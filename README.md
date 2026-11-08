@@ -4,27 +4,36 @@ Turn a photograph of a **flat, constant-thickness part** into a scaled CAD solid
 
 The workbench is designed for plates, gaskets, spacers, and templates. It traces what is visible in the photograph; it does not recover hidden geometry or infer physical dimensions.
 
+This repository contains two related tools:
+
+| Component | Use it for | Entry point |
+| --- | --- | --- |
+| Photo-to-CAD workbench | Trace, measure, review, and export a flat part | `make start` after setup |
+| Reference library | Read the handbook, compare workflows, and use standalone calculators | [Open the library](reference-library/index.html) or [read its guide](reference-library/README.md) |
+
 ![Pictures to CAD workbench showing the traced sample beside its generated CAD solid](docs/images/workbench.png)
 
 Browser-rendered workbench with the demonstration part. The source photo is generated sample imagery; the displayed solid is constructed from its traced outline.
 
 ## Start the app
 
-Use **Python 3.12**, Node.js 22.12 or later (24 recommended), and npm. Setup uses [uv](https://docs.astral.sh/uv/) if available, or installs a pinned local copy. From this repository:
+Use **Python 3.12**, Node.js 22.12 or later (24 recommended), npm, and GNU Make. Setup uses [uv](https://docs.astral.sh/uv/) if available, or installs a pinned local copy. From this repository:
 
 ```bash
-./scripts/setup.sh
-./scripts/start.sh
+make setup
+make start
 ```
 
-Setup installs the locked dependencies and builds the interface. Startup runs the API and built interface together. No account, paid API, GPU, or third-party AI credential is required.
+Setup prepares the workbench and reference-library dependencies in separate local environments and builds the workbench interface. Startup runs the API and built interface together. No account, paid API, GPU, or third-party AI credential is required. Setup does not download Ollama models, browsers, OpenSCAD, or system fonts.
+
+For workbench-only setup, use `make setup-app`. The existing `./scripts/setup.sh` and `./scripts/start.sh` commands remain supported and apply only to the workbench.
 
 The server listens on the local machine at port **8000**. In a managed cloud environment, use the environment's supported browser or forwarding mechanism. A server running on a remote machine is not your device's localhost.
 
 For development with frontend hot reload:
 
 ```bash
-./scripts/dev.sh
+make dev
 ```
 
 See [development and setup](docs/development.md) for prerequisites, commands, and troubleshooting.
@@ -112,22 +121,25 @@ See [export formats and dimensional checks](docs/exports.md) before transferring
 
 - **Handbook:** 23 chapters on capture, scale and calibration, reconstruction workflows, CAD drawings, print design, and validation
 - **Source catalog:** 86 annotated sources, each labeled with its depth of review
-- **Toolkit:** 14 calculators and a route finder, with the same arithmetic available as `python3 -m cadkit`
+- **Toolkit:** 14 calculators and a route finder, with the same arithmetic available as `python3 -m cadkit` from the `reference-library/` directory
 - **Worksheets and examples:** project worksheets and an OpenSCAD example pipeline
 
-It has its own build and tests (`cd reference-library && make test`) and its own [CI workflow](.github/workflows/reference-library.yml). See [its README](reference-library/README.md) and [verification record](reference-library/VERIFICATION.md).
+The root `make build-library` and `make test-library` commands operate on this component. Its own Makefile and [CI workflow](.github/workflows/reference-library.yml) remain available. See [its README](reference-library/README.md) and [verification record](reference-library/VERIFICATION.md).
 
 ## Checks
 
 From the repository root:
 
 ```bash
-./scripts/test.sh
+make test
+make lint
 ```
 
-This runs backend tests, the frontend type check and build, and browser tests. The validation report records which checks were actually run and their results. A successful synthetic fixture does not establish dimensional accuracy for an arbitrary real-world photograph.
+`make test` runs the workbench's Python tests, frontend type check/build, and browser scenarios, followed by the reference library's Python/Node tests and browser check over loopback HTTP. `make lint` runs the workbench Python and frontend/browser-source lint/format checks. Use `make test-app` or `make test-library` to work on one component; `make` lists the available commands.
 
-A [GitHub Actions workflow](.github/workflows/ci.yml) is included for pushes and pull requests. Its presence is not evidence of a successful remote CI run; see the validation report for recorded execution evidence.
+Install Chromium before browser checks if none is available. OpenSCAD-dependent library tests may skip when OpenSCAD is absent; `make setup` does not install it. See [development prerequisites](docs/development.md) for browser, PDF/font, and OpenSCAD requirements. The [validation report](docs/validation.md) distinguishes recorded successful runs from checks that have not yet run. A successful synthetic fixture does not establish dimensional accuracy for an arbitrary real-world photograph.
+
+Separate GitHub Actions workflows validate the [workbench](.github/workflows/ci.yml) and [reference library](.github/workflows/reference-library.yml). Recorded results apply to their stated commits; see the validation report for execution evidence.
 
 ## License
 

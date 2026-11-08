@@ -2,6 +2,17 @@
 
 Validated November 8, 2026, in the managed Linux environment. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
 
+## Repository command integration
+
+The root Makefile exposes setup, build, test, and lint commands for the workbench and reference library while preserving each component's existing entry points. The combined `make setup` completed successfully. `PICAD_TEST_URL=http://127.0.0.1:8001 make test` then passed against an isolated workbench instance:
+
+- Workbench: **142 Python tests**, production typecheck/build, and **15 Chromium browser scenarios**.
+- Reference library: **119 Python tests**, **11 Node tests**, and **98 browser assertions** over loopback HTTP.
+
+There were no failed or skipped tests in that completed run. `make lint`, shell and JavaScript syntax checks, and documentation file-link checks also passed. The library HTTP server closed after both a successful check and a deliberately failed browser launch. Interpreter paths containing spaces were checked through the library Makefile. No generated library content or dependency versions changed.
+
+Direct library browser checks retain the `file://` default. This managed browser blocks that transport; the local pass above establishes HTTP behavior. The library CI checks both transports. Remote results below apply only to their named commits.
+
 ## Current design, print and assistant changes
 
 The complete `PICAD_TEST_URL=http://127.0.0.1:8001 ./scripts/test.sh` run passed against an isolated instance of the final implementation: **142 Python tests**, production typecheck/build, and **15 Chromium browser scenarios**, with no failures or skips.
@@ -48,9 +59,18 @@ The model shortlist is provisional. See [local AI setup](ollama.md) and [model r
 
 ## GitHub-hosted CI
 
-The **Validate workbench** workflow completed with **Success** for commit `96d73c6ef1b6ee50759f1835e63717835772b4f1`. The [workflow run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42519068333) and its [test job](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42519068333/job/128848357811) provide the remote evidence.
+Both workflows completed with **Success** for merge commit `5d6a446d6175e4ad1bd0c01c0166b05e0d1e393a`:
 
-The workflow runs locked dependency setup and build, browser installation, Python lint, and the backend/build/browser test sequence on `ubuntu-latest` with Python 3.12 and Node.js 24. This result applies to the exact commit above. Later changes, including this documentation update, are not covered by that run until a subsequent run verifies them. The detailed counts below are the recorded local test results.
+| Workflow | Recorded run | Scope |
+| --- | --- | --- |
+| Validate workbench | [42528803054](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42528803054) | Locked workbench setup/build, Chromium installation, Ruff, Python and browser workflow checks |
+| Validate reference library | [42528803055](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42528803055) | Library regeneration and drift checks, Python/Node tests, required OpenSCAD plate pipeline, and browser checks |
+
+These runs use `ubuntu-latest`, Python 3.12, and Node.js 24. They validate that exact merge commit. They do not validate later repository-command or browser-transport changes before those changes receive their own completed runs.
+
+Earlier workbench evidence remains available: the [feature run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42528243229) passed for `f4b924517c6f58fe34686f380c478e55ba67d4ef`; the [original CAD run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42519068333) passed for `96d73c6ef1b6ee50759f1835e63717835772b4f1`.
+
+The library has a separate [verification record](../reference-library/VERIFICATION.md) describing its 119 Python tests, 11 Node test groups, and browser assertions. Those checks are additional to the workbench's 142 Python tests and 15 browser scenarios; they do not evaluate real photograph reconstruction, physical printing, or LLM quality. Counts, skips, and browser transport belong to the particular recorded invocation rather than the mere presence of a test command.
 
 ## Geometry and API evidence
 

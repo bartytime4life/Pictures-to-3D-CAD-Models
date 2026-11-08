@@ -7,19 +7,24 @@ Run commands from the repository root unless a command explicitly says otherwise
 - **Python 3.12** with `venv` and a working package installer, as recorded in `.python-version`. The project intentionally restricts Python to the tested CAD binary dependency combination; do not assume Python 3.13 compatibility.
 - Node.js 22.12 or later; Node.js 24 is recommended.
 - npm. Setup reuses [uv](https://docs.astral.sh/uv/) if installed or bootstraps its pinned version into `.local/uv-bootstrap`.
+- GNU Make for the root command entry point. The component scripts remain available when running a workbench-only workflow.
 - Enough disk space for the Python CAD kernel and frontend dependencies. CadQuery and its OpenCascade runtime are substantially larger than an ordinary web API dependency.
 - HTTPS access to the package registries needed by the lockfiles. Preserve the environment's proxy and certificate trust configuration.
 
 The initial pipeline runs on the CPU. It requires neither CUDA nor an external image-generation, photogrammetry, or language-model service.
 
+The companion library uses the same Python 3.12/Node 24 toolchain in the combined workflow, with its own `reference-library/.venv` and Node dependencies. Rebuilding its PDF also requires DejaVu fonts. Browser checks need Chrome/Chromium; OpenSCAD is needed to execute all library rendering checks. Setup installs neither these system tools nor model weights. Reading the committed library HTML/PDF needs none of the development tools.
+
 ## Install and run
 
 ```bash
-./scripts/setup.sh
-./scripts/start.sh
+make setup
+make start
 ```
 
-The setup script installs dependencies from `uv.lock` and `package-lock.json`, then builds the frontend. The start script runs the Python service, which serves the compiled frontend and the API on the same origin.
+`make setup` prepares both components. Workbench setup uses `uv.lock` and the root `package-lock.json`, then builds the frontend. Library setup creates `reference-library/.venv`, installs its PDF requirements, and runs `npm ci` against the library's own lockfile. The environments and dependency declarations remain separate.
+
+`make start` runs the Python workbench service, which serves the compiled frontend and API on the same origin. `make setup-app` and the existing `./scripts/setup.sh` prepare only that workbench; `./scripts/start.sh` remains the direct startup command. A library-only contributor can use `make setup-library`.
 
 The normal server uses port 8000. Do not assume a background process will survive a new cloud task or an environment snapshot restore; run the start script again in the restored environment.
 
@@ -41,7 +46,7 @@ The optional assistant accepts only an HTTP loopback Ollama endpoint; remote URL
 For frontend development:
 
 ```bash
-./scripts/dev.sh
+make dev
 ```
 
 Development uses a Vite frontend on port 4173 and a Python backend on port 8000. Vite proxies `/api` requests to the backend. Start both services; opening Vite alone does not validate conversion or export.
@@ -55,23 +60,48 @@ frontend/public/     demonstration image and static assets
 scripts/             repeatable setup and startup entry points
 tests/               backend and browser validation
 docs/                user guides, architecture, limitations and evidence
+data/                pinned printer catalog and source attribution
+reference-library/   offline handbook, calculators, examples, and independent build/test tools
 ```
 
 Generated frontend build files, local environments, temporary conversion artifacts, and dependency caches are local outputs rather than source files.
 
+The reference library intentionally commits generated HTML, figures, and its PDF alongside their sources. Rebuilding that component can update tracked outputs; review them with the source change rather than treating them as workbench build artifacts.
+
+## Root commands
+
+Run `make` for help. Component targets delegate to the existing scripts and library Makefile.
+
+| Command | Scope |
+| --- | --- |
+| `make setup` | Prepare both components; no system tools, browser, or model downloads |
+| `make start` / `make dev` | Run the production workbench / workbench with hot reload |
+| `make build` | Build the workbench and library outputs, including the library PDF |
+| `make test` | Workbench Python/build/browser checks, then library Python/Node/browser checks |
+| `make lint` | Workbench Ruff and frontend/browser-source formatting checks |
+| `make smoke` | Check an already running workbench through its real trace/build/export API |
+| `make setup-app` / `make setup-library` | Prepare one component |
+| `make build-app` / `make build-library` | Build one component |
+| `make test-app` / `make test-library` | Validate one component |
+
+The library's full build requires its PDF dependencies and fonts. The root library browser target uses an ephemeral loopback HTTP server; the standalone library check defaults to `file://`. `CAD_REFERENCE_BROWSER_TRANSPORT=file` or `http` selects that transport when invoking the library directly. This is a test mechanism; the distributed HTML still opens offline. See [library build instructions](../reference-library/BUILD.md) for its additional release, archive, and optional network-check targets.
+
 ## Validate changes
 
 ```bash
-./scripts/test.sh
+make test
+make lint
 ```
 
-Or run the stages separately:
+For just the workbench, use `make test-app` or the existing `./scripts/test.sh`. Its individual stages remain:
 
 ```bash
 .venv/bin/python -m pytest -q
 npm run build
 npm run test:e2e
 ```
+
+`make test-library` runs the independent library tests and browser check without rerunning CAD workbench tests. OpenSCAD-dependent tests report skips if the tool is absent; those skips do not establish that rendering passed. The library CI installs OpenSCAD and executes the required plate pipeline separately.
 
 Backend checks should exercise image parsing, geometry validation, dimensional bounds, topology, and exported-file re-imports. Browser checks should exercise the actual conversion path, edits, outdated-result handling, exports, input failures, and responsive navigation.
 
@@ -85,15 +115,17 @@ Browser tests use `PLAYWRIGHT_CHROMIUM_EXECUTABLE` when supplied, otherwise `/us
 npx playwright install chromium
 ```
 
+For a library-only install, run `npx playwright install chromium` from `reference-library/`, or use the installed browser selected by `CAD_REFERENCE_CHROME`. The workbench uses `PLAYWRIGHT_CHROMIUM_EXECUTABLE`. The two packages keep their own Playwright versions, so install each package's browser when not using a shared system Chrome/Chromium.
+
 The test configuration starts the built app on port 8000, or reuses an already running server outside CI. `PICAD_TEST_URL` selects an explicitly managed test server instead. Confirm that a reused server is this checkout's app, particularly after rebuilding. Browser results and failure traces are local generated outputs under `playwright-report/` and `test-results/`.
 
 The browser suite includes automated accessibility checks with `@axe-core/playwright`. Those checks cover the tested rendered states; they do not establish full accessibility conformance or replace keyboard and assistive-technology testing.
 
 ## Continuous integration
 
-[`.github/workflows/ci.yml`](../.github/workflows/ci.yml) defines the same setup and test sequence on pushes and pull requests, using Python 3.12 and Node.js 24. It installs Chromium, runs Python lint checks, executes `scripts/test.sh`, and retains browser reports and failure traces for seven days.
+[`.github/workflows/ci.yml`](../.github/workflows/ci.yml) validates the workbench using Python 3.12 and Node.js 24. It installs Chromium, runs Python lint checks, executes the workbench test sequence, and retains browser reports and failure traces for seven days. [The reference-library workflow](../.github/workflows/reference-library.yml) separately regenerates its committed outputs, runs its tests, renders its OpenSCAD plate, and checks its browser interface.
 
-The [GitHub-hosted run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42519068333) completed successfully for commit `96d73c6ef1b6ee50759f1835e63717835772b4f1`. See [validation results](validation.md) for the separate local and remote evidence. That run does not validate later commits; check the workflow result for the revision being reviewed.
+Both workflows completed successfully for merge commit `5d6a446d6175e4ad1bd0c01c0166b05e0d1e393a`: [workbench run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42528803054) and [reference-library run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42528803055). These links identify that exact revision; check the workflows for the revision under review. See [validation results](validation.md) for the separate local and remote evidence.
 
 ## Dependency changes
 
@@ -116,7 +148,7 @@ Printer data is a pinned, locally bundled snapshot. Follow [catalog reproduction
 After startup, this smoke check exercises the real sample through the HTTP API, builds a solid, verifies its width and thickness, downloads STEP, and deletes its own temporary model:
 
 ```bash
-.venv/bin/python scripts/smoke.py
+make smoke
 ```
 
-To check the development proxy, use `PICAD_BASE_URL=http://127.0.0.1:4173 .venv/bin/python scripts/smoke.py`. The default is the single-service startup on port 8000. This complements the full test suite; it does not replace browser verification.
+The direct `.venv/bin/python scripts/smoke.py` command remains available. To check the development proxy, use `PICAD_BASE_URL=http://127.0.0.1:4173 make smoke`. The default is the single-service startup on port 8000. This complements the full test suite; it does not replace browser verification.

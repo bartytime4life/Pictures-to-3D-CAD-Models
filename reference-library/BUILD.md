@@ -7,7 +7,7 @@ Reading the HTML or the PDF needs no tools: open `index.html` in a browser. The 
 | Task | Needs |
 | --- | --- |
 | Calculations, figures, `cadkit`, Python tests, archive | Python 3.10+ (standard library only) |
-| HTML build and Node tests | Node.js 18+ and the `marked` package |
+| HTML build and Node tests | Node.js 20+ and the `marked` package |
 | Browser check | `playwright` package and Chrome or Chromium |
 | PDF | Python with `reportlab` and `lxml` (`requirements.txt`), and DejaVu fonts |
 | Plate pipeline and render tests | OpenSCAD (optional; those steps are skipped without it) |
@@ -45,6 +45,20 @@ Run these from `reference-library/`.
 | `make release` | `build` → `plate` → `test` → `check` → `verify` → `dist` |
 | `make clean` | Remove `tmp/` and `examples/output/` |
 
+`make check` retains the default `file://` test of the offline reader. When a
+managed browser blocks local-file navigation, run the same assertions over HTTP:
+
+```bash
+CAD_REFERENCE_BROWSER_TRANSPORT=http make check
+```
+
+The check starts its own server on an available loopback port and closes it on
+success or failure. It serves only the published library page, figures, linked
+documents, worksheets, and examples; it does not serve the parent repository,
+dependency folders, or environment files. No external service is used. The QA
+JSON records `transport`, `page_url`, and the tested scope. An HTTP result does
+not establish that `file://` works in that browser. CI checks both transports.
+
 To run a step directly:
 
 - **Calculations:** `python3 examples/calculate.py` rewrites the worked numbers; `--check` only compares them.
@@ -81,6 +95,7 @@ Never edit generated files by hand: `index.html`, `sources.csv`, `REFERENCES.md`
 | --- | --- |
 | `CAD_REFERENCE_NODE_MODULES` | A `node_modules` directory holding `marked` and `playwright` |
 | `CAD_REFERENCE_CHROME` | Chrome or Chromium executable for the browser check |
+| `CAD_REFERENCE_BROWSER_TRANSPORT` | `file` (default) or `http`; HTTP uses a temporary loopback server |
 | `CAD_REFERENCE_FONT_DIR` | Folder containing `DejaVuSans.ttf` and its family |
 | `CAD_REFERENCE_PYTHON` | Python used by the Node tests to call `cadkit` (default `python3`) |
 | `GITHUB_TOKEN` or `GH_TOKEN` | Raises the API rate limit for `refresh-github` |
@@ -92,6 +107,7 @@ Never edit generated files by hand: `index.html`, `sources.csv`, `REFERENCES.md`
 | --- | --- |
 | `Cannot find the Node package "marked"` | Run `npm ci`, or set `CAD_REFERENCE_NODE_MODULES` |
 | Browser check cannot launch a browser | Install Chrome, run `npx playwright install chromium`, or set `CAD_REFERENCE_CHROME` |
+| `file://` navigation is blocked by browser policy | Run `CAD_REFERENCE_BROWSER_TRANSPORT=http make check`; do not change the browser policy |
 | `DejaVu fonts not found` | Install `fonts-dejavu`, or set `CAD_REFERENCE_FONT_DIR` |
 | `Refusing to build` | The catalog or route data failed validation; the message names the entry |
 | `test_docs` fails after an edit | A document disagrees with the data; the message names the file and value |
