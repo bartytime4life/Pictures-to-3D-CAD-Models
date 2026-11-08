@@ -87,7 +87,7 @@ The browser suite includes automated accessibility checks with `@axe-core/playwr
 
 [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) defines the same setup and test sequence on pushes and pull requests, using Python 3.12 and Node.js 24. It installs Chromium, runs Python lint checks, executes `scripts/test.sh`, and retains browser reports and failure traces for seven days.
 
-The workflow has been added to the repository. A remote GitHub Actions run is unverified until a run actually completes; local test results and a workflow definition are separate evidence.
+The [GitHub-hosted run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42519068333) completed successfully for commit `96d73c6ef1b6ee50759f1835e63717835772b4f1`. See [validation results](validation.md) for the separate local and remote evidence. That run does not validate later commits; check the workflow result for the revision being reviewed.
 
 ## Dependency changes
 

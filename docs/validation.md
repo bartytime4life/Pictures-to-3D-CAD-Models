@@ -1,8 +1,8 @@
 # Validation results
 
-Validated November 8, 2026, in the current managed Linux environment. The project was built and exercised locally; GitHub Actions and a freshly published cloud task have not been run.
+Validated November 8, 2026, in the managed Linux environment, followed by the successful GitHub-hosted CI run recorded below. A freshly published cloud task has not been validated.
 
-## Results
+## Local results
 
 | Check | Observed result |
 | --- | --- |
@@ -14,6 +14,12 @@ Validated November 8, 2026, in the current managed Linux environment. The projec
 | Package advisory check | `npm audit` reported zero known advisories at the time of this check, including development dependencies. |
 | Running development service | The smoke helper passed through the Vite proxy on port 4173: served interface, traced sample, built solid, and downloaded STEP. |
 | Visual comparison | [Passed](../design-qa.md), with paired source/implementation evidence and desktop/mobile captures. |
+
+## GitHub-hosted CI
+
+The **Validate workbench** workflow completed with **Success** for commit `96d73c6ef1b6ee50759f1835e63717835772b4f1`. The [workflow run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42519068333) and its [test job](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42519068333/job/128848357811) provide the remote evidence.
+
+The workflow runs locked dependency setup and build, browser installation, Python lint, and the backend/build/browser test sequence on `ubuntu-latest` with Python 3.12 and Node.js 24. This result applies to the exact commit above. Later changes, including this documentation update, are not covered by that run until a subsequent run verifies them. The detailed counts below are the recorded local test results.
 
 ## Geometry and API evidence
 
@@ -46,14 +52,14 @@ Six complete scenarios ran against the built application in Chromium:
 
 The sample scenario recorded no JavaScript page exceptions or browser console errors. Expected failed HTTP requests in negative scenarios were checked as recovery behavior. The workbench returned zero violations in the selected axe-core rules. Complete screen-reader, cross-browser, and device-lab testing remain outside this run.
 
-The final mobile typography change was followed by a passing rerun of scenario 4 against the development server. The local HTML Playwright report reflects the most recent invocation; CI retains reports from its complete run when executed.
+The final mobile typography change was followed by a passing rerun of scenario 4 against the development server. The local HTML Playwright report reflects the most recent local invocation. The GitHub workflow retains its own browser reports and failure traces according to its seven-day artifact policy.
 
 ## Runtime and reproducibility
 
 - Tested runtime: Python 3.12.14, Node.js 24.22.1, npm 11.9.0, uv 0.13.5.
 - Dependencies are recorded in `uv.lock` and `package-lock.json`; setup preserves both locks.
 - Python is restricted to 3.12 because the selected CAD binary stack includes VTK 9.3.1 wheels through CPython 3.12. The project does not claim Python 3.13 support.
-- The current machine already provided uv. The setup script's uv-absent bootstrap branch has not been separately exercised.
+- The local machine already provided uv. The setup script's uv-absent bootstrap branch was not separately exercised in the local validation run.
 - The service uses one API process and bounded CAD subprocesses. No GPU or third-party reconstruction API was required.
 - A development startup and shutdown were exercised; the final single-service startup serves the built interface and API together.
 - The Sites preview relay was unavailable. Actual Chromium against the application provided browser evidence; there is no published site or user-facing hosted preview.
