@@ -2,7 +2,9 @@
 
 ## Current product boundary
 
-The first workflow is a single-user photo-to-profile workbench for one connected, constant-thickness part. It provides visible outline review, user-entered width and thickness, an interactive preview, and CAD/mesh/profile exports with a reproducible recipe.
+The workflow is a single-user photo-to-profile workbench for one connected, constant-thickness source part. It provides visible outline review, measured width and thickness, explicit design scales, relative-detail choices, approximate color/material preview, editable printer-volume planning, and optional straight-cut parts. CAD/mesh/profile exports and a version 2 recipe preserve the generated result and design choices; version 1 recipes remain importable.
+
+An optional local Ollama assistant provides text guidance and reviewable trace/design/print-setting proposals. Its integration is separate from geometric conversion; model downloads and live quality comparisons are still subject to the [recorded verification status](ollama.md#current-cloud-verification-status).
 
 The current implementation and [validation results](validation.md) are the source of truth for what works. Items below are future work, not hidden capabilities or delivery promises.
 
@@ -17,6 +19,10 @@ The current implementation and [validation results](validation.md) are the sourc
 | Parametric CAD recipes | Make more of the construction editable downstream | A defined feature schema, stable regeneration, and version migration |
 | Analytic line and circle fitting | Replace suitable traced approximations with editable geometric features | Explicit residual errors, user review, and preservation of intentional non-circular geometry |
 | Measured-photo benchmark | Quantify error on real parts | Ground-truth dimensions, repeatable capture conditions, published uncertainty |
+| Measured local-model selection | Choose the smallest assistant that gives useful advice quickly | Installed artifact/license verification, repeatable latency results, and human review of fixed project-specific cases |
+| Opt-in vision guidance | Give capture advice based on the actual photograph | Explicit image-sharing control, a verified local vision model, resource bounds, and evaluation against visible evidence |
+| Assembly-aware splitting | Add useful joints or locating features between pieces | Measured clearance/kerf, topology checks, validated joinery, and explicit assembly assumptions |
+| Slicer integration | Inspect supports, toolpaths, and machine-specific output | Qualified printer/material profiles, actual slicer execution, reviewable results, and machine-specific validation |
 | Multi-user hosting | Share the tool safely across users | Authentication, authorization, isolated jobs, quotas, retention, deletion, monitoring |
 | Multiview reconstruction | Reconstruct more general surfaces | Capture guidance, hardware budget, scale controls, mesh validation, and a separate CAD-fitting strategy |
 

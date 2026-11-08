@@ -4,7 +4,7 @@ PYTHON ?= python3
 NODE ?= node
 CODEX_PY := $(HOME)/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3.12
 # The PDF needs reportlab + lxml. Use PYTHON when it has them, else the Codex runtime if present.
-PDF_PYTHON ?= $(shell $(PYTHON) -c 'import reportlab, lxml' >/dev/null 2>&1 && echo $(PYTHON) || (test -x $(CODEX_PY) && echo $(CODEX_PY)) || echo $(PYTHON))
+PDF_PYTHON ?= $(shell "$(PYTHON)" -c 'import reportlab, lxml' >/dev/null 2>&1 && printf '%s\n' "$(PYTHON)" || (test -x "$(CODEX_PY)" && printf '%s\n' "$(CODEX_PY)") || printf '%s\n' "$(PYTHON)")
 
 .PHONY: help all build calc figures html pdf plate test test-python test-node check links refresh-github verify dist dist-check release clean
 
@@ -24,45 +24,45 @@ all: build test check
 build: calc figures html pdf
 
 calc:
-	$(PYTHON) examples/calculate.py >/dev/null
+	"$(PYTHON)" examples/calculate.py >/dev/null
 
 figures:
-	$(PYTHON) scripts/make-figures.py
+	"$(PYTHON)" scripts/make-figures.py
 
 html: figures
-	$(NODE) scripts/build-library.mjs
+	"$(NODE)" scripts/build-library.mjs
 
 pdf: html
-	$(PDF_PYTHON) scripts/make-pdf.py
+	"$(PDF_PYTHON)" scripts/make-pdf.py
 
 plate:
-	$(PYTHON) examples/build_plate.py
+	"$(PYTHON)" examples/build_plate.py
 
 test: test-python test-node
 
 test-python:
-	$(PYTHON) -m unittest discover -s tests/python
+	"$(PYTHON)" -m unittest discover -s tests/python
 
 test-node:
-	$(NODE) --test tests/node/*.test.mjs
+	"$(NODE)" --test tests/node/*.test.mjs
 
 check:
-	$(NODE) scripts/check-library.mjs
+	"$(NODE)" scripts/check-library.mjs
 
 links:
-	$(NODE) scripts/check-links.mjs
+	"$(NODE)" scripts/check-links.mjs
 
 refresh-github:
-	$(NODE) scripts/refresh-github.mjs --write
+	"$(NODE)" scripts/refresh-github.mjs --write
 
 verify:
-	$(PYTHON) scripts/record-verification.py
+	"$(PYTHON)" scripts/record-verification.py
 
 dist:
-	$(PYTHON) scripts/make-dist.py
+	"$(PYTHON)" scripts/make-dist.py
 
 dist-check:
-	$(PYTHON) scripts/make-dist.py --check
+	"$(PYTHON)" scripts/make-dist.py --check
 
 release: build plate test check verify dist
 

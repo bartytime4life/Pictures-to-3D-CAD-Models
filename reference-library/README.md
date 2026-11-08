@@ -5,7 +5,7 @@
 <p align="center">
   <img alt="Works offline" src="https://img.shields.io/badge/works-offline-174d68">
   <img alt="Python 3.10+ standard library" src="https://img.shields.io/badge/python-3.10%2B%20stdlib-2f7d79">
-  <img alt="Node 18+" src="https://img.shields.io/badge/node-18%2B-2f7d79">
+  <img alt="Node 20+" src="https://img.shields.io/badge/node-20%2B-2f7d79">
   <img alt="OpenSCAD optional" src="https://img.shields.io/badge/OpenSCAD-optional-c77a1f">
 </p>
 
@@ -117,7 +117,7 @@ reference-library/
 
 ## Build and test
 
-Reading needs nothing but a browser. To rebuild or test, install Node 18+ and Python 3.10+, then run from this folder:
+Reading needs nothing but a browser. To rebuild or test, install Node 20+ and Python 3.10+, then run from this folder:
 
 ```bash
 make test
