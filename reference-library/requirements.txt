@@ -1,0 +1,4 @@
+# Needed only to rebuild the PDF (scripts/make-pdf.py). Everything else in
+# cadkit/, examples/ and tests/python/ uses the Python standard library.
+reportlab>=4.0,<5
+lxml>=5.0

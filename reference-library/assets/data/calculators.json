@@ -1,0 +1,168 @@
+[
+  {
+    "id": "scale", "title": "Planar scale", "section": 5,
+    "blurb": "Turn pixels into millimetres on a front-facing or rectified plane.",
+    "formula": "scale = L_ref / p_ref     L = p × scale",
+    "inputs": [
+      { "k": "lref", "label": "Reference length", "unit": "mm", "value": 50 },
+      { "k": "pref", "label": "Reference span", "unit": "px", "value": 1000 },
+      { "k": "p", "label": "Feature span", "unit": "px", "value": 640 }
+    ],
+    "note": "Valid on the reference plane only. Raised or recessed features need the off-plane depth correction."
+  },
+  {
+    "id": "uncertainty", "title": "Scale uncertainty", "section": 5,
+    "blurb": "First-order propagation for L = p × L_ref / p_ref with independent errors.",
+    "formula": "(u_L/L)² = (u_p/p)² + (u_Lref/L_ref)² + (u_pref/p_ref)²",
+    "inputs": [
+      { "k": "p", "label": "Feature span p", "unit": "px", "value": 640 },
+      { "k": "up", "label": "u(p)", "unit": "px", "value": 2 },
+      { "k": "pref", "label": "Reference span p_ref", "unit": "px", "value": 1000 },
+      { "k": "upref", "label": "u(p_ref)", "unit": "px", "value": 2 },
+      { "k": "lref", "label": "Reference length L_ref", "unit": "mm", "value": 50 },
+      { "k": "ulref", "label": "u(L_ref)", "unit": "mm", "value": 0.05 }
+    ],
+    "note": "Standard uncertainties, small independent errors. Perspective, distortion, and correlated endpoints are not included; k = 2 is a convention, not a guaranteed 95 % interval."
+  },
+  {
+    "id": "aspect", "title": "Calibration self-check", "section": 5,
+    "blurb": "Compare a reference rectangle's image proportions with its known proportions before trusting one rectification.",
+    "formula": "squat = 1 − (h_px/w_px) / (H/W)     stretch = scale_v / scale_h − 1",
+    "inputs": [
+      { "k": "kw", "label": "Known width", "unit": "mm", "value": 50 },
+      { "k": "kh", "label": "Known height", "unit": "mm", "value": 90 },
+      { "k": "pw", "label": "Image width", "unit": "px", "value": 400 },
+      { "k": "ph", "label": "Image height", "unit": "px", "value": 675 }
+    ],
+    "note": "If plane tilt does not explain a difference, use one uniform scale off the plane, record both results, and carry the difference as uncertainty."
+  },
+  {
+    "id": "homography", "title": "Homography fit", "section": 5,
+    "blurb": "Fit a planar homography from four or more image-to-plane point pairs and inspect residuals and local scale.",
+    "formula": "λ [x, y, 1]ᵀ = H [u, v, 1]ᵀ     local scale = ‖∂(x,y)/∂u‖, ‖∂(x,y)/∂v‖",
+    "inputs": [
+      { "k": "pairs", "type": "textarea", "label": "Point pairs, one per line: u v x y (pixels → mm)", "unit": "",
+        "value": "112 96 0 0\n511 81 50 0\n592 802 50 90\n48 770 0 90\n305.99 88.71 25 0\n307.6 383.69 25 45\n155.89 677.18 10 80" },
+      { "k": "u", "label": "Evaluate at u", "unit": "px", "value": 308 },
+      { "k": "v", "label": "Evaluate at v", "unit": "px", "value": 384 }
+    ],
+    "note": "Pixels map to millimetres on the plane. A fit can match its control points and still be wrong elsewhere: keep an independent check length."
+  },
+  {
+    "id": "depth", "title": "Off-plane depth correction", "section": 5,
+    "blurb": "Correct a size measured at the reference plane's scale for a feature nearer or farther from the camera.",
+    "formula": "actual ≈ size_at_reference_scale × (Z + Δ) / Z",
+    "inputs": [
+      { "k": "z", "label": "Camera to reference plane Z", "unit": "mm", "value": 500 },
+      { "k": "d", "label": "Extra depth Δ (behind = +)", "unit": "mm", "value": 60 },
+      { "k": "size", "label": "Size at reference scale", "unit": "mm", "value": 40 },
+      { "k": "zmin", "label": "Z lower bound", "unit": "mm", "value": 350 },
+      { "k": "zmax", "label": "Z upper bound", "unit": "mm", "value": 800 },
+      { "k": "dmin", "label": "Δ lower bound", "unit": "mm", "value": 30 },
+      { "k": "dmax", "label": "Δ upper bound", "unit": "mm", "value": 80 }
+    ],
+    "note": "Pinhole model, feature parallel to the image plane. Tilted features are foreshortened as well."
+  },
+  {
+    "id": "camera", "title": "Camera distance", "section": 5,
+    "blurb": "Estimate how far a reference was from the camera, from a 35 mm-equivalent focal length.",
+    "formula": "f_px ≈ f_35 × diag_px / 43.27     Z ≈ f_px × L / l",
+    "inputs": [
+      { "k": "f35", "label": "35 mm-equivalent focal length", "unit": "mm", "value": 26 },
+      { "k": "w", "label": "Image width", "unit": "px", "value": 4000 },
+      { "k": "h", "label": "Image height", "unit": "px", "value": 3000 },
+      { "k": "L", "label": "Reference length L", "unit": "mm", "value": 100 },
+      { "k": "l", "label": "Reference span l", "unit": "px", "value": 500 }
+    ],
+    "note": "Assumes the original, uncropped frame, a centred principal point, and negligible distortion. Screenshots and crops break these assumptions."
+  },
+  {
+    "id": "label", "title": "Published-label rounding", "section": 3,
+    "blurb": "How much a rounded dimension on packaging or a datasheet can actually tell you.",
+    "formula": "a = ½ × 10^(−decimals) unit     u = a / √3   (rectangular, GUM 4.3.7)",
+    "inputs": [
+      { "k": "value", "label": "Printed value", "unit": "", "value": 3.25 },
+      { "k": "unit", "type": "select", "label": "Unit", "unit": "", "value": "in", "options": ["in", "mm", "cm"] },
+      { "k": "decimals", "label": "Decimal places printed", "unit": "", "value": 2, "step": 1 }
+    ],
+    "note": "Rounding only. Manufacturing tolerance is separate, usually larger, and usually unpublished. Converting units adds digits, not knowledge."
+  },
+  {
+    "id": "chord", "title": "Circle tessellation", "section": 12,
+    "blurb": "Segments needed so a polygonal circle stays within an allowed chordal (sagitta) error.",
+    "formula": "e = R (1 − cos(π/n))     n ≥ π / acos(1 − e/R)",
+    "inputs": [
+      { "k": "r", "label": "Radius R", "unit": "mm", "value": 10 },
+      { "k": "e", "label": "Allowed error e", "unit": "mm", "value": 0.02 }
+    ],
+    "note": "Idealised polygon error only: says nothing about the printed hole, slicer, or machine."
+  },
+  {
+    "id": "clearance", "title": "Clearance coupon planner", "section": 15,
+    "blurb": "Plan an exploratory hole series around a pin, using diametral differences.",
+    "formula": "hole D = d + c_diametral     radial = c_diametral / 2",
+    "inputs": [
+      { "k": "nominal", "label": "Pin diameter d", "unit": "mm", "value": 5 },
+      { "k": "start", "label": "First diametral clearance", "unit": "mm", "value": 0.1 },
+      { "k": "step", "label": "Step", "unit": "mm", "value": 0.1 },
+      { "k": "count", "label": "Number of holes", "unit": "", "value": 5, "step": 1 }
+    ],
+    "note": "Example test settings, not recommended fits. Print with the intended material, orientation, layers and cooling; examples/clearance-coupon.scad makes the part."
+  },
+  {
+    "id": "coating", "title": "Coating allowance", "section": 11,
+    "blurb": "Primer and paint shrink every slot and hole they touch.",
+    "formula": "loss = coat per face × faces",
+    "inputs": [
+      { "k": "coat", "label": "Coating per face", "unit": "mm", "value": 0.08 },
+      { "k": "faces", "label": "Coated faces across the gap", "unit": "", "value": 2, "step": 1 },
+      { "k": "width", "label": "Slot width as printed", "unit": "mm", "value": 10 }
+    ],
+    "note": "Test the coupon in its finished state, or reserve the allowance in the parameter register."
+  },
+  {
+    "id": "gear", "title": "Spur gear pair", "section": 16,
+    "blurb": "Nominal pitch diameters, centre distance, and speed ratio for unshifted external spur gears.",
+    "formula": "d = m z     a = m (z₁ + z₂) / 2     ω₂/ω₁ = −z₁/z₂",
+    "inputs": [
+      { "k": "m", "label": "Module m", "unit": "mm", "value": 2 },
+      { "k": "z1", "label": "Teeth z₁ (driver)", "unit": "", "value": 20, "step": 1 },
+      { "k": "z2", "label": "Teeth z₂ (driven)", "unit": "", "value": 40, "step": 1 }
+    ],
+    "note": "Does not define tooth profile, backlash, strength, or profile shift. Use a validated gear generator."
+  },
+  {
+    "id": "units", "title": "Import unit detective", "section": 2,
+    "blurb": "A mesh came in far too big or small? Find the unit mismatch that explains it.",
+    "formula": "corrected = observed × factor     rank by |log(corrected / expected)|",
+    "inputs": [
+      { "k": "observed", "label": "Extent shown after import", "unit": "", "value": 0.06 },
+      { "k": "expected", "label": "Known real size", "unit": "mm", "value": 60 }
+    ],
+    "note": "Compare the same extent (for example overall length) in both fields. Bounding-box scaling and wrong references produce mismatches no unit explains."
+  },
+  {
+    "id": "evidence", "title": "Evidence-class propagation", "section": 3,
+    "blurb": "A derived value inherits the weakest evidence class among its inputs.",
+    "formula": "class(result) = weakest(class(inputs))",
+    "inputs": [
+      { "k": "a", "type": "select", "label": "Input 1", "unit": "", "value": "measured", "options": ["measured", "image-derived", "inferred", "unknown", "(none)"] },
+      { "k": "b", "type": "select", "label": "Input 2", "unit": "", "value": "image-derived", "options": ["measured", "image-derived", "inferred", "unknown", "(none)"] },
+      { "k": "c", "type": "select", "label": "Input 3", "unit": "", "value": "inferred", "options": ["measured", "image-derived", "inferred", "unknown", "(none)"] },
+      { "k": "d", "type": "select", "label": "Input 4", "unit": "", "value": "(none)", "options": ["measured", "image-derived", "inferred", "unknown", "(none)"] }
+    ],
+    "note": "Carry the class into tables, guide curves, and reports so a proposal never reads as a measurement."
+  },
+  {
+    "id": "wind", "title": "Wind power estimate", "section": 16,
+    "blurb": "First estimate of power a small rotor extracts at a steady wind speed.",
+    "formula": "P = ½ ρ A v³ C_p",
+    "inputs": [
+      { "k": "rho", "label": "Air density ρ", "unit": "kg/m³", "value": 1.225 },
+      { "k": "diameter", "label": "Rotor diameter", "unit": "m", "value": 0.3 },
+      { "k": "v", "label": "Wind speed v", "unit": "m/s", "value": 5 },
+      { "k": "cp", "label": "Power coefficient C_p", "unit": "", "value": 0.2 }
+    ],
+    "note": "Not a start-up torque formula. Starting must overcome friction, imbalance, and mechanism resistance at rest: build and measure a prototype."
+  }
+]

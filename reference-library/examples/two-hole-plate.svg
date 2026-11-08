@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="690" viewBox="0 0 1000 690">
+<title>Synthetic two-hole plate teaching diagram</title><desc>Top and side views of a 60 by 30 by 4 millimeter plate with two 5 millimeter diameter holes at 40 millimeter center spacing. Not a production drawing.</desc>
+<rect width="1000" height="690" fill="#fffefa"/>
+<g font-family="sans-serif" fill="#173a50"><text x="55" y="50" font-size="13" letter-spacing="2">SYNTHETIC CAD EXERCISE / ALL DIMENSIONS IN MM</text><text x="55" y="95" font-size="34">A measured profile becomes a model.</text><text x="55" y="128" font-size="15">Illustrative values only. No photograph, fit, or physical print has been validated.</text></g>
+<defs><marker id="a" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto-start-reverse"><path d="M0 0L8 4L0 8" fill="#537589"/></marker></defs>
+<g stroke="#173a50" stroke-width="2" fill="#eaf2f5"><rect x="200" y="240" width="600" height="300"/><circle cx="300" cy="390" r="25" fill="#fffefa"/><circle cx="700" cy="390" r="25" fill="#fffefa"/></g>
+<g stroke="#87a0ad" stroke-width="1" stroke-dasharray="8 5"><path d="M170 390H830M300 210V570M700 210V570"/></g>
+<g stroke="#537589" stroke-width="1.5" fill="none"><path d="M200 230V175M800 230V175M190 240H130M190 540H130M300 425V585M700 425V585"/><path d="M200 190H800M145 240V540M300 570H700" marker-start="url(#a)" marker-end="url(#a)"/><path d="M720 372L865 285H925"/></g>
+<g font-family="sans-serif" font-size="21" fill="#173a50" text-anchor="middle"><rect x="474" y="171" width="52" height="28" fill="#fffefa"/><text x="500" y="192">60</text><rect x="127" y="373" width="36" height="32" fill="#fffefa"/><text x="145" y="396">30</text><rect x="475" y="552" width="50" height="30" fill="#fffefa"/><text x="500" y="574">40</text><text x="880" y="271" font-size="17">2 × Ø5 THRU</text></g>
+<rect x="200" y="620" width="600" height="40" fill="#eaf2f5" stroke="#173a50" stroke-width="2"/>
+<g stroke="#537589" stroke-width="1.5"><path d="M810 620H855M810 660H855"/><path d="M840 620V660" marker-start="url(#a)" marker-end="url(#a)"/></g><g fill="#173a50" font-family="sans-serif" font-size="16"><text x="865" y="645">4 thickness</text><text x="55" y="648">SIDE VIEW</text></g>
+</svg>

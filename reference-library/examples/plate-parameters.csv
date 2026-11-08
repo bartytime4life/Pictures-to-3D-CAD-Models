@@ -1,0 +1,8 @@
+parameter_id,value,unit,evidence_class,source_or_rationale,decided_on,supersedes,used_by,notes
+plate_length,60,mm,synthetic,Teaching value from handbook section 6; not a measured part,2026-11-08,,two-hole-plate.scad;build_plate.py,Overall X extent
+plate_width,30,mm,synthetic,Teaching value from handbook section 6; not a measured part,2026-11-08,,two-hole-plate.scad;build_plate.py,Overall Y extent
+plate_thickness,4,mm,synthetic,Teaching value from handbook section 6; not a measured part,2026-11-08,,two-hole-plate.scad;build_plate.py,Z extent; a real job measures it
+hole_diameter,5,mm,synthetic,Teaching value; not a fit for any particular fastener,2026-11-08,,two-hole-plate.scad;build_plate.py,Two through-holes
+hole_spacing,40,mm,synthetic,Teaching value; holes at x = -20 and +20 mm and y = 0,2026-11-08,,two-hole-plate.scad;build_plate.py,Centre distance
+chord_error,0.02,mm,proposed,Tessellation tolerance from handbook section 12,2026-11-08,,two-hole-plate.scad;build_plate.py,Sets the hole segment count (minimum 16)
+min_wall,2,mm,proposed,Design-rule threshold for this example; replace with the chosen process's demonstrated minimum wall,2026-11-08,,build_plate.py,Checked for end walls side walls and the web between holes
