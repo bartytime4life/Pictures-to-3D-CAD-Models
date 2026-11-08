@@ -1,0 +1,2 @@
+assumption_id,feature,assumption,reason,impact_if_wrong,verification_method,status,evidence_file
+EXAMPLE_ONLY,Hidden wall thickness,Unknown,Not visible in available views,May affect fit or strength,Measure or obtain additional source,unresolved,

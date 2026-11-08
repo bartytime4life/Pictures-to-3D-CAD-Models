@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 330" width="1000" height="330" role="img" aria-labelledby="clearance-title clearance-desc" class="figure-svg">
+<title id="clearance-title">Diametral and radial clearance, with an exploratory coupon</title>
+<desc id="clearance-desc">Diametral clearance is hole diameter minus shaft diameter; radial clearance is half of it. A coupon of holes tests a range of differences.</desc>
+<rect x="0.5" y="0.5" width="999" height="329" rx="14" style="fill:#fffefa;stroke:#c9d6da;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<rect x="52" y="36" width="296" height="264" rx="8" style="fill:#e2ebee;stroke:#c9d6da;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<ellipse cx="200" cy="168" rx="110" ry="110" style="fill:#fffefa;stroke:#174d68;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/>
+<ellipse cx="200" cy="168" rx="86" ry="86" style="fill:#5a8aa6"/>
+<text x="200" y="164" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle" style="fill:#ffffff">shaft</text>
+<text x="200" y="184" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" font-style="italic" text-anchor="middle" style="fill:#ffffff">d</text>
+<text x="200" y="72" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle" style="fill:#174d68">hole D</text>
+<line x1="290.8" y1="168" x2="305.2" y2="168" style="stroke:#c77a1f;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/>
+<polygon points="310,168 304.47,170.34 304.47,165.66" style="fill:#c77a1f"/>
+<polygon points="286,168 291.53,165.66 291.53,170.34" style="fill:#c77a1f"/>
+<text x="298" y="156" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" font-style="italic" text-anchor="middle" style="fill:#c77a1f">c</text>
+<text x="400" y="62" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="16" font-weight="700" text-anchor="start" style="fill:#172b37">diametral clearance = D − d</text>
+<text x="400" y="90" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="16" text-anchor="start" style="fill:#172b37">radial clearance c = (D − d) / 2</text>
+<text x="400" y="118" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" text-anchor="start" style="fill:#566975">Record which definition a coupon uses; clearance and</text>
+<text x="400" y="136" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" text-anchor="start" style="fill:#566975">process compensation are separate decisions.</text>
+<text x="400" y="178" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" style="fill:#566975">Exploratory coupon: diametral differences (example settings, not recommended fits)</text>
+<rect x="400" y="190" width="570" height="104" rx="8" style="fill:#e2ebee;stroke:#c9d6da;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<ellipse cx="457" cy="232" rx="24.4" ry="24.4" style="fill:#fffefa;stroke:#174d68;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round"/>
+<ellipse cx="457" cy="232" rx="22" ry="22" style="fill:#5a8aa6;opacity:0.85"/>
+<text x="457" y="282" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" style="fill:#172b37">+0.10</text>
+<ellipse cx="571" cy="232" rx="26.8" ry="26.8" style="fill:#fffefa;stroke:#174d68;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round"/>
+<ellipse cx="571" cy="232" rx="22" ry="22" style="fill:#5a8aa6;opacity:0.85"/>
+<text x="571" y="282" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" style="fill:#172b37">+0.20</text>
+<ellipse cx="685" cy="232" rx="29.2" ry="29.2" style="fill:#fffefa;stroke:#174d68;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round"/>
+<ellipse cx="685" cy="232" rx="22" ry="22" style="fill:#5a8aa6;opacity:0.85"/>
+<text x="685" y="282" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" style="fill:#172b37">+0.30</text>
+<ellipse cx="799" cy="232" rx="31.6" ry="31.6" style="fill:#fffefa;stroke:#174d68;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round"/>
+<ellipse cx="799" cy="232" rx="22" ry="22" style="fill:#5a8aa6;opacity:0.85"/>
+<text x="799" y="282" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" style="fill:#172b37">+0.40</text>
+<ellipse cx="913" cy="232" rx="34" ry="34" style="fill:#fffefa;stroke:#174d68;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round"/>
+<ellipse cx="913" cy="232" rx="22" ry="22" style="fill:#5a8aa6;opacity:0.85"/>
+<text x="913" y="282" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="13" font-weight="700" text-anchor="middle" style="fill:#172b37">+0.50</text>
+</svg>

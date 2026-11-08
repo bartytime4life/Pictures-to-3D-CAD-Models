@@ -1,0 +1,59 @@
+{
+  "checked_date": "2026-11-08",
+  "revision": 3,
+  "status": "passed",
+  "source_records": 86,
+  "unique_urls": 86,
+  "github_repositories": 21,
+  "handbook_chapters": 23,
+  "calculators": 14,
+  "figures": 11,
+  "route_combinations": 35,
+  "python_tests": {
+    "ran": 119,
+    "skipped": 2,
+    "status": "passed"
+  },
+  "node_tests": {
+    "passed": 11,
+    "failed": 0
+  },
+  "browser_checks": {
+    "assertions": 98,
+    "local_files_checked": 28,
+    "in_page_anchors_checked": 117,
+    "desktop_viewport": [
+      1440,
+      1050
+    ],
+    "mobile_viewport": [
+      390,
+      844
+    ],
+    "errors": []
+  },
+  "external_links": {
+    "checked_at": "2026-11-08T21:57:47.393Z",
+    "total": 86,
+    "ok": 84,
+    "blocked": 2,
+    "timeout": 0,
+    "broken": 0,
+    "not_ok": [
+      "https://dpo.si.edu/3d-digitization-program",
+      "https://mci.si.edu/3d-technologies"
+    ]
+  },
+  "pdf_pages": 54,
+  "pdf_sha256": "3b3307733d354964fd0cc227325cabece873212099ed1b75d41eab84d7906fbd",
+  "pdf_catalog_urls_linked": 86,
+  "synthetic_calculations": "passed",
+  "openscad_plate_checks": {
+    "rows": 15,
+    "passed": 15
+  },
+  "physical_printing": "not performed",
+  "slicing": "not performed",
+  "reconstruction_benchmarks": "not performed",
+  "scope": "Automated consistency and design-rule checks of the library, its calculators, and its synthetic CAD examples. No physical part, photograph set, printer, or reconstruction package was qualified."
+}

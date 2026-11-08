@@ -1,0 +1,18 @@
+{
+  "name": "pictures-to-printable-cad-reference-library",
+  "version": "3.0.0",
+  "private": true,
+  "description": "Offline reference library, calculators and checks for turning photographs into printable CAD.",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "build": "node scripts/build-library.mjs",
+    "test": "node --test tests/node/*.test.mjs",
+    "check": "node scripts/check-library.mjs",
+    "links": "node scripts/check-links.mjs",
+    "refresh-github": "node scripts/refresh-github.mjs"
+  },
+  "devDependencies": {
+    "marked": "17.0.5",
+    "playwright": "1.62.1"
+  }
+}

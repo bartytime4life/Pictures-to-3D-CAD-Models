@@ -1,0 +1,2 @@
+feature_id,model_revision,target_mm,lower_limit_mm,upper_limit_mm,measured_mm,instrument,setup,uncertainty_or_limitation,status,evidence_file
+EXAMPLE_ONLY,,,,,,,,,not_tested,

@@ -1,0 +1,49 @@
+name: Validate reference library
+on:
+  push:
+    paths: ['reference-library/**', '.github/workflows/reference-library.yml']
+  pull_request:
+    paths: ['reference-library/**', '.github/workflows/reference-library.yml']
+permissions:
+  contents: read
+defaults:
+  run:
+    working-directory: reference-library
+jobs:
+  library:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: reference-library/package-lock.json
+      - name: Install OpenSCAD and DejaVu fonts
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends openscad fonts-dejavu-core
+      - name: Install pinned packages
+        run: |
+          npm ci
+          python3 -m pip install -r requirements.txt
+      - name: Regenerate committed outputs
+        run: make calc figures html pdf
+      - name: Committed outputs are up to date
+        # The PDF is rebuilt above (the tests read it) but not compared: font builds differ between machines.
+        run: git diff --exit-code -- . ':(exclude)output/pdf'
+      - name: Unit and cross-language tests
+        run: make test
+      - name: OpenSCAD plate pipeline
+        run: python3 examples/build_plate.py --require-openscad
+      - name: Browser check
+        run: make check
+      - name: Upload screenshots and check records
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reference-library-qa
+          path: reference-library/tmp/qa/
+          retention-days: 7

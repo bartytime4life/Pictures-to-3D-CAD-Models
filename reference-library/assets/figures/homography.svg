@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 392" width="1000" height="392" role="img" aria-labelledby="homography-title homography-desc" class="figure-svg">
+<title id="homography-title">Planar rectification with a homography</title>
+<desc id="homography-desc">Four or more point pairs map a tilted rectangle in the image to its known 50 x 90 mm shape. Four pairs fit exactly, so their residuals are zero by construction.</desc>
+<rect x="0.5" y="0.5" width="999" height="391" rx="14" style="fill:#fffefa;stroke:#c9d6da;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<polygon points="150,96 330,82 392,318 82,300" style="fill:#edf3f6;stroke:#174d68;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="182.9" y1="93.44" x2="135.01" y2="303.08" style="stroke:#7d98b7;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="217.26" y1="90.77" x2="192.01" y2="306.39" style="stroke:#7d98b7;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="253.15" y1="87.98" x2="253.47" y2="309.96" style="stroke:#7d98b7;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="290.69" y1="85.06" x2="319.92" y2="313.81" style="stroke:#7d98b7;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="145.24" y1="110.27" x2="334.02" y2="97.31" style="stroke:#7d98b7;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="140.02" y1="125.93" x2="338.48" y2="114.29" style="stroke:#7d98b7;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="134.27" y1="143.18" x2="343.46" y2="133.25" style="stroke:#7d98b7;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="127.9" y1="162.29" x2="349.06" y2="154.55" style="stroke:#7d98b7;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="120.81" y1="183.57" x2="355.39" y2="178.65" style="stroke:#7d98b7;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="112.86" y1="207.41" x2="362.61" y2="206.14" style="stroke:#7d98b7;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="103.89" y1="234.32" x2="370.93" y2="237.78" style="stroke:#7d98b7;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="93.7" y1="264.91" x2="380.6" y2="274.61" style="stroke:#7d98b7;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<rect x="703" y="70" width="133.3" height="240" style="fill:#edf3f6;stroke:#174d68;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="729.66" y1="70" x2="729.66" y2="310" style="stroke:#7d98b7;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="756.32" y1="70" x2="756.32" y2="310" style="stroke:#7d98b7;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="782.98" y1="70" x2="782.98" y2="310" style="stroke:#7d98b7;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="809.64" y1="70" x2="809.64" y2="310" style="stroke:#7d98b7;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="703" y1="96.67" x2="836.3" y2="96.67" style="stroke:#7d98b7;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="703" y1="123.33" x2="836.3" y2="123.33" style="stroke:#7d98b7;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="703" y1="150" x2="836.3" y2="150" style="stroke:#7d98b7;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="703" y1="176.67" x2="836.3" y2="176.67" style="stroke:#7d98b7;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="703" y1="203.33" x2="836.3" y2="203.33" style="stroke:#7d98b7;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="703" y1="230" x2="836.3" y2="230" style="stroke:#7d98b7;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="703" y1="256.67" x2="836.3" y2="256.67" style="stroke:#7d98b7;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="703" y1="283.33" x2="836.3" y2="283.33" style="stroke:#7d98b7;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<ellipse cx="150" cy="96" rx="11" ry="11" style="fill:#c77a1f;stroke:#fffefa;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/>
+<text x="150" y="100.5" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" text-anchor="middle" style="fill:#ffffff">1</text>
+<ellipse cx="703" cy="70" rx="11" ry="11" style="fill:#c77a1f;stroke:#fffefa;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/>
+<text x="703" y="74.5" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" text-anchor="middle" style="fill:#ffffff">1</text>
+<ellipse cx="330" cy="82" rx="11" ry="11" style="fill:#c77a1f;stroke:#fffefa;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/>
+<text x="330" y="86.5" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" text-anchor="middle" style="fill:#ffffff">2</text>
+<ellipse cx="836.3" cy="70" rx="11" ry="11" style="fill:#c77a1f;stroke:#fffefa;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/>
+<text x="836.3" y="74.5" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" text-anchor="middle" style="fill:#ffffff">2</text>
+<ellipse cx="392" cy="318" rx="11" ry="11" style="fill:#c77a1f;stroke:#fffefa;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/>
+<text x="392" y="322.5" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" text-anchor="middle" style="fill:#ffffff">3</text>
+<ellipse cx="836.3" cy="310" rx="11" ry="11" style="fill:#c77a1f;stroke:#fffefa;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/>
+<text x="836.3" y="314.5" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" text-anchor="middle" style="fill:#ffffff">3</text>
+<ellipse cx="82" cy="300" rx="11" ry="11" style="fill:#c77a1f;stroke:#fffefa;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/>
+<text x="82" y="304.5" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" text-anchor="middle" style="fill:#ffffff">4</text>
+<ellipse cx="703" cy="310" rx="11" ry="11" style="fill:#c77a1f;stroke:#fffefa;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/>
+<text x="703" y="314.5" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" font-weight="700" text-anchor="middle" style="fill:#ffffff">4</text>
+<text x="236" y="50" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="700" text-anchor="middle" style="fill:#566975">image (pixels)</text>
+<text x="769.65" y="46" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="700" text-anchor="middle" style="fill:#566975">rectified plane (mm)</text>
+<text x="769.65" y="336" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" text-anchor="middle" style="fill:#172b37">50 mm</text>
+<text x="852.3" y="194" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" text-anchor="start" style="fill:#172b37">90 mm</text>
+<line x1="452" y1="200" x2="631.2" y2="200" style="stroke:#174d68;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"/>
+<polygon points="640,200 629.87,204.28 629.87,195.72" style="fill:#174d68"/>
+<text x="546" y="184" font-family="Georgia, DejaVu Serif, Times New Roman, serif" font-size="24" font-weight="700" font-style="italic" text-anchor="middle" style="fill:#174d68">H</text>
+<text x="546" y="226" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" text-anchor="middle" style="fill:#174d68">≥ 4 point pairs</text>
+<text x="20" y="362" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" text-anchor="start" style="fill:#566975">Four pairs fit exactly, so their residuals are zero by construction, not evidence of accuracy.</text>
+<text x="20" y="381" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" text-anchor="start" style="fill:#566975">Use more well-spread points, check residuals, and keep an independent check length.</text>
+</svg>
