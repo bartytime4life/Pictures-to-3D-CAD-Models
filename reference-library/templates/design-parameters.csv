@@ -1,0 +1,2 @@
+parameter_id,value,unit,evidence_class,source_or_rationale,decided_on,supersedes,used_by,notes
+EXAMPLE_ONLY,,mm,proposed,Replace with a real governing value or decision,,,,One row per value; scripts and drawings read this file instead of retyping numbers

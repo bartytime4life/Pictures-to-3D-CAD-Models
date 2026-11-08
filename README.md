@@ -106,6 +106,17 @@ See [export formats and dimensional checks](docs/exports.md) before transferring
 - [Validation results](docs/validation.md)
 - [Visual QA report](design-qa.md)
 
+## Reference library
+
+[`reference-library/`](reference-library/README.md) is the companion reference for work beyond one flat part. Open `reference-library/index.html` in a browser; it works offline. It covers:
+
+- **Handbook:** 23 chapters on capture, scale and calibration, reconstruction workflows, CAD drawings, print design, and validation
+- **Source catalog:** 86 annotated sources, each labeled with its depth of review
+- **Toolkit:** 14 calculators and a route finder, with the same arithmetic available as `python3 -m cadkit`
+- **Worksheets and examples:** project worksheets and an OpenSCAD example pipeline
+
+It has its own build and tests (`cd reference-library && make test`) and its own [CI workflow](.github/workflows/reference-library.yml). See [its README](reference-library/README.md) and [verification record](reference-library/VERIFICATION.md).
+
 ## Checks
 
 From the repository root:

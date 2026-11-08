@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 360" width="1000" height="360" role="img" aria-labelledby="off-plane-depth-title off-plane-depth-desc" class="figure-svg">
+<title id="off-plane-depth-title">Depth correction for a feature behind the reference plane</title>
+<desc id="off-plane-depth-desc">Under a pinhole model a feature at distance Z + delta appears smaller than its true size at the reference scale; actual = size at reference scale x (Z + delta)/Z. Example: Z = 500 mm, delta = 60 mm, factor 1.12.</desc>
+<rect x="0.5" y="0.5" width="999" height="359" rx="14" style="fill:#fffefa;stroke:#c9d6da;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<rect x="58" y="208" width="52" height="44" rx="6" style="fill:#172b37"/>
+<polygon points="110,218 122,230 110,242" style="fill:#172b37"/>
+<text x="84" y="274" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" text-anchor="middle" style="fill:#566975">camera</text>
+<line x1="122" y1="230" x2="900" y2="230" style="stroke:#566975;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4 5"/>
+<line x1="480" y1="62" x2="480" y2="300" style="stroke:#174d68;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="660" y1="62" x2="660" y2="300" style="stroke:#2f7d79;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:7 5"/>
+<text x="480" y="50" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle" style="fill:#174d68">reference plane</text>
+<text x="660" y="50" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle" style="fill:#2f7d79">feature plane</text>
+<line x1="122" y1="230" x2="660" y2="98" style="stroke:#c77a1f;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:6 4"/>
+<line x1="660" y1="230" x2="660" y2="98" style="stroke:#2f7d79;stroke-width:9;stroke-linecap:round;stroke-linejoin:round"/>
+<line x1="480" y1="230" x2="480" y2="142.16" style="stroke:#174d68;stroke-width:9;stroke-linecap:round;stroke-linejoin:round"/>
+<text x="466" y="160.16" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" text-anchor="end" style="fill:#174d68">size at</text>
+<text x="466" y="176.16" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" text-anchor="end" style="fill:#174d68">reference scale</text>
+<text x="674" y="112" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" text-anchor="start" style="fill:#2f7d79">actual size</text>
+<line x1="127.6" y1="318" x2="474.4" y2="318" style="stroke:#172b37;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round"/>
+<polygon points="480,318 473.55,320.73 473.55,315.27" style="fill:#172b37"/>
+<polygon points="122,318 128.45,315.27 128.45,320.73" style="fill:#172b37"/>
+<line x1="485.6" y1="318" x2="654.4" y2="318" style="stroke:#172b37;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round"/>
+<polygon points="660,318 653.55,320.73 653.55,315.27" style="fill:#172b37"/>
+<polygon points="480,318 486.45,315.27 486.45,320.73" style="fill:#172b37"/>
+<rect x="287" y="306" width="28" height="22" style="fill:#fffefa"/>
+<text x="301" y="323" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" font-style="italic" text-anchor="middle" style="fill:#172b37">Z</text>
+<rect x="556" y="306" width="28" height="22" style="fill:#fffefa"/>
+<text x="570" y="323" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle" style="fill:#172b37">Δ</text>
+<rect x="700" y="128" width="278" height="140" rx="10" style="fill:#edf3f6"/>
+<text x="716" y="156" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="13" text-anchor="start" style="fill:#172b37">actual ≈ size at reference scale</text>
+<text x="788" y="176" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="13" text-anchor="start" style="fill:#172b37">× (Z + Δ) / Z</text>
+<text x="716" y="210" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" text-anchor="start" style="fill:#174d68">Z = 500 mm, Δ = 60 mm</text>
+<text x="716" y="230" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" text-anchor="start" style="fill:#174d68">factor = 560 / 500 = 1.12</text>
+<text x="716" y="250" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="start" style="fill:#174d68">40.0 mm  →  44.8 mm</text>
+<text x="20" y="350" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" style="fill:#566975">Schematic, not to scale. Features behind the plane (Δ &gt; 0) are larger than the reference scale suggests.</text>
+</svg>

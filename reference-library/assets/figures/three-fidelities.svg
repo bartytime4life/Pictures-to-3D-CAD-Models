@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 262" width="1000" height="262" role="img" aria-labelledby="three-fidelities-title three-fidelities-desc" class="figure-svg">
+<title id="three-fidelities-title">Three separate comparisons validate the chain</title>
+<desc id="three-fidelities-desc">Capture fidelity compares the object with its reconstruction, CAD fidelity compares the CAD with the observations, and manufacturing fidelity compares the print with the approved CAD. Held-back measurements give an independent check across the chain.</desc>
+<rect x="0.5" y="0.5" width="999" height="261" rx="14" style="fill:#fffefa;stroke:#c9d6da;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<rect x="20" y="26" width="210" height="64" rx="10" style="fill:#174d68"/>
+<text x="125" y="64" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" style="fill:#ffffff">Original object</text>
+<line x1="234" y1="58" x2="259.6" y2="58" style="stroke:#7d98b7;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/>
+<polygon points="266,58 258.63,61.12 258.63,54.88" style="fill:#7d98b7"/>
+<rect x="270" y="26" width="210" height="64" rx="10" style="fill:#edf3f6;stroke:#c9d6da;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<text x="375" y="64" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" style="fill:#172b37">Reconstruction</text>
+<line x1="484" y1="58" x2="509.6" y2="58" style="stroke:#7d98b7;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/>
+<polygon points="516,58 508.63,61.12 508.63,54.88" style="fill:#7d98b7"/>
+<rect x="520" y="26" width="210" height="64" rx="10" style="fill:#edf3f6;stroke:#c9d6da;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<text x="625" y="64" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" style="fill:#172b37">Rebuilt CAD</text>
+<line x1="734" y1="58" x2="759.6" y2="58" style="stroke:#7d98b7;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/>
+<polygon points="766,58 758.63,61.12 758.63,54.88" style="fill:#7d98b7"/>
+<rect x="770" y="26" width="210" height="64" rx="10" style="fill:#174d68"/>
+<text x="875" y="64" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" text-anchor="middle" style="fill:#ffffff">Printed part</text>
+<polyline points="129,104 129,116 371,116 371,104" style="fill:none;stroke:#2f7d79;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"/>
+<text x="250" y="140" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" style="fill:#2f7d79">1 · capture fidelity</text>
+<text x="250" y="160" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" text-anchor="middle" style="fill:#566975">object vs. reconstruction</text>
+<polyline points="379,104 379,116 621,116 621,104" style="fill:none;stroke:#2f7d79;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"/>
+<text x="500" y="140" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" style="fill:#2f7d79">2 · CAD fidelity</text>
+<text x="500" y="160" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" text-anchor="middle" style="fill:#566975">CAD vs. observations &amp; intent</text>
+<polyline points="629,104 629,116 871,116 871,104" style="fill:none;stroke:#2f7d79;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"/>
+<text x="750" y="140" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" style="fill:#2f7d79">3 · manufacturing fidelity</text>
+<text x="750" y="160" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" text-anchor="middle" style="fill:#566975">print vs. approved CAD</text>
+<polyline points="129,184 129,198 871,198 871,184" style="fill:none;stroke:#c77a1f;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:6 4"/>
+<text x="500" y="222" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" text-anchor="middle" style="fill:#c77a1f">held-back measurements: an independent check across the whole chain</text>
+<text x="500" y="244" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" text-anchor="middle" style="fill:#566975">Comparing CAD to a scan only checks agreement with that scan.</text>
+</svg>

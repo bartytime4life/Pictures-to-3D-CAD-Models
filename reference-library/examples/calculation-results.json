@@ -1,0 +1,44 @@
+{
+  "status": "synthetic teaching calculations, not measurements",
+  "scale_mm_per_pixel": 0.05,
+  "feature_length_mm": 32.0,
+  "standard_uncertainty_mm_independent_small_error_model": 0.12296340919151519,
+  "circle_radius_mm": 10.0,
+  "allowed_chord_error_mm": 0.02,
+  "minimum_circle_segments": 50,
+  "actual_chord_error_mm": 0.01973271571728441,
+  "previous_segment_count_error_mm": 0.020546072496636647,
+  "gear_module_mm": 2.0,
+  "gear_teeth": [
+    20,
+    40
+  ],
+  "gear_pitch_diameters_mm": [
+    40.0,
+    80.0
+  ],
+  "gear_nominal_center_distance_mm": 60.0,
+  "gear_output_input_speed_ratio": -0.5,
+  "calibration_check_known_aspect": 1.8,
+  "calibration_check_image_aspect": 1.6875,
+  "calibration_check_squat_percent": 6.25,
+  "calibration_check_scale_mm_per_pixel_horizontal": 0.125,
+  "calibration_check_scale_mm_per_pixel_vertical": 0.13333333333333333,
+  "calibration_check_vertical_stretch_percent": 6.666666666666665,
+  "off_plane_reference_distance_mm": 500.0,
+  "off_plane_extra_depth_mm": 60.0,
+  "off_plane_depth_factor": 1.12,
+  "off_plane_corrected_size_mm": 44.800000000000004,
+  "off_plane_factor_range": [
+    1.0375,
+    1.2285714285714286
+  ],
+  "camera_focal_length_px": 3004.6260628866576,
+  "camera_distance_mm": 600.9252125773314,
+  "label_inches": 3.25,
+  "label_mm": 82.55,
+  "label_rounding_half_interval_mm": 0.127,
+  "label_rounding_standard_uncertainty_mm": 0.07332348418708248,
+  "coating_per_face_mm": 0.08,
+  "coated_slot_width_loss_mm": 0.16
+}

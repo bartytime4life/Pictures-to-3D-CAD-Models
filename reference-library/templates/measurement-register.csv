@@ -1,0 +1,2 @@
+feature_id,description,evidence_class,nominal_mm,reading_1_mm,reading_2_mm,reading_3_mm,instrument,datum,standard_uncertainty_mm,acceptance_criterion,source_file,notes
+EXAMPLE_ONLY,Replace this row with a real measurement,unknown,,,,,,,,,,Blank values mean unknown and must not be treated as zero

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 228" width="1000" height="228" role="img" aria-labelledby="check-tiers-title check-tiers-desc" class="figure-svg">
+<title id="check-tiers-title">Three tiers of checks</title>
+<desc id="check-tiers-desc">Consistency checks show the package agrees with itself, design-rule checks show the design can work, and physical acceptance shows the part works. Report each tier separately.</desc>
+<rect x="0.5" y="0.5" width="999" height="227" rx="14" style="fill:#fffefa;stroke:#c9d6da;stroke-width:1;stroke-linecap:round;stroke-linejoin:round"/>
+<rect x="220" y="18" width="560" height="54" rx="10" style="fill:#8a969c"/>
+<text x="242" y="52" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="22" font-weight="700" text-anchor="start" style="fill:#ffffff">1</text>
+<text x="272" y="44" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="17" font-weight="700" text-anchor="start" style="fill:#ffffff">Consistency</text>
+<text x="272" y="62" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" text-anchor="start" style="fill:#ffffff">files reopen, counts and hashes match, units declared</text>
+<rect x="130" y="82" width="740" height="54" rx="10" style="fill:#2f7d79"/>
+<text x="152" y="116" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="22" font-weight="700" text-anchor="start" style="fill:#ffffff">2</text>
+<text x="182" y="108" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="17" font-weight="700" text-anchor="start" style="fill:#ffffff">Design rules</text>
+<text x="182" y="126" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" text-anchor="start" style="fill:#ffffff">one connected volume, walls, build fit, clearances kept</text>
+<rect x="40" y="146" width="920" height="54" rx="10" style="fill:#174d68"/>
+<text x="62" y="180" font-family="DejaVu Sans Mono, Menlo, Consolas, monospace" font-size="22" font-weight="700" text-anchor="start" style="fill:#ffffff">3</text>
+<text x="92" y="172" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="17" font-weight="700" text-anchor="start" style="fill:#ffffff">Physical acceptance</text>
+<text x="92" y="190" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" text-anchor="start" style="fill:#ffffff">coupons and prints measured against stated criteria</text>
+<text x="500" y="218" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="12.5" text-anchor="middle" style="fill:#566975">A passing consistency tier is not validation. Make design-rule failures fail the build.</text>
+</svg>
