@@ -24,7 +24,19 @@ import {
   X,
 } from '@phosphor-icons/react';
 import ModelViewer from './ModelViewer';
-import type { Detail, ModelResult, Point, Profile, ProjectRecipe, TraceResult } from './types';
+import LocalAssistant from './LocalAssistant';
+import PrintSettings from './PrintSettings';
+import { DEFAULT_DESIGN, designError, designFromProposal, parseDesign } from './design';
+import type {
+  AssistantProposal,
+  DesignSettings,
+  Detail,
+  ModelResult,
+  Point,
+  Profile,
+  ProjectRecipe,
+  TraceResult,
+} from './types';
 
 type ModalName = 'photo' | 'trace' | 'guide' | 'export' | null;
 type Unit = 'mm' | 'in';
@@ -75,12 +87,12 @@ function parseRecipe(value: unknown): ProjectRecipe {
   if (
     !recipe ||
     recipe.format !== 'pictures-to-cad' ||
-    recipe.version !== 1 ||
+    (recipe.version !== 1 && recipe.version !== 2) ||
     typeof recipe.name !== 'string' ||
     recipe.name.length > 100
   )
     throw new Error(
-      'This is not a supported Pictures to CAD project. Choose a version 1 project JSON file.',
+      'This is not a supported Pictures to CAD project. Choose a version 1 or 2 project JSON file.',
     );
   if (
     !Number.isFinite(recipe.width_mm) ||
@@ -112,6 +124,7 @@ function parseRecipe(value: unknown): ProjectRecipe {
     profile.outer.length + profile.holes.reduce((n, h) => n + h.length, 0) > 2000
   )
     throw new Error('This project contains an invalid or overly complex outline.');
+  if (recipe.version === 2) recipe.design = parseDesign(recipe.design);
   return recipe as ProjectRecipe;
 }
 
@@ -318,6 +331,15 @@ export default function App() {
   const [detail, setDetail] = useState<Detail>('standard');
   const [threshold, setThreshold] = useState(-1);
   const [inverted, setInverted] = useState(false);
+  const [design, setDesign] = useState<DesignSettings>({ ...DEFAULT_DESIGN });
+  const [assistantUndo, setAssistantUndo] = useState<{
+    trace: TraceResult | null;
+    detail: Detail;
+    threshold: number;
+    inverted: boolean;
+    design: DesignSettings;
+    preview: ModelResult | null;
+  } | null>(null);
   const [draftThreshold, setDraftThreshold] = useState(150);
   const [draftAuto, setDraftAuto] = useState(true);
   const [draftInverted, setDraftInverted] = useState(false);
@@ -346,6 +368,16 @@ export default function App() {
     thicknessMm >= 0.1 &&
     thicknessMm <= 500;
   const dimensionsValid = validWidth && validThickness;
+  const sourceSize =
+    trace && dimensionsValid
+      ? {
+          width: widthMm,
+          height: (trace.bounds.height / trace.bounds.width) * widthMm,
+          thickness: thicknessMm,
+        }
+      : null;
+  const designIssue = designError(design, sourceSize);
+  const buildReady = dimensionsValid && !designIssue;
   const current = !!model && model.revision === String(revision);
   const stale = !!model && !current;
   const displayNumber = (millimeters: number) =>
@@ -359,12 +391,14 @@ export default function App() {
     const previous = modelRef.current;
     modelRef.current = result;
     setModel(result);
+    if (result.design) setDesign(result.design);
     if (previous && previous.id !== result.id) releaseModel(previous.id);
   }
   function projectName() {
     return name.trim().replace(/[\u0000-\u001f\u007f]/g, '') || 'Untitled part';
   }
   function invalidate() {
+    setAssistantUndo(null);
     const next = ++revisionRef.current;
     setRevision(next);
     setNotice('');
@@ -390,6 +424,7 @@ export default function App() {
     t: number,
     projectName: string,
     rev: string,
+    settings: DesignSettings = design,
   ) {
     return api<ModelResult>('/api/build', {
       method: 'POST',
@@ -400,6 +435,7 @@ export default function App() {
         thickness_mm: t,
         name: projectName || 'Untitled part',
         revision: rev,
+        design: settings,
       }),
     });
   }
@@ -430,6 +466,7 @@ export default function App() {
       setDetail('standard');
       setThreshold(-1);
       setInverted(false);
+      setDesign({ ...DEFAULT_DESIGN });
       setUnit('mm');
       setWidth(isSample ? '80.00' : '');
       setThickness(isSample ? '4.00' : '');
@@ -438,7 +475,7 @@ export default function App() {
       setOutline(true);
       if (isSample) {
         setBusy('Building the CAD solid…');
-        const built = await requestModel(result.profile, 80, 4, projectName, rev);
+        const built = await requestModel(result.profile, 80, 4, projectName, rev, DEFAULT_DESIGN);
         if (sequence === sequenceRef.current && String(revisionRef.current) === rev)
           installModel(built);
         else releaseModel(built.id);
@@ -482,7 +519,7 @@ export default function App() {
   }, [editingName]);
 
   async function buildModel(openExport = false) {
-    if (!trace || !dimensionsValid || busy) return;
+    if (!trace || !buildReady || busy) return;
     const sequence = ++sequenceRef.current;
     const rev = String(revisionRef.current);
     setBusy('Building the CAD solid…');
@@ -506,7 +543,7 @@ export default function App() {
   }
 
   async function retrace(newDetail: Detail, newThreshold = threshold, newInverted = inverted) {
-    if (!sourceFile || busy) return;
+    if (!sourceFile || busy) return false;
     const sequence = ++sequenceRef.current;
     invalidate();
     setBusy('Finding the outline…');
@@ -515,17 +552,81 @@ export default function App() {
     retryRef.current = () => void retrace(newDetail, newThreshold, newInverted);
     try {
       const result = await requestTrace(sourceFile, newDetail, newThreshold, newInverted);
-      if (sequence !== sequenceRef.current) return;
+      if (sequence !== sequenceRef.current) return false;
       setTrace(result);
       setDetail(newDetail);
       setThreshold(newThreshold);
       setInverted(newInverted);
       setNotice('Outline updated. Build the model to apply this trace.');
+      return true;
     } catch (err) {
       if (sequence === sequenceRef.current) setError(errorText(err));
+      return false;
     } finally {
       if (sequence === sequenceRef.current) setBusy(null);
     }
+  }
+
+  async function applyAssistantProposal(proposal: AssistantProposal) {
+    if (busy) return false;
+    const nextDesign = designFromProposal(design, proposal);
+    const invalid = designError(nextDesign, sourceSize);
+    if (invalid) {
+      setError(`This suggestion could not be applied. ${invalid}`);
+      return false;
+    }
+    const previous = {
+      trace,
+      detail,
+      threshold,
+      inverted,
+      design,
+      preview: current ? model : null,
+    };
+    const changesTrace =
+      (proposal.detail !== undefined && proposal.detail !== detail) ||
+      (proposal.threshold !== undefined && proposal.threshold !== threshold) ||
+      (proposal.inverted !== undefined && proposal.inverted !== inverted);
+    if (changesTrace) {
+      if (!sourceFile) return false;
+      const success = await retrace(
+        proposal.detail ?? detail,
+        proposal.threshold ?? threshold,
+        proposal.inverted ?? inverted,
+      );
+      if (!success) {
+        retryRef.current = () => void applyAssistantProposal(proposal);
+        return false;
+      }
+    } else invalidate();
+    setDesign(nextDesign);
+    setAssistantUndo(previous);
+    setNotice('AI suggestion applied. Review your settings, then build when you are ready.');
+    return true;
+  }
+
+  function undoAssistantProposal() {
+    if (!assistantUndo || busy) return;
+    const previous = assistantUndo;
+    // A generated replacement may already have released the old export files.
+    // Restore only the previous preview, and rebuild before allowing downloads.
+    const ownedModel = modelRef.current;
+    modelRef.current = null;
+    if (ownedModel) releaseModel(ownedModel.id);
+    invalidate();
+    setTrace(previous.trace);
+    setDetail(previous.detail);
+    setThreshold(previous.threshold);
+    setInverted(previous.inverted);
+    setDesign(previous.design);
+    setModel(previous.preview);
+    setError('');
+    retryRef.current = null;
+    setNotice(
+      previous.preview
+        ? 'Previous preview, outline and design settings restored. Your measurements are unchanged. Rebuild to refresh exports.'
+        : 'Previous outline and design settings restored. Your measurements are unchanged. Build to create a fresh preview and exports.',
+    );
   }
 
   async function restoreProject(file: File) {
@@ -540,9 +641,16 @@ export default function App() {
     retryRef.current = () => void restoreProject(file);
     try {
       const recipe = parseRecipe(JSON.parse(await file.text()));
+      const restoredDesign = recipe.version === 2 ? recipe.design! : { ...DEFAULT_DESIGN };
       const bounds = getBounds(recipe.profile);
       if (bounds.width <= 0 || bounds.height <= 0)
         throw new Error('The project outline has no area.');
+      const restoredError = designError(restoredDesign, {
+        width: recipe.width_mm,
+        height: (bounds.height / bounds.width) * recipe.width_mm,
+        thickness: recipe.thickness_mm,
+      });
+      if (restoredError) throw new Error(`This project could not be opened. ${restoredError}`);
       const rev = invalidate();
       setName(recipe.name);
       setWidth(recipe.width_mm.toFixed(4));
@@ -556,6 +664,7 @@ export default function App() {
       setDetail('standard');
       setThreshold(-1);
       setInverted(false);
+      setDesign(restoredDesign);
       setTrace({
         profile: recipe.profile,
         bounds,
@@ -576,6 +685,7 @@ export default function App() {
         recipe.thickness_mm,
         recipe.name,
         rev,
+        restoredDesign,
       );
       if (sequence === sequenceRef.current && String(revisionRef.current) === rev) {
         installModel(built);
@@ -623,25 +733,28 @@ export default function App() {
     setModal('trace');
   }
   function saveProject() {
-    if (!trace || !dimensionsValid) return;
+    if (!trace || !buildReady) return;
     downloadJson({
       format: 'pictures-to-cad',
-      version: 1,
+      version: 2,
       name: projectName(),
       profile: trace.profile,
       width_mm: widthMm,
       thickness_mm: thicknessMm,
+      design,
     });
     setNotice(
-      'Project download started. Your outline and dimensions are included; the photo is not.',
+      'Project download started. Your outline, measurements and design settings are included; the photo is not.',
     );
   }
-  async function exportFile(kind: 'step' | 'stl' | 'dxf') {
+  async function exportFile(kind: 'step' | 'stl' | 'dxf' | 'parts') {
     if (!model || !current || downloading) return;
+    const downloadUrl = model.downloads[kind];
+    if (!downloadUrl) return;
     setDownloading(kind);
     setExportError('');
     try {
-      const response = await fetch(model.downloads[kind], { signal: AbortSignal.timeout(30000) });
+      const response = await fetch(downloadUrl, { signal: AbortSignal.timeout(30000) });
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
         if (response.status === 404 || response.status === 410) {
@@ -663,7 +776,7 @@ export default function App() {
       link.href = url;
       link.download = `${projectName()
         .replace(/[^a-zA-Z0-9_-]+/g, '-')
-        .slice(0, 60)}.${kind}`;
+        .slice(0, 60)}.${kind === 'parts' ? 'parts.zip' : kind}`;
       link.click();
       window.setTimeout(() => URL.revokeObjectURL(url), 1000);
       setNotice(`${kind.toUpperCase()} download started. Exported geometry uses millimeters.`);
@@ -753,14 +866,19 @@ export default function App() {
           </button>
         </div>
         <div className="header-actions">
-          <button className="text-button guide-button" onClick={() => setModal('guide')}>
+          <button
+            className="text-button guide-button"
+            aria-label="Capture guide"
+            onClick={() => setModal('guide')}
+          >
             <Question size={25} />
             <span>Capture guide</span>
           </button>
           <button
             className="outlined-button save-button"
+            aria-label="Save project"
             onClick={saveProject}
-            disabled={!trace || !dimensionsValid || !!busy}
+            disabled={!trace || !buildReady || !!busy}
           >
             <FloppyDisk size={24} />
             <span>Save project</span>
@@ -799,7 +917,7 @@ export default function App() {
           <button
             className="workflow-step"
             onClick={handlePrimary}
-            disabled={!trace || !dimensionsValid || !!busy}
+            disabled={!trace || !buildReady || !!busy}
           >
             <span className="step-icon">
               <DownloadSimple size={27} />
@@ -918,7 +1036,14 @@ export default function App() {
               </button>
             </div>
             <div className="canvas-stage model-stage">
-              <ModelViewer mesh={model?.mesh ?? null} resetKey={resetKey} loading={!!busy} />
+              <ModelViewer
+                mesh={model?.mesh ?? null}
+                parts={model?.parts}
+                resetKey={resetKey}
+                loading={!!busy}
+                color={design.color}
+                material={design.material}
+              />
               {busy && (
                 <div className="processing-status" role="status">
                   <SpinnerGap size={20} className="spinner" />
@@ -1054,7 +1179,7 @@ export default function App() {
               <button
                 className="primary-button export-button"
                 onClick={handlePrimary}
-                disabled={!trace || !dimensionsValid || !!busy}
+                disabled={!trace || !buildReady || !!busy}
               >
                 {busy ? <SpinnerGap size={25} className="spinner" /> : <ArrowSquareOut size={27} />}
                 <span>
@@ -1092,8 +1217,7 @@ export default function App() {
             <details className="warnings">
               <summary>
                 <WarningCircle size={18} />
-                {warningMessages.length}{' '}
-                {warningMessages.length === 1 ? 'capture note' : 'capture notes'} to review
+                {warningMessages.length} {warningMessages.length === 1 ? 'note' : 'notes'} to review
               </summary>
               <ul>
                 {warningMessages.map((warning, i) => (
@@ -1103,6 +1227,51 @@ export default function App() {
             </details>
           )}
         </section>
+        <PrintSettings
+          design={design}
+          onChange={(next) => {
+            setDesign(next);
+            invalidate();
+            setError('');
+          }}
+          busy={!!busy}
+          sourceSize={sourceSize}
+          model={model}
+          current={current}
+        />
+        <LocalAssistant
+          context={{
+            threshold,
+            inverted,
+            detail,
+            width_mm: validWidth ? widthMm : null,
+            thickness_mm: validThickness ? thicknessMm : null,
+            hole_count: trace?.profile.holes.length ?? null,
+            has_image: !!sourceFile,
+            has_model: current,
+            warnings: warningMessages.slice(0, 8).map((warning) => warning.slice(0, 300)),
+            design,
+            ...(current && model
+              ? {
+                  geometry: {
+                    width_mm: model.dimensions.width,
+                    height_mm: model.dimensions.height,
+                    thickness_mm: model.dimensions.thickness,
+                    parts: (model.parts ?? []).slice(0, 8).map((part) => ({
+                      width_mm: part.dimensions.width,
+                      height_mm: part.dimensions.height,
+                      thickness_mm: part.dimensions.thickness,
+                    })),
+                  },
+                }
+              : {}),
+          }}
+          revision={JSON.stringify({ revision, design, model: current ? model?.id : null })}
+          busy={!!busy || !!designIssue}
+          canUndo={!!assistantUndo}
+          onApply={applyAssistantProposal}
+          onUndo={undoAssistantProposal}
+        />
       </main>
 
       <footer className="statusbar">
@@ -1379,6 +1548,16 @@ export default function App() {
                   description: 'Flat outline for 2D workflows',
                   suffix: '.dxf',
                 },
+                ...(model.downloads.parts
+                  ? [
+                      {
+                        type: 'parts' as const,
+                        label: 'Parts ZIP',
+                        description: 'Individual STEP and STL files for each built part',
+                        suffix: '.zip',
+                      },
+                    ]
+                  : []),
               ] as const
             ).map((format) => (
               <button

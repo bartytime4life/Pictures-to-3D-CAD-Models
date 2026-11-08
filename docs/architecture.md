@@ -1,6 +1,6 @@
 # Architecture and API
 
-Pictures to CAD separates image interpretation from geometric construction. The photo supplies a planar profile. The user supplies scale and thickness. CadQuery constructs a solid, and that solid supplies both the displayed mesh and the export artifacts.
+Pictures to CAD separates image interpretation from geometric construction. The photo supplies a planar profile. The user supplies a measured width and thickness, then optional design scales and print-planning settings. CadQuery constructs the resulting solid or split solids, which supply both the displayed mesh and the export artifacts.
 
 ```mermaid
 flowchart LR
@@ -8,10 +8,11 @@ flowchart LR
     B --> C[Threshold and trace contours]
     C --> D[Review outline and holes]
     D --> E[Enter width and thickness]
-    E --> F[Validate planar profile]
+    E --> J[Review design scales and print plan]
+    J --> F[Validate planar profile]
     F --> G[Bounded CadQuery conversion]
     G --> H[Mesh for 3D preview]
-    G --> I[STEP · STL · DXF · recipe]
+    G --> I[STEP · STL · DXF · parts ZIP · recipe]
 ```
 
 ## Components
@@ -25,16 +26,25 @@ flowchart LR
 | OpenCV | Thresholding, contours, hierarchy, and outline approximation |
 | Shapely | Planar-profile validity checks before invoking the solid kernel |
 | CadQuery / OpenCascade | Solid construction, topology checks, tessellation, and CAD exports |
+| Optional local Ollama | Text advice and validated trace/design/print-setting proposals for explicit user review |
 
-The application does not call an external AI service. An uploaded photograph still reaches the Python backend, which may run on the user's machine or on a cloud host.
+The application does not call a paid or external inference service. Its optional assistant connects to Ollama through an HTTP loopback address on the backend host. It receives text context, not the photograph or geometry. An uploaded photograph still reaches the Python backend for tracing, which may run on the user's machine or on a cloud host.
 
 ## Geometry conventions
 
-Traced points use image pixel coordinates, with the image's vertical coordinate increasing downward. Conversion translates and scales the profile into a centered XY model plane, then extrudes along Z. The dimensional scale is the entered width divided by the traced profile's horizontal span.
+Traced points use image pixel coordinates, with the image's vertical coordinate increasing downward. Conversion translates and scales the profile into a centered XY model plane, then extrudes along Z. The measured scale is the entered reference width divided by the traced profile's horizontal span. An explicit XY design percentage multiplies that scale; a separate thickness percentage multiplies the entered thickness. Design choices do not overwrite the source measurements.
 
 All geometry is stored internally in millimeters. The entered thickness is independent of image scale. Changing display units must convert the entered values rather than reinterpret the same number in another unit.
 
 The pipeline preserves supported through-hole boundaries. It cannot infer whether a dark patch represents a hole, a marking, or surface relief; the user must review the trace.
+
+Geometry detail is a geometric approximation applied to the scaled profile. `original` retains it; `draft`, `balanced`, and `fine` use simplification tolerances of 0.5, 0.25, and 0.1 times the selected nozzle diameter in millimeters, respectively. The simplification preserves topology and checks that every hole remains. The modes can still change small features and must be inspected; they do not recover image information, measure minimum wall thickness, or prove printability. The original trace remains the recipe's source profile.
+
+Split mode makes actual solids with straight XY cuts. The default preview and combined STEP/STL keep those solids in their assembled positions. A separated inspection view displays the actual per-part meshes with temporary offsets; it does not change exported coordinates or claim a print-bed layout. Per-part exports translate each piece to a local XY origin and record the assembly offset in the bundle manifest. The program does not introduce alignment pins, joints, kerf compensation, or assembly tolerances.
+
+Printer fit compares actual geometric bounds with the user-selected usable bed volume and checks the original and 90° XY orientations. This is a bounds check, not slicing, build-plate packing, support generation, material simulation, or G-code generation. Color/material choices are approximate preview and recipe/planning metadata; STL carries no color.
+
+Known catalog printers resolve their bed geometry from the selected nozzle's source profile; the backend does not trust stale client-supplied dimensions for a known match. Missing or ambiguous profiles, nonrectangular beds, and excluded bed areas produce an unknown-placement result instead of a rectangular-fit guarantee. Custom mode uses the user's rectangular volume. Unsupported hardware facts remain unknown.
 
 ## API overview
 
@@ -61,19 +71,35 @@ The normalized image and trace share the same coordinate system. This avoids usi
 
 ### `POST /api/build`
 
-A JSON request contains the reviewed `profile`, `width_mm`, `thickness_mm`, project `name`, and a client `revision` identifier.
+A JSON request contains the reviewed `profile`, measured `width_mm` and `thickness_mm`, project `name`, a client `revision` identifier, and optional `design` settings. Design settings include XY/thickness percentages, appearance, material, relative detail, nozzle size, output mode and split grid, and printer/usable-volume choices.
 
-The response contains a build identifier, matching revision, dimensions, volume, hole count, mesh vertices and triangles, download links, and warnings. The client must only present a build as current if its revision matches the settings still shown in the interface.
+The response contains a build identifier, matching revision, resulting dimensions, volume, hole count, mesh vertices and triangles, effective design settings, part metadata and geometric fit results, download links, and warnings. The client must only present a build as current if its revision matches the settings still shown in the interface. Each part reports its actual dimensions, volume, and fit status.
 
 The profile is validated at the API boundary even when it originated in this app's trace endpoint. A client-supplied polygon is not trusted merely because it has the expected JSON shape.
 
 ### Export downloads
 
-`GET /api/download/{job_id}/{kind}` returns an artifact for `kind` equal to `step`, `stl`, `dxf`, or `project`. Successful builds provide those links explicitly. Do not construct arbitrary filesystem paths from project names or user-provided extensions.
+`GET /api/download/{job_id}/{kind}` returns an artifact for `kind` equal to `step`, `stl`, `dxf`, `project`, or `parts`. The parts artifact is a ZIP of separate STEP/STL files and a manifest. Successful builds provide those links explicitly. Do not construct arbitrary filesystem paths from project names or user-provided extensions.
 
 `DELETE /api/models/{job_id}` removes the generated model directory. It is an API capability; it is not a promise that the interface exposes a model-management screen. Deleting server artifacts does not delete copies already downloaded.
 
 `DELETE /api/models` clears all completed temporary models and reports the number removed. It rejects the request with 409 while a CAD build is active. This is a global operation in the single-user service, not a per-account deletion request.
+
+### Optional local assistant
+
+`GET /api/assistant/status` reports whether the local Ollama server responds, the available local models, a provisional recommended model, and setup guidance. Server availability alone does not prove that a model can produce a useful answer.
+
+`POST /api/assistant/chat` accepts `model`, `question`, and a bounded `context` containing trace settings, optional measured dimensions and hole count, presence flags, warnings, design/print choices, and dimensions of available built geometry and parts. It returns `model`, `answer`, a nullable `proposal`, `warnings`, and `elapsed_seconds`.
+
+Proposals may contain supported trace controls and design/print settings, including explicit XY/thickness design percentages. They cannot replace the measured source width or thickness. The server requests structured output and independently validates it; response text does not execute actions. Invalid proposals are discarded with a warning. The browser previews proposals, requires an explicit application, rejects proposals for an outdated project, and offers undo. Geometry-affecting changes invalidate the existing CAD result and require review and a new build before export. Undo after building an AI suggestion restores prior settings and their previously current mesh for comparison, or clears the preview if none existed; exports remain stale until rebuilt because those server artifacts may already have been released.
+
+There is no image/geometry payload, model-download endpoint, generated-code execution, or cloud fallback. Ollama must already have the selected local model installed. See [local AI setup and controls](ollama.md).
+
+The status endpoint returns HTTP 200 with `running: false` when Ollama is unavailable. Chat failures use 503 for an unavailable service, 409 for an unavailable or unsupported model, 429 for a busy assistant, 504 for a timeout, and 502 for an unusable upstream response. Cloud names and remote-model metadata are rejected; a model is checked again before inference. Generated prose still requires human review.
+
+### `GET /api/printers`
+
+Returns the bundled, versioned printer catalog with source metadata, grouped models, nozzle-specific profiles, and known/unknown feature facts. The endpoint reads local data rather than querying a hosted printer service. See [catalog provenance and contract](printer-catalog.md) for how profile inheritance, bed shape, exclusions, and unknown hardware capabilities are represented.
 
 ### Limits and errors
 
@@ -88,12 +114,16 @@ The profile is validated at the API boundary even when it originated in this app
 | Image tracing | One concurrent trace per API process |
 | CAD work | One concurrent build per API process; 60-second worker timeout |
 | Stored models | At most 20 model directories per process; one-hour expiry |
+| Design percentages | 10–400% XY and thickness; resulting CAD dimensions must remain within the geometry bounds above |
+| Split grid and solids | 1–4 rows/columns; at most 8 cells and 8 connected pieces |
+| Assistant question/context | 1600-character question; up to 8 warnings of 300 characters each |
+| Assistant inference | One concurrent request; 120-second chat timeout plus short model checks; 2 MiB upstream response cap |
 
 Do not increase the web server worker count as a substitute for a job queue: the concurrency lock and capacity accounting are per process. The supplied startup runs a single API process.
 
 Errors use a JSON `detail` string. Invalid inputs commonly return 422, oversized requests 413, busy or full-capacity responses 429, deletion conflicting with an active build 409, and CAD timeouts 504. Missing artifacts return 404; an artifact found at access time but already expired returns 410. A background cleanup may already have removed an expired artifact, so expired links may also appear missing.
 
-Project recipes identify `format: "pictures-to-cad"` and `version: 1`, with `name`, `profile`, `width_mm`, and `thickness_mm`. The server's artifact recipe also includes units and provenance text. The source photograph is not embedded.
+The interface saves recipes identifying `format: "pictures-to-cad"` and `version: 2`, with `name`, source `profile`, measured `width_mm` and `thickness_mm`, and `design`. The server's artifact recipe also includes units and provenance text. Version 1 recipes remain importable with default design settings; legacy API build requests omitting `design` still receive a version 1 recipe. The source photograph is not embedded.
 
 ## Revision and failure behavior
 

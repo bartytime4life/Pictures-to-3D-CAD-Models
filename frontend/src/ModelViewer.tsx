@@ -1,6 +1,6 @@
 import { Component, Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
-import { Environment, Lightformer, OrbitControls, useTexture } from '@react-three/drei';
+import { Environment, Lightformer, OrbitControls } from '@react-three/drei';
 import { ArrowsOut, Cube, Minus, Plus } from '@phosphor-icons/react';
 import {
   Box3,
@@ -9,22 +9,33 @@ import {
   Float32BufferAttribute,
   OrthographicCamera,
   PCFShadowMap,
-  RepeatWrapping,
-  SRGBColorSpace,
   Vector3,
 } from 'three';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { toCreasedNormals } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
-// Fetch the bundled finish while the API traces/builds, avoiding an empty first frame.
-useTexture.preload('/metal-texture.png');
-
 export type PreviewMesh = { vertices: number[]; triangles: number[] };
+export type PreviewPart = { id: string; name: string; mesh?: PreviewMesh };
+export type PreviewMaterial = 'pla' | 'petg' | 'abs' | 'asa' | 'tpu' | 'nylon';
+const noParts: PreviewPart[] = [];
+
+// Visual finish presets only, not measured material properties or a print simulation.
+const finishes: Record<PreviewMaterial, { roughness: number; clearcoat: number }> = {
+  pla: { roughness: 0.5, clearcoat: 0.08 },
+  petg: { roughness: 0.32, clearcoat: 0.16 },
+  abs: { roughness: 0.46, clearcoat: 0.05 },
+  asa: { roughness: 0.6, clearcoat: 0.02 },
+  tpu: { roughness: 0.72, clearcoat: 0 },
+  nylon: { roughness: 0.65, clearcoat: 0 },
+};
 
 type ModelViewerProps = {
   mesh: PreviewMesh | null;
   resetKey: number;
   loading: boolean;
+  color?: string;
+  material?: PreviewMaterial;
+  parts?: PreviewPart[];
 };
 
 type View = 'iso' | 'top' | 'front';
@@ -80,6 +91,22 @@ function Unavailable({ retry }: { retry?: () => void }) {
   );
 }
 
+function CanvasContextListener({ onLost }: { onLost: () => void }) {
+  const { gl } = useThree();
+  useEffect(() => {
+    const canvas = gl.domElement;
+    const handleLoss = (event: Event) => {
+      event.preventDefault();
+      // A renderer intentionally loses its old context after unmounting. That
+      // delayed event must never mark a replacement canvas as unavailable.
+      if (canvas.isConnected) onLost();
+    };
+    canvas.addEventListener('webglcontextlost', handleLoss);
+    return () => canvas.removeEventListener('webglcontextlost', handleLoss);
+  }, [gl, onLost]);
+  return null;
+}
+
 class ViewerBoundary extends Component<
   { children: ReactNode; onRetry: () => void; onFailure: () => void },
   { failed: boolean }
@@ -97,77 +124,100 @@ class ViewerBoundary extends Component<
   }
 }
 
+function prepareMesh(mesh: PreviewMesh) {
+  if (
+    !mesh.vertices.length ||
+    mesh.vertices.length % 3 ||
+    !mesh.triangles.length ||
+    mesh.triangles.length % 3
+  ) {
+    throw new Error('The model does not contain a complete triangle mesh.');
+  }
+  const vertexCount = mesh.vertices.length / 3;
+  if (
+    mesh.vertices.some((n) => !Number.isFinite(n)) ||
+    mesh.triangles.some((i) => !Number.isInteger(i) || i < 0 || i >= vertexCount)
+  ) {
+    throw new Error('The model contains invalid mesh coordinates.');
+  }
+  const indexed = new BufferGeometry();
+  indexed.setAttribute('position', new Float32BufferAttribute(mesh.vertices, 3));
+  indexed.setIndex(mesh.triangles);
+  // Preserve the top/side crease while smoothing the polygonal outline walls.
+  const geometry = toCreasedNormals(indexed, Math.PI / 4);
+  indexed.dispose();
+  geometry.computeBoundingBox();
+  const bounds = geometry.boundingBox as Box3;
+  const center = bounds.getCenter(new Vector3());
+  const dimensions = bounds.getSize(new Vector3());
+  const span = Math.max(dimensions.x, dimensions.y, dimensions.z, 1);
+  return { geometry, edges: new EdgesGeometry(geometry, 24), bounds, center, dimensions, span };
+}
+
 function CadScene({
   mesh,
   resetKey,
   request,
   actions,
+  color,
+  material,
+  parts,
+  separated,
 }: {
   mesh: PreviewMesh;
   resetKey: number;
   request: ViewRequest;
   actions: React.RefObject<ViewerActions | null>;
+  color: string;
+  material: PreviewMaterial;
+  parts: PreviewPart[];
+  separated: boolean;
 }) {
   const controls = useRef<OrbitControlsImpl>(null);
   const { camera, size, invalidate, gl } = useThree();
-  const metalImage = useTexture('/metal-texture.png');
-  const metalTexture = useMemo(() => {
-    const texture = metalImage.clone();
-    texture.wrapS = RepeatWrapping;
-    texture.wrapT = RepeatWrapping;
-    texture.colorSpace = SRGBColorSpace;
-    texture.anisotropy = 8;
-    texture.needsUpdate = true;
-    return texture;
-  }, [metalImage]);
-  useEffect(() => () => metalTexture.dispose(), [metalTexture]);
+  const finish = finishes[material];
 
-  const model = useMemo(() => {
-    if (
-      !mesh.vertices.length ||
-      mesh.vertices.length % 3 ||
-      !mesh.triangles.length ||
-      mesh.triangles.length % 3
-    ) {
-      throw new Error('The model does not contain a complete triangle mesh.');
-    }
-    const vertexCount = mesh.vertices.length / 3;
-    if (
-      mesh.vertices.some((n) => !Number.isFinite(n)) ||
-      mesh.triangles.some((i) => !Number.isInteger(i) || i < 0 || i >= vertexCount)
-    ) {
-      throw new Error('The model contains invalid mesh coordinates.');
-    }
-    const indexed = new BufferGeometry();
-    indexed.setAttribute('position', new Float32BufferAttribute(mesh.vertices, 3));
-    indexed.setIndex(mesh.triangles);
-    // Preserve the top/side crease while smoothing the polygonal outline walls.
-    const geometry = toCreasedNormals(indexed, Math.PI / 4);
-    indexed.dispose();
-    geometry.computeBoundingBox();
-    const bounds = geometry.boundingBox as Box3;
-    const center = bounds.getCenter(new Vector3());
+  useEffect(() => invalidate(), [color, material, invalidate]);
+
+  const model = useMemo(() => prepareMesh(mesh), [mesh]);
+  const partModels = useMemo(
+    () =>
+      parts
+        .filter((part) => part.mesh)
+        .map((part) => ({ ...prepareMesh(part.mesh!), id: part.id })),
+    [parts],
+  );
+  const layout = useMemo(() => {
+    if (!separated || partModels.length < 2)
+      return [{ ...model, id: 'assembled', offset: new Vector3() }];
+    // Space the actual cut solids for inspection only. These offsets never reach exports.
+    const columns = Math.ceil(Math.sqrt(partModels.length));
+    const rows = Math.ceil(partModels.length / columns);
+    const gap = model.span * 0.12;
+    const cellWidth = Math.max(...partModels.map((part) => part.dimensions.x)) + gap;
+    const cellHeight = Math.max(...partModels.map((part) => part.dimensions.y)) + gap;
+    return partModels.map((part, index) => ({
+      ...part,
+      offset: new Vector3(
+        model.center.x + ((index % columns) - (columns - 1) / 2) * cellWidth - part.center.x,
+        model.center.y +
+          ((rows - 1) / 2 - Math.floor(index / columns)) * cellHeight -
+          part.center.y,
+        0,
+      ),
+    }));
+  }, [model, partModels, separated]);
+  const display = useMemo(() => {
+    const bounds = new Box3();
+    for (const part of layout) bounds.union(part.bounds.clone().translate(part.offset));
     const dimensions = bounds.getSize(new Vector3());
-    const span = Math.max(dimensions.x, dimensions.y, dimensions.z, 1);
-    // Cosmetic surface finish only: planar UVs never displace or alter the measured mesh.
-    const positions = geometry.getAttribute('position');
-    const normals = geometry.getAttribute('normal');
-    const uv: number[] = [];
-    const textureSize = span * 0.6;
-    for (let i = 0; i < positions.count; i++) {
-      const x = positions.getX(i),
-        y = positions.getY(i),
-        z = positions.getZ(i);
-      const nx = Math.abs(normals.getX(i)),
-        ny = Math.abs(normals.getY(i)),
-        nz = Math.abs(normals.getZ(i));
-      if (nz >= nx && nz >= ny) uv.push(x / textureSize, y / textureSize);
-      else if (nx >= ny) uv.push(y / textureSize, z / textureSize);
-      else uv.push(x / textureSize, z / textureSize);
-    }
-    geometry.setAttribute('uv', new Float32BufferAttribute(uv, 2));
-    return { geometry, edges: new EdgesGeometry(geometry, 24), bounds, center, dimensions, span };
-  }, [mesh]);
+    return {
+      bounds,
+      center: bounds.getCenter(new Vector3()),
+      span: Math.max(dimensions.x, dimensions.y, dimensions.z, 1),
+    };
+  }, [layout]);
+  const lastFit = useRef<{ mesh: PreviewMesh; resetKey: number; sequence: number } | null>(null);
 
   useEffect(
     () => () => {
@@ -176,16 +226,31 @@ function CadScene({
     },
     [model],
   );
+  useEffect(
+    () => () => {
+      for (const part of partModels) {
+        part.geometry.dispose();
+        part.edges.dispose();
+      }
+    },
+    [partModels],
+  );
 
   useEffect(() => {
     if (!(camera instanceof OrthographicCamera)) return;
-    const { center, span, bounds } = model;
-    const direction =
-      request.view === 'top'
+    const { center, span, bounds } = display;
+    const keepDirection =
+      lastFit.current?.mesh === mesh &&
+      lastFit.current.resetKey === resetKey &&
+      lastFit.current.sequence === request.sequence;
+    const direction = keepDirection
+      ? camera.position.clone().sub(controls.current?.target ?? model.center)
+      : request.view === 'top'
         ? new Vector3(0, -0.0001, 1)
         : request.view === 'front'
           ? new Vector3(0, -1, 0)
           : new Vector3(1, -1, 1.3);
+    lastFit.current = { mesh, resetKey, sequence: request.sequence };
     camera.up.set(0, 0, 1);
     camera.position.copy(center).add(direction.normalize().multiplyScalar(span * 4));
     camera.near = Math.max(span / 1000, 0.001);
@@ -220,7 +285,7 @@ function CadScene({
       controls.current.saveState();
     }
     invalidate();
-  }, [camera, model, resetKey, request, size.width, size.height, invalidate]);
+  }, [camera, display, mesh, model, resetKey, request, size.width, size.height, invalidate]);
 
   useEffect(() => {
     actions.current = {
@@ -234,7 +299,7 @@ function CadScene({
         invalidate();
       },
       rotate: (horizontal, vertical) => {
-        const target = controls.current?.target ?? model.center;
+        const target = controls.current?.target ?? display.center;
         const offset = camera.position.clone().sub(target);
         const azimuth = Math.atan2(offset.y, offset.x) + horizontal;
         const polar = Math.max(
@@ -255,9 +320,9 @@ function CadScene({
     return () => {
       actions.current = null;
     };
-  }, [actions, camera, invalidate, model]);
+  }, [actions, camera, invalidate, display]);
 
-  const span = model.span;
+  const span = display.span;
   return (
     <>
       <color attach="background" args={['#1b2025']} />
@@ -301,40 +366,43 @@ function CadScene({
           scale={[12, 2, 1]}
         />
       </Environment>
-      <mesh
-        geometry={model.geometry}
-        castShadow
-        receiveShadow
-        onAfterRender={() => {
-          gl.domElement.dataset.modelReady = 'true';
-        }}
-      >
-        <meshPhysicalMaterial
-          map={metalTexture}
-          color="#c4c7ca"
-          metalness={0.72}
-          roughness={0.48}
-          envMapIntensity={1.1}
-          anisotropy={0.5}
-          clearcoat={0.06}
-          clearcoatRoughness={0.5}
-        />
-      </mesh>
-      <lineSegments geometry={model.edges}>
-        <lineBasicMaterial color="#c0c9ce" transparent opacity={0.22} />
-      </lineSegments>
-      <mesh position={[0, 0, model.bounds.min.z - span * 0.012]}>
+      {layout.map((part) => (
+        <group key={part.id} position={part.offset}>
+          <mesh
+            geometry={part.geometry}
+            castShadow
+            receiveShadow
+            onAfterRender={() => {
+              gl.domElement.dataset.modelReady = 'true';
+              gl.domElement.dataset.inspectionView = separated ? 'separated' : 'assembled';
+            }}
+          >
+            <meshPhysicalMaterial
+              color={color}
+              metalness={0}
+              roughness={finish.roughness}
+              envMapIntensity={0.7}
+              clearcoat={finish.clearcoat}
+              clearcoatRoughness={0.5}
+            />
+          </mesh>
+          <lineSegments geometry={part.edges}>
+            <lineBasicMaterial color="#c0c9ce" transparent opacity={0.22} />
+          </lineSegments>
+        </group>
+      ))}
+      <mesh position={[0, 0, display.bounds.min.z - span * 0.012]}>
         <planeGeometry args={[span * 14, span * 14]} />
         <meshBasicMaterial color="#1b2025" toneMapped={false} />
       </mesh>
       <gridHelper
         args={[span * 8, 64, '#343c43', '#30383f']}
         rotation={[Math.PI / 2, 0, 0]}
-        position={[0, 0, model.bounds.min.z - span * 0.011]}
+        position={[0, 0, display.bounds.min.z - span * 0.011]}
         material-transparent
         material-opacity={0.55}
       />
-      <mesh position={[0, 0, model.bounds.min.z - span * 0.01]} receiveShadow>
+      <mesh position={[0, 0, display.bounds.min.z - span * 0.01]} receiveShadow>
         <planeGeometry args={[span * 14, span * 14]} />
         <shadowMaterial transparent opacity={0.4} />
       </mesh>
@@ -352,12 +420,24 @@ function CadScene({
   );
 }
 
-export default function ModelViewer({ mesh, resetKey, loading }: ModelViewerProps) {
+export default function ModelViewer({
+  mesh,
+  resetKey,
+  loading,
+  color = '#c4c7ca',
+  material = 'pla',
+  parts = noParts,
+}: ModelViewerProps) {
   const [request, setRequest] = useState<ViewRequest>({ view: 'iso', sequence: 0 });
   const [attempt, setAttempt] = useState(0);
   const [contextLost, setContextLost] = useState(false);
   const [failed, setFailed] = useState(false);
+  const [separated, setSeparated] = useState(false);
+  const canSeparate = parts.length > 1 && parts.every((part) => part.mesh);
+  const showSeparated = separated && canSeparate;
   const actions = useRef<ViewerActions | null>(null);
+  const previewColor = /^#[\da-f]{6}$/i.test(color) ? color : '#c4c7ca';
+  const previewMaterial = Object.hasOwn(finishes, material) ? material : 'pla';
   const setView = (view: View) =>
     setRequest((previous) => ({ view, sequence: previous.sequence + 1 }));
   const retry = () => {
@@ -374,7 +454,10 @@ export default function ModelViewer({ mesh, resetKey, loading }: ModelViewerProp
     <div
       className="model-viewer"
       role="region"
-      aria-label="Interactive CAD model. Drag to orbit, scroll to zoom. Focus this area and use arrow keys to rotate, plus or minus to zoom, or zero to reset."
+      aria-label={`Interactive CAD model with approximate ${previewMaterial.toUpperCase()} appearance in ${previewColor}. Drag to orbit, scroll to zoom. Focus this area and use arrow keys to rotate, plus or minus to zoom, or zero to reset.`}
+      data-preview-color={previewColor}
+      data-preview-material={previewMaterial}
+      data-inspection-view={showSeparated ? 'separated' : 'assembled'}
       tabIndex={mesh ? 0 : -1}
       onKeyDown={(event) => {
         // Buttons keep their own normal keyboard behavior.
@@ -405,11 +488,7 @@ export default function ModelViewer({ mesh, resetKey, loading }: ModelViewerProp
       }}
     >
       {mesh ? (
-        <ViewerBoundary
-          key={`${attempt}-${mesh.vertices.length}-${mesh.triangles.length}`}
-          onRetry={retry}
-          onFailure={() => setFailed(true)}
-        >
+        <ViewerBoundary key={attempt} onRetry={retry} onFailure={() => setFailed(true)}>
           {contextLost ? (
             <Unavailable retry={retry} />
           ) : (
@@ -430,19 +509,21 @@ export default function ModelViewer({ mesh, resetKey, loading }: ModelViewerProp
               fallback={<Unavailable />}
               onCreated={({ gl }) => {
                 gl.domElement.setAttribute('aria-label', 'CAD solid preview');
-                gl.domElement.addEventListener(
-                  'webglcontextlost',
-                  (event) => {
-                    event.preventDefault();
-                    setContextLost(true);
-                  },
-                  { once: true },
-                );
               }}
               style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }}
             >
+              <CanvasContextListener onLost={() => setContextLost(true)} />
               <Suspense fallback={null}>
-                <CadScene mesh={mesh} resetKey={resetKey} request={request} actions={actions} />
+                <CadScene
+                  mesh={mesh}
+                  resetKey={resetKey}
+                  request={request}
+                  actions={actions}
+                  color={previewColor}
+                  material={previewMaterial}
+                  parts={parts}
+                  separated={showSeparated}
+                />
               </Suspense>
             </Canvas>
           )}
@@ -469,6 +550,33 @@ export default function ModelViewer({ mesh, resetKey, loading }: ModelViewerProp
       )}
       {mesh && !contextLost && !failed && (
         <>
+          {canSeparate && (
+            <div
+              aria-label="Piece inspection"
+              role="group"
+              style={{ position: 'absolute', top: 58, left: 16, display: 'flex', gap: 5 }}
+            >
+              {([false, true] as const).map((value) => (
+                <button
+                  type="button"
+                  key={String(value)}
+                  aria-pressed={showSeparated === value}
+                  onClick={() => setSeparated(value)}
+                  style={{
+                    ...buttonStyle,
+                    width: 'auto',
+                    padding: '0 10px',
+                    fontFamily: 'inherit',
+                    fontSize: 12,
+                    borderColor: showSeparated === value ? '#7bd1ef' : '#46515b',
+                    color: showSeparated === value ? '#bdefff' : '#dce4e9',
+                  }}
+                >
+                  {value ? 'Separate pieces' : 'Assembled'}
+                </button>
+              ))}
+            </div>
+          )}
           <div
             aria-label="Model views"
             role="group"
@@ -534,8 +642,11 @@ export default function ModelViewer({ mesh, resetKey, loading }: ModelViewerProp
               color: '#a7b5bf',
               fontSize: 11,
               fontFamily: 'inherit',
+              maxWidth: 'calc(100% - 154px)',
+              lineHeight: 1.45,
             }}
           >
+            {showSeparated && <span style={{ display: 'block' }}>Separated for inspection</span>}
             Drag to orbit · Scroll to zoom
           </span>
         </>

@@ -22,7 +22,7 @@ jobs:
       - name: Install browser
         run: npx playwright install --with-deps chromium
       - name: Check Python
-        run: .venv/bin/ruff check backend tests/test_backend.py
+        run: .venv/bin/ruff check backend scripts tests
       - name: Test geometry and browser workflow
         run: ./scripts/test.sh
       - uses: actions/upload-artifact@v4

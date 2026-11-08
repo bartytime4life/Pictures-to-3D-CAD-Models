@@ -16,7 +16,9 @@ from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse
 
+from .assistant import AssistantError, AssistantRequest, assistant_status, chat
 from .models import BuildRequest, Detail
+from .printing import load_printer_catalog
 from .tracing import MAX_BYTES, TraceError, trace_image
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -29,6 +31,7 @@ DOWNLOADS = {
     "stl": ("model.stl", "model/stl"),
     "dxf": ("profile.dxf", "application/dxf"),
     "project": ("project.json", "application/json"),
+    "parts": ("parts.zip", "application/zip"),
 }
 UUID_PATTERN = re.compile(r"^[0-9a-f]{32}$")
 
@@ -50,6 +53,7 @@ async def lifespan(app):
     cleanup_jobs()
     app.state.cad_lock = asyncio.Lock()
     app.state.trace_lock = asyncio.Lock()
+    app.state.assistant_lock = asyncio.Lock()
 
     async def expire_jobs():
         while True:
@@ -129,6 +133,43 @@ async def invalid_input(request, exc):
 @app.get("/api/health")
 async def health():
     return {"status": "ok", "version": "0.1.0", "workflow": "measured-profile-extrusion"}
+
+
+@app.get("/api/printers")
+async def printers():
+    return load_printer_catalog()
+
+
+@app.get("/api/assistant/status")
+async def local_assistant_status():
+    return await asyncio.to_thread(assistant_status)
+
+
+@app.post("/api/assistant/chat")
+async def local_assistant_chat(request: AssistantRequest):
+    lock = app.state.assistant_lock
+    if lock.locked():
+        raise HTTPException(429, "The local assistant is answering. Wait a moment and try again.")
+    async with lock:
+        # Cancelling an HTTP request cannot stop a worker thread. Keep its slot
+        # until the bounded local request finishes, so repeated cancellation
+        # cannot accumulate inference jobs on the Ollama server.
+        worker = asyncio.create_task(asyncio.to_thread(chat, request))
+        try:
+            return await asyncio.shield(worker)
+        except asyncio.CancelledError:
+            while not worker.done():
+                try:
+                    await asyncio.shield(worker)
+                except asyncio.CancelledError:
+                    continue
+                except AssistantError:
+                    break
+            if not worker.cancelled():
+                worker.exception()
+            raise
+        except AssistantError as exc:
+            raise HTTPException(exc.status_code, exc.detail) from exc
 
 
 @app.post("/api/trace")
@@ -219,6 +260,11 @@ async def build(request: BuildRequest):
                     504, "CAD generation exceeded 60 seconds. Reduce outline detail and try again."
                 ) from exc
             if process.returncode != 0 or not (job_dir / "result.json").is_file():
+                failure = job_dir / "error.json"
+                if failure.is_file():
+                    info = json.loads(failure.read_text())
+                    if info.get("public") is True and isinstance(info.get("error"), str):
+                        raise HTTPException(422, info["error"][:500])
                 raise HTTPException(
                     422,
                     "This outline could not be converted to a solid. Reduce detail or remove very narrow features and try again.",
@@ -252,6 +298,8 @@ async def download(job_id: str, kind: str):
         raise HTTPException(404, "Export format not found.")
     directory = resolve_job(job_id)
     name, media_type = DOWNLOADS[kind]
+    if not (directory / name).is_file():
+        raise HTTPException(404, "This export is not available for this model.")
     return FileResponse(
         directory / name,
         media_type=media_type,

@@ -31,8 +31,12 @@ The default bind address is `127.0.0.1`. The supported startup settings are:
 | `PICAD_PORT` | `8000` | API and built-interface port for `start.sh` |
 | `PICAD_DEV_HOST` | `127.0.0.1` | Vite bind address for `dev.sh`; the development API remains on port 8000 |
 | `PICTURES_CAD_JOB_DIR` | Repository `.local/jobs` | Temporary model artifact directory |
+| `PICTURES_CAD_OLLAMA_URL` | `http://127.0.0.1:11434` | Optional assistant's HTTP loopback endpoint on the backend host |
+| `PICTURES_CAD_OLLAMA_MODEL` | `qwen3:1.7b` | Preferred installed assistant model; otherwise selects that default if installed, then the smallest local model |
 
 Changing the bind address can expose a service to other machines. Use the intended host access controls; the application itself has no account authentication.
+
+The optional assistant accepts only an HTTP loopback Ollama endpoint; remote URLs and cloud models are not supported. See [local AI setup](ollama.md) for the separate runtime/model installation and resource controls. Neither ordinary app setup nor CI downloads model weights. Existing CAD tests run without an Ollama installation; assistant integration tests use explicit test doubles and do not establish live model quality.
 
 For frontend development:
 
@@ -71,6 +75,8 @@ npm run test:e2e
 
 Backend checks should exercise image parsing, geometry validation, dimensional bounds, topology, and exported-file re-imports. Browser checks should exercise the actual conversion path, edits, outdated-result handling, exports, input failures, and responsive navigation.
 
+Design/print checks should also verify that XY and thickness percentages preserve measured inputs, that relative-detail approximation remains valid, and that generated split solids have consistent volumes and per-part exports. Check printer fit in both supported XY orientations, version 2 recipe round-trips, and version 1 import defaults. Color/material preview must not alter mesh coordinates or imply material/strength simulation. Test assistant Apply/Undo and stale proposals separately from live model quality.
+
 Treat the recorded results in [validation.md](validation.md) as the test evidence for the current implementation. Do not infer that a test passed merely because its command is listed here.
 
 Browser tests use `PLAYWRIGHT_CHROMIUM_EXECUTABLE` when supplied, otherwise `/usr/bin/chromium` when available, otherwise Playwright's installed Chromium. If neither a system browser nor a Playwright browser is present, install the browser after `npm ci`:
@@ -94,6 +100,8 @@ The [GitHub-hosted run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Mod
 Change dependency declarations intentionally and regenerate the corresponding lockfile. Keep lockfiles under version control. Use frozen or clean-install modes for normal setup so a routine startup does not silently select a new CAD kernel or frontend dependency.
 
 After upgrading the geometry stack, rerun dimensional and export re-import tests. After changing the viewer, verify the displayed geometry against the same exported solid, including interior holes and camera reset behavior.
+
+Printer data is a pinned, locally bundled snapshot. Follow [catalog reproduction and update instructions](printer-catalog.md#reproduce-the-snapshot) to regenerate it; review its source commit, attribution, profile inheritance, skips, geometry changes, and unknown-value handling. App startup does not silently refresh printer specifications from the network.
 
 ## Cloud environment notes
 
