@@ -129,5 +129,37 @@ class Degenerate(unittest.TestCase):
             self.assertAlmostEqual(2 * vec[0] + vec[1], lam * vec[0])
 
 
+class QueryPoint(unittest.TestCase):
+    """Review of Revision 4: ``at`` must be a finite pixel on the plane's side of its vanishing line."""
+
+    # A plane seen in perspective: w = 0 along image row 100, and the control points have w < 0.
+    SRC = ((200, 800), (800, 800), (700, 400), (300, 400), (500, 600), (350, 650))
+    DST = ((-60, 0), (60, 0), (93.333333, 266.666667), (-93.333333, 266.666667), (0, 80), (-38.181818, 54.545455))
+
+    def test_non_finite_or_malformed_points_are_rejected(self):
+        for at in ((math.nan, math.nan), (math.inf, 0), (0, -math.inf), (1,), (1, 2, 3), ("a", 0), "ab"):
+            with self.assertRaises(ValueError, msg=at):
+                hg.fit_report(self.SRC, self.DST, at=at)
+
+    def test_points_beyond_the_vanishing_line_are_rejected(self):
+        H = hg.fit(self.SRC, self.DST)
+        self.assertLess(H[2][0] * 500 + H[2][1] * 600 + H[2][2], 0)
+        self.assertGreater(H[2][0] * 500 + H[2][1] * 50 + H[2][2], 0)
+        # (500, 50) used to "map" to y = -3000 mm with a confident local scale and no warning.
+        with self.assertRaisesRegex(ValueError, "vanishing line"):
+            hg.fit_report(self.SRC, self.DST, at=(500, 50))
+        r = hg.fit_report(self.SRC, self.DST, at=(500, 600))
+        self.assertAlmostEqual(r["mapped"][1], 80.0, places=4)
+        self.assertEqual(r["at"], [500.0, 600.0])
+
+    def test_malformed_control_points_are_value_errors(self):
+        square = [(0, 0), (1, 0), (1, 1), (0, 1)]
+        for bad in (5, [1, 2, 3, 4], [None] * 4, [[0, 0], [1, 0], [1, 1], ["a", 1]], [[0, 0], [1, 0], [1, 1], [0]]):
+            with self.assertRaises(ValueError, msg=bad):
+                hg.fit(bad, square)
+            with self.assertRaises(ValueError, msg=bad):
+                hg.fit_report(square, bad)
+
+
 if __name__ == "__main__":
     unittest.main()

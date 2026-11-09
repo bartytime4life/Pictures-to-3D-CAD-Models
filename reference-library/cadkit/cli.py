@@ -65,6 +65,8 @@ def cmd_chord(args):
 
 
 def cmd_depth(args):
+    if (args.z_range is None) != (args.delta_range is None):
+        raise ValueError("give both --z-range and --delta-range, or neither")
     r = calc.depth_report(args.z, args.delta, args.size)
     lines = [f"depth factor (Z + delta) / Z: {_fmt(r['depth_factor'])}"]
     if "corrected_size_mm" in r:
@@ -120,6 +122,8 @@ def cmd_gear(args):
 
 
 def cmd_wind(args):
+    if args.area is None and not (math.isfinite(args.diameter) and args.diameter > 0):
+        raise ValueError(f"diameter must be a positive finite number, got {args.diameter!r}")
     area = args.area if args.area is not None else math.pi * (args.diameter / 2.0) ** 2
     r = calc.wind_report(args.rho, area, args.v, args.cp)
     r["area_m2"] = area
@@ -183,18 +187,26 @@ def cmd_route(args):
     return 0
 
 
+_POINTS_SHAPE = 'give [[[u, v], [x, y]], ...] or {"src": [[u, v], ...], "dst": [[x, y], ...]}'
+
+
 def _load_points(spec: str):
     stripped = spec.lstrip()
     if stripped.startswith(("[", "{")):  # inline JSON; may be far longer than any file name
         text = spec
     else:
-        text = Path(spec).read_text(encoding="utf-8")
+        text = Path(spec).read_text(encoding="utf-8-sig")  # tolerate a byte-order mark
     data = json.loads(text)
     if isinstance(data, dict):
+        if not (isinstance(data.get("src"), list) and isinstance(data.get("dst"), list)):
+            raise ValueError(f'a points object needs "src" and "dst" lists; {_POINTS_SHAPE}')
         return data["src"], data["dst"]
-    src = [pair[0] for pair in data]
-    dst = [pair[1] for pair in data]
-    return src, dst
+    if not isinstance(data, list):
+        raise ValueError(f"points must be a JSON list or object; {_POINTS_SHAPE}")
+    for i, pair in enumerate(data, start=1):
+        if not (isinstance(pair, list) and len(pair) == 2):
+            raise ValueError(f"point pair {i} is not [[u, v], [x, y]]; {_POINTS_SHAPE}")
+    return [pair[0] for pair in data], [pair[1] for pair in data]
 
 
 def cmd_homography(args):
@@ -372,13 +384,25 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _message(exc: Exception) -> str:
+    if isinstance(exc, OSError) and exc.strerror:
+        return f"{exc.strerror}: {exc.filename}" if exc.filename else exc.strerror
+    if isinstance(exc, OverflowError):  # args may be (errno, text) from the C library
+        detail = exc.args[-1] if exc.args else ""
+        return f"a value is too large to compute ({detail}); check the inputs"
+    return str(exc)
+
+
 def main(argv=None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
     try:
         code = args.func(args)
-    except (ValueError, KeyError, FileNotFoundError, FileExistsError, json.JSONDecodeError) as exc:
-        print(f"error: {exc}", file=sys.stderr)
+    # Exit 1 means "a check failed", so anything the input provokes must exit 2: bad values
+    # (ValueError, KeyError), malformed structures (TypeError, IndexError), unreadable or
+    # unwritable paths (OSError), and overflow (ArithmeticError). JSONDecodeError is a ValueError.
+    except (ValueError, KeyError, TypeError, IndexError, OSError, ArithmeticError) as exc:
+        print(f"error: {_message(exc)}", file=sys.stderr)
         return 2
     return int(code or 0)
 

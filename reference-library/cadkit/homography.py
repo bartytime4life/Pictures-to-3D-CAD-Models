@@ -44,11 +44,16 @@ def _sum(values) -> float:
 
 
 def _points(name: str, pts: Sequence[Point]) -> list[tuple[float, float]]:
+    if isinstance(pts, (str, bytes)) or not hasattr(pts, "__iter__"):
+        raise ValueError(f"{name} points must be a list of (x, y) pairs")
     out = []
     for p in pts:
-        if len(p) != 2:
-            raise ValueError(f"{name} points must be (x, y) pairs")
-        x, y = float(p[0]), float(p[1])
+        try:
+            if isinstance(p, (str, bytes)) or len(p) != 2:
+                raise ValueError
+            x, y = float(p[0]), float(p[1])
+        except (TypeError, ValueError, LookupError):  # None, a number, a string, a dict, ...
+            raise ValueError(f"{name} points must be (x, y) pairs of numbers") from None
         if not (math.isfinite(x) and math.isfinite(y)):
             raise ValueError(f"{name} points must be finite")
         out.append((x, y))
@@ -214,9 +219,35 @@ def local_scale(H: Matrix, pt: Point) -> tuple[float, float]:
     return math.hypot(J[0][0], J[1][0]), math.hypot(J[0][1], J[1][1])
 
 
+def _query_point(at: Point) -> tuple[float, float]:
+    try:
+        if isinstance(at, (str, bytes)) or len(at) != 2:
+            raise ValueError
+        u, v = float(at[0]), float(at[1])
+    except (TypeError, ValueError, LookupError):
+        raise ValueError("at must be a (u, v) pixel pair") from None
+    if not (math.isfinite(u) and math.isfinite(v)):
+        raise ValueError("at must be a finite (u, v) pixel position")
+    return u, v
+
+
+def _side(H: Matrix, pt: tuple[float, float]) -> int:
+    """Sign of the homogeneous w at an image point: its side of the plane's vanishing line."""
+    w = H[2][0] * pt[0] + H[2][1] * pt[1] + H[2][2]
+    return (w > 0) - (w < 0)
+
+
 def fit_report(src: Sequence[Point], dst: Sequence[Point], at: Point | None = None) -> dict:
-    """Fit, residual summary, optional local scale, and warnings."""
+    """Fit, residual summary, optional local scale, and warnings.
+
+    ``at`` must be a finite pixel on the same side of the plane's vanishing line
+    as the control points (the homogeneous ``w`` has their sign). A pixel across
+    that line does not image the plane, although the formula still maps it, so
+    it raises ``ValueError`` instead of returning a mapping and local scale.
+    """
     src_p, dst_p = _points("src", src), _points("dst", dst)
+    if at is not None:
+        at = _query_point(at)
     H = fit(src_p, dst_p)
     res, rms = residuals(H, src_p, dst_p)
     warnings = []
@@ -237,8 +268,12 @@ def fit_report(src: Sequence[Point], dst: Sequence[Point], at: Point | None = No
         "warnings": warnings,
     }
     if at is not None:
+        side = _side(H, at)
+        if any(_side(H, p) != side for p in src_p):
+            raise ValueError("at is on or beyond the plane's vanishing line: w there is zero or has the opposite "
+                             "sign to the control points, so the pixel does not image the plane")
         sx, sy = local_scale(H, at)
-        report["at"] = [float(at[0]), float(at[1])]
+        report["at"] = [at[0], at[1]]
         report["mapped"] = list(apply(H, at))
         report["jacobian"] = jacobian(H, at)
         report["local_scale_u"] = sx

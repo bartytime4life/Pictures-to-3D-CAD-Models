@@ -118,6 +118,13 @@ await page.fill('#in-scale-pref', '150');
 assert(await page.locator('#calc-scale .warn li').count() >= 1 && await page.locator('#calc-scale').getAttribute('data-state') === 'warn', 'a short reference raises a warning');
 await page.fill('#in-homography-pairs', '0 0 0 0\n10 0 5 0\n10 10 5 5\n0 10 0 5');
 assert((await page.locator('#calc-homography .warn').textContent()).includes('zero by construction'), 'four-point homography warns that residuals mean nothing');
+await page.locator('#calc-homography [data-action="reset"]').click();
+await page.fill('#in-homography-v', '-2000'); // the default fit's vanishing line crosses u = 308 near v = −1841
+assert((await page.locator('#calc-homography .error').textContent()).includes('vanishing line'), 'homography refuses a point beyond the plane’s vanishing line, like the CLI');
+await page.locator('#calc-homography [data-action="reset"]').click();
+await page.fill('#in-wind-diameter', '-2');
+assert((await page.locator('#calc-wind .error').textContent()).includes('diameter must be positive'), 'wind calculator rejects a non-positive rotor diameter, like the CLI');
+await page.locator('#calc-wind [data-action="reset"]').click();
 await page.selectOption('#route-input', 'photo-set');
 await page.selectOption('#route-goal', 'editable');
 assert(await page.locator('.route-steps li').count() === 2, 'route finder: photo set + editable → two workflows');

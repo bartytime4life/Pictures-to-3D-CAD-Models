@@ -217,7 +217,7 @@ test('route finder: every input and goal gives the same answer in JavaScript and
 });
 
 test('regressions from the independent review agree with Python', { timeout: 60000 }, () => {
-  // Rounding: toFixed-based round6 must equal Python's round(x, 6).
+  // Rounding: round6 must equal Python's round(x, 6).
   for (const [nominal, start, step, count] of [[5, 0.439521, 0, 1], [5, 5e-7, 0, 1], [3, 0.0333333, 0.0166667, 12], [8, 0.1, 0.1, 201]]) {
     const py = cadkit('coupon', '--nominal', nominal, '--start', start, '--step', step, '--count', count);
     assert.deepEqual(C.clearanceSeries(nominal, start, step, count), py.rows, `coupon ${nominal} ${start} ${step} ${count}`);
@@ -240,4 +240,64 @@ test('regressions from the independent review agree with Python', { timeout: 600
   assert.equal(C.scaledLength(0, 0.05), 0);
   assert.throws(() => C.recommendRoute(routes, 'constructor', 'holder'), /unknown input/);
   assert.throws(() => C.recommendRoute(routes, 'mesh', '__proto__'), /unknown goal/);
+});
+
+// The message Python prints for input it rejects (exit code 2, no traceback).
+const cadkitError = (...args) => {
+  try {
+    cadkit(...args);
+  } catch (e) {
+    assert.equal(e.status, 2, `${args.join(' ')}: exit ${e.status} ${e.stderr}`);
+    assert.match(e.stderr, /^error: [^\n]*\n$/, `${args.join(' ')}: one error line`);
+    return e.stderr.slice('error: '.length).trim();
+  }
+  assert.fail(`${args.join(' ')} was accepted`);
+};
+
+test('coupon rounding: exact binary ties round to even, as Python does', { timeout: 60000 }, () => {
+  // Odd multiples of 1/128 are exactly the doubles whose value × 10⁶ ends in .5. toFixed rounds
+  // those ties away from zero; Python's round(x, 6) rounds them to the even neighbour.
+  assert.deepEqual(C.clearanceSeries(5, 0.0078125, 0, 1), [{ diametral: 0.007812, radial: 0.003906, hole_diameter: 5.007812 }]);
+  for (const [nominal, start, step, count] of [[5, 0.0078125, 0, 1], [5, 0.0078125, 0.015625, 200],
+    [5, -1.9921875, 0.015625, 200], [1e9, 0.0078125, 0.0078125, 60], [0.5, -0.4921875, 0.0078125, 3], [7, 0.1015625, 0.03125, 9]]) {
+    const py = cadkit('coupon', '--nominal', nominal, '--start', start, '--step', step, '--count', count);
+    assert.deepEqual(C.clearanceSeries(nominal, start, step, count), py.rows, `coupon ${nominal} ${start} ${step} ${count}`);
+  }
+});
+
+test('homography query point must be finite and on the plane side of the vanishing line', { timeout: 60000 }, () => {
+  // A plane in perspective whose vanishing line is image row 100; the control points lie below it.
+  const src = [[200, 800], [800, 800], [700, 400], [300, 400], [500, 600], [350, 650]];
+  const dst = [[-60, 0], [60, 0], [93.333333, 266.666667], [-93.333333, 266.666667], [0, 80], [-38.181818, 54.545455]];
+  const points = JSON.stringify({ src, dst });
+  const messages = [];
+  for (const at of [[500, 50], [500, 99.9999], [NaN, NaN], [Infinity, 0]]) {
+    let js;
+    assert.throws(() => C.homography.report(src, dst, at), (e) => { js = e.message; return e instanceof RangeError; }, `at ${at}`);
+    assert.equal(cadkitError('homography', '--points', points, '--at', ...at), js, `at ${at}`);
+    messages.push(js);
+  }
+  assert.match(messages[0], /vanishing line/);
+  assert.match(messages[2], /finite/);
+  const js = C.homography.report(src, dst, [500, 600]);
+  const py = cadkit('homography', '--points', points, '--at', 500, 600);
+  js.mapped.forEach((v, i) => close(v, py.mapped[i], 1e-9, `mapped[${i}]`));
+  close(js.local_scale_v, py.local_scale_v, 1e-9, 'sy');
+  assert.throws(() => C.homography.report(src, dst, [500]), /pixel pair/);
+});
+
+test('impossible gear, wind, and uncertainty inputs are rejected in both languages', { timeout: 60000 }, () => {
+  for (const angle of [95, 180, 90, 0]) {
+    assert.throws(() => C.gearPair(2, 20, 40, angle), /pressure angle/, `alpha ${angle}`);
+    assert.match(cadkitError('gear', '--module', 2, '--teeth', 20, 40, '--pressure-angle', angle), /pressure_angle_deg/);
+  }
+  const g = cadkit('gear', '--module', 2, '--teeth', 20, 40, '--pressure-angle', 25);
+  close(C.gearPair(2, 20, 40, 25).undercut_limit_teeth, g.undercut_limit_teeth);
+  // Overflow is invalid input: not Infinity in JavaScript, not a traceback (exit 1) in Python.
+  assert.throws(() => C.windPower(1.225, 1, 1e110, 0.3), /too large/);
+  assert.match(cadkitError('wind', '--area', 1, '--v', 1e110, '--cp', 0.3), /too large/);
+  assert.throws(() => C.ratioUncertainty(1, 1e200, 1, 1, 1, 1), /too large/);
+  assert.match(cadkitError('uncertainty', '--p', 1, '--up', 1e200, '--pref', 1, '--upref', 1, '--lref', 1, '--ulref', 1), /too large/);
+  // The browser's wind calculator rejects a non-positive diameter (scripts/check-library.mjs); so does the CLI.
+  for (const d of [-2, 0]) assert.match(cadkitError('wind', '--diameter', d, '--v', 5, '--cp', 0.3), /diameter/);
 });

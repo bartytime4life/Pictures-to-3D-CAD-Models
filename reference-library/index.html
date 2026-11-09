@@ -1661,9 +1661,20 @@ button.photo-card, .photo-card > button { cursor: pointer; }
   };
   const ROUNDING_UNITS = ['in', 'mm', 'cm'];
   const MAX_DECIMALS = 12; // same limit as cadkit.calc.MAX_DECIMALS
-  // Python's round(x, 6): toFixed rounds the exact binary value to the nearest decimal,
-  // which matches Python except at exact binary ties (none occur at 6 decimals for mm values).
-  const round6 = (x) => { const r = Number(x.toFixed(6)); return Object.is(r, -0) ? 0 : r; };
+  // Python's round(x, 6) rounds the exact binary value to 6 decimals, with exact ties to even.
+  // toFixed also rounds the exact value but takes ties away from zero. A double is an exact tie
+  // (x × 10⁶ = k + 0.5) only when x × 128 is an odd integer, as for 0.0078125, so those values
+  // take the even neighbour instead.
+  function round6(x) {
+    let r = Number(x.toFixed(6));
+    const t = x * 128; // exact: scaling by a power of two
+    if (Number.isInteger(t) && t % 2 !== 0) {
+      const k = (BigInt(Math.abs(t)) * 15625n - 1n) / 2n; // |x| × 10⁶ = k + 0.5
+      const even = k % 2n === 0n ? k : k + 1n;
+      r = Math.sign(x) * Number(`${even / 1000000n}.${String(even % 1000000n).padStart(6, '0')}`);
+    }
+    return Object.is(r, -0) ? 0 : r;
+  }
   const BETZ_LIMIT = 16 / 27;
   const LIMITS = { referencePx: 200, extrapolation: 3, depthRatio: 0.2, segments: 720, aspectPercent: 1 };
 
@@ -1680,6 +1691,10 @@ button.photo-card, .photo-card > button { cursor: pointer; }
     if (!Number.isFinite(v)) fail(`${name} must be a number`);
     return v;
   }
+  function finiteResult(name, v) { // same rule and wording as cadkit.calc._finite_result
+    if (!Number.isFinite(v)) fail(`${name} is too large to represent; check the inputs`);
+    return v;
+  }
 
   // ---- scale and uncertainty (handbook section 5) ----------------------------
   function planarScale(knownLengthMm, referencePx) {
@@ -1694,6 +1709,7 @@ button.photo-card, .photo-card > button { cursor: pointer; }
     const length = p * lref / pref;
     const relative = Math.sqrt((up / p) ** 2 + (ulref / lref) ** 2 + (upref / pref) ** 2); // same order as Python
     const u = length * relative;
+    for (const [name, value] of [['length', length], ['relative uncertainty', relative], ['u', u], ['2u', 2 * u]]) finiteResult(name, value);
     return { length, u, relative, expanded_k2: 2 * u, warnings: scaleWarnings(pref, p) };
   }
   function scaleWarnings(referencePx, featurePx) {
@@ -1778,7 +1794,8 @@ button.photo-card, .photo-card > button { cursor: pointer; }
     });
   }
   function gearPair(module, z1, z2, pressureAngleDeg = 20) {
-    positive('module', module); positive('pressure angle', pressureAngleDeg);
+    positive('module', module);
+    if (!(pressureAngleDeg > 0 && pressureAngleDeg < 90)) fail('pressure angle must be between 0 and 90 degrees');
     if (!Number.isInteger(z1) || !Number.isInteger(z2) || z1 < 1 || z2 < 1) fail('tooth counts must be whole numbers');
     const undercut = 2 / Math.sin(pressureAngleDeg * Math.PI / 180) ** 2;
     const warnings = [['z1', z1], ['z2', z2]].filter(([, z]) => z < undercut).map(([name, z]) =>
@@ -1788,7 +1805,7 @@ button.photo-card, .photo-card > button { cursor: pointer; }
   function windPower(rho, areaM2, v, cp) {
     positive('air density', rho); positive('area', areaM2); nonNegative('wind speed', v);
     if (!(cp >= 0 && cp <= BETZ_LIMIT)) fail('Cp must be between 0 and the Betz limit 16/27 (about 0.593)');
-    return 0.5 * rho * areaM2 * v ** 3 * cp;
+    return finiteResult('power', 0.5 * rho * areaM2 * v ** 3 * cp);
   }
 
   // ---- evidence classes (section 3) ------------------------------------------
@@ -1962,8 +1979,18 @@ button.photo-card, .photo-card > button { cursor: pointer; }
     const J = homographyJacobian(H, pt);
     return [Math.hypot(J[0][0], J[1][0]), Math.hypot(J[0][1], J[1][1])];
   }
+  // The query point must be a finite pixel on the control points' side of the plane's vanishing
+  // line (same sign of w); across it the formula still maps, but the pixel does not image the plane.
+  function queryPoint(at) {
+    if (!Array.isArray(at) || at.length !== 2) fail('at must be a (u, v) pixel pair');
+    const [u, v] = at.map(Number);
+    if (!Number.isFinite(u) || !Number.isFinite(v)) fail('at must be a finite (u, v) pixel position');
+    return [u, v];
+  }
+  const side = (H, [u, v]) => Math.sign(H[2][0] * u + H[2][1] * v + H[2][2]);
   function homographyReport(src, dst, at) {
     const s = checkPoints('src', src), d = checkPoints('dst', dst);
+    const q = at === undefined || at === null ? null : queryPoint(at);
     const H = homographyFit(s, d);
     const { residuals, rms, max } = homographyResiduals(H, s, d);
     const warnings = [];
@@ -1972,9 +1999,11 @@ button.photo-card, .photo-card > button { cursor: pointer; }
     if (s.length <= 6 && minTriangleArea(normaliser(s).pts) < NEAR_COLLINEAR_AREA) warnings.push('Some image points are nearly collinear; the estimate is fragile.');
     if (spreadRatio(s) < 0.05) warnings.push('Control points occupy a narrow region; avoid extrapolating beyond it.');
     const report = { H, points: s.length, residuals, rms, max, warnings };
-    if (at) {
-      const [sx, sy] = homographyLocalScale(H, at);
-      Object.assign(report, { at: [Number(at[0]), Number(at[1])], mapped: homographyApply(H, at), jacobian: homographyJacobian(H, at),
+    if (q) {
+      const sq = side(H, q);
+      if (s.some((p) => side(H, p) !== sq)) fail("at is on or beyond the plane's vanishing line: w there is zero or has the opposite sign to the control points, so the pixel does not image the plane");
+      const [sx, sy] = homographyLocalScale(H, q);
+      Object.assign(report, { at: q, mapped: homographyApply(H, q), jacobian: homographyJacobian(H, q),
         local_scale_u: sx, local_scale_v: sy, local_anisotropy_percent: (Math.max(sx, sy) / Math.min(sx, sy) - 1) * 100 });
     }
     return report;

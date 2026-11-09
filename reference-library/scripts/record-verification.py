@@ -78,6 +78,9 @@ elif browser:
     if (QA / 'browser-check.json').stat().st_mtime < (ROOT / 'index.html').stat().st_mtime:
         problems.append('index.html changed after the last browser check; run `make check`')
 links = load(QA / 'link-check.json', required=False)
+# The link check needs the network and runs only on request (`make links`). Without a fresh
+# result, keep the previously recorded one rather than erasing the most recent run.
+previous = load(ROOT / 'verification.json', required=False) or {}
 photos = load(QA / 'photo-check.json') or {}
 if photos and photos.get('status') != 'passed':
     problems.append('photo workspace browser check did not pass')
@@ -121,7 +124,7 @@ record = {
                        'errors': browser.get('browser_errors')},
     # page_url is machine-specific (a local path or a random port); the transport is kept.
     'photo_workspace_checks': {k: v for k, v in photos.items() if k != 'page_url'},
-    'external_links': None if not links else {'checked_at': links['summary']['checked_at'], 'total': links['summary']['total'],
+    'external_links': previous.get('external_links') if not links else {'checked_at': links['summary']['checked_at'], 'total': links['summary']['total'],
                                                'ok': links['summary']['ok'], 'blocked': links['summary']['blocked'],
                                                'timeout': links['summary']['timeout'], 'broken': links['summary']['broken'],
                                                'not_ok': [x['url'] for x in links['summary']['not_ok']]},

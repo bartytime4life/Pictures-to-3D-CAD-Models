@@ -1,6 +1,7 @@
 import contextlib
 import io
 import json
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -143,6 +144,117 @@ class FileCommands(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertTrue((dest / "PROJECT-BRIEF.md").exists())
         self.assertEqual(run("new-project", str(dest), "--name", "Again")[0], 2)
+
+
+# The homography from the review: a trapezoid imaged in perspective, with the plane's
+# vanishing line between image rows 50 and 300 (w changes sign there).
+VANISHING = json.dumps({"src": [[200, 800], [800, 800], [700, 400], [300, 400], [500, 600], [350, 650]],
+                        "dst": [[-60, 0], [60, 0], [93.333333, 266.666667], [-93.333333, 266.666667], [0, 80],
+                                [-38.181818, 54.545455]]})
+
+
+class InvalidInputExitCodes(unittest.TestCase):
+    """Review of Revision 4: invalid input exits 2 with one ``error:`` line, never a traceback (exit 1)."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.dir = Path(self.tmp.name)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def assertInvalid(self, *argv, says=""):
+        code, out, err = run(*argv)
+        self.assertEqual(code, 2, f"{argv}: {err}")
+        self.assertTrue(err.startswith("error: ") and err.count("\n") == 1, f"{argv}: {err!r}")
+        self.assertIn(says, err)
+        self.assertEqual(out, "")
+
+    def test_malformed_point_json(self):
+        for spec in ("[1,2,3,4]", "[[[0,0]],[[1,0]],[[1,1]],[[0,1]]]", '{"src":[[0,0],[1,0],[1,1],[0,1]],"dst":5}',
+                     '{"src":null,"dst":null}', '{"src":[[0,0],[1,0],[1,1],[0,1]]}', "[null,null,null,null]",
+                     "[[null,[0,0]],[[1,0],[1,0]],[[1,1],[1,1]],[[0,1],[0,1]]]",
+                     '[[["a","b"],[0,0]],[[1,0],[1,0]],[[1,1],[1,1]],[[0,1],[0,1]]]', "5", '"text"'):
+            self.assertInvalid("homography", "--points", spec)
+        self.assertInvalid("homography", "--points", "[1,2,3,4]", says="[[u, v], [x, y]]")
+        path = self.dir / "null.json"
+        path.write_text("null", encoding="utf-8")
+        self.assertInvalid("homography", "--points", str(path))
+
+    def test_points_file_with_a_byte_order_mark(self):
+        path = self.dir / "pts.json"
+        pairs = [[[0, 0], [0, 0]], [[1000, 0], [50, 0]], [[1000, 800], [50, 40]], [[0, 800], [0, 40]]]
+        path.write_text(json.dumps(pairs), encoding="utf-8-sig")
+        self.assertEqual(run("homography", "--points", str(path))[0], 0)
+
+    def test_file_system_errors(self):
+        self.assertInvalid("meshcheck", str(self.dir), says="directory")
+        afile = self.dir / "box.stl"
+        stl.write_stl_binary(afile, stl.box())
+        self.assertInvalid("new-project", str(afile / "sub"), "--name", "x")
+        self.assertInvalid("params", str(self.dir))
+
+    def test_unreadable_file(self):
+        path = self.dir / "locked.stl"
+        stl.write_stl_binary(path, stl.box())
+        path.chmod(0)
+        try:
+            if os.access(path, os.R_OK):
+                self.skipTest("running with privileges that ignore file permissions")
+            self.assertInvalid("meshcheck", str(path), says="ermission")
+        finally:
+            path.chmod(0o600)
+
+    def test_overflow(self):
+        self.assertInvalid("uncertainty", "--p", "1", "--up", "1e200", "--pref", "1", "--upref", "1",
+                           "--lref", "1", "--ulref", "1", says="too large")
+        self.assertInvalid("wind", "--area", "1", "--v", "1e110", "--cp", "0.3", says="too large")
+        self.assertInvalid("wind", "--diameter", "1e200", "--v", "1", "--cp", "0.3")
+        box = self.dir / "box.stl"
+        stl.write_stl_binary(box, stl.box((10, 10, 10)))
+        self.assertInvalid("meshcheck", str(box), "--weld-tol", "1e-320", says="too small")
+        for tol in ("inf", "nan", "0", "-1"):
+            self.assertInvalid("meshcheck", str(box), "--weld-tol", tol, says="weld_tol")
+
+    def test_ascii_stl_with_a_garbage_facet(self):
+        good = self.dir / "box.stl"
+        stl.write_stl_ascii(good, stl.box((10, 10, 10)))
+        bad = self.dir / "box-plus-nan.stl"
+        bad.write_text(good.read_text(encoding="ascii").replace(
+            "endsolid", "facet normal 0 0 1\nouter loop\nvertex nan nan nan\nvertex 1 0 0\nvertex 0 1 0\n"
+            "endloop\nendfacet\nendsolid"), encoding="ascii")
+        self.assertEqual(run("meshcheck", str(good))[0], 0)
+        self.assertInvalid("meshcheck", str(bad), says="not finite")
+
+    def test_sliver_fails_the_mesh_check(self):
+        path = self.dir / "sliver.stl"
+        stl.write_stl_binary(path, stl.box() + [((0, 0, 0), (0.5, 0, 0), (1, 0, 0))])
+        code, r = run_json("meshcheck", str(path))
+        self.assertEqual((code, r["status"], r["degenerate_triangles"]), (1, "fail", 1))
+
+    def test_homography_query_point(self):
+        code, _, err = run("homography", "--points", VANISHING, "--at", "nan", "nan", "--json")
+        self.assertEqual(code, 2, err)
+        self.assertInvalid("homography", "--points", VANISHING, "--at", "inf", "0", says="finite")
+        self.assertInvalid("homography", "--points", VANISHING, "--at", "500", "50", says="vanishing line")
+        code, r = run_json("homography", "--points", VANISHING, "--at", "500", "600")
+        self.assertEqual(code, 0)
+        self.assertAlmostEqual(r["mapped"][1], 80.0, places=4)
+
+    def test_wind_needs_a_positive_diameter(self):
+        for diameter in ("-2", "0", "nan"):
+            self.assertInvalid("wind", "--diameter", diameter, "--v", "5", "--cp", "0.3", says="diameter")
+
+    def test_gear_pressure_angle_range(self):
+        for angle in ("95", "180", "90", "0", "-20"):
+            self.assertInvalid("gear", "--module", "2", "--teeth", "20", "40", "--pressure-angle", angle,
+                               says="pressure")
+        self.assertEqual(run_json("gear", "--module", "2", "--teeth", "20", "40", "--pressure-angle", "25")[0], 0)
+
+    def test_depth_ranges_come_together(self):
+        base = ("depth", "--z", "500", "--delta", "60")
+        self.assertInvalid(*base, "--z-range", "350", "800", says="--delta-range")
+        self.assertInvalid(*base, "--delta-range", "30", "80", says="--z-range")
 
 
 if __name__ == "__main__":

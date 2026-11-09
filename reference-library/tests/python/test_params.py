@@ -49,6 +49,15 @@ class Register(unittest.TestCase):
         with self.assertRaises(ValueError):
             params.load_register(self.write("a,1,mm,measured,,,,,\na,2,mm,measured,,,,,\n"))
 
+    def test_byte_order_mark_is_ignored(self):
+        # Review of Revision 4: spreadsheets save "CSV UTF-8" with a BOM, which used to hide parameter_id.
+        path = self.dir / "bom.csv"
+        path.write_text(HEADER + "plate_length,60,mm,proposed,,,,,\n", encoding="utf-8-sig")
+        self.assertTrue(path.read_bytes().startswith(b"\xef\xbb\xbf"))
+        reg = params.load_register(path)
+        self.assertEqual(reg["plate_length"].value, 60.0)
+        self.assertEqual(params.validate(reg, ["plate_length"]), [])
+
     def test_missing_columns_raise(self):
         path = self.dir / "short.csv"
         path.write_text("parameter_id,value\na,1\n")

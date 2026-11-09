@@ -7,7 +7,7 @@ python3 -m cadkit --help
 python3 -m cadkit <command> --help
 ```
 
-Lengths are in millimetres unless an option says otherwise. Every numeric command accepts `--json`. Exit codes are `0` for success, `1` when a check fails (for example a mesh that is not closed, or a register with problems), and `2` for invalid input.
+Lengths are in millimetres unless an option says otherwise. Every numeric command accepts `--json`. Exit codes are `0` for success, `1` when a check fails (for example a mesh that is not closed, or a register with problems), and `2` for invalid input. Invalid input includes impossible or out-of-range values, results too large to represent, malformed JSON or STL, and a path that is missing, unreadable, a directory, or not writable. It prints one `error: …` line on standard error, never a traceback.
 
 The results are arithmetic on the inputs you give. They are not measurements, and they inherit every assumption the handbook states for each formula.
 
@@ -103,7 +103,9 @@ at [500.0, 400.0]: maps to [25.0, 20.0]; local scale u 0.05, v 0.05 units/px (4.
 warning: Exactly four point pairs: the homography reproduces them exactly, so residuals are zero by construction and are not accuracy evidence. Add well-distributed control points and reserve an independent check length.
 ```
 
-`--points` takes a JSON file path or inline JSON, either as `[[[u, v], [x, y]], ...]` or as `{"src": [[u, v], ...], "dst": [[x, y], ...]}`.
+`--points` takes a JSON file path or inline JSON, either as `[[[u, v], [x, y]], ...]` or as `{"src": [[u, v], ...], "dst": [[x, y], ...]}`. Any other shape is invalid input.
+
+`--at` must be a finite pixel on the same side of the plane's vanishing line as the control points, that is, where the homogeneous `w = h31 u + h32 v + h33` has the control points' sign. A pixel on or beyond that line does not image the plane, although the formula would still map it to a confident-looking position and scale. `homography` therefore refuses it with exit code 2 and reports no mapping or local scale. The browser calculator shows the same error.
 
 Checking the plate rendered by `examples/build_plate.py`:
 
@@ -155,7 +157,7 @@ scad.render("examples/two-hole-plate.scad", "out.stl", params.to_openscad_define
 | `project` | `new_project`, `slugify`, `FOLDERS`, `PLACEMENT` |
 | `routes` | `load_routes`, `recommend`, `all_recommendations` |
 
-Single-number functions are plain formulas. Functions that return a dictionary include a `warnings` list. Warnings never change a result. Invalid input raises `ValueError` with a message.
+Single-number functions are plain formulas. Functions that return a dictionary include a `warnings` list. Warnings never change a result. Invalid input raises `ValueError` with a message. That includes malformed point lists, a homography `at` point beyond the vanishing line, and a result too large to represent, such as a `wind_power` or `ratio_uncertainty` overflow.
 
 ## Conventions shared with the browser calculators
 
@@ -170,8 +172,12 @@ The offline page's calculators (`assets/js/cadcalc.js`) follow the same formulas
 | Proportion mismatch warning | reference aspect differs by more than 1 % | `aspect` |
 | Full-frame diagonal | `hypot(36, 24)` = 43.2666 mm | `camera` |
 | Gear undercut limit | `2 / sin²(pressure angle)`, 17.1 teeth at 20° | `gear` |
+| Gear pressure angle | strictly between 0° and 90°; other values are rejected | `gear` |
 | Betz limit | `Cp` above 16/27 is rejected | `wind` |
-| Clearance rounding | diametral values rounded to 1e-6 mm | `coupon` |
+| Rotor diameter | zero or negative is rejected | `wind` |
+| Overflow | a result too large to represent is rejected, not reported as infinity | `uncertainty`, `wind` |
+| Homography query point | finite, and on the control points' side of the plane's vanishing line | `homography` |
+| Clearance rounding | values rounded to 1e-6 mm; exact binary ties such as 0.0078125 go to the even digit, as in Python's `round` | `coupon` |
 
 Evidence classes, from strongest to weakest, are `measured`, `image-derived`, `inferred`, and `unknown`. A derived value takes the weakest class among its inputs. Register labels map onto the four classes as follows: `confirmed` counts as measured, `estimated` as image-derived, and `nominal`, `proposed`, and `synthetic` as inferred. Matching ignores case and treats spaces as hyphens. Unrecognized labels raise an error.
 
@@ -180,12 +186,13 @@ Evidence classes, from strongest to weakest, are `measured`, `image-derived`, `i
 ## Mesh-check notes
 
 - Binary STL is recognized by its exact size (`84 + 50 × triangle count`), so a binary file whose header begins with `solid` is still read correctly.
-- Vertices closer than `--weld-tol` (default 1e-6 file units, straight-line distance) are welded before topology is checked. A spatial hash searches neighbouring cells, so two nearly coincident points are merged even when they straddle a cell boundary.
+- ASCII STL is read line by line. Each `vertex` line must hold three numbers, and each `facet` … `endfacet` block exactly three vertices. A coordinate that is not a number (`1,5`, `1D+01`), a NaN or infinite coordinate, or a facet with the wrong vertex count is invalid input (exit code 2), and the message names the line. Non-finite coordinates in a binary file are rejected the same way.
+- Vertices closer than `--weld-tol` (default 1e-6 file units, straight-line distance) are welded before topology is checked. A spatial hash searches neighbouring cells, so two nearly coincident points are merged even when they straddle a cell boundary. The tolerance must be a positive finite number no larger than 1e100, and large enough that every coordinate divided by it stays finite; `--weld-tol 1e-320` on a 10 mm part is rejected.
 - `watertight` means every edge is shared by exactly two faces. `manifold` adds the vertex test: the faces around each vertex must form a single fan, so two shells that touch only at a corner fail even though every edge has two faces. `orientation_consistent` means each shared edge is traversed once in each direction. None of these checks rules out self-intersections.
 - `status: pass` (exit code 0) requires a watertight, manifold, consistently oriented mesh with no degenerate triangles. `--allow-open` reports the same result but exits 0.
 - Volume uses the divergence theorem about the bounding-box centre. A negative volume indicates inward-facing normals.
 - `genus` is reported for closed, manifold, consistently oriented meshes as `(2 × components − χ) / 2`. For a plate it equals the number of through-holes, so the two-hole plate reports 2.
-- Degenerate triangles are counted and excluded from the topology checks.
+- A triangle is degenerate when fewer than three distinct vertices remain after welding (a collapsed face) or when its area is at most `weld_tol²` (a sliver). Collapsed faces are excluded from the topology checks. Slivers keep three welded vertices, so their edges still count in the edge, vertex, and component checks. Both kinds are counted in `degenerate_triangles` and fail `status`.
 
 ## Tests
 

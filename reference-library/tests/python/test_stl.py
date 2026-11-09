@@ -62,7 +62,7 @@ class Analyze(unittest.TestCase):
         tris = stl.box() + [((0, 0, 0), (0, 0, 0), (1, 1, 1))]
         r = stl.analyze(tris)
         self.assertEqual(r["degenerate_triangles"], 1)
-        self.assertTrue(r["watertight"])  # degenerate faces are excluded from topology
+        self.assertTrue(r["watertight"])  # collapsed faces are excluded from topology
 
     def test_weld_tolerance(self):
         tris = stl.box()
@@ -175,6 +175,109 @@ class ReadWrite(unittest.TestCase):
         path.write_text("solid s\nvertex 0 0 0\nvertex 1 0 0\nendsolid s\n")
         with self.assertRaises(ValueError):
             stl.read_stl(path)
+
+
+def _ascii_facet(*vertex_lines: str) -> str:
+    return "facet normal 0 0 1\nouter loop\n" + "".join(f"vertex {v}\n" for v in vertex_lines) + "endloop\nendfacet\n"
+
+
+class AsciiStructure(unittest.TestCase):
+    """Review of Revision 4: a malformed ASCII facet must be invalid input, never a passing mesh."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.dir = Path(self.tmp.name)
+        self.path = self.dir / "m.stl"
+        box = self.dir / "box.stl"
+        stl.write_stl_ascii(box, stl.box((10, 10, 10)))
+        self.box = box.read_text(encoding="ascii").replace("endsolid cadkit\n", "")
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def read(self, extra: str):
+        self.path.write_text(self.box + extra + "endsolid cadkit\n", encoding="ascii")
+        return stl.read_stl(self.path)
+
+    def test_unparsable_coordinates_are_rejected(self):
+        # The old reader skipped tokens it could not match, so the next facet's vertices
+        # regrouped into this one: a box plus a "nan nan nan" facet reported status: pass.
+        with self.assertRaises(ValueError):
+            self.read(_ascii_facet("nan nan nan", "inf 0 0", "1,5 2 3"))  # the reviewer's file
+        for coords in ("1,5 0 0", "1D+01 0 0", "0 0 zero", "0x1 0 0"):
+            with self.assertRaises(ValueError, msg=coords):
+                self.read(_ascii_facet(coords, coords, coords))
+            with self.assertRaises(ValueError, msg=coords):
+                self.read(_ascii_facet("0 0 0", coords, "10 10 0"))
+
+    def test_non_finite_coordinates_are_rejected_like_binary(self):
+        for coords in ("nan 0 0", "inf 0 0", "0 -Infinity 0"):
+            with self.assertRaisesRegex(ValueError, "not finite", msg=coords):
+                self.read(_ascii_facet(coords, "0 10 0", "10 10 0"))
+
+    def test_every_facet_has_exactly_three_vertices(self):
+        for vertices in (("0 0 0", "0 10 0"), ("0 0 0", "0 10 0", "10 10 0", "10 0 0"), ("0 0 0 0", "0 10 0", "10 10 0"),
+                         ("0 0", "0 10 0", "10 10 0")):
+            with self.assertRaises(ValueError, msg=vertices):
+                self.read(_ascii_facet(*vertices))
+
+    def test_vertex_count_is_three_per_facet(self):
+        with self.assertRaisesRegex(ValueError, "endfacet"):  # truncated inside the last facet
+            self.read("facet normal 0 0 1\nouter loop\nvertex 0 0 0\nvertex 0 10 0\nvertex 10 10 0\n")
+        with self.assertRaisesRegex(ValueError, "outside a facet"):
+            self.read("vertex 0 0 0\nvertex 0 10 0\nvertex 10 10 0\n")
+
+    def test_well_formed_files_still_read(self):
+        self.assertEqual(len(self.read("")), 12)
+        tris = self.read(_ascii_facet("  1.5e+1\t-0 +2", "0 1E1 0", "1000 .5 5."))
+        self.assertEqual(tris[-1], ((15.0, 0.0, 2.0), (0.0, 10.0, 0.0), (1000.0, 0.5, 5.0)))
+        two_solids = self.box + "endsolid cadkit\nsolid second\n" + _ascii_facet("0 0 0", "1 0 0", "0 1 0")
+        self.path.write_text(two_solids + "endsolid second\n", encoding="ascii")
+        self.assertEqual(len(stl.read_stl(self.path)), 13)
+
+
+class DegenerateTopology(unittest.TestCase):
+    """Review of Revision 4: which degenerate faces the topology checks exclude (cadkit/README.md)."""
+
+    def test_collapsed_faces_are_excluded_from_topology(self):
+        r = stl.analyze(stl.box() + [((0, 0, 0), (0, 0, 0), (1, 1, 1))])  # two corners weld together
+        self.assertEqual(r["degenerate_triangles"], 1)
+        self.assertEqual((r["boundary_edges"], r["nonmanifold_edges"], r["components"]), (0, 0, 1))
+        self.assertTrue(r["watertight"] and r["manifold"])
+
+    def test_slivers_are_degenerate_and_keep_their_edges(self):
+        # Three distinct, collinear vertices: zero area, so the face is degenerate, but it
+        # still has three welded corners and its edges take part in the topology checks.
+        r = stl.analyze(stl.box() + [((0, 0, 0), (0.5, 0, 0), (1, 0, 0))])
+        self.assertEqual(r["degenerate_triangles"], 1)
+        self.assertEqual(r["vertices"], 9)
+        self.assertEqual((r["boundary_edges"], r["nonmanifold_edges"]), (2, 1))
+        self.assertFalse(r["watertight"])
+        self.assertIsNone(r["genus"])
+
+
+class WeldToleranceBounds(unittest.TestCase):
+    """Review of Revision 4: the weld tolerance must be a usable positive finite length."""
+
+    def test_non_finite_or_non_positive_tolerances_are_rejected(self):
+        for tol in (float("inf"), float("nan"), 0.0, -1e-6):
+            with self.assertRaisesRegex(ValueError, "weld_tol must be a positive finite number", msg=tol):
+                stl.analyze(stl.box(), weld_tol=tol)
+
+    def test_a_tolerance_too_small_for_the_coordinates_is_invalid_input(self):
+        # 10 / 1e-320 overflows the welding grid; it used to raise OverflowError.
+        with self.assertRaisesRegex(ValueError, "too small"):
+            stl.analyze(stl.box((10, 10, 10)), weld_tol=1e-320)
+        with self.assertRaisesRegex(ValueError, "too small"):
+            stl.analyze(stl.box(origin=(1e303, 0, 0)), weld_tol=1e-6)
+        self.assertTrue(stl.analyze(stl.box(origin=(1e9, 0, 0)), weld_tol=1e-6)["watertight"])
+
+    def test_a_huge_tolerance_is_bounded_instead_of_overflowing(self):
+        r = stl.analyze(stl.box(), weld_tol=stl.MAX_WELD_TOL)  # welds every corner into one point
+        self.assertEqual((r["vertices"], r["degenerate_triangles"]), (1, 12))
+        self.assertFalse(r["watertight"])
+        with self.assertRaisesRegex(ValueError, "no larger than"):  # 1e200 ** 2 used to raise OverflowError
+            stl.analyze(stl.box(), weld_tol=1e200)
 
 
 class UnitHints(unittest.TestCase):
