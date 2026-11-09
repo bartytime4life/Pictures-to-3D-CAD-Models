@@ -19,6 +19,7 @@ All dates are 2026. Revisions are numbered in `library.json`, which feeds the HT
 
 ### Fixed
 
+- **Thumbnails no longer request revoked blob URLs.** When the gallery refreshed while the previous thumbnails were still lazily loading, their object URLs were revoked while the images still pointed at them. A fetch that started late then failed: Chrome logs "Not allowed to load local resource" on `file://` pages, and the thumbnail is missing. This intermittently failed the photo check, about 1 run in 4 to 1 in 20 locally, and on both CI runs after Revision 4 merged. URLs are now created only after the last await, for the gallery that is actually shown. Old thumbnails drop their source before it is revoked, and the detail view revokes its previous URL only after switching. A new deterministic browser assertion fails if any image keeps or receives a revoked URL.
 - **The archive no longer packages local environments.** `make-dist.py` now skips `.venv`, `.cache`, and `.ruff_cache`. `make setup-library` at the repository root creates `reference-library/.venv`, which a later `make dist` would otherwise have added to the ZIP.
 
 ## Revision 3 maintenance (November 8, 2026)

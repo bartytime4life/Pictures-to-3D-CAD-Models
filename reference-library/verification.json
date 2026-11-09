@@ -34,7 +34,7 @@
     "errors": []
   },
   "photo_workspace_checks": {
-    "checked_at": "2026-11-09T01:53:35.007Z",
+    "checked_at": "2026-11-09T02:40:44.200Z",
     "revision": 4,
     "status": "passed",
     "transport": "file",
@@ -86,6 +86,7 @@
       "photo-save: late completion preserves a different photograph's open draft",
       "photo-remove: details cannot change while the mutation is pending",
       "photo-remove: late completion preserves a different photograph's open draft",
+      "Images never keep or receive a revoked blob URL",
       "No browser script or console errors"
     ],
     "browser_errors": [],
@@ -117,7 +118,7 @@
       390,
       844
     ],
-    "check_count": 48
+    "check_count": 49
   },
   "external_links": {
     "checked_at": "2026-11-08T21:57:47.393Z",

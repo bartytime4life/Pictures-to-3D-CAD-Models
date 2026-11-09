@@ -85,28 +85,33 @@
     $('photo-export').disabled = result.count === 0;
     coverage(result);
     const fragment = document.createDocumentFragment();
-    const urls = [];
-    try {
-      for (const photo of result.items) {
-        const card = node('button', undefined, 'photo-card'); card.type = 'button';
-        card.dataset.photoId = photo.id;
-        card.setAttribute('aria-label', `Review ${photo.name}`);
-        const thumb = node('img', undefined, 'photo-thumb');
-        thumb.alt = ''; thumb.loading = 'lazy'; thumb.decoding = 'async';
-        const blob = await db.thumbnail(photo.id);
-        if (blob) { const url = URL.createObjectURL(blob); urls.push(url); thumb.src = url; }
-        const body = node('span', undefined, 'photo-card-body');
-        body.append(node('span', photo.name, 'photo-card-name'), node('span', `${photo.width} × ${photo.height} · ${label(photo.viewpoint)}`, 'photo-card-meta'));
-        if (photo.measurement) body.append(node('span', 'Dimension estimate saved', 'photo-badge'));
-        if (photo.notes) body.append(node('span', photo.notes, 'photo-card-note'));
-        card.append(thumb, body);
-        card.addEventListener('click', run(() => openDetail(photo.id)));
-        fragment.append(card);
-      }
-    } catch (error) { urls.forEach((url) => URL.revokeObjectURL(url)); throw error; }
-    if (version !== renderVersion) { urls.forEach((url) => URL.revokeObjectURL(url)); return; }
-    galleryURLs.forEach((url) => URL.revokeObjectURL(url)); galleryURLs = urls;
+    const thumbnails = [];
+    for (const photo of result.items) {
+      const card = node('button', undefined, 'photo-card'); card.type = 'button';
+      card.dataset.photoId = photo.id;
+      card.setAttribute('aria-label', `Review ${photo.name}`);
+      const thumb = node('img', undefined, 'photo-thumb');
+      thumb.alt = ''; thumb.loading = 'lazy'; thumb.decoding = 'async';
+      const blob = await db.thumbnail(photo.id);
+      if (blob) thumbnails.push([thumb, blob]);
+      const body = node('span', undefined, 'photo-card-body');
+      body.append(node('span', photo.name, 'photo-card-name'), node('span', `${photo.width} × ${photo.height} · ${label(photo.viewpoint)}`, 'photo-card-meta'));
+      if (photo.measurement) body.append(node('span', 'Dimension estimate saved', 'photo-badge'));
+      if (photo.notes) body.append(node('span', photo.notes, 'photo-card-note'));
+      card.append(thumb, body);
+      card.addEventListener('click', run(() => openDetail(photo.id)));
+      fragment.append(card);
+    }
+    // A newer refresh supersedes this one. No object URL exists yet, so nothing leaks.
+    if (version !== renderVersion) return;
+    // Hand out URLs only after the last await, for the gallery that is actually shown, and
+    // detach the old thumbnails from theirs before revoking them. A lazy image whose fetch
+    // has not started would otherwise request a revoked URL ("Not allowed to load local
+    // resource" on file:// pages) and show no thumbnail.
+    const urls = thumbnails.map(([thumb, blob]) => { const url = URL.createObjectURL(blob); thumb.src = url; return url; });
+    for (const old of $('photo-grid').querySelectorAll('img')) old.removeAttribute('src');
     $('photo-grid').replaceChildren(fragment);
+    galleryURLs.forEach((url) => URL.revokeObjectURL(url)); galleryURLs = urls;
     const info = await storageInfo(result.bytes);
     if (version === renderVersion) $('photo-storage').textContent = info;
   }
@@ -219,9 +224,11 @@
     if (!photo || version !== detailVersion) return;
     selected = photo;
     setDetailBusy(false);
-    if (detailURL) URL.revokeObjectURL(detailURL);
+    // Point the image at the new URL before revoking the previous one.
+    const previousURL = detailURL;
     detailURL = URL.createObjectURL(photo.blob);
     $('photo-image').src = detailURL; $('photo-image').alt = photo.name;
+    if (previousURL) URL.revokeObjectURL(previousURL);
     $('photo-detail-title').textContent = photo.name;
     $('photo-detail-info').textContent = `${photo.width} × ${photo.height} pixels · ${size(photo.size)} · ${label(photo.viewpoint)}. Save details before closing.`;
     $('photo-viewpoint').value = photo.viewpoint;
