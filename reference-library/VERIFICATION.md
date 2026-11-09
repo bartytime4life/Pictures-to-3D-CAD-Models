@@ -39,12 +39,13 @@ The checks fall into the three tiers described in handbook section 18. Tiers 1 a
   - **Theme, keyboard, and safety:** the theme persists across reloads, and dark mode applies. `/` focuses the search, while Ctrl+/ does not. Script-like text and malformed escapes in the URL hash are treated as data.
   - **Layout:** no horizontal page overflow at 390 × 844 on any tab, and no JavaScript or console errors at 1440 × 1050.
 - **Test suites:** 129 Python tests. OpenSCAD tests are skipped automatically where it is not installed. There are also 22 Node test groups, including 10 for photo validation, preparation, storage errors, and calibrated estimates.
-- **Photo workspace:** `scripts/check-photos.mjs` passed 48 assertions in fresh Chrome contexts with generated raster images only, over the `file` transport and again over loopback HTTP. It checks:
+- **Photo workspace:** `scripts/check-photos.mjs` passed 49 assertions in fresh Chrome contexts with generated raster images only, over the `file` transport and again over loopback HTTP. It checks:
   - repeated imports beyond the 24-thumbnail page size, exact-byte duplicates, original-byte preservation, and reload persistence
   - viewpoint and notes editing, text-only rendering of notes containing markup, filtering, and paging
   - a known 5 mm result from pointer-picked and typed endpoints, and rejection of out-of-image coordinates
   - metadata-only manifest export, concurrent duplicate writes, rollback after a simulated quota failure, and feedback for corrupt or unsupported files
   - per-photo removal with confirmation, drag-and-drop cancellation and resume, guidance when storage is blocked, a save or removal finishing after another photo was opened, and desktop, dark, and 390 px layouts
+  - no image keeps or receives a revoked blob URL when gallery refreshes overlap (deterministic; it replaces a timing-dependent failure)
 
   The scope and per-check list are recorded in `verification.json` under `photo_workspace_checks`.
 - **Storage boundaries:** images are saved only after a complete IndexedDB transaction. A failed import stops on storage failure while retaining already committed photos. The gallery reads at most 24 thumbnails per page; original blobs are read only for a selected image. There is no hard total-count cap, but device and browser storage, 50 MiB per file, and 60-megapixel image limits still apply. Browser data is not a backup.
@@ -60,7 +61,7 @@ A separate code review of the Revision 3 scripts and interface reported 15 corre
 - two Python inputs that crashed instead of reporting an error
 - PDF worksheets that had lost their checkboxes since Revision 1
 
-Revision 4's photo code, tests, and documents were read in full before it was added to this repository; that review found no defects in the photo code. The port added the shared loopback transport for the photo check and the archive exclusion fix described in the changelog.
+Revision 4's photo code, tests, and documents were read in full before it was added to this repository. That review missed a timing race in the gallery's blob-URL handling. CI exposed it after the merge, and it is fixed with a regression assertion; see the changelog. The port added the shared loopback transport for the photo check and the archive exclusion fix described in the changelog.
 
 ### External links (network, informational)
 

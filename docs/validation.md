@@ -2,6 +2,10 @@
 
 Validated November 8, 2026, in the managed Linux environment. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
 
+## Reference library Photos fix: blob-URL race
+
+After Revision 4 merged, both library CI runs failed. The Photos check's final assertion found two "Not allowed to load local resource: blob:null/…" console errors. The same failure appeared locally in about 1 run in 4, and in 1 of 20 instrumented runs, always as a filtered gallery refreshed. The gallery revoked its previous thumbnails' object URLs while those images still referenced them, so a lazy load that started late requested a revoked URL. The fix creates URLs only for the gallery actually shown and detaches old thumbnails before revoking. A new deterministic assertion (49 in total) fails on the previous code and passes now. The library and workbench results for this fix are in its pull request and the library's [verification record](../reference-library/VERIFICATION.md).
+
 ## Reference library Revision 4: Photos workspace
 
 This change set adds the library's offline Photos workspace (Revision 4). It shares the browser checks' loopback server so the Photos check runs over both transports, and it keeps `reference-library/.venv` out of the library archive. The workbench code is unchanged. The run below used the same workstation and tools as the section that follows.

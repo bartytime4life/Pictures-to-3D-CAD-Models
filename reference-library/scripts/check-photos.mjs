@@ -312,6 +312,24 @@ try {
     window.CadPhotos = { VIEWPOINTS: ['unassigned', 'front'], createStore: async () => store, estimate: () => ({ estimatedMm: 1, warnings: [] }) };
     window.confirm = () => true;
   });
+  // Record every image source and every revoked blob URL. A lazily loaded image whose
+  // URL is revoked before its fetch starts logs "Not allowed to load local resource"
+  // (timing-dependent; it failed CI). The deterministic invariant: no image may keep,
+  // or be given, a URL that has already been revoked.
+  await racePage.evaluate(() => {
+    const revoked = new Set(); const images = new Set(); window.staleImageSources = [];
+    const source = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
+    Object.defineProperty(HTMLImageElement.prototype, 'src', {
+      configurable: true, get() { return source.get.call(this); },
+      set(value) { images.add(this); if (revoked.has(String(value))) window.staleImageSources.push('assigned ' + value); source.set.call(this, value); },
+    });
+    const revoke = URL.revokeObjectURL.bind(URL);
+    URL.revokeObjectURL = (url) => {
+      revoked.add(url);
+      for (const image of images) if (image.getAttribute('src') === url) window.staleImageSources.push('kept ' + url);
+      revoke(url);
+    };
+  });
   await racePage.addScriptTag({ content: fs.readFileSync(path.join(ROOT, 'assets/js/photo-workspace.js'), 'utf8') });
   await racePage.locator('.photo-card').first().waitFor({ state: 'visible' });
   for (const action of ['photo-save', 'photo-remove']) {
@@ -331,6 +349,20 @@ try {
     assert(await racePage.locator('#photo-detail').evaluate((dialog) => dialog.open) && await racePage.locator('#photo-notes').inputValue() === 'New draft on B', `${action}: late completion preserves a different photograph's open draft`);
     await racePage.locator('#photo-close').click();
   }
+  // Overlapping refreshes: a superseded one must not hand out URLs, and a replaced
+  // gallery's thumbnails must let go of theirs before they are revoked.
+  await racePage.evaluate(async () => {
+    const search = document.querySelector('#photo-search');
+    for (let n = 0; n < 4; n++) {
+      search.value = 'x'.repeat(n % 2); search.dispatchEvent(new Event('input'));
+      for (let tick = 0; tick < n; tick++) await Promise.resolve();
+    }
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  });
+  await racePage.locator('.photo-card').first().click();
+  await racePage.locator('#photo-close').click();
+  const stale = await racePage.evaluate(() => window.staleImageSources);
+  assert(stale.length === 0, 'Images never keep or receive a revoked blob URL' + (stale.length ? ': ' + stale.slice(0, 3).join('; ') : ''));
   await racePage.close();
   assert(results.browser_errors.length === 0, 'No browser script or console errors');
   results.status = 'passed';
