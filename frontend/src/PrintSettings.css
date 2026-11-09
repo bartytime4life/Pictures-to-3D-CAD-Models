@@ -1,0 +1,75 @@
+.print-settings .printer-search-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.print-settings .printer-search-input {
+  display: flex;
+  position: relative;
+  min-width: 0;
+}
+
+.print-settings .printer-search-input input {
+  min-height: 44px;
+  padding-right: 49px;
+}
+
+.print-settings .printer-search-input input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.print-settings .printer-search-clear {
+  display: grid;
+  place-items: center;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 5px;
+  padding: 0;
+  background: transparent;
+  color: #c6dce7;
+  cursor: pointer;
+}
+
+.print-settings .printer-search-clear:hover {
+  background: #30434f;
+  color: #edf8ff;
+}
+
+.print-settings .printer-search-clear:focus-visible {
+  outline: 2px solid #74daf4;
+  outline-offset: -4px;
+}
+
+.print-settings .printer-search-help {
+  margin: 9px 0;
+}
+
+.print-settings .printer-search-empty {
+  padding: 12px 14px;
+  margin: 0 0 16px;
+  border: 1px solid #647d8d;
+  border-radius: 5px;
+  background: #182c38;
+  color: #d0e0ea;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.print-settings .printer-search-empty strong,
+.print-settings .printer-search-empty span {
+  display: block;
+}
+
+.print-settings .printer-search-empty strong {
+  color: #edf8ff;
+}
+
+.print-settings .printer-search-empty span {
+  margin-top: 5px;
+}

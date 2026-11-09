@@ -1,6 +1,19 @@
 # Validation results
 
-Validated November 8, 2026, in the managed Linux environment. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
+Latest workbench validation: November 9, 2026, on the local Linux workstation. Earlier managed-environment and release results are recorded separately below. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
+
+## Measured-feature scale and recovery improvements — November 9, 2026
+
+The workbench now supports an explicitly applied two-point reference in the orientation-adjusted working image, alongside manual outside-width entry. An optional independent outside-height comparison stays separate from XY design scaling. Version 2 recipes retain validated endpoint/length/frame notes and the optional check without embedding a photograph.
+
+- `PICAD_TEST_URL=http://127.0.0.1:18000 make test-app` passed: **180 Python tests**, production typecheck/build, and **33 Chromium browser scenarios**, with no failures or skips. `make lint` passed. Dependencies and lockfiles did not change.
+- The ten added browser scenarios verify real CAD dimensions, inch conversion, save/restore started in inches, held-out height comparison before design scaling, blank checks, invalid drafts/imports, manual width overrides, same-frame and changed-frame retracing, failed-retrace retention, fixture-assisted retrace/Undo, and printer-search recovery on desktop and mobile.
+- The endpoint checks include a 3–4–5 diagonal and reversed endpoints, draft edits that do not change applied scale, and independent mobile touch-to-image mapping at device pixel ratio 2. The expanded measurement tools pass the selected axe WCAG A/AA rules at a 390-pixel phone viewport with no horizontal overflow. Complete screen-reader, cross-browser, and device-lab qualification remain outside this run.
+- Damaged PNG compressed-data chunks now return a recoverable HTTP 422 instead of an uncaught decoder error. A regression checks rejection followed by a successful valid trace.
+- Personal source photos, private project folders and local model providers were not used. Assistant answers and deliberately changed trace frames in lifecycle checks are fixtures; geometry builds and exports use the real local CAD service.
+- The reference-library files are unchanged in this update. Its separate release and CI evidence remain attached to Revision 6 / pull request #9; this workbench run does not replace those results.
+
+The run used Python 3.12.14, Node.js 22.13.1 and the system Chrome fallback. These are software and synthetic geometry checks. No physical part was sliced or printed, and the endpoint/height tools do not establish metrology accuracy, fit or manufacturing acceptance. GitHub CI results belong to this update's pull request.
 
 ## Review fixes: recovery, tracing accuracy, and input checks
 

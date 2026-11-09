@@ -22,11 +22,15 @@ Tiny interior regions below the trace resolution can be omitted with a warning. 
 
 If several objects are present, the app uses the largest candidate and reports additional substantial regions. Re-photograph or crop the source before uploading if it is unclear which object should be traced. Do not assume a small disconnected feature was intentionally included.
 
-## Set the reference width
+## Set the scale
+
+Supply one measured length using either the complete outside width or two points on a known feature. Both methods apply one scale factor to the entire outline; neither removes perspective or lens distortion.
+
+### Enter the complete outside width
 
 The reference width is the **complete horizontal span of the traced part**, from its leftmost to rightmost outline point in the image. The outline follows the outer edges of the part's boundary pixels, so a part covering 401 pixel columns spans 401 pixels. It is not an arbitrary distance between holes or the length of whichever edge is easiest to measure.
 
-Measure that same span on the real part and enter it with an explicit unit. Align the part in the photograph so this direction is unambiguous. If your intended reference is a different edge or pair of points, retake or rotate the source image so the full horizontal span corresponds to the measurement you can supply.
+Measure that same span on the real part and enter it with an explicit unit. Align the part in the photograph so this direction is unambiguous. Use the known-feature option below if the measurement you can supply is a different edge or pair of points.
 
 Internally, the conversion is:
 
@@ -36,17 +40,41 @@ millimeters per pixel = measured reference width / traced horizontal pixel span
 
 That factor is applied uniformly to both image axes. The model's height is therefore calculated from the image; it is not independently measured.
 
+### Use two points on a known feature
+
+Open **Use a known feature**. Choose two clearly visible endpoints of a feature whose physical length you have measured, then enter that distance as **Known feature length**. For example, use the centers of two holes only when the measurement is the distance between those same centers. Prefer a long, sharply defined reference on the part; a short span makes small endpoint-placement errors more influential.
+
+Select the endpoints on the reference preview or enter their X/Y coordinates numerically. Coordinates belong to the orientation-adjusted **working image**, whose longest side is at most 1400 pixels. They are not browser-screen coordinates or necessarily the original camera-file coordinates. The numeric controls provide the same operation without pointing.
+
+Choose **Apply reference scale** to set the complete outside width from the reference:
+
+```text
+reference pixels = sqrt((x2 - x1)^2 + (y2 - y1)^2)
+millimeters per pixel = measured feature length / reference pixels
+outside width = traced horizontal pixel span × millimeters per pixel
+```
+
+The reference may run horizontally, vertically, or diagonally. Its direction does not rotate the outline or give the two axes separate scales. Keep the reference and the outline being reconstructed in the same flat plane, with the camera facing that plane directly. A reference resting at a different height can give a different apparent scale.
+
+Applying a reference makes an existing model outdated; rebuild before exporting. Editing the outside width directly clears the saved endpoint-calibration record. A successful re-trace of the same photo retains the reference and recalculates the outside width from the new outline; if the working-image frame changes, the app clears the reference with a notice. A new photo or sample starts without the earlier reference. Review the chosen points and the resulting dimensions after any source change.
+
 ## Enter thickness separately
 
 Measure the part's constant thickness and enter it independently. A front-facing photograph does not supply a reliable thickness. If the part has different thicknesses, countersinks, pockets, or sloped walls, this workflow does not describe the complete part.
 
-The supported reference width and resulting height are each **0.1–2000 mm**; thickness is **0.1–500 mm**. These are computational input bounds, not guarantees of manufacturing usefulness throughout those ranges.
+The supported outside width and resulting height are each **0.1–2000 mm**; thickness is **0.1–500 mm**. These are computational input bounds, not guarantees of manufacturing usefulness throughout those ranges.
 
 Switching display units should preserve the physical measurement. Before exporting, confirm the reported width, height, and thickness, especially after restoring a project or changing units.
 
 ## Cross-check before fabrication
 
-Measure a second dimension on the real part—for example, its height or hole spacing—and compare it with the exported model in your CAD tool. A disagreement can indicate perspective distortion, an incorrect boundary, or a mismatched reference width.
+Use **Independent height check** to enter the **Measured outside height** of the real part, from its topmost to bottommost outline point in the photograph. This optional value supports **0.1–2000 mm**. Reserve it from setting the scale: if the same height established the endpoint reference, it is not an independent check.
+
+The workbench compares that measurement with the source-outline height implied by the selected scale, before any explicit XY design percentage. The signed difference is `estimated height - measured height`; a positive value means the estimate is larger. Entering the check does not stretch the model or change the scale. Agreement is useful evidence for this dimension, but does not establish a physical accuracy bound or manufacturing acceptance.
+
+Keep the physical reference and source-scale check separate from intentional design changes. For example, a 120% XY design scale makes the exported dimensions 20% larger; the source-height check still compares the reconstructed source part with its measurement.
+
+Measure further reserved dimensions—for example, hole spacing—and compare them with the exported model in your CAD tool. A disagreement can indicate perspective distortion, endpoint placement, an incorrect boundary, or a mismatched physical reference. Record the measurement method and its limitations. If you change the scale or outline to satisfy a check, keep that earlier result and obtain a fresh check for the revised model where practical. The [independent-check worksheet](../reference-library/templates/INDEPENDENT-CHECKS.md) helps preserve these distinctions.
 
 Do not stretch one axis merely to make two measurements agree without understanding the cause. Uniform scale alone does not calibrate a camera or remove lens distortion.
 

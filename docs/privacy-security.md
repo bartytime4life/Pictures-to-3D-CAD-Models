@@ -20,6 +20,8 @@ Model downloads contact the configured Ollama registry and storage hosts. Once w
 
 An AI response is untrusted advice. The application validates its limited trace/design/print-setting proposal separately from its prose. It does not execute generated code, overwrite source measurements, build geometry, or export files from a response. A proposed design-scale change can alter resulting dimensions only after the user applies it and rebuilds. The user must review the resulting geometry and print plan.
 
+Applying a retrace with a two-point reference retains the user's measured feature length and endpoints. It recalculates the derived outside width for the new outline. The independent height check is retained locally in the recipe and is not added to assistant context.
+
 ## Temporary artifacts and saved projects
 
 Generated meshes, CAD files, and recipe data are stored under `.local/jobs` by default; `PICTURES_CAD_JOB_DIR` can select another directory. The running service expires model directories after **one hour**, checks expiry on startup and builds, and runs a cleanup check every **60 seconds**. Expiry removes only directories containing a job file this service writes (`input.json`, `result.json`, or `error.json`), so other programs' directories in a shared job directory are left in place. A failed cleanup check is logged and retried at the next interval. It caps stored model directories at 20 in the job directory, counting every model directory present there. The API supports deletion of one model with `DELETE /api/models/{job_id}`, or all completed temporary models with `DELETE /api/models`. The workbench page deletes its own current model when the page is closed or reloaded. Clearing all models is blocked while a CAD build is active.

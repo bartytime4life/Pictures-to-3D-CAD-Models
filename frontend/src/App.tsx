@@ -26,6 +26,8 @@ import {
 import ModelViewer from './ModelViewer';
 import LocalAssistant from './LocalAssistant';
 import PrintSettings from './PrintSettings';
+import ReferenceCalibration from './ReferenceCalibration';
+import { calibrationError, measuredHeightError, referenceWidth } from './calibration';
 import { DEFAULT_DESIGN, designError, designFromProposal, parseDesign } from './design';
 import type {
   AssistantProposal,
@@ -35,6 +37,7 @@ import type {
   Point,
   Profile,
   ProjectRecipe,
+  ReferenceCalibration as Calibration,
   TraceResult,
 } from './types';
 
@@ -139,6 +142,36 @@ function parseRecipe(value: unknown): ProjectRecipe {
     profile.outer.length + profile.holes.reduce((n, h) => n + h.length, 0) > 2000
   )
     throw new Error('This project contains an invalid or overly complex outline.');
+  if (recipe.reference_calibration !== undefined) {
+    const evidence = recipe.reference_calibration;
+    const issue = calibrationError(evidence);
+    if (issue) throw new Error(`This project has invalid reference measurements. ${issue}`);
+    const frame = evidence.image_size;
+    if (
+      [profile.outer, ...profile.holes].some((loop) =>
+        loop.some(([x, y]) => x < 0 || y < 0 || x > frame.width || y > frame.height),
+      )
+    )
+      throw new Error('This project outline is outside its reference working image.');
+    const calculated = referenceWidth(evidence, getBounds(profile).width);
+    if (
+      !Number.isFinite(calculated) ||
+      Math.abs(calculated - recipe.width_mm!) > Math.max(1e-6, recipe.width_mm! * 1e-8)
+    )
+      throw new Error('This project reference scale does not match its saved outside width.');
+    // Keep only the supported measurement notes, never unrelated fields from an imported file.
+    recipe.reference_calibration = {
+      known_length_mm: evidence.known_length_mm,
+      reference_points: evidence.reference_points.map(([x, y]) => [x, y]) as [Point, Point],
+      image_size: { width: frame.width, height: frame.height },
+    };
+  }
+  if (
+    recipe.measured_height_mm !== undefined &&
+    (typeof recipe.measured_height_mm !== 'number' ||
+      measuredHeightError(String(recipe.measured_height_mm), 1))
+  )
+    throw new Error('This project has an invalid independent height measurement.');
   if (recipe.version === 2) recipe.design = parseDesign(recipe.design);
   return recipe as ProjectRecipe;
 }
@@ -347,6 +380,9 @@ export default function App() {
   const [unit, setUnit] = useState<Unit>('mm');
   const [widthMm, setWidthMm] = useState(80);
   const [thicknessMm, setThicknessMm] = useState(4);
+  const [referenceCalibration, setReferenceCalibration] = useState<Calibration | null>(null);
+  const [measuredHeight, setMeasuredHeight] = useState('');
+  const [measurementReset, setMeasurementReset] = useState(0);
   const [downloading, setDownloading] = useState<string | null>(null);
   const [exportError, setExportError] = useState('');
   const [detail, setDetail] = useState<Detail>('standard');
@@ -360,6 +396,10 @@ export default function App() {
     inverted: boolean;
     design: DesignSettings;
     preview: ModelResult | null;
+    width: string;
+    unit: Unit;
+    widthMm: number;
+    referenceCalibration: Calibration | null;
   } | null>(null);
   const [draftThreshold, setDraftThreshold] = useState(150);
   const [draftAuto, setDraftAuto] = useState(true);
@@ -522,6 +562,9 @@ export default function App() {
       const rev = invalidate();
       setTrace(result);
       setSourceFile(file);
+      setReferenceCalibration(null);
+      setMeasuredHeight('');
+      setMeasurementReset((previous) => previous + 1);
       setModel(null);
       setSample(isSample);
       setName(projectName);
@@ -655,7 +698,22 @@ export default function App() {
       setDetail(newDetail);
       setThreshold(newThreshold);
       setInverted(newInverted);
-      setNotice('Outline updated. Build the model to apply this trace.');
+      if (referenceCalibration) {
+        const frame = referenceCalibration.image_size;
+        if (frame.width === result.image.width && frame.height === result.image.height) {
+          const nextWidth = referenceWidth(referenceCalibration, result.bounds.width);
+          setWidthMm(nextWidth);
+          setWidth((nextWidth / unitFactor).toFixed(unit === 'in' ? 6 : 4));
+          setNotice(
+            'Outline updated. The measured feature scale is retained; review the recalculated outside width, then build.',
+          );
+        } else {
+          setReferenceCalibration(null);
+          setNotice(
+            'Outline updated with a different working-image size. Reapply the feature reference or verify the outside width before building.',
+          );
+        }
+      } else setNotice('Outline updated. Build the model to apply this trace.');
       return true;
     } catch (err) {
       if (sequence === sequenceRef.current)
@@ -686,6 +744,10 @@ export default function App() {
       inverted,
       design,
       preview: current ? model : null,
+      width,
+      unit,
+      widthMm,
+      referenceCalibration,
     };
     const changesTrace =
       (proposal.detail !== undefined && proposal.detail !== detail) ||
@@ -729,6 +791,13 @@ export default function App() {
     setThreshold(previous.threshold);
     setInverted(previous.inverted);
     setDesign(previous.design);
+    setWidth(
+      previous.unit === unit || !previous.width.trim() || !Number.isFinite(previous.widthMm)
+        ? previous.width
+        : String(previous.widthMm / unitFactor),
+    );
+    setWidthMm(previous.widthMm);
+    setReferenceCalibration(previous.referenceCalibration);
     if (unchanged) {
       const restored = { ...ownedModel, revision: rev };
       modelRef.current = restored;
@@ -739,8 +808,8 @@ export default function App() {
       unchanged
         ? 'Previous outline and design settings restored. The model and its downloads match them again.'
         : previous.preview
-          ? 'Previous preview, outline and design settings restored. Your measurements are unchanged. Rebuild to refresh exports.'
-          : 'Previous outline and design settings restored. Your measurements are unchanged. Build to create a fresh preview and exports.',
+          ? 'Previous preview, outline and design settings restored. Your previous source scale is restored. Rebuild to refresh exports.'
+          : 'Previous outline and design settings restored. Your previous source scale is restored. Build to create a fresh preview and exports.',
     );
   }
 
@@ -777,6 +846,11 @@ export default function App() {
       setWidthMm(recipe.width_mm);
       setThicknessMm(recipe.thickness_mm);
       setSourceFile(null);
+      setReferenceCalibration(recipe.reference_calibration ?? null);
+      setMeasuredHeight(
+        recipe.measured_height_mm === undefined ? '' : String(recipe.measured_height_mm),
+      );
+      setMeasurementReset((previous) => previous + 1);
       setSample(false);
       setModel(null);
       setDetail('standard');
@@ -787,8 +861,10 @@ export default function App() {
         profile: recipe.profile,
         bounds,
         image: {
-          width: Math.ceil(bounds.x + bounds.width),
-          height: Math.ceil(bounds.y + bounds.height),
+          width:
+            recipe.reference_calibration?.image_size.width ?? Math.ceil(bounds.x + bounds.width),
+          height:
+            recipe.reference_calibration?.image_size.height ?? Math.ceil(bounds.y + bounds.height),
           data_url: '',
         },
         threshold: 0,
@@ -847,6 +923,10 @@ export default function App() {
       setWidth((widthMm / factor).toFixed(next === 'in' ? 6 : 4));
     if (thickness.trim() !== '' && Number.isFinite(thicknessMm))
       setThickness((thicknessMm / factor).toFixed(next === 'in' ? 6 : 4));
+    if (measuredHeight.trim() !== '' && Number.isFinite(Number(measuredHeight)))
+      setMeasuredHeight(
+        String(Number(((Number(measuredHeight) * unitFactor) / factor).toPrecision(12))),
+      );
     setUnit(next);
   }
   function openTrace() {
@@ -857,6 +937,11 @@ export default function App() {
   }
   function saveProject() {
     if (!trace || !buildReady) return;
+    const heightIssue = measuredHeightError(measuredHeight, unitFactor);
+    if (heightIssue) {
+      setError(heightIssue);
+      return;
+    }
     downloadJson({
       format: 'pictures-to-cad',
       version: 2,
@@ -865,6 +950,8 @@ export default function App() {
       width_mm: widthMm,
       thickness_mm: thicknessMm,
       design,
+      ...(referenceCalibration ? { reference_calibration: referenceCalibration } : {}),
+      ...(measuredHeight.trim() ? { measured_height_mm: Number(measuredHeight) * unitFactor } : {}),
     });
     setNotice(
       'Project download started. Your outline, measurements and design settings are included; the photo is not.',
@@ -1236,6 +1323,7 @@ export default function App() {
                     aria-invalid={width !== '' && !validWidth}
                     onChange={(e) => {
                       setWidth(e.target.value);
+                      setReferenceCalibration(null);
                       setWidthMm(Number(e.target.value) * unitFactor);
                       invalidate();
                       setError('');
@@ -1244,7 +1332,9 @@ export default function App() {
                   <span>{unit}</span>
                 </div>
                 <span id="width-help" className="field-hint">
-                  Full outside width, measured by you
+                  {referenceCalibration
+                    ? 'Outside width from your applied feature reference'
+                    : 'Full outside width, measured by you'}
                 </span>
               </div>
             </div>
@@ -1319,6 +1409,31 @@ export default function App() {
               </button>
             </div>
           </div>
+          {trace && (
+            <ReferenceCalibration
+              key={measurementReset}
+              trace={trace}
+              calibration={referenceCalibration}
+              unit={unit}
+              widthMm={validWidth ? widthMm : null}
+              height={measuredHeight}
+              disabled={!!busy}
+              onApply={(value, calculatedWidth) => {
+                invalidate();
+                setReferenceCalibration(value);
+                setWidthMm(calculatedWidth);
+                setWidth((calculatedWidth / unitFactor).toFixed(unit === 'in' ? 6 : 4));
+                setError('');
+                setNotice(
+                  'Feature reference applied. Review the outside width and independent height check before building.',
+                );
+              }}
+              onHeight={(value) => {
+                setMeasuredHeight(value);
+                setError('');
+              }}
+            />
+          )}
           <p className="measurement-note">
             <Info size={21} />
             <span>
@@ -1579,10 +1694,11 @@ export default function App() {
               </p>
             </li>
             <li>
-              <strong>Measure the whole width.</strong>
+              <strong>Set scale from a real measurement.</strong>
               <p>
-                The reference width is the leftmost-to-rightmost outside width of the part in the
-                photo. Measure it on the real object. Measure thickness separately.
+                Enter the full outside width, or open Use a known feature and mark two measured
+                endpoints. Keep the reference in the same plane as the part. Measure thickness
+                separately.
               </p>
             </li>
             <li>

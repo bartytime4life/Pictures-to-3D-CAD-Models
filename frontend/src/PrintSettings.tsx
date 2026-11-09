@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   ArrowSquareOut,
   CaretDown,
@@ -8,9 +8,11 @@ import {
   SlidersHorizontal,
   SpinnerGap,
   WarningCircle,
+  X,
 } from '@phosphor-icons/react';
 import { DEFAULT_DESIGN, designError } from './design';
 import type { DesignSettings, ModelResult } from './types';
+import './PrintSettings.css';
 
 type PrinterProfile = {
   id: string;
@@ -74,6 +76,7 @@ export default function PrintSettings({
   const [loading, setLoading] = useState(false);
   const [catalogError, setCatalogError] = useState('');
   const [search, setSearch] = useState('');
+  const searchInput = useRef<HTMLInputElement>(null);
   const [reload, setReload] = useState(0);
   useEffect(() => {
     if (!expanded || catalog) return;
@@ -373,18 +376,40 @@ export default function PrintSettings({
               <Printer size={20} /> Printer &amp; build volume
             </legend>
             <div className="printer-picker">
-              <label>
-                Search printers
-                <input
-                  type="search"
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Brand or model, such as Prusa or Ender"
-                />
-              </label>
+              <div className="printer-search-field">
+                <label htmlFor="printer-search">Search printers</label>
+                <span className="printer-search-input">
+                  <input
+                    ref={searchInput}
+                    id="printer-search"
+                    type="search"
+                    value={search}
+                    onChange={(event) => setSearch(event.target.value)}
+                    placeholder="Brand or model, such as Prusa or Ender"
+                    aria-describedby="printer-search-status printer-search-help"
+                    aria-controls="printer-model"
+                    autoComplete="off"
+                    spellCheck={false}
+                  />
+                  {search && (
+                    <button
+                      type="button"
+                      className="printer-search-clear"
+                      aria-label="Clear printer search"
+                      onClick={() => {
+                        setSearch('');
+                        searchInput.current?.focus();
+                      }}
+                    >
+                      <X size={17} aria-hidden="true" />
+                    </button>
+                  )}
+                </span>
+              </div>
               <label>
                 Printer model
                 <select
+                  id="printer-model"
                   value={design.printer_id}
                   onChange={(event) => {
                     const printer = catalog?.printers.find(
@@ -423,18 +448,24 @@ export default function PrintSettings({
                 </select>
               </label>
             </div>
+            <p id="printer-search-help" className="print-field-note printer-search-help">
+              Search narrows the model list below. Your selected printer stays selected until you
+              choose another model or edit its dimensions.
+            </p>
             <div className="printer-catalog-status">
-              {loading ? (
-                <span>
-                  <SpinnerGap size={15} className="spinner" /> Loading printer catalog…
-                </span>
-              ) : catalog ? (
-                <span>
-                  {matches.length} matching models · {catalog.printers.length} in the catalog
-                </span>
-              ) : (
-                <span>Custom dimensions are always available.</span>
-              )}
+              <span id="printer-search-status" role="status" aria-atomic="true">
+                {loading ? (
+                  <>
+                    <SpinnerGap size={15} className="spinner" /> Loading printer catalog…
+                  </>
+                ) : catalog ? (
+                  <>
+                    {matches.length} matching models · {catalog.printers.length} in the catalog
+                  </>
+                ) : (
+                  'Custom dimensions are always available.'
+                )}
+              </span>
               {catalogError && (
                 <>
                   <p role="status">{catalogError}</p>
@@ -444,6 +475,15 @@ export default function PrintSettings({
                 </>
               )}
             </div>
+            {catalog && queryTokens.length > 0 && matches.length === 0 && (
+              <p className="printer-search-empty">
+                <strong>No printers match “{search.trim()}”.</strong> Try a shorter brand or model
+                name, or choose Custom printer and enter your build volume below.
+                {design.printer_id !== 'custom' && (
+                  <span>Your current selection, {printerTitle}, is still selected.</span>
+                )}
+              </p>
+            )}
             <div className="printer-dimensions">
               <label>
                 Bed width (mm)

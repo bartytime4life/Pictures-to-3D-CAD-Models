@@ -1,4 +1,9 @@
 export type Point = [number, number];
+export type ReferenceCalibration = {
+  known_length_mm: number;
+  reference_points: [Point, Point];
+  image_size: { width: number; height: number };
+};
 export type Profile = { outer: Point[]; holes: Point[][] };
 export type Detail = 'coarse' | 'standard' | 'fine';
 export type Material = 'pla' | 'petg' | 'abs' | 'asa' | 'tpu' | 'nylon';
@@ -101,4 +106,6 @@ export type ProjectRecipe = {
   width_mm: number;
   thickness_mm: number;
   design?: DesignSettings;
+  reference_calibration?: ReferenceCalibration;
+  measured_height_mm?: number;
 };

@@ -60,9 +60,13 @@ Use **Save project** to download a version 2 JSON recipe. Restore it through **P
 
 Save before refreshing or leaving the page. The workbench does not provide automatic project persistence; a fresh page starts with the sample.
 
-The project recipe preserves the traced coordinates, measured width/thickness, XY/thickness design scales, geometry-detail mode, color/material choices, printer settings, and split plan needed to regenerate the result. Design percentages remain separate from the source measurements. Color/material choices also appear in a split bundle's manifest; STEP, STL, and DXF do not encode them. The recipe is not a substitute for the original physical measurement, nor a general-purpose CAD exchange format.
+The project recipe preserves the traced coordinates, source width/thickness, XY/thickness design scales, geometry-detail mode, color/material choices, printer settings, and split plan needed to regenerate the result. Design percentages remain separate from the source measurements. Color/material choices also appear in a split bundle's manifest; STEP, STL, and DXF do not encode them. The recipe is not a substitute for the original physical measurement, nor a general-purpose CAD exchange format.
 
-Keep a separately named copy of the original photo when provenance matters. The recipe **does not include the photograph**. A restored project therefore displays an outline-only source view; upload a photograph if you want to trace again.
+When **Apply reference scale** has been used, version 2 recipes also preserve optional `reference_calibration` data: `known_length_mm`, two `reference_points`, and `image_size` with its working-image width and height. Coordinates refer to the orientation-adjusted working image, whose longest side is at most 1400 pixels; they are not display-pixel coordinates or necessarily original camera-file coordinates. The full outside `width_mm` remains the scale input for geometry generation. Directly editing that width clears the endpoint-calibration record so it no longer appears to explain a manually chosen size.
+
+The optional `measured_height_mm` preserves the independent outside-height input. Its comparison is against the source profile before XY design scaling and does not change the generated shape. These optional fields extend version 2; existing version 1 and version 2 recipes remain importable. They are workbench measurement notes, not an uncertainty budget, physical inspection certificate, or additional measurement metadata in STEP, STL, DXF, or the parts manifest.
+
+Keep a separately named copy of the original photo when provenance matters. The recipe **does not include the photograph**. A restored project therefore displays an outline-only source view; saved reference endpoints retain their working-image frame and can be adjusted numerically. Upload a photograph if you want to trace again; it starts a new source rather than attaching the old reference to a different image.
 
 ## Keep revisions consistent
 
@@ -73,8 +77,8 @@ The preview and download links returned by a successful build belong to that bui
 ## A practical import checklist
 
 1. Confirm the expected units.
-2. Compare the complete width and thickness with the measured inputs multiplied by the explicit design percentages; inspect any outline change from geometry-detail approximation.
-3. Check a second measured dimension against the physical part.
+2. Compare the complete width and thickness with the source dimensions multiplied by the explicit design percentages; inspect any outline change from geometry-detail approximation. If a known feature set the scale, check that its saved endpoints and measured length describe the intended physical reference.
+3. Review the independent source-height comparison, if entered, and check further reserved dimensions against the physical part. Account for intentional design scaling when measuring the export.
 4. Verify that every intended through-hole is open.
 5. Check for unexpected disconnected bodies or closed-over openings.
 6. Save the original recipe alongside any downstream CAD edits.

@@ -463,8 +463,9 @@ export default function LocalAssistant({
                     </tbody>
                   </table>
                   <p>
-                    Your original measured width and thickness stay the same. Apply only the changes
-                    you want, then build to review the resulting geometry and printer fit.
+                    Your physical reference and thickness stay the same. Retracing with a feature
+                    reference recalculates outside width. Apply the changes you want, then build to
+                    review the resulting geometry and printer fit.
                   </p>
                   <div className="assistant-proposal-actions">
                     <button
