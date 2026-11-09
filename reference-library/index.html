@@ -621,7 +621,7 @@ h1, h2 { font-family: Georgia, "DejaVu Serif", serif; font-weight: 500; line-hei
 <p><code>G0</code> means surfaces meet in position. <code>G1</code> means tangent directions agree at the join. <code>G2</code> adds curvature continuity. Parametric <code>C1</code> and <code>C2</code> conditions are stronger statements about derivatives under the chosen parameterization. A visually smooth join may still contain undesirable curvature behavior. The <a href="https://web.mit.edu/hyperbook/Patrikalakis-Maekawa-Cho/mathe.html" target="_blank" rel="noopener noreferrer">MIT hyperbook</a> covers the mathematical foundations.</p>
 <p><strong>Sweeping along a guide curve:</strong> a profile swept along a centreline folds into itself wherever the curve&#39;s radius of curvature, <code>R = 1/κ</code>, is smaller than the profile&#39;s extent toward the centre of curvature, which is half its width for a profile centred on the curve. Sample curvature along a guide before sweeping. A curve interpolated through noisy or widely spaced points, such as estimated joint centres, can contain kinks with radii well under a millimetre even when it looks smooth at overview scale. Smooth or refit the guide rather than thinning the profile to suit it.</p>
 <h3 id="book-mesh-topology-and-geometry">Mesh topology and geometry<a class="anchor" href="#book-mesh-topology-and-geometry" aria-label="Link to this section">#</a></h3>
-<p>For an ordinary closed manifold surface, each edge belongs to two faces. That combinatorial condition alone does not rule out self-intersections, inverted regions, duplicated internal shells, or zero-thickness contacts. Check connected components, orientation, intersections, and volume interpretation. Intentional separate bodies may legitimately produce several closed components.</p>
+<p>For an ordinary closed manifold surface, each edge belongs to two faces, and the faces around each vertex form a single fan. The edge condition alone misses two shells that touch at one corner, which share a vertex but no edge. Neither condition rules out self-intersections, inverted regions, duplicated internal shells, or zero-thickness contacts. Check connected components, orientation, intersections, and volume interpretation. Intentional separate bodies may legitimately produce several closed components.</p>
 <p>Boolean unions of separately modelled parts need their own checks. Count connected components after the union and compare the count with intent: small extra components are floating islands that print as loose debris or fail. Overlapping regions can also leave slivers and walls thinner than any printable path. Measure local thickness after the Boolean, not only on the inputs.</p>
 <p>Poisson-style reconstruction uses oriented samples to estimate a surface and can create geometry in poorly sampled regions. Ball pivoting and alpha-shape methods make different assumptions about connectivity and scale. Use the output&#39;s support in the observations, not just visual smoothness, to decide whether it is acceptable. <a href="https://www.open3d.org/docs/release/tutorial/geometry/surface_reconstruction.html" target="_blank" rel="noopener noreferrer">Open3D surface reconstruction</a> and <a href="https://doc.cgal.org/latest/Polygon_mesh_processing/" target="_blank" rel="noopener noreferrer">CGAL mesh processing</a> provide practical starting points.</p>
 <h3 id="book-tessellation-error">Tessellation error<a class="anchor" href="#book-tessellation-error" aria-label="Link to this section">#</a></h3>
@@ -934,7 +934,7 @@ h1, h2 { font-family: Georgia, "DejaVu Serif", serif; font-weight: 500; line-hei
 <tr>
 <td><code>units</code>, <code>meshcheck</code></td>
 <td>2, 12, 18</td>
-<td>Unit mismatch on import; STL extents, volume, closure, orientation, components</td>
+<td>Unit mismatch on import; STL extents, volume, closure, vertex manifoldness, orientation, components, through-holes</td>
 </tr>
 <tr>
 <td><code>chord</code>, <code>coupon</code>, <code>coating</code></td>
@@ -1738,7 +1738,8 @@ h1, h2 { font-family: Georgia, "DejaVu Serif", serif; font-weight: 500; line-hei
     const { residuals, rms, max } = homographyResiduals(H, s, d);
     const warnings = [];
     if (s.length === 4) warnings.push(FOUR_POINT_WARNING);
-    if (minTriangleArea(normaliser(s).pts) < NEAR_COLLINEAR_AREA && s.length <= 6) warnings.push('Some image points are nearly collinear; the estimate is fragile.');
+    // Check the count first: the triangle scan is cubic in the number of points.
+    if (s.length <= 6 && minTriangleArea(normaliser(s).pts) < NEAR_COLLINEAR_AREA) warnings.push('Some image points are nearly collinear; the estimate is fragile.');
     if (spreadRatio(s) < 0.05) warnings.push('Control points occupy a narrow region; avoid extrapolating beyond it.');
     const report = { H, points: s.length, residuals, rms, max, warnings };
     if (at) {

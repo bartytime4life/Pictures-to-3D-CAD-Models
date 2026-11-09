@@ -111,7 +111,7 @@ Never edit generated files by hand: `index.html`, `sources.csv`, `REFERENCES.md`
 | `DejaVu fonts not found` | Install `fonts-dejavu`, or set `CAD_REFERENCE_FONT_DIR` |
 | `Refusing to build` | The catalog or route data failed validation; the message names the entry |
 | `test_docs` fails after an edit | A document disagrees with the data; the message names the file and value |
-| `make verify` stops after writing | Update `VERIFICATION.md` to match the new `verification.json` |
+| `make verify` stops after writing | Update `VERIFICATION.md` to match the new `verification.json` (test counts, browser assertions, plate checks, PDF pages), then run `make verify` again. Until then `make test` also fails, because `test_docs` compares the two files |
 | Plate tests skipped | OpenSCAD is not on `PATH`. This is expected on machines without it |
 
 ## Provenance

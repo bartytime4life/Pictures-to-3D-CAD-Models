@@ -329,7 +329,8 @@
     const { residuals, rms, max } = homographyResiduals(H, s, d);
     const warnings = [];
     if (s.length === 4) warnings.push(FOUR_POINT_WARNING);
-    if (minTriangleArea(normaliser(s).pts) < NEAR_COLLINEAR_AREA && s.length <= 6) warnings.push('Some image points are nearly collinear; the estimate is fragile.');
+    // Check the count first: the triangle scan is cubic in the number of points.
+    if (s.length <= 6 && minTriangleArea(normaliser(s).pts) < NEAR_COLLINEAR_AREA) warnings.push('Some image points are nearly collinear; the estimate is fragile.');
     if (spreadRatio(s) < 0.05) warnings.push('Control points occupy a narrow region; avoid extrapolating beyond it.');
     const report = { H, points: s.length, residuals, rms, max, warnings };
     if (at) {

@@ -123,6 +123,7 @@ See [export formats and dimensional checks](docs/exports.md) before transferring
 - **Source catalog:** 86 annotated sources, each labeled with its depth of review
 - **Toolkit:** 14 calculators and a route finder, with the same arithmetic available as `python3 -m cadkit` from the `reference-library/` directory
 - **Worksheets and examples:** project worksheets and an OpenSCAD example pipeline
+- **Mesh check for workbench exports:** `python3 -m cadkit meshcheck model.stl --expect-mm 80` independently checks an exported STL for closure, manifoldness, orientation, and one through-hole per traced hole. See [export checks](docs/exports.md#check-an-stl-independently).
 
 The root `make build-library` and `make test-library` commands operate on this component. Its own Makefile and [CI workflow](.github/workflows/reference-library.yml) remain available. See [its README](reference-library/README.md) and [verification record](reference-library/VERIFICATION.md).
 

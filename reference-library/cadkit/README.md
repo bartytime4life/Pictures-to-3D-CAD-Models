@@ -29,7 +29,7 @@ The results are arithmetic on the inputs you give. They are not measurements, an
 | `coupon` | 15 | diametral clearance series for a hole coupon |
 | `gear` | 16 | nominal spur-gear pair relations and an undercut warning |
 | `wind` | 16 | first wind-power estimate `0.5 ρ A v³ Cp` |
-| `meshcheck` | 2, 12, 18 | STL extents, area, volume, closed-ness, orientation, components, genus |
+| `meshcheck` | 2, 12, 18 | STL extents, area, volume, closed-ness, vertex manifoldness, orientation, components, genus (through-holes) |
 | `params` | 17 | load and validate a design-parameter register |
 | `new-project` | 4 | scaffold the minimum project folder from the templates |
 | `route` | 1 | recommend a handbook workflow for an input and a goal (same rules as the HTML route finder) |
@@ -114,7 +114,9 @@ triangles: 220; welded vertices: 108; components: 1
 extents: 60 x 30 x 4 (file units)
 surface area: 4367.62; volume: 7044.57
 watertight: True (boundary edges 0, non-manifold edges 0)
+manifold: True (non-manifold vertices 0)
 orientation consistent: True; degenerate triangles: 0
+through-holes (genus): 2
 hint: Largest extent 60 mm agrees with the expected 60 mm (within 0.5 %).
 status: pass
 ```
@@ -178,10 +180,11 @@ Evidence classes, from strongest to weakest, are `measured`, `image-derived`, `i
 ## Mesh-check notes
 
 - Binary STL is recognized by its exact size (`84 + 50 × triangle count`), so a binary file whose header begins with `solid` is still read correctly.
-- Vertices are welded on a grid of `--weld-tol` (default 1e-6 file units) before topology is checked.
-- `watertight` means every edge is shared by exactly two faces. `orientation_consistent` means each shared edge is traversed once in each direction. Neither check rules out self-intersections.
+- Vertices closer than `--weld-tol` (default 1e-6 file units, straight-line distance) are welded before topology is checked. A spatial hash searches neighbouring cells, so two nearly coincident points are merged even when they straddle a cell boundary.
+- `watertight` means every edge is shared by exactly two faces. `manifold` adds the vertex test: the faces around each vertex must form a single fan, so two shells that touch only at a corner fail even though every edge has two faces. `orientation_consistent` means each shared edge is traversed once in each direction. None of these checks rules out self-intersections.
+- `status: pass` (exit code 0) requires a watertight, manifold, consistently oriented mesh with no degenerate triangles. `--allow-open` reports the same result but exits 0.
 - Volume uses the divergence theorem about the bounding-box centre. A negative volume indicates inward-facing normals.
-- `genus` is reported for closed, consistently oriented meshes as `(2 × components − χ) / 2`. For a plate it equals the number of through-holes, so the two-hole plate reports 2.
+- `genus` is reported for closed, manifold, consistently oriented meshes as `(2 × components − χ) / 2`. For a plate it equals the number of through-holes, so the two-hole plate reports 2.
 - Degenerate triangles are counted and excluded from the topology checks.
 
 ## Tests

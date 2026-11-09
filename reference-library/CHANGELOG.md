@@ -2,6 +2,22 @@
 
 All dates are 2026. Revisions are numbered in `library.json`, which feeds the HTML, the PDF, and the archive name. Revision 3 is the first revision kept in this repository; Revisions 1 and 2 were distributed as ZIP archives.
 
+## Revision 3 maintenance (November 8, 2026)
+
+Fixes from the automated Codex review of pull request #2, plus a cross-check with the workbench. The revision number, archive name, and content are unchanged apart from the items below.
+
+### Fixed
+
+- **STL welding no longer depends on grid alignment.** `cadkit meshcheck` used to round coordinates to a `--weld-tol` grid, so two points 10⁻⁹ apart that straddled a cell boundary stayed separate. A cube shifted by half a cell reported 10 boundary edges and two components. Vertices are now merged by distance, using a spatial hash that searches neighbouring cells.
+- **Pinched vertices fail the mesh check.** Two closed shells touching at one corner have two faces on every edge, so the check used to pass them. `meshcheck` now reports `nonmanifold_vertices` and `manifold`, requires a manifold mesh for `status: pass`, and reports genus only for closed 2-manifolds. The plate pipeline gained a matching check (16 instead of 15).
+- **Non-finite STL coordinates are invalid input.** A NaN or infinite vertex now gives a clear error and exit code 2. An infinite vertex used to end in a traceback with exit code 1, which reads as a mesh that failed its checks.
+- **Large homography inputs stay fast.** The near-collinear warning applies only to 4–6 points, but both implementations scanned every point triple first, which is cubic in the number of points. In Python, 400 points took about 5 seconds. Both now check the count first, and the browser calculator no longer stalls on long point lists.
+
+### Added
+
+- **Workbench interoperability tests** (`../tests/test_mesh_interop.py`). The workbench's test suite runs this library's STL checker on combined STL exports, a traced photograph with round holes, and each split part. It also runs the documented `meshcheck` command on a workbench export.
+- **Record tests.** `test_docs` now checks the test, assertion, and plate-check counts in `VERIFICATION.md` against `verification.json`, and the record notes the browser transport that was checked.
+
 ## Revision 3 (November 8, 2026)
 
 ### Added

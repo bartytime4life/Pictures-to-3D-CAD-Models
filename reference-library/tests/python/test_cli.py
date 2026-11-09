@@ -112,6 +112,24 @@ class FileCommands(unittest.TestCase):
         self.assertIn("file units are m", out)
         self.assertEqual(run("meshcheck", str(self.dir / "missing.stl"))[0], 2)
 
+    def test_meshcheck_fails_a_vertex_pinch(self):
+        pinch = self.dir / "pinch.stl"
+        stl.write_stl_binary(pinch, stl.box() + stl.box(origin=(1, 1, 1)))
+        code, r = run_json("meshcheck", str(pinch))
+        self.assertEqual((code, r["status"], r["watertight"], r["manifold"]), (1, "fail", True, False))
+        code, out, _ = run("meshcheck", str(pinch))
+        self.assertIn("manifold: False (non-manifold vertices 1)", out)
+        self.assertIn("through-holes (genus): n/a", out)
+
+    def test_meshcheck_rejects_non_finite_coordinates(self):
+        tris = stl.box()
+        tris[0] = ((float("inf"), 0.0, 0.0), tris[0][1], tris[0][2])
+        path = self.dir / "inf.stl"
+        stl.write_stl_binary(path, tris)
+        code, _, err = run("meshcheck", str(path))
+        self.assertEqual(code, 2)  # invalid input, not a traceback
+        self.assertIn("not finite", err)
+
     def test_params(self):
         code, out, _ = run("params", str(_helpers.EXAMPLES / "plate-parameters.csv"), "--require", "plate_length")
         self.assertEqual(code, 0)

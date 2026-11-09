@@ -2,6 +2,16 @@
 
 Validated November 8, 2026, in the managed Linux environment. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
 
+## Mesh interoperability and library review fixes
+
+This change set addresses the automated review findings on the reference library's STL checker and homography calculator. It also adds `tests/test_mesh_interop.py`, which runs the library's independent STL checker on workbench exports. The run below used the local Linux workstation: Python 3.12.3, Node.js 22.13.1, uv 0.11.16, Google Chrome 157.0.8103.38 through `PLAYWRIGHT_CHROMIUM_EXECUTABLE`, and OpenSCAD 2021.01.
+
+- Workbench: `./scripts/test.sh` passed with **146 Python tests** (the previous 142 plus 4 interoperability tests), production typecheck/build, and **15 Chromium browser scenarios**. `make lint` passed.
+- Interoperability: the combined STL, an STL built from a traced photograph with two round holes, and both pieces of a 2 × 1 split bundle are closed, manifold, consistently oriented, and outward-facing. Each has one component and one genus per hole. Their volumes are within 0.01 % of the CAD solid, and split pieces start at the origin. The documented `python3 -m cadkit meshcheck … --expect-mm 80` command exits 0 on a workbench export.
+- Reference library: `make release` passed with **129 Python tests**, **12 Node test groups**, **98 browser assertions** over `file://`, and **16/16** plate checks after an OpenSCAD render. The same 98 assertions also passed over loopback HTTP. Regenerated HTML matched the committed file, and the PDF matched its recorded SHA-256.
+
+These are software and geometry checks of synthetic fixtures. They do not establish dimensional accuracy for an arbitrary photograph, and no part was sliced or printed. The CI results for this change set belong to its pull request.
+
 ## Repository command integration
 
 The root Makefile exposes setup, build, test, and lint commands for the workbench and reference library while preserving each component's existing entry points. The combined `make setup` completed successfully. `PICAD_TEST_URL=http://127.0.0.1:8001 make test` then passed against an isolated workbench instance:
@@ -70,7 +80,7 @@ These runs use `ubuntu-latest`, Python 3.12, and Node.js 24. They validate that 
 
 Earlier workbench evidence remains available: the [feature run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42528243229) passed for `f4b924517c6f58fe34686f380c478e55ba67d4ef`; the [original CAD run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42519068333) passed for `96d73c6ef1b6ee50759f1835e63717835772b4f1`.
 
-The library has a separate [verification record](../reference-library/VERIFICATION.md) describing its 119 Python tests, 11 Node test groups, and browser assertions. Those checks are additional to the workbench's 142 Python tests and 15 browser scenarios; they do not evaluate real photograph reconstruction, physical printing, or LLM quality. Counts, skips, and browser transport belong to the particular recorded invocation rather than the mere presence of a test command.
+The library has a separate [verification record](../reference-library/VERIFICATION.md) describing its 129 Python tests, 12 Node test groups, and browser assertions. Those checks are additional to the workbench's 146 Python tests and 15 browser scenarios; they do not evaluate real photograph reconstruction, physical printing, or LLM quality. Counts, skips, and browser transport belong to the particular recorded invocation rather than the mere presence of a test command.
 
 ## Geometry and API evidence
 
@@ -81,6 +91,7 @@ The backend suite verifies:
 - Correct dimensions, positive volume, expected hole count, and matching settings revision.
 - STEP re-import as one valid solid with the expected dimensions and volume.
 - Binary STL structure, expected bounds, and exactly two incident triangles at every welded mesh edge.
+- Independent STL checks by the reference library's `cadkit` (see above): closure, vertex manifoldness, orientation, one component, and one genus per hole for combined, traced, and split exports.
 - DXF millimeter units and three closed profile rings for the two-hole fixture.
 - Reproducible project-recipe content.
 - Trace hierarchy, foreground inversion, EXIF orientation, and removal of source metadata from the normalized display image.
