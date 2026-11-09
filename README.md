@@ -42,7 +42,7 @@ See [development and setup](docs/development.md) for prerequisites, commands, an
 
 Open **Local AI assistant** for help with capture, tracing, design changes, print planning, and export choices. Choose an installed Ollama model, ask a question, and review its answer. Suggestions show their proposed settings before an explicit **Apply**, with undo available. You still enter measured dimensions and decide when to build and export.
 
-The assistant uses your question and current project settings; it does not receive the photograph or outline. It runs on the same machine as the CAD backend, with no paid API or cloud-model fallback. The regular CAD workflow works without it.
+The assistant uses your question, measurements, trace and design settings, warnings, and built-part dimensions; it does not receive the photograph, outline, or mesh. It runs on the same machine as the CAD backend, with no paid API or cloud-model fallback. The regular CAD workflow works without it.
 
 For the included Linux x86_64 setup:
 
@@ -123,7 +123,7 @@ See [export formats and dimensional checks](docs/exports.md) before transferring
 - **Source catalog:** 86 annotated sources, each labeled with its depth of review
 - **Toolkit:** 14 calculators and a route finder, with the same arithmetic available as `python3 -m cadkit` from the `reference-library/` directory
 - **Worksheets and examples:** project worksheets and an OpenSCAD example pipeline
-- **Mesh check for workbench exports:** `python3 -m cadkit meshcheck model.stl --expect-mm 80` independently checks an exported STL for closure, manifoldness, orientation, and one through-hole per traced hole. See [export checks](docs/exports.md#check-an-stl-independently).
+- **Mesh check for workbench exports:** `python3 -m cadkit meshcheck model.stl --expect-mm 80` independently checks an exported STL for closure, manifoldness, and orientation, and reports its genus (through-holes) for comparison with the workbench's hole count. See [export checks](docs/exports.md#check-an-stl-independently).
 
 The root `make build-library` and `make test-library` commands operate on this component. Its own Makefile and [CI workflow](.github/workflows/reference-library.yml) remain available. See [its README](reference-library/README.md) and [verification record](reference-library/VERIFICATION.md).
 

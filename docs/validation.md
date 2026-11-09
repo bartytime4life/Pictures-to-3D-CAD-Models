@@ -25,7 +25,7 @@ Direct library browser checks retain the `file://` default. This managed browser
 
 ## Current design, print and assistant changes
 
-The complete `PICAD_TEST_URL=http://127.0.0.1:8001 ./scripts/test.sh` run passed against an isolated instance of the final implementation: **142 Python tests**, production typecheck/build, and **15 Chromium browser scenarios**, with no failures or skips.
+The complete `PICAD_TEST_URL=http://127.0.0.1:8001 ./scripts/test.sh` run passed against an isolated instance of the design, print, and assistant implementation: **142 Python tests**, production typecheck/build, and **15 Chromium browser scenarios**, with no failures or skips.
 
 The Python checks comprise 34 original CAD/API tests, 26 real geometry/printing tests, 6 printer-catalog tests, 69 assistant tests, and 7 benchmark tests. The browser run includes the original six workflows, five assistant-control scenarios, and four design/print scenarios.
 

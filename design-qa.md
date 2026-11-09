@@ -41,7 +41,7 @@ The environment's `sites-preview` relay was unavailable. Browser verification us
 
 ## Design, print and local-assistant follow-up
 
-The final complete run passed 142 Python tests, production typecheck/build, and 15 browser scenarios. Additional scenarios cover reviewed multi-setting suggestions, explicit rejection, Undo after building, stale responses, saved recipes, printer search, actual parts ZIP geometry, and mobile accessibility. The viewer keeps a stable canvas across model changes; both a multipart-build regression and genuine context-loss recovery were tested and corrected before this passing run.
+The complete run for the design, print, and assistant changes passed 142 Python tests, production typecheck/build, and 15 browser scenarios. Additional scenarios cover reviewed multi-setting suggestions, explicit rejection, Undo after building, stale responses, saved recipes, printer search, actual parts ZIP geometry, and mobile accessibility. The viewer keeps a stable canvas across model changes; both a multipart-build regression and genuine context-loss recovery were tested and corrected before this passing run.
 
 Actual rendered evidence, without AI-response fixtures:
 

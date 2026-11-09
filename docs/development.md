@@ -13,7 +13,7 @@ Run commands from the repository root unless a command explicitly says otherwise
 
 The initial pipeline runs on the CPU. It requires neither CUDA nor an external image-generation, photogrammetry, or language-model service.
 
-The companion library uses the same Python 3.12/Node 24 toolchain in the combined workflow, with its own `reference-library/.venv` and Node dependencies. Rebuilding its PDF also requires DejaVu fonts. Browser checks need Chrome/Chromium; OpenSCAD is needed to execute all library rendering checks. Setup installs neither these system tools nor model weights. Reading the committed library HTML/PDF needs none of the development tools.
+The companion library uses the `python3` and `node` found on `PATH` (it needs Python 3.10+ and Node.js 20+; `make setup` additionally requires the workbench's Python 3.12 and Node.js 22.12+), with its own `reference-library/.venv` and Node dependencies. Rebuilding its PDF also requires DejaVu fonts. Browser checks need Chrome/Chromium; OpenSCAD is needed to execute all library rendering checks. Setup installs neither these system tools nor model weights. Reading the committed library HTML/PDF needs none of the development tools.
 
 ## Install and run
 
@@ -123,7 +123,7 @@ The browser suite includes automated accessibility checks with `@axe-core/playwr
 
 ## Continuous integration
 
-[`.github/workflows/ci.yml`](../.github/workflows/ci.yml) validates the workbench using Python 3.12 and Node.js 24. It installs Chromium, runs Python lint checks, executes the workbench test sequence, and retains browser reports and failure traces for seven days. [The reference-library workflow](../.github/workflows/reference-library.yml) separately regenerates its committed outputs, runs its tests, renders its OpenSCAD plate, and checks its browser interface.
+[`.github/workflows/ci.yml`](../.github/workflows/ci.yml) validates the workbench using Python 3.12 and Node.js 24. It installs Chromium, runs Ruff and Prettier checks (`make lint`), executes the workbench test sequence, and retains browser reports and failure traces for seven days. [The reference-library workflow](../.github/workflows/reference-library.yml) separately regenerates its committed outputs, runs its tests, renders its OpenSCAD plate, and checks its browser interface.
 
 Both workflows completed successfully for merge commit `5d6a446d6175e4ad1bd0c01c0166b05e0d1e393a`: [workbench run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42528803054) and [reference-library run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42528803055). These links identify that exact revision; check the workflows for the revision under review. See [validation results](validation.md) for the separate local and remote evidence.
 
