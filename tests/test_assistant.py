@@ -6,7 +6,7 @@ import threading
 from copy import deepcopy
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-import httpx
+import httpx2
 import pytest
 from fastapi.testclient import TestClient
 
@@ -389,6 +389,47 @@ def test_export_explanations_and_fit_checks_do_not_authorize_resizing(question):
     assert any("size suggestion was withheld" in warning for warning in response["warnings"])
 
 
+@pytest.mark.parametrize(
+    "question,sizes",
+    [
+        # Negated size or thickness wording withholds only that axis.
+        ("Don't change the thickness, just make it blue.", set()),
+        ("Don't make it bigger, just change the color", set()),
+        (
+            (
+                "My current XY scale is 150%. Make that design 20% larger, keep its thickness, "
+                "and propose blue PETG."
+            ),
+            {"scale_percent"},
+        ),
+        ("Don’t change the width, length or thickness. Use blue.", set()),
+        ("Make it fit my printer without changing the thickness.", {"scale_percent"}),
+        ("Make it 20% larger with the thickness unchanged.", {"scale_percent"}),
+        # Positive requests still reach review, including after an unrelated negation.
+        ("Keep the width the same, but make it 50% thicker.", {"thickness_percent"}),
+        ("Keep the thickness and make it 20% larger.", {"scale_percent"}),
+        ("Don't change the color, but make it 20% wider.", {"scale_percent"}),
+        (
+            "Make it 20% wider and increase the thickness to 150%.",
+            {"scale_percent", "thickness_percent"},
+        ),
+    ],
+)
+def test_negated_size_wording_does_not_authorize_that_change(question, sizes):
+    request = assistant.AssistantRequest.model_validate(request_body(question=question))
+    response = assistant.review_proposal(
+        {
+            "answer": "Review the suggested changes.",
+            "proposal": {"scale_percent": 120, "thickness_percent": 150, "color": "#0000ff"},
+            "warnings": [],
+        },
+        request,
+    )
+    assert set(response["proposal"]) == sizes | {"color"}
+    withheld = any("size suggestion was withheld" in w for w in response["warnings"])
+    assert withheld is (len(sizes) < 2)
+
+
 def test_requested_scale_cannot_exceed_known_cad_dimension_limits(client, local_ollama):
     body = request_body(question="Double the size of this part.")
     body["context"]["width_mm"] = 1500
@@ -621,8 +662,8 @@ def test_inference_slot_survives_cancelled_http_request(tmp_path, monkeypatch):
     async def exercise():
         async with (
             api.lifespan(api.app),
-            httpx.AsyncClient(
-                transport=httpx.ASGITransport(app=api.app), base_url="http://test"
+            httpx2.AsyncClient(
+                transport=httpx2.ASGITransport(app=api.app), base_url="http://test"
             ) as client,
         ):
             first = asyncio.create_task(client.post("/api/assistant/chat", json=request_body()))

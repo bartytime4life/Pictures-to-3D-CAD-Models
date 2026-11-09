@@ -1,6 +1,7 @@
 name: Validate reference library
 on:
   push:
+    branches: [main]
     paths: ['reference-library/**', '.github/workflows/reference-library.yml', 'Makefile', 'scripts/setup-library.sh']
   pull_request:
     paths: ['reference-library/**', '.github/workflows/reference-library.yml', 'Makefile', 'scripts/setup-library.sh']
@@ -11,14 +12,14 @@ defaults:
     working-directory: reference-library
 jobs:
   library:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '24'
           cache: npm
@@ -48,7 +49,7 @@ jobs:
           cp tmp/qa/photo-check.json tmp/qa/photo-check-http.json
       - name: Upload screenshots and check records
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: reference-library-qa
           path: reference-library/tmp/qa/

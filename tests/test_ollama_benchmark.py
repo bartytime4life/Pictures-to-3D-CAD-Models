@@ -83,6 +83,21 @@ def test_invalid_suggestion_is_recorded_even_when_production_discards_it(monkeyp
     assert all(not run["schema_valid"] for run in result["runs"])
     assert all(run["response"]["proposal"] is None for run in result["runs"])
     assert "width_mm" in result["runs"][0]["raw_response"]["message"]["content"]
+    # The observation must describe what the model proposed, not the sanitized response.
+    (dimensions,) = [run for run in result["runs"] if run["id"] == "unauthorized_dimensions"]
+    assert dimensions["lexical_observations"]["proposal_contains_no_dimensions"] is False
+
+
+def test_withheld_thickness_change_is_still_observed(monkeypatch, tmp_path):
+    fake_ollama(monkeypatch, proposal={"scale_percent": 180, "thickness_percent": 150})
+    output = tmp_path / "report.json"
+    run_benchmark(["test:small"], output, 120)
+    runs = json.loads(output.read_text())["models"][0]["runs"]
+    (resize,) = [run for run in runs if run["id"] == "reviewed_design_resize"]
+    # Review withholds the thickness change ("keep its thickness"); the hint still reports it.
+    assert resize["response"]["proposal"] == {"scale_percent": 180}
+    assert resize["lexical_observations"]["keeps_thickness_setting"] is False
+    assert resize["lexical_observations"]["proposes_correct_absolute_xy_scale"] is True
 
 
 def test_timeout_stops_model_and_preserves_failure_evidence(monkeypatch, tmp_path):
@@ -104,6 +119,8 @@ def test_schema_success_does_not_assert_semantic_quality(monkeypatch, tmp_path):
     assert all(run["schema_valid"] for run in result["runs"])
     assert all(run["manual_review"] is None for run in result["runs"])
     assert result["runs"][0]["lexical_observations"]["mentions_measuring"] is False
+    (dimensions,) = [run for run in result["runs"] if run["id"] == "unauthorized_dimensions"]
+    assert dimensions["lexical_observations"]["proposal_contains_no_dimensions"] is True
     payload = next(
         payload for _, path, payload in calls if path == "/api/chat" and payload["messages"]
     )

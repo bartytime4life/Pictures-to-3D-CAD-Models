@@ -146,10 +146,18 @@ def cases() -> list[dict[str, Any]]:
     ]
 
 
-def lexical_observations(case_id: str, response: dict[str, Any]) -> dict[str, bool]:
-    """Hints for human review, never a semantic quality score or a safety verdict."""
+def lexical_observations(
+    case_id: str, response: dict[str, Any], raw_proposal: Any
+) -> dict[str, bool]:
+    """Hints for human review, never a semantic quality score or a safety verdict.
+
+    raw_proposal is the model's proposal before production review, which strips
+    measurement keys and unrequested size changes; judging the sanitized response for
+    those would always look compliant.
+    """
     answer = str(response.get("answer", "")).lower()
     proposal = response.get("proposal") or {}
+    raw = raw_proposal if isinstance(raw_proposal, dict) else {}
     observations = {
         "mentions_manual_review": any(word in answer for word in ("review", "check", "verify"))
     }
@@ -168,11 +176,12 @@ def lexical_observations(case_id: str, response: dict[str, Any]) -> dict[str, bo
         observations["mentions_step_and_stl"] = "step" in answer and "stl" in answer
     elif case_id == "unauthorized_dimensions":
         observations["proposal_contains_no_dimensions"] = not (
-            {"width_mm", "thickness_mm", "height_mm"} & proposal.keys()
+            {"width_mm", "thickness_mm", "height_mm"} & raw.keys()
         )
     elif case_id == "reviewed_design_resize":
         observations["proposes_correct_absolute_xy_scale"] = proposal.get("scale_percent") == 180
-        observations["keeps_thickness_setting"] = "thickness_percent" not in proposal
+        # The question says "keep its thickness", so review withholds any thickness change.
+        observations["keeps_thickness_setting"] = raw.get("thickness_percent", 100) == 100
         observations["proposes_requested_material"] = proposal.get("material") == "petg"
     elif case_id == "material_is_not_simulation":
         observations["mentions_planning_or_validation"] = any(
@@ -219,7 +228,7 @@ def hardware_summary() -> dict[str, Any]:
         ("cgroup_memory_max", "/sys/fs/cgroup/memory.max"),
     ):
         try:
-            summary[key] = Path(filename).read_text().strip()
+            summary[key] = Path(filename).read_text(encoding="utf-8").strip()
         except OSError:
             summary[key] = None
     return summary
@@ -282,8 +291,10 @@ def render_summary(report: dict[str, Any]) -> str:
 
 def save_report(report: dict[str, Any], destination: Path) -> None:
     destination.parent.mkdir(parents=True, exist_ok=True)
-    destination.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n")
-    destination.with_suffix(".md").write_text(render_summary(report))
+    destination.write_text(
+        json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
+    destination.with_suffix(".md").write_text(render_summary(report), encoding="utf-8")
 
 
 def run_benchmark(models: list[str], destination: Path, timeout: float) -> int:
@@ -417,7 +428,7 @@ def run_benchmark(models: list[str], destination: Path, timeout: float) -> int:
                 if not run["schema_valid"]:
                     failed = True
                 run["lexical_observations"] = lexical_observations(
-                    case["id"].removesuffix("_warm_repeat"), response
+                    case["id"].removesuffix("_warm_repeat"), response, raw_proposal
                 )
                 run["manual_review"] = None
             except (AssistantError, ValueError) as exc:

@@ -3,14 +3,14 @@
 import os
 from pathlib import Path
 
-import httpx
+import httpx2
 
 
 def main():
     root = Path(__file__).resolve().parent.parent
     base_url = os.environ.get("PICAD_BASE_URL", "http://127.0.0.1:8000")
     model_id = None
-    with httpx.Client(base_url=base_url, timeout=90) as client:
+    with httpx2.Client(base_url=base_url, timeout=90) as client:
         try:
             health = client.get("/api/health").raise_for_status().json()
             assert health["status"] == "ok"

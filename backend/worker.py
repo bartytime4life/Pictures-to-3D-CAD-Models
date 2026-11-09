@@ -77,7 +77,7 @@ def export_solid(shape, directory, basename):
 
 
 def build(job_dir: Path) -> dict:
-    request = BuildRequest.model_validate_json((job_dir / "input.json").read_text())
+    request = BuildRequest.model_validate_json((job_dir / "input.json").read_text(encoding="utf-8"))
     design, printer, warnings = resolve_design(request.design or DesignSettings())
     xs, ys = zip(*request.profile.outer)
     center_x, center_y = (min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2
@@ -151,7 +151,9 @@ def build(job_dir: Path) -> dict:
     }
     if request.design is not None:
         recipe["design"] = design.model_dump()
-    (job_dir / "project.json").write_text(json.dumps(recipe, indent=2, allow_nan=False))
+    (job_dir / "project.json").write_text(
+        json.dumps(recipe, indent=2, allow_nan=False), encoding="utf-8"
+    )
 
     downloads = {
         kind: f"/api/download/{job_dir.name}/{kind}" for kind in ("step", "stl", "dxf", "project")
@@ -175,7 +177,9 @@ def build(job_dir: Path) -> dict:
                 "Pieces are checked against the bed separately; arrange and verify each in a slicer.",
             ],
         }
-        (job_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, allow_nan=False))
+        (job_dir / "manifest.json").write_text(
+            json.dumps(manifest, indent=2, allow_nan=False), encoding="utf-8"
+        )
         with zipfile.ZipFile(
             job_dir / "parts.zip", "w", compression=zipfile.ZIP_DEFLATED
         ) as bundle:
@@ -209,7 +213,7 @@ def build(job_dir: Path) -> dict:
     for name in ("profile.dxf", "project.json"):
         if (job_dir / name).stat().st_size == 0:
             raise PrintGeometryError("An export was empty. Try rebuilding the model.")
-    (job_dir / "result.json").write_text(json.dumps(result, allow_nan=False))
+    (job_dir / "result.json").write_text(json.dumps(result, allow_nan=False), encoding="utf-8")
     return result
 
 
@@ -224,6 +228,7 @@ if __name__ == "__main__":
                     "error": str(exc)[:500],
                     "public": isinstance(exc, PrintGeometryError),
                 }
-            )
+            ),
+            encoding="utf-8",
         )
         raise SystemExit(1)

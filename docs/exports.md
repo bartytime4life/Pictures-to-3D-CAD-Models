@@ -68,7 +68,7 @@ Keep a separately named copy of the original photo when provenance matters. The 
 
 Changing a photo, outline, reference width, thickness, or other geometry setting makes the previous result outdated. Rebuild the model before exporting it. If a rebuild fails, an earlier preview may remain visible to help recovery, but it must not be presented as the result of the new settings.
 
-The preview and download links returned by a successful build belong to that build. The interface releases superseded builds, and remaining temporary server artifacts expire after one hour. Download files and recipes you want to keep; old links are not an archive. If the result has expired or been cleared, rebuild the current settings to obtain fresh links.
+The preview and download links returned by a successful build belong to that build. The interface releases superseded builds, and its current build when its page is closed or reloaded. Remaining temporary server artifacts expire after one hour. Download files and recipes you want to keep; old links are not an archive. If the result has expired or been cleared, rebuild the current settings to obtain fresh links.
 
 ## A practical import checklist
 

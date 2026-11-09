@@ -2,6 +2,40 @@
 
 Validated November 8, 2026, in the managed Linux environment. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
 
+## Review fixes: recovery, tracing accuracy, and input checks
+
+Separate code reviews of the backend, frontend, and reference library found 30 defects. This change set fixes them, removes the warnings from CI and the test runs, and adds a regression test for every code fix. The run below used the local workstation: Python 3.12.3, Node.js 22.13.1, Google Chrome 157.0.8103.38 through the system-Chrome fallback, and OpenSCAD 2021.01.
+
+- **CI and build.** Both workflows use the Node 24 releases of their actions (v7 of `checkout`, `setup-python`, `setup-node`, and `upload-artifact`), run on `ubuntu-26.04`, and run once per pull-request push instead of twice. The tests and smoke check use `httpx2`, which Starlette's test client now expects. The production build puts three.js (1,003 kB, 272 kB gzip) and the other libraries (289 kB) in their own chunks, apart from the application's 76 kB. The development server binds to loopback by default, as `dev.sh` already did.
+- **Frontend (10 fixes).**
+  - **Try again** repeats only the failed step, using the inputs on screen. Before, an error with no retry of its own replayed an earlier step and could silently restore old dimensions and design settings.
+  - A failed retrace no longer marks the model outdated.
+  - An AI answer no longer takes focus from a field being edited.
+  - Focus returns to the control that started busy work.
+  - Undoing a suggestion that was never built keeps the model current.
+  - Unit switching converts out-of-range entries.
+  - Restored project names are cleaned like typed ones.
+  - The outline toggle is disabled without a photo.
+  - Printer profiles that describe one bed are not reported as ambiguous.
+  - Leaving or reloading the page releases its temporary model files.
+- **Backend (12 fixes).**
+  - Malformed EXIF no longer returns HTTP 500.
+  - Camera MPO JPEGs and 16-bit grayscale PNGs trace.
+  - A speck inside a hole is ignored like a tiny hole.
+  - Outlines now follow pixel edges, not boundary-pixel centres. The old tracing made outer spans 1 px short and holes 1 px large; a 51 px hole in a 401 px part was 2.2 % oversize. The sample is now 34.05 mm tall at 80 mm wide (previously 34.01 mm).
+  - Negated wording such as "don't change the thickness" no longer authorizes a size proposal.
+  - Expiry deletes only directories holding this application's job files, and it survives a failed pass.
+  - Null bytes in frontend paths return 404.
+  - Job files use explicit UTF-8.
+  - Each hole ring is bounded before parsing.
+  - The traversal test now reaches the download route.
+  - The benchmark's dimension hint judges the model's raw proposal.
+- **Workbench results.** `make test-app` passed with **178 Python tests** (146 before), production typecheck/build, and **23 Chromium browser scenarios** (15 before). The backend tests produced no warnings. `make lint` passed. `scripts/smoke.py` passed against the running service.
+- **Regression checks.** 26 new or changed backend tests and 9 browser scenarios failed on the previous code. The strengthened traversal test passes on both versions, because that route was already safe.
+- **Reference library (8 fixes; see its [changelog](../reference-library/CHANGELOG.md)).** `make release` passed over `file://` with **157 Python tests**, **25 Node test groups**, **101 page assertions**, **49 Photos assertions**, and **16/16** plate checks. `make test-library` passed the same counts over loopback HTTP.
+
+HawkScan was not run because no `HAWK_API_KEY` is configured. These are software and geometry checks of synthetic fixtures; no part was sliced or printed. The CI results for this change set belong to its pull request.
+
 ## Reference library Photos fix: blob-URL race
 
 After Revision 4 merged, both library CI runs failed. The Photos check's final assertion found two "Not allowed to load local resource: blob:null/…" console errors. The same failure appeared locally in about 1 run in 4, and in 1 of 20 instrumented runs, always as a filtered gallery refreshed. The gallery revoked its previous thumbnails' object URLs while those images still referenced them, so a lazy load that started late requested a revoked URL. The fix creates URLs only for the gallery actually shown and detaches old thumbnails before revoking. A new deterministic assertion (49 in total) fails on the previous code and passes now. The library and workbench results for this fix are in its pull request and the library's [verification record](../reference-library/VERIFICATION.md).
@@ -94,7 +128,7 @@ These runs use `ubuntu-latest`, Python 3.12, and Node.js 24. They validate that 
 
 Earlier workbench evidence remains available: the [feature run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42528243229) passed for `f4b924517c6f58fe34686f380c478e55ba67d4ef`; the [original CAD run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42519068333) passed for `96d73c6ef1b6ee50759f1835e63717835772b4f1`.
 
-The library has a separate [verification record](../reference-library/VERIFICATION.md) describing its 129 Python tests, 22 Node test groups, and browser assertions. Those checks are additional to the workbench's 146 Python tests and 15 browser scenarios; they do not evaluate real photograph reconstruction, physical printing, or LLM quality. Counts, skips, and browser transport belong to the particular recorded invocation rather than the mere presence of a test command.
+The library has a separate [verification record](../reference-library/VERIFICATION.md) describing its 157 Python tests, 25 Node test groups, and browser assertions. Those checks are additional to the workbench's 178 Python tests and 23 browser scenarios; they do not evaluate real photograph reconstruction, physical printing, or LLM quality. Counts, skips, and browser transport belong to the particular recorded invocation rather than the mere presence of a test command.
 
 ## Geometry and API evidence
 
@@ -142,6 +176,6 @@ The final mobile typography change was followed by a passing rerun of scenario 4
 
 ## Remaining notices and limits
 
-The build reports a large JavaScript chunk associated with the 3D stack (approximately 377 kB gzip). A Starlette TestClient/httpx deprecation warning appears in the backend test runner. Neither prevented the verified workflow. Renderer dependency warnings are distinct from application console errors.
+The build and backend tests run without warnings. The 3D stack is still the largest download: three.js is a 1,003 kB chunk (272 kB gzip) that loads with the page because the preview is on the first screen. The build's chunk-size limit sits just above it, so unexpected growth still warns. In the browser console, React Three Fiber 9.8.2 logs a `THREE.Clock` deprecation warning. It comes from the library, not this application, and only its version 10 pre-releases change it. Renderer dependency warnings are distinct from application console errors.
 
 This is a working single-user, constant-thickness profile workbench. It has no public-service authentication, collaborative project database, arbitrary-object reconstruction, manufacturing certification, or validated metrology. See [scope](roadmap.md), [capture guidance](capture-guide.md), and [data handling](privacy-security.md).

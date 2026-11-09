@@ -165,8 +165,40 @@ test('model choice shares only disclosed context; trace changes require Apply an
     '80.00',
   );
   await expect(page.getByLabel('Thickness', { exact: true })).toHaveValue('4.00');
+  // Nothing was built from the suggestion, so the restored settings match the existing model:
+  // it stays current and its files stay available, with no rebuild.
+  await expect(page.getByRole('button', { name: 'Review export', exact: true })).toBeEnabled();
+  await expect(page.locator('.notice')).toContainText('The model and its downloads match them');
   expect(traceRequests).toBe(1);
   expect(buildRequests).toBe(0);
+});
+
+test('an answer that arrives while the user works elsewhere does not take their focus', async ({
+  page,
+}) => {
+  await installAssistantFixtures(page);
+  let releaseAnswer: (() => void) | undefined;
+  const answerGate = new Promise<void>((resolve) => {
+    releaseAnswer = resolve;
+  });
+  await page.route('**/api/assistant/chat', async (route) => {
+    await answerGate;
+    await route.fulfill({ json: { ...advice, proposal: null } });
+  });
+  await ready(page);
+  const assistant = await openAssistant(page);
+  await assistant.getByRole('textbox').fill('What detail setting should I try?');
+  const request = page.waitForRequest('**/api/assistant/chat');
+  await assistant.getByRole('button', { name: 'Ask local AI', exact: true }).click();
+  await request;
+  const thickness = page.getByLabel('Thickness', { exact: true });
+  await thickness.fill('1');
+  releaseAnswer!();
+  await expect(assistant.getByText(advice.answer, { exact: true })).toBeVisible();
+  await page.keyboard.type('2');
+  await expect(thickness).toBeFocused();
+  await expect(thickness).toHaveValue('12');
+  await expect(assistant.getByRole('status').filter({ hasText: 'answer is ready' })).toHaveCount(1);
 });
 
 test('project edits while AI is answering prevent applying an outdated suggestion', async ({

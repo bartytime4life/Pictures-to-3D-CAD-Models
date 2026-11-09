@@ -32,7 +32,7 @@ The application does not call a paid or external inference service. Its optional
 
 ## Geometry conventions
 
-Traced points use image pixel coordinates, with the image's vertical coordinate increasing downward. Conversion translates and scales the profile into a centered XY model plane, then extrudes along Z. The measured scale is the entered reference width divided by the traced profile's horizontal span. An explicit XY design percentage multiplies that scale; a separate thickness percentage multiplies the entered thickness. Design choices do not overwrite the source measurements.
+Traced points use image pixel coordinates, with the image's vertical coordinate increasing downward. Pixel *i* spans *i* to *i* + 1, so the image spans 0 to its pixel width. Outlines follow the outer edges of boundary pixels: a part covering pixel columns 50–450 spans 50 to 451, and a hole follows the edges of the material around it. Conversion translates and scales the profile into a centered XY model plane, then extrudes along Z. The measured scale is the entered reference width divided by the traced profile's horizontal span. An explicit XY design percentage multiplies that scale; a separate thickness percentage multiplies the entered thickness. Design choices do not overwrite the source measurements.
 
 All geometry is stored internally in millimeters. The entered thickness is independent of image scale. Changing display units must convert the entered values rather than reinterpret the same number in another unit.
 
@@ -44,7 +44,7 @@ Split mode makes actual solids with straight XY cuts. The default preview and co
 
 Printer fit compares actual geometric bounds with the user-selected usable bed volume and checks the original and 90° XY orientations. This is a bounds check, not slicing, build-plate packing, support generation, material simulation, or G-code generation. Color/material choices are approximate preview and recipe/planning metadata; STL carries no color.
 
-Known catalog printers resolve their bed geometry from the selected nozzle's source profile; the backend does not trust stale client-supplied dimensions for a known match. Missing or ambiguous profiles, nonrectangular beds, and excluded bed areas produce an unknown-placement result instead of a rectangular-fit guarantee. Custom mode uses the user's rectangular volume. Unsupported hardware facts remain unknown.
+Known catalog printers resolve their bed geometry from the selected nozzle's source profile; the backend does not trust stale client-supplied dimensions for a known match. Missing profiles, several matching profiles that describe different beds, nonrectangular beds, and excluded bed areas produce an unknown-placement result instead of a rectangular-fit guarantee. Custom mode uses the user's rectangular volume. Unsupported hardware facts remain unknown.
 
 ## API overview
 
@@ -60,7 +60,7 @@ A multipart request includes:
 
 | Field | Meaning |
 | --- | --- |
-| `file` | PNG, JPEG, or WebP upload |
+| `file` | PNG, JPEG, or WebP upload; a multi-picture (MPO) camera JPEG uses its primary image |
 | `threshold` | Intensity cutoff, or `-1` for automatic selection |
 | `inverted` | Switch from the default dark-foreground interpretation |
 | `detail` | `coarse`, `standard`, or `fine` contour approximation |
@@ -91,7 +91,7 @@ The profile is validated at the API boundary even when it originated in this app
 
 `POST /api/assistant/chat` accepts `model`, `question`, and a bounded `context` containing trace settings, optional measured dimensions and hole count, presence flags, warnings, design/print choices, and dimensions of available built geometry and parts. It returns `model`, `answer`, a nullable `proposal`, `warnings`, and `elapsed_seconds`.
 
-Proposals may contain supported trace controls and design/print settings, including explicit XY/thickness design percentages. They cannot replace the measured source width or thickness. The server requests structured output and independently validates it; response text does not execute actions. Invalid proposals are discarded with a warning. The browser previews proposals, requires an explicit application, rejects proposals for an outdated project, and offers undo. Geometry-affecting changes invalidate the existing CAD result and require review and a new build before export. Undo after building an AI suggestion restores prior settings and their previously current mesh for comparison, or clears the preview if none existed; exports remain stale until rebuilt because those server artifacts may already have been released.
+Proposals may contain supported trace controls and design/print settings, including explicit XY/thickness design percentages. They cannot replace the measured source width or thickness. The server requests structured output and independently validates it; response text does not execute actions. Invalid proposals are discarded with a warning. The browser previews proposals, requires an explicit application, rejects proposals for an outdated project, and offers undo. Geometry-affecting changes invalidate the existing CAD result and require review and a new build before export. Undo before any build from the suggestion keeps the existing model current, because the restored settings are the ones it was built from. Undo after building an AI suggestion restores prior settings and their previously current mesh for comparison, or clears the preview if none existed; exports remain stale until rebuilt because those server artifacts may already have been released.
 
 There is no image, outline, or mesh payload, model-download endpoint, generated-code execution, or cloud fallback. Ollama must already have the selected local model installed. See [local AI setup and controls](ollama.md).
 

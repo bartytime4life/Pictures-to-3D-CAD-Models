@@ -13,6 +13,7 @@ Use the visible error message and the stage that failed. Keep the current photog
 | Multiple substantial regions | Other objects, loose pieces, or a detached part appear in the image. | Use an image of one intended connected part. Review the warning and selected region. |
 | Hole missing or false hole present | Reflection, shadow, texture, or thresholding changed the interior boundary. | Compare the trace with the real part and adjust the threshold or capture. Do not export an unreviewed hole pattern. |
 | Outline and image appear rotated differently | Orientation or coordinate handling is incorrect. | Re-export the source with its orientation applied and report the reproducible case. The normalized display image and trace should align. |
+| Warning that orientation metadata could not be read | The file's EXIF block is damaged, so the photo was traced as stored rather than rotated. | If the part appears sideways or mirrored, rotate the photo or re-export it with its orientation applied, then trace again. |
 
 ## Scale and geometry problems
 
