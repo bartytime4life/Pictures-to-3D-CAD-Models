@@ -10,16 +10,17 @@
   "figures": 11,
   "route_combinations": 35,
   "python_tests": {
-    "ran": 119,
+    "ran": 129,
     "skipped": 2,
     "status": "passed"
   },
   "node_tests": {
-    "passed": 11,
+    "passed": 12,
     "failed": 0
   },
   "browser_checks": {
     "assertions": 98,
+    "transport": "file",
     "local_files_checked": 28,
     "in_page_anchors_checked": 117,
     "desktop_viewport": [
@@ -45,12 +46,12 @@
     ]
   },
   "pdf_pages": 54,
-  "pdf_sha256": "3b3307733d354964fd0cc227325cabece873212099ed1b75d41eab84d7906fbd",
+  "pdf_sha256": "30b268b6644a044bb8adffcb627fd50390d3396bcb3c86e3b6e8c3c1903cbfce",
   "pdf_catalog_urls_linked": 86,
   "synthetic_calculations": "passed",
   "openscad_plate_checks": {
-    "rows": 15,
-    "passed": 15
+    "rows": 16,
+    "passed": 16
   },
   "physical_printing": "not performed",
   "slicing": "not performed",

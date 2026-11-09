@@ -95,6 +95,23 @@ test('homography validation mirrors the Python rules', () => {
   assert.throws(() => C.homography.fit([[0, 0], [1, 0], [1, 1]], [[0, 0], [1, 0], [1, 1]]), /at least four/);
 });
 
+test('homography reports on large point sets without a cubic scan', () => {
+  // Codex review of PR #2: the near-collinear warning needs at most six points, so a larger
+  // set must not enumerate every triple (3000 points is 4.5e9 triples, many seconds).
+  const Ht = [[0.05, 0.004, -12], [-0.003, 0.049, -8], [1.2e-5, -2e-5, 1]];
+  let seed = 20261108;
+  const rand = () => ((seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648);
+  const src = Array.from({ length: 3000 }, () => [rand() * 3000, rand() * 2000]);
+  const dst = src.map((p) => C.homography.apply(Ht, p));
+  const t0 = performance.now();
+  const r = C.homography.report(src, dst);
+  const ms = performance.now() - t0;
+  assert.ok(ms < 1500, `report took ${ms.toFixed(0)} ms`);
+  assert.equal(r.points, 3000);
+  assert.ok(r.rms < 1e-6, `rms ${r.rms}`);
+  assert.deepEqual(r.warnings, []);
+});
+
 test('input validation rejects impossible values', () => {
   assert.throws(() => C.planarScale(0, 100), RangeError);
   assert.throws(() => C.depthFactor(500, -600), /in front of the camera/);

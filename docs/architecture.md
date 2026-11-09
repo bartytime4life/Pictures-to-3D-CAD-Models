@@ -28,7 +28,7 @@ flowchart LR
 | CadQuery / OpenCascade | Solid construction, topology checks, tessellation, and CAD exports |
 | Optional local Ollama | Text advice and validated trace/design/print-setting proposals for explicit user review |
 
-The application does not call a paid or external inference service. Its optional assistant connects to Ollama through an HTTP loopback address on the backend host. It receives text context, not the photograph or geometry. An uploaded photograph still reaches the Python backend for tracing, which may run on the user's machine or on a cloud host.
+The application does not call a paid or external inference service. Its optional assistant connects to Ollama through an HTTP loopback address on the backend host. It receives text context, including measured and built dimensions, but not the photograph, outline vertices, or mesh. An uploaded photograph still reaches the Python backend for tracing, which may run on the user's machine or on a cloud host.
 
 ## Geometry conventions
 
@@ -93,7 +93,7 @@ The profile is validated at the API boundary even when it originated in this app
 
 Proposals may contain supported trace controls and design/print settings, including explicit XY/thickness design percentages. They cannot replace the measured source width or thickness. The server requests structured output and independently validates it; response text does not execute actions. Invalid proposals are discarded with a warning. The browser previews proposals, requires an explicit application, rejects proposals for an outdated project, and offers undo. Geometry-affecting changes invalidate the existing CAD result and require review and a new build before export. Undo after building an AI suggestion restores prior settings and their previously current mesh for comparison, or clears the preview if none existed; exports remain stale until rebuilt because those server artifacts may already have been released.
 
-There is no image/geometry payload, model-download endpoint, generated-code execution, or cloud fallback. Ollama must already have the selected local model installed. See [local AI setup and controls](ollama.md).
+There is no image, outline, or mesh payload, model-download endpoint, generated-code execution, or cloud fallback. Ollama must already have the selected local model installed. See [local AI setup and controls](ollama.md).
 
 The status endpoint returns HTTP 200 with `running: false` when Ollama is unavailable. Chat failures use 503 for an unavailable service, 409 for an unavailable or unsupported model, 429 for a busy assistant, 504 for a timeout, and 502 for an unusable upstream response. Cloud names and remote-model metadata are rejected; a model is checked again before inference. Generated prose still requires human review.
 
@@ -113,13 +113,13 @@ Returns the bundled, versioned printer catalog with source metadata, grouped mod
 | Thickness | 0.1–500 mm |
 | Image tracing | One concurrent trace per API process |
 | CAD work | One concurrent build per API process; 60-second worker timeout |
-| Stored models | At most 20 model directories per process; one-hour expiry |
+| Stored models | At most 20 model directories in the job directory (`PICTURES_CAD_JOB_DIR`); one-hour expiry |
 | Design percentages | 10–400% XY and thickness; resulting CAD dimensions must remain within the geometry bounds above |
 | Split grid and solids | 1–4 rows/columns; at most 8 cells and 8 connected pieces |
 | Assistant question/context | 1600-character question; up to 8 warnings of 300 characters each |
 | Assistant inference | One concurrent request; 120-second chat timeout plus short model checks; 2 MiB upstream response cap |
 
-Do not increase the web server worker count as a substitute for a job queue: the concurrency lock and capacity accounting are per process. The supplied startup runs a single API process.
+Do not increase the web server worker count as a substitute for a job queue: the concurrency locks are per process, while the capacity count covers every model directory on disk, including those of other processes sharing the job directory. The supplied startup runs a single API process.
 
 Errors use a JSON `detail` string. Invalid inputs commonly return 422, oversized requests 413, busy or full-capacity responses 429, deletion conflicting with an active build 409, and CAD timeouts 504. Missing artifacts return 404; an artifact found at access time but already expired returns 410. A background cleanup may already have removed an expired artifact, so expired links may also appear missing.
 

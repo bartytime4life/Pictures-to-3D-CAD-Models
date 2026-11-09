@@ -18,6 +18,7 @@ class Analyze(unittest.TestCase):
         self.assertTrue(r["watertight"])
         self.assertTrue(r["orientation_consistent"])
         self.assertEqual((r["components"], r["boundary_edges"], r["nonmanifold_edges"]), (1, 0, 0))
+        self.assertEqual((r["manifold"], r["nonmanifold_vertices"]), (True, 0))
         self.assertEqual((r["euler_characteristic"], r["genus"]), (2, 0))
 
     def test_volume_is_translation_invariant(self):
@@ -29,6 +30,7 @@ class Analyze(unittest.TestCase):
         r = stl.analyze(stl.box()[:-1])
         self.assertFalse(r["watertight"])
         self.assertEqual(r["boundary_edges"], 3)
+        self.assertEqual(r["nonmanifold_vertices"], 0)  # each rim vertex still has one open fan
         self.assertIsNone(r["genus"])
 
     def test_flipped_triangle_breaks_orientation(self):
@@ -70,6 +72,67 @@ class Analyze(unittest.TestCase):
             stl.analyze(tris, weld_tol=0)
         with self.assertRaises(ValueError):
             stl.analyze([])
+
+    def test_non_finite_coordinates_are_invalid_input(self):
+        for bad in (float("nan"), float("inf"), float("-inf")):
+            tris = stl.box()
+            tris[3] = (tris[3][0], (bad, 0.0, 0.0), tris[3][2])
+            with self.assertRaisesRegex(ValueError, "not finite"):
+                stl.analyze(tris)
+
+
+class Welding(unittest.TestCase):
+    """Codex review of PR #2: welding must not depend on where points fall on a grid."""
+
+    def test_points_straddling_a_cell_boundary_are_welded(self):
+        # Shifted by half a tolerance cell, then jittered by 1e-9: rounding to a grid split
+        # these into 10 boundary edges and two components.
+        moved = [tuple((p[0] + 5e-7, p[1], p[2]) for p in t) for t in stl.box()]
+        jitter = [tuple(((p[0] + 1e-9, p[1], p[2]) if i == 0 else p) for i, p in enumerate(t)) for t in moved]
+        r = stl.analyze(jitter, weld_tol=1e-6)
+        self.assertEqual((r["vertices"], r["boundary_edges"], r["components"]), (8, 0, 1))
+        self.assertTrue(r["watertight"] and r["manifold"] and r["orientation_consistent"])
+        self.assertEqual(r["genus"], 0)
+
+    def test_weld_is_a_distance_not_a_cell(self):
+        tris = stl.box()
+        for gap, closed in ((0.9e-6, True), (1.1e-6, False), (5e-6, False)):
+            # Move one corner of the first triangle off its neighbours by `gap` along a diagonal.
+            a, b, c = tris[0]
+            d = gap / 3 ** 0.5
+            nudged = [((a[0] + d, a[1] + d, a[2] + d), b, c)] + tris[1:]
+            self.assertEqual(stl.analyze(nudged, weld_tol=1e-6)["watertight"], closed, gap)
+
+    def test_grid_offset_does_not_change_the_answer(self):
+        base = stl.analyze(stl.box((60, 30, 4)))
+        for offset in (0.0, 5e-7, 4.9999e-7, -5e-7, 123.4565):
+            shifted = [tuple((p[0] + offset, p[1] + offset, p[2] + offset) for p in t) for t in stl.box((60, 30, 4))]
+            r = stl.analyze(shifted)
+            self.assertEqual((r["vertices"], r["boundary_edges"], r["components"], r["genus"]),
+                             (base["vertices"], 0, 1, 0), offset)
+
+
+class VertexManifold(unittest.TestCase):
+    """Codex review of PR #2: shells that touch at one vertex are not a 2-manifold."""
+
+    def test_boxes_touching_at_a_vertex(self):
+        r = stl.analyze(stl.box() + stl.box(origin=(1, 1, 1)))
+        self.assertEqual((r["boundary_edges"], r["nonmanifold_edges"]), (0, 0))
+        self.assertTrue(r["watertight"])  # every edge has two faces...
+        self.assertEqual(r["nonmanifold_vertices"], 1)  # ...but the shared corner has two fans
+        self.assertFalse(r["manifold"])
+        self.assertIsNone(r["genus"])
+
+    def test_boxes_sharing_an_edge(self):
+        r = stl.analyze(stl.box() + stl.box(origin=(1, 1, 0)))
+        self.assertGreater(r["nonmanifold_edges"], 0)
+        self.assertEqual(r["nonmanifold_vertices"], 2)
+        self.assertFalse(r["watertight"] or r["manifold"])
+
+    def test_separate_boxes_stay_manifold(self):
+        r = stl.analyze(stl.box() + stl.box(origin=(1.5, 1.5, 1.5)))
+        self.assertTrue(r["manifold"])
+        self.assertEqual((r["components"], r["genus"]), (2, 0))
 
 
 class ReadWrite(unittest.TestCase):

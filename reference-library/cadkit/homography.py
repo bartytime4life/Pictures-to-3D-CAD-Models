@@ -223,7 +223,8 @@ def fit_report(src: Sequence[Point], dst: Sequence[Point], at: Point | None = No
     if len(src_p) == 4:
         warnings.append(FOUR_POINT_WARNING)
     _, ns = _normalizer(src_p)
-    if _min_triangle_area(ns) < NEAR_COLLINEAR_AREA and len(src_p) <= 6:
+    # Check the count first: the triangle scan is cubic in the number of points.
+    if len(src_p) <= 6 and _min_triangle_area(ns) < NEAR_COLLINEAR_AREA:
         warnings.append("Some image points are nearly collinear; the estimate is fragile.")
     if _spread_ratio(src_p) < 0.05:
         warnings.append("Control points occupy a narrow region; avoid extrapolating beyond it.")

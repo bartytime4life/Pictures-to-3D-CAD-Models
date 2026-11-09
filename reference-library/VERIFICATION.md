@@ -21,23 +21,24 @@ The checks fall into the three tiers described in handbook section 18. Tiers 1 a
 
 ### Tier 2: design rules (the examples and the interface can work)
 
-- **Synthetic plate:** `examples/build_plate.py` reads `examples/plate-parameters.csv` and renders `two-hole-plate.scad` with OpenSCAD 2021.01. Its STL passed all 15 checks:
+- **Synthetic plate:** `examples/build_plate.py` reads `examples/plate-parameters.csv` and renders `two-hole-plate.scad` with OpenSCAD 2021.01. Its STL passed all 16 checks:
   - extents of 60 × 30 × 4 mm
-  - one connected component, closed and consistently oriented
+  - one connected component, closed, manifold at every edge and vertex, and consistently oriented
   - genus 2
   - hole positions and radii
   - a volume matching the inscribed-polygon expectation
   - end walls, side walls, and the web between holes at or above the 2 mm minimum wall
 - **Clearance coupon:** `clearance-coupon.scad` renders with and without labels. Each render is one closed component with one handle per hole, and its compensated hole polygons have the intended vertex radius. See `examples/README.md` for the numbers.
-- **Mesh checker:** synthetic cases with known answers exercise `cadkit meshcheck`: closed and open boxes, two components, flipped faces, degenerate triangles, unit hints, and binary files whose header starts with `solid`.
-- **Browser:** 98 assertions in Chrome through Playwright, loading the page from `file://`:
+- **Mesh checker:** synthetic cases with known answers exercise `cadkit meshcheck`: closed and open boxes, two components, flipped faces, degenerate triangles, unit hints, and binary files whose header starts with `solid`. The cases also cover boxes that touch at one vertex or share one edge, near-coincident points that straddle a welding-grid boundary, and translations that must not change the result.
+- **Workbench exports:** the workbench's own test suite (`tests/test_mesh_interop.py` in the repository root) runs the same checker on its STL exports. Combined, traced, and split-part meshes are each closed, manifold, and outward-facing, with one genus per traced hole and volumes within 0.01 % of the CAD solid.
+- **Browser:** 98 assertions in Chrome through Playwright, loading the page over the `file` transport (`file://`, as a reader opens it). CI repeats the same assertions over a private loopback HTTP server (`CAD_REFERENCE_BROWSER_TRANSPORT=http`).
   - **Navigation:** tabs by mouse and keyboard, deep links to tabs, chapters, and calculators, and a contents list with all 23 chapters.
   - **Toolkit:** all 14 calculators with correct default results, reset, and warnings. Empty, negative, and malformed inputs are reported as errors rather than computed as zero. The route finder's answers and calculator links are checked too.
   - **Catalog:** search, topic, review-depth, and sort filters. The filter state is written to the URL and restored after a reload, including topics containing "&" and searches containing "+".
   - **Files and figures:** 28 local files resolve, every in-page link has a target, and all figures load.
   - **Theme, keyboard, and safety:** the theme persists across reloads, and dark mode applies. `/` focuses the search, while Ctrl+/ does not. Script-like text and malformed escapes in the URL hash are treated as data.
   - **Layout:** no horizontal page overflow at 390 × 844 on any tab, and no JavaScript or console errors at 1440 × 1050.
-- **Test suites:** 119 Python tests. OpenSCAD tests are skipped automatically where it is not installed. There are also 11 Node test groups.
+- **Test suites:** 129 Python tests. OpenSCAD tests are skipped automatically where it is not installed. There are also 12 Node test groups.
 
 ### Independent review
 

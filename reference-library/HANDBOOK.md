@@ -376,7 +376,7 @@ A rational B-spline curve combines control points, basis functions, and weights.
 
 ### Mesh topology and geometry
 
-For an ordinary closed manifold surface, each edge belongs to two faces. That combinatorial condition alone does not rule out self-intersections, inverted regions, duplicated internal shells, or zero-thickness contacts. Check connected components, orientation, intersections, and volume interpretation. Intentional separate bodies may legitimately produce several closed components.
+For an ordinary closed manifold surface, each edge belongs to two faces, and the faces around each vertex form a single fan. The edge condition alone misses two shells that touch at one corner, which share a vertex but no edge. Neither condition rules out self-intersections, inverted regions, duplicated internal shells, or zero-thickness contacts. Check connected components, orientation, intersections, and volume interpretation. Intentional separate bodies may legitimately produce several closed components.
 
 Boolean unions of separately modelled parts need their own checks. Count connected components after the union and compare the count with intent: small extra components are floating islands that print as loose debris or fail. Overlapping regions can also leave slivers and walls thinner than any printable path. Measure local thickness after the Boolean, not only on the inputs.
 
@@ -649,7 +649,7 @@ Run `python3 -m cadkit --help` in the `reference-library` folder. The package us
 | `route` | 1 | Recommend a workflow for an input and a goal |
 | `scale`, `uncertainty`, `aspect`, `homography`, `depth`, `camera` | 5 | Image scale, propagation, calibration checks, rectification, depth, camera distance |
 | `label`, `evidence` | 3 | Rounding of published values; weakest evidence class |
-| `units`, `meshcheck` | 2, 12, 18 | Unit mismatch on import; STL extents, volume, closure, orientation, components |
+| `units`, `meshcheck` | 2, 12, 18 | Unit mismatch on import; STL extents, volume, closure, vertex manifoldness, orientation, components, through-holes |
 | `chord`, `coupon`, `coating` | 11, 12, 15 | Tessellation, clearance series, finish allowance |
 | `gear`, `wind` | 16 | Nominal gear relations with an undercut warning; first wind-power estimate |
 | `params`, `new-project` | 4, 17 | Validate a design-parameter register; scaffold the minimum project folder |

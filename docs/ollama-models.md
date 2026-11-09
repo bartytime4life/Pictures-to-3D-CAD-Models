@@ -99,8 +99,10 @@ record completion time, output tokens per second, resident model memory, disk
 bytes, errors, and structured-response validity. Score factual correctness,
 respect for the workbench's limits, useful next action, and brevity. Any
 unapproved change, invented measurement, or fabricated feature is a failed case.
-Include design/print cases when evaluating the expanded assistant, even if a
-baseline script run covers only the core tracing and export cases. Choose the
+Include design/print cases when evaluating the expanded assistant. The included
+`scripts/benchmark_ollama.py` is a baseline: it covers eight cases, including
+design resizing, material, and unknown printer capabilities, with one warm repeat,
+and it records cgroup limits rather than resident model memory. Choose the
 smallest model that meets those requirements with acceptable
 interactive latency; promote a larger model only when its observed advantage
 justifies the cost on the target machine.

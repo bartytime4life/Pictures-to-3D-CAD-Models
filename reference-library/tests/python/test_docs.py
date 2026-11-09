@@ -69,6 +69,15 @@ class Counts(unittest.TestCase):
         self.assertIn(f"{len(SOURCES)} entries", text)
         self.assertIn(f"{len(REPOS)} GitHub repository", text)
         self.assertIn(f"{record['pdf_pages']} pages", text)
+        # The prose counts of the last recorded run must be the recorded ones.
+        self.assertIn(f"{record['python_tests']['ran']} Python tests", text)
+        self.assertIn(f"{record['node_tests']['passed']} Node test groups", text)
+        self.assertIn(f"{record['browser_checks']['assertions']} assertions", text)
+        self.assertIn(f"`{record['browser_checks'].get('transport', 'file')}`", text)
+        plate = record["openscad_plate_checks"]
+        if isinstance(plate, dict):
+            self.assertEqual(plate["rows"], plate["passed"])
+            self.assertIn(f"all {plate['rows']} checks", text)
 
     @unittest.skipIf(RECORDING, "verification.json is being rewritten")
     def test_pdf_page_count_matches_record(self):

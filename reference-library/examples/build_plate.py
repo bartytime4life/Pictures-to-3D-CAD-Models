@@ -99,6 +99,7 @@ def run(param_path: Path, scad_path: Path, out_dir: Path) -> dict:
         check("components_count", 1, 1, 1, mesh["components"], "count, not mm"),
         check("boundary_edges_count", 0, 0, 0, mesh["boundary_edges"], "count, not mm; 0 means closed"),
         check("nonmanifold_edges_count", 0, 0, 0, mesh["nonmanifold_edges"], "count, not mm"),
+        check("nonmanifold_vertices_count", 0, 0, 0, mesh["nonmanifold_vertices"], "count, not mm; 0 means no pinched vertices"),
         check("orientation_inconsistent", 0, 0, 0, 0 if mesh["orientation_consistent"] else 1, "flag, not mm"),
         check("degenerate_triangles_count", 0, 0, 0, mesh["degenerate_triangles"], "count, not mm"),
         check("through_hole_genus_count", 2, 2, 2, -1 if mesh["genus"] is None else mesh["genus"],

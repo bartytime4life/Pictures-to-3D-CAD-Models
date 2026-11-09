@@ -22,6 +22,18 @@ STL has no standard color/material representation. The chosen color and material
 
 Check that the receiving tool reports a closed mesh and that holes remain open. A printable mesh is not a declaration that the part is strong enough, dimensionally suitable, or ready for a particular printer and material.
 
+### Check an STL independently
+
+The [reference library](../reference-library/README.md) in this repository includes `cadkit meshcheck`, a standard-library STL checker that shares no code with the CadQuery exporter. Run it from `reference-library/`, giving the largest dimension you expect in millimeters:
+
+```bash
+python3 -m cadkit meshcheck ~/Downloads/model.stl --expect-mm 80
+```
+
+It reports extents, volume, boundary and non-manifold edges, non-manifold vertices, orientation, connected components, and genus. For a flat part, genus is the number of through-holes, so compare it with the hole count shown in the workbench. A missing or extra through-hole changes the genus even when the outline looks right. The unit hint flags a likely inch, centimeter, or meter mix-up. Unless `--allow-open` is given, the command exits with status 0 only for a closed, manifold, consistently oriented mesh with no degenerate triangles. Add `--json` for machine-readable output. See the [`cadkit` notes](../reference-library/cadkit/README.md#mesh-check-notes).
+
+The workbench test suite runs this checker on combined exports, on a traced photograph with round holes, and on every piece in a split bundle (`tests/test_mesh_interop.py`). Like the receiving tool's check, a pass is a geometry result, not evidence of strength or fit.
+
 ## DXF: a planar profile
 
 Use DXF for the 2D boundary and interior cutouts. It describes a flat profile, not the extruded thickness, toolpaths, cutting order, kerf compensation, or machine settings.

@@ -56,6 +56,28 @@ class Fit(unittest.TestCase):
         self.assertAlmostEqual(report["mapped"][0], 25.0)
         self.assertAlmostEqual(report["local_anisotropy_percent"], 0.0, places=6)
 
+    def test_many_points_skip_the_cubic_collinearity_scan(self):
+        # Codex review of PR #2: the near-collinear warning only applies to 4-6 points, so
+        # larger sets must not enumerate every triple (400 points took about 5 s).
+        rng = random.Random(7)
+        src = [(rng.uniform(0, 3000), rng.uniform(0, 2000)) for _ in range(400)]
+        original = hg._min_triangle_area
+        calls = []
+
+        def spy(pts):
+            calls.append(len(pts))
+            return original(pts)
+
+        hg._min_triangle_area = spy
+        try:
+            report = hg.fit_report(src, mapped(src))
+            self.assertEqual(calls, [])
+            self.assertLess(report["rms_residual"], 1e-6)
+            hg.fit_report(GRID[:6], mapped(GRID[:6]))
+            self.assertEqual(calls, [6])  # still checked where the warning applies
+        finally:
+            hg._min_triangle_area = original
+
     def test_jacobian_matches_finite_differences(self):
         for p in [(300.0, 400.0), (2200.0, 1900.0)]:
             J = hg.jacobian(H_TRUE, p)

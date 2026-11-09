@@ -64,7 +64,7 @@ python3 -m cadkit depth --z 500 --delta 60 --size 40
 python3 -m cadkit meshcheck examples/output/two-hole-plate.stl --expect-mm 60
 ```
 
-The last command checks the STL that `make plate` renders with OpenSCAD. The test suite checks that the browser and Python calculators return the same results and the same route recommendations.
+The last command checks the STL that `make plate` renders with OpenSCAD: extents, volume, closure, vertex manifoldness, orientation, and genus, which for a plate equals the number of through-holes. It works on any ASCII or binary STL, including the workbench's exports, and the [workbench tests](../tests/test_mesh_interop.py) run it on combined and split-part exports. The library's test suite checks that the browser and Python calculators return the same results and the same route recommendations.
 
 ![Route map from available input to a starting workflow](assets/figures/route-map.svg)
 

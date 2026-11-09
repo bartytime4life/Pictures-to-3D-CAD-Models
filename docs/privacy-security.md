@@ -22,7 +22,7 @@ An AI response is untrusted advice. The application validates its limited trace/
 
 ## Temporary artifacts and saved projects
 
-Generated meshes, CAD files, and recipe data are stored under `.local/jobs` by default; `PICTURES_CAD_JOB_DIR` can select another directory. The running service expires model directories after **one hour**, checks expiry on startup and builds, and runs a cleanup check every **60 seconds**. It caps stored model directories at 20 per process. The API supports deletion of one model with `DELETE /api/models/{job_id}`, or all completed temporary models with `DELETE /api/models`. Clearing all models is blocked while a CAD build is active.
+Generated meshes, CAD files, and recipe data are stored under `.local/jobs` by default; `PICTURES_CAD_JOB_DIR` can select another directory. The running service expires model directories after **one hour**, checks expiry on startup and builds, and runs a cleanup check every **60 seconds**. It caps stored model directories at 20 in the job directory, counting every model directory present there. The API supports deletion of one model with `DELETE /api/models/{job_id}`, or all completed temporary models with `DELETE /api/models`. Clearing all models is blocked while a CAD build is active.
 
 Download the exports you want to retain; a temporary artifact URL is not durable project storage. Cleanup depends on the service running. Stopping the service, taking a filesystem snapshot, or backing up its storage can retain files beyond the running service's intended lifetime.
 

@@ -219,7 +219,7 @@ def cmd_meshcheck(args):
     r = stl.analyze(tris, weld_tol=args.weld_tol)
     r["file"] = str(args.stl)
     r["unit_hints"] = stl.unit_hints(r["extents"], args.expect_mm)
-    ok = r["watertight"] and r["orientation_consistent"] and r["degenerate_triangles"] == 0
+    ok = r["watertight"] and r["manifold"] and r["orientation_consistent"] and r["degenerate_triangles"] == 0
     r["status"] = "pass" if ok else "fail"
     ext = " x ".join(_fmt(e) for e in r["extents"])
     lines = [
@@ -228,7 +228,9 @@ def cmd_meshcheck(args):
         f"extents: {ext} (file units)",
         f"surface area: {_fmt(r['surface_area'])}; volume: {_fmt(r['volume'])}",
         f"watertight: {r['watertight']} (boundary edges {r['boundary_edges']}, non-manifold edges {r['nonmanifold_edges']})",
+        f"manifold: {r['manifold']} (non-manifold vertices {r['nonmanifold_vertices']})",
         f"orientation consistent: {r['orientation_consistent']}; degenerate triangles: {r['degenerate_triangles']}",
+        f"through-holes (genus): {'n/a (not a closed manifold)' if r['genus'] is None else r['genus']}",
     ] + [f"hint: {h}" for h in r["unit_hints"]] + [f"status: {r['status']}"]
     if r["volume"] < 0:
         lines.append("hint: negative volume suggests inward-facing normals")
