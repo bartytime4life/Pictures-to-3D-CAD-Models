@@ -30,8 +30,8 @@ Separate code reviews of the backend, frontend, and reference library found 30 d
   - Each hole ring is bounded before parsing.
   - The traversal test now reaches the download route.
   - The benchmark's dimension hint judges the model's raw proposal.
-- **Workbench results.** `make test-app` passed with **178 Python tests** (146 before), production typecheck/build, and **23 Chromium browser scenarios** (15 before). The backend tests produced no warnings. `make lint` passed. `scripts/smoke.py` passed against the running service.
-- **Regression checks.** 26 new or changed backend tests and 9 browser scenarios failed on the previous code. The strengthened traversal test passes on both versions, because that route was already safe.
+- **Workbench results.** `make test-app` passed with **179 Python tests** (146 before), production typecheck/build, and **23 Chromium browser scenarios** (15 before). The backend tests produced no warnings. `make lint` passed. `scripts/smoke.py` passed against the running service.
+- **Regression checks.** 27 new or changed backend tests and 9 browser scenarios failed on the previous code. The strengthened traversal test passes on both versions, because that route was already safe.
 - **Reference library (8 fixes; see its [changelog](../reference-library/CHANGELOG.md)).** `make release` passed over `file://` with **157 Python tests**, **25 Node test groups**, **101 page assertions**, **49 Photos assertions**, and **16/16** plate checks. `make test-library` passed the same counts over loopback HTTP.
 
 HawkScan was not run because no `HAWK_API_KEY` is configured. These are software and geometry checks of synthetic fixtures; no part was sliced or printed. The CI results for this change set belong to its pull request.
@@ -128,7 +128,7 @@ These runs use `ubuntu-latest`, Python 3.12, and Node.js 24. They validate that 
 
 Earlier workbench evidence remains available: the [feature run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42528243229) passed for `f4b924517c6f58fe34686f380c478e55ba67d4ef`; the [original CAD run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42519068333) passed for `96d73c6ef1b6ee50759f1835e63717835772b4f1`.
 
-The library has a separate [verification record](../reference-library/VERIFICATION.md) describing its 157 Python tests, 25 Node test groups, and browser assertions. Those checks are additional to the workbench's 178 Python tests and 23 browser scenarios; they do not evaluate real photograph reconstruction, physical printing, or LLM quality. Counts, skips, and browser transport belong to the particular recorded invocation rather than the mere presence of a test command.
+The library has a separate [verification record](../reference-library/VERIFICATION.md) describing its 157 Python tests, 25 Node test groups, and browser assertions. Those checks are additional to the workbench's 179 Python tests and 23 browser scenarios; they do not evaluate real photograph reconstruction, physical printing, or LLM quality. Counts, skips, and browser transport belong to the particular recorded invocation rather than the mere presence of a test command.
 
 ## Geometry and API evidence
 
