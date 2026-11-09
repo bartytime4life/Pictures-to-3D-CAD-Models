@@ -117,6 +117,25 @@ def test_exif_orientation_and_metadata_removal(client):
     assert len(result["profile"]["holes"]) == 2
 
 
+def test_exif_horizontal_mirror_moves_asymmetric_photo_and_outline(client):
+    metadata = Image.Exif()
+    metadata[274] = 2  # Display stored pixels mirrored left-to-right.
+    metadata[270] = "private metadata should not survive"
+    response = trace(client, encoded(plate(), exif=metadata))
+    assert response.status_code == 200, response.text
+    result = response.json()
+    image = Image.open(io.BytesIO(base64.b64decode(result["image"]["data_url"].split(",")[1])))
+    assert image.size == (500, 360)
+    # The single hole starts on the left. Both the normalized photo and the CAD
+    # profile must move it to the right, rather than merely dropping its EXIF.
+    assert image.getpixel((145, 145)) == (0, 0, 0)
+    assert image.getpixel((354, 145)) == (255, 255, 255)
+    assert not image.getexif()
+    assert result["bounds"] == {"x": 49, "y": 60, "width": 401, "height": 241}
+    (hole,) = result["profile"]["holes"]
+    assert extent(hole) == (329, 120, 51, 51)
+
+
 def plate(mode="RGB", part="black", background="white"):
     """A 401 x 241 pixel part with a 51 x 51 pixel square hole at columns and rows 120-170."""
     image = Image.new(mode, (500, 360), background)

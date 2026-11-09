@@ -1,6 +1,14 @@
 # Validation results
 
-Validated November 8, 2026, in the managed Linux environment. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
+The records below identify each change set's validation scope and environment. A freshly published cloud task has not been validated.
+
+## Mirrored photos and independent resize requests — November 9, 2026
+
+EXIF orientation 2 now mirrors the normalized photo and its traced outline correctly. Pillow's horizontal-flip enum has value zero, so the previous truthiness check skipped that transformation. The asymmetric-photo regression checks both image pixels and the hole's position in the actual profile, as well as metadata removal.
+
+Assistant proposal review now preserves an explicit request such as “Make it larger, thickness stays the same” while withholding changes to the held dimension. It recognizes coordinated held-dimension lists and retains the conservative fallback for other wording. Measured source dimensions and the explicit Apply step remain unchanged. The photo regression and six of eight new resize fixtures failed before their respective fixes.
+
+Validation in the managed Linux environment passed `make setup`, `make lint`, and `PICAD_TEST_URL=http://127.0.0.1:8001 make test-app`: **188 Python tests**, production typecheck/build, and **23 Chromium scenarios**. `make test-library` also passed **157 Python tests**, **25 Node test groups**, **101 page assertions**, and **49 Photos assertions** over loopback HTTP. These completed runs had no failures or skips. Assistant fixtures validate proposal handling; live model inference remains untested.
 
 ## Review fixes: recovery, tracing accuracy, and input checks
 

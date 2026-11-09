@@ -430,6 +430,34 @@ def test_negated_size_wording_does_not_authorize_that_change(question, sizes):
     assert withheld is (len(sizes) < 2)
 
 
+@pytest.mark.parametrize(
+    "question,sizes",
+    [
+        ("Make it larger, thickness stays the same.", {"scale_percent"}),
+        ("Make it larger and thickness stays the same.", {"scale_percent"}),
+        ("Make it larger, thickness remains unchanged.", {"scale_percent"}),
+        ("Make it thicker, width stays the same.", {"thickness_percent"}),
+        ("Make the width, height and thickness stay the same.", set()),
+        ("Make width, length and thickness unchanged.", set()),
+        ("Don't make it larger, thickness stays the same.", set()),
+        ("Don't change the width, height or thickness. Make it blue.", set()),
+    ],
+)
+def test_held_dimension_subject_does_not_mask_another_requested_axis(question, sizes):
+    request = assistant.AssistantRequest.model_validate(request_body(question=question))
+    response = assistant.review_proposal(
+        {
+            "answer": "Review the suggested changes.",
+            "proposal": {"scale_percent": 120, "thickness_percent": 150, "color": "#0000ff"},
+            "warnings": [],
+        },
+        request,
+    )
+    assert set(response["proposal"]) == sizes | {"color"}
+    assert request.context.width_mm == 80
+    assert request.context.thickness_mm == 4
+
+
 def test_requested_scale_cannot_exceed_known_cad_dimension_limits(client, local_ollama):
     body = request_body(question="Double the size of this part.")
     body["context"]["width_mm"] = 1500

@@ -34,6 +34,13 @@ NEGATION_BEFORE = re.compile(
 NEGATION_AFTER = re.compile(
     r"\b(?:unchanged|untouched|alone|as\s+(?:it\s+)?is|the\s+same|stays?|remains?)\b"
 )
+DIMENSION_SUBJECT = r"(?:width|length|height|size|scale|dimensions?|thickness)"
+NEGATION_AFTER_SUBJECT = re.compile(
+    rf"\b{DIMENSION_SUBJECT}\b"
+    rf"(?:\s*(?:,|and\b|or\b)\s*(?:(?:and|or)\s+)?"
+    rf"(?:(?:the|its|their|our|your|my)\s+)?{DIMENSION_SUBJECT}\b)*"
+    r"\s*(?:(?:is|are|stays?|remains?)\s*)?$"
+)
 # A negation lasts to the end of its sentence, a contrast, or a new instruction. A
 # comma alone does not end it, so "don't change the width, length or thickness" is
 # withheld as a whole; erring that way only withholds a suggestion.
@@ -387,10 +394,16 @@ def _without_negated_wording(question):
         masked[cue.start() : end] = " " * (end - cue.start())
     for cue in NEGATION_AFTER.finditer(question):
         start = max((value for value in ends if value <= cue.start()), default=0)
-        # Only the few words just before the cue: "... and the thickness stays the same".
-        words = [match.start() for match in re.finditer(r"\b\w", question[start : cue.start()])]
-        if len(words) > 3:
-            start += words[-3]
+        subject = NEGATION_AFTER_SUBJECT.search(question[start : cue.start()])
+        if subject:
+            # Mask the held dimension or list, not an earlier "make it larger".
+            # Commas can join held dimensions, so they are not blanket boundaries.
+            start += subject.start()
+        else:
+            # Keep the existing conservative fallback for other wording.
+            words = [match.start() for match in re.finditer(r"\b\w", question[start : cue.start()])]
+            if len(words) > 3:
+                start += words[-3]
         masked[start : cue.end()] = " " * (cue.end() - start)
     return "".join(masked)
 

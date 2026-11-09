@@ -109,7 +109,8 @@ def trace_image(
                     notices.append(
                         "The image's orientation metadata could not be read, so it was traced as stored. Check that the outline is oriented like the part before measuring the reference width."
                     )
-                normalized = to_eight_bit(raw.transpose(method) if method else raw)
+                # FLIP_LEFT_RIGHT is enum value 0, so presence cannot use truthiness.
+                normalized = to_eight_bit(raw.transpose(method) if method is not None else raw)
                 if "A" in normalized.getbands() or "transparency" in normalized.info:
                     rgba = normalized.convert("RGBA")
                     image = Image.new("RGB", rgba.size, "white")
