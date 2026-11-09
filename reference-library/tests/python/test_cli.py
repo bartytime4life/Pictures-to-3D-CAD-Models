@@ -121,6 +121,8 @@ class FileCommands(unittest.TestCase):
         code, out, _ = run("meshcheck", str(pinch))
         self.assertIn("manifold: False (non-manifold vertices 1)", out)
         self.assertIn("through-holes (genus): n/a", out)
+        code, r = run_json("meshcheck", str(pinch), "--allow-open")
+        self.assertEqual((code, r["status"]), (0, "fail"))
 
     def test_meshcheck_rejects_non_finite_coordinates(self):
         tris = stl.box()

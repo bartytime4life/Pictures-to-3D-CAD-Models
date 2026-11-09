@@ -1,7 +1,9 @@
-/* Local photo intake and review. Originals never leave the browser. */
+/* Local photo intake, review, and explicit backups. No photos are uploaded. */
 (function () {
   'use strict';
   const P = window.CadPhotos;
+  const T = window.CadPhotoTransfer;
+  const R = window.CadPhotoRegister;
   const $ = (id) => document.getElementById(id);
   if (!P || !$('photos')) return;
   const label = (s) => s.charAt(0).toUpperCase() + s.slice(1);
@@ -16,10 +18,13 @@
   const fail = (error) => report(error.message || 'This action could not finish. Try again.');
   const run = (action) => (...args) => Promise.resolve().then(() => action(...args)).catch(fail);
   let db, page = 0, importing = false, cancelled = false, renderVersion = 0;
+  let transferring = false, transferCancelled = false, savedCount = 0;
   let galleryURLs = [], detailURL, selected, detailVersion = 0, pointMode = null, pointIndex = 0;
   const coordinateIDs = ['ref-x1', 'ref-y1', 'ref-x2', 'ref-y2', 'target-x1', 'target-y1', 'target-x2', 'target-y2'];
   const coords = coordinateIDs.map((id) => $('photo-' + id));
   const dialog = $('photo-detail');
+  let savedDraft = null;
+  const pendingDetails = new Set();
   const errorsBox = node('ul', undefined, 'photo-errors');
   errorsBox.id = 'photo-errors'; errorsBox.hidden = true;
   $('photo-status').after(errorsBox);
@@ -31,13 +36,31 @@
     }
   }
 
+  function syncControls() {
+    const busy = importing || transferring;
+    $('photo-input').disabled = busy || !db;
+    $('photo-backup').disabled = busy || !db || !savedCount || typeof window.showDirectoryPicker !== 'function';
+    $('photo-restore-input').disabled = busy || !db;
+    $('photo-measurements-export').disabled = busy || !db || !savedCount;
+    $('photo-export').disabled = busy || !db || !savedCount;
+    for (const card of $('photo-grid').querySelectorAll('button')) card.disabled = transferring;
+  }
+
   function setBusy(value) {
     importing = value;
-    $('photo-input').disabled = value || !db;
+    syncControls();
     $('photo-cancel').hidden = !value;
     $('photo-cancel').disabled = false;
     $('photo-progress').hidden = !value;
     $('photo-drop-zone').setAttribute('aria-busy', String(value));
+  }
+
+  function setTransferring(value) {
+    transferring = value;
+    $('photo-transfer-progress').hidden = !value;
+    $('photo-transfer-cancel').hidden = !value;
+    $('photo-transfer-cancel').disabled = false;
+    syncControls();
   }
 
   async function storageInfo(bytes) {
@@ -77,17 +100,19 @@
     if (version !== renderVersion) return;
     if (page > 0 && page * 24 >= result.total) { page = Math.max(0, Math.ceil(result.total / 24) - 1); return refresh(); }
     $('photo-count').textContent = `${result.count} photo${result.count === 1 ? '' : 's'} saved`;
+    savedCount = result.count;
     $('photo-empty').hidden = result.total !== 0;
     $('photo-empty').textContent = result.count ? 'No photos match these filters. Try another view or a shorter search.' : 'Your reference set starts here. Add photos, then open one to label its view and record a measurement.';
     $('photo-page').textContent = `${result.total ? page * 24 + 1 : 0}–${Math.min((page + 1) * 24, result.total)} of ${result.total} photos`;
     $('photo-prev').disabled = page === 0;
     $('photo-next').disabled = (page + 1) * 24 >= result.total;
-    $('photo-export').disabled = result.count === 0;
+    syncControls();
     coverage(result);
     const fragment = document.createDocumentFragment();
     const thumbnails = [];
     for (const photo of result.items) {
       const card = node('button', undefined, 'photo-card'); card.type = 'button';
+      card.disabled = transferring;
       card.dataset.photoId = photo.id;
       card.setAttribute('aria-label', `Review ${photo.name}`);
       const thumb = node('img', undefined, 'photo-thumb');
@@ -112,12 +137,13 @@
     for (const old of $('photo-grid').querySelectorAll('img')) old.removeAttribute('src');
     $('photo-grid').replaceChildren(fragment);
     galleryURLs.forEach((url) => URL.revokeObjectURL(url)); galleryURLs = urls;
+    syncControls();
     const info = await storageInfo(result.bytes);
     if (version === renderVersion) $('photo-storage').textContent = info;
   }
 
   async function importPhotos(files) {
-    if (!db || importing || !files.length) return;
+    if (!db || importing || transferring || !files.length) return;
     setBusy(true); cancelled = false;
     errorsBox.replaceChildren(); errorsBox.hidden = true;
     let added = 0, duplicates = 0, failed = 0, processed = 0, storageStopped = false;
@@ -204,6 +230,32 @@
       $('photo-estimate').textContent = error.message;
       $('photo-estimate').dataset.state = 'incomplete';
     }
+    updateDraftStatus();
+  }
+
+  function draftSnapshot() {
+    // Compare numeric values so entering 10.0 instead of 10 is not a change.
+    const numeric = (input) => input.value.trim() === '' ? '' : Number(input.value);
+    return JSON.stringify({ viewpoint: $('photo-viewpoint').value, notes: $('photo-notes').value,
+      points: coords.map(numeric), known: numeric($('photo-known-mm')) });
+  }
+
+  function hasDraftChanges() {
+    return Boolean(dialog.open && selected && savedDraft !== null && savedDraft !== draftSnapshot());
+  }
+
+  function updateDraftStatus() {
+    if (!selected) return;
+    $('photo-draft-status').textContent = hasDraftChanges() ? 'Unsaved changes. Choose Save photo details to keep them.' : 'Saved details.';
+  }
+
+  function requestClose() {
+    // A submitted operation continues independently of this editor. Navigation
+    // remains protected until it finishes, even after this dialog closes.
+    if (pendingDetails.has(detailVersion)) { dialog.close(); return; }
+    if (!hasDraftChanges()) { dialog.close(); return; }
+    $('photo-unsaved').hidden = false;
+    $('photo-keep-editing').focus();
   }
 
   function stopMarking() {
@@ -219,9 +271,10 @@
   }
 
   async function openDetail(id) {
+    if (transferring) return;
     const version = ++detailVersion;
     const photo = await db.get(id);
-    if (!photo || version !== detailVersion) return;
+    if (!photo || version !== detailVersion || transferring) return;
     selected = photo;
     setDetailBusy(false);
     // Point the image at the new URL before revoking the previous one.
@@ -241,6 +294,8 @@
       coords.forEach((input, i) => { input.value = values[i]; });
       $('photo-known-mm').value = m.knownMm;
     }
+    savedDraft = draftSnapshot();
+    $('photo-unsaved').hidden = true;
     stopMarking();
     $('photo-measure-instruction').textContent = 'Choose a reference or target, then click its two endpoints on the photo. You can also enter pixel coordinates below.';
     updateEstimate();
@@ -262,7 +317,7 @@
   drop.addEventListener('dragleave', () => drop.classList.remove('is-dragging'));
   drop.addEventListener('drop', (event) => {
     event.preventDefault(); drop.classList.remove('is-dragging');
-    if (importing) return report('A batch is still being added. Wait for it to finish, then drop these photos again.');
+    if (importing || transferring) return report('A photo operation is still running. Wait for it to finish, then drop these photos again.');
     run(importPhotos)(Array.from(event.dataTransfer.files));
   });
   // Prevent dropping a photo elsewhere from navigating away and losing an active import.
@@ -280,9 +335,82 @@
     report('Photo manifest exported: filenames, fingerprints, viewpoints, notes, and measurements. Keep the original photos separately; this file does not contain images.');
   }));
 
-  $('photo-close').addEventListener('click', () => dialog.close());
+  const transferReport = (message) => { $('photo-transfer-status').textContent = message; };
+  function transferOptions(operation) {
+    return {
+      shouldCancel: () => transferCancelled,
+      onProgress: ({ processed, total, name }) => {
+        $('photo-transfer-progress').max = Math.max(1, total);
+        $('photo-transfer-progress').value = processed;
+        transferReport(`${operation}: ${processed} of ${total} files${name ? ' · ' + name : ''}`);
+      },
+    };
+  }
+  function beginTransfer() {
+    detailVersion++; // A photo-open read already in flight must not reveal an editor during transfer.
+    transferCancelled = false;
+    $('photo-transfer-errors').replaceChildren(); $('photo-transfer-errors').hidden = true;
+    $('photo-transfer-progress').value = 0;
+    setTransferring(true);
+  }
+  $('photo-backup-support').textContent = typeof window.showDirectoryPicker === 'function'
+    ? 'Folder backup writes one original at a time. A complete folder includes cad-photo-manifest.json. Measurement CSVs contain image-derived estimates for review, not verified dimensions.'
+    : 'Folder backup is unavailable in this browser. Export the photo manifest below and keep it with your original files in one folder; select that folder to restore. Measurement CSVs contain image-derived estimates.';
+  // Request the picker directly from the click so browser user activation is preserved.
+  $('photo-backup').addEventListener('click', async () => {
+    if (!db || importing || transferring || !savedCount || typeof window.showDirectoryPicker !== 'function') return;
+    beginTransfer();
+    try {
+      const directory = await window.showDirectoryPicker({ mode: 'readwrite', id: 'cad-photo-backup' });
+      const result = await T.exportFolder(db, directory, transferOptions('Backing up'));
+      transferReport(result.status === 'complete'
+        ? `Backup saved: ${result.count} photos with notes and measurements in ${result.folderName}. Keep this folder outside browser storage.`
+        : result.folderName ? `Backup stopped. ${result.count} originals were copied into ${result.folderName}. That folder is incomplete; start a new backup to save the full set.` : 'Backup stopped before creating a folder. No backup was saved.');
+    } catch (error) {
+      if (error.name === 'AbortError' && !error.folderName) transferReport('Folder selection cancelled. No backup was created.');
+      else if (['NotAllowedError', 'SecurityError'].includes(error.name)) transferReport('Folder access was declined or is unavailable in this browser. No backup was created. You can export the photo manifest and keep it in a folder with your originals, then restore from that folder.');
+      else transferReport(`Backup incomplete: ${error.message}${error.folderName ? ' Folder: ' + error.folderName + '.' : ''} Start a new backup when ready.`);
+    } finally { setTransferring(false); }
+  });
+  $('photo-restore-input').addEventListener('change', async (event) => {
+    const files = Array.from(event.target.files);
+    if (!files.length || !db || importing || transferring) return;
+    beginTransfer();
+    transferReport('Checking the backup manifest before restoring any photos…');
+    try {
+      const result = await T.restoreFiles(db, files, transferOptions('Restoring'));
+      page = 0; $('photo-search').value = ''; $('photo-filter').value = '';
+      await refresh();
+      const state = result.cancelled ? 'Restore stopped' : (result.failed || result.missing ? 'Restore incomplete' : 'Restore complete');
+      transferReport(`${state}. Added ${result.added} photos; ${result.duplicates} matching photos kept their current details. ${result.missing} reference photos missing; ${result.failed} files failed; ${result.unmatched} unrelated files ignored.${result.cancelled || result.failed || result.missing ? ' Keep the backup and select its folder again to retry; already saved photos are retained.' : ''}`);
+      $('photo-transfer-errors').replaceChildren(...result.errors.map((entry) => node('li', `${entry.name}: ${entry.message}`)));
+      $('photo-transfer-errors').hidden = !result.errors.length;
+    } catch (error) { transferReport(`Restore could not finish: ${error.message} Existing photos remain saved.`); }
+    finally { event.target.value = ''; setTransferring(false); }
+  });
+  $('photo-transfer-cancel').addEventListener('click', () => {
+    transferCancelled = true; $('photo-transfer-cancel').disabled = true;
+    transferReport('Stopping after the current file. Photos already saved will remain.');
+  });
+  $('photo-measurements-export').addEventListener('click', run(async () => {
+    const manifest = await db.exportManifest();
+    if (!manifest.photos.some((photo) => photo.measurement)) { transferReport('No saved measurements yet. Open a photo, mark a known reference and target, then save its details.'); return; }
+    download(new Blob([R.toCSV(manifest)], { type: 'text/csv;charset=utf-8' }), 'photo-measurement-register.csv');
+    transferReport('Measurement CSV exported. Image estimates are labelled image-derived; unknown uncertainty and physical readings stay blank. Review them before using them as CAD dimensions.');
+  }));
+
+  $('photo-close').addEventListener('click', requestClose);
+  dialog.addEventListener('cancel', (event) => { event.preventDefault(); requestClose(); });
+  dialog.addEventListener('input', updateDraftStatus);
+  dialog.addEventListener('change', updateDraftStatus);
+  $('photo-keep-editing').addEventListener('click', () => { $('photo-unsaved').hidden = true; $('photo-notes').focus(); });
+  $('photo-discard').addEventListener('click', () => dialog.close());
   dialog.addEventListener('close', () => {
-    detailVersion++; selected = null; stopMarking();
+    // Native close events are queued. An earlier close must not clear a photo
+    // that has already opened in the same dialog.
+    if (dialog.open) return;
+    detailVersion++; selected = null; savedDraft = null; stopMarking();
+    $('photo-unsaved').hidden = true;
     $('photo-image').removeAttribute('src');
     if (detailURL) URL.revokeObjectURL(detailURL); detailURL = null;
   });
@@ -316,7 +444,9 @@
   $('photo-save').addEventListener('click', async () => {
     if (!selected) return;
     const version = detailVersion, id = selected.id;
+    pendingDetails.add(version);
     setDetailBusy(true);
+    $('photo-draft-status').textContent = 'Saving photo details… Closing this photo does not cancel the save.';
     try {
       const measurement = readMeasurement();
       if (measurement) P.estimate(measurement, selected.width, selected.height);
@@ -326,13 +456,18 @@
     } catch (error) {
       if (version === detailVersion) $('photo-estimate').textContent = error.message;
       else fail(error);
-    } finally { if (version === detailVersion) setDetailBusy(false); }
+    } finally {
+      pendingDetails.delete(version);
+      if (version === detailVersion) { setDetailBusy(false); updateDraftStatus(); }
+    }
   });
   $('photo-download').addEventListener('click', () => { if (selected) download(selected.blob, selected.name); });
   $('photo-remove').addEventListener('click', async () => {
     if (!selected || !window.confirm(`Remove ${selected.name} from this browser's photo set? Your original file stays unchanged.`)) return;
     const version = detailVersion, id = selected.id;
+    pendingDetails.add(version);
     setDetailBusy(true);
+    $('photo-draft-status').textContent = 'Removing photo… Closing this photo does not cancel removal.';
     try {
       await db.remove(id);
       if (version === detailVersion) dialog.close();
@@ -340,10 +475,13 @@
     } catch (error) {
       if (version === detailVersion) $('photo-detail-info').textContent = error.message;
       else fail(error);
-    } finally { if (version === detailVersion) setDetailBusy(false); }
+    } finally {
+      pendingDetails.delete(version);
+      if (version === detailVersion) { setDetailBusy(false); updateDraftStatus(); }
+    }
   });
-  window.addEventListener('beforeunload', (event) => { if (importing) { event.preventDefault(); event.returnValue = ''; } });
-  window.addEventListener('focus', run(() => !importing && refresh()));
+  window.addEventListener('beforeunload', (event) => { if (importing || transferring || pendingDetails.size || hasDraftChanges()) { event.preventDefault(); event.returnValue = ''; } });
+  window.addEventListener('focus', run(() => !importing && !transferring && refresh()));
   setBusy(false);
   run(async () => {
     db = await P.createStore(); setBusy(false); await refresh();

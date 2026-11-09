@@ -316,9 +316,9 @@ story.extend([PageBreak(), heading('Synthetic two-hole plate', toc=True),
                         'uncertainty, tessellation, gear, calibration-proportion, off-plane depth, camera-distance, '
                         'label-rounding, and coating arithmetic.', styles['p'])])
 story.extend([PageBreak(), heading('Project worksheets', toc=True)])
-for name in ['PROJECT-BRIEF', 'CAPTURE-CHECKLIST', 'PRINT-ACCEPTANCE']:
+for name in ['PROJECT-BRIEF', 'CAPTURE-CHECKLIST', 'PRINT-ACCEPTANCE', 'INDEPENDENT-CHECKS']:
     append_html((ROOT / 'tmp' / f'{name}.html').read_text(encoding='utf-8'))
-    if name != 'PRINT-ACCEPTANCE':
+    if name != 'INDEPENDENT-CHECKS':
         story.append(PageBreak())
 Book().multiBuild(story)
 print(OUT)

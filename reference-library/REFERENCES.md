@@ -1,6 +1,6 @@
 # Annotated source directory
 
-86 resources. Checked November 8, 2026. Review depth is recorded for each entry; links are not claims of full-document review.
+88 resources. Checked November 9, 2026. Review depth is recorded for each entry; links are not claims of full-document review.
 
 ## Capture & reconstruction
 
@@ -125,6 +125,14 @@ International guidance document | Advanced | Page content checked
 Defines standard uncertainty and Type B evaluation, including the bounded rectangular case where a quantity known only within ±a has standard uncertainty a/√3.
 
 **Limit:** A rounding interval or published bound is one input. The guide does not supply perspective, distortion, picking, or manufacturing errors for an image-based measurement.
+
+### [JCGM 106:2012: uncertainty in conformity assessment](https://www.bipm.org/documents/20126/2071204/JCGM_106_2012_E.pdf/fe9537d2-e7d7-e146-5abb-2649c3450b25)
+
+Official metrology guidance | Intermediate–advanced | Page content checked
+
+Distinguishes tolerance and acceptance intervals; explains guard-band decision rules near a specification limit.
+
+**Limit:** Selected PDF section 8.3 read; no standard conformity, calibration capability, or printer tolerance is established by this reference.
 
 ## CAD & drawings
 
@@ -649,6 +657,14 @@ SciSpace scholarly record | Intermediate–advanced | Discovery abstract only
 Research on synthetic-to-real domain shift and CAD parameter bias (2026).
 
 **Limit:** Discovery lead only; do not treat a search abstract as independent validation.
+
+### [di Filippo et al.: statistical assessment of close-range photogrammetry geometrical features (2022)](https://isprs-archives.copernicus.org/articles/XLVIII-2-W2-2022/31/2022/isprs-archives-XLVIII-2-W2-2022-31-2022.pdf)
+
+Primary research paper | Intermediate–advanced | Page content checked
+
+Examines tie-point covariance and separates image residuals, control/check points, and uncertainty indicators.
+
+**Limit:** SciSpace abstract plus selected publisher-PDF sections 2–4 read. Single small museum object; dense image-matching uncertainty is outside the proposed analysis. No reproduced experiment or transferable tolerance.
 
 ## AI reconstruction
 

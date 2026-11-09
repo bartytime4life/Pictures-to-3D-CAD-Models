@@ -151,40 +151,37 @@ class _Welder:
 
 
 def _nonmanifold_vertices(faces: Sequence[tuple[int, int, int]],
-                          undirected: dict[tuple[int, int], list[int]]) -> int:
-    """Count vertices whose incident faces form more than one fan.
+                          valid: Sequence[int]) -> int:
+    """Count vertex links that are neither one cycle nor one boundary path.
 
-    Faces around a vertex belong to one fan when they are joined through edges at
-    that vertex with exactly two faces; an edge with three or more faces joins
-    nothing, so both of its ends are reported too. Two closed shells that touch
-    at a single vertex share no edge, so every edge still has two faces; only
-    this vertex-link test exposes the pinch.
+    Separate shells or sheets can share a vertex while every edge still has
+    valid incidence. A manifold vertex has one connected link, with degree two
+    at every link node (interior), or two degree-one ends (boundary).
     """
-    parent: dict[tuple[int, int], tuple[int, int]] = {}
+    vertex_links: dict[int, dict[int, list[int]]] = {}
+    for fi in valid:
+        ids = faces[fi]
+        for k in range(3):
+            a, b, c = ids[k], ids[(k + 1) % 3], ids[(k + 2) % 3]
+            link = vertex_links.setdefault(a, {})
+            link.setdefault(b, []).append(c)
+            link.setdefault(c, []).append(b)
 
-    def find(c: tuple[int, int]) -> tuple[int, int]:
-        root = c
-        while parent[root] != root:
-            root = parent[root]
-        while parent[c] != root:
-            parent[c], c = root, parent[c]
-        return root
-
-    for fi, ids in enumerate(faces):
-        if len(set(ids)) == 3:
-            for v in ids:
-                parent[(v, fi)] = (v, fi)
-    for (a, b), fs in undirected.items():
-        if len(fs) != 2:
-            continue
-        for v in (a, b):
-            ra, rb = find((v, fs[0])), find((v, fs[1]))
-            if ra != rb:
-                parent[rb] = ra
-    fans: dict[int, set[tuple[int, int]]] = {}
-    for corner in parent:
-        fans.setdefault(corner[0], set()).add(find(corner))
-    return sum(1 for roots in fans.values() if len(roots) > 1)
+    nonmanifold = 0
+    for link in vertex_links.values():
+        degrees = [len(neighbours) for neighbours in link.values()]
+        pending = [next(iter(link))]
+        reached = set()
+        while pending:
+            vertex = pending.pop()
+            if vertex in reached:
+                continue
+            reached.add(vertex)
+            pending.extend(neighbour for neighbour in link[vertex] if neighbour not in reached)
+        if (len(reached) != len(link) or any(degree not in (1, 2) for degree in degrees)
+                or degrees.count(1) not in (0, 2)):
+            nonmanifold += 1
+    return nonmanifold
 
 
 def analyze(triangles: Sequence[Triangle], weld_tol: float = 1e-6) -> dict:
@@ -196,7 +193,13 @@ def analyze(triangles: Sequence[Triangle], weld_tol: float = 1e-6) -> dict:
     if n_tri == 0:
         raise ValueError("mesh has no triangles")
     welder = _Welder(weld_tol)
-    faces = [tuple(welder.weld(p) for p in tri) for tri in triangles]
+    faces = []
+    for tri in triangles:
+        if len(tri) != 3:
+            raise ValueError("each triangle must contain three vertices")
+        if any(len(p) != 3 for p in tri):
+            raise ValueError("each vertex must contain three finite coordinates")
+        faces.append(tuple(welder.weld(p) for p in tri))
 
     xs = [p[0] for t in triangles for p in t]
     ys = [p[1] for t in triangles for p in t]
@@ -208,8 +211,9 @@ def analyze(triangles: Sequence[Triangle], weld_tol: float = 1e-6) -> dict:
     area = 0.0
     volume6 = 0.0
     degenerate = 0
+    valid = []
     area_eps = (weld_tol ** 2)
-    for tri, ids in zip(triangles, faces):
+    for fi, (tri, ids) in enumerate(zip(triangles, faces)):
         a, b, c = (_sub(p, centre) for p in tri)
         cr = _cross(_sub(b, a), _sub(c, a))
         tri_area = 0.5 * math.sqrt(_dot(cr, cr))
@@ -217,12 +221,13 @@ def analyze(triangles: Sequence[Triangle], weld_tol: float = 1e-6) -> dict:
         volume6 += _dot(a, _cross(b, c))
         if len(set(ids)) < 3 or tri_area <= area_eps:
             degenerate += 1
+        else:
+            valid.append(fi)
 
     directed: dict[tuple[int, int], int] = {}
     undirected: dict[tuple[int, int], list[int]] = {}
-    for fi, ids in enumerate(faces):
-        if len(set(ids)) < 3:
-            continue
+    for fi in valid:
+        ids = faces[fi]
         for k in range(3):
             a, b = ids[k], ids[(k + 1) % 3]
             directed[(a, b)] = directed.get((a, b), 0) + 1
@@ -236,7 +241,7 @@ def analyze(triangles: Sequence[Triangle], weld_tol: float = 1e-6) -> dict:
             orientation_ok = False
             break
 
-    nonmanifold_vertices = _nonmanifold_vertices(faces, undirected)
+    nonmanifold_vertices = _nonmanifold_vertices(faces, valid)
 
     parent = list(range(n_tri))
 
@@ -252,13 +257,12 @@ def analyze(triangles: Sequence[Triangle], weld_tol: float = 1e-6) -> dict:
             r = find(other)
             if r != root:
                 parent[r] = root
-    valid = [fi for fi, ids in enumerate(faces) if len(set(ids)) == 3]
     components = len({find(fi) for fi in valid})
 
     watertight = boundary == 0 and nonmanifold == 0 and bool(valid)
     manifold = nonmanifold == 0 and nonmanifold_vertices == 0
     extents = tuple(bmax[i] - bmin[i] for i in range(3))
-    euler = len({i for f in faces if len(set(f)) == 3 for i in f}) - len(undirected) + len(valid)
+    euler = len({i for fi in valid for i in faces[fi]}) - len(undirected) + len(valid)
     # Closed orientable 2-manifolds: chi = sum(2 - 2 g_i), so total genus (through-holes) = (2c - chi) / 2.
     closed_surface = watertight and manifold and orientation_ok
     genus = (2 * components - euler) // 2 if closed_surface and (2 * components - euler) % 2 == 0 else None

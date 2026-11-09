@@ -6,11 +6,12 @@ Usage, from any directory:
     python3 examples/calculate.py --check    # fail if the committed JSON differs
     python3 examples/calculate.py --output other.json
 
-The numbers are synthetic teaching values, not measurements. Every formula is
-imported from ``cadkit.calc`` so the examples, the command line, and the tests
-share one implementation.
+The numbers are synthetic teaching values, not measurements. Geometry formulas
+are imported from ``cadkit.calc``; the section 18 teaching decision rule uses
+exact decimal arithmetic here. The generated values also drive documentation checks.
 """
 import argparse
+from decimal import Decimal
 import json
 import math
 import sys
@@ -71,6 +72,12 @@ def compute() -> dict:
     slot_width_loss_mm = calc.coating_loss(coat_per_face_mm, 2)
     assert math.isclose(slot_width_loss_mm, 0.16)
 
+    # Section 18: an explicitly chosen teaching decision rule, not a general
+    # compliance rule. Decimal preserves the stated hundredths exactly.
+    nominal, tolerance, expanded, reading = map(Decimal, ('10.00', '0.10', '0.04', '10.08'))
+    limits = (nominal - tolerance, nominal + tolerance)
+    acceptance = (limits[0] + expanded, limits[1] - expanded)
+
     return {
         "status": "synthetic teaching calculations, not measurements",
         "scale_mm_per_pixel": scale,
@@ -105,6 +112,13 @@ def compute() -> dict:
         "label_rounding_standard_uncertainty_mm": label["standard_uncertainty_mm"],
         "coating_per_face_mm": coat_per_face_mm,
         "coated_slot_width_loss_mm": slot_width_loss_mm,
+        "guard_band_example": {
+            "nominal_mm": float(nominal), "tolerance_mm": float(tolerance),
+            "expanded_uncertainty_mm": float(expanded), "reading_mm": float(reading),
+            "tolerance_limits_mm": list(map(float, limits)),
+            "acceptance_limits_mm": list(map(float, acceptance)),
+            "accepted_under_chosen_rule": acceptance[0] <= reading <= acceptance[1],
+        },
     }
 
 

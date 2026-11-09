@@ -13,9 +13,9 @@
 
 This folder is the reference companion to the [photo-to-CAD workbench](../README.md) in this repository. The workbench traces one flat part; the library covers the wider route from photographs to printable CAD.
 
-A practical, source-backed library for turning photographs into printable CAD: recover shape, establish dimensions, rebuild editable geometry, and check the part you print. **Revision 4, November 8, 2026.**
+A practical, source-backed library for turning photographs into printable CAD: recover shape, establish dimensions, rebuild editable geometry, and check the part you print. **Revision 6, November 9, 2026.**
 
-It contains a 23-chapter handbook, 86 annotated sources (including 21 GitHub repository records), research notes, reusable worksheets, 10 explanatory figures, 14 calculators with a route finder, a local photo workspace, a Python command-line toolkit, and synthetic worked examples that are rendered and checked automatically.
+It contains a 23-chapter handbook, 88 annotated sources (including 21 GitHub repository records), research notes, reusable worksheets, 10 explanatory figures, 14 calculators with a route finder, a local photo workspace, a Python command-line toolkit, and synthetic worked examples that are rendered and checked automatically.
 
 ## Start here
 
@@ -37,16 +37,16 @@ The easiest first project is a measured flat part. Import and scale a reference 
 | Material | Files | Notes |
 | --- | --- | --- |
 | Handbook | [`HANDBOOK.md`](HANDBOOK.md) | Governing decisions, capture, provenance, scale and single-view calibration, workflows A–E, held-object design, geometry, drawings, process selection, scripted pipelines, validation, troubleshooting, and a learning plan |
-| Source directory | [`REFERENCES.md`](REFERENCES.md), [`sources.csv`](sources.csv), [`sources.json`](sources.json) | 86 annotated sources, each with a use, a limitation, and its depth of review. `sources.json` is the authoritative record |
+| Source directory | [`REFERENCES.md`](REFERENCES.md), [`sources.csv`](sources.csv), [`sources.json`](sources.json) | 88 annotated sources, each with a use, a limitation, and its depth of review. `sources.json` is the authoritative record |
 | GitHub directory | [`GITHUB.md`](GITHUB.md) | 21 GitHub repository records: purpose, caution, and a metadata snapshot |
 | Research notes | [`RESEARCH-NOTES.md`](RESEARCH-NOTES.md) | Search scope, evidence depth, exclusions, and a paper-evaluation worksheet |
-| Worksheets | [`templates/`](templates/) | Project brief, capture checklist, print acceptance, and measurement, assumption, validation, and design-parameter registers |
+| Worksheets | [`templates/`](templates/) | Project brief, capture checklist, print acceptance, independent dimension checks, and measurement, assumption, validation, and design-parameter registers |
 | Toolkit | [`cadkit/`](cadkit/README.md), [`assets/js/cadcalc.js`](assets/js/cadcalc.js) | 14 calculators, a route finder, an STL checker, a parameter-register loader, and a project scaffolder |
 | Photo workspace | [`assets/photo-workspace.html`](assets/photo-workspace.html), [`assets/js/photos.js`](assets/js/photos.js), [`assets/js/photo-workspace.js`](assets/js/photo-workspace.js) | Add photos in batches, label viewpoints, record notes, and estimate a flat feature from a known reference length; stored in this browser |
 | Examples | [`examples/`](examples/README.md) | Synthetic plate driven by one parameter register and checked after an OpenSCAD render; a printable clearance coupon; reproducible calculations |
 | Records | [`VERIFICATION.md`](VERIFICATION.md), [`CHANGELOG.md`](CHANGELOG.md), [`CONTRIBUTING.md`](CONTRIBUTING.md) | What was checked, what was not, and what changed |
 
-![86 sources by topic and review depth](assets/figures/catalog-composition.svg)
+![88 sources by topic and review depth](assets/figures/catalog-composition.svg)
 
 ## The toolkit
 
@@ -74,13 +74,21 @@ The last command checks the STL that `make plate` renders with OpenSCAD: extents
 
 Open **Photos** to add JPEG, PNG, or WebP images, either with the file picker or by dropping them onto the page. There is no photo-count cap: add more in later batches as needed, subject to available browser and device storage. Each image is limited to 50 MiB and 60 megapixels so a single large file cannot consume excessive decoding memory. Imports run one photo at a time and can be stopped after the current file.
 
-Label each image's viewpoint and record notes about its features or uncertainties. The coverage summary reflects those labels; it does not evaluate whether the pictures are sharp, overlapping, or suitable for reconstruction. Search and viewpoint filters help find the reference you need as the collection grows.
+Label each image's viewpoint and record notes about its features or uncertainties. Unsaved edits are shown explicitly; Close and Escape let you keep editing or discard them, and supported browsers warn before leaving an edited photo. The coverage summary reflects those labels; it does not evaluate whether the pictures are sharp, overlapping, or suitable for reconstruction. Search and viewpoint filters help find the reference you need as the collection grows.
 
 For a front-on view of a flat surface, mark two endpoints on a known reference and two on the feature of interest, then enter the reference length in millimeters. You can select points on the image or enter full-size pixel coordinates. The resulting dimension is a scale estimate that assumes both lengths lie in the same plane. It does not correct perspective, recover hidden geometry, generate CAD, or establish 3D accuracy. Confirm critical dimensions with physical measurements and use the Toolkit to choose a reconstruction workflow.
 
 Photos and their details are saved only in this browser's local storage; they are never uploaded. Clearing browser data, using another browser or origin, or losing the device can make the collection unavailable. Keep your original image files. **Export photo manifest** saves the notes and measurements, not the image files, and is not a backup of the photo library. **Download original** retrieves an individual stored photo. The feature needs a browser with IndexedDB and image decoding support; storage restrictions and private browsing can prevent saving.
 
 The Photos tab is separate from the [workbench](../README.md)'s photo upload, which traces one flat part on its own backend. Photos saved here stay in this page's browser storage and are not shared with the workbench.
+
+### Back up, restore, and hand off measurements
+
+1. In **Photos**, choose **Back up photos to a folder**. The app creates a new subfolder with unchanged originals and a manifest of notes, views, and measurement points. It writes one image at a time and marks the backup complete only after every original is copied. Folder writing requires a supporting browser and your folder selection.
+2. To recover the set on another browser or device, choose **Restore from a folder** and select the backup folder. The app checks image fingerprints and dimensions before saving. Existing matching photos keep their current notes and measurements; missing photos are added. An interrupted restore can be retried safely.
+3. Choose **Export measurement CSV** for a register matching the project worksheet. Values stay labelled **image-derived**; unknown instrument readings, uncertainty, and acceptance criteria remain blank. The export does not modify CAD parameters.
+
+If folder writing is unavailable, download the photo manifest and keep it in a folder with your originals. **Restore from a folder** accepts that set too, even if the originals have been renamed. A metadata manifest alone cannot recover images. Choose one backup at a time; manifest files are limited to 64 MiB, separately from the per-image limits. Incomplete backup folders are retained for inspection and are never presented as complete backups.
 
 ## How the pieces fit together
 
@@ -151,4 +159,4 @@ No real photographs were reconstructed. No part was sliced or printed, and no pr
 
 ## Revision history
 
-See [`CHANGELOG.md`](CHANGELOG.md). Revision 4 adds a local photo workspace with repeatable multi-photo intake, viewpoint coverage, and traceable image measurements. Revision 3, the first revision kept in this repository, added the figures, toolkit, Python package, example pipeline, automated tests, a reproducible PDF and archive, and a refreshed metadata snapshot. Revision 2 added governing decisions, single-view calibration checks, Workflow E, held-object design, and seven sources. Revision 1 was the initial library with 79 resources.
+See [`CHANGELOG.md`](CHANGELOG.md). Revision 6 improves search, protects photo drafts, extends mesh checks, and adds independent validation worksheets and sources. Revision 5 adds portable folder backup and restore plus an image-derived measurement CSV. Revision 4 adds a local photo workspace with repeatable multi-photo intake, viewpoint coverage, and traceable image measurements. Revision 3, the first revision kept in this repository, added the figures, toolkit, Python package, example pipeline, automated tests, a reproducible PDF and archive, and a refreshed metadata snapshot. Revision 2 added governing decisions, single-view calibration checks, Workflow E, held-object design, and seven sources. Revision 1 was the initial library with 79 resources.

@@ -1135,5 +1135,29 @@
     "limit": "Use the correct gear family and profile-shift assumptions; the equations do not establish print strength or backlash.",
     "evidence": "page-http-gzip-decoded",
     "checked": "2026-11-08"
+  },
+  {
+    "id": "jcgm-conformity",
+    "category": "Geometry & measurement",
+    "title": "JCGM 106:2012: uncertainty in conformity assessment",
+    "url": "https://www.bipm.org/documents/20126/2071204/JCGM_106_2012_E.pdf/fe9537d2-e7d7-e146-5abb-2649c3450b25",
+    "type": "Official metrology guidance",
+    "level": "Intermediate–advanced",
+    "use": "Distinguishes tolerance and acceptance intervals; explains guard-band decision rules near a specification limit.",
+    "limit": "Selected PDF section 8.3 read; no standard conformity, calibration capability, or printer tolerance is established by this reference.",
+    "evidence": "page",
+    "checked": "2026-11-09"
+  },
+  {
+    "id": "paper-di-filippo-2022-uncertainty",
+    "category": "Research literature",
+    "title": "di Filippo et al.: statistical assessment of close-range photogrammetry geometrical features (2022)",
+    "url": "https://isprs-archives.copernicus.org/articles/XLVIII-2-W2-2022/31/2022/isprs-archives-XLVIII-2-W2-2022-31-2022.pdf",
+    "type": "Primary research paper",
+    "level": "Intermediate–advanced",
+    "use": "Examines tie-point covariance and separates image residuals, control/check points, and uncertainty indicators.",
+    "limit": "SciSpace abstract plus selected publisher-PDF sections 2–4 read. Single small museum object; dense image-matching uncertainty is outside the proposed analysis. No reproduced experiment or transferable tolerance.",
+    "evidence": "page",
+    "checked": "2026-11-09"
   }
 ]

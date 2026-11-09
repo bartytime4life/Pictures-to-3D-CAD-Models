@@ -2,7 +2,7 @@
 
 ## 1. Start with the result you need
 
-This handbook is a practical reference for reconstructing objects from photographs, drawings, silhouettes, and scanned geometry. Prepared **November 8, 2026**. It combines established documentation, research leads, and original engineering examples. It is not a test report for a particular printer or reconstruction package.
+This handbook is a practical reference for reconstructing objects from photographs, drawings, silhouettes, and scanned geometry. Prepared **November 9, 2026**. It combines established documentation, research leads, and original engineering examples. It is not a test report for a particular printer or reconstruction package.
 
 For a replacement part, start with its interfaces: the holes, shafts, mating faces, clearances, and overall envelope. For a sculpture, start with silhouette, surface coverage, wall thickness, and a stable base. For a moving assembly, identify the separate bodies, joints, constraints, and collision envelope before sculpting the visible exterior.
 
@@ -545,9 +545,29 @@ A mean or RMS distance can hide a localized bad hole. Include a maximum or high-
 
 [CloudCompare's distance documentation](https://www.cloudcompare.org/doc/wiki/index.php/Distances_Computation) distinguishes point-cloud and mesh comparisons. The [NIST additive manufacturing test artifact](https://www.nist.gov/publications/additive-manufacturing-test-artifact) illustrates the value of testing multiple feature types rather than relying on one overall dimension.
 
+### Keep image diagnostics separate from physical accuracy
+
+A small reprojection residual describes agreement in image coordinates. It is not a whole-mesh tolerance in millimetres. Covariance-based uncertainty also depends on the camera and measurement models. [Di Filippo and colleagues](https://isprs-archives.copernicus.org/articles/XLVIII-2-W2-2022/31/2022/isprs-archives-XLVIII-2-W2-2022-31-2022.pdf) examine tie-point covariance but explicitly leave dense image-matching uncertainty outside their analysis. The practical implication is to report these separately:
+
+| Result | What it checks | What still needs evidence |
+| --- | --- | --- |
+| Image reprojection residual | Fit of projected points to image observations | Object-space dimensions and missing surfaces |
+| Estimated coordinate uncertainty | Dispersion under the selected model | Unmodelled bias and later surface-processing changes |
+| Held-back physical dimensions | Independent checks at measured locations | Unchecked regions and printed-part behavior |
+
+Freeze scale, alignment, and modeling choices before checking held-back measurements. If those checks then guide a correction, record that use and obtain fresh independent checks where practical.
+
+Use the [independent-check worksheet](templates/INDEPENDENT-CHECKS.md) and [CSV register](templates/independent-checks.csv) to reserve checks, preserve the evaluated revision, and record whether a check later influenced a correction.
+
+### Decide what happens near a tolerance limit
+
+[JCGM 106, section 8.3](https://www.bipm.org/documents/20126/2071204/JCGM_106_2012_E.pdf/fe9537d2-e7d7-e146-5abb-2649c3450b25) distinguishes allowable part values from measurement results that permit acceptance under a stated decision rule. Guard bands can narrow the acceptance interval. Record the rule and uncertainty basis before inspecting results.
+
+**Synthetic example:** a 10.00 ± 0.10 mm requirement gives limits 9.90–10.10 mm. A chosen guard band equal to expanded uncertainty `U = 0.04 mm` narrows acceptance to 9.94–10.06 mm. A 10.08 mm reading is not accepted by that rule, even though the reading lies within the tolerance limits; it does not prove the true size is outside them. State the coverage factor and assumptions behind `U`. With unknown uncertainty, record acceptance as unresolved and improve the measurement. This teaching rule does not certify compliance with a manufacturing standard.
+
 ### An acceptance record
 
-For each critical feature, record target, tolerance or fit criterion, measured value, instrument/setup, uncertainty or known limitation, pass/fail/not-tested status, and evidence file. Avoid a single global accuracy percentage. A 99% length match can still be unacceptable for a bearing seat.
+For each critical feature, record target, tolerance or fit criterion, measured value, instrument/setup, uncertainty or known limitation, decision rule, pass/fail/unresolved/not-tested status, and evidence file. Avoid a single global accuracy percentage. A 99% length match can still be unacceptable for a bearing seat.
 
 Inspect the exported mesh in the actual slicer. Verify dimensions, component count, layers, support contact, holes, thin walls, and estimated assembly clearances. Then print a coupon or reduced-scope prototype. Measure after relevant cooling or post-processing. Keep a failed result as evidence and change one meaningful variable at a time.
 
@@ -634,6 +654,8 @@ OpenSCAD 2021.01 rendered the two synthetic examples and their meshes passed the
 
 **Revision 4, November 8, 2026.** This revision adds a local photo workspace: repeatable multi-photo intake, saved viewpoint labels and notes, coverage guidance, reference-length dimension estimates, and a metadata manifest. Synthetic browser checks exercise storage, editing, and image measurement. No real-object reconstruction or physical accuracy qualification is implied.
 
+**Revision 6, November 9, 2026.** The catalog keeps search and filters near the top, preserves filter links between tabs, and provides a clear reset for empty results. Photo editors show unsaved changes and protect them on Close, Escape, and supported browser navigation. Outstanding saves and removals remain protected after the editor closes. Mesh checks now detect non-manifold vertices, including separate closed solids that meet at one point. Independent-check worksheets preserve reserved physical dimensions, model revisions, uncertainty limitations, and acceptance rules. These improvements are local and synthetic; no reconstruction or physical print has been qualified.
+
 ## 23. Companion toolkit
 
 The calculators are conveniences for the arithmetic in this handbook. They state their assumptions and raise the warnings described in the text, but they cannot supply missing evidence: a result inherits the weakest evidence class of its inputs.
@@ -646,11 +668,21 @@ Open the **Toolkit** tab of `index.html`. The route finder takes what you have a
 
 Open the **Photos** tab to build a reference set for the current object. Select multiple JPEG, PNG, or WebP files or drop them into the page. Repeat as often as needed: there is no fixed photo-count limit. Processing is sequential, the gallery displays 24 thumbnails at a time, and browser storage is the practical total limit. Each image must be at most 50 MiB and 60 megapixels. Exact byte duplicates are skipped; similar views are retained.
 
-Originals, thumbnails, viewpoint labels, notes, and measurements stay in this browser on this device. No images are uploaded. Browser data may be cleared or evicted, and storage under a local file can vary by browser and path. Keep your originals. Exporting the photo manifest saves metadata and measurement points, not image backups. Moving the HTML file or changing browsers does not transfer the collection.
+The working originals, thumbnails, viewpoint labels, notes, and measurements are stored in this browser on this device. No images are uploaded. Explicit backups and downloads write copies to files you choose. Browser data may be cleared or evicted, and storage under a local file can vary by browser and path. Keep your originals. Exporting the photo manifest saves metadata and measurement points, not image backups. Moving the HTML file or changing browsers does not automatically transfer the collection. Use a complete folder backup to carry it over.
+
+Save photo details to keep notes, viewpoints, and measurement points. Close and Escape offer to keep editing or discard unsaved changes; supported browsers warn before navigation. Closing a submitted save or removal does not cancel it.
 
 Label the front, back, left, right, top, bottom, and detail views. The coverage display reports these labels and suggests missing views; it does not infer camera poses or score reconstruction accuracy. Capture overlapping views of the same unchanged object and retain physical measurements of critical interfaces.
 
 For a front-on planar feature, mark two endpoints of a known reference, enter its length in millimeters, and mark two endpoints of the target feature. The workspace computes `target pixels × known mm / reference pixels` using full-resolution image coordinates. Numeric coordinate inputs offer the same operation without pointing. The original image, selected points, and known length remain associated in the manifest. Results are unverified estimates: both lengths must lie in the same plane, perspective and lens distortion are not corrected, and a short baseline increases endpoint-picking sensitivity. Use the Toolkit homography and depth workflows where their assumptions apply; independently measure critical dimensions before building or printing.
+
+### Portable photo backups and measurement handoff
+
+**Revision 5, November 8, 2026.** The photo workspace can copy originals and their metadata into a new folder selected by the user. **Back up photos to a folder** writes one original at a time under its SHA-256 fingerprint, preserves the original name in the manifest, and writes `cad-photo-manifest.json` last. Existing folders and photos are not replaced. Cancelled or failed backups leave an incomplete folder without a completion manifest; start a new backup when ready.
+
+**Restore from a folder** accepts a complete backup, or a metadata manifest kept together with the original photos. It validates the manifest before writing, then verifies each original by content fingerprint, file size, decoded dimensions, and format. Files can be renamed without losing their association. Missing, changed, unsupported, or corrupted files are reported. Existing matching photos retain their current annotations; an interrupted restore can be repeated to add the remaining photos. There is no total photo-count cap; available storage and per-image limits still apply. Manifest input is limited to 64 MiB. Folder backup depends on browser support for choosing and writing a folder; the manifest-plus-originals workflow is the fallback.
+
+**Export measurement CSV** produces the same columns as `templates/measurement-register.csv`. It records each saved target estimate as `image-derived`, including the photo fingerprint, known reference length, and full-image endpoints. Instrument readings, uncertainty, and acceptance criteria stay blank rather than becoming zero. These values are review inputs: independent measurements and an explicit design decision are needed before promoting a critical estimate to a CAD parameter. The export does not update a CAD model or prove improved physical accuracy.
 
 ### From the command line
 
@@ -661,7 +693,7 @@ Run `python3 -m cadkit --help` in the `reference-library` folder. The package us
 | `route` | 1 | Recommend a workflow for an input and a goal |
 | `scale`, `uncertainty`, `aspect`, `homography`, `depth`, `camera` | 5 | Image scale, propagation, calibration checks, rectification, depth, camera distance |
 | `label`, `evidence` | 3 | Rounding of published values; weakest evidence class |
-| `units`, `meshcheck` | 2, 12, 18 | Unit mismatch on import; STL extents, volume, closure, vertex manifoldness, orientation, components, through-holes |
+| `units`, `meshcheck` | 2, 12, 18 | Unit mismatch on import; STL extents, volume, closure, orientation, components |
 | `chord`, `coupon`, `coating` | 11, 12, 15 | Tessellation, clearance series, finish allowance |
 | `gear`, `wind` | 16 | Nominal gear relations with an undercut warning; first wind-power estimate |
 | `params`, `new-project` | 4, 17 | Validate a design-parameter register; scaffold the minimum project folder |

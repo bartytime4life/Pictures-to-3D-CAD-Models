@@ -73,7 +73,7 @@ write('GITHUB.md', github);
 // ---- Markdown rendering ------------------------------------------------------------------
 const docs = ['HANDBOOK.md', 'RESEARCH-NOTES.md', 'REFERENCES.md', 'GITHUB.md'];
 for (const f of docs) write('tmp/' + f.replace('.md', '.html'), marked.parse(read(f))); // raw fragments for the PDF
-const templates = ['PROJECT-BRIEF.md', 'CAPTURE-CHECKLIST.md', 'PRINT-ACCEPTANCE.md'];
+const templates = ['PROJECT-BRIEF.md', 'CAPTURE-CHECKLIST.md', 'INDEPENDENT-CHECKS.md', 'PRINT-ACCEPTANCE.md'];
 for (const f of templates) write('tmp/' + f.replace('.md', '.html'), marked.parse(read('templates/' + f)));
 
 const stripTags = (h) => h.replace(/<[^>]+>/g, '');
@@ -158,7 +158,7 @@ const tabsSpec = [['handbook', 'Handbook', ''], ['toolkit', 'Toolkit', calculato
   ['github', 'GitHub', repos.length], ['research', 'Research notes', ''], ['worksheets', 'Worksheets & examples', '']];
 const option = (v, label = v) => `<option value="${esc(v)}">${esc(label)}</option>`;
 const css = read('assets/css/library.css') + '\n' + read('assets/css/photos.css');
-const js = read('assets/js/cadcalc.js') + '\n' + read('assets/js/app.js') + '\n' + read('assets/js/photos.js') + '\n' + read('assets/js/photo-workspace.js');
+const js = read('assets/js/cadcalc.js') + '\n' + read('assets/js/app.js') + '\n' + read('assets/js/photos.js') + '\n' + read('assets/js/photo-transfer.js') + '\n' + read('assets/js/photo-register.js') + '\n' + read('assets/js/photo-workspace.js');
 const photoWorkspace = read('assets/photo-workspace.html');
 
 const html = `<!doctype html>
@@ -202,14 +202,14 @@ ${heroFlow}
 ${photoWorkspace}
 <section class="panel" id="sources" role="tabpanel" aria-labelledby="tab-sources" tabindex="-1" hidden>
 <div class="catalog-head"><div><h2>The source library</h2><p>Official guides, primary research, geometry resources, and implementation projects. Each entry has a use case, a limitation, and the depth of review. Press <kbd>/</kbd> to search.</p></div><a href="REFERENCES.md" class="download" download>Markdown directory</a></div>
-${composition}
+<details class="catalog-coverage"><summary>Explore catalog coverage and review depth</summary>${composition}</details>
 <div class="filters"><label>Search the catalog<input id="search" type="search" placeholder="Try: FreeCAD, calibration, NURBS, anatomy…" autocomplete="off"></label><label>Topic<select id="category"><option value="">All topics</option>${categories.map((c) => option(c)).join('')}</select></label><label>Review depth<select id="depth"><option value="">Any depth</option>${option('strong', 'Page or document read')}${option('medium', 'Search index or metadata')}${option('limited', 'Abstract or bibliographic')}</select></label><label>Level<select id="level"><option value="">Any level</option>${levels.map((l) => option(l)).join('')}</select></label><label>Sort<select id="sort">${option('default', 'Catalog order')}${option('title', 'Title A–Z')}${option('depth', 'Deepest review first')}${option('push', 'Most recent repository push')}</select></label></div>
 <div class="chips" role="group" aria-label="Filter by topic">${chips}</div>
-<div class="result-row"><div id="result-count" aria-live="polite"></div><button type="button" class="linkish" id="reset-filters">Clear filters</button></div>
-<div class="cards">${cards}</div><p id="empty" class="empty" hidden>No matching sources. Try a shorter term, or clear the filters.</p></section>
+<div class="result-row"><div id="result-count" role="status" aria-live="polite" aria-atomic="true"></div><button type="button" class="linkish" id="reset-filters">Clear filters</button></div>
+<div class="cards">${cards}</div><div id="empty" class="empty" hidden><p>No matching sources. Try a shorter search or fewer filters.</p><button type="button" class="ghost" id="reset-empty">Show all sources</button></div></section>
 <section class="panel" id="github" role="tabpanel" aria-labelledby="tab-github" tabindex="-1" hidden><article class="prose">${gh}</article></section>
 <section class="panel" id="research" role="tabpanel" aria-labelledby="tab-research" tabindex="-1" hidden><article class="prose">${research}</article></section>
-<section class="panel" id="worksheets" role="tabpanel" aria-labelledby="tab-worksheets" tabindex="-1" hidden><article class="prose"><h1>Make the process repeatable.</h1><p>Use these templates to connect observations, modeling decisions, and print acceptance. Empty measurements mean unknown, never zero. <code>python3 -m cadkit new-project</code> copies them into a fresh project folder.</p><div class="resources"><a href="templates/measurement-register.csv" download>Measurement CSV</a><a href="templates/assumptions-register.csv" download>Assumptions CSV</a><a href="templates/validation-results.csv" download>Validation CSV</a><a href="templates/design-parameters.csv" download>Design-parameter CSV</a></div>${worksheets}<h2>Synthetic two-hole plate</h2><p>Teaching geometry: 60 × 30 × 4 mm, with two 5 mm holes spaced 40 mm apart. One parameter register drives the OpenSCAD model; <code>examples/build_plate.py</code> renders it and checks the STL against design rules. No real object or physical print was tested.</p><img class="example" src="examples/two-hole-plate.svg" alt="Dimensioned teaching diagram of a rectangular two-hole plate" loading="lazy"><div class="resources">${exampleLinks}</div></article></section>
+<section class="panel" id="worksheets" role="tabpanel" aria-labelledby="tab-worksheets" tabindex="-1" hidden><article class="prose"><h1>Make the process repeatable.</h1><p>Use these templates to connect observations, modeling decisions, and print acceptance. Empty measurements mean unknown, never zero. <code>python3 -m cadkit new-project</code> copies them into a fresh project folder.</p><div class="resources"><a href="templates/measurement-register.csv" download>Measurement CSV</a><a href="templates/assumptions-register.csv" download>Assumptions CSV</a><a href="templates/validation-results.csv" download>Validation CSV</a><a href="templates/design-parameters.csv" download>Design-parameter CSV</a><a href="templates/independent-checks.csv" download>Independent-check CSV</a></div>${worksheets}<h2>Synthetic two-hole plate</h2><p>Teaching geometry: 60 × 30 × 4 mm, with two 5 mm holes spaced 40 mm apart. One parameter register drives the OpenSCAD model; <code>examples/build_plate.py</code> renders it and checks the STL against design rules. No real object or physical print was tested.</p><img class="example" src="examples/two-hole-plate.svg" alt="Dimensioned teaching diagram of a rectangular two-hole plate" loading="lazy"><div class="resources">${exampleLinks}</div></article></section>
 </main>
 <footer class="footer">Revision ${lib.revision} · ${sources.length} curated resources · ${repos.length} repository snapshots · ${calculators.length} calculators · Original explanations and synthetic examples. No reconstruction benchmark or physical printing qualification is implied.</footer>
 <button id="to-top" type="button" aria-label="Back to top" hidden>↑</button>

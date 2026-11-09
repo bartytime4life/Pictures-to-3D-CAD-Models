@@ -192,7 +192,7 @@ Evidence classes, from strongest to weakest, are `measured`, `image-derived`, `i
 - `status: pass` (exit code 0) requires a watertight, manifold, consistently oriented mesh with no degenerate triangles. `--allow-open` reports the same result but exits 0.
 - Volume uses the divergence theorem about the bounding-box centre. A negative volume indicates inward-facing normals.
 - `genus` is reported for closed, manifold, consistently oriented meshes as `(2 × components − χ) / 2`. For a plate it equals the number of through-holes, so the two-hole plate reports 2.
-- A triangle is degenerate when fewer than three distinct vertices remain after welding (a collapsed face) or when its area is at most `weld_tol²` (a sliver). Collapsed faces are excluded from the topology checks. Slivers keep three welded vertices, so their edges still count in the edge, vertex, and component checks. Both kinds are counted in `degenerate_triangles` and fail `status`.
+- A triangle is degenerate when fewer than three distinct vertices remain after welding (a collapsed face) or when its area is at most `weld_tol²` (a sliver). Both collapsed faces and slivers are excluded from the topology checks. Both kinds are counted in `degenerate_triangles` and fail `status`.
 
 ## Tests
 

@@ -165,6 +165,18 @@ class WorkedNumbers(unittest.TestCase):
         self.assertStated(f"output speed of {GOLD['gear_output_input_speed_ratio']:g} times the input speed".replace("-", "−"))
 
 
+    def test_guard_band_example(self):
+        example = GOLD['guard_band_example']
+        lo, hi = example['tolerance_limits_mm']
+        accepted_lo, accepted_hi = example['acceptance_limits_mm']
+        self.assertStated(f"{example['nominal_mm']:.2f} ± {example['tolerance_mm']:.2f} mm")
+        self.assertStated(f"limits {lo:.2f}–{hi:.2f} mm")
+        self.assertStated(f"U = {example['expanded_uncertainty_mm']:.2f} mm")
+        self.assertStated(f"acceptance to {accepted_lo:.2f}–{accepted_hi:.2f} mm")
+        self.assertStated(f"A {example['reading_mm']:.2f} mm reading is not accepted by that rule")
+        self.assertFalse(example['accepted_under_chosen_rule'])
+
+
 class ToolkitData(unittest.TestCase):
     def test_calculators_reference_real_sections(self):
         self.assertEqual(len({c["id"] for c in CALCULATORS}), len(CALCULATORS))

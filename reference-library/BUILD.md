@@ -35,7 +35,7 @@ Run these from `reference-library/`.
 | --- | --- |
 | `make build` | `calc` → `figures` → `html` → `pdf` |
 | `make test` | Python `unittest` and `node --test` (including JavaScript-vs-Python agreement) |
-| `make check` | Browser end-to-end checks of `index.html` (`check-library.mjs`) and of the Photos workspace (`check-photos.mjs`); records and screenshots go to `tmp/qa/` |
+| `make check` | Browser end-to-end checks of `index.html` (`check-library.mjs`) of the Photos workspace (`check-photos.mjs`), and of portable backup/restore (`check-photo-transfer.mjs`); records and screenshots go to `tmp/qa/` |
 | `make plate` | Render the synthetic plate with OpenSCAD and run its design-rule checks |
 | `make links` | Request every catalog URL and write `tmp/qa/link-check.json` (network) |
 | `make refresh-github` | Update the repository metadata in `sources.json` (network) |
@@ -83,13 +83,22 @@ Never edit generated files by hand: `index.html`, `sources.csv`, `REFERENCES.md`
 
 ## Photo workspace
 
-The HTML build inlines `assets/photo-workspace.html`, `assets/css/photos.css`, and the scripts `assets/js/photos.js` and `assets/js/photo-workspace.js`. The core photo module owns storage, validation, and scale calculations; the workspace script connects those operations to the page. The Photos tab follows Toolkit, and Worksheets remains the last tab.
+The HTML build inlines `assets/photo-workspace.html`, `assets/css/photos.css`, and the scripts `assets/js/photos.js`, `assets/js/photo-transfer.js`, `assets/js/photo-register.js`, and `assets/js/photo-workspace.js`. The core photo module owns storage, validation, and scale calculations; the workspace script connects those operations to the page. The Photos tab follows Toolkit, and Worksheets remains the last tab.
 
 The browser stores original image files and photo details in IndexedDB, separately from repository files and generated artifacts. No photo is included in an HTML rebuild, PDF, or distribution archive. There is no fixed photo-count limit; imports are processed sequentially, and storage availability determines how many photos fit. The per-file limits are 50 MiB and 60 megapixels. Supported input types are JPEG, PNG, and WebP.
 
 Photo measurements are simple pixel-length ratios with a known real length. They assume a front-on view and a shared plane, and do not correct perspective or perform photogrammetry. View coverage is based on user-supplied labels, not an analysis of image quality or reconstruction completeness.
 
-Browser storage can be unavailable, exhausted, cleared, or isolated by browser profile and origin. Keep original images outside the application. The downloadable manifest contains metadata and measurement records only; it cannot restore image files. When testing, use synthetic images in a disposable browser profile and check persistence within the same origin. A normal HTML rebuild does not migrate data between browser profiles or origins.
+Browser storage can be unavailable, exhausted, cleared, or isolated by browser profile and origin. Keep original images outside the application. The downloadable manifest contains metadata and measurement records only; it cannot restore image files on its own. Folder backup copies originals and the manifest to a new user-selected subfolder. Restore verifies the manifest and image fingerprints before adding photos, preserves existing annotations, and reports partial failure. Manifest parsing is limited to 64 MiB; images are processed sequentially. When testing, use synthetic images in a disposable browser profile and check persistence within the same origin. A normal HTML rebuild does not migrate data between browser profiles or origins.
+
+### Photo transfer verification
+
+`node scripts/check-photo-transfer.mjs` runs in isolated browser contexts with synthetic images. It exercises the browser file APIs with a real origin-private directory handle, then restores the exported files into a different browser context. The native operating-system folder chooser is injected in automation; its interactive permission prompt is not an automated acceptance result. The original photo acceptance suite remains `scripts/check-photos.mjs`; `make check` runs both and the main library checks.
+
+Folder export uses the browser's [directory picker](https://developer.mozilla.org/en-US/docs/Web/API/Window/showDirectoryPicker) and [writable file handles](https://developer.mozilla.org/en-US/docs/Web/API/FileSystemFileHandle/createWritable). It must start from a user click. Unsupported environments show the manifest-plus-originals fallback. Nothing is sent to a remote service.
+
+`photo-register.js` exports the existing measurement-register columns, including image-derived evidence and blank unknown fields. It quotes CSV fields and protects spreadsheet formula prefixes in user text. CSV export is a review handoff and does not modify the design-parameter register.
+
 
 `scripts/check-photos.mjs` runs in fresh, isolated browser contexts with generated images and writes `tmp/qa/photo-check.json`. It honours `CAD_REFERENCE_BROWSER_TRANSPORT` like the main check, through the same loopback server (`scripts/lib/serve.mjs`). Because browser storage is per origin, a pass over HTTP does not establish that a particular browser saves photos for a `file://` page.
 

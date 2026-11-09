@@ -2,6 +2,23 @@
 
 All dates are 2026. Revisions are numbered in `library.json`, which feeds the HTML, the PDF, and the archive name. Revision 3 is the first revision kept in this repository; Revisions 1 and 2 were distributed as ZIP archives.
 
+## Revision 6 — November 9, 2026
+
+- Keep catalog search and filters in easy reach, with an expandable coverage chart, a clear empty-state reset, and larger touch targets. Preserve filter links when moving between tabs.
+- Show unsaved photo edits and protect notes, viewpoints, and measurement points on Close, Escape, and supported browser navigation. Explicit discard retains the last saved details.
+- Release image sources before revoking preview URLs, including abandoned gallery refreshes, to avoid intermittent preview-load errors.
+- Detect mesh vertices where disconnected surfaces meet at a single point; fail those mesh checks and withhold genus. Exclude degenerate faces from topology, and report invalid numeric geometry cleanly.
+- Add independent-check worksheets to the browser, PDF, and new-project folders. Separate calibration evidence, held-out dimensions, uncertainty, and physical print acceptance.
+- Add two primary sources on uncertainty-aware acceptance and independently checked photogrammetry, taking the catalog to 88 records.
+- Rebuild the offline library, PDF, validation record, checksum manifest, and portable archive. Physical reconstruction and printing remain unperformed.
+
+## Revision 5 (November 8, 2026)
+
+- Added portable folder backup of unchanged originals, viewpoint labels, notes, and measurement points. Files are written sequentially to a new folder; the manifest is committed last.
+- Added folder restore with manifest validation, image fingerprint and geometry checks, current-annotation preservation for existing photos, cancellation, and truthful partial-failure reporting.
+- Added a measurement CSV matching the project worksheet. Estimates remain image-derived, unknown fields stay blank, and source points and fingerprints travel with each row.
+- Added transfer and CSV tests plus isolated browser backup/restore acceptance. Native folder-picker interaction remains a manual browser boundary; no physical-object accuracy benchmark was performed.
+
 ## Revision 4 maintenance (November 8, 2026)
 
 Fixes from a review of the toolkit after Revision 4 merged. The revision number, archive name, and content are unchanged apart from the items below. The handbook and PDF are unchanged; `index.html` changes only because it inlines `cadcalc.js`.
