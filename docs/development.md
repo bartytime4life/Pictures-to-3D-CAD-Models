@@ -4,7 +4,7 @@ Run commands from the repository root unless a command explicitly says otherwise
 
 ## Prerequisites
 
-- **Python 3.12** with `venv` and a working package installer, as recorded in `.python-version`. The project intentionally restricts Python to the tested CAD binary dependency combination; do not assume Python 3.13 compatibility.
+- **Python 3.12** with `venv` and a working package installer, as recorded in `.python-version`. The project intentionally restricts Python to the tested CAD binary dependency combination; do not assume Python 3.13 compatibility. `python3` does not have to be 3.12: setup uses `PICAD_PYTHON` when set, otherwise the first of `python3.12` and `python3` that is 3.12, and prints the interpreter it chose.
 - Node.js 22.12 or later; Node.js 24 is recommended.
 - npm. Setup reuses [uv](https://docs.astral.sh/uv/) if installed or bootstraps its pinned version into `.local/uv-bootstrap`.
 - GNU Make for the root command entry point. The component scripts remain available when running a workbench-only workflow.
@@ -32,6 +32,7 @@ The default bind address is `127.0.0.1`. The supported startup settings are:
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
+| `PICAD_PYTHON` | first 3.12 of `python3.12`, `python3` | Python 3.12 interpreter that `setup.sh` builds `.venv` from |
 | `PICAD_HOST` | `127.0.0.1` | API and built-interface bind address for `start.sh` |
 | `PICAD_PORT` | `8000` | API and built-interface port for `start.sh` |
 | `PICAD_DEV_HOST` | `127.0.0.1` | Vite bind address for `dev.sh`; the development API remains on port 8000 |
@@ -109,7 +110,7 @@ Design/print checks should also verify that XY and thickness percentages preserv
 
 Treat the recorded results in [validation.md](validation.md) as the test evidence for the current implementation. Do not infer that a test passed merely because its command is listed here.
 
-Browser tests use `PLAYWRIGHT_CHROMIUM_EXECUTABLE` when supplied, otherwise `/usr/bin/chromium` when available, otherwise Playwright's installed Chromium. If neither a system browser nor a Playwright browser is present, install the browser after `npm ci`:
+Browser tests use `PLAYWRIGHT_CHROMIUM_EXECUTABLE` when supplied, otherwise `/usr/bin/chromium` when available, otherwise Playwright's installed Chromium, otherwise an installed Google Chrome (`/usr/bin/google-chrome`, `google-chrome-stable`, or the macOS application). If none of these is present, install the browser after `npm ci`:
 
 ```bash
 npx playwright install chromium

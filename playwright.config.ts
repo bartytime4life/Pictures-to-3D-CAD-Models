@@ -1,9 +1,24 @@
-import { defineConfig } from '@playwright/test';
+import { chromium, defineConfig } from '@playwright/test';
 import { existsSync } from 'node:fs';
 
+// Browser order: an explicit executable, a system Chromium, Playwright's own installed
+// Chromium, then an installed Google Chrome (as the reference library's checks do).
+const playwrightChromium = (() => {
+  try {
+    return existsSync(chromium.executablePath());
+  } catch {
+    return false;
+  }
+})();
+const systemChrome = [
+  '/usr/bin/google-chrome',
+  '/usr/bin/google-chrome-stable',
+  '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+].find((path) => existsSync(path));
 const executable =
   process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE ||
-  (existsSync('/usr/bin/chromium') ? '/usr/bin/chromium' : undefined);
+  (existsSync('/usr/bin/chromium') ? '/usr/bin/chromium' : undefined) ||
+  (playwrightChromium ? undefined : systemChrome);
 
 export default defineConfig({
   testDir: './tests/e2e',

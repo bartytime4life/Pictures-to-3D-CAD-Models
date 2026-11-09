@@ -55,6 +55,8 @@ If refreshing the page returns to the sample, restore your downloaded project th
 - **Blank 3D viewer:** confirm that the browser supports WebGL and that a build has actually completed. A text summary or fallback message does not establish that 3D rendering passed.
 - **Interface loads but conversion fails:** the frontend can run independently of the API. Use the supplied startup scripts and check the backend output.
 - **Port already in use:** identify the existing service before changing ports or stopping it. Avoid terminating an unrelated process.
+- **Setup says Python 3.12 is required:** setup looked for `PICAD_PYTHON`, `python3.12`, and `python3`, and none was 3.12. Install Python 3.12 alongside your current Python, or point `PICAD_PYTHON` at an existing 3.12 interpreter. A pyenv `.python-version` message about 3.12 means pyenv has no 3.12; setup can still use a system `python3.12`.
+- **Browser tests cannot launch a browser:** install Chromium or Google Chrome, or run `npx playwright install chromium`. `PLAYWRIGHT_CHROMIUM_EXECUTABLE` selects a specific executable.
 - **Dependency installation fails:** use the pinned toolchain and lockfiles, inspect the actual package or certificate error, and preserve TLS verification. Do not disable certificate checks to make setup pass.
 - **App unavailable after restoring an environment:** prepared files can survive a snapshot; running processes do not. Start the application again.
 
