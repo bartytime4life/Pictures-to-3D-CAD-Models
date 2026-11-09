@@ -80,6 +80,13 @@ class Analyze(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "not finite"):
                 stl.analyze(tris)
 
+    def test_malformed_triangle_shapes_are_rejected(self):
+        for triangles in ([((0, 0, 0), (1, 0, 0))],
+                          [((0, 0), (1, 0, 0), (0, 1, 0))],
+                          [((0, 0, 0, 0), (1, 0, 0), (0, 1, 0))]):
+            with self.subTest(triangles=triangles), self.assertRaises(ValueError):
+                stl.analyze(triangles)
+
 
 class Welding(unittest.TestCase):
     """Codex review of PR #2: welding must not depend on where points fall on a grid."""
@@ -127,6 +134,12 @@ class VertexManifold(unittest.TestCase):
         r = stl.analyze(stl.box() + stl.box(origin=(1, 1, 0)))
         self.assertGreater(r["nonmanifold_edges"], 0)
         self.assertEqual(r["nonmanifold_vertices"], 2)
+        self.assertFalse(r["watertight"] or r["manifold"])
+
+    def test_open_sheets_touching_at_a_vertex(self):
+        r = stl.analyze([((0, 0, 0), (1, 0, 0), (0, 1, 0)),
+                         ((0, 0, 0), (-1, 0, 0), (0, -1, 0))])
+        self.assertEqual(r["nonmanifold_vertices"], 1)
         self.assertFalse(r["watertight"] or r["manifold"])
 
     def test_separate_boxes_stay_manifold(self):
@@ -245,14 +258,20 @@ class DegenerateTopology(unittest.TestCase):
         self.assertEqual((r["boundary_edges"], r["nonmanifold_edges"], r["components"]), (0, 0, 1))
         self.assertTrue(r["watertight"] and r["manifold"])
 
-    def test_slivers_are_degenerate_and_keep_their_edges(self):
-        # Three distinct, collinear vertices: zero area, so the face is degenerate, but it
-        # still has three welded corners and its edges take part in the topology checks.
+    def test_collinear_faces_are_excluded_from_topology(self):
+        # Three distinct welded vertices can still enclose no area. Their edges
+        # must not alter the topology of the remaining surface.
         r = stl.analyze(stl.box() + [((0, 0, 0), (0.5, 0, 0), (1, 0, 0))])
         self.assertEqual(r["degenerate_triangles"], 1)
         self.assertEqual(r["vertices"], 9)
-        self.assertEqual((r["boundary_edges"], r["nonmanifold_edges"]), (2, 1))
+        self.assertEqual((r["boundary_edges"], r["nonmanifold_edges"], r["nonmanifold_vertices"]), (0, 0, 0))
+        self.assertTrue(r["watertight"] and r["manifold"])
+        self.assertEqual((r["components"], r["euler_characteristic"], r["genus"]), (1, 2, 0))
+
+    def test_only_degenerate_faces_are_not_watertight(self):
+        r = stl.analyze([((0, 0, 0), (1, 0, 0), (2, 0, 0))])
         self.assertFalse(r["watertight"])
+        self.assertEqual((r["components"], r["degenerate_triangles"]), (0, 1))
         self.assertIsNone(r["genus"])
 
 

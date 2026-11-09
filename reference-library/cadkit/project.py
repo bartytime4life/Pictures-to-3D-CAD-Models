@@ -33,6 +33,8 @@ PLACEMENT = {
     "measurement-register.csv": "measurements",
     "validation-results.csv": "validation",
     "PRINT-ACCEPTANCE.md": "validation",
+    "INDEPENDENT-CHECKS.md": "validation",
+    "independent-checks.csv": "validation",
 }
 
 MANIFEST_COLUMNS = ("file", "origin", "date", "terms", "redistributable", "sha256", "notes")

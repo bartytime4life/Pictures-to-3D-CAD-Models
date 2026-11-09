@@ -15,7 +15,7 @@ const qaFile = path.join(qa, 'photo-check.json');
 const results = {
   checked_at: new Date().toISOString(), revision: readJSON('library.json').revision,
   status: 'running', transport: process.env.CAD_REFERENCE_BROWSER_TRANSPORT || 'file', checks: [], browser_errors: [],
-  scope: 'Isolated Chromium profile; synthetic PNG fixtures only. Multi-batch imports, durable browser storage, SHA-256 deduplication, paging, metadata, same-plane estimates, export, deletion, invalid files, quota failure, and responsive layout. This is not a 3D reconstruction or real-object accuracy benchmark.',
+  scope: 'Isolated Chromium profile; synthetic PNG fixtures only. Multi-batch imports, durable browser storage, SHA-256 deduplication, paging, metadata, unsaved-draft and pending-write navigation protection, preview URL cleanup, same-plane estimates, export, deletion, invalid files, quota failure, and responsive layout. This is not a 3D reconstruction or real-object accuracy benchmark.',
 };
 fs.mkdirSync(qa, { recursive: true });
 fs.rmSync(qaFile, { force: true });
@@ -33,9 +33,17 @@ try {
   browser = await chromium.launch({ headless: true, executablePath: findChrome() });
   const context = await browser.newContext({ viewport: { width: 1440, height: 1050 }, acceptDownloads: true });
   const page = await context.newPage();
+  await page.addInitScript(() => {
+    const revoke = URL.revokeObjectURL.bind(URL);
+    window.__revokedImageReferences = [];
+    URL.revokeObjectURL = (url) => {
+      if ([...document.querySelectorAll('img')].some((img) => img.getAttribute('src') === url)) window.__revokedImageReferences.push(url);
+      return revoke(url);
+    };
+  });
   const dialogs = [];
   page.on('pageerror', (error) => results.browser_errors.push(error.message));
-  page.on('console', (message) => { if (message.type() === 'error') results.browser_errors.push(message.text()); });
+  page.on('console', (message) => { if (message.type() === 'error') results.browser_errors.push(message.text() + " [after: " + results.checks.at(-1) + "]"); });
   page.on('dialog', async (dialog) => { dialogs.push(dialog.message()); await dialog.dismiss(); });
   const pageUrl = served.pageUrl + '#photos';
   await page.goto(pageUrl);
@@ -127,6 +135,7 @@ try {
   const intended = [20, 20, 120, 20, 20, 50, 70, 50];
   assert(picked.values.every((value, index) => Math.abs(value - intended[index]) < 1.2), 'Four image clicks map rendered positions into original-image pixel coordinates');
   assert(Math.abs(picked.estimatedMm - 5) < 0.1 && await page.locator('#photo-overlay circle').count() === 4, 'Pointer-picked reference and target produce the expected scale estimate and endpoint overlay');
+  assert(/Unsaved changes/.test(await page.locator('#photo-draft-status').innerText()), 'Pointer measurement edits visibly mark the photo draft as unsaved');
   results.pointer_measurement_mm = picked.estimatedMm;
   await page.screenshot({ path: path.join(qa, 'photos-measurement.png'), fullPage: false });
   await page.locator('#photo-detail .photo-coordinates summary').click();
@@ -152,7 +161,36 @@ try {
   assert(await page.locator('#photo-grid .photo-card').count() === 1, 'Viewpoint labels filter the collection');
   await page.locator('#photo-grid .photo-card').click();
   assert(await page.locator('#photo-notes').inputValue() === hostileNotes && await page.locator('#photo-viewpoint').inputValue() === 'front', 'Labels and notes persist when reopening the photograph');
+  const unloadIsPrevented = () => page.evaluate(() => {
+    const event = new Event('beforeunload', { cancelable: true });
+    window.dispatchEvent(event);
+    return event.defaultPrevented;
+  });
+  assert(!await unloadIsPrevented(), 'A saved photo does not request a navigation warning');
+  await page.locator('#photo-known-mm').fill('10.0');
+  assert(/Saved details/.test(await page.locator('#photo-draft-status').innerText()), 'Equivalent numeric formatting does not create an unsaved draft');
+  await page.locator('#photo-notes').fill('Unsaved local draft');
+  assert(await unloadIsPrevented(), 'An edited photo requests browser protection against reload or navigation');
   await page.locator('#photo-close').click();
+  assert(await page.locator('#photo-detail').isVisible() && await page.locator('#photo-unsaved').isVisible(), 'Closing an edited photo offers a choice before discarding the draft');
+  assert(await page.locator('#photo-keep-editing').evaluate((button) => button === document.activeElement), 'Discard warning focuses the safe keep-editing action');
+  await page.locator('#photo-keep-editing').click();
+  assert(await page.locator('#photo-notes').inputValue() === 'Unsaved local draft' && !await page.locator('#photo-unsaved').isVisible(), 'Keep editing retains the current photo draft');
+  await page.locator('#photo-notes').fill(hostileNotes);
+  assert(!await unloadIsPrevented(), 'Reverting edits clears the navigation warning');
+  await page.locator('#photo-viewpoint').selectOption('back');
+  await page.keyboard.press('Escape');
+  assert(await page.locator('#photo-detail').isVisible() && await page.locator('#photo-unsaved').isVisible(), 'Escape protects a changed viewpoint from accidental loss');
+  await page.locator('#photo-discard').click();
+  await page.locator('#photo-detail').waitFor({ state: 'hidden' });
+  assert(!await unloadIsPrevented(), 'Explicit discard clears the draft and its navigation warning');
+  await page.locator('#photo-grid .photo-card').click();
+  await page.locator('#photo-detail').waitFor({ state: 'visible' });
+  assert(await page.locator('#photo-notes').inputValue() === hostileNotes && await page.locator('#photo-viewpoint').inputValue() === 'front', 'Discard leaves the last saved photo details intact');
+  await page.locator('#photo-reset-points').click();
+  await page.locator('#photo-close').click();
+  assert(await page.locator('#photo-unsaved').isVisible(), 'Clearing a saved measurement is protected as an unsaved change');
+  await page.locator('#photo-discard').click();
   await page.locator('#photo-filter').selectOption('');
   await page.locator('#photo-search').fill('front face synthetic datum');
   await page.waitForFunction(() => document.querySelectorAll('#photo-grid .photo-card').length === 1);
@@ -249,7 +287,7 @@ try {
   const dropContext = await browser.newContext({ viewport: { width: 1200, height: 900 } });
   const dropPage = await dropContext.newPage();
   dropPage.on('pageerror', (error) => results.browser_errors.push(error.message));
-  dropPage.on('console', (message) => { if (message.type() === 'error') results.browser_errors.push(message.text()); });
+  dropPage.on('console', (message) => { if (message.type() === 'error') results.browser_errors.push(message.text() + " [after: " + results.checks.at(-1) + "]"); });
   await dropPage.goto(pageUrl);
   await dropPage.waitForFunction(() => !document.querySelector('#photo-input').disabled);
   await dropPage.locator('#photo-input').setInputFiles(fixtures.slice(0, 2));
@@ -285,7 +323,7 @@ try {
   });
   const blockedPage = await blockedContext.newPage();
   blockedPage.on('pageerror', (error) => results.browser_errors.push(error.message));
-  blockedPage.on('console', (message) => { if (message.type() === 'error') results.browser_errors.push(message.text()); });
+  blockedPage.on('console', (message) => { if (message.type() === 'error') results.browser_errors.push(message.text() + " [after: " + results.checks.at(-1) + "]"); });
   await blockedPage.goto(pageUrl);
   await blockedPage.waitForFunction(() => /blocked|unavailable/i.test(document.querySelector('#photo-status').textContent));
   assert(await blockedPage.locator('#photo-input').isDisabled(), 'Browser storage restrictions disable importing before any photos are accepted');
@@ -297,7 +335,7 @@ try {
   // tiny synthetic store and does not alter the main IndexedDB acceptance case.
   const racePage = await context.newPage();
   racePage.on('pageerror', (error) => results.browser_errors.push(error.message));
-  racePage.on('console', (message) => { if (message.type() === 'error') results.browser_errors.push(message.text()); });
+  racePage.on('console', (message) => { if (message.type() === 'error') results.browser_errors.push(message.text() + " [after: " + results.checks.at(-1) + "]"); });
   await racePage.setContent(fs.readFileSync(path.join(ROOT, 'assets/photo-workspace.html'), 'utf8').replace('tabindex="-1" hidden', 'tabindex="-1"'));
   await racePage.evaluate(async () => {
     const canvas = document.createElement('canvas'); canvas.width = 320; canvas.height = 240;
@@ -332,6 +370,19 @@ try {
   });
   await racePage.addScriptTag({ content: fs.readFileSync(path.join(ROOT, 'assets/js/photo-workspace.js'), 'utf8') });
   await racePage.locator('.photo-card').first().waitFor({ state: 'visible' });
+  const pendingUnloadIsPrevented = () => racePage.evaluate(() => {
+    const event = new Event('beforeunload', { cancelable: true });
+    window.dispatchEvent(event);
+    return event.defaultPrevented;
+  });
+  await racePage.locator('.photo-card').first().click();
+  await racePage.locator('#photo-save').click();
+  await racePage.waitForFunction(() => !!window.pendingMutation);
+  assert(await pendingUnloadIsPrevented(), 'Saving unchanged details protects navigation while the write is pending');
+  await racePage.locator('#photo-close').click();
+  assert(await pendingUnloadIsPrevented(), 'Closing the editor does not remove protection for an outstanding save');
+  await racePage.evaluate(async () => { window.pendingMutation(); window.pendingMutation = null; await new Promise((resolve) => setTimeout(resolve, 0)); });
+  assert(!await pendingUnloadIsPrevented(), 'Completed writes release navigation protection after the editor closes');
   for (const action of ['photo-save', 'photo-remove']) {
     await racePage.locator('.photo-card').first().click();
     await racePage.locator('#photo-notes').fill('Original draft');
@@ -339,6 +390,7 @@ try {
     await racePage.waitForFunction(() => !!window.pendingMutation);
     assert(await racePage.locator('#photo-notes').isDisabled() && await racePage.locator('#photo-known-mm').isDisabled(), `${action}: details cannot change while the mutation is pending`);
     await racePage.locator('#photo-close').click();
+    assert(await pendingUnloadIsPrevented(), `${action}: closed-editor pending mutations retain navigation protection`);
     await racePage.locator('.photo-card').last().click();
     await racePage.locator('#photo-notes').fill('New draft on B');
     await racePage.evaluate(async () => {
@@ -348,6 +400,7 @@ try {
     });
     assert(await racePage.locator('#photo-detail').evaluate((dialog) => dialog.open) && await racePage.locator('#photo-notes').inputValue() === 'New draft on B', `${action}: late completion preserves a different photograph's open draft`);
     await racePage.locator('#photo-close').click();
+    await racePage.locator('#photo-discard').click();
   }
   // Overlapping refreshes: a superseded one must not hand out URLs, and a replaced
   // gallery's thumbnails must let go of theirs before they are revoked.
@@ -364,6 +417,7 @@ try {
   const stale = await racePage.evaluate(() => window.staleImageSources);
   assert(stale.length === 0, 'Images never keep or receive a revoked blob URL' + (stale.length ? ': ' + stale.slice(0, 3).join('; ') : ''));
   await racePage.close();
+  assert(await page.evaluate(() => window.__revokedImageReferences.length === 0), 'Gallery refresh and photo close detach image sources before revoking their URLs');
   assert(results.browser_errors.length === 0, 'No browser script or console errors');
   results.status = 'passed';
   results.synthetic_images_imported = 33;

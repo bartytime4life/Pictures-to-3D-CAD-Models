@@ -70,7 +70,7 @@
 <text x="56" y="190" font-family="Georgia, DejaVu Serif, Times New Roman, serif" font-size="54" text-anchor="start" style="fill:#ffffff">to printable CAD.</text>
 <text x="56" y="228" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="16" text-anchor="start" style="fill:#cfe0ea">Recover shape · set dimensions · rebuild geometry · check the print</text>
 <rect x="56" y="252" width="94" height="30" rx="15" style="fill:#ffffff;opacity:0.12"/>
-<text x="103" y="272" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle" style="fill:#ffffff">86 sources</text>
+<text x="103" y="272" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle" style="fill:#ffffff">88 sources</text>
 <rect x="158" y="252" width="132" height="30" rx="15" style="fill:#ffffff;opacity:0.12"/>
 <text x="224" y="272" font-family="DejaVu Sans, Verdana, Segoe UI, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" text-anchor="middle" style="fill:#ffffff">21 repositories</text>
 <rect x="298" y="252" width="101.6" height="30" rx="15" style="fill:#ffffff;opacity:0.12"/>

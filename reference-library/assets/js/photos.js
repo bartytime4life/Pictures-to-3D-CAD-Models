@@ -1,4 +1,4 @@
-/* Local photo workspace. Originals never leave this browser. Metadata and image
+/* Local photo workspace. No photos are uploaded. Metadata and image
  * blobs are stored separately so filtering and exports do not load originals.
  * A calibrated image ratio is an estimate, not a reconstruction or verified CAD.
  */

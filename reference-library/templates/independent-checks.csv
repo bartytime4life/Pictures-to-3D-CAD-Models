@@ -1,0 +1,2 @@
+check_id,description,model_revision,role,reference_mm,reference_method,reference_evidence_file,model_mm,difference_mm,uncertainty_or_limitation,tolerance_or_criterion,used_to_adjust_model,frozen_transform_file,decision_rule,status,notes
+EXAMPLE_ONLY,Replace this row with an independent physical check,,check_only,,,,,,,,,,,not_tested,Blank values mean unknown. A check used to adjust the model becomes development evidence; obtain fresh checks where practical.

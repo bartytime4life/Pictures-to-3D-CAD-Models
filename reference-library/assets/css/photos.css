@@ -32,6 +32,12 @@
 .photo-storage-note { padding: 15px 0 20px; border-bottom: 1px solid var(--line); }
 .photo-storage-note p { max-width: 1000px; font-size: 12.5px; color: var(--muted); margin: 4px 0; }
 .photo-storage-note strong { color: var(--ink); }
+.photo-transfer { padding: 22px; margin-top: 20px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; }
+.photo-transfer > p { margin: 10px 0; max-width: 980px; }
+.photo-transfer-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 14px; }
+.photo-transfer-actions .photo-file-label { font-weight: 400; padding: 8px 15px; }
+.photo-transfer .photo-import-progress { justify-content: flex-start; }
+#photo-transfer-status { overflow-wrap: anywhere; color: var(--ink); }
 .photo-section-heading, .photo-library-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .photo-section-heading h3, .photo-library-heading h3 { margin: 0; font-size: 17px; }
 .photo-coverage-panel { padding: 22px 0; border-bottom: 1px solid var(--line); }
@@ -101,6 +107,9 @@ button.photo-card, .photo-card > button { cursor: pointer; }
 .photo-detail-actions { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 2px; }
 .photo-detail-actions .btn { font-size: 12px; }
 .photo-detail-actions .photo-remove { color: var(--err-ink); }
+#photo-unsaved { color: var(--warn-ink); background: var(--warn-bg); border: 1px solid var(--accent); border-radius: 8px; padding: 14px; margin: 0 0 18px; font-size: 14px; }
+#photo-unsaved p { margin: 0 0 12px; }
+#photo-unsaved .btn { min-height: 44px; }
 
 @media (max-width: 850px) {
   .photo-intro { display: block; }

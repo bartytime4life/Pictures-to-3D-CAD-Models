@@ -95,6 +95,16 @@ Revision 3, prepared November 8, 2026, added no new sources and changed no revie
 
 A link check shows that a server answered at the time of the check. It does not re-review a page's content or confirm that the text supporting an annotation is still there.
 
+## November 9 research update
+
+A focused SciSpace query asked: “How do metrology studies of close-range photogrammetry and reverse-engineered CAD distinguish alignment error, scale uncertainty, reconstruction error, and independent check measurements?” with open-access and eight-result filters. The eight returned excerpts were screened. The full bibliographic record and abstract of di Filippo and colleagues' 2022 study were fetched, then selected publisher-PDF sections 2–4 were read. The paper's tie-point analysis does not include dense image-matching uncertainty; no published tolerance was transferred to this project.
+
+[JCGM 106:2012](https://www.bipm.org/documents/20126/2071204/JCGM_106_2012_E.pdf/fe9537d2-e7d7-e146-5abb-2649c3450b25), section 8.3, was read from BIPM's official PDF for acceptance decisions near tolerance limits. The handbook's numerical guard-band example is synthetic. It illustrates a declared decision rule, with no physical result or standards certification implied.
+
+A reusable independent-check worksheet and CSV register make the evaluation sequence concrete: reserve checks, freeze the evaluated revision, and retire a check from independent status if it guides a correction.
+
+Both additions are marked page-content checked, with the selected sections stated in their catalog limitations. Existing review depths and dates were not promoted. The Life Sciences Literature PMC metadata skill was inspected for relevance; no biomedical article lookup was needed for this metrology question. No new private Drive search, software installation, or reconstruction experiment was performed for this update.
+
 ## Refreshing the library
 
 Keep the conceptual explanations stable and refresh software versions, dependency requirements, licenses, and repository status before installation. For a future research update, record the query, date, selected sources, review depth, and reasons for exclusions. Add substantive findings only after reading enough of the source to support them. The `sources.json` and `sources.csv` files provide the structured starting point.

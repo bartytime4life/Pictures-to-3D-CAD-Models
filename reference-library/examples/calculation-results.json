@@ -40,5 +40,20 @@
   "label_rounding_half_interval_mm": 0.127,
   "label_rounding_standard_uncertainty_mm": 0.07332348418708248,
   "coating_per_face_mm": 0.08,
-  "coated_slot_width_loss_mm": 0.16
+  "coated_slot_width_loss_mm": 0.16,
+  "guard_band_example": {
+    "nominal_mm": 10.0,
+    "tolerance_mm": 0.1,
+    "expanded_uncertainty_mm": 0.04,
+    "reading_mm": 10.08,
+    "tolerance_limits_mm": [
+      9.9,
+      10.1
+    ],
+    "acceptance_limits_mm": [
+      9.94,
+      10.06
+    ],
+    "accepted_under_chosen_rule": false
+  }
 }

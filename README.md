@@ -117,12 +117,14 @@ See [export formats and dimensional checks](docs/exports.md) before transferring
 
 ## Reference library
 
+Revision 6 adds independent measurement worksheets, clearer source search, and portable photo backup/restore, with 88 annotated sources.
+
 [`reference-library/`](reference-library/README.md) is the companion reference for work beyond one flat part. Open `reference-library/index.html` in a browser; it works offline. It covers:
 
 - **Handbook:** 23 chapters on capture, scale and calibration, reconstruction workflows, CAD drawings, print design, and validation
-- **Source catalog:** 86 annotated sources, each labeled with its depth of review
+- **Source catalog:** 88 annotated sources, each labeled with its depth of review
 - **Toolkit:** 14 calculators and a route finder, with the same arithmetic available as `python3 -m cadkit` from the `reference-library/` directory
-- **Photos:** an offline reference-photo workspace. Add photos in batches, label viewpoints, keep notes, and estimate a flat dimension from a known length. Photos stay in that browser's local storage and are separate from the workbench's uploads.
+- **Photos:** an offline reference-photo workspace. Add photos in batches, label viewpoints, keep notes, and estimate a flat dimension from a known length. Protect unsaved edits, back up originals and notes to a folder, restore a reference set, and export image-derived measurements. Photos stay in that browser's local storage and are separate from the workbench's uploads.
 - **Worksheets and examples:** project worksheets and an OpenSCAD example pipeline
 - **Mesh check for workbench exports:** `python3 -m cadkit meshcheck model.stl --expect-mm 80` independently checks an exported STL for closure, manifoldness, and orientation, and reports its genus (through-holes) for comparison with the workbench's hole count. See [export checks](docs/exports.md#check-an-stl-independently).
 
@@ -137,7 +139,7 @@ make test
 make lint
 ```
 
-`make test` runs the workbench's Python tests, frontend type check/build, and browser scenarios, followed by the reference library's Python/Node tests and its two browser checks (the page and the Photos workspace) over loopback HTTP. `make lint` runs the workbench Python and frontend/browser-source lint/format checks. Use `make test-app` or `make test-library` to work on one component; `make` lists the available commands.
+`make test` runs the workbench's Python tests, frontend type check/build, and browser scenarios, followed by the reference library's Python/Node tests and its three browser checks (the page, Photos workspace, and portable backup/restore) over loopback HTTP. `make lint` runs the workbench Python and frontend/browser-source lint/format checks. Use `make test-app` or `make test-library` to work on one component; `make` lists the available commands.
 
 Browser checks use an installed Chromium or Google Chrome; if neither is available, run `npx playwright install chromium`. OpenSCAD-dependent library tests may skip when OpenSCAD is absent; `make setup` does not install it. See [development prerequisites](docs/development.md) for browser, PDF/font, and OpenSCAD requirements. The [validation report](docs/validation.md) distinguishes recorded successful runs from checks that have not yet run. A successful synthetic fixture does not establish dimensional accuracy for an arbitrary real-world photograph.
 

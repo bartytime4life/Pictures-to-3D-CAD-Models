@@ -22,7 +22,7 @@ const timeout = arg('--timeout', 20000);
 
 const urls = new Map();
 for (const s of readJSON('sources.json')) urls.set(s.url, new Set([`sources.json#${s.id}`]));
-const docs = ['HANDBOOK.md', 'RESEARCH-NOTES.md', 'BUILD.md', 'README.md', 'CONTRIBUTING.md', 'cadkit/README.md', 'examples/README.md'];
+const docs = ['HANDBOOK.md', 'RESEARCH-NOTES.md', 'BUILD.md', 'README.md', 'CONTRIBUTING.md', '../README.md', 'cadkit/README.md', 'examples/README.md'];
 for (const doc of docs) {
   const file = path.join(ROOT, doc);
   if (!fs.existsSync(file)) continue;

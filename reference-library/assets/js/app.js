@@ -64,7 +64,11 @@
       if (on && focus) t.focus();
     });
     panels.forEach((p) => { p.hidden = p.id !== id; });
-    if (hash && location.hash.slice(1).split('?')[0] !== id) history.replaceState(null, '', '#' + id);
+    // Returning to Sources must keep the same shareable filter state as the controls.
+    if (hash) {
+      const nextHash = id === 'sources' ? catalogHash() : '#' + id;
+      if (location.hash !== nextHash) history.replaceState(null, '', nextHash);
+    }
     updateProgress();
   }
   tabs.forEach((t, i) => {
@@ -88,7 +92,7 @@
     if (!head) return activate(current || 'handbook', { hash: false });
     if (panels.some((p) => p.id === head)) {
       activate(head, { hash: false });
-      if (head === 'sources' && query !== undefined) readCatalogQuery(query);
+      if (head === 'sources') readCatalogQuery(query || '');
       const top = $('.tabs-wrap').offsetTop;
       if (window.scrollY > top || head !== 'handbook') window.scrollTo({ top, behavior: 'auto' });
       return;
@@ -115,6 +119,12 @@
     depth: (a, b) => a.dataset.rank - b.dataset.rank || order.get(a) - order.get(b),
     push: (a, b) => (b.dataset.push || '').localeCompare(a.dataset.push || '') || order.get(a) - order.get(b),
   };
+  function catalogHash() {
+    const params = new URLSearchParams();
+    for (const [k, input] of Object.entries(f)) if (input.value && !(k === 'sort' && input.value === 'default')) params.set(k, input.value);
+    const qs = params.toString();
+    return '#sources' + (qs ? '?' + qs : '');
+  }
   function filterCatalog({ writeHash = true } = {}) {
     const terms = f.q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
     let visible = 0;
@@ -132,18 +142,16 @@
     $('#empty').hidden = visible !== 0;
     $$('.chip[data-topic]').forEach((chip) => chip.setAttribute('aria-pressed', String(chip.dataset.topic === f.topic.value)));
     if (writeHash && current === 'sources') {
-      const params = new URLSearchParams();
-      for (const [k, input] of Object.entries(f)) if (input.value && !(k === 'sort' && input.value === 'default')) params.set(k, input.value);
-      const qs = params.toString();
-      history.replaceState(null, '', '#sources' + (qs ? '?' + qs : ''));
+      history.replaceState(null, '', catalogHash());
     }
   }
   function readCatalogQuery(query) {
     const params = new URLSearchParams(query);
     for (const [k, input] of Object.entries(f)) {
-      const v = params.get(k) || (k === 'sort' ? 'default' : '');
-      if (input.tagName === 'SELECT' && v && ![...input.options].some((o) => o.value === v)) continue;
-      input.value = v;
+      const fallback = k === 'sort' ? 'default' : '';
+      const v = params.get(k) || fallback;
+      // Unknown URL values reset to the default, never retain an unrelated old filter.
+      input.value = input.tagName === 'SELECT' && ![...input.options].some((o) => o.value === v) ? fallback : v;
     }
     filterCatalog({ writeHash: false });
   }
@@ -152,10 +160,12 @@
     f.topic.value = f.topic.value === chip.dataset.topic ? '' : chip.dataset.topic;
     filterCatalog();
   }));
-  $('#reset-filters').addEventListener('click', () => {
+  function resetCatalog() {
     Object.entries(f).forEach(([k, input]) => { input.value = k === 'sort' ? 'default' : ''; });
     filterCatalog(); f.q.focus();
-  });
+  }
+  $('#reset-filters').addEventListener('click', resetCatalog);
+  $('#reset-empty').addEventListener('click', resetCatalog);
   document.addEventListener('keydown', (e) => {
     if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey && !/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) {
       e.preventDefault(); activate('sources'); f.q.focus();

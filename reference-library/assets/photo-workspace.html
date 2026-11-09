@@ -35,9 +35,24 @@
   </div>
 
   <div class="photo-storage-note">
-    <p><strong>Your photos stay in this browser.</strong> They are never sent to a server. Browser or device storage is the limit; clearing browser data can delete this library. Keep your originals.</p>
+    <p><strong>Your workspace is stored in this browser.</strong> This page sends no photos to a server. Backups copy original files and notes into a folder you choose. Clearing browser data can delete the local workspace; keep an independent copy.</p>
     <p class="photo-small" id="photo-storage">Checking browser storage…</p>
   </div>
+
+  <section class="photo-transfer" aria-labelledby="photo-transfer-title">
+    <div class="photo-section-heading"><h3 id="photo-transfer-title">Keep your work. Take it into CAD.</h3><span class="photo-small">Photos + notes + measurements</span></div>
+    <p class="photo-small">Save a complete reference set outside the browser, then restore it on another device. Each backup uses a new folder and copies your original photos unchanged.</p>
+    <div class="photo-transfer-actions">
+      <button class="btn primary" id="photo-backup" type="button" disabled>Back up photos to a folder</button>
+      <label class="btn photo-file-label">Restore from a folder<input class="photo-file-input" id="photo-restore-input" type="file" webkitdirectory multiple disabled aria-describedby="photo-restore-help"></label>
+      <button class="btn" id="photo-measurements-export" type="button" disabled>Export measurement CSV</button>
+    </div>
+    <p class="photo-small" id="photo-backup-support">Checking folder backup support…</p>
+    <p class="photo-small" id="photo-restore-help">Choose the backup folder containing the manifest and photos. Matching photos already here keep their current notes and measurements. Restoring adds missing photos; it does not replace the workspace.</p>
+    <div class="photo-import-progress"><progress id="photo-transfer-progress" value="0" max="1" aria-label="Photo backup or restore progress" hidden></progress><button class="btn" id="photo-transfer-cancel" type="button" hidden>Stop after this file</button></div>
+    <p class="photo-small" id="photo-transfer-status" role="status"></p>
+    <ul class="photo-errors" id="photo-transfer-errors" hidden></ul>
+  </section>
 
   <section class="photo-coverage-panel" aria-labelledby="photo-coverage-title">
     <div class="photo-section-heading"><h3 id="photo-coverage-title">Views you have covered</h3><span class="photo-small">Based on your labels</span></div>
@@ -68,6 +83,11 @@
     <div class="photo-detail-controls">
       <label for="photo-viewpoint">Viewpoint<select id="photo-viewpoint"></select></label>
       <label for="photo-notes">Notes<textarea id="photo-notes" rows="3" maxlength="10000" placeholder="What does this view reveal? Record features, uncertainties, or capture conditions."></textarea></label>
+      <p class="photo-small" id="photo-draft-status" role="status">Saved details.</p>
+      <div class="photo-accuracy-note" id="photo-unsaved" role="alert" hidden>
+        <p><strong>Keep your changes?</strong> Your edited notes, viewpoint and measurement points have not been saved.</p>
+        <div class="photo-detail-actions"><button class="btn primary" id="photo-keep-editing" type="button">Keep editing</button><button class="btn" id="photo-discard" type="button">Discard changes and close</button></div>
+      </div>
       <section class="photo-measure" aria-labelledby="photo-measure-title">
         <span class="eyebrow">Measure within one photo</span>
         <h3 id="photo-measure-title">Estimate a flat feature</h3>
