@@ -10,7 +10,7 @@ The most dependable input is a clearly separated silhouette of one part that has
 4. Use diffuse, even light. Hard shadows, bright reflections, and a dark background visible through holes can become false geometry.
 5. Keep the image sharp enough to distinguish the smallest feature you need. A higher-resolution file cannot recover a feature that is blurred or obscured.
 
-Upload a still PNG, JPEG, or WebP of at most **10 MiB** and **16 million decoded pixels**, with both dimensions at least 16 pixels. Animated images are rejected. The backend applies image orientation and downsizes the longest side to at most **1400 pixels**. Inspect the resulting outline rather than assuming that every original pixel became a geometric feature.
+Upload a still PNG, JPEG, or WebP of at most **10 MiB** and **16 million decoded pixels**, with both dimensions at least 16 pixels. Animated images are rejected. A camera JPEG that embeds a preview or second view (MPO) is accepted, and only its primary image is traced. A 16-bit grayscale PNG is reduced to 8 bits before tracing. The backend applies image orientation and downsizes the longest side to at most **1400 pixels**. If the orientation metadata is damaged, the image is traced as stored and a warning says so; check that the outline is oriented like the part before measuring. Inspect the resulting outline rather than assuming that every original pixel became a geometric feature.
 
 ## Review the outline before measuring
 
@@ -18,13 +18,13 @@ Look at both the outer boundary and each interior boundary. A dark marking can b
 
 Use the foreground/background control when the part is lighter than its background. Adjust the threshold to separate the part from the background. The detail setting changes contour approximation; increasing detail is not a substitute for a better photograph.
 
-Tiny interior regions below the trace resolution can be omitted with a warning. The current tracer ignores hole contours smaller than 9 square pixels in the working image. Nested regions inside a hole are rejected. Review capture notes before accepting a trace, particularly when the smallest holes matter.
+Tiny interior regions below the trace resolution can be omitted with a warning. The current tracer ignores hole contours smaller than 9 square pixels in the working image, and specks inside a hole whose contours are below that same area; both are counted in the warning. A larger region inside a hole is rejected. Review capture notes before accepting a trace, particularly when the smallest holes matter.
 
 If several objects are present, the app uses the largest candidate and reports additional substantial regions. Re-photograph or crop the source before uploading if it is unclear which object should be traced. Do not assume a small disconnected feature was intentionally included.
 
 ## Set the reference width
 
-The reference width is the **complete horizontal span of the traced part**, from its leftmost to rightmost outline point in the image. It is not an arbitrary distance between holes or the length of whichever edge is easiest to measure.
+The reference width is the **complete horizontal span of the traced part**, from its leftmost to rightmost outline point in the image. The outline follows the outer edges of the part's boundary pixels, so a part covering 401 pixel columns spans 401 pixels. It is not an arbitrary distance between holes or the length of whichever edge is easiest to measure.
 
 Measure that same span on the real part and enter it with an explicit unit. Align the part in the photograph so this direction is unambiguous. If your intended reference is a different edge or pair of points, retake or rotate the source image so the full horizontal span corresponds to the measurement you can supply.
 

@@ -81,6 +81,8 @@ export default function LocalAssistant({
   const request = useRef<AbortController | null>(null);
   const statusRequest = useRef<AbortController | null>(null);
   const replyRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const [announcement, setAnnouncement] = useState('');
 
   useEffect(
     () => () => {
@@ -93,7 +95,15 @@ export default function LocalAssistant({
   );
 
   useEffect(() => {
-    if (reply) replyRef.current?.focus({ preventScroll: true });
+    if (!reply) return;
+    // Move focus to the answer only from the assistant itself (or from nowhere, as when the
+    // disabled Ask button dropped it). Someone who kept working elsewhere while waiting keeps
+    // their place and typing; the answer is announced instead.
+    const active = document.activeElement;
+    if (!active || active === document.body || sectionRef.current?.contains(active)) {
+      setAnnouncement('');
+      replyRef.current?.focus({ preventScroll: true });
+    } else setAnnouncement('The local AI answer is ready in the assistant panel.');
   }, [reply]);
 
   async function refresh() {
@@ -142,6 +152,7 @@ export default function LocalAssistant({
     setPending(true);
     setError('');
     setReply(null);
+    setAnnouncement('');
     setApplied(false);
     setAskedQuestion(question.trim());
     const sentRevision = revision;
@@ -226,9 +237,13 @@ export default function LocalAssistant({
 
   return (
     <section
+      ref={sectionRef}
       className={`local-assistant ${expanded ? 'expanded' : ''}`}
       aria-label="Local AI assistant"
     >
+      <p className="sr-only" role="status">
+        {announcement}
+      </p>
       <button
         className="assistant-toggle"
         aria-expanded={expanded}

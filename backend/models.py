@@ -1,16 +1,19 @@
 """Bounded, explicit inputs shared by the API and isolated CAD worker."""
 
-from typing import Literal
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 from shapely.geometry import Polygon
 from shapely.validation import explain_validity
 
+# Bound each hole before its points are parsed; the 2000-point total is checked below.
+HoleRing = Annotated[list[tuple[float, float]], Field(max_length=2000)]
+
 
 class Profile(BaseModel):
     model_config = ConfigDict(extra="forbid", allow_inf_nan=False)
     outer: list[tuple[float, float]] = Field(min_length=3, max_length=2000)
-    holes: list[list[tuple[float, float]]] = Field(default_factory=list, max_length=32)
+    holes: list[HoleRing] = Field(default_factory=list, max_length=32)
 
     @model_validator(mode="after")
     def validate_polygon(self):

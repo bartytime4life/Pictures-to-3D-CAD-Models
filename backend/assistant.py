@@ -24,6 +24,25 @@ MAX_RESPONSE_BYTES = 2 * 1024 * 1024
 REVIEW_WARNING = "AI advice can be wrong. Review the outline and use your own measurements."
 BED_FIELDS = {"bed_width_mm", "bed_depth_mm", "bed_height_mm"}
 GEOMETRY_TOLERANCE_MM = 1e-5  # OpenCascade bounding boxes include small kernel tolerances.
+# Wording that withholds a change from what follows it ("don't make it bigger",
+# "keep its thickness") or from what precedes it ("with the thickness unchanged").
+NEGATION_BEFORE = re.compile(
+    r"\b(?:\w+n't|dont|doesnt|cannot|not|no|never|nor|without|keep(?:s|ing)?|leav(?:e|es|ing)"
+    r"|same|unchanged|untouched|preserv(?:e|es|ing)|retain(?:s|ing)?|maintain(?:s|ing)?"
+    r"|avoid(?:s|ing)?)\b"
+)
+NEGATION_AFTER = re.compile(
+    r"\b(?:unchanged|untouched|alone|as\s+(?:it\s+)?is|the\s+same|stays?|remains?)\b"
+)
+# A negation lasts to the end of its sentence, a contrast, or a new instruction. A
+# comma alone does not end it, so "don't change the width, length or thickness" is
+# withheld as a whole; erring that way only withholds a suggestion.
+NEGATION_SCOPE_END = re.compile(
+    r"[.;:!?]|\b(?:but|just|instead|rather|only|then|while|with)\b"
+    r"|(?:,|\band\b|\bor\b)\s*(?=(?:please\s+)?(?:make|set|change|adjust|increase|decrease"
+    r"|reduce|scale|resize|enlarge|shrink|extend|stretch|double|halve|fit|use|propose"
+    r"|choose|switch|add)\b)"
+)
 
 
 class AssistantError(Exception):
@@ -359,6 +378,23 @@ def _normalized_words(value):
     return " ".join(re.findall(r"[a-z0-9]+", value.lower()))
 
 
+def _without_negated_wording(question):
+    """Blank negated wording, keeping offsets, so it cannot authorize a size change."""
+    ends = [match.start() for match in NEGATION_SCOPE_END.finditer(question)]
+    masked = list(question)
+    for cue in NEGATION_BEFORE.finditer(question):
+        end = min((value for value in ends if value >= cue.end()), default=len(question))
+        masked[cue.start() : end] = " " * (end - cue.start())
+    for cue in NEGATION_AFTER.finditer(question):
+        start = max((value for value in ends if value <= cue.start()), default=0)
+        # Only the few words just before the cue: "... and the thickness stays the same".
+        words = [match.start() for match in re.finditer(r"\b\w", question[start : cue.start()])]
+        if len(words) > 3:
+            start += words[-3]
+        masked[start : cue.end()] = " " * (cue.end() - start)
+    return "".join(masked)
+
+
 def printer_candidates(question):
     """Match explicit catalog model names locally; never ask an LLM to invent a profile."""
     normalized = f" {_normalized_words(question)} "
@@ -541,7 +577,7 @@ def review_proposal(result, request: AssistantRequest):
     proposal = result["proposal"]
     if not proposal:
         return result
-    question = request.question.lower()
+    question = _without_negated_wording(request.question.lower().replace("’", "'"))
     # A conservative English wording check, not proof of the user's intent. The
     # model still has to propose the right values and the user must review Apply.
     resize_intent = re.search(

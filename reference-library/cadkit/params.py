@@ -58,7 +58,9 @@ def _parse_value(text: str) -> float | str | None:
 def load_register(path: str | Path) -> dict[str, Param]:
     """Load a register into ``{parameter_id: Param}``; duplicate ids raise ``ValueError``."""
     path = Path(path)
-    with path.open(newline="", encoding="utf-8") as handle:
+    # utf-8-sig: spreadsheets save "CSV UTF-8" with a byte-order mark, which would
+    # otherwise become part of the first column name.
+    with path.open(newline="", encoding="utf-8-sig") as handle:
         reader = csv.DictReader(handle)
         missing = [c for c in COLUMNS if c not in (reader.fieldnames or [])]
         if missing:

@@ -40,7 +40,22 @@ import type {
 
 type ModalName = 'photo' | 'trace' | 'guide' | 'export' | null;
 type Unit = 'mm' | 'in';
+// What "Try again" repeats. It names the failed operation rather than capturing it, so a retry
+// always runs with the inputs on screen when it is clicked, never with an earlier render's.
+type RetryAction =
+  | { kind: 'sample' }
+  | { kind: 'photo'; file: File; isSample: boolean }
+  | { kind: 'build'; openExport: boolean }
+  | { kind: 'retrace'; detail: Detail; threshold: number; inverted: boolean }
+  | { kind: 'proposal'; proposal: AssistantProposal }
+  | { kind: 'restore'; file: File }
+  | { kind: 'clear' };
 const MAX_FILE = 10 * 1024 * 1024;
+
+/** The backend's project-name rule: no control characters, no surrounding space, nonempty. */
+function cleanName(value: string) {
+  return value.replace(/[\u0000-\u001f\u007f]/g, '').trim() || 'Untitled part';
+}
 
 async function api<T>(url: string, init?: RequestInit): Promise<T> {
   const controller = new AbortController();
@@ -141,11 +156,14 @@ function Modal({
   eyebrow,
   children,
   onClose,
+  onFocusLost,
 }: {
   title: string;
   eyebrow?: string;
   children: ReactNode;
   onClose: () => void;
+  /** Receives the opener when closing into busy work left it disabled and unfocusable. */
+  onFocusLost: (opener: HTMLElement) => void;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
@@ -154,7 +172,10 @@ function Modal({
     dialog?.showModal();
     return () => {
       dialog?.close();
-      previousFocus?.focus();
+      if (!previousFocus || previousFocus === document.body || !previousFocus.isConnected) return;
+      previousFocus.focus();
+      // onFocusLost only records the element in a ref, so the first render's callback suffices.
+      if (document.activeElement !== previousFocus) onFocusLost(previousFocus);
     };
   }, []);
   return (
@@ -346,7 +367,8 @@ export default function App() {
   const [revision, setRevision] = useState(0);
   const [sample, setSample] = useState(true);
   const [busy, setBusy] = useState<string | null>('Loading sample…');
-  const [error, setError] = useState('');
+  const [error, setErrorMessage] = useState('');
+  const [retry, setRetry] = useState<RetryAction | null>(null);
   const [notice, setNotice] = useState('');
   const [modal, setModal] = useState<ModalName>(null);
   const [outline, setOutline] = useState(true);
@@ -357,7 +379,9 @@ export default function App() {
   const nameInput = useRef<HTMLInputElement>(null);
   const revisionRef = useRef(0);
   const sequenceRef = useRef(0);
-  const retryRef = useRef<(() => void) | null>(null);
+  // An element that lost focus because busy work disabled it, or a dialog that closed into busy
+  // work could not return focus to its disabled opener. Restored once the work finishes.
+  const pendingFocusRef = useRef<HTMLElement | null>(null);
   const unitFactor = unit === 'in' ? 25.4 : 1;
 
   const validWidth =
@@ -395,7 +419,7 @@ export default function App() {
     if (previous && previous.id !== result.id) releaseModel(previous.id);
   }
   function projectName() {
-    return name.trim().replace(/[\u0000-\u001f\u007f]/g, '') || 'Untitled part';
+    return cleanName(name);
   }
   function invalidate() {
     setAssistantUndo(null);
@@ -403,6 +427,45 @@ export default function App() {
     setRevision(next);
     setNotice('');
     return String(next);
+  }
+  /** Show (or clear) an error. Only an error given its own retry action offers "Try again". */
+  function setError(message: string, retryAction: RetryAction | null = null) {
+    setErrorMessage(message);
+    setRetry(message ? retryAction : null);
+  }
+  function retryFailed() {
+    if (!retry || busy) return;
+    switch (retry.kind) {
+      case 'sample':
+        return void loadSample();
+      case 'photo':
+        return void loadPhoto(retry.file, retry.isSample);
+      case 'build':
+        return void buildModel(retry.openExport);
+      case 'retrace':
+        return void retrace(retry.detail, retry.threshold, retry.inverted);
+      case 'proposal':
+        return void applyAssistantProposal(retry.proposal);
+      case 'restore':
+        return void restoreProject(retry.file);
+      case 'clear':
+        return void clearTemporaryExports();
+    }
+  }
+  function rememberFocus(element: Element | null) {
+    if (
+      !pendingFocusRef.current &&
+      element instanceof HTMLElement &&
+      element !== document.body &&
+      element.isConnected &&
+      !element.closest('dialog')
+    )
+      pendingFocusRef.current = element;
+  }
+  /** Start busy work, first noting the focused control that disabling it would strand. */
+  function startBusy(label: string) {
+    rememberFocus(document.activeElement);
+    setBusy(label);
   }
 
   async function requestTrace(
@@ -449,14 +512,13 @@ export default function App() {
     setError('');
     setNotice('');
     setModal(null);
-    setBusy('Finding the outline…');
-    retryRef.current = () => void loadPhoto(file, isSample);
+    startBusy('Finding the outline…');
     try {
       const result = await requestTrace(file, 'standard', -1, false);
       if (sequence !== sequenceRef.current) return;
       const projectName = isSample
         ? 'Mounting plate'
-        : file.name.replace(/\.[^.]+$/, '').slice(0, 100) || 'Untitled part';
+        : cleanName(file.name.replace(/\.[^.]+$/, '').slice(0, 100));
       const rev = invalidate();
       setTrace(result);
       setSourceFile(file);
@@ -484,16 +546,16 @@ export default function App() {
         window.setTimeout(() => widthInput.current?.focus(), 0);
       }
     } catch (err) {
-      if (sequence === sequenceRef.current) setError(errorText(err));
+      if (sequence === sequenceRef.current)
+        setError(errorText(err), { kind: 'photo', file, isSample });
     } finally {
       if (sequence === sequenceRef.current) setBusy(null);
     }
   }
 
   async function loadSample() {
-    setBusy('Loading sample…');
+    startBusy('Loading sample…');
     setError('');
-    retryRef.current = () => void loadSample();
     try {
       const response = await fetch('/sample.png');
       if (!response.ok)
@@ -503,7 +565,7 @@ export default function App() {
       const blob = await response.blob();
       await loadPhoto(new File([blob], 'mounting-plate.png', { type: 'image/png' }), true);
     } catch (err) {
-      setError(errorText(err));
+      setError(errorText(err), { kind: 'sample' });
       setBusy(null);
     }
   }
@@ -515,17 +577,53 @@ export default function App() {
     };
   }, []);
   useEffect(() => {
+    // Release this tab's temporary model files when the page goes away, so reloads and closed
+    // tabs do not fill the service's job limit. A page restored from the back/forward cache has
+    // lost those files, so it needs a rebuild before exporting.
+    const release = () => {
+      const owned = modelRef.current;
+      if (!owned) return;
+      modelRef.current = null;
+      void fetch(`/api/models/${encodeURIComponent(owned.id)}`, {
+        method: 'DELETE',
+        keepalive: true,
+      }).catch(() => {});
+    };
+    const restored = (event: PageTransitionEvent) => {
+      if (event.persisted) invalidate();
+    };
+    window.addEventListener('pagehide', release);
+    window.addEventListener('pageshow', restored);
+    return () => {
+      window.removeEventListener('pagehide', release);
+      window.removeEventListener('pageshow', restored);
+    };
+  }, []);
+  useEffect(() => {
     if (editingName) nameInput.current?.focus();
   }, [editingName]);
+  useEffect(() => {
+    // Disabling a focused control during busy work drops focus to the page body. Return it once
+    // the work and any dialog it opened are finished, unless the user has focused something else.
+    if (busy || modal) return;
+    const target = pendingFocusRef.current;
+    pendingFocusRef.current = null;
+    const active = document.activeElement;
+    if (
+      target?.isConnected &&
+      !target.matches(':disabled') &&
+      (!active || active === document.body)
+    )
+      target.focus();
+  }, [busy, modal]);
 
   async function buildModel(openExport = false) {
     if (!trace || !buildReady || busy) return;
     const sequence = ++sequenceRef.current;
     const rev = String(revisionRef.current);
-    setBusy('Building the CAD solid…');
+    startBusy('Building the CAD solid…');
     setError('');
     setNotice('');
-    retryRef.current = () => void buildModel(openExport);
     try {
       const result = await requestModel(trace.profile, widthMm, thicknessMm, projectName(), rev);
       if (sequence === sequenceRef.current && String(revisionRef.current) === rev) {
@@ -536,7 +634,7 @@ export default function App() {
         } else setNotice('Model updated. The preview and downloads now use these dimensions.');
       } else releaseModel(result.id);
     } catch (err) {
-      if (sequence === sequenceRef.current) setError(errorText(err));
+      if (sequence === sequenceRef.current) setError(errorText(err), { kind: 'build', openExport });
     } finally {
       if (sequence === sequenceRef.current) setBusy(null);
     }
@@ -545,14 +643,14 @@ export default function App() {
   async function retrace(newDetail: Detail, newThreshold = threshold, newInverted = inverted) {
     if (!sourceFile || busy) return false;
     const sequence = ++sequenceRef.current;
-    invalidate();
-    setBusy('Finding the outline…');
+    startBusy('Finding the outline…');
     setError('');
     setModal(null);
-    retryRef.current = () => void retrace(newDetail, newThreshold, newInverted);
     try {
       const result = await requestTrace(sourceFile, newDetail, newThreshold, newInverted);
       if (sequence !== sequenceRef.current) return false;
+      // Only a new outline makes the model outdated; a failed trace leaves it current.
+      invalidate();
       setTrace(result);
       setDetail(newDetail);
       setThreshold(newThreshold);
@@ -560,7 +658,13 @@ export default function App() {
       setNotice('Outline updated. Build the model to apply this trace.');
       return true;
     } catch (err) {
-      if (sequence === sequenceRef.current) setError(errorText(err));
+      if (sequence === sequenceRef.current)
+        setError(errorText(err), {
+          kind: 'retrace',
+          detail: newDetail,
+          threshold: newThreshold,
+          inverted: newInverted,
+        });
       return false;
     } finally {
       if (sequence === sequenceRef.current) setBusy(null);
@@ -595,7 +699,8 @@ export default function App() {
         proposal.inverted ?? inverted,
       );
       if (!success) {
-        retryRef.current = () => void applyAssistantProposal(proposal);
+        // If the trace failed with a retryable error, retry the whole suggestion, not the trace.
+        setRetry((failed) => (failed ? { kind: 'proposal', proposal } : failed));
         return false;
       }
     } else invalidate();
@@ -608,24 +713,34 @@ export default function App() {
   function undoAssistantProposal() {
     if (!assistantUndo || busy) return;
     const previous = assistantUndo;
-    // A generated replacement may already have released the old export files.
-    // Restore only the previous preview, and rebuild before allowing downloads.
     const ownedModel = modelRef.current;
-    modelRef.current = null;
-    if (ownedModel) releaseModel(ownedModel.id);
-    invalidate();
+    // Every other edit clears the undo, so if no build replaced the model since the suggestion
+    // was applied, the restored settings are exactly the ones it was built from: keep it current.
+    const unchanged = !!ownedModel && ownedModel.id === previous.preview?.id;
+    if (!unchanged) {
+      // A generated replacement may already have released the old export files.
+      // Restore only the previous preview, and rebuild before allowing downloads.
+      modelRef.current = null;
+      if (ownedModel) releaseModel(ownedModel.id);
+    }
+    const rev = invalidate();
     setTrace(previous.trace);
     setDetail(previous.detail);
     setThreshold(previous.threshold);
     setInverted(previous.inverted);
     setDesign(previous.design);
-    setModel(previous.preview);
+    if (unchanged) {
+      const restored = { ...ownedModel, revision: rev };
+      modelRef.current = restored;
+      setModel(restored);
+    } else setModel(previous.preview);
     setError('');
-    retryRef.current = null;
     setNotice(
-      previous.preview
-        ? 'Previous preview, outline and design settings restored. Your measurements are unchanged. Rebuild to refresh exports.'
-        : 'Previous outline and design settings restored. Your measurements are unchanged. Build to create a fresh preview and exports.',
+      unchanged
+        ? 'Previous outline and design settings restored. The model and its downloads match them again.'
+        : previous.preview
+          ? 'Previous preview, outline and design settings restored. Your measurements are unchanged. Rebuild to refresh exports.'
+          : 'Previous outline and design settings restored. Your measurements are unchanged. Build to create a fresh preview and exports.',
     );
   }
 
@@ -636,11 +751,14 @@ export default function App() {
     }
     setError('');
     setModal(null);
-    setBusy('Opening project…');
+    startBusy('Opening project…');
     const sequence = ++sequenceRef.current;
-    retryRef.current = () => void restoreProject(file);
+    // Retrying cannot fix an invalid file, only a failed build of a valid one.
+    let retryable = false;
     try {
       const recipe = parseRecipe(JSON.parse(await file.text()));
+      // Saved names may predate, or bypass, the rule the service enforces.
+      const restoredName = cleanName(recipe.name);
       const restoredDesign = recipe.version === 2 ? recipe.design! : { ...DEFAULT_DESIGN };
       const bounds = getBounds(recipe.profile);
       if (bounds.width <= 0 || bounds.height <= 0)
@@ -652,7 +770,7 @@ export default function App() {
       });
       if (restoredError) throw new Error(`This project could not be opened. ${restoredError}`);
       const rev = invalidate();
-      setName(recipe.name);
+      setName(restoredName);
       setWidth(recipe.width_mm.toFixed(4));
       setThickness(recipe.thickness_mm.toFixed(4));
       setUnit('mm');
@@ -679,11 +797,12 @@ export default function App() {
         ],
       });
       setBusy('Building the CAD solid…');
+      retryable = true;
       const built = await requestModel(
         recipe.profile,
         recipe.width_mm,
         recipe.thickness_mm,
-        recipe.name,
+        restoredName,
         rev,
         restoredDesign,
       );
@@ -692,7 +811,8 @@ export default function App() {
         setNotice('Project restored and rebuilt.');
       } else releaseModel(built.id);
     } catch (err) {
-      if (sequence === sequenceRef.current) setError(errorText(err));
+      if (sequence === sequenceRef.current)
+        setError(errorText(err), retryable ? { kind: 'restore', file } : null);
     } finally {
       if (sequence === sequenceRef.current) setBusy(null);
     }
@@ -722,8 +842,11 @@ export default function App() {
   function changeUnit(next: Unit) {
     if (next === unit) return;
     const factor = next === 'in' ? 25.4 : 1;
-    if (validWidth) setWidth((widthMm / factor).toFixed(next === 'in' ? 6 : 4));
-    if (validThickness) setThickness((thicknessMm / factor).toFixed(next === 'in' ? 6 : 4));
+    // Convert every entered number, valid or not, so the field keeps showing the stored length.
+    if (width.trim() !== '' && Number.isFinite(widthMm))
+      setWidth((widthMm / factor).toFixed(next === 'in' ? 6 : 4));
+    if (thickness.trim() !== '' && Number.isFinite(thicknessMm))
+      setThickness((thicknessMm / factor).toFixed(next === 'in' ? 6 : 4));
     setUnit(next);
   }
   function openTrace() {
@@ -783,15 +906,14 @@ export default function App() {
     } catch (err) {
       const message = errorText(err);
       setExportError(message);
-      setError(message);
-      retryRef.current = () => void buildModel(true);
+      setError(message, { kind: 'build', openExport: true });
     } finally {
       setDownloading(null);
     }
   }
   async function clearTemporaryExports() {
     if (busy) return;
-    setBusy('Clearing temporary exports…');
+    startBusy('Clearing temporary exports…');
     setError('');
     try {
       await api<{ deleted: number }>('/api/models', { method: 'DELETE' });
@@ -804,7 +926,7 @@ export default function App() {
       );
     } catch (err) {
       setModal(null);
-      setError(errorText(err));
+      setError(errorText(err), { kind: 'clear' });
     } finally {
       setBusy(null);
     }
@@ -933,9 +1055,11 @@ export default function App() {
               <strong>We couldn’t complete that step.</strong>
               <span>{error}</span>
             </div>
-            <button className="text-button" disabled={!!busy} onClick={() => retryRef.current?.()}>
-              Try again
-            </button>
+            {retry && (
+              <button className="text-button" disabled={!!busy} onClick={retryFailed}>
+                Try again
+              </button>
+            )}
             <button className="icon-button" aria-label="Dismiss error" onClick={() => setError('')}>
               <X size={19} />
             </button>
@@ -958,7 +1082,8 @@ export default function App() {
                   title={outline ? 'Hide outline' : 'Show outline'}
                   aria-label={outline ? 'Hide outline' : 'Show outline'}
                   aria-pressed={outline}
-                  disabled={!trace}
+                  // Without a photo the outline is all there is to show, so it cannot be hidden.
+                  disabled={!trace?.image.data_url}
                   onClick={() => setOutline(!outline)}
                 >
                   {outline ? <Eye size={22} /> : <EyeSlash size={22} />}
@@ -1312,6 +1437,7 @@ export default function App() {
           title="Start from a photo."
           eyebrow="PHOTO TO PROFILE"
           onClose={() => setModal(null)}
+          onFocusLost={rememberFocus}
         >
           <p className="modal-intro">
             One flat part, a contrasting background, and a straight-on view. We’ll trace the
@@ -1363,6 +1489,7 @@ export default function App() {
           title="Make the outline match."
           eyebrow="REVIEW YOUR TRACE"
           onClose={() => setModal(null)}
+          onFocusLost={rememberFocus}
         >
           <p className="modal-intro">
             The cyan line becomes the edge of your part. Check the outside boundary and every hole
@@ -1430,6 +1557,7 @@ export default function App() {
           title="A better photo. A better outline."
           eyebrow="CAPTURE GUIDE"
           onClose={() => setModal(null)}
+          onFocusLost={rememberFocus}
         >
           <p className="modal-intro">
             Designed for flat parts with a constant thickness: plates, gaskets, spacers, and
@@ -1505,6 +1633,7 @@ export default function App() {
           title="Your part, ready for the next tool."
           eyebrow="REVIEW & EXPORT"
           onClose={() => setModal(null)}
+          onFocusLost={rememberFocus}
         >
           <p className="modal-intro">
             Review the dimensions, then choose your format. These files match the current preview.

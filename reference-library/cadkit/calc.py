@@ -71,6 +71,13 @@ def _finite(name: str, value: float) -> float:
     return value
 
 
+def _finite_result(name: str, value: float) -> float:
+    """Reject a result that overflowed (inf) or became NaN: the inputs are out of range."""
+    if not math.isfinite(value):
+        raise ValueError(f"{name} is too large to represent; check the inputs")
+    return value
+
+
 # --- Section 5: planar scale and uncertainty -------------------------------
 
 def planar_scale(known_length_mm: float, reference_px: float) -> float:
@@ -122,8 +129,13 @@ def ratio_uncertainty(p: float, up: float, pref: float, upref: float, lref: floa
     upref = _nonnegative("upref", upref)
     ulref = _nonnegative("ulref", ulref)
     length = p * lref / pref
-    relative = math.sqrt((up / p) ** 2 + (ulref / lref) ** 2 + (upref / pref) ** 2)
+    try:
+        relative = math.sqrt((up / p) ** 2 + (ulref / lref) ** 2 + (upref / pref) ** 2)
+    except OverflowError:  # a squared ratio beyond the float range
+        relative = math.inf
     u = length * relative
+    for name, value in (("length", length), ("relative uncertainty", relative), ("u", u), ("2u", 2.0 * u)):
+        _finite_result(name, value)
     return {
         "length": length,
         "u": u,
@@ -135,12 +147,20 @@ def ratio_uncertainty(p: float, up: float, pref: float, upref: float, lref: floa
 
 # --- Section 12: tessellation ------------------------------------------------
 
+def _segment_count(n) -> int:
+    try:
+        whole = int(n)
+    except (TypeError, ValueError, OverflowError):  # None, NaN, infinity
+        whole = None
+    if whole is None or whole != n or whole < 3:
+        raise ValueError(f"n must be an integer of at least 3, got {n!r}")
+    return whole
+
+
 def chord_error(radius: float, n: int) -> float:
     """Maximum radial (sagitta) error of a circle drawn with ``n`` equal chords."""
     radius = _positive("radius", radius)
-    if int(n) != n or n < 3:
-        raise ValueError(f"n must be an integer of at least 3, got {n!r}")
-    return radius * (1.0 - math.cos(math.pi / int(n)))
+    return radius * (1.0 - math.cos(math.pi / _segment_count(n)))
 
 
 def min_segments(radius: float, error: float) -> int:
@@ -162,7 +182,7 @@ def chord_report(radius: float, error: float | None = None, segments: int | None
     if error is not None:
         n = min_segments(radius, error)
     else:
-        n = int(segments)
+        n = _segment_count(segments)  # 3.5 is invalid, as in chord_error, not truncated to 3
     result = {
         "radius_mm": float(radius),
         "segments": n,
@@ -340,7 +360,10 @@ def gear_pair(module: float, z1: int, z2: int, pressure_angle_deg: float = 20.0)
         if int(z) != z or z < 1:
             raise ValueError(f"{name} must be a positive integer")
     z1, z2 = int(z1), int(z2)
-    alpha = math.radians(_positive("pressure_angle_deg", pressure_angle_deg))
+    pressure_angle_deg = float(pressure_angle_deg)
+    if not 0.0 < pressure_angle_deg < 90.0:  # also rejects NaN
+        raise ValueError(f"pressure_angle_deg must be between 0 and 90 degrees, got {pressure_angle_deg!r}")
+    alpha = math.radians(pressure_angle_deg)
     undercut_limit = 2.0 / math.sin(alpha) ** 2
     warnings = []
     for name, z in (("z1", z1), ("z2", z2)):
@@ -367,7 +390,11 @@ def wind_power(rho: float, area_m2: float, v: float, cp: float) -> float:
     cp = _nonnegative("cp", cp)
     if cp > BETZ_LIMIT:
         raise ValueError(f"cp = {cp:g} exceeds the Betz limit 16/27 = {BETZ_LIMIT:.4f}")
-    return 0.5 * rho * area_m2 * v ** 3 * cp
+    try:
+        power = 0.5 * rho * area_m2 * v ** 3 * cp
+    except OverflowError:  # v ** 3 beyond the float range
+        power = math.inf
+    return _finite_result("power", power)
 
 
 def wind_report(rho: float, area_m2: float, v: float, cp: float) -> dict:

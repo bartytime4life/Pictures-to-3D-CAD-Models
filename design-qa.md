@@ -54,7 +54,7 @@ The capture run recorded no page exceptions and no horizontal overflow. The desi
 
 **Open Questions / accepted differences**
 
-- The reference depicts a demonstration height of 30 mm; the real traced sample produces 34.01 mm at an 80 mm width. The interface reports the calculated geometry instead of copying a mock measurement.
+- The reference depicts a demonstration height of 30 mm; the real traced sample produces 34.05 mm at an 80 mm width. The interface reports the calculated geometry instead of copying a mock measurement.
 - The photo-derived outline is polygonal. The app does not add decorative bevels or analytic circles that are absent from the generated solid.
 - Named, keyboard-accessible view buttons replace the illustrative orientation cube. Outline dots show sampled geometry; direct vertex editing is outside this release.
 - Helpful sample labeling, explicit units, and capture guidance add modest content beyond the static concept.

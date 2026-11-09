@@ -2,6 +2,31 @@
 
 All dates are 2026. Revisions are numbered in `library.json`, which feeds the HTML, the PDF, and the archive name. Revision 3 is the first revision kept in this repository; Revisions 1 and 2 were distributed as ZIP archives.
 
+## Revision 4 maintenance (November 8, 2026)
+
+Fixes from a review of the toolkit after Revision 4 merged. The revision number, archive name, and content are unchanged apart from the items below. The handbook and PDF are unchanged; `index.html` changes only because it inlines `cadcalc.js`.
+
+### Fixed
+
+- **A malformed ASCII STL facet is invalid input.** The reader matched only plain decimals, so it skipped `vertex nan nan nan`, `inf`, `1,5`, and `1D+01`, and the following vertices regrouped across facets. A box plus such a facet reported `status: pass` with exit code 0. Each `vertex` line must now hold three numbers and each facet exactly three vertices; otherwise `meshcheck` exits 2 and names the line. NaN and infinite coordinates are rejected as they are in binary files.
+- **Invalid input no longer exits 1.** Exit code 1 means a check failed, yet malformed `--points` JSON, a directory or unreadable file, an unusable `new-project` path, and arithmetic overflow ended in a traceback with exit code 1. `--points` is now validated against its two documented shapes. The CLI reports type, index, file-system, and overflow errors as one `error: …` line with exit code 2. `uncertainty` and `wind` results too large to represent raise `ValueError` in Python and an error in the browser, instead of a traceback or infinity.
+- **The homography query point is checked.** `homography --at nan nan --json` printed bare `NaN`, which is not valid JSON. A pixel beyond the plane's vanishing line got a confident mapping: in the review's example, pixel (500, 50) mapped to y = −3000 mm with a local scale of 56 mm/px and no warning, although it does not image the plane at all. Python and the browser now require a finite point on the control points' side of the vanishing line (the same sign of `w`) and refuse any other with the same message.
+- **Coupon rounding matches Python at exact ties.** The browser rounded exact binary ties such as 0.0078125 away from zero, while Python rounds them to even, so `coupon --start 0.0078125` gave 0.007813 in the browser and 0.007812 in Python. A double is such a tie only when it is an odd multiple of 1/128, and those values now take the even digit in both.
+- **Range checks.**
+  - `wind --diameter -2` returned a power estimate, because squaring the diameter drops its sign. The CLI now requires a positive diameter, as the browser does.
+  - The gear pressure angle must lie strictly between 0° and 90° in both languages. Previously 95° was accepted, and 180° gave an undercut limit of 1.3 × 10³² teeth.
+  - `depth` silently ignored `--z-range` without `--delta-range`, or the reverse; it now exits 2.
+  - `--weld-tol` must be positive, finite, at most 1e100, and large enough for the coordinates. `inf` welded every vertex together, `nan` gave a confusing message, and `1e-320` overflowed the welding grid.
+  - `chord_report(10, segments=3.5)` truncated to 3 segments; it now raises `ValueError`, like `chord_error`.
+- **Byte-order marks.** A register saved as "CSV UTF-8" by a spreadsheet starts with a byte-order mark and failed with "missing columns parameter_id". Registers and `--points` files are now read with `utf-8-sig`.
+- **The verification record keeps the last link check.** `make verify` wrote `"external_links": null` whenever the network link check had not been run on that machine, erasing the most recent result that `VERIFICATION.md` describes. It now keeps the previously recorded result until `make links` produces a new one.
+- **Degenerate-face wording.** `cadkit/README.md` said degenerate faces are excluded from the topology checks. Only collapsed faces, with fewer than three distinct welded vertices, are excluded. Zero-area slivers are counted as degenerate, which fails `meshcheck`, but their edges still count. The code is unchanged; the README now says this, and a test locks it in.
+
+### Added
+
+- Regression tests for each item: 28 Python tests, 3 Node test groups that compare both languages, and 2 browser assertions (the homography refusal and the wind calculator's diameter check). Each code fix's test failed before the fix.
+- `cadkit/README.md` describes what exit code 2 covers, the homography `at` rule, ASCII STL parsing, the weld-tolerance bounds, and the new shared conventions.
+
 ## Revision 4 (November 8, 2026)
 
 ### Added

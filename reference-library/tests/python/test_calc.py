@@ -203,3 +203,32 @@ class ReviewRegressions(unittest.TestCase):
         with self.assertRaises(ValueError):
             calc.rounding_uncertainty(1, "in", 400)
         self.assertAlmostEqual(calc.rounding_uncertainty(1, "IN", 12)["half_interval_mm"], 0.5e-12 * 25.4)
+
+
+class Revision4Review(unittest.TestCase):
+    """Review of Revision 4: invalid API input raises ValueError, as cadkit/README.md states."""
+
+    def test_overflowing_results_are_value_errors(self):
+        with self.assertRaisesRegex(ValueError, "too large"):
+            calc.wind_power(1.225, 1, 1e110, 0.3)  # v ** 3 used to raise OverflowError
+        with self.assertRaisesRegex(ValueError, "too large"):
+            calc.wind_power(1e300, 1e300, 1, 0.3)  # finite inputs, infinite product
+        with self.assertRaisesRegex(ValueError, "too large"):
+            calc.ratio_uncertainty(1, 1e200, 1, 1, 1, 1)
+        with self.assertRaisesRegex(ValueError, "too large"):
+            calc.ratio_uncertainty(1e300, 0, 1e-300, 0, 1, 0)
+        self.assertAlmostEqual(calc.wind_power(1.225, 1, 5, 0.3), 0.5 * 1.225 * 125 * 0.3)
+
+    def test_pressure_angle_is_between_0_and_90_degrees(self):
+        for angle in (95, 180, 90, 0, -20, float("nan"), float("inf")):
+            with self.assertRaisesRegex(ValueError, "pressure_angle_deg", msg=angle):
+                calc.gear_pair(2, 20, 40, angle)
+        self.assertAlmostEqual(calc.gear_pair(2, 20, 40, 14.5)["undercut_limit_teeth"], 2 / math.sin(math.radians(14.5)) ** 2)
+
+    def test_chord_report_rejects_a_fractional_segment_count(self):
+        for n in (3.5, 2, float("inf"), float("nan")):
+            with self.assertRaisesRegex(ValueError, "integer of at least 3", msg=n):
+                calc.chord_report(10, segments=n)
+            with self.assertRaisesRegex(ValueError, "integer of at least 3", msg=n):
+                calc.chord_error(10, n)
+        self.assertEqual(calc.chord_report(10, segments=4.0)["segments"], 4)

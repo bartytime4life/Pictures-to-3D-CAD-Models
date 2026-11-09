@@ -10,16 +10,16 @@
   "figures": 11,
   "route_combinations": 35,
   "python_tests": {
-    "ran": 129,
+    "ran": 157,
     "skipped": 2,
     "status": "passed"
   },
   "node_tests": {
-    "passed": 22,
+    "passed": 25,
     "failed": 0
   },
   "browser_checks": {
-    "assertions": 99,
+    "assertions": 101,
     "transport": "file",
     "local_files_checked": 28,
     "in_page_anchors_checked": 119,
@@ -34,7 +34,7 @@
     "errors": []
   },
   "photo_workspace_checks": {
-    "checked_at": "2026-11-09T02:40:44.200Z",
+    "checked_at": "2026-11-09T05:31:39.835Z",
     "revision": 4,
     "status": "passed",
     "transport": "file",

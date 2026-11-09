@@ -19,7 +19,7 @@ class PrintGeometryError(ValueError):
 def load_printer_catalog():
     if not CATALOG_PATH.is_file():
         return {"schema_version": 1, "source": None, "printers": []}
-    return json.loads(CATALOG_PATH.read_text())
+    return json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
 
 
 def printer_by_id(printer_id):

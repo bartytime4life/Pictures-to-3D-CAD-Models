@@ -27,6 +27,7 @@ type PrinterProfile = {
     nozzle_diameters_mm: number[];
     build_volume: { x_mm: number; y_mm: number; z_mm: number };
     bed_shape: string;
+    printable_area_mm?: number[][] | null;
     excluded_areas_mm: number[][][];
     min_layer_height_mm: number | null;
     max_layer_height_mm: number | null;
@@ -122,6 +123,20 @@ export default function PrintSettings({
       profile.nozzle_diameters_mm.includes(design.nozzle_mm),
     ) ?? [];
   const selectedProfile = matchingProfiles.length === 1 ? matchingProfiles[0] : null;
+  // Like the service's fit check (backend/printing.py), several matching profiles are not
+  // ambiguous for bed fit when they all describe the same bed.
+  const bedGeometry = (profile: (typeof matchingProfiles)[number]) =>
+    JSON.stringify([
+      profile.build_volume,
+      profile.bed_shape,
+      profile.printable_area_mm ?? null,
+      profile.excluded_areas_mm,
+    ]);
+  const sharedBedProfile =
+    matchingProfiles.length > 1 && new Set(matchingProfiles.map(bedGeometry)).size === 1
+      ? matchingProfiles[0]
+      : null;
+  const bedProfile = selectedProfile ?? sharedBedProfile;
   const queryTokens = normalizeSearch(search).match(/[\p{L}\p{N}]+/gu) ?? [];
   const matches =
     catalog?.printers.filter((item) =>
@@ -538,9 +553,11 @@ export default function PrintSettings({
                   </dl>
                 ) : (
                   <p>
-                    {matchingProfiles.length
-                      ? 'More than one profile matches this nozzle. The build-volume check needs manual review.'
-                      : 'No exact profile matches this nozzle. Check your printer hardware and slicer profile.'}
+                    {sharedBedProfile
+                      ? `${matchingProfiles.length} profiles match this nozzle. They describe the same ${sharedBedProfile.bed_shape} bed, which the build-volume check uses; their other slicer settings may differ, so check the profile you print with.`
+                      : matchingProfiles.length
+                        ? 'More than one profile matches this nozzle, with different beds. The build-volume check needs manual review.'
+                        : 'No exact profile matches this nozzle. Check your printer hardware and slicer profile.'}
                   </p>
                 )}
                 <p>
@@ -549,9 +566,9 @@ export default function PrintSettings({
                   describe slicer settings, not verified hardware. Check your exact printer and
                   material requirements.
                 </p>
-                {((selectedProfile?.bed_shape ?? selectedPrinter.bed_shape) !== 'rectangular' ||
-                  (selectedProfile?.excluded_areas_mm ?? selectedPrinter.excluded_areas_mm)
-                    ?.length > 0) && (
+                {((bedProfile?.bed_shape ?? selectedPrinter.bed_shape) !== 'rectangular' ||
+                  (bedProfile?.excluded_areas_mm ?? selectedPrinter.excluded_areas_mm)?.length >
+                    0) && (
                   <p>
                     This profile has a shaped bed or excluded areas. Automatic fit may be unknown;
                     check placement in your slicer.

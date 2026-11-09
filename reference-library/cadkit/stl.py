@@ -12,7 +12,6 @@ self-intersections (handbook section 12).
 from __future__ import annotations
 
 import math
-import re
 import struct
 from pathlib import Path
 from typing import Iterable, Sequence
@@ -21,9 +20,6 @@ from . import calc
 
 Vec = tuple[float, float, float]
 Triangle = tuple[Vec, Vec, Vec]
-
-_FLOAT = r"[-+]?(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?"
-_VERTEX = re.compile(rf"vertex\s+({_FLOAT})\s+({_FLOAT})\s+({_FLOAT})", re.IGNORECASE)
 
 
 def _is_binary(data: bytes) -> bool:
@@ -46,10 +42,49 @@ def read_stl(path: str | Path) -> list[Triangle]:
     text = data.decode("utf-8", errors="replace")
     if not text.lstrip().lower().startswith("solid"):
         raise ValueError(f"{path}: not a recognizable ASCII or binary STL")
-    verts = [tuple(float(g) for g in m.groups()) for m in _VERTEX.finditer(text)]
-    if len(verts) % 3:
-        raise ValueError(f"{path}: vertex count {len(verts)} is not a multiple of 3")
-    return [tuple(verts[i:i + 3]) for i in range(0, len(verts), 3)]
+    return _read_ascii(path, text)
+
+
+def _read_ascii(path, text: str) -> list[Triangle]:
+    """Parse ASCII facets line by line; any malformed facet or coordinate is invalid input.
+
+    Each ``vertex`` line must hold three numbers and each ``facet`` ... ``endfacet``
+    block exactly three vertices, so a bad token cannot be skipped and let the
+    following vertices regroup across facets.
+    """
+    tris: list[Triangle] = []
+    facet: list[Vec] | None = None  # vertices of the open facet
+    start = 0
+    for lineno, line in enumerate(text.splitlines(), start=1):
+        parts = line.split()
+        key = parts[0].lower() if parts else ""
+        if key == "facet":
+            if facet is not None:
+                raise ValueError(f"{path}:{start}: facet has no endfacet before line {lineno}")
+            facet, start = [], lineno
+        elif key == "vertex":
+            if facet is None:
+                raise ValueError(f"{path}:{lineno}: vertex outside a facet")
+            if len(parts) != 4:
+                raise ValueError(f"{path}:{lineno}: a vertex needs three coordinates, got {len(parts) - 1}")
+            try:
+                x, y, z = (float(t) for t in parts[1:])
+            except ValueError:
+                raise ValueError(f"{path}:{lineno}: vertex coordinates {' '.join(parts[1:])!r} are not numbers") from None
+            if not (math.isfinite(x) and math.isfinite(y) and math.isfinite(z)):
+                raise ValueError(f"{path}:{lineno}: vertex ({x}, {y}, {z}) is not finite; "
+                                 "the file holds NaN or infinite coordinates")
+            facet.append((x, y, z))
+        elif key == "endfacet":
+            if facet is None:
+                raise ValueError(f"{path}:{lineno}: endfacet without a facet")
+            if len(facet) != 3:
+                raise ValueError(f"{path}:{start}: facet has {len(facet)} vertices; STL facets have exactly 3")
+            tris.append((facet[0], facet[1], facet[2]))
+            facet = None
+    if facet is not None:
+        raise ValueError(f"{path}:{start}: facet has no endfacet (truncated file?)")
+    return tris
 
 
 def _sub(a: Vec, b: Vec) -> Vec:
@@ -65,6 +100,8 @@ def _dot(a: Vec, b: Vec) -> float:
 
 
 _NEIGHBOURS = tuple((i, j, k) for i in (-1, 0, 1) for j in (-1, 0, 1) for k in (-1, 0, 1))
+# Far beyond any mesh; keeps the squared tolerance and neighbour distances finite.
+MAX_WELD_TOL = 1e100
 
 
 class _Welder:
@@ -92,7 +129,11 @@ class _Welder:
         x, y, z = float(p[0]), float(p[1]), float(p[2])
         if not (math.isfinite(x) and math.isfinite(y) and math.isfinite(z)):
             raise ValueError(f"vertex ({x}, {y}, {z}) is not finite; the file holds NaN or infinite coordinates")
-        cx, cy, cz = math.floor(x / self.tol), math.floor(y / self.tol), math.floor(z / self.tol)
+        qx, qy, qz = x / self.tol, y / self.tol, z / self.tol
+        if not (math.isfinite(qx) and math.isfinite(qy) and math.isfinite(qz)):
+            raise ValueError(f"weld_tol {self.tol:g} is too small for a vertex at ({x:g}, {y:g}, {z:g}): "
+                             "the welding grid would overflow")
+        cx, cy, cz = math.floor(qx), math.floor(qy), math.floor(qz)
         best, best_d2 = -1, self.tol2
         cells, points = self.cells, self.points
         for dx, dy, dz in _NEIGHBOURS:
@@ -148,8 +189,9 @@ def _nonmanifold_vertices(faces: Sequence[tuple[int, int, int]],
 
 def analyze(triangles: Sequence[Triangle], weld_tol: float = 1e-6) -> dict:
     """Topology and geometry summary of a triangle soup."""
-    if weld_tol <= 0:
-        raise ValueError("weld_tol must be positive")
+    weld_tol = float(weld_tol)
+    if not (math.isfinite(weld_tol) and 0 < weld_tol <= MAX_WELD_TOL):
+        raise ValueError(f"weld_tol must be a positive finite number no larger than {MAX_WELD_TOL:g}, got {weld_tol!r}")
     n_tri = len(triangles)
     if n_tri == 0:
         raise ValueError("mesh has no triangles")

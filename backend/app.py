@@ -2,6 +2,7 @@
 
 import asyncio
 import json
+import logging
 import os
 import re
 import shutil
@@ -24,8 +25,13 @@ from .tracing import MAX_BYTES, TraceError, trace_image
 ROOT = Path(__file__).resolve().parent.parent
 JOB_ROOT = Path(os.environ.get("PICTURES_CAD_JOB_DIR", ROOT / ".local" / "jobs")).resolve()
 TTL_SECONDS = 3600
+CLEANUP_INTERVAL = 60
 MAX_JOBS = 20
 BUILD_TIMEOUT = 60
+# Files only this app writes into a job directory: the build request, then the worker's
+# result or failure. Expiry never removes a directory without one, so a shared
+# PICTURES_CAD_JOB_DIR keeps other programs' similarly named directories.
+JOB_MARKERS = ("input.json", "result.json", "error.json")
 DOWNLOADS = {
     "step": ("model.step", "application/step"),
     "stl": ("model.stl", "model/stl"),
@@ -34,18 +40,24 @@ DOWNLOADS = {
     "parts": ("parts.zip", "application/zip"),
 }
 UUID_PATTERN = re.compile(r"^[0-9a-f]{32}$")
+logger = logging.getLogger(__name__)
 
 
 def cleanup_jobs():
     JOB_ROOT.mkdir(parents=True, exist_ok=True)
     now = time.time()
     for path in JOB_ROOT.iterdir():
-        if (
-            UUID_PATTERN.fullmatch(path.name)
-            and path.is_dir()
-            and now - path.stat().st_mtime >= TTL_SECONDS
-        ):
-            shutil.rmtree(path)
+        try:
+            expired = (
+                UUID_PATTERN.fullmatch(path.name)
+                and path.is_dir()
+                and now - path.stat().st_mtime >= TTL_SECONDS
+                and any((path / marker).is_file() for marker in JOB_MARKERS)
+            )
+        except OSError:  # Removed or made unreadable meanwhile; check again next time.
+            continue
+        if expired:
+            shutil.rmtree(path, ignore_errors=True)
 
 
 @asynccontextmanager
@@ -57,8 +69,11 @@ async def lifespan(app):
 
     async def expire_jobs():
         while True:
-            await asyncio.sleep(60)
-            cleanup_jobs()
+            await asyncio.sleep(CLEANUP_INTERVAL)
+            try:
+                cleanup_jobs()
+            except Exception:  # One failed pass must not end expiry for the service's lifetime.
+                logger.exception("Temporary model cleanup failed; it will be retried.")
 
     reaper = asyncio.create_task(expire_jobs())
     try:
@@ -239,9 +254,10 @@ async def build(request: BuildRequest):
         job_id = uuid.uuid4().hex
         job_dir = JOB_ROOT / job_id
         job_dir.mkdir(mode=0o700)
-        (job_dir / "input.json").write_text(request.model_dump_json())
         process = None
         try:
+            # Explicit UTF-8: names may be non-ASCII and the locale default may not be UTF-8.
+            (job_dir / "input.json").write_text(request.model_dump_json(), encoding="utf-8")
             process = await asyncio.create_subprocess_exec(
                 sys.executable,
                 "-m",
@@ -262,14 +278,14 @@ async def build(request: BuildRequest):
             if process.returncode != 0 or not (job_dir / "result.json").is_file():
                 failure = job_dir / "error.json"
                 if failure.is_file():
-                    info = json.loads(failure.read_text())
+                    info = json.loads(failure.read_text(encoding="utf-8"))
                     if info.get("public") is True and isinstance(info.get("error"), str):
                         raise HTTPException(422, info["error"][:500])
                 raise HTTPException(
                     422,
                     "This outline could not be converted to a solid. Reduce detail or remove very narrow features and try again.",
                 )
-            result = json.loads((job_dir / "result.json").read_text())
+            result = json.loads((job_dir / "result.json").read_text(encoding="utf-8"))
             (job_dir / "input.json").unlink(missing_ok=True)
             return result
         except BaseException:
@@ -339,10 +355,14 @@ async def frontend(path: str):
     if path == "api" or path.startswith("api/"):
         raise HTTPException(404, "API route not found.")
     dist = (ROOT / "frontend" / "dist").resolve()
-    target = (dist / path).resolve()
-    if not target.is_relative_to(dist):
-        raise HTTPException(404, "File not found.")
-    if target.is_file():
+    try:
+        target = (dist / path).resolve()
+        if not target.is_relative_to(dist):
+            raise HTTPException(404, "File not found.")
+        found = target.is_file()
+    except (OSError, ValueError):  # A null byte or overlong name cannot name a file here.
+        raise HTTPException(404, "File not found.") from None
+    if found:
         return FileResponse(target)
     if path:
         raise HTTPException(404, "File not found.")
