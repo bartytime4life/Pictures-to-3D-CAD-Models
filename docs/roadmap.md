@@ -2,7 +2,9 @@
 
 ## Current product boundary
 
-The workflow is a single-user photo-to-profile workbench for one connected, constant-thickness source part. It provides visible outline review, measured width and thickness, explicit design scales, relative-detail choices, approximate color/material preview, editable printer-volume planning, and optional straight-cut parts. CAD/mesh/profile exports and a version 2 recipe preserve the generated result and design choices; version 1 recipes remain importable.
+The workflow is a single-user photo-to-profile workbench for one connected, constant-thickness source part. It provides visible outline review, scale from either the complete outside width or two points on a known feature, a separate thickness input, an optional independent source-height comparison, explicit design scales, relative-detail choices, approximate color/material preview, editable printer-volume planning, and optional straight-cut parts. CAD/mesh/profile exports preserve geometry; a version 2 recipe also preserves design choices and optional reference/check inputs. Earlier version 1 and version 2 recipes remain importable.
+
+Known-feature endpoints can be selected on the working-image preview or entered numerically. Their measured length defines one uniform scale, and the outside-height comparison does not adjust geometry. These features help review a source photograph; they do not correct perspective or lens distortion, quantify physical accuracy, or certify fabrication suitability. See the [capture guide](capture-guide.md) for the coordinate frame, assumptions, and held-out checks.
 
 An optional local Ollama assistant provides text guidance and reviewable trace/design/print-setting proposals. Its integration is separate from geometric conversion; model downloads and live quality comparisons are still subject to the [recorded verification status](ollama.md#current-cloud-verification-status).
 
@@ -12,8 +14,7 @@ The current implementation and [validation results](validation.md) are the sourc
 
 | Direction | User benefit | Evidence needed before release |
 | --- | --- | --- |
-| Two-point calibration | Use a known feature instead of the whole horizontal span | Keyboard-accessible endpoint controls, correct coordinate transforms, short-reference handling |
-| Additional measured cross-checks | Detect inconsistent scale or perspective sooner | Clear distinction between a warning and actual camera calibration |
+| Additional measured feature checks | Compare reserved hole spacings or other dimensions beyond the current outside-height check | Unambiguous feature selection, preserved model revision, and clear separation of checks from values used to set scale |
 | Manual profile correction | Repair a small tracing error without retaking the photo | Undo/redo, topology validation, accessible editing, consistent export revisions |
 | Lens and perspective correction | Improve suitable off-axis captures | Explicit calibration assumptions and measured accuracy on reference parts |
 | Parametric CAD recipes | Make more of the construction editable downstream | A defined feature schema, stable regeneration, and version migration |

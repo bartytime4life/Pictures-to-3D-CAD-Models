@@ -1,6 +1,6 @@
 # Pictures to CAD
 
-Turn a photograph of a **flat, constant-thickness part** into a scaled CAD solid. Review the traced outline beside an interactive 3D model, enter a real width and thickness, then export for your next tool.
+Turn a photograph of a **flat, constant-thickness part** into a scaled CAD solid. Review the traced outline beside an interactive 3D model, set scale from a real measurement and enter thickness, then export for your next tool.
 
 The workbench is designed for plates, gaskets, spacers, and templates. It traces what is visible in the photograph; it does not recover hidden geometry or infer physical dimensions.
 
@@ -64,7 +64,7 @@ Refresh the assistant's connection after the download. This is a provisional CPU
 1. **Start with the sample.** The supplied demonstration image is traced and converted by the same pipeline as an uploaded photograph.
 2. **Choose a photo.** Upload a PNG, JPEG, or WebP containing one flat part against a contrasting background.
 3. **Review the outline.** Check the boundary and every through-hole. Adjust the tracing controls if the selection is wrong.
-4. **Set the dimensions.** Enter the measured width of the entire part along the image's horizontal axis, then enter its measured thickness separately.
+4. **Set the dimensions.** Enter the measured outside width, or open **Use a known feature**, mark two endpoints, enter their real separation, and apply the scale. Enter measured thickness separately. Use the optional **Independent height check** to compare another measurement before design resizing.
 5. **Choose design and print settings.** Keep the measured size or set explicit XY and thickness scales, preview a color and material, choose a printer or custom volume, and decide whether to keep one piece or generate straight-cut parts.
 6. **Inspect and export.** Rotate the model, compare it with the photograph, rebuild after edits, review each piece's geometric bed fit, and choose a format.
 
@@ -84,14 +84,14 @@ The bundled searchable [printer catalog](docs/printer-catalog.md) covers 429 mod
 | STL | Slicing or mesh workflows | Triangle surfaces in assembled positions; millimeter coordinates, no color |
 | DXF | A flat profile for a CAD or CAM workflow | The planar boundary and holes |
 | Parts ZIP | Importing generated pieces separately | A STEP and STL per piece, plus a manifest |
-| Project JSON | Restoring the workbench settings | Version 2 outline, measured inputs, design and print plan; version 1 imports remain supported |
+| Project JSON | Restoring the workbench settings | Version 2 outline, measurements, optional endpoint reference and height check, design and print plan; version 1 imports remain supported |
 
 See [export formats and dimensional checks](docs/exports.md) before transferring a part to fabrication software.
 
 ## Honest limits
 
 - A single image supplies a 2D outline. Thickness is entered by the user; recesses, sloped walls, threads, and hidden features are not reconstructed.
-- One reference width sets uniform scale. It does not correct perspective, lens distortion, or an out-of-plane part.
+- One outside width or two-point reference sets uniform scale. It does not correct perspective, lens distortion, or an out-of-plane part.
 - Tracing approximates pixel boundaries. Smooth-looking geometry is not evidence of manufacturing accuracy.
 - Relative detail can simplify the CAD outline; it does not recover missing image detail or establish a minimum printable wall thickness.
 - Split exports use straight cuts without joinery, kerf, or assembly tolerances. Combined STEP/STL exports show the assembled geometry, not separated parts arranged on a print bed.

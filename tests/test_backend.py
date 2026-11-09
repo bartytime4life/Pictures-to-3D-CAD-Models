@@ -258,6 +258,18 @@ def test_unusable_images_have_recoverable_errors(client, data):
     assert isinstance(response.json()["detail"], str)
 
 
+def test_damaged_png_chunk_length_is_recoverable_and_releases_trace_slot(client):
+    data = bytearray(encoded(plate()))
+    # Keep a recognizable PNG header but truncate the declared compressed-data
+    # chunk. Pillow opens it, then raises SyntaxError while loading its pixels.
+    chunk_type = data.index(b"IDAT")
+    struct.pack_into(">I", data, chunk_type - 4, 4)
+    response = trace(client, bytes(data))
+    assert response.status_code == 422
+    assert "could not be decoded" in response.json()["detail"]
+    assert trace(client).status_code == 200
+
+
 def test_upload_size_limit(client):
     response = trace(client, b"x" * (10 * 1024 * 1024 + 1))
     assert response.status_code == 413

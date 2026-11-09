@@ -124,6 +124,7 @@ def trace_image(
         UnidentifiedImageError,
         OSError,
         ValueError,
+        SyntaxError,  # A damaged PNG chunk can fail only when its pixels are loaded.
         Image.DecompressionBombError,
         Image.DecompressionBombWarning,
     ) as exc:
