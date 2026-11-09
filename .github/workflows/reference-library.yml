@@ -36,14 +36,16 @@ jobs:
         run: make test PYTHON=.venv/bin/python CAD_REFERENCE_PYTHON=.venv/bin/python
       - name: OpenSCAD plate pipeline
         run: .venv/bin/python examples/build_plate.py --require-openscad
-      - name: Browser check of offline file
+      - name: Browser checks of offline file (page and Photos workspace)
         run: |
           CAD_REFERENCE_BROWSER_TRANSPORT=file make check
           cp tmp/qa/browser-check.json tmp/qa/browser-check-file.json
-      - name: Browser check over loopback HTTP
+          cp tmp/qa/photo-check.json tmp/qa/photo-check-file.json
+      - name: Browser checks over loopback HTTP (page and Photos workspace)
         run: |
           CAD_REFERENCE_BROWSER_TRANSPORT=http make check
           cp tmp/qa/browser-check.json tmp/qa/browser-check-http.json
+          cp tmp/qa/photo-check.json tmp/qa/photo-check-http.json
       - name: Upload screenshots and check records
         if: always()
         uses: actions/upload-artifact@v4

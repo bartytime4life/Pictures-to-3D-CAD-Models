@@ -48,6 +48,7 @@ test-node:
 
 check:
 	"$(NODE)" scripts/check-library.mjs
+	"$(NODE)" scripts/check-photos.mjs
 
 links:
 	"$(NODE)" scripts/check-links.mjs

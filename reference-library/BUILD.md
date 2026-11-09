@@ -1,6 +1,6 @@
 # Building, testing, and packaging the library
 
-Reading the HTML or the PDF needs no tools: open `index.html` in a browser. The handbook, catalog filters, and Toolkit calculators all work offline. Source links need internet access.
+Reading the HTML or the PDF needs no tools: open `index.html` in a browser. The handbook, catalog filters, Toolkit calculators, and Photos workspace all work offline. Source links need internet access. Saving photos requires browser support for IndexedDB and image decoding, plus available local storage.
 
 ## Requirements
 
@@ -35,7 +35,7 @@ Run these from `reference-library/`.
 | --- | --- |
 | `make build` | `calc` → `figures` → `html` → `pdf` |
 | `make test` | Python `unittest` and `node --test` (including JavaScript-vs-Python agreement) |
-| `make check` | Browser end-to-end check of `index.html`; screenshots go to `tmp/qa/` |
+| `make check` | Browser end-to-end checks of `index.html` (`check-library.mjs`) and of the Photos workspace (`check-photos.mjs`); records and screenshots go to `tmp/qa/` |
 | `make plate` | Render the synthetic plate with OpenSCAD and run its design-rule checks |
 | `make links` | Request every catalog URL and write `tmp/qa/link-check.json` (network) |
 | `make refresh-github` | Update the repository metadata in `sources.json` (network) |
@@ -74,12 +74,24 @@ To run a step directly:
 | `HANDBOOK.md`, `RESEARCH-NOTES.md`, `templates/*.md` | HTML and PDF text | `make html pdf` |
 | `scripts/figures.py` | all figures (SVG and PDF) | `make figures html pdf` |
 | `assets/data/routes.json` | route finder (HTML, CLI) and route map | `make figures html` |
-| `assets/data/calculators.json`, `assets/js/*.js`, `assets/css/library.css` | Toolkit and page interface (inlined into `index.html`) | `make html` |
+| `assets/data/calculators.json`, `assets/js/*.js`, `assets/css/*.css`, `assets/photo-workspace.html` | Toolkit, Photos workspace, and page interface (inlined into `index.html`) | `make html` |
 | `cadkit/*.py` | CLI, examples, Python tests | `make test` |
 | `examples/plate-parameters.csv` | plate render and checks | `make plate` |
 | `library.json` | revision label, dates, archive name | `make build dist` |
 
 Never edit generated files by hand: `index.html`, `sources.csv`, `REFERENCES.md`, `GITHUB.md`, `assets/figures/*.svg`, the PDF, and `verification.json`. `SHA256SUMS` and `dist/` are also generated and are not committed.
+
+## Photo workspace
+
+The HTML build inlines `assets/photo-workspace.html`, `assets/css/photos.css`, and the scripts `assets/js/photos.js` and `assets/js/photo-workspace.js`. The core photo module owns storage, validation, and scale calculations; the workspace script connects those operations to the page. The Photos tab follows Toolkit, and Worksheets remains the last tab.
+
+The browser stores original image files and photo details in IndexedDB, separately from repository files and generated artifacts. No photo is included in an HTML rebuild, PDF, or distribution archive. There is no fixed photo-count limit; imports are processed sequentially, and storage availability determines how many photos fit. The per-file limits are 50 MiB and 60 megapixels. Supported input types are JPEG, PNG, and WebP.
+
+Photo measurements are simple pixel-length ratios with a known real length. They assume a front-on view and a shared plane, and do not correct perspective or perform photogrammetry. View coverage is based on user-supplied labels, not an analysis of image quality or reconstruction completeness.
+
+Browser storage can be unavailable, exhausted, cleared, or isolated by browser profile and origin. Keep original images outside the application. The downloadable manifest contains metadata and measurement records only; it cannot restore image files. When testing, use synthetic images in a disposable browser profile and check persistence within the same origin. A normal HTML rebuild does not migrate data between browser profiles or origins.
+
+`scripts/check-photos.mjs` runs in fresh, isolated browser contexts with generated images and writes `tmp/qa/photo-check.json`. It honours `CAD_REFERENCE_BROWSER_TRANSPORT` like the main check, through the same loopback server (`scripts/lib/serve.mjs`). Because browser storage is per origin, a pass over HTTP does not establish that a particular browser saves photos for a `file://` page.
 
 ## Reproducibility
 
@@ -113,6 +125,8 @@ Never edit generated files by hand: `index.html`, `sources.csv`, `REFERENCES.md`
 | `test_docs` fails after an edit | A document disagrees with the data; the message names the file and value |
 | `make verify` stops after writing | Update `VERIFICATION.md` to match the new `verification.json` (test counts, browser assertions, plate checks, PDF pages), then run `make verify` again. Until then `make test` also fails, because `test_docs` compares the two files |
 | Plate tests skipped | OpenSCAD is not on `PATH`. This is expected on machines without it |
+| Photos cannot be saved | Check the page's storage message; use a normal browser profile with IndexedDB enabled and free space |
+| Previously added photos are missing | Return to the same browser profile and page origin; clearing browser data removes locally stored photos |
 
 ## Provenance
 

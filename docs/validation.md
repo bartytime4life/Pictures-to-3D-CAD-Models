@@ -2,6 +2,16 @@
 
 Validated November 8, 2026, in the managed Linux environment. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
 
+## Reference library Revision 4: Photos workspace
+
+This change set adds the library's offline Photos workspace (Revision 4). It shares the browser checks' loopback server so the Photos check runs over both transports, and it keeps `reference-library/.venv` out of the library archive. The workbench code is unchanged. The run below used the same workstation and tools as the section that follows.
+
+- Root commands: `make setup-library` completed, then `make test-library` passed. It ran **129 Python tests** and **22 Node test groups**, then **99 page assertions** and **48 Photos assertions** over loopback HTTP.
+- Library: `make release` passed with both browser checks over `file://` (99 and 48 assertions) and **16/16** plate checks after an OpenSCAD render. Two PDF, HTML, and archive builds were each byte-identical, and ReportLab 4.4.9 and 4.5.1 produced the same PDF.
+- Workbench: **146 Python tests** and `make lint` passed. The Chromium scenarios were not rerun because no workbench code changed.
+
+The Photos checks use generated images in fresh browser contexts. They do not establish that a particular browser keeps photos for a `file://` page, and they are not a reconstruction or accuracy benchmark.
+
 ## Mesh interoperability and library review fixes
 
 This change set addresses the automated review findings on the reference library's STL checker and homography calculator. It also adds `tests/test_mesh_interop.py`, which runs the library's independent STL checker on workbench exports. The run below used the local Linux workstation: Python 3.12.3, Node.js 22.13.1, uv 0.11.16, Google Chrome 157.0.8103.38 through `PLAYWRIGHT_CHROMIUM_EXECUTABLE`, and OpenSCAD 2021.01.
@@ -80,7 +90,7 @@ These runs use `ubuntu-latest`, Python 3.12, and Node.js 24. They validate that 
 
 Earlier workbench evidence remains available: the [feature run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42528243229) passed for `f4b924517c6f58fe34686f380c478e55ba67d4ef`; the [original CAD run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42519068333) passed for `96d73c6ef1b6ee50759f1835e63717835772b4f1`.
 
-The library has a separate [verification record](../reference-library/VERIFICATION.md) describing its 129 Python tests, 12 Node test groups, and browser assertions. Those checks are additional to the workbench's 146 Python tests and 15 browser scenarios; they do not evaluate real photograph reconstruction, physical printing, or LLM quality. Counts, skips, and browser transport belong to the particular recorded invocation rather than the mere presence of a test command.
+The library has a separate [verification record](../reference-library/VERIFICATION.md) describing its 129 Python tests, 22 Node test groups, and browser assertions. Those checks are additional to the workbench's 146 Python tests and 15 browser scenarios; they do not evaluate real photograph reconstruction, physical printing, or LLM quality. Counts, skips, and browser transport belong to the particular recorded invocation rather than the mere presence of a test command.
 
 ## Geometry and API evidence
 

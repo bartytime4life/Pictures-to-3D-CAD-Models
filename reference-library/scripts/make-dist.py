@@ -24,7 +24,8 @@ TOP = LIB_DIR.parent
 LIB = json.loads((LIB_DIR / 'library.json').read_text(encoding='utf-8'))
 MANIFEST = LIB_DIR / 'SHA256SUMS'
 ARCHIVE = LIB_DIR / 'dist' / LIB['archive_name']
-EXCLUDE_DIRS = {'tmp', 'dist', 'node_modules', '__pycache__', '.pytest_cache', '.git'}
+# .venv and .cache come from `make setup-library` at the repository root; never package them.
+EXCLUDE_DIRS = {'tmp', 'dist', 'node_modules', '__pycache__', '.pytest_cache', '.ruff_cache', '.git', '.venv', '.cache'}
 EXCLUDE_PATHS = {'examples/output'}
 EXCLUDE_NAMES = {'.DS_Store', 'SHA256SUMS', 'Thumbs.db'}
 

@@ -78,6 +78,14 @@ elif browser:
     if (QA / 'browser-check.json').stat().st_mtime < (ROOT / 'index.html').stat().st_mtime:
         problems.append('index.html changed after the last browser check; run `make check`')
 links = load(QA / 'link-check.json', required=False)
+photos = load(QA / 'photo-check.json') or {}
+if photos and photos.get('status') != 'passed':
+    problems.append('photo workspace browser check did not pass')
+elif photos:
+    if photos.get('revision') != LIB['revision']:
+        problems.append('photo workspace check is from another revision; run `make check`')
+    if (QA / 'photo-check.json').stat().st_mtime < (ROOT / 'index.html').stat().st_mtime:
+        problems.append('index.html changed after the photo workspace check; run `make check`')
 build = load(ROOT / 'tmp/build-info.json') or {}
 pdf = ROOT / 'output/pdf/pictures-to-printable-cad.pdf'
 pdf_bytes = pdf.read_bytes() if pdf.exists() else b''
@@ -111,6 +119,8 @@ record = {
                        'in_page_anchors_checked': browser.get('in_page_anchors_checked'),
                        'desktop_viewport': browser.get('desktop_viewport'), 'mobile_viewport': browser.get('mobile_viewport'),
                        'errors': browser.get('browser_errors')},
+    # page_url is machine-specific (a local path or a random port); the transport is kept.
+    'photo_workspace_checks': {k: v for k, v in photos.items() if k != 'page_url'},
     'external_links': None if not links else {'checked_at': links['summary']['checked_at'], 'total': links['summary']['total'],
                                                'ok': links['summary']['ok'], 'blocked': links['summary']['blocked'],
                                                'timeout': links['summary']['timeout'], 'broken': links['summary']['broken'],

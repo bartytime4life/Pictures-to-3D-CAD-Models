@@ -8,10 +8,9 @@
 // theme toggle, deep links, and desktop/mobile layouts. Writes screenshots and
 // tmp/qa/browser-check.json. It does not visit external websites (see check-links.mjs).
 import fs from 'node:fs';
-import http from 'node:http';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
 import { ROOT, requireModule, findChrome, readJSON, validateSources } from './lib/runtime.mjs';
+import { browserTransport, openTransport } from './lib/serve.mjs';
 
 const { chromium } = requireModule('playwright');
 const sources = readJSON('sources.json');
@@ -22,7 +21,7 @@ const results = { checks: [] };
 const qaFile = path.join(ROOT, 'tmp/qa/browser-check.json');
 const transport = process.env.CAD_REFERENCE_BROWSER_TRANSPORT || 'file';
 let browser;
-let server;
+let served;
 let pageUrl;
 const assert = (condition, message) => {
   if (!condition) throw new Error('FAILED: ' + message);
@@ -32,52 +31,8 @@ const assert = (condition, message) => {
 fs.mkdirSync(path.dirname(qaFile), { recursive: true });
 fs.rmSync(qaFile, { force: true });
 
-// Serve only published reader content. Never expose scripts, dependencies,
-// environment files, or the parent repository; realpath also excludes symlinks
-// escaping the library. The two Python examples are downloadable source text.
-const publishedFiles = new Set([
-  'index.html', 'HANDBOOK.md', 'REFERENCES.md', 'sources.csv', 'cadkit/README.md',
-  'examples/build_plate.py', 'examples/calculate.py', 'examples/calculation-results.json',
-  'examples/clearance-coupon.scad', 'examples/plate-parameters.csv',
-  'examples/two-hole-plate.scad', 'examples/two-hole-plate.svg',
-  'output/pdf/pictures-to-printable-cad.pdf',
-]);
-const mimeTypes = {
-  '.html': 'text/html; charset=utf-8', '.svg': 'image/svg+xml',
-  '.pdf': 'application/pdf', '.json': 'application/json', '.csv': 'text/csv; charset=utf-8',
-};
-function servePublishedFile(request, response) {
-  if (!['GET', 'HEAD'].includes(request.method)) {
-    response.writeHead(405, { Allow: 'GET, HEAD' }).end();
-    return;
-  }
-  try {
-    const pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
-    const relative = pathname === '/' ? 'index.html' : pathname.slice(1);
-    const allowed = publishedFiles.has(relative)
-      || /^assets\/figures\/[a-z0-9-]+\.svg$/.test(relative)
-      || /^templates\/[a-zA-Z0-9-]+\.(md|csv)$/.test(relative);
-    if (!allowed) { response.writeHead(404).end(); return; }
-    const realFile = fs.realpathSync(path.join(ROOT, relative));
-    if (!realFile.startsWith(fs.realpathSync(ROOT) + path.sep) || !fs.statSync(realFile).isFile()) {
-      response.writeHead(404).end(); return;
-    }
-    const body = fs.readFileSync(realFile);
-    response.writeHead(200, {
-      'Content-Type': mimeTypes[path.extname(realFile)] || 'text/plain; charset=utf-8',
-      'Content-Length': body.length, 'Cache-Control': 'no-store',
-      'X-Content-Type-Options': 'nosniff',
-    });
-    response.end(request.method === 'HEAD' ? undefined : body);
-  } catch {
-    response.writeHead(404).end();
-  }
-}
-
 try {
-if (!['file', 'http'].includes(transport)) {
-  throw new Error('CAD_REFERENCE_BROWSER_TRANSPORT must be file or http.');
-}
+browserTransport();
 
 const problems = validateSources(sources);
 assert(problems.length === 0, 'catalog passes schema validation' + (problems.length ? ': ' + problems.join('; ') : ''));
@@ -86,15 +41,8 @@ const categoryCount = (c) => sources.filter((s) => s.category === c).length;
 
 const qa = path.join(ROOT, 'tmp/qa');
 fs.mkdirSync(qa, { recursive: true });
-pageUrl = pathToFileURL(path.join(ROOT, 'index.html')).href;
-if (transport === 'http') {
-  server = http.createServer(servePublishedFile);
-  await new Promise((resolve, reject) => {
-    server.once('error', reject);
-    server.listen(0, '127.0.0.1', resolve);
-  });
-  pageUrl = `http://127.0.0.1:${server.address().port}/index.html`;
-}
+served = await openTransport(transport);
+pageUrl = served.pageUrl;
 browser = await chromium.launch({ headless: true, executablePath: findChrome() });
 const context = await browser.newContext({ viewport: { width: 1440, height: 1050 } });
 const page = await context.newPage();
@@ -119,8 +67,8 @@ for (const ref of uniqueLocal) assert(fs.existsSync(path.resolve(ROOT, decodeURI
 const anchors = await page.evaluate(() => [...document.querySelectorAll('a[href^="#"]')].map((a) => a.getAttribute('href').slice(1)).filter(Boolean));
 const missingAnchors = await page.evaluate((ids) => ids.filter((id) => !document.getElementById(id.split('?')[0])), [...new Set(anchors)]);
 assert(missingAnchors.length === 0, 'every in-page link has a target' + (missingAnchors.length ? ': ' + missingAnchors.join(', ') : ''));
-await page.evaluate(() => Promise.all([...document.images].map((img) => { img.loading = 'eager'; return img.decode().catch(() => {}); })));
-const brokenImages = await page.evaluate(() => [...document.images].filter((i) => !(i.complete && i.naturalWidth > 0)).map((i) => i.getAttribute('src')));
+await page.evaluate(() => Promise.all([...document.images].filter((img) => img.getAttribute('src')).map((img) => { img.loading = 'eager'; return img.decode().catch(() => {}); })));
+const brokenImages = await page.evaluate(() => [...document.images].filter((i) => i.getAttribute('src') && !(i.complete && i.naturalWidth > 0)).map((i) => i.getAttribute('src')));
 assert(brokenImages.length === 0, 'all figures and images load' + (brokenImages.length ? ': ' + brokenImages.join(', ') : ''));
 const figureCount = await page.locator('.prose figure.fig').count();
 assert(figureCount >= 8, `handbook shows ${figureCount} captioned figures`);
@@ -255,7 +203,7 @@ await page.emulateMedia({ colorScheme: 'light' });
 
 // ---- mobile -------------------------------------------------------------------------------
 await page.setViewportSize({ width: 390, height: 844 });
-for (const tab of ['handbook', 'toolkit', 'sources', 'github', 'worksheets']) {
+for (const tab of ['handbook', 'toolkit', 'photos', 'sources', 'github', 'worksheets']) {
   await page.goto(pageUrl + '#' + tab);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   assert(overflow <= 1, `no horizontal page overflow on mobile: ${tab}`);
@@ -290,9 +238,6 @@ console.log(JSON.stringify({ status: results.status, checks: results.check_count
   try {
     await browser?.close();
   } finally {
-    if (server) {
-      server.closeAllConnections();
-      await new Promise((resolve) => server.close(resolve));
-    }
+    await served?.close();
   }
 }

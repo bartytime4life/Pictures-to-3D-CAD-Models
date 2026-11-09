@@ -1,6 +1,6 @@
 {
   "checked_date": "2026-11-08",
-  "revision": 3,
+  "revision": 4,
   "status": "passed",
   "source_records": 86,
   "unique_urls": 86,
@@ -15,14 +15,14 @@
     "status": "passed"
   },
   "node_tests": {
-    "passed": 12,
+    "passed": 22,
     "failed": 0
   },
   "browser_checks": {
-    "assertions": 98,
+    "assertions": 99,
     "transport": "file",
     "local_files_checked": 28,
-    "in_page_anchors_checked": 117,
+    "in_page_anchors_checked": 119,
     "desktop_viewport": [
       1440,
       1050
@@ -32,6 +32,92 @@
       844
     ],
     "errors": []
+  },
+  "photo_workspace_checks": {
+    "checked_at": "2026-11-09T01:53:35.007Z",
+    "revision": 4,
+    "status": "passed",
+    "transport": "file",
+    "checks": [
+      "Photo workspace opens directly from its hash",
+      "File chooser accepts multiple photographs",
+      "File chooser advertises supported raster formats",
+      "First batch saves 30 distinct synthetic photographs",
+      "Saved-photo count reflects the full collection",
+      "First gallery page renders 24 cards for a larger collection",
+      "Next page reaches the six remaining photographs",
+      "Later batches add new photographs and report duplicate content",
+      "Multiple imports retain earlier photographs across gallery pages",
+      "Reload restores all saved photographs",
+      "Collection listing contains metadata without original image payloads",
+      "Stored original bytes retain their SHA-256 fingerprint separately from the thumbnail",
+      "Filename search filters the photo collection",
+      "Selecting a photograph opens the metadata and measurement dialog",
+      "Four image clicks map rendered positions into original-image pixel coordinates",
+      "Pointer-picked reference and target produce the expected scale estimate and endpoint overlay",
+      "A 100-pixel reference of 10 mm and 50-pixel target estimate 5 mm",
+      "Out-of-image coordinates are rejected before saving",
+      "Invalid coordinates do not leave a usable estimate",
+      "Photo notes are treated as text, never executable markup",
+      "Viewpoint labels filter the collection",
+      "Labels and notes persist when reopening the photograph",
+      "Saved notes are searchable",
+      "Downloaded manifest excludes original images and thumbnail blobs",
+      "Manifest records SHA-256 photograph identifiers",
+      "Manifest includes saved labels, notes, and measurement evidence",
+      "Concurrent duplicate imports commit one photograph atomically",
+      "Simulated quota failure rejects the new photo while retaining saved photos and metadata",
+      "Quota failure explains the storage problem",
+      "Unsupported and corrupt inputs leave the existing collection intact",
+      "Import failures identify each rejected filename",
+      "Import errors provide a usable file-format or decoding explanation",
+      "Removing a saved photograph asks for explicit confirmation",
+      "Deleting one photograph updates the filtered gallery",
+      "Individual deletion persists across reloads",
+      "Imports and stored metadata raise no unexpected dialogs or script execution",
+      "Photo gallery has no horizontal overflow at 390 pixels",
+      "Photo detail dialog has no horizontal overflow at 390 pixels",
+      "Dropped batch can be cancelled after the active file while retaining already saved photos",
+      "Cancelled import explains how to continue with remaining files",
+      "Reselecting a cancelled batch resumes safely and skips previously saved content",
+      "Browser storage restrictions disable importing before any photos are accepted",
+      "Unavailable storage has visible recovery guidance",
+      "photo-save: details cannot change while the mutation is pending",
+      "photo-save: late completion preserves a different photograph's open draft",
+      "photo-remove: details cannot change while the mutation is pending",
+      "photo-remove: late completion preserves a different photograph's open draft",
+      "No browser script or console errors"
+    ],
+    "browser_errors": [],
+    "scope": "Isolated Chromium profile; synthetic PNG fixtures only. Multi-batch imports, durable browser storage, SHA-256 deduplication, paging, metadata, same-plane estimates, export, deletion, invalid files, quota failure, and responsive layout. This is not a 3D reconstruction or real-object accuracy benchmark.",
+    "pointer_measurement_mm": 4.999500848557454,
+    "manifest_bytes": 12442,
+    "manifest_top_level_keys": [
+      "schema",
+      "version",
+      "exportedAt",
+      "photos"
+    ],
+    "storage_checks": {
+      "beforeCount": 32,
+      "afterCount": 33,
+      "afterQuotaCount": 33,
+      "added": 1,
+      "quotaRejected": true,
+      "quotaMessage": "Photo storage is full. Remove photos from this workspace or free browser storage, then try again. Keep your original files.",
+      "savedMetadataRetained": true
+    },
+    "drop_cancel_saved_count": 3,
+    "synthetic_images_imported": 33,
+    "desktop_viewport": [
+      1440,
+      1050
+    ],
+    "mobile_viewport": [
+      390,
+      844
+    ],
+    "check_count": 48
   },
   "external_links": {
     "checked_at": "2026-11-08T21:57:47.393Z",
@@ -45,8 +131,8 @@
       "https://mci.si.edu/3d-technologies"
     ]
   },
-  "pdf_pages": 54,
-  "pdf_sha256": "30b268b6644a044bb8adffcb627fd50390d3396bcb3c86e3b6e8c3c1903cbfce",
+  "pdf_pages": 55,
+  "pdf_sha256": "a586547493414c1d722e5b336551fc68120a26336afeb48872a68d5857c815c0",
   "pdf_catalog_urls_linked": 86,
   "synthetic_calculations": "passed",
   "openscad_plate_checks": {

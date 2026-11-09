@@ -245,15 +245,142 @@ h1, h2 { font-family: Georgia, "DejaVu Serif", serif; font-weight: 500; line-hei
   body { font-size: 11pt; background: white; color: black; }
 }
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+/* Local photo workspace. Uses the library's light and dark theme tokens. */
+.photo-workspace [hidden], .photo-dialog [hidden] { display: none !important; }
+.photo-workspace button, .photo-dialog button { cursor: pointer; }
+.photo-workspace button:disabled, .photo-dialog button:disabled { opacity: .55; cursor: not-allowed; }
+.photo-intro { display: flex; justify-content: space-between; align-items: start; gap: 24px; margin-bottom: 8px; }
+.photo-intro .panel-title { margin-top: 8px; }
+.photo-local { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; margin-top: 15px; border: 1px solid var(--line); background: var(--surface); padding: 6px 12px; border-radius: 999px; font-size: 12px; color: var(--muted); }
+.photo-local span { color: var(--teal); font-size: 10px; }
+.photo-small { font-size: 12.5px; line-height: 1.6; color: var(--muted); }
+.photo-start { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(260px, 1fr); gap: 22px; }
+.photo-drop-zone { display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px dashed var(--line-strong); border-radius: 12px; padding: 28px; background: var(--surface); text-align: center; min-width: 0; }
+.photo-drop-zone.is-dragging, .photo-drop-zone.dragging, .photo-drop-zone[data-dragging="true"] { border-color: var(--blue); background: var(--surface-2); box-shadow: inset 0 0 0 2px var(--blue); }
+.photo-add-icon { color: var(--blue); margin-bottom: 8px; }
+.photo-drop-zone h3 { font-family: Georgia, "DejaVu Serif", serif; font-size: 23px; font-weight: 500; line-height: 1.3; margin: 8px 0; }
+.photo-drop-zone > p { max-width: 530px; margin: 4px 0 15px; color: var(--muted); font-size: 14px; }
+.photo-drop-zone .photo-small { font-size: 12px; margin: 9px 0 0; }
+.photo-file-label { position: relative; cursor: pointer; font-weight: 650; padding: 10px 22px; }
+.photo-file-label:focus-within { outline: 3px solid var(--focus); outline-offset: 3px; }
+.photo-file-input { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; border: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.photo-file-label:has(input:disabled) { opacity: .55; cursor: not-allowed; }
+.photo-import-progress { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; width: 100%; margin-top: 8px; }
+.photo-import-progress progress { width: min(100%, 280px); accent-color: var(--teal); height: 10px; }
+.photo-drop-zone .photo-status { margin: 8px 0 0; font-size: 12.5px; overflow-wrap: anywhere; }
+.photo-capture-note { border: 1px solid var(--line); border-radius: 12px; background: var(--surface-2); padding: 25px; }
+.photo-capture-note h3 { font-family: Georgia, "DejaVu Serif", serif; font-size: 24px; font-weight: 500; line-height: 1.25; margin: 8px 0 16px; }
+.photo-capture-note ol { padding-left: 22px; margin: 0; font-size: 13px; color: var(--muted); }
+.photo-capture-note li { padding-left: 4px; margin: 12px 0; }
+.photo-capture-note li::marker { font-weight: 700; color: var(--teal); }
+.photo-capture-note strong { color: var(--ink); }
+.photo-capture-note > p, .photo-capture-note > a { font-size: 12.5px; }
+.photo-capture-note > p { color: var(--muted); margin: 18px 0 12px; }
+.photo-storage-note { padding: 15px 0 20px; border-bottom: 1px solid var(--line); }
+.photo-storage-note p { max-width: 1000px; font-size: 12.5px; color: var(--muted); margin: 4px 0; }
+.photo-storage-note strong { color: var(--ink); }
+.photo-section-heading, .photo-library-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.photo-section-heading h3, .photo-library-heading h3 { margin: 0; font-size: 17px; }
+.photo-coverage-panel { padding: 22px 0; border-bottom: 1px solid var(--line); }
+.photo-coverage { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 9px; }
+.photo-coverage .photo-badge, .photo-coverage > span { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); border-radius: 6px; padding: 5px 11px; background: var(--surface); font-size: 12px; color: var(--muted); }
+.photo-coverage .covered, .photo-coverage .is-covered, .photo-coverage [data-covered="true"] { border-color: var(--teal); color: var(--teal); background: var(--surface-2); }
+.photo-coverage-panel > p { margin: 7px 0 0; }
+.photo-library-heading { margin: 28px 0 18px; }
+.photo-library-heading p { margin: 3px 0 0; }
+.photo-export-group { display: flex; flex-direction: column; gap: 5px; align-items: flex-end; }
+.photo-export-group .photo-small { font-size: 11px; }
+.photo-filters { display: grid; grid-template-columns: minmax(0, 2fr) minmax(160px, 1fr); gap: 16px; max-width: 760px; margin-bottom: 20px; }
+.photo-filters label, .photo-detail-controls > label, .photo-measure > label { display: block; font-size: 12px; font-weight: 700; }
+.photo-filters input, .photo-filters select, .photo-detail-controls input, .photo-detail-controls select, .photo-detail-controls textarea { display: block; width: 100%; margin-top: 6px; padding: 10px 11px; border: 1px solid var(--line-strong); background: var(--surface); border-radius: 6px; font-size: 14px; font-weight: 400; }
+.photo-detail-controls textarea { resize: vertical; min-height: 88px; }
+.photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 18px; }
+.photo-card { display: block; min-width: 0; border: 1px solid var(--line); border-radius: 10px; padding: 0; background: var(--surface); overflow: hidden; color: var(--ink); text-align: left; box-shadow: 0 1px 2px rgb(23 43 55 / 4%); }
+button.photo-card, .photo-card > button { cursor: pointer; }
+.photo-card:hover { border-color: var(--line-strong); box-shadow: var(--shadow); }
+.photo-card > button { display: block; width: 100%; border: 0; padding: 0; color: inherit; background: transparent; text-align: left; }
+.photo-thumb { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: contain; background: var(--surface-2); border-bottom: 1px solid var(--line); }
+.photo-thumb img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.photo-card-body { display: block; padding: 12px 14px 14px; }
+.photo-card-meta, .photo-card-note { display: block; font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+.photo-card-note { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: 6px; }
+.photo-errors { max-height: 200px; overflow: auto; text-align: left; font-size: 13px; color: var(--err-ink); overflow-wrap: anywhere; width: 100%; }
+.photo-card-name { display: block; font-size: 13px; font-weight: 650; line-height: 1.4; margin: 0 0 8px; overflow-wrap: anywhere; }
+.photo-card-body p { margin: 6px 0 0; font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+.photo-badge { display: inline-block; background: var(--surface-2); color: var(--blue); border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 600; line-height: 1.6; }
+.photo-empty { padding: 42px 20px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); text-align: center; }
+.photo-empty h3 { font: 500 26px/1.3 Georgia, "DejaVu Serif", serif; margin: 8px 0; }
+.photo-empty p { font-size: 14px; color: var(--muted); max-width: 510px; margin: 0 auto; }
+.photo-pagination { display: flex; align-items: center; justify-content: center; gap: 18px; margin: 24px 0 0; }
+
+.photo-dialog { width: min(1160px, calc(100% - 32px)); max-width: none; max-height: calc(100dvh - 40px); padding: 0; border: 1px solid var(--line-strong); border-radius: 14px; background: var(--paper); color: var(--ink); box-shadow: 0 20px 70px rgb(0 0 0 / 30%); }
+.photo-dialog::backdrop { background: rgb(10 20 28 / 70%); backdrop-filter: blur(3px); }
+.photo-dialog-header { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 20px 24px; border-bottom: 1px solid var(--line); }
+.photo-dialog-header h2 { font-size: 25px; margin: 5px 0 0; overflow-wrap: anywhere; }
+.photo-dialog-header > div { min-width: 0; }
+.photo-dialog-header button { flex-shrink: 0; }
+.photo-detail-layout { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(300px, 1fr); align-items: start; gap: 24px; padding: 24px; }
+.photo-viewer { min-width: 0; background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
+.photo-image-stage { position: relative; width: 100%; overflow: hidden; background: var(--surface); }
+.photo-image-stage.is-marking, .photo-image-stage[data-marking="true"] { cursor: crosshair; }
+#photo-image { display: block; width: 100%; height: auto; }
+#photo-overlay { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+#photo-detail-info { margin: 10px 0 0; overflow-wrap: anywhere; }
+.photo-detail-controls { display: grid; gap: 16px; min-width: 0; }
+.photo-measure { padding-top: 18px; margin-top: 2px; border-top: 1px solid var(--line); }
+.photo-measure h3 { font: 500 23px/1.3 Georgia, "DejaVu Serif", serif; margin: 5px 0 8px; }
+.photo-measure > p { margin: 8px 0 14px; }
+.photo-measure-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+.photo-measure-buttons .btn { font-size: 12px; padding: 7px 10px; }
+.photo-measure-buttons [aria-pressed="true"] { background: var(--blue); border-color: var(--blue); color: var(--on-blue); }
+.photo-measure-instruction { min-height: 2.8em; }
+.photo-measure > label input { max-width: 180px; }
+.photo-estimate { display: block; padding: 14px 16px; margin: 16px 0; border: 1px solid var(--line); border-left: 3px solid var(--teal); border-radius: 0 8px 8px 0; background: var(--surface-2); color: var(--ink); font-size: 15px; font-variant-numeric: tabular-nums; }
+.photo-coordinates { margin: 14px 0; }
+.photo-coordinates summary { cursor: pointer; color: var(--blue); font-size: 13px; font-weight: 650; }
+.photo-coordinates fieldset { margin: 12px 0; border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; }
+.photo-coordinates legend { font-size: 12px; padding: 0 5px; color: var(--muted); }
+.photo-point-row { display: grid; grid-template-columns: 38px minmax(0, 1fr) minmax(0, 1fr); align-items: end; gap: 10px; margin-bottom: 8px; }
+.photo-point-row > span { font-size: 12px; padding-bottom: 8px; }
+.photo-point-row label { font-size: 11px; color: var(--muted); }
+.photo-point-row input { margin-top: 3px; padding: 6px 8px; }
+.photo-measure .photo-accuracy-note { color: var(--warn-ink); background: var(--warn-bg); border-radius: 6px; padding: 12px 14px; font-size: 12px; margin: 16px 0 0; }
+.photo-detail-actions { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 2px; }
+.photo-detail-actions .btn { font-size: 12px; }
+.photo-detail-actions .photo-remove { color: var(--err-ink); }
+
+@media (max-width: 850px) {
+  .photo-intro { display: block; }
+  .photo-local { margin: 0 0 20px; }
+  .photo-start { grid-template-columns: 1fr; }
+  .photo-drop-zone { padding: 24px 18px; }
+  .photo-capture-note { padding: 20px; }
+  .photo-detail-layout { grid-template-columns: 1fr; gap: 20px; padding: 18px; }
+  .photo-dialog-header { padding: 16px 18px; }
+  .photo-dialog { width: calc(100% - 20px); max-height: calc(100dvh - 20px); }
+}
+@media (max-width: 520px) {
+  .photo-section-heading, .photo-library-heading { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .photo-export-group { align-items: flex-start; margin-top: 8px; }
+  .photo-filters { grid-template-columns: 1fr; gap: 12px; }
+  .photo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .photo-card-body { padding: 10px; }
+  .photo-card-name { font-size: 12px; }
+  .photo-dialog-header h2 { font-size: 20px; }
+  .photo-dialog-header { gap: 10px; }
+  .photo-pagination { gap: 12px; }
+}
+@media print { #photos, #photos[hidden], #photo-detail { display: none !important; } }
 </style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to reference material</a>
 <div class="mast-wrap"><header class="mast">
-<div class="brand"><span class="eyebrow">Field reference / 3D &amp; CAD</span><span class="brand-meta"><span>Revision 3 · November 8, 2026 · Works offline</span><button id="theme-toggle" type="button" aria-pressed="false" title="Switch light or dark theme"><span>Dark</span></button></span></div>
+<div class="brand"><span class="eyebrow">Field reference / 3D &amp; CAD</span><span class="brand-meta"><span>Revision 4 · November 8, 2026 · Works offline</span><button id="theme-toggle" type="button" aria-pressed="false" title="Switch light or dark theme"><span>Dark</span></button></span></div>
 <h1>From pictures<br>to <em>printable</em> CAD.</h1>
 <p class="lede">A practical library for recovering shape, establishing dimensions, rebuilding editable geometry, and checking the part you print, with calculators that show their working.</p>
-<div class="actions"><a class="btn primary" href="output/pdf/pictures-to-printable-cad.pdf">Read the PDF</a><a class="btn" href="#toolkit">Open the toolkit</a><a class="btn" href="sources.csv" download>Source CSV</a><a class="btn" href="HANDBOOK.md" download>Editable handbook</a></div>
+<div class="actions"><a class="btn primary" href="#photos">Add reference photos</a><a class="btn" href="output/pdf/pictures-to-printable-cad.pdf">Read the PDF</a><a class="btn" href="#toolkit">Open the toolkit</a><a class="btn" href="sources.csv" download>Source CSV</a><a class="btn" href="HANDBOOK.md" download>Editable handbook</a></div>
 <ul class="stats" aria-label="Library contents">
 <li><b>23</b><span>Handbook chapters</span></li>
 <li><b>86</b><span>Annotated sources</span></li>
@@ -300,7 +427,7 @@ h1, h2 { font-family: Georgia, "DejaVu Serif", serif; font-weight: 500; line-hei
 </svg>
 
 </header></div>
-<div class="tabs-wrap"><nav class="tabs" role="tablist" aria-label="Reference library sections"><button id="tab-handbook" role="tab" aria-controls="handbook" aria-selected="true" tabindex="0" data-tab="handbook">Handbook</button><button id="tab-toolkit" role="tab" aria-controls="toolkit" aria-selected="false" tabindex="-1" data-tab="toolkit">Toolkit <span class="count">14</span></button><button id="tab-sources" role="tab" aria-controls="sources" aria-selected="false" tabindex="-1" data-tab="sources">Sources <span class="count">86</span></button><button id="tab-github" role="tab" aria-controls="github" aria-selected="false" tabindex="-1" data-tab="github">GitHub <span class="count">21</span></button><button id="tab-research" role="tab" aria-controls="research" aria-selected="false" tabindex="-1" data-tab="research">Research notes</button><button id="tab-worksheets" role="tab" aria-controls="worksheets" aria-selected="false" tabindex="-1" data-tab="worksheets">Worksheets & examples</button></nav><div id="progress" aria-hidden="true"></div></div>
+<div class="tabs-wrap"><nav class="tabs" role="tablist" aria-label="Reference library sections"><button id="tab-handbook" role="tab" aria-controls="handbook" aria-selected="true" tabindex="0" data-tab="handbook">Handbook</button><button id="tab-toolkit" role="tab" aria-controls="toolkit" aria-selected="false" tabindex="-1" data-tab="toolkit">Toolkit <span class="count">14</span></button><button id="tab-photos" role="tab" aria-controls="photos" aria-selected="false" tabindex="-1" data-tab="photos">Photos</button><button id="tab-sources" role="tab" aria-controls="sources" aria-selected="false" tabindex="-1" data-tab="sources">Sources <span class="count">86</span></button><button id="tab-github" role="tab" aria-controls="github" aria-selected="false" tabindex="-1" data-tab="github">GitHub <span class="count">21</span></button><button id="tab-research" role="tab" aria-controls="research" aria-selected="false" tabindex="-1" data-tab="research">Research notes</button><button id="tab-worksheets" role="tab" aria-controls="worksheets" aria-selected="false" tabindex="-1" data-tab="worksheets">Worksheets & examples</button></nav><div id="progress" aria-hidden="true"></div></div>
 <main class="main" id="main">
 <section class="panel" id="handbook" role="tabpanel" aria-labelledby="tab-handbook" tabindex="-1"><div class="reading"><aside class="contents" aria-label="Handbook contents"><h2>In this handbook</h2><a href="#book-1-start-with-the-result-you-need">1. Start with the result you need</a><a href="#book-2-understand-the-representations">2. Understand the representations</a><a href="#book-3-what-photographs-can-and-cannot-determine">3. What photographs can and cannot determine</a><a href="#book-4-capture-a-useful-evidence-set">4. Capture a useful evidence set</a><a href="#book-5-scale-perspective-and-uncertainty">5. Scale, perspective, and uncertainty</a><a href="#book-6-workflow-a-one-picture-to-a-profile-based-part">6. Workflow A: one picture to a profile-based part</a><a href="#book-7-workflow-b-several-views-to-editable-mechanical-cad">7. Workflow B: several views to editable mechanical CAD</a><a href="#book-8-workflow-c-photographs-to-a-printable-organic-mesh">8. Workflow C: photographs to a printable organic mesh</a><a href="#book-9-workflow-d-mesh-or-point-cloud-to-engineering-surfaces">9. Workflow D: mesh or point cloud to engineering surfaces</a><a href="#book-10-workflow-e-organic-subjects-with-mechanical-interfaces">10. Workflow E: organic subjects with mechanical interfaces</a><a href="#book-11-design-around-a-held-or-purchased-object">11. Design around a held or purchased object</a><a href="#book-12-advanced-geometry-that-pays-off">12. Advanced geometry that pays off</a><a href="#book-13-ai-generated-geometry-and-neural-reconstruction">13. AI-generated geometry and neural reconstruction</a><a href="#book-14-turn-the-model-into-useful-cad-drawings">14. Turn the model into useful CAD drawings</a><a href="#book-15-design-for-the-actual-printing-process">15. Design for the actual printing process</a><a href="#book-16-mechanisms-reconstruct-function-before-decoration">16. Mechanisms: reconstruct function before decoration</a><a href="#book-17-scripted-pipelines-and-reproducible-geometry">17. Scripted pipelines and reproducible geometry</a><a href="#book-18-validate-the-whole-chain">18. Validate the whole chain</a><a href="#book-19-biology-anatomy-and-specimen-resources">19. Biology, anatomy, and specimen resources</a><a href="#book-20-troubleshooting-by-symptom">20. Troubleshooting by symptom</a><a href="#book-21-a-staged-learning-plan">21. A staged learning plan</a><a href="#book-22-what-this-reference-library-establishes">22. What this reference library establishes</a><a href="#book-23-companion-toolkit">23. Companion toolkit</a></aside><article class="prose"><div class="note"><strong>First project:</strong> choose a simple measured part, model its critical interfaces, and print a small fit coupon. The <a href="#toolkit">Toolkit</a> suggests a route and checks the arithmetic.</div><h1 id="book-from-pictures-to-printable-cad">From pictures to printable CAD</h1>
 <h2 id="book-1-start-with-the-result-you-need">1. Start with the result you need<a class="anchor" href="#book-1-start-with-the-result-you-need" aria-label="Link to this section">#</a></h2>
@@ -902,10 +1029,16 @@ h1, h2 { font-family: Georgia, "DejaVu Serif", serif; font-weight: 500; line-hei
 <li>a refreshed GitHub metadata snapshot, a link check of every catalog URL, and removal of tracking parameters from eight research links</li>
 </ul>
 <p>OpenSCAD 2021.01 rendered the two synthetic examples and their meshes passed the geometry checks. That establishes that the CAD sources produce the intended closed solids; it is not a slicing, printing, fit, or strength result.</p>
+<p><strong>Revision 4, November 8, 2026.</strong> This revision adds a local photo workspace: repeatable multi-photo intake, saved viewpoint labels and notes, coverage guidance, reference-length dimension estimates, and a metadata manifest. Synthetic browser checks exercise storage, editing, and image measurement. No real-object reconstruction or physical accuracy qualification is implied.</p>
 <h2 id="book-23-companion-toolkit">23. Companion toolkit<a class="anchor" href="#book-23-companion-toolkit" aria-label="Link to this section">#</a></h2>
 <p>The calculators are conveniences for the arithmetic in this handbook. They state their assumptions and raise the warnings described in the text, but they cannot supply missing evidence: a result inherits the weakest evidence class of its inputs.</p>
 <h3 id="book-in-the-html-library">In the HTML library<a class="anchor" href="#book-in-the-html-library" aria-label="Link to this section">#</a></h3>
 <p>Open the <strong>Toolkit</strong> tab of <code>index.html</code>. The route finder takes what you have and what you need, and returns a starting workflow, any follow-on workflow, warnings for risky combinations, checks before printing, sources to read first, and the relevant calculators. The calculators cover planar scale, scale uncertainty, the calibration self-check, a homography fit with residuals and local scale, off-plane depth correction, camera distance, label rounding, circle tessellation, a clearance-coupon planner, coating allowance, spur-gear relations, import-unit diagnosis, evidence-class propagation, and a first wind-power estimate. Everything runs locally; links such as <code>index.html#calc-depth</code> open a calculator directly.</p>
+<h3 id="book-local-photo-workspace">Local photo workspace<a class="anchor" href="#book-local-photo-workspace" aria-label="Link to this section">#</a></h3>
+<p>Open the <strong>Photos</strong> tab to build a reference set for the current object. Select multiple JPEG, PNG, or WebP files or drop them into the page. Repeat as often as needed: there is no fixed photo-count limit. Processing is sequential, the gallery displays 24 thumbnails at a time, and browser storage is the practical total limit. Each image must be at most 50 MiB and 60 megapixels. Exact byte duplicates are skipped; similar views are retained.</p>
+<p>Originals, thumbnails, viewpoint labels, notes, and measurements stay in this browser on this device. No images are uploaded. Browser data may be cleared or evicted, and storage under a local file can vary by browser and path. Keep your originals. Exporting the photo manifest saves metadata and measurement points, not image backups. Moving the HTML file or changing browsers does not transfer the collection.</p>
+<p>Label the front, back, left, right, top, bottom, and detail views. The coverage display reports these labels and suggests missing views; it does not infer camera poses or score reconstruction accuracy. Capture overlapping views of the same unchanged object and retain physical measurements of critical interfaces.</p>
+<p>For a front-on planar feature, mark two endpoints of a known reference, enter its length in millimeters, and mark two endpoints of the target feature. The workspace computes <code>target pixels × known mm / reference pixels</code> using full-resolution image coordinates. Numeric coordinate inputs offer the same operation without pointing. The original image, selected points, and known length remain associated in the manifest. Results are unverified estimates: both lengths must lie in the same plane, perspective and lens distortion are not corrected, and a short baseline increases endpoint-picking sensitivity. Use the Toolkit homography and depth workflows where their assumptions apply; independently measure critical dimensions before building or printing.</p>
 <h3 id="book-from-the-command-line">From the command line<a class="anchor" href="#book-from-the-command-line" aria-label="Link to this section">#</a></h3>
 <p>Run <code>python3 -m cadkit --help</code> in the <code>reference-library</code> folder. The package uses only the Python standard library.</p>
 <table>
@@ -963,6 +1096,103 @@ h1, h2 { font-family: Georgia, "DejaVu Serif", serif; font-weight: 500; line-hei
 <div id="route-out" aria-live="polite"></div></div>
 <div id="calc-grid"></div>
 </section>
+<section class="panel photo-workspace" id="photos" role="tabpanel" aria-labelledby="tab-photos" tabindex="-1" hidden>
+  <div class="photo-intro">
+    <div>
+      <span class="eyebrow">Your object, from every angle</span>
+      <h2 class="panel-title">Reference photos</h2>
+      <p class="panel-lede">Build a useful view of your part. Add photos over time, label the angles, and use a known measurement to estimate dimensions on a flat surface.</p>
+    </div>
+    <span class="photo-local"><span aria-hidden="true">●</span> Local photo workspace</span>
+  </div>
+
+  <div class="photo-start">
+    <div class="photo-drop-zone" id="photo-drop-zone" aria-label="Add reference photos">
+      <svg class="photo-add-icon" viewBox="0 0 48 48" width="48" height="48" fill="none" aria-hidden="true"><rect x="5" y="11" width="32" height="29" rx="4" stroke="currentColor" stroke-width="1.5"/><path d="m7 32 9-9 9 10 5-5 7 7" stroke="currentColor" stroke-width="1.5"/><circle cx="28" cy="19" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M40 4v14M33 11h14" stroke="currentColor" stroke-width="2"/></svg>
+      <h3>A better reference starts with another view.</h3>
+      <p>Drop photos here, or choose them from your device. Add as many as your browser storage allows, in one batch or over time.</p>
+      <label class="btn primary photo-file-label">Choose photos<input class="photo-file-input" id="photo-input" type="file" accept="image/jpeg,image/png,image/webp" multiple aria-describedby="photo-file-help"></label>
+      <p class="photo-small" id="photo-file-help">JPEG, PNG or WebP · up to 50 MiB and 60 megapixels per photo</p>
+      <div class="photo-import-progress">
+        <progress id="photo-progress" value="0" max="1" aria-label="Photo import progress" hidden></progress>
+        <button class="btn" id="photo-cancel" type="button" hidden>Stop after this photo</button>
+      </div>
+      <p class="photo-status" id="photo-status" role="status" aria-live="polite">Opening your local photo library…</p>
+    </div>
+    <aside class="photo-capture-note" aria-labelledby="photo-capture-title">
+      <span class="eyebrow">Capture with purpose</span>
+      <h3 id="photo-capture-title">More angles. Fewer assumptions.</h3>
+      <ol>
+        <li><strong>Go around the part.</strong> Include front, back, left, right, top and bottom when accessible.</li>
+        <li><strong>Show what must fit.</strong> Add close views of holes, interfaces and hidden features.</li>
+        <li><strong>Measure a reference.</strong> Place a ruler in the same plane as the feature you want to estimate.</li>
+      </ol>
+      <p>View labels help reveal gaps. They do not verify photo quality or prove 3D accuracy.</p>
+      <a href="#toolkit">Find your reconstruction route <span aria-hidden="true">→</span></a>
+    </aside>
+  </div>
+
+  <div class="photo-storage-note">
+    <p><strong>Your photos stay in this browser.</strong> They are never sent to a server. Browser or device storage is the limit; clearing browser data can delete this library. Keep your originals.</p>
+    <p class="photo-small" id="photo-storage">Checking browser storage…</p>
+  </div>
+
+  <section class="photo-coverage-panel" aria-labelledby="photo-coverage-title">
+    <div class="photo-section-heading"><h3 id="photo-coverage-title">Views you have covered</h3><span class="photo-small">Based on your labels</span></div>
+    <div class="photo-coverage" id="photo-coverage"></div>
+    <div class="photo-small" id="photo-guidance">Add photos and label each viewpoint to see which views are missing.</div>
+  </section>
+
+  <div class="photo-library-heading">
+    <div><h3>Your reference library</h3><p class="photo-small" id="photo-count">0 photos</p></div>
+    <div class="photo-export-group"><button class="btn" id="photo-export" type="button" disabled>Export photo manifest</button><span class="photo-small">Notes and measurements only. Not a photo backup.</span></div>
+  </div>
+  <div class="photo-filters">
+    <label for="photo-search">Search photos<input id="photo-search" type="search" placeholder="Filename or notes" autocomplete="off"></label>
+    <label for="photo-filter">Viewpoint<select id="photo-filter"><option value="">All viewpoints</option></select></label>
+  </div>
+  <div class="photo-grid" id="photo-grid" aria-label="Reference photos"></div>
+  <div class="photo-empty" id="photo-empty"><span class="eyebrow">A place for every perspective</span><h3>No reference photos yet.</h3><p>Add your first photos above. You can return and add more whenever you need another angle.</p></div>
+  <nav class="photo-pagination" aria-label="Photo pages"><button class="btn" id="photo-prev" type="button" disabled>Previous</button><span class="photo-small" id="photo-page" aria-live="polite">Page 1 of 1</span><button class="btn" id="photo-next" type="button" disabled>Next</button></nav>
+</section>
+
+<dialog class="photo-dialog" id="photo-detail" aria-labelledby="photo-detail-title">
+  <header class="photo-dialog-header"><div><span class="eyebrow">Photo reference</span><h2 id="photo-detail-title">Photo details</h2></div><button class="btn" id="photo-close" type="button" aria-label="Close photo details">Close <span aria-hidden="true">×</span></button></header>
+  <div class="photo-detail-layout">
+    <div class="photo-viewer">
+      <div class="photo-image-stage" id="photo-image-stage"><img id="photo-image" alt="Selected reference photo"><svg id="photo-overlay" aria-hidden="true"></svg></div>
+      <p class="photo-small" id="photo-detail-info" role="status"></p>
+    </div>
+    <div class="photo-detail-controls">
+      <label for="photo-viewpoint">Viewpoint<select id="photo-viewpoint"></select></label>
+      <label for="photo-notes">Notes<textarea id="photo-notes" rows="3" maxlength="10000" placeholder="What does this view reveal? Record features, uncertainties, or capture conditions."></textarea></label>
+      <section class="photo-measure" aria-labelledby="photo-measure-title">
+        <span class="eyebrow">Measure within one photo</span>
+        <h3 id="photo-measure-title">Estimate a flat feature</h3>
+        <p class="photo-small">Mark the ends of a known length, enter its real size, then mark the feature you want to estimate.</p>
+        <div class="photo-measure-buttons"><button class="btn" id="photo-reference-points" type="button" aria-pressed="false">1. Mark known length</button><button class="btn" id="photo-target-points" type="button" aria-pressed="false">2. Mark target length</button></div>
+        <p class="photo-small photo-measure-instruction" id="photo-measure-instruction" role="status">Choose a marking tool, then select two points on the photo. You can also enter pixel coordinates below.</p>
+        <label for="photo-known-mm">Known length (mm)<input id="photo-known-mm" type="number" min="0" step="any" inputmode="decimal" placeholder="e.g. 50"></label>
+        <output class="photo-estimate" id="photo-estimate" aria-live="polite">Add both lengths to see an estimate.</output>
+        <details class="photo-coordinates"><summary>Enter pixel coordinates</summary>
+          <p class="photo-small">Coordinates use the full-size image, starting at the top-left corner: x across, y down.</p>
+          <fieldset><legend>Known length endpoints</legend>
+            <div class="photo-point-row"><span>Start</span><label for="photo-ref-x1">x<input id="photo-ref-x1" type="number" min="0" step="any" inputmode="decimal"></label><label for="photo-ref-y1">y<input id="photo-ref-y1" type="number" min="0" step="any" inputmode="decimal"></label></div>
+            <div class="photo-point-row"><span>End</span><label for="photo-ref-x2">x<input id="photo-ref-x2" type="number" min="0" step="any" inputmode="decimal"></label><label for="photo-ref-y2">y<input id="photo-ref-y2" type="number" min="0" step="any" inputmode="decimal"></label></div>
+          </fieldset>
+          <fieldset><legend>Target length endpoints</legend>
+            <div class="photo-point-row"><span>Start</span><label for="photo-target-x1">x<input id="photo-target-x1" type="number" min="0" step="any" inputmode="decimal"></label><label for="photo-target-y1">y<input id="photo-target-y1" type="number" min="0" step="any" inputmode="decimal"></label></div>
+            <div class="photo-point-row"><span>End</span><label for="photo-target-x2">x<input id="photo-target-x2" type="number" min="0" step="any" inputmode="decimal"></label><label for="photo-target-y2">y<input id="photo-target-y2" type="number" min="0" step="any" inputmode="decimal"></label></div>
+          </fieldset>
+        </details>
+        <button class="ghost" id="photo-reset-points" type="button">Clear measurement points</button>
+        <p class="photo-accuracy-note"><strong>An estimate, not a verified dimension.</strong> Use a front-on photo with both lengths in the same plane. Perspective is not corrected. True 3D accuracy requires physical measurements and a reconstruction workflow.</p>
+      </section>
+      <div class="photo-detail-actions"><button class="btn primary" id="photo-save" type="button">Save photo details</button><button class="btn" id="photo-download" type="button">Download original</button><button class="btn photo-remove" id="photo-remove" type="button">Remove photo</button></div>
+    </div>
+  </div>
+</dialog>
+
 <section class="panel" id="sources" role="tabpanel" aria-labelledby="tab-sources" tabindex="-1" hidden>
 <div class="catalog-head"><div><h2>The source library</h2><p>Official guides, primary research, geometry resources, and implementation projects. Each entry has a use case, a limitation, and the depth of review. Press <kbd>/</kbd> to search.</p></div><a href="REFERENCES.md" class="download" download>Markdown directory</a></div>
 <img class="composition" src="assets/figures/catalog-composition.svg" alt="Bar chart of 86 sources by topic, split by review depth" loading="lazy">
@@ -1403,9 +1633,9 @@ h1, h2 { font-family: Georgia, "DejaVu Serif", serif; font-weight: 500; line-hei
 <p>Decision: __________  Limitations: __________  Evidence: __________</p>
 </div><h2>Synthetic two-hole plate</h2><p>Teaching geometry: 60 × 30 × 4 mm, with two 5 mm holes spaced 40 mm apart. One parameter register drives the OpenSCAD model; <code>examples/build_plate.py</code> renders it and checks the STL against design rules. No real object or physical print was tested.</p><img class="example" src="examples/two-hole-plate.svg" alt="Dimensioned teaching diagram of a rectangular two-hole plate" loading="lazy"><div class="resources"><a href="examples/two-hole-plate.scad" download>OpenSCAD plate</a><a href="examples/plate-parameters.csv" download>Plate parameter register</a><a href="examples/build_plate.py" download>Parameter → STL → checks pipeline</a><a href="examples/clearance-coupon.scad" download>Clearance coupon (OpenSCAD)</a><a href="examples/two-hole-plate.svg" download>SVG diagram</a><a href="examples/calculate.py" download>Calculation script</a><a href="examples/calculation-results.json" download>Calculated values</a><a href="cadkit/README.md" >cadkit command-line guide</a></div></article></section>
 </main>
-<footer class="footer">Revision 3 · 86 curated resources · 21 repository snapshots · 14 calculators · Original explanations and synthetic examples. No reconstruction benchmark or physical printing qualification is implied.</footer>
+<footer class="footer">Revision 4 · 86 curated resources · 21 repository snapshots · 14 calculators · Original explanations and synthetic examples. No reconstruction benchmark or physical printing qualification is implied.</footer>
 <button id="to-top" type="button" aria-label="Back to top" hidden>↑</button>
-<script type="application/json" id="library-data">{"revision":3,"routes":{"about":"Route-finder rules. One source for the HTML route finder (assets/js/cadcalc.js), the Python CLI (python3 -m cadkit route), and the route-map figure. Derived from HANDBOOK.md section 1 'Choose a route' and workflows A-E. A recommendation is a starting point, not a guarantee of accuracy.","inputs":[{"id":"flat-image","label":"One image of a flat part, sign, or profile"},{"id":"turned-image","label":"One image of a turned shape (knob, bottle)"},{"id":"multi-view","label":"Several views of a mechanical part"},{"id":"photo-set","label":"Many overlapping photos of a textured object"},{"id":"mesh","label":"An existing mesh, scan, or point cloud"},{"id":"artwork","label":"One artistic or AI-generated image"},{"id":"volume","label":"A CT or MRI image volume"}],"goals":[{"id":"replacement","label":"A replacement part that must fit"},{"id":"decorative","label":"A decorative or display print"},{"id":"editable","label":"Editable CAD I can change later"},{"id":"mount","label":"An organic subject with an exact mount or socket"},{"id":"holder","label":"A holder or stand for an object I own"}],"workflows":{"A":{"name":"Workflow A: one picture to a profile-based part","short":"Profile part","section":6,"start":"Correct perspective, trace a constrained outline, then extrude (flat) or revolve (turned)","deliverable":"Editable sketch and solid","missing":"Thickness, back face, hidden bores, and true scale","calculators":["scale","aspect","homography","depth"]},"B":{"name":"Workflow B: several views to editable mechanical CAD","short":"Mechanical CAD","section":7,"start":"Choose a functional datum, measure key interfaces, fit sketches and analytic features","deliverable":"Feature-based CAD and drawings","missing":"Occluded features and design intent","calculators":["scale","uncertainty","chord","clearance"]},"C":{"name":"Workflow C: photographs to a printable organic mesh","short":"Organic mesh","section":8,"start":"Reconstruct, scale from a measured distance, clean conservatively, simplify deliberately","deliverable":"Scaled, inspected print mesh plus a raw reference mesh","missing":"Underside, deep recesses, texture-poor regions","calculators":["scale","units"]},"D":{"name":"Workflow D: mesh or point cloud to engineering surfaces","short":"Mesh to surfaces","section":9,"start":"Segment regions, fit planes and cylinders, rebuild freeform patches only where needed","deliverable":"Editable surfaces or a hybrid mesh and CAD model","missing":"Design intent behind noisy or worn regions","calculators":["units","chord"]},"E":{"name":"Workflow E: organic subjects with mechanical interfaces","short":"Organic + interfaces","section":10,"start":"Declare scale from a reference dimension, keep sockets and pins parametric, split along natural seams","deliverable":"Sculpted mesh with parametric mounting features","missing":"Pose, hidden surfaces, and pin engagement","calculators":["clearance","coating","units"]},"H":{"name":"Design around a held or purchased object","short":"Held-object design","section":11,"start":"Measure the real object's envelope, sweep the insertion path, reserve grasp and visibility volumes","deliverable":"Holder with explicit insertion path and finish allowance","missing":"Unit-to-unit variation and coating thickness","calculators":["label","coating","clearance"]},"G":{"name":"AI-generated geometry as a concept candidate","short":"Concept model","section":13,"start":"Interpret proportions, treat generated surfaces as candidates, set scale by declaration","deliverable":"Approximate concept model","missing":"Unseen geometry, actual scale, physical feasibility","calculators":["aspect","depth"]},"V":{"name":"Volume segmentation (CT or MRI)","short":"Volume segmentation","section":19,"start":"Respect voxel spacing, segment structures, extract and check surfaces","deliverable":"Segmented surface mesh","missing":"Segmentation uncertainty and application-specific validation","calculators":["units"]}},"by_input":{"flat-image":{"workflow":"A","sources":["freecad-images","opencv-homography","inkscape-trace"]},"turned-image":{"workflow":"A","sources":["freecad-images","opencv-calib","fspy"]},"multi-view":{"workflow":"B","sources":["cadquery-docs","build123d-docs","freecad-techdraw"]},"photo-set":{"workflow":"C","sources":["capture-meshroom","capture-colmap","meshlab-docs"]},"mesh":{"workflow":"D","sources":["fusion-mesh","rhino-re","cgal-shapes"]},"artwork":{"workflow":"G","sources":["repo-microsoft-trellis","repo-tencent-hunyuan-hunyuan3d-2","fspy"]},"volume":{"workflow":"V","sources":["slicer-segmentation","slicer-export","slicer-training"]}},"by_goal":{"replacement":{"also":[],"sources":["prusa-design","nist-artifact"],"checks":["Reserve independent check lengths before modeling","Print an interface coupon before the full part"]},"decorative":{"also":[],"sources":["prusa-perimeters","formlabs-hollowing"],"checks":["Inspect thin features in the slicer layer preview","Keep a faithful reference mesh apart from the print mesh"]},"editable":{"also":[],"sources":["cadquery-docs","freecad-techdraw"],"checks":["Change a major parameter and regenerate to test the constraints"]},"mount":{"lead":"E","sources":["blender-sculpting","prusaslicer-cut"],"checks":["Declare scale from a named reference dimension, not a bounding box","Test pin and socket fit with a coupon"]},"holder":{"lead":"H","sources":["gum-jcgm100","prusa-design"],"checks":["Sweep the measured envelope along the real insertion path","Test the coupon in its finished, coated state"]}},"pairs":{"photo-set|editable":{"also":["D"],"warning":"A photogrammetry mesh is not editable CAD; rebuild the important features (Workflow D)."},"photo-set|replacement":{"also":["D"],"warning":"Photogrammetry surfaces need independent dimensions before they can define a fit."},"mesh|decorative":{"workflow":"C","warning":"For a display print, clean and prepare the mesh (Workflow C) instead of rebuilding surfaces."},"artwork|replacement":{"warning":"A single artistic or generated image cannot set fit dimensions. Measure the mating part or obtain a drawing."},"artwork|editable":{"also":["B"],"warning":"Generated surfaces are candidates; rebuild the parts you will edit as features."},"volume|replacement":{"warning":"Education-grade segmentation is not qualified for clinical or patient-specific manufacture."},"turned-image|replacement":{"warning":"Hidden bores and wall thickness are invisible in one image; measure them."},"flat-image|replacement":{"warning":"One image sets the outline only; thickness and hole fits come from measurement."}}},"calculators":[{"id":"scale","title":"Planar scale","section":5,"blurb":"Turn pixels into millimetres on a front-facing or rectified plane.","formula":"scale = L_ref / p_ref     L = p × scale","inputs":[{"k":"lref","label":"Reference length","unit":"mm","value":50},{"k":"pref","label":"Reference span","unit":"px","value":1000},{"k":"p","label":"Feature span","unit":"px","value":640}],"note":"Valid on the reference plane only. Raised or recessed features need the off-plane depth correction."},{"id":"uncertainty","title":"Scale uncertainty","section":5,"blurb":"First-order propagation for L = p × L_ref / p_ref with independent errors.","formula":"(u_L/L)² = (u_p/p)² + (u_Lref/L_ref)² + (u_pref/p_ref)²","inputs":[{"k":"p","label":"Feature span p","unit":"px","value":640},{"k":"up","label":"u(p)","unit":"px","value":2},{"k":"pref","label":"Reference span p_ref","unit":"px","value":1000},{"k":"upref","label":"u(p_ref)","unit":"px","value":2},{"k":"lref","label":"Reference length L_ref","unit":"mm","value":50},{"k":"ulref","label":"u(L_ref)","unit":"mm","value":0.05}],"note":"Standard uncertainties, small independent errors. Perspective, distortion, and correlated endpoints are not included; k = 2 is a convention, not a guaranteed 95 % interval."},{"id":"aspect","title":"Calibration self-check","section":5,"blurb":"Compare a reference rectangle's image proportions with its known proportions before trusting one rectification.","formula":"squat = 1 − (h_px/w_px) / (H/W)     stretch = scale_v / scale_h − 1","inputs":[{"k":"kw","label":"Known width","unit":"mm","value":50},{"k":"kh","label":"Known height","unit":"mm","value":90},{"k":"pw","label":"Image width","unit":"px","value":400},{"k":"ph","label":"Image height","unit":"px","value":675}],"note":"If plane tilt does not explain a difference, use one uniform scale off the plane, record both results, and carry the difference as uncertainty."},{"id":"homography","title":"Homography fit","section":5,"blurb":"Fit a planar homography from four or more image-to-plane point pairs and inspect residuals and local scale.","formula":"λ [x, y, 1]ᵀ = H [u, v, 1]ᵀ     local scale = ‖∂(x,y)/∂u‖, ‖∂(x,y)/∂v‖","inputs":[{"k":"pairs","type":"textarea","label":"Point pairs, one per line: u v x y (pixels → mm)","unit":"","value":"112 96 0 0\n511 81 50 0\n592 802 50 90\n48 770 0 90\n305.99 88.71 25 0\n307.6 383.69 25 45\n155.89 677.18 10 80"},{"k":"u","label":"Evaluate at u","unit":"px","value":308},{"k":"v","label":"Evaluate at v","unit":"px","value":384}],"note":"Pixels map to millimetres on the plane. A fit can match its control points and still be wrong elsewhere: keep an independent check length."},{"id":"depth","title":"Off-plane depth correction","section":5,"blurb":"Correct a size measured at the reference plane's scale for a feature nearer or farther from the camera.","formula":"actual ≈ size_at_reference_scale × (Z + Δ) / Z","inputs":[{"k":"z","label":"Camera to reference plane Z","unit":"mm","value":500},{"k":"d","label":"Extra depth Δ (behind = +)","unit":"mm","value":60},{"k":"size","label":"Size at reference scale","unit":"mm","value":40},{"k":"zmin","label":"Z lower bound","unit":"mm","value":350},{"k":"zmax","label":"Z upper bound","unit":"mm","value":800},{"k":"dmin","label":"Δ lower bound","unit":"mm","value":30},{"k":"dmax","label":"Δ upper bound","unit":"mm","value":80}],"note":"Pinhole model, feature parallel to the image plane. Tilted features are foreshortened as well."},{"id":"camera","title":"Camera distance","section":5,"blurb":"Estimate how far a reference was from the camera, from a 35 mm-equivalent focal length.","formula":"f_px ≈ f_35 × diag_px / 43.27     Z ≈ f_px × L / l","inputs":[{"k":"f35","label":"35 mm-equivalent focal length","unit":"mm","value":26},{"k":"w","label":"Image width","unit":"px","value":4000},{"k":"h","label":"Image height","unit":"px","value":3000},{"k":"L","label":"Reference length L","unit":"mm","value":100},{"k":"l","label":"Reference span l","unit":"px","value":500}],"note":"Assumes the original, uncropped frame, a centred principal point, and negligible distortion. Screenshots and crops break these assumptions."},{"id":"label","title":"Published-label rounding","section":3,"blurb":"How much a rounded dimension on packaging or a datasheet can actually tell you.","formula":"a = ½ × 10^(−decimals) unit     u = a / √3   (rectangular, GUM 4.3.7)","inputs":[{"k":"value","label":"Printed value","unit":"","value":3.25},{"k":"unit","type":"select","label":"Unit","unit":"","value":"in","options":["in","mm","cm"]},{"k":"decimals","label":"Decimal places printed","unit":"","value":2,"step":1}],"note":"Rounding only. Manufacturing tolerance is separate, usually larger, and usually unpublished. Converting units adds digits, not knowledge."},{"id":"chord","title":"Circle tessellation","section":12,"blurb":"Segments needed so a polygonal circle stays within an allowed chordal (sagitta) error.","formula":"e = R (1 − cos(π/n))     n ≥ π / acos(1 − e/R)","inputs":[{"k":"r","label":"Radius R","unit":"mm","value":10},{"k":"e","label":"Allowed error e","unit":"mm","value":0.02}],"note":"Idealised polygon error only: says nothing about the printed hole, slicer, or machine."},{"id":"clearance","title":"Clearance coupon planner","section":15,"blurb":"Plan an exploratory hole series around a pin, using diametral differences.","formula":"hole D = d + c_diametral     radial = c_diametral / 2","inputs":[{"k":"nominal","label":"Pin diameter d","unit":"mm","value":5},{"k":"start","label":"First diametral clearance","unit":"mm","value":0.1},{"k":"step","label":"Step","unit":"mm","value":0.1},{"k":"count","label":"Number of holes","unit":"","value":5,"step":1}],"note":"Example test settings, not recommended fits. Print with the intended material, orientation, layers and cooling; examples/clearance-coupon.scad makes the part."},{"id":"coating","title":"Coating allowance","section":11,"blurb":"Primer and paint shrink every slot and hole they touch.","formula":"loss = coat per face × faces","inputs":[{"k":"coat","label":"Coating per face","unit":"mm","value":0.08},{"k":"faces","label":"Coated faces across the gap","unit":"","value":2,"step":1},{"k":"width","label":"Slot width as printed","unit":"mm","value":10}],"note":"Test the coupon in its finished state, or reserve the allowance in the parameter register."},{"id":"gear","title":"Spur gear pair","section":16,"blurb":"Nominal pitch diameters, centre distance, and speed ratio for unshifted external spur gears.","formula":"d = m z     a = m (z₁ + z₂) / 2     ω₂/ω₁ = −z₁/z₂","inputs":[{"k":"m","label":"Module m","unit":"mm","value":2},{"k":"z1","label":"Teeth z₁ (driver)","unit":"","value":20,"step":1},{"k":"z2","label":"Teeth z₂ (driven)","unit":"","value":40,"step":1}],"note":"Does not define tooth profile, backlash, strength, or profile shift. Use a validated gear generator."},{"id":"units","title":"Import unit detective","section":2,"blurb":"A mesh came in far too big or small? Find the unit mismatch that explains it.","formula":"corrected = observed × factor     rank by |log(corrected / expected)|","inputs":[{"k":"observed","label":"Extent shown after import","unit":"","value":0.06},{"k":"expected","label":"Known real size","unit":"mm","value":60}],"note":"Compare the same extent (for example overall length) in both fields. Bounding-box scaling and wrong references produce mismatches no unit explains."},{"id":"evidence","title":"Evidence-class propagation","section":3,"blurb":"A derived value inherits the weakest evidence class among its inputs.","formula":"class(result) = weakest(class(inputs))","inputs":[{"k":"a","type":"select","label":"Input 1","unit":"","value":"measured","options":["measured","image-derived","inferred","unknown","(none)"]},{"k":"b","type":"select","label":"Input 2","unit":"","value":"image-derived","options":["measured","image-derived","inferred","unknown","(none)"]},{"k":"c","type":"select","label":"Input 3","unit":"","value":"inferred","options":["measured","image-derived","inferred","unknown","(none)"]},{"k":"d","type":"select","label":"Input 4","unit":"","value":"(none)","options":["measured","image-derived","inferred","unknown","(none)"]}],"note":"Carry the class into tables, guide curves, and reports so a proposal never reads as a measurement."},{"id":"wind","title":"Wind power estimate","section":16,"blurb":"First estimate of power a small rotor extracts at a steady wind speed.","formula":"P = ½ ρ A v³ C_p","inputs":[{"k":"rho","label":"Air density ρ","unit":"kg/m³","value":1.225},{"k":"diameter","label":"Rotor diameter","unit":"m","value":0.3},{"k":"v","label":"Wind speed v","unit":"m/s","value":5},{"k":"cp","label":"Power coefficient C_p","unit":"","value":0.2}],"note":"Not a start-up torque formula. Starting must overcome friction, imbalance, and mechanism resistance at rest: build and measure a prototype."}],"sectionIds":{"1":"book-1-start-with-the-result-you-need","2":"book-2-understand-the-representations","3":"book-3-what-photographs-can-and-cannot-determine","4":"book-4-capture-a-useful-evidence-set","5":"book-5-scale-perspective-and-uncertainty","6":"book-6-workflow-a-one-picture-to-a-profile-based-part","7":"book-7-workflow-b-several-views-to-editable-mechanical-cad","8":"book-8-workflow-c-photographs-to-a-printable-organic-mesh","9":"book-9-workflow-d-mesh-or-point-cloud-to-engineering-surfaces","10":"book-10-workflow-e-organic-subjects-with-mechanical-interfaces","11":"book-11-design-around-a-held-or-purchased-object","12":"book-12-advanced-geometry-that-pays-off","13":"book-13-ai-generated-geometry-and-neural-reconstruction","14":"book-14-turn-the-model-into-useful-cad-drawings","15":"book-15-design-for-the-actual-printing-process","16":"book-16-mechanisms-reconstruct-function-before-decoration","17":"book-17-scripted-pipelines-and-reproducible-geometry","18":"book-18-validate-the-whole-chain","19":"book-19-biology-anatomy-and-specimen-resources","20":"book-20-troubleshooting-by-symptom","21":"book-21-a-staged-learning-plan","22":"book-22-what-this-reference-library-establishes","23":"book-23-companion-toolkit"},"sourceIndex":{"capture-colmap":{"title":"COLMAP reconstruction tutorial","url":"https://colmap.github.io/tutorial"},"capture-meshroom":{"title":"Meshroom capture guide","url":"https://meshroom-manual.readthedocs.io/en/latest/capturing/capturing.html"},"colmap-install":{"title":"COLMAP installation and build options","url":"https://colmap.github.io/install.html"},"opencv-calib":{"title":"OpenCV camera calibration","url":"https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html"},"opencv-homography":{"title":"OpenCV homography tutorial","url":"https://docs.opencv.org/4.x/d9/dab/tutorial_homography.html"},"fspy":{"title":"fSpy camera matching","url":"https://fspy.io/"},"freecad-images":{"title":"FreeCAD: importing and scaling reference images","url":"https://freecad.github.io/Website/pl/news/tutorial-importing-and-using-scaled-reference-images/"},"freecad-techdraw":{"title":"FreeCAD TechDraw workbench","url":"https://github.com/FreeCAD/FreeCAD-documentation/blob/main/wiki/TechDraw_Workbench.md"},"freecad-draft":{"title":"FreeCAD traditional 2D drafting manual","url":"https://github.com/FreeCAD/FreeCAD-documentation/blob/main/wiki/Manual_Traditional_2D_drafting.md"},"fusion-canvas":{"title":"Fusion canvas calibration concepts","url":"https://autodeskfusion360.github.io/FusionAPIReference/Fusion_API_Documentation/files/Canvases_UM.htm"},"fusion-mesh":{"title":"Fusion: convert a mesh to a solid","url":"https://help.autodesk.com/cloudhelp/ENU/Fusion-Mesh/files/MESH-CONVERT-TO-SOLID.htm"},"fusion-course":{"title":"Autodesk University: reverse engineering with imported data","url":"https://static.au-uw2-prd.autodesk.com/Class_Handout_CP323607_Reverse_Engineering_with_Imported_Data_in_Fusion_360_Jeff_Strater.pdf"},"rhino-re":{"title":"McNeel reverse engineering guide","url":"https://wiki.mcneel.com/rhino/reverseengineering"},"rhino-shrinkwrap":{"title":"Rhino ShrinkWrap","url":"https://www.rhino3d.com/features/shrinkwrap/"},"cadquery-docs":{"title":"CadQuery documentation","url":"https://cadquery.readthedocs.io/en/latest/"},"build123d-docs":{"title":"build123d documentation","url":"https://build123d.readthedocs.io/en/latest/"},"openscad-docs":{"title":"OpenSCAD documentation","url":"https://openscad.org/documentation"},"inkscape-trace":{"title":"Inkscape: tracing an image","url":"https://inkscape-manuals.readthedocs.io/en/1.1/tracing-an-image.html"},"meshlab-docs":{"title":"MeshLab project and capabilities","url":"https://www.meshlab.net/"},"cloudcompare-distance":{"title":"CloudCompare distance computation","url":"https://www.cloudcompare.org/doc/wiki/index.php/Distances_Computation"},"open3d-icp":{"title":"Open3D ICP registration tutorial","url":"https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html"},"open3d-surface":{"title":"Open3D surface reconstruction","url":"https://www.open3d.org/docs/release/tutorial/geometry/surface_reconstruction.html"},"cgal-shapes":{"title":"CGAL shape detection","url":"https://doc.cgal.org/latest/Shape_detection/index.html"},"cgal-mesh":{"title":"CGAL polygon mesh processing","url":"https://doc.cgal.org/latest/Polygon_mesh_processing/"},"mit-surfaces":{"title":"MIT Shape Interrogation hyperbook","url":"https://web.mit.edu/hyperbook/Patrikalakis-Maekawa-Cho/mathe.html"},"cmu-ddg":{"title":"Keenan Crane: Discrete Differential Geometry","url":"https://www.cs.cmu.edu/~kmcrane/Projects/DDG/"},"oxford-mvg":{"title":"Hartley and Zisserman: Multiple View Geometry","url":"https://www.robots.ox.ac.uk/~vgg/hzbook/"},"libigl-tutorial":{"title":"libigl tutorial","url":"https://libigl.github.io/tutorial/"},"geometry-central":{"title":"Geometry Central","url":"https://geometry-central.net/"},"prusa-design":{"title":"Prusa: modeling with 3D printing in mind","url":"https://help.prusa3d.com/article/modeling-with-3d-printing-in-mind_164135"},"prusa-perimeters":{"title":"Prusa: layers and perimeters","url":"https://help.prusa3d.com/article/layers-and-perimeters_1748"},"blender-print":{"title":"Blender 3D Print Toolbox extension","url":"https://extensions.blender.org/add-ons/print3d-toolbox/"},"3mf-spec":{"title":"3MF specification directory","url":"https://3mf.io/spec/"},"3mf-core":{"title":"3MF Core Specification source","url":"https://github.com/3MFConsortium/spec_core/blob/master/3MF%20Core%20Specification.md"},"nist-artifact":{"title":"NIST additive manufacturing test artifact","url":"https://www.nist.gov/publications/additive-manufacturing-test-artifact"},"nih3d":{"title":"NIH 3D","url":"https://3d.nih.gov/"},"nih3d-faq":{"title":"NIH 3D FAQs","url":"https://3d.nih.gov/faqs"},"morphosource":{"title":"MorphoSource repository description","url":"https://github.com/MorphoSource/MorphoSource"},"smithsonian":{"title":"Smithsonian 3D digitization program","url":"https://dpo.si.edu/3d-digitization-program"},"smithsonian-photo":{"title":"Smithsonian photogrammetry and 3D technologies","url":"https://mci.si.edu/3d-technologies"},"slicer-segmentation":{"title":"3D Slicer image segmentation","url":"https://slicer.readthedocs.io/en/latest/user_guide/image_segmentation.html"},"slicer-export":{"title":"3D Slicer segmentations and export","url":"https://slicer.readthedocs.io/en/latest/user_guide/modules/segmentations.html"},"slicer-training":{"title":"3D Slicer training compendium","url":"https://training.slicer.org/"},"stanford-scans":{"title":"Stanford 3D scanning repository","url":"https://graphics.stanford.edu/data/3Dscanrep/"},"sfm-paper":{"title":"Structure-from-Motion Revisited","url":"https://openaccess.thecvf.com/content_cvpr_2016/html/Schonberger_Structure-From-Motion_Revisited_CVPR_2016_paper.html"},"deepcad-paper":{"title":"DeepCAD author project page","url":"https://www.cs.columbia.edu/cg/deepcad/"},"brepgen-paper":{"title":"BrepGen paper","url":"https://damassets.autodesk.net/content/dam/autodesk/www/pdfs/brepgen.pdf"},"pubmed-scapula":{"title":"Photogrammetry-derived printed sheep scapula comparison","url":"https://pubmed.ncbi.nlm.nih.gov/35014052/"},"pubmed-spectacles":{"title":"Optical face scanner for customized 3D-printed spectacles","url":"https://pubmed.ncbi.nlm.nih.gov/35629524/"},"repo-colmap-colmap":{"title":"colmap/colmap","url":"https://github.com/colmap/colmap"},"repo-freecad-freecad":{"title":"FreeCAD/FreeCAD","url":"https://github.com/FreeCAD/FreeCAD"},"repo-cloudcompare-cloudcompare":{"title":"CloudCompare/CloudCompare","url":"https://github.com/CloudCompare/CloudCompare"},"repo-alicevision-meshroom":{"title":"alicevision/Meshroom","url":"https://github.com/alicevision/Meshroom"},"repo-cnr-isti-vclab-meshlab":{"title":"cnr-isti-vclab/meshlab","url":"https://github.com/cnr-isti-vclab/meshlab"},"repo-cdcseacave-openmvs":{"title":"cdcseacave/openMVS","url":"https://github.com/cdcseacave/openMVS"},"repo-gumyr-build123d":{"title":"gumyr/build123d","url":"https://github.com/gumyr/build123d"},"repo-openscad-openscad":{"title":"openscad/openscad","url":"https://github.com/openscad/openscad"},"repo-isl-org-open3d":{"title":"isl-org/Open3D","url":"https://github.com/isl-org/Open3D"},"gum-jcgm100":{"title":"JCGM 100:2008 Guide to the expression of uncertainty in measurement (GUM)","url":"https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf"},"repo-cadquery-cadquery":{"title":"CadQuery/cadquery","url":"https://github.com/CadQuery/cadquery"},"repo-libigl-libigl":{"title":"libigl/libigl","url":"https://github.com/libigl/libigl"},"repo-mikedh-trimesh":{"title":"mikedh/trimesh","url":"https://github.com/mikedh/trimesh"},"repo-cgal-cgal":{"title":"CGAL/cgal","url":"https://github.com/CGAL/cgal"},"repo-microsoft-trellis":{"title":"microsoft/TRELLIS","url":"https://github.com/microsoft/TRELLIS"},"repo-rundiwu-deepcad":{"title":"rundiwu/DeepCAD","url":"https://github.com/rundiwu/DeepCAD"},"repo-sxyu-sdf":{"title":"sxyu/sdf","url":"https://github.com/sxyu/sdf"},"repo-prusa3d-prusaslicer":{"title":"prusa3d/PrusaSlicer","url":"https://github.com/prusa3d/PrusaSlicer"},"repo-orcaslicer-orcaslicer":{"title":"OrcaSlicer/OrcaSlicer","url":"https://github.com/OrcaSlicer/OrcaSlicer"},"prusaslicer-cut":{"title":"PrusaSlicer cut tool with connectors","url":"https://help.prusa3d.com/article/cut-tool_1779"},"formlabs-hollowing":{"title":"Formlabs: hollowing models and adding drain holes","url":"https://formlabs.com/blog/how-to-hollow-out-3d-models/"},"gltf-spec":{"title":"glTF 2.0 specification","url":"https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html"},"blender-posing":{"title":"Blender manual: posing armatures","url":"https://docs.blender.org/manual/en/latest/animation/armatures/posing/introduction.html"},"blender-sculpting":{"title":"Blender manual: sculpting","url":"https://docs.blender.org/manual/en/latest/sculpt_paint/sculpting/index.html"},"cc-licenses":{"title":"Creative Commons license types","url":"https://creativecommons.org/share-your-work/cclicenses/"},"repo-nerfstudio-project-nerfstudio":{"title":"nerfstudio-project/nerfstudio","url":"https://github.com/nerfstudio-project/nerfstudio"},"repo-tencent-hunyuan-hunyuan3d-2":{"title":"Tencent-Hunyuan/Hunyuan3D-2","url":"https://github.com/Tencent-Hunyuan/Hunyuan3D-2"},"repo-samxuxiang-brepgen":{"title":"samxuxiang/BrepGen","url":"https://github.com/samxuxiang/BrepGen"},"paper-analysis-of-the-accuracy-of-cad-modeling-in-engineering-and-36nxm62vq6":{"title":"Analysis of the Accuracy of CAD Modeling in Engineering and Medical Industries Based on Measurement Data Using Reverse Engineering Methods","url":"https://scispace.com/papers/analysis-of-the-accuracy-of-cad-modeling-in-engineering-and-36nxm62vq6"},"paper-towards-the-fitting-of-parametric-2d-sketches-and-3d-cad-1djsfr3w67":{"title":"Towards the Fitting of Parametric 2D Sketches and 3D CAD Models to Point Clouds of Digitized Assemblies for Reverse Engineering","url":"https://scispace.com/papers/towards-the-fitting-of-parametric-2d-sketches-and-3d-cad-1djsfr3w67"},"paper-investigation-of-the-accuracy-of-close-range-photogrammetry-2hhol7wrqs":{"title":"Investigation of the accuracy of close-range photogrammetry – a 3d printing case study","url":"https://scispace.com/papers/investigation-of-the-accuracy-of-close-range-photogrammetry-2hhol7wrqs"},"paper-reverse-engineering-using-close-range-photogrammetry-for-3m0wn3gwp8":{"title":"Reverse Engineering Using Close Range Photogrammetry for Additive Manufactured Reproduction of Egyptian Artifacts and Other Objets d'art","url":"https://scispace.com/papers/reverse-engineering-using-close-range-photogrammetry-for-3m0wn3gwp8"},"paper-experimental-comparison-of-photogrammetry-for-additive-4unoc5f5vu":{"title":"Experimental comparison of photogrammetry for additive manufactured parts with and without laser speckle projection","url":"https://scispace.com/papers/experimental-comparison-of-photogrammetry-for-additive-4unoc5f5vu"},"paper-cadfit-precise-mesh-to-cad-program-generation-with-hybrid-fl4odx8809fi":{"title":"CADFit: Precise Mesh-to-CAD Program Generation with Hybrid Optimization","url":"https://scispace.com/papers/cadfit-precise-mesh-to-cad-program-generation-with-hybrid-fl4odx8809fi"},"paper-image2cadseq-computer-aided-design-sequence-and-knowledge-71qfjvt88v04":{"title":"Image2CADSeq: Computer-Aided Design Sequence and Knowledge Inference from Product Images","url":"https://scispace.com/papers/image2cadseq-computer-aided-design-sequence-and-knowledge-71qfjvt88v04"},"paper-realcad-towards-real-world-image-to-cad-reconstruction-under-o7g04f6k963j":{"title":"RealCAD: Towards Real-World Image-to-CAD Reconstruction under Domain Shift and Parameter Bias","url":"https://scispace.com/papers/realcad-towards-real-world-image-to-cad-reconstruction-under-o7g04f6k963j"},"khk-gears":{"title":"KHK: calculation of gear dimensions","url":"https://khkgears.net/new/gear_knowledge/gear_technical_reference/calculation_gear_dimensions.html"}}}</script>
+<script type="application/json" id="library-data">{"revision":4,"routes":{"about":"Route-finder rules. One source for the HTML route finder (assets/js/cadcalc.js), the Python CLI (python3 -m cadkit route), and the route-map figure. Derived from HANDBOOK.md section 1 'Choose a route' and workflows A-E. A recommendation is a starting point, not a guarantee of accuracy.","inputs":[{"id":"flat-image","label":"One image of a flat part, sign, or profile"},{"id":"turned-image","label":"One image of a turned shape (knob, bottle)"},{"id":"multi-view","label":"Several views of a mechanical part"},{"id":"photo-set","label":"Many overlapping photos of a textured object"},{"id":"mesh","label":"An existing mesh, scan, or point cloud"},{"id":"artwork","label":"One artistic or AI-generated image"},{"id":"volume","label":"A CT or MRI image volume"}],"goals":[{"id":"replacement","label":"A replacement part that must fit"},{"id":"decorative","label":"A decorative or display print"},{"id":"editable","label":"Editable CAD I can change later"},{"id":"mount","label":"An organic subject with an exact mount or socket"},{"id":"holder","label":"A holder or stand for an object I own"}],"workflows":{"A":{"name":"Workflow A: one picture to a profile-based part","short":"Profile part","section":6,"start":"Correct perspective, trace a constrained outline, then extrude (flat) or revolve (turned)","deliverable":"Editable sketch and solid","missing":"Thickness, back face, hidden bores, and true scale","calculators":["scale","aspect","homography","depth"]},"B":{"name":"Workflow B: several views to editable mechanical CAD","short":"Mechanical CAD","section":7,"start":"Choose a functional datum, measure key interfaces, fit sketches and analytic features","deliverable":"Feature-based CAD and drawings","missing":"Occluded features and design intent","calculators":["scale","uncertainty","chord","clearance"]},"C":{"name":"Workflow C: photographs to a printable organic mesh","short":"Organic mesh","section":8,"start":"Reconstruct, scale from a measured distance, clean conservatively, simplify deliberately","deliverable":"Scaled, inspected print mesh plus a raw reference mesh","missing":"Underside, deep recesses, texture-poor regions","calculators":["scale","units"]},"D":{"name":"Workflow D: mesh or point cloud to engineering surfaces","short":"Mesh to surfaces","section":9,"start":"Segment regions, fit planes and cylinders, rebuild freeform patches only where needed","deliverable":"Editable surfaces or a hybrid mesh and CAD model","missing":"Design intent behind noisy or worn regions","calculators":["units","chord"]},"E":{"name":"Workflow E: organic subjects with mechanical interfaces","short":"Organic + interfaces","section":10,"start":"Declare scale from a reference dimension, keep sockets and pins parametric, split along natural seams","deliverable":"Sculpted mesh with parametric mounting features","missing":"Pose, hidden surfaces, and pin engagement","calculators":["clearance","coating","units"]},"H":{"name":"Design around a held or purchased object","short":"Held-object design","section":11,"start":"Measure the real object's envelope, sweep the insertion path, reserve grasp and visibility volumes","deliverable":"Holder with explicit insertion path and finish allowance","missing":"Unit-to-unit variation and coating thickness","calculators":["label","coating","clearance"]},"G":{"name":"AI-generated geometry as a concept candidate","short":"Concept model","section":13,"start":"Interpret proportions, treat generated surfaces as candidates, set scale by declaration","deliverable":"Approximate concept model","missing":"Unseen geometry, actual scale, physical feasibility","calculators":["aspect","depth"]},"V":{"name":"Volume segmentation (CT or MRI)","short":"Volume segmentation","section":19,"start":"Respect voxel spacing, segment structures, extract and check surfaces","deliverable":"Segmented surface mesh","missing":"Segmentation uncertainty and application-specific validation","calculators":["units"]}},"by_input":{"flat-image":{"workflow":"A","sources":["freecad-images","opencv-homography","inkscape-trace"]},"turned-image":{"workflow":"A","sources":["freecad-images","opencv-calib","fspy"]},"multi-view":{"workflow":"B","sources":["cadquery-docs","build123d-docs","freecad-techdraw"]},"photo-set":{"workflow":"C","sources":["capture-meshroom","capture-colmap","meshlab-docs"]},"mesh":{"workflow":"D","sources":["fusion-mesh","rhino-re","cgal-shapes"]},"artwork":{"workflow":"G","sources":["repo-microsoft-trellis","repo-tencent-hunyuan-hunyuan3d-2","fspy"]},"volume":{"workflow":"V","sources":["slicer-segmentation","slicer-export","slicer-training"]}},"by_goal":{"replacement":{"also":[],"sources":["prusa-design","nist-artifact"],"checks":["Reserve independent check lengths before modeling","Print an interface coupon before the full part"]},"decorative":{"also":[],"sources":["prusa-perimeters","formlabs-hollowing"],"checks":["Inspect thin features in the slicer layer preview","Keep a faithful reference mesh apart from the print mesh"]},"editable":{"also":[],"sources":["cadquery-docs","freecad-techdraw"],"checks":["Change a major parameter and regenerate to test the constraints"]},"mount":{"lead":"E","sources":["blender-sculpting","prusaslicer-cut"],"checks":["Declare scale from a named reference dimension, not a bounding box","Test pin and socket fit with a coupon"]},"holder":{"lead":"H","sources":["gum-jcgm100","prusa-design"],"checks":["Sweep the measured envelope along the real insertion path","Test the coupon in its finished, coated state"]}},"pairs":{"photo-set|editable":{"also":["D"],"warning":"A photogrammetry mesh is not editable CAD; rebuild the important features (Workflow D)."},"photo-set|replacement":{"also":["D"],"warning":"Photogrammetry surfaces need independent dimensions before they can define a fit."},"mesh|decorative":{"workflow":"C","warning":"For a display print, clean and prepare the mesh (Workflow C) instead of rebuilding surfaces."},"artwork|replacement":{"warning":"A single artistic or generated image cannot set fit dimensions. Measure the mating part or obtain a drawing."},"artwork|editable":{"also":["B"],"warning":"Generated surfaces are candidates; rebuild the parts you will edit as features."},"volume|replacement":{"warning":"Education-grade segmentation is not qualified for clinical or patient-specific manufacture."},"turned-image|replacement":{"warning":"Hidden bores and wall thickness are invisible in one image; measure them."},"flat-image|replacement":{"warning":"One image sets the outline only; thickness and hole fits come from measurement."}}},"calculators":[{"id":"scale","title":"Planar scale","section":5,"blurb":"Turn pixels into millimetres on a front-facing or rectified plane.","formula":"scale = L_ref / p_ref     L = p × scale","inputs":[{"k":"lref","label":"Reference length","unit":"mm","value":50},{"k":"pref","label":"Reference span","unit":"px","value":1000},{"k":"p","label":"Feature span","unit":"px","value":640}],"note":"Valid on the reference plane only. Raised or recessed features need the off-plane depth correction."},{"id":"uncertainty","title":"Scale uncertainty","section":5,"blurb":"First-order propagation for L = p × L_ref / p_ref with independent errors.","formula":"(u_L/L)² = (u_p/p)² + (u_Lref/L_ref)² + (u_pref/p_ref)²","inputs":[{"k":"p","label":"Feature span p","unit":"px","value":640},{"k":"up","label":"u(p)","unit":"px","value":2},{"k":"pref","label":"Reference span p_ref","unit":"px","value":1000},{"k":"upref","label":"u(p_ref)","unit":"px","value":2},{"k":"lref","label":"Reference length L_ref","unit":"mm","value":50},{"k":"ulref","label":"u(L_ref)","unit":"mm","value":0.05}],"note":"Standard uncertainties, small independent errors. Perspective, distortion, and correlated endpoints are not included; k = 2 is a convention, not a guaranteed 95 % interval."},{"id":"aspect","title":"Calibration self-check","section":5,"blurb":"Compare a reference rectangle's image proportions with its known proportions before trusting one rectification.","formula":"squat = 1 − (h_px/w_px) / (H/W)     stretch = scale_v / scale_h − 1","inputs":[{"k":"kw","label":"Known width","unit":"mm","value":50},{"k":"kh","label":"Known height","unit":"mm","value":90},{"k":"pw","label":"Image width","unit":"px","value":400},{"k":"ph","label":"Image height","unit":"px","value":675}],"note":"If plane tilt does not explain a difference, use one uniform scale off the plane, record both results, and carry the difference as uncertainty."},{"id":"homography","title":"Homography fit","section":5,"blurb":"Fit a planar homography from four or more image-to-plane point pairs and inspect residuals and local scale.","formula":"λ [x, y, 1]ᵀ = H [u, v, 1]ᵀ     local scale = ‖∂(x,y)/∂u‖, ‖∂(x,y)/∂v‖","inputs":[{"k":"pairs","type":"textarea","label":"Point pairs, one per line: u v x y (pixels → mm)","unit":"","value":"112 96 0 0\n511 81 50 0\n592 802 50 90\n48 770 0 90\n305.99 88.71 25 0\n307.6 383.69 25 45\n155.89 677.18 10 80"},{"k":"u","label":"Evaluate at u","unit":"px","value":308},{"k":"v","label":"Evaluate at v","unit":"px","value":384}],"note":"Pixels map to millimetres on the plane. A fit can match its control points and still be wrong elsewhere: keep an independent check length."},{"id":"depth","title":"Off-plane depth correction","section":5,"blurb":"Correct a size measured at the reference plane's scale for a feature nearer or farther from the camera.","formula":"actual ≈ size_at_reference_scale × (Z + Δ) / Z","inputs":[{"k":"z","label":"Camera to reference plane Z","unit":"mm","value":500},{"k":"d","label":"Extra depth Δ (behind = +)","unit":"mm","value":60},{"k":"size","label":"Size at reference scale","unit":"mm","value":40},{"k":"zmin","label":"Z lower bound","unit":"mm","value":350},{"k":"zmax","label":"Z upper bound","unit":"mm","value":800},{"k":"dmin","label":"Δ lower bound","unit":"mm","value":30},{"k":"dmax","label":"Δ upper bound","unit":"mm","value":80}],"note":"Pinhole model, feature parallel to the image plane. Tilted features are foreshortened as well."},{"id":"camera","title":"Camera distance","section":5,"blurb":"Estimate how far a reference was from the camera, from a 35 mm-equivalent focal length.","formula":"f_px ≈ f_35 × diag_px / 43.27     Z ≈ f_px × L / l","inputs":[{"k":"f35","label":"35 mm-equivalent focal length","unit":"mm","value":26},{"k":"w","label":"Image width","unit":"px","value":4000},{"k":"h","label":"Image height","unit":"px","value":3000},{"k":"L","label":"Reference length L","unit":"mm","value":100},{"k":"l","label":"Reference span l","unit":"px","value":500}],"note":"Assumes the original, uncropped frame, a centred principal point, and negligible distortion. Screenshots and crops break these assumptions."},{"id":"label","title":"Published-label rounding","section":3,"blurb":"How much a rounded dimension on packaging or a datasheet can actually tell you.","formula":"a = ½ × 10^(−decimals) unit     u = a / √3   (rectangular, GUM 4.3.7)","inputs":[{"k":"value","label":"Printed value","unit":"","value":3.25},{"k":"unit","type":"select","label":"Unit","unit":"","value":"in","options":["in","mm","cm"]},{"k":"decimals","label":"Decimal places printed","unit":"","value":2,"step":1}],"note":"Rounding only. Manufacturing tolerance is separate, usually larger, and usually unpublished. Converting units adds digits, not knowledge."},{"id":"chord","title":"Circle tessellation","section":12,"blurb":"Segments needed so a polygonal circle stays within an allowed chordal (sagitta) error.","formula":"e = R (1 − cos(π/n))     n ≥ π / acos(1 − e/R)","inputs":[{"k":"r","label":"Radius R","unit":"mm","value":10},{"k":"e","label":"Allowed error e","unit":"mm","value":0.02}],"note":"Idealised polygon error only: says nothing about the printed hole, slicer, or machine."},{"id":"clearance","title":"Clearance coupon planner","section":15,"blurb":"Plan an exploratory hole series around a pin, using diametral differences.","formula":"hole D = d + c_diametral     radial = c_diametral / 2","inputs":[{"k":"nominal","label":"Pin diameter d","unit":"mm","value":5},{"k":"start","label":"First diametral clearance","unit":"mm","value":0.1},{"k":"step","label":"Step","unit":"mm","value":0.1},{"k":"count","label":"Number of holes","unit":"","value":5,"step":1}],"note":"Example test settings, not recommended fits. Print with the intended material, orientation, layers and cooling; examples/clearance-coupon.scad makes the part."},{"id":"coating","title":"Coating allowance","section":11,"blurb":"Primer and paint shrink every slot and hole they touch.","formula":"loss = coat per face × faces","inputs":[{"k":"coat","label":"Coating per face","unit":"mm","value":0.08},{"k":"faces","label":"Coated faces across the gap","unit":"","value":2,"step":1},{"k":"width","label":"Slot width as printed","unit":"mm","value":10}],"note":"Test the coupon in its finished state, or reserve the allowance in the parameter register."},{"id":"gear","title":"Spur gear pair","section":16,"blurb":"Nominal pitch diameters, centre distance, and speed ratio for unshifted external spur gears.","formula":"d = m z     a = m (z₁ + z₂) / 2     ω₂/ω₁ = −z₁/z₂","inputs":[{"k":"m","label":"Module m","unit":"mm","value":2},{"k":"z1","label":"Teeth z₁ (driver)","unit":"","value":20,"step":1},{"k":"z2","label":"Teeth z₂ (driven)","unit":"","value":40,"step":1}],"note":"Does not define tooth profile, backlash, strength, or profile shift. Use a validated gear generator."},{"id":"units","title":"Import unit detective","section":2,"blurb":"A mesh came in far too big or small? Find the unit mismatch that explains it.","formula":"corrected = observed × factor     rank by |log(corrected / expected)|","inputs":[{"k":"observed","label":"Extent shown after import","unit":"","value":0.06},{"k":"expected","label":"Known real size","unit":"mm","value":60}],"note":"Compare the same extent (for example overall length) in both fields. Bounding-box scaling and wrong references produce mismatches no unit explains."},{"id":"evidence","title":"Evidence-class propagation","section":3,"blurb":"A derived value inherits the weakest evidence class among its inputs.","formula":"class(result) = weakest(class(inputs))","inputs":[{"k":"a","type":"select","label":"Input 1","unit":"","value":"measured","options":["measured","image-derived","inferred","unknown","(none)"]},{"k":"b","type":"select","label":"Input 2","unit":"","value":"image-derived","options":["measured","image-derived","inferred","unknown","(none)"]},{"k":"c","type":"select","label":"Input 3","unit":"","value":"inferred","options":["measured","image-derived","inferred","unknown","(none)"]},{"k":"d","type":"select","label":"Input 4","unit":"","value":"(none)","options":["measured","image-derived","inferred","unknown","(none)"]}],"note":"Carry the class into tables, guide curves, and reports so a proposal never reads as a measurement."},{"id":"wind","title":"Wind power estimate","section":16,"blurb":"First estimate of power a small rotor extracts at a steady wind speed.","formula":"P = ½ ρ A v³ C_p","inputs":[{"k":"rho","label":"Air density ρ","unit":"kg/m³","value":1.225},{"k":"diameter","label":"Rotor diameter","unit":"m","value":0.3},{"k":"v","label":"Wind speed v","unit":"m/s","value":5},{"k":"cp","label":"Power coefficient C_p","unit":"","value":0.2}],"note":"Not a start-up torque formula. Starting must overcome friction, imbalance, and mechanism resistance at rest: build and measure a prototype."}],"sectionIds":{"1":"book-1-start-with-the-result-you-need","2":"book-2-understand-the-representations","3":"book-3-what-photographs-can-and-cannot-determine","4":"book-4-capture-a-useful-evidence-set","5":"book-5-scale-perspective-and-uncertainty","6":"book-6-workflow-a-one-picture-to-a-profile-based-part","7":"book-7-workflow-b-several-views-to-editable-mechanical-cad","8":"book-8-workflow-c-photographs-to-a-printable-organic-mesh","9":"book-9-workflow-d-mesh-or-point-cloud-to-engineering-surfaces","10":"book-10-workflow-e-organic-subjects-with-mechanical-interfaces","11":"book-11-design-around-a-held-or-purchased-object","12":"book-12-advanced-geometry-that-pays-off","13":"book-13-ai-generated-geometry-and-neural-reconstruction","14":"book-14-turn-the-model-into-useful-cad-drawings","15":"book-15-design-for-the-actual-printing-process","16":"book-16-mechanisms-reconstruct-function-before-decoration","17":"book-17-scripted-pipelines-and-reproducible-geometry","18":"book-18-validate-the-whole-chain","19":"book-19-biology-anatomy-and-specimen-resources","20":"book-20-troubleshooting-by-symptom","21":"book-21-a-staged-learning-plan","22":"book-22-what-this-reference-library-establishes","23":"book-23-companion-toolkit"},"sourceIndex":{"capture-colmap":{"title":"COLMAP reconstruction tutorial","url":"https://colmap.github.io/tutorial"},"capture-meshroom":{"title":"Meshroom capture guide","url":"https://meshroom-manual.readthedocs.io/en/latest/capturing/capturing.html"},"colmap-install":{"title":"COLMAP installation and build options","url":"https://colmap.github.io/install.html"},"opencv-calib":{"title":"OpenCV camera calibration","url":"https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html"},"opencv-homography":{"title":"OpenCV homography tutorial","url":"https://docs.opencv.org/4.x/d9/dab/tutorial_homography.html"},"fspy":{"title":"fSpy camera matching","url":"https://fspy.io/"},"freecad-images":{"title":"FreeCAD: importing and scaling reference images","url":"https://freecad.github.io/Website/pl/news/tutorial-importing-and-using-scaled-reference-images/"},"freecad-techdraw":{"title":"FreeCAD TechDraw workbench","url":"https://github.com/FreeCAD/FreeCAD-documentation/blob/main/wiki/TechDraw_Workbench.md"},"freecad-draft":{"title":"FreeCAD traditional 2D drafting manual","url":"https://github.com/FreeCAD/FreeCAD-documentation/blob/main/wiki/Manual_Traditional_2D_drafting.md"},"fusion-canvas":{"title":"Fusion canvas calibration concepts","url":"https://autodeskfusion360.github.io/FusionAPIReference/Fusion_API_Documentation/files/Canvases_UM.htm"},"fusion-mesh":{"title":"Fusion: convert a mesh to a solid","url":"https://help.autodesk.com/cloudhelp/ENU/Fusion-Mesh/files/MESH-CONVERT-TO-SOLID.htm"},"fusion-course":{"title":"Autodesk University: reverse engineering with imported data","url":"https://static.au-uw2-prd.autodesk.com/Class_Handout_CP323607_Reverse_Engineering_with_Imported_Data_in_Fusion_360_Jeff_Strater.pdf"},"rhino-re":{"title":"McNeel reverse engineering guide","url":"https://wiki.mcneel.com/rhino/reverseengineering"},"rhino-shrinkwrap":{"title":"Rhino ShrinkWrap","url":"https://www.rhino3d.com/features/shrinkwrap/"},"cadquery-docs":{"title":"CadQuery documentation","url":"https://cadquery.readthedocs.io/en/latest/"},"build123d-docs":{"title":"build123d documentation","url":"https://build123d.readthedocs.io/en/latest/"},"openscad-docs":{"title":"OpenSCAD documentation","url":"https://openscad.org/documentation"},"inkscape-trace":{"title":"Inkscape: tracing an image","url":"https://inkscape-manuals.readthedocs.io/en/1.1/tracing-an-image.html"},"meshlab-docs":{"title":"MeshLab project and capabilities","url":"https://www.meshlab.net/"},"cloudcompare-distance":{"title":"CloudCompare distance computation","url":"https://www.cloudcompare.org/doc/wiki/index.php/Distances_Computation"},"open3d-icp":{"title":"Open3D ICP registration tutorial","url":"https://www.open3d.org/docs/release/tutorial/pipelines/icp_registration.html"},"open3d-surface":{"title":"Open3D surface reconstruction","url":"https://www.open3d.org/docs/release/tutorial/geometry/surface_reconstruction.html"},"cgal-shapes":{"title":"CGAL shape detection","url":"https://doc.cgal.org/latest/Shape_detection/index.html"},"cgal-mesh":{"title":"CGAL polygon mesh processing","url":"https://doc.cgal.org/latest/Polygon_mesh_processing/"},"mit-surfaces":{"title":"MIT Shape Interrogation hyperbook","url":"https://web.mit.edu/hyperbook/Patrikalakis-Maekawa-Cho/mathe.html"},"cmu-ddg":{"title":"Keenan Crane: Discrete Differential Geometry","url":"https://www.cs.cmu.edu/~kmcrane/Projects/DDG/"},"oxford-mvg":{"title":"Hartley and Zisserman: Multiple View Geometry","url":"https://www.robots.ox.ac.uk/~vgg/hzbook/"},"libigl-tutorial":{"title":"libigl tutorial","url":"https://libigl.github.io/tutorial/"},"geometry-central":{"title":"Geometry Central","url":"https://geometry-central.net/"},"prusa-design":{"title":"Prusa: modeling with 3D printing in mind","url":"https://help.prusa3d.com/article/modeling-with-3d-printing-in-mind_164135"},"prusa-perimeters":{"title":"Prusa: layers and perimeters","url":"https://help.prusa3d.com/article/layers-and-perimeters_1748"},"blender-print":{"title":"Blender 3D Print Toolbox extension","url":"https://extensions.blender.org/add-ons/print3d-toolbox/"},"3mf-spec":{"title":"3MF specification directory","url":"https://3mf.io/spec/"},"3mf-core":{"title":"3MF Core Specification source","url":"https://github.com/3MFConsortium/spec_core/blob/master/3MF%20Core%20Specification.md"},"nist-artifact":{"title":"NIST additive manufacturing test artifact","url":"https://www.nist.gov/publications/additive-manufacturing-test-artifact"},"nih3d":{"title":"NIH 3D","url":"https://3d.nih.gov/"},"nih3d-faq":{"title":"NIH 3D FAQs","url":"https://3d.nih.gov/faqs"},"morphosource":{"title":"MorphoSource repository description","url":"https://github.com/MorphoSource/MorphoSource"},"smithsonian":{"title":"Smithsonian 3D digitization program","url":"https://dpo.si.edu/3d-digitization-program"},"smithsonian-photo":{"title":"Smithsonian photogrammetry and 3D technologies","url":"https://mci.si.edu/3d-technologies"},"slicer-segmentation":{"title":"3D Slicer image segmentation","url":"https://slicer.readthedocs.io/en/latest/user_guide/image_segmentation.html"},"slicer-export":{"title":"3D Slicer segmentations and export","url":"https://slicer.readthedocs.io/en/latest/user_guide/modules/segmentations.html"},"slicer-training":{"title":"3D Slicer training compendium","url":"https://training.slicer.org/"},"stanford-scans":{"title":"Stanford 3D scanning repository","url":"https://graphics.stanford.edu/data/3Dscanrep/"},"sfm-paper":{"title":"Structure-from-Motion Revisited","url":"https://openaccess.thecvf.com/content_cvpr_2016/html/Schonberger_Structure-From-Motion_Revisited_CVPR_2016_paper.html"},"deepcad-paper":{"title":"DeepCAD author project page","url":"https://www.cs.columbia.edu/cg/deepcad/"},"brepgen-paper":{"title":"BrepGen paper","url":"https://damassets.autodesk.net/content/dam/autodesk/www/pdfs/brepgen.pdf"},"pubmed-scapula":{"title":"Photogrammetry-derived printed sheep scapula comparison","url":"https://pubmed.ncbi.nlm.nih.gov/35014052/"},"pubmed-spectacles":{"title":"Optical face scanner for customized 3D-printed spectacles","url":"https://pubmed.ncbi.nlm.nih.gov/35629524/"},"repo-colmap-colmap":{"title":"colmap/colmap","url":"https://github.com/colmap/colmap"},"repo-freecad-freecad":{"title":"FreeCAD/FreeCAD","url":"https://github.com/FreeCAD/FreeCAD"},"repo-cloudcompare-cloudcompare":{"title":"CloudCompare/CloudCompare","url":"https://github.com/CloudCompare/CloudCompare"},"repo-alicevision-meshroom":{"title":"alicevision/Meshroom","url":"https://github.com/alicevision/Meshroom"},"repo-cnr-isti-vclab-meshlab":{"title":"cnr-isti-vclab/meshlab","url":"https://github.com/cnr-isti-vclab/meshlab"},"repo-cdcseacave-openmvs":{"title":"cdcseacave/openMVS","url":"https://github.com/cdcseacave/openMVS"},"repo-gumyr-build123d":{"title":"gumyr/build123d","url":"https://github.com/gumyr/build123d"},"repo-openscad-openscad":{"title":"openscad/openscad","url":"https://github.com/openscad/openscad"},"repo-isl-org-open3d":{"title":"isl-org/Open3D","url":"https://github.com/isl-org/Open3D"},"gum-jcgm100":{"title":"JCGM 100:2008 Guide to the expression of uncertainty in measurement (GUM)","url":"https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf"},"repo-cadquery-cadquery":{"title":"CadQuery/cadquery","url":"https://github.com/CadQuery/cadquery"},"repo-libigl-libigl":{"title":"libigl/libigl","url":"https://github.com/libigl/libigl"},"repo-mikedh-trimesh":{"title":"mikedh/trimesh","url":"https://github.com/mikedh/trimesh"},"repo-cgal-cgal":{"title":"CGAL/cgal","url":"https://github.com/CGAL/cgal"},"repo-microsoft-trellis":{"title":"microsoft/TRELLIS","url":"https://github.com/microsoft/TRELLIS"},"repo-rundiwu-deepcad":{"title":"rundiwu/DeepCAD","url":"https://github.com/rundiwu/DeepCAD"},"repo-sxyu-sdf":{"title":"sxyu/sdf","url":"https://github.com/sxyu/sdf"},"repo-prusa3d-prusaslicer":{"title":"prusa3d/PrusaSlicer","url":"https://github.com/prusa3d/PrusaSlicer"},"repo-orcaslicer-orcaslicer":{"title":"OrcaSlicer/OrcaSlicer","url":"https://github.com/OrcaSlicer/OrcaSlicer"},"prusaslicer-cut":{"title":"PrusaSlicer cut tool with connectors","url":"https://help.prusa3d.com/article/cut-tool_1779"},"formlabs-hollowing":{"title":"Formlabs: hollowing models and adding drain holes","url":"https://formlabs.com/blog/how-to-hollow-out-3d-models/"},"gltf-spec":{"title":"glTF 2.0 specification","url":"https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html"},"blender-posing":{"title":"Blender manual: posing armatures","url":"https://docs.blender.org/manual/en/latest/animation/armatures/posing/introduction.html"},"blender-sculpting":{"title":"Blender manual: sculpting","url":"https://docs.blender.org/manual/en/latest/sculpt_paint/sculpting/index.html"},"cc-licenses":{"title":"Creative Commons license types","url":"https://creativecommons.org/share-your-work/cclicenses/"},"repo-nerfstudio-project-nerfstudio":{"title":"nerfstudio-project/nerfstudio","url":"https://github.com/nerfstudio-project/nerfstudio"},"repo-tencent-hunyuan-hunyuan3d-2":{"title":"Tencent-Hunyuan/Hunyuan3D-2","url":"https://github.com/Tencent-Hunyuan/Hunyuan3D-2"},"repo-samxuxiang-brepgen":{"title":"samxuxiang/BrepGen","url":"https://github.com/samxuxiang/BrepGen"},"paper-analysis-of-the-accuracy-of-cad-modeling-in-engineering-and-36nxm62vq6":{"title":"Analysis of the Accuracy of CAD Modeling in Engineering and Medical Industries Based on Measurement Data Using Reverse Engineering Methods","url":"https://scispace.com/papers/analysis-of-the-accuracy-of-cad-modeling-in-engineering-and-36nxm62vq6"},"paper-towards-the-fitting-of-parametric-2d-sketches-and-3d-cad-1djsfr3w67":{"title":"Towards the Fitting of Parametric 2D Sketches and 3D CAD Models to Point Clouds of Digitized Assemblies for Reverse Engineering","url":"https://scispace.com/papers/towards-the-fitting-of-parametric-2d-sketches-and-3d-cad-1djsfr3w67"},"paper-investigation-of-the-accuracy-of-close-range-photogrammetry-2hhol7wrqs":{"title":"Investigation of the accuracy of close-range photogrammetry – a 3d printing case study","url":"https://scispace.com/papers/investigation-of-the-accuracy-of-close-range-photogrammetry-2hhol7wrqs"},"paper-reverse-engineering-using-close-range-photogrammetry-for-3m0wn3gwp8":{"title":"Reverse Engineering Using Close Range Photogrammetry for Additive Manufactured Reproduction of Egyptian Artifacts and Other Objets d'art","url":"https://scispace.com/papers/reverse-engineering-using-close-range-photogrammetry-for-3m0wn3gwp8"},"paper-experimental-comparison-of-photogrammetry-for-additive-4unoc5f5vu":{"title":"Experimental comparison of photogrammetry for additive manufactured parts with and without laser speckle projection","url":"https://scispace.com/papers/experimental-comparison-of-photogrammetry-for-additive-4unoc5f5vu"},"paper-cadfit-precise-mesh-to-cad-program-generation-with-hybrid-fl4odx8809fi":{"title":"CADFit: Precise Mesh-to-CAD Program Generation with Hybrid Optimization","url":"https://scispace.com/papers/cadfit-precise-mesh-to-cad-program-generation-with-hybrid-fl4odx8809fi"},"paper-image2cadseq-computer-aided-design-sequence-and-knowledge-71qfjvt88v04":{"title":"Image2CADSeq: Computer-Aided Design Sequence and Knowledge Inference from Product Images","url":"https://scispace.com/papers/image2cadseq-computer-aided-design-sequence-and-knowledge-71qfjvt88v04"},"paper-realcad-towards-real-world-image-to-cad-reconstruction-under-o7g04f6k963j":{"title":"RealCAD: Towards Real-World Image-to-CAD Reconstruction under Domain Shift and Parameter Bias","url":"https://scispace.com/papers/realcad-towards-real-world-image-to-cad-reconstruction-under-o7g04f6k963j"},"khk-gears":{"title":"KHK: calculation of gear dimensions","url":"https://khkgears.net/new/gear_knowledge/gear_technical_reference/calculation_gear_dimensions.html"}}}</script>
 <script>
 /* cadcalc.js - calculators for the Pictures-to-printable-CAD reference library.
  *
@@ -2225,6 +2455,749 @@ h1, h2 { font-family: Georgia, "DejaVu Serif", serif; font-weight: 500; line-hei
 
   route();
   window.CadLibrary = { activate, route, RUN };
+})();
+
+/* Local photo workspace. Originals never leave this browser. Metadata and image
+ * blobs are stored separately so filtering and exports do not load originals.
+ * A calibrated image ratio is an estimate, not a reconstruction or verified CAD.
+ */
+(function (root) {
+  'use strict';
+
+  const VIEWPOINTS = Object.freeze(['unassigned', 'front', 'back', 'left', 'right', 'top', 'bottom', 'detail']);
+  const MAX_FILE_BYTES = 50 * 1024 * 1024;
+  const MAX_PIXELS = 60000000;
+  const TYPES = Object.freeze(['image/jpeg', 'image/png', 'image/webp']);
+  const DB_NAME = 'cad-photo-workspace';
+
+  function validateFile(file) {
+    if (!file || typeof file.arrayBuffer !== 'function' || typeof file.slice !== 'function' ||
+        !Number.isSafeInteger(file.size) || file.size <= 0) {
+      throw new RangeError('Choose a non-empty JPEG, PNG, or WebP photo.');
+    }
+    if (file.size > MAX_FILE_BYTES) throw new RangeError('Each photo must be 50 MiB or smaller. Add larger originals after resizing them.');
+    if (file.type && !TYPES.includes(file.type.toLowerCase())) {
+      throw new RangeError('Only JPEG, PNG, and WebP photos are supported. Convert HEIC, SVG, and other formats first.');
+    }
+    return file;
+  }
+
+  function detectImageType(bytes) {
+    if (!(bytes instanceof Uint8Array)) throw new TypeError('Image bytes must be a Uint8Array.');
+    if (bytes.length >= 8 && [137, 80, 78, 71, 13, 10, 26, 10].every((v, i) => bytes[i] === v)) return 'image/png';
+    if (bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return 'image/jpeg';
+    if (bytes.length >= 12 && String.fromCharCode(...bytes.subarray(0, 4)) === 'RIFF' &&
+        String.fromCharCode(...bytes.subarray(8, 12)) === 'WEBP') return 'image/webp';
+    throw new RangeError('This file is not a supported JPEG, PNG, or WebP photo, regardless of its filename.');
+  }
+
+  function dimensions(width, height) {
+    if (!Number.isSafeInteger(width) || !Number.isSafeInteger(height) || width < 1 || height < 1) {
+      throw new RangeError('The photo must have valid, positive image dimensions.');
+    }
+    if (width * height > MAX_PIXELS) throw new RangeError('This photo exceeds 60 megapixels. Resize it before adding it.');
+  }
+
+  // Read dimensions before decoding to avoid allocating an oversized image.
+  function headerDimensions(bytes, type) {
+    const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+    if (type === 'image/png' && bytes.length >= 24 && String.fromCharCode(...bytes.subarray(12, 16)) === 'IHDR') {
+      return [view.getUint32(16), view.getUint32(20)];
+    }
+    if (type === 'image/jpeg') {
+      let offset = 2;
+      while (offset + 3 < bytes.length) {
+        if (bytes[offset++] !== 0xff) break;
+        while (bytes[offset] === 0xff) offset++;
+        const marker = bytes[offset++];
+        if (marker === 0xda || marker === 0xd9) break;
+        if (marker === 0x01 || (marker >= 0xd0 && marker <= 0xd7)) continue;
+        if (offset + 2 > bytes.length) break;
+        const length = view.getUint16(offset);
+        if (length < 2 || offset + length > bytes.length) break;
+        if ([0xc0, 0xc1, 0xc2, 0xc3, 0xc5, 0xc6, 0xc7, 0xc9, 0xca, 0xcb, 0xcd, 0xce, 0xcf].includes(marker) && length >= 7) {
+          return [view.getUint16(offset + 5), view.getUint16(offset + 3)];
+        }
+        offset += length;
+      }
+    }
+    if (type === 'image/webp' && bytes.length >= 20) {
+      // The first VP8X/VP8/VP8L chunk specifies the canvas or image dimensions.
+      let offset = 12;
+      const u24 = (start) => bytes[start] + (bytes[start + 1] << 8) + (bytes[start + 2] << 16);
+      while (offset + 8 <= bytes.length) {
+        const chunk = String.fromCharCode(...bytes.subarray(offset, offset + 4));
+        const size = view.getUint32(offset + 4, true);
+        const start = offset + 8;
+        if (size > bytes.length - start) break;
+        if (chunk === 'VP8X' && size >= 10) return [u24(start + 4) + 1, u24(start + 7) + 1];
+        if (chunk === 'VP8 ' && size >= 10 && bytes[start + 3] === 0x9d && bytes[start + 4] === 0x01 && bytes[start + 5] === 0x2a) {
+          return [view.getUint16(start + 6, true) & 0x3fff, view.getUint16(start + 8, true) & 0x3fff];
+        }
+        if (chunk === 'VP8L' && size >= 5 && bytes[start] === 0x2f) {
+          const bits = view.getUint32(start + 1, true);
+          return [(bits & 0x3fff) + 1, ((bits >>> 14) & 0x3fff) + 1];
+        }
+        offset = start + size + (size % 2);
+      }
+    }
+    throw new RangeError('This photo has an incomplete or invalid image header.');
+  }
+
+  async function decode(file) {
+    if (typeof root.createImageBitmap === 'function') {
+      try { return await root.createImageBitmap(file, { imageOrientation: 'from-image' }); }
+      catch (_) { throw new RangeError('The browser could not decode this photo. It may be damaged or use an unsupported image variant.'); }
+    }
+    if (typeof root.Image !== 'function' || !root.URL || !root.URL.createObjectURL) {
+      throw new Error('Photo decoding is unavailable in this browser. Use a current browser with image support.');
+    }
+    return new Promise((resolve, reject) => {
+      const url = root.URL.createObjectURL(file);
+      const img = new root.Image();
+      img.onload = () => { root.URL.revokeObjectURL(url); resolve(img); };
+      img.onerror = () => { root.URL.revokeObjectURL(url); reject(new RangeError('The browser could not decode this photo. It may be damaged.')); };
+      img.src = url;
+    });
+  }
+
+  async function makeThumbnail(img, width, height) {
+    const ratio = Math.min(1, 480 / Math.max(width, height));
+    const w = Math.max(1, Math.round(width * ratio));
+    const h = Math.max(1, Math.round(height * ratio));
+    let canvas;
+    if (typeof root.OffscreenCanvas === 'function') canvas = new root.OffscreenCanvas(w, h);
+    else if (root.document) { canvas = root.document.createElement('canvas'); canvas.width = w; canvas.height = h; }
+    else throw new Error('Thumbnail creation is unavailable in this browser.');
+    const context = canvas.getContext('2d');
+    if (!context) throw new Error('The browser could not create a photo thumbnail.');
+    context.fillStyle = '#fff';
+    context.fillRect(0, 0, w, h);
+    context.drawImage(img, 0, 0, w, h);
+    const blob = canvas.convertToBlob
+      ? await canvas.convertToBlob({ type: 'image/jpeg', quality: 0.82 })
+      : await new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.82));
+    if (!blob || !blob.size) throw new Error('The browser could not create a photo thumbnail.');
+    return blob;
+  }
+
+  async function prepareFile(file) {
+    validateFile(file);
+    let buffer;
+    try { buffer = await file.arrayBuffer(); }
+    catch (_) { throw new Error('The browser could not read this photo. Select the file again.'); }
+    if (buffer.byteLength !== file.size) throw new RangeError('The photo could not be read completely.');
+    const bytes = new Uint8Array(buffer);
+    const type = detectImageType(bytes);
+    if (file.type && file.type.toLowerCase() !== type) throw new RangeError('This photo’s declared format does not match its contents. Convert or re-export the original image.');
+    dimensions(...headerDimensions(bytes, type));
+    if (!root.crypto || !root.crypto.subtle) throw new Error('Photo fingerprinting is unavailable. Open this library through localhost or a secure browser page.');
+    const digest = await root.crypto.subtle.digest('SHA-256', buffer);
+    const id = Array.from(new Uint8Array(digest), (value) => value.toString(16).padStart(2, '0')).join('');
+    const img = await decode(file);
+    try {
+      const width = img.naturalWidth || img.width;
+      const height = img.naturalHeight || img.height;
+      dimensions(width, height);
+      const thumbnail = await makeThumbnail(img, width, height);
+      return { id, name: file.name || 'Untitled photo', type, size: file.size, width, height,
+        addedAt: new Date().toISOString(), viewpoint: 'unassigned', notes: '', measurement: null, blob: file, thumbnail };
+    } finally { if (typeof img.close === 'function') img.close(); }
+  }
+
+  function measurementValue(measurement, width, height) {
+    dimensions(width, height);
+    if (!measurement || typeof measurement !== 'object' || Array.isArray(measurement)) throw new RangeError('Choose a reference and target line before estimating a length.');
+    if (!Number.isFinite(measurement.knownMm) || measurement.knownMm <= 0) throw new RangeError('The known reference length must be a positive number in millimeters.');
+    const line = (points, name) => {
+      if (!Array.isArray(points) || points.length !== 2) throw new RangeError(`The ${name} line needs two image points.`);
+      const copy = points.map((point) => {
+        if (!Array.isArray(point) || point.length !== 2 || !point.every(Number.isFinite)) throw new RangeError(`Each ${name} point needs two finite image coordinates.`);
+        if (point[0] < 0 || point[0] > width || point[1] < 0 || point[1] > height) throw new RangeError(`The ${name} points must be inside the photo.`);
+        return [point[0], point[1]];
+      });
+      if (Math.hypot(copy[1][0] - copy[0][0], copy[1][1] - copy[0][1]) === 0) throw new RangeError(`The ${name} line must have nonzero length.`);
+      return copy;
+    };
+    return { reference: line(measurement.reference, 'reference'), target: line(measurement.target, 'target'), knownMm: measurement.knownMm };
+  }
+
+  function estimate(measurement, width, height) {
+    const value = measurementValue(measurement, width, height);
+    const distance = (line) => Math.hypot(line[1][0] - line[0][0], line[1][1] - line[0][1]);
+    const referencePixels = distance(value.reference);
+    const targetPixels = distance(value.target);
+    const mmPerPixel = value.knownMm / referencePixels;
+    const estimatedMm = targetPixels * mmPerPixel;
+    if (![mmPerPixel, estimatedMm].every((v) => Number.isFinite(v) && v > 0)) throw new RangeError('These values exceed the supported numerical range. Use a longer reference line and realistic dimensions.');
+    const warnings = ['Unverified image estimate: the reference and target must lie in the same plane, photographed front-on. Perspective, lens distortion, and endpoint choices can change the result.'];
+    if (referencePixels < 200) warnings.push('The reference is shorter than 200 pixels; use a longer, clearly visible reference to reduce endpoint-picking error.');
+    if (targetPixels > 3 * referencePixels) warnings.push('The target is over three times longer than the reference; this magnifies reference-picking errors.');
+    return { referencePixels, targetPixels, mmPerPixel, estimatedMm, warnings };
+  }
+
+  function viewpointValue(value) {
+    if (!VIEWPOINTS.includes(value)) throw new RangeError('Choose a valid photo viewpoint.');
+    return value;
+  }
+
+  function notesValue(value) {
+    if (typeof value !== 'string') throw new TypeError('Photo notes must be text.');
+    return value;
+  }
+
+  function metadataFrom(prepared) {
+    if (!prepared || !/^[a-f0-9]{64}$/.test(prepared.id || '')) throw new RangeError('Prepare this photo before saving it.');
+    validateFile(prepared.blob);
+    if (!TYPES.includes(prepared.type) || prepared.size !== prepared.blob.size || typeof prepared.name !== 'string') throw new RangeError('The prepared photo has invalid metadata.');
+    if (!root.Blob || !(prepared.thumbnail instanceof root.Blob) || !prepared.thumbnail.size) throw new RangeError('The prepared photo needs a thumbnail.');
+    if (!Number.isFinite(Date.parse(prepared.addedAt))) throw new RangeError('The prepared photo needs a valid date.');
+    dimensions(prepared.width, prepared.height);
+    let measurement = null;
+    if (prepared.measurement != null) {
+      measurement = measurementValue(prepared.measurement, prepared.width, prepared.height);
+      estimate(measurement, prepared.width, prepared.height);
+    }
+    return { id: prepared.id, name: prepared.name, type: prepared.type, size: prepared.size,
+      width: prepared.width, height: prepared.height, addedAt: new Date(prepared.addedAt).toISOString(),
+      viewpoint: viewpointValue(prepared.viewpoint), notes: notesValue(prepared.notes), measurement,
+      thumbnailBytes: prepared.thumbnail.size };
+  }
+
+  function storageError(error) {
+    const name = error && error.name;
+    let message = 'The browser could not access your photo workspace. Check browser storage settings, then try again.';
+    if (name === 'QuotaExceededError') message = 'Photo storage is full. Remove photos from this workspace or free browser storage, then try again. Keep your original files.';
+    else if (name === 'SecurityError' || name === 'NotAllowedError') message = 'This browser has blocked local photo storage. Allow site storage or open the library through localhost in a regular browser window.';
+    else if (name === 'InvalidStateError') message = 'This photo workspace is closed or unavailable. Reload the page and try again.';
+    const result = new Error(message);
+    result.name = 'PhotoStorageError';
+    result.cause = error;
+    return result;
+  }
+
+  async function createStore() {
+    if (!root.indexedDB) throw new Error('Local photo storage is unavailable in this browser. No photos have been saved. Use a browser with IndexedDB enabled.');
+    const db = await new Promise((resolve, reject) => {
+      let settled = false;
+      let request;
+      try { request = root.indexedDB.open(DB_NAME, 1); }
+      catch (error) { reject(storageError(error)); return; }
+      request.onupgradeneeded = () => {
+        const database = request.result;
+        const metadata = database.createObjectStore('metadata', { keyPath: 'id' });
+        metadata.createIndex('addedAt', 'addedAt');
+        database.createObjectStore('files', { keyPath: 'id' });
+      };
+      request.onblocked = () => { settled = true; reject(new Error('Another copy of this library is blocking photo storage. Close the other copies and reload this page.')); };
+      request.onerror = () => { settled = true; reject(storageError(request.error)); };
+      request.onsuccess = () => {
+        if (settled) { request.result.close(); return; }
+        settled = true;
+        resolve(request.result);
+      };
+    });
+    let closed = false;
+    db.onversionchange = () => { closed = true; db.close(); };
+    const transact = (stores, mode, action) => new Promise((resolve, reject) => {
+      if (closed) { reject(new Error('This photo workspace is closed. Reload the page to reopen it.')); return; }
+      let tx;
+      try { tx = db.transaction(stores, mode); }
+      catch (error) { reject(storageError(error)); return; }
+      let result;
+      let failure;
+      tx.oncomplete = () => resolve(result);
+      tx.onabort = () => reject(failure || storageError(tx.error));
+      tx.onerror = () => { /* Abort reports the final transaction failure. */ };
+      const fail = (error) => {
+        failure = error;
+        try { tx.abort(); } catch (_) { reject(error); }
+      };
+      // All IndexedDB requests are queued synchronously or in request callbacks.
+      const guard = (callback) => (...args) => {
+        try { callback(...args); } catch (error) { fail(storageError(error)); }
+      };
+      try { action(tx, (value) => { result = value; }, fail, guard); }
+      catch (error) { fail(storageError(error)); }
+    });
+    const assertId = (id) => {
+      if (typeof id !== 'string' || !/^[a-f0-9]{64}$/.test(id)) throw new RangeError('Choose a saved photo.');
+    };
+
+    return {
+      async put(prepared) {
+        const metadata = metadataFrom(prepared);
+        const originalBlob = prepared.blob;
+        const thumbnailBlob = prepared.thumbnail;
+        return transact(['metadata', 'files'], 'readwrite', (tx, result, fail, guard) => {
+          const meta = tx.objectStore('metadata');
+          const find = meta.get(metadata.id);
+          find.onsuccess = guard(() => {
+            if (find.result) { result({ added: false }); return; }
+            meta.add(metadata);
+            const files = tx.objectStore('files');
+            files.add({ id: metadata.id, blob: originalBlob });
+            files.add({ id: `${metadata.id}:thumbnail`, blob: thumbnailBlob });
+            result({ added: true });
+          });
+        });
+      },
+      async list({ query = '', viewpoint = '', page = 0, pageSize = 24 } = {}) {
+        if (typeof query !== 'string') throw new TypeError('Search must be text.');
+        if (viewpoint !== '') viewpointValue(viewpoint);
+        if (!Number.isSafeInteger(page) || page < 0 || !Number.isInteger(pageSize) || pageSize < 1 || pageSize > 100 || !Number.isSafeInteger(page * pageSize)) {
+          throw new RangeError('Choose a valid page and a page size from 1 to 100.');
+        }
+        const term = query.trim().toLowerCase();
+        return transact(['metadata'], 'readonly', (tx, result, fail, guard) => {
+          const data = { items: [], total: 0, count: 0, bytes: 0, viewpoints: Object.fromEntries(VIEWPOINTS.map((v) => [v, 0])) };
+          const cursor = tx.objectStore('metadata').index('addedAt').openCursor(null, 'prev');
+          cursor.onsuccess = guard(() => {
+            const row = cursor.result;
+            if (!row) { result(data); return; }
+            const photo = row.value;
+            data.count++;
+            data.bytes += photo.size + photo.thumbnailBytes;
+            data.viewpoints[photo.viewpoint]++;
+            if ((!viewpoint || photo.viewpoint === viewpoint) && (!term || `${photo.name}\n${photo.notes}`.toLowerCase().includes(term))) {
+              const position = data.total++;
+              if (position >= page * pageSize && data.items.length < pageSize) data.items.push(photo);
+            }
+            row.continue();
+          });
+        });
+      },
+      async get(id) {
+        assertId(id);
+        return transact(['metadata', 'files'], 'readonly', (tx, result, fail, guard) => {
+          const metadata = tx.objectStore('metadata').get(id);
+          metadata.onsuccess = guard(() => {
+            if (!metadata.result) { result(null); return; }
+            const photo = { ...metadata.result, blob: null, thumbnail: null };
+            const original = tx.objectStore('files').get(id);
+            const thumb = tx.objectStore('files').get(`${id}:thumbnail`);
+            original.onsuccess = () => { photo.blob = original.result ? original.result.blob : null; };
+            thumb.onsuccess = () => { photo.thumbnail = thumb.result ? thumb.result.blob : null; };
+            result(photo);
+          });
+        });
+      },
+      async thumbnail(id) {
+        assertId(id);
+        return transact(['files'], 'readonly', (tx, result) => {
+          const request = tx.objectStore('files').get(`${id}:thumbnail`);
+          request.onsuccess = () => result(request.result ? request.result.blob : null);
+        });
+      },
+      async update(id, patch) {
+        assertId(id);
+        if (!patch || typeof patch !== 'object' || Array.isArray(patch) || Object.keys(patch).some((key) => !['viewpoint', 'notes', 'measurement'].includes(key))) {
+          throw new RangeError('Only viewpoint, notes, and measurement can be updated.');
+        }
+        // Validate caller-owned input before the asynchronous read; snapshot it so
+        // later edits by the caller cannot change the committed measurement.
+        const values = {};
+        if (Object.hasOwn(patch, 'viewpoint')) values.viewpoint = viewpointValue(patch.viewpoint);
+        if (Object.hasOwn(patch, 'notes')) values.notes = notesValue(patch.notes);
+        if (Object.hasOwn(patch, 'measurement')) {
+          if (patch.measurement === null) values.measurement = null;
+          else {
+            const m = patch.measurement;
+            if (!m || typeof m !== 'object') throw new RangeError('Choose a valid measurement or clear it.');
+            values.measurement = { reference: Array.isArray(m.reference) ? m.reference.map((p) => Array.isArray(p) ? [...p] : p) : m.reference,
+              target: Array.isArray(m.target) ? m.target.map((p) => Array.isArray(p) ? [...p] : p) : m.target, knownMm: m.knownMm };
+          }
+        }
+        return transact(['metadata'], 'readwrite', (tx, result, fail) => {
+          const metadata = tx.objectStore('metadata');
+          const request = metadata.get(id);
+          request.onsuccess = () => {
+            try {
+              if (!request.result) throw new RangeError('This photo is no longer in the workspace.');
+              const photo = { ...request.result, ...values };
+              if (photo.measurement !== null) {
+                photo.measurement = measurementValue(photo.measurement, photo.width, photo.height);
+                estimate(photo.measurement, photo.width, photo.height);
+              }
+              metadata.put(photo);
+              result(photo);
+            } catch (error) { fail(error instanceof RangeError || error instanceof TypeError ? error : storageError(error)); }
+          };
+        });
+      },
+      async remove(id) {
+        assertId(id);
+        return transact(['metadata', 'files'], 'readwrite', (tx) => {
+          tx.objectStore('metadata').delete(id);
+          tx.objectStore('files').delete(id);
+          tx.objectStore('files').delete(`${id}:thumbnail`);
+        });
+      },
+      async exportManifest() {
+        return transact(['metadata'], 'readonly', (tx, result, fail, guard) => {
+          const manifest = { schema: 'cad-photo-workspace', version: 1, exportedAt: new Date().toISOString(), photos: [] };
+          const request = tx.objectStore('metadata').index('addedAt').openCursor(null, 'prev');
+          request.onsuccess = guard(() => {
+            const cursor = request.result;
+            if (!cursor) { result(manifest); return; }
+            manifest.photos.push(cursor.value);
+            cursor.continue();
+          });
+        });
+      },
+      close() { closed = true; db.close(); },
+    };
+  }
+
+  const api = Object.freeze({ VIEWPOINTS, MAX_FILE_BYTES, MAX_PIXELS, validateFile, detectImageType, prepareFile, estimate, createStore });
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  root.CadPhotos = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this);
+
+/* Local photo intake and review. Originals never leave the browser. */
+(function () {
+  'use strict';
+  const P = window.CadPhotos;
+  const $ = (id) => document.getElementById(id);
+  if (!P || !$('photos')) return;
+  const label = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+  const node = (tag, text, className) => {
+    const item = document.createElement(tag);
+    if (text !== undefined) item.textContent = text;
+    if (className) item.className = className;
+    return item;
+  };
+  const size = (bytes) => bytes < 1048576 ? `${(bytes / 1024).toFixed(1)} KB` : `${(bytes / 1048576).toFixed(1)} MB`;
+  const report = (message) => { $('photo-status').textContent = message; };
+  const fail = (error) => report(error.message || 'This action could not finish. Try again.');
+  const run = (action) => (...args) => Promise.resolve().then(() => action(...args)).catch(fail);
+  let db, page = 0, importing = false, cancelled = false, renderVersion = 0;
+  let galleryURLs = [], detailURL, selected, detailVersion = 0, pointMode = null, pointIndex = 0;
+  const coordinateIDs = ['ref-x1', 'ref-y1', 'ref-x2', 'ref-y2', 'target-x1', 'target-y1', 'target-x2', 'target-y2'];
+  const coords = coordinateIDs.map((id) => $('photo-' + id));
+  const dialog = $('photo-detail');
+  const errorsBox = node('ul', undefined, 'photo-errors');
+  errorsBox.id = 'photo-errors'; errorsBox.hidden = true;
+  $('photo-status').after(errorsBox);
+
+  for (const viewpoint of P.VIEWPOINTS) {
+    for (const id of ['photo-filter', 'photo-viewpoint']) {
+      const option = node('option', label(viewpoint)); option.value = viewpoint;
+      $(id).append(option);
+    }
+  }
+
+  function setBusy(value) {
+    importing = value;
+    $('photo-input').disabled = value || !db;
+    $('photo-cancel').hidden = !value;
+    $('photo-cancel').disabled = false;
+    $('photo-progress').hidden = !value;
+    $('photo-drop-zone').setAttribute('aria-busy', String(value));
+  }
+
+  async function storageInfo(bytes) {
+    let text = `${size(bytes)} saved in this browser. Keep your original files.`;
+    try {
+      const estimate = await navigator.storage?.estimate();
+      if (estimate?.quota && Number.isFinite(estimate.usage)) {
+        text += ` About ${size(Math.max(0, estimate.quota - estimate.usage))} of browser storage available (shared with this site).`;
+      }
+    } catch { /* An estimate is optional; committed writes determine success. */ }
+    return text;
+  }
+
+  function coverage(result) {
+    const primary = ['front', 'back', 'left', 'right', 'top', 'bottom'];
+    $('photo-coverage').replaceChildren(...primary.map((view) => {
+      const count = result.viewpoints[view] || 0;
+      const chip = node('span', `${label(view)} · ${count}`, 'photo-badge' + (count ? ' is-covered' : ''));
+      return chip;
+    }));
+    const missing = primary.filter((view) => !result.viewpoints[view]);
+    const tips = [];
+    if (!result.count) tips.push('Start with clear views around the same object. Include a ruler or a measured feature in the plane you want to measure.');
+    else {
+      if (result.viewpoints.unassigned) tips.push(`Label the viewpoint of ${result.viewpoints.unassigned} unassigned photo${result.viewpoints.unassigned === 1 ? '' : 's'} to track coverage.`);
+      tips.push(missing.length ? `Views still unlabelled: ${missing.map(label).join(', ')}. Add them where the object can be photographed safely.` : 'All six view labels are represented. Check that nearby photos overlap and show the same unchanged object.');
+      tips.push('Use overlapping views with steady lighting. Add close-ups of interfaces and hidden geometry; verify critical dimensions on the object.');
+    }
+    tips.push('Coverage follows your labels. It does not measure camera positions, overlap, or reconstruction accuracy.');
+    $('photo-guidance').replaceChildren(...tips.map((tip) => node('p', tip)));
+  }
+
+  async function refresh() {
+    if (!db) return;
+    const version = ++renderVersion;
+    const result = await db.list({ query: $('photo-search').value, viewpoint: $('photo-filter').value, page, pageSize: 24 });
+    if (version !== renderVersion) return;
+    if (page > 0 && page * 24 >= result.total) { page = Math.max(0, Math.ceil(result.total / 24) - 1); return refresh(); }
+    $('photo-count').textContent = `${result.count} photo${result.count === 1 ? '' : 's'} saved`;
+    $('photo-empty').hidden = result.total !== 0;
+    $('photo-empty').textContent = result.count ? 'No photos match these filters. Try another view or a shorter search.' : 'Your reference set starts here. Add photos, then open one to label its view and record a measurement.';
+    $('photo-page').textContent = `${result.total ? page * 24 + 1 : 0}–${Math.min((page + 1) * 24, result.total)} of ${result.total} photos`;
+    $('photo-prev').disabled = page === 0;
+    $('photo-next').disabled = (page + 1) * 24 >= result.total;
+    $('photo-export').disabled = result.count === 0;
+    coverage(result);
+    const fragment = document.createDocumentFragment();
+    const urls = [];
+    try {
+      for (const photo of result.items) {
+        const card = node('button', undefined, 'photo-card'); card.type = 'button';
+        card.dataset.photoId = photo.id;
+        card.setAttribute('aria-label', `Review ${photo.name}`);
+        const thumb = node('img', undefined, 'photo-thumb');
+        thumb.alt = ''; thumb.loading = 'lazy'; thumb.decoding = 'async';
+        const blob = await db.thumbnail(photo.id);
+        if (blob) { const url = URL.createObjectURL(blob); urls.push(url); thumb.src = url; }
+        const body = node('span', undefined, 'photo-card-body');
+        body.append(node('span', photo.name, 'photo-card-name'), node('span', `${photo.width} × ${photo.height} · ${label(photo.viewpoint)}`, 'photo-card-meta'));
+        if (photo.measurement) body.append(node('span', 'Dimension estimate saved', 'photo-badge'));
+        if (photo.notes) body.append(node('span', photo.notes, 'photo-card-note'));
+        card.append(thumb, body);
+        card.addEventListener('click', run(() => openDetail(photo.id)));
+        fragment.append(card);
+      }
+    } catch (error) { urls.forEach((url) => URL.revokeObjectURL(url)); throw error; }
+    if (version !== renderVersion) { urls.forEach((url) => URL.revokeObjectURL(url)); return; }
+    galleryURLs.forEach((url) => URL.revokeObjectURL(url)); galleryURLs = urls;
+    $('photo-grid').replaceChildren(fragment);
+    const info = await storageInfo(result.bytes);
+    if (version === renderVersion) $('photo-storage').textContent = info;
+  }
+
+  async function importPhotos(files) {
+    if (!db || importing || !files.length) return;
+    setBusy(true); cancelled = false;
+    errorsBox.replaceChildren(); errorsBox.hidden = true;
+    let added = 0, duplicates = 0, failed = 0, processed = 0, storageStopped = false;
+    $('photo-progress').max = files.length; $('photo-progress').value = 0;
+    try {
+      for (const file of files) {
+        if (cancelled) break;
+        report(`Adding photo ${processed + 1} of ${files.length}: ${file.name}`);
+        let prepared;
+        try { prepared = await P.prepareFile(file); }
+        catch (error) {
+          failed++;
+          if (errorsBox.childElementCount < 30) errorsBox.append(node('li', `${file.name}: ${error.message}`));
+        }
+        if (prepared) {
+          try {
+            const result = await db.put(prepared);
+            if (result.added) added++; else duplicates++;
+          } catch (error) {
+            failed++; storageStopped = true;
+            errorsBox.append(node('li', `${file.name}: ${error.message} Import stopped; photos already saved are retained.`));
+          }
+        }
+        processed++; $('photo-progress').value = processed;
+        // Yield between files; neither decoded originals nor previews accumulate in memory.
+        if (processed % 12 === 0) await refresh();
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        if (storageStopped) break;
+      }
+      page = 0;
+      await refresh();
+      const pending = files.length - processed;
+      report(`Added ${added} photos · ${duplicates} duplicates skipped · ${failed} files could not be added.${pending ? ` ${pending} files not processed; select them again to continue.` : ''}${cancelled ? ' Import cancelled.' : ''}`);
+      errorsBox.hidden = !failed;
+    } finally {
+      $('photo-input').value = '';
+      setBusy(false);
+    }
+  }
+
+  function readMeasurement() {
+    const values = coords.map((input) => input.value.trim() === '' ? null : Number(input.value));
+    const known = $('photo-known-mm').value.trim();
+    if (values.every((v) => v === null) && !known) return null;
+    if (values.some((v) => v === null) || !known) throw new Error('Mark both endpoints of the reference and target, and enter the known reference length. Or clear the measurement to save only photo details.');
+    return { reference: [[values[0], values[1]], [values[2], values[3]]], target: [[values[4], values[5]], [values[6], values[7]]], knownMm: Number(known) };
+  }
+
+  function drawPoints() {
+    const svg = $('photo-overlay'); svg.replaceChildren();
+    if (!selected) return;
+    svg.setAttribute('viewBox', `0 0 ${selected.width} ${selected.height}`);
+    const radius = Math.max(selected.width, selected.height) / 95;
+    for (const [offset, color, prefix] of [[0, '#ea982c', 'R'], [4, '#40b9ba', 'T']]) {
+      const points = [];
+      for (let n = 0; n < 2; n++) {
+        const xInput = coords[offset + n * 2], yInput = coords[offset + n * 2 + 1];
+        if (xInput.value === '' || yInput.value === '') continue;
+        const x = Number(xInput.value), y = Number(yInput.value);
+        if (!Number.isFinite(x) || !Number.isFinite(y) || x < 0 || y < 0 || x > selected.width || y > selected.height) continue;
+        points.push([x, y]);
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        for (const [key, value] of Object.entries({ cx: x, cy: y, r: radius, fill: color, stroke: '#172b37', 'stroke-width': radius / 5 })) circle.setAttribute(key, value);
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        for (const [key, value] of Object.entries({ x: x + radius * 1.3, y: y - radius, fill: color, 'font-size': radius * 2.3, 'font-weight': 'bold', stroke: '#172b37', 'stroke-width': radius / 12, 'paint-order': 'stroke' })) text.setAttribute(key, value);
+        text.textContent = prefix + (n + 1); svg.append(circle, text);
+      }
+      if (points.length === 2) {
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        for (const [key, value] of Object.entries({ x1: points[0][0], y1: points[0][1], x2: points[1][0], y2: points[1][1], stroke: color, 'stroke-width': radius / 3 })) line.setAttribute(key, value);
+        svg.prepend(line);
+      }
+    }
+  }
+
+  function updateEstimate() {
+    drawPoints();
+    try {
+      const measurement = readMeasurement();
+      const estimate = measurement && P.estimate(measurement, selected.width, selected.height);
+      $('photo-estimate').textContent = estimate ? `Estimated dimension: ${Number(estimate.estimatedMm.toPrecision(6))} mm. ${estimate.warnings.join(' ')}` : 'No dimension estimate yet. Mark a known reference and a target on the same plane.';
+      $('photo-estimate').dataset.state = estimate ? 'estimate' : 'empty';
+    } catch (error) {
+      $('photo-estimate').textContent = error.message;
+      $('photo-estimate').dataset.state = 'incomplete';
+    }
+  }
+
+  function stopMarking() {
+    pointMode = null; pointIndex = 0;
+    $('photo-image-stage').classList.remove('is-marking');
+    $('photo-reference-points').setAttribute('aria-pressed', 'false');
+    $('photo-target-points').setAttribute('aria-pressed', 'false');
+  }
+
+  function setDetailBusy(value) {
+    for (const input of dialog.querySelectorAll('input, select, textarea, #photo-save, #photo-remove, #photo-reference-points, #photo-target-points, #photo-reset-points')) input.disabled = value;
+    if (value) stopMarking();
+  }
+
+  async function openDetail(id) {
+    const version = ++detailVersion;
+    const photo = await db.get(id);
+    if (!photo || version !== detailVersion) return;
+    selected = photo;
+    setDetailBusy(false);
+    if (detailURL) URL.revokeObjectURL(detailURL);
+    detailURL = URL.createObjectURL(photo.blob);
+    $('photo-image').src = detailURL; $('photo-image').alt = photo.name;
+    $('photo-detail-title').textContent = photo.name;
+    $('photo-detail-info').textContent = `${photo.width} × ${photo.height} pixels · ${size(photo.size)} · ${label(photo.viewpoint)}. Save details before closing.`;
+    $('photo-viewpoint').value = photo.viewpoint;
+    $('photo-notes').value = photo.notes;
+    coords.forEach((input, i) => { input.max = i % 2 ? photo.height : photo.width; input.value = ''; });
+    $('photo-known-mm').value = '';
+    if (photo.measurement) {
+      const m = photo.measurement;
+      const values = [...m.reference.flat(), ...m.target.flat()];
+      coords.forEach((input, i) => { input.value = values[i]; });
+      $('photo-known-mm').value = m.knownMm;
+    }
+    stopMarking();
+    $('photo-measure-instruction').textContent = 'Choose a reference or target, then click its two endpoints on the photo. You can also enter pixel coordinates below.';
+    updateEstimate();
+    if (!dialog.open) dialog.showModal();
+  }
+
+  function download(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const link = node('a'); link.href = url; link.download = filename;
+    document.body.append(link); link.click(); link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
+  }
+
+  $('photo-input').addEventListener('change', (event) => { run(importPhotos)(Array.from(event.target.files)); });
+  const drop = $('photo-drop-zone');
+  for (const eventName of ['dragenter', 'dragover']) drop.addEventListener(eventName, (event) => {
+    event.preventDefault(); drop.classList.add('is-dragging');
+  });
+  drop.addEventListener('dragleave', () => drop.classList.remove('is-dragging'));
+  drop.addEventListener('drop', (event) => {
+    event.preventDefault(); drop.classList.remove('is-dragging');
+    if (importing) return report('A batch is still being added. Wait for it to finish, then drop these photos again.');
+    run(importPhotos)(Array.from(event.dataTransfer.files));
+  });
+  // Prevent dropping a photo elsewhere from navigating away and losing an active import.
+  for (const name of ['dragover', 'drop']) window.addEventListener(name, (event) => {
+    if ([...(event.dataTransfer?.types || [])].includes('Files')) event.preventDefault();
+  });
+  $('photo-cancel').addEventListener('click', () => { cancelled = true; $('photo-cancel').disabled = true; report('Stopping after the current file finishes. Already saved photos will remain.'); });
+  $('photo-search').addEventListener('input', run(() => { page = 0; return refresh(); }));
+  $('photo-filter').addEventListener('change', run(() => { page = 0; return refresh(); }));
+  $('photo-prev').addEventListener('click', run(() => { page = Math.max(0, page - 1); return refresh(); }));
+  $('photo-next').addEventListener('click', run(() => { page++; return refresh(); }));
+  $('photo-export').addEventListener('click', run(async () => {
+    const manifest = await db.exportManifest();
+    download(new Blob([JSON.stringify(manifest, null, 2) + '\n'], { type: 'application/json' }), 'cad-photo-manifest.json');
+    report('Photo manifest exported: filenames, fingerprints, viewpoints, notes, and measurements. Keep the original photos separately; this file does not contain images.');
+  }));
+
+  $('photo-close').addEventListener('click', () => dialog.close());
+  dialog.addEventListener('close', () => {
+    detailVersion++; selected = null; stopMarking();
+    $('photo-image').removeAttribute('src');
+    if (detailURL) URL.revokeObjectURL(detailURL); detailURL = null;
+  });
+  for (const [button, mode, offset] of [['photo-reference-points', 'reference', 0], ['photo-target-points', 'target', 4]]) {
+    $(button).addEventListener('click', () => {
+      stopMarking(); pointMode = mode; pointIndex = 0;
+      coords.slice(offset, offset + 4).forEach((input) => { input.value = ''; });
+      $(button).setAttribute('aria-pressed', 'true');
+      $('photo-image-stage').classList.add('is-marking');
+      $('photo-measure-instruction').textContent = `Click the first endpoint of the ${mode}.`;
+      updateEstimate();
+    });
+  }
+  $('photo-image').addEventListener('click', (event) => {
+    if (!pointMode || !selected) return;
+    const rect = event.target.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    const offset = (pointMode === 'reference' ? 0 : 4) + pointIndex * 2;
+    coords[offset].value = Math.min(selected.width, Math.max(0, (event.clientX - rect.left) * selected.width / rect.width)).toFixed(2);
+    coords[offset + 1].value = Math.min(selected.height, Math.max(0, (event.clientY - rect.top) * selected.height / rect.height)).toFixed(2);
+    pointIndex++;
+    if (pointIndex === 2) { stopMarking(); $('photo-measure-instruction').textContent = 'Endpoints marked. Check the reference length and estimated dimension, then save photo details.'; }
+    else $('photo-measure-instruction').textContent = `Click the second endpoint of the ${pointMode}.`;
+    updateEstimate();
+  });
+  for (const input of [...coords, $('photo-known-mm')]) input.addEventListener('input', updateEstimate);
+  $('photo-reset-points').addEventListener('click', () => {
+    coords.forEach((input) => { input.value = ''; }); $('photo-known-mm').value = '';
+    stopMarking(); updateEstimate();
+  });
+  $('photo-save').addEventListener('click', async () => {
+    if (!selected) return;
+    const version = detailVersion, id = selected.id;
+    setDetailBusy(true);
+    try {
+      const measurement = readMeasurement();
+      if (measurement) P.estimate(measurement, selected.width, selected.height);
+      await db.update(id, { viewpoint: $('photo-viewpoint').value, notes: $('photo-notes').value, measurement });
+      if (version === detailVersion) dialog.close();
+      await refresh(); report('Photo details saved locally.');
+    } catch (error) {
+      if (version === detailVersion) $('photo-estimate').textContent = error.message;
+      else fail(error);
+    } finally { if (version === detailVersion) setDetailBusy(false); }
+  });
+  $('photo-download').addEventListener('click', () => { if (selected) download(selected.blob, selected.name); });
+  $('photo-remove').addEventListener('click', async () => {
+    if (!selected || !window.confirm(`Remove ${selected.name} from this browser's photo set? Your original file stays unchanged.`)) return;
+    const version = detailVersion, id = selected.id;
+    setDetailBusy(true);
+    try {
+      await db.remove(id);
+      if (version === detailVersion) dialog.close();
+      await refresh(); report('Photo removed from this browser’s reference set.');
+    } catch (error) {
+      if (version === detailVersion) $('photo-detail-info').textContent = error.message;
+      else fail(error);
+    } finally { if (version === detailVersion) setDetailBusy(false); }
+  });
+  window.addEventListener('beforeunload', (event) => { if (importing) { event.preventDefault(); event.returnValue = ''; } });
+  window.addEventListener('focus', run(() => !importing && refresh()));
+  setBusy(false);
+  run(async () => {
+    db = await P.createStore(); setBusy(false); await refresh();
+    report('Ready to add photos. Images stay in this browser on this device.');
+  })();
 })();
 </script>
 </body>
