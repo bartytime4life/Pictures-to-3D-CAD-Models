@@ -74,6 +74,11 @@ class Counts(unittest.TestCase):
         self.assertIn(f"{record['node_tests']['passed']} Node test groups", text)
         self.assertIn(f"{record['browser_checks']['assertions']} assertions", text)
         self.assertIn(f"`{record['browser_checks'].get('transport', 'file')}`", text)
+        photos = record.get("photo_workspace_checks")
+        if photos:
+            self.assertEqual(photos["status"], "passed")
+            self.assertEqual(photos["check_count"], len(photos["checks"]))
+            self.assertIn(f"{photos['check_count']} assertions", text)
         plate = record["openscad_plate_checks"]
         if isinstance(plate, dict):
             self.assertEqual(plate["rows"], plate["passed"])

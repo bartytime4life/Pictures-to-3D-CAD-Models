@@ -2,6 +2,25 @@
 
 All dates are 2026. Revisions are numbered in `library.json`, which feeds the HTML, the PDF, and the archive name. Revision 3 is the first revision kept in this repository; Revisions 1 and 2 were distributed as ZIP archives.
 
+## Revision 4 (November 8, 2026)
+
+### Added
+
+- An offline **Photos** workspace with repeated multi-select and drag-and-drop intake, no fixed photo-count cap, sequential decoding, local original storage, and a paged thumbnail gallery.
+- Byte-fingerprint duplicate detection, content and dimension validation, cancellation, readable storage failures, and atomic per-photo writes.
+- Manual viewpoint coverage, searchable notes, saved reference and target endpoints, and known-length dimension estimates with explicit planar and perspective limitations.
+- Original download, per-photo removal, and a metadata-only photo manifest export. Photos are never sent to a server, and the manifest is not an image backup.
+- Automated photo validation tests (`tests/node/photos.test.mjs`) and isolated browser checks with synthetic images (`scripts/check-photos.mjs`). They cover persistence, multi-batch additions, measurement arithmetic, duplicate races, storage failure, and mobile layout. This is an intake and reference workflow; no 3D reconstruction or physical accuracy qualification is claimed.
+
+### Changed
+
+- **One loopback server for both browser checks.** The private HTTP server from `check-library.mjs` moved to `scripts/lib/serve.mjs`. The photo check now honours `CAD_REFERENCE_BROWSER_TRANSPORT` too, so the repository's root `make test-library` and CI test the Photos tab over the same transport as the rest of the page. Each record notes its transport.
+- **`make check`** runs both browser checks, and `make verify` requires a passing, current photo check.
+
+### Fixed
+
+- **The archive no longer packages local environments.** `make-dist.py` now skips `.venv`, `.cache`, and `.ruff_cache`. `make setup-library` at the repository root creates `reference-library/.venv`, which a later `make dist` would otherwise have added to the ZIP.
+
 ## Revision 3 maintenance (November 8, 2026)
 
 Fixes from the automated Codex review of pull request #2, plus a cross-check with the workbench. The revision number, archive name, and content are unchanged apart from the items below.

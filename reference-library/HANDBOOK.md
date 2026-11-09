@@ -632,6 +632,8 @@ The additions are engineering synthesis with synthetic arithmetic. They were not
 
 OpenSCAD 2021.01 rendered the two synthetic examples and their meshes passed the geometry checks. That establishes that the CAD sources produce the intended closed solids; it is not a slicing, printing, fit, or strength result.
 
+**Revision 4, November 8, 2026.** This revision adds a local photo workspace: repeatable multi-photo intake, saved viewpoint labels and notes, coverage guidance, reference-length dimension estimates, and a metadata manifest. Synthetic browser checks exercise storage, editing, and image measurement. No real-object reconstruction or physical accuracy qualification is implied.
+
 ## 23. Companion toolkit
 
 The calculators are conveniences for the arithmetic in this handbook. They state their assumptions and raise the warnings described in the text, but they cannot supply missing evidence: a result inherits the weakest evidence class of its inputs.
@@ -639,6 +641,16 @@ The calculators are conveniences for the arithmetic in this handbook. They state
 ### In the HTML library
 
 Open the **Toolkit** tab of `index.html`. The route finder takes what you have and what you need, and returns a starting workflow, any follow-on workflow, warnings for risky combinations, checks before printing, sources to read first, and the relevant calculators. The calculators cover planar scale, scale uncertainty, the calibration self-check, a homography fit with residuals and local scale, off-plane depth correction, camera distance, label rounding, circle tessellation, a clearance-coupon planner, coating allowance, spur-gear relations, import-unit diagnosis, evidence-class propagation, and a first wind-power estimate. Everything runs locally; links such as `index.html#calc-depth` open a calculator directly.
+
+### Local photo workspace
+
+Open the **Photos** tab to build a reference set for the current object. Select multiple JPEG, PNG, or WebP files or drop them into the page. Repeat as often as needed: there is no fixed photo-count limit. Processing is sequential, the gallery displays 24 thumbnails at a time, and browser storage is the practical total limit. Each image must be at most 50 MiB and 60 megapixels. Exact byte duplicates are skipped; similar views are retained.
+
+Originals, thumbnails, viewpoint labels, notes, and measurements stay in this browser on this device. No images are uploaded. Browser data may be cleared or evicted, and storage under a local file can vary by browser and path. Keep your originals. Exporting the photo manifest saves metadata and measurement points, not image backups. Moving the HTML file or changing browsers does not transfer the collection.
+
+Label the front, back, left, right, top, bottom, and detail views. The coverage display reports these labels and suggests missing views; it does not infer camera poses or score reconstruction accuracy. Capture overlapping views of the same unchanged object and retain physical measurements of critical interfaces.
+
+For a front-on planar feature, mark two endpoints of a known reference, enter its length in millimeters, and mark two endpoints of the target feature. The workspace computes `target pixels × known mm / reference pixels` using full-resolution image coordinates. Numeric coordinate inputs offer the same operation without pointing. The original image, selected points, and known length remain associated in the manifest. Results are unverified estimates: both lengths must lie in the same plane, perspective and lens distortion are not corrected, and a short baseline increases endpoint-picking sensitivity. Use the Toolkit homography and depth workflows where their assumptions apply; independently measure critical dimensions before building or printing.
 
 ### From the command line
 

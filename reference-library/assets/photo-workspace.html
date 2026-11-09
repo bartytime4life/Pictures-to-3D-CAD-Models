@@ -1,0 +1,96 @@
+<section class="panel photo-workspace" id="photos" role="tabpanel" aria-labelledby="tab-photos" tabindex="-1" hidden>
+  <div class="photo-intro">
+    <div>
+      <span class="eyebrow">Your object, from every angle</span>
+      <h2 class="panel-title">Reference photos</h2>
+      <p class="panel-lede">Build a useful view of your part. Add photos over time, label the angles, and use a known measurement to estimate dimensions on a flat surface.</p>
+    </div>
+    <span class="photo-local"><span aria-hidden="true">●</span> Local photo workspace</span>
+  </div>
+
+  <div class="photo-start">
+    <div class="photo-drop-zone" id="photo-drop-zone" aria-label="Add reference photos">
+      <svg class="photo-add-icon" viewBox="0 0 48 48" width="48" height="48" fill="none" aria-hidden="true"><rect x="5" y="11" width="32" height="29" rx="4" stroke="currentColor" stroke-width="1.5"/><path d="m7 32 9-9 9 10 5-5 7 7" stroke="currentColor" stroke-width="1.5"/><circle cx="28" cy="19" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M40 4v14M33 11h14" stroke="currentColor" stroke-width="2"/></svg>
+      <h3>A better reference starts with another view.</h3>
+      <p>Drop photos here, or choose them from your device. Add as many as your browser storage allows, in one batch or over time.</p>
+      <label class="btn primary photo-file-label">Choose photos<input class="photo-file-input" id="photo-input" type="file" accept="image/jpeg,image/png,image/webp" multiple aria-describedby="photo-file-help"></label>
+      <p class="photo-small" id="photo-file-help">JPEG, PNG or WebP · up to 50 MiB and 60 megapixels per photo</p>
+      <div class="photo-import-progress">
+        <progress id="photo-progress" value="0" max="1" aria-label="Photo import progress" hidden></progress>
+        <button class="btn" id="photo-cancel" type="button" hidden>Stop after this photo</button>
+      </div>
+      <p class="photo-status" id="photo-status" role="status" aria-live="polite">Opening your local photo library…</p>
+    </div>
+    <aside class="photo-capture-note" aria-labelledby="photo-capture-title">
+      <span class="eyebrow">Capture with purpose</span>
+      <h3 id="photo-capture-title">More angles. Fewer assumptions.</h3>
+      <ol>
+        <li><strong>Go around the part.</strong> Include front, back, left, right, top and bottom when accessible.</li>
+        <li><strong>Show what must fit.</strong> Add close views of holes, interfaces and hidden features.</li>
+        <li><strong>Measure a reference.</strong> Place a ruler in the same plane as the feature you want to estimate.</li>
+      </ol>
+      <p>View labels help reveal gaps. They do not verify photo quality or prove 3D accuracy.</p>
+      <a href="#toolkit">Find your reconstruction route <span aria-hidden="true">→</span></a>
+    </aside>
+  </div>
+
+  <div class="photo-storage-note">
+    <p><strong>Your photos stay in this browser.</strong> They are never sent to a server. Browser or device storage is the limit; clearing browser data can delete this library. Keep your originals.</p>
+    <p class="photo-small" id="photo-storage">Checking browser storage…</p>
+  </div>
+
+  <section class="photo-coverage-panel" aria-labelledby="photo-coverage-title">
+    <div class="photo-section-heading"><h3 id="photo-coverage-title">Views you have covered</h3><span class="photo-small">Based on your labels</span></div>
+    <div class="photo-coverage" id="photo-coverage"></div>
+    <div class="photo-small" id="photo-guidance">Add photos and label each viewpoint to see which views are missing.</div>
+  </section>
+
+  <div class="photo-library-heading">
+    <div><h3>Your reference library</h3><p class="photo-small" id="photo-count">0 photos</p></div>
+    <div class="photo-export-group"><button class="btn" id="photo-export" type="button" disabled>Export photo manifest</button><span class="photo-small">Notes and measurements only. Not a photo backup.</span></div>
+  </div>
+  <div class="photo-filters">
+    <label for="photo-search">Search photos<input id="photo-search" type="search" placeholder="Filename or notes" autocomplete="off"></label>
+    <label for="photo-filter">Viewpoint<select id="photo-filter"><option value="">All viewpoints</option></select></label>
+  </div>
+  <div class="photo-grid" id="photo-grid" aria-label="Reference photos"></div>
+  <div class="photo-empty" id="photo-empty"><span class="eyebrow">A place for every perspective</span><h3>No reference photos yet.</h3><p>Add your first photos above. You can return and add more whenever you need another angle.</p></div>
+  <nav class="photo-pagination" aria-label="Photo pages"><button class="btn" id="photo-prev" type="button" disabled>Previous</button><span class="photo-small" id="photo-page" aria-live="polite">Page 1 of 1</span><button class="btn" id="photo-next" type="button" disabled>Next</button></nav>
+</section>
+
+<dialog class="photo-dialog" id="photo-detail" aria-labelledby="photo-detail-title">
+  <header class="photo-dialog-header"><div><span class="eyebrow">Photo reference</span><h2 id="photo-detail-title">Photo details</h2></div><button class="btn" id="photo-close" type="button" aria-label="Close photo details">Close <span aria-hidden="true">×</span></button></header>
+  <div class="photo-detail-layout">
+    <div class="photo-viewer">
+      <div class="photo-image-stage" id="photo-image-stage"><img id="photo-image" alt="Selected reference photo"><svg id="photo-overlay" aria-hidden="true"></svg></div>
+      <p class="photo-small" id="photo-detail-info" role="status"></p>
+    </div>
+    <div class="photo-detail-controls">
+      <label for="photo-viewpoint">Viewpoint<select id="photo-viewpoint"></select></label>
+      <label for="photo-notes">Notes<textarea id="photo-notes" rows="3" maxlength="10000" placeholder="What does this view reveal? Record features, uncertainties, or capture conditions."></textarea></label>
+      <section class="photo-measure" aria-labelledby="photo-measure-title">
+        <span class="eyebrow">Measure within one photo</span>
+        <h3 id="photo-measure-title">Estimate a flat feature</h3>
+        <p class="photo-small">Mark the ends of a known length, enter its real size, then mark the feature you want to estimate.</p>
+        <div class="photo-measure-buttons"><button class="btn" id="photo-reference-points" type="button" aria-pressed="false">1. Mark known length</button><button class="btn" id="photo-target-points" type="button" aria-pressed="false">2. Mark target length</button></div>
+        <p class="photo-small photo-measure-instruction" id="photo-measure-instruction" role="status">Choose a marking tool, then select two points on the photo. You can also enter pixel coordinates below.</p>
+        <label for="photo-known-mm">Known length (mm)<input id="photo-known-mm" type="number" min="0" step="any" inputmode="decimal" placeholder="e.g. 50"></label>
+        <output class="photo-estimate" id="photo-estimate" aria-live="polite">Add both lengths to see an estimate.</output>
+        <details class="photo-coordinates"><summary>Enter pixel coordinates</summary>
+          <p class="photo-small">Coordinates use the full-size image, starting at the top-left corner: x across, y down.</p>
+          <fieldset><legend>Known length endpoints</legend>
+            <div class="photo-point-row"><span>Start</span><label for="photo-ref-x1">x<input id="photo-ref-x1" type="number" min="0" step="any" inputmode="decimal"></label><label for="photo-ref-y1">y<input id="photo-ref-y1" type="number" min="0" step="any" inputmode="decimal"></label></div>
+            <div class="photo-point-row"><span>End</span><label for="photo-ref-x2">x<input id="photo-ref-x2" type="number" min="0" step="any" inputmode="decimal"></label><label for="photo-ref-y2">y<input id="photo-ref-y2" type="number" min="0" step="any" inputmode="decimal"></label></div>
+          </fieldset>
+          <fieldset><legend>Target length endpoints</legend>
+            <div class="photo-point-row"><span>Start</span><label for="photo-target-x1">x<input id="photo-target-x1" type="number" min="0" step="any" inputmode="decimal"></label><label for="photo-target-y1">y<input id="photo-target-y1" type="number" min="0" step="any" inputmode="decimal"></label></div>
+            <div class="photo-point-row"><span>End</span><label for="photo-target-x2">x<input id="photo-target-x2" type="number" min="0" step="any" inputmode="decimal"></label><label for="photo-target-y2">y<input id="photo-target-y2" type="number" min="0" step="any" inputmode="decimal"></label></div>
+          </fieldset>
+        </details>
+        <button class="ghost" id="photo-reset-points" type="button">Clear measurement points</button>
+        <p class="photo-accuracy-note"><strong>An estimate, not a verified dimension.</strong> Use a front-on photo with both lengths in the same plane. Perspective is not corrected. True 3D accuracy requires physical measurements and a reconstruction workflow.</p>
+      </section>
+      <div class="photo-detail-actions"><button class="btn primary" id="photo-save" type="button">Save photo details</button><button class="btn" id="photo-download" type="button">Download original</button><button class="btn photo-remove" id="photo-remove" type="button">Remove photo</button></div>
+    </div>
+  </div>
+</dialog>
