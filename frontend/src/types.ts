@@ -6,6 +6,31 @@ export type ReferenceCalibration = {
 };
 export type Profile = { outer: Point[]; holes: Point[][] };
 export type Detail = 'coarse' | 'standard' | 'fine';
+export type SlicerId = 'bambu' | 'prusa';
+export type ExportKind = 'step' | 'stl' | 'dxf' | 'scad' | 'parts' | '3mf' | SlicerId;
+export type SlicerProgram = {
+  id: SlicerId;
+  name: string;
+  target_version: string;
+  release_url: string;
+  source_url: string;
+  detected: boolean;
+  launch_available: boolean;
+  launch_reason: string;
+  version_status: 'not_checked';
+  bridge_enabled: boolean;
+};
+export type SlicerDiscovery = {
+  programs: SlicerProgram[];
+  local_bridge_enabled: boolean;
+};
+export type SlicerLaunch = {
+  status: 'launch_requested';
+  program_id: SlicerId;
+  name: string;
+  detail: string;
+  handoff_id: string;
+};
 export type Material = 'pla' | 'petg' | 'abs' | 'asa' | 'tpu' | 'nylon';
 export type DesignSettings = {
   scale_percent: number;
@@ -102,6 +127,9 @@ export type ModelResult = {
     scad: string;
     project: string;
     parts?: string;
+    '3mf'?: string;
+    bambu?: string;
+    prusa?: string;
   };
   warnings: string[];
 };

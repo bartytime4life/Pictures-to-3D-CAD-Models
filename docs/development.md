@@ -153,3 +153,7 @@ make smoke
 ```
 
 The direct `.venv/bin/python scripts/smoke.py` command remains available. To check the development proxy, use `PICAD_BASE_URL=http://127.0.0.1:4173 make smoke`. The default is the single-service startup on port 8000. This complements the full test suite; it does not replace browser verification.
+
+## Optional slicer programs
+
+`make slicers` reports filesystem discovery for Bambu Studio and PrusaSlicer without starting them. Configure `PICAD_ENABLE_SLICER_LAUNCH=1` and absolute `PICAD_BAMBU_STUDIO` / `PICAD_PRUSA_SLICER` executable paths before startup to permit explicit local GUI handoff. Programs on PATH and common app locations are also checked. Direct opening requires loopback and same-origin JSON; configure remotely hosted workbenches for downloads instead. Retained copies live in `.local/slicer-handoffs/` or `PICAD_SLICER_HANDOFF_DIR`, outside temporary job cleanup. See [slicer integration](slicers.md) for version targets and installation details.

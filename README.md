@@ -40,6 +40,12 @@ make dev
 
 See [development and setup](docs/development.md) for prerequisites, commands, and troubleshooting.
 
+## Bambu Studio and PrusaSlicer
+
+After building, open **Review export → Prepare in your slicer**. Choose **Bambu Studio** or **PrusaSlicer** and download a ZIP containing millimeter 3MF geometry, separate split-piece files, the editable recipe, and a hash-verified record of your printer/material plan. Select and review the actual printer, nozzle, filament and process settings in the slicer. Plain 3MF is also available as a regular export.
+
+An optional local launcher can open the current geometry in a configured installed slicer. Run `make slicers` to inspect availability. Targets are Bambu Studio 2.9.1 and the requested PrusaSlicer 2.9.7; executable detection does not verify the installed version. See [slicer setup and use](docs/slicers.md). Setup does not install either application, and the workbench does not slice or start prints.
+
 ## Optional local AI guidance
 
 Open **Local AI assistant** for help with capture, tracing, design changes, print planning, and export choices. Choose an installed Ollama model, ask a question, and review its answer. Suggestions show their proposed settings before an explicit **Apply**, with undo available. You still enter measured dimensions and decide when to build and export.
@@ -84,9 +90,11 @@ The bundled searchable [printer catalog](docs/printer-catalog.md) covers 429 mod
 | --- | --- | --- |
 | STEP | Opening solids in CAD software | Solid geometry in assembled positions; not the original feature history |
 | STL | Slicing or mesh workflows | Triangle surfaces in assembled positions; millimeter coordinates, no color |
+| 3MF | Importing geometry into a slicer | Millimetre units and separate mesh objects in assembled positions |
 | DXF | A flat profile for a CAD or CAM workflow | The planar boundary and holes |
 | OpenSCAD | Editing the built profile in scripted CAD | Final scaled and simplified polygon boundaries, holes, thickness, and selectable split pieces in assembled positions |
-| Parts ZIP | Importing generated pieces separately | A STEP and STL per piece, plus a manifest |
+| Parts ZIP | Importing generated pieces separately | A STEP, STL and 3MF per piece, plus a manifest |
+| Slicer handoff ZIP | Preparing a Bambu Studio or PrusaSlicer import | Geometry, split pieces, recipe, printer/material planning notes, instructions and payload hashes |
 | Project JSON | Restoring the workbench settings | Version 2 outline, measurements, optional endpoint reference and height check, design and print plan; version 1 imports remain supported |
 
 See [export formats and dimensional checks](docs/exports.md) before transferring a part to fabrication software.
@@ -99,7 +107,7 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 - One outside width or two-point reference sets uniform scale. It does not correct perspective, lens distortion, or an out-of-plane part.
 - Tracing approximates pixel boundaries. Smooth-looking geometry is not evidence of manufacturing accuracy.
 - Relative detail can simplify the CAD outline; it does not recover missing image detail or establish a minimum printable wall thickness.
-- Split exports use straight cuts without joinery, kerf, or assembly tolerances. Combined STEP/STL exports show the assembled geometry, not separated parts arranged on a print bed.
+- Split exports use straight cuts without joinery, kerf, or assembly tolerances. Combined STEP/STL/3MF exports show the assembled geometry, not separated parts arranged on a print bed.
 - The browser sends images to the app's backend. On a cloud host, that means uploading to that host; processing is not browser-only.
 - This release is a single-user workbench, not a hosted account or collaboration service.
 

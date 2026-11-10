@@ -27,17 +27,21 @@ import ModelViewer from './ModelViewer';
 import LocalAssistant from './LocalAssistant';
 import PrintSettings from './PrintSettings';
 import ReferenceCalibration from './ReferenceCalibration';
+import SlicerHandoff from './SlicerHandoff';
 import { calibrationError, measuredHeightError, referenceWidth } from './calibration';
 import { DEFAULT_DESIGN, designError, designFromProposal, parseDesign } from './design';
 import type {
   AssistantProposal,
   DesignSettings,
   Detail,
+  ExportKind,
   ModelResult,
   Point,
   Profile,
   ProjectRecipe,
   ReferenceCalibration as Calibration,
+  SlicerId,
+  SlicerLaunch,
   TraceResult,
 } from './types';
 
@@ -385,6 +389,7 @@ export default function App() {
   const [measurementReset, setMeasurementReset] = useState(0);
   const [downloading, setDownloading] = useState<string | null>(null);
   const [exportError, setExportError] = useState('');
+  const [selectedSlicer, setSelectedSlicer] = useState<SlicerId>('bambu');
   const [detail, setDetail] = useState<Detail>('standard');
   const [threshold, setThreshold] = useState(-1);
   const [inverted, setInverted] = useState(false);
@@ -957,8 +962,9 @@ export default function App() {
       'Project download started. Your outline, measurements and design settings are included; the photo is not.',
     );
   }
-  async function exportFile(kind: 'step' | 'stl' | 'dxf' | 'scad' | 'parts') {
+  async function exportFile(kind: ExportKind) {
     if (!model || !current || downloading) return;
+    const exportedModel = model;
     const downloadUrl = model.downloads[kind];
     if (!downloadUrl) return;
     setDownloading(kind);
@@ -981,22 +987,80 @@ export default function App() {
         );
       }
       const blob = await response.blob();
+      if (
+        modelRef.current?.id !== exportedModel.id ||
+        String(revisionRef.current) !== exportedModel.revision
+      )
+        throw new Error(
+          'The model changed during download. Update the model, then download it again.',
+        );
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
       link.download = `${projectName()
         .replace(/[^a-zA-Z0-9_-]+/g, '-')
-        .slice(0, 60)}.${kind === 'parts' ? 'parts.zip' : kind}`;
+        .slice(
+          0,
+          60,
+        )}.${kind === 'parts' ? 'parts.zip' : kind === 'bambu' ? 'bambu-studio.zip' : kind === 'prusa' ? 'prusaslicer.zip' : kind}`;
       link.click();
       window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-      setNotice(`${kind.toUpperCase()} download started. Exported geometry uses millimeters.`);
+      const label =
+        kind === 'bambu'
+          ? 'Bambu Studio handoff ZIP'
+          : kind === 'prusa'
+            ? 'PrusaSlicer handoff ZIP'
+            : kind.toUpperCase();
+      setNotice(`${label} download started. Exported geometry uses millimeters.`);
     } catch (err) {
-      const message = errorText(err);
+      const message =
+        err instanceof DOMException && (err.name === 'TimeoutError' || err.name === 'AbortError')
+          ? 'The download took too long. Your model is still here; try again.'
+          : errorText(err);
       setExportError(message);
       setError(message, { kind: 'build', openExport: true });
     } finally {
       setDownloading(null);
     }
+  }
+  async function launchSlicer(id: SlicerId): Promise<SlicerLaunch> {
+    if (!model || !current || downloading)
+      throw new Error('Update the model before opening it in your slicer.');
+    let response: Response;
+    try {
+      response = await fetch(`/api/models/${encodeURIComponent(model.id)}/slicer/${id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: '{}',
+        signal: AbortSignal.timeout(30000),
+      });
+    } catch (error) {
+      if (
+        error instanceof DOMException &&
+        (error.name === 'TimeoutError' || error.name === 'AbortError')
+      )
+        throw new Error(
+          'The launch request timed out. Check the application before trying again, or download the handoff ZIP.',
+        );
+      throw new Error('Could not reach the CAD service. Check the connection and try again.');
+    }
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      if (response.status === 404 || response.status === 410) {
+        invalidate();
+        setModal(null);
+        setError(
+          'These temporary files have expired or were cleared. Update the model to create a fresh handoff.',
+          { kind: 'build', openExport: true },
+        );
+      }
+      throw new Error(
+        typeof result.detail === 'string'
+          ? result.detail
+          : 'Could not open your slicer. Download the handoff ZIP instead.',
+      );
+    }
+    return result as SlicerLaunch;
   }
   async function clearTemporaryExports() {
     if (busy) return;
@@ -1742,8 +1806,8 @@ export default function App() {
               Clear temporary exports
             </button>
             <p>
-              Deletes all generated files on this instance. Downloaded copies are unaffected. The
-              current model will need to be rebuilt.
+              Deletes temporary model exports. Downloaded copies and retained slicer handoff copies
+              remain. The current model will need to be rebuilt.
             </p>
           </div>
           <div className="modal-footer">
@@ -1782,6 +1846,14 @@ export default function App() {
               <strong>{model.hole_count}</strong>
             </div>
           </div>
+          <SlicerHandoff
+            model={model}
+            selected={selectedSlicer}
+            onSelect={setSelectedSlicer}
+            downloading={downloading}
+            onDownload={(id) => void exportFile(id)}
+            onLaunch={launchSlicer}
+          />
           <div className="export-options">
             {(
               [
@@ -1797,6 +1869,16 @@ export default function App() {
                   description: 'Triangle mesh for 3D printing',
                   suffix: '.stl',
                 },
+                ...(model.downloads['3mf']
+                  ? [
+                      {
+                        type: '3mf' as const,
+                        label: '3MF',
+                        description: 'Millimeter mesh with separate objects for split parts',
+                        suffix: '.3mf',
+                      },
+                    ]
+                  : []),
                 {
                   type: 'dxf',
                   label: 'DXF',

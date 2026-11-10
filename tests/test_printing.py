@@ -103,8 +103,10 @@ def test_split_zip_contains_distinct_valid_solids_with_matching_volume(
             "manifest.json",
             "part-01.step",
             "part-01.stl",
+            "part-01.3mf",
             "part-02.step",
             "part-02.stl",
+            "part-02.3mf",
         }
         manifest = json.loads(bundle.read("manifest.json"))
         assert manifest["format"] == "pictures-to-cad-parts" and manifest["units"] == "mm"

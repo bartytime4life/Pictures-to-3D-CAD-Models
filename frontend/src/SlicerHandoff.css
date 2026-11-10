@@ -1,0 +1,264 @@
+.slicer-handoff {
+  border: 1px solid #50717b;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #273d45, #233039 55%, #252e35);
+  padding: 23px;
+  margin: 26px 0;
+  text-align: left;
+}
+.slicer-heading {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+.slicer-heading-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid #5b8189;
+  border-radius: 11px;
+  background: #254650;
+  color: #82e4ed;
+}
+.slicer-eyebrow {
+  margin: 0 0 6px;
+  font-size: 9px;
+  letter-spacing: 1.3px;
+  color: #b5d7df;
+  font-weight: 650;
+}
+.slicer-heading h3 {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: -0.5px;
+  font-weight: 550;
+}
+.slicer-intro {
+  font-size: 12px;
+  line-height: 1.7;
+  color: #bfced6;
+  margin: 15px 0 18px;
+}
+.slicer-choices {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  min-width: 0;
+}
+.slicer-choices legend {
+  font-size: 12px;
+  font-weight: 550;
+  margin-bottom: 10px;
+  padding: 0;
+}
+.slicer-choice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 11px;
+  border: 1px solid #63737d;
+  border-radius: 7px;
+  cursor: pointer;
+  min-width: 0;
+  background: #25323a;
+}
+.slicer-choice.is-selected {
+  background: #254651;
+  border-color: #81deed;
+  box-shadow: inset 0 0 0 1px #81deed;
+}
+.slicer-choice input {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  flex-shrink: 0;
+  accent-color: #6ed6e7;
+}
+.slicer-choice > span {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 5px;
+}
+.slicer-choice strong {
+  font-size: 12px;
+  font-weight: 600;
+}
+.slicer-choice small {
+  font-size: 10px;
+  color: #bbced6;
+  line-height: 1.4;
+}
+.slicer-choice > svg {
+  color: #8ce4ee;
+}
+.slicer-package {
+  margin-top: 17px;
+  border: 1px solid #4b626e;
+  background: #202d34;
+  padding: 17px;
+  border-radius: 7px;
+}
+.slicer-package-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+.slicer-package-title > svg {
+  color: #9adbe5;
+}
+.slicer-package-title strong {
+  font-size: 13px;
+  font-weight: 550;
+}
+.slicer-package-title > span {
+  font-size: 10px;
+  color: #b3cbd3;
+  margin-left: auto;
+}
+.slicer-package p {
+  color: #b9cbd3;
+  font-size: 11px;
+  line-height: 1.65;
+  margin: 10px 0;
+}
+.slicer-package .slicer-plan {
+  color: #dfebef;
+  font-size: 10px;
+  padding-top: 5px;
+}
+.slicer-handoff .slicer-download {
+  width: 100%;
+  justify-content: center;
+  gap: 9px;
+  padding: 12px 10px;
+  margin-top: 8px;
+  font-size: 12px;
+  white-space: normal;
+  line-height: 1.5;
+}
+.slicer-package .slicer-unpack {
+  font-size: 10px;
+  margin-bottom: 0;
+}
+.slicer-local {
+  margin: 17px 0 0;
+}
+.slicer-local-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  line-height: 1.65;
+  color: #d4e2e7;
+}
+.slicer-status-dot {
+  display: inline-block;
+  height: 6px;
+  width: 6px;
+  background: #a3b2ba;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.slicer-status-dot.is-detected {
+  background: #a2d9c1;
+}
+.slicer-launch-reason {
+  font-size: 10px;
+  line-height: 1.7;
+  color: #b2c3cb;
+  margin: 7px 0;
+}
+.slicer-open {
+  font-size: 11px;
+  padding: 9px 12px;
+  margin: 5px 0;
+  white-space: normal;
+}
+.slicer-release {
+  font-size: 10px;
+  line-height: 1.7;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  margin: 11px 0 0;
+  color: #c2e3eb;
+  text-underline-offset: 3px;
+}
+.slicer-review {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: #bcd5de;
+  border-top: 1px solid #4b616d;
+  margin-top: 18px;
+  padding-top: 15px;
+}
+.slicer-review > svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.slicer-review p {
+  font-size: 10px;
+  line-height: 1.8;
+  margin: 0;
+}
+.slicer-launch-message,
+.slicer-launch-error {
+  font-size: 11px;
+  line-height: 1.7;
+  padding: 10px 12px;
+  border: 1px solid #62877c;
+  border-radius: 5px;
+  color: #d5efe5;
+  background: #283e38;
+}
+.slicer-launch-error {
+  border-color: #9a7364;
+  background: #443730;
+  color: #ffddcc;
+}
+@media (max-width: 520px) {
+  .slicer-handoff {
+    padding: 17px 14px;
+    margin: 23px 0;
+  }
+  .slicer-heading h3 {
+    font-size: 18px;
+  }
+  .slicer-choices {
+    grid-template-columns: 1fr;
+  }
+  .slicer-choice {
+    min-height: 65px;
+    padding: 12px;
+  }
+  .slicer-choice strong {
+    font-size: 13px;
+  }
+  .slicer-choice small {
+    font-size: 11px;
+  }
+  .slicer-package {
+    padding: 13px;
+  }
+  .slicer-package-title > span {
+    margin-left: 31px;
+  }
+  .slicer-package .slicer-plan {
+    line-height: 1.9;
+  }
+  .slicer-release {
+    min-height: 44px;
+  }
+  .slicer-handoff .text-button {
+    min-height: 44px;
+  }
+}

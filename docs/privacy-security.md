@@ -55,3 +55,11 @@ Before hosting it as a shared public service, implement and test authentication,
 Do not place image contents, CAD payloads, credentials, or raw environment dumps in support reports. A useful report normally needs the operation, error text, relevant software version, and a non-sensitive reproduction image.
 
 The app does not require third-party API keys for conversion. If future integrations add credentials, store them through the hosting environment's supported secret mechanism rather than embedding them in a project recipe or frontend bundle.
+
+## Local slicer handoff
+
+Bambu Studio and PrusaSlicer handoff downloads include generated geometry, the editable outline recipe and printer/material planning notes. They do not include the original photograph or assistant conversation. Neutral 3MF files contain geometry without native slicing settings.
+
+The optional host launcher is disabled by default. Explicit local opening accepts only two fixed program IDs, configured installed executables and a generated model ID. It requires same-origin JSON from a loopback client/host and uses an argument array without a shell. Opening requests do not slice, send G-code, or contact a printer. Once open, the external slicer runs with its own settings and permissions.
+
+A retained copy under `.local/slicer-handoffs/` (or `PICAD_SLICER_HANDOFF_DIR`) survives temporary-job expiry and Clear temporary exports. These copies stay local and remain until manually removed. Discovery does not execute either program or verify its version; the interface distinguishes launch requests from confirmed native imports.

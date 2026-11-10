@@ -12,6 +12,12 @@ The traced boundary is a polygonal approximation. A hole that looks circular in 
 
 After import, check the bounding-box width, height, thickness, number of solids, and hole topology. Single-piece mode produces one valid solid with positive volume. Split mode produces the reported valid piece solids; inspect the pieces separately rather than assuming the assembly view shows a print-bed arrangement.
 
+## 3MF and slicer handoffs
+
+The **3MF** export contains millimeter geometry with separate objects for split output. Each object uses welded mesh indices and retains its assembly position. Individual split pieces in the Parts ZIP and slicer packages are normalized to XY zero and Z zero. A neutral 3MF does not contain printer, filament, process, support or multi-material settings.
+
+Choose **Bambu Studio** or **PrusaSlicer** in the export dialog for a tailored ZIP with geometry, editable recipe, part files, instructions and SHA-256 manifest. Choose native presets and review placement in the receiving slicer. See [slicer integration](slicers.md) for optional local opening and version/install boundaries.
+
 ## STL: a triangle mesh
 
 Use STL for a mesh or slicing workflow. Its triangles approximate the solid's surface. Mesh resolution affects the representation of curved boundaries, not the fidelity of the original photograph.
@@ -54,13 +60,13 @@ For a new plate with explicit hole diameters and spacing, the companion [OpenSCA
 
 ## Parts ZIP: individual pieces
 
-Split mode adds a parts ZIP containing `part-01.step`, `part-01.stl`, subsequent numbered piece pairs, and `manifest.json`. These are actual generated solids and their meshes. The splitter supports at most eight cells and eight resulting connected pieces; a complex outline can produce more than one piece inside a cell and may be rejected if it exceeds that bound.
+Split mode adds a parts ZIP containing `part-01.step`, `part-01.stl`, `part-01.3mf`, subsequent numbered piece files, and `manifest.json`. These are actual generated solids and their meshes. The splitter supports at most eight cells and eight resulting connected pieces; a complex outline can produce more than one piece inside a cell and may be rejected if it exceeds that bound.
 
 Each individual part file is translated so its minimum X and Y coordinates and its bottom Z coordinate are zero. Translation preserves its dimensions and shape. Import STL coordinates as **millimeters** and arrange each piece in the slicer yourself; the archive is not a slicer project or automatically packed build plate.
 
 The manifest identifies `format: "pictures-to-cad-parts"`, `version: 1`, and `units: "mm"`. It records the design choices, assembled dimensions, total volume, and each part's filenames, dimensions, volume, geometric fit result, and `assembly_offset_mm`. Add that offset to an individual part's coordinates to reconstruct the combined assembly.
 
-The combined STEP/STL keep the pieces touching at their original assembled coordinates. **Separate pieces** in the viewer moves their actual meshes apart for inspection only; it does not change export positions. Use that view to inspect cut faces, then use the numbered part files for separate placement.
+The combined STEP/STL/3MF keep the pieces touching at their original assembled coordinates. **Separate pieces** in the viewer moves their actual meshes apart for inspection only; it does not change export positions. Use that view to inspect cut faces, then use the numbered part files for separate placement.
 
 The cuts create no alignment pins, joints, glue allowance, clearance, or kerf compensation. Check how the pieces will be joined and whether splitting preserves the intended function. A per-piece bed-fit result does not assess strength, supports, adhesion, or material/printer compatibility.
 

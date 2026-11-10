@@ -11,7 +11,8 @@ export default defineConfig({
     strictPort: true,
     allowedHosts: ['terminal.local', 'localhost'],
     proxy: {
-      '/api': { target: 'http://127.0.0.1:8000', changeOrigin: true },
+      // Keep the browser's Host and Origin aligned for the loopback slicer-launch gate.
+      '/api': { target: 'http://127.0.0.1:8000', changeOrigin: false },
       '/reference-library': { target: 'http://127.0.0.1:8000', changeOrigin: true },
     },
   },
