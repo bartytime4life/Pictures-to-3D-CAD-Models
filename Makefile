@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 REFERENCE_PYTHON ?= $(CURDIR)/reference-library/.venv/bin/python
 
-.PHONY: help setup setup-app setup-library start dev build build-app build-library test test-app test-library lint smoke
+.PHONY: help setup setup-app setup-library start dev build build-app build-library test test-app test-library lint smoke slicers
 
 help:
 	@echo "make setup          install app and reference-library dependencies; build the app"
@@ -11,6 +11,7 @@ help:
 	@echo "make test           run both components' unit and browser checks"
 	@echo "make lint           check workbench Python and frontend/browser-source formatting"
 	@echo "make smoke          check an already running workbench"
+	@echo "make slicers        inspect local Bambu Studio and PrusaSlicer availability"
 	@echo "Append -app or -library to setup, build, or test to select one component."
 	@echo "Library browser checks use local HTTP; its own make check defaults to file URLs."
 
@@ -51,3 +52,6 @@ lint:
 
 smoke:
 	.venv/bin/python scripts/smoke.py
+
+slicers:
+	.venv/bin/python scripts/slicer_status.py

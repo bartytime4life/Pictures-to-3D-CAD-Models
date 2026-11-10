@@ -21,6 +21,8 @@ from .printing import (
     split_profile,
 )
 from .scad import profile_source
+from .slicer_handoff import write_slicer_handoffs
+from .three_mf import ThreeMFError, write_3mf
 
 
 def extrude_profile(polygon, thickness):
@@ -136,10 +138,20 @@ def build(job_dir: Path) -> dict:
         if design.output_mode == "split":
             # Individual files sit at XY zero for slicer placement; the manifest
             # records the translation needed to reassemble them without gaps.
-            export_solid(solid.translate((-bounds.xmin, -bounds.ymin, 0)), job_dir, part_id)
-            part["files"] = {"step": f"{part_id}.step", "stl": f"{part_id}.stl"}
+            normalized = solid.translate((-bounds.xmin, -bounds.ymin, 0))
+            export_solid(normalized, job_dir, part_id)
+            write_3mf(
+                job_dir / f"{part_id}.3mf",
+                [{"name": part["name"], "mesh": mesh_of(normalized)}],
+                name=f"{request.name} — {part['name']}",
+            )
+            part["files"] = {
+                "step": f"{part_id}.step", "stl": f"{part_id}.stl", "3mf": f"{part_id}.3mf"
+            }
             bundle_files.extend(part["files"].values())
         parts.append(part)
+
+    write_3mf(job_dir / "model.3mf", parts, name=request.name)
 
     recipe = {
         "format": "pictures-to-cad",
@@ -156,10 +168,18 @@ def build(job_dir: Path) -> dict:
     (job_dir / "project.json").write_text(
         json.dumps(recipe, indent=2, allow_nan=False), encoding="utf-8"
     )
+    write_slicer_handoffs(
+        job_dir,
+        name=request.name,
+        design=design.model_dump(),
+        dimensions=dimensions,
+        volume_mm3=volume,
+        parts=parts,
+    )
 
     downloads = {
         kind: f"/api/download/{job_dir.name}/{kind}"
-        for kind in ("step", "stl", "dxf", "scad", "project")
+        for kind in ("step", "stl", "dxf", "scad", "project", "3mf", "bambu", "prusa")
     }
     if design.output_mode == "split":
         manifest = {
@@ -196,7 +216,7 @@ def build(job_dir: Path) -> dict:
     warnings.extend(
         [
             "STL coordinates are in millimeters. Set millimeters explicitly when importing the mesh.",
-            "Color and material are saved in the project recipe and parts manifest; STEP/STL/DXF/SCAD do not encode these choices.",
+            "Color and material are planning notes in the project and handoff manifests; geometry exports do not assign filament or slicer presets.",
             "Bed fit checks the flat bounding envelope only. Verify placement, small features, supports and material settings in your slicer.",
         ]
     )
@@ -213,7 +233,10 @@ def build(job_dir: Path) -> dict:
         "parts": parts,
         "print_fit": aggregate_fit(parts),
     }
-    for name in ("profile.dxf", "model.scad", "project.json"):
+    for name in (
+        "profile.dxf", "model.scad", "project.json", "model.3mf",
+        "bambu-handoff.zip", "prusa-handoff.zip",
+    ):
         if (job_dir / name).stat().st_size == 0:
             raise PrintGeometryError("An export was empty. Try rebuilding the model.")
     (job_dir / "result.json").write_text(json.dumps(result, allow_nan=False), encoding="utf-8")
@@ -229,7 +252,7 @@ if __name__ == "__main__":
             json.dumps(
                 {
                     "error": str(exc)[:500],
-                    "public": isinstance(exc, PrintGeometryError),
+                    "public": isinstance(exc, (PrintGeometryError, ThreeMFError)),
                 }
             ),
             encoding="utf-8",

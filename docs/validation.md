@@ -2,6 +2,18 @@
 
 Latest workbench validation: November 9, 2026, on the local Linux workstation. Earlier managed-environment and release results are recorded separately below. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
 
+## Bambu Studio and PrusaSlicer handoff — November 9, 2026
+
+The workbench exports neutral 3MF geometry and tailored handoff ZIPs for Bambu Studio 2.9.1 and the requested PrusaSlicer 2.9.7. Optional direct opening uses fixed installed executables and a retained local model copy. Neither slicer is installed or launched by setup or the checks below.
+
+- `PICAD_TEST_URL=http://127.0.0.1:18001 make test-app` passed: **237 Python tests**, production typecheck/build, and **39 Chrome browser scenarios**, with no failures or skips. `make lint` passed Ruff and Prettier. After the final cleanup-copy and development-proxy fixes, the production build, all **12 slicer/workbench browser scenarios**, and lint passed again.
+- Independent 3MF readers verified package relationships, millimetre units, object/build references, per-object dimensions, closed and consistently oriented meshes, hole topology and volume against the final CAD solids. Combined split objects retain assembly coordinates; individual part files start at XY zero and bottom Z zero. Every archived payload hash and referenced filename was checked.
+- Browser checks downloaded real 3MF and both handoff ZIPs, preserved the selected printer/material plan, required an explicit native-open click, recovered from status/launch failures, blocked stale geometry downloads, and exercised selection, keyboard and selected axe A/AA rules at a 390-pixel viewport. Native discovery/launch replies in browser tests were fixtures; geometry and downloads used the real CAD service.
+- Launcher tests used mocked processes to verify fixed arguments without a shell, retained copies, disabled/missing-program states, arbitrary-path/argument rejection, same-origin loopback restrictions, attempt cooldown and repeated request cancellation. Independent review found and corrected a development proxy Host rewrite and inaccurate cleanup wording. A real Vite proxy check accepted the local origin through to model lookup and rejected a cross-origin request with 403, without launching any software.
+- The refreshed local service passed the sample smoke check. Read-only status reported neither requested slicer executable available and direct opening disabled. The original browser project was saved locally before refreshing the service; its open tab was preserved and its recipe restored in a separate preview tab.
+
+This run used Python 3.12.3, Node.js 22.13.1 and Google Chrome 157.0.8103.50. Native Bambu Studio/PrusaSlicer import, installed-version verification, slicing and physical printing remain unverified. These are software and synthetic-geometry results; they do not establish material suitability, physical dimensions, fit or strength. Reference-library source and dependencies did not change. Remote CI results belong to the new revision.
+
 ## Repository and OpenSCAD integration — November 9, 2026
 
 The full repository workbench now includes OpenSCAD source export and opens the preserved Revision 7 companion workspace from its header. The app serves published companion files on the same origin through an explicit allowlist; local build outputs, environments, and scratch files remain outside that route.

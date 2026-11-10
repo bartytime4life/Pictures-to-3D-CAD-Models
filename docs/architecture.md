@@ -12,7 +12,8 @@ flowchart LR
     J --> F[Validate planar profile]
     F --> G[Bounded CadQuery conversion]
     G --> H[Mesh for 3D preview]
-    G --> I[STEP · STL · DXF · SCAD · parts ZIP · recipe]
+    G --> I[STEP · STL · 3MF · DXF · SCAD · parts ZIP · recipe]
+    I --> K[Bambu Studio or PrusaSlicer handoff]
 ```
 
 ## Components
@@ -40,7 +41,9 @@ The pipeline preserves supported through-hole boundaries. It cannot infer whethe
 
 Geometry detail is a geometric approximation applied to the scaled profile. `original` retains it; `draft`, `balanced`, and `fine` use simplification tolerances of 0.5, 0.25, and 0.1 times the selected nozzle diameter in millimeters, respectively. The simplification preserves topology and checks that every hole remains. The modes can still change small features and must be inspected; they do not recover image information, measure minimum wall thickness, or prove printability. The original trace remains the recipe's source profile.
 
-Split mode makes actual solids with straight XY cuts. The default preview and combined STEP/STL keep those solids in their assembled positions. A separated inspection view displays the actual per-part meshes with temporary offsets; it does not change exported coordinates or claim a print-bed layout. Per-part exports translate each piece to a local XY origin and record the assembly offset in the bundle manifest. The program does not introduce alignment pins, joints, kerf compensation, or assembly tolerances.
+Split mode makes actual solids with straight XY cuts. The default preview and combined STEP/STL/3MF keep those solids in their assembled positions. A separated inspection view displays the actual per-part meshes with temporary offsets; it does not change exported coordinates or claim a print-bed layout. Per-part exports translate each piece to a local XY origin and record the assembly offset in the bundle manifest. The program does not introduce alignment pins, joints, kerf compensation, or assembly tolerances.
+
+3MF Core packages use millimetres and separate indexed mesh objects for split solids. Each mesh is checked for finite coordinates, nondegenerate triangles, closed oriented edges and positive volume. Slicer handoff ZIPs carry this geometry, STL alternatives, the recipe, printer/material planning notes, instructions and payload hashes. They do not contain native slicing presets or machine instructions.
 
 OpenSCAD source serializes the final prepared/split polygons as numeric points and hole paths, then extrudes the effective built thickness. Default source values reproduce the assembly. An additional XY scale and a piece selector support downstream edits; those changes do not feed back into the workbench recipe or bed-fit calculation. OpenSCAD is only needed to render the source, not to produce it. The source contains no user-provided code or project-name interpolation and does not claim recovered constraints or feature history.
 
@@ -81,11 +84,19 @@ The profile is validated at the API boundary even when it originated in this app
 
 ### Export downloads
 
-`GET /api/download/{job_id}/{kind}` returns an artifact for `kind` equal to `step`, `stl`, `dxf`, `scad`, `project`, or `parts`. The parts artifact is a ZIP of separate STEP/STL files and a manifest. Successful builds provide those links explicitly. Do not construct arbitrary filesystem paths from project names or user-provided extensions.
+`GET /api/download/{job_id}/{kind}` returns an artifact for `kind` equal to `step`, `stl`, `3mf`, `dxf`, `scad`, `project`, `parts`, `bambu`, or `prusa`. The parts artifact is a ZIP of separate STEP/STL/3MF files and a manifest. The `bambu` and `prusa` artifacts are tailored handoff ZIPs. Successful builds provide those links explicitly. Do not construct arbitrary filesystem paths from project names or user-provided extensions.
 
 `DELETE /api/models/{job_id}` removes the generated model directory. It is an API capability; it is not a promise that the interface exposes a model-management screen. Deleting server artifacts does not delete copies already downloaded.
 
 `DELETE /api/models` clears all completed temporary models and reports the number removed. It rejects the request with 409 while a CAD build is active. This is a global operation in the single-user service, not a per-account deletion request.
+
+### Optional local slicer opening
+
+`GET /api/slicers` checks fixed executable names or server-configured paths without executing them. It reports target releases, executable availability and whether direct opening is enabled; installed versions remain unchecked.
+
+`POST /api/models/{job_id}/slicer/{program_id}` accepts an empty JSON object for `bambu` or `prusa`. With `PICAD_ENABLE_SLICER_LAUNCH=1`, a loopback caller/host and matching Origin, it retains a copy of the generated 3MF and requests GUI opening using a fixed argument list without a shell. The API accepts neither executable paths nor arbitrary arguments. The response is HTTP 202 with `launch_requested`, not proof of import. A per-process lock and two-second cooldown bound launch attempts; request cancellation keeps the lock until the worker completes.
+
+Copies under `.local/slicer-handoffs/` (or `PICAD_SLICER_HANDOFF_DIR`) outlive temporary model expiry and deletion and remain until manually removed. This workflow does not slice or send anything to a printer. See [slicer setup and limits](slicers.md).
 
 ### Optional local assistant
 

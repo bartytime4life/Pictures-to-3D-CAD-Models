@@ -13,18 +13,23 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
+from pydantic import BaseModel, ConfigDict
 
 from .assistant import AssistantError, AssistantRequest, assistant_status, chat
 from .models import BuildRequest, Detail
 from .printing import load_printer_catalog
+from .slicers import PROGRAMS, SlicerError, launch, launch_request_allowed, program_status
 from .tracing import MAX_BYTES, TraceError, trace_image
 
 ROOT = Path(__file__).resolve().parent.parent
 LIBRARY_ROOT = ROOT / "reference-library"
 JOB_ROOT = Path(os.environ.get("PICTURES_CAD_JOB_DIR", ROOT / ".local" / "jobs")).resolve()
+SLICER_HANDOFF_ROOT = Path(
+    os.environ.get("PICAD_SLICER_HANDOFF_DIR", ROOT / ".local" / "slicer-handoffs")
+).resolve()
 TTL_SECONDS = 3600
 CLEANUP_INTERVAL = 60
 MAX_JOBS = 20
@@ -38,6 +43,9 @@ DOWNLOADS = {
     "stl": ("model.stl", "model/stl"),
     "dxf": ("profile.dxf", "application/dxf"),
     "scad": ("model.scad", "application/x-openscad"),
+    "3mf": ("model.3mf", "model/3mf"),
+    "bambu": ("bambu-handoff.zip", "application/zip"),
+    "prusa": ("prusa-handoff.zip", "application/zip"),
     "project": ("project.json", "application/json"),
     "parts": ("parts.zip", "application/zip"),
 }
@@ -45,11 +53,20 @@ UUID_PATTERN = re.compile(r"^[0-9a-f]{32}$")
 # Mirror the companion's scripts/lib/serve.mjs publication boundary. Local CAD
 # builds, environments, browser databases, logs and scratch reports are private.
 LIBRARY_FILES = {
-    "index.html", "HANDBOOK.md", "REFERENCES.md", "OPENSCAD.md", "sources.csv",
-    "cadkit/README.md", "examples/build_plate.py", "examples/calculate.py",
-    "examples/calculation-results.json", "examples/clearance-coupon.scad",
-    "examples/plate-parameters.csv", "examples/two-hole-plate.scad",
-    "examples/two-hole-plate.svg", "output/pdf/pictures-to-printable-cad.pdf",
+    "index.html",
+    "HANDBOOK.md",
+    "REFERENCES.md",
+    "OPENSCAD.md",
+    "sources.csv",
+    "cadkit/README.md",
+    "examples/build_plate.py",
+    "examples/calculate.py",
+    "examples/calculation-results.json",
+    "examples/clearance-coupon.scad",
+    "examples/plate-parameters.csv",
+    "examples/two-hole-plate.scad",
+    "examples/two-hole-plate.svg",
+    "output/pdf/pictures-to-printable-cad.pdf",
 }
 LIBRARY_PATTERNS = (
     re.compile(r"assets/figures/[a-z0-9-]+\.svg"),
@@ -86,6 +103,8 @@ async def lifespan(app):
     app.state.cad_lock = asyncio.Lock()
     app.state.trace_lock = asyncio.Lock()
     app.state.assistant_lock = asyncio.Lock()
+    app.state.slicer_lock = asyncio.Lock()
+    app.state.slicer_last_launch = 0.0
 
     async def expire_jobs():
         while True:
@@ -328,6 +347,57 @@ def resolve_job(job_id: str):
     return directory
 
 
+class SlicerLaunchRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+
+@app.get("/api/slicers")
+async def slicer_status():
+    # Discovery only inspects configured paths; reading this endpoint never starts a program.
+    return JSONResponse(program_status(), headers={"Cache-Control": "no-store"})
+
+
+@app.post("/api/models/{job_id}/slicer/{program_id}", status_code=202)
+async def open_in_slicer(
+    job_id: str, program_id: str, request: Request, payload: SlicerLaunchRequest
+):
+    if not launch_request_allowed(
+        request.client.host if request.client else None,
+        str(request.url),
+        request.headers.get("origin"),
+        request.headers.get("content-type", ""),
+    ):
+        raise HTTPException(403, "Open a slicer from the workbench on this computer.")
+    if program_id not in PROGRAMS:
+        raise HTTPException(404, "Slicer not found.")
+    directory = resolve_job(job_id)
+    async with app.state.slicer_lock:
+        if time.monotonic() - app.state.slicer_last_launch < 2:
+            raise HTTPException(429, "Wait a moment before opening another slicer window.")
+        app.state.slicer_last_launch = time.monotonic()
+        task = asyncio.create_task(
+            asyncio.to_thread(launch, program_id, directory / "model.3mf", SLICER_HANDOFF_ROOT)
+        )
+        try:
+            result = await asyncio.shield(task)
+        except asyncio.CancelledError:
+            # The native thread still runs after a disconnected/cancelled caller.
+            # Retain the lock until its side effect finishes before accepting another launch.
+            while not task.done():
+                try:
+                    await asyncio.shield(task)
+                except asyncio.CancelledError:
+                    continue
+                except (SlicerError, OSError):
+                    break
+            if not task.cancelled():
+                task.exception()
+            raise
+        except SlicerError as exc:
+            raise HTTPException(409, str(exc)) from None
+    return result
+
+
 @app.get("/api/download/{job_id}/{kind}")
 async def download(job_id: str, kind: str):
     if kind not in DOWNLOADS:
@@ -378,7 +448,9 @@ async def library_home():
 @app.get("/reference-library/{path:path}")
 async def library_file(path: str):
     path = path or "index.html"
-    if path not in LIBRARY_FILES and not any(pattern.fullmatch(path) for pattern in LIBRARY_PATTERNS):
+    if path not in LIBRARY_FILES and not any(
+        pattern.fullmatch(path) for pattern in LIBRARY_PATTERNS
+    ):
         raise HTTPException(404, "Library file not found.")
     try:
         root = LIBRARY_ROOT.resolve()
