@@ -155,16 +155,24 @@ def build(job_dir: Path) -> dict:
 
     recipe = {
         "format": "pictures-to-cad",
-        "version": 2 if request.design is not None else 1,
+        "version": 2
+        if request.design is not None
+        or request.reference_calibration is not None
+        or request.measured_height_mm is not None
+        else 1,
         "name": request.name,
         "profile": request.profile.model_dump(),
         "width_mm": request.width_mm,
         "thickness_mm": request.thickness_mm,
         "units": "mm",
-        "provenance": "Image outline with user-supplied bounding width and thickness; hidden geometry is not recovered.",
+        "provenance": "Image outline with user-supplied scale and thickness; optional reference and independent height are measurement notes, not accuracy certification. Hidden geometry is not recovered.",
     }
-    if request.design is not None:
+    if recipe["version"] == 2:
         recipe["design"] = design.model_dump()
+    if request.reference_calibration is not None:
+        recipe["reference_calibration"] = request.reference_calibration.model_dump(mode="json")
+    if request.measured_height_mm is not None:
+        recipe["measured_height_mm"] = request.measured_height_mm
     (job_dir / "project.json").write_text(
         json.dumps(recipe, indent=2, allow_nan=False), encoding="utf-8"
     )

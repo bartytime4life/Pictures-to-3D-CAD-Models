@@ -1,5 +1,7 @@
 # Export formats and dimensional checks
 
+Generated project JSON and the project inside each slicer handoff ZIP preserve any applied known-feature reference (endpoints, working-image size, and measured length) and optional independent outside-height measurement. These values remain in millimeters before intentional design scaling. Changing the height check makes existing handoffs outdated until you rebuild; the check does not adjust geometry. Photos and assistant conversations are excluded.
+
 Choose the output according to the receiving tool. All generated geometry uses **millimeters internally**. Confirm the receiving program's import settings rather than relying on a file extension to establish units.
 
 ## STEP: CAD solids

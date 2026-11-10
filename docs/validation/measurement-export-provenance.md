@@ -1,0 +1,7 @@
+# Measurement export provenance — November 10, 2026
+
+The build API accepts bounded reference measurements and the optional independent height. It verifies image coordinates, endpoint separation, finite values, supported measurement ranges, and consistency between the reference and outside width before construction. Generated project JSON and the same recipe in both slicer handoffs preserve the notes. Reference-only or height-only requests produce a version 2 recipe with design defaults; old requests remain compatible.
+
+Local validation passed all **255 Python tests**, including **18 new cases**, plus **10 browser scenarios** for calibration, export provenance, and slicer handoffs. Production typecheck/build, Ruff, Prettier, and whitespace checks passed. The new browser scenario restores measurement evidence, edits and clears the height check, verifies outdated-export handling, and confirms unchanged geometry. The Python checks read actual generated recipes and both ZIP payloads and verify the recipe hashes.
+
+Synthetic geometry and demonstration imagery were used. The 47 mm independent check intentionally differs from the 48 mm inferred source height; it remains a note while a 150% design produces 120 × 72 × 4 mm geometry. These values are test inputs, not physical measurements. Native import, slicing, printing, and manufacturing accuracy remain unverified. Hosted CI belongs to the PR revision.
