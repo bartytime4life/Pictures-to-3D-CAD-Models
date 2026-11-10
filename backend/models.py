@@ -1,5 +1,6 @@
 """Bounded, explicit inputs shared by the API and isolated CAD worker."""
 
+import math
 from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
@@ -66,6 +67,33 @@ class DesignSettings(BaseModel):
         return self
 
 
+class WorkingImageSize(BaseModel):
+    model_config = ConfigDict(extra="forbid", strict=True)
+    width: int = Field(gt=0, le=1400)
+    height: int = Field(gt=0, le=1400)
+
+
+Coordinate = Annotated[float, Field(strict=True)]
+
+
+class ReferenceCalibration(BaseModel):
+    """Measurement notes only; no photograph, inferred accuracy, or hidden geometry."""
+
+    model_config = ConfigDict(extra="forbid", allow_inf_nan=False)
+    known_length_mm: float = Field(gt=0, strict=True)
+    reference_points: tuple[tuple[Coordinate, Coordinate], tuple[Coordinate, Coordinate]]
+    image_size: WorkingImageSize
+
+    @model_validator(mode="after")
+    def validate_reference(self):
+        for x, y in self.reference_points:
+            if not 0 <= x <= self.image_size.width or not 0 <= y <= self.image_size.height:
+                raise ValueError("Reference endpoints must be inside the working image.")
+        if math.dist(*self.reference_points) < 1:
+            raise ValueError("Separate reference endpoints by at least one working-image pixel.")
+        return self
+
+
 class BuildRequest(BaseModel):
     model_config = ConfigDict(extra="forbid", allow_inf_nan=False)
     profile: Profile
@@ -74,6 +102,8 @@ class BuildRequest(BaseModel):
     name: str = Field(default="Untitled part", min_length=1, max_length=100)
     revision: str = Field(default="1", min_length=1, max_length=100)
     design: DesignSettings | None = None
+    reference_calibration: ReferenceCalibration | None = None
+    measured_height_mm: float | None = Field(default=None, ge=0.1, le=2000, strict=True)
 
     @field_validator("name")
     @classmethod
@@ -86,6 +116,21 @@ class BuildRequest(BaseModel):
     @model_validator(mode="after")
     def validate_scaled_height(self):
         xs, ys = zip(*self.profile.outer)
+        if reference := self.reference_calibration:
+            if any(
+                not 0 <= x <= reference.image_size.width
+                or not 0 <= y <= reference.image_size.height
+                for ring in [self.profile.outer, *self.profile.holes]
+                for x, y in ring
+            ):
+                raise ValueError("Outline must be inside its reference working image.")
+            calculated_width = (
+                (max(xs) - min(xs))
+                * reference.known_length_mm
+                / math.dist(*reference.reference_points)
+            )
+            if not math.isclose(calculated_width, self.width_mm, rel_tol=1e-8, abs_tol=1e-6):
+                raise ValueError("Reference scale does not match the supplied outside width.")
         design = self.design or DesignSettings()
         width = self.width_mm * design.scale_percent / 100
         thickness = self.thickness_mm * design.thickness_percent / 100

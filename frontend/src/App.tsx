@@ -446,7 +446,8 @@ export default function App() {
         }
       : null;
   const designIssue = designError(design, sourceSize);
-  const buildReady = dimensionsValid && !designIssue;
+  const buildReady =
+    dimensionsValid && !designIssue && !measuredHeightError(measuredHeight, unitFactor);
   const current = !!model && model.revision === String(revision);
   const stale = !!model && !current;
   const displayNumber = (millimeters: number) =>
@@ -533,6 +534,7 @@ export default function App() {
     projectName: string,
     rev: string,
     settings: DesignSettings = design,
+    measurements: Pick<ProjectRecipe, 'reference_calibration' | 'measured_height_mm'> = {},
   ) {
     return api<ModelResult>('/api/build', {
       method: 'POST',
@@ -544,6 +546,7 @@ export default function App() {
         name: projectName || 'Untitled part',
         revision: rev,
         design: settings,
+        ...measurements,
       }),
     });
   }
@@ -673,7 +676,20 @@ export default function App() {
     setError('');
     setNotice('');
     try {
-      const result = await requestModel(trace.profile, widthMm, thicknessMm, projectName(), rev);
+      const result = await requestModel(
+        trace.profile,
+        widthMm,
+        thicknessMm,
+        projectName(),
+        rev,
+        design,
+        {
+          ...(referenceCalibration ? { reference_calibration: referenceCalibration } : {}),
+          ...(measuredHeight.trim()
+            ? { measured_height_mm: Number(measuredHeight) * unitFactor }
+            : {}),
+        },
+      );
       if (sequence === sequenceRef.current && String(revisionRef.current) === rev) {
         installModel(result);
         if (openExport) {
@@ -856,6 +872,14 @@ export default function App() {
         restoredName,
         rev,
         restoredDesign,
+        {
+          ...(recipe.reference_calibration
+            ? { reference_calibration: recipe.reference_calibration }
+            : {}),
+          ...(recipe.measured_height_mm !== undefined
+            ? { measured_height_mm: recipe.measured_height_mm }
+            : {}),
+        },
       );
       if (sequence !== sequenceRef.current || revisionRef.current !== previousRevision) {
         releaseModel(built.id);
@@ -1509,6 +1533,7 @@ export default function App() {
                 );
               }}
               onHeight={(value) => {
+                invalidate();
                 setMeasuredHeight(value);
                 setError('');
               }}
