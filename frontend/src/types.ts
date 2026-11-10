@@ -4,7 +4,30 @@ export type ReferenceCalibration = {
   reference_points: [Point, Point];
   image_size: { width: number; height: number };
 };
-export type Profile = { outer: Point[]; holes: Point[][] };
+export type Segment =
+  | { kind: 'line'; start: Point; end: Point }
+  | { kind: 'arc'; start: Point; mid: Point; end: Point }
+  | { kind: 'circle'; center: Point; radius: number };
+export type SheetKind = 'a4' | 'letter' | 'custom';
+export type SheetChoice = { kind: 'none' | SheetKind; width: string; height: string };
+/** How a reference-sheet trace was scaled and corrected; evidence, not geometry. */
+export type TraceReference = {
+  kind: SheetKind;
+  sheet_mm: [number, number];
+  mm_per_px: number;
+  lens_k1: number;
+  edge_blur_mm: number;
+  thickness_mm?: number;
+  camera_height_mm?: number;
+  focal_source?: 'sheet' | 'exif' | 'assumed';
+  notes: string[];
+};
+export type Profile = {
+  outer: Point[];
+  holes: Point[][];
+  primitives?: { outer: Segment[]; holes: Segment[][] };
+  reference?: TraceReference;
+};
 export type Detail = 'coarse' | 'standard' | 'fine';
 export type SlicerId = 'bambu' | 'prusa';
 export type ExportKind = 'step' | 'stl' | 'dxf' | 'scad' | 'parts' | '3mf' | SlicerId;
@@ -116,6 +139,7 @@ export type ModelResult = {
   dimensions: { width: number; height: number; thickness: number };
   volume_mm3: number;
   hole_count: number;
+  geometry?: { kind: 'fitted'; lines: number; arcs: number; circles: number } | { kind: 'polygon' };
   design?: DesignSettings;
   parts?: ModelPart[];
   print_fit?: BedFit;
@@ -135,7 +159,7 @@ export type ModelResult = {
 };
 export type ProjectRecipe = {
   format: 'pictures-to-cad';
-  version: 1 | 2;
+  version: 1 | 2 | 3;
   name: string;
   profile: Profile;
   width_mm: number;

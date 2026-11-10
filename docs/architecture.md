@@ -6,6 +6,8 @@ Pictures to CAD separates image interpretation from geometric construction. The 
 flowchart LR
     A[Photo upload] --> B[Validate and normalize image]
     B --> C[Threshold and trace contours]
+    B --> R[Reference sheet: rectify, sub-pixel edges, fit lines/arcs/circles]
+    R --> D
     C --> D[Review outline and holes]
     D --> E[Enter width and thickness]
     E --> J[Review design scales and print plan]
@@ -69,14 +71,21 @@ A multipart request includes:
 | `threshold` | Intensity cutoff, or `-1` for automatic selection |
 | `inverted` | Switch from the default dark-foreground interpretation |
 | `detail` | `coarse`, `standard`, or `fine` contour approximation |
+| `reference` | `none` (default), `a4`, `letter`, or `custom` scale reference sheet |
+| `sheet_width_mm`, `sheet_height_mm` | Measured sides of a `custom` sheet, 10–2000 mm |
+| `thickness_mm` | Optional part thickness for the reference-sheet parallax correction |
+| `snap` | Recover design intent on a reference-sheet trace (default `true`) |
+| `fallback` | Trace without the sheet, with a warning, if it cannot be found or used |
 
 The response contains a normalized display image, its dimensions, the traced outer boundary and holes, the bounding box, the chosen threshold, and any relevant warnings.
+
+With a reference sheet, the display image is the rectified, perspective- and lens-corrected view of the part, rotated to its own axes when snapping found straight edges. The profile also carries `primitives`: exact `line`, `arc` (start, mid, end) and `circle` segments for the outer boundary and every hole, in the same display-pixel frame. It also carries `reference`, the evidence for that trace: sheet kind and size, `mm_per_px`, the lens coefficient, edge blur, any thickness correction with camera height and focal-length source, and notes such as the snap list and the sheet-proportions check. The outside width is the outline's span × `mm_per_px`. See [reference-sheet tracing](reference-sheet.md).
 
 The normalized image and trace share the same coordinate system. This avoids using uncorrected EXIF orientation for one while displaying the other differently.
 
 ### `POST /api/build`
 
-A JSON request contains the reviewed `profile`, measured `width_mm` and `thickness_mm`, project `name`, a client `revision` identifier, and optional `design` settings. Design settings include XY/thickness percentages, appearance, material, relative detail, nozzle size, output mode and split grid, and printer/usable-volume choices.
+A JSON request contains the reviewed `profile`, measured `width_mm` and `thickness_mm`, project `name`, a client `revision` identifier, and optional `design` settings. A profile's `primitives` are validated at the API boundary: they must be closed, must match the outline and every hole, and must agree with the traced polygon rings within 3 % symmetric-difference area. Single-piece output then extrudes the exact segments; the response's `geometry` reports `fitted` with line, arc and circle counts, or `polygon`. Design settings include XY/thickness percentages, appearance, material, relative detail, nozzle size, output mode and split grid, and printer/usable-volume choices.
 
 The response contains a build identifier, matching revision, resulting dimensions, volume, hole count, mesh vertices and triangles, effective design settings, part metadata and geometric fit results, download links, and warnings. The client must only present a build as current if its revision matches the settings still shown in the interface. Each part reports its actual dimensions, volume, and fit status.
 
@@ -124,7 +133,8 @@ Returns the bundled, versioned printer catalog with source metadata, grouped mod
 | --- | --- |
 | Encoded upload | 10 MiB |
 | Decoded image | 16 million pixels; at least 16 pixels per side |
-| Normalized image | Longest side at most 1400 pixels |
+| Normalized image | Longest side at most 1400 pixels (without a reference sheet) |
+| Reference-sheet analysis | Full-resolution photo; rectified at 1.25 × native resolution, 4–12 px/mm, at most 12 MP; display crop at most 1400 pixels |
 | Planar profile | At most 2000 vertices in total and 32 holes |
 | Scaled width and height | 0.1–2000 mm each |
 | Thickness | 0.1–500 mm |
@@ -140,7 +150,7 @@ Do not increase the web server worker count as a substitute for a job queue: the
 
 Errors use a JSON `detail` string. Invalid inputs commonly return 422, oversized requests 413, busy or full-capacity responses 429, deletion conflicting with an active build 409, and CAD timeouts 504. Missing artifacts return 404; an artifact found at access time but already expired returns 410. A background cleanup may already have removed an expired artifact, so expired links may also appear missing.
 
-The interface saves recipes identifying `format: "pictures-to-cad"` and `version: 2`, with `name`, source `profile`, measured `width_mm` and `thickness_mm`, and `design`. The server's artifact recipe also includes units and provenance text. Version 1 recipes remain importable with default design settings; legacy API build requests omitting `design` still receive a version 1 recipe. The source photograph is not embedded.
+The interface saves recipes identifying `format: "pictures-to-cad"` and `version: 2` (`version: 3` when the profile carries fitted `primitives` or a sheet `reference`), with `name`, source `profile`, measured `width_mm` and `thickness_mm`, and `design`. The server's artifact recipe also includes units and provenance text. Version 1 recipes remain importable with default design settings; legacy API build requests omitting `design` still receive a version 1 recipe. The source photograph is not embedded.
 
 ## Revision and failure behavior
 

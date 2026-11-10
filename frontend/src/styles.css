@@ -2351,3 +2351,52 @@ main {
     overflow-wrap: anywhere;
   }
 }
+.sheet-reference > label {
+  font-size: 14px;
+}
+.sheet-size {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.sheet-size label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+}
+.sheet-size input {
+  height: 40px;
+  border: 1px solid #8d969d;
+  border-radius: 6px;
+  padding: 6px 10px;
+  background: #11181d;
+  color: #f7fafc;
+  font-family: var(--mono);
+  min-width: 0;
+}
+.sheet-reference .field-explanation {
+  margin: 0;
+}
+.fit-report {
+  margin-bottom: 20px;
+}
+.fit-report ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+}
+.fit-report li {
+  margin: 2px 0;
+}
+.sheet-reference select {
+  max-width: none;
+  font-size: 15px;
+}
+.upload-zone + .sheet-reference {
+  margin-top: 24px;
+}
+.export-summary strong.exact-edges {
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+}

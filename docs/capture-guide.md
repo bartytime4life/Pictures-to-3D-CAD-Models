@@ -24,9 +24,20 @@ Tiny interior regions below the trace resolution can be omitted with a warning. 
 
 If several objects are present, the app uses the largest candidate and reports additional substantial regions. Re-photograph or crop the source before uploading if it is unclear which object should be traced. Do not assume a small disconnected feature was intentionally included.
 
+## Photograph the part on a reference sheet
+
+This is the recommended capture. Lay the part flat on a sheet of known size, with paper showing all round it, and photograph the **whole sheet**. All four corners must be in the frame, with a contrasting surface (a table, not more paper) around the sheet. Choose the sheet as the **Scale reference** in the photo dialog before uploading, or later under **Adjust outline**. A4 (210 × 297 mm) and US Letter (215.9 × 279.4 mm) are built in; for any other sheet, choose **Custom sheet, measured** and enter its sides.
+
+- **Measure your sheet.** Its stated size sets every dimension. ISO 216 allows ±2 mm on A4's 297 mm side, about 0.7 %; most sheets are much closer. The workbench checks the sheet's *proportions* against the photo and warns when they differ from your choice by more than 1 %, but it cannot see a uniformly wrong size.
+- **Keep the sheet flat.** A curled or creased sheet breaks the straight edges used to correct the lens and the plane used for scale.
+- **Enter the thickness.** For a thick part, the camera sees some of its side walls. Building re-traces the photo once with the entered thickness and removes them. A photo tilted about 10–20° gives the most reliable correction. Straight overhead, the walls are too narrow to measure, and an edge facing the camera may read up to 0.2 × the edge blur into the part; the trace says so when that happens.
+- **Contrast.** A dark part on white paper is typical. For a light part, use a dark sheet on a lighter surface and tick **Light part on a dark background**.
+
+With a sheet the width field is filled from the sheet. Measure the part's real width anyway, and compare: it is now an independent check, not the scale. The trace notes list the fitted geometry (circles, arcs, lines), every design-intent snap, the measured edge blur, the lens correction and the proportions check. See [reference-sheet tracing](reference-sheet.md) for the method and its evidence.
+
 ## Set the scale
 
-Supply one measured length using either the complete outside width or two points on a known feature. Both methods apply one scale factor to the entire outline; neither removes perspective or lens distortion.
+Without a reference sheet, supply one measured length using either the complete outside width or two points on a known feature. Both methods apply one scale factor to the entire outline; neither removes perspective or lens distortion.
 
 ### Enter the complete outside width
 

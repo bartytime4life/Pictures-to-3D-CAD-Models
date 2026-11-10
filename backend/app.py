@@ -19,7 +19,7 @@ from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from pydantic import BaseModel, ConfigDict
 
 from .assistant import AssistantError, AssistantRequest, assistant_status, chat
-from .models import BuildRequest, Detail
+from .models import BuildRequest, Detail, Reference
 from .printing import load_printer_catalog
 from .slicers import PROGRAMS, SlicerError, launch, launch_request_allowed, program_status
 from .tracing import MAX_BYTES, TraceError, trace_image
@@ -232,7 +232,17 @@ async def trace(
     threshold: Annotated[int, Form()] = -1,
     inverted: Annotated[bool, Form()] = False,
     detail: Annotated[Detail, Form()] = "standard",
+    reference: Annotated[Reference, Form()] = "none",
+    sheet_width_mm: Annotated[float | None, Form(gt=0, le=2000, allow_inf_nan=False)] = None,
+    sheet_height_mm: Annotated[float | None, Form(gt=0, le=2000, allow_inf_nan=False)] = None,
+    thickness_mm: Annotated[float | None, Form(gt=0, le=500, allow_inf_nan=False)] = None,
+    snap: Annotated[bool, Form()] = True,
+    fallback: Annotated[bool, Form()] = False,
 ):
+    if reference == "custom" and (sheet_width_mm is None or sheet_height_mm is None):
+        await file.close()
+        raise HTTPException(422, "Enter the custom sheet's measured width and height.")
+    sheet_mm = (sheet_width_mm, sheet_height_mm) if reference == "custom" else None
     lock = app.state.trace_lock
     if lock.locked():
         await file.close()
@@ -252,7 +262,18 @@ async def trace(
         # concurrency slot until the actual operation finishes, including repeated
         # cancellation; otherwise reconnecting clients could start unbounded work.
         worker = asyncio.create_task(
-            asyncio.to_thread(trace_image, data, threshold, inverted, detail)
+            asyncio.to_thread(
+                trace_image,
+                data,
+                threshold,
+                inverted,
+                detail,
+                reference,
+                sheet_mm,
+                thickness_mm,
+                snap,
+                fallback,
+            )
         )
         try:
             return await asyncio.shield(worker)

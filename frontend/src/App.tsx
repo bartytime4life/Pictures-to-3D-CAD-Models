@@ -27,9 +27,19 @@ import ModelViewer from './ModelViewer';
 import LocalAssistant from './LocalAssistant';
 import PrintSettings from './PrintSettings';
 import ReferenceCalibration from './ReferenceCalibration';
+import SheetReference from './SheetReference';
 import SlicerHandoff from './SlicerHandoff';
 import { calibrationError, measuredHeightError, referenceWidth } from './calibration';
 import { DEFAULT_DESIGN, designError, designFromProposal, parseDesign } from './design';
+import {
+  NO_SHEET,
+  appendSheetFields,
+  fitCounts,
+  primitivesShapeError,
+  sheetChoiceError,
+  sheetLabel,
+  sheetWidthMm,
+} from './sheet';
 import type {
   AssistantProposal,
   DesignSettings,
@@ -40,6 +50,7 @@ import type {
   Profile,
   ProjectRecipe,
   ReferenceCalibration as Calibration,
+  SheetChoice,
   SlicerId,
   SlicerLaunch,
   TraceResult,
@@ -53,7 +64,14 @@ type RetryAction =
   | { kind: 'sample' }
   | { kind: 'photo'; file: File; isSample: boolean }
   | { kind: 'build'; openExport: boolean }
-  | { kind: 'retrace'; detail: Detail; threshold: number; inverted: boolean }
+  | {
+      kind: 'retrace';
+      detail: Detail;
+      threshold: number;
+      inverted: boolean;
+      sheet: SheetChoice;
+      snap: boolean;
+    }
   | { kind: 'proposal'; proposal: AssistantProposal }
   | { kind: 'restore'; file: File }
   | { kind: 'clear' };
@@ -109,12 +127,12 @@ function parseRecipe(value: unknown): ProjectRecipe {
   if (
     !recipe ||
     recipe.format !== 'pictures-to-cad' ||
-    (recipe.version !== 1 && recipe.version !== 2) ||
+    (recipe.version !== 1 && recipe.version !== 2 && recipe.version !== 3) ||
     typeof recipe.name !== 'string' ||
     recipe.name.length > 100
   )
     throw new Error(
-      'This is not a supported Pictures to CAD project. Choose a version 1 or 2 project JSON file.',
+      'This is not a supported Pictures to CAD project. Choose a version 1, 2 or 3 project JSON file.',
     );
   if (
     !Number.isFinite(recipe.width_mm) ||
@@ -146,6 +164,14 @@ function parseRecipe(value: unknown): ProjectRecipe {
     profile.outer.length + profile.holes.reduce((n, h) => n + h.length, 0) > 2000
   )
     throw new Error('This project contains an invalid or overly complex outline.');
+  const fittedIssue = primitivesShapeError(profile);
+  if (fittedIssue) throw new Error(fittedIssue);
+  if (
+    profile.reference !== undefined &&
+    (typeof profile.reference !== 'object' ||
+      !(Number.isFinite(profile.reference?.mm_per_px) && profile.reference.mm_per_px > 0))
+  )
+    throw new Error('This project has an invalid reference-sheet record.');
   if (recipe.reference_calibration !== undefined) {
     const evidence = recipe.reference_calibration;
     const issue = calibrationError(evidence);
@@ -176,7 +202,7 @@ function parseRecipe(value: unknown): ProjectRecipe {
       measuredHeightError(String(recipe.measured_height_mm), 1))
   )
     throw new Error('This project has an invalid independent height measurement.');
-  if (recipe.version === 2) recipe.design = parseDesign(recipe.design);
+  if (recipe.version !== 1) recipe.design = parseDesign(recipe.design);
   return recipe as ProjectRecipe;
 }
 
@@ -393,6 +419,12 @@ export default function App() {
   const [detail, setDetail] = useState<Detail>('standard');
   const [threshold, setThreshold] = useState(-1);
   const [inverted, setInverted] = useState(false);
+  // The reference-sheet choice and snapping persist across photos: a user who measures on
+  // a sheet usually keeps doing so. The bundled sample is always traced without one.
+  const [sheetChoice, setSheetChoice] = useState<SheetChoice>(NO_SHEET);
+  const [snap, setSnap] = useState(true);
+  const [draftSheet, setDraftSheet] = useState<SheetChoice>(NO_SHEET);
+  const [draftSnap, setDraftSnap] = useState(true);
   const [design, setDesign] = useState<DesignSettings>({ ...DEFAULT_DESIGN });
   const [assistantUndo, setAssistantUndo] = useState<{
     trace: TraceResult | null;
@@ -488,7 +520,7 @@ export default function App() {
       case 'build':
         return void buildModel(retry.openExport);
       case 'retrace':
-        return void retrace(retry.detail, retry.threshold, retry.inverted);
+        return void retrace(retry.detail, retry.threshold, retry.inverted, retry.sheet, retry.snap);
       case 'proposal':
         return void applyAssistantProposal(retry.proposal);
       case 'restore':
@@ -518,13 +550,31 @@ export default function App() {
     newDetail: Detail,
     newThreshold: number,
     newInverted: boolean,
+    sheet: SheetChoice = NO_SHEET,
+    sheetThickness: number | null = null,
+    snapIntent = true,
+    fallback = false,
   ) {
     const body = new FormData();
     body.append('file', file);
     body.append('detail', newDetail);
     body.append('threshold', String(newThreshold));
     body.append('inverted', String(newInverted));
+    appendSheetFields(body, sheet, sheetThickness, snapIntent, fallback);
     return api<TraceResult>('/api/trace', { method: 'POST', body });
+  }
+  /** A sheet-size mismatch found from the photo's proportions outranks routine notices. */
+  function sheetMismatch(result: TraceResult) {
+    return result.warnings.find((w) => w.includes('proportions in the photo differ')) ?? '';
+  }
+  /** Use the sheet scale of a reference-sheet trace as the outside width. */
+  function applySheetWidth(result: TraceResult) {
+    const fromSheet = sheetWidthMm(result.profile);
+    if (fromSheet === null) return false;
+    setReferenceCalibration(null);
+    setWidthMm(fromSheet);
+    setWidth((fromSheet / unitFactor).toFixed(unit === 'in' ? 6 : 4));
+    return true;
   }
   async function requestModel(
     profile: Profile,
@@ -553,13 +603,19 @@ export default function App() {
       setError('This file is too large. Choose an image or project smaller than 10 MiB.');
       return;
     }
+    const sheetIssue = isSample ? null : sheetChoiceError(sheetChoice);
+    if (sheetIssue) {
+      setError(sheetIssue);
+      return;
+    }
     const sequence = ++sequenceRef.current;
     setError('');
     setNotice('');
     setModal(null);
     startBusy('Finding the outline…');
     try {
-      const result = await requestTrace(file, 'standard', -1, false);
+      const sheet = isSample ? NO_SHEET : sheetChoice;
+      const result = await requestTrace(file, 'standard', -1, false, sheet, null, snap, true);
       if (sequence !== sequenceRef.current) return;
       const projectName = isSample
         ? 'Mounting plate'
@@ -589,13 +645,28 @@ export default function App() {
         if (sequence === sequenceRef.current && String(revisionRef.current) === rev)
           installModel(built);
         else releaseModel(built.id);
+      } else if (result.profile.reference) {
+        const fromSheet = sheetWidthMm(result.profile)!;
+        setWidth(fromSheet.toFixed(4));
+        setWidthMm(fromSheet);
+        setNotice(
+          sheetMismatch(result) ||
+            `Outline traced on the ${sheetLabel(result.profile.reference.kind)}; the width comes from the sheet. Enter the measured thickness, then build.`,
+        );
+        window.setTimeout(() => document.getElementById('thickness')?.focus(), 0);
       } else {
         setNotice('Outline ready. Enter the full measured width and thickness of your part.');
         window.setTimeout(() => widthInput.current?.focus(), 0);
       }
     } catch (err) {
+      const message = errorText(err);
       if (sequence === sequenceRef.current)
-        setError(errorText(err), { kind: 'photo', file, isSample });
+        setError(
+          !isSample && sheetChoice.kind === 'none' && message.includes('touches the image edge')
+            ? `${message} If the part lies on a sheet of paper, choose that sheet under Scale reference and load the photo again.`
+            : message,
+          { kind: 'photo', file, isSample },
+        );
     } finally {
       if (sequence === sequenceRef.current) setBusy(null);
     }
@@ -668,18 +739,59 @@ export default function App() {
   async function buildModel(openExport = false) {
     if (!trace || !buildReady || busy) return;
     const sequence = ++sequenceRef.current;
-    const rev = String(revisionRef.current);
+    let rev = String(revisionRef.current);
+    let profile = trace.profile;
+    let width = widthMm;
+    let afterBuild = '';
     startBusy('Building the CAD solid…');
     setError('');
     setNotice('');
     try {
-      const result = await requestModel(trace.profile, widthMm, thicknessMm, projectName(), rev);
+      const reference = trace.profile.reference;
+      if (reference && reference.thickness_mm !== thicknessMm) {
+        if (sourceFile) {
+          // The visible side walls depend on thickness: trace again for the entered value.
+          setBusy('Correcting the outline for thickness…');
+          const sheet: SheetChoice =
+            reference.kind === 'custom'
+              ? {
+                  kind: 'custom',
+                  width: String(reference.sheet_mm[0]),
+                  height: String(reference.sheet_mm[1]),
+                }
+              : { kind: reference.kind, width: '', height: '' };
+          const corrected = await requestTrace(
+            sourceFile,
+            detail,
+            threshold,
+            inverted,
+            sheet,
+            thicknessMm,
+            snap,
+          );
+          if (sequence !== sequenceRef.current || String(revisionRef.current) !== rev) return;
+          const usedSheetScale = Math.abs((sheetWidthMm(trace.profile) ?? NaN) - widthMm) < 1e-9;
+          rev = invalidate();
+          setTrace(corrected);
+          profile = corrected.profile;
+          if (usedSheetScale && applySheetWidth(corrected)) width = sheetWidthMm(profile)!;
+          setBusy('Building the CAD solid…');
+        } else
+          afterBuild = reference.thickness_mm
+            ? `This outline was corrected for a ${reference.thickness_mm} mm thickness. Upload the photo again to correct it for the entered thickness.`
+            : 'This outline was not corrected for thickness. Upload the photo again to correct it for the entered thickness.';
+      }
+      const result = await requestModel(profile, width, thicknessMm, projectName(), rev);
       if (sequence === sequenceRef.current && String(revisionRef.current) === rev) {
         installModel(result);
         if (openExport) {
           setExportError('');
           setModal('export');
-        } else setNotice('Model updated. The preview and downloads now use these dimensions.');
+        } else
+          setNotice(
+            afterBuild || 'Model updated. The preview and downloads now use these dimensions.',
+          );
+        if (openExport && afterBuild) setNotice(afterBuild);
       } else releaseModel(result.id);
     } catch (err) {
       if (sequence === sequenceRef.current) setError(errorText(err), { kind: 'build', openExport });
@@ -688,14 +800,33 @@ export default function App() {
     }
   }
 
-  async function retrace(newDetail: Detail, newThreshold = threshold, newInverted = inverted) {
+  async function retrace(
+    newDetail: Detail,
+    newThreshold = threshold,
+    newInverted = inverted,
+    newSheet = sheetChoice,
+    newSnap = snap,
+  ) {
     if (!sourceFile || busy) return false;
+    const sheetIssue = sheetChoiceError(newSheet);
+    if (sheetIssue) {
+      setError(sheetIssue);
+      return false;
+    }
     const sequence = ++sequenceRef.current;
     startBusy('Finding the outline…');
     setError('');
     setModal(null);
     try {
-      const result = await requestTrace(sourceFile, newDetail, newThreshold, newInverted);
+      const result = await requestTrace(
+        sourceFile,
+        newDetail,
+        newThreshold,
+        newInverted,
+        newSheet,
+        validThickness ? thicknessMm : null,
+        newSnap,
+      );
       if (sequence !== sequenceRef.current) return false;
       // Only a new outline makes the model outdated; a failed trace leaves it current.
       invalidate();
@@ -703,7 +834,15 @@ export default function App() {
       setDetail(newDetail);
       setThreshold(newThreshold);
       setInverted(newInverted);
-      if (referenceCalibration) {
+      setSheetChoice(newSheet);
+      setSnap(newSnap);
+      if (result.profile.reference) {
+        applySheetWidth(result);
+        setNotice(
+          sheetMismatch(result) ||
+            `Outline traced on the ${sheetLabel(result.profile.reference.kind)}. The width comes from the sheet; your own width measurement is now an independent check.`,
+        );
+      } else if (referenceCalibration) {
         const frame = referenceCalibration.image_size;
         if (frame.width === result.image.width && frame.height === result.image.height) {
           const nextWidth = referenceWidth(referenceCalibration, result.bounds.width);
@@ -727,6 +866,8 @@ export default function App() {
           detail: newDetail,
           threshold: newThreshold,
           inverted: newInverted,
+          sheet: newSheet,
+          snap: newSnap,
         });
       return false;
     } finally {
@@ -833,7 +974,7 @@ export default function App() {
       const recipe = parseRecipe(JSON.parse(await file.text()));
       // Saved names may predate, or bypass, the rule the service enforces.
       const restoredName = cleanName(recipe.name);
-      const restoredDesign = recipe.version === 2 ? recipe.design! : { ...DEFAULT_DESIGN };
+      const restoredDesign = recipe.version !== 1 ? recipe.design! : { ...DEFAULT_DESIGN };
       const bounds = getBounds(recipe.profile);
       if (bounds.width <= 0 || bounds.height <= 0)
         throw new Error('The project outline has no area.');
@@ -944,6 +1085,8 @@ export default function App() {
     setDraftThreshold(threshold === -1 ? (trace?.threshold ?? 150) : threshold);
     setDraftAuto(threshold === -1);
     setDraftInverted(inverted);
+    setDraftSheet(sheetChoice);
+    setDraftSnap(snap);
     setModal('trace');
   }
   function saveProject() {
@@ -955,7 +1098,7 @@ export default function App() {
     }
     downloadJson({
       format: 'pictures-to-cad',
-      version: 2,
+      version: trace.profile.primitives || trace.profile.reference ? 3 : 2,
       name: projectName(),
       profile: trace.profile,
       width_mm: widthMm,
@@ -1414,7 +1557,10 @@ export default function App() {
                 <span id="width-help" className="field-hint">
                   {referenceCalibration
                     ? 'Outside width from your applied feature reference'
-                    : 'Full outside width, measured by you'}
+                    : trace?.profile.reference &&
+                        Math.abs((sheetWidthMm(trace.profile) ?? NaN) - widthMm) < 1e-9
+                      ? `From the ${sheetLabel(trace.profile.reference.kind)}; check it against the part`
+                      : 'Full outside width, measured by you'}
                 </span>
               </div>
             </div>
@@ -1465,7 +1611,11 @@ export default function App() {
                 </select>
                 <span className="field-hint">
                   {trace
-                    ? `${trace.profile.holes.length} through holes detected`
+                    ? `${trace.profile.holes.length} through holes detected${
+                        trace.profile.primitives
+                          ? ` · fitted ${fitCounts(trace.profile)!.circle} circles, ${fitCounts(trace.profile)!.arc} arcs`
+                          : ''
+                      }`
                     : 'Review the outline before building'}
                 </span>
               </div>
@@ -1517,7 +1667,9 @@ export default function App() {
           <p className="measurement-note">
             <Info size={21} />
             <span>
-              Scale and thickness are supplied by you. Check dimensions before manufacturing.
+              {trace?.profile.reference
+                ? 'Scale comes from the sheet size you chose; thickness is supplied by you. Check dimensions before manufacturing.'
+                : 'Scale and thickness are supplied by you. Check dimensions before manufacturing.'}
             </span>
           </p>
           {!dimensionsValid && trace && !busy && (
@@ -1654,6 +1806,11 @@ export default function App() {
               Browse files
             </button>
           </div>
+          <SheetReference
+            id="photo-sheet-reference"
+            value={sheetChoice}
+            onChange={setSheetChoice}
+          />
           <div className="modal-split-actions">
             <button
               className="text-button accent"
@@ -1691,10 +1848,24 @@ export default function App() {
             before building.
           </p>
           <div className="trace-settings">
+            <SheetReference id="sheet-reference" value={draftSheet} onChange={setDraftSheet} />
+            <div className="field-stack sheet-reference">
+              {draftSheet.kind !== 'none' && (
+                <label className="check-field">
+                  <input
+                    type="checkbox"
+                    checked={draftSnap}
+                    onChange={(e) => setDraftSnap(e.target.checked)}
+                  />
+                  <span>Recover design intent: square edges, equal radii, aligned axes</span>
+                </label>
+              )}
+            </div>
             <label className="check-field">
               <input
                 type="checkbox"
                 checked={draftAuto}
+                disabled={draftSheet.kind !== 'none'}
                 onChange={(e) => setDraftAuto(e.target.checked)}
               />
               <span>Choose contrast automatically</span>
@@ -1709,12 +1880,13 @@ export default function App() {
               min="1"
               max="254"
               value={draftThreshold}
-              disabled={draftAuto}
+              disabled={draftAuto || draftSheet.kind !== 'none'}
               onChange={(e) => setDraftThreshold(Number(e.target.value))}
             />
             <p className="field-explanation">
-              For a dark part on a light background, raise the threshold to include more of the dark
-              edge.
+              {draftSheet.kind === 'none'
+                ? 'For a dark part on a light background, raise the threshold to include more of the dark edge.'
+                : 'With a reference sheet, contrast is measured locally along every edge, so the threshold is not used.'}
             </p>
             <label className="check-field">
               <input
@@ -1725,6 +1897,29 @@ export default function App() {
               <span>Light part on a dark background</span>
             </label>
           </div>
+          {trace?.profile.reference && (
+            <div className="inline-note fit-report">
+              <Info size={19} />
+              <div>
+                <p>
+                  Traced on the {sheetLabel(trace.profile.reference.kind)}: edge blur{' '}
+                  {trace.profile.reference.edge_blur_mm.toFixed(2)} mm
+                  {trace.profile.reference.lens_k1
+                    ? `, lens distortion k₁ ${trace.profile.reference.lens_k1.toFixed(4)}`
+                    : ''}
+                  {trace.profile.reference.thickness_mm
+                    ? `, corrected for ${trace.profile.reference.thickness_mm} mm thickness`
+                    : ', not yet corrected for thickness'}
+                  .
+                </p>
+                <ul>
+                  {trace.profile.reference.notes.map((note) => (
+                    <li key={note}>{note}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
           <div className="inline-note">
             <Info size={19} />
             <p>
@@ -1739,7 +1934,16 @@ export default function App() {
             </button>
             <button
               className="primary-button"
-              onClick={() => void retrace(detail, draftAuto ? -1 : draftThreshold, draftInverted)}
+              disabled={!!sheetChoiceError(draftSheet)}
+              onClick={() =>
+                void retrace(
+                  detail,
+                  draftAuto ? -1 : draftThreshold,
+                  draftInverted,
+                  draftSheet,
+                  draftSnap,
+                )
+              }
             >
               Apply trace
             </button>
@@ -1776,9 +1980,10 @@ export default function App() {
             <li>
               <strong>Set scale from a real measurement.</strong>
               <p>
-                Enter the full outside width, or open Use a known feature and mark two measured
-                endpoints. Keep the reference in the same plane as the part. Measure thickness
-                separately.
+                For the best result, lay the part on a sheet of known size (A4, US Letter or a
+                measured custom sheet), photograph the whole sheet, and choose it under Adjust
+                outline. Otherwise enter the full outside width, or open Use a known feature and
+                mark two measured endpoints in the part's plane. Measure thickness separately.
               </p>
             </li>
             <li>
@@ -1851,6 +2056,15 @@ export default function App() {
               <span>Through holes</span>
               <strong>{model.hole_count}</strong>
             </div>
+            {model.geometry?.kind === 'fitted' && (
+              <div>
+                <span>Exact edges</span>
+                <strong className="exact-edges">
+                  {model.geometry.circles} circles · {model.geometry.arcs} arcs ·{' '}
+                  {model.geometry.lines} lines
+                </strong>
+              </div>
+            )}
           </div>
           <SlicerHandoff
             model={model}

@@ -4,6 +4,8 @@ Turn a photograph of a **flat, constant-thickness part** into a scaled CAD solid
 
 The workbench is designed for plates, gaskets, spacers, and templates. It traces what is visible in the photograph; it does not recover hidden geometry or infer physical dimensions.
 
+Photograph the part lying on a sheet of known size (A4, US Letter, or a sheet you have measured) and the sheet does more. It sets the scale and corrects perspective and lens distortion. Together with the thickness you enter, it removes the visible side walls. The outline is then fitted with lines, tangent arcs and circles that export as true geometry. See [reference-sheet tracing](docs/reference-sheet.md) for the method, its mathematics and its evidence.
+
 This repository contains two related tools:
 
 | Component | Use it for | Entry point |
@@ -70,9 +72,9 @@ Refresh the assistant's connection after the download. This is a provisional CPU
 ## Try the complete workflow
 
 1. **Start with the sample.** The supplied demonstration image is traced and converted by the same pipeline as an uploaded photograph.
-2. **Choose a photo.** Upload a PNG, JPEG, or WebP containing one flat part against a contrasting background.
+2. **Choose a photo.** Upload a PNG, JPEG, or WebP containing one flat part against a contrasting background. For the best result, lay the part on a sheet of paper, photograph the whole sheet, and choose that sheet as the **Scale reference** before uploading.
 3. **Review the outline.** Check the boundary and every through-hole. Adjust the tracing controls if the selection is wrong.
-4. **Set the dimensions.** Enter the measured outside width, or open **Use a known feature**, mark two endpoints, enter their real separation, and apply the scale. Enter measured thickness separately. Use the optional **Independent height check** to compare another measurement before design resizing.
+4. **Set the dimensions.** With a reference sheet, the width comes from the sheet; measure the part's width as an independent check. Otherwise enter the measured outside width, or open **Use a known feature**, mark two endpoints, enter their real separation, and apply the scale. Enter measured thickness separately; with a sheet, building re-traces once to correct for the part's visible side walls. Use the optional **Independent height check** to compare another measurement before design resizing.
 5. **Choose design and print settings.** Keep the measured size or set explicit XY and thickness scales, preview a color and material, choose a printer or custom volume, and decide whether to keep one piece or generate straight-cut parts.
 6. **Inspect and export.** Rotate the model, compare it with the photograph, rebuild after edits, review each piece's geometric bed fit, and choose a format.
 
@@ -88,14 +90,14 @@ The bundled searchable [printer catalog](docs/printer-catalog.md) covers 429 mod
 
 | Format | Use it for | What it preserves |
 | --- | --- | --- |
-| STEP | Opening solids in CAD software | Solid geometry in assembled positions; not the original feature history |
+| STEP | Opening solids in CAD software | Solid geometry in assembled positions; a fitted reference-sheet outline has true cylindrical faces for its arcs and circles; not the original feature history |
 | STL | Slicing or mesh workflows | Triangle surfaces in assembled positions; millimeter coordinates, no color |
 | 3MF | Importing geometry into a slicer | Millimetre units and separate mesh objects in assembled positions |
-| DXF | A flat profile for a CAD or CAM workflow | The planar boundary and holes |
-| OpenSCAD | Editing the built profile in scripted CAD | Final scaled and simplified polygon boundaries, holes, thickness, and selectable split pieces in assembled positions |
+| DXF | A flat profile for a CAD or CAM workflow | The planar boundary and holes; `LINE`, `ARC` and `CIRCLE` entities for a fitted outline |
+| OpenSCAD | Editing the built profile in scripted CAD | Final scaled and simplified polygon boundaries, holes, thickness, and selectable split pieces in assembled positions; fitted circles stay `circle()` calls |
 | Parts ZIP | Importing generated pieces separately | A STEP, STL and 3MF per piece, plus a manifest |
 | Slicer handoff ZIP | Preparing a Bambu Studio or PrusaSlicer import | Geometry, split pieces, recipe, printer/material planning notes, instructions and payload hashes |
-| Project JSON | Restoring the workbench settings | Version 2 outline, measurements, optional endpoint reference and height check, design and print plan; version 1 imports remain supported |
+| Project JSON | Restoring the workbench settings | Version 2 outline, measurements, optional endpoint reference and height check, design and print plan; version 3 adds fitted geometry and how the sheet scaled and corrected it; version 1 imports remain supported |
 
 See [export formats and dimensional checks](docs/exports.md) before transferring a part to fabrication software.
 
@@ -104,7 +106,8 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 ## Honest limits
 
 - A single image supplies a 2D outline. Thickness is entered by the user; recesses, sloped walls, threads, and hidden features are not reconstructed.
-- One outside width or two-point reference sets uniform scale. It does not correct perspective, lens distortion, or an out-of-plane part.
+- One outside width or two-point reference sets uniform scale. It does not correct perspective, lens distortion, or an out-of-plane part. A reference sheet corrects perspective and one radial lens coefficient in the sheet's plane, and the parallax of a vertical-walled part of the entered thickness. Its accuracy figures come from rendered photographs with exact ground truth, not from a measured-photo benchmark.
+- A reference sheet's stated size sets the scale. The workbench checks the sheet's proportions against the photo, but not its absolute size: measure your sheet.
 - Tracing approximates pixel boundaries. Smooth-looking geometry is not evidence of manufacturing accuracy.
 - Relative detail can simplify the CAD outline; it does not recover missing image detail or establish a minimum printable wall thickness.
 - Split exports use straight cuts without joinery, kerf, or assembly tolerances. Combined STEP/STL/3MF exports show the assembled geometry, not separated parts arranged on a print bed.
@@ -114,6 +117,7 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 ## Documentation
 
 - [Capture and calibration guide](docs/capture-guide.md)
+- [Reference-sheet tracing: method, mathematics and evidence](docs/reference-sheet.md)
 - [Export formats](docs/exports.md)
 - [Print planning, materials, and split parts](docs/print-planning.md)
 - [Printer catalog, provenance, and updates](docs/printer-catalog.md)
