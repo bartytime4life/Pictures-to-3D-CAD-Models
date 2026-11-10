@@ -42,6 +42,16 @@ Confirm millimeter units, closed contours, and the separation between the outer 
 
 In split mode, DXF records each piece's planar outline at its assembled position. Shared cuts can appear on both adjacent pieces; review duplicates and cutting order in CAM. The app does not supply kerf compensation or toolpaths.
 
+## OpenSCAD: editable polygon extrusion
+
+Choose **OpenSCAD** in the export dialog to download `model.scad`. Source generation uses the same final profiles as the CAD worker, after the workbench's design percentages, geometry-detail approximation, and split cuts. The default SCAD values therefore describe the current built dimensions and holes. Generating this source does not require an OpenSCAD installation.
+
+Open the file in OpenSCAD, then preview and render it. `thickness_mm` is the effective built thickness, `xy_scale = 1` preserves the exported XY dimensions, and `part_index = 0` displays the whole assembly. In split mode, set `part_index` to a numbered piece to inspect or export only that piece. Selected pieces keep their assembled coordinates; place them in your slicer. The combined source unions touching pieces for display/rendering; use the selector or the Parts ZIP when separate pieces are needed.
+
+These are polygonal traced boundaries and an extrusion, with editable source values. They are not recovered sketch constraints, analytic circles, threads, hidden features, or the original CAD feature history. Changes made in OpenSCAD do not update the saved workbench recipe or its printer-fit result. Recheck the new dimensions, holes, closure, and fit after edits; material and preview color are not encoded in SCAD.
+
+For a new plate with explicit hole diameters and spacing, the companion [OpenSCAD workspace](../reference-library/index.html#cad) provides parameter-driven mounting plates and fit coupons. It opens from the workbench header in a separate tab. Its [native workflow](../reference-library/OPENSCAD.md) records mesh checks and build provenance; synthetic passing geometry does not establish physical fit, strength, or printing success.
+
 ## Parts ZIP: individual pieces
 
 Split mode adds a parts ZIP containing `part-01.step`, `part-01.stl`, subsequent numbered piece pairs, and `manifest.json`. These are actual generated solids and their meshes. The splitter supports at most eight cells and eight resulting connected pieces; a complex outline can produce more than one piece inside a cell and may be rejected if it exceeds that bound.
@@ -60,7 +70,7 @@ Use **Save project** to download a version 2 JSON recipe. Restore it through **P
 
 Save before refreshing or leaving the page. The workbench does not provide automatic project persistence; a fresh page starts with the sample.
 
-The project recipe preserves the traced coordinates, source width/thickness, XY/thickness design scales, geometry-detail mode, color/material choices, printer settings, and split plan needed to regenerate the result. Design percentages remain separate from the source measurements. Color/material choices also appear in a split bundle's manifest; STEP, STL, and DXF do not encode them. The recipe is not a substitute for the original physical measurement, nor a general-purpose CAD exchange format.
+The project recipe preserves the traced coordinates, source width/thickness, XY/thickness design scales, geometry-detail mode, color/material choices, printer settings, and split plan needed to regenerate the result. Design percentages remain separate from the source measurements. Color/material choices also appear in a split bundle's manifest; STEP, STL, DXF, and SCAD do not encode them. The recipe is not a substitute for the original physical measurement, nor a general-purpose CAD exchange format.
 
 When **Apply reference scale** has been used, version 2 recipes also preserve optional `reference_calibration` data: `known_length_mm`, two `reference_points`, and `image_size` with its working-image width and height. Coordinates refer to the orientation-adjusted working image, whose longest side is at most 1400 pixels; they are not display-pixel coordinates or necessarily original camera-file coordinates. The full outside `width_mm` remains the scale input for geometry generation. Directly editing that width clears the endpoint-calibration record so it no longer appears to explain a manually chosen size.
 

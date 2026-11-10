@@ -13,7 +13,7 @@
 
 This folder is the reference companion to the [photo-to-CAD workbench](../README.md) in this repository. The workbench traces one flat part; the library covers the wider route from photographs to printable CAD.
 
-A practical, source-backed library for turning photographs into printable CAD: recover shape, establish dimensions, rebuild editable geometry, and check the part you print. **Revision 6, November 9, 2026.**
+A practical, source-backed library for turning photographs into printable CAD: recover shape, establish dimensions, rebuild editable geometry, and check the part you print. **Revision 7, November 9, 2026.**
 
 It contains a 23-chapter handbook, 88 annotated sources (including 21 GitHub repository records), research notes, reusable worksheets, 10 explanatory figures, 14 calculators with a route finder, a local photo workspace, a Python command-line toolkit, and synthetic worked examples that are rendered and checked automatically.
 
@@ -25,6 +25,7 @@ It contains a 23-chapter handbook, 88 annotated sources (including 21 GitHub rep
 | Read a printable copy | [the PDF handbook](output/pdf/pictures-to-printable-cad.pdf) |
 | Find the right workflow and check the arithmetic | the **Toolkit** tab of `index.html`, or `python3 -m cadkit` |
 | Collect reference photos, check view coverage, and estimate a flat dimension | the **Photos** tab of `index.html` |
+| Design a measured plate or fit coupon and export to OpenSCAD | the **OpenSCAD** tab, or [OpenSCAD guide](OPENSCAD.md) |
 | Edit the text | [`HANDBOOK.md`](HANDBOOK.md) and the [worksheets](templates/) |
 | Rebuild, test, or package the library | [`BUILD.md`](BUILD.md) |
 
@@ -47,6 +48,12 @@ The easiest first project is a measured flat part. Import and scale a reference 
 | Records | [`VERIFICATION.md`](VERIFICATION.md), [`CHANGELOG.md`](CHANGELOG.md), [`CONTRIBUTING.md`](CONTRIBUTING.md) | What was checked, what was not, and what changed |
 
 ![88 sources by topic and review depth](assets/figures/catalog-composition.svg)
+
+## OpenSCAD parts
+
+The **OpenSCAD** tab connects this reference workflow to editable mechanical geometry. Choose a two-hole mounting plate or a clearance coupon, adjust dimensions and evidence, inspect the live dimensional sketch, and download its OpenSCAD source, parameter CSV and SVG. The page works offline; the native renderer runs locally.
+
+From this folder, `python3 -m cadkit openscad doctor` checks the installed executable. `python3 -m cadkit openscad build --model plate --output-dir output/plate-01 --preview` renders the synthetic defaults and checks the actual STL. Supply `--params plate-parameters.csv` to use a reviewed register. Each new output folder contains the source, STL, checks, hashes and optional preview. Earlier builds are preserved. Personal build directories are excluded from the portable library archive. See [the guide and rendered starter files](OPENSCAD.md). Physical fit and printing remain untested.
 
 ## The toolkit
 
@@ -128,9 +135,9 @@ reference-library/
 ├── HANDBOOK.md, RESEARCH-NOTES.md
 ├── sources.json               authoritative catalog → sources.csv, REFERENCES.md, GITHUB.md
 ├── library.json               revision, date, archive name
-├── assets/                    photo-workspace.html, css, js, data (routes, calculators), figures (SVG)
+├── assets/                    photo/cad workspaces, css, js, shared model data, figures (SVG)
 ├── cadkit/                    Python toolkit: python3 -m cadkit
-├── examples/                  synthetic plate, clearance coupon, calculations
+├── examples/                  synthetic plate, clearance coupon, rendered OpenSCAD starters, calculations
 ├── templates/                 worksheets and registers
 ├── scripts/                   build, figures, PDF, checks, link check, GitHub refresh, dist
 ├── tests/                     python/ (unittest) and node/ (node --test)
@@ -159,4 +166,4 @@ No real photographs were reconstructed. No part was sliced or printed, and no pr
 
 ## Revision history
 
-See [`CHANGELOG.md`](CHANGELOG.md). Revision 6 improves search, protects photo drafts, extends mesh checks, and adds independent validation worksheets and sources. Revision 5 adds portable folder backup and restore plus an image-derived measurement CSV. Revision 4 adds a local photo workspace with repeatable multi-photo intake, viewpoint coverage, and traceable image measurements. Revision 3, the first revision kept in this repository, added the figures, toolkit, Python package, example pipeline, automated tests, a reproducible PDF and archive, and a refreshed metadata snapshot. Revision 2 added governing decisions, single-view calibration checks, Workflow E, held-object design, and seven sources. Revision 1 was the initial library with 79 resources.
+See [`CHANGELOG.md`](CHANGELOG.md). Revision 7 adds the OpenSCAD workspace, shared mechanical parameters, traceable local builds and safe render replacement. Revision 6 improves search, protects photo drafts, extends mesh checks, and adds independent validation worksheets and sources. Revision 5 adds portable folder backup and restore plus an image-derived measurement CSV. Revision 4 adds a local photo workspace with repeatable multi-photo intake, viewpoint coverage, and traceable image measurements. Revision 3, the first revision kept in this repository, added the figures, toolkit, Python package, example pipeline, automated tests, a reproducible PDF and archive, and a refreshed metadata snapshot. Revision 2 added governing decisions, single-view calibration checks, Workflow E, held-object design, and seven sources. Revision 1 was the initial library with 79 resources.

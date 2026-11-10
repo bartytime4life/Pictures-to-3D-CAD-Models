@@ -12,7 +12,7 @@ flowchart LR
     J --> F[Validate planar profile]
     F --> G[Bounded CadQuery conversion]
     G --> H[Mesh for 3D preview]
-    G --> I[STEP · STL · DXF · parts ZIP · recipe]
+    G --> I[STEP · STL · DXF · SCAD · parts ZIP · recipe]
 ```
 
 ## Components
@@ -21,7 +21,7 @@ flowchart LR
 | --- | --- |
 | React and TypeScript | Workflow state, measured inputs, revision tracking, recovery, and export controls |
 | Three.js / React Three Fiber | Interactive inspection of the actual generated mesh |
-| FastAPI | Input validation, request handling, artifact delivery, and static frontend serving |
+| FastAPI | Input validation, request handling, artifact delivery, static frontend and published companion serving |
 | Pillow | Image decoding and orientation normalization |
 | OpenCV | Thresholding, contours, hierarchy, and outline approximation |
 | Shapely | Planar-profile validity checks before invoking the solid kernel |
@@ -41,6 +41,8 @@ The pipeline preserves supported through-hole boundaries. It cannot infer whethe
 Geometry detail is a geometric approximation applied to the scaled profile. `original` retains it; `draft`, `balanced`, and `fine` use simplification tolerances of 0.5, 0.25, and 0.1 times the selected nozzle diameter in millimeters, respectively. The simplification preserves topology and checks that every hole remains. The modes can still change small features and must be inspected; they do not recover image information, measure minimum wall thickness, or prove printability. The original trace remains the recipe's source profile.
 
 Split mode makes actual solids with straight XY cuts. The default preview and combined STEP/STL keep those solids in their assembled positions. A separated inspection view displays the actual per-part meshes with temporary offsets; it does not change exported coordinates or claim a print-bed layout. Per-part exports translate each piece to a local XY origin and record the assembly offset in the bundle manifest. The program does not introduce alignment pins, joints, kerf compensation, or assembly tolerances.
+
+OpenSCAD source serializes the final prepared/split polygons as numeric points and hole paths, then extrudes the effective built thickness. Default source values reproduce the assembly. An additional XY scale and a piece selector support downstream edits; those changes do not feed back into the workbench recipe or bed-fit calculation. OpenSCAD is only needed to render the source, not to produce it. The source contains no user-provided code or project-name interpolation and does not claim recovered constraints or feature history.
 
 Printer fit compares actual geometric bounds with the user-selected usable bed volume and checks the original and 90° XY orientations. This is a bounds check, not slicing, build-plate packing, support generation, material simulation, or G-code generation. Color/material choices are approximate preview and recipe/planning metadata; STL carries no color.
 
@@ -79,7 +81,7 @@ The profile is validated at the API boundary even when it originated in this app
 
 ### Export downloads
 
-`GET /api/download/{job_id}/{kind}` returns an artifact for `kind` equal to `step`, `stl`, `dxf`, `project`, or `parts`. The parts artifact is a ZIP of separate STEP/STL files and a manifest. Successful builds provide those links explicitly. Do not construct arbitrary filesystem paths from project names or user-provided extensions.
+`GET /api/download/{job_id}/{kind}` returns an artifact for `kind` equal to `step`, `stl`, `dxf`, `scad`, `project`, or `parts`. The parts artifact is a ZIP of separate STEP/STL files and a manifest. Successful builds provide those links explicitly. Do not construct arbitrary filesystem paths from project names or user-provided extensions.
 
 `DELETE /api/models/{job_id}` removes the generated model directory. It is an API capability; it is not a promise that the interface exposes a model-management screen. Deleting server artifacts does not delete copies already downloaded.
 
@@ -100,6 +102,10 @@ The status endpoint returns HTTP 200 with `running: false` when Ollama is unavai
 ### `GET /api/printers`
 
 Returns the bundled, versioned printer catalog with source metadata, grouped models, nozzle-specific profiles, and known/unknown feature facts. The endpoint reads local data rather than querying a hosted printer service. See [catalog provenance and contract](printer-catalog.md) for how profile inheritance, bed shape, exclusions, and unknown hardware capabilities are represented.
+
+### Published companion library
+
+`GET /reference-library/index.html` serves the offline handbook and browser workspaces; `#cad` selects OpenSCAD. The app opens this link in a separate tab to preserve its current project and temporary exports. This route mirrors the companion browser-test server's explicit reader-file allowlist, including the bundled synthetic examples and published handbook PDF. Both check real filesystem containment so an allowlisted symlink cannot escape the library. Personal builds under `output/`, scratch reports, dependencies, scripts, and environment files are excluded. The Vite development proxy forwards the same path to the API service.
 
 ### Limits and errors
 

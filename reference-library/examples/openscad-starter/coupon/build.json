@@ -1,0 +1,335 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "model": "coupon",
+  "units": "mm",
+  "built_at": "2026-11-09T22:30:55.617422+00:00",
+  "model_revision_sha256": "6e06ab57bc5a759cef9b346eb13e21ab77eb3a190719735365a8391435f0fad4",
+  "cadkit_version": "1.0.0",
+  "openscad_version": "2021.01",
+  "output_dir": "/home/bartytime/Documents/ChatGPT/3D & CAD/reference-library/examples/openscad-starter/coupon",
+  "parameters": {
+    "pin_diameter": {
+      "parameter_id": "pin_diameter",
+      "value": 5.0,
+      "unit": "mm",
+      "evidence_class": "inferred",
+      "source_or_rationale": "Synthetic teaching default; measure the actual mating pin before a fit test.",
+      "decided_on": "",
+      "supersedes": "",
+      "used_by": "coupon",
+      "notes": "Default is not a measurement."
+    },
+    "clearance_start": {
+      "parameter_id": "clearance_start",
+      "value": 0.1,
+      "unit": "mm",
+      "evidence_class": "inferred",
+      "source_or_rationale": "Chosen start of an example test series.",
+      "decided_on": "",
+      "supersedes": "",
+      "used_by": "coupon",
+      "notes": "Diametral clearance; not radial clearance or a recommended fit."
+    },
+    "clearance_step": {
+      "parameter_id": "clearance_step",
+      "value": 0.1,
+      "unit": "mm",
+      "evidence_class": "inferred",
+      "source_or_rationale": "Chosen increment for the example test series.",
+      "decided_on": "",
+      "supersedes": "",
+      "used_by": "coupon",
+      "notes": "Test using intended material, orientation and finish."
+    },
+    "clearance_count": {
+      "parameter_id": "clearance_count",
+      "value": 5.0,
+      "unit": "1",
+      "evidence_class": "inferred",
+      "source_or_rationale": "Chosen count of test holes.",
+      "decided_on": "",
+      "supersedes": "",
+      "used_by": "coupon",
+      "notes": "Integer between 1 and 100."
+    },
+    "thickness": {
+      "parameter_id": "thickness",
+      "value": 4.0,
+      "unit": "mm",
+      "evidence_class": "inferred",
+      "source_or_rationale": "Synthetic coupon thickness for the teaching example.",
+      "decided_on": "",
+      "supersedes": "",
+      "used_by": "coupon",
+      "notes": "No strength qualification."
+    },
+    "min_wall": {
+      "parameter_id": "min_wall",
+      "value": 2.0,
+      "unit": "mm",
+      "evidence_class": "inferred",
+      "source_or_rationale": "Chosen geometric minimum between holes and long edges.",
+      "decided_on": "",
+      "supersedes": "",
+      "used_by": "coupon",
+      "notes": "Not a material qualification."
+    },
+    "end_wall": {
+      "parameter_id": "end_wall",
+      "value": 3.0,
+      "unit": "mm",
+      "evidence_class": "inferred",
+      "source_or_rationale": "Chosen material from outer hole polygons to the coupon ends.",
+      "decided_on": "",
+      "supersedes": "",
+      "used_by": "coupon",
+      "notes": "Must be at least the minimum wall."
+    },
+    "chord_error": {
+      "parameter_id": "chord_error",
+      "value": 0.02,
+      "unit": "mm",
+      "evidence_class": "inferred",
+      "source_or_rationale": "Chosen polygon tessellation setting for the teaching coupon.",
+      "decided_on": "",
+      "supersedes": "",
+      "used_by": "coupon",
+      "notes": "Polygon flats are compensated to preserve the requested opening."
+    },
+    "notch_size": {
+      "parameter_id": "notch_size",
+      "value": 2.0,
+      "unit": "mm",
+      "evidence_class": "inferred",
+      "source_or_rationale": "Chosen corner-notch leg length to mark the smallest-clearance end.",
+      "decided_on": "",
+      "supersedes": "",
+      "used_by": "coupon",
+      "notes": "Notch must preserve the minimum wall to the first hole."
+    }
+  },
+  "input_sha256": {
+    "template": "e8b5604e0dddf5d045a5bc7d547fb0dabb16d8fded5c7799b1dc572566d475fe",
+    "parameters": "dc08350e846fc925dca63bfeac0d6b38664e57f3534cb0231898c3eaadc0123f",
+    "schema": "c04c4b075e2dbe950353565514ab75e66e1b46af0bf204160c30b327d1518a36"
+  },
+  "outputs_sha256": {
+    "model.stl": "8910c3a86679ea2f0a8f2f919ea8e5b5b4bb9bf5c8b7e53e84db555fbcb1b3f1",
+    "parameters.csv": "dc08350e846fc925dca63bfeac0d6b38664e57f3534cb0231898c3eaadc0123f",
+    "preview.log": "722aed964fdcaf10437f23210b8a8bf2ddec88e14a642071ae09c789241d8ccc",
+    "preview.png": "e365314c8a19c4a2c2f4d4b34e504fc07b369a19894a7997bc9adc9241b8206c",
+    "render.log": "60385d3d9c2df5af9139f531f0ae1f68716aa8e56b64696b89e1826da2ee9fae",
+    "source.scad": "045a3f536736ce0dda06d3c968672168da1324bdd4be70be3aa9b82d118fb759",
+    "validation-results.csv": "c74ff9c363d28a0969581c47f6b6eb32218aa3cf1d60ead617812e1f83af15c2"
+  },
+  "command": [
+    "/usr/bin/openscad",
+    "-o",
+    "/home/bartytime/Documents/ChatGPT/3D & CAD/reference-library/examples/openscad-starter/.cadkit-build-gmchq6cv/result/.model-0fzbzki4.stl",
+    "--export-format",
+    "binstl",
+    "/home/bartytime/Documents/ChatGPT/3D & CAD/reference-library/examples/openscad-starter/.cadkit-build-gmchq6cv/result/source.scad"
+  ],
+  "preview_command": [
+    "/usr/bin/openscad",
+    "-o",
+    "/home/bartytime/Documents/ChatGPT/3D & CAD/reference-library/examples/openscad-starter/.cadkit-build-gmchq6cv/result/preview.png",
+    "--render",
+    "--autocenter",
+    "--viewall",
+    "--imgsize=1200,800",
+    "/home/bartytime/Documents/ChatGPT/3D & CAD/reference-library/examples/openscad-starter/.cadkit-build-gmchq6cv/result/source.scad"
+  ],
+  "command_path_note": "Commands record temporary build paths; files were moved together into output_dir after passing checks.",
+  "warnings": [],
+  "mesh": {
+    "triangles": 560,
+    "vertices": 272,
+    "bbox_min": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "bbox_max": [
+      41.68721008300781,
+      9.53744125366211,
+      4.0
+    ],
+    "extents": [
+      41.68721008300781,
+      9.53744125366211,
+      4.0
+    ],
+    "surface_area": 1309.0646341592878,
+    "volume": 1138.6789233040909,
+    "watertight": true,
+    "boundary_edges": 0,
+    "nonmanifold_edges": 0,
+    "nonmanifold_vertices": 0,
+    "orientation_consistent": true,
+    "components": 1,
+    "degenerate_triangles": 0,
+    "euler_characteristic": -8,
+    "genus": 5
+  },
+  "checks": [
+    {
+      "feature_id": "extent_x_mm",
+      "target": 41.68721101601362,
+      "actual": 41.68721008300781,
+      "tolerance": 0.0001,
+      "status": "pass"
+    },
+    {
+      "feature_id": "extent_y_mm",
+      "target": 9.537442203202723,
+      "actual": 9.53744125366211,
+      "tolerance": 0.0001,
+      "status": "pass"
+    },
+    {
+      "feature_id": "extent_z_mm",
+      "target": 4.0,
+      "actual": 4.0,
+      "tolerance": 0.0001,
+      "status": "pass"
+    },
+    {
+      "feature_id": "volume_mm3",
+      "target": 1138.6791156047632,
+      "actual": 1138.6789233040909,
+      "tolerance": 0.022773582312095267,
+      "status": "pass"
+    },
+    {
+      "feature_id": "components",
+      "target": 1,
+      "actual": 1,
+      "tolerance": 0,
+      "status": "pass"
+    },
+    {
+      "feature_id": "boundary_edges",
+      "target": 0,
+      "actual": 0,
+      "tolerance": 0,
+      "status": "pass"
+    },
+    {
+      "feature_id": "nonmanifold_edges",
+      "target": 0,
+      "actual": 0,
+      "tolerance": 0,
+      "status": "pass"
+    },
+    {
+      "feature_id": "nonmanifold_vertices",
+      "target": 0,
+      "actual": 0,
+      "tolerance": 0,
+      "status": "pass"
+    },
+    {
+      "feature_id": "degenerate_triangles",
+      "target": 0,
+      "actual": 0,
+      "tolerance": 0,
+      "status": "pass"
+    },
+    {
+      "feature_id": "watertight",
+      "target": 1,
+      "actual": 1,
+      "tolerance": 0,
+      "status": "pass"
+    },
+    {
+      "feature_id": "orientation_consistent",
+      "target": 1,
+      "actual": 1,
+      "tolerance": 0,
+      "status": "pass"
+    },
+    {
+      "feature_id": "through_holes",
+      "target": 5,
+      "actual": 5,
+      "tolerance": 0,
+      "status": "pass"
+    },
+    {
+      "feature_id": "hole_1_ring_vertices",
+      "target": 52,
+      "actual": 52,
+      "tolerance": 0,
+      "status": "pass"
+    },
+    {
+      "feature_id": "hole_1_radial_deviation_mm",
+      "target": 0,
+      "actual": 1.1746864170270044e-06,
+      "tolerance": 0.0001,
+      "status": "pass"
+    },
+    {
+      "feature_id": "hole_2_ring_vertices",
+      "target": 52,
+      "actual": 52,
+      "tolerance": 0,
+      "status": "pass"
+    },
+    {
+      "feature_id": "hole_2_radial_deviation_mm",
+      "target": 0,
+      "actual": 9.940269829478154e-07,
+      "tolerance": 0.0001,
+      "status": "pass"
+    },
+    {
+      "feature_id": "hole_3_ring_vertices",
+      "target": 52,
+      "actual": 52,
+      "tolerance": 0,
+      "status": "pass"
+    },
+    {
+      "feature_id": "hole_3_radial_deviation_mm",
+      "target": 0,
+      "actual": 1.9023090791492336e-06,
+      "tolerance": 0.0001,
+      "status": "pass"
+    },
+    {
+      "feature_id": "hole_4_ring_vertices",
+      "target": 52,
+      "actual": 52,
+      "tolerance": 0,
+      "status": "pass"
+    },
+    {
+      "feature_id": "hole_4_radial_deviation_mm",
+      "target": 0,
+      "actual": 1.9388240888318364e-06,
+      "tolerance": 0.0001,
+      "status": "pass"
+    },
+    {
+      "feature_id": "hole_5_ring_vertices",
+      "target": 54,
+      "actual": 54,
+      "tolerance": 0,
+      "status": "pass"
+    },
+    {
+      "feature_id": "hole_5_radial_deviation_mm",
+      "target": 0,
+      "actual": 2.445517675031539e-06,
+      "tolerance": 0.0001,
+      "status": "pass"
+    }
+  ],
+  "physical_printing": "not performed",
+  "slicing": "not performed",
+  "scope": "Mesh topology and analytic geometry checks. Parameters retain their stated evidence; no physical fit, strength or print qualification."
+}

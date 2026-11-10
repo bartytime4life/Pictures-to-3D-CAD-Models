@@ -1,2 +1,4 @@
 *.pdf binary
 *.zip binary
+# Preserve standard CSV record endings, including hashed OpenSCAD evidence files.
+*.csv whitespace=cr-at-eol

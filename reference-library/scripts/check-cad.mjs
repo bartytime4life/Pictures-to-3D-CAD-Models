@@ -1,0 +1,107 @@
+// Offline browser verification of the numeric OpenSCAD handoff.
+// Only synthetic model settings and an isolated browser profile are used.
+import fs from 'node:fs';
+import path from 'node:path';
+import { ROOT, requireModule, findChrome, readJSON } from './lib/runtime.mjs';
+import { browserTransport, openTransport } from './lib/serve.mjs';
+const { chromium } = requireModule('playwright');
+const qa = path.join(ROOT, 'tmp/qa'), downloads = path.join(qa, 'cad-downloads');
+fs.mkdirSync(downloads, { recursive: true });
+const report = path.join(qa, 'cad-check.json');
+const result = { checked_at: new Date().toISOString(), revision: readJSON('library.json').revision, status: 'running', transport: process.env.CAD_REFERENCE_BROWSER_TRANSPORT || 'file', checks: [], browser_errors: [], downloaded_files: [], scope: 'Isolated browser; synthetic numeric parameters only. Checks dimensions, validation, SCAD/CSV/SVG exports, evidence, autosave, unavailable storage and responsive layout over the recorded transport. Native rendering and physical fit are separate.' };
+const write = () => fs.writeFileSync(report, JSON.stringify({ ...result, check_count: result.checks.length }, null, 2) + '\n');
+const check = (value, label) => { if (!value) throw new Error('FAILED: ' + label); result.checks.push(label); };
+let browser, served;
+try {
+  result.transport = browserTransport();
+  served = await openTransport(result.transport);
+  result.page_url = served.pageUrl;
+  browser = await chromium.launch({ headless: true, executablePath: findChrome() });
+  const context = await browser.newContext({ viewport: { width: 1440, height: 1050 }, acceptDownloads: true });
+  if (result.transport === 'file') await context.setOffline(true);
+  const page = await context.newPage();
+  page.on('pageerror', (e) => result.browser_errors.push(e.message));
+  page.on('console', (m) => { if (m.type() === 'error') result.browser_errors.push(m.text()); });
+  await page.goto(served.pageUrl + '#cad');
+  await page.waitForFunction(() => window.CadModels && document.querySelector('#cad-sketch svg'));
+  check(await page.locator('#cad').isVisible(), 'OpenSCAD tab opens directly from its hash over ' + result.transport);
+  check(await page.locator('#tab-cad').getAttribute('aria-selected') === 'true', 'OpenSCAD tab is selected accessibly');
+  check(await page.locator('#cad-sketch svg circle').count() === 2, 'Default plate sketch shows two holes');
+  check(/not a CAD render/.test(await page.locator('#cad-sketch').textContent()), 'Sketch explicitly states that it is not a CAD render');
+  const getDownload = async (selector, expected) => {
+    const pending = page.waitForEvent('download'); await page.locator(selector).click(); const download = await pending;
+    check(download.suggestedFilename() === expected, 'Download filename is ' + expected);
+    const target = path.join(downloads, expected); await download.saveAs(target); result.downloaded_files.push(path.relative(ROOT, target));
+    return fs.readFileSync(target, 'utf8');
+  };
+  await page.locator('#cad-plate_length').fill('72.12345678901234');
+  await page.locator('#cad-plate_length-evidence').locator('summary').click();
+  await page.locator('#cad-evidence-plate_length').selectOption('measured');
+  await page.locator('#cad-rationale-plate_length').fill('Synthetic browser fixture: caliper decision, datum "A".');
+  await page.locator('#cad-plate_length-evidence').locator('summary').click();
+  check(/72\.123457/.test(await page.locator('#cad-summary').textContent()), 'Sketch dimensions update after editing the plate');
+  const scad = await getDownload('#cad-download-scad', 'plate.scad');
+  check(/plate_length = 72\.12345678901234;/.test(scad) && /\[Parameters\]/.test(scad) && /difference\(\)/.test(scad), 'Plate SCAD preserves exact selected values, Customizer controls and geometry');
+  const csv = await getDownload('#cad-download-csv', 'plate-parameters.csv');
+  check(csv.startsWith('"parameter_id","value","unit","evidence_class"') && /"72\.12345678901234","mm","measured"/.test(csv) && /datum ""A""/.test(csv), 'Plate CSV preserves register columns, exact value, self-recorded evidence and quoted rationale');
+  const svg = await getDownload('#cad-download-svg', 'plate-drawing.svg');
+  check(svg.startsWith('<svg xmlns=') && /not a CAD render/.test(svg), 'SVG is a standalone accessible dimensional sketch');
+  await page.reload();
+  await page.waitForFunction(() => document.querySelector('#cad-plate_length')?.value === '72.12345678901234');
+  check(/restored/.test(await page.locator('#cad-save-status').textContent()), 'Reload restores the numeric draft and reports it');
+  check(await page.locator('#cad-evidence-plate_length').inputValue() === 'measured', 'Reload restores self-recorded parameter evidence');
+  await page.locator('#cad-plate_length').fill('');
+  check(await page.locator('#cad-download-scad').isDisabled() && await page.locator('#cad-sketch svg').count() === 0, 'Blank dimensions disable exports and clear the usable sketch');
+  await page.locator('#cad-plate_length').fill('60');
+  await page.locator('#cad-hole_spacing').fill('59');
+  check(await page.locator('#cad-download-csv').isDisabled() && /End walls/.test(await page.locator('#cad-errors').textContent()), 'Plate end-wall violation is explained and blocks export');
+  await page.locator('#cad-hole_spacing').fill('40');
+  await page.locator('#cad-plate_length-evidence').locator('summary').click();
+  await page.locator('#cad-rationale-plate_length').fill('');
+  check(await page.locator('#cad-download-scad').isDisabled() && /source or rationale/.test(await page.locator('#cad-errors').textContent()), 'Blank evidence rationale blocks export consistently with the command-line build');
+  await page.locator('#cad-rationale-plate_length').fill('Synthetic review rationale.');
+  await page.locator('#cad-plate_length-evidence').locator('summary').click();
+  await page.locator('#cad-model').selectOption('coupon');
+  check(await page.locator('#cad-sketch svg circle').count() === 5, 'Coupon sketch shows the default five-hole test series');
+  check(/polygon-flat compensation on/.test(await page.locator('#cad-fixed-note').textContent()), 'Coupon states its polygon compensation and fixed label settings');
+  await page.locator('#cad-pin_diameter').fill('6.25');
+  await page.locator('#cad-clearance_count').fill('4');
+  const couponScad = await getDownload('#cad-download-scad', 'coupon.scad');
+  check(/pin_diameter = 6\.25;/.test(couponScad) && /clearance_count = 4;/.test(couponScad) && /compensate_polygon = true;/.test(couponScad) && /label_mode = "none";/.test(couponScad), 'Coupon SCAD uses selected numbers, compensation and no font-dependent labels');
+  await getDownload('#cad-download-csv', 'coupon-parameters.csv');
+  await getDownload('#cad-download-svg', 'coupon-drawing.svg');
+  await page.locator('#cad-clearance_count').fill('2.5');
+  check(await page.locator('#cad-download-scad').isDisabled() && /whole number/.test(await page.locator('#cad-errors').textContent()), 'Fractional coupon hole count blocks downloads with a useful error');
+  await page.locator('#cad-clearance_count').fill('4');
+  await page.locator('#cad-notch_size').fill('100');
+  check(await page.locator('#cad-download-scad').isDisabled() && /notch/.test(await page.locator('#cad-errors').textContent()), 'Coupon notch-wall violation blocks downloads');
+  await page.locator('#cad-notch_size').fill('2');
+  await page.locator('#cad-model').selectOption('plate');
+  check(await page.locator('#cad-plate_length').inputValue() === '60' && await page.locator('#cad-evidence-plate_length').inputValue() === 'measured', 'Switching models retains each model’s draft and evidence');
+  await page.locator('.cad-reference-render summary').click();
+  await page.locator('#cad-default-render').evaluate((image) => image.decode());
+  check(await page.locator('#cad-default-render').evaluate((image) => image.naturalWidth > 0), 'Actual default OpenSCAD render loads with fixed-example wording');
+  await page.locator('.cad-reference-render summary').click();
+  await page.screenshot({ path: path.join(qa, 'cad-desktop.png'), fullPage: false });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.locator('#cad').scrollIntoViewIfNeeded();
+  check(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), 'Mobile workspace has no horizontal page overflow');
+  check(await page.locator('#cad-model').isVisible() && await page.locator('#cad-download-scad').isEnabled(), 'Mobile workspace keeps part selection and download available');
+  await page.screenshot({ path: path.join(qa, 'cad-mobile.png'), fullPage: true });
+  await context.close();
+  const unavailable = await browser.newContext({ viewport: { width: 1000, height: 800 } });
+  await unavailable.addInitScript(() => { Storage.prototype.setItem = function () { throw new DOMException('Synthetic storage failure', 'QuotaExceededError'); }; });
+  const second = await unavailable.newPage();
+  second.on('pageerror', (e) => result.browser_errors.push(e.message));
+  await second.goto(served.pageUrl + '#cad');
+  await second.locator('#cad-plate_length').fill('70');
+  check(/saving is unavailable/.test(await second.locator('#cad-save-status').textContent()) && await second.locator('#cad-download-scad').isEnabled(), 'Unavailable browser storage explains how to preserve edits and permits download');
+  await unavailable.close();
+  check(result.browser_errors.length === 0, 'No browser JavaScript or console errors');
+  result.status = 'passed'; write(); console.log(JSON.stringify({ status: result.status, checks: result.checks.length, report, downloads }));
+} catch (error) {
+  result.status = 'failed'; result.error = error.stack || String(error); write(); console.error(result.error); process.exitCode = 1;
+} finally {
+  try { await browser?.close(); }
+  finally { await served?.close(); }
+}

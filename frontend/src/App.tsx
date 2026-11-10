@@ -957,7 +957,7 @@ export default function App() {
       'Project download started. Your outline, measurements and design settings are included; the photo is not.',
     );
   }
-  async function exportFile(kind: 'step' | 'stl' | 'dxf' | 'parts') {
+  async function exportFile(kind: 'step' | 'stl' | 'dxf' | 'scad' | 'parts') {
     if (!model || !current || downloading) return;
     const downloadUrl = model.downloads[kind];
     if (!downloadUrl) return;
@@ -1075,6 +1075,16 @@ export default function App() {
           </button>
         </div>
         <div className="header-actions">
+          <a
+            className="text-button guide-button"
+            href="/reference-library/index.html#cad"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="OpenSCAD workspace (opens in a new tab)"
+          >
+            <Cube size={25} />
+            <span>OpenSCAD</span>
+          </a>
           <button
             className="text-button guide-button"
             aria-label="Capture guide"
@@ -1713,9 +1723,9 @@ export default function App() {
           <div className="inline-note">
             <Info size={21} />
             <p>
-              STEP contains a CAD solid; STL is a triangle mesh in millimeters; DXF is a 2D outline.
-              Save the project JSON to keep your outline and parameters. STEP does not retain a
-              parametric feature history.
+              STEP contains a CAD solid; STL is a triangle mesh in millimeters; DXF is a 2D outline;
+              SCAD is an editable polygon extrusion for OpenSCAD. Save the project JSON to keep your
+              outline and parameters. STEP does not retain a parametric feature history.
             </p>
           </div>
           <p className="privacy-note">
@@ -1792,6 +1802,12 @@ export default function App() {
                   label: 'DXF',
                   description: 'Flat outline for 2D workflows',
                   suffix: '.dxf',
+                },
+                {
+                  type: 'scad',
+                  label: 'OpenSCAD',
+                  description: 'Editable polygon extrusion with the current holes and design',
+                  suffix: '.scad',
                 },
                 ...(model.downloads.parts
                   ? [

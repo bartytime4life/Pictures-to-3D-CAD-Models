@@ -1,0 +1,8 @@
+parameter_id,value,unit,evidence_class,source_or_rationale,decided_on,supersedes,used_by,notes
+plate_length,60.0,mm,inferred,Synthetic teaching default; replace with the reviewed overall length.,,,plate,No real object measured.
+plate_width,30.0,mm,inferred,Synthetic teaching default; replace with the reviewed overall width.,,,plate,No real object measured.
+plate_thickness,4.0,mm,inferred,Synthetic teaching default; measure thickness independently from the photograph.,,,plate,No strength qualification.
+hole_diameter,5.0,mm,inferred,Synthetic teaching default; review the mating fastener and fit before use.,,,plate,Not a recommended printer fit.
+hole_spacing,40.0,mm,inferred,Synthetic teaching default; replace with reviewed center-to-center spacing.,,,plate,No real object measured.
+chord_error,0.02,mm,inferred,Chosen polygon tessellation setting for this teaching model.,,,plate,"Geometric tessellation setting, not printer accuracy."
+min_wall,2.0,mm,inferred,Chosen geometric minimum for the teaching plate.,,,plate,Not a strength or material qualification.

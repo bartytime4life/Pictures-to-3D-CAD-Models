@@ -13,3 +13,12 @@ playwright-report/
 .env.*
 !.env.example
 .DS_Store
+
+# Personal print studies and legacy standalone library downloads stay local.
+/Prints/
+/pictures-to-printable-cad*.zip
+/pictures-to-printable-cad.pdf
+/CHANGELOG.md
+/CONTRIBUTING.md
+/reference-library/output/*
+!/reference-library/output/pdf/

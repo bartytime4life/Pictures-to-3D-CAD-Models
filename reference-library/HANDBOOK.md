@@ -684,6 +684,12 @@ For a front-on planar feature, mark two endpoints of a known reference, enter it
 
 **Export measurement CSV** produces the same columns as `templates/measurement-register.csv`. It records each saved target estimate as `image-derived`, including the photo fingerprint, known reference length, and full-image endpoints. Instrument readings, uncertainty, and acceptance criteria stay blank rather than becoming zero. These values are review inputs: independent measurements and an explicit design decision are needed before promoting a critical estimate to a CAD parameter. The export does not update a CAD model or prove improved physical accuracy.
 
+### OpenSCAD mechanical parts
+
+**Revision 7, November 9, 2026.** The **OpenSCAD** tab connects reviewed dimensions to a mounting plate or clearance coupon. Edit the parameters and their evidence, review a dimensioned sketch, then download an editable `.scad` file, its parameter CSV and an SVG drawing. The sketch is not a rendered solid. Open the source in native OpenSCAD, preview with F5, render with F6 and inspect the console before exporting STL.
+
+The `openscad` command discovers the local renderer and builds either template into a new folder from the same CSV. It checks the actual mesh against analytic extents, hole layout and volume, records source/parameter/output hashes, and preserves previous builds on failure. The defaults are synthetic; a successful render is not a physical fit or print result. See [OpenSCAD setup, checked builds and starter files](OPENSCAD.md).
+
 ### From the command line
 
 Run `python3 -m cadkit --help` in the `reference-library` folder. The package uses only the Python standard library.
@@ -697,6 +703,7 @@ Run `python3 -m cadkit --help` in the `reference-library` folder. The package us
 | `chord`, `coupon`, `coating` | 11, 12, 15 | Tessellation, clearance series, finish allowance |
 | `gear`, `wind` | 16 | Nominal gear relations with an undercut warning; first wind-power estimate |
 | `params`, `new-project` | 4, 17 | Validate a design-parameter register; scaffold the minimum project folder |
+| `openscad` | 17, 23 | Discover OpenSCAD; render and verify a plate or clearance coupon from its parameter register |
 
 `cadkit/README.md` documents every option with real output.
 

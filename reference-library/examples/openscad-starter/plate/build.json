@@ -1,0 +1,271 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "model": "plate",
+  "units": "mm",
+  "built_at": "2026-11-09T22:30:55.054900+00:00",
+  "model_revision_sha256": "cd3f69adec0971e84da4f6e4de25079e6202e48b34012da8ce5cec696033c292",
+  "cadkit_version": "1.0.0",
+  "openscad_version": "2021.01",
+  "output_dir": "/home/bartytime/Documents/ChatGPT/3D & CAD/reference-library/examples/openscad-starter/plate",
+  "parameters": {
+    "plate_length": {
+      "parameter_id": "plate_length",
+      "value": 60.0,
+      "unit": "mm",
+      "evidence_class": "inferred",
+      "source_or_rationale": "Synthetic teaching default; replace with the reviewed overall length.",
+      "decided_on": "",
+      "supersedes": "",
+      "used_by": "plate",
+      "notes": "No real object measured."
+    },
+    "plate_width": {
+      "parameter_id": "plate_width",
+      "value": 30.0,
+      "unit": "mm",
+      "evidence_class": "inferred",
+      "source_or_rationale": "Synthetic teaching default; replace with the reviewed overall width.",
+      "decided_on": "",
+      "supersedes": "",
+      "used_by": "plate",
+      "notes": "No real object measured."
+    },
+    "plate_thickness": {
+      "parameter_id": "plate_thickness",
+      "value": 4.0,
+      "unit": "mm",
+      "evidence_class": "inferred",
+      "source_or_rationale": "Synthetic teaching default; measure thickness independently from the photograph.",
+      "decided_on": "",
+      "supersedes": "",
+      "used_by": "plate",
+      "notes": "No strength qualification."
+    },
+    "hole_diameter": {
+      "parameter_id": "hole_diameter",
+      "value": 5.0,
+      "unit": "mm",
+      "evidence_class": "inferred",
+      "source_or_rationale": "Synthetic teaching default; review the mating fastener and fit before use.",
+      "decided_on": "",
+      "supersedes": "",
+      "used_by": "plate",
+      "notes": "Not a recommended printer fit."
+    },
+    "hole_spacing": {
+      "parameter_id": "hole_spacing",
+      "value": 40.0,
+      "unit": "mm",
+      "evidence_class": "inferred",
+      "source_or_rationale": "Synthetic teaching default; replace with reviewed center-to-center spacing.",
+      "decided_on": "",
+      "supersedes": "",
+      "used_by": "plate",
+      "notes": "No real object measured."
+    },
+    "chord_error": {
+      "parameter_id": "chord_error",
+      "value": 0.02,
+      "unit": "mm",
+      "evidence_class": "inferred",
+      "source_or_rationale": "Chosen polygon tessellation setting for this teaching model.",
+      "decided_on": "",
+      "supersedes": "",
+      "used_by": "plate",
+      "notes": "Geometric tessellation setting, not printer accuracy."
+    },
+    "min_wall": {
+      "parameter_id": "min_wall",
+      "value": 2.0,
+      "unit": "mm",
+      "evidence_class": "inferred",
+      "source_or_rationale": "Chosen geometric minimum for the teaching plate.",
+      "decided_on": "",
+      "supersedes": "",
+      "used_by": "plate",
+      "notes": "Not a strength or material qualification."
+    }
+  },
+  "input_sha256": {
+    "template": "e9cd40e86867028b69af7f18f278c73c85555ba67a8750fff761c949e1abae96",
+    "parameters": "f69cfcf4628c911f96c70f2fbc88646de366fb2c06875e69c932febaddf894c7",
+    "schema": "c04c4b075e2dbe950353565514ab75e66e1b46af0bf204160c30b327d1518a36"
+  },
+  "outputs_sha256": {
+    "model.stl": "8db4a1c6adfecaa1964b2be7d3f604be74a6016aa05a9b7d991d8059490980db",
+    "parameters.csv": "f69cfcf4628c911f96c70f2fbc88646de366fb2c06875e69c932febaddf894c7",
+    "preview.log": "6f50613bf05660e36f9310f9846b678bbec5bde1179082f16ff4febc9df11997",
+    "preview.png": "9eb16bf3a1abf1bb4234211d7fd714cb01381bed32f3d3dd91b5529355b81f6b",
+    "render.log": "fd71a2a3125bd296e196e6acc6a80301018fc80ec1c97ede615e928ff5196aee",
+    "source.scad": "d41ccebded9641e41353c477349fd3d03d56d770131bf179420aad1317368150",
+    "validation-results.csv": "6ceb57e13e262218df75d0cdde3646a75099905e784ca8b0a303b656ecbbf596"
+  },
+  "command": [
+    "/usr/bin/openscad",
+    "-o",
+    "/home/bartytime/Documents/ChatGPT/3D & CAD/reference-library/examples/openscad-starter/.cadkit-build-cmp055fn/result/.model-a2pdok1n.stl",
+    "--export-format",
+    "binstl",
+    "/home/bartytime/Documents/ChatGPT/3D & CAD/reference-library/examples/openscad-starter/.cadkit-build-cmp055fn/result/source.scad"
+  ],
+  "preview_command": [
+    "/usr/bin/openscad",
+    "-o",
+    "/home/bartytime/Documents/ChatGPT/3D & CAD/reference-library/examples/openscad-starter/.cadkit-build-cmp055fn/result/preview.png",
+    "--render",
+    "--autocenter",
+    "--viewall",
+    "--imgsize=1200,800",
+    "/home/bartytime/Documents/ChatGPT/3D & CAD/reference-library/examples/openscad-starter/.cadkit-build-cmp055fn/result/source.scad"
+  ],
+  "command_path_note": "Commands record temporary build paths; files were moved together into output_dir after passing checks.",
+  "warnings": [],
+  "mesh": {
+    "triangles": 220,
+    "vertices": 108,
+    "bbox_min": [
+      -30.0,
+      -15.0,
+      0.0
+    ],
+    "bbox_max": [
+      30.0,
+      15.0,
+      4.0
+    ],
+    "extents": [
+      60.0,
+      30.0,
+      4.0
+    ],
+    "surface_area": 4367.617648779067,
+    "volume": 7044.568871685515,
+    "watertight": true,
+    "boundary_edges": 0,
+    "nonmanifold_edges": 0,
+    "nonmanifold_vertices": 0,
+    "orientation_consistent": true,
+    "components": 1,
+    "degenerate_triangles": 0,
+    "euler_characteristic": -2,
+    "genus": 2
+  },
+  "checks": [
+    {
+      "feature_id": "extent_x_mm",
+      "target": 60.0,
+      "actual": 60.0,
+      "tolerance": 0.0001,
+      "status": "pass"
+    },
+    {
+      "feature_id": "extent_y_mm",
+      "target": 30.0,
+      "actual": 30.0,
+      "tolerance": 0.0001,
+      "status": "pass"
+    },
+    {
+      "feature_id": "extent_z_mm",
+      "target": 4.0,
+      "actual": 4.0,
+      "tolerance": 0.0001,
+      "status": "pass"
+    },
+    {
+      "feature_id": "volume_mm3",
+      "target": 7044.568820521966,
+      "actual": 7044.568871685515,
+      "tolerance": 0.14089137641043933,
+      "status": "pass"
+    },
+    {
+      "feature_id": "components",
+      "target": 1,
+      "actual": 1,
+      "tolerance": 0,
+      "status": "pass"
+    },
+    {
+      "feature_id": "boundary_edges",
+      "target": 0,
+      "actual": 0,
+      "tolerance": 0,
+      "status": "pass"
+    },
+    {
+      "feature_id": "nonmanifold_edges",
+      "target": 0,
+      "actual": 0,
+      "tolerance": 0,
+      "status": "pass"
+    },
+    {
+      "feature_id": "nonmanifold_vertices",
+      "target": 0,
+      "actual": 0,
+      "tolerance": 0,
+      "status": "pass"
+    },
+    {
+      "feature_id": "degenerate_triangles",
+      "target": 0,
+      "actual": 0,
+      "tolerance": 0,
+      "status": "pass"
+    },
+    {
+      "feature_id": "watertight",
+      "target": 1,
+      "actual": 1,
+      "tolerance": 0,
+      "status": "pass"
+    },
+    {
+      "feature_id": "orientation_consistent",
+      "target": 1,
+      "actual": 1,
+      "tolerance": 0,
+      "status": "pass"
+    },
+    {
+      "feature_id": "through_holes",
+      "target": 2,
+      "actual": 2,
+      "tolerance": 0,
+      "status": "pass"
+    },
+    {
+      "feature_id": "hole_1_ring_vertices",
+      "target": 50,
+      "actual": 50,
+      "tolerance": 0,
+      "status": "pass"
+    },
+    {
+      "feature_id": "hole_1_radial_deviation_mm",
+      "target": 0,
+      "actual": 1.597438277656238e-06,
+      "tolerance": 0.0001,
+      "status": "pass"
+    },
+    {
+      "feature_id": "hole_2_ring_vertices",
+      "target": 50,
+      "actual": 50,
+      "tolerance": 0,
+      "status": "pass"
+    },
+    {
+      "feature_id": "hole_2_radial_deviation_mm",
+      "target": 0,
+      "actual": 1.7192708128277445e-06,
+      "tolerance": 0.0001,
+      "status": "pass"
+    }
+  ],
+  "physical_printing": "not performed",
+  "slicing": "not performed",
+  "scope": "Mesh topology and analytic geometry checks. Parameters retain their stated evidence; no physical fit, strength or print qualification."
+}

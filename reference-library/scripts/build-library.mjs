@@ -16,6 +16,8 @@ const lib = readJSON('library.json');
 const sources = readJSON('sources.json');
 const routes = readJSON('assets/data/routes.json');
 const calculators = readJSON('assets/data/calculators.json');
+const openscadModels = readJSON('assets/data/openscad-models.json');
+const openscadTemplates = Object.fromEntries(Object.entries(openscadModels.models).map(([id, model]) => [id, read(model.template)]));
 
 // ---- validate before writing anything ----------------------------------------------
 const problems = validateSources(sources);
@@ -150,16 +152,17 @@ const exampleLinks = [
 
 // ---- page ---------------------------------------------------------------------------------
 const libraryData = {
-  revision: lib.revision, routes, calculators, sectionIds,
+  revision: lib.revision, routes, calculators, sectionIds, openscadModels, openscadTemplates,
   sourceIndex: Object.fromEntries(sources.map((s) => [s.id, { title: s.title, url: s.url }])),
 };
 const jsonForScript = (v) => JSON.stringify(v).replaceAll('<', '\\u003c').replaceAll('\u2028', '\\u2028').replaceAll('\u2029', '\\u2029');
-const tabsSpec = [['handbook', 'Handbook', ''], ['toolkit', 'Toolkit', calculators.length], ['photos', 'Photos', ''], ['sources', 'Sources', sources.length],
+const tabsSpec = [['handbook', 'Handbook', ''], ['toolkit', 'Toolkit', calculators.length], ['photos', 'Photos', ''], ['cad', 'OpenSCAD', ''], ['sources', 'Sources', sources.length],
   ['github', 'GitHub', repos.length], ['research', 'Research notes', ''], ['worksheets', 'Worksheets & examples', '']];
 const option = (v, label = v) => `<option value="${esc(v)}">${esc(label)}</option>`;
-const css = read('assets/css/library.css') + '\n' + read('assets/css/photos.css');
-const js = read('assets/js/cadcalc.js') + '\n' + read('assets/js/app.js') + '\n' + read('assets/js/photos.js') + '\n' + read('assets/js/photo-transfer.js') + '\n' + read('assets/js/photo-register.js') + '\n' + read('assets/js/photo-workspace.js');
+const css = read('assets/css/library.css') + '\n' + read('assets/css/photos.css') + '\n' + read('assets/css/cad.css');
+const js = read('assets/js/cadcalc.js') + '\n' + read('assets/js/app.js') + '\n' + read('assets/js/photos.js') + '\n' + read('assets/js/photo-transfer.js') + '\n' + read('assets/js/photo-register.js') + '\n' + read('assets/js/photo-workspace.js') + '\n' + read('assets/js/cad-models.js') + '\n' + read('assets/js/cad-workspace.js');
 const photoWorkspace = read('assets/photo-workspace.html');
+const cadWorkspace = read('assets/cad-workspace.html');
 
 const html = `<!doctype html>
 <html lang="en">
@@ -179,7 +182,7 @@ ${css}</style>
 <div class="brand"><span class="eyebrow">Field reference / 3D &amp; CAD</span><span class="brand-meta"><span>Revision ${lib.revision} · ${esc(lib.date_label)} · Works offline</span><button id="theme-toggle" type="button" aria-pressed="false" title="Switch light or dark theme"><span>Dark</span></button></span></div>
 <h1>From pictures<br>to <em>printable</em> CAD.</h1>
 <p class="lede">A practical library for recovering shape, establishing dimensions, rebuilding editable geometry, and checking the part you print, with calculators that show their working.</p>
-<div class="actions"><a class="btn primary" href="#photos">Add reference photos</a><a class="btn" href="output/pdf/pictures-to-printable-cad.pdf">Read the PDF</a><a class="btn" href="#toolkit">Open the toolkit</a><a class="btn" href="sources.csv" download>Source CSV</a><a class="btn" href="HANDBOOK.md" download>Editable handbook</a></div>
+<div class="actions"><a class="btn primary" href="#photos">Add reference photos</a><a class="btn" href="#cad">Make an OpenSCAD part</a><a class="btn" href="output/pdf/pictures-to-printable-cad.pdf">Read the PDF</a><a class="btn" href="#toolkit">Open the toolkit</a><a class="btn" href="sources.csv" download>Source CSV</a><a class="btn" href="HANDBOOK.md" download>Editable handbook</a></div>
 <ul class="stats" aria-label="Library contents">
 <li><b>${toc.length}</b><span>Handbook chapters</span></li>
 <li><b>${sources.length}</b><span>Annotated sources</span></li>
@@ -200,6 +203,7 @@ ${heroFlow}
 <div id="calc-grid"></div>
 </section>
 ${photoWorkspace}
+${cadWorkspace}
 <section class="panel" id="sources" role="tabpanel" aria-labelledby="tab-sources" tabindex="-1" hidden>
 <div class="catalog-head"><div><h2>The source library</h2><p>Official guides, primary research, geometry resources, and implementation projects. Each entry has a use case, a limitation, and the depth of review. Press <kbd>/</kbd> to search.</p></div><a href="REFERENCES.md" class="download" download>Markdown directory</a></div>
 <details class="catalog-coverage"><summary>Explore catalog coverage and review depth</summary>${composition}</details>

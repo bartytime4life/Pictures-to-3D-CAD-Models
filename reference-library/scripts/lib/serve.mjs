@@ -1,7 +1,7 @@
 // How the browser checks open index.html: from file:// (the default, exactly as a reader
 // opens it) or from a private loopback HTTP server when CAD_REFERENCE_BROWSER_TRANSPORT=http,
 // for browsers whose policy blocks local-file navigation. Shared by check-library.mjs and
-// check-photos.mjs so both test the same page over the same transport.
+// check-photos.mjs and check-cad.mjs so all test the same page over the same transport.
 import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
@@ -14,15 +14,24 @@ export const TRANSPORTS = Object.freeze(['file', 'http']);
 // environment files, or the parent repository; realpath also excludes symlinks
 // escaping the library. The two Python examples are downloadable source text.
 const publishedFiles = new Set([
-  'index.html', 'HANDBOOK.md', 'REFERENCES.md', 'sources.csv', 'cadkit/README.md',
+  'index.html', 'HANDBOOK.md', 'OPENSCAD.md', 'REFERENCES.md', 'sources.csv', 'cadkit/README.md',
   'examples/build_plate.py', 'examples/calculate.py', 'examples/calculation-results.json',
   'examples/clearance-coupon.scad', 'examples/plate-parameters.csv',
   'examples/two-hole-plate.scad', 'examples/two-hole-plate.svg',
   'output/pdf/pictures-to-printable-cad.pdf',
 ]);
+// Only the bundled synthetic builds are reader downloads. Personal native builds
+// under output/ remain private, even if a browser check requests their paths.
+for (const model of ['plate', 'coupon']) {
+  for (const name of ['source.scad', 'parameters.csv', 'model.stl', 'validation-results.csv',
+    'build.json', 'preview.png', 'render.log', 'preview.log']) {
+    publishedFiles.add(`examples/openscad-starter/${model}/${name}`);
+  }
+}
 const mimeTypes = {
   '.html': 'text/html; charset=utf-8', '.svg': 'image/svg+xml',
   '.pdf': 'application/pdf', '.json': 'application/json', '.csv': 'text/csv; charset=utf-8',
+  '.png': 'image/png', '.stl': 'application/octet-stream',
 };
 
 export function servePublishedFile(request, response) {

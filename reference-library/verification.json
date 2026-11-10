@@ -1,6 +1,6 @@
 {
   "checked_date": "2026-11-09",
-  "revision": 6,
+  "revision": 7,
   "status": "passed",
   "source_records": 88,
   "unique_urls": 88,
@@ -10,19 +10,19 @@
   "figures": 11,
   "route_combinations": 35,
   "python_tests": {
-    "ran": 161,
+    "ran": 180,
     "skipped": 2,
     "status": "passed"
   },
   "node_tests": {
-    "passed": 50,
+    "passed": 58,
     "failed": 0
   },
   "browser_checks": {
-    "assertions": 109,
+    "assertions": 112,
     "transport": "http",
-    "local_files_checked": 30,
-    "in_page_anchors_checked": 126,
+    "local_files_checked": 33,
+    "in_page_anchors_checked": 129,
     "desktop_viewport": [
       1440,
       1050
@@ -34,8 +34,8 @@
     "errors": []
   },
   "photo_workspace_checks": {
-    "checked_at": "2026-11-09T20:22:09.217Z",
-    "revision": 6,
+    "checked_at": "2026-11-10T00:09:15.873Z",
+    "revision": 7,
     "status": "passed",
     "transport": "http",
     "checks": [
@@ -139,18 +139,18 @@
     "check_count": 67
   },
   "photo_transfer_checks": {
-    "checked_at": "2026-11-09T20:22:15.571Z",
-    "revision": 6,
+    "checked_at": "2026-11-10T00:09:22.132Z",
+    "revision": 7,
     "status": "passed",
     "checks": [
       "Browser provides an actual origin-private filesystem for backup writes",
       "Transfer progress and recovery messages are announced as status",
       "Restore chooser accepts a complete backup directory",
       "Backup writes one completed manifest inside a dedicated backup folder",
-      "Exported relative path remains inside its backup folder: cad-photos-2026-11-09T20-22-16-347Z-1eb971b3-dbc4-402a-bc6c-7d86312e6b79/photos/ffd8de4ef3503412ae0c2716318dff28786e6ce0d0bfdab02286aa4ca068a1bf.png",
-      "Exported relative path remains inside its backup folder: cad-photos-2026-11-09T20-22-16-347Z-1eb971b3-dbc4-402a-bc6c-7d86312e6b79/photos/a6e823a417be1cf0e11463aa378a77c26acecbd5f8c6d2e4d7accab3d80b2295.png",
-      "Exported relative path remains inside its backup folder: cad-photos-2026-11-09T20-22-16-347Z-1eb971b3-dbc4-402a-bc6c-7d86312e6b79/photos/86c142277ed1c97ae299817d51d7eadafe756dc1853c0234baa37379f400bc3d.png",
-      "Exported relative path remains inside its backup folder: cad-photos-2026-11-09T20-22-16-347Z-1eb971b3-dbc4-402a-bc6c-7d86312e6b79/cad-photo-manifest.json",
+      "Exported relative path remains inside its backup folder: cad-photos-2026-11-10T00-09-22-901Z-b9a8cef0-0159-4d0f-9630-cc00c4e77b3f/photos/ffd8de4ef3503412ae0c2716318dff28786e6ce0d0bfdab02286aa4ca068a1bf.png",
+      "Exported relative path remains inside its backup folder: cad-photos-2026-11-10T00-09-22-901Z-b9a8cef0-0159-4d0f-9630-cc00c4e77b3f/photos/a6e823a417be1cf0e11463aa378a77c26acecbd5f8c6d2e4d7accab3d80b2295.png",
+      "Exported relative path remains inside its backup folder: cad-photos-2026-11-10T00-09-22-901Z-b9a8cef0-0159-4d0f-9630-cc00c4e77b3f/photos/86c142277ed1c97ae299817d51d7eadafe756dc1853c0234baa37379f400bc3d.png",
+      "Exported relative path remains inside its backup folder: cad-photos-2026-11-10T00-09-22-901Z-b9a8cef0-0159-4d0f-9630-cc00c4e77b3f/cad-photo-manifest.json",
       "Portable folder contains every original named by SHA-256 and its metadata",
       "Repeated backup chooses a distinct subfolder and preserves unrelated destination content",
       "Measurement CSV download uses the repository measurement-register columns",
@@ -201,14 +201,187 @@
     "renamed_original_mime": "application/octet-stream",
     "cancelled_export": {
       "status": "cancelled",
-      "folderName": "cad-photos-2026-11-09T20-22-17-571Z-4c462101-25e7-45e1-a1a9-7db4856d0a36",
+      "folderName": "cad-photos-2026-11-10T00-09-24-105Z-308efb83-a02a-4e1a-890c-c1aaeab98caa",
       "count": 1,
       "bytes": 5962
     },
     "check_count": 49
   },
+  "openscad_workspace_checks": {
+    "checked_at": "2026-11-10T00:09:26.973Z",
+    "revision": 7,
+    "status": "passed",
+    "transport": "http",
+    "checks": [
+      "OpenSCAD tab opens directly from its hash over http",
+      "OpenSCAD tab is selected accessibly",
+      "Default plate sketch shows two holes",
+      "Sketch explicitly states that it is not a CAD render",
+      "Sketch dimensions update after editing the plate",
+      "Download filename is plate.scad",
+      "Plate SCAD preserves exact selected values, Customizer controls and geometry",
+      "Download filename is plate-parameters.csv",
+      "Plate CSV preserves register columns, exact value, self-recorded evidence and quoted rationale",
+      "Download filename is plate-drawing.svg",
+      "SVG is a standalone accessible dimensional sketch",
+      "Reload restores the numeric draft and reports it",
+      "Reload restores self-recorded parameter evidence",
+      "Blank dimensions disable exports and clear the usable sketch",
+      "Plate end-wall violation is explained and blocks export",
+      "Blank evidence rationale blocks export consistently with the command-line build",
+      "Coupon sketch shows the default five-hole test series",
+      "Coupon states its polygon compensation and fixed label settings",
+      "Download filename is coupon.scad",
+      "Coupon SCAD uses selected numbers, compensation and no font-dependent labels",
+      "Download filename is coupon-parameters.csv",
+      "Download filename is coupon-drawing.svg",
+      "Fractional coupon hole count blocks downloads with a useful error",
+      "Coupon notch-wall violation blocks downloads",
+      "Switching models retains each model\u2019s draft and evidence",
+      "Actual default OpenSCAD render loads with fixed-example wording",
+      "Mobile workspace has no horizontal page overflow",
+      "Mobile workspace keeps part selection and download available",
+      "Unavailable browser storage explains how to preserve edits and permits download",
+      "No browser JavaScript or console errors"
+    ],
+    "browser_errors": [],
+    "downloaded_files": [
+      "tmp/qa/cad-downloads/plate.scad",
+      "tmp/qa/cad-downloads/plate-parameters.csv",
+      "tmp/qa/cad-downloads/plate-drawing.svg",
+      "tmp/qa/cad-downloads/coupon.scad",
+      "tmp/qa/cad-downloads/coupon-parameters.csv",
+      "tmp/qa/cad-downloads/coupon-drawing.svg"
+    ],
+    "scope": "Isolated browser; synthetic numeric parameters only. Checks dimensions, validation, SCAD/CSV/SVG exports, evidence, autosave, unavailable storage and responsive layout over the recorded transport. Native rendering and physical fit are separate.",
+    "check_count": 30
+  },
+  "openscad_native_handoff": {
+    "revision": 7,
+    "status": "passed",
+    "models": {
+      "plate": {
+        "status": "passed",
+        "openscad_version": "2021.01",
+        "source_sha256": "06bc2b877fbc821c0cb28ee7764cfb178267103958bfc3d46b2e59d2cd30cab3",
+        "csv_sha256": "ff67b9e7d9445048618bfa279bdca7831ed6d3cd7cc0409cc5ea1c6255cbfb3c",
+        "direct_render": "tmp/qa/cad-native-65l9disz/plate-browser.stl",
+        "csv_build": "tmp/qa/cad-native-65l9disz/plate-csv",
+        "mesh": {
+          "triangles": 220,
+          "vertices": 108,
+          "bbox_min": [
+            -36.061729431152344,
+            -15.0,
+            0.0
+          ],
+          "bbox_max": [
+            36.061729431152344,
+            15.0,
+            4.0
+          ],
+          "extents": [
+            72.12345886230469,
+            30.0,
+            4.0
+          ],
+          "surface_area": 5192.012851415786,
+          "volume": 8499.383935162077,
+          "watertight": true,
+          "boundary_edges": 0,
+          "nonmanifold_edges": 0,
+          "nonmanifold_vertices": 0,
+          "manifold": true,
+          "orientation_consistent": true,
+          "components": 1,
+          "degenerate_triangles": 0,
+          "euler_characteristic": -2,
+          "genus": 2
+        },
+        "direct_checks": 16,
+        "csv_build_checks": 16,
+        "values": {
+          "plate_length": 72.12345678901234,
+          "plate_width": 30.0,
+          "plate_thickness": 4.0,
+          "hole_diameter": 5.0,
+          "hole_spacing": 40.0,
+          "chord_error": 0.02,
+          "min_wall": 2.0
+        }
+      },
+      "coupon": {
+        "status": "passed",
+        "openscad_version": "2021.01",
+        "source_sha256": "af4e2489cf4567943fffc5f7654150794410f821703d49fd30f3bf03e445ab25",
+        "csv_sha256": "5ddcec482829f2e72adee8c61782d95cf9f29cae88c3e82bef8bd13021de5aef",
+        "direct_render": "tmp/qa/cad-native-65l9disz/coupon-browser.stl",
+        "csv_build": "tmp/qa/cad-native-65l9disz/coupon-csv",
+        "mesh": {
+          "triangles": 492,
+          "vertices": 240,
+          "bbox_min": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "bbox_max": [
+            38.75685119628906,
+            10.68921184539795,
+            4.0
+          ],
+          "extents": [
+            38.75685119628906,
+            10.68921184539795,
+            4.0
+          ],
+          "surface_area": 1276.8703110457463,
+          "volume": 1115.9108370013073,
+          "watertight": true,
+          "boundary_edges": 0,
+          "nonmanifold_edges": 0,
+          "nonmanifold_vertices": 0,
+          "manifold": true,
+          "orientation_consistent": true,
+          "components": 1,
+          "degenerate_triangles": 0,
+          "euler_characteristic": -6,
+          "genus": 4
+        },
+        "direct_checks": 20,
+        "csv_build_checks": 20,
+        "values": {
+          "pin_diameter": 6.25,
+          "clearance_start": 0.1,
+          "clearance_step": 0.1,
+          "clearance_count": 4.0,
+          "thickness": 4.0,
+          "min_wall": 2.0,
+          "end_wall": 3.0,
+          "chord_error": 0.02,
+          "notch_size": 2.0
+        }
+      }
+    },
+    "scope": "Real OpenSCAD renders of synthetic browser downloads and their CSV-driven builds; no physical print or fit test.",
+    "browser_transport": "http"
+  },
+  "openscad_starter_builds": {
+    "plate": {
+      "status": "passed",
+      "checks": 16,
+      "openscad_version": "2021.01",
+      "model_revision_sha256": "cd3f69adec0971e84da4f6e4de25079e6202e48b34012da8ce5cec696033c292"
+    },
+    "coupon": {
+      "status": "passed",
+      "checks": 22,
+      "openscad_version": "2021.01",
+      "model_revision_sha256": "6e06ab57bc5a759cef9b346eb13e21ab77eb3a190719735365a8391435f0fad4"
+    }
+  },
   "external_links": {
-    "checked_at": "2026-11-09T20:21:30.204Z",
+    "checked_at": "2026-11-09T20:06:04.422Z",
     "total": 91,
     "ok": 89,
     "blocked": 2,
@@ -219,8 +392,8 @@
       "https://mci.si.edu/3d-technologies"
     ]
   },
-  "pdf_pages": 58,
-  "pdf_sha256": "0b75c9a3732f7341ab32845cc1d79dc91addfd2112cf1fc0003794d15c1c12b3",
+  "pdf_pages": 59,
+  "pdf_sha256": "d0405c05a25c3443d1c5ed11da2501ac317eb73f53e22cd5049e98cfa0f3f624",
   "pdf_catalog_urls_linked": 88,
   "synthetic_calculations": "passed",
   "openscad_plate_checks": {

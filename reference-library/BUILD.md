@@ -35,7 +35,8 @@ Run these from `reference-library/`.
 | --- | --- |
 | `make build` | `calc` → `figures` → `html` → `pdf` |
 | `make test` | Python `unittest` and `node --test` (including JavaScript-vs-Python agreement) |
-| `make check` | Browser end-to-end checks of `index.html` (`check-library.mjs`) of the Photos workspace (`check-photos.mjs`), and of portable backup/restore (`check-photo-transfer.mjs`); records and screenshots go to `tmp/qa/` |
+| `make check` | Browser checks of the library, Photos, backup/restore and OpenSCAD workspace, followed by native OpenSCAD handoff checks; records and screenshots go to `tmp/qa/` |
+| `make openscad-doctor` | Check the installed OpenSCAD executable and version |
 | `make plate` | Render the synthetic plate with OpenSCAD and run its design-rule checks |
 | `make links` | Request every catalog URL and write `tmp/qa/link-check.json` (network) |
 | `make refresh-github` | Update the repository metadata in `sources.json` (network) |
@@ -57,7 +58,7 @@ success or failure. It serves only the published library page, figures, linked
 documents, worksheets, and examples; it does not serve the parent repository,
 dependency folders, or environment files. No external service is used. The QA
 JSON records `transport`, `page_url`, and the tested scope. An HTTP result does
-not establish that `file://` works in that browser. CI checks both transports.
+not establish that `file://` works in that browser. CI checks both transports, including the OpenSCAD workspace.
 
 To run a step directly:
 
@@ -74,9 +75,11 @@ To run a step directly:
 | `HANDBOOK.md`, `RESEARCH-NOTES.md`, `templates/*.md` | HTML and PDF text | `make html pdf` |
 | `scripts/figures.py` | all figures (SVG and PDF) | `make figures html pdf` |
 | `assets/data/routes.json` | route finder (HTML, CLI) and route map | `make figures html` |
-| `assets/data/calculators.json`, `assets/js/*.js`, `assets/css/*.css`, `assets/photo-workspace.html` | Toolkit, Photos workspace, and page interface (inlined into `index.html`) | `make html` |
+| `assets/data/calculators.json`, `assets/js/*.js`, `assets/css/*.css`, `assets/photo-workspace.html`, `assets/cad-workspace.html` | Toolkit, Photos workspace, and page interface (inlined into `index.html`) | `make html` |
+| `assets/data/openscad-models.json`, `examples/*.scad` | shared OpenSCAD model parameters and source templates | `make html test check` |
 | `cadkit/*.py` | CLI, examples, Python tests | `make test` |
-| `examples/plate-parameters.csv` | plate render and checks | `make plate` |
+| `examples/plate-parameters.csv` | plate render and checks | `make openscad-doctor` | Check the installed OpenSCAD executable and version |
+| `make plate` |
 | `library.json` | revision label, dates, archive name | `make build dist` |
 
 Never edit generated files by hand: `index.html`, `sources.csv`, `REFERENCES.md`, `GITHUB.md`, `assets/figures/*.svg`, the PDF, and `verification.json`. `SHA256SUMS` and `dist/` are also generated and are not committed.
@@ -140,3 +143,9 @@ Folder export uses the browser's [directory picker](https://developer.mozilla.or
 ## Provenance
 
 Revisions 1 and 2 were authored with a Codex workflow and its bundled runtimes. Revision 3 made the build portable and added the toolkit, figures, and tests; no CAD application other than OpenSCAD and no AI reconstruction package was installed or run. Generated intermediates live in `tmp/`, which is ignored by Git and excluded from the archive.
+
+## OpenSCAD workspace
+
+The build inlines `assets/cad-workspace.html`, `assets/css/cad.css`, `assets/js/cad-models.js`, and `assets/js/cad-workspace.js`. The shared schema is `assets/data/openscad-models.json`; source templates are the existing plate and coupon SCAD files. `scripts/check-cad.mjs` exercises both workflows in isolated browser profiles using the same `CAD_REFERENCE_BROWSER_TRANSPORT` selection as the main and Photos checks. The file run disables browser networking; the HTTP run uses the restricted loopback server. The server exposes only published synthetic starter artifacts, not personal native output directories.
+
+`scripts/check-cad-native.py` renders the actual downloaded sources and separately builds from their CSVs. Native checks record a skip when OpenSCAD is unavailable. Native build checks live in `tests/python/test_openscad.py`, and export-preservation regressions in `test_scad.py`. `make verify` requires current passing CAD browser results, the subsequent native handoff result, and intact synthetic starter build records. It records the browser transport and keeps the most recent optional external-link check. See [OPENSCAD.md](OPENSCAD.md) for usage and limits. Personal builds under `output/` are excluded from the archive; only the handbook PDF is packaged from that folder.

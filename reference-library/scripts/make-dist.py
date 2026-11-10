@@ -36,6 +36,10 @@ def library_files() -> list[Path]:
         rel = p.relative_to(LIB_DIR)
         if not p.is_file() or p.name in EXCLUDE_NAMES or p.suffix == '.pyc':
             continue
+        # Native builds may contain reviewed dimensions and local provenance.
+        # Package only the published handbook from output/, never user builds.
+        if rel.parts[0] == 'output' and rel.as_posix() != 'output/pdf/pictures-to-printable-cad.pdf':
+            continue
         if set(rel.parts) & EXCLUDE_DIRS or any(rel.as_posix().startswith(x + '/') for x in EXCLUDE_PATHS):
             continue
         files.append(p)

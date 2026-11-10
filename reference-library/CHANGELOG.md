@@ -2,6 +2,14 @@
 
 All dates are 2026. Revisions are numbered in `library.json`, which feeds the HTML, the PDF, and the archive name. Revision 3 is the first revision kept in this repository; Revisions 1 and 2 were distributed as ZIP archives.
 
+## Revision 7 — November 9, 2026
+
+- Connect the photo-to-CAD workflow to OpenSCAD with an offline mounting-plate and clearance-coupon workspace, dimensioned sketches, evidence fields, and SCAD/CSV/SVG downloads.
+- Add `cadkit openscad doctor` and checked native builds, bringing the current CLI to a toolkit with 20 commands. Share model parameters and bounds with the browser.
+- Preserve earlier exports on invalid input, failed renders and timeouts; commit complete new builds only after geometry checks pass.
+- Record complete source, parameter, schema and output hashes, OpenSCAD versions, logs and actual-mesh checks. Include real default-model renders and editable starter files.
+- Exercise browser downloads through actual OpenSCAD renders, with isolated desktop/mobile checks and preservation regression tests. Rebuild the handbook, verification record and portable archive. No slicing or physical print qualification.
+
 ## Revision 6 — November 9, 2026
 
 - Keep catalog search and filters in easy reach, with an expandable coverage chart, a clear empty-state reset, and larger touch targets. Preserve filter links when moving between tabs.

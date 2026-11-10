@@ -9,10 +9,11 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import subprocess
 import sys
 from pathlib import Path
 
-from . import __version__, calc, homography, params, project, routes, stl
+from . import __version__, calc, homography, openscad, params, project, routes, stl
 
 
 def _fmt(value, digits: int = 6) -> str:
@@ -275,6 +276,25 @@ def cmd_version(args):
     _emit(args, r, [f"cadkit {__version__}"])
 
 
+def cmd_openscad(args):
+    if args.openscad_action == "doctor":
+        r = openscad.doctor()
+        _emit(args, r, [f"OpenSCAD: {r['status']}", f"executable: {r['executable'] or 'not found'}",
+                       f"version: {r['version'] or 'unavailable'}", "models: plate, coupon",
+                       "Units: mm. The browser exports editable files; OpenSCAD renders locally."])
+        return 0 if r["status"] == "ready" else 1
+    try:
+        r = openscad.build(args.model, args.output_dir, args.params, args.preview)
+    except (RuntimeError, subprocess.TimeoutExpired) as exc:
+        print(f"build failed: {exc}", file=sys.stderr)
+        return 1
+    _emit(args, r, [f"PASS: {len(r['checks'])} mesh and geometry checks",
+                   f"OpenSCAD {r['openscad_version']} → {r['output_dir']}",
+                   "Wrote source.scad, parameters.csv, model.stl, validation-results.csv and build.json.",
+                   "Physical fit and printing have not been tested."])
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="python3 -m cadkit", description=(
         "Handbook calculators and checks for pictures-to-printable-CAD work. "
@@ -373,6 +393,17 @@ def build_parser() -> argparse.ArgumentParser:
     p = add("new-project", cmd_new_project, "scaffold a project folder from the templates")
     p.add_argument("dir", type=Path)
     p.add_argument("--name", required=True)
+
+    p = add("openscad", cmd_openscad, "discover OpenSCAD or build a checked local plate/coupon")
+    actions = p.add_subparsers(dest="openscad_action", required=True)
+    doctor = actions.add_parser("doctor", help="check the installed OpenSCAD executable")
+    doctor.add_argument("--json", action="store_true", default=argparse.SUPPRESS)
+    build = actions.add_parser("build", help="render to a new directory and check the actual STL")
+    build.add_argument("--json", action="store_true", default=argparse.SUPPRESS)
+    build.add_argument("--model", choices=("plate", "coupon"), required=True)
+    build.add_argument("--params", type=Path, help="parameter CSV; omit for explicitly synthetic defaults")
+    build.add_argument("--output-dir", type=Path, required=True, help="new directory; existing builds are preserved")
+    build.add_argument("--preview", action="store_true", help="also render a PNG (display or xvfb-run required)")
 
     p = add("route", cmd_route, "recommend a handbook workflow for an input and a goal")
     p.add_argument("--input", help="what you have (see --list)")

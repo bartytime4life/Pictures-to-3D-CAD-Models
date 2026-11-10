@@ -9,6 +9,8 @@ have exactly one through-hole (genus) per traced hole.
 
 import io
 import json
+import os
+import shutil
 import subprocess
 import sys
 import zipfile
@@ -130,6 +132,56 @@ def test_every_split_part_is_independently_printable(client, mesh, tmp_path):
         assert_printable(report, holes=1)
         assert report["volume"] == pytest.approx(part["volume_mm3"], rel=1e-4)
         assert report["bbox_min"] == pytest.approx([0, 0, 0], abs=1e-5)
+
+
+@pytest.mark.parametrize("split", [False, True])
+def test_native_openscad_matches_final_scaled_simplified_profiles(client, mesh, tmp_path, split):
+    openscad = shutil.which("openscad")
+    if not openscad:
+        pytest.skip("Native SCAD render comparison requires OpenSCAD.")
+    # The top-edge bumps disappear under draft simplification. Matching volume
+    # proves the SCAD uses the final profile, not the source pixels or raw scale.
+    profile = square_plate()["profile"]
+    profile["outer"] = [
+        [0, 0], [100, 0], [100, 60], [80, 60], [79, 60.05], [78, 60], [0, 60]
+    ]
+    response = client.post(
+        "/api/build",
+        json=square_plate(
+            profile=profile,
+            design={
+                "scale_percent": 150, "thickness_percent": 175,
+                "detail_mode": "draft", "nozzle_mm": 0.4,
+                "output_mode": "split" if split else "single",
+                "split_columns": 2, "split_rows": 1,
+            },
+        ),
+    )
+    assert response.status_code == 200, response.text
+    model = response.json()
+    source = download(client, model["downloads"]["scad"], tmp_path / "model.scad")
+
+    def render(index):
+        output = tmp_path / f"render-{index}.stl"
+        result = subprocess.run(
+            [openscad, "-o", str(output), "-D", f"part_index={index}", str(source)],
+            capture_output=True, text=True, timeout=60, check=False,
+            env={**os.environ, "QT_QPA_PLATFORM": "offscreen"},
+        )
+        assert result.returncode == 0, result.stderr
+        return mesh.analyze(mesh.read_stl(output))
+
+    report = render(0)
+    assert_printable(report, holes=2)
+    assert report["extents"] == pytest.approx(list(model["dimensions"].values()), abs=1e-4)
+    assert report["volume"] == pytest.approx(model["volume_mm3"], rel=1e-4)
+    if split:
+        assert len(model["parts"]) == 2
+        for index, part in enumerate(model["parts"], start=1):
+            piece = render(index)
+            assert_printable(piece, holes=1)
+            assert piece["volume"] == pytest.approx(part["volume_mm3"], rel=1e-4)
+            assert piece["extents"] == pytest.approx(list(part["dimensions"].values()), abs=1e-4)
 
 
 def test_documented_meshcheck_command_accepts_a_workbench_export(client, tmp_path):

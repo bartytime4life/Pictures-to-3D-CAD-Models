@@ -2,6 +2,17 @@
 
 Latest workbench validation: November 9, 2026, on the local Linux workstation. Earlier managed-environment and release results are recorded separately below. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
 
+## Repository and OpenSCAD integration — November 9, 2026
+
+The full repository workbench now includes OpenSCAD source export and opens the preserved Revision 7 companion workspace from its header. The app serves published companion files on the same origin through an explicit allowlist; local build outputs, environments, and scratch files remain outside that route.
+
+- `make test-app` passed: **202 Python tests**, production typecheck/build, and **34 Chrome browser scenarios**, with no failures or skips. The Python suite completed in 21.95 seconds and the browser scenarios in 2.9 minutes. `make lint` passed Ruff and Prettier checks.
+- Native OpenSCAD rendered exported source for scaled and simplified profiles containing two through-holes, both as a single part and as a split assembly. The library's independent mesh checker confirmed closed, manifold, consistently oriented meshes, matching CAD bounds and volume, and the expected hole topology. Both selected split pieces also matched their CAD dimensions and volume. These tests use the final prepared polygons and effective thickness rather than the source-image outline or unscaled inputs.
+- Browser checks downloaded the new `.scad` source through the export dialog and opened `/reference-library/index.html#cad` in a separate tab while the original model and its download remained available. Existing measurement, design, assistant, recovery, accessibility, and mobile scenarios also passed. The refreshed workbench screenshot was visually reviewed.
+- Route checks served the bundled public handbook, drawing, worksheet, SCAD example, and PDF, and rejected private directories, personal output paths, traversal, null-byte paths, and an allowlisted symlink escaping the library.
+
+This run used Python 3.12.3, Node.js 22.13.1, OpenSCAD 2021.01, and Google Chrome 157.0.8103.50. The tests used synthetic geometry and generated imagery; no personal source photo was used, and no part was sliced, printed, or physically qualified for dimensions, fit, or strength. This is local evidence; remote CI results belong to the new revision. The companion's separate verification record covers its own library, browser, and native-build checks.
+
 ## Measured-feature scale and recovery improvements — November 9, 2026
 
 The workbench now supports an explicitly applied two-point reference in the orientation-adjusted working image, alongside manual outside-width entry. An optional independent outside-height comparison stays separate from XY design scaling. Version 2 recipes retain validated endpoint/length/frame notes and the optional check without embedding a photograph.
