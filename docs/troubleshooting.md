@@ -51,6 +51,8 @@ If STEP opens without the application's original sketch and extrusion history, t
 
 If refreshing the page returns to the sample, restore your downloaded project through **Photo → Browse files**. The application has no automatic project persistence; the saved recipe is the recovery path.
 
+Opening a project replaces the current work only after its CAD build succeeds. If the imported outline is invalid or the service fails, the previous outline, measurements, design settings, and temporary exports remain available. **Try again** retries the selected import; it does not rebuild the previous project. Correct an invalid imported file before retrying it.
+
 ## Viewer and startup problems
 
 - **Blank 3D viewer:** confirm that the browser supports WebGL and that a build has actually completed. A text summary or fallback message does not establish that 3D rendering passed.
