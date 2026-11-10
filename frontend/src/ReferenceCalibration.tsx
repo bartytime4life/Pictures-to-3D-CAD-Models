@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { PointerEvent } from 'react';
 import { calibrationError, measuredHeightError, referenceWidth } from './calibration';
+import ReferenceSensitivity from './ReferenceSensitivity';
 import type { Point, ReferenceCalibration as Calibration, TraceResult } from './types';
 import './ReferenceCalibration.css';
 
@@ -78,12 +79,6 @@ export default function ReferenceCalibration({
     !issue && (!Number.isFinite(derivedWidth) || derivedWidth < 0.1 || derivedWidth > 2000)
       ? 'This reference gives an outside width beyond 0.1–2000 mm. Check the points and length.'
       : null;
-  const pixelSpan = issue
-    ? NaN
-    : Math.hypot(
-        value.reference_points[1][0] - value.reference_points[0][0],
-        value.reference_points[1][1] - value.reference_points[0][1],
-      );
   const heightIssue = measuredHeightError(height, factor);
   const estimate = widthMm === null ? null : (trace.bounds.height / trace.bounds.width) * widthMm;
   const difference =
@@ -245,13 +240,14 @@ export default function ReferenceCalibration({
                   ) : (
                     <p>Set two endpoints and a known length to calculate scale.</p>
                   )}
-                  {pixelSpan < 200 && (
-                    <p>
-                      A longer reference reduces sensitivity to endpoint placement. This short span
-                      is not an accuracy check.
-                    </p>
-                  )}
                 </div>
+                <ReferenceSensitivity
+                  calibration={value}
+                  outlineWidth={trace.bounds.width}
+                  unit={unit}
+                  disabled={disabled}
+                  available={!issue && !rangeIssue}
+                />
                 <button
                   className="secondary-button"
                   disabled={disabled || !!issue || !!rangeIssue}

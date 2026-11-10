@@ -128,6 +128,58 @@
 .height-check > label {
   max-width: 320px;
 }
+.reference-sensitivity {
+  margin: 12px 0;
+  border-top: 1px solid var(--border);
+}
+.reference-sensitivity > summary {
+  cursor: pointer;
+  min-height: 44px;
+  padding: 10px 0;
+  color: #edf8ff;
+  font-weight: 600;
+}
+.reference-sensitivity > summary:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+.reference-sensitivity > label {
+  margin: 12px 0;
+}
+.sensitivity-plot {
+  display: block;
+  width: 100%;
+  height: 56px;
+  color: #9dd9e7;
+}
+.sensitivity-plot line {
+  stroke: currentColor;
+  stroke-width: 2;
+}
+.sensitivity-plot .sensitivity-range {
+  stroke-width: 4;
+  opacity: 0.6;
+}
+.sensitivity-plot circle {
+  fill: currentColor;
+}
+.sensitivity-values {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 12px;
+  text-align: center;
+  font-size: 12px;
+}
+.sensitivity-values dt {
+  color: #b7c8d3;
+}
+.sensitivity-values dd {
+  margin: 4px 0 0;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+  color: #edf8ff;
+}
 @media (max-width: 700px) {
   .reference-layout {
     grid-template-columns: minmax(0, 1fr);

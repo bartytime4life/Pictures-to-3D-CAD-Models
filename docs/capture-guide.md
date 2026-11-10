@@ -1,5 +1,7 @@
 # Capture and calibration guide
 
+Use [Explore endpoint placement](reference-sensitivity.md) inside the known-feature controls to see how an assumed shift of the selected endpoints changes the source-width calculation. It illustrates sensitivity in working-image pixels and does not estimate manufacturing accuracy or correct the photograph.
+
 The most dependable input is a clearly separated silhouette of one part that has the same cross-section through its thickness. A flat washer, spacer, plate, or gasket is a useful starting point.
 
 ## Take the photograph

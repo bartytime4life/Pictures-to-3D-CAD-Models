@@ -6,6 +6,35 @@ export function referenceWidth(calibration: ReferenceCalibration, outlineWidth: 
   return (outlineWidth * calibration.known_length_mm) / Math.hypot(b[0] - a[0], b[1] - a[1]);
 }
 
+/** An explicit along-reference endpoint scenario, not an uncertainty estimate. */
+export function scaleSensitivity(
+  calibration: ReferenceCalibration,
+  outlineWidth: number,
+  offsetPx: number,
+) {
+  if (
+    calibrationError(calibration) ||
+    !Number.isFinite(outlineWidth) ||
+    outlineWidth <= 0 ||
+    !Number.isFinite(offsetPx) ||
+    offsetPx < 0 ||
+    offsetPx > 5
+  )
+    return null;
+  const [a, b] = calibration.reference_points;
+  const span = Math.hypot(b[0] - a[0], b[1] - a[1]);
+  if (span <= 2 * offsetPx) return null;
+  const numerator = outlineWidth * calibration.known_length_mm;
+  const result = {
+    span,
+    mmPerPixel: calibration.known_length_mm / span,
+    low: numerator / (span + 2 * offsetPx),
+    current: numerator / span,
+    high: numerator / (span - 2 * offsetPx),
+  };
+  return Object.values(result).every(Number.isFinite) ? result : null;
+}
+
 export function calibrationError(value: ReferenceCalibration): string | null {
   const frame = value?.image_size;
   if (

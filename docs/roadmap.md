@@ -10,6 +10,8 @@ An optional local Ollama assistant provides text guidance and reviewable trace/d
 
 The current implementation and [validation results](validation.md) are the source of truth for what works. Items below are future work, not hidden capabilities or delivery promises.
 
+Reference entry also includes an [endpoint-placement sensitivity explorer](reference-sensitivity.md). It illustrates a user-selected pixel-shift scenario without applying scale or claiming an accuracy range.
+
 ## Useful next steps
 
 | Direction | User benefit | Evidence needed before release |
@@ -23,12 +25,14 @@ The current implementation and [validation results](validation.md) are the sourc
 | Measured local-model selection | Choose the smallest assistant that gives useful advice quickly | Installed artifact/license verification, repeatable latency results, and human review of fixed project-specific cases |
 | Opt-in vision guidance | Give capture advice based on the actual photograph | Explicit image-sharing control, a verified local vision model, resource bounds, and evaluation against visible evidence |
 | Assembly-aware splitting | Add useful joints or locating features between pieces | Measured clearance/kerf, topology checks, validated joinery, and explicit assembly assumptions |
-| Slicer integration | Inspect supports, toolpaths, and machine-specific output | Qualified printer/material profiles, actual slicer execution, reviewable results, and machine-specific validation |
+| Native slicer qualification | Verify the existing 3MF and Bambu Studio/PrusaSlicer handoffs in installed applications | Installed-version records, imported dimensions and hole topology, actual layer previews, qualified printer/material profiles, and separate physical-print evidence |
 | Multi-user hosting | Share the tool safely across users | Authentication, authorization, isolated jobs, quotas, retention, deletion, monitoring |
 | Multiview reconstruction | Reconstruct more general surfaces | Capture guidance, hardware budget, scale controls, mesh validation, and a separate CAD-fitting strategy |
 
 ## Release discipline
 
 Before expanding the scope, keep the current workflow dependable: verify supported imports, hole topology, dimensional conversion, exports, outdated-result handling, failure recovery, keyboard access, and responsive behavior. Update the user guide when behavior changes, and record failures as well as passes.
+
+Prioritize repeatable ground-truth capture and native slicer qualification next. Manual profile correction follows when undo, topology checks, and accessible editing are scoped together. Multiview reconstruction and multi-user hosting require separate designs and resources. These priorities carry no delivery dates or assigned owners.
 
 Do not label a release manufacturing-accurate, fully parametric, production-secure, or universally accessible without evidence supporting that specific claim.
