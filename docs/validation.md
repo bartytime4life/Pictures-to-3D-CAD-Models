@@ -1,6 +1,6 @@
 # Validation results
 
-Latest workbench validation: November 9, 2026, on the local Linux workstation. Earlier managed-environment and release results are recorded separately below. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
+Latest workbench validation: November 10, 2026, on the local Linux workstation. The [reference-sensitivity record](validation/reference-sensitivity.md) covers the new endpoint-placement explorer. Earlier managed-environment and release results are recorded separately below. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
 
 ## Bambu Studio and PrusaSlicer handoff — November 9, 2026
 
