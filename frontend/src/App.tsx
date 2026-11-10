@@ -843,7 +843,25 @@ export default function App() {
         thickness: recipe.thickness_mm,
       });
       if (restoredError) throw new Error(`This project could not be opened. ${restoredError}`);
-      const rev = invalidate();
+      // Validate and build before replacing the current project. A service failure or
+      // invalid polygon must leave the user's editable work and exports available.
+      const previousRevision = revisionRef.current;
+      const rev = String(previousRevision + 1);
+      setBusy('Building the CAD solid…');
+      retryable = true;
+      const built = await requestModel(
+        recipe.profile,
+        recipe.width_mm,
+        recipe.thickness_mm,
+        restoredName,
+        rev,
+        restoredDesign,
+      );
+      if (sequence !== sequenceRef.current || revisionRef.current !== previousRevision) {
+        releaseModel(built.id);
+        return;
+      }
+      invalidate();
       setName(restoredName);
       setWidth(recipe.width_mm.toFixed(4));
       setThickness(recipe.thickness_mm.toFixed(4));
@@ -877,20 +895,8 @@ export default function App() {
           'Restored project: the source photo was not included. Upload a photo to trace again.',
         ],
       });
-      setBusy('Building the CAD solid…');
-      retryable = true;
-      const built = await requestModel(
-        recipe.profile,
-        recipe.width_mm,
-        recipe.thickness_mm,
-        restoredName,
-        rev,
-        restoredDesign,
-      );
-      if (sequence === sequenceRef.current && String(revisionRef.current) === rev) {
-        installModel(built);
-        setNotice('Project restored and rebuilt.');
-      } else releaseModel(built.id);
+      installModel(built);
+      setNotice('Project restored and rebuilt.');
     } catch (err) {
       if (sequence === sequenceRef.current)
         setError(errorText(err), retryable ? { kind: 'restore', file } : null);
