@@ -30,7 +30,7 @@ async function ready(page: Page): Promise<TraceResult> {
 }
 
 async function applyReference(page: Page, trace: TraceResult) {
-  await page.locator('.reference-tool').first().locator('summary').click();
+  await page.locator('.reference-tool').first().locator(':scope > summary').click();
   const points = [
     [trace.bounds.x, trace.bounds.y],
     [trace.bounds.x + 100, trace.bounds.y],
@@ -43,7 +43,7 @@ async function applyReference(page: Page, trace: TraceResult) {
     .getByRole('spinbutton', { name: 'Known feature length (mm)', exact: true })
     .fill(String((80 * 100) / trace.bounds.width));
   await page.getByRole('button', { name: 'Apply reference scale', exact: true }).click();
-  await expect(page.locator('.reference-tool').first().locator('summary')).toContainText(
+  await expect(page.locator('.reference-tool').first().locator(':scope > summary')).toContainText(
     'scale applied',
   );
   await expect
@@ -126,9 +126,9 @@ test('a changed working-image frame clears applied provenance and asks for verif
   );
   await page.getByLabel('Outline detail', { exact: true }).selectOption('fine');
   await expect(page.locator('.notice')).toContainText('different working-image size');
-  await expect(page.locator('.reference-tool').first().locator('summary')).not.toContainText(
-    'scale applied',
-  );
+  await expect(
+    page.locator('.reference-tool').first().locator(':scope > summary'),
+  ).not.toContainText('scale applied');
   await expect(
     page.getByRole('spinbutton', { name: 'Known feature length (mm)', exact: true }),
   ).toHaveValue('');

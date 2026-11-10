@@ -2,6 +2,10 @@
 
 Open **Use a known feature → Explore endpoint placement** after entering two valid endpoints and a known length. The readout uses the orientation-adjusted working image, whose longest side is at most 1400 pixels. It shows the draft reference span, millimeters per working-image pixel, and calculated outside widths for an explicit endpoint-shift scenario.
 
+![Browser-rendered sensitivity example at phone width](images/reference-sensitivity-mobile.png)
+
+Browser-rendered example with a 1.1-pixel assumed shift per endpoint. The dimensions are synthetic test inputs.
+
 The shift is an assumption you choose, in pixels per endpoint. Both endpoints move along their connecting line in opposite directions, either shortening or lengthening that span. The known physical feature length and traced outside width in pixels stay fixed. The chart uses source dimensions before any Design & print scaling; the display follows your millimeter/inch choice.
 
 For outline width `B` pixels, reference length `L` mm, endpoint span `s` pixels, and assumed shift `d` pixels per endpoint:
