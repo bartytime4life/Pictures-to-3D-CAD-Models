@@ -10,7 +10,10 @@ export default defineConfig({
     port: 4173,
     strictPort: true,
     allowedHosts: ['terminal.local', 'localhost'],
-    proxy: { '/api': { target: 'http://127.0.0.1:8000', changeOrigin: true } },
+    proxy: {
+      '/api': { target: 'http://127.0.0.1:8000', changeOrigin: true },
+      '/reference-library': { target: 'http://127.0.0.1:8000', changeOrigin: true },
+    },
   },
   build: {
     outDir: 'dist',

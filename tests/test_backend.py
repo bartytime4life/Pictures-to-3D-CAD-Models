@@ -388,6 +388,58 @@ def test_dxf_export_units_and_closed_holes(client, model):
     assert sum(ring.dxf.layer == "HOLES" for ring in rings) == 2
 
 
+def test_scad_export_is_editable_numeric_source_for_current_build(client, model):
+    response = client.get(model["downloads"]["scad"])
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "application/x-openscad"
+    assert response.headers["content-disposition"] == 'attachment; filename="model.scad"'
+    assert "thickness_mm = 4.0;" in response.text
+    assert "linear_extrude(height = thickness_mm" in response.text
+    assert "polygon(" in response.text and "paths = " in response.text
+    assert "Measured test plate" not in response.text
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "index.html", "OPENSCAD.md", "assets/figures/process-flow.svg",
+        "templates/PROJECT-BRIEF.md", "examples/openscad-starter/plate/source.scad",
+        "output/pdf/pictures-to-printable-cad.pdf",
+    ],
+)
+def test_app_serves_published_companion_library(client, path):
+    # Use actual committed names; the route must never fall through to the app.
+    response = client.get(f"/reference-library/{path}")
+    assert response.status_code == 200
+    assert response.headers["x-content-type-options"] == "nosniff"
+    if path == "index.html":
+        assert 'id="tab-cad"' in response.text
+    assert client.get("/reference-library").url.path == "/reference-library/index.html"
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        ".venv/pyvenv.cfg", "node_modules/package.json", "scripts/build-library.mjs",
+        "tmp/qa/cad-check.json", "output/private-build/source.scad",
+        "examples/output/model.stl", "cadkit/scad.py", "library.json",
+        "%2e%2e/README.md", "..%5cREADME.md", "%00", "assets/figures/../../README.md",
+    ],
+)
+def test_library_route_rejects_private_files_and_traversal(client, path):
+    assert client.get(f"/reference-library/{path}").status_code == 404
+
+
+def test_library_route_rejects_allowlisted_symlink_escaping_library(client, monkeypatch, tmp_path):
+    root = tmp_path / "library"
+    root.mkdir()
+    outside = tmp_path / "private.html"
+    outside.write_text("Private project notes", encoding="utf-8")
+    (root / "index.html").symlink_to(outside)
+    monkeypatch.setattr(api, "LIBRARY_ROOT", root)
+    assert client.get("/reference-library/index.html").status_code == 404
+
+
 def test_recipe_restores_original_inputs(client, model):
     response = client.get(model["downloads"]["project"])
     recipe = response.json()

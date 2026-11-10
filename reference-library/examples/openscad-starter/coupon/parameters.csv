@@ -1,0 +1,10 @@
+parameter_id,value,unit,evidence_class,source_or_rationale,decided_on,supersedes,used_by,notes
+pin_diameter,5.0,mm,inferred,Synthetic teaching default; measure the actual mating pin before a fit test.,,,coupon,Default is not a measurement.
+clearance_start,0.1,mm,inferred,Chosen start of an example test series.,,,coupon,Diametral clearance; not radial clearance or a recommended fit.
+clearance_step,0.1,mm,inferred,Chosen increment for the example test series.,,,coupon,"Test using intended material, orientation and finish."
+clearance_count,5.0,1,inferred,Chosen count of test holes.,,,coupon,Integer between 1 and 100.
+thickness,4.0,mm,inferred,Synthetic coupon thickness for the teaching example.,,,coupon,No strength qualification.
+min_wall,2.0,mm,inferred,Chosen geometric minimum between holes and long edges.,,,coupon,Not a material qualification.
+end_wall,3.0,mm,inferred,Chosen material from outer hole polygons to the coupon ends.,,,coupon,Must be at least the minimum wall.
+chord_error,0.02,mm,inferred,Chosen polygon tessellation setting for the teaching coupon.,,,coupon,Polygon flats are compensated to preserve the requested opening.
+notch_size,2.0,mm,inferred,Chosen corner-notch leg length to mark the smallest-clearance end.,,,coupon,Notch must preserve the minimum wall to the first hole.

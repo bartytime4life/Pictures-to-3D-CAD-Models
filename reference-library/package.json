@@ -1,6 +1,6 @@
 {
   "name": "pictures-to-printable-cad-reference-library",
-  "version": "6.0.0",
+  "version": "7.0.0",
   "private": true,
   "description": "Offline reference library, calculators and checks for turning photographs into printable CAD.",
   "engines": {
@@ -9,11 +9,13 @@
   "scripts": {
     "build": "node scripts/build-library.mjs",
     "test": "node --test tests/node/*.test.mjs",
-    "check": "node scripts/check-library.mjs && node scripts/check-photos.mjs && node scripts/check-photo-transfer.mjs",
+    "check": "node scripts/check-library.mjs && node scripts/check-photos.mjs && node scripts/check-photo-transfer.mjs && node scripts/check-cad.mjs && python3 scripts/check-cad-native.py",
     "links": "node scripts/check-links.mjs",
     "refresh-github": "node scripts/refresh-github.mjs",
     "check:photos": "node scripts/check-photos.mjs",
-    "check:transfer": "node scripts/check-photo-transfer.mjs"
+    "check:transfer": "node scripts/check-photo-transfer.mjs",
+    "check:cad": "node scripts/check-cad.mjs && python3 scripts/check-cad-native.py",
+    "openscad:doctor": "python3 -m cadkit openscad doctor"
   },
   "devDependencies": {
     "marked": "17.0.5",

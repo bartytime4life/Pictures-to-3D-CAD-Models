@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "units": "mm",
+  "csv_columns": ["parameter_id", "value", "unit", "evidence_class", "source_or_rationale", "decided_on", "supersedes", "used_by", "notes"],
+  "models": {
+    "plate": {
+      "id": "plate",
+      "title": "Two-hole mounting plate",
+      "description": "A measured outline and two through-holes: a useful first parametric part.",
+      "template": "examples/two-hole-plate.scad",
+      "filename": "plate",
+      "fixed": {},
+      "parameters": [
+        {"id":"plate_length","label":"Length","default":60,"unit":"mm","min":0,"exclusive_min":true,"max":10000,"step":1,"evidence_class":"inferred","source_or_rationale":"Synthetic teaching default; replace with the reviewed overall length.","notes":"No real object measured."},
+        {"id":"plate_width","label":"Width","default":30,"unit":"mm","min":0,"exclusive_min":true,"max":10000,"step":1,"evidence_class":"inferred","source_or_rationale":"Synthetic teaching default; replace with the reviewed overall width.","notes":"No real object measured."},
+        {"id":"plate_thickness","label":"Thickness","default":4,"unit":"mm","min":0,"exclusive_min":true,"max":10000,"step":0.1,"evidence_class":"inferred","source_or_rationale":"Synthetic teaching default; measure thickness independently from the photograph.","notes":"No strength qualification."},
+        {"id":"hole_diameter","label":"Hole diameter","default":5,"unit":"mm","min":0,"exclusive_min":true,"max":10000,"step":0.1,"evidence_class":"inferred","source_or_rationale":"Synthetic teaching default; review the mating fastener and fit before use.","notes":"Not a recommended printer fit."},
+        {"id":"hole_spacing","label":"Hole center spacing","default":40,"unit":"mm","min":0,"exclusive_min":true,"max":10000,"step":0.1,"evidence_class":"inferred","source_or_rationale":"Synthetic teaching default; replace with reviewed center-to-center spacing.","notes":"No real object measured."},
+        {"id":"chord_error","label":"Radial chord error","default":0.02,"unit":"mm","min":0,"exclusive_min":true,"max":10000,"step":0.001,"evidence_class":"inferred","source_or_rationale":"Chosen polygon tessellation setting for this teaching model.","notes":"Geometric tessellation setting, not printer accuracy."},
+        {"id":"min_wall","label":"Minimum wall rule","default":2,"unit":"mm","min":0,"exclusive_min":true,"max":10000,"step":0.1,"evidence_class":"inferred","source_or_rationale":"Chosen geometric minimum for the teaching plate.","notes":"Not a strength or material qualification."}
+      ]
+    },
+    "coupon": {
+      "id": "coupon",
+      "title": "Diametral clearance coupon",
+      "description": "Test a sequence of hole sizes against a real mating pin before committing to a larger print.",
+      "template": "examples/clearance-coupon.scad",
+      "filename": "coupon",
+      "fixed": {"compensate_polygon":true,"label_mode":"none","index_notch":true},
+      "parameters": [
+        {"id":"pin_diameter","label":"Nominal pin diameter","default":5,"unit":"mm","min":0,"exclusive_min":true,"max":10000,"step":0.1,"evidence_class":"inferred","source_or_rationale":"Synthetic teaching default; measure the actual mating pin before a fit test.","notes":"Default is not a measurement."},
+        {"id":"clearance_start","label":"First diametral clearance","default":0.1,"unit":"mm","min":0,"max":1000,"step":0.05,"evidence_class":"inferred","source_or_rationale":"Chosen start of an example test series.","notes":"Diametral clearance; not radial clearance or a recommended fit."},
+        {"id":"clearance_step","label":"Clearance increment","default":0.1,"unit":"mm","min":0,"max":1000,"step":0.05,"evidence_class":"inferred","source_or_rationale":"Chosen increment for the example test series.","notes":"Test using intended material, orientation and finish."},
+        {"id":"clearance_count","label":"Number of holes","default":5,"unit":"1","min":1,"max":100,"step":1,"integer":true,"evidence_class":"inferred","source_or_rationale":"Chosen count of test holes.","notes":"Integer between 1 and 100."},
+        {"id":"thickness","label":"Thickness","default":4,"unit":"mm","min":0,"exclusive_min":true,"max":10000,"step":0.1,"evidence_class":"inferred","source_or_rationale":"Synthetic coupon thickness for the teaching example.","notes":"No strength qualification."},
+        {"id":"min_wall","label":"Minimum wall","default":2,"unit":"mm","min":0,"exclusive_min":true,"max":10000,"step":0.1,"evidence_class":"inferred","source_or_rationale":"Chosen geometric minimum between holes and long edges.","notes":"Not a material qualification."},
+        {"id":"end_wall","label":"End wall","default":3,"unit":"mm","min":0,"exclusive_min":true,"max":10000,"step":0.1,"evidence_class":"inferred","source_or_rationale":"Chosen material from outer hole polygons to the coupon ends.","notes":"Must be at least the minimum wall."},
+        {"id":"chord_error","label":"Radial chord error","default":0.02,"unit":"mm","min":0,"exclusive_min":true,"max":10000,"step":0.001,"evidence_class":"inferred","source_or_rationale":"Chosen polygon tessellation setting for the teaching coupon.","notes":"Polygon flats are compensated to preserve the requested opening."},
+        {"id":"notch_size","label":"Index notch size","default":2,"unit":"mm","min":0,"max":10000,"step":0.1,"evidence_class":"inferred","source_or_rationale":"Chosen corner-notch leg length to mark the smallest-clearance end.","notes":"Notch must preserve the minimum wall to the first hole."}
+      ]
+    }
+  }
+}

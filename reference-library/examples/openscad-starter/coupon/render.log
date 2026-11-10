@@ -1,0 +1,14 @@
+ECHO: "COUPON length=41.6872 width=9.53744 pitch=7.53744 holes=[5.1, 5.2, 5.3, 5.4, 5.5] segments=[26, 26, 26, 26, 27]"
+Geometries in cache: 14
+Geometry cache size in bytes: 41560
+CGAL Polyhedrons in cache: 2
+CGAL cache size in bytes: 772768
+Total rendering time: 0:00:00.115
+   Top level object is a 3D object:
+   Simple:        yes
+   Vertices:      272
+   Halfedges:     816
+   Edges:         408
+   Halffacets:    276
+   Facets:        138
+   Volumes:         2

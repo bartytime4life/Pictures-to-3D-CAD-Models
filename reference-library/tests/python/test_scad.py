@@ -1,12 +1,14 @@
 import math
 import os
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
 
 import _helpers
-from cadkit import calc, scad, stl
+from cadkit import calc, openscad, scad, stl
 
 PLATE = _helpers.EXAMPLES / "two-hole-plate.scad"
 COUPON = _helpers.EXAMPLES / "clearance-coupon.scad"
@@ -45,6 +47,131 @@ class Defines(unittest.TestCase):
             self.assertIsNone(scad.find_openscad())
             with self.assertRaises(FileNotFoundError):
                 scad.render(PLATE, Path(tempfile.gettempdir()) / "never.stl")
+
+
+class Discovery(unittest.TestCase):
+    def test_directory_override_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory, \
+                mock.patch.dict(os.environ, {"CADKIT_OPENSCAD": directory}):
+            self.assertIsNone(scad.find_openscad())
+            self.assertEqual(openscad.doctor()["status"], "missing")
+
+    @unittest.skipUnless(os.name == "posix", "POSIX execute permission semantics")
+    def test_non_executable_file_override_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            executable = Path(directory) / "openscad"
+            executable.write_text("not an executable")
+            executable.chmod(0o644)
+            with mock.patch.dict(os.environ, {"CADKIT_OPENSCAD": str(executable)}):
+                self.assertIsNone(scad.find_openscad())
+
+    def test_unrelated_executable_is_not_ready(self):
+        with mock.patch.dict(os.environ, {"CADKIT_OPENSCAD": sys.executable}):
+            self.assertIsNotNone(scad.find_openscad())
+            report = openscad.doctor()
+            self.assertEqual(report["status"], "error")
+            self.assertIsNone(report["version"])
+
+    def test_version_recognizes_openscad_output_on_stderr(self):
+        result = subprocess.CompletedProcess([], 0, "", "OpenSCAD version 2021.01\n")
+        with mock.patch.object(scad.subprocess, "run", return_value=result):
+            self.assertEqual(scad.version("openscad-test"), "2021.01")
+
+
+class RenderSafety(unittest.TestCase):
+    """Exercise failure paths without depending on an installed OpenSCAD."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.dir = Path(self.tmp.name)
+        self.source = self.dir / "part.scad"
+        self.source.write_text("cube([1, 2, 3]);")
+        self.output = self.dir / "part.stl"
+        self.original = b"previous good export"
+        self.output.write_bytes(self.original)
+
+    def assert_preserved(self):
+        self.assertEqual(self.output.read_bytes(), self.original)
+        self.assertEqual(set(self.dir.iterdir()), {self.source, self.output})
+
+    def test_invalid_defines_preserve_previous_export_without_launching(self):
+        with mock.patch.object(scad.subprocess, "run") as run:
+            for defines in ({"invalid-name": 1}, {"width": None}, {"width": float("nan")}):
+                with self.subTest(defines=defines), self.assertRaises(ValueError):
+                    scad.render(self.source, self.output, defines, executable="openscad-test")
+                self.assert_preserved()
+            run.assert_not_called()
+
+    def test_source_cannot_be_used_as_output(self):
+        original = self.source.read_bytes()
+        with mock.patch.object(scad.subprocess, "run") as run:
+            with self.assertRaisesRegex(ValueError, "different files"):
+                scad.render(self.source, self.dir / "." / self.source.name, executable="openscad-test")
+            alias = self.dir / "source-alias.scad"
+            alias.symlink_to(self.source)
+            with self.assertRaisesRegex(ValueError, "different files"):
+                scad.render(self.source, alias, executable="openscad-test")
+            run.assert_not_called()
+        self.assertEqual(self.source.read_bytes(), original)
+
+    def test_failure_error_log_and_empty_output_never_accept_stale_export(self):
+        for returncode, stderr, data in (
+                (1, "render failed", b"partial candidate"),
+                (0, "  ERROR: invalid geometry", b"partial candidate"),
+                (0, "", b"")):
+            def renderer(command, **kwargs):
+                Path(command[command.index("-o") + 1]).write_bytes(data)
+                return subprocess.CompletedProcess(command, returncode, "", stderr)
+
+            with self.subTest(returncode=returncode, stderr=stderr, data=data):
+                with mock.patch.object(scad.subprocess, "run", side_effect=renderer), \
+                        mock.patch.object(scad, "version", return_value="test"):
+                    result = scad.render(self.source, self.output, executable="openscad-test")
+                self.assertFalse(result.ok)
+                self.assertEqual(result.output, self.output)
+                if returncode == 0:
+                    self.assertTrue(result.errors)
+                self.assert_preserved()
+
+    def test_timeout_and_launch_error_clean_staging_and_preserve_export(self):
+        for error in (subprocess.TimeoutExpired("openscad-test", 1), OSError("launch failed")):
+            def renderer(command, **kwargs):
+                Path(command[command.index("-o") + 1]).write_bytes(b"partial candidate")
+                raise error
+
+            with self.subTest(error=error), mock.patch.object(scad.subprocess, "run", side_effect=renderer):
+                with self.assertRaises(type(error)):
+                    scad.render(self.source, self.output, executable="openscad-test")
+            self.assert_preserved()
+
+    def test_success_replaces_export_and_records_actual_command(self):
+        def renderer(command, **kwargs):
+            staged = Path(command[command.index("-o") + 1])
+            self.assertEqual(staged.parent, self.output.parent)
+            self.assertEqual(staged.suffix, ".stl")
+            self.assertNotEqual(staged, self.output)
+            self.assertEqual(self.output.read_bytes(), self.original)
+            staged.write_bytes(b"new export")
+            return subprocess.CompletedProcess(command, 0, "", "WARNING: test warning")
+
+        with mock.patch.object(scad.subprocess, "run", side_effect=renderer), \
+                mock.patch.object(scad, "version", return_value="test"):
+            result = scad.render(self.source, self.output, {"width": 12}, executable="openscad-test")
+        self.assertTrue(result.ok)
+        self.assertEqual(self.output.read_bytes(), b"new export")
+        self.assertIn("width=12", result.command)
+        self.assertIn("binstl", result.command)
+        self.assertEqual(result.warnings, ["WARNING: test warning"])
+        self.assertFalse(Path(result.command[result.command.index("-o") + 1]).exists())
+        self.assertEqual(set(self.dir.iterdir()), {self.source, self.output})
+
+    def test_version_probe_failure_is_unknown(self):
+        for error in (subprocess.TimeoutExpired("openscad-test", 30), FileNotFoundError("missing")):
+            with self.subTest(error=error), mock.patch.object(scad.subprocess, "run", side_effect=error):
+                self.assertIsNone(scad.version("openscad-test"))
+        with mock.patch.object(scad.subprocess, "run", return_value=subprocess.CompletedProcess([], 1, "", "failed")):
+            self.assertIsNone(scad.version("openscad-test"))
 
 
 @unittest.skipUnless(_helpers.HAS_OPENSCAD, "OpenSCAD is not installed")

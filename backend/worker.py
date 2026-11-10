@@ -20,6 +20,7 @@ from .printing import (
     resolve_design,
     split_profile,
 )
+from .scad import profile_source
 
 
 def extrude_profile(polygon, thickness):
@@ -100,6 +101,7 @@ def build(job_dir: Path) -> dict:
         raise PrintGeometryError("The split assembly did not preserve the expected volume.")
     dimensions = dimensions_of(shape)
     export_solid(shape, job_dir, "model")
+    (job_dir / "model.scad").write_text(profile_source(polygons, thickness), encoding="utf-8")
 
     # Each closed DXF loop describes a real part outline, including split edges.
     drawing = ezdxf.new("R2010")
@@ -156,7 +158,8 @@ def build(job_dir: Path) -> dict:
     )
 
     downloads = {
-        kind: f"/api/download/{job_dir.name}/{kind}" for kind in ("step", "stl", "dxf", "project")
+        kind: f"/api/download/{job_dir.name}/{kind}"
+        for kind in ("step", "stl", "dxf", "scad", "project")
     }
     if design.output_mode == "split":
         manifest = {
@@ -193,7 +196,7 @@ def build(job_dir: Path) -> dict:
     warnings.extend(
         [
             "STL coordinates are in millimeters. Set millimeters explicitly when importing the mesh.",
-            "Color and material are saved in the project recipe and parts manifest; STEP/STL/DXF do not encode these choices.",
+            "Color and material are saved in the project recipe and parts manifest; STEP/STL/DXF/SCAD do not encode these choices.",
             "Bed fit checks the flat bounding envelope only. Verify placement, small features, supports and material settings in your slicer.",
         ]
     )
@@ -210,7 +213,7 @@ def build(job_dir: Path) -> dict:
         "parts": parts,
         "print_fit": aggregate_fit(parts),
     }
-    for name in ("profile.dxf", "project.json"):
+    for name in ("profile.dxf", "model.scad", "project.json"):
         if (job_dir / name).stat().st_size == 0:
             raise PrintGeometryError("An export was empty. Try rebuilding the model.")
     (job_dir / "result.json").write_text(json.dumps(result, allow_nan=False), encoding="utf-8")

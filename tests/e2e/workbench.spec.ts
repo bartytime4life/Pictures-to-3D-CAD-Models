@@ -48,7 +48,7 @@ test('sample creates real CAD, downloads valid formats, and renders the selected
   await page.screenshot({ path: 'docs/images/workbench.png', fullPage: true });
   await page.getByRole('button', { name: 'Review export', exact: true }).click();
   await expect(page.getByRole('dialog')).toBeVisible();
-  for (const format of ['STEP', 'STL', 'DXF']) {
+  for (const format of ['STEP', 'STL', 'DXF', 'OpenSCAD']) {
     const downloadEvent = page.waitForEvent('download');
     await page.locator('.export-row').filter({ hasText: format }).click();
     const download = await downloadEvent;
@@ -59,8 +59,33 @@ test('sample creates real CAD, downloads valid formats, and renders the selected
     if (format === 'STEP') expect(data.toString('utf8')).toContain('ISO-10303-21');
     if (format === 'STL') expect(data.length).toBe(84 + 50 * data.readUInt32LE(80));
     if (format === 'DXF') expect(data.toString('utf8')).toContain('LWPOLYLINE');
+    if (format === 'OpenSCAD') {
+      expect(download.suggestedFilename()).toMatch(/\.scad$/);
+      expect(data.toString('utf8')).toContain('linear_extrude(height = thickness_mm');
+    }
   }
   expect(errors).toEqual([]);
+});
+
+test('companion OpenSCAD workspace opens separately while the current model stays available', async ({
+  page,
+}) => {
+  await ready(page);
+  const modelId = [...jobs].at(-1)!;
+  const popupEvent = page.waitForEvent('popup');
+  await page
+    .getByRole('link', { name: 'OpenSCAD workspace (opens in a new tab)', exact: true })
+    .click();
+  const companion = await popupEvent;
+  await expect(companion).toHaveURL(/\/reference-library\/index\.html#cad$/);
+  await expect(companion.getByRole('tab', { name: 'OpenSCAD', exact: true })).toHaveAttribute(
+    'aria-selected',
+    'true',
+  );
+  await expect(companion.locator('#cad')).toBeVisible();
+  await companion.close();
+  await expect(page.getByRole('button', { name: 'Review export', exact: true })).toBeEnabled();
+  expect((await page.request.get(`/api/download/${modelId}/scad`)).status()).toBe(200);
 });
 
 test('dimension edits invalidate exports; inch display and saved recipes retain physical scale', async ({

@@ -9,7 +9,7 @@ This repository contains two related tools:
 | Component | Use it for | Entry point |
 | --- | --- | --- |
 | Photo-to-CAD workbench | Trace, measure, review, and export a flat part | `make start` after setup |
-| Reference library | Read the handbook, compare workflows, and use standalone calculators | [Open the library](reference-library/index.html) or [read its guide](reference-library/README.md) |
+| Reference library and OpenSCAD workspace | Read the handbook, calculate dimensions, and design parameter-driven mounting plates or fit coupons | **OpenSCAD** in the app header, [offline library](reference-library/index.html), or [its guide](reference-library/README.md) |
 
 ![Pictures to CAD workbench showing the traced sample beside its generated CAD solid](docs/images/workbench.png)
 
@@ -29,6 +29,8 @@ Setup prepares the workbench and reference-library dependencies in separate loca
 For workbench-only setup, use `make setup-app`. The existing `./scripts/setup.sh` and `./scripts/start.sh` commands remain supported and apply only to the workbench.
 
 The server listens on the local machine at port **8000**. In a managed cloud environment, use the environment's supported browser or forwarding mechanism. A server running on a remote machine is not your device's localhost.
+
+The app's **OpenSCAD** link opens the companion workspace in a separate tab and keeps the current traced part available. The same server serves the published library at `/reference-library/index.html#cad`; its handbook and browser tools also open offline from `reference-library/index.html`.
 
 For development with frontend hot reload:
 
@@ -83,10 +85,13 @@ The bundled searchable [printer catalog](docs/printer-catalog.md) covers 429 mod
 | STEP | Opening solids in CAD software | Solid geometry in assembled positions; not the original feature history |
 | STL | Slicing or mesh workflows | Triangle surfaces in assembled positions; millimeter coordinates, no color |
 | DXF | A flat profile for a CAD or CAM workflow | The planar boundary and holes |
+| OpenSCAD | Editing the built profile in scripted CAD | Final scaled and simplified polygon boundaries, holes, thickness, and selectable split pieces in assembled positions |
 | Parts ZIP | Importing generated pieces separately | A STEP and STL per piece, plus a manifest |
 | Project JSON | Restoring the workbench settings | Version 2 outline, measurements, optional endpoint reference and height check, design and print plan; version 1 imports remain supported |
 
 See [export formats and dimensional checks](docs/exports.md) before transferring a part to fabrication software.
+
+OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.scad` in OpenSCAD to edit its thickness, apply an additional XY scale, or select a split piece. The source represents traced polygon extrusion; it does not recover constraints, analytic circles, or the part's original feature history. For a new plate with deliberately dimensioned holes, use the companion [OpenSCAD workspace](reference-library/index.html#cad) and its [native build guide](reference-library/OPENSCAD.md).
 
 ## Honest limits
 
@@ -117,7 +122,7 @@ See [export formats and dimensional checks](docs/exports.md) before transferring
 
 ## Reference library
 
-Revision 6 adds independent measurement worksheets, clearer source search, and portable photo backup/restore, with 88 annotated sources.
+Revision 7 adds an editable OpenSCAD workspace for mounting plates and fit coupons, with SCAD/CSV/SVG downloads, saved browser drafts, and checked native build records. The library retains 88 annotated sources, independent measurement worksheets, and portable photo backup/restore.
 
 [`reference-library/`](reference-library/README.md) is the companion reference for work beyond one flat part. Open `reference-library/index.html` in a browser; it works offline. It covers:
 
@@ -125,10 +130,13 @@ Revision 6 adds independent measurement worksheets, clearer source search, and p
 - **Source catalog:** 88 annotated sources, each labeled with its depth of review
 - **Toolkit:** 14 calculators and a route finder, with the same arithmetic available as `python3 -m cadkit` from the `reference-library/` directory
 - **Photos:** an offline reference-photo workspace. Add photos in batches, label viewpoints, keep notes, and estimate a flat dimension from a known length. Protect unsaved edits, back up originals and notes to a folder, restore a reference set, and export image-derived measurements. Photos stay in that browser's local storage and are separate from the workbench's uploads.
+- **OpenSCAD:** parameter-driven mounting plates and clearance coupons, live dimensional drawings, evidence notes, saved drafts, and downloadable SCAD/CSV/SVG files. The local `cadkit openscad` commands render and independently check native meshes, preserve build provenance, and keep earlier exports after a failed build. See [OpenSCAD instructions](reference-library/OPENSCAD.md).
 - **Worksheets and examples:** project worksheets and an OpenSCAD example pipeline
 - **Mesh check for workbench exports:** `python3 -m cadkit meshcheck model.stl --expect-mm 80` independently checks an exported STL for closure, manifoldness, and orientation, and reports its genus (through-holes) for comparison with the workbench's hole count. See [export checks](docs/exports.md#check-an-stl-independently).
 
 The root `make build-library` and `make test-library` commands operate on this component. Its own Makefile and [CI workflow](.github/workflows/reference-library.yml) remain available. See [its README](reference-library/README.md) and [verification record](reference-library/VERIFICATION.md).
+
+Photos and saved browser drafts belong to that browser and page origin. Opening the served library does not automatically import data saved while using its offline file. Use the Photos backup/restore tools and download CAD parameters before moving between browsers or page addresses.
 
 ## Checks
 
@@ -139,9 +147,9 @@ make test
 make lint
 ```
 
-`make test` runs the workbench's Python tests, frontend type check/build, and browser scenarios, followed by the reference library's Python/Node tests and its three browser checks (the page, Photos workspace, and portable backup/restore) over loopback HTTP. `make lint` runs the workbench Python and frontend/browser-source lint/format checks. Use `make test-app` or `make test-library` to work on one component; `make` lists the available commands.
+`make test` runs the workbench's Python tests, frontend type check/build, and browser scenarios, followed by the reference library's Python/Node tests and its browser checks (the page, Photos workspace, portable backup/restore, and OpenSCAD workspace) over loopback HTTP, plus native OpenSCAD checks when available. `make lint` runs the workbench Python and frontend/browser-source lint/format checks. Use `make test-app` or `make test-library` to work on one component; `make` lists the available commands.
 
-Browser checks use an installed Chromium or Google Chrome; if neither is available, run `npx playwright install chromium`. OpenSCAD-dependent library tests may skip when OpenSCAD is absent; `make setup` does not install it. See [development prerequisites](docs/development.md) for browser, PDF/font, and OpenSCAD requirements. The [validation report](docs/validation.md) distinguishes recorded successful runs from checks that have not yet run. A successful synthetic fixture does not establish dimensional accuracy for an arbitrary real-world photograph.
+Browser checks use an installed Chromium or Google Chrome; if neither is available, run `npx playwright install chromium`. Native OpenSCAD checks may skip when OpenSCAD is absent; `make setup` does not install it. Those skips do not validate native rendering. See [development prerequisites](docs/development.md) for browser, PDF/font, and OpenSCAD requirements. The [validation report](docs/validation.md) distinguishes recorded successful runs from checks that have not yet run. A successful synthetic fixture does not establish dimensional accuracy for an arbitrary real-world photograph.
 
 Separate GitHub Actions workflows validate the [workbench](.github/workflows/ci.yml) and [reference library](.github/workflows/reference-library.yml). Recorded results apply to their stated commits; see the validation report for execution evidence.
 

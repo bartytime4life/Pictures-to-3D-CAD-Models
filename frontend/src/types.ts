@@ -95,7 +95,14 @@ export type ModelResult = {
   parts?: ModelPart[];
   print_fit?: BedFit;
   mesh: { vertices: number[]; triangles: number[] };
-  downloads: { step: string; stl: string; dxf: string; project: string; parts?: string };
+  downloads: {
+    step: string;
+    stl: string;
+    dxf: string;
+    scad: string;
+    project: string;
+    parts?: string;
+  };
   warnings: string[];
 };
 export type ProjectRecipe = {

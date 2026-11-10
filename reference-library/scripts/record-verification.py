@@ -90,6 +90,50 @@ elif photos:
     if (QA / 'photo-check.json').stat().st_mtime < (ROOT / 'index.html').stat().st_mtime:
         problems.append('index.html changed after the photo workspace check; run `make check`')
 build = load(ROOT / 'tmp/build-info.json') or {}
+cad = load(QA / 'cad-check.json') or {}
+if cad and cad.get('status') != 'passed':
+    problems.append('OpenSCAD workspace browser check did not pass')
+elif cad:
+    if cad.get('revision') != LIB['revision']:
+        problems.append('OpenSCAD workspace check is from another revision; run `make check`')
+    if (QA / 'cad-check.json').stat().st_mtime < (ROOT / 'index.html').stat().st_mtime:
+        problems.append('index.html changed after the OpenSCAD workspace check; run `make check`')
+    if cad.get('transport') not in ('file', 'http'):
+        problems.append('OpenSCAD workspace check did not record a valid browser transport')
+    elif cad['transport'] != browser.get('transport', 'file') or cad['transport'] != photos.get('transport', 'file'):
+        problems.append('library, Photos and OpenSCAD checks used different transports; run `make check`')
+native = load(QA / 'cad-native-check.json') or {}
+if native.get('revision') != LIB['revision'] or native.get('status') not in ('passed', 'skipped'):
+    problems.append('native OpenSCAD handoff check failed or is stale; run `make check`')
+elif (QA / 'cad-check.json').exists() and (QA / 'cad-native-check.json').stat().st_mtime < (QA / 'cad-check.json').stat().st_mtime:
+    problems.append('browser downloads changed after native handoff check; run `make check`')
+elif native.get('status') == 'passed':
+    for model in ('plate', 'coupon'):
+        receipt = native.get('models', {}).get(model, {})
+        if receipt.get('status') != 'passed':
+            problems.append(f'native OpenSCAD handoff lacks a passing {model} result')
+        for name, key in ((f'{model}.scad', 'source_sha256'), (f'{model}-parameters.csv', 'csv_sha256')):
+            output = QA / 'cad-downloads' / name
+            if not output.is_file() or hashlib.sha256(output.read_bytes()).hexdigest() != receipt.get(key):
+                problems.append(f'OpenSCAD browser download {name} changed after its native check')
+elif not native.get('reason'):
+    problems.append('native OpenSCAD handoff skip has no explanation')
+starters = {}
+for model in ('plate', 'coupon'):
+    folder = ROOT / 'examples/openscad-starter' / model
+    receipt = load(folder / 'build.json') or {}
+    if receipt.get('status') != 'passed' or not receipt.get('checks') or any(check.get('status') != 'pass' for check in receipt.get('checks', [])):
+        problems.append(f'OpenSCAD starter {model} did not pass')
+    outputs = receipt.get('outputs_sha256', {})
+    if not {'source.scad', 'parameters.csv', 'model.stl', 'validation-results.csv', 'preview.png'} <= outputs.keys():
+        problems.append(f'OpenSCAD starter {model} lacks required output hashes')
+    for name, digest in outputs.items():
+        output = folder / name
+        if not output.is_file() or hashlib.sha256(output.read_bytes()).hexdigest() != digest:
+            problems.append(f'OpenSCAD starter {model}/{name} changed after its receipt')
+    starters[model] = {'status': receipt.get('status'), 'checks': len(receipt.get('checks', [])),
+                       'openscad_version': receipt.get('openscad_version'),
+                       'model_revision_sha256': receipt.get('model_revision_sha256')}
 transfer = load(QA / 'photo-transfer-check.json') or {}
 if transfer and transfer.get('status') != 'passed':
     problems.append('photo transfer browser check did not pass')
@@ -133,6 +177,9 @@ record = {
     # page_url is machine-specific (a local path or a random port); the transport is kept.
     'photo_workspace_checks': {k: v for k, v in photos.items() if k != 'page_url'},
     'photo_transfer_checks': {k: v for k, v in transfer.items() if k != 'page_url'},
+    'openscad_workspace_checks': {k: v for k, v in cad.items() if k != 'page_url'},
+    'openscad_native_handoff': {**native, 'browser_transport': cad.get('transport')},
+    'openscad_starter_builds': starters,
     'external_links': previous.get('external_links') if not links else {'checked_at': links['summary']['checked_at'], 'total': links['summary']['total'],
                                                'ok': links['summary']['ok'], 'blocked': links['summary']['blocked'],
                                                'timeout': links['summary']['timeout'], 'broken': links['summary']['broken'],

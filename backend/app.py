@@ -15,7 +15,7 @@ from typing import Annotated
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 
 from .assistant import AssistantError, AssistantRequest, assistant_status, chat
 from .models import BuildRequest, Detail
@@ -23,6 +23,7 @@ from .printing import load_printer_catalog
 from .tracing import MAX_BYTES, TraceError, trace_image
 
 ROOT = Path(__file__).resolve().parent.parent
+LIBRARY_ROOT = ROOT / "reference-library"
 JOB_ROOT = Path(os.environ.get("PICTURES_CAD_JOB_DIR", ROOT / ".local" / "jobs")).resolve()
 TTL_SECONDS = 3600
 CLEANUP_INTERVAL = 60
@@ -36,10 +37,29 @@ DOWNLOADS = {
     "step": ("model.step", "application/step"),
     "stl": ("model.stl", "model/stl"),
     "dxf": ("profile.dxf", "application/dxf"),
+    "scad": ("model.scad", "application/x-openscad"),
     "project": ("project.json", "application/json"),
     "parts": ("parts.zip", "application/zip"),
 }
 UUID_PATTERN = re.compile(r"^[0-9a-f]{32}$")
+# Mirror the companion's scripts/lib/serve.mjs publication boundary. Local CAD
+# builds, environments, browser databases, logs and scratch reports are private.
+LIBRARY_FILES = {
+    "index.html", "HANDBOOK.md", "REFERENCES.md", "OPENSCAD.md", "sources.csv",
+    "cadkit/README.md", "examples/build_plate.py", "examples/calculate.py",
+    "examples/calculation-results.json", "examples/clearance-coupon.scad",
+    "examples/plate-parameters.csv", "examples/two-hole-plate.scad",
+    "examples/two-hole-plate.svg", "output/pdf/pictures-to-printable-cad.pdf",
+}
+LIBRARY_PATTERNS = (
+    re.compile(r"assets/figures/[a-z0-9-]+\.svg"),
+    re.compile(r"templates/[A-Za-z0-9-]+\.(?:md|csv)"),
+    re.compile(
+        r"examples/openscad-starter/(?:plate|coupon)/"
+        r"(?:source\.scad|parameters\.csv|model\.stl|validation-results\.csv|"
+        r"build\.json|preview\.png|render\.log|preview\.log)"
+    ),
+)
 logger = logging.getLogger(__name__)
 
 
@@ -348,6 +368,29 @@ async def clear_models():
                 shutil.rmtree(directory)
                 deleted += 1
         return {"deleted": deleted}
+
+
+@app.get("/reference-library")
+async def library_home():
+    return RedirectResponse("/reference-library/index.html")
+
+
+@app.get("/reference-library/{path:path}")
+async def library_file(path: str):
+    path = path or "index.html"
+    if path not in LIBRARY_FILES and not any(pattern.fullmatch(path) for pattern in LIBRARY_PATTERNS):
+        raise HTTPException(404, "Library file not found.")
+    try:
+        root = LIBRARY_ROOT.resolve()
+        target = (root / path).resolve()
+        if not target.is_relative_to(root) or not target.is_file():
+            raise HTTPException(404, "Library file not found.")
+    except (OSError, ValueError):
+        raise HTTPException(404, "Library file not found.") from None
+    return FileResponse(
+        target,
+        headers={"Cache-Control": "no-cache", "X-Content-Type-Options": "nosniff"},
+    )
 
 
 @app.get("/{path:path}")

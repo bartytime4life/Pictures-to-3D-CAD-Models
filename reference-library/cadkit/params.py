@@ -10,6 +10,7 @@ starts with ``#`` are skipped.
 from __future__ import annotations
 
 import csv
+import io
 import math
 import re
 from dataclasses import asdict, dataclass
@@ -56,33 +57,36 @@ def _parse_value(text: str) -> float | str | None:
 
 
 def load_register(path: str | Path) -> dict[str, Param]:
-    """Load a register into ``{parameter_id: Param}``; duplicate ids raise ``ValueError``."""
+    """Load a CSV register; duplicate ids raise ``ValueError``."""
     path = Path(path)
-    # utf-8-sig: spreadsheets save "CSV UTF-8" with a byte-order mark, which would
-    # otherwise become part of the first column name.
-    with path.open(newline="", encoding="utf-8-sig") as handle:
-        reader = csv.DictReader(handle)
-        missing = [c for c in COLUMNS if c not in (reader.fieldnames or [])]
-        if missing:
-            raise ValueError(f"{path}: missing columns {', '.join(missing)}")
-        params: dict[str, Param] = {}
-        for line, row in enumerate(reader, start=2):
-            pid = (row.get("parameter_id") or "").strip()
-            if not pid or pid == "EXAMPLE_ONLY" or pid.startswith("#"):
-                continue
-            if pid in params:
-                raise ValueError(f"{path}:{line}: duplicate parameter_id {pid!r}")
-            params[pid] = Param(
-                parameter_id=pid,
-                value=_parse_value(row.get("value", "")),
-                unit=(row.get("unit") or "").strip(),
-                evidence_class=(row.get("evidence_class") or "").strip(),
-                source_or_rationale=(row.get("source_or_rationale") or "").strip(),
-                decided_on=(row.get("decided_on") or "").strip(),
-                supersedes=(row.get("supersedes") or "").strip(),
-                used_by=(row.get("used_by") or "").strip(),
-                notes=(row.get("notes") or "").strip(),
-            )
+    return parse_register(path.read_text(encoding="utf-8-sig"), str(path))
+
+
+def parse_register(text: str, source: str = "<register>") -> dict[str, Param]:
+    """Parse a captured input once so rendering and archived evidence agree."""
+    handle = io.StringIO(text.removeprefix("\ufeff"), newline="")
+    reader = csv.DictReader(handle)
+    missing = [c for c in COLUMNS if c not in (reader.fieldnames or [])]
+    if missing:
+        raise ValueError(f"{source}: missing columns {', '.join(missing)}")
+    params: dict[str, Param] = {}
+    for line, row in enumerate(reader, start=2):
+        pid = (row.get("parameter_id") or "").strip()
+        if not pid or pid == "EXAMPLE_ONLY" or pid.startswith("#"):
+            continue
+        if pid in params:
+            raise ValueError(f"{source}:{line}: duplicate parameter_id {pid!r}")
+        params[pid] = Param(
+            parameter_id=pid,
+            value=_parse_value(row.get("value", "")),
+            unit=(row.get("unit") or "").strip(),
+            evidence_class=(row.get("evidence_class") or "").strip(),
+            source_or_rationale=(row.get("source_or_rationale") or "").strip(),
+            decided_on=(row.get("decided_on") or "").strip(),
+            supersedes=(row.get("supersedes") or "").strip(),
+            used_by=(row.get("used_by") or "").strip(),
+            notes=(row.get("notes") or "").strip(),
+        )
     return params
 
 

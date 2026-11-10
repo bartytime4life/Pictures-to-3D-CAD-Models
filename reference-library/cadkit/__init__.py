@@ -9,6 +9,7 @@ examples, command line, tests, and the browser calculators agree:
 - ``cadkit.stl``         ASCII/binary STL reader and mesh checks
 - ``cadkit.params``      design-parameter register (CSV) loader
 - ``cadkit.scad``        OpenSCAD discovery and rendering with ``-D`` overrides
+- ``cadkit.openscad``    checked mechanical builds shared with the browser workspace
 - ``cadkit.project``     project-folder scaffolding from the handbook templates
 - ``cadkit.routes``      route finder shared with the HTML Toolkit (assets/data/routes.json)
 
@@ -18,4 +19,4 @@ Every result is arithmetic on stated inputs; none of it is a measurement.
 
 __version__ = "1.0.0"
 
-__all__ = ["calc", "homography", "stl", "params", "scad", "project", "routes", "__version__"]
+__all__ = ["calc", "homography", "stl", "params", "scad", "openscad", "project", "routes", "__version__"]

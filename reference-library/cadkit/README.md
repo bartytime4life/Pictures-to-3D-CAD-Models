@@ -33,6 +33,7 @@ The results are arithmetic on the inputs you give. They are not measurements, an
 | `params` | 17 | load and validate a design-parameter register |
 | `new-project` | 4 | scaffold the minimum project folder from the templates |
 | `route` | 1 | recommend a handbook workflow for an input and a goal (same rules as the HTML route finder) |
+| `openscad` | 17, 23 | Discover OpenSCAD or build a checked plate/coupon from the shared parameter register |
 | `version` | | print the package version |
 
 ## Examples
@@ -201,3 +202,9 @@ python3 -m unittest discover -s tests/python -v
 ```
 
 Run this from `reference-library`. Tests that render with OpenSCAD are skipped when OpenSCAD is not found. Set `CADKIT_OPENSCAD` to point at a specific executable.
+
+## OpenSCAD connection
+
+Run `python3 -m cadkit openscad doctor` to check the native executable. Build synthetic defaults with `python3 -m cadkit openscad build --model plate --output-dir output/plate-01 --preview`, or add `--params plate-parameters.csv` to use the register downloaded from the browser OpenSCAD tab. Use `--model coupon` for a fit-test coupon. Length units must be `mm`; count units must be `1`.
+
+Every output directory must be new. A failed render or check leaves earlier builds intact. The directory includes effective SCAD, exact input CSV, binary STL, validation CSV, logs, hashes, versions and optional real PNG. All values retain their evidence classes. See [the complete guide](../OPENSCAD.md); no physical fit or print is qualified.

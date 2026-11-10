@@ -24,7 +24,7 @@ make start
 
 `make setup` prepares both components. Workbench setup uses `uv.lock` and the root `package-lock.json`, then builds the frontend. Library setup creates `reference-library/.venv`, installs its PDF requirements, and runs `npm ci` against the library's own lockfile. The environments and dependency declarations remain separate.
 
-`make start` runs the Python workbench service, which serves the compiled frontend and API on the same origin. `make setup-app` and the existing `./scripts/setup.sh` prepare only that workbench; `./scripts/start.sh` remains the direct startup command. A library-only contributor can use `make setup-library`.
+`make start` runs the Python workbench service, which serves the compiled frontend, API, and published reference library on the same origin. The app header opens `/reference-library/index.html#cad` separately. The library route only serves an explicit set of reader files; personal native builds, temporary outputs, scripts, and environments remain outside it. `make setup-app` and the existing `./scripts/setup.sh` prepare only that workbench; `./scripts/start.sh` remains the direct startup command. A library-only contributor can use `make setup-library`.
 
 The normal server uses port 8000. Do not assume a background process will survive a new cloud task or an environment snapshot restore; run the start script again in the restored environment.
 
@@ -50,7 +50,7 @@ For frontend development:
 make dev
 ```
 
-Development uses a Vite frontend on port 4173 and a Python backend on port 8000. Vite proxies `/api` requests to the backend. Start both services; opening Vite alone does not validate conversion or export.
+Development uses a Vite frontend on port 4173 and a Python backend on port 8000. Vite proxies `/api` and `/reference-library` requests to the backend. Start both services; opening Vite alone does not validate conversion or export.
 
 ## Project layout
 
@@ -102,7 +102,7 @@ npm run build
 npm run test:e2e
 ```
 
-`make test-library` runs the independent library tests and browser check without rerunning CAD workbench tests. OpenSCAD-dependent tests report skips if the tool is absent; those skips do not establish that rendering passed. The library CI installs OpenSCAD and executes the required plate pipeline separately.
+`make test-library` runs the independent library tests and browser checks without rerunning CAD workbench tests. Native OpenSCAD checks report skips if the tool is absent; those skips do not establish that rendering passed. Workbench source export does not require the executable. When it is available, `tests/test_mesh_interop.py` renders exported SCAD and compares simplified/scaled single and split-piece geometry, volume, and holes with the built CAD result. The library CI installs OpenSCAD and executes the required plate pipeline separately.
 
 Backend checks should exercise image parsing, geometry validation, dimensional bounds, topology, and exported-file re-imports. Browser checks should exercise the actual conversion path, edits, outdated-result handling, exports, input failures, and responsive navigation.
 
