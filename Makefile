@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 REFERENCE_PYTHON ?= $(CURDIR)/reference-library/.venv/bin/python
 
-.PHONY: help setup setup-app setup-library start dev build build-app build-library test test-app test-library lint smoke slicers
+.PHONY: help setup setup-app setup-library start dev build build-app build-library test test-app test-library lint smoke slicers freecad
 
 help:
 	@echo "make setup          install app and reference-library dependencies; build the app"
@@ -12,6 +12,7 @@ help:
 	@echo "make lint           check workbench Python and frontend/browser-source formatting"
 	@echo "make smoke          check an already running workbench"
 	@echo "make slicers        inspect local Bambu Studio and PrusaSlicer availability"
+	@echo "make freecad        open a fitted build in FreeCAD (set FREECADCMD) and check it"
 	@echo "Append -app or -library to setup, build, or test to select one component."
 	@echo "Library browser checks use local HTTP; its own make check defaults to file URLs."
 
@@ -55,3 +56,6 @@ smoke:
 
 slicers:
 	.venv/bin/python scripts/slicer_status.py
+
+freecad:
+	.venv/bin/python scripts/freecad_check.py

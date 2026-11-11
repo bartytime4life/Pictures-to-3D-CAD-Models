@@ -1,6 +1,15 @@
 # Validation results
 
-Latest workbench validation: November 10, 2026, on the local Linux workstation. The [reference-sensitivity record](validation/reference-sensitivity.md) covers the new endpoint-placement explorer. Earlier managed-environment and release results are recorded separately below. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
+Latest workbench validation: November 10, 2026, on the local Linux workstation. The FreeCAD import check of November 11 ran in a managed cloud session. The [reference-sensitivity record](validation/reference-sensitivity.md) covers the new endpoint-placement explorer. Earlier managed-environment and release results are recorded separately below. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
+
+## FreeCAD import of fitted exports — November 11, 2026
+
+`make freecad` (new; `scripts/freecad_check.py`) traces and builds the synthetic tilted 4 mm plate photo with the workbench API on `main` at `2c0dc34`, then has FreeCAD 1.0.2 (the official `conda-Linux-x86_64-py311` AppImage, extracted; `FREECADCMD` set to its `freecadcmd`) import the STEP and DXF exports. It closes the "open the fitted STEP/DXF in a CAD package" item left open on #16. The plate's design is 120 × 70 mm with R8 corners, 4 × Ø6 holes, a Ø22 bore and a 24 × 8 slot.
+
+- **STEP:** one valid solid of 8 planes and 11 true cylinders, 119.999 × 70.006 × 4.000 mm. Cylinder radii are 2.996 (×4, design 3), 3.985 (×2, slot ends, design 4), 8.004 (×4, corners, design 8) and 10.987 mm (bore, design 11). The volume is 0.032% above design.
+- **DXF**, through FreeCAD's own DXF importer: 6 lines, 6 arcs and 5 circles with the same radii, and no other edge types.
+- The check fails on a wrong face type, a radius more than 0.05 mm off, a size more than 0.1 mm off, a volume more than 0.2% off, or a wrong DXF entity count; each case was confirmed with a corrupted report. Without FreeCAD it stops with a message instead of passing.
+- FreeCAD shares the OpenCascade kernel with the STEP export, so this shows that a separate CAD application imports the files as exact geometry of the right size; it is not an independent kernel check. The photo is synthetic, and FreeCAD is not installed by setup or run in CI.
 
 ## Reference-sheet tracing and mathematical verification — November 10, 2026
 
