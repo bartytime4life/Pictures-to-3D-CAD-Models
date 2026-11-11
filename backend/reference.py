@@ -98,12 +98,12 @@ class _Transform:
 def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, focal_35mm, snap, notices):
     size_mm = sheet_size(reference, sheet_mm)
     gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
-    # Every sub-pixel measurement is made in linear light; the photo's saved values are
-    # used only to find the sheet and to classify the part (backend.tone).
-    linear = tone.linear_luminance(rgb)
     size = (gray.shape[1], gray.shape[0])
+    # Every sub-pixel measurement is made on a linear-light mix of the photo's channels;
+    # its saved values are used only to find the sheet and to classify the part
+    # (backend.tone).
     try:
-        found = sheet.find_sheet(gray, linear)
+        found = sheet.find_sheet(gray, rgb)
     except sheet.SheetError as exc:
         raise ReferenceError_(str(exc), sheet_missing=True) from exc
     k1, before, after = sheet.estimate_k1(found, size)
@@ -119,17 +119,24 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
             sheet_missing=True,
         )
     rectified = sheet.rectify(rgb, matrix, k1, plane, ppm)  # display and classification
-    rect_linear = sheet.rectify_gray(linear, matrix, k1, plane, ppm)  # measurements
-    del linear
     try:
         mask, seg_notes = edges.segment(
             cv2.cvtColor(rectified, cv2.COLOR_RGB2GRAY), ppm, part_lighter=inverted
         )
-        g = cv2.GaussianBlur(rect_linear, (0, 0), 0.7)
+        weights = edges.measurement_weights(rectified, mask, ppm)
+        # The measurement image: exact resampling of the linear-light mix.
+        g = cv2.GaussianBlur(
+            sheet.rectify_gray(tone.linear_mix(rgb, weights), matrix, k1, plane, ppm), (0, 0), 0.7
+        )
         rings, sigma, tiny = edges.subpixel_rings(mask, g, ppm)
     except edges.EdgeError as exc:
         raise ReferenceError_(str(exc), sheet_missing=True) from exc
     notes = list(seg_notes)
+    if weights != tone.LUMINANCE:
+        notes.append(
+            "The part and the sheet differ in colour more than in brightness, so edges were measured on a colour mix"
+            f" (red {weights[0]:.0%}, green {weights[1]:.0%}, blue {weights[2]:.0%}). Colour detail is coarser than brightness in a compressed photo."
+        )
     stated = plane[0] / plane[1]
     if abs(aspect - 1) > 0.01:
         notes.append(

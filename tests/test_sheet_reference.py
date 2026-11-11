@@ -197,6 +197,32 @@ def test_a_camera_saving_with_a_plain_gamma_stays_within_limits(client):
     assert within_limits(S.feature_errors(response.json()["profile"])) == {}
 
 
+@pytest.mark.parametrize(
+    "table,paper,part,mixed",
+    [
+        pytest.param((60, 60, 60), (220, 220, 220), (40, 40, 40), False, id="grey-part"),
+        # Pure green and this grey have the same luminance but 70 grey levels between them
+        # in the saved photo, on which the part is found.
+        pytest.param((120, 120, 120), (220, 220, 220), (0, 255, 0), True, id="green-part"),
+        pytest.param((0, 255, 0), (220, 220, 220), (40, 40, 40), False, id="green-table"),
+    ],
+)
+def test_parts_and_sheets_that_differ_in_colour_are_measured_on_the_channels_that_differ(
+    client, table, paper, part, mixed
+):
+    """A part the tracer can find must also be measurable. Luminance alone loses the
+    green part's boundary and the sheet's edge on the green table."""
+    response = trace(client, S.colour_photo(table, paper, part), reference="a4")
+    assert response.status_code == 200, response.text
+    profile = response.json()["profile"]
+    scale = profile["reference"]["mm_per_px"]
+    (outer,), ((hole,),) = profile["primitives"]["outer"], profile["primitives"]["holes"]
+    assert outer["kind"] == hole["kind"] == "circle"
+    assert abs(2 * outer["radius"] * scale - 60) < 0.01
+    assert abs(2 * hole["radius"] * scale - 16) < 0.01
+    assert any("colour mix" in note for note in profile["reference"]["notes"]) == mixed
+
+
 def test_light_part_on_dark_sheet(client, photos):
     result, _ = traced(client, photos, "light-part-dark-sheet", inverted=True)
     assert within_limits(S.feature_errors(result["profile"])) == {}

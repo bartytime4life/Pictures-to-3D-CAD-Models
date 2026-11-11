@@ -407,6 +407,34 @@ def test_saved_values_bias_the_half_level_as_predicted_and_linear_light_removes_
     assert np.abs(on_linear).max() < 0.03 and abs(np.mean(on_linear)) < 2e-3
 
 
+def test_the_measurement_mix_keeps_luminance_or_follows_the_channels_that_differ():
+    """Property. Luminance is kept when it separates two surfaces by 40 saved grey
+    levels. Pure green and a 220 grey have equal luminance; the mix then takes the
+    channels that differ, with non-negative weights summing to 1, whichever surface is
+    named first. Any such fixed mix keeps a blurred edge's half-level on the edge."""
+    dark, paper = tone.linear_from_encoded([48.0, 46.0, 44.0]), tone.linear_from_encoded([236.0, 229.0, 217.0])
+    assert tone.mix_weights(dark, paper) == tone.LUMINANCE
+    green, grey = tone.linear_from_encoded([0.0, 255.0, 0.0]), tone.linear_from_encoded([220.0] * 3)
+    assert tone.saved_contrast(green, grey, tone.LUMINANCE) < 1
+    weights = tone.mix_weights(green, grey)
+    assert weights == tone.mix_weights(grey, green) == (0.5, 0.0, 0.5)
+    assert tone.saved_contrast(green, grey, weights) > 200
+    assert tone.mix_weights(grey, grey) == tone.LUMINANCE
+    columns = np.arange(96, dtype=np.float64)
+    points = np.column_stack([np.full(6, 40.9), np.linspace(10.5, 29.5, 6)])
+    errors = []
+    for edge in np.linspace(40.0, 41.0, 9)[:-1]:
+        cover = np.tile(np.clip(edge - columns, 0, 1), (40, 1))[..., None]
+        light = cv2.GaussianBlur((grey + (green - grey) * cover).astype(np.float32), (0, 0), 1.7)
+        rgb = np.clip(synthetic.linear_to_srgb(light), 0, 255).round().astype(np.uint8)
+        moved, keep = sheet.half_level_search(
+            tone.linear_mix(rgb, weights), points, np.tile([1.0, 0.0], (6, 1)), half=8.0, step=0.0625
+        )
+        assert keep.all()
+        errors.append(moved[0, 0] - edge)
+    assert np.abs(errors).max() < 0.03 and abs(np.mean(errors)) < 5e-3
+
+
 def test_a_sloped_plateau_shifts_the_half_level_by_the_predicted_amount():
     """Numerical analysis of a known limit. A soft shadow makes the paper brighter away
     from an edge: light a on the part, b0 + b (t - e) beyond it. Blurred by a Gaussian,
