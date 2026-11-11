@@ -78,6 +78,7 @@ test('a photo on an A4 sheet is scaled by the sheet and exported with exact circ
   expect(Math.abs(h - 70)).toBeLessThan(0.1);
   expect(t).toBe(4);
 
+  await page.getByText('Drawings & source files', { exact: true }).click();
   for (const format of ['STEP', 'DXF', 'SVG', 'PDF', 'OpenSCAD']) {
     const downloadEvent = page.waitForEvent('download');
     await page.locator('.export-row').filter({ hasText: format }).click();

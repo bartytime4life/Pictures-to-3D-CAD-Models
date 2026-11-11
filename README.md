@@ -73,6 +73,11 @@ Refresh the assistant's connection after the download. This is a provisional CPU
 
 ## Try the complete workflow
 
+The **Next step** guide explains the current task and takes you to its controls.
+After an edit, **Update preview** rebuilds the model for inspection; **Choose an
+export** opens the downloads once that model matches the settings. Missing
+measurements and invalid design settings have a direct correction path.
+
 1. **Start with the sample.** The supplied demonstration image is traced and converted by the same pipeline as an uploaded photograph.
 2. **Choose a photo.** Upload a PNG, JPEG, WebP, HEIC, or AVIF containing one flat part against a contrasting background. Phone photos up to 70 megapixels and 32 MiB are accepted as the camera saved them. For the best result, lay the part on a sheet of paper, photograph the whole sheet, and choose that sheet as the **Scale reference** before uploading.
 3. **Review the outline.** Check the boundary and every through-hole. Adjust the tracing controls if the selection is wrong.
@@ -91,6 +96,9 @@ When a built polygon part exceeds the selected bed, **Design & print** can sugge
 The bundled searchable [printer catalog](docs/printer-catalog.md) covers 429 model groups across 70 manufacturer/profile families, with nozzle-specific source profiles and links. It works offline. Hardware capabilities absent from those sources are shown as unknown; custom printer dimensions remain available.
 
 ## What you can export
+
+The export dialog shows **CAD & 3D printing** downloads first. Expand **Drawings &
+source files** for DXF, SVG, PDF, and OpenSCAD.
 
 | Format | Use it for | What it preserves |
 | --- | --- | --- |

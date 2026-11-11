@@ -1,5 +1,10 @@
 # Validation results
 
+The [guided-workbench review](validation/guided-workbench.md) records the latest
+local interface audit, recovery fixes, reference-unit arithmetic checks, and
+fixture-based AI tests, with before/after screenshots. Geometry and physical
+qualification evidence remain distinct below.
+
 Latest workbench validation: November 11, 2026, on the local Linux workstation, for continuous-angle bed placement and for the exact-corner fillet fit. The FreeCAD import check, the linear-light edge measurement, the phone-photo decoding, the photo benchmark runner, the SVG and PDF drawings, the fillet-radius correction, the arc-chord fit and the stub fix of November 11 ran in a managed cloud session. The [reference-sensitivity record](validation/reference-sensitivity.md) covers the endpoint-placement explorer. Earlier managed-environment and release results are recorded separately below. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
 
 ## Rounded polygons are not taken for circles — November 11, 2026

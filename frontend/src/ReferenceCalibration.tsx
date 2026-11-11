@@ -46,7 +46,7 @@ export default function ReferenceCalibration({
     if (previousCalibration.current !== calibration) {
       if (calibration) {
         setPoints(calibration.reference_points.map((p) => p.map(String)) as typeof points);
-        setLength(String(Number((calibration.known_length_mm / factor).toPrecision(12))));
+        setLength(String(calibration.known_length_mm / factor));
       } else {
         setPoints([
           ['', ''],
@@ -59,7 +59,7 @@ export default function ReferenceCalibration({
       const previous = previousFactor.current;
       setLength((old) =>
         old.trim() && Number.isFinite(Number(old))
-          ? String(Number(((Number(old) * previous) / factor).toPrecision(12)))
+          ? String((Number(old) * previous) / factor)
           : old,
       );
     }

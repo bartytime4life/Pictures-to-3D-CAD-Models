@@ -299,3 +299,111 @@ test('assistant is keyboard-accessible and its expanded mobile layout passes acc
   await expect(toggle).toHaveAttribute('aria-expanded', 'false');
   await expect(assistant.getByRole('textbox')).toBeHidden();
 });
+
+test('advice without a proposal is marked outdated after an edit while AI is answering', async ({
+  page,
+}) => {
+  await installAssistantFixtures(page);
+  let releaseAnswer: (() => void) | undefined;
+  const answerGate = new Promise<void>((resolve) => {
+    releaseAnswer = resolve;
+  });
+  const answer = 'At 80 mm wide, review your printer fit before exporting.';
+  await page.route('**/api/assistant/chat', async (route) => {
+    await answerGate;
+    await route.fulfill({ json: { ...advice, answer, proposal: null } });
+  });
+  await ready(page);
+  let traceRequests = 0;
+  let buildRequests = 0;
+  page.on('request', (request) => {
+    if (request.url().endsWith('/api/trace')) traceRequests += 1;
+    if (request.url().endsWith('/api/build')) buildRequests += 1;
+  });
+  const assistant = await openAssistant(page);
+  await assistant.getByRole('textbox').fill('Does this fit my printer?');
+  const request = page.waitForRequest('**/api/assistant/chat');
+  await assistant.getByRole('button', { name: 'Ask local AI', exact: true }).click();
+  await request;
+  const width = page.getByRole('spinbutton', { name: 'Reference width', exact: true });
+  await width.fill('95');
+  releaseAnswer!();
+  await expect(assistant.getByText(answer, { exact: true })).toBeVisible();
+  const staleNotice = assistant.getByText('Your project changed after this answer.', {
+    exact: false,
+  });
+  await expect(staleNotice).toBeVisible();
+  await expect(staleNotice).toHaveCount(1);
+  await expect(
+    assistant.getByRole('button', { name: 'Apply suggestion', exact: true }),
+  ).toHaveCount(0);
+  await expect(width).toHaveValue('95');
+  expect(traceRequests).toBe(0);
+  expect(buildRequests).toBe(0);
+});
+
+test('AI can suggest a supported scale when requested geometry is oversized without building it', async ({
+  page,
+}) => {
+  await installAssistantFixtures(page);
+  let sent: Record<string, unknown> | undefined;
+  await page.route('**/api/assistant/chat', (route) => {
+    sent = route.request().postDataJSON();
+    return route.fulfill({
+      json: {
+        ...advice,
+        answer: 'Return XY scale to 100%, then review the dimensions before rebuilding.',
+        proposal: { scale_percent: 100 },
+      },
+    });
+  });
+  await ready(page);
+  let buildRequests = 0;
+  page.on('request', (request) => {
+    if (request.url().endsWith('/api/build')) buildRequests += 1;
+  });
+  const width = page.getByRole('spinbutton', { name: 'Reference width', exact: true });
+  await width.fill('800');
+  await page.getByRole('button', { name: /^Design & print/ }).click();
+  const scale = page.getByRole('spinbutton', { name: 'XY scale (%)', exact: true });
+  await scale.fill('300');
+  const guide = page.getByRole('region', { name: 'Next step', exact: true });
+  await expect(guide).toContainText('Requested size must stay within');
+  await expect(page.getByRole('button', { name: 'Update model', exact: true })).toBeDisabled();
+  const assistant = await openAssistant(page);
+  await assistant.getByRole('textbox').fill('Resize the design to 100% XY scale.');
+  const ask = assistant.getByRole('button', { name: 'Ask local AI', exact: true });
+  await expect(ask).toBeEnabled();
+  await ask.click();
+  const apply = assistant.getByRole('button', { name: 'Apply suggestion', exact: true });
+  await expect(apply).toBeEnabled();
+  expect(sent).toMatchObject({
+    context: { width_mm: 800, design: { scale_percent: 300 } },
+  });
+  await expect(scale).toHaveValue('300');
+  expect(buildRequests).toBe(0);
+  await apply.click();
+  await expect(scale).toHaveValue('100');
+  await expect(width).toHaveValue('800');
+  await expect(guide.getByRole('button', { name: 'Update preview', exact: true })).toBeEnabled();
+  await expect(page.getByRole('button', { name: 'Update model', exact: true })).toBeEnabled();
+  expect(buildRequests).toBe(0);
+});
+
+test('invalid design fields explain why an AI question cannot be sent', async ({ page }) => {
+  await installAssistantFixtures(page);
+  await ready(page);
+  let chatRequests = 0;
+  page.on('request', (request) => {
+    if (request.url().endsWith('/api/assistant/chat')) chatRequests += 1;
+  });
+  await page.getByRole('button', { name: /^Design & print/ }).click();
+  await page.getByRole('spinbutton', { name: 'XY scale (%)', exact: true }).fill('0');
+  const assistant = await openAssistant(page);
+  await assistant.getByRole('textbox').fill('Help me fix the size.');
+  await expect(
+    assistant.getByText('Fix your design settings before asking AI.', { exact: false }),
+  ).toContainText('Set both scale values between 10% and 400%.');
+  await expect(assistant.getByRole('button', { name: 'Ask local AI', exact: true })).toBeDisabled();
+  expect(chatRequests).toBe(0);
+});

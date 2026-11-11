@@ -29,8 +29,10 @@ import PrintSettings from './PrintSettings';
 import ReferenceCalibration from './ReferenceCalibration';
 import SheetReference from './SheetReference';
 import SlicerHandoff from './SlicerHandoff';
+import ExportFormats from './ExportFormats';
 import { calibrationError, measuredHeightError, referenceWidth } from './calibration';
 import { heightCheckDraft, heightCheckSettingsError } from './heightCheck';
+import { workflowState } from './workflow';
 import { DEFAULT_DESIGN, designError, designFromProposal, parseDesign } from './design';
 import {
   NO_SHEET,
@@ -439,6 +441,11 @@ export default function App() {
   const [heightAllowance, setHeightAllowance] = useState('');
   const [heightBound, setHeightBound] = useState('');
   const [measurementReset, setMeasurementReset] = useState(0);
+  const [measurementReview, setMeasurementReview] = useState<{
+    request: number;
+    target: 'height' | 'decision';
+  }>({ request: 0, target: 'height' });
+  const [designReview, setDesignReview] = useState(0);
   const [downloading, setDownloading] = useState<string | null>(null);
   const [exportError, setExportError] = useState('');
   const [selectedSlicer, setSelectedSlicer] = useState<SlicerId>('bambu');
@@ -479,6 +486,8 @@ export default function App() {
   const [dragging, setDragging] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
   const widthInput = useRef<HTMLInputElement>(null);
+  const thicknessInput = useRef<HTMLInputElement>(null);
+  const measurementTools = useRef<HTMLDivElement>(null);
   const nameInput = useRef<HTMLInputElement>(null);
   const revisionRef = useRef(0);
   const sequenceRef = useRef(0);
@@ -507,6 +516,38 @@ export default function App() {
   const buildReady = dimensionsValid && !designIssue;
   const current = !!model && model.revision === String(revision);
   const stale = !!model && !current;
+  const nextStep = workflowState({
+    hasTrace: !!trace,
+    hasModel: !!model,
+    current,
+    validWidth,
+    validThickness,
+    designIssue,
+    busy,
+  });
+  const activeStage = busy
+    ? null
+    : modal === 'photo'
+      ? 'photo'
+      : modal === 'trace'
+        ? 'trace'
+        : modal === 'export'
+          ? 'export'
+          : nextStep.stage;
+  useEffect(() => {
+    if (!measurementReview.request) return;
+    const check = measurementTools.current?.querySelector('.height-check')?.closest('details');
+    if (!check) return;
+    check.open = true;
+    const inputs = Array.from(check.querySelectorAll('input'));
+    const candidates = measurementReview.target === 'height' ? inputs.slice(0, 1) : inputs.slice(1);
+    const target =
+      candidates.find((input) => !input.validity.valid) ??
+      candidates.find((input) => !input.value.trim()) ??
+      candidates.find((input) => input.getAttribute('aria-invalid') === 'true') ??
+      candidates[0];
+    target?.focus();
+  }, [measurementReview]);
   const displayNumber = (millimeters: number) =>
     (millimeters / unitFactor).toFixed(unit === 'in' ? 3 : 2);
   const widthLabel = validWidth ? `${displayNumber(widthMm)} ${unit}` : '';
@@ -1127,11 +1168,18 @@ export default function App() {
     if (!trace || !buildReady) return;
     const heightIssue = measuredHeightError(measuredHeight, unitFactor);
     if (heightIssue) {
+      setModal(null);
+      setMeasurementReview((value) => ({ request: value.request + 1, target: 'height' }));
       setError(heightIssue);
       return;
     }
     const check = heightCheckDraft(heightAllowance, heightBound, unitFactor);
     if (check.error || (check.value && !measuredHeight.trim())) {
+      setModal(null);
+      setMeasurementReview((value) => ({
+        request: value.request + 1,
+        target: check.error ? 'decision' : 'height',
+      }));
       setError(
         check.error ?? 'Enter an independent height measurement, or clear both decision inputs.',
       );
@@ -1282,6 +1330,28 @@ export default function App() {
     if (current) setModal('export');
     else void buildModel(true);
   };
+  function followNextStep() {
+    switch (nextStep.action) {
+      case 'photo':
+        setModal('photo');
+        break;
+      case 'width':
+        widthInput.current?.focus();
+        break;
+      case 'thickness':
+        thicknessInput.current?.focus();
+        break;
+      case 'design':
+        setDesignReview((value) => value + 1);
+        break;
+      case 'build':
+        void buildModel(false);
+        break;
+      case 'export':
+        handlePrimary();
+        break;
+    }
+  }
   const warningMessages = [
     ...(trace?.warnings ?? []),
     ...(current
@@ -1366,14 +1436,24 @@ export default function App() {
 
       <main id="workbench">
         <nav className="workflow" aria-label="Conversion workflow">
-          <button className="workflow-step" onClick={() => setModal('photo')} disabled={!!busy}>
+          <button
+            className={`workflow-step ${activeStage === 'photo' ? 'active' : ''}`}
+            aria-current={activeStage === 'photo' ? 'step' : undefined}
+            onClick={() => setModal('photo')}
+            disabled={!!busy}
+          >
             <span className="step-icon">
               <Camera size={26} />
             </span>
             <span>Photo</span>
           </button>
           <span className="step-line" />
-          <button className="workflow-step" onClick={openTrace} disabled={!sourceFile || !!busy}>
+          <button
+            className={`workflow-step ${activeStage === 'trace' ? 'active' : ''}`}
+            aria-current={activeStage === 'trace' ? 'step' : undefined}
+            onClick={openTrace}
+            disabled={!sourceFile || !!busy}
+          >
             <span className="step-icon">
               <PencilSimple size={26} />
             </span>
@@ -1381,8 +1461,8 @@ export default function App() {
           </button>
           <span className="step-line" />
           <button
-            className="workflow-step active"
-            aria-current="step"
+            className={`workflow-step ${activeStage === 'scale' ? 'active' : ''}`}
+            aria-current={activeStage === 'scale' ? 'step' : undefined}
             onClick={() => widthInput.current?.focus()}
             disabled={!trace || !!busy}
           >
@@ -1393,7 +1473,8 @@ export default function App() {
           </button>
           <span className="step-line" />
           <button
-            className="workflow-step"
+            className={`workflow-step ${activeStage === 'export' ? 'active' : ''}`}
+            aria-current={activeStage === 'export' ? 'step' : undefined}
             onClick={handlePrimary}
             disabled={!trace || !buildReady || !!busy}
           >
@@ -1424,6 +1505,35 @@ export default function App() {
         <div className="sr-only" role="status" aria-live="polite">
           {busy || notice || (current ? 'CAD model ready.' : '')}
         </div>
+
+        <section className="workflow-guide" aria-label="Next step">
+          <div className="workflow-guide-icon" aria-hidden="true">
+            {busy ? (
+              <SpinnerGap size={25} className="spinner" />
+            ) : nextStep.action === 'export' ? (
+              <CheckCircle size={25} />
+            ) : nextStep.action === 'design' ? (
+              <WarningCircle size={25} />
+            ) : (
+              <Ruler size={25} />
+            )}
+          </div>
+          <div className="workflow-guide-copy" aria-live="polite">
+            <span className="workflow-guide-label">
+              {sample ? 'Sample project · demonstration measurements' : 'Your next step'}
+            </span>
+            <h2>{nextStep.title}</h2>
+            <p>{nextStep.detail}</p>
+          </div>
+          <button
+            className="outlined-button"
+            onClick={followNextStep}
+            disabled={!!busy || !nextStep.action}
+          >
+            {busy ? 'Please wait…' : nextStep.actionLabel}
+            <ArrowSquareOut size={18} aria-hidden="true" />
+          </button>
+        </section>
 
         <section className="viewports" aria-label="Photo and CAD workbench">
           <section className="viewport-panel source-panel">
@@ -1616,6 +1726,7 @@ export default function App() {
                 <label htmlFor="thickness">Thickness</label>
                 <div className={`number-field ${thickness && !validThickness ? 'invalid' : ''}`}>
                   <input
+                    ref={thicknessInput}
                     id="thickness"
                     type="number"
                     inputMode="decimal"
@@ -1686,39 +1797,41 @@ export default function App() {
             </div>
           </div>
           {trace && (
-            <ReferenceCalibration
-              key={measurementReset}
-              trace={trace}
-              calibration={referenceCalibration}
-              unit={unit}
-              widthMm={validWidth ? widthMm : null}
-              height={measuredHeight}
-              heightAllowance={heightAllowance}
-              heightBound={heightBound}
-              disabled={!!busy}
-              onApply={(value, calculatedWidth) => {
-                invalidate();
-                setReferenceCalibration(value);
-                setWidthMm(calculatedWidth);
-                setWidth((calculatedWidth / unitFactor).toFixed(unit === 'in' ? 6 : 4));
-                setError('');
-                setNotice(
-                  'Feature reference applied. Review the outside width and independent height check before building.',
-                );
-              }}
-              onHeight={(value) => {
-                setMeasuredHeight(value);
-                setError('');
-              }}
-              onHeightAllowance={(value) => {
-                setHeightAllowance(value);
-                setError('');
-              }}
-              onHeightBound={(value) => {
-                setHeightBound(value);
-                setError('');
-              }}
-            />
+            <div ref={measurementTools}>
+              <ReferenceCalibration
+                key={measurementReset}
+                trace={trace}
+                calibration={referenceCalibration}
+                unit={unit}
+                widthMm={validWidth ? widthMm : null}
+                height={measuredHeight}
+                heightAllowance={heightAllowance}
+                heightBound={heightBound}
+                disabled={!!busy}
+                onApply={(value, calculatedWidth) => {
+                  invalidate();
+                  setReferenceCalibration(value);
+                  setWidthMm(calculatedWidth);
+                  setWidth((calculatedWidth / unitFactor).toFixed(unit === 'in' ? 6 : 4));
+                  setError('');
+                  setNotice(
+                    'Feature reference applied. Review the outside width and independent height check before building.',
+                  );
+                }}
+                onHeight={(value) => {
+                  setMeasuredHeight(value);
+                  setError('');
+                }}
+                onHeightAllowance={(value) => {
+                  setHeightAllowance(value);
+                  setError('');
+                }}
+                onHeightBound={(value) => {
+                  setHeightBound(value);
+                  setError('');
+                }}
+              />
+            </div>
           )}
           <p className="measurement-note">
             <Info size={21} />
@@ -1766,6 +1879,7 @@ export default function App() {
           sourceSize={sourceSize}
           model={model}
           current={current}
+          revealRequest={designReview}
         />
         <LocalAssistant
           context={{
@@ -1795,7 +1909,8 @@ export default function App() {
               : {}),
           }}
           revision={JSON.stringify({ revision, design, model: current ? model?.id : null })}
-          busy={!!busy || !!designIssue}
+          busy={!!busy}
+          settingsIssue={designError(design)}
           canUndo={!!assistantUndo}
           onApply={applyAssistantProposal}
           onUndo={undoAssistantProposal}
@@ -1823,7 +1938,7 @@ export default function App() {
         </div>
         <span className="local-status">
           <span className="status-dot" />
-          {current ? 'Solid ready' : busy ? 'Processing' : 'Awaiting dimensions'}
+          {nextStep.footer}
         </span>
       </footer>
       <input
@@ -2131,94 +2246,11 @@ export default function App() {
             onDownload={(id) => void exportFile(id)}
             onLaunch={launchSlicer}
           />
-          <div className="export-options">
-            {(
-              [
-                {
-                  type: 'step',
-                  label: 'STEP',
-                  description: 'CAD solid for CAD applications',
-                  suffix: '.step',
-                },
-                {
-                  type: 'stl',
-                  label: 'STL',
-                  description: 'Triangle mesh for 3D printing',
-                  suffix: '.stl',
-                },
-                ...(model.downloads['3mf']
-                  ? [
-                      {
-                        type: '3mf' as const,
-                        label: '3MF',
-                        description: 'Millimeter mesh with separate objects for split parts',
-                        suffix: '.3mf',
-                      },
-                    ]
-                  : []),
-                {
-                  type: 'dxf',
-                  label: 'DXF',
-                  description: 'Flat outline for 2D workflows',
-                  suffix: '.dxf',
-                },
-                ...(model.downloads.svg
-                  ? [
-                      {
-                        type: 'svg' as const,
-                        label: 'SVG',
-                        description: 'Flat outline for laser cutters and vector editors',
-                        suffix: '.svg',
-                      },
-                    ]
-                  : []),
-                ...(model.downloads.pdf
-                  ? [
-                      {
-                        type: 'pdf' as const,
-                        label: 'PDF',
-                        description: 'Drawing to print at 1:1 and lay the part on',
-                        suffix: '.pdf',
-                      },
-                    ]
-                  : []),
-                {
-                  type: 'scad',
-                  label: 'OpenSCAD',
-                  description: 'Editable polygon extrusion with the current holes and design',
-                  suffix: '.scad',
-                },
-                ...(model.downloads.parts
-                  ? [
-                      {
-                        type: 'parts' as const,
-                        label: 'Parts ZIP',
-                        description: 'Individual STEP and STL files for each built part',
-                        suffix: '.zip',
-                      },
-                    ]
-                  : []),
-              ] as const
-            ).map((format) => (
-              <button
-                key={format.type}
-                className="export-row"
-                disabled={!!downloading}
-                onClick={() => void exportFile(format.type)}
-              >
-                <span className="format-name">{format.label}</span>
-                <span className="format-description">
-                  {format.description}
-                  <small>{format.suffix} · millimeters</small>
-                </span>
-                {downloading === format.type ? (
-                  <SpinnerGap size={23} className="spinner" />
-                ) : (
-                  <DownloadSimple size={23} />
-                )}
-              </button>
-            ))}
-          </div>
+          <ExportFormats
+            model={model}
+            downloading={downloading}
+            onDownload={(kind) => void exportFile(kind)}
+          />
           <div className="inline-note">
             <Info size={20} />
             <p>

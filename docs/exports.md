@@ -2,6 +2,11 @@
 
 Choose the output according to the receiving tool. All generated geometry uses **millimeters internally**. Confirm the receiving program's import settings rather than relying on a file extension to establish units.
 
+Open **Choose an export** or **Review export** for the current build. **CAD & 3D
+printing** contains STEP, STL, 3MF, and Parts ZIP when available. Expand **Drawings
+& source files** for DXF, SVG, PDF, and OpenSCAD. The disclosure works with the
+keyboard as well as a pointer.
+
 ## STEP: CAD solids
 
 Use STEP when continuing in a solid-modeling CAD application. The file contains the generated boundary representation of the extruded part and its through-holes. In split mode, the combined file contains the generated pieces in their assembled positions.
@@ -104,6 +109,11 @@ The project recipe preserves the traced coordinates, source width/thickness, XY/
 When **Apply reference scale** has been used, version 2 recipes also preserve optional `reference_calibration` data: `known_length_mm`, two `reference_points`, and `image_size` with its working-image width and height. Coordinates refer to the orientation-adjusted working image, whose longest side is at most 1400 pixels; they are not display-pixel coordinates or necessarily original camera-file coordinates. The full outside `width_mm` remains the scale input for geometry generation. Directly editing that width clears the endpoint-calibration record so it no longer appears to explain a manually chosen size.
 
 The optional `measured_height_mm` preserves the independent outside-height input. Optional `height_check` stores `allowance_mm` (above 0, up to 2000 mm) and `measurement_bound_mm` (0–2000 mm), and requires that height measurement. These are user-entered decision inputs; no assessment status is saved. Import validates both and recomputes the result against the restored source. See [engineering model and verification](engineering-model.md) for the conditional interval rule. Its comparison is against the source profile before XY design scaling and does not change the generated shape. These optional fields extend version 2; existing version 1 and version 2 recipes remain importable. They are workbench measurement notes, not an uncertainty budget, physical inspection certificate, or additional measurement metadata in STEP, STL, DXF, or the parts manifest.
+
+If these optional notes are incomplete or invalid, **Save project** returns from
+Export to the measurement controls, opens the height check, and focuses the field
+that needs correction. Correct the notes or clear both decision inputs before
+saving again. This does not change an otherwise current CAD model.
 
 Keep a separately named copy of the original photo when provenance matters. The recipe **does not include the photograph**. A restored project therefore displays an outline-only source view; saved reference endpoints retain their working-image frame and can be adjusted numerically. Upload a photograph if you want to trace again; it starts a new source rather than attaching the old reference to a different image.
 
