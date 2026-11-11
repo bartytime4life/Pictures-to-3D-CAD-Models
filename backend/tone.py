@@ -16,9 +16,9 @@ edge's half-level in place. A camera's own tone mapping on top of the standard c
 is not known from the file and is not undone.
 
 That freedom also chooses the mix. Luminance is used when it separates the two
-surfaces an edge lies between. Two colours can differ clearly in the saved photo yet
-have the same luminance (pure green on light grey); the edge is then measured on the
-channels that do differ (mix_weights).
+sides of a boundary all along it. Two colours can differ clearly in the saved photo yet
+have the same luminance (pure green on light grey); the boundary is then measured on
+the channels that do differ (choose_mix).
 """
 
 import numpy as np
@@ -67,35 +67,63 @@ def linear_luminance(rgb):
     return linear_mix(rgb, LUMINANCE)
 
 
-def surface_light(pixels):
-    """Median linear-light RGB of a surface's 8-bit sRGB pixels (N x 3)."""
-    return np.median(_LINEAR[pixels], axis=0).astype(np.float64)
+def light_at(rgb, points):
+    """Linear-light RGB (N x 3) of an 8-bit sRGB image at points (x, y), each read from
+    the pixel that contains it; points outside the image read its nearest edge pixel."""
+    h, w = rgb.shape[:2]
+    x = np.clip(np.floor(points[:, 0]).astype(np.int64), 0, w - 1)
+    y = np.clip(np.floor(points[:, 1]).astype(np.int64), 0, h - 1)
+    return _LINEAR[rgb[y, x]].astype(np.float64)
 
 
 def saved_contrast(a, b, weights):
-    """How far apart two surfaces' light (linear RGB) lies in a mix, in saved grey
-    levels: the scale contrast limits are stated on."""
+    """How far apart the light on two sides (linear RGB, one row or N rows) lies in a
+    mix, in saved grey levels: the scale contrast limits are stated on."""
     w = np.asarray(weights, np.float64)
-    return float(abs(encoded_from_linear(w @ a) - encoded_from_linear(w @ b)))
+    return np.abs(
+        encoded_from_linear(np.asarray(a, np.float64) @ w)
+        - encoded_from_linear(np.asarray(b, np.float64) @ w)
+    )
 
 
-def mix_weights(a, b, floor=40.0):
-    """Channel weights for measuring the edge between two surfaces of linear RGB `a`
-    and `b`.
-
-    Luminance is kept while it separates them by at least `floor` saved grey levels:
-    it carries the photo's finest detail. Below that, each channel is weighted by its
-    own difference, taking only the channels that differ in the more strongly differing
-    direction so that the weights stay non-negative, and that mix is used if it
-    separates the surfaces better. Weights sum to 1.
-    """
-    luminance = saved_contrast(a, b, LUMINANCE)
-    if luminance >= floor:
-        return LUMINANCE
+def difference_mix(a, b):
+    """Each channel weighted by its own difference between two colours (linear RGB),
+    taking only the channels that differ in the more strongly differing direction so
+    that the weights stay non-negative. Returns None for equal colours."""
     difference = np.asarray(a, np.float64) - np.asarray(b, np.float64)
     up, down = np.maximum(difference, 0), np.maximum(-difference, 0)
     chosen = up if up @ up >= down @ down else down
     if chosen.sum() <= 0:
+        return None
+    return tuple(float(v) for v in chosen / chosen.sum())
+
+
+# A boundary is measurable where its two sides differ by 12 saved grey levels
+# (sheet.half_level_search); twice that is taken as adequate everywhere.
+ADEQUATE_CONTRAST = 24.0
+
+
+def choose_mix(side_a, side_b):
+    """Channel weights for measuring a boundary, from the linear RGB on its two sides
+    at N points along it (N x 3 each). Weights are non-negative and sum to 1.
+
+    A mix is judged by the contrast it leaves at the boundary's weakest stretch: the
+    5th percentile over the points. Luminance is kept while that is adequate, because
+    it carries the photo's finest detail and every boundary is then measurable in it.
+    Otherwise the candidate with the best weakest stretch is used if it beats
+    luminance: the mix weighted by each channel's difference between the two sides'
+    typical colours, an even mix, or one channel alone. Judging by the weakest stretch
+    keeps a part of two colours from losing the boundary of its smaller colour.
+    """
+
+    def weakest(weights):
+        return float(np.percentile(saved_contrast(side_a, side_b, weights), 5))
+
+    luminance = weakest(LUMINANCE)
+    if luminance >= ADEQUATE_CONTRAST:
         return LUMINANCE
-    weights = tuple(float(v) for v in chosen / chosen.sum())
-    return weights if saved_contrast(a, b, weights) > luminance else LUMINANCE
+    difference = difference_mix(np.median(side_a, axis=0), np.median(side_b, axis=0))
+    candidates = [difference] if difference else []
+    candidates += [(1 / 3, 1 / 3, 1 / 3), (1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)]
+    best = max(candidates, key=weakest)
+    return best if weakest(best) > luminance else LUMINANCE

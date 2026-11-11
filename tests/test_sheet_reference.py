@@ -223,6 +223,25 @@ def test_parts_and_sheets_that_differ_in_colour_are_measured_on_the_channels_tha
     assert any("colour mix" in note for note in profile["reference"]["notes"]) == mixed
 
 
+def test_a_two_colour_part_keeps_the_boundary_of_its_smaller_colour(client):
+    """A pale pink plate with a green patch holding a hole, on a 220 grey sheet. Both
+    colours are measurable in luminance. A mix chosen from the plate's main colour is
+    green alone, in which the patch equals the sheet: the plate then read 66 mm wide,
+    not 80, and lost its hole, with no error."""
+    data = S.two_colour_photo((120, 120, 120), (220, 220, 220), (220, 180, 220), (40, 220, 40))
+    response = trace(client, data, reference="a4")
+    assert response.status_code == 200, response.text
+    profile = response.json()["profile"]
+    scale = profile["reference"]["mm_per_px"]
+    (_, _), (width, height), _ = cv2.minAreaRect(
+        (np.array(profile["outer"]) * scale).astype(np.float32)
+    )
+    assert abs(max(width, height) - 80) < 0.03 and abs(min(width, height) - 50) < 0.03
+    ((hole,),) = profile["primitives"]["holes"]
+    assert hole["kind"] == "circle" and abs(2 * hole["radius"] * scale - 8) < 0.02
+    assert not any("colour mix" in note for note in profile["reference"]["notes"])
+
+
 def test_light_part_on_dark_sheet(client, photos):
     result, _ = traced(client, photos, "light-part-dark-sheet", inverted=True)
     assert within_limits(S.feature_errors(result["profile"])) == {}

@@ -281,12 +281,12 @@ def render(
     return encoded.tobytes(), truth
 
 
-def colour_photo(table, paper, part, ppm=4.0, blur=1.2):
-    """PNG bytes of a flat-lit colour photo: a 60 mm disc with a 16 mm hole, centred on
-    an A4 sheet lying square on a table. `table`, `paper` and `part` are saved sRGB
-    colours. Coverage and blur mix linear light in each channel; `ppm` is photo pixels
-    per millimetre."""
+def _flat_photo(table, paper, regions, ppm, blur):
+    """PNG bytes of a flat-lit colour photo of an A4 sheet lying square on a table, with
+    non-overlapping coloured `regions` [(polygon in sheet millimetres, sRGB colour)] on
+    it. Coverage and blur mix linear light in each channel."""
     from PIL import Image
+    from shapely import affinity
 
     margin = 40.0
     shape = (int((SHEET[1] + 2 * margin) * ppm), int((SHEET[0] + 2 * margin) * ppm))
@@ -298,16 +298,39 @@ def colour_photo(table, paper, part, ppm=4.0, blur=1.2):
     sheet_a = np.outer(
         cover(shape[0], margin, margin + SHEET[1]), cover(shape[1], margin, margin + SHEET[0])
     )
-    centre = Point(margin + SHEET[0] / 2, margin + SHEET[1] / 2)
-    part_a = coverage(centre.buffer(30, 512).difference(centre.buffer(8, 512)), ppm, 0.0, 0.0, shape)
+    covers = [
+        (coverage(affinity.translate(polygon, margin, margin), ppm, 0.0, 0.0, shape), colour)
+        for polygon, colour in regions
+    ]
+    clear = 1 - sum(a for a, _ in covers)
     channels = []
     for index in range(3):
-        t, p, m = (float(srgb_to_linear(colour[index])) for colour in (table, paper, part))
-        light = (t * (1 - sheet_a) + p * sheet_a) * (1 - part_a) + m * part_a
+        t, p = float(srgb_to_linear(table[index])), float(srgb_to_linear(paper[index]))
+        light = (t * (1 - sheet_a) + p * sheet_a) * clear
+        for a, colour in covers:
+            light = light + float(srgb_to_linear(colour[index])) * a
         channels.append(linear_to_srgb(cv2.GaussianBlur(light.astype(np.float32), (0, 0), blur)))
     buffer = io.BytesIO()
     Image.fromarray(np.clip(np.dstack(channels), 0, 255).round().astype(np.uint8)).save(buffer, "PNG")
     return buffer.getvalue()
+
+
+def colour_photo(table, paper, part, ppm=4.0, blur=1.2):
+    """A 60 mm disc with a 16 mm hole, centred on the sheet. `table`, `paper` and `part`
+    are saved sRGB colours; `ppm` is photo pixels per millimetre."""
+    centre = Point(SHEET[0] / 2, SHEET[1] / 2)
+    disc = centre.buffer(30, 512).difference(centre.buffer(8, 512))
+    return _flat_photo(table, paper, [(disc, part)], ppm, blur)
+
+
+def two_colour_photo(table, paper, part, patch, ppm=4.0, blur=1.2):
+    """An 80 x 50 mm plate centred on the sheet. Its right 14 mm is the `patch` colour
+    and holds an 8 mm hole; the rest is the `part` colour."""
+    cx, cy = SHEET[0] / 2, SHEET[1] / 2
+    hole = Point(cx + 33, cy).buffer(4, 512)
+    main = box(cx - 40, cy - 25, cx + 26, cy + 25)
+    minor = box(cx + 26, cy - 25, cx + 40, cy + 25).difference(hole)
+    return _flat_photo(table, paper, [(main, part), (minor, patch)], ppm, blur)
 
 
 def rigid_fit(src, dst):
