@@ -1215,7 +1215,7 @@ def test_fillets_keep_their_radius_at_every_corner_angle_and_size(apex, multiple
     radius within 0.005 px + 0.1 % up to 120 degrees. The one exception is a 150 degree
     fillet of two sigma, which moves the outline less than the edges' own uncertainty:
     it is reported sharp, with a bound above its true radius. Before the exact corner model the
-    150 degree fillets read up to 16 blur shrinks large; before chords were merged,
+    150 degree fillets read up to 19 blur shrinks large; before chords were merged,
     radii of 25 sigma and more were cut into runs of short lines."""
     sigma = 1.6
     radius = multiple * sigma

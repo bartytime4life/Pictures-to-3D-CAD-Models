@@ -2,12 +2,20 @@
 
 Latest workbench validation: November 11, 2026, on the local Linux workstation, for continuous-angle bed placement and for the exact-corner fillet fit. The FreeCAD import check, the linear-light edge measurement, the phone-photo decoding, the photo benchmark runner, the SVG and PDF drawings, the fillet-radius correction, the arc-chord fit and the stub fix of November 11 ran in a managed cloud session. The [reference-sensitivity record](validation/reference-sensitivity.md) covers the endpoint-placement explorer. Earlier managed-environment and release results are recorded separately below. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
 
+## Corner sweep script — November 11, 2026
+
+Branch `claude/corner-sweep`, on `main` at `48e17d2` (after the fillet-corner change below). It adds `scripts/corner_sweep.py` and `make corner-sweep`, the exact-blur corner sweep behind the entry below, so that its figures can be reproduced.
+
+- **What it does.** It blurs filleted pentagons (corners of 60°, 90°, 120° and 150°; r = 5 to 80 px; σ = 1.6 and 2.5 px) in the continuum by vertical slices, independently of `fitting.corner_level`. It traces each half-level outline exactly and runs it through `backend.reference`'s fitting chain with snapping on. It reports the worst radius error per corner angle in units of the blur shrink, the corners lost, and the corners reported sharp whose bound is below their true radius; either of those makes the exit status 1. `--backend PATH` runs another checkout's fitting chain; `--quick` runs four cases.
+- **Reproduced.** On this branch: 0.00, 0.01, 0.03 and 0.28 s at 60°, 90°, 120° and 150°, no corner lost, five small 150° fillets reported sharp with bounds of 6.42, 7.95 and 8.04 px against true radii of 5, 5 and 8 px; exit status 0. With `--backend` on `main` at `dd65399`: 1.1, 2.5, 8.0 and 19.3 s, and two corners lost (a 150° R40 px and a 120° R12.5 px corner at σ = 2.5 px); exit status 1. Each run takes about four minutes.
+- **Checks run.** `tests/test_corner_sweep.py` checks the script's integral against the closed form at a disc's centre (to 10⁻¹⁰), a straight edge's half-level (to 10⁻⁸ px), and one case's fit; it takes about six seconds. `pytest`: **457 passed**. Ruff passed.
+
 ## Exact blurred corners, two-chord arcs and sharp corners — November 11, 2026
 
 Branch `claude/fillet-corners`, on `main` at `ae69552`. Its "before" figures were taken on `dd65399`, which has the large-radius and stub fixes below; the bed-placement change after it touches no tracing code. See [reference-sheet tracing](reference-sheet.md), §4 and §7, for the mathematics.
 
-- **How it was found.** The fillet-radius entry below left corners other than right angles unverified. The 2026-11-10 study (not in the repository) has a continuum integrator of the exact Gaussian blur of filleted polygons. It traced corners of 60° to 150°, and the pipeline's fitting chain was run on those outlines. That showed four defects. Every "before" figure here is `main` at `dd65399`, with the large-radius and stub fixes.
-- **Defect 1: wide corners.** The disc shrink s(r) holds only in the middle of a long arc. On exact outlines, fillets read up to 16 s large at 150° and 8 s at 120°, and nothing flagged them. (Before the stub fix, which refits small arcs on their points between the lines, it was 49 s, and rendered 150° R4 corners were up to 1.9 mm off.)
+- **How it was found.** The fillet-radius entry below left corners other than right angles unverified. An exact continuum blur of filleted polygons (from the 2026-11-10 study, now `scripts/corner_sweep.py`, `make corner-sweep`) traced corners of 60° to 150°, and the pipeline's fitting chain was run on those outlines. That showed four defects. Every "before" figure here is `main` at `dd65399`, with the large-radius and stub fixes.
+- **Defect 1: wide corners.** The disc shrink s(r) holds only in the middle of a long arc. On exact outlines, fillets read up to 19 s large at 150° and 8 s at 120°, and nothing flagged them. (Before the stub fix, which refits small arcs on their points between the lines, it was 49 s, and rendered 150° R4 corners were up to 1.9 mm off.)
 - **Defect 2: two-chord arcs.** An arc cut into only two chords goes back to two lines under the large-radius fix's rule that one chord is not an arc. A 150° R40 px corner at σ = 2.5 px and a 120° R12.5 px corner lost their arcs, moving the outline 1.4 and 1.9 px.
 - **Defect 3: tilted edges.** Douglas–Peucker hands each line the start of the next arc. Beside large radii that tilted the edges (0.24° beside R80 px), snapping kept the tilt, and fillets built on those edges read up to 2.5 s off at 90° and 8 s at 120°.
 - **Defect 4: sharp corners.** Blur rounds a sharp corner, and it was fitted as a fillet: R0.4 to R1.1 mm on rendered sharp plates, exported as cylinders.
@@ -24,9 +32,9 @@ Branch `claude/fillet-corners`, on `main` at `ae69552`. Its "before" figures wer
   | 60° | 1.1 s | 0.00 s |
   | 90° | 2.5 s | 0.01 s |
   | 120° | 8.0 s | 0.03 s |
-  | 150° | 16 s | 0.22 s |
+  | 150° | 19 s | 0.28 s |
 
-  Two of the 24 cases lost a corner's arc before; none does after. Three small 150° fillets are traced sharp, each with a bound above its true radius.
+  Two corners lost their arc before, their edges meeting with no warning; none does after. Five small 150° fillets (r ≤ 3.2 σ) are traced sharp, each with a bound above its true radius. These are the counts of `make corner-sweep`, which takes every corner into account; an earlier summary that left out cases with a lost corner gave 16 s and 0.22 s for 150°.
 - **Rendered plates, before and after** (5 px/mm, traced with snapping on):
 
   | Plate | Before | After |
