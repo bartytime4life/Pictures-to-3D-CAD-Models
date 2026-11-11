@@ -214,7 +214,7 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
         for ring, prims in fitted:
             if prims and any(p.kind == "line" for p in prims):
                 fitting.refit_lines(ring["points"], prims)
-                fitting.fit_fillets(ring["points"], prims, tolerance_px)
+                fitting.fit_fillets(ring["points"], prims, tolerance_px, sigma)
     for prims in rings_prims:
         fitting.correct_blur(prims, sigma)
     if snap:

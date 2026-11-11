@@ -100,7 +100,7 @@ A trace takes a few seconds per photo. The command exits with an error only when
 This report is the `--example` folder: three **rendered** photos of the test plate at 22°, 9° and 0° tilt, 4 mm thick, with its design dimensions as the caliper values.
 
 > 3 of 3 photos traced; 48 dimensions compared.
-> Absolute error: median 0.019 mm, 95th percentile 0.036 mm, worst 0.088 mm.
+> Absolute error: median 0.013 mm, 95th percentile 0.035 mm, worst 0.088 mm.
 
 | Dimension | Calipers (mm) | Readings | Mean error (mm) | Spread, SD (mm) | Worst (mm) | Not found |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -110,7 +110,7 @@ This report is the `--example` folder: three **rendered** photos of the test pla
 | Ø6 (×4) | 6.00 | 12 | +0.002 | 0.025 | +0.035 |  |
 | Opening 24 × 8 length | 24.00 | 3 | -0.008 | 0.022 | -0.021 |  |
 | Opening 24 × 8 width | 8.00 | 3 | -0.023 | 0.009 | -0.031 |  |
-| R8 (×4) | 8.00 | 12 | +0.029 | 0.005 | +0.036 |  |
+| R8 (×4) | 8.00 | 12 | +0.005 | 0.006 | +0.012 |  |
 | Centres 96 | 96.00 | 3 | -0.002 | 0.009 | -0.011 |  |
 | Centres 50 | 50.00 | 3 | -0.002 | 0.004 | -0.007 |  |
 | Centres 108.24 | 108.24 | 3 | -0.005 | 0.009 | -0.015 |  |
