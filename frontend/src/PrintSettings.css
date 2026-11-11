@@ -91,3 +91,28 @@
   font-size: 12px;
   line-height: 1.5;
 }
+
+.split-plan-card {
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid #647d8d;
+  border-radius: 5px;
+  background: #182c38;
+  color: #d0e0ea;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.split-plan-card strong {
+  color: #edf8ff;
+}
+
+.split-plan-card p {
+  margin: 8px 0;
+}
+
+.split-plan-card button {
+  min-height: 44px;
+  white-space: normal;
+  text-align: left;
+}

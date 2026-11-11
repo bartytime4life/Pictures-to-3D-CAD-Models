@@ -82,6 +82,39 @@ for that conservative rectangle remain inconclusive about the curve itself.
 The search checks one piece at a time and leaves all geometry and measurements
 unchanged. It does not evaluate slicer placement, physical fit, or printing.
 
+## Bounded split-plan search
+
+Split planning is a finite geometric optimization over
+`G = {(c,r) in {1,2,3,4}² : 1 < c*r <= 8}`, containing eleven grids.
+Each grid partitions the prepared polygon's bounding rectangle into equal
+cells. Intersect each cell with the actual polygon, retain every connected
+polygon component, reject invalid results or more than eight pieces, and check
+that their total area equals the source area within the existing split tolerance.
+Holes and empty cells therefore affect actual piece count rather than being
+counted as nominal rectangular tiles.
+
+A grid is feasible only when each piece's thickness fits Z and its actual
+polygon can be rotated and translated inside the usable bed rectangle. Rank
+feasible grids lexicographically by `(actual_piece_count, c+r-2, r, c)`.
+The second term counts straight cut lines. Exhaustively evaluating this small
+set finds the minimum under that ranking among grids passing the build's
+polygon checks. Numerical intersection failures qualify the search as partial.
+The result is a proposal on the current model revision; it changes no geometry
+until the user applies the settings and rebuilds.
+
+Before searching angles, reject any convex hull whose area exceeds
+`(usable_width + 1e-6) * (usable_depth + 1e-6)`. A convex rectangle containing a
+piece also contains its convex hull, so this is a necessary condition for fit.
+Including the existing numerical comparison tolerance avoids imposing a
+stricter limit than the final directional checks. This prunes obviously
+impossible candidates without weakening placement verification.
+
+The search is bounded to eleven grids with at most eight pieces each. It does
+not optimize arbitrary partitions or plate packing, nor evaluate strength,
+kerf, assembly tolerances or printing. Fitted single-piece curves are excluded
+because their split fallback changes exact arcs into polygons; that change
+remains an explicit manual decision.
+
 ## Why multiview reconstruction is separate
 
 [COLMAP's tutorial](https://github.com/colmap/colmap/blob/main/doc/tutorial.rst) describes overlapping images from different viewpoints and the importance of texture and capture conditions. Its [FAQ](https://github.com/colmap/colmap/blob/main/doc/faq.rst) discusses hardware and reconstruction constraints.
