@@ -2,6 +2,7 @@
 
 import io
 import json
+import math
 import struct
 import zipfile
 
@@ -229,6 +230,52 @@ def test_nozzle_detail_changes_real_export_outline_and_retains_holes(tmp_path):
     assert unchanged.equals_exact(source, 0) and not warnings
 
 
+@pytest.mark.parametrize("split", [False, True])
+def test_diagonal_placement_matches_real_mesh_and_survives_handoff_manifests(client, split):
+    length = 250 if split else 125
+    response = client.post(
+        "/api/build",
+        json=request_body(
+            profile={"outer": [[0, 0], [length, 0], [length, 10], [0, 10]], "holes": []},
+            width_mm=length,
+            design={
+                "output_mode": "split" if split else "single",
+                "split_columns": 2,
+                "bed_width_mm": 110,
+                "bed_depth_mm": 110,
+                "bed_margin_mm": 5,
+            },
+        ),
+    )
+    assert response.status_code == 200, response.text
+    model = response.json()
+    assert model["print_fit"]["status"] == "fits"
+    assert len(model["parts"]) == (2 if split else 1)
+    assert model["dimensions"] == pytest.approx({"width": length, "height": 10, "thickness": 4})
+    assert model["volume_mm3"] == pytest.approx(length * 10 * 4)
+    recipe = client.get(model["downloads"]["project"]).json()
+    assert recipe["width_mm"] == length and recipe["design"]["scale_percent"] == 100
+    assert recipe["profile"]["outer"] == [[0, 0], [length, 0], [length, 10], [0, 10]]
+    for part in model["parts"]:
+        fit = part["bed_fit"]
+        assert fit["basis"] == "outline" and not fit["rotated_90"]
+        angle = math.radians(fit["rotation_deg"])
+        vertices = list(zip(*[iter(part["mesh"]["vertices"])] * 3))
+        xs = [x * math.cos(angle) - y * math.sin(angle) for x, y, _ in vertices]
+        ys = [x * math.sin(angle) + y * math.cos(angle) for x, y, _ in vertices]
+        assert max(xs) - min(xs) <= 100 + 1e-6
+        assert max(ys) - min(ys) <= 100 + 1e-6
+        assert fit["footprint_mm"] == pytest.approx(
+            {"width": max(xs) - min(xs), "depth": max(ys) - min(ys)}
+        )
+    for kind in (["parts"] if split else []) + ["bambu", "prusa"]:
+        with zipfile.ZipFile(io.BytesIO(client.get(model["downloads"][kind]).content)) as archive:
+            manifest = json.loads(archive.read("manifest.json"))
+            assert [p["bed_fit"] for p in manifest["parts"]] == [
+                p["bed_fit"] for p in model["parts"]
+            ]
+
+
 def test_grid_counts_connected_fragments_and_preserves_area():
     comb = unary_union([box(0, 0, 90, 2), *[box(i * 10, 0, i * 10 + 4, 10) for i in range(9)]])
     assert isinstance(comb, Polygon)
@@ -286,7 +333,10 @@ def test_bed_fit_checks_margin_rotation_height_and_unknown_shapes():
     dims = {"width": 150, "height": 80, "thickness": 5}
     assert printing.bed_fit(dims, design)["rotated_90"]
     assert printing.bed_fit({**dims, "thickness": 101}, design)["status"] == "too_large"
-    assert printing.bed_fit({**dims, "height": 91}, design)["status"] == "too_large"
+    assert (
+        printing.bed_fit({**dims, "height": 91}, design, footprint=box(0, 0, 150, 91))["status"]
+        == "too_large"
+    )
     selected = design.model_copy(update={"printer_id": "catalog/example"})
     for printer in (
         None,
@@ -325,7 +375,12 @@ def test_known_printer_uses_exact_nozzle_profile_and_rejects_ambiguous_fit(tmp_p
     assert settings.bed_width_mm == 180 and settings.bed_height_mm == 2100
     assert not warnings
     assert (
-        printing.bed_fit({"width": 190, "height": 190, "thickness": 5}, settings, printer)["status"]
+        printing.bed_fit(
+            {"width": 190, "height": 190, "thickness": 5},
+            settings,
+            printer,
+            footprint=box(0, 0, 190, 190),
+        )["status"]
         == "too_large"
     )
     catalog["printers"][0]["profiles"].append(profile(0.6, 160))

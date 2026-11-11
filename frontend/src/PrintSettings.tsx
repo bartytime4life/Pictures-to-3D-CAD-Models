@@ -532,7 +532,7 @@ export default function PrintSettings({
             </div>
             <p className="print-field-note">
               Margin reserves space on each side of the bed. Editing width, depth or height switches
-              to Custom. Fit checks allow a 90° turn on a rectangular bed.
+              to Custom. Fit checks search all XY turns on a clear rectangular bed.
             </p>
             {selectedPrinter && (
               <details className="printer-facts">
@@ -682,11 +682,25 @@ export default function PrintSettings({
                         {sizeText(part.dimensions.thickness)}
                       </td>
                       <td>
-                        {part.bed_fit.status === 'fits'
-                          ? `Fits${part.bed_fit.rotated_90 ? ' after 90° turn' : ''}`
-                          : part.bed_fit.status === 'too_large'
-                            ? 'Too large'
-                            : 'Check in slicer'}
+                        <details className="part-placement">
+                          <summary>
+                            {part.bed_fit.status === 'fits'
+                              ? `Fits${part.bed_fit.rotation_deg ? ` after ≈${part.bed_fit.rotation_deg.toFixed(6).replace(/\.?0+$/, '')}° turn` : ''}`
+                              : part.bed_fit.status === 'too_large'
+                                ? 'Too large'
+                                : 'Check in slicer'}
+                          </summary>
+                          <p>{part.bed_fit.reason}</p>
+                          {part.bed_fit.footprint_mm && (
+                            <p>
+                              Rotated footprint: {sizeText(part.bed_fit.footprint_mm.width)} ×{' '}
+                              {sizeText(part.bed_fit.footprint_mm.depth)} mm.
+                              {part.bed_fit.basis === 'bounding_box'
+                                ? ' Uses the enclosing rectangle of the fitted curves.'
+                                : ' Uses the built polygon outline.'}
+                            </p>
+                          )}
+                        </details>
                       </td>
                     </tr>
                   ))}
@@ -701,8 +715,8 @@ export default function PrintSettings({
           )}
           <div className="print-footer">
             <p>
-              Fit is a bounding-box check. No toolpaths, supports, temperatures or strength
-              guarantees are generated.
+              Turns are suggestions for individual pieces; exports keep their original orientation.
+              No toolpaths, supports, temperatures or strength guarantees are generated.
             </p>
             <button
               className="text-button"

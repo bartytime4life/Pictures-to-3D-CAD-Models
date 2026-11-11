@@ -84,7 +84,7 @@ The sample's dimensions are demonstration inputs, not measurements recovered fro
 
 Design scales preserve those source measurements: an 80 mm reference width at 125% requests a 100 mm design, while the entered reference remains 80 mm. Thickness scale is separate. Geometry-detail approximation may alter the resulting outline, so check the built dimensions. Color and material affect the approximate preview and saved plan; they do not simulate strength or select a filament spool.
 
-Printer fit compares actual part bounds with the chosen usable volume, including a possible 90° XY rotation. It does not generate toolpaths or account for supports, adhesion, machine clearances, or material behavior. Review exported parts in your slicer. See [print planning](docs/print-planning.md).
+Printer fit searches all in-plane rotations of each built polygon on a clear rectangular bed. Open a part's fit result to see the suggested counterclockwise turn and rotated footprint. Fitted curves use a conservative enclosing rectangle; an inconclusive rectangle check asks for slicer review. Suggested turns are saved in handoff manifests and are not applied to geometry exports. Review supports, adhesion, machine clearances, and material behavior in your slicer. See [print planning](docs/print-planning.md).
 
 The bundled searchable [printer catalog](docs/printer-catalog.md) covers 429 model groups across 70 manufacturer/profile families, with nozzle-specific source profiles and links. It works offline. Hardware capabilities absent from those sources are shown as unknown; custom printer dimensions remain available.
 

@@ -46,6 +46,42 @@ The blur–curvature series, its third-order coefficient (5/24), the two-step wa
 
 The intended checks go beyond successful file creation: re-import STEP, verify bounds and positive volume, check mesh closure, and check that planar loops and units survive DXF export. The [validation report](validation.md) records the tests actually executed.
 
+## Continuous-angle rectangular placement
+
+The placement implementation is engineering synthesis using convex support
+geometry. [Toussaint's rotating-calipers paper](https://www-cgrl.cs.mcgill.ca/~godfried/publications/calipers.pdf)
+describes rotating support lines for convex-polygon problems; the
+[SciSpace record](https://scispace.com/papers/solving-geometric-problems-with-the-rotating-calipers-awbxr0c4b6)
+was used to locate this primary source. [Shapely's convex-hull documentation](https://shapely.readthedocs.io/en/stable/reference/shapely.convex_hull.html)
+defines the enclosing convex geometry used here. This implementation searches
+fixed-bed containment rather than simply taking a minimum-area rectangle:
+a minimum-area rectangle need not fit the specified bed even when some other
+rotation of the outline does.
+
+For model coordinates `(x, y)`, a counterclockwise rotation gives
+`x' = x cos θ − y sin θ`, `y' = x sin θ + y cos θ`.
+The projected width and depth are the maxima minus minima of these coordinates.
+Taking the convex hull leaves those extrema unchanged. Supporting vertices
+change only when a hull edge becomes parallel to one bed axis. Between adjacent
+events each extent is `a cos θ + b sin θ`, with fixed coefficients.
+
+Solve each bed-limit equality analytically using
+`a cos θ + b sin θ = hypot(a,b) cos(θ − atan2(b,a))`.
+The roots and support events partition `[0, π]` into intervals where the truth
+of both containment inequalities is constant. Check boundaries and interval
+interiors to retain isolated exact fits and narrow feasible intervals without
+an arbitrary angular increment. Every returned angle is verified again against
+all hull vertices. A 1e-6 mm numerical comparison tolerance is explicit.
+
+The bounded implementation scans the hull at each support interval, taking
+`O(h²)` time and `O(h)` storage for `h` hull vertices, rather than claiming the
+linear complexity of a full rotating-calipers implementation. Polygon input
+is limited to 2000 vertices before split intersections. Fitted curves use a
+four-corner enclosing rectangle instead of inscribed samples. Negative results
+for that conservative rectangle remain inconclusive about the curve itself.
+The search checks one piece at a time and leaves all geometry and measurements
+unchanged. It does not evaluate slicer placement, physical fit, or printing.
+
 ## Why multiview reconstruction is separate
 
 [COLMAP's tutorial](https://github.com/colmap/colmap/blob/main/doc/tutorial.rst) describes overlapping images from different viewpoints and the importance of texture and capture conditions. Its [FAQ](https://github.com/colmap/colmap/blob/main/doc/faq.rst) discusses hardware and reconstruction constraints.

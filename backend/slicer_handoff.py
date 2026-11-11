@@ -40,6 +40,8 @@ def _readme(slicer, *, split):
         "they are not installed presets, temperatures or filament assignments. "
         "Work in the slicer's normal Prepare/Plater view and confirm the dimensions there.\n"
         "4. Arrange on the actual printable bed, inspect fine features and holes, select orientation "
+        "(manifest.json includes per-piece bed_fit rotation_deg and footprint_mm when a placement was found; "
+        "angles are counterclockwise about model Z, and are not applied to these geometry files), "
         "and supports, then slice and inspect the layer preview. Check the appropriate machine "
         "and material settings before deciding whether to export G-code.\n"
         "5. Save the reviewed native slicer project from the slicer if you want to keep its settings. "
@@ -93,7 +95,8 @@ def write_slicer_handoffs(job_dir: Path, *, name, design, dimensions, volume_mm3
             "The 3MF files contain geometry and millimeter units, without slicer settings or filament assignments.",
             "Printer, nozzle, material and color are planning metadata. Choose matching native presets in the slicer.",
             "The combined model preserves assembled positions. Individual split files require separate arrangement and review.",
-            "A bounding-envelope fit does not establish placement, supports, material suitability, physical fit or printing success.",
+            "Per-piece bed_fit records a suggested counterclockwise XY rotation and footprint when found. Apply and verify it in the slicer; geometry files retain their original orientation.",
+            "A geometric fit does not establish slicer acceptance, supports, material suitability, physical fit or printing success.",
             "No G-code, printer connection, print command or source photograph is included.",
         ],
     }

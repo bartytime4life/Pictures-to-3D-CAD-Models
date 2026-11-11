@@ -73,3 +73,21 @@
 .print-settings .printer-search-empty span {
   margin-top: 5px;
 }
+
+.part-placement summary {
+  cursor: pointer;
+  min-height: 44px;
+  padding: 10px 0;
+}
+
+.part-placement summary:focus-visible {
+  outline: 2px solid #74daf4;
+  outline-offset: 2px;
+}
+
+.part-placement p {
+  max-width: 34em;
+  white-space: normal;
+  font-size: 12px;
+  line-height: 1.5;
+}

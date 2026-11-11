@@ -33,12 +33,38 @@ nominal machine volume because of clips, excluded areas, or the user's setup.
 An application edge margin is a planning allowance, not a manufacturer
 specification; display its value and let the user change it.
 
-For this workbench's flat parts, a basic fit check compares the extruded solid's
-XY bounds with the usable bed rectangle and its thickness with the usable Z
-height. A 90-degree in-plane rotation exchanges X and Y. If only those two
-orientations are checked, report that limitation. A bounding-box test does not
-account for a brim, raft, skirt, supports, purge structures, toolhead clearance,
-or a slicer's placement rules.
+For this workbench's flat parts, the fit check compares thickness with usable Z
+height, subtracts the selected margin from both edges of each bed axis, and
+searches every in-plane rotation of each built polygon. It preserves familiar
+0° or 90° placements when they work. Otherwise it finds a feasible angle from
+the outline's convex hull and analytic trigonometric crossings, including
+placements between fixed angular steps. Holes and concavities do not change
+the directional extents needed for containment in a clear rectangle.
+
+For example, a 125 × 10 mm bar exceeds a 100 × 100 mm usable square in either
+axis orientation, but at 45° its footprint is approximately 95.46 × 95.46 mm.
+The old two-orientation check rejected it; the continuous-angle check finds a
+placement without scaling or splitting the measured part. The solver finds a
+feasible placement; it does not claim a globally optimal clearance or plate packing.
+
+Open the per-piece result to inspect the approximate counterclockwise turn
+about model Z and its footprint in millimeters. The full-precision angle,
+footprint and geometry basis are preserved in parts and slicer handoff manifests.
+These are placement suggestions: exported STEP, STL and 3MF geometry retains
+its original orientation. Apply the turn, translate onto the plate, and verify
+it in your slicer. Displayed numbers are rounded; close fits need extra care.
+
+Fitted arcs and circles use the exact solid's enclosing rectangle, avoiding
+an unsafe fit based on inscribed samples of a curve. A positive rectangle
+result contains the actual solid. A failed rectangle result is **unknown**,
+because a curved outline could fit where that rectangle does not. Polygon
+results use the actual built outline after simplification or splitting. Shaped,
+excluded and ambiguous catalog beds remain unverified.
+
+This check does not account for a brim, raft, skirt, supports, purge structures,
+toolhead clearance, or a slicer's placement rules. The 0.000001 mm comparison
+tolerance accommodates floating-point arithmetic; it is not a physical allowance
+or an accuracy estimate. See [algorithm derivation and sources](research.md#continuous-angle-rectangular-placement).
 
 Prefer “Fits these geometric bounds” to “Ready to print.” A model that exceeds a
 printer preset can still be valid CAD; choosing another printer or changing the

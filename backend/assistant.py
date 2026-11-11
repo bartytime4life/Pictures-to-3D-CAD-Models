@@ -490,7 +490,8 @@ def printer_context(request):
         "limits": {
             "maximum_parts": 8,
             "geometry_summary_is_ui_reported": True,
-            "bed_fit_is_bounding_box_only": True,
+            "bed_fit_is_geometric_envelope_only": True,
+            "bed_fit_checks_individual_pieces_at_any_xy_angle": True,
             "material_and_color_are_planning_metadata": True,
             "toolpaths_and_physical_print_validation": False,
         },

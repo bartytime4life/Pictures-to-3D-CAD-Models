@@ -75,6 +75,9 @@ export type DesignSettings = {
 export type BedFit = {
   status: 'fits' | 'too_large' | 'unknown';
   rotated_90?: boolean;
+  basis?: 'outline' | 'bounding_box';
+  rotation_deg?: number;
+  footprint_mm?: { width: number; depth: number };
   reason: string;
 };
 export type ModelPart = {

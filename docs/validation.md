@@ -1,6 +1,48 @@
 # Validation results
 
-Latest workbench validation: November 10, 2026, on the local Linux workstation. The FreeCAD import check, the linear-light edge measurement, the phone-photo decoding, the photo benchmark runner, the SVG and PDF drawings, the fillet-radius correction, the arc-chord fit and the stub fix of November 11 ran in a managed cloud session. The [reference-sensitivity record](validation/reference-sensitivity.md) covers the new endpoint-placement explorer. Earlier managed-environment and release results are recorded separately below. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
+Latest workbench validation: November 11, 2026, on the local Linux workstation, for continuous-angle bed placement. The FreeCAD import check, the linear-light edge measurement, the phone-photo decoding, the photo benchmark runner, the SVG and PDF drawings, the fillet-radius correction, the arc-chord fit and the stub fix of November 11 ran in a managed cloud session. The [reference-sensitivity record](validation/reference-sensitivity.md) covers the endpoint-placement explorer. Earlier managed-environment and release results are recorded separately below. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
+
+## Continuous-angle bed placement — November 11, 2026
+
+Branch `codex/analytic-bed-placement`, based on `main` at `dd65399`, in an
+isolated local worktree. The original checkout on `codex/slicer-integration`
+was preserved. See [the derivation](research.md#continuous-angle-rectangular-placement)
+and [user controls](print-planning.md).
+
+- Reproduced before the change: a 125 × 10 × 4 mm bar was reported too large
+  for a 100 × 100 mm usable rectangle because only 0° and 90° were checked.
+  The new solver finds 45°, with a 95.459415 × 95.459415 mm footprint.
+- Exact-fit synthetic rectangles rotated by 0.1234567°, 17.1234567°,
+  67.8912345° and 123.456789° are recovered without an angle grid. Each is
+  refused when both bed dimensions are reduced by 0.0001 mm.
+- Thirty seeded polygon cases retain constructed feasible placements; random
+  beds are compared with 3601 independently sampled angles. Returned witnesses
+  are also checked with Shapely rotation. This checks software containment,
+  not photographic or manufacturing accuracy.
+- Real CAD builds of single and split bars preserve dimensions, volume, source
+  recipes and export orientation. Applying each suggested turn to its actual
+  output mesh independently satisfies the selected envelope. Both slicer
+  manifests and the split manifest preserve the same placement result.
+- Fitted curves retain a conservative solid-bounds check. An unsuccessful XY
+  enclosing-rectangle check reports unknown; no sampled polygon is promoted
+  to proof that the exact curved outline fits. Shaped/excluded/ambiguous beds,
+  margins, build height and the legacy 90° flag retain coverage.
+- `python -m pytest -q`: **431 passed**. The fitted-build assertion was also
+  rerun after adding the geometry-basis check. Production TypeScript/Vite
+  build, `make lint` and `git diff --check` passed.
+- All **49 Chromium scenarios** passed across two batches: the new desktop and
+  390 px mobile scenarios plus four existing print planning scenarios (6),
+  followed by all remaining browser scenarios (43). They exercise keyboard
+  disclosure, displayed angle and footprint, unchanged measurements, edit
+  invalidation and rebuild, automated axe checks, capture/calibration, import
+  recovery, reference-sheet tracing, assistant proposals and slicer exports.
+- One 2000-vertex convex-polygon refusal took 0.077 seconds locally. This is
+  one synthetic timing sample, not a throughput or latency guarantee.
+
+The accepted [desktop](images/diagonal-placement-desktop.png) and
+[mobile](images/diagonal-placement-mobile.png) screenshots were visually inspected.
+No native slicer import, toolpaths, physical print, deployment or release was
+validated by these checks. Reference-library code and outputs were unchanged.
 
 ## Stubs go back to their edges — November 11, 2026
 
