@@ -19,6 +19,7 @@ from dataclasses import dataclass
 import cv2
 import numpy as np
 
+from . import tone
 from .tone import encoded_from_linear
 
 # Paper presets in millimetres (ISO 216 A4 and ANSI Letter), short side first.
@@ -142,12 +143,33 @@ def _quad(gray_small, polarity):
     return quad.astype(np.float64)
 
 
-def find_sheet(gray, linear=None):
+def _edge_mix(rgb, quad, small_shape):
+    """Channel weights (tone.choose_mix) for the sheet's edges, from the light just
+    inside and just outside each side. `quad` is in the coordinates of the reduced
+    image of `small_shape`."""
+    h, w = small_shape
+    small = cv2.resize(rgb, (w, h), interpolation=cv2.INTER_AREA)
+    reach = max(6.0, 0.01 * max(h, w))
+    inside, outside = [], []
+    for i in range(4):
+        a, b = quad[i], quad[(i + 1) % 4]
+        length = float(np.linalg.norm(b - a))
+        if length < 4 * reach:
+            return tone.LUMINANCE
+        points = a[None] + np.linspace(0.06, 0.94, max(20, int(length / 4)))[:, None] * (b - a)[None]
+        normal = np.array([-(b - a)[1], (b - a)[0]]) / length
+        inside.append(tone.light_at(small, points + reach * normal))
+        outside.append(tone.light_at(small, points - reach * normal))
+    return tone.choose_mix(np.vstack(inside), np.vstack(outside))
+
+
+def find_sheet(gray, rgb=None):
     """Locate the reference sheet and sub-pixel points along its four edges.
 
     `gray` is the full-resolution photo as saved, uint8; the sheet is found on it.
-    `linear` is the same photo in linear light (tone.linear_luminance); the sub-pixel
-    edge points are measured on it. Without it, `gray` is taken as linear light.
+    `rgb` is the same photo in colour; the sub-pixel edge points are measured on a
+    linear-light mix of its channels (luminance, unless the sheet and the surface
+    under it differ mainly in colour). Without it, `gray` is taken as linear light.
     Tries a sheet brighter than its surroundings first, then a darker one.
     """
     h, w = gray.shape
@@ -163,10 +185,10 @@ def find_sheet(gray, linear=None):
             "No reference sheet was found. Show the whole sheet, with all four corners and a "
             "contrasting surface around it, or choose No reference."
         )
+    measured = gray if rgb is None else tone.linear_mix(rgb, _edge_mix(rgb, quad, small.shape))
     quad /= scale
     sums, diffs = quad.sum(1), np.diff(quad, axis=1).ravel()
     quad = np.array([quad[np.argmin(sums)], quad[np.argmin(diffs)], quad[np.argmax(sums)], quad[np.argmax(diffs)]])
-    measured = gray if linear is None else linear
     gray_f = cv2.GaussianBlur(measured.astype(np.float32), (0, 0), 1.0)
     sides = []
     for i in range(4):

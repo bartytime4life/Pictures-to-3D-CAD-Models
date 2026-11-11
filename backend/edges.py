@@ -17,6 +17,7 @@ import cv2
 import numpy as np
 from shapely.geometry import Point, Polygon
 
+from . import tone
 from .sheet import half_level_search, sample_bilinear
 from .tone import encoded_from_linear
 
@@ -116,6 +117,25 @@ def segment(gray, ppm, part_lighter=False):
             "The part reaches the edge of the reference sheet. Place it with a clear margin of sheet all round."
         )
     return mask, notes
+
+
+def measurement_weights(rectified, mask, ppm):
+    """Channel weights (tone.choose_mix) for measuring the part's boundary, from the
+    light 1 mm to either side of it along the outline and every hole. `rectified` is
+    the rectified photo in 8-bit sRGB and `mask` the classified part."""
+    contours, _ = cv2.findContours(mask, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
+    reach = max(4.0, ppm)
+    one_side, other_side = [], []
+    for contour in contours:
+        if len(contour) < 8:
+            continue
+        smooth, normals = ring_normals(contour.reshape(-1, 2).astype(np.float64) + 0.5)
+        step = max(1, len(smooth) // 2000)
+        one_side.append(tone.light_at(rectified, smooth[::step] + reach * normals[::step]))
+        other_side.append(tone.light_at(rectified, smooth[::step] - reach * normals[::step]))
+    if not one_side:
+        return tone.LUMINANCE
+    return tone.choose_mix(np.vstack(one_side), np.vstack(other_side))
 
 
 def ring_normals(ring, sigma=2.0):

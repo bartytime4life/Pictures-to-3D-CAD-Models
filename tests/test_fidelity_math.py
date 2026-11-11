@@ -407,6 +407,55 @@ def test_saved_values_bias_the_half_level_as_predicted_and_linear_light_removes_
     assert np.abs(on_linear).max() < 0.03 and abs(np.mean(on_linear)) < 2e-3
 
 
+def test_the_measurement_mix_is_judged_by_the_boundary_s_weakest_stretch():
+    """Property. Luminance is kept when every stretch of a boundary has adequate
+    contrast in it. Pure green and a 220 grey have equal luminance; the mix then takes
+    the channels that differ, with non-negative weights summing to 1, whichever side is
+    named first. A part of two colours keeps luminance when both are measurable in it,
+    where a mix chosen from its main colour alone would erase the other. Any such fixed
+    mix keeps a blurred edge's half-level on the edge."""
+
+    def rows(colour, count):
+        return np.tile(tone.linear_from_encoded(np.array(colour, float)), (count, 1))
+
+    grey = rows((220, 220, 220), 100)
+    assert tone.choose_mix(rows((48, 46, 44), 100), rows((236, 229, 217), 100)) == tone.LUMINANCE
+    assert tone.choose_mix(grey, grey) == tone.LUMINANCE
+
+    green = rows((0, 255, 0), 100)
+    assert tone.saved_contrast(green, grey, tone.LUMINANCE).max() < 1
+    weights = tone.choose_mix(green, grey)
+    assert weights == tone.choose_mix(grey, green) == (0.5, 0.0, 0.5)
+    assert tone.saved_contrast(green, grey, weights).min() > 200
+
+    # A pale pink part with a green patch on that grey: both are 27 to 30 saved levels
+    # from the sheet in luminance, and the pink's own difference mix is green alone.
+    pink, patch = rows((220, 180, 220), 80), rows((40, 220, 40), 20)
+    assert tone.difference_mix(pink[0], grey[0]) == (0.0, 1.0, 0.0)
+    assert tone.saved_contrast(patch, grey[:20], (0.0, 1.0, 0.0)).max() < 1
+    assert tone.choose_mix(np.vstack([pink, patch]), grey) == tone.LUMINANCE
+
+    # Where luminance loses one stretch, the mix must still serve every stretch.
+    mixed = tone.choose_mix(np.vstack([rows((40, 40, 40), 90), rows((0, 255, 0), 10)]), grey)
+    assert mixed != tone.LUMINANCE and abs(sum(mixed) - 1) < 1e-12 and min(mixed) >= 0
+    assert tone.saved_contrast(rows((40, 40, 40), 1), grey[:1], mixed)[0] > 24
+    assert tone.saved_contrast(rows((0, 255, 0), 1), grey[:1], mixed)[0] > 24
+
+    columns = np.arange(96, dtype=np.float64)
+    points = np.column_stack([np.full(6, 40.9), np.linspace(10.5, 29.5, 6)])
+    errors = []
+    for edge in np.linspace(40.0, 41.0, 9)[:-1]:
+        cover = np.tile(np.clip(edge - columns, 0, 1), (40, 1))[..., None]
+        light = cv2.GaussianBlur((grey[0] + (green[0] - grey[0]) * cover).astype(np.float32), (0, 0), 1.7)
+        rgb = np.clip(synthetic.linear_to_srgb(light), 0, 255).round().astype(np.uint8)
+        moved, keep = sheet.half_level_search(
+            tone.linear_mix(rgb, weights), points, np.tile([1.0, 0.0], (6, 1)), half=8.0, step=0.0625
+        )
+        assert keep.all()
+        errors.append(moved[0, 0] - edge)
+    assert np.abs(errors).max() < 0.03 and abs(np.mean(errors)) < 5e-3
+
+
 def test_a_sloped_plateau_shifts_the_half_level_by_the_predicted_amount():
     """Numerical analysis of a known limit. A soft shadow makes the paper brighter away
     from an edge: light a on the part, b0 + b (t - e) beyond it. Blurred by a Gaussian,
