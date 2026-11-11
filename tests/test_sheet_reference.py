@@ -96,6 +96,27 @@ def test_sheet_trace_is_metric_fitted_and_within_limits(client, photos, name):
     assert any("Scaled from the A4 sheet" in w for w in result["warnings"])
 
 
+@pytest.mark.parametrize(("name", "corner"), [("overhead", 20.0), ("tilted", 25.0)])
+def test_large_corner_radii_trace_as_arcs(client, monkeypatch, name, corner):
+    """The test plate with R20 or R25 corners in place of R8. The breakpoint chords of
+    so large an arc are over 3 mm long and pass the line test. Without the chord test
+    in fitting.fit_ring the outline comes back as a polyline of 67 (overhead) or 77
+    (tilted) straight segments instead of four lines and four arcs."""
+    monkeypatch.setitem(S.PART, "corner", corner)
+    data, _ = S.render(**CASES[name])
+    response = trace(client, data, reference="a4")
+    assert response.status_code == 200, response.text
+    profile = response.json()["profile"]
+    outer = profile["primitives"]["outer"]
+    assert collections.Counter(s["kind"] for s in outer) == {"line": 4, "arc": 4}
+    mm = profile["reference"]["mm_per_px"]
+    radii = [
+        fitting.arc_geometry(s["start"], s["mid"], s["end"])[1] * mm for s in outer if s["kind"] == "arc"
+    ]
+    assert max(abs(r - corner) for r in radii) < LIMITS["outer"]
+    assert within_limits(S.feature_errors(profile)) == {}
+
+
 def test_full_frame_photo_needs_a_crop_without_a_sheet_reference(client, photos):
     data, _ = photos("tilted")
     response = trace(client, data)
@@ -595,6 +616,83 @@ def test_rounded_rectangle_fits_four_lines_and_tangent_arcs():
     from shapely.geometry import Polygon
 
     assert abs(Polygon(polygon).area - shape.area) / shape.area < 1e-3
+
+
+def blurred_outline(part, sigma_px, ppm):
+    """The outer ring traced from a rendered, blurred part (a shapely polygon in mm),
+    with the measured blur and the tolerance backend.reference would fit it to. All
+    three are in pixels."""
+    from shapely import affinity
+
+    x0, y0, x1, y1 = part.bounds
+    part = affinity.translate(part, 10 - x0, 10 - y0)
+    shape = (int((y1 - y0 + 20) * ppm), int((x1 - x0 + 20) * ppm))
+    image = (236 - 188 * S.coverage(part, ppm, 0.0, 0.0, shape)).astype(np.float32)
+    image = cv2.GaussianBlur(image, (0, 0), sigma_px)
+    rings, sigma, _ = edges.subpixel_rings((image < 142).astype(np.uint8), image, ppm)
+    points = next(r for r in rings if r["outer"])["points"]
+    return points, sigma, max(0.03, 0.15 * sigma / ppm) * ppm
+
+
+@pytest.mark.parametrize(
+    ("radius_mm", "sigma_px", "size_mm", "min_line_mm", "ppm"),
+    [
+        (20.0, 1.6, (120.0, 70.0), 3.0, 5.0),
+        (30.0, 1.6, (120.0, 70.0), 3.0, 5.0),
+        (25.0, 1.0, (120.0, 70.0), 3.0, 5.0),
+        (6.0, 2.0, (36.0, 24.0), 1.0, 10.0),
+    ],
+)
+def test_corners_whose_chords_pass_for_lines_are_fitted_as_arcs(
+    radius_mm, sigma_px, size_mm, min_line_mm, ppm
+):
+    """A rendered plate with rounded corners, blurred, traced and fitted as
+    backend.reference does, with and without design-intent snapping. In every case the
+    longest chord a breakpoint leaves on a corner, sqrt(12 R tol), is over min_line:
+    R20 and R30 at a 0.34 mm blur, R25 at 0.23 mm, and R6 on a 36 mm plate, whose
+    min_line is 1 mm. Every radius reads within 0.01 mm. Without the chord test in
+    fit_ring none of these rings comes out as four lines and four arcs."""
+    from shapely.geometry import box
+
+    part = box(0, 0, *size_mm).buffer(-radius_mm).buffer(radius_mm, 2048)
+    points, sigma, tolerance = blurred_outline(part, sigma_px, ppm)
+    assert math.sqrt(12 * radius_mm * tolerance / ppm) > min_line_mm
+    for snap in (False, True):
+        prims = fitting.fit_ring(points, tolerance, min_line_mm * ppm)
+        assert [p.kind for p in prims] == ["line", "arc"] * 4
+        if snap:
+            fitting.snap_axes([prims])
+            fitting.refit_lines(points, prims)
+            fitting.fit_fillets(points, prims, tolerance, sigma)
+        fitting.correct_blur(prims, sigma)
+        radii = np.array([p.data["r"] for p in prims if p.kind == "arc"]) / ppm
+        assert np.abs(radii - radius_mm).max() < 0.01
+        # Opposite edges are the plate's height and width apart: no edge took in a chord.
+        lines = [p for p in prims if p.kind == "line"]
+        apart = []
+        for near, far in ((lines[0], lines[2]), (lines[1], lines[3])):
+            normal = np.array([-near.data["d"][1], near.data["d"][0]])
+            apart.append(abs((np.asarray(far.data["c"]) - np.asarray(near.data["c"])) @ normal) / ppm)
+        assert np.abs(np.sort(apart) - sorted(size_mm)).max() < 0.01
+
+
+def test_blurred_facets_are_not_taken_for_an_arc():
+    """A plate with one corner turned by five 3.2 mm facets in 15 degree steps, rendered
+    at 5 px/mm with a 0.34 mm blur and turned 8 degrees. The facets bow 0.10 mm from a
+    circle, twice the tolerance, so all five stay lines beside the plate's four edges.
+    The blur rounds the joins between facets, and those rounded joins are too short to
+    define a circle for the facets next to them."""
+    from shapely import affinity
+    from shapely.geometry import Polygon
+
+    step = math.radians(15)
+    corner = np.cumsum([(3.2 * math.cos(k * step), -3.2 * math.sin(k * step)) for k in range(1, 6)], axis=0)
+    plate = Polygon([(-60, 0), (0, 0), *map(tuple, corner), (corner[-1][0], -60), (-60, -60)])
+    points, _, tolerance = blurred_outline(affinity.rotate(plate, 8, origin="centroid"), 1.6, 5.0)
+    assert 3.2 * step / 8 > 2 * tolerance / 5.0
+    min_line = min(max(0.025 * float(np.ptp(points, axis=0).max()), 5.0), 15.0)  # as backend.reference
+    prims = fitting.fit_ring(points, tolerance, min_line)
+    assert [p.kind for p in prims].count("line") == 9
 
 
 def test_camera_pose_recovers_a_known_camera():
