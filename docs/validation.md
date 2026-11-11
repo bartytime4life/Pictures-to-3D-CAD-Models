@@ -1,6 +1,19 @@
 # Validation results
 
-Latest workbench validation: November 10, 2026, on the local Linux workstation. The FreeCAD import check, the linear-light edge measurement and the phone-photo decoding of November 11 ran in a managed cloud session. The [reference-sensitivity record](validation/reference-sensitivity.md) covers the new endpoint-placement explorer. Earlier managed-environment and release results are recorded separately below. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
+Latest workbench validation: November 10, 2026, on the local Linux workstation. The FreeCAD import check, the linear-light edge measurement, the phone-photo decoding and the photo benchmark runner of November 11 ran in a managed cloud session. The [reference-sensitivity record](validation/reference-sensitivity.md) covers the new endpoint-placement explorer. Earlier managed-environment and release results are recorded separately below. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
+
+## Photo benchmark runner — November 11, 2026
+
+Branch `claude/photo-benchmark`, on top of `claude/phone-photo-decoding` (`bd5dc55`). See [the photo benchmark](photo-benchmark.md) for its use.
+
+- **What it is.** `make photo-benchmark PHOTOS=folder` (`scripts/photo_benchmark.py`) traces a folder of reference-sheet photos with the workbench's own trace function and compares each trace with caliper measurements listed in the folder's `benchmark.json`: outline, hole diameters, non-round openings, radii and distances between hole centres. It reports each dimension's mean error, its spread between readings and its worst reading, and splits each photo's errors into a scale error and an edge offset.
+- **No real photo was measured.** No photo taken by a camera and no calipered part was available in this session. The runner is the means to record such a result; none is recorded.
+- **Checked against the test suite's own measure.** On three rendered photos of the 4 mm test plate, the runner's worst errors per feature equal those of `tests/synthetic.py`'s `feature_errors` to four decimals (for the 22° photo: Ø6 0.0166, Ø22 0.0251, slot 0.0236, outer 0.0174 mm).
+- **On rendered photos** (22°, 9° and 0° tilt, 4 mm thick, design dimensions as the caliper values): 48 dimensions, median absolute error 0.019 mm, 95th percentile 0.036 mm, worst 0.088 mm. The worst is the outline length in the overhead photo, whose trace notes that the walls are too narrow to measure. Distances between hole centres stayed within 0.016 mm in every photo.
+- **Two observations from that run.** In the two tilted photos the split gives an edge offset of +0.009 mm with a scale error under 0.001 %, which agrees with the shadow being the main remaining error there. With design-intent snapping on, the R8 corners read 0.029 mm large on average, against 0.008 mm with it off; the cause has not been investigated.
+- **Formats.** A folder mixing a JPEG, a PNG and a HEIC of the rendered photos traced all three.
+- **Checks run.** `pytest`: **365 passed** and 2 skipped (the OpenSCAD checks; OpenSCAD is not installed in this session). 41 tests are new, in `tests/test_photo_benchmark.py`. Sixteen faults planted one at a time in the runner (a wrong sign, a dropped tolerance, a reused feature, a miscounted miss and others) each failed at least one test. Ruff passed. The browser scenarios were not run locally; no backend or frontend code changed.
+- **Not verified.** Real photos, real calipers and real parts. The matching of caliper values to traced features by nearest size has been exercised on one plate design only.
 
 ## Phone photos: HEIC, AVIF and up to 70 megapixels — November 11, 2026
 

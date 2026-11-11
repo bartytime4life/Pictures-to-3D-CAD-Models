@@ -81,6 +81,7 @@ Run `make` for help. Component targets delegate to the existing scripts and libr
 | `make test` | Workbench Python/build/browser checks, then library Python/Node/browser checks |
 | `make lint` | Workbench Ruff and frontend/browser-source formatting checks |
 | `make smoke` | Check an already running workbench through its real trace/build/export API |
+| `make photo-benchmark PHOTOS=folder` | Trace a folder of your own reference-sheet photos and compare them with your caliper measurements ([guide](photo-benchmark.md)) |
 | `make setup-app` / `make setup-library` | Prepare one component |
 | `make build-app` / `make build-library` | Build one component |
 | `make test-app` / `make test-library` | Validate one component |

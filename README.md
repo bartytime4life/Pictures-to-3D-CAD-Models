@@ -101,6 +101,8 @@ The bundled searchable [printer catalog](docs/printer-catalog.md) covers 429 mod
 | Slicer handoff ZIP | Preparing a Bambu Studio or PrusaSlicer import | Geometry, split pieces, recipe, printer/material planning notes, instructions and payload hashes |
 | Project JSON | Restoring the workbench settings | Version 2 outline, measurements, optional endpoint reference and height check, design and print plan; version 3 adds fitted geometry and how the sheet scaled and corrected it; version 1 imports remain supported |
 
+To measure the reference-sheet tracer on your own photos, run `make photo-benchmark PHOTOS=folder` on a folder of photos and the dimensions you measured with calipers. It reports each dimension's error and its spread between repeat shots; see [the photo benchmark](docs/photo-benchmark.md). No result from real photos is recorded yet.
+
 See [export formats and dimensional checks](docs/exports.md) before transferring a part to fabrication software.
 
 OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.scad` in OpenSCAD to edit its thickness, apply an additional XY scale, or select a split piece. The source represents traced polygon extrusion; it does not recover constraints, analytic circles, or the part's original feature history. For a new plate with deliberately dimensioned holes, use the companion [OpenSCAD workspace](reference-library/index.html#cad) and its [native build guide](reference-library/OPENSCAD.md).
@@ -108,7 +110,7 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 ## Honest limits
 
 - A single image supplies a 2D outline. Thickness is entered by the user; recesses, sloped walls, threads, and hidden features are not reconstructed.
-- One outside width or two-point reference sets uniform scale. It does not correct perspective, lens distortion, or an out-of-plane part. A reference sheet corrects perspective and one radial lens coefficient in the sheet's plane, and the parallax of a vertical-walled part of the entered thickness. Its edges are measured in linear light, decoding the photo as sRGB; a camera's own tone mapping and a soft shadow beside an edge are not corrected. Its accuracy figures come from rendered photographs with exact ground truth, not from a measured-photo benchmark.
+- One outside width or two-point reference sets uniform scale. It does not correct perspective, lens distortion, or an out-of-plane part. A reference sheet corrects perspective and one radial lens coefficient in the sheet's plane, and the parallax of a vertical-walled part of the entered thickness. Its edges are measured in linear light, decoding the photo as sRGB; a camera's own tone mapping and a soft shadow beside an edge are not corrected. Its accuracy figures come from rendered photographs with exact ground truth. [The photo benchmark](docs/photo-benchmark.md) measures real photos against calipers, and no such result is recorded yet.
 - A reference sheet's stated size sets the scale. The workbench checks the sheet's proportions against the photo, but not its absolute size: measure your sheet.
 - Tracing approximates pixel boundaries. Smooth-looking geometry is not evidence of manufacturing accuracy.
 - Relative detail can simplify the CAD outline; it does not recover missing image detail or establish a minimum printable wall thickness.
@@ -120,6 +122,7 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 - [Capture and calibration guide](docs/capture-guide.md)
 - [Reference-sheet tracing: method, mathematics and evidence](docs/reference-sheet.md)
+- [Photo benchmark: your photos against your calipers](docs/photo-benchmark.md)
 - [Export formats](docs/exports.md)
 - [Print planning, materials, and split parts](docs/print-planning.md)
 - [Printer catalog, provenance, and updates](docs/printer-catalog.md)
