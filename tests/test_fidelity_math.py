@@ -731,6 +731,94 @@ def test_one_chord_between_two_lines_is_not_an_arc():
     assert [p.kind for p in prims] == ["line"] * 16
 
 
+def turned(points, turn_deg):
+    """Points turned about the origin, as outline_points turns its shape."""
+    turn = math.radians(turn_deg)
+    return np.asarray(points) @ np.array([[math.cos(turn), math.sin(turn)], [-math.sin(turn), math.cos(turn)]])
+
+
+def test_a_stub_cut_off_by_the_rings_first_point_is_part_of_its_edge():
+    """Property: exact recovery wherever the ring starts. A ring's first point is always
+    a breakpoint. On a straight edge within min_line of a corner it cuts off a stub that
+    is too short to be a line, and the stub was fitted as an arc with a radius in the
+    millions. It is part of the edge it was cut from, whether the ring starts before the
+    corner or past it, so a rectangle is four lines that meet at its corners."""
+    corners = [(0, 0), (100, 0), (100, 60), (0, 60)]
+    ring = outline_points(Polygon(corners), 10)
+    for start in (-14, -5, -2, 0, 2, 5, 14):  # points 0.2 apart: up to 2.8 before or past a corner
+        prims = fitting.fit_ring(np.roll(ring, -start, axis=0), 0.03, 3.0)
+        assert [p.kind for p in prims] == ["line"] * 4
+        ends = [segment[1] for segment in fitting.segments(prims)]
+        assert max(min(math.dist(end, corner) for corner in turned(corners, 10)) for end in ends) < 1e-9
+        # Every point is on one of the four lines, and each corner on two.
+        assert sum((p.span[1] - p.span[0]) % len(ring) + 1 for p in prims) == len(ring) + 4
+
+
+def blurred_rectangle_points(width, height, sigma, step, start=0.0, turn_deg=0.0):
+    """Points `step` apart along the half-level outline of a sharp-cornered plate under a
+    Gaussian blur, beginning `start` along it. Near a corner the blurred plate's level is
+    Phi(x / sigma) Phi(y / sigma), where x and y are the depths inside its two edges, and
+    the outline is where that product is 1/2. It follows each edge and rounds the corner."""
+    normal = statistics.NormalDist()
+    depth = np.linspace(6.0, normal.inv_cdf(math.sqrt(0.5)), 400)  # in sigma, down to the diagonal
+    other = np.array([normal.inv_cdf(0.5 / normal.cdf(v)) for v in depth])
+    half = sigma * np.column_stack([depth, other])
+    corner = np.vstack([half, half[-2::-1, ::-1]])  # in along one edge, out along the next
+    w, h = width / 2, height / 2
+    outline = []
+    for sx, sy, swap in ((1, 1, True), (-1, 1, False), (-1, -1, True), (1, -1, False)):
+        outline.extend((sx * (w - x), sy * (h - y)) for x, y in (corner[:, ::-1] if swap else corner))
+    xy = np.array(outline + outline[:1])
+    along = np.r_[0, np.cumsum(np.linalg.norm(np.diff(xy, axis=0), axis=1))]
+    at = (start + np.arange(0, along[-1] - step / 2, step)) % along[-1]
+    return turned(np.column_stack([np.interp(at, along, xy[:, 0]), np.interp(at, along, xy[:, 1])]), turn_deg)
+
+
+def test_a_blurred_sharp_corner_is_fitted_alike_wherever_the_ring_starts():
+    """Numerical analysis, then statistics. Under a Gaussian blur of sigma the outline of
+    a sharp-cornered plate follows its edges and rounds each corner. fit_ring describes
+    the rounding as an arc, and its radius is 1.55 to 2 sigma wherever the ring starts.
+    The start matters because a ring's first point is always a breakpoint, and on a
+    straight edge just short of a corner it cuts off a stub that is too short to be a
+    line. Fitted with the corner as one arc, the stub gave radii of up to 20 sigma here,
+    by nothing but where the ring began. The edges do not move: opposite ones are the
+    plate's width and height apart within 0.001. With edge noise of a fifth of the
+    tolerance, about what a rendered photo's outline carries, the radii stay within 1.5
+    to 2.5 sigma, where every third outline had stayed a polyline."""
+    sigma, size = 0.3, (100.0, 60.0)
+    tol = max(0.03, 0.15 * sigma)  # as backend.reference
+    rng = np.random.default_rng(3)
+    for noise, low, high in ((0.0, 1.55, 2.0), (tol / 5, 1.5, 2.5)):
+        for start in np.arange(0, 6.01, 0.25):
+            ring = blurred_rectangle_points(*size, sigma, 0.2, start, 10)
+            prims = fitting.fit_ring(ring + rng.normal(0, noise, ring.shape), tol, 3.0)
+            assert [p.kind for p in prims] == ["line", "arc"] * 4
+            # Each line and arc begins on the point where the one before it ends.
+            assert all(0 <= index < len(ring) for p in prims for index in p.span)
+            assert sum((p.span[1] - p.span[0]) % len(ring) for p in prims) == len(ring)
+            radii = np.array([p.data["r"] for p in prims[1::2]]) / sigma
+            assert low < radii.min() and radii.max() < high
+            lines = prims[::2]
+            for near, far in ((lines[0], lines[2]), (lines[1], lines[3])):
+                normal = np.array([-near.data["d"][1], near.data["d"][0]])
+                apart = abs((np.asarray(far.data["c"]) - np.asarray(near.data["c"])) @ normal)
+                assert min(abs(apart - side) for side in size) < (0.001 if noise == 0 else 0.005)
+
+
+def test_two_points_between_two_lines_are_a_corner():
+    """Property: exact recovery. Where a corner is cut by one step from a point to the
+    next, those two points are all that lies between its edges. Two points define no
+    circle, and they were fitted with one of radius 60 that swept out from the middle of
+    both edges. The edges meet at the corner instead."""
+    cut = 0.1  # shorter than the spacing of the points, so none falls on it
+    corners = [(0, 0), (100, 0), (100, 60), (0, 60)]
+    ring = outline_points(Polygon([(0, 0), (100, 0), (100, 60 - cut), (100 - cut, 60), (0, 60)]), 10)
+    prims = fitting.fit_ring(ring, 0.03, 3.0)
+    assert [p.kind for p in prims] == ["line"] * 4
+    ends = [segment[1] for segment in fitting.segments(prims)]
+    assert max(min(math.dist(end, corner) for corner in turned(corners, 10)) for end in ends) < 1e-9
+
+
 def segment_area(ring):
     """Green's theorem for a boundary of lines and arcs: shoelace over the segment
     endpoints plus, for each arc of signed sweep phi, the circular segment
