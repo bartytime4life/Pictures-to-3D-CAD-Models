@@ -154,7 +154,7 @@ Each fillet's radius is then found by Gauss–Newton. The fit uses the arc's poi
 - a 5 % uncertainty in the measured blur;
 - a 0.03 px systematic error in each edge's position.
 
-A wide corner magnifies the last of these most. On a rendered octagon the tracer places axis-aligned and diagonal edges about 0.03 px apart, and its 135° fillets then read 0.07 mm small.
+A wide corner magnifies the last of these most. On exactly rendered edges the tracer is within 0.004 px at any angle and sub-pixel phase; the 0.03 px is an allowance for what rendering leaves out (demosaicing, JPEG, a lens blur that is not Gaussian) and has not been measured on real photos. A rendered octagon's 135° fillets read 0.022 mm small, within their reported ± 0.078 mm.
 
 **Sharp corners.** Blur rounds a sharp corner too, and the same model at r = 0 describes it. A fitted fillet is kept only if its outline differs somewhere from the sharp corner's by twice the edge uncertainty. Otherwise the corner is traced as sharp. The trace then gives the radius at which a fillet would first show (found by bisection), as a bound on any fillet there. Before, a sharp 120 × 70 mm plate at a 0.32 mm blur was fitted with fillets of R0.4 to R0.6 mm. Now it is sharp, with any fillet bounded under R0.23 mm (`test_sharp_corners_are_traced_sharp`).
 
@@ -258,17 +258,17 @@ The fitted CAD face area equals both the Green's-theorem area of its segments an
 
 ## Results on rendered photographs
 
-The plate is 120 × 70 mm with R8 corners, 4 × Ø6 holes, a Ø22 bore and a 24 × 8 slot. Figures are maximum absolute errors in mm, measured on the fitted geometry after a rigid fit of the six hole centres; no scale is fitted. Runs recorded on 2026-11-11, with light mixed in linear light, saved through the sRGB curve, and a shadow that removes 25 % of the light:
+The plate is 120 × 70 mm with R8 corners, 4 × Ø6 holes, a Ø22 bore and a 24 × 8 slot. Figures are maximum absolute errors in mm, measured on the fitted geometry after a rigid fit of the six hole centres; no scale is fitted. Runs recorded on 2026-11-11 with exact pixel coverage (`synthetic.coverage`), light mixed in linear light, saved through the sRGB curve, and a shadow that removes 25 % of the light. Rendered with the earlier sub-row coverage, every figure was within 0.002 mm of these:
 
 | Photo | Ø6 | Ø22 | Slot | Hole position | Outer |
 | --- | --- | --- | --- | --- | --- |
-| 2400 × 1800, overhead, ideal light | < 0.0001 | 0.0016 | 0.0034 | 0.0020 | 0.0028 |
-| 2400 × 1800, 22° tilt, lens, shadow | 0.0121 | 0.0257 | 0.0268 | 0.0098 | 0.0253 |
-| 2400 × 1800, 22° tilt, 4 mm thick | 0.0166 | 0.0251 | 0.0236 | 0.0060 | 0.0174 |
-| 2400 × 1800, 9° tilt, 4 mm thick | 0.0073 | 0.0184 | 0.0212 | 0.0058 | 0.0234 |
-| 2400 × 1800, 5° tilt, 4 mm thick (walls too narrow, bound noted) | 0.0078 | 0.0048 | 0.0192 | 0.0116 | 0.0231 |
-| 4000 × 3000, overhead, ideal light | 0.0009 | 0.0006 | 0.0032 | 0.0017 | 0.0021 |
-| 4000 × 3000, 22° tilt, lens, shadow | 0.0056 | 0.0104 | 0.0141 | 0.0035 | 0.0107 |
+| 2400 × 1800, overhead, ideal light | 0.0001 | 0.0016 | 0.0033 | 0.0017 | 0.0029 |
+| 2400 × 1800, 22° tilt, lens, shadow | 0.0123 | 0.0253 | 0.0254 | 0.0089 | 0.0255 |
+| 2400 × 1800, 22° tilt, 4 mm thick | 0.0171 | 0.0249 | 0.0228 | 0.0063 | 0.0173 |
+| 2400 × 1800, 9° tilt, 4 mm thick | 0.0067 | 0.0181 | 0.0203 | 0.0059 | 0.0239 |
+| 2400 × 1800, 5° tilt, 4 mm thick (walls too narrow, bound noted) | 0.0078 | 0.0052 | 0.0250 | 0.0129 | 0.0233 |
+| 4000 × 3000, overhead, ideal light | 0.0007 | 0.0002 | 0.0015 | 0.0022 | 0.0021 |
+| 4000 × 3000, 22° tilt, lens, shadow | 0.0061 | 0.0103 | 0.0132 | 0.0043 | 0.0108 |
 
 The 2400 × 1800 rows other than 5° are the cases in `tests/test_sheet_reference.py`. The 5° row is `render(tilt=(5.0, -2.0, 4.0), thickness=4.0)`, and the 4000 × 3000 rows add `size=(4000, 3000)`, which shows the same field of view in more pixels.
 
