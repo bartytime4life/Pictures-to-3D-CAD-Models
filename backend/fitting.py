@@ -111,6 +111,14 @@ def _arc_chord(points, edges, is_line, k, tol):
     return bool(np.sqrt(np.mean((np.hypot(own[:, 0] - cx, own[:, 1] - cy) - r) ** 2)) < tol / 2)
 
 
+def _line(points, a, b):
+    """The line through the ring's points from a to b, as a primitive."""
+    seg = span_points(points, a, b)
+    c, d, rms = line_tls(seg)
+    res = np.abs((seg - c) @ np.array([-d[1], d[0]]))
+    return Primitive("line", {"c": c, "d": d}, rms, float(res.max()), (a, b))
+
+
 def fit_ring(points, tol, min_line, circle_rel=0.01):
     """A circle, a cycle of lines and arcs, or None (keep the polyline)."""
     cx, cy, r, rms, mx = fit_circle(points)
@@ -170,11 +178,7 @@ def fit_ring(points, tol, min_line, circle_rel=0.01):
     k = 0
     while k < len(edges):
         if is_line[k]:
-            a, b = edges[k]
-            seg = span_points(points, a, b)
-            c, d, lrms = line_tls(seg)
-            res = np.abs((seg - c) @ np.array([-d[1], d[0]]))
-            prims.append(Primitive("line", {"c": c, "d": d}, lrms, float(res.max()), (a, b)))
+            prims.append(_line(points, *edges[k]))
             k += 1
             continue
         j = k
@@ -200,12 +204,9 @@ def fit_ring(points, tol, min_line, circle_rel=0.01):
             d1, d2 = l1.data["d"], l2.data["d"]
             if abs(d1[0] * d2[1] - d1[1] * d2[0]) >= math.sin(math.radians(5)) or d1 @ d2 <= 0:
                 continue
-            seg = span_points(points, l1.span[0], l2.span[1])
-            c, d, lrms = line_tls(seg)
-            if lrms >= tol:
+            merged = _line(points, l1.span[0], l2.span[1])
+            if merged.rms >= tol:
                 return None
-            res = np.abs((seg - c) @ np.array([-d[1], d[0]]))
-            merged = Primitive("line", {"c": c, "d": d}, lrms, float(res.max()), (l1.span[0], l2.span[1]))
             keep = [q for i, q in enumerate(prims) if i not in {(k - 1) % m, k, (k + 1) % m}]
             insert_at = min((k - 1) % m, k)
             prims = keep[:insert_at] + [merged] + keep[insert_at:]
@@ -213,20 +214,49 @@ def fit_ring(points, tol, min_line, circle_rel=0.01):
             break
     # Points near a tangent point belong to the neighbouring line as much as to the arc;
     # left in, they pull the arc centre toward the line. Trim them and refit.
-    m = len(prims)
+    n, m = len(points), len(prims)
+    corners = set()
     for k, p in enumerate(prims):
         if p.kind != "arc":
             continue
         seg = span_points(points, *p.span)
-        keep = np.ones(len(seg), bool)
-        for q in (prims[k - 1], prims[(k + 1) % m]):
-            if q.kind == "line":
-                normal = np.array([-q.data["d"][1], q.data["d"][0]])
-                keep &= np.abs((seg - q.data["c"]) @ normal) > tol
+        off = [
+            np.abs((seg - q.data["c"]) @ np.array([-q.data["d"][1], q.data["d"][0]]))
+            if q.kind == "line"
+            else np.full(len(seg), np.inf)
+            for q in (prims[k - 1], prims[(k + 1) % m])
+        ]
+        keep = (off[0] > tol) & (off[1] > tol)
         if keep.sum() >= 8:
             acx, acy, ar, arms, amx = fit_circle(seg[keep])
             p.data.update(c=(acx, acy), r=ar)
             p.rms, p.max_abs = arms, amx
+            continue
+        # Too few of its points are clear of the lines for that. The arc is a small one,
+        # often a sharp corner that only the blur rounds, and it keeps the points near its
+        # lines, but not a straight run of them. A breakpoint can fall anywhere on a
+        # straight edge (the ring's first point is one). Where it falls just short of a
+        # corner it cuts off a stub that is too short to be a line, and the stub comes
+        # here with the corner: one arc through both fits neither. So each line runs on
+        # to the last point within half the tolerance of it, and the arc is fitted to the
+        # points between. Fewer than three define no circle, and the lines then meet at
+        # a corner.
+        near = [np.flatnonzero(distance < tol / 2) for distance in off]
+        lo = int(near[0][-1]) if len(near[0]) else 0
+        hi = int(next((i for i in near[1] if i >= lo), len(seg) - 1))
+        a = p.span[0]
+        if lo > 0:
+            prims[k - 1] = _line(points, prims[k - 1].span[0], (a + lo) % n)
+        if hi < len(seg) - 1:
+            prims[(k + 1) % m] = _line(points, (a + hi) % n, prims[(k + 1) % m].span[1])
+        if hi - lo < 2:
+            corners.add(k)
+        elif hi - lo < len(seg) - 1:
+            seg = seg[lo : hi + 1]
+            acx, acy, ar, arms, amx = fit_circle(seg)
+            p.data.update(c=(acx, acy), r=ar, mid=tuple(seg[len(seg) // 2]))
+            p.rms, p.max_abs, p.span = arms, amx, ((a + lo) % n, (a + hi) % n)
+    prims = [p for k, p in enumerate(prims) if k not in corners]
     # An arc whose residual is far outside tolerance is not an arc: keep the polyline.
     if any(p.kind == "arc" and p.max_abs > 6 * max(tol, circle_rel * p.data["r"]) for p in prims):
         return None

@@ -695,6 +695,49 @@ def test_blurred_facets_are_not_taken_for_an_arc():
     assert [p.kind for p in prims].count("line") == 9
 
 
+@pytest.mark.parametrize(("flat_mm", "turn_deg"), [(6.0, 0), (4.0, 0), (10.0, 0), (6.0, 2), (4.0, 5), (10.0, 45)])
+def test_a_stub_cut_off_a_straight_edge_is_fitted_as_part_of_it(flat_mm, turn_deg):
+    """A plate with four sharp corners whose top edge runs into an R30 arc of 60 degrees
+    and then a short flat, rendered at 5 px/mm with a 0.23 mm blur and fitted as
+    backend.reference does, with and without design-intent snapping. In each case a
+    breakpoint falls on a straight edge 1.8 to 2.4 mm from a sharp corner, within
+    min_line, and the stub it cuts off is too short to be a line. Fitted as one arc with
+    the corner's blur-rounded join, the stub left the whole outline a polyline. As part
+    of its edge it leaves five lines and five arcs. The R30 arc reads within 0.03 mm.
+    Each right-angle corner is rounded by the blur alone, to under 0.6 mm, where the
+    stub and the corner together had been an arc of 1.3 to 3.2 mm. The outline encloses
+    the plate's area within 0.03 %."""
+    from shapely import affinity
+    from shapely.geometry import Polygon
+
+    ppm, radius = 5.0, 30.0
+    angles = np.linspace(math.pi / 2, math.pi / 6, 600)
+    arc = [(70 + radius * math.cos(t), 80 - radius + radius * math.sin(t)) for t in angles]
+    # The flat runs on from the end of the arc, tangent to it, to the right-hand edge.
+    corner = (arc[-1][0] + flat_mm * math.sin(angles[-1]), arc[-1][1] - flat_mm * math.cos(angles[-1]))
+    plate = Polygon([(0, 0), (corner[0], 0), corner, *arc[::-1], (0, 80)])
+    points, sigma, tolerance = blurred_outline(affinity.rotate(plate, turn_deg, origin="centroid"), 1.0, ppm)
+    min_line = min(max(0.025 * float(np.ptp(points, axis=0).max()), 5.0), 15.0)  # as backend.reference
+    for snap in (False, True):
+        prims = fitting.fit_ring(points, tolerance, min_line)
+        assert [p.kind for p in prims] == ["line", "arc"] * 5
+        if snap:
+            fitting.snap_axes([prims])
+            fitting.refit_lines(points, prims)
+            fitting.fit_fillets(points, prims, tolerance, sigma)
+        fitting.correct_blur(prims, sigma)
+        lines, arcs = prims[::2], prims[1::2]
+        assert abs(max(p.data["r"] for p in arcs) / ppm - radius) < 0.03
+        square = [
+            between.data["r"] / ppm
+            for before, between, after in zip(lines, arcs, lines[1:] + lines[:1])
+            if abs(before.data["d"] @ after.data["d"]) < 0.1
+        ]
+        assert len(square) == 3 and max(square) < 0.6
+        outline = Polygon(fitting.sample_segments(fitting.segments(prims), 0.01))
+        assert outline.is_valid and abs(outline.area / ppm**2 / plate.area - 1) < 3e-4
+
+
 def test_camera_pose_recovers_a_known_camera():
     k, rotation, t = S.camera((18.0, -7.0, 3.0))
     matrix = k @ np.column_stack([rotation[:, 0], rotation[:, 1], t])
