@@ -85,6 +85,10 @@ def wire_of(ring):
     return cq.Wire.assembleEdges(edges)
 
 
+# Fitted rings are sampled within this distance (mm) of each arc for the solid check.
+SAMPLE_SAGITTA_MM = 0.001
+
+
 def extrude_fitted(rings, thickness, polygon):
     """Extrude exact lines, arcs and circles; checked against the reviewed polygon."""
     try:
@@ -102,7 +106,11 @@ def extrude_fitted(rings, thickness, polygon):
         or not math.isfinite(volume)
         or not math.isclose(volume, face.Area() * thickness, rel_tol=1e-6)
         # The exact solid must be the outline the user reviewed (sampled within microns).
-        or not math.isclose(face.Area(), polygon.area, rel_tol=1e-4)
+        # An inscribed sample loses under one sagitta per unit of boundary length, so
+        # allow that much on top of the relative tolerance (small circles need it).
+        or not math.isclose(
+            face.Area(), polygon.area, rel_tol=1e-4, abs_tol=SAMPLE_SAGITTA_MM * polygon.length
+        )
     ):
         raise PrintGeometryError(
             "The fitted outline did not pass its solid checks. Re-trace with design-intent snapping off."
@@ -169,7 +177,7 @@ def export_solid(shape, directory, basename):
 
 def _sampled(primitives, convert, scale):
     """Outer and hole vertex lists of the fitted rings, within 1 micron of each arc."""
-    sampled = [convert(ring_polygon(ring, 0.001 / scale)) for ring in [primitives.outer, *primitives.holes]]
+    sampled = [convert(ring_polygon(ring, SAMPLE_SAGITTA_MM / scale)) for ring in [primitives.outer, *primitives.holes]]
     return sampled[0], sampled[1:]
 
 
@@ -290,7 +298,7 @@ def build(job_dir: Path) -> dict:
     has_fit = request.profile.primitives is not None or reference is not None
     recipe = {
         "format": "pictures-to-cad",
-        "version": (3 if has_fit else 2) if request.design is not None else (3 if has_fit else 1),
+        "version": 3 if has_fit else (2 if request.design is not None else 1),
         "name": request.name,
         "profile": request.profile.model_dump(exclude_none=True),
         "width_mm": request.width_mm,
@@ -298,7 +306,8 @@ def build(job_dir: Path) -> dict:
         "units": "mm",
         "provenance": provenance,
     }
-    if request.design is not None:
+    # Every version after 1 carries its design settings: the app requires them to open it.
+    if recipe["version"] != 1:
         recipe["design"] = design.model_dump()
     (job_dir / "project.json").write_text(
         json.dumps(recipe, indent=2, allow_nan=False), encoding="utf-8"
