@@ -91,6 +91,8 @@ Keep the physical reference and source-scale check separate from intentional des
 
 Measure further reserved dimensions—for example, hole spacing—and compare them with the exported model in your CAD tool. A disagreement can indicate perspective distortion, endpoint placement, an incorrect boundary, or a mismatched physical reference. Record the measurement method and its limitations. If you change the scale or outline to satisfy a check, keep that earlier result and obtain a fresh check for the revised model where practical. The [independent-check worksheet](../reference-library/templates/INDEPENDENT-CHECKS.md) helps preserve these distinctions.
 
+For a reference-sheet photo, [the photo benchmark](photo-benchmark.md) makes this comparison for a whole folder: it traces every photo, compares each dimension you measured, and reports the spread between repeat shots.
+
 Do not stretch one axis merely to make two measurements agree without understanding the cause. Uniform scale alone does not calibrate a camera or remove lens distortion.
 
 For a close-fitting part, inspect important features individually, apply the intended manufacturing tolerances in the downstream CAD/CAM workflow, and make an appropriate trial part. This app does not validate strength, fit, tool clearance, material choice, or manufacturing suitability.

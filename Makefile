@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 REFERENCE_PYTHON ?= $(CURDIR)/reference-library/.venv/bin/python
 
-.PHONY: help setup setup-app setup-library start dev build build-app build-library test test-app test-library lint smoke slicers freecad
+.PHONY: help setup setup-app setup-library start dev build build-app build-library test test-app test-library lint smoke slicers freecad photo-benchmark
 
 help:
 	@echo "make setup          install app and reference-library dependencies; build the app"
@@ -13,6 +13,7 @@ help:
 	@echo "make smoke          check an already running workbench"
 	@echo "make slicers        inspect local Bambu Studio and PrusaSlicer availability"
 	@echo "make freecad        open a fitted build in FreeCAD (set FREECADCMD) and check it"
+	@echo "make photo-benchmark PHOTOS=folder   compare traces of your photos with your calipers"
 	@echo "Append -app or -library to setup, build, or test to select one component."
 	@echo "Library browser checks use local HTTP; its own make check defaults to file URLs."
 
@@ -59,3 +60,7 @@ slicers:
 
 freecad:
 	.venv/bin/python scripts/freecad_check.py
+
+photo-benchmark:
+	@test -n "$(PHOTOS)" || { echo "Usage: make photo-benchmark PHOTOS=folder (see docs/photo-benchmark.md)"; exit 2; }
+	.venv/bin/python scripts/photo_benchmark.py "$(PHOTOS)"
