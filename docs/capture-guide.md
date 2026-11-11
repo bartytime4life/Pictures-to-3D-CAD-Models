@@ -32,6 +32,8 @@ This is the recommended capture. Lay the part flat on a sheet of known size, wit
 - **Keep the sheet flat.** A curled or creased sheet breaks the straight edges used to correct the lens and the plane used for scale.
 - **Enter the thickness.** For a thick part, the camera sees some of its side walls. Building re-traces the photo once with the entered thickness and removes them. A photo tilted about 10–20° gives the most reliable correction. Straight overhead, the walls are too narrow to measure, and an edge facing the camera may read up to 0.2 × the edge blur into the part; the trace says so when that happens.
 - **Contrast.** A dark part on white paper is typical. For a light part, use a dark sheet on a lighter surface and tick **Light part on a dark background**.
+- **Soften the light.** A shadow beside the part moves its edges outward, by more as the shadow gets darker. In the rendered tests, a shadow that removes about half the light next to an edge costs up to 0.05 mm on a hole's diameter. The effect grows with the square of the edge blur, so a sharp photo helps too. Use diffuse light from above, not a single lamp to one side.
+- **Use the photo as the camera saved it.** Edges are measured after undoing the standard sRGB tone curve. Filters and edited brightness or contrast change that curve and move the edges.
 
 With a sheet the width field is filled from the sheet. Measure the part's real width anyway, and compare: it is now an independent check, not the scale. The trace notes list the fitted geometry (circles, arcs, lines), every design-intent snap, the measured edge blur, the lens correction and the proportions check. See [reference-sheet tracing](reference-sheet.md) for the method and its evidence.
 

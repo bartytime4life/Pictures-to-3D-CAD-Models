@@ -3,6 +3,7 @@
 Photos come from tests/synthetic.py: a 120 x 70 mm plate (R8 corners, 4 x D6 holes, a
 D22 bore, a 24 x 8 slot) on an A4 sheet, photographed by a 2400 x 1800 pinhole camera
 with radial distortion, uneven light, a soft shadow, blur, noise and JPEG compression.
+Light is mixed and blurred in linear light and saved through the sRGB tone curve.
 Coverage is exact, so these are measurement-error tests, not snapshot tests. The
 thresholds are regression guards at this resolution (about 0.2 mm per photo pixel); a
 synthetic pass is not a real-world accuracy claim.
@@ -129,8 +130,10 @@ def narrow_wall_bound(reference):
 
 def test_moderate_tilt_measures_the_wall_tone_and_refines_narrow_wall_bands(client, photos):
     """At 9 degrees the walls span 0-4 sigma: their tone is measured where wide and the
-    narrow bands are refined with the two-step model (without it, D6 errors were 0.039 mm
-    and the slot 0.060 mm in the same photo)."""
+    narrow bands are refined with the two-step model. Without a shadow that takes this
+    photo's D22 error from 0.014 to 0.002 mm and its slot from 0.040 to 0.017 mm; with
+    the 25 % shadow used here, the shadow's opposite bias hides the gain
+    (docs/reference-sheet.md)."""
     result, _ = traced(client, photos, "moderate-thick", thickness_mm=4)
     reference = result["profile"]["reference"]
     assert not any("Side walls are visible but narrower" in note for note in reference["notes"])
@@ -158,6 +161,40 @@ def test_frontal_photo_without_exif_assumes_a_phone_lens_and_says_so(client, pho
     bound = narrow_wall_bound(reference)
     errors = S.feature_errors(result["profile"])
     assert {k: v for k, v in errors.items() if v > 1.5 * LIMITS[k] + bound} == {}
+
+
+def test_without_a_shadow_the_tilted_trace_is_several_times_tighter(client):
+    """Tone curve, lens, perspective, blur, noise and JPEG together leave under 0.02 mm
+    (0.03 mm on position). The rest of the tilted photo's error is its shadow."""
+    data, _ = S.render(shadow=0.0)
+    response = trace(client, data, reference="a4")
+    assert response.status_code == 200, response.text
+    tight = {"small": 0.01, "bore": 0.015, "slot": 0.02, "position": 0.03, "outer": 0.015}
+    errors = S.feature_errors(response.json()["profile"])
+    assert {k: v for k, v in errors.items() if v > tight[k]} == {}
+
+
+def test_a_deep_shadow_biases_edges_by_a_bounded_amount(client):
+    """Known sensitivity, not a target. A soft shadow slopes the paper's brightness
+    next to an edge, and the mid-level then sits too far out. The error grows with the
+    shadow's depth: this one removes 47 % of the light (25 % darker in the saved photo)
+    and roughly doubles the errors of the usual 25 % shadow."""
+    data, _ = S.render(shadow=0.47)
+    response = trace(client, data, reference="a4")
+    assert response.status_code == 200, response.text
+    bound = {"small": 0.04, "bore": 0.07, "slot": 0.08, "position": 0.05, "outer": 0.07}
+    errors = S.feature_errors(response.json()["profile"])
+    assert {k: v for k, v in errors.items() if v > bound[k]} == {}
+    assert errors["bore"] > LIMITS["bore"]  # tighten the bounds when this is improved
+
+
+def test_a_camera_saving_with_a_plain_gamma_stays_within_limits(client):
+    """The tracer decodes photos as sRGB. A camera that saves with a plain 2.2 gamma
+    differs slightly from that curve and costs about 0.01-0.02 mm."""
+    data, _ = S.render(gamma=2.2, **CASES["overhead"])
+    response = trace(client, data, reference="a4")
+    assert response.status_code == 200, response.text
+    assert within_limits(S.feature_errors(response.json()["profile"])) == {}
 
 
 def test_light_part_on_dark_sheet(client, photos):

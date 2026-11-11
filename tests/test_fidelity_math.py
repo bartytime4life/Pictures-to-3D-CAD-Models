@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import math
 import random
+import statistics
 from fractions import Fraction as Q
 
 import cv2
@@ -27,9 +28,10 @@ import numpy as np
 import pytest
 from shapely.geometry import Polygon
 
-from backend import edges, fitting, sheet
+from backend import edges, fitting, sheet, tone
 from backend.models import Primitives, ring_polygon
 from backend.worker import extrude_fitted, model_rings, write_fitted_dxf
+from tests import synthetic
 
 # ------------------------------------------------------------- exact-arithmetic helpers
 
@@ -355,6 +357,79 @@ def test_half_level_crossing_on_symmetric_blur_is_unbiased_on_average(kernel):
     else:
         assert np.abs(errors).max() < 0.03
         assert abs(errors.mean()) < 1e-3
+
+
+def test_srgb_decoding_matches_the_standard_and_inverts_its_encoding():
+    """Property: tone.linear_from_encoded is the IEC 61966-2-1 decoding. It agrees with
+    the renderer's separately written copy and with the standard's own values (a saved
+    0.5 is 0.21404 of full light; the two segments meet at 0.04045), it is increasing,
+    it fixes 0 and 255, and encoding inverts it. A grey pixel's luminance is its
+    decoded value."""
+    codes = np.arange(256.0)
+    linear = tone.linear_from_encoded(codes)
+    assert linear[0] == 0 and abs(linear[255] - 255) < 1e-12
+    assert np.all(np.diff(linear) > 0)
+    assert np.abs(linear - synthetic.srgb_to_linear(codes)).max() < 1e-12
+    assert abs(tone.linear_from_encoded(127.5) / 255 - 0.21404114) < 1e-8
+    assert abs(tone.linear_from_encoded(0.04045 * 255) / 255 - 0.04045 / 12.92) < 1e-12
+    assert np.abs(tone.encoded_from_linear(linear) - codes).max() < 1e-9
+    assert tone.encoded_from_linear(-3.0) == 0
+    grey = np.repeat(np.arange(256, dtype=np.uint8)[:, None], 3, axis=1)[None]
+    assert np.abs(tone.linear_luminance(grey)[0] - linear).max() < 1e-3  # float32
+
+
+def test_saved_values_bias_the_half_level_as_predicted_and_linear_light_removes_it():
+    """Numerical analysis. A lens blurs in linear light and the camera then saves
+    through a tone curve. On saved values, the mid-level of an edge between linear tones
+    L < H is the linear level lin((enc(L) + enc(H)) / 2). A Gaussian edge reaches that
+    level at sigma * Phi^-1(its share of the step) from the edge: inside the darker
+    side, by 0.53 sigma for the test plate's saved tones 48 and 236. The crossing
+    measured on saved values matches that prediction; on linear light it is the edge."""
+    sigma = 1.7
+    low, high = tone.linear_from_encoded(48.0), tone.linear_from_encoded(236.0)
+    share = (tone.linear_from_encoded((48.0 + 236.0) / 2) - low) / (high - low)
+    spread = math.hypot(sigma, 1 / math.sqrt(12))  # the blur plus the pixel's own width
+    predicted = spread * statistics.NormalDist().inv_cdf(share)
+    assert -0.56 * sigma < predicted < -0.52 * sigma
+    columns = np.arange(96, dtype=np.float64)
+    normals = np.tile([1.0, 0.0], (6, 1))
+    on_saved, on_linear = [], []
+    for edge in np.linspace(40.0, 41.0, 17)[:-1]:
+        light = np.tile(high - (high - low) * np.clip(edge - columns, 0, 1), (40, 1))
+        light = cv2.GaussianBlur(light.astype(np.float32), (0, 0), sigma, borderType=cv2.BORDER_REPLICATE)
+        saved = synthetic.linear_to_srgb(light)
+        points = np.column_stack([np.full(6, edge + 0.6), np.linspace(10.5, 29.5, 6)])
+        for image, errors in ((saved, on_saved), (tone.linear_from_encoded(saved), on_linear)):
+            moved, keep = sheet.half_level_search(image, points, normals, half=8.0, step=0.0625)
+            assert keep.all()
+            errors.append(moved[0, 0] - edge)
+    assert abs(np.mean(on_saved) - predicted) < 0.02 * sigma
+    assert np.abs(on_linear).max() < 0.03 and abs(np.mean(on_linear)) < 2e-3
+
+
+def test_a_sloped_plateau_shifts_the_half_level_by_the_predicted_amount():
+    """Numerical analysis of a known limit. A soft shadow makes the paper brighter away
+    from an edge: light a on the part, b0 + b (t - e) beyond it. Blurred by a Gaussian,
+    the profile at the edge is (a + b0) / 2 + b sigma / sqrt(2 pi). The level taken
+    from the profile's ends, whose medians lie at 85 % of the half-window H, is
+    (a + b0 + 0.85 b H) / 2. The crossing therefore moves out of the part by
+    b (0.425 H - sigma / sqrt(2 pi)) / slope: about 2.7 sigma^2 b / (b0 - a) for the
+    H = 3.5 sigma used on part boundaries."""
+    sigma, a, b0, edge = 2.0, 20.0, 200.0, 200.3
+    half = 3.5 * sigma
+    t = np.arange(400) + 0.5 - edge
+    points = np.column_stack([np.full(4, edge + 0.1), [3.0, 5.0, 7.0, 9.0]])
+    normals = np.tile([1.0, 0.0], (4, 1))
+    for b in (0.5, 1.0, 2.0):
+        cdf = edges.normal_cdf(t / sigma)
+        density = np.exp(-0.5 * (t / sigma) ** 2) / math.sqrt(2 * math.pi)
+        row = a * (1 - cdf) + b0 * cdf + b * (t * cdf + sigma * density)
+        moved, keep = sheet.half_level_search(np.tile(row, (12, 1)), points, normals, half=half, step=0.0625)
+        assert keep.all()
+        slope = (b0 - a) / (sigma * math.sqrt(2 * math.pi)) + b / 2
+        predicted = b * (0.425 * half - sigma / math.sqrt(2 * math.pi)) / slope
+        assert abs(moved[0, 0] - edge - predicted) < 0.004  # px; pixel phase adds a little
+        assert abs(predicted - 2.7 * sigma**2 * b / (b0 - a)) < 0.02 * predicted
 
 
 def test_rectification_follows_the_pixel_centre_convention():

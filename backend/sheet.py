@@ -19,6 +19,8 @@ from dataclasses import dataclass
 import cv2
 import numpy as np
 
+from .tone import encoded_from_linear
+
 # Paper presets in millimetres (ISO 216 A4 and ANSI Letter), short side first.
 SHEETS = {"a4": (210.0, 297.0), "letter": (215.9, 279.4)}
 MAX_RECTIFIED_PIXELS = 12_000_000
@@ -77,11 +79,13 @@ def sample_bilinear(image, x, y):
 def half_level_search(gray, points, normals, half, step=0.125, min_contrast=12.0):
     """Move each point along its normal to the crossing of its local mid-level.
 
-    The level is the mean of the median intensities at both ends of the sampled profile,
-    so it follows uneven light and shadow. For a straight edge blurred by any symmetric
-    point-spread function the crossing is unbiased whatever the blur width. Profiles
-    with less than `min_contrast` grey levels between their ends are dropped. Returns the
-    moved points and a keep mask.
+    `gray` holds linear light (backend.tone). The level is the mean of the median
+    intensities at both ends of the sampled profile, so it follows uneven light and
+    shadow. For a straight edge blurred by any symmetric point-spread function the
+    crossing is unbiased whatever the blur width; that holds in linear light only.
+    Profiles whose ends differ by less than `min_contrast` saved grey levels are
+    dropped: the limit is stated on the saved scale, where a photo's noise is roughly
+    even across tones. Returns the moved points and a keep mask.
     """
     t = np.arange(-half, half + step / 2, step)
     sx = points[:, None, 0] + t[None, :] * normals[:, None, 0] - 0.5
@@ -93,7 +97,7 @@ def half_level_search(gray, points, normals, half, step=0.125, min_contrast=12.0
     level = (low + high) / 2
     sign = np.sign(high - low)[:, None]
     above = (profile - level[:, None]) * sign > 0
-    keep = np.abs(high - low) >= min_contrast
+    keep = np.abs(encoded_from_linear(high) - encoded_from_linear(low)) >= min_contrast
     moved = points.astype(np.float64).copy()
     centre = len(t) // 2
     for i in np.nonzero(keep)[0]:
@@ -138,11 +142,13 @@ def _quad(gray_small, polarity):
     return quad.astype(np.float64)
 
 
-def find_sheet(gray):
+def find_sheet(gray, linear=None):
     """Locate the reference sheet and sub-pixel points along its four edges.
 
-    `gray` is the full-resolution photo as uint8. Tries a sheet brighter than its
-    surroundings first, then a darker one.
+    `gray` is the full-resolution photo as saved, uint8; the sheet is found on it.
+    `linear` is the same photo in linear light (tone.linear_luminance); the sub-pixel
+    edge points are measured on it. Without it, `gray` is taken as linear light.
+    Tries a sheet brighter than its surroundings first, then a darker one.
     """
     h, w = gray.shape
     scale = 1000 / max(h, w)
@@ -160,7 +166,8 @@ def find_sheet(gray):
     quad /= scale
     sums, diffs = quad.sum(1), np.diff(quad, axis=1).ravel()
     quad = np.array([quad[np.argmin(sums)], quad[np.argmin(diffs)], quad[np.argmax(sums)], quad[np.argmax(diffs)]])
-    gray_f = cv2.GaussianBlur(gray.astype(np.float32), (0, 0), 1.0)
+    measured = gray if linear is None else linear
+    gray_f = cv2.GaussianBlur(measured.astype(np.float32), (0, 0), 1.0)
     sides = []
     for i in range(4):
         a, b = quad[i], quad[(i + 1) % 4]

@@ -30,12 +30,13 @@ The reference-sheet stages are documented with their derivations and checks in [
 
 - Plane homography and camera pose from a plane: [OpenCV's homography tutorial](https://docs.opencv.org/4.x/d9/dab/tutorial_homography.html); the two orthonormality constraints on the rotation columns are those of [Zhang's plane-based calibration](https://www.microsoft.com/en-us/research/publication/a-flexible-new-technique-for-camera-calibration/) (2000), here used with one image and a known principal point to solve only the focal length.
 - Radial distortion from straight lines (the plumb-line method): D. C. Brown, "Close-range camera calibration", *Photogrammetric Engineering* 37 (1971). The model inverse is solved by Newton's method.
+- Tone curve: the sRGB transfer function of IEC 61966-2-1:1999, in the form given by the [CSS Color Module Level 4 conversion code](https://www.w3.org/TR/css-color-4/#color-conversion-code). Display P3 uses the same curve. Edges are measured after undoing it, because blur and partial pixel coverage mix light linearly.
 - Cubic convolution interpolation: [Keys (1981)](https://doi.org/10.1109/TASSP.1981.1163711), whose a = −½ kernel reproduces quadratics.
 - Circle fitting: the Kåsa algebraic fit refined by Gauss–Newton on geometric distance; see N. Chernov, *Circular and Linear Regression: Fitting Circles and Lines by Least Squares* (CRC Press, 2010) for bias and precision.
 - The normal CDF is evaluated with [Abramowitz & Stegun 7.1.26](https://personal.math.ubc.ca/~cbm/aands/page_299.htm) (|erf error| < 1.5 × 10⁻⁷).
 - Exact identities are checked in rational arithmetic at random rational points. A nonzero rational function vanishes at a random point with negligible probability (the [Schwartz–Zippel lemma](https://en.wikipedia.org/wiki/Schwartz%E2%80%93Zippel_lemma)), so agreement at independent random points is strong evidence the identity holds generally.
 
-The blur–curvature series, its third-order coefficient (5/24), the two-step wall model and its degeneracy, and the sheet-proportions check were derived for this workbench and checked numerically; they are not taken from a cited source.
+The blur–curvature series, its third-order coefficient (5/24), the two-step wall model and its degeneracy, the sheet-proportions check, the size of the tone-curve bias and the shift a sloped shadow causes were derived for this workbench and checked numerically; they are not taken from a cited source.
 
 ## Outline to solid and exchange files
 
