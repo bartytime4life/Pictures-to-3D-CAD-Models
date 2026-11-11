@@ -682,6 +682,32 @@ def test_sharp_corners_are_traced_sharp(sides, turn, sigma_px):
     assert max(p.data["sharp_bound"] for p in prims) / ppm < (0.75 if sides == 3 else 0.5)
 
 
+@pytest.mark.parametrize(("sides", "radius_mm"), [(12, 12.0), (16, 15.0)])
+def test_a_rounded_polygon_close_to_a_circle_is_not_taken_for_one(sides, radius_mm):
+    """A rendered 12-gon (or 16-gon) on a 45 mm circle with large fillets lies within
+    1 % of its radius (RMS) of one circle, which fit_ring accepted as a circle. It is
+    eight times the line tolerance from it, and lines and arcs describe it within the
+    tolerance, so it is now its lines and arcs, each fillet within twice its reported
+    uncertainty. A disc and a hole 2 % out of round stay circles."""
+    from shapely import affinity
+    from shapely.geometry import Point, Polygon
+
+    ppm = 5.0
+    corners = [(70 + 45 * math.cos(2 * math.pi * k / sides), 55 + 45 * math.sin(2 * math.pi * k / sides)) for k in range(sides)]
+    part = Polygon(corners).buffer(-radius_mm).buffer(radius_mm, 1024)
+    prims, _ = snapped_fit_of_rendered(part, ppm, 1.6, (575, 725))
+    assert "".join(p.kind[0] for p in prims) in ("la" * sides, "al" * sides)
+    for p in prims:
+        if p.kind == "arc":
+            # At 150 and 157.5 degrees the radius is weakly determined: judge it by its own
+            # reported uncertainty, as test_wide_corner_fillets_... does.
+            error = abs(p.data["r"] / ppm - radius_mm)
+            assert error < 2 * p.data["r_sd"] / ppm and error < 0.12
+    for round_part in (Point(70, 55).buffer(45, 2048), affinity.scale(Point(70, 55).buffer(45, 2048), 1.02, 1.0)):
+        prims, _ = snapped_fit_of_rendered(round_part, ppm, 1.6, (575, 725))
+        assert [p.kind for p in prims] == ["circle"]
+
+
 def test_rounded_rectangle_fits_four_lines_and_tangent_arcs():
     import shapely
     from shapely.geometry import box

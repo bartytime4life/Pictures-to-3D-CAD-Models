@@ -120,11 +120,31 @@ def _line(points, a, b):
 
 
 def fit_ring(points, tol, min_line, circle_rel=0.01):
-    """A circle, a cycle of lines and arcs, or None (keep the polyline)."""
+    """A circle, a cycle of lines and arcs, or None (keep the polyline).
+
+    A ring is one circle when a circle fits it within max(tol, circle_rel r) (RMS, and
+    four times that at its worst point). The radius-relative allowance keeps a slightly
+    out-of-round hole a circle, but a rounded polygon can pass it too: a 12-gon on a
+    45 mm circle with R12 corners lies within 0.4 mm RMS of a circle. A ring that
+    passes only by that allowance is therefore also described as lines and arcs, and
+    that description wins when it has straight edges and its worst residual is under a
+    third of the circle's.
+    """
     cx, cy, r, rms, mx = fit_circle(points)
     gate = max(tol, circle_rel * r)
     if rms < gate and mx < 4 * gate:
-        return [Primitive("circle", {"c": (cx, cy), "r": r}, rms, mx)]
+        circle = [Primitive("circle", {"c": (cx, cy), "r": r}, rms, mx)]
+        if rms < tol and mx < 4 * tol:
+            return circle
+        pieces = _fit_pieces(points, tol, min_line, circle_rel)
+        if pieces and any(p.kind == "line" for p in pieces) and max(p.max_abs for p in pieces) < mx / 3:
+            return pieces
+        return circle
+    return _fit_pieces(points, tol, min_line, circle_rel)
+
+
+def _fit_pieces(points, tol, min_line, circle_rel):
+    """fit_ring's cycle of lines and arcs, or None."""
     breaks = dp_indices(points, tol * 1.5)
     m = len(breaks)
     edges = [(breaks[k], breaks[(k + 1) % m]) for k in range(m)]

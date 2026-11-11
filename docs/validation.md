@@ -2,6 +2,15 @@
 
 Latest workbench validation: November 11, 2026, on the local Linux workstation, for continuous-angle bed placement and for the exact-corner fillet fit. The FreeCAD import check, the linear-light edge measurement, the phone-photo decoding, the photo benchmark runner, the SVG and PDF drawings, the fillet-radius correction, the arc-chord fit and the stub fix of November 11 ran in a managed cloud session. The [reference-sensitivity record](validation/reference-sensitivity.md) covers the endpoint-placement explorer. Earlier managed-environment and release results are recorded separately below. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
 
+## Rounded polygons are not taken for circles — November 11, 2026
+
+Branch `claude/circle-gate`, on `main` at `363f295` (after the renderer fix below). It resolves the second item found and not fixed in the exact-corner entry below.
+
+- **The defect.** `fit_ring` takes a whole ring as one circle when a circle fits it within max(tol, 1 % r) RMS. The radius-relative allowance keeps slightly out-of-round holes circles, but a rounded polygon passes it too. A rendered 12-gon on a 45 mm circle with R12 corners lies 1.95 px (0.39 mm) RMS from its best circle, eight times the line tolerance, and was exported as one cylinder.
+- **The fix.** A ring that passes only by the allowance, not within the line tolerance itself, is also described as lines and arcs, and that description wins when it has straight edges and its worst residual is under a third of the circle's.
+- **After.** The 12-gon with R12 corners and a 16-gon with R15 corners are their lines and arcs. The 12-gon's radii are within 0.033 mm. The 16-gon's 157.5° fillets are within 0.063 mm, where the reported standard deviation is 0.285 mm, because the outline moves only 0.02 times a change of radius. A rendered disc and holes 1 % and 2 % out of round stay circles.
+- **Checks run.** `pytest`: **474 passed**. Both cases of the new `test_a_rounded_polygon_close_to_a_circle_is_not_taken_for_one` fail without the fix. Ruff passed.
+
 ## Exact coverage in the test renderer — November 11, 2026
 
 Branch `claude/edge-orientation`, on `main` at `5cebd27`. It resolves the first item found and not fixed in the exact-corner entry below.
