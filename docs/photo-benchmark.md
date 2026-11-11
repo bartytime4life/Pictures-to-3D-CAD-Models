@@ -108,19 +108,19 @@ This report is the `--example` folder: three **rendered** photos of the test pla
 | Outline width | 70.00 | 3 | -0.002 | 0.034 | -0.041 |  |
 | Ø22 | 22.00 | 3 | -0.016 | 0.010 | -0.025 |  |
 | Ø6 (×4) | 6.00 | 12 | +0.002 | 0.025 | +0.035 |  |
-| Opening 24 × 8 length | 24.00 | 3 | -0.008 | 0.022 | -0.021 |  |
-| Opening 24 × 8 width | 8.00 | 3 | -0.023 | 0.009 | -0.031 |  |
+| Opening 24 × 8 length | 24.00 | 3 | -0.007 | 0.020 | -0.019 |  |
+| Opening 24 × 8 width | 8.00 | 3 | -0.021 | 0.007 | -0.028 |  |
 | R8 (×4) | 8.00 | 12 | +0.005 | 0.006 | +0.012 |  |
 | Centres 96 | 96.00 | 3 | -0.002 | 0.009 | -0.011 |  |
 | Centres 50 | 50.00 | 3 | -0.002 | 0.004 | -0.007 |  |
 | Centres 108.24 | 108.24 | 3 | -0.005 | 0.009 | -0.015 |  |
 
-> Scale error -0.010 % (SD 0.016 between photos); edge offset +0.002 mm (SD 0.013 between photos), positive when boundaries are found outside the material. What the two leave unexplained: 0.009 mm RMS.
+> Scale error -0.009 % (SD 0.017 between photos); edge offset +0.002 mm (SD 0.013 between photos), positive when boundaries are found outside the material. What the two leave unexplained: 0.008 mm RMS.
 
 | Photo | Edge blur (mm) | Sheet proportions (%) | Worst error (mm) | Result |
 | --- | ---: | ---: | ---: | --- |
-| plate-1.jpg | 0.326 | 0.00 | +0.025 | Traced |
-| plate-2.jpg | 0.310 | 0.00 | +0.036 | Traced |
+| plate-1.jpg | 0.326 | 0.00 | -0.025 | Traced |
+| plate-2.jpg | 0.310 | 0.00 | -0.028 | Traced |
 | plate-3.jpg | 0.302 | 0.00 | -0.088 | Traced |
 
 **The dimension table.** An error is the traced value minus your caliper value.

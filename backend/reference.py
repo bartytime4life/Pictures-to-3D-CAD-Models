@@ -213,12 +213,15 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
         notes.extend(snap_notes)
         for ring, prims in fitted:
             if prims and any(p.kind == "line" for p in prims):
-                fitting.refit_lines(ring["points"], prims)
+                fitting.refit_lines(ring["points"], prims, margin=3 * sigma)
                 fitting.fit_fillets(ring["points"], prims, tolerance_px, sigma)
     for prims in rings_prims:
         fitting.correct_blur(prims, sigma)
     if snap:
         notes.extend(fitting.equalise_radii(rings_prims, scale=1 / ppm, unit="mm"))
+    # First among the notes (after the fit summary), so the 16-note limit keeps them.
+    radius_notes = fitting.undetermined_radii(rings_prims, sigma, scale=1 / ppm, unit="mm")
+    notes[0:0] = radius_notes
     polyline_px = POLYLINE_TOLERANCE_MM.get(detail, 0.05) * ppm
     described = []
     for ring, prims in fitted:
@@ -324,6 +327,7 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
     )
     mismatch = [n for n in notes if n.startswith("The sheet's proportions in the photo differ")]
     warnings_out.extend(mismatch)
+    warnings_out.extend(radius_notes)
     if not camera:
         warnings_out.append(
             "Enter the part's thickness and re-trace (Build does this automatically) to correct for its visible side walls."

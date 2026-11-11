@@ -153,8 +153,11 @@ def fit_ring(points, tol, min_line, circle_rel=0.01):
             is_line[k] = True
     if not any(is_line):
         return None
-    first = is_line.index(True)
-    edges, is_line = edges[first:] + edges[:first], is_line[first:] + is_line[:first]
+    # What that leaves: an arc cut into as few as two chords that each pass for a line
+    # (at a wide corner, or under a wide blur), which the rule above sends back. Runs
+    # along one circle that no line fits are marked curved, while each chord is still
+    # its own edge. This also rotates the list to start with a line.
+    edges, is_line = _curved_runs(points, edges, is_line, tol)
     # A straight edge often ends in a short breakpoint edge that runs into the tangent
     # region of the next arc. Merge consecutive line edges that still fit one line, so
     # that pair is not described as two nearly collinear lines.
@@ -187,8 +190,11 @@ def fit_ring(points, tol, min_line, circle_rel=0.01):
         a, b = edges[k][0], edges[j - 1][1]
         seg = span_points(points, a, b)
         acx, acy, ar, arms, amx = fit_circle(seg)
+        length = float(np.linalg.norm(np.diff(seg, axis=0), axis=1).sum())
         prims.append(
-            Primitive("arc", {"c": (acx, acy), "r": ar, "mid": tuple(seg[len(seg) // 2])}, arms, amx, (a, b))
+            Primitive(
+                "arc", {"c": (acx, acy), "r": ar, "mid": tuple(seg[len(seg) // 2]), "length": length}, arms, amx, (a, b)
+            )
         )
         k = j
     # An "arc" between two lines running the same way is a noise bump on one straight
@@ -254,9 +260,13 @@ def fit_ring(points, tol, min_line, circle_rel=0.01):
         elif hi - lo < len(seg) - 1:
             seg = seg[lo : hi + 1]
             acx, acy, ar, arms, amx = fit_circle(seg)
-            p.data.update(c=(acx, acy), r=ar, mid=tuple(seg[len(seg) // 2]))
+            length = float(np.linalg.norm(np.diff(seg, axis=0), axis=1).sum())
+            p.data.update(c=(acx, acy), r=ar, mid=tuple(seg[len(seg) // 2]), length=length)
             p.rms, p.max_abs, p.span = arms, amx, ((a + lo) % n, (a + hi) % n)
     prims = [p for k, p in enumerate(prims) if k not in corners]
+    # Each line's span runs into its neighbouring arcs; refit it on its straight part,
+    # so its direction (which axis snapping relies on) and offset are the edge's own.
+    refit_lines(points, prims)
     # An arc whose residual is far outside tolerance is not an arc: keep the polyline.
     if any(p.kind == "arc" and p.max_abs > 6 * max(tol, circle_rel * p.data["r"]) for p in prims):
         return None
@@ -269,6 +279,69 @@ def fit_ring(points, tol, min_line, circle_rel=0.01):
     if len(prims) < 2:
         return None
     return prims
+
+
+def _fits_arc(points, a, b, tol):
+    """One circle fits the span to half the line tolerance (RMS) and 1.5 tolerances
+    (worst point)."""
+    seg = span_points(points, a, b)
+    *_, rms, max_abs = fit_circle(seg)
+    return rms < 0.5 * tol and max_abs < 1.5 * tol
+
+
+def _bowed_chords(points, edges, is_line, k, j):
+    """Whether every line edge of run k..j is itself curved along the run's circle: its
+    own points lie closer to that circle (RMS) than to their own best line. A chord of
+    an arc bows by L^2/8r and passes; a straight facet or flat does not, however well
+    the run as a whole fits a circle."""
+    cx, cy, r, _, _ = fit_circle(span_points(points, edges[k][0], edges[j][1]))
+    for e in range(k, j + 1):
+        if is_line[e]:
+            own = span_points(points, *edges[e])
+            on_circle = float(np.sqrt(np.mean((np.hypot(own[:, 0] - cx, own[:, 1] - cy) - r) ** 2)))
+            if on_circle >= line_tls(own)[2]:
+                return False
+    return True
+
+
+def _curved_runs(points, edges, is_line, tol):
+    """Return (edges, is_line) with runs of chords along one large arc marked curved.
+
+    Douglas-Peucker cuts an arc into chords whose sagitta is at most 1.5 tolerances, so
+    an arc of radius above about min_line^2 / (12 tol) yields chords that are long enough,
+    and straight enough, to pass as lines; the arc is then described as a run of short
+    lines. Each longest run of two or more consecutive edges that one circle fits
+    (_fits_arc) is marked curved when it contains such a line, one line does not fit
+    the whole run within tolerance, and each of its line edges bows along the circle
+    (_bowed_chords). Pieces of one straight edge fit a line, and straight facets or
+    flats do not bow, so neither is taken for an arc. The longest straight edge is never
+    absorbed: the list is rotated to start with it, so no run wraps around the ring.
+    """
+    m = len(edges)
+    lengths = [float(np.linalg.norm(points[b] - points[a])) if s else -1.0 for (a, b), s in zip(edges, is_line)]
+    first = int(np.argmax(lengths))
+    edges, is_line = edges[first:] + edges[:first], list(is_line[first:] + is_line[:first])
+    if m < 4:
+        return edges, is_line
+    curved = [not s for s in is_line]
+    k = 1
+    while k + 1 < m:
+        j = k + 1
+        if not _fits_arc(points, edges[k][0], edges[j][1], tol):
+            k += 1
+            continue
+        while j + 1 < m and _fits_arc(points, edges[k][0], edges[j + 1][1], tol):
+            j += 1
+        if (
+            any(is_line[k : j + 1])
+            and line_tls(span_points(points, edges[k][0], edges[j][1]))[2] >= tol
+            and _bowed_chords(points, edges, is_line, k, j)
+        ):
+            curved[k : j + 1] = [True] * (j + 1 - k)
+            k = j + 1
+        else:
+            k += 1
+    return edges, [not c for c in curved]
 
 
 def blur_corrected_radius(r, sigma):
@@ -291,6 +364,183 @@ def blur_shrink(radius, sigma):
         sigma**2 / (2 * radius) + 5 * sigma**4 / (24 * radius**3),
         -(sigma**2) / (2 * radius**2) - 5 * sigma**4 / (8 * radius**4),
     )
+
+
+def erfc(x):
+    """Complementary error function, vectorised; fractional error below 1.2e-7 everywhere
+    (the Chebyshev fit of Numerical Recipes' erfcc)."""
+    x = np.asarray(x, dtype=np.float64)
+    z = np.abs(x)
+    t = 1.0 / (1.0 + 0.5 * z)
+    poly = -z * z - 1.26551223 + t * (1.00002368 + t * (0.37409196 + t * (0.09678418 + t * (
+        -0.18628806 + t * (0.27886807 + t * (-1.13520398 + t * (1.48851587 + t * (-0.82215223 + t * 0.17087277))))
+    ))))
+    with np.errstate(invalid="ignore"):
+        tail = np.where(z == np.inf, 0.0, t * np.exp(poly))
+    return np.where(x >= 0, tail, 2.0 - tail)
+
+
+_GL6 = np.polynomial.legendre.leggauss(6)
+SIGMA_REL_SD = 0.05  # relative uncertainty of a measured edge blur (edges.edge_sigma)
+# Systematic error of a straight edge's traced position, in pixels: on rendered photos
+# the sub-pixel tracer places axis-aligned and diagonal edges about 0.03 px apart.
+EDGE_SYS_SD = 0.03
+
+
+def corner_level(points, centre, radius, start, sweep, sigma, pieces=None):
+    """The blurred indicator of a rounded corner, at each point: the probability that a
+    Gaussian of `sigma` about the point falls inside the corner.
+
+    The corner is convex: an arc of `radius` about `centre`, from angle `start` counter-
+    clockwise through `sweep` (< pi), and the two lines tangent to it at its ends, running
+    away from the arc without end. Its half-level contour is the traced edge of the part
+    whichever side the material is on, since the two blurred indicators sum to one.
+
+    Seen from the centre the corner is star-shaped: a ray at angle a leaves it at
+    R(a) = radius across the arc, at radius / cos(a - end) beyond each tangent point (for
+    a quarter turn), and never in the opening between the lines. With q = centre - p,
+    b = q.e(a) and h^2 = |q|^2 - b^2, the radial integral of the Gaussian has the closed
+    form
+
+        [exp(-|q|^2/2s^2) - exp(-((R+b)^2 + h^2)/2s^2)] / 2pi
+            - b/(s sqrt(2pi)) exp(-h^2/2s^2) [Q(b/s) - Q((R+b)/s)],
+
+    Q the upper normal tail, leaving one smooth integral over the angle. That runs over
+    the directions within 9 sigma of the point (all directions when it is that close to
+    the centre), by composite 6-point Gauss-Legendre broken at the arc's ends: 40
+    pieces, or 160 when some point is that close, since rays from the centre then graze
+    the edges and their exit point moves fast with the angle.
+    """
+    p = np.atleast_2d(np.asarray(points, dtype=np.float64))
+    q = np.asarray(centre, dtype=np.float64)[None] - p
+    dist2 = (q * q).sum(axis=1)
+    dist = np.sqrt(dist2)
+    toward = np.arctan2(-q[:, 1], -q[:, 0])
+    half = np.where(dist > 9 * sigma, np.arcsin(np.minimum(1.0, 9 * sigma / np.maximum(dist, 1e-300))), math.pi)
+    if pieces is None:
+        pieces = 40 if (dist > 9 * sigma).all() else 160
+    lo, hi = toward - half, toward + half
+    end = start + sweep
+    base = np.array([start - math.pi / 2, start, end, end + math.pi / 2])
+    nearest = base[None] + 2 * math.pi * np.round((toward[:, None] - base[None]) / (2 * math.pi))
+    cuts = np.clip(nearest, lo[:, None], hi[:, None])
+    grid = lo[:, None] + (hi - lo)[:, None] * np.linspace(0.0, 1.0, pieces + 1)[None]
+    bounds = np.sort(np.concatenate([grid, cuts], axis=1), axis=1)
+    a, b = bounds[:, :-1, None], bounds[:, 1:, None]
+    nodes, weights = _GL6
+    angle = (a + b) / 2 + (b - a) / 2 * nodes
+    weight = (b - a) / 2 * weights
+    turn = np.mod(angle - (start - math.pi / 2), 2 * math.pi)
+    with np.errstate(divide="ignore", over="ignore", invalid="ignore"):
+        c1, c2 = np.cos(angle - start), np.cos(angle - end)
+        reach = np.full(angle.shape, np.inf)
+        reach = np.where((turn < math.pi / 2) & (c1 > 0), radius / c1, reach)
+        reach = np.where((turn >= math.pi / 2) & (turn < math.pi / 2 + sweep), radius, reach)
+        reach = np.where((turn >= math.pi / 2 + sweep) & (turn < math.pi + sweep) & (c2 > 0), radius / c2, reach)
+        along = q[:, 0, None, None] * np.cos(angle) + q[:, 1, None, None] * np.sin(angle)
+        off2 = np.maximum(dist2[:, None, None] - along * along, 0.0)
+        far = reach + along
+        two_s2 = 2 * sigma * sigma
+        outer = np.where(np.isinf(far), 0.0, np.exp(-(far * far + off2) / two_s2))
+        first = (np.exp(-dist2 / two_s2)[:, None, None] - outer) / (2 * math.pi)
+        tails = 0.5 * erfc(along / (sigma * math.sqrt(2))) - 0.5 * erfc(far / (sigma * math.sqrt(2)))
+        second = -along / (sigma * math.sqrt(2 * math.pi)) * np.exp(-off2 / two_s2) * tails
+    return ((first + second) * weight).sum(axis=(1, 2))
+
+
+def _exact_fillet(seg, lines, v, inward, r, sigma, noise, correlation=None):
+    """Fit a fillet's radius to its traced points with the exact blurred corner
+    (corner_level) as the model; returns (radius, sd, rms, max_abs, sharp_bound) or
+    None. sharp_bound is None for a fillet the photo shows; for one it cannot tell from
+    a sharp corner it is the smallest radius it would show.
+
+    `lines` holds the two edges as (point, direction), `inward` their unit normals
+    pointing toward the fillet's centre c(r) = c0 + r v, c0 their intersection. Each
+    point's residual is (level - 1/2) / |gradient|, its signed distance from the model's
+    half-level contour to first order, and r is found by Gauss-Newton. The radius's
+    standard deviation combines, each carried through the fit's own derivative:
+    the residual noise, inflated by its correlation along the edge (`correlation`,
+    measured on the neighbouring straight edges by correlation_factor; one sigma of
+    points if not given); the edge blur's uncertainty, SIGMA_REL_SD; and a systematic
+    error EDGE_SYS_SD in each edge's position, which a wide corner magnifies most.
+
+    A fillet is visible when its traced outline differs somewhere from that of the
+    sharp corner (r = 0) by twice the edge uncertainty, max(noise, EDGE_SYS_SD). One
+    that is not is reported as sharp, with the radius at which a fillet would become
+    visible found by bisection. (The standard deviation is no guide there: a fillet
+    much smaller than the blur changes the outline only as r squared.)
+    """
+    (c1, d1), (c2, d2) = lines
+
+    def corner(shift1=0.0, shift2=0.0):
+        return intersect(np.asarray(c1) + shift1 * inward[0], d1, np.asarray(c2) + shift2 * inward[1], d2)
+
+    c0 = corner()
+    starts = [math.atan2(-m[1], -m[0]) for m in inward]
+    a1, a2 = starts
+    sweep = (a2 - a1) % (2 * math.pi)
+    if sweep > math.pi:
+        a1, sweep = a2, 2 * math.pi - sweep
+    if not 0.02 < sweep < math.pi - 0.02:
+        return None
+
+    def level(radius, s=sigma, at=seg, apex=c0):
+        return corner_level(at, apex + radius * v, radius, a1, sweep, s)
+
+    h = 0.1 * sigma
+    gx = level(r, at=seg + [h, 0]) - level(r, at=seg - [h, 0])
+    gy = level(r, at=seg + [0, h]) - level(r, at=seg - [0, h])
+    gradient = np.hypot(gx, gy) / (2 * h)
+    if not (gradient > 0).all():
+        return None
+
+    def residual(radius, s=sigma, apex=c0):
+        return (level(radius, s, apex=apex) - 0.5) / gradient
+
+    start_r = r
+    for _ in range(25):
+        f = residual(r)
+        step_r = max(1e-3 * sigma, 1e-4 * r)
+        jac = (residual(r + step_r) - f) / step_r
+        step = min(-float(jac @ f) / float(jac @ jac), 0.5 * max(r, sigma))
+        # r = 0 is the sharp corner, which the same model describes.
+        new_r = max(0.0, r + step)
+        if new_r > 5 * max(start_r, sigma):
+            return None
+        done = abs(new_r - r) < 1e-6 * max(r, sigma)
+        r = new_r
+        if done:
+            break
+    f = residual(r)
+    step_r = max(1e-3 * sigma, 1e-4 * r)
+    jac = (residual(r + step_r) - f) / step_r
+    jac_sigma = (residual(r, sigma * 1.01) - f) / (0.01 * sigma)
+    spacing = float(np.median(np.linalg.norm(np.diff(seg, axis=0), axis=1)))
+    rms = float(np.sqrt(np.mean(f * f)))
+    nu = max(rms, noise)
+    if correlation is None:
+        correlation = sigma / max(spacing, 1e-9)
+    var_noise = nu * nu * max(1.0, correlation) / float(jac @ jac)
+    dr_dsigma = -float(jac @ jac_sigma) / float(jac @ jac)
+    var_edges = 0.0
+    for shifts in ((0.01, 0.0), (0.0, 0.01)):
+        jac_edge = (residual(r, apex=corner(*shifts)) - f) / 0.01
+        var_edges += (float(jac @ jac_edge) / float(jac @ jac) * EDGE_SYS_SD) ** 2
+    sd = math.sqrt(var_noise + (dr_dsigma * SIGMA_REL_SD * sigma) ** 2 + var_edges)
+    sharp = residual(0.0)
+    floor = 2 * max(nu, EDGE_SYS_SD)
+    bound = None
+    if np.abs(f - sharp).max() < floor:
+        lo, hi = r, max(4 * sigma, 2 * start_r)
+        for _ in range(3):
+            if np.abs(residual(hi) - sharp).max() >= floor:
+                break
+            lo, hi = hi, 2 * hi
+        for _ in range(30):
+            mid = (lo + hi) / 2
+            lo, hi = (mid, hi) if np.abs(residual(mid) - sharp).max() < floor else (lo, mid)
+        bound = hi
+    return float(r), sd, rms, float(np.abs(f).max()), bound
 
 
 def correct_blur(prims, sigma):
@@ -321,6 +571,7 @@ def snap_axes(rings, angle_tol_deg=0.6):
         target = axis + round((a - axis) / (math.pi / 2)) * math.pi / 2
         if abs(math.degrees(a - target)) < angle_tol_deg:
             p.data["d"] = np.array([math.cos(target), math.sin(target)])
+            p.data["snapped"] = True
             snapped += 1
     notes = [f"{snapped} straight edge(s) made exactly parallel or perpendicular."] if snapped else []
     return notes, axis
@@ -352,14 +603,124 @@ def equalise_radii(rings, radius_rel=0.03, scale=1.0, unit="mm"):
     return notes
 
 
-def refit_lines(points, prims):
-    """Least-squares offset for each line whose direction was fixed by snapping."""
-    for p in prims:
-        if p.kind == "line":
-            seg = span_points(points, *p.span)
-            d = p.data["d"]
+UNDETERMINED_REL = 0.1  # a radius with a standard deviation above this fraction is reported
+
+
+def undetermined_radii(rings, sigma, scale=1.0, unit="mm", limit=300):
+    """Notes naming the fitted radii that this photo does not pin down, and the corners
+    found sharp. Each note is at most `limit` characters (backend.models' note limit).
+
+    A fillet fitted with the exact corner model carries a standard deviation (r_sd);
+    it is reported above UNDETERMINED_REL of the radius. That happens at wide corners,
+    where the outline moves only (1/sin(theta/2) - 1) times a change of radius (0.035
+    at 150 degrees), so the edge barely constrains the radius; the note gives how far
+    the outline itself is uncertain. r_sd is a linearised estimate; once it is a large
+    part of the radius the fit is no longer linear and the spread is larger still, so
+    the note says "or more". A free arc between two lines (no snapping) is reported
+    when it is shorter than 5 sigma: blur then bends all of it, and the free circle's
+    radius is not the part's. Corners that fit_fillets found sharp are counted, with the
+    largest fillet radius the photo leaves possible there.
+    """
+    fillets, free, sharp = [], [], []
+    for prims in rings:
+        m = len(prims)
+        for k, p in enumerate(prims):
+            if p.kind == "line" and "sharp_bound" in p.data:
+                sharp.append(p.data["sharp_bound"])
+            if p.kind != "arc" or p.data.get("end_cap"):
+                continue
+            r, sd = p.data["r"], p.data.get("r_sd")
+            if sd is not None:
+                angle = p.data.get("corner_deg", 90.0)
+                if not math.isfinite(sd):
+                    fillets.append(f"R{r * scale:.2f} {unit} (a {angle:.0f}° corner the fit could not settle)")
+                elif sd > UNDETERMINED_REL * r:
+                    outline = sd * (1 / math.sin(math.radians(angle) / 2) - 1)
+                    fillets.append(
+                        f"R{r * scale:.2f} ± {sd * scale:.2f} {unit} or more ({angle:.0f}° corner; "
+                        f"outline ± {outline * scale:.3f} {unit})"
+                    )
+            elif (
+                sigma > 0
+                and "fillet" not in p.data
+                and prims[k - 1].kind == prims[(k + 1) % m].kind == "line"
+                and p.data.get("length", math.inf) < 5 * sigma
+            ):
+                free.append(f"R{r * scale:.2f} {unit}")
+
+    def listed(head, items, tail):
+        for shown in range(len(items), 0, -1):
+            more = f" and {len(items) - shown} more" if shown < len(items) else ""
+            text = head + "; ".join(items[:shown]) + more + tail
+            if len(text) <= limit:
+                return text
+        return (head + f"{len(items)} of them" + tail)[:limit]
+
+    notes = []
+    if fillets:
+        notes.append(listed(f"This photo does not determine {len(fillets)} fillet radius(es) well: ", fillets, ". Measure them if they matter."))
+    if free:
+        notes.append(listed(f"{len(free)} arc(s) are too short to measure under this photo's blur: ", free, ". Turn on snapping, or measure them."))
+    if sharp:
+        notes.append(
+            f"{len(sharp)} corner(s) traced as sharp: any fillet there is under R{max(sharp) * scale:.2f} {unit}."[:limit]
+        )
+    return notes
+
+
+def correlation_factor(residual, max_lag=25):
+    """How many times the variance of a mean exceeds that of independent samples, for
+    residuals in order along an edge: 1 + 2 (rho_1 + rho_2 + ...), the autocorrelations
+    summed until the first that is not positive (Geyer's initial positive sequence)."""
+    r = np.asarray(residual, dtype=np.float64)
+    r = r - r.mean()
+    total_var = float(r @ r)
+    if len(r) < 8 or total_var <= 0:
+        return 1.0
+    total = 0.0
+    for lag in range(1, min(max_lag, len(r) // 4) + 1):
+        rho = float(r[:-lag] @ r[lag:]) / total_var
+        if rho <= 0:
+            break
+        total += rho
+    return 1.0 + 2.0 * total
+
+
+def refit_lines(points, prims, margin=0.0):
+    """Refit each line on the straight part of its span: least-squares offset for a
+    line whose direction was fixed by snapping, total least squares otherwise.
+
+    Douglas-Peucker hands a line the first stretch of a neighbouring arc, up to where
+    that arc leaves it by 1.5 tolerances; for a large radius that stretch is long and
+    tilts or shifts the line. Points past the foot of a neighbouring arc's centre (its
+    tangent point), less `margin` (where blur still bends the edge), are left out.
+    """
+    m = len(prims)
+    for k, p in enumerate(prims):
+        if p.kind != "line":
+            continue
+        seg = span_points(points, *p.span)
+        d = np.asarray(p.data["d"], dtype=np.float64)
+        along = (seg - np.asarray(p.data["c"])) @ d
+        forward = 1.0 if along[-1] >= along[0] else -1.0
+        keep = np.ones(len(seg), bool)
+        for q, sense in ((prims[k - 1], 1.0), (prims[(k + 1) % m], -1.0)):
+            if q.kind == "arc":
+                tangent = float((np.asarray(q.data["c"]) - np.asarray(p.data["c"])) @ d)
+                keep &= sense * forward * (along - tangent) >= margin
+        if keep.sum() < max(5, len(seg) // 5):
+            keep[:] = True
+        seg = seg[keep]
+        if p.data.get("snapped"):
             n = np.array([-d[1], d[0]])
             p.data["c"] = n * float(np.mean(seg @ n)) + d * float(np.mean(seg @ d))
+        else:
+            c, direction, _ = line_tls(seg)
+            p.data["c"], p.data["d"] = c, direction * (1.0 if direction @ d >= 0 else -1.0)
+        d = np.asarray(p.data["d"])
+        residual = (seg - np.asarray(p.data["c"])) @ np.array([-d[1], d[0]])
+        p.rms, p.max_abs = float(np.sqrt(np.mean(residual**2))), float(np.abs(residual).max())
+        p.data["noise_corr"] = correlation_factor(residual)
 
 
 def place_fillets(prims):
@@ -388,6 +749,15 @@ def fit_fillets(points, prims, tol, sigma=0.0):
     radius r - s(r) about c(r), which gives the true radius directly; correct_blur then
     leaves the fillet alone. Within about 2.5 sigma of where the arc meets an edge the
     traced curve is neither arc nor line, and those points are left out.
+
+    That disc model holds only in the middle of a long arc. The radius is then refined
+    against the exact blurred corner (corner_level) on the whole corner, including the
+    edges out to 5 sigma beyond the tangent points (_exact_fillet), which also gives its
+    standard deviation (r_sd; infinite when the exact fit finds no radius). Blur rounds
+    a sharp corner too, and the exact model at r = 0 describes it: a fillet whose outline
+    the photo cannot tell from a sharp corner's is removed, so its two edges meet, and
+    the following edge records the largest fillet radius the photo leaves possible there
+    (sharp_bound).
     """
     m = len(prims)
     for k, p in enumerate(prims):
@@ -442,15 +812,46 @@ def fit_fillets(points, prims, tol, sigma=0.0):
             r += step
             if abs(step) < 1e-10:
                 break
-        if not (0.5 * old_r < r < 2 * old_r):
+        approximate = 0.5 * old_r < r < 2 * old_r
+        if not approximate:
+            if sigma <= 0:
+                continue
+            r = old_r  # a start for the exact fit only
+        shrink = blur_shrink(r, sigma)[0] if sigma > 0 else 0.0
+        residual = np.linalg.norm(seg - (c0 + r * v), axis=1) - (r - shrink)
+        rms, max_abs = float(np.sqrt(np.mean(residual**2))), float(np.abs(residual).max())
+        centre = c0 + r * v
+        inward = [n * math.copysign(1.0, float((centre - c) @ n)) for n, c in ((n1, c1), (n2, c2))]
+        exact = None
+        if sigma > 0:
+            # The whole corner, with the edges up to 5 sigma beyond the tangent points.
+            around = span_points(points, l1.span[0], l2.span[1])
+            near = around[np.linalg.norm(around - centre, axis=1) <= math.sqrt(r * r + 25 * sigma * sigma)]
+            if len(near) >= 5:
+                corr = [q.data["noise_corr"] for q in (l1, l2) if "noise_corr" in q.data]
+                exact = _exact_fillet(
+                    near, ((c1, d1), (c2, d2)), v, inward, r, sigma, (l1.rms + l2.rms) / 2, max(corr) if corr else None
+                )
+            if exact is not None:
+                r, sd, rms, max_abs, bound = exact
+                p.data["r_sd"] = sd
+            elif approximate:
+                p.data["r_sd"] = math.inf  # the exact fit found no radius: not determined
+        if exact is None and not approximate:
             continue
         p.data["r"] = float(r)
         p.data["fillet"] = (tuple(c0), tuple(v))
+        # The inward normals of the two edges are pi minus the corner angle apart.
+        p.data["corner_deg"] = 180.0 - math.degrees(math.acos(max(-1.0, min(1.0, float(inward[0] @ inward[1])))))
         p.data["blur_modelled"] = sigma > 0
         place_fillets([p])
-        shrink = blur_shrink(r, sigma)[0] if sigma > 0 else 0.0
-        residual = np.linalg.norm(seg - np.asarray(p.data["c"]), axis=1) - (r - shrink)
-        p.rms, p.max_abs = float(np.sqrt(np.mean(residual**2))), float(np.abs(residual).max())
+        p.rms, p.max_abs = rms, max_abs
+        if exact is not None and bound is not None:
+            # Not to be told from a sharp corner. The next edge keeps the bound on any
+            # fillet there for the trace's notes.
+            p.data["sharp"] = True
+            l2.data["sharp_bound"] = max(l2.data.get("sharp_bound", 0.0), bound)
+    prims[:] = [p for p in prims if not p.data.get("sharp")]
 
 
 def _foot(line, point):

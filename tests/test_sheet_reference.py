@@ -597,6 +597,88 @@ def test_blurred_fillets_keep_their_radius_when_snapped(radius_mm, sigma_px):
     assert fitted(0.0).min() > 3 * shrink > 0.02
 
 
+def snapped_fit_of_rendered(part, ppm, sigma_px, size):
+    """Render `part` (mm) at `ppm`, blur it, trace it and fit it as backend.reference does
+    with snapping on. Returns (primitives in pixels, measured blur in pixels)."""
+    image = (236 - 188 * S.coverage(part, ppm, 0.0, 0.0, size)).astype(np.float32)
+    image = cv2.GaussianBlur(image, (0, 0), sigma_px)
+    rings, sigma, _ = edges.subpixel_rings((image < 142).astype(np.uint8), image, ppm)
+    points = next(r for r in rings if r["outer"])["points"]
+    tolerance = max(0.03, 0.15 * sigma / ppm) * ppm
+    extent_mm = float(np.ptp(points, axis=0).max()) / ppm
+    prims = fitting.fit_ring(points, tolerance, min(max(0.025 * extent_mm, 1.0), 3.0) * ppm)
+    assert prims is not None
+    fitting.snap_axes([prims])
+    fitting.refit_lines(points, prims, margin=3 * sigma)
+    fitting.fit_fillets(points, prims, tolerance, sigma)
+    fitting.correct_blur(prims, sigma)
+    return prims, sigma
+
+
+@pytest.mark.parametrize(
+    ("sides", "turn_deg", "radius_mm"),
+    [(6, 0.0, 3.0), (8, 22.5, 4.0), (8, 10.0, 4.0), (12, 0.0, 4.0)],
+)
+def test_wide_corner_fillets_keep_their_radius_within_the_reported_uncertainty(sides, turn_deg, radius_mm):
+    """Rendered regular polygons with filleted corners of 120, 135 and 150 degrees,
+    0.32 mm blur. Each fillet's radius is within twice its reported standard deviation
+    and 0.12 mm. Before the exact corner model they carried no uncertainty. An octagon with
+    its edges on the pixel axes and diagonals reads 0.07 mm small: the tracer places
+    those edges about 0.03 px apart, which a 135 degree corner magnifies twelve times
+    (fitting.EDGE_SYS_SD carries it into the reported uncertainty)."""
+    from shapely.geometry import Polygon
+
+    ppm = 5.0
+    turn = math.radians(turn_deg)
+    corners = [
+        (70 + 45 * math.cos(turn + 2 * math.pi * k / sides), 55 + 45 * math.sin(turn + 2 * math.pi * k / sides))
+        for k in range(sides)
+    ]
+    part = Polygon(corners).buffer(-radius_mm).buffer(radius_mm, 1024)
+    prims, _ = snapped_fit_of_rendered(part, ppm, 1.6, (575, 725))
+    arcs = [p for p in prims if p.kind == "arc"]
+    assert len(arcs) == sides
+    for p in arcs:
+        error = abs(p.data["r"] / ppm - radius_mm)
+        assert error < 2 * p.data["r_sd"] / ppm and error < 0.12
+        assert round(p.data["corner_deg"]) == round(180 - 360 / sides)
+
+
+@pytest.mark.parametrize(("radius_mm", "sigma_px"), [(4.0, 1.6), (8.0, 1.6), (3.0, 2.5)])
+def test_inside_and_outside_fillets_of_an_l_shaped_plate(radius_mm, sigma_px):
+    """A rendered L-shaped plate with every corner filleted, the inside one included.
+    The blurred indicators of a corner and of its complement sum to one, so the traced
+    edge and the exact corner model are the same for an inside fillet as for an
+    outside one: all six radii read within 0.01 mm."""
+    from shapely.geometry import box
+
+    ppm = 5.0
+    plate = box(10, 10, 130, 90).difference(box(60, 45, 140, 100))
+    part = plate.buffer(radius_mm, 1024).buffer(-2 * radius_mm, 1024).buffer(radius_mm, 1024)
+    prims, _ = snapped_fit_of_rendered(part, ppm, sigma_px, (500, 725))
+    radii = np.array([p.data["r"] for p in prims if p.kind == "arc"]) / ppm
+    assert len(radii) == 6 and np.abs(radii - radius_mm).max() < 0.01
+
+
+@pytest.mark.parametrize(("sides", "turn", "sigma_px"), [(4, 0.0, 1.6), (4, 0.0, 2.5), (6, 0.2, 1.6), (3, 0.1, 1.6)])
+def test_sharp_corners_are_traced_sharp(sides, turn, sigma_px):
+    """Rendered plates with sharp corners. Blur rounds a sharp corner; on main each was
+    fitted as a fillet of R0.4 to R1.1 mm. With the exact corner model the corner is
+    sharp, its edges meet, and the note bounds any fillet there well under a millimetre."""
+    from shapely.geometry import Polygon, box
+
+    ppm = 5.0
+    if sides == 4:
+        part = box(10, 10, 130, 80)
+    else:
+        part = Polygon([(70 + 45 * math.cos(turn + 2 * math.pi * k / sides), 55 + 45 * math.sin(turn + 2 * math.pi * k / sides)) for k in range(sides)])
+    prims, sigma = snapped_fit_of_rendered(part, ppm, sigma_px, (575, 725))
+    assert [p.kind for p in prims] == ["line"] * sides
+    (note,) = fitting.undetermined_radii([prims], sigma, scale=1 / ppm)
+    assert note.startswith(f"{sides} corner(s) traced as sharp")
+    assert max(p.data["sharp_bound"] for p in prims) / ppm < 0.5
+
+
 def test_rounded_rectangle_fits_four_lines_and_tangent_arcs():
     import shapely
     from shapely.geometry import box
@@ -707,8 +789,9 @@ def test_a_stub_cut_off_a_straight_edge_is_fitted_as_part_of_it(flat_mm, turn_de
     the corner's blur-rounded join, the stub left the whole outline a polyline. As part
     of its edge it leaves five lines and five arcs. The R30 arc reads within 0.03 mm.
     Each right-angle corner is rounded by the blur alone, to under 0.6 mm, where the
-    stub and the corner together had been an arc of 1.3 to 3.2 mm. The outline encloses
-    the plate's area within 0.03 %."""
+    stub and the corner together had been an arc of 1.3 to 3.2 mm; with snapping, the
+    exact corner model traces it sharp, with a bound under 0.6 mm on any fillet there.
+    The outline encloses the plate's area within 0.03 %."""
     from shapely import affinity
     from shapely.geometry import Polygon
 
@@ -728,14 +811,22 @@ def test_a_stub_cut_off_a_straight_edge_is_fitted_as_part_of_it(flat_mm, turn_de
             fitting.refit_lines(points, prims)
             fitting.fit_fillets(points, prims, tolerance, sigma)
         fitting.correct_blur(prims, sigma)
-        lines, arcs = prims[::2], prims[1::2]
-        assert abs(max(p.data["r"] for p in arcs) / ppm - radius) < 0.03
-        square = [
-            between.data["r"] / ppm
-            for before, between, after in zip(lines, arcs, lines[1:] + lines[:1])
-            if abs(before.data["d"] @ after.data["d"]) < 0.1
-        ]
+        assert [p.kind for p in prims].count("line") == 5
+        assert abs(max(p.data["r"] for p in prims if p.kind == "arc") / ppm - radius) < 0.03
+        # Each right angle: a blur-rounded arc, or (snapped, fitting.fit_fillets) a sharp
+        # corner with the bound on any fillet there, kept by the edge after it.
+        square, m = [], len(prims)
+        for k, before in enumerate(prims):
+            if before.kind != "line":
+                continue
+            between, after = prims[(k + 1) % m], prims[(k + 2) % m]
+            if between.kind == "line" and abs(before.data["d"] @ between.data["d"]) < 0.1:
+                square.append(between.data["sharp_bound"] / ppm)
+            elif between.kind == "arc" and after.kind == "line" and abs(before.data["d"] @ after.data["d"]) < 0.1:
+                square.append(between.data["r"] / ppm)
         assert len(square) == 3 and max(square) < 0.6
+        if snap:
+            assert [p.kind for p in prims].count("arc") < 5
         outline = Polygon(fitting.sample_segments(fitting.segments(prims), 0.01))
         assert outline.is_valid and abs(outline.area / ppm**2 / plate.area - 1) < 3e-4
 

@@ -1,6 +1,54 @@
 # Validation results
 
-Latest workbench validation: November 11, 2026, on the local Linux workstation, for continuous-angle bed placement. The FreeCAD import check, the linear-light edge measurement, the phone-photo decoding, the photo benchmark runner, the SVG and PDF drawings, the fillet-radius correction, the arc-chord fit and the stub fix of November 11 ran in a managed cloud session. The [reference-sensitivity record](validation/reference-sensitivity.md) covers the endpoint-placement explorer. Earlier managed-environment and release results are recorded separately below. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
+Latest workbench validation: November 11, 2026, on the local Linux workstation, for continuous-angle bed placement and for the exact-corner fillet fit. The FreeCAD import check, the linear-light edge measurement, the phone-photo decoding, the photo benchmark runner, the SVG and PDF drawings, the fillet-radius correction, the arc-chord fit and the stub fix of November 11 ran in a managed cloud session. The [reference-sensitivity record](validation/reference-sensitivity.md) covers the endpoint-placement explorer. Earlier managed-environment and release results are recorded separately below. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
+
+## Exact blurred corners, two-chord arcs and sharp corners — November 11, 2026
+
+Branch `claude/fillet-corners`, on `main` at `ae69552`. Its "before" figures were taken on `dd65399`, which has the large-radius and stub fixes below; the bed-placement change after it touches no tracing code. See [reference-sheet tracing](reference-sheet.md), §4 and §7, for the mathematics.
+
+- **How it was found.** The fillet-radius entry below left corners other than right angles unverified. The 2026-11-10 study (not in the repository) has a continuum integrator of the exact Gaussian blur of filleted polygons. It traced corners of 60° to 150°, and the pipeline's fitting chain was run on those outlines. That showed four defects. Every "before" figure here is `main` at `dd65399`, with the large-radius and stub fixes.
+- **Defect 1: wide corners.** The disc shrink s(r) holds only in the middle of a long arc. On exact outlines, fillets read up to 16 s large at 150° and 8 s at 120°, and nothing flagged them. (Before the stub fix, which refits small arcs on their points between the lines, it was 49 s, and rendered 150° R4 corners were up to 1.9 mm off.)
+- **Defect 2: two-chord arcs.** An arc cut into only two chords goes back to two lines under the large-radius fix's rule that one chord is not an arc. A 150° R40 px corner at σ = 2.5 px and a 120° R12.5 px corner lost their arcs, moving the outline 1.4 and 1.9 px.
+- **Defect 3: tilted edges.** Douglas–Peucker hands each line the start of the next arc. Beside large radii that tilted the edges (0.24° beside R80 px), snapping kept the tilt, and fillets built on those edges read up to 2.5 s off at 90° and 8 s at 120°.
+- **Defect 4: sharp corners.** Blur rounds a sharp corner, and it was fitted as a fillet: R0.4 to R1.1 mm on rendered sharp plates, exported as cylinders.
+- **The fixes** (`backend/fitting.py`):
+  - Fillets are refined against the exact blurred corner (`corner_level`), on the arc and the edges out to 5 σ. Each gets a standard deviation that carries noise, its measured correlation, a 5 % blur uncertainty and a 0.03 px systematic edge error.
+  - A fillet the photo cannot tell from a sharp corner is traced sharp, with a bound on any fillet there.
+  - After the large-radius rule, runs along one circle that no line fits, whose straight-looking edges each bow along that circle, are marked curved (`_curved_runs`). The bow test keeps the facets and flats that rule keeps as lines.
+  - Lines are refit on their straight parts before snapping (`refit_lines`).
+  - Undetermined radii and sharp corners are named in the trace's notes and warnings, each note within the profile's 300-character limit.
+- **Exact outlines, before and after.** Worst radius errors in units of s over 24 cases (σ = 1.6 and 2.5 px, r = 5 to 80 px):
+
+  | Corner | Before | After |
+  | --- | --- | --- |
+  | 60° | 1.1 s | 0.00 s |
+  | 90° | 2.5 s | 0.01 s |
+  | 120° | 8.0 s | 0.03 s |
+  | 150° | 16 s | 0.22 s |
+
+  Two of the 24 cases lost a corner's arc before; none does after. Three small 150° fillets are traced sharp, each with a bound above its true radius.
+- **Rendered plates, before and after** (5 px/mm, traced with snapping on):
+
+  | Plate | Before | After |
+  | --- | --- | --- |
+  | 120 × 70, R20, 0.34 mm blur | 0.006 mm | 0.002 mm |
+  | 120 × 70, R30, 0.34 mm blur | 0.005 mm | 0.001 mm |
+  | 12-gon (150°), R4, 0.32 mm blur | 0.13 mm, no uncertainty | 0.11 mm (reported ± 0.19) |
+  | Octagon (135°), R4, edges on the pixel axes | −0.070 mm | −0.068 mm (reported ± 0.078) |
+  | Hexagon (120°), R3 | 0.014 mm | 0.014 mm |
+  | L-plate, inside and outside R8 | 0.003 mm | 0.003 mm |
+  | Sharp 120 × 70 plate | four R0.4 to R0.6 mm fillets | sharp, any fillet under R0.23 mm |
+  | Sharp hexagon, turned | six R0.6 to R1.1 mm fillets | sharp, any fillet under R0.45 mm |
+  | Sharp plate, 0.5 mm blur | four R1.1 mm fillets | sharp, any fillet under R0.28 mm |
+
+  On the photo benchmark's three rendered photos the R8 row is unchanged (+0.005 mm). The slot width moved from −0.023 to −0.021 mm, because its sides are now fitted without their end caps' first points.
+- **Statistics.** Over forty tracings with 0.1 px noise correlated over four points, radii are unbiased within four standard errors. The reported standard deviation is 1.3 to 1.4 times the observed spread, and under half without the measured correlation. At 150° with R8 px fillets the photo cannot resolve the radius (observed spread 10 px); the fit names those fillets in every tracing, with a linearised standard deviation that understates the spread, so the note says "or more".
+- **Checks run.** `pytest`: **456 passed**, none skipped (OpenSCAD is installed on this workstation). 25 tests are new: 14 in `tests/test_fidelity_math.py` and 11 in `tests/test_sheet_reference.py`. The large-radius fix's tests pass unchanged. In the stub fix's `test_a_stub_cut_off_a_straight_edge_is_fitted_as_part_of_it`, the snapped case now expects the plate's three blur-rounded right angles to be sharp, each with a bound under 0.6 mm on any fillet, in place of arcs under 0.6 mm. Each of seven faults planted in this change, one at a time, failed at least one test: no two-chord runs, chords not required to bow, no systematic edge term, the disc model only, a wrong sign in the corner integral, noise correlation ignored, and lines not trimmed at arcs. Ruff passed. The two reference-sheet, eight workbench and two placement browser scenarios passed with the system Chrome; the others were not re-run. `make freecad` was not run (FreeCAD is not installed on this workstation). A full trace of the rendered plate takes 0.65 s at 2400 × 1800 and 1.89 s at 4000 × 3000, against 0.57 and 1.72 s on `main`.
+- **Found and not fixed.**
+  - The sub-pixel tracer places edges along the pixel axes and along the diagonals about 0.03 px apart. A 135° corner magnifies that twelve times, so the octagon's fillets read 0.07 mm small; the systematic edge term carries it into the reported uncertainty.
+  - The circle gate (RMS within 1 % of the radius) accepts a rounded 12-gon with R12 corners on a 45 mm circumradius as one circle.
+  - With snapping off, short free arcs at wide corners are still biased; they are only named.
+- **Not verified.** No real photo. A real lens's blur is not exactly Gaussian, and the model assumes it is.
 
 ## Continuous-angle bed placement — November 11, 2026
 
