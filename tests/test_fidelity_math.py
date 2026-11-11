@@ -1023,3 +1023,289 @@ def test_repeated_photos_are_precise_as_well_as_accurate():
         diameters.append([c["diameter"] for c in circles])
     spread = np.array(diameters).std(axis=0, ddof=1)
     assert spread.max() < 0.02
+
+
+# -------------------------------------------------- the exactly blurred corner (fillets)
+
+
+def rounded_polygon(vertices, radius):
+    """A convex polygon (counter-clockwise) with every corner filleted at `radius`:
+    vertices, inner vertices (fillet centres), unit edge directions, outward normals."""
+    p = np.asarray(vertices, dtype=np.float64)
+    d = np.roll(p, -1, axis=0) - p
+    d /= np.linalg.norm(d, axis=1)[:, None]
+    out = np.column_stack([d[:, 1], -d[:, 0]])
+    centres = np.array([
+        np.linalg.solve(np.array([out[i - 1], out[i]]), [out[i - 1] @ p[i] - radius, out[i] @ p[i] - radius])
+        for i in range(len(p))
+    ])
+    return p, centres, d, out
+
+
+def house(apex_deg, width=300.0, height=200.0):
+    """A pentagon with two right-angled base corners, two wall corners of
+    90 + (90 - apex/2) degrees and an apex of `apex_deg`."""
+    rise = width / 2 * math.tan(math.radians(90 - apex_deg / 2))
+    return [(0, 0), (width, 0), (width, height), (width / 2, height + rise), (0, height)]
+
+
+_ERF = np.frompyfunc(math.erf, 1, 1)
+
+
+def slice_level(vertices, radius, points, sigma):
+    """Blurred indicator of a filleted convex polygon by vertical slices, independent of
+    fitting.corner_level: each vertical line meets the shape in one interval
+    [bot(x), top(x)], so u(p) = int phi(x - px) [Phi((top - py)/s) - Phi((bot - py)/s)] dx.
+    top and bot are the max and min over the fillet discs and offset edges, which all lie
+    in the shape and make up its boundary. Gauss-Legendre between breakpoints, under a
+    cosine substitution that removes the square-root ends of the discs."""
+    _, centres, _, out = rounded_polygon(vertices, radius)
+    seg_a, seg_b = centres + radius * out, np.roll(centres, -1, axis=0) + radius * out
+    xs = np.concatenate([seg_a[:, 0], seg_b[:, 0], centres[:, 0] - radius, centres[:, 0] + radius])
+    xmin, xmax = xs.min(), xs.max()
+    breaks = np.unique(np.clip(xs, xmin, xmax))
+
+    def top_bot(x):
+        top, bot = np.full(x.shape, -np.inf), np.full(x.shape, np.inf)
+        for cx, cy in centres:
+            ok = np.abs(x - cx) <= radius
+            h = np.sqrt(np.clip(radius * radius - (x - cx) ** 2, 0, None))
+            top, bot = np.where(ok, np.maximum(top, cy + h), top), np.where(ok, np.minimum(bot, cy - h), bot)
+        for a, b in zip(seg_a, seg_b):
+            if abs(b[0] - a[0]) < 1e-12:
+                continue
+            ok = (x >= min(a[0], b[0])) & (x <= max(a[0], b[0]))
+            y = a[1] + (x - a[0]) * (b[1] - a[1]) / (b[0] - a[0])
+            top, bot = np.where(ok, np.maximum(top, y), top), np.where(ok, np.minimum(bot, y), bot)
+        return top, bot
+
+    def phi_cdf(z):
+        return 0.5 * (1 + _ERF(z / math.sqrt(2)).astype(np.float64))
+
+    points = np.atleast_2d(points)
+    px, py = points[:, 0], points[:, 1]
+    lo, hi = np.clip(px - 9 * sigma, xmin, xmax), np.clip(px + 9 * sigma, xmin, xmax)
+    cuts = np.sort(np.concatenate([lo[:, None], np.clip(breaks[None], lo[:, None], hi[:, None]), hi[:, None]], 1), 1)
+    a, b = cuts[:, :-1], cuts[:, 1:]
+    f = np.linspace(0, 1, 7)
+    sa = a[..., None] + (b - a)[..., None] * f[:-1]
+    sb = a[..., None] + (b - a)[..., None] * f[1:]
+    nodes, weights = np.polynomial.legendre.leggauss(16)
+    s = (nodes + 1) / 2
+    x = sa[..., None] + (sb - sa)[..., None] * (1 - np.cos(np.pi * s)) / 2
+    jac = (sb - sa)[..., None] * (np.pi / 2) * np.sin(np.pi * s) * weights / 2
+    top, bot = top_bot(x)
+    inside = np.isfinite(top)
+    pyb = py[:, None, None, None]
+    cross = np.where(
+        inside, phi_cdf((np.where(inside, top, 0) - pyb) / sigma) - phi_cdf((np.where(inside, bot, 0) - pyb) / sigma), 0
+    )
+    gauss = np.exp(-0.5 * ((x - px[:, None, None, None]) / sigma) ** 2) / (sigma * math.sqrt(2 * math.pi))
+    return np.sum(gauss * cross * jac, axis=(1, 2, 3))
+
+
+def corner_geometry(vertices, radius, i):
+    """centre, start angle and sweep of corner i's fillet, as fitting.corner_level takes them."""
+    _, centres, _, out = rounded_polygon(vertices, radius)
+    start = math.atan2(out[i - 1][1], out[i - 1][0])
+    sweep = (math.atan2(out[i][1], out[i][0]) - start) % (2 * math.pi)
+    return centres[i], start, sweep
+
+
+def blurred_polygon_ring(vertices, radius, sigma, step=1.0):
+    """The traced outline of a filleted polygon blurred by sigma: true boundary points
+    moved along their normals to the blurred half-level, solved by bisection on
+    fitting.corner_level of the nearest corner (exact while corners lie more than about
+    ten sigma apart). Returns (points, normals)."""
+    p, centres, _, out = rounded_polygon(vertices, radius)
+    n = len(p)
+    pts, nrm, owner = [], [], []
+    for i in range(n):
+        centre, start, sweep = corner_geometry(vertices, radius, i)
+        k = max(2, round(sweep * radius / step))
+        for t in start + sweep * (np.arange(k) + 0.5) / k:
+            u = np.array([math.cos(t), math.sin(t)])
+            pts.append(centre + radius * u), nrm.append(u), owner.append(i)
+        a, b = centres[i] + radius * out[i], centres[(i + 1) % n] + radius * out[i]
+        k = max(2, round(float(np.linalg.norm(b - a)) / step))
+        for s in (np.arange(k) + 0.5) / k:
+            q = a + s * (b - a)
+            # nearer corner of this edge, if within 8 sigma of its tangent point
+            ends = ((i, float(np.linalg.norm(q - a))), ((i + 1) % n, float(np.linalg.norm(q - b))))
+            corner, gap = min(ends, key=lambda e: e[1])
+            pts.append(q), nrm.append(out[i]), owner.append(corner if gap < 8 * sigma else -1)
+    pts, nrm, owner = np.array(pts), np.array(nrm), np.array(owner)
+    shift = np.zeros(len(pts))
+    for i in range(n):
+        sel = owner == i
+        centre, start, sweep = corner_geometry(vertices, radius, i)
+        lo, hi = np.full(sel.sum(), -3 * sigma), np.full(sel.sum(), 3 * sigma)
+        for _ in range(60):
+            mid = (lo + hi) / 2
+            inside = fitting.corner_level(pts[sel] + mid[:, None] * nrm[sel], centre, radius, start, sweep, sigma) > 0.5
+            lo, hi = np.where(inside, mid, lo), np.where(inside, hi, mid)
+        shift[sel] = (lo + hi) / 2
+    return pts + shift[:, None] * nrm, nrm
+
+
+def fit_snapped(ring, sigma, ppm=5.0):
+    """The fitting chain of backend.reference with snapping on, in pixels at `ppm`."""
+    tol = max(0.03, 0.15 * sigma / ppm) * ppm
+    min_line = min(max(0.025 * float(np.ptp(ring, axis=0).max()) / ppm, 1.0), 3.0) * ppm
+    prims = fitting.fit_ring(ring, tol, min_line)
+    assert prims is not None
+    fitting.snap_axes([prims])
+    fitting.refit_lines(ring, prims, margin=3 * sigma)
+    fitting.fit_fillets(ring, prims, tol, sigma)
+    fitting.correct_blur(prims, sigma)
+    return prims
+
+
+def test_erfc_matches_the_standard_library_within_its_stated_accuracy():
+    """Numerical analysis: fitting.erfc against math.erfc, fractional error < 1.2e-7,
+    out to where erfc underflows; and its limits."""
+    x = np.linspace(-6, 26, 64001)
+    exact = np.array([math.erfc(v) for v in x])
+    assert (np.abs(fitting.erfc(x) - exact) / exact).max() < 1.2e-7
+    assert list(fitting.erfc(np.array([np.inf, -np.inf, 0.0]))) == [0.0, 2.0, pytest.approx(1.0, abs=1e-7)]
+
+
+def test_blurred_corner_matches_closed_forms_and_an_independent_integral():
+    """Numerical analysis of fitting.corner_level. A sharp right-angled corner blurs to
+    Phi(x/s) Phi(y/s); far along an edge it is the half-plane Phi(d/s). Around every
+    corner of two filleted pentagons (corners of 60, 90, 120 and 150 degrees; r from one
+    to twelve sigma) it agrees with the vertical-slice integral, which shares no code
+    with it, to 1e-6 at the points the fillet fit uses."""
+    rng = np.random.default_rng(0)
+    sigma = 1.7
+    pts = rng.uniform(-6, 6, (300, 2))
+    sharp = fitting.corner_level(pts, (1e-7, 1e-7), 1e-7, math.pi, math.pi / 2, sigma)
+    phi = 0.5 * (1 + _ERF(pts / (sigma * math.sqrt(2))).astype(np.float64))
+    assert np.abs(sharp - phi[:, 0] * phi[:, 1]).max() < 1e-6
+    along = fitting.corner_level(np.array([[10.4, -30.0]]), (0, 0), 10.0, 0.0, math.pi / 2, sigma)
+    assert along[0] == pytest.approx(0.5 * (1 + math.erf(-0.4 / (sigma * math.sqrt(2)))), abs=1e-6)
+
+    sigma = 1.6
+    for apex in (60, 120):
+        for multiple in (1.0, 3.0, 12.0):
+            radius = multiple * sigma
+            vertices = house(apex)
+            _, _, d, out = rounded_polygon(vertices, radius)
+            for i in range(len(vertices)):
+                centre, start, sweep = corner_geometry(vertices, radius, i)
+                t1, t2 = centre + radius * out[i - 1], centre + radius * out[i]
+                offsets = np.linspace(-2 * sigma, 2 * sigma, 5)
+                probe = [t1 - a * d[i - 1] + o * out[i - 1] for a in np.linspace(0, 5 * sigma, 6) for o in offsets]
+                probe += [t2 + a * d[i] + o * out[i] for a in np.linspace(0, 5 * sigma, 6) for o in offsets]
+                for angle in np.linspace(start, start + sweep, 5):
+                    u = np.array([math.cos(angle), math.sin(angle)])
+                    probe += [centre + (radius + o) * u for o in offsets if radius + o > 0]
+                probe = np.array(probe)
+                model = fitting.corner_level(probe, centre, radius, start, sweep, sigma)
+                assert np.abs(model - slice_level(vertices, radius, probe, sigma)).max() < 1e-6
+
+
+@pytest.mark.parametrize("apex", [60, 120])
+@pytest.mark.parametrize("multiple", [2.0, 5.0, 25.0, 50.0])
+def test_fillets_keep_their_radius_at_every_corner_angle_and_size(apex, multiple):
+    """Exact recovery. The traced outline of a blurred, filleted pentagon (corners of 60,
+    90 and 150, or 90 and 120 degrees), fitted as backend.reference does: every corner
+    is one arc between two lines, and every fillet's outline is within 0.001 px of the
+    truth (at 150 degrees a radius error moves the outline only 0.035 times as far), its
+    radius within 0.005 px + 0.1 % up to 120 degrees. The one exception is a 150 degree
+    fillet of two sigma, which moves the outline less than the edges' own uncertainty:
+    it is reported sharp, with a bound above its true radius. Before the exact corner model the
+    150 degree fillets read up to 16 blur shrinks large; before chords were merged,
+    radii of 25 sigma and more were cut into runs of short lines."""
+    sigma = 1.6
+    radius = multiple * sigma
+    vertices = house(apex)
+    ring, _ = blurred_polygon_ring(vertices, radius, sigma)
+    prims = fit_snapped(ring, sigma)
+    kinds = "".join(p.kind[0] for p in prims)
+    assert kinds.count("l") == 5 and "aa" not in kinds
+    for k, p in enumerate(prims):
+        if p.kind == "line" and prims[k - 1].kind == "line":
+            # A corner reported sharp never hides a fillet larger than its stated bound,
+            # and only a wide corner's small fillet can be hidden.
+            assert p.data["sharp_bound"] > radius and multiple <= 2.0 and apex == 60
+        if p.kind == "arc":
+            error = abs(p.data["r"] - radius)
+            theta = math.radians(p.data["corner_deg"])
+            # How far the outline itself moves at the corner's midpoint.
+            assert error * (1 / math.sin(theta / 2) - 1) < 1e-3
+            if p.data["corner_deg"] < 121:
+                assert error < 0.005 + 0.001 * radius
+            assert p.data["blur_modelled"] and math.isfinite(p.data["r_sd"])
+
+
+@pytest.mark.parametrize(("apex", "multiple"), [(60, 16.0), (120, 5.0)])
+def test_an_arc_cut_into_two_chords_stays_one_arc(apex, multiple):
+    """Exact recovery under a wide blur (2.5 px). A 150 degree R40 px corner and a
+    120 degree R12.5 px corner are each cut into just two chords that pass for lines.
+    The large-radius rule sends a lone chord between two lines back, and these corners
+    became sharp, moving the outline 1.4 and 1.9 px; fitting._curved_runs keeps them as
+    one arc each, with their radius."""
+    sigma = 2.5
+    radius = multiple * sigma
+    ring, _ = blurred_polygon_ring(house(apex), radius, sigma)
+    prims = fit_snapped(ring, sigma)
+    assert "".join(p.kind[0] for p in prims) == "la" * 5
+    radii = np.array([p.data["r"] for p in prims if p.kind == "arc"])
+    assert np.abs(radii - radius).max() < 0.01
+
+
+def correlated_noise(rng, n, scale, length=2.0):
+    """Edge noise of standard deviation `scale` correlated along the ring over `length` points."""
+    kernel = np.exp(-0.5 * (np.arange(-4 * length, 4 * length + 1) / length) ** 2)
+    kernel /= np.sqrt((kernel * kernel).sum())
+    w = rng.normal(0, 1, n + 2 * len(kernel))
+    return scale * np.convolve(w, kernel, "same")[len(kernel) : len(kernel) + n]
+
+
+def test_reported_fillet_uncertainty_matches_its_monte_carlo_spread():
+    """Statistics. Forty noisy tracings (0.1 px noise correlated over four points along
+    the edge) of a pentagon with 90 and 120 degree corners: each corner's mean radius is
+    within four standard errors of the truth, and the reported standard deviation is
+    within a factor of 0.75 to 3 of the observed spread. It includes the blur's and the
+    edges' systematic uncertainty, which this experiment leaves out, so it errs high;
+    without the correlation measured on the edges (fitting.correlation_factor) it would
+    read under half the spread."""
+    sigma, radius = 1.6, 8.0
+    ring, normals = blurred_polygon_ring(house(120), radius, sigma)
+    rng = np.random.default_rng(11)
+    radii, reported = {}, {}
+    for _ in range(40):
+        noisy = ring + correlated_noise(rng, len(ring), 0.1, 4.0)[:, None] * normals
+        for p in fit_snapped(noisy, sigma):
+            if p.kind == "arc":
+                angle = round(p.data["corner_deg"])
+                radii.setdefault(angle, []).append(p.data["r"])
+                reported.setdefault(angle, []).append(p.data["r_sd"])
+    assert sorted(radii) == [90, 120]
+    for angle, values in radii.items():
+        spread = statistics.stdev(values)
+        assert abs(statistics.fmean(values) - radius) < 4 * spread / math.sqrt(len(values))
+        assert 0.75 < statistics.median(reported[angle]) / spread < 3
+
+
+def test_a_wide_fillet_the_photo_cannot_resolve_is_reported():
+    """Properties. At a 150 degree corner the outline moves only 0.035 times a change of
+    radius; with 0.03 px of edge noise a radius of five sigma is not determined, and the
+    trace says so (with the outline's own, much smaller, uncertainty), in each of six
+    noisy tracings. The right-angled and 60 degree corners of the same outline are
+    determined and are never named."""
+    sigma, radius = 1.6, 8.0
+    ring, normals = blurred_polygon_ring(house(60), radius, sigma)
+    for seed in range(6):
+        noisy = ring + correlated_noise(np.random.default_rng(seed), len(ring), 0.03)[:, None] * normals
+        prims = fit_snapped(noisy, sigma)
+        notes = fitting.undetermined_radii([prims], sigma, scale=0.2)
+        assert len(notes) >= 1 and all("90°" not in n and "60°" not in n for n in notes)
+        for p in prims:
+            if p.kind == "arc" and "r_sd" in p.data:
+                wide = round(p.data["corner_deg"]) == 150
+                assert (p.data["r_sd"] > fitting.UNDETERMINED_REL * p.data["r"]) == wide
+    assert any("150° corner" in n and "or more" in n for n in notes)
+    square = blurred_polygon_ring([(0, 0), (300, 0), (300, 200), (0, 200)], radius, sigma)[0]
+    assert fitting.undetermined_radii([fit_snapped(square, sigma)], sigma) == []
