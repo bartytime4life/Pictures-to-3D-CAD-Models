@@ -1,0 +1,439 @@
+"""Reference-sheet geometry: detection, lens distortion, rectification and camera pose.
+
+A sheet of known size lying in the part's plane supplies three things a single photo
+otherwise lacks: millimetre scale, the plane-to-image homography (perspective), and
+enough straight edges to estimate radial lens distortion. The homography also fixes the
+camera's position relative to the plane, which the edge stage uses to undo the parallax
+of a part's top face.
+
+Coordinates: photo pixel i spans [i, i + 1] (its centre is i + 0.5), the repository
+convention. Plane coordinates are millimetres on the sheet, x along its top edge and y
+down its left edge, origin at its top-left corner as seen in the photo.
+"""
+
+from __future__ import annotations
+
+import math
+from dataclasses import dataclass
+
+import cv2
+import numpy as np
+
+# Paper presets in millimetres (ISO 216 A4 and ANSI Letter), short side first.
+SHEETS = {"a4": (210.0, 297.0), "letter": (215.9, 279.4)}
+MAX_RECTIFIED_PIXELS = 12_000_000
+PPM_RANGE = (4.0, 12.0)  # rectified pixels per millimetre
+K1_RANGE = (-0.25, 0.25)
+# A phone's main camera is typically about 24-28 mm (35 mm equivalent).
+DEFAULT_FOCAL_35MM = 26.0
+
+
+class SheetError(ValueError):
+    """A recoverable reference-sheet failure whose message is suitable for the user."""
+
+
+@dataclass
+class Sheet:
+    corners: np.ndarray  # 4x2 photo px (distorted), order: top-left, top-right, bottom-right, bottom-left
+    sides: list  # four arrays of edge points (distorted photo px), same order as the corners
+    polarity: int  # +1 for a sheet brighter than its surroundings, -1 for darker
+
+
+def line_tls(points):
+    """Total-least-squares line: (centroid, unit direction, rms residual)."""
+    centre = points.mean(axis=0)
+    _, _, vt = np.linalg.svd(points - centre, full_matrices=False)
+    direction = vt[0]
+    normal = np.array([-direction[1], direction[0]])
+    residual = (points - centre) @ normal
+    return centre, direction, float(np.sqrt(np.mean(residual * residual)))
+
+
+def intersect(c1, d1, c2, d2):
+    t = np.linalg.solve(np.array([d1, -d2]).T, np.asarray(c2) - np.asarray(c1))
+    return np.asarray(c1) + t[0] * np.asarray(d1)
+
+
+def sample_bilinear(image, x, y):
+    """Bilinear samples of a 2-D float image at continuous index coordinates (x, y),
+    in float64, with edge replication.
+
+    cv2.remap would be faster, but it quantises interpolation positions to 1/32 pixel
+    (INTER_TAB_SIZE), up to 0.016 px of error, which is larger than the edge
+    localisation it serves.
+    """
+    h, w = image.shape
+    x = np.clip(x, 0, w - 1)
+    y = np.clip(y, 0, h - 1)
+    x0 = np.minimum(np.floor(x).astype(np.int64), w - 2)
+    y0 = np.minimum(np.floor(y).astype(np.int64), h - 2)
+    fx, fy = x - x0, y - y0
+    img = image.astype(np.float64, copy=False)
+    top = img[y0, x0] * (1 - fx) + img[y0, x0 + 1] * fx
+    bottom = img[y0 + 1, x0] * (1 - fx) + img[y0 + 1, x0 + 1] * fx
+    return top * (1 - fy) + bottom * fy
+
+
+def half_level_search(gray, points, normals, half, step=0.125, min_contrast=12.0):
+    """Move each point along its normal to the crossing of its local mid-level.
+
+    The level is the mean of the median intensities at both ends of the sampled profile,
+    so it follows uneven light and shadow. For a straight edge blurred by any symmetric
+    point-spread function the crossing is unbiased whatever the blur width. Profiles
+    with less than `min_contrast` grey levels between their ends are dropped. Returns the
+    moved points and a keep mask.
+    """
+    t = np.arange(-half, half + step / 2, step)
+    sx = points[:, None, 0] + t[None, :] * normals[:, None, 0] - 0.5
+    sy = points[:, None, 1] + t[None, :] * normals[:, None, 1] - 0.5
+    profile = sample_bilinear(gray, sx, sy)
+    k = max(2, round(0.15 * len(t)))
+    low = np.median(profile[:, :k], axis=1)
+    high = np.median(profile[:, -k:], axis=1)
+    level = (low + high) / 2
+    sign = np.sign(high - low)[:, None]
+    above = (profile - level[:, None]) * sign > 0
+    keep = np.abs(high - low) >= min_contrast
+    moved = points.astype(np.float64).copy()
+    centre = len(t) // 2
+    for i in np.nonzero(keep)[0]:
+        crossings = np.nonzero(above[i, 1:] != above[i, :-1])[0]
+        if len(crossings) == 0:
+            keep[i] = False
+            continue
+        j = crossings[np.argmin(np.abs(crossings - centre))]
+        p0, p1 = profile[i, j] - level[i], profile[i, j + 1] - level[i]
+        fraction = p0 / (p0 - p1) if p0 != p1 else 0.5
+        moved[i] = points[i] + (t[j] + fraction * step) * normals[i]
+    return moved, keep
+
+
+def _quad(gray_small, polarity):
+    work = gray_small if polarity > 0 else 255 - gray_small
+    _, mask = cv2.threshold(work, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, np.ones((15, 15), np.uint8))
+    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    if not contours:
+        return None
+    contour = max(contours, key=cv2.contourArea)
+    area = cv2.contourArea(contour)
+    if area < 0.05 * gray_small.size or area > 0.97 * gray_small.size:
+        return None
+    hull = cv2.convexHull(contour)
+    quad = cv2.approxPolyDP(hull, 0.02 * cv2.arcLength(hull, True), True).reshape(-1, 2)
+    if len(quad) != 4 or not cv2.isContourConvex(quad.reshape(-1, 1, 2)):
+        return None
+    # The sheet must not run off the photo: a clipped edge would be a false side.
+    h, w = gray_small.shape
+    if quad[:, 0].min() <= 2 or quad[:, 1].min() <= 2 or quad[:, 0].max() >= w - 3 or quad[:, 1].max() >= h - 3:
+        return None
+    # A sheet carries a part: something contrasting must lie well inside it. Without this
+    # a plain dark rectangle on a light background would pass as a dark sheet.
+    inside = np.zeros_like(mask)
+    cv2.fillConvexPoly(inside, quad.astype(np.int32), 255)
+    inside = cv2.erode(inside, np.ones((9, 9), np.uint8))
+    region = inside > 0
+    if region.sum() < 100 or np.mean(mask[region] == 0) < 0.003:
+        return None
+    return quad.astype(np.float64)
+
+
+def find_sheet(gray):
+    """Locate the reference sheet and sub-pixel points along its four edges.
+
+    `gray` is the full-resolution photo as uint8. Tries a sheet brighter than its
+    surroundings first, then a darker one.
+    """
+    h, w = gray.shape
+    scale = 1000 / max(h, w)
+    small = cv2.resize(gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
+    small = cv2.GaussianBlur(small, (5, 5), 0)
+    for polarity in (1, -1):
+        quad = _quad(small, polarity)
+        if quad is not None:
+            break
+    else:
+        raise SheetError(
+            "No reference sheet was found. Show the whole sheet, with all four corners and a "
+            "contrasting surface around it, or choose No reference."
+        )
+    quad /= scale
+    sums, diffs = quad.sum(1), np.diff(quad, axis=1).ravel()
+    quad = np.array([quad[np.argmin(sums)], quad[np.argmin(diffs)], quad[np.argmax(sums)], quad[np.argmax(diffs)]])
+    gray_f = cv2.GaussianBlur(gray.astype(np.float32), (0, 0), 1.0)
+    sides = []
+    for i in range(4):
+        a, b = quad[i], quad[(i + 1) % 4]
+        length = float(np.linalg.norm(b - a))
+        ts = np.linspace(0.06, 0.94, max(40, int(length / 3)))  # clear of the corners
+        points = a[None] + ts[:, None] * (b - a)[None]
+        d = (b - a) / length
+        normals = np.tile([-d[1], d[0]], (len(points), 1))
+        moved, keep = half_level_search(gray_f, points, normals, half=14.0, step=0.25)
+        # Distortion bows a real edge off the corner-to-corner chord, which can put one
+        # level window on the transition. Re-centre on the first crossings and search again.
+        moved, keep2 = half_level_search(gray_f, moved[keep], normals[keep], half=10.0, step=0.25)
+        side = moved[keep2]
+        if len(side) < 20:
+            raise SheetError(
+                "The reference sheet's edges are not clear enough. Use a sheet that contrasts with the surface under it."
+            )
+        sides.append(side)
+    return Sheet(corners=quad, sides=sides, polarity=polarity)
+
+
+def undistort_radius(rd, k1, iterations=12):
+    """Solve r_u + k1 r_u^3 = r_d for r_u by Newton's method (quadratic convergence).
+
+    The forward model is monotonic, hence invertible, while 1 + 3 k1 r_u^2 > 0; with
+    |k1| <= 0.25 that holds across the whole image (normalised radius <= 1).
+    """
+    ru = np.array(rd, dtype=np.float64, copy=True)
+    for _ in range(iterations):
+        derivative = 1 + 3 * k1 * ru * ru
+        step = (ru + k1 * ru**3 - rd) / derivative
+        ru = ru - step
+        if np.all(np.abs(step) < 1e-15):
+            break
+    return ru
+
+
+def undistort_points(points, k1, size):
+    """Invert x_d = x_u (1 + k1 r_u^2), r normalised by the image half-diagonal."""
+    w, h = size
+    cx, cy, s = w / 2, h / 2, math.hypot(w, h) / 2
+    xd, yd = (points[:, 0] - cx) / s, (points[:, 1] - cy) / s
+    rd = np.hypot(xd, yd)
+    ru = undistort_radius(rd, k1)
+    factor = np.divide(ru, rd, out=np.ones_like(rd), where=rd > 0)
+    return np.column_stack([cx + xd * factor * s, cy + yd * factor * s])
+
+
+def straightness(sides, k1, size):
+    total, count = 0.0, 0
+    for side in sides:
+        _, _, rms = line_tls(undistort_points(side, k1, size))
+        total += rms * rms * len(side)
+        count += len(side)
+    return math.sqrt(total / count)
+
+
+def estimate_k1(sheet, size):
+    """Golden-section search for the radial coefficient that straightens the sheet edges.
+
+    Returns (k1, rms before, rms after) with residuals in photo pixels. Four edges
+    near the image centre constrain k1 weakly; the residual improvement shows how much
+    the correction mattered.
+    """
+    g = (math.sqrt(5) - 1) / 2
+    a, b = K1_RANGE
+    c, d = b - g * (b - a), a + g * (b - a)
+    fc, fd = straightness(sheet.sides, c, size), straightness(sheet.sides, d, size)
+    for _ in range(60):
+        if fc < fd:
+            b, d, fd = d, c, fc
+            c = b - g * (b - a)
+            fc = straightness(sheet.sides, c, size)
+        else:
+            a, c, fc = c, d, fd
+            d = a + g * (b - a)
+            fd = straightness(sheet.sides, d, size)
+    k1 = (a + b) / 2
+    before = straightness(sheet.sides, 0.0, size)
+    after = straightness(sheet.sides, k1, size)
+    # Keep a correction only when it clearly straightens the edges.
+    if after > 0.8 * before or abs(k1) < 1e-4:
+        return 0.0, before, before
+    return k1, before, after
+
+
+def homography(sheet, k1, size, sheet_mm):
+    """Plane millimetres -> undistorted photo pixels, from the four fitted sheet edges.
+
+    The longer pair of opposite sides is matched to the sheet's long dimension.
+    """
+    lines = []
+    for side in sheet.sides:
+        centre, direction, _ = line_tls(undistort_points(side, k1, size))
+        lines.append((centre, direction))
+    corners = np.array([intersect(*lines[i - 1], *lines[i]) for i in range(4)])
+    horizontal = np.linalg.norm(corners[1] - corners[0]) + np.linalg.norm(corners[2] - corners[3])
+    vertical = np.linalg.norm(corners[3] - corners[0]) + np.linalg.norm(corners[2] - corners[1])
+    short, long = sorted(sheet_mm)
+    width, height = (short, long) if vertical > horizontal else (long, short)
+    plane = np.array([[0, 0], [width, 0], [width, height], [0, height]], np.float64)
+    matrix, _ = cv2.findHomography(plane, corners, 0)
+    if matrix is None or not np.all(np.isfinite(matrix)):
+        raise SheetError("The reference sheet's corners could not be resolved. Retake the photo.")
+    return matrix / matrix[2, 2], (width, height), corners
+
+
+def project(matrix, points):
+    p = np.c_[points, np.ones(len(points))] @ matrix.T
+    return p[:, :2] / p[:, 2:]
+
+
+def native_ppm(matrix, plane_size):
+    """Photo pixels per millimetre at the sheet centre (geometric mean of both axes)."""
+    w, h = plane_size
+    c = np.array([[w / 2, h / 2], [w / 2 + 1, h / 2], [w / 2, h / 2 + 1]])
+    p = project(matrix, c)
+    return math.sqrt(np.linalg.norm(p[1] - p[0]) * np.linalg.norm(p[2] - p[0]))
+
+
+def choose_ppm(matrix, plane_size):
+    native = native_ppm(matrix, plane_size)
+    ppm = min(max(1.25 * native, PPM_RANGE[0]), PPM_RANGE[1])
+    w, h = plane_size
+    return min(ppm, math.sqrt(MAX_RECTIFIED_PIXELS / (w * h))), native
+
+
+def rectify(rgb, matrix, k1, plane_size, ppm):
+    """One resampling of the photo onto a millimetre grid, through perspective and lens,
+    for display (cv2.remap: fast, but positions quantised to 1/32 pixel; measurements
+    use rectify_gray).
+
+    Output pixel (i, j) is centred on plane ((i + 0.5) / ppm, (j + 0.5) / ppm).
+    """
+    w, h = plane_size
+    cols, rows = round(w * ppm), round(h * ppm)
+    gx, gy = np.meshgrid((np.arange(cols) + 0.5) / ppm, (np.arange(rows) + 0.5) / ppm)
+    ph, pw = rgb.shape[:2]
+    u, v = plane_to_photo(matrix, k1, (pw, ph), gx, gy)
+    map_x = (u - 0.5).astype(np.float32)
+    map_y = (v - 0.5).astype(np.float32)
+    return cv2.remap(rgb, map_x, map_y, cv2.INTER_CUBIC, borderMode=cv2.BORDER_REPLICATE)
+
+
+def _keys(t, a=-0.5):
+    """Keys cubic-convolution kernel (a = -0.5): interpolates, and reproduces
+    quadratics exactly."""
+    t = np.abs(t)
+    near = t <= 1
+    far = (t > 1) & (t < 2)
+    out = np.zeros_like(t)
+    out[near] = ((a + 2) * t[near] - (a + 3)) * t[near] ** 2 + 1
+    out[far] = ((a * t[far] - 5 * a) * t[far] + 8 * a) * t[far] - 4 * a
+    return out
+
+
+def plane_to_photo(matrix, k1, size, gx, gy):
+    """Distorted photo coordinates (continuous, pixel i spans [i, i + 1]) of plane points."""
+    den = matrix[2, 0] * gx + matrix[2, 1] * gy + matrix[2, 2]
+    iu = (matrix[0, 0] * gx + matrix[0, 1] * gy + matrix[0, 2]) / den
+    iv = (matrix[1, 0] * gx + matrix[1, 1] * gy + matrix[1, 2]) / den
+    pw, ph = size
+    cx, cy, s = pw / 2, ph / 2, math.hypot(pw, ph) / 2
+    x, y = (iu - cx) / s, (iv - cy) / s
+    f = 1 + k1 * (x * x + y * y)
+    return cx + x * f * s, cy + y * f * s
+
+
+def rectify_gray(gray, matrix, k1, plane_size, ppm, block_rows=192):
+    """The measurement image: an exact float64 cubic resampling of a grey photo onto the
+    millimetre grid (same geometry as rectify). Unlike cv2.remap, which quantises
+    positions to 1/32 pixel and moved content by up to 0.09 px in tests, this has no
+    positional quantisation: a linear intensity ramp is reproduced exactly."""
+    h, w = gray.shape
+    width, height = plane_size
+    cols, rows = round(width * ppm), round(height * ppm)
+    image = gray.astype(np.float64)
+    out = np.empty((rows, cols), np.float32)
+    xs = (np.arange(cols) + 0.5) / ppm
+    for top in range(0, rows, block_rows):
+        ys = (np.arange(top, min(rows, top + block_rows)) + 0.5) / ppm
+        gx, gy = np.meshgrid(xs, ys)
+        u, v = plane_to_photo(matrix, k1, (w, h), gx, gy)
+        u, v = u - 0.5, v - 0.5  # index coordinates
+        u0, v0 = np.floor(u).astype(np.int64), np.floor(v).astype(np.int64)
+        fu, fv = u - u0, v - v0
+        acc = np.zeros(u.shape)
+        for j in range(-1, 3):
+            wy = _keys(fv - j)
+            yy = np.clip(v0 + j, 0, h - 1)
+            row = np.zeros(u.shape)
+            for i in range(-1, 3):
+                row += _keys(fu - i) * image[yy, np.clip(u0 + i, 0, w - 1)]
+            acc += wy * row
+        out[top : top + len(ys)] = acc
+    return out
+
+
+def orthogonal_focal(matrix, size):
+    """Focal length from the orthogonality of the rotation's first two columns alone.
+
+    Scaling the plane's x or y axis (a wrong sheet aspect ratio) scales a column of the
+    homography and cannot change whether the two columns are orthogonal, so this
+    estimate does not depend on the stated sheet size. Returns None when the view gives
+    no usable constraint (perspective about only one axis, or a frontal view).
+    """
+    w, h = size
+    shifted = np.array([[1, 0, -w / 2], [0, 1, -h / 2], [0, 0, 1.0]]) @ matrix
+    (h11, h12, _), (h21, h22, _), (h31, h32, _) = shifted
+    a, b = h11 * h12 + h21 * h22, h31 * h32
+    if abs(a) < 1e-12 or -b / a <= 0:
+        return None
+    focal = 1 / math.sqrt(-b / a)
+    diagonal = math.hypot(w, h)
+    return focal if 0.3 * diagonal <= focal <= 5 * diagonal else None
+
+
+def aspect_ratio_check(matrix, size, focal):
+    """Measured / stated sheet aspect ratio (width / height) implied by the homography.
+
+    With metric plane coordinates the rotation's first two columns have equal norms,
+    so their ratio in K^-1 H is (true aspect) / (stated aspect). In a frontal view the
+    ratio hardly depends on the focal length, so the check holds for any view.
+    """
+    w, h = size
+    shifted = np.array([[1, 0, -w / 2], [0, 1, -h / 2], [0, 0, 1.0]]) @ matrix
+    m = np.diag([1 / focal, 1 / focal, 1.0]) @ shifted
+    return float(np.linalg.norm(m[:, 0]) / np.linalg.norm(m[:, 1]))
+
+
+def camera_pose(matrix, size, exif_focal_35mm=None):
+    """Focal length, camera centre and height above the plane from the homography.
+
+    Assumes square pixels, zero skew and the principal point at the image centre. The
+    focal length follows from the two orthonormality constraints on the rotation's
+    first columns. Each constraint gives its own estimate; when they disagree (a nearly
+    frontal view, or a cropped photo) the EXIF 35 mm-equivalent focal length is used,
+    else a typical phone value. Returns a dict; `focal_source` says which was used.
+    """
+    w, h = size
+    diagonal = math.hypot(w, h)
+    shifted = np.array([[1, 0, -w / 2], [0, 1, -h / 2], [0, 0, 1.0]]) @ matrix
+    (h11, h12, _), (h21, h22, _), (h31, h32, _) = shifted
+    a1, b1 = h11 * h12 + h21 * h22, h31 * h32
+    a2, b2 = h11**2 + h21**2 - h12**2 - h22**2, h31**2 - h32**2
+    estimates = []
+    for a, b in ((a1, b1), (a2, b2)):
+        if abs(a) > 1e-12 and -b / a > 0:
+            estimates.append(1 / math.sqrt(-b / a))
+    focal, source = None, None
+    if len(estimates) == 2:
+        u = -(a1 * b1 + a2 * b2) / (a1 * a1 + a2 * a2)
+        if u > 0:
+            candidate = 1 / math.sqrt(u)
+            spread = abs(estimates[0] - estimates[1]) / candidate
+            if spread < 0.15 and 0.3 * diagonal <= candidate <= 5 * diagonal:
+                focal, source = candidate, "sheet"
+    if focal is None and exif_focal_35mm and 5 <= exif_focal_35mm <= 600:
+        focal, source = exif_focal_35mm / math.hypot(36, 24) * diagonal, "exif"
+    if focal is None:
+        focal, source = DEFAULT_FOCAL_35MM / math.hypot(36, 24) * diagonal, "assumed"
+    m = np.diag([1 / focal, 1 / focal, 1.0]) @ shifted
+    lam = 2 / (np.linalg.norm(m[:, 0]) + np.linalg.norm(m[:, 1]))
+    r1, r2, t = lam * m[:, 0], lam * m[:, 1], lam * m[:, 2]
+    if t[2] < 0:
+        r1, r2, t = -r1, -r2, -t
+    u_, _, vt = np.linalg.svd(np.column_stack([r1, r2, np.cross(r1, r2)]))
+    rotation = u_ @ vt
+    centre = -rotation.T @ t
+    return {
+        "focal_px": float(focal),
+        "focal_source": source,
+        "centre_mm": centre,
+        "nadir_mm": centre[:2].copy(),
+        "height_mm": float(abs(centre[2])),
+    }

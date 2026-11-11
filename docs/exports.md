@@ -6,6 +6,8 @@ Choose the output according to the receiving tool. All generated geometry uses *
 
 Use STEP when continuing in a solid-modeling CAD application. The file contains the generated boundary representation of the extruded part and its through-holes. In split mode, the combined file contains the generated pieces in their assembled positions.
 
+A single-piece build from a reference-sheet trace extrudes its fitted lines, arcs and circles. Holes and rounded corners are then true cylindrical faces with exact radii that downstream CAD can dimension and edit, and the export dialog reports the counts. A fitted radius describes the photograph; it is not recovered design intent. Split output still uses the traced polygon.
+
 STEP does not carry this application's original editable feature history. The receiving tool may support direct edits, but that is different from recovering a named sketch, constraints, or an extrusion feature. Keep the project recipe if you want to change width or thickness in this workbench later.
 
 The traced boundary is a polygonal approximation. A hole that looks circular in the photograph is not automatically fitted to an exact analytic circle, and STEP export does not change that approximation into an exact measured feature.
@@ -42,7 +44,7 @@ The workbench test suite runs this checker on combined exports, on a traced phot
 
 ## DXF: a planar profile
 
-Use DXF for the 2D boundary and interior cutouts. It describes a flat profile, not the extruded thickness, toolpaths, cutting order, kerf compensation, or machine settings.
+Use DXF for the 2D boundary and interior cutouts. It describes a flat profile, not the extruded thickness, toolpaths, cutting order, kerf compensation, or machine settings. A fitted single-piece outline is written as `LINE`, `ARC` (counter-clockwise start and end angles) and `CIRCLE` entities on the `OUTLINE` and `HOLES` layers instead of polylines.
 
 Confirm millimeter units, closed contours, and the separation between the outer boundary and holes in the receiving CAD/CAM software. Decide how to compensate for the manufacturing process there.
 
@@ -50,7 +52,7 @@ In split mode, DXF records each piece's planar outline at its assembled position
 
 ## OpenSCAD: editable polygon extrusion
 
-Choose **OpenSCAD** in the export dialog to download `model.scad`. Source generation uses the same final profiles as the CAD worker, after the workbench's design percentages, geometry-detail approximation, and split cuts. The default SCAD values therefore describe the current built dimensions and holes. Generating this source does not require an OpenSCAD installation.
+Choose **OpenSCAD** in the export dialog to download `model.scad`. For a fitted single-piece outline, circular holes stay `circle(r = …, $fn = …)` calls inside a `difference()`, with facet counts chosen for a 0.005 mm chord error; other fitted boundaries are polygons sampled within 0.005 mm. Source generation uses the same final profiles as the CAD worker, after the workbench's design percentages, geometry-detail approximation, and split cuts. The default SCAD values therefore describe the current built dimensions and holes. Generating this source does not require an OpenSCAD installation.
 
 Open the file in OpenSCAD, then preview and render it. `thickness_mm` is the effective built thickness, `xy_scale = 1` preserves the exported XY dimensions, and `part_index = 0` displays the whole assembly. In split mode, set `part_index` to a numbered piece to inspect or export only that piece. Selected pieces keep their assembled coordinates; place them in your slicer. The combined source unions touching pieces for display/rendering; use the selector or the Parts ZIP when separate pieces are needed.
 

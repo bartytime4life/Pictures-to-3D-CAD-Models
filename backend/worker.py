@@ -11,7 +11,8 @@ import ezdxf
 from shapely.geometry import Polygon
 from shapely.geometry.polygon import orient
 
-from .models import BuildRequest, DesignSettings
+from .fitting import arc_geometry
+from .models import BuildRequest, DesignSettings, ring_polygon
 from .printing import (
     PrintGeometryError,
     aggregate_fit,
@@ -20,7 +21,7 @@ from .printing import (
     resolve_design,
     split_profile,
 )
-from .scad import profile_source
+from .scad import fitted_source, profile_source
 from .slicer_handoff import write_slicer_handoffs
 from .three_mf import ThreeMFError, write_3mf
 
@@ -52,6 +53,93 @@ def extrude_profile(polygon, thickness):
     return shape
 
 
+def model_rings(primitives, convert, scale):
+    """Fitted segments in model millimetres: ("line", a, b), ("arc", a, m, b), ("circle", c, r)."""
+    rings = []
+    for ring in [primitives.outer, *primitives.holes]:
+        out = []
+        for s in ring:
+            if s.kind == "circle":
+                out.append(("circle", convert([s.center])[0], s.radius * scale))
+            elif s.kind == "line":
+                a, b = convert([s.start, s.end])
+                out.append(("line", a, b))
+            else:
+                out.append(("arc", *convert([s.start, s.mid, s.end])))
+        rings.append(out)
+    return rings
+
+
+def wire_of(ring):
+    def v(p):
+        return cq.Vector(p[0], p[1], 0)
+
+    if ring[0][0] == "circle":
+        return cq.Wire.makeCircle(ring[0][2], v(ring[0][1]), cq.Vector(0, 0, 1))
+    edges = []
+    for s in ring:
+        if s[0] == "line":
+            edges.append(cq.Edge.makeLine(v(s[1]), v(s[2])))
+        else:
+            edges.append(cq.Edge.makeThreePointArc(v(s[1]), v(s[2]), v(s[3])))
+    return cq.Wire.assembleEdges(edges)
+
+
+def extrude_fitted(rings, thickness, polygon):
+    """Extrude exact lines, arcs and circles; checked against the reviewed polygon."""
+    try:
+        wires = [wire_of(ring) for ring in rings]
+        face = cq.Face.makeFromWires(wires[0], wires[1:])
+        shape = cq.Solid.extrudeLinear(wires[0], wires[1:], (0, 0, thickness))
+    except Exception as exc:
+        raise PrintGeometryError(
+            "The fitted outline could not form a solid. Re-trace with design-intent snapping off."
+        ) from exc
+    volume = shape.Volume()
+    if (
+        not shape.isValid()
+        or len(shape.Solids()) != 1
+        or not math.isfinite(volume)
+        or not math.isclose(volume, face.Area() * thickness, rel_tol=1e-6)
+        # The exact solid must be the outline the user reviewed (sampled within microns).
+        or not math.isclose(face.Area(), polygon.area, rel_tol=1e-4)
+    ):
+        raise PrintGeometryError(
+            "The fitted outline did not pass its solid checks. Re-trace with design-intent snapping off."
+        )
+    return shape, face.Area()
+
+
+def fitted_counts(rings):
+    counts = {"lines": 0, "arcs": 0, "circles": 0}
+    for ring in rings:
+        for s in ring:
+            counts[{"line": "lines", "arc": "arcs", "circle": "circles"}[s[0]]] += 1
+    return counts
+
+
+def write_fitted_dxf(path, rings):
+    """LINE, ARC and CIRCLE entities: true geometry for CAD/CAM import."""
+    drawing = ezdxf.new("R2010")
+    drawing.units = ezdxf.units.MM
+    drawing.header["$MEASUREMENT"] = 1
+    modelspace = drawing.modelspace()
+    for index, ring in enumerate(rings):
+        layer = {"layer": "OUTLINE" if index == 0 else "HOLES"}
+        for s in ring:
+            if s[0] == "circle":
+                modelspace.add_circle(s[1], s[2], dxfattribs=layer)
+            elif s[0] == "line":
+                modelspace.add_line(s[1], s[2], dxfattribs=layer)
+            else:
+                (cx, cy), r, a0, sweep = arc_geometry(s[1], s[2], s[3])
+                start, end = (a0, a0 + sweep) if sweep > 0 else (a0 + sweep, a0)
+                modelspace.add_arc(
+                    (cx, cy), r, math.degrees(start), math.degrees(end), dxfattribs=layer
+                )
+    drawing.saveas(path)
+
+
 def dimensions_of(shape):
     bounds = shape.BoundingBox()
     return {"width": bounds.xlen, "height": bounds.ylen, "thickness": bounds.zlen}
@@ -79,6 +167,12 @@ def export_solid(shape, directory, basename):
             raise PrintGeometryError("An export was empty. Try rebuilding the model.")
 
 
+def _sampled(primitives, convert, scale):
+    """Outer and hole vertex lists of the fitted rings, within 1 micron of each arc."""
+    sampled = [convert(ring_polygon(ring, 0.001 / scale)) for ring in [primitives.outer, *primitives.holes]]
+    return sampled[0], sampled[1:]
+
+
 def build(job_dir: Path) -> dict:
     request = BuildRequest.model_validate_json((job_dir / "input.json").read_text(encoding="utf-8"))
     design, printer, warnings = resolve_design(request.design or DesignSettings())
@@ -93,32 +187,58 @@ def build(job_dir: Path) -> dict:
     polygon = orient(
         Polygon(convert(request.profile.outer), [convert(r) for r in request.profile.holes]), sign=1
     )
-    polygon, detail_warnings = prepare_profile(polygon, design)
-    warnings.extend(detail_warnings)
-    polygons = split_profile(polygon, design)
-    solids = [extrude_profile(part, thickness) for part in polygons]
+    primitives = request.profile.primitives
+    fitted = primitives is not None and design.output_mode == "single"
+    geometry = {"kind": "polygon"}
+    if fitted:
+        rings = model_rings(primitives, convert, scale)
+        # The polygon the user reviewed, re-sampled finely, checks the exact solid.
+        exact = orient(
+            Polygon(*_sampled(primitives, convert, scale)), sign=1
+        )
+        shape, _ = extrude_fitted(rings, thickness, exact if exact.is_valid else polygon)
+        solids, polygons = [shape], [exact if exact.is_valid else polygon]
+        volume = shape.Volume()
+        geometry = {"kind": "fitted", **fitted_counts(rings)}
+        if design.detail_mode != "original":
+            warnings.append(
+                "Geometry detail does not simplify a fitted outline: its exported edges are the fitted lines, arcs and circles."
+            )
+    else:
+        if primitives is not None:
+            warnings.append(
+                "Split pieces use the traced outline polygon. Exact arcs and circles are exported only for single-piece output."
+            )
+        polygon, detail_warnings = prepare_profile(polygon, design)
+        warnings.extend(detail_warnings)
+        polygons = split_profile(polygon, design)
+        solids = [extrude_profile(part, thickness) for part in polygons]
     shape = solids[0] if len(solids) == 1 else cq.Compound.makeCompound(solids)
-    volume = shape.Volume()
-    if not math.isclose(volume, polygon.area * thickness, rel_tol=1e-6, abs_tol=1e-7):
-        raise PrintGeometryError("The split assembly did not preserve the expected volume.")
+    if not fitted:
+        volume = shape.Volume()
+        if not math.isclose(volume, polygon.area * thickness, rel_tol=1e-6, abs_tol=1e-7):
+            raise PrintGeometryError("The split assembly did not preserve the expected volume.")
     dimensions = dimensions_of(shape)
     export_solid(shape, job_dir, "model")
-    (job_dir / "model.scad").write_text(profile_source(polygons, thickness), encoding="utf-8")
-
-    # Each closed DXF loop describes a real part outline, including split edges.
-    drawing = ezdxf.new("R2010")
-    drawing.units = ezdxf.units.MM
-    drawing.header["$MEASUREMENT"] = 1
-    modelspace = drawing.modelspace()
-    for part in polygons:
-        modelspace.add_lwpolyline(
-            list(part.exterior.coords)[:-1], close=True, dxfattribs={"layer": "OUTLINE"}
-        )
-        for ring in part.interiors:
+    if fitted:
+        (job_dir / "model.scad").write_text(fitted_source(rings, thickness), encoding="utf-8")
+        write_fitted_dxf(job_dir / "profile.dxf", rings)
+    else:
+        (job_dir / "model.scad").write_text(profile_source(polygons, thickness), encoding="utf-8")
+        # Each closed DXF loop describes a real part outline, including split edges.
+        drawing = ezdxf.new("R2010")
+        drawing.units = ezdxf.units.MM
+        drawing.header["$MEASUREMENT"] = 1
+        modelspace = drawing.modelspace()
+        for part in polygons:
             modelspace.add_lwpolyline(
-                list(ring.coords)[:-1], close=True, dxfattribs={"layer": "HOLES"}
+                list(part.exterior.coords)[:-1], close=True, dxfattribs={"layer": "OUTLINE"}
             )
-    drawing.saveas(job_dir / "profile.dxf")
+            for ring in part.interiors:
+                modelspace.add_lwpolyline(
+                    list(ring.coords)[:-1], close=True, dxfattribs={"layer": "HOLES"}
+                )
+        drawing.saveas(job_dir / "profile.dxf")
 
     parts = []
     bundle_files = []
@@ -153,15 +273,30 @@ def build(job_dir: Path) -> dict:
 
     write_3mf(job_dir / "model.3mf", parts, name=request.name)
 
+    reference = request.profile.reference
+    if reference is not None:
+        xs_ = [x for x, _ in request.profile.outer]
+        sheet_width = (max(xs_) - min(xs_)) * reference.mm_per_px
+        scaled_by_sheet = math.isclose(sheet_width, request.width_mm, rel_tol=1e-6)
+        provenance = (
+            "Image outline rectified on a reference sheet of stated size, with lens, perspective"
+            + (" and thickness-parallax" if reference.thickness_mm else "")
+            + " correction; "
+            + ("scale from the sheet" if scaled_by_sheet else "scale from a user-supplied width")
+            + "; user-supplied thickness; hidden geometry is not recovered."
+        )
+    else:
+        provenance = "Image outline with user-supplied bounding width and thickness; hidden geometry is not recovered."
+    has_fit = request.profile.primitives is not None or reference is not None
     recipe = {
         "format": "pictures-to-cad",
-        "version": 2 if request.design is not None else 1,
+        "version": (3 if has_fit else 2) if request.design is not None else (3 if has_fit else 1),
         "name": request.name,
-        "profile": request.profile.model_dump(),
+        "profile": request.profile.model_dump(exclude_none=True),
         "width_mm": request.width_mm,
         "thickness_mm": request.thickness_mm,
         "units": "mm",
-        "provenance": "Image outline with user-supplied bounding width and thickness; hidden geometry is not recovered.",
+        "provenance": provenance,
     }
     if request.design is not None:
         recipe["design"] = design.model_dump()
@@ -226,6 +361,7 @@ def build(job_dir: Path) -> dict:
         "dimensions": dimensions,
         "volume_mm3": volume,
         "hole_count": len(polygon.interiors),
+        "geometry": geometry,
         "mesh": mesh_of(shape),
         "downloads": downloads,
         "warnings": warnings,

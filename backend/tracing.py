@@ -2,6 +2,7 @@
 
 import base64
 import io
+import logging
 import warnings
 
 import cv2
@@ -26,6 +27,7 @@ ORIENTATION = {
     8: Image.Transpose.ROTATE_90,
 }
 cv2.setNumThreads(1)
+logger = logging.getLogger(__name__)
 
 
 class TraceError(ValueError):
@@ -47,6 +49,16 @@ def to_eight_bit(image):
         alpha = np.where(samples == key, 0, 255).astype(np.uint8)
         return Image.fromarray(np.dstack([gray, alpha]))
     return Image.fromarray(gray)
+
+
+def exif_focal_35mm(exif):
+    """The 35 mm-equivalent focal length from EXIF, or None if absent or unusable."""
+    try:
+        value = exif.get_ifd(0x8769).get(0xA405)  # Exif IFD, FocalLengthIn35mmFilm
+        value = float(value)
+    except Exception:  # noqa: BLE001 - optional metadata; any malformed value is ignored.
+        return None
+    return value if 5 <= value <= 600 else None
 
 
 def to_pixel_edges(ring, distance):
@@ -78,11 +90,25 @@ def to_pixel_edges(ring, distance):
 
 
 def trace_image(
-    data: bytes, threshold: int = -1, inverted: bool = False, detail: str = "standard"
+    data: bytes,
+    threshold: int = -1,
+    inverted: bool = False,
+    detail: str = "standard",
+    reference: str = "none",
+    sheet_mm: tuple[float, float] | None = None,
+    thickness_mm: float | None = None,
+    snap: bool = True,
+    fallback: bool = False,
 ) -> dict:
+    """Trace one part. With a reference sheet, see backend.reference.trace_on_sheet.
+
+    `reference` is "none", "a4", "letter" or "custom" (with `sheet_mm`). `fallback`
+    traces without the sheet, with a warning, when no sheet can be found.
+    """
     if not data or len(data) > MAX_BYTES:
         raise TraceError("Choose an image between 1 byte and 10 MiB.")
     notices = []
+    focal_35mm = None
     try:
         with warnings.catch_warnings():
             warnings.simplefilter("error", Image.DecompressionBombWarning)
@@ -103,12 +129,15 @@ def trace_image(
                 # remaining EXIF, which raises on malformed but otherwise harmless tags, and
                 # EXIF is discarded below.
                 try:
-                    method = ORIENTATION.get(raw.getexif().get(ExifTags.Base.Orientation, 1))
+                    exif = raw.getexif()
+                    method = ORIENTATION.get(exif.get(ExifTags.Base.Orientation, 1))
                 except Exception:  # noqa: BLE001 - any malformed EXIF block is untrusted input.
                     method = None
                     notices.append(
                         "The image's orientation metadata could not be read, so it was traced as stored. Check that the outline is oriented like the part before measuring the reference width."
                     )
+                else:
+                    focal_35mm = exif_focal_35mm(exif)
                 normalized = to_eight_bit(raw.transpose(method) if method else raw)
                 if "A" in normalized.getbands() or "transparency" in normalized.info:
                     rgba = normalized.convert("RGBA")
@@ -116,8 +145,9 @@ def trace_image(
                     image.paste(rgba, mask=rgba.getchannel("A"))
                 else:
                     image = normalized.convert("RGB")
-                image.thumbnail((MAX_SIDE, MAX_SIDE), Image.Resampling.LANCZOS)
                 image.load()
+                if reference == "none":
+                    image.thumbnail((MAX_SIDE, MAX_SIDE), Image.Resampling.LANCZOS)
     except TraceError:
         raise
     except (
@@ -131,6 +161,40 @@ def trace_image(
         raise TraceError(
             "The image could not be decoded. Try a valid PNG, JPEG, or WebP under 16 megapixels."
         ) from exc
+
+    if reference != "none":
+        from .reference import ReferenceError_, trace_on_sheet
+
+        try:
+            try:
+                return trace_on_sheet(
+                    np.asarray(image),
+                    reference=reference,
+                    sheet_mm=sheet_mm,
+                    inverted=inverted,
+                    detail=detail,
+                    thickness_mm=thickness_mm,
+                    focal_35mm=focal_35mm,
+                    snap=snap,
+                    notices=notices,
+                )
+            except ReferenceError_:
+                raise
+            except Exception as exc:  # Untrusted photos must not cause a 500.
+                logger.exception("Reference-sheet trace failed unexpectedly.")
+                raise ReferenceError_(
+                    "This photo could not be measured on the reference sheet. Retake it with the whole sheet flat and in view, or choose No reference.",
+                    sheet_missing=True,
+                ) from exc
+        except ReferenceError_ as exc:
+            if not (fallback and exc.sheet_missing):
+                raise TraceError(str(exc)) from exc
+            notices.append(
+                f"The reference sheet could not be used, so the photo was traced without one: {exc} Enter the measured width instead."
+                if "No reference sheet" not in str(exc)
+                else "No reference sheet was found, so the photo was traced without one. Enter the measured width, or retake the photo with the whole sheet in view."
+            )
+            image.thumbnail((MAX_SIDE, MAX_SIDE), Image.Resampling.LANCZOS)
 
     gray = cv2.cvtColor(np.asarray(image), cv2.COLOR_RGB2GRAY)
     gray = cv2.GaussianBlur(gray, (3, 3), 0)
@@ -222,7 +286,7 @@ def trace_image(
             "data_url": "data:image/png;base64,"
             + base64.b64encode(buffer.getvalue()).decode("ascii"),
         },
-        "profile": profile.model_dump(),
+        "profile": profile.model_dump(exclude_none=True),
         "bounds": {
             "x": min(xs),
             "y": min(ys),

@@ -2,6 +2,21 @@
 
 Latest workbench validation: November 10, 2026, on the local Linux workstation. The [reference-sensitivity record](validation/reference-sensitivity.md) covers the new endpoint-placement explorer. Earlier managed-environment and release results are recorded separately below. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
 
+## Reference-sheet tracing and mathematical verification — November 10, 2026
+
+Branch `claude/photo-fidelity-phase1` (from `09d2f46`). See [reference-sheet tracing](reference-sheet.md) for the method and the accuracy table.
+
+- `PLAYWRIGHT_CHROMIUM_EXECUTABLE=/usr/bin/google-chrome ./scripts/test.sh` passed twice: production typecheck/build and **46 Chrome browser scenarios** (44 before, plus 2 in `tests/e2e/sheet-reference.spec.ts`), with no failures or skips. The final code then passed **300 Python tests** (237 before, plus 63 new: 37 in `tests/test_sheet_reference.py` and 26 in `tests/test_fidelity_math.py`) and a rerun of the sheet, workbench and recovery browser specs (16 scenarios) after the last backend change, which turned unexpected reference-trace failures into recoverable 422 responses. `make lint` passed Ruff and Prettier.
+- Six hostile inputs (blank, noise, a 20-pixel image, an empty sheet, stripes, and a part over the sheet edge) each return a specific, recoverable message instead of a server error.
+- The new browser scenarios trace a rendered tilted phone photo of a 4 mm plate on an A4 sheet. They check the width taken from the sheet, a single thickness-correcting re-trace on build, export dimensions 120 × 70 × 4 mm within 0.1 mm, 11 cylindrical STEP faces, DXF `ARC`/`CIRCLE` entities without polylines, 5 OpenSCAD `circle()` calls, a version 3 project, an accessibility scan of the photo dialog, the sheet-proportions warning for a wrongly chosen US Letter sheet, and switching the reference in the outline dialog.
+- Mathematical verification found and fixed four defects before any accuracy figure was recorded:
+  - the fixed-point lens inverse, 4.6 px wrong at the image corners for k₁ = −0.25 (now Newton's method, ≤ 1.4 × 10⁻¹² px);
+  - `cv2.remap`'s 1/32-pixel position quantisation, up to 0.086 px in the measurement image (now exact float64 cubic resampling);
+  - an off-centre first edge pass that grew holes by about 0.09 px (now two passes);
+  - a test-renderer compositing error that biased every synthetic edge by about 0.017 mm.
+- The two-step wall model was kept only in the range where it improved results. Over 0.25–4 σ it made the 22° thick photo worse (Ø6 0.021 against 0.010 mm without it). The tapered 1–3 σ range improved every feature at 9° tilt and four of five at 22°.
+- These are synthetic photographs; no real photo, physical part, slicer or print was measured.
+
 ## Bambu Studio and PrusaSlicer handoff — November 9, 2026
 
 The workbench exports neutral 3MF geometry and tailored handoff ZIPs for Bambu Studio 2.9.1 and the requested PrusaSlicer 2.9.7. Optional direct opening uses fixed installed executables and a retained local model copy. Neither slicer is installed or launched by setup or the checks below.
