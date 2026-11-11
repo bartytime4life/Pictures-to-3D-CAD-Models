@@ -281,6 +281,35 @@ def render(
     return encoded.tobytes(), truth
 
 
+def colour_photo(table, paper, part, ppm=4.0, blur=1.2):
+    """PNG bytes of a flat-lit colour photo: a 60 mm disc with a 16 mm hole, centred on
+    an A4 sheet lying square on a table. `table`, `paper` and `part` are saved sRGB
+    colours. Coverage and blur mix linear light in each channel; `ppm` is photo pixels
+    per millimetre."""
+    from PIL import Image
+
+    margin = 40.0
+    shape = (int((SHEET[1] + 2 * margin) * ppm), int((SHEET[0] + 2 * margin) * ppm))
+
+    def cover(n, lo, hi):
+        c = np.arange(n, dtype=np.float64)
+        return np.clip(np.minimum(c + 0.5, hi * ppm) - np.maximum(c - 0.5, lo * ppm), 0, 1)
+
+    sheet_a = np.outer(
+        cover(shape[0], margin, margin + SHEET[1]), cover(shape[1], margin, margin + SHEET[0])
+    )
+    centre = Point(margin + SHEET[0] / 2, margin + SHEET[1] / 2)
+    part_a = coverage(centre.buffer(30, 512).difference(centre.buffer(8, 512)), ppm, 0.0, 0.0, shape)
+    channels = []
+    for index in range(3):
+        t, p, m = (float(srgb_to_linear(colour[index])) for colour in (table, paper, part))
+        light = (t * (1 - sheet_a) + p * sheet_a) * (1 - part_a) + m * part_a
+        channels.append(linear_to_srgb(cv2.GaussianBlur(light.astype(np.float32), (0, 0), blur)))
+    buffer = io.BytesIO()
+    Image.fromarray(np.clip(np.dstack(channels), 0, 255).round().astype(np.uint8)).save(buffer, "PNG")
+    return buffer.getvalue()
+
+
 def rigid_fit(src, dst):
     """Least-squares rotation + translation (no scale) mapping src onto dst."""
     sc, dc = src.mean(0), dst.mean(0)
