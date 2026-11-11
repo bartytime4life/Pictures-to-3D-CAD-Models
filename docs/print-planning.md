@@ -54,10 +54,23 @@ These are placement suggestions: exported STEP, STL and 3MF geometry retains
 its original orientation. Apply the turn, translate onto the plate, and verify
 it in your slicer. Displayed numbers are rounded; close fits need extra care.
 
-Fitted arcs and circles use the exact solid's enclosing rectangle, avoiding
-an unsafe fit based on inscribed samples of a curve. A positive rectangle
-result contains the actual solid. A failed rectangle result is **unknown**,
-because a curved outline could fit where that rectangle does not. Polygon
+Fitted arcs and circles first use the exact solid's enclosing rectangle. If it
+does not fit, a conservative outer polygon is constructed from analytic curve
+supports in 256 directions. Its supporting half-planes enclose the whole curved
+outline, including points between directions; it is not an inscribed sample.
+The continuous-angle solver searches rotations of this outer polygon. A positive
+result contains the actual solid. The per-piece disclosure labels this basis
+and its conservative footprint. A failed outer-bound test remains **unknown**:
+the actual curved outline might fit where its conservative enclosure does not.
+
+For example, a 125 × 20 mm capsule with 10 mm end radii has a 94.25 mm square
+footprint at 45°, fitting a 100 mm usable square. Its enclosing 125 × 20 mm
+rectangle cannot fit that bed. This check recognizes the curved placement while
+keeping the exact arcs, size and export orientation. It does not enable curved
+split proposals. A rotated copy of the CAD solid independently confirms new
+curve placements. Dimensions and this confirmation use analytic CAD bounds,
+excluding cached mesh deflection, so meshing does not change the reported size.
+Polygon
 results use the actual built outline after simplification or splitting. Shaped,
 excluded and ambiguous catalog beds remain unverified.
 

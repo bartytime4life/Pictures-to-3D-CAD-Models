@@ -1,6 +1,7 @@
 """One bounded CAD process per build. Run with python -m backend.worker JOB_DIR."""
 
 import json
+import logging
 import math
 import sys
 import zipfile
@@ -8,12 +9,15 @@ from pathlib import Path
 
 import cadquery as cq
 import ezdxf
+from OCP.Bnd import Bnd_Box
+from OCP.BRepBndLib import BRepBndLib
 from shapely.geometry import Polygon
 from shapely.geometry.polygon import orient
 
 from . import drawing
 from .fitting import arc_geometry
 from .models import BuildRequest, DesignSettings, ring_polygon
+from .placement import FIT_TOLERANCE_MM
 from .printing import (
     PrintGeometryError,
     aggregate_fit,
@@ -26,6 +30,8 @@ from .printing import (
 from .scad import fitted_source, profile_source
 from .slicer_handoff import write_slicer_handoffs
 from .three_mf import ThreeMFError, write_3mf
+
+logger = logging.getLogger(__name__)
 
 
 def extrude_profile(polygon, thickness):
@@ -150,9 +156,39 @@ def write_fitted_dxf(path, rings):
     document.saveas(path)
 
 
+def solid_bounds(shape):
+    """Bound analytic CAD geometry, independently of cached export triangulation."""
+    bounds = Bnd_Box()
+    BRepBndLib.AddOptimal_s(shape.wrapped, bounds, False, False)
+    return cq.BoundBox(bounds)
+
+
 def dimensions_of(shape):
-    bounds = shape.BoundingBox()
+    bounds = solid_bounds(shape)
     return {"width": bounds.xlen, "height": bounds.ylen, "thickness": bounds.zlen}
+
+
+def verify_curve_placement(solid, design, fit):
+    """Confirm a new curve witness against the CAD kernel without changing exports."""
+    if fit["status"] != "fits" or fit.get("basis") != "curve_envelope":
+        return fit
+    try:
+        bounds = solid_bounds(solid.rotate((0, 0, 0), (0, 0, 1), fit["rotation_deg"]))
+        if (
+            bounds.xlen <= design.bed_width_mm - 2 * design.bed_margin_mm + FIT_TOLERANCE_MM
+            and bounds.ylen <= design.bed_depth_mm - 2 * design.bed_margin_mm + FIT_TOLERANCE_MM
+            and bounds.zlen <= design.bed_height_mm + FIT_TOLERANCE_MM
+            and bounds.xlen <= fit["footprint_mm"]["width"] + FIT_TOLERANCE_MM
+            and bounds.ylen <= fit["footprint_mm"]["depth"] + FIT_TOLERANCE_MM
+        ):
+            return fit
+    except Exception:
+        # A kernel failure in optional planning must not discard the valid solid.
+        logger.exception("Could not verify a curved placement against the CAD solid.")
+    return {
+        "status": "unknown", "basis": "curve_envelope", "rotated_90": False,
+        "reason": "The curved placement could not be confirmed against the CAD solid. Check placement in your slicer.",
+    }
 
 
 def mesh_of(shape):
@@ -259,17 +295,21 @@ def build(job_dir: Path) -> dict:
     bundle_files = []
     for index, solid in enumerate(solids, start=1):
         part_id = f"part-{index:02d}"
-        bounds = solid.BoundingBox()
+        bounds = solid_bounds(solid)
         part_dimensions = dimensions_of(solid)
+        fit = bed_fit(
+            part_dimensions, design, printer, footprint=None if fitted else polygons[index - 1],
+            fitted_outer=rings[0] if fitted else None,
+        )
+        if fitted:
+            fit = verify_curve_placement(solid, design, fit)
         part = {
             "id": part_id,
             "name": f"Part {index}",
             "dimensions": part_dimensions,
             "volume_mm3": solid.Volume(),
             "assembly_offset_mm": [bounds.xmin, bounds.ymin, 0],
-            "bed_fit": bed_fit(
-                part_dimensions, design, printer, footprint=None if fitted else polygons[index - 1]
-            ),
+            "bed_fit": fit,
             "mesh": mesh_of(solid),
         }
         if design.output_mode == "split":

@@ -727,11 +727,16 @@ export default function PrintSettings({
                           <p>{part.bed_fit.reason}</p>
                           {part.bed_fit.footprint_mm && (
                             <p>
-                              Rotated footprint: {sizeText(part.bed_fit.footprint_mm.width)} ×{' '}
+                              {part.bed_fit.basis === 'curve_envelope'
+                                ? 'Conservative rotated footprint: '
+                                : 'Rotated footprint: '}
+                              {sizeText(part.bed_fit.footprint_mm.width)} ×{' '}
                               {sizeText(part.bed_fit.footprint_mm.depth)} mm.
                               {part.bed_fit.basis === 'bounding_box'
                                 ? ' Uses the enclosing rectangle of the fitted curves.'
-                                : ' Uses the built polygon outline.'}
+                                : part.bed_fit.basis === 'curve_envelope'
+                                  ? ' Uses an outer enclosure of the fitted curves.'
+                                  : ' Uses the built polygon outline.'}
                             </p>
                           )}
                         </details>
