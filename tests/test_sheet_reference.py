@@ -310,6 +310,39 @@ def test_split_output_falls_back_to_the_traced_polygon(client, fitted_build):
     assert any("Exact arcs and circles are exported only for single-piece" in w for w in body["warnings"])
 
 
+def disc_profile(radius_px=100.0):
+    outer = [
+        (radius_px + radius_px * math.cos(2 * math.pi * k / 200), radius_px + radius_px * math.sin(2 * math.pi * k / 200))
+        for k in range(200)
+    ]
+    circle = {"kind": "circle", "center": [radius_px, radius_px], "radius": radius_px}
+    return {"outer": outer, "primitives": {"outer": [circle]}}
+
+
+@pytest.mark.parametrize("diameter_mm", [2, 20, 60])
+def test_small_fitted_discs_pass_the_solid_check(client, diameter_mm):
+    # The sampled check polygon is inscribed, so its area falls short by about
+    # (4/3) * sagitta / radius: more than a fixed 1e-4 for radii under ~13 mm.
+    response = client.post(
+        "/api/build",
+        json={"profile": disc_profile(), "width_mm": diameter_mm, "thickness_mm": 3, "design": {}},
+    )
+    assert response.status_code == 200, response.text
+    assert response.json()["geometry"] == {"kind": "fitted", "lines": 0, "arcs": 0, "circles": 1}
+
+
+def test_fitted_recipe_without_design_still_carries_design_settings(client):
+    response = client.post("/api/build", json={"profile": disc_profile(), "width_mm": 40, "thickness_mm": 3})
+    assert response.status_code == 200, response.text
+    recipe = client.get(response.json()["downloads"]["project"]).json()
+    assert recipe["version"] == 3
+    assert isinstance(recipe["design"], dict) and recipe["design"]
+    rebuilt = client.post(
+        "/api/build", json={k: recipe[k] for k in ("profile", "width_mm", "thickness_mm", "design")}
+    )
+    assert rebuilt.status_code == 200, rebuilt.text
+
+
 def _mutated(profile, change):
     copy = json.loads(json.dumps(profile))
     change(copy)
