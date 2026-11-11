@@ -48,6 +48,7 @@ test('sample creates real CAD, downloads valid formats, and renders the selected
   await page.screenshot({ path: 'docs/images/workbench.png', fullPage: true });
   await page.getByRole('button', { name: 'Review export', exact: true }).click();
   await expect(page.getByRole('dialog')).toBeVisible();
+  await page.getByText('Drawings & source files', { exact: true }).click();
   for (const format of ['STEP', 'STL', 'DXF', 'SVG', 'PDF', 'OpenSCAD']) {
     const downloadEvent = page.waitForEvent('download');
     await page.locator('.export-row').filter({ hasText: format }).click();

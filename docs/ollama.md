@@ -40,7 +40,13 @@ For macOS, Windows, or another architecture, install the official [Ollama applic
 4. Select **Ask local AI** and read the answer. A settings proposal shows the previous and suggested values before you apply it.
 5. Use **Apply suggestion** only for a change you want to try, inspect the resulting settings and outline, then decide whether to rebuild. **Keep current settings** dismisses a proposal. **Undo suggestion** restores its previous settings without asking the model again. If nothing was built from the suggestion, the existing model already matches the restored settings, so it stays current and exportable. After building a suggestion, undo also restores the prior valid mesh for comparison, or clears the new preview if there was no prior current model. Rebuild before exporting the restored settings because previous server files may have been released. A subsequent manual project change clears that undo step.
 
-The assistant can propose supported trace controls, explicit XY/thickness design percentages, relative detail, color/material, printer-volume choices, and a split plan. It cannot overwrite the measured reference width or thickness, run generated code, build, or export. A design-scale proposal changes the derived dimensions only after you apply it and rebuild. Changing the project after a response makes its proposal outdated, so ask again for advice about the current inputs.
+The assistant can propose supported trace controls, explicit XY/thickness design percentages, relative detail, color/material, printer-volume choices, and a split plan. It cannot overwrite the measured reference width or thickness, run generated code, build, or export. A design-scale proposal changes the derived dimensions only after you apply it and rebuild. Project edits during or after an answer mark it outdated, including answers without a settings proposal; ask again for advice about the current inputs.
+
+Invalid design fields have a visible explanation beside the question and prevent
+sending it. Valid settings that request geometry beyond the supported size may
+still be discussed: for example, an 800 mm source at 300% XY scale can receive a
+proposal to return to 100%. Review and apply that change explicitly; the workbench
+checks the resulting size before accepting it. A response never starts a build.
 
 When a two-point feature reference is applied, a reviewed retrace retains its measured length and endpoints but recalculates outside width from the new outline bounds. Undo restores the previous outline, width and reference. This does not change the physical reference or infer a new measurement.
 

@@ -63,6 +63,7 @@ export default function PrintSettings({
   sourceSize,
   model,
   current,
+  revealRequest = 0,
 }: {
   design: DesignSettings;
   onChange: (settings: DesignSettings) => void;
@@ -70,8 +71,15 @@ export default function PrintSettings({
   sourceSize: { width: number; height: number; thickness: number } | null;
   model: ModelResult | null;
   current: boolean;
+  revealRequest?: number;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const toggle = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!revealRequest) return;
+    setExpanded(true);
+    toggle.current?.focus();
+  }, [revealRequest]);
   const [catalog, setCatalog] = useState<Catalog | null>(null);
   const [loading, setLoading] = useState(false);
   const [catalogError, setCatalogError] = useState('');
@@ -184,6 +192,7 @@ export default function PrintSettings({
       aria-label="Design and print settings"
     >
       <button
+        ref={toggle}
         className="assistant-toggle"
         aria-expanded={expanded}
         aria-controls="print-settings-content"

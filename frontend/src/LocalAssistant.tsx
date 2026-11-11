@@ -53,6 +53,7 @@ export default function LocalAssistant({
   context,
   revision,
   busy,
+  settingsIssue = '',
   canUndo,
   onApply,
   onUndo,
@@ -60,6 +61,7 @@ export default function LocalAssistant({
   context: AssistantContext;
   revision: string;
   busy: boolean;
+  settingsIssue?: string;
   canUndo: boolean;
   onApply: (proposal: AssistantProposal) => Promise<boolean>;
   onUndo: () => void;
@@ -145,7 +147,7 @@ export default function LocalAssistant({
   }
 
   async function ask() {
-    if (!question.trim() || !model || pending || busy || !status?.running) return;
+    if (!question.trim() || !model || pending || busy || settingsIssue || !status?.running) return;
     const controller = new AbortController();
     request.current = controller;
     const timeout = window.setTimeout(() => controller.abort(), 135000);
@@ -397,14 +399,24 @@ export default function LocalAssistant({
                 disabled={pending}
                 onChange={(event) => setQuestion(event.target.value)}
                 placeholder="For example: the outline misses a small hole. What should I try?"
-                aria-describedby="assistant-question-help"
+                aria-describedby={
+                  settingsIssue
+                    ? 'assistant-question-help assistant-settings-issue'
+                    : 'assistant-question-help'
+                }
               />
+              {settingsIssue && (
+                <p id="assistant-settings-issue" className="assistant-error" role="status">
+                  Fix your design settings before asking AI. {settingsIssue}
+                </p>
+              )}
               <div className="assistant-send-row">
                 <p id="assistant-question-help">AI suggests. You review, apply and build.</p>
                 <button
                   className="primary-button"
                   type="submit"
-                  disabled={!ready || !question.trim() || pending || busy}
+                  disabled={!ready || !question.trim() || pending || busy || !!settingsIssue}
+                  aria-describedby={settingsIssue ? 'assistant-settings-issue' : undefined}
                 >
                   {pending ? <SpinnerGap size={19} className="spinner" /> : <ArrowUp size={18} />}
                   {pending ? 'Thinking locally…' : 'Ask local AI'}
@@ -441,6 +453,11 @@ export default function LocalAssistant({
               </div>
               <p className="assistant-asked">{askedQuestion}</p>
               <p className="assistant-answer">{reply.answer}</p>
+              {!applied && outdated && (
+                <p className="assistant-stale">
+                  Your project changed after this answer. Ask again for a fresh suggestion.
+                </p>
+              )}
               {changes.length > 0 && (
                 <div className="assistant-proposal">
                   <h3>Review proposed changes</h3>
@@ -506,7 +523,7 @@ export default function LocalAssistant({
                     {canUndo && (
                       <button
                         className="text-button"
-                        disabled={busy}
+                        disabled={busy || applying}
                         onClick={() => {
                           onUndo();
                           setApplied(false);
@@ -517,11 +534,6 @@ export default function LocalAssistant({
                       </button>
                     )}
                   </div>
-                  {!applied && outdated && (
-                    <p className="assistant-stale">
-                      Your project changed after this answer. Ask again for a fresh suggestion.
-                    </p>
-                  )}
                   {changesTrace && !context.has_image && (
                     <p className="assistant-stale">Load a source photo to apply trace changes.</p>
                   )}
@@ -537,7 +549,7 @@ export default function LocalAssistant({
             </div>
           )}
           {canUndo && changes.length === 0 && (
-            <button className="text-button" disabled={busy} onClick={onUndo}>
+            <button className="text-button" disabled={busy || applying} onClick={onUndo}>
               <ArrowCounterClockwise size={17} />
               Undo suggestion
             </button>

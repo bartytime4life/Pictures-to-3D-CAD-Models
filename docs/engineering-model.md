@@ -37,6 +37,14 @@ ideal extrusion has `W' = aW`, `H' = aH`, `t' = bt` and `V' = a²bV`, before any
 geometry-detail change. Scaling dimensions does not establish a strength law.
 Check the generated solid and downstream import after approximation or splitting.
 
+Reference-length drafts retain full numeric precision when switching between
+millimeters and inches. The computed width normalizes floating-point contact
+with the supported 0.1 mm and 2000 mm limits using
+`64 * Number.EPSILON * max(abs(width), abs(limit))`. This is an arithmetic guard
+(about 2.84e-11 mm at 2000 mm), not a measurement allowance. Values outside that
+narrow guard remain outside the supported range. Endpoint sensitivity scenarios
+retain their unbounded results; they are not clipped to computational limits.
+
 The independent height check concerns the **source polygon's bounding spans**,
 not a resized design, a local fitted radius, an exported mesh or a printed part.
 It remains a global aspect-ratio check even for a fitted profile. Agreement can

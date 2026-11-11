@@ -3,7 +3,16 @@ import type { Point, ReferenceCalibration } from './types';
 /** Uniform scale only: endpoints and outline share the orientation-adjusted working image. */
 export function referenceWidth(calibration: ReferenceCalibration, outlineWidth: number): number {
   const [a, b] = calibration.reference_points;
-  return (outlineWidth * calibration.known_length_mm) / Math.hypot(b[0] - a[0], b[1] - a[1]);
+  const width = (outlineWidth * calibration.known_length_mm) / Math.hypot(b[0] - a[0], b[1] - a[1]);
+  if (!Number.isFinite(width)) return width;
+  // Unit conversion and multiply/divide roundoff can move exact boundary contact
+  // across a supported limit. Normalize only that numerical contact; this relative
+  // guard is not a physical tolerance or an estimate of measurement uncertainty.
+  for (const limit of [0.1, 2000]) {
+    const guard = 64 * Number.EPSILON * Math.max(Math.abs(width), Math.abs(limit));
+    if (Math.abs(width - limit) <= guard) return limit;
+  }
+  return width;
 }
 
 /** An explicit along-reference endpoint scenario, not an uncertainty estimate. */
