@@ -89,6 +89,20 @@ export type ModelPart = {
   mesh?: { vertices: number[]; triangles: number[] };
   assembly_offset_mm?: [number, number, number];
 };
+export type SplitPlan = {
+  grids_considered: number;
+  grids_failed: number;
+  reason: string;
+} & (
+  | { status: 'no_fit' }
+  | {
+      status: 'suggested';
+      columns: number;
+      rows: number;
+      piece_count: number;
+      pieces: { dimensions: ModelPart['dimensions']; area_mm2: number; bed_fit: BedFit }[];
+    }
+);
 export type AssistantProposal = {
   threshold?: number;
   inverted?: boolean;
@@ -147,6 +161,7 @@ export type ModelResult = {
   design?: DesignSettings;
   parts?: ModelPart[];
   print_fit?: BedFit;
+  split_plan?: SplitPlan;
   mesh: { vertices: number[]; triangles: number[] };
   downloads: {
     step: string;

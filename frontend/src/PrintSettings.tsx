@@ -176,6 +176,7 @@ export default function PrintSettings({
     (design.printer_id === 'custom' ? 'Custom printer' : design.printer_id);
   const printedParts = current ? (model?.parts ?? []) : [];
   const fit = current ? model?.print_fit : undefined;
+  const splitPlan = current ? model?.split_plan : undefined;
 
   return (
     <section
@@ -662,6 +663,39 @@ export default function PrintSettings({
               </p>
             </div>
           </div>
+          {splitPlan && (
+            <section className="split-plan-card" aria-label="Suggested split plan">
+              <strong>
+                {splitPlan.status === 'suggested'
+                  ? `Try a ${splitPlan.columns} × ${splitPlan.rows} split · ${splitPlan.piece_count} pieces`
+                  : 'A fitting split needs another plan'}
+              </strong>
+              <p>{splitPlan.reason}</p>
+              {splitPlan.status === 'suggested' && (
+                <>
+                  <p>
+                    Each proposed piece fits separately with the selected margin and a checked XY
+                    turn. Apply the cut settings, then rebuild to generate and inspect the pieces.
+                    Your measured size stays the same. Straight cuts add no joints or clearance.
+                  </p>
+                  <button
+                    type="button"
+                    className="text-button"
+                    disabled={busy}
+                    onClick={() =>
+                      change({
+                        output_mode: 'split',
+                        split_columns: splitPlan.columns,
+                        split_rows: splitPlan.rows,
+                      })
+                    }
+                  >
+                    Use suggested split
+                  </button>
+                </>
+              )}
+            </section>
+          )}
           {printedParts.length > 0 && (
             <div className="print-parts-table">
               <table>

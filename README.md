@@ -86,6 +86,8 @@ Design scales preserve those source measurements: an 80 mm reference width at 12
 
 Printer fit searches all in-plane rotations of each built polygon on a clear rectangular bed. Open a part's fit result to see the suggested counterclockwise turn and rotated footprint. Fitted curves use a conservative enclosing rectangle; an inconclusive rectangle check asks for slicer review. Suggested turns are saved in handoff manifests and are not applied to geometry exports. Review supports, adhesion, machine clearances, and material behavior in your slicer. See [print planning](docs/print-planning.md).
 
+When a built polygon part exceeds the selected bed, **Design & print** can suggest a supported straight-cut grid with the fewest fitting pieces. **Use suggested split** changes the cut settings; **Update model** generates the pieces for inspection and export. Your measured size stays the same. The search considers up to four rows and columns, with at most eight cells and actual pieces; it checks each piece separately and adds no joints or assembly clearance.
+
 The bundled searchable [printer catalog](docs/printer-catalog.md) covers 429 model groups across 70 manufacturer/profile families, with nozzle-specific source profiles and links. It works offline. Hardware capabilities absent from those sources are shown as unknown; custom printer dimensions remain available.
 
 ## What you can export

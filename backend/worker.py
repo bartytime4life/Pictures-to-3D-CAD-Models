@@ -21,6 +21,7 @@ from .printing import (
     prepare_profile,
     resolve_design,
     split_profile,
+    suggest_split_plan,
 )
 from .scad import fitted_source, profile_source
 from .slicer_handoff import write_slicer_handoffs
@@ -386,6 +387,10 @@ def build(job_dir: Path) -> dict:
         "parts": parts,
         "print_fit": aggregate_fit(parts),
     }
+    if not fitted and result["print_fit"]["status"] == "too_large":
+        plan = suggest_split_plan(polygon, thickness, design, printer)
+        if plan is not None:
+            result["split_plan"] = plan
     for name in (
         "profile.dxf", "profile.svg", "drawing.pdf", "model.scad", "project.json", "model.3mf",
         "bambu-handoff.zip", "prusa-handoff.zip",

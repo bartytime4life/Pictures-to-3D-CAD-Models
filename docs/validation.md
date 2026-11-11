@@ -50,6 +50,10 @@ Branch `claude/fillet-corners`, on `main` at `ae69552`. Its "before" figures wer
   - With snapping off, short free arcs at wide corners are still biased; they are only named.
 - **Not verified.** No real photo. A real lens's blur is not exactly Gaussian, and the model assumes it is.
 
+The [suggested split-plan record](validation/split-plans.md) covers the subsequent
+bounded search for the fewest fitting pieces, explicit apply/rebuild behavior
+and preservation of measurements and exports.
+
 ## Continuous-angle bed placement — November 11, 2026
 
 Branch `codex/analytic-bed-placement`, based on `main` at `dd65399`, in an

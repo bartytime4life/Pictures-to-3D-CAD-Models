@@ -42,7 +42,12 @@ def rectangular_placement(polygon: Polygon, width: float, depth: float):
     """
     if min(width, depth) <= 0:
         return None
-    points = np.asarray(polygon.convex_hull.exterior.coords[:-1], dtype=float)
+    hull = polygon.convex_hull
+    # A rectangle containing the outline also contains its hull. This necessary
+    # area bound cheaply rejects impossible candidates during split-plan search.
+    if hull.area > (width + FIT_TOLERANCE_MM) * (depth + FIT_TOLERANCE_MM):
+        return None
+    points = np.asarray(hull.exterior.coords[:-1], dtype=float)
     # Keep projection arithmetic stable when a caller supplies translated coordinates.
     points -= points[0].copy()
 

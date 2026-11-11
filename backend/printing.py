@@ -4,6 +4,7 @@ import json
 import math
 from pathlib import Path
 
+from shapely.errors import GEOSException
 from shapely.geometry import GeometryCollection, MultiPolygon, Polygon, box
 
 from .models import DesignSettings
@@ -206,4 +207,82 @@ def aggregate_fit(parts):
         "rotated_90": False,
         "reason": reasons[status],
         "part_count": len(parts),
+    }
+
+
+def suggest_split_plan(polygon: Polygon, thickness, design: DesignSettings, printer=None):
+    """Find the fewest fitting pieces among the eleven supported nontrivial grids.
+
+    Only polygon extrusions are eligible. Every candidate uses the same clipping,
+    connected-component limit, area preservation and continuous-angle fit checks
+    as a build. Prefer fewer actual pieces, then fewer cut lines, then fewer rows
+    and columns. This returns settings to review, never altered source geometry.
+    """
+    left, bottom, right, top = polygon.bounds
+    dimensions = {"width": right - left, "height": top - bottom, "thickness": thickness}
+    source_fit = bed_fit(dimensions, design, printer, footprint=polygon)
+    if source_fit["status"] != "too_large":
+        return None
+    no_plan = {"status": "no_fit", "grids_considered": 0, "grids_failed": 0}
+    if thickness > design.bed_height_mm + FIT_TOLERANCE_MM:
+        return {
+            **no_plan,
+            "reason": "Splitting does not reduce thickness. Check the build height or thickness setting.",
+        }
+    if min(design.bed_width_mm, design.bed_depth_mm) <= 2 * design.bed_margin_mm:
+        return {
+            **no_plan,
+            "reason": "The selected margin leaves no usable bed rectangle for split pieces.",
+        }
+
+    best, best_rank = None, None
+    considered = failed = 0
+    for columns in range(1, 5):
+        for rows in range(1, 5):
+            if columns * rows == 1 or columns * rows > 8:
+                continue
+            considered += 1
+            candidate = design.model_copy(
+                update={"output_mode": "split", "split_columns": columns, "split_rows": rows}
+            )
+            try:
+                pieces = split_profile(polygon, candidate)
+                checked = []
+                for piece in pieces:
+                    x0, y0, x1, y1 = piece.bounds
+                    dims = {"width": x1 - x0, "height": y1 - y0, "thickness": thickness}
+                    fit = bed_fit(dims, candidate, printer, footprint=piece)
+                    if fit["status"] != "fits":
+                        break
+                    checked.append({"dimensions": dims, "area_mm2": piece.area, "bed_fit": fit})
+                else:
+                    rank = (len(pieces), columns + rows - 2, rows, columns)
+                    if best_rank is None or rank < best_rank:
+                        best_rank = rank
+                        best = {
+                            "status": "suggested",
+                            "columns": columns,
+                            "rows": rows,
+                            "piece_count": len(pieces),
+                            "pieces": checked,
+                        }
+            except PrintGeometryError:
+                # An optional suggestion must not discard an otherwise valid build.
+                # Grids with more than eight connected fragments are unsupported.
+                continue
+            except GEOSException:
+                failed += 1
+    return {
+        **(best or {"status": "no_fit"}),
+        "grids_considered": considered,
+        "grids_failed": failed,
+        "reason": (
+            "Smallest fitting plan found. Some cut grids could not be checked; inspect the cuts and pieces after rebuilding."
+            if best and failed
+            else "Fewest fitting pieces among the supported straight-cut grids. Review the cuts and assembly after rebuilding."
+            if best
+            else "No fitting split was found, and some cut grids could not be checked. Try another bed or a different manual plan."
+            if failed
+            else "No fitting split was found within 1–4 rows, 1–4 columns and at most 8 cells and pieces. Check another bed or a different manual plan."
+        ),
     }

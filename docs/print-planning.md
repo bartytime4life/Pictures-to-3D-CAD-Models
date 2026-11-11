@@ -156,6 +156,42 @@ are actually evaluated, describe any “optimization” as a specific operation:
 for example, choosing between the checked orientations or reducing the number
 of straight-cut pieces that fit the selected geometric bounds.
 
+### Suggested split plans
+
+After a built polygon exceeds the selected rectangular bed, **Design & print**
+searches the supported straight-cut grids and offers the one with the fewest
+fitting pieces. It considers all eleven nontrivial combinations of 1–4 columns
+and 1–4 rows with at most 8 cells. It clips the actual outline, counts connected
+pieces rather than empty cells, checks area preservation, and tests every piece
+with the continuous-angle placement solver. Plans producing more than 8 pieces
+are unsupported. Ties prefer fewer cut lines, then fewer rows and columns.
+
+For example, a 250 × 80 mm plate on a 140 × 100 mm usable bed can be cut into
+two 125 × 80 mm pieces. An L-shaped 100 × 100 mm outline with 10 mm arms can
+produce three pieces from a 2 × 2 grid on a 50 × 50 mm usable bed: the fourth
+cell is empty. A long narrow piece may fit its cell only after an XY turn.
+
+The proposal does not generate or export parts. **Use suggested split** sets
+Output, Columns and Rows, invalidates the previous fit and exports, and keeps
+measured dimensions unchanged. Select **Update model** to generate and inspect
+the actual solids, cut locations and exports. The ordinary Output, Columns and
+Rows controls remain editable. Changing the source, scale, bed or other build
+settings hides an old suggestion until a fresh build. Saved recipes and slicer
+manifests describe the built or explicitly selected settings, not unapplied
+proposals.
+
+Single-piece fitted curves and unverified shaped, excluded or ambiguous beds
+do not receive polygon split suggestions. Splitting cannot correct excessive
+thickness or a margin that leaves no usable bed. If no supported grid fits,
+the workbench explains that search limit. A numerical failure checking a grid
+is reported as an incomplete search, without discarding the original build.
+
+This minimizes piece count within the supported grids. It does not find arbitrary
+cut paths, preserve structural strength, add joinery, compensate kerf, or arrange
+several pieces on one plate. Each proposed piece still needs a successful CAD
+build and review in the slicer. See [the search derivation](research.md#bounded-split-plan-search)
+and [validation](validation/split-plans.md).
+
 ## Reviewed changes and undo
 
 The assistant should present a concise explanation and a before/after proposal
