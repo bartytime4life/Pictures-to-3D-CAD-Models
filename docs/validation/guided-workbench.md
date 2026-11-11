@@ -125,7 +125,7 @@ geometry code. This change adds no backend or dependency changes.
 - `npm run build`: passed, including TypeScript compilation and the production
   frontend bundle.
 - `make lint`: Ruff and Prettier passed; `git diff --check` passed.
-- `uv run pytest`: **498 passed** in 178.55 s. These exercise geometry, backend
+- `.venv/bin/python -m pytest -q`: **498 passed** in 178.55 s. These exercise geometry, backend
   validation, export re-import and existing arithmetic checks.
 - `npx playwright test`: **74 passed** in 6.0 minutes, with a real local CAD
   backend. This includes six new guided-workflow cases, the reference-unit
