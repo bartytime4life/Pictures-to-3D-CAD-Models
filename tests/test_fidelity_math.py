@@ -1309,3 +1309,40 @@ def test_a_wide_fillet_the_photo_cannot_resolve_is_reported():
     assert any("150° corner" in n and "or more" in n for n in notes)
     square = blurred_polygon_ring([(0, 0), (300, 0), (300, 200), (0, 200)], radius, sigma)[0]
     assert fitting.undetermined_radii([fit_snapped(square, sigma)], sigma) == []
+
+
+def test_rendered_coverage_is_exact_and_edges_keep_their_place_at_any_phase():
+    """Exact geometry and properties of the test renderer. synthetic.coverage gives each
+    pixel square's exact area inside a turned plate with a hole and a slot that crosses
+    the image's left border (shapely's intersection area, to 1e-6). Sampling coverage on
+    sub-rows instead moved a traced 45 degree edge by up to 0.027 px depending on its
+    sub-pixel phase; rendered exactly, a square at 45 and 26.6 degrees (slopes 1 and
+    1/2, where every pixel along an edge has the same phase) traces within 0.006 px of
+    its true size at each of two phases."""
+    from shapely import affinity
+    from shapely.geometry import Point, box
+
+    part = affinity.rotate(box(-3, 4, 40, 30).buffer(-3).buffer(3, 64), 23, origin=(18, 17))
+    part = part.difference(Point(20, 17).buffer(5, 64)).difference(box(28, 10, 33, 22))
+    cov = synthetic.coverage(part, 4.0, 0.0, 0.0, (160, 200))
+    rng = np.random.default_rng(0)
+    for _ in range(500):
+        i, j = int(rng.integers(0, 200)), int(rng.integers(0, 160))
+        pixel = box((i - 0.5) / 4, (j - 0.5) / 4, (i + 0.5) / 4, (j + 0.5) / 4)
+        assert abs(pixel.intersection(part).area * 16 - cov[j, i]) < 1e-6
+
+    ppm = 5.0
+    for angle in (45.0, math.degrees(math.atan(0.5))):
+        for shift in (0.0, 0.25):
+            square = affinity.translate(affinity.rotate(box(30, 30, 110, 110), angle, origin=(70, 70)), shift / ppm, 0.37 * shift / ppm)
+            image = cv2.GaussianBlur((236 - 188 * synthetic.coverage(square, ppm, 0.0, 0.0, (700, 700))).astype(np.float32), (0, 0), 1.6)
+            rings, _, _ = edges.subpixel_rings((image < 142).astype(np.uint8), image, ppm)
+            points = next(r for r in rings if r["outer"])["points"] / ppm - (np.array([70.0, 70.0]) + np.array([shift, 0.37 * shift]) / ppm)
+            t = math.radians(angle)
+            for axis in (np.array([math.cos(t), math.sin(t)]), np.array([-math.sin(t), math.cos(t)])):
+                # Opposite edges together: their mean offset is the size error, free of any shift.
+                offsets = []
+                for n in (axis, -axis):
+                    along, dist = points @ np.array([-n[1], n[0]]), points @ n - 40.0
+                    offsets.append(dist[(np.abs(along) < 30) & (np.abs(dist) < 1.5)].mean() * ppm)
+                assert abs(sum(offsets) / 2) < 0.006

@@ -382,8 +382,10 @@ def erfc(x):
 
 _GL6 = np.polynomial.legendre.leggauss(6)
 SIGMA_REL_SD = 0.05  # relative uncertainty of a measured edge blur (edges.edge_sigma)
-# Systematic error of a straight edge's traced position, in pixels: on rendered photos
-# the sub-pixel tracer places axis-aligned and diagonal edges about 0.03 px apart.
+# Systematic error allowed in a straight edge's traced position, in pixels. On exactly
+# rendered edges the tracer is within 0.004 px at any angle and sub-pixel phase; this
+# allowance is for what rendering leaves out (demosaicing, JPEG, a lens blur that is not
+# Gaussian) and is not measured on real photos.
 EDGE_SYS_SD = 0.03
 
 

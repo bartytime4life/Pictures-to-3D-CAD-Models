@@ -18,6 +18,7 @@ centres only, so no inclusive-boundary bias such as cv2.fillPoly's).
 from __future__ import annotations
 
 import io
+import itertools
 import math
 
 import cv2
@@ -92,38 +93,81 @@ def camera(tilt=(22.0, -9.0, 4.0), size=(2400, 1800), focal=None, distance=440.0
     return k, rotation, t
 
 
-def coverage(polygon, ppm, x0, y0, shape, samples=8):
+def _accumulate(acc, x0, y0, x1, y1):
+    """Add one directed edge's signed area to a row accumulator (a polygon rasteriser's
+    accumulation buffer): after a cumulative sum along each row, every cell holds the
+    exact signed area of its pixel square [i, i + 1] x [j, j + 1] inside the polygon."""
+    if y0 == y1:
+        return
+    sign = 1.0
+    if y0 > y1:
+        x0, y0, x1, y1, sign = x1, y1, x0, y0, -1.0
+    dxdy = (x1 - x0) / (y1 - y0)
+    rows = acc.shape[0]
+    first, last = max(0, math.floor(y0)), min(rows, math.ceil(y1))
+    x = x0 + dxdy * (max(y0, first) - y0)
+    for y in range(first, last):
+        dy = min(y + 1.0, y1) - max(float(y), y0)
+        x_next = x + dxdy * dy
+        d = dy * sign
+        lo, hi = (x, x_next) if x < x_next else (x_next, x)
+        lo_floor = math.floor(lo)
+        i0, i1 = lo_floor, math.ceil(hi)
+        if i1 <= i0 + 1:
+            # Within one cell: the area right of the edge's mean position stays in it.
+            mid = 0.5 * (x + x_next) - lo_floor
+            acc[y, i0] += d * (1.0 - mid)
+            acc[y, i0 + 1] += d * mid
+        else:
+            inv = 1.0 / (hi - lo)
+            f0 = lo - lo_floor
+            a0 = 0.5 * inv * (1.0 - f0) ** 2
+            f1 = hi - math.ceil(hi) + 1.0
+            am = 0.5 * inv * f1 * f1
+            acc[y, i0] += d * a0
+            if i1 == i0 + 2:
+                acc[y, i0 + 1] += d * (1.0 - a0 - am)
+            else:
+                a1 = inv * (1.5 - f0)
+                acc[y, i0 + 1] += d * (a1 - a0)
+                acc[y, i0 + 2 : i1 - 1] += d * inv
+                a2 = a1 + (i1 - i0 - 3) * inv
+                acc[y, i1 - 1] += d * (1.0 - a2 - am)
+            acc[y, i1] += d * am
+        x = x_next
+
+
+def coverage(polygon, ppm, x0, y0, shape):
     """Exact fraction of each scene pixel inside `polygon` (scene pixel i is centred on
-    plane x0 + i / ppm)."""
-    edges = []
+    plane x0 + i / ppm).
+
+    Each edge adds its signed area to a row accumulator, which a cumulative sum along
+    each row turns into each pixel's covered area: exact for any polygon, holes
+    included. Edges are clipped to the image's columns, a stretch left of it standing
+    as a vertical edge at its border. (Sampling the coverage on sub-rows instead, as
+    this did before, quantised a straight edge's area per pixel by the sub-row
+    spacing. At rational slopes, where every pixel along the edge has the same phase,
+    that moved the traced edge by up to 0.03 px.)"""
+    from shapely.geometry.polygon import orient
+
+    polygon = orient(polygon, 1.0)
+    rows, cols = shape
+    acc = np.zeros((rows, cols + 2), np.float64)
     for ring in [polygon.exterior, *polygon.interiors]:
-        c = (np.asarray(ring.coords) - [x0, y0]) * ppm
-        edges.append(np.column_stack([c[:-1], c[1:]]))
-    e = np.vstack(edges)
-    bx0, by0, bx1, by1 = polygon.bounds
-    i0, j0 = max(0, int((bx0 - x0) * ppm) - 2), max(0, int((by0 - y0) * ppm) - 2)
-    i1, j1 = min(shape[1], int((bx1 - x0) * ppm) + 3), min(shape[0], int((by1 - y0) * ppm) + 3)
-    nx, ny = (i1 - i0) * samples, (j1 - j0) * samples
-    xs = i0 - 0.5 + (np.arange(nx) + 0.5) / samples
-    ys = j0 - 0.5 + (np.arange(ny) + 0.5) / samples
-    ya, yb = e[:, 1:2], e[:, 3:4]
-    hit = (ya <= ys) != (yb <= ys)  # edges x rows
-    edge_index, row = np.nonzero(hit)
-    ex = e[edge_index]
-    x = ex[:, 0] + (ys[row] - ex[:, 1]) * (ex[:, 2] - ex[:, 0]) / (ex[:, 3] - ex[:, 1])
-    order = np.lexsort((x, row))
-    row, x = row[order], x[order]
-    col = np.searchsorted(xs, x)
-    starts = np.r_[0, np.flatnonzero(np.diff(row)) + 1]
-    # Parity must restart on every row.
-    parity = np.arange(len(x)) - np.repeat(starts, np.diff(np.r_[starts, len(x)]))
-    sign = np.where(parity % 2 == 0, 1.0, -1.0)
-    acc = np.zeros((ny, nx + 1), np.float32)
-    np.add.at(acc, (row, col), sign)
-    fine = np.cumsum(acc, axis=1)[:, :nx]
-    out = np.zeros(shape, np.float32)
-    out[j0:j1, i0:i1] = fine.reshape(j1 - j0, samples, i1 - i0, samples).mean(axis=(1, 3))
-    return out
+        c = (np.asarray(ring.coords, dtype=np.float64) - [x0, y0]) * ppm + 0.5
+        for (ax, ay), (bx, by) in itertools.pairwise(c):
+            # Split at the image's left and right borders, then clamp what lies outside.
+            cuts = [0.0, 1.0]
+            for border in (0.0, float(cols)):
+                if (ax - border) * (bx - border) < 0:
+                    cuts.append((border - ax) / (bx - ax))
+            cuts.sort()
+            for t0, t1 in itertools.pairwise(cuts):
+                px0, py0 = ax + t0 * (bx - ax), ay + t0 * (by - ay)
+                px1, py1 = ax + t1 * (bx - ax), ay + t1 * (by - ay)
+                _accumulate(acc, min(max(px0, 0.0), cols), py0, min(max(px1, 0.0), cols), py1)
+    # The ring orientation sets the sign; exterior and holes have opposite ones.
+    return np.clip(np.abs(np.cumsum(acc, axis=1)[:, :cols]), 0.0, 1.0).astype(np.float32)
 
 
 def project(polygon, matrix):
