@@ -31,6 +31,8 @@ SLICER_HANDOFF_ROOT = Path(
     os.environ.get("PICAD_SLICER_HANDOFF_DIR", ROOT / ".local" / "slicer-handoffs")
 ).resolve()
 TTL_SECONDS = 3600
+# Request bodies other than a photo upload (project recipes, assistant questions).
+MAX_BODY = 10 * 1024 * 1024
 CLEANUP_INTERVAL = 60
 MAX_JOBS = 20
 BUILD_TIMEOUT = 60
@@ -129,8 +131,16 @@ app = FastAPI(title="Pictures to CAD", version="0.1.0", lifespan=lifespan)
 
 
 class BodyTooLarge(HTTPException):
-    def __init__(self):
-        super().__init__(413, "Upload exceeds the 10 MiB limit.")
+    def __init__(self, detail):
+        super().__init__(413, detail)
+
+
+def body_limit(path):
+    """(bytes allowed, refusal) for a request body. A photo upload may be larger than
+    any other request; both allow 64 KiB for multipart framing and form fields."""
+    if path == "/api/trace":
+        return MAX_BYTES + 64 * 1024, "Upload exceeds the 32 MiB limit."
+    return MAX_BODY + 64 * 1024, "Upload exceeds the 10 MiB limit."
 
 
 class BodyLimitMiddleware:
@@ -142,7 +152,7 @@ class BodyLimitMiddleware:
     async def __call__(self, scope, receive, send):
         if scope["type"] != "http":
             return await self.app(scope, receive, send)
-        limit = MAX_BYTES + 64 * 1024
+        limit, refusal = body_limit(scope.get("path", ""))
         headers = dict(scope.get("headers", []))
         length = headers.get(b"content-length")
         if length:
@@ -151,9 +161,7 @@ class BodyLimitMiddleware:
             except ValueError:
                 too_large = True
             if too_large:
-                return await JSONResponse({"detail": "Upload exceeds the 10 MiB limit."}, 413)(
-                    scope, receive, send
-                )
+                return await JSONResponse({"detail": refusal}, 413)(scope, receive, send)
         count = 0
 
         async def bounded_receive():
@@ -161,15 +169,13 @@ class BodyLimitMiddleware:
             message = await receive()
             count += len(message.get("body", b""))
             if count > limit:
-                raise BodyTooLarge()
+                raise BodyTooLarge(refusal)
             return message
 
         try:
             await self.app(scope, bounded_receive, send)
         except BodyTooLarge:
-            await JSONResponse({"detail": "Upload exceeds the 10 MiB limit."}, 413)(
-                scope, receive, send
-            )
+            await JSONResponse({"detail": refusal}, 413)(scope, receive, send)
 
 
 app.add_middleware(BodyLimitMiddleware)
@@ -257,7 +263,7 @@ async def trace(
         finally:
             await file.close()
         if len(data) > MAX_BYTES:
-            raise HTTPException(413, "Choose an image under 10 MiB.")
+            raise HTTPException(413, "Choose an image under 32 MiB.")
         # A cancelled request cannot terminate a native decode thread. Keep its
         # concurrency slot until the actual operation finishes, including repeated
         # cancellation; otherwise reconnecting clients could start unbounded work.

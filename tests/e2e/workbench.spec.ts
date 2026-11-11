@@ -120,6 +120,22 @@ test('dimension edits invalidate exports; inch display and saved recipes retain 
   await expect(page.getByText('Restored project · outline only')).toBeVisible();
 });
 
+test('a phone HEIC photo is accepted by its file name and traced', async ({ page }) => {
+  await ready(page);
+  // Browsers on Linux and Windows report no type for .heic, so the name decides.
+  await page
+    .getByLabel('Choose photo or project')
+    .setInputFiles(path.resolve('tests/fixtures/plain.heic'));
+  await expect(page.getByRole('alert')).toHaveCount(0);
+  await expect(page.getByText('plain.heic')).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByRole('button', { name: 'Build model', exact: true })).toBeDisabled();
+  await page.getByRole('spinbutton', { name: 'Reference width', exact: true }).fill('40');
+  await page.getByLabel('Thickness', { exact: true }).fill('2');
+  await page.getByRole('button', { name: 'Build model', exact: true }).click();
+  await expect(page.getByRole('dialog')).toBeVisible({ timeout: 60_000 });
+  await expect(page.locator('.export-summary')).toContainText('40.00');
+});
+
 test('own photo requires measurements and a failed upload preserves the previous valid model', async ({
   page,
 }) => {

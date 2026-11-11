@@ -3,6 +3,7 @@
 import base64
 import io
 import logging
+import math
 import warnings
 
 import cv2
@@ -11,11 +12,22 @@ from PIL import ExifTags, Image, UnidentifiedImageError
 from pydantic import ValidationError
 from shapely.geometry import Polygon
 
+from . import heic, tone
 from .models import Profile
 
-MAX_BYTES = 10 * 1024 * 1024
-MAX_PIXELS = 16_000_000
+MAX_BYTES = 32 * 1024 * 1024
+# Decoded size. Phone cameras save 12 to 64 megapixels; anything larger is refused.
+MAX_PIXELS = 70_000_000
+# A reference-sheet photo above this is reduced to it, in linear light, before tracing.
+WORKING_PIXELS = 16_000_000
 MAX_SIDE = 1400
+MIN_SIDE = 16
+# Decoded here by Pillow. MPO is a JPEG with an embedded preview or second view. HEIC,
+# the default of recent phones, is decoded in a child process instead (backend.heic).
+FORMATS = {"PNG", "JPEG", "WEBP", "MPO", "AVIF"}
+FORMAT_NAMES = "PNG, JPEG, WebP, HEIC or AVIF"
+TOO_MANY_PIXELS = "The image exceeds 70 megapixels. Resize it and try again."
+TOO_SMALL = "Use an image at least 16 pixels wide and tall."
 TINY_AREA = 9  # Contour area, in working-image pixels, below the trace resolution.
 ORIENTATION = {
     2: Image.Transpose.FLIP_LEFT_RIGHT,
@@ -89,6 +101,48 @@ def to_pixel_edges(ring, distance):
     return [list(point) for point in moved.exterior.coords[:-1]]
 
 
+def decode_with_pillow(data, notices):
+    """Decode a PNG, JPEG, WebP or AVIF as an upright RGB image on white. Returns
+    (image, 35 mm-equivalent focal length or None); appends to `notices`."""
+    focal_35mm = None
+    with warnings.catch_warnings():
+        warnings.simplefilter("error", Image.DecompressionBombWarning)
+        with Image.open(io.BytesIO(data)) as raw:
+            if raw.format not in FORMATS:
+                raise TraceError(f"Use a {FORMAT_NAMES} image.")
+            if raw.width * raw.height > MAX_PIXELS:
+                raise TraceError(TOO_MANY_PIXELS)
+            if min(raw.size) < MIN_SIDE:
+                raise TraceError(TOO_SMALL)
+            if raw.format == "MPO":
+                raw.seek(0)  # The primary image; later frames are previews or other views.
+            elif getattr(raw, "n_frames", 1) != 1:
+                raise TraceError("Use a still image rather than an animation.")
+            raw.load()
+            # Read only the orientation. Pillow's exif_transpose also re-serializes the
+            # remaining EXIF, which raises on malformed but otherwise harmless tags, and
+            # EXIF is discarded below.
+            try:
+                exif = raw.getexif()
+                method = ORIENTATION.get(exif.get(ExifTags.Base.Orientation, 1))
+            except Exception:  # noqa: BLE001 - any malformed EXIF block is untrusted input.
+                method = None
+                notices.append(
+                    "The image's orientation metadata could not be read, so it was traced as stored. Check that the outline is oriented like the part before measuring the reference width."
+                )
+            else:
+                focal_35mm = exif_focal_35mm(exif)
+            normalized = to_eight_bit(raw.transpose(method) if method else raw)
+            if "A" in normalized.getbands() or "transparency" in normalized.info:
+                rgba = normalized.convert("RGBA")
+                image = Image.new("RGB", rgba.size, "white")
+                image.paste(rgba, mask=rgba.getchannel("A"))
+            else:
+                image = normalized.convert("RGB")
+            image.load()
+    return image, focal_35mm
+
+
 def trace_image(
     data: bytes,
     threshold: int = -1,
@@ -106,60 +160,43 @@ def trace_image(
     traces without the sheet, with a warning, when no sheet can be found.
     """
     if not data or len(data) > MAX_BYTES:
-        raise TraceError("Choose an image between 1 byte and 10 MiB.")
+        raise TraceError("Choose an image between 1 byte and 32 MiB.")
     notices = []
     focal_35mm = None
     try:
-        with warnings.catch_warnings():
-            warnings.simplefilter("error", Image.DecompressionBombWarning)
-            with Image.open(io.BytesIO(data)) as raw:
-                # Cameras store an embedded preview or second view as an MPO JPEG.
-                if raw.format not in {"PNG", "JPEG", "WEBP", "MPO"}:
-                    raise TraceError("Use a PNG, JPEG, or WebP image.")
-                if raw.width * raw.height > MAX_PIXELS:
-                    raise TraceError("The image exceeds 16 megapixels. Resize it and try again.")
-                if min(raw.size) < 16:
-                    raise TraceError("Use an image at least 16 pixels wide and tall.")
-                if raw.format == "MPO":
-                    raw.seek(0)  # The primary image; later frames are previews or other views.
-                elif getattr(raw, "n_frames", 1) != 1:
-                    raise TraceError("Use a still image rather than an animation.")
-                raw.load()
-                # Read only the orientation. Pillow's exif_transpose also re-serializes the
-                # remaining EXIF, which raises on malformed but otherwise harmless tags, and
-                # EXIF is discarded below.
-                try:
-                    exif = raw.getexif()
-                    method = ORIENTATION.get(exif.get(ExifTags.Base.Orientation, 1))
-                except Exception:  # noqa: BLE001 - any malformed EXIF block is untrusted input.
-                    method = None
-                    notices.append(
-                        "The image's orientation metadata could not be read, so it was traced as stored. Check that the outline is oriented like the part before measuring the reference width."
-                    )
-                else:
-                    focal_35mm = exif_focal_35mm(exif)
-                normalized = to_eight_bit(raw.transpose(method) if method else raw)
-                if "A" in normalized.getbands() or "transparency" in normalized.info:
-                    rgba = normalized.convert("RGBA")
-                    image = Image.new("RGB", rgba.size, "white")
-                    image.paste(rgba, mask=rgba.getchannel("A"))
-                else:
-                    image = normalized.convert("RGB")
-                image.load()
-                if reference == "none":
-                    image.thumbnail((MAX_SIDE, MAX_SIDE), Image.Resampling.LANCZOS)
+        if heic.is_heic(data):
+            try:
+                image, focal_35mm = heic.decode(data, MAX_PIXELS, MIN_SIDE)
+            except heic.HeicError as exc:
+                refusal = {"pixels": TOO_MANY_PIXELS, "small": TOO_SMALL}.get(exc.reason)
+                if refusal:
+                    raise TraceError(refusal) from exc
+                raise ValueError("The HEIC image could not be decoded.") from exc
+        else:
+            image, focal_35mm = decode_with_pillow(data, notices)
+        if reference == "none":
+            image.thumbnail((MAX_SIDE, MAX_SIDE), Image.Resampling.LANCZOS)
+        elif image.width * image.height > WORKING_PIXELS:
+            megapixels = image.width * image.height / 1e6
+            scale = math.sqrt(WORKING_PIXELS / (image.width * image.height))
+            image = Image.fromarray(tone.reduce_in_linear_light(np.asarray(image), scale))
+            notices.append(
+                f"The {megapixels:.0f}-megapixel photo was reduced to {image.width} × {image.height} pixels for tracing."
+            )
     except TraceError:
         raise
     except (
         UnidentifiedImageError,
         OSError,
+        EOFError,
         ValueError,
+        RuntimeError,  # Pillow's AVIF decoder reports a damaged file this way.
         SyntaxError,  # A damaged PNG chunk can fail only when its pixels are loaded.
         Image.DecompressionBombError,
         Image.DecompressionBombWarning,
     ) as exc:
         raise TraceError(
-            "The image could not be decoded. Try a valid PNG, JPEG, or WebP under 16 megapixels."
+            f"The image could not be decoded. Try a valid {FORMAT_NAMES} image under 70 megapixels."
         ) from exc
 
     if reference != "none":

@@ -36,7 +36,7 @@ test('Try again repeats only the failed step, with the inputs on screen', async 
   // An error that retrying cannot fix offers no retry, and does not replay an older step.
   await thickness.fill('6');
   await page.getByLabel('Choose photo or project').setInputFiles(gif);
-  await expect(alert).toContainText('Choose a PNG, JPEG or WebP image');
+  await expect(alert).toContainText('Choose a PNG, JPEG, WebP, HEIC or AVIF image');
   await expect(tryAgain).toHaveCount(0);
   await expect(thickness).toHaveValue('6');
   await expect(page.getByRole('button', { name: 'Update model', exact: true })).toBeEnabled();
@@ -66,7 +66,7 @@ test('Try again repeats only the failed step, with the inputs on screen', async 
   await page.getByRole('button', { name: 'Update model', exact: true }).click();
   await expect(tryAgain).toBeVisible();
   await page.getByLabel('Choose photo or project').setInputFiles(gif);
-  await expect(alert).toContainText('Choose a PNG, JPEG or WebP image');
+  await expect(alert).toContainText('Choose a PNG, JPEG, WebP, HEIC or AVIF image');
   await expect(tryAgain).toHaveCount(0);
   await expect(thickness).toHaveValue('7');
 });

@@ -435,6 +435,42 @@ def test_the_measurement_mix_keeps_luminance_or_follows_the_channels_that_differ
     assert np.abs(errors).max() < 0.03 and abs(np.mean(errors)) < 5e-3
 
 
+@pytest.mark.parametrize("megapixels", [24, 50])
+def test_reducing_a_photo_in_linear_light_keeps_edges_in_place(megapixels):
+    """Property. A photo above 16 megapixels is reduced before tracing. Averaging linear
+    light is a symmetric blur, so an edge's half-level stays put: its mean position over
+    all pixel phases is within 0.015 source pixels. Averaging the saved values instead
+    mixes tones on the wrong scale and moves the edge toward the lighter side."""
+    scale = math.sqrt(16 / megapixels)
+    low, high = float(tone.linear_from_encoded(48.0)), float(tone.linear_from_encoded(236.0))
+    columns = np.arange(200, dtype=np.float64)
+    normals = np.tile([1.0, 0.0], (4, 1))
+    shifts = {"linear": [], "saved": []}
+    for edge in np.linspace(90.0, 97.0, 57)[:-1]:
+        light = np.tile(high - (high - low) * np.clip(edge - columns, 0, 1), (60, 1))
+        light = cv2.GaussianBlur(light.astype(np.float32), (0, 0), 1.5, borderType=cv2.BORDER_REPLICATE)
+        saved = np.clip(np.rint(synthetic.linear_to_srgb(light)), 0, 255).astype(np.uint8)
+        photo = np.dstack([saved] * 3)
+        size = (round(200 * scale), round(60 * scale))
+        reduced = {
+            "linear": tone.reduce_in_linear_light(photo, scale),
+            "saved": cv2.resize(photo, size, interpolation=cv2.INTER_AREA),
+        }
+        for name, small in reduced.items():
+            assert small.shape[:2] == size[::-1]
+            ratio = small.shape[1] / 200
+            points = np.column_stack(
+                [np.full(4, edge * ratio + 0.3), np.linspace(6.5, small.shape[0] - 6.5, 4)]
+            )
+            moved, keep = sheet.half_level_search(
+                tone.linear_luminance(small), points, normals, half=6.0, step=0.0625
+            )
+            assert keep.all()
+            shifts[name].append(moved[0, 0] / ratio - edge)
+    assert abs(np.mean(shifts["linear"])) < 0.015
+    assert np.mean(shifts["saved"]) > 0.02
+
+
 def test_a_sloped_plateau_shifts_the_half_level_by_the_predicted_amount():
     """Numerical analysis of a known limit. A soft shadow makes the paper brighter away
     from an edge: light a on the part, b0 + b (t - e) beyond it. Blurred by a Gaussian,

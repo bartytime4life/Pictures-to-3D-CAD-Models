@@ -21,6 +21,7 @@ have the same luminance (pure green on light grey); the edge is then measured on
 channels that do differ (mix_weights).
 """
 
+import cv2
 import numpy as np
 
 
@@ -99,3 +100,19 @@ def mix_weights(a, b, floor=40.0):
         return LUMINANCE
     weights = tuple(float(v) for v in chosen / chosen.sum())
     return weights if saved_contrast(a, b, weights) > luminance else LUMINANCE
+
+
+def reduce_in_linear_light(rgb, scale):
+    """Shrink an 8-bit sRGB photo by `scale` (below 1) and return 8-bit sRGB.
+
+    Each output pixel is the exact area average of the linear light it covers, so an
+    edge's half-level keeps its place. Averaging saved values instead would mix tones
+    on the wrong scale and move edges, the error this module exists to avoid.
+    """
+    height, width = rgb.shape[:2]
+    size = (max(1, round(width * scale)), max(1, round(height * scale)))
+    out = np.empty((size[1], size[0], 3), np.uint8)
+    for channel in range(3):
+        light = cv2.resize(_LINEAR[rgb[..., channel]], size, interpolation=cv2.INTER_AREA)
+        out[..., channel] = np.clip(np.rint(encoded_from_linear(light)), 0, 255)
+    return out

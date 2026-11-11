@@ -11,6 +11,7 @@ import sys
 import threading
 import time
 from collections import Counter
+from pathlib import Path
 
 import cadquery as cq
 import ezdxf
@@ -21,7 +22,7 @@ from fastapi.testclient import TestClient
 from PIL import Image, ImageDraw
 
 from backend import app as api
-from backend import tracing
+from backend import heic, tracing
 
 
 @pytest.fixture(scope="module")
@@ -271,16 +272,129 @@ def test_damaged_png_chunk_length_is_recoverable_and_releases_trace_slot(client)
 
 
 def test_upload_size_limit(client):
-    response = trace(client, b"x" * (10 * 1024 * 1024 + 1))
+    response = trace(client, b"x" * (tracing.MAX_BYTES + 1))
     assert response.status_code == 413
+    assert "32 MiB" in response.json()["detail"]
+
+
+def test_requests_other_than_a_photo_keep_the_10_mib_limit(client):
+    response = client.post(
+        "/api/build",
+        content=b" " * (10 * 1024 * 1024 + 64 * 1024 + 1),
+        headers={"Content-Type": "application/json"},
+    )
+    assert response.status_code == 413
+    assert "10 MiB" in response.json()["detail"]
 
 
 def test_pixel_limit(client):
     buffer = io.BytesIO()
-    Image.new("L", (4001, 4000), 255).save(buffer, "PNG")
+    Image.new("L", (8401, 8400), 255).save(buffer, "PNG")
     response = trace(client, buffer.getvalue())
     assert response.status_code == 422
-    assert "16 megapixels" in response.json()["detail"]
+    assert "70 megapixels" in response.json()["detail"]
+
+
+def test_a_24_megapixel_phone_photo_is_accepted(client):
+    image = Image.new("L", (5712, 4284), 255)
+    ImageDraw.Draw(image).rectangle((1200, 900, 4400, 3300), fill=0)
+    response = trace(client, encoded(image, "JPEG", quality=85))
+    assert response.status_code == 200, response.text
+    assert max(response.json()["image"]["width"], response.json()["image"]["height"]) == 1400
+
+
+FIXTURES = Path(__file__).parent / "fixtures"
+# tests/fixtures/*.heic: a 320 x 240 L-shaped plate with one hole, written with
+# pillow-heif 1.8.1 (quality 90). orientation6.heic also carries EXIF orientation 6 and
+# a 26 mm equivalent focal length. The app's pi-heif can decode HEIC but not write it.
+
+
+def test_heic_is_recognised_by_its_file_type_box():
+    assert heic.is_heic((FIXTURES / "plain.heic").read_bytes())
+    assert not heic.is_heic(image_bytes()) and not heic.is_heic(image_bytes(exif=True))
+    assert not heic.is_heic(encoded(plate(), "AVIF"))
+    box = (24).to_bytes(4, "big") + b"ftypmif1" + bytes(4) + b"mif1"
+    assert heic.is_heic(box + b"heic") and not heic.is_heic(box + b"avif")
+    assert not heic.is_heic(b"") and not heic.is_heic(b"\x00\x00\x00\x18ftyp")
+
+
+def test_heic_photos_trace_like_jpeg_including_their_stored_rotation(client):
+    plain = trace(client, (FIXTURES / "plain.heic").read_bytes())
+    assert plain.status_code == 200, plain.text
+    body = plain.json()
+    assert (body["image"]["width"], body["image"]["height"]) == (320, 240)
+    assert len(body["profile"]["holes"]) == 1
+    assert body["image"]["data_url"].startswith("data:image/png;base64,")
+
+    turned = trace(client, (FIXTURES / "orientation6.heic").read_bytes()).json()
+    assert (turned["image"]["width"], turned["image"]["height"]) == (240, 320)
+    # The same pixels as a JPEG carrying EXIF orientation 6 give the same outline.
+    pixels, focal = heic.decode((FIXTURES / "plain.heic").read_bytes(), tracing.MAX_PIXELS, 16)
+    assert focal is None
+    metadata = Image.Exif()
+    metadata[274] = 6
+    as_jpeg = trace(client, encoded(pixels, "JPEG", quality=95, exif=metadata)).json()
+    for key in ("x", "y", "width", "height"):
+        assert abs(turned["bounds"][key] - as_jpeg["bounds"][key]) <= 1.5
+    assert abs(turned["bounds"]["width"] - body["bounds"]["height"]) <= 1.5
+
+
+def test_heic_limits_and_focal_length_come_back_from_the_decoder():
+    data = (FIXTURES / "orientation6.heic").read_bytes()
+    image, focal = heic.decode(data, tracing.MAX_PIXELS, 16)
+    assert image.size == (240, 320) and image.mode == "RGB" and focal == 26
+    with pytest.raises(heic.HeicError) as too_many:
+        heic.decode(data, 1000, 16)
+    assert too_many.value.reason == "pixels"
+    with pytest.raises(heic.HeicError) as too_small:
+        heic.decode(data, tracing.MAX_PIXELS, 400)
+    assert too_small.value.reason == "small"
+
+
+def test_a_heic_decoder_crash_is_a_refusal_and_the_service_keeps_running(client, monkeypatch):
+    """HEIC is decoded in a child process because its native decoder can crash on a
+    damaged file. Changing these two bytes of a valid file made pi-heif 1.4.0 fail with a
+    segmentation fault while reading metadata."""
+    assert "pi_heif" not in sys.modules  # the decoder is never loaded into the service
+    data = bytearray((FIXTURES / "orientation6.heic").read_bytes())
+    data[39], data[177] = 0o077, 0o351
+    response = trace(client, bytes(data))
+    assert response.status_code in (200, 422), response.text  # 422 while the decoder crashes
+    assert trace(client, (FIXTURES / "plain.heic").read_bytes()).status_code == 200
+
+    # Whatever a later decoder version does with that file, a crashed child is a refusal.
+    crashed = subprocess.CompletedProcess([], -11, stdout=b"", stderr=b"")
+    monkeypatch.setattr(heic.subprocess, "run", lambda *args, **kwargs: crashed)
+    response = trace(client, (FIXTURES / "plain.heic").read_bytes())
+    assert response.status_code == 422
+    assert "could not be decoded" in response.json()["detail"]
+
+
+def test_a_truncated_heic_is_refused(client):
+    data = (FIXTURES / "plain.heic").read_bytes()
+    for cut in (len(data) // 2, len(data) - 1, 40):
+        response = trace(client, data[:cut])
+        assert response.status_code == 422
+        assert "could not be decoded" in response.json()["detail"]
+
+
+def test_avif_photos_are_traced_and_damaged_ones_refused(client):
+    metadata = Image.Exif()
+    metadata[274] = 6
+    data = encoded(plate(), "AVIF", quality=90, exif=metadata)
+    response = trace(client, data)
+    assert response.status_code == 200, response.text
+    upright = trace(client, encoded(plate(), "PNG")).json()
+    body = response.json()
+    assert (body["image"]["width"], body["image"]["height"]) == (
+        upright["image"]["height"],
+        upright["image"]["width"],
+    )
+    assert abs(body["bounds"]["width"] - upright["bounds"]["height"]) <= 2
+    # Pillow's AVIF decoder reports damage as RuntimeError, which must not become a 500.
+    response = trace(client, data[: len(data) // 2] + bytes(len(data) // 2))
+    assert response.status_code == 422
+    assert "could not be decoded" in response.json()["detail"]
 
 
 @pytest.mark.parametrize(

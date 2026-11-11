@@ -6,7 +6,7 @@ Use the visible error message and the stage that failed. Keep the current photog
 
 | Symptom | Likely cause | Next action |
 | --- | --- | --- |
-| Unsupported or unreadable image | The bytes are not a supported image, or the file is damaged. | Export a fresh PNG, JPEG, or WebP; changing the extension alone does not convert a file. |
+| Unsupported or unreadable image | The bytes are not a supported image, or the file is damaged. | Export a fresh PNG, JPEG, WebP, HEIC, or AVIF; changing the extension alone does not convert a file. A HEIC that uses a codec other than HEVC is not supported. |
 | Upload rejected as too large | Encoded size or decoded image dimensions exceed the server limit. | Resize the image before uploading, keeping the relevant boundary sharp. |
 | No useful outline | Low contrast, a blank image, or the wrong foreground interpretation. | Check the foreground setting and threshold; retake with a plain contrasting background if necessary. |
 | Background selected as the part | Foreground and background are reversed or merge at the image edge. | Invert the foreground interpretation and leave a clear margin around the whole part. |

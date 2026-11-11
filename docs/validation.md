@@ -1,6 +1,18 @@
 # Validation results
 
-Latest workbench validation: November 10, 2026, on the local Linux workstation. The FreeCAD import check and the linear-light edge measurement of November 11 ran in a managed cloud session. The [reference-sensitivity record](validation/reference-sensitivity.md) covers the new endpoint-placement explorer. Earlier managed-environment and release results are recorded separately below. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
+Latest workbench validation: November 10, 2026, on the local Linux workstation. The FreeCAD import check, the linear-light edge measurement and the phone-photo decoding of November 11 ran in a managed cloud session. The [reference-sensitivity record](validation/reference-sensitivity.md) covers the new endpoint-placement explorer. Earlier managed-environment and release results are recorded separately below. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
+
+## Phone photos: HEIC, AVIF and up to 70 megapixels — November 11, 2026
+
+Branch `claude/phone-photo-decoding`, on top of `claude/colour-edge-mix` (`7aa1d3e`).
+
+- **Before.** The tracer accepted PNG, JPEG and WebP up to 10 MiB and 16 megapixels. A 24-megapixel JPEG was refused for its size, and HEIC and AVIF for their format.
+- **Formats.** HEIC is decoded by pi-heif 1.4.0 (libheif 1.23.0, libde265 1.1.0). AVIF is decoded by Pillow 13.0.0. Two HEIC fixtures written with pillow-heif 1.8.1 trace like the same pixels saved as JPEG, including a stored rotation, and return the EXIF 35 mm focal length. No photo taken by a phone was available, so an iPhone's tiled HEIC with a gain map or depth image is not verified.
+- **A decoder crash, found and contained.** Mutating one or a few bytes of a valid HEIC 150 times produced one segmentation fault in pi-heif while it read metadata; two changed bytes are enough. HEIC is therefore decoded in a child process (`backend/heic.py`). Through that path, 805 mutated or truncated HEIC files gave no crash of the service and no unhandled error. The same mutation of 3005 AVIF files in the service gave no crash; Pillow reported damage as `RuntimeError`, which is now a refusal and not a server error.
+- **Size.** Uploads may be 32 MiB and 70 megapixels; other request bodies keep the 10 MiB limit. A reference-sheet photo above 16 megapixels is reduced to 16 by averaging linear light. Over all pixel phases that left a blurred edge's mean position within 0.015 source pixels at 24 and 50 megapixels, where averaging saved values moved it by about 0.04. An 18-megapixel rendered photo traced within 0.01 mm on a 60 mm disc.
+- **Checks run.** `pytest`: **323 passed** and 2 skipped (the OpenSCAD checks; OpenSCAD is not installed in this session). Ruff and Prettier passed. The production build and the 15 scenarios of `workbench.spec.ts` and `recovery.spec.ts` passed with Playwright's bundled Chromium, including a new one that uploads a HEIC whose type the browser does not report. The other browser scenarios were not re-run locally.
+- **Time and memory.** Rendered reference-sheet photos of 25 megapixels (JPEG and HEIC) and 51 megapixels (JPEG) traced in 8 to 10 seconds with a peak of 0.9 GB in the service, the same peak as a 16-megapixel photo, and 0.4 GB in the HEIC child. Each read a 60 mm disc to about 0.001 mm. These renders are flat colour and compress to under 1 MB; a real photo of that size takes longer to decode.
+- **Not verified.** No real phone photo was decoded. The child's memory and processor limits apply on POSIX systems only. The frontend's HEIC acceptance was exercised in Chromium only.
 
 ## Edges measured in linear light — November 11, 2026
 
