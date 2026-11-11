@@ -48,6 +48,8 @@ After building, open **Review export → Prepare in your slicer**. Choose **Bamb
 
 An optional local launcher can open the current geometry in a configured installed slicer. Run `make slicers` to inspect availability. Targets are Bambu Studio 2.9.1 and the requested PrusaSlicer 2.9.7; executable detection does not verify the installed version. See [slicer setup and use](docs/slicers.md). Setup does not install either application, and the workbench does not slice or start prints.
 
+To check that a separate CAD application reads fitted exports as exact geometry, run `make freecad` with `FREECADCMD` set to FreeCAD's `freecadcmd` (FreeCAD is not installed by setup). It builds the synthetic reference-sheet plate and checks FreeCAD's import of its STEP and DXF against the plate's design; see [validation](docs/validation.md).
+
 ## Optional local AI guidance
 
 Open **Local AI assistant** for help with capture, tracing, design changes, print planning, and export choices. Choose an installed Ollama model, ask a question, and review its answer. Suggestions show their proposed settings before an explicit **Apply**, with undo available. You still enter measured dimensions and decide when to build and export.
