@@ -7,6 +7,7 @@ from pathlib import Path
 from shapely.geometry import GeometryCollection, MultiPolygon, Polygon, box
 
 from .models import DesignSettings
+from .placement import FIT_TOLERANCE_MM, rectangular_placement
 
 CATALOG_PATH = Path(__file__).resolve().parent.parent / "data" / "printers.json"
 DETAIL_TOLERANCE = {"draft": 0.5, "balanced": 0.25, "fine": 0.1}
@@ -132,8 +133,15 @@ def split_profile(polygon: Polygon, design: DesignSettings):
     return parts
 
 
-def bed_fit(dimensions, design: DesignSettings, printer=None):
-    """Bounding-box placement only: flat on Z, optionally rotated 90 degrees."""
+def bed_fit(dimensions, design: DesignSettings, printer=None, *, footprint=None):
+    """Check one flat piece at any XY angle, retaining a placement witness.
+
+    A polygon footprint is exact for polygon extrusions. When absent (fitted
+    curves), use the solid's enclosing rectangle: a positive result is safe,
+    but a failed rectangle test cannot rule out a placement of the actual curve.
+    """
+    basis = "outline" if footprint is not None else "bounding_box"
+    common = {"rotated_90": False, "basis": basis}
     if design.printer_id != "custom" and (
         printer is None
         or printer.get("bed_shape") != "rectangular"
@@ -141,27 +149,45 @@ def bed_fit(dimensions, design: DesignSettings, printer=None):
     ):
         return {
             "status": "unknown",
-            "rotated_90": False,
+            **common,
             "reason": "Placement on this printer's shaped, excluded or unknown bed area is not verified. Check it in your slicer.",
         }
     usable_width = design.bed_width_mm - 2 * design.bed_margin_mm
     usable_depth = design.bed_depth_mm - 2 * design.bed_margin_mm
     width, depth, height = dimensions["width"], dimensions["height"], dimensions["thickness"]
-    tolerance = 1e-6
-    fits_z = height <= design.bed_height_mm + tolerance
-    straight = width <= usable_width + tolerance and depth <= usable_depth + tolerance
-    rotated = depth <= usable_width + tolerance and width <= usable_depth + tolerance
-    fits = fits_z and (straight or rotated)
+    if height > design.bed_height_mm + FIT_TOLERANCE_MM:
+        return {
+            **common,
+            "status": "too_large",
+            "reason": "Exceeds the selected build height in this flat orientation.",
+        }
+    if min(usable_width, usable_depth) <= 0:
+        return {
+            **common,
+            "status": "too_large",
+            "reason": "The selected XY margin leaves no usable bed rectangle.",
+        }
+    placement = rectangular_placement(
+        footprint if footprint is not None else box(0, 0, width, depth), usable_width, usable_depth
+    )
+    if placement is None:
+        return {
+            **common,
+            "status": "too_large" if footprint is not None else "unknown",
+            "reason": (
+                "No in-plane rotation of this outline fits the rectangular envelope with the selected XY margin."
+                if footprint is not None
+                else "No rotation of the enclosing rectangle fits. Placement of the curved outline needs review in your slicer."
+            ),
+        }
+    angle = placement["rotation_deg"]
+    turn = f" after an approximately {angle:.6f}° counterclockwise XY turn" if angle else ""
     return {
-        "status": "fits" if fits else "too_large",
-        "rotated_90": bool(fits and not straight and rotated),
-        "reason": (
-            "Fits the rectangular envelope with the selected XY margin after a 90-degree rotation; slicer checks are still required."
-            if fits and not straight
-            else "Fits the rectangular envelope with the selected XY margin; slicer checks are still required."
-            if fits
-            else "Exceeds the usable rectangular envelope in this flat orientation, including a 90-degree rotation."
-        ),
+        **common,
+        **placement,
+        "status": "fits",
+        "rotated_90": math.isclose(angle, 90, abs_tol=1e-9),
+        "reason": f"Fits the rectangular envelope with the selected XY margin{turn}; verify the placement in your slicer. Geometry exports keep their original orientation.",
     }
 
 
@@ -173,7 +199,7 @@ def aggregate_fit(parts):
     reasons = {
         "fits": "Each piece fits separately in the checked rectangular envelope. This is not a printability guarantee.",
         "too_large": "At least one piece exceeds the checked envelope. Reduce scale, change the split or choose another printer.",
-        "unknown": "Bed placement is not verified for this printer. Check every piece in your slicer.",
+        "unknown": "At least one piece needs a placement check in your slicer. Review the per-piece results.",
     }
     return {
         "status": status,

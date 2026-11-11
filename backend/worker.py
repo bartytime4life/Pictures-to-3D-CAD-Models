@@ -266,7 +266,9 @@ def build(job_dir: Path) -> dict:
             "dimensions": part_dimensions,
             "volume_mm3": solid.Volume(),
             "assembly_offset_mm": [bounds.xmin, bounds.ymin, 0],
-            "bed_fit": bed_fit(part_dimensions, design, printer),
+            "bed_fit": bed_fit(
+                part_dimensions, design, printer, footprint=None if fitted else polygons[index - 1]
+            ),
             "mesh": mesh_of(solid),
         }
         if design.output_mode == "split":
@@ -367,7 +369,7 @@ def build(job_dir: Path) -> dict:
         [
             "STL coordinates are in millimeters. Set millimeters explicitly when importing the mesh.",
             "Color and material are planning notes in the project and handoff manifests; geometry exports do not assign filament or slicer presets.",
-            "Bed fit checks the flat bounding envelope only. Verify placement, small features, supports and material settings in your slicer.",
+            "Bed fit checks one flat piece at a time in a clear rectangular envelope. Suggested XY turns are not applied to exports. Verify placement, small features, supports and material settings in your slicer.",
         ]
     )
     result = {

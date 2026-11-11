@@ -373,6 +373,8 @@ def test_fitted_build_is_aligned_exact_and_reports_its_geometry(fitted_build):
     assert abs(model["dimensions"]["height"] - 70) < LIMITS["outer"]
     assert model["hole_count"] == 6
     assert math.isclose(model["volume_mm3"], S.part_local().area * 4, rel_tol=0.005)
+    assert model["parts"][0]["bed_fit"]["basis"] == "bounding_box"
+    assert model["parts"][0]["bed_fit"]["status"] == "fits"
 
 
 def test_fitted_exports_carry_true_circles_and_arcs(client, fitted_build, tmp_path):
