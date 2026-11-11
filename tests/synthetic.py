@@ -6,6 +6,11 @@ polynomial radial distortion; the photo has uneven light, vignetting, a soft con
 shadow, optical blur, noise and JPEG compression. A thick part has vertical walls,
 rendered as projected slices below its top face.
 
+Light mixes linearly. Surface tones are given as saved 0-255 values and taken to
+linear light; uneven light, vignetting and the shadow scale that light; partial
+coverage and optical blur mix it; the result is then saved through a camera tone curve
+(sRGB's, or a plain gamma).
+
 Coverage is exact: an even-odd scanline at 8 x 8 samples per scene pixel (sample
 centres only, so no inclusive-boundary bias such as cv2.fillPoly's).
 """
@@ -26,6 +31,20 @@ SMALL_HOLES = [(x, y) for x in (-48.0, 48.0) for y in (-25.0, 25.0)]
 BORE = (-20.0, 0.0, 22.0)
 SLOT = (25.0, 0.0, 24.0, 8.0)
 POSE = {"centre": (105.0, 150.0), "angle_deg": 8.0}
+
+
+def srgb_to_linear(values):
+    """IEC 61966-2-1 decoding, written out here independently of backend.tone; both
+    sides use a 0-255 scale."""
+    v = np.asarray(values, np.float64) / 255
+    return 255 * np.where(v <= 0.04045, v / 12.92, ((np.maximum(v, 0.04045) + 0.055) / 1.055) ** 2.4)
+
+
+def linear_to_srgb(values):
+    v = np.maximum(np.asarray(values, np.float64), 0) / 255
+    return 255 * np.where(
+        v <= 0.0031308, 12.92 * v, 1.055 * np.maximum(v, 0.0031308) ** (1 / 2.4) - 0.055
+    )
 
 
 def stadium(cx, cy, length, width):
@@ -61,8 +80,11 @@ def _rot(axis, deg):
     return np.array([[c, -s, 0], [s, c, 0], [0, 0, 1]])
 
 
-def camera(tilt=(22.0, -9.0, 4.0), size=(2400, 1800), focal=1980.0, distance=440.0):
+def camera(tilt=(22.0, -9.0, 4.0), size=(2400, 1800), focal=None, distance=440.0):
+    """`focal` defaults to 1980 px at 2400 px wide and scales with the width, so a
+    larger photo shows the same field in more pixels."""
     w, h = size
+    focal = 1980.0 * w / 2400 if focal is None else focal
     k = np.array([[focal, 0, w / 2], [0, focal, h / 2], [0, 0, 1.0]])
     rotation = _rot("z", tilt[2]) @ _rot("x", tilt[0]) @ _rot("y", tilt[1])
     target = np.array([SHEET[0] / 2, SHEET[1] / 2, 0.0])
@@ -141,12 +163,30 @@ def render(
     quality=90,
     tones=(106.0, 236.0, 48.0, 78.0),
     exif_focal_35mm=None,
+    gamma=None,
 ):
     """Returns (jpeg bytes, truth dict).
 
-    `tones` are the table, sheet, part-top and wall brightness (0-255).
+    `tones` are the table, sheet, part-top and wall brightness as saved (0-255).
+    `shadow` is the fraction of light the part's contact shadow removes at its deepest;
+    `gradient` is the strength of the uneven light. Both act on linear light, so a
+    0.25 shadow darkens the saved paper by about 12 %, and a shadow that looks 25 %
+    darker in the saved photo removes about 47 % of the light.
     `exif_focal_35mm` writes that 35 mm-equivalent focal length into the JPEG's EXIF.
+    `gamma` is the camera's tone curve: None for sRGB's, or the exponent of a plain
+    power law (saved = linear ** (1 / gamma)), for cameras whose curve differs from the
+    sRGB decoding the tracer assumes. 1 saves linear light unchanged.
     """
+    if gamma is None:
+        to_linear, to_saved = srgb_to_linear, linear_to_srgb
+    else:
+
+        def to_linear(v):
+            return 255 * (np.clip(v, 0, None) / 255) ** gamma
+
+        def to_saved(v):
+            return 255 * (np.clip(v, 0, None) / 255) ** (1 / gamma)
+
     rng = np.random.default_rng(seed)
     part = part_on_sheet()
     k, rotation, t = camera(tilt, size)
@@ -190,9 +230,14 @@ def render(
         (0, 0),
         2.2 * ppm,
     )
+    # From here on everything is linear light. The shadow dims the paper. A pixel is
+    # linear in its coverages (top is inside material, so material >= top): background
+    # where neither covers it, wall where only the walls do, top face elsewhere. Uneven
+    # light and vignetting scale the whole scene, and the optical blur follows.
+    table, paper, metal, wall_tone = (
+        to_linear(np.clip(surface, 0, 255)) for surface in (table, paper, metal, wall_tone)
+    )
     paper = paper * (1 - shadow * cast)
-    # Each pixel is linear in its coverages (top is inside material, so material >= top):
-    # background where neither covers it, wall where only the walls do, top face elsewhere.
     background = table * (1 - sheet_a) + paper * sheet_a
     scene = background * (1 - material) + wall_tone * (material - top) + metal * top
     gx, gy = (xx - shape[1] / 2) / shape[1], (yy - shape[0] / 2) / shape[0]
@@ -211,8 +256,10 @@ def render(
         cv2.INTER_LINEAR,
         borderMode=cv2.BORDER_REFLECT,
     )
-    image = cv2.GaussianBlur(image, (0, 0), blur) + rng.normal(0, noise, image.shape)
-    grey = np.clip(image, 0, 255)
+    image = cv2.GaussianBlur(image, (0, 0), blur)
+    # The camera saves through its tone curve; noise is added on the saved scale, where
+    # a processed photo's noise is roughly even across tones.
+    grey = np.clip(to_saved(image) + rng.normal(0, noise, image.shape), 0, 255)
     rgb = np.dstack([grey, grey * 0.97, grey * 0.92]).astype(np.uint8)
     from PIL import Image
 

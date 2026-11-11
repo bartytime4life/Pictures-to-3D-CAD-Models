@@ -8,7 +8,7 @@ Lay the part on a sheet of known size, photograph the whole sheet, and choose th
 - **Exact geometry**: lines, tangent arcs and circles fitted with residuals, then exported as true cylinders (STEP), `ARC`/`CIRCLE` entities (DXF) and `circle()` calls (OpenSCAD).
 - **A check of the sheet you chose**: its proportions, though not its scale, are measured from the photo.
 
-![The workbench after tracing a tilted phone photo of a 4 mm plate on an A4 sheet: the rectified, axis-aligned view with the fitted outline, the 120.00 mm width taken from the sheet, and the built model](images/reference-sheet.png)
+![The workbench after tracing a tilted phone photo of a 4 mm plate on an A4 sheet: the rectified, axis-aligned view with the fitted outline, the 120.02 mm width taken from the sheet, and the built model](images/reference-sheet.png)
 
 The screenshot shows the browser-test fixture `tests/e2e/fixtures/plate-on-a4.jpg`, a rendered photo, after building with a 4 mm thickness.
 
@@ -16,7 +16,7 @@ This page describes each stage, the mathematics it depends on, and the tests tha
 
 ## Evidence boundary
 
-The accuracy figures here come from **synthetic photographs** with exact ground truth (`tests/synthetic.py`). The renderer models a pinhole camera with radial distortion, uneven light, vignetting, a soft shadow, optical blur, noise, JPEG compression and the walls of a thick part. It also uses the same single-coefficient lens model the estimator fits. The sheet is exactly its nominal size and perfectly flat, and the walls are vertical with uniform tone.
+The accuracy figures here come from **synthetic photographs** with exact ground truth (`tests/synthetic.py`). The renderer models a pinhole camera with radial distortion, uneven light, vignetting, a soft shadow, optical blur, noise, JPEG compression and the walls of a thick part. It also uses the same single-coefficient lens model the estimator fits. Light is mixed and blurred in linear light and saved through the sRGB tone curve, the same curve the tracer decodes. A real camera adds its own tone mapping, which neither side models; §3 gives the cost of a mismatched curve. The sheet is exactly its nominal size and perfectly flat, and the walls are vertical with uniform tone.
 
 Real lenses, paper tolerance, a curled sheet, chamfered or shiny edges will all do worse. These figures show which error sources each stage removes and the floor it reaches. They are not a physical accuracy claim. A measured-photo benchmark with calipered parts and real phones remains necessary.
 
@@ -24,13 +24,14 @@ Real lenses, paper tolerance, a curled sheet, chamfered or shiny edges will all 
 
 ```text
 photo (full resolution, <= 16 MP)
+  -> linear-light copy of the photo (sRGB decoding), used for every sub-pixel measurement
   -> find the sheet: largest convex quadrilateral (bright first, then dark) holding contrasting content
   -> sub-pixel points on each sheet edge (two passes)
   -> radial lens coefficient k1 from edge straightness (plumb-line)
   -> homography H: sheet millimetres -> undistorted photo pixels
   -> sheet-proportions check, and camera pose if a thickness is entered
-  -> exact cubic resampling onto a millimetre grid (analysis), fast resampling (display)
-  -> illumination-flattened part/sheet classification
+  -> exact cubic resampling of linear light onto a millimetre grid (analysis), fast resampling (display)
+  -> illumination-flattened part/sheet classification, on saved values
   -> sub-pixel boundary at the local mid-level (two passes), edge blur sigma
   -> thick parts: two-step wall model on narrow wall bands, then top-face parallax correction
   -> circles / lines / arcs, design-intent snapping, constrained fillets, blur-curvature correction
@@ -57,6 +58,25 @@ Coordinates follow the repository convention: pixel *i* spans [*i*, *i* + 1], so
 
 **Classification.** After an initial Otsu split, a robust cubic polynomial surface is fitted to the sheet (pixels at least 4 mm from the part) and a plane to the part. Each pixel is normalised as (sheet − value) / (sheet − part) and classified at 0.5. Gradients, vignetting and soft shadow therefore do not move the threshold. Only the largest region is kept, and a 3 mm sheet margin is excluded.
 
+**Linear light.** A lens and sensor blur the scene in linear light. The camera then saves each value through a tone curve, close to a 2.2 gamma, which bends a blurred edge's profile. The mid-level property below holds only in linear light.
+
+On saved values, the mid-level between linear tones L < H is the linear level lin((enc(L) + enc(H)) / 2). A Gaussian edge reaches that level at σ · Φ⁻¹(s) from the edge, where s is the level's share of the step. For the test plate's saved tones (48 on 236), s = 0.30 and the crossing sits 0.53 σ inside the darker side. In the rendered photos that made holes read about 0.25 mm too large and the outline about 0.3 mm too small. `test_saved_values_bias_the_half_level_as_predicted_and_linear_light_removes_it` checks the prediction and its removal.
+
+The tracer therefore decodes the photo with the sRGB curve (IEC 61966-2-1; `backend/tone.py`) and makes every sub-pixel measurement on linear light: the sheet's edges, the resampling onto the millimetre grid, the part's boundary, the edge blur and the wall model. Finding the sheet and classifying the part still use saved values, the scale their thresholds were set on. Contrast limits are stated on that scale too, because a processed photo's noise is roughly even there. Any fixed mix of linear colour channels keeps an edge's mid-level in place, so the photo's colour primaries do not matter; only its tone curve does.
+
+A camera whose curve differs from sRGB leaves part of the bias. On the overhead rendered photo (ideal light, 2400 × 1800), the largest of the five errors reported under Results was:
+
+| Camera's curve | Largest error (mm) |
+| --- | --- |
+| sRGB | 0.003 |
+| Plain gamma 2.2 | 0.019 |
+| Plain gamma 2.4 | 0.027 |
+| Plain gamma 2.0 | 0.065 |
+| Plain gamma 1.8 | 0.114 |
+| Linear (no curve) | 0.318 |
+
+Phone cameras also apply their own tone mapping, which the file does not record. Its cost is not measured here.
+
 **Mid-level crossing.** Each boundary point is moved along its normal to where the profile crosses the mean of its two end medians. Profiles are sampled with exact float64 bilinear interpolation (§2). For a straight edge blurred by any symmetric point-spread function, the crossing of the continuous profile is the edge itself, whatever the blur width.
 
 Sampling a pixel-integrated image adds a phase-dependent error ("pixel locking"):
@@ -70,6 +90,18 @@ This is checked at 16 phases by `test_half_level_crossing_on_symmetric_blur_is_u
 **Two passes.** Pass 1 starts from boundary-pixel centres, about half a pixel inside one side, so its level windows are asymmetric. That grew holes by about 0.09 px at σ = 2 px. Pass 2 re-centres every point, with windows beyond 3.5 σ on both sides.
 
 **Edge blur.** σ is the 25–75 % rise distance divided by 1.349 (the Gaussian value), taken as the median over the outer boundary.
+
+**Shadows (not corrected).** A soft shadow makes the paper brighter away from an edge, with slope b per pixel. The blurred profile at the edge is (a + b₀)/2 + b σ/√(2π) for part light a and paper light b₀ at the edge. The level taken from the profile's ends, whose medians lie at 85 % of the half-window H, is (a + b₀ + 0.85 b H)/2. The crossing therefore moves out of the part by b (0.425 H − σ/√(2π)) divided by the edge's slope, about 2.7 σ² b / (b₀ − a) for H = 3.5 σ (`test_a_sloped_plateau_shifts_the_half_level_by_the_predicted_amount`).
+
+In the tilted rendered photo the error grows with the shadow's depth, and almost all of that photo's error is its shadow:
+
+| Light the shadow removes | Ø6 | Ø22 | Slot | Outer |
+| --- | --- | --- | --- | --- |
+| None | 0.001 | 0.004 | 0.008 | 0.004 |
+| 25 % (the test photos) | 0.012 | 0.026 | 0.027 | 0.025 |
+| 47 % (25 % darker in the saved photo) | 0.024 | 0.054 | 0.066 | 0.055 |
+
+`test_without_a_shadow_the_tilted_trace_is_several_times_tighter` and `test_a_deep_shadow_biases_edges_by_a_bounded_amount` hold these figures. Fitting each plateau's slope, instead of taking its end median, would remove the effect; that is not implemented.
 
 ## 4. Blur–curvature correction
 
@@ -104,11 +136,13 @@ Slot end caps take their radius from the spacing of their straight sides, which 
 
 `test_exact_top_face_projection_is_a_homothety_about_the_nadir` verifies H₀⁻¹H_t equals exactly this homothety matrix, in rational arithmetic, for random cameras and thicknesses. A silhouette point whose material-outward normal faces away from N is formed by the top edge and is scaled back by (D − t)/D. A point facing N is formed by the bottom edge and is left unchanged. The same rule applies to holes, using the material's outward normal, which points into the hole.
 
-**Walls narrower than the blur.** Where the bottom edge forms the silhouette, the visible wall lies between it and the top edge in a band of width w = (D/(D − t) − 1)·|(p − N)·n|. The profile is then a blurred two-step (sheet → wall → top face). A single mid-level crossing is biased into the material by:
+**Walls narrower than the blur.** Where the bottom edge forms the silhouette, the visible wall lies between it and the top edge in a band of width w = (D/(D − t) − 1)·|(p − N)·n|. The profile is then a blurred two-step (sheet → wall → top face). For a wall whose step above the top face is 16 % of the sheet-to-top contrast in linear light, a single mid-level crossing is biased into the material by:
 
 | w / σ | 0.25 | 0.5 | 1.0 | 1.6 | 2.5 | 4.0 | 6.0 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | bias / σ | −0.040 | −0.078 | −0.144 | −0.196 | −0.202 | −0.082 | −0.002 |
+
+The bias grows roughly in proportion to the wall's share of the contrast. The rendered plate's dark walls (saved tone 78, top face 48, paper 236) have a 6 % share in linear light, so their bias is about a third of the table's.
 
 The profile is therefore modelled as I(t) = C(1 − P₁) + B(P₁ − P₂) + A P₂, with P₁ = Φ((t + w − e)/σ) and P₂ = Φ((t − e)/σ). This is linear in the tones A (sheet), B (wall) and C (top face) for a given edge offset e. Each candidate e is solved by least squares (variable projection), and the residual minimum is refined by a parabola.
 
@@ -118,9 +152,20 @@ As w → 0 the wall term tends to (B − C)(w/σ)φ, which is indistinguishable 
 - That tone is then held fixed for the narrower bands.
 - The refinement is applied with full weight for 1.5–2.5 σ, tapering to zero at 0.5 and 3.5 σ so the boundary stays continuous.
 
-On exact profiles the fixed-tone fit is unbiased within 0.01 σ, while the free fit is biased (`test_two_step_wall_model_is_unbiased_with_a_known_wall_tone_and_degenerate_without`). In rendered photos, refinement over the whole 0.25–4 σ range made strongly tilted shots worse, because soft shadow and uneven wall shading break the flat-tone model. The tapered 1–3 σ range was better on every feature at 9° and on four of five features at 22° (Results, below).
+On exact profiles the fixed-tone fit is unbiased within 0.01 σ, while the free fit is biased (`test_two_step_wall_model_is_unbiased_with_a_known_wall_tone_and_degenerate_without`). The taper was chosen on 2026-11-10 with an earlier renderer that mixed tones on the saved scale: refinement over the whole 0.25–4 σ range made strongly tilted shots worse, because soft shadow and uneven wall shading break the flat-tone model, and the tapered 1–3 σ range was better on every feature at 9° and on four of five at 22°. That comparison has not been repeated in linear light.
 
-In a near-frontal photo the walls are too narrow to measure their tone. No refinement is attempted, and the trace notes the bound instead: edges facing the camera may read up to 0.2 σ into the part. A slightly tilted photo shows wider walls and avoids it.
+On the 9° photo of the 4 mm plate (2400 × 1800, linear light), the model's effect depends on the shadow:
+
+| 9° tilt, 4 mm thick | Ø6 | Ø22 | Slot | Hole position | Outer |
+| --- | --- | --- | --- | --- | --- |
+| No shadow, wall model | 0.0012 | 0.0016 | 0.0174 | 0.0051 | 0.0060 |
+| No shadow, without it | 0.0101 | 0.0143 | 0.0395 | 0.0058 | 0.0122 |
+| 25 % shadow, wall model | 0.0073 | 0.0184 | 0.0212 | 0.0058 | 0.0234 |
+| 25 % shadow, without it | 0.0029 | 0.0051 | 0.0303 | 0.0066 | 0.0233 |
+
+Without a shadow the model cuts the hole errors about eightfold. With the shadow, the uncorrected trace reads these holes better only because two biases cancel: the dark wall pulls the edge into the material and the shadow pushes it out. With a lighter wall (saved tone 110) the model wins in both cases; with the shadow it takes Ø6 from 0.040 to 0.006 mm.
+
+In a near-frontal photo the walls are too narrow to measure their tone. No refinement is attempted, and the trace notes a bound instead: edges facing the camera may read up to 0.2 σ into the part. That figure is the table's maximum, so it assumes a wall share of at most 16 %; a brighter wall can exceed it. A slightly tilted photo shows wider walls and avoids it.
 
 ## 6. Sheet proportions check
 
@@ -144,21 +189,23 @@ The fitted CAD face area equals both the Green's-theorem area of its segments an
 
 ## Results on rendered photographs
 
-The plate is 120 × 70 mm with R8 corners, 4 × Ø6 holes, a Ø22 bore and a 24 × 8 slot. Figures are maximum absolute errors in mm, measured on the fitted geometry after a rigid fit of the six hole centres; no scale is fitted. Runs recorded on 2026-11-10:
+The plate is 120 × 70 mm with R8 corners, 4 × Ø6 holes, a Ø22 bore and a 24 × 8 slot. Figures are maximum absolute errors in mm, measured on the fitted geometry after a rigid fit of the six hole centres; no scale is fitted. Runs recorded on 2026-11-11, with light mixed in linear light, saved through the sRGB curve, and a shadow that removes 25 % of the light:
 
 | Photo | Ø6 | Ø22 | Slot | Hole position | Outer |
 | --- | --- | --- | --- | --- | --- |
-| 2400 × 1800, overhead, ideal light | 0.0013 | 0.0002 | 0.0052 | 0.0021 | 0.0063 |
-| 2400 × 1800, 22° tilt, lens, shadow | 0.0118 | 0.0295 | 0.0360 | 0.0065 | 0.0255 |
-| 2400 × 1800, 22° tilt, 4 mm thick | 0.0076 | 0.0260 | 0.0294 | 0.0111 | 0.0059 |
-| 2400 × 1800, 9° tilt, 4 mm thick | 0.0076 | 0.0065 | 0.0225 | 0.0067 | 0.0252 |
-| 2400 × 1800, 5° tilt, 4 mm thick (walls too narrow, bound noted) | 0.0429 | 0.0244 | 0.0642 | 0.0388 | 0.0258 |
-| 4000 × 3000, overhead, ideal light | 0.0003 | 0.0009 | 0.0052 | 0.0021 | 0.0020 |
-| 4000 × 3000, 22° tilt, lens, shadow | 0.0060 | 0.0119 | 0.0162 | 0.0039 | 0.0105 |
+| 2400 × 1800, overhead, ideal light | < 0.0001 | 0.0016 | 0.0034 | 0.0020 | 0.0028 |
+| 2400 × 1800, 22° tilt, lens, shadow | 0.0121 | 0.0257 | 0.0268 | 0.0098 | 0.0253 |
+| 2400 × 1800, 22° tilt, 4 mm thick | 0.0166 | 0.0251 | 0.0236 | 0.0060 | 0.0174 |
+| 2400 × 1800, 9° tilt, 4 mm thick | 0.0073 | 0.0184 | 0.0212 | 0.0058 | 0.0234 |
+| 2400 × 1800, 5° tilt, 4 mm thick (walls too narrow, bound noted) | 0.0078 | 0.0048 | 0.0192 | 0.0116 | 0.0231 |
+| 4000 × 3000, overhead, ideal light | 0.0009 | 0.0006 | 0.0032 | 0.0017 | 0.0021 |
+| 4000 × 3000, 22° tilt, lens, shadow | 0.0056 | 0.0104 | 0.0141 | 0.0035 | 0.0107 |
 
-For comparison, at 9° tilt on a 4 mm plate, the trace without the two-step wall model had errors of 0.039 (Ø6), 0.029, 0.060, 0.026 and 0.025 mm.
+The 2400 × 1800 rows other than 5° are the cases in `tests/test_sheet_reference.py`. The 5° row is `render(tilt=(5.0, -2.0, 4.0), thickness=4.0)`, and the 4000 × 3000 rows add `size=(4000, 3000)`, which shows the same field of view in more pixels.
 
-The same full-frame photos cannot be traced without a reference at all ("The outline touches the image edge"). Cropped inside the sheet by hand and traced the original way, with the best two-point scale a user could supply (endpoints exactly on the two diagonal Ø6 hole centroids, 108.24 mm apart), the 2400 × 1800 tilted photos gave:
+Traced on saved values, as before this correction, the same overhead photo gave 0.263 (Ø6), 0.250 (Ø22), 0.257 (slot) and 0.353 mm (outer): the tone-curve bias of §3. The table recorded on 2026-11-10 did not show it, because that renderer mixed tones on the saved scale.
+
+The same full-frame photos cannot be traced without a reference at all ("The outline touches the image edge"). Cropped inside the sheet by hand and traced the original way, with the best two-point scale a user could supply (endpoints exactly on the two diagonal Ø6 hole centroids, 108.24 mm apart), the 2400 × 1800 tilted photos gave the errors below. They were recorded on 2026-11-10 with the earlier renderer and have not been repeated; perspective dominates them.
 
 | Photo | Ø6 | Ø22 | Outer |
 | --- | --- | --- | --- |
@@ -171,6 +218,8 @@ The same full-frame photos cannot be traced without a reference at all ("The out
 
 - The stated sheet size sets the scale. ISO 216 allows ±2 mm on 297 mm (about 0.7 %). The proportions check catches a wrong choice or a mistyped side, but not a uniformly wrong size: measure your sheet once.
 - The sheet must be flat, fully visible, and contrast with the surface under it. The part must sit wholly on the sheet with a margin, and its brightness must differ from the sheet's.
+- The photo is decoded as sRGB. A camera's own tone mapping is not undone; §3 gives the cost of a plain-gamma camera (0.02 mm at 2.2, 0.11 mm at 1.8).
+- A soft shadow beside an edge moves it outward in proportion to the shadow's depth: 0.026 mm on Ø22 for a shadow removing a quarter of the light in the rendered photo, and about twice that for one removing about half. Use diffuse light.
 - One radial coefficient about the image centre; no tangential distortion or k₂. Cropped photos and screenshots break the principal-point assumption, which leaves the focal estimate inconsistent and falls back to EXIF or an assumed lens.
 - Vertical walls of constant thickness. Chamfers, draft, countersinks and shiny edges are not modelled. With walls too narrow to measure, an edge may read up to 0.2 σ into the part.
 - Fitted lines, arcs and circles are descriptions of the photograph, not recovered design intent; review the snap list. Split output uses the traced polygon.

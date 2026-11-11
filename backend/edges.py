@@ -5,6 +5,10 @@ contours; move every boundary point to the local half-level crossing (two passes
 second with windows centred on the edge); measure edge blur; optionally undo the
 parallax of a thick part's top face. All coordinates are rectified pixels, where pixel
 i spans [i, i + 1].
+
+Two images are used. The part is classified on the photo's saved values, the scale its
+thresholds are stated in. Boundary positions, edge blur and the wall model are measured
+in linear light (backend.tone), where blur and partial coverage mix tones linearly.
 """
 
 from __future__ import annotations
@@ -14,6 +18,7 @@ import numpy as np
 from shapely.geometry import Point, Polygon
 
 from .sheet import half_level_search, sample_bilinear
+from .tone import encoded_from_linear
 
 BORDER_MM = 3.0  # sheet margin excluded from the part search
 TINY_AREA_MM2 = 0.1  # boundary regions below this are under the trace resolution
@@ -53,11 +58,12 @@ def _poly_surface(values, sample_mask, degree, step=6):
 
 
 def segment(gray, ppm, part_lighter=False):
-    """Classify the part on the sheet; returns (mask uint8, smoothed grey float32, notes).
+    """Classify the part on the sheet; returns (mask uint8, notes).
 
-    Both the sheet and the part get a smooth fitted brightness surface, so a gradient,
-    vignetting or a soft shadow does not move the classification threshold. Only the
-    largest part region is kept.
+    `gray` is the rectified photo as saved (0-255), not linear light. Both the sheet and
+    the part get a smooth fitted brightness surface, so a gradient, vignetting or a soft
+    shadow does not move the classification threshold. Only the largest part region is
+    kept. The mask only starts the sub-pixel search (subpixel_rings).
     """
     g = cv2.GaussianBlur(gray.astype(np.float32), (0, 0), 0.7)
     work = 255 - g if part_lighter else g  # the part is the darker class in `work`
@@ -109,7 +115,7 @@ def segment(gray, ppm, part_lighter=False):
         raise EdgeError(
             "The part reaches the edge of the reference sheet. Place it with a clear margin of sheet all round."
         )
-    return mask, g, notes
+    return mask, notes
 
 
 def ring_normals(ring, sigma=2.0):
@@ -129,7 +135,8 @@ def ring_normals(ring, sigma=2.0):
 
 
 def edge_sigma(g, points, normals, half=8.0, step=0.125):
-    """Gaussian-equivalent edge blur from the 25-75 % rise distance (1.349 sigma)."""
+    """Gaussian-equivalent edge blur from the 25-75 % rise distance (1.349 sigma), on a
+    linear-light image; profiles under 20 saved grey levels of contrast are skipped."""
     t = np.arange(-half, half + step / 2, step)
     sx = points[:, None, 0] + t[None, :] * normals[:, None, 0] - 0.5
     sy = points[:, None, 1] + t[None, :] * normals[:, None, 1] - 0.5
@@ -138,7 +145,7 @@ def edge_sigma(g, points, normals, half=8.0, step=0.125):
     low, high = np.median(profile[:, :k], axis=1), np.median(profile[:, -k:], axis=1)
     widths = []
     for row, lo, hi in zip(profile, low, high):
-        if abs(hi - lo) < 20:
+        if abs(encoded_from_linear(hi) - encoded_from_linear(lo)) < 20:
             continue
         f = (row - lo) / (hi - lo)
         if f[-1] < f[0]:
@@ -151,6 +158,7 @@ def edge_sigma(g, points, normals, half=8.0, step=0.125):
 def subpixel_rings(mask, g, ppm):
     """Outer boundary and holes of the mask at the local half-level, sub-pixel.
 
+    `g` is the lightly smoothed rectified photo in linear light.
     Returns (rings, sigma_px, tiny) where rings is a list of {"outer": bool, "points"}.
     Pass 1 starts from boundary-pixel centres, about half a pixel inside one side, so its
     level windows are asymmetric; pass 2 re-centres each point with windows beyond
@@ -237,6 +245,7 @@ def normal_cdf(z):
 def two_step_refine(g, points, normals, band, sigma, wall_tone=None, step=0.125):
     """Locate an edge that has a narrow wall band on its material side.
 
+    `g` holds linear light, in which the model below is exact for flat tones.
     Where a thick part's bottom edge forms the silhouette, the visible side wall lies
     between the bottom edge (t = 0, the edge sought) and the top edge (t = -w) along the
     material-outward normal t. A single mid-level crossing is biased into the material

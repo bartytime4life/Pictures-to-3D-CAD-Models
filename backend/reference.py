@@ -8,7 +8,8 @@ design-intent snapping (backend.fitting) -> a display crop and a Profile whose
 coordinates are display pixels of known size.
 
 The scale comes from the sheet's stated size; the user's outside-width measurement
-becomes an independent check of it.
+becomes an independent check of it. Sub-pixel positions are measured in linear light,
+decoding the photo as sRGB (backend.tone).
 """
 
 from __future__ import annotations
@@ -23,7 +24,7 @@ from PIL import Image
 from pydantic import ValidationError
 from shapely.geometry import Polygon
 
-from . import edges, fitting, sheet
+from . import edges, fitting, sheet, tone
 from .models import Profile
 
 DISPLAY_SIDE = 1400
@@ -97,9 +98,12 @@ class _Transform:
 def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, focal_35mm, snap, notices):
     size_mm = sheet_size(reference, sheet_mm)
     gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
+    # Every sub-pixel measurement is made in linear light; the photo's saved values are
+    # used only to find the sheet and to classify the part (backend.tone).
+    linear = tone.linear_luminance(rgb)
     size = (gray.shape[1], gray.shape[0])
     try:
-        found = sheet.find_sheet(gray)
+        found = sheet.find_sheet(gray, linear)
     except sheet.SheetError as exc:
         raise ReferenceError_(str(exc), sheet_missing=True) from exc
     k1, before, after = sheet.estimate_k1(found, size)
@@ -114,10 +118,14 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
             "The sheet is too small in the photo to measure from. Move closer so it fills most of the frame.",
             sheet_missing=True,
         )
-    rectified = sheet.rectify(rgb, matrix, k1, plane, ppm)  # display only
-    rect_gray = sheet.rectify_gray(gray, matrix, k1, plane, ppm)  # measurements
+    rectified = sheet.rectify(rgb, matrix, k1, plane, ppm)  # display and classification
+    rect_linear = sheet.rectify_gray(linear, matrix, k1, plane, ppm)  # measurements
+    del linear
     try:
-        mask, g, seg_notes = edges.segment(rect_gray, ppm, part_lighter=inverted)
+        mask, seg_notes = edges.segment(
+            cv2.cvtColor(rectified, cv2.COLOR_RGB2GRAY), ppm, part_lighter=inverted
+        )
+        g = cv2.GaussianBlur(rect_linear, (0, 0), 0.7)
         rings, sigma, tiny = edges.subpixel_rings(mask, g, ppm)
     except edges.EdgeError as exc:
         raise ReferenceError_(str(exc), sheet_missing=True) from exc
