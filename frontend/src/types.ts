@@ -4,6 +4,10 @@ export type ReferenceCalibration = {
   reference_points: [Point, Point];
   image_size: { width: number; height: number };
 };
+export type HeightCheckSettings = {
+  allowance_mm: number;
+  measurement_bound_mm: number;
+};
 export type Segment =
   | { kind: 'line'; start: Point; end: Point }
   | { kind: 'arc'; start: Point; mid: Point; end: Point }
@@ -189,4 +193,5 @@ export type ProjectRecipe = {
   design?: DesignSettings;
   reference_calibration?: ReferenceCalibration;
   measured_height_mm?: number;
+  height_check?: HeightCheckSettings;
 };

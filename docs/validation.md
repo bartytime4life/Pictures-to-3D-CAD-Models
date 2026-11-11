@@ -477,3 +477,7 @@ The final mobile typography change was followed by a passing rerun of scenario 4
 The build and backend tests run without warnings. The 3D stack is still the largest download: three.js is a 1,003 kB chunk (272 kB gzip) that loads with the page because the preview is on the first screen. The build's chunk-size limit sits just above it, so unexpected growth still warns. In the browser console, React Three Fiber 9.8.2 logs a `THREE.Clock` deprecation warning. It comes from the library, not this application, and only its version 10 pre-releases change it. Renderer dependency warnings are distinct from application console errors.
 
 This is a working single-user, constant-thickness profile workbench. It has no public-service authentication, collaborative project database, arbitrary-object reconstruction, manufacturing certification, or validated metrology. See [scope](roadmap.md), [capture guidance](capture-guide.md), and [data handling](privacy-security.md).
+
+## Independent height decision
+
+The [engineering check](engineering-model.md) uses explicit user-entered bounds and a strict interval decision. [Audit and verification](validation/engineering-audit.md) records the scope, baseline finding, arithmetic oracle, recipe/state checks and browser evidence. This is synthetic software evidence; physical accuracy remains unqualified.
