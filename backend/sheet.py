@@ -144,20 +144,23 @@ def _quad(gray_small, polarity):
 
 
 def _edge_mix(rgb, quad, small_shape):
-    """Channel weights (tone.mix_weights) for the sheet's edges, from the sheet just
-    inside its outline and the surface just outside it. `quad` is in the coordinates
-    of the reduced image of `small_shape`."""
+    """Channel weights (tone.choose_mix) for the sheet's edges, from the light just
+    inside and just outside each side. `quad` is in the coordinates of the reduced
+    image of `small_shape`."""
     h, w = small_shape
     small = cv2.resize(rgb, (w, h), interpolation=cv2.INTER_AREA)
-    inside = np.zeros((h, w), np.uint8)
-    cv2.fillConvexPoly(inside, np.round(quad).astype(np.int32), 1)
-    k = 2 * max(2, round(0.02 * max(h, w))) + 1
-    kernel = np.ones((k, k), np.uint8)
-    sheet = (inside > 0) & (cv2.erode(inside, kernel) == 0)
-    surface = (cv2.dilate(inside, kernel) > 0) & (inside == 0)
-    if sheet.sum() < 50 or surface.sum() < 50:
-        return tone.LUMINANCE
-    return tone.mix_weights(tone.surface_light(small[sheet]), tone.surface_light(small[surface]))
+    reach = max(6.0, 0.01 * max(h, w))
+    inside, outside = [], []
+    for i in range(4):
+        a, b = quad[i], quad[(i + 1) % 4]
+        length = float(np.linalg.norm(b - a))
+        if length < 4 * reach:
+            return tone.LUMINANCE
+        points = a[None] + np.linspace(0.06, 0.94, max(20, int(length / 4)))[:, None] * (b - a)[None]
+        normal = np.array([-(b - a)[1], (b - a)[0]]) / length
+        inside.append(tone.light_at(small, points + reach * normal))
+        outside.append(tone.light_at(small, points - reach * normal))
+    return tone.choose_mix(np.vstack(inside), np.vstack(outside))
 
 
 def find_sheet(gray, rgb=None):

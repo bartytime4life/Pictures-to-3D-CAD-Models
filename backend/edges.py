@@ -120,25 +120,22 @@ def segment(gray, ppm, part_lighter=False):
 
 
 def measurement_weights(rectified, mask, ppm):
-    """Channel weights (tone.mix_weights) for measuring the part's boundary, from the
-    part's interior and the sheet at least 2 mm clear of it. `rectified` is the
-    rectified photo in 8-bit sRGB and `mask` the classified part."""
-    near = 2 * max(1, int(ppm)) + 1
-    part = cv2.erode(mask, np.ones((near, near), np.uint8)) > 0
-    if part.sum() < 50:
-        part = mask > 0
-    clear = 2 * max(1, int(2 * ppm)) + 1
-    sheet = cv2.dilate(mask, np.ones((clear, clear), np.uint8)) == 0
-    border = max(2, int(BORDER_MM * ppm))
-    sheet[:border] = sheet[-border:] = False
-    sheet[:, :border] = sheet[:, -border:] = False
-    if part.sum() < 8 or sheet.sum() < 50:
+    """Channel weights (tone.choose_mix) for measuring the part's boundary, from the
+    light 1 mm to either side of it along the outline and every hole. `rectified` is
+    the rectified photo in 8-bit sRGB and `mask` the classified part."""
+    contours, _ = cv2.findContours(mask, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
+    reach = max(4.0, ppm)
+    one_side, other_side = [], []
+    for contour in contours:
+        if len(contour) < 8:
+            continue
+        smooth, normals = ring_normals(contour.reshape(-1, 2).astype(np.float64) + 0.5)
+        step = max(1, len(smooth) // 2000)
+        one_side.append(tone.light_at(rectified, smooth[::step] + reach * normals[::step]))
+        other_side.append(tone.light_at(rectified, smooth[::step] - reach * normals[::step]))
+    if not one_side:
         return tone.LUMINANCE
-    step = max(1, int(part.sum()) // 20000), max(1, int(sheet.sum()) // 20000)
-    return tone.mix_weights(
-        tone.surface_light(rectified[part][:: step[0]]),
-        tone.surface_light(rectified[sheet][:: step[1]]),
-    )
+    return tone.choose_mix(np.vstack(one_side), np.vstack(other_side))
 
 
 def ring_normals(ring, sigma=2.0):
