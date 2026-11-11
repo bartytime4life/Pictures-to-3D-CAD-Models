@@ -76,11 +76,61 @@ all hull vertices. A 1e-6 mm numerical comparison tolerance is explicit.
 The bounded implementation scans the hull at each support interval, taking
 `O(h²)` time and `O(h)` storage for `h` hull vertices, rather than claiming the
 linear complexity of a full rotating-calipers implementation. Polygon input
-is limited to 2000 vertices before split intersections. Fitted curves use a
-four-corner enclosing rectangle instead of inscribed samples. Negative results
-for that conservative rectangle remain inconclusive about the curve itself.
+is limited to 2000 vertices before split intersections. Fitted curves first use
+a four-corner enclosing rectangle, then the conservative curve enclosure below.
+Negative results for either bound remain inconclusive about the curve itself.
 The search checks one piece at a time and leaves all geometry and measurements
 unchanged. It does not evaluate slicer placement, physical fit, or printing.
+
+## Conservative fitted-curve placement
+
+The following is an engineering derivation using supporting half-planes.
+[CGAL's halfspace-intersection documentation](https://doc.cgal.org/latest/Convex_hull_3/)
+provides related computational-geometry background. SciSpace located
+[Richardson's support-probe approximation paper](https://scispace.com/papers/approximation-of-planar-convex-sets-from-hyperplane-probes-3os7ldt596)
+as further reading; this implementation uses fixed directions and does not claim
+that paper's adaptive algorithm or approximation rate.
+
+For a unit normal `u = (cos φ, sin φ)`, define support
+`h(u) = max { dot(p,u) : p on the fitted outer boundary }`.
+A line contributes the maximum of its endpoints. A circle with centre `c`
+and radius `r` contributes `dot(c,u) + r`. A circular arc contributes that same
+value when `φ` lies in its signed radial sweep; otherwise its maximum occurs
+at an endpoint. This handles clockwise and counterclockwise sweeps, including
+major arcs and sweeps crossing zero. Holes cannot increase any extent.
+
+Every point of the actual solid satisfies `dot(p,u) <= h(u)`. Intersect those
+supporting half-planes for 256 equally spaced normals. Unlike an inscribed
+polygon made from sampled curve points, this intersection contains the whole
+curved boundary between normals. Adjacent supporting lines give its vertices.
+With step `δ = 2π/256` and tangent `t_i = (-sin φ_i, cos φ_i)`, their intersection is
+`h_i u_i + ((h_(i+1) - h_i cos δ) / sin δ) t_i`.
+The discretized support inequality
+`h_(i-1) + h_(i+1) >= 2 cos δ h_i` keeps these intersections in convex cyclic
+order. Computation uses a local origin and adds 1e-6 mm to each support for
+outward numerical padding. This is not a manufacturing allowance.
+
+The existing continuous-angle solver searches rotations of the resulting
+outer polygon and verifies the returned witness against all its vertices.
+Containing this polygon contains the exact curved solid. Failure remains
+unknown because a finite outer enclosure may exclude a valid tight placement.
+Before reporting a new curved placement, the worker also rotates a temporary
+copy of the exact CAD solid and checks its kernel bounding box against both
+the bed limits and the reported conservative footprint. An unconfirmed witness
+is withheld as unknown; the original solid and exports retain their orientation.
+Measurements, normalization offsets and this final witness check use
+`BRepBndLib.AddOptimal` with triangulation disabled. The
+[OCCT 7.8.1 API declaration](https://github.com/Open-Cascade-SAS/OCCT/blob/V7_8_1/src/BRepBndLib/BRepBndLib.hxx)
+matches the installed OCP wrapper's flags. This prevents cached STL/viewport
+triangulation and its deflection allowance from inflating geometric dimensions.
+The fixed directions bound geometry approximation; they are not fixed trial
+placement angles. No universal enclosure-error or physical accuracy is claimed.
+
+For `s` fitted segments, support evaluation costs `O(256s)` with `O(256)`
+temporary storage. The resulting hull has at most 256 vertices, bounding the
+subsequent `O(h²)` placement search. Polygon outlines and the 2000-segment input
+limit retain their existing behavior. Numerical enclosure failures leave CAD
+intact and report unknown. Curved splitting remains a separate explicit choice.
 
 ## Bounded split-plan search
 

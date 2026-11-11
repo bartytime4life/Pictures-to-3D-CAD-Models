@@ -7,6 +7,7 @@ from pathlib import Path
 from shapely.errors import GEOSException
 from shapely.geometry import GeometryCollection, MultiPolygon, Polygon, box
 
+from .curve_envelope import ENCLOSURE_DIRECTIONS, fitted_outer_envelope
 from .models import DesignSettings
 from .placement import FIT_TOLERANCE_MM, rectangular_placement
 
@@ -134,12 +135,13 @@ def split_profile(polygon: Polygon, design: DesignSettings):
     return parts
 
 
-def bed_fit(dimensions, design: DesignSettings, printer=None, *, footprint=None):
+def bed_fit(dimensions, design: DesignSettings, printer=None, *, footprint=None, fitted_outer=None):
     """Check one flat piece at any XY angle, retaining a placement witness.
 
     A polygon footprint is exact for polygon extrusions. When absent (fitted
-    curves), use the solid's enclosing rectangle: a positive result is safe,
-    but a failed rectangle test cannot rule out a placement of the actual curve.
+    curves), first try the solid's enclosing rectangle, then an outer polygon
+    from analytic supports of the fitted outer ring. Either positive result is
+    safe; failure of an outer bound cannot rule out the actual curved solid.
     """
     basis = "outline" if footprint is not None else "bounding_box"
     common = {"rotated_90": False, "basis": basis}
@@ -171,6 +173,18 @@ def bed_fit(dimensions, design: DesignSettings, printer=None, *, footprint=None)
     placement = rectangular_placement(
         footprint if footprint is not None else box(0, 0, width, depth), usable_width, usable_depth
     )
+    if placement is None and footprint is None and fitted_outer is not None:
+        try:
+            envelope = fitted_outer_envelope(fitted_outer)
+            placement = rectangular_placement(envelope, usable_width, usable_depth)
+            common.update(basis="curve_envelope", enclosure_directions=ENCLOSURE_DIRECTIONS)
+        except (ValueError, ArithmeticError, GEOSException):
+            # A numerical failure in optional planning must not discard valid CAD.
+            return {
+                **common,
+                "status": "unknown",
+                "reason": "The curved outline's outer enclosure could not be verified. Check placement in your slicer.",
+            }
     if placement is None:
         return {
             **common,
@@ -178,7 +192,7 @@ def bed_fit(dimensions, design: DesignSettings, printer=None, *, footprint=None)
             "reason": (
                 "No in-plane rotation of this outline fits the rectangular envelope with the selected XY margin."
                 if footprint is not None
-                else "No rotation of the enclosing rectangle fits. Placement of the curved outline needs review in your slicer."
+                else "No checked outer enclosure fits. Placement of the curved outline needs review in your slicer."
             ),
         }
     angle = placement["rotation_deg"]

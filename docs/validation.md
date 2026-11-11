@@ -75,6 +75,10 @@ The [suggested split-plan record](validation/split-plans.md) covers the subseque
 bounded search for the fewest fitting pieces, explicit apply/rebuild behavior
 and preservation of measurements and exports.
 
+The [curved-placement record](validation/curved-placement.md) covers conservative
+fitted-curve enclosures, CAD-solid witness checks, and measurements independent
+of export triangulation.
+
 ## Continuous-angle bed placement — November 11, 2026
 
 Branch `codex/analytic-bed-placement`, based on `main` at `dd65399`, in an

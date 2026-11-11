@@ -75,7 +75,8 @@ export type DesignSettings = {
 export type BedFit = {
   status: 'fits' | 'too_large' | 'unknown';
   rotated_90?: boolean;
-  basis?: 'outline' | 'bounding_box';
+  basis?: 'outline' | 'bounding_box' | 'curve_envelope';
+  enclosure_directions?: number;
   rotation_deg?: number;
   footprint_mm?: { width: number; depth: number };
   reason: string;
