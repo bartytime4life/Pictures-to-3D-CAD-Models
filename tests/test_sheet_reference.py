@@ -223,6 +223,18 @@ def test_parts_and_sheets_that_differ_in_colour_are_measured_on_the_channels_tha
     assert any("colour mix" in note for note in profile["reference"]["notes"]) == mixed
 
 
+def test_a_photo_above_16_megapixels_is_reduced_in_linear_light_and_stays_accurate(client):
+    data = S.colour_photo((60, 60, 60), (220, 220, 220), (40, 40, 40), ppm=13.0)
+    response = trace(client, data, reference="a4")
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert any("18-megapixel photo was reduced" in warning for warning in body["warnings"])
+    scale = body["profile"]["reference"]["mm_per_px"]
+    (outer,), ((hole,),) = body["profile"]["primitives"]["outer"], body["profile"]["primitives"]["holes"]
+    assert abs(2 * outer["radius"] * scale - 60) < 0.01
+    assert abs(2 * hole["radius"] * scale - 16) < 0.01
+
+
 def test_a_two_colour_part_keeps_the_boundary_of_its_smaller_colour(client):
     """A pale pink plate with a green patch holding a hole, on a 220 grey sheet. Both
     colours are measurable in luminance. A mix chosen from the plate's main colour is

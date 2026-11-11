@@ -75,7 +75,19 @@ type RetryAction =
   | { kind: 'proposal'; proposal: AssistantProposal }
   | { kind: 'restore'; file: File }
   | { kind: 'clear' };
-const MAX_FILE = 10 * 1024 * 1024;
+const MAX_PHOTO = 32 * 1024 * 1024;
+const MAX_PROJECT = 10 * 1024 * 1024;
+// HEIC is the default photo format of recent phones. Some browsers report no type for
+// it, so the file name is accepted as well.
+const PHOTO_TYPES = [
+  'image/png',
+  'image/jpeg',
+  'image/webp',
+  'image/heic',
+  'image/heif',
+  'image/avif',
+];
+const PHOTO_NAME = /\.(heic|heif|avif)$/i;
 
 /** The backend's project-name rule: no control characters, no surrounding space, nonempty. */
 function cleanName(value: string) {
@@ -599,8 +611,8 @@ export default function App() {
   }
 
   async function loadPhoto(file: File, isSample = false) {
-    if (file.size > MAX_FILE) {
-      setError('This file is too large. Choose an image or project smaller than 10 MiB.');
+    if (file.size > MAX_PHOTO) {
+      setError('This photo is too large. Choose an image smaller than 32 MiB.');
       return;
     }
     const sheetIssue = isSample ? null : sheetChoiceError(sheetChoice);
@@ -960,7 +972,7 @@ export default function App() {
   }
 
   async function restoreProject(file: File) {
-    if (file.size > MAX_FILE) {
+    if (file.size > MAX_PROJECT) {
       setError('This project is too large. Choose a project smaller than 10 MiB.');
       return;
     }
@@ -1052,8 +1064,8 @@ export default function App() {
       void restoreProject(file);
       return;
     }
-    if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) {
-      setError('Choose a PNG, JPEG or WebP image, or a saved project JSON file.');
+    if (!PHOTO_TYPES.includes(file.type) && !PHOTO_NAME.test(file.name)) {
+      setError('Choose a PNG, JPEG, WebP, HEIC or AVIF image, or a saved project JSON file.');
       return;
     }
     void loadPhoto(file);
@@ -1774,7 +1786,7 @@ export default function App() {
         ref={fileInput}
         className="sr-only"
         type="file"
-        accept="image/png,image/jpeg,image/webp,application/json,.json"
+        accept="image/png,image/jpeg,image/webp,image/heic,image/heif,image/avif,.heic,.heif,.avif,application/json,.json"
         aria-label="Choose photo or project"
         onChange={onFile}
       />
@@ -1801,7 +1813,7 @@ export default function App() {
           >
             <UploadSimple size={40} weight="light" />
             <strong>Drop a photo or saved project</strong>
-            <p>PNG, JPEG, WebP or project JSON · up to 10 MiB</p>
+            <p>PNG, JPEG, WebP, HEIC, AVIF or project JSON · photos up to 32 MiB</p>
             <button className="primary-button" onClick={() => fileInput.current?.click()}>
               Browse files
             </button>

@@ -26,6 +26,7 @@ flowchart LR
 | Three.js / React Three Fiber | Interactive inspection of the actual generated mesh |
 | FastAPI | Input validation, request handling, artifact delivery, static frontend and published companion serving |
 | Pillow | Image decoding and orientation normalization |
+| pi-heif (libheif, libde265) | HEIC decoding, in a child process (`backend/heic.py`) |
 | OpenCV | Thresholding, contours, hierarchy, and outline approximation |
 | Shapely | Planar-profile validity checks before invoking the solid kernel |
 | CadQuery / OpenCascade | Solid construction, topology checks, tessellation, and CAD exports |
@@ -67,7 +68,7 @@ A multipart request includes:
 
 | Field | Meaning |
 | --- | --- |
-| `file` | PNG, JPEG, or WebP upload; a multi-picture (MPO) camera JPEG uses its primary image |
+| `file` | PNG, JPEG, WebP, HEIC, or AVIF upload; a multi-picture (MPO) camera JPEG or a HEIC burst uses its primary image |
 | `threshold` | Intensity cutoff, or `-1` for automatic selection |
 | `inverted` | Switch from the default dark-foreground interpretation |
 | `detail` | `coarse`, `standard`, or `fine` contour approximation |
@@ -131,10 +132,12 @@ Returns the bundled, versioned printer catalog with source metadata, grouped mod
 
 | Boundary | Current limit |
 | --- | --- |
-| Encoded upload | 10 MiB |
-| Decoded image | 16 million pixels; at least 16 pixels per side |
+| Photo upload | 32 MiB |
+| Any other request body | 10 MiB |
+| Decoded image | 70 million pixels; at least 16 pixels per side |
+| HEIC decoding | A child process per file; 60-second timeout; 4 GiB address space and 60 s of processor time where the platform enforces them |
 | Normalized image | Longest side at most 1400 pixels (without a reference sheet) |
-| Reference-sheet analysis | Full-resolution photo; rectified at 1.25 × native resolution, 4–12 px/mm, at most 12 MP; display crop at most 1400 pixels |
+| Reference-sheet analysis | Full-resolution photo up to 16 MP, larger photos reduced to that in linear light; rectified at 1.25 × native resolution, 4–12 px/mm, at most 12 MP; display crop at most 1400 pixels |
 | Planar profile | At most 2000 vertices in total and 32 holes |
 | Scaled width and height | 0.1–2000 mm each |
 | Thickness | 0.1–500 mm |

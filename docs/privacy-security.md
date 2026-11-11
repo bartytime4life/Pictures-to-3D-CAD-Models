@@ -40,6 +40,8 @@ Browser downloads are governed by the browser and host environment. Deleting an 
 
 The backend validates the decoded image format and dimensions rather than trusting a filename extension alone. It limits upload and geometry size, rejects invalid dimensional inputs, and checks planar geometry before running CAD operations.
 
+HEIC photos are decoded in a short-lived child process, not in the service. Their decoders (libheif and libde265, through pi-heif) are native code, and a damaged file can crash them: changing two bytes of a valid file caused a segmentation fault in pi-heif 1.4.0 while it read the file's metadata. In the child, a crash, a timeout or an oversized image becomes an ordinary refusal and the service keeps running. This contains failures; it is not a security sandbox, because the child runs as the same user with the same file access. PNG, JPEG, WebP and AVIF are decoded in the service by Pillow.
+
 CAD construction runs with bounded execution and concurrency. Export routes accept the supported artifact types and generated identifiers; user project names are not filesystem paths.
 
 These controls reduce accidental resource exhaustion and malformed-input failures. They are not a substitute for authentication and resource isolation when serving untrusted users.
