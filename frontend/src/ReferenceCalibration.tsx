@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { PointerEvent } from 'react';
 import { calibrationError, measuredHeightError, referenceWidth } from './calibration';
 import ReferenceSensitivity from './ReferenceSensitivity';
+import HeightDecision from './HeightDecision';
 import type { Point, ReferenceCalibration as Calibration, TraceResult } from './types';
 import './ReferenceCalibration.css';
 
@@ -11,18 +12,26 @@ export default function ReferenceCalibration({
   unit,
   widthMm,
   height,
+  heightAllowance,
+  heightBound,
   disabled,
   onApply,
   onHeight,
+  onHeightAllowance,
+  onHeightBound,
 }: {
   trace: TraceResult;
   calibration: Calibration | null;
   unit: 'mm' | 'in';
   widthMm: number | null;
   height: string;
+  heightAllowance: string;
+  heightBound: string;
   disabled: boolean;
   onApply: (value: Calibration, widthMm: number) => void;
   onHeight: (value: string) => void;
+  onHeightAllowance: (value: string) => void;
+  onHeightBound: (value: string) => void;
 }) {
   const factor = unit === 'in' ? 25.4 : 1;
   const [points, setPoints] = useState<[[string, string], [string, string]]>([
@@ -316,6 +325,16 @@ export default function ReferenceCalibration({
               and a physical prototype.
             </p>
           </div>
+          <HeightDecision
+            estimate={estimate}
+            measured={height.trim() && !heightIssue ? Number(height) * factor : null}
+            allowance={heightAllowance}
+            bound={heightBound}
+            unit={unit}
+            disabled={disabled}
+            onAllowance={onHeightAllowance}
+            onBound={onHeightBound}
+          />
         </div>
       </details>
     </div>

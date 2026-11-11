@@ -30,6 +30,7 @@ import ReferenceCalibration from './ReferenceCalibration';
 import SheetReference from './SheetReference';
 import SlicerHandoff from './SlicerHandoff';
 import { calibrationError, measuredHeightError, referenceWidth } from './calibration';
+import { heightCheckDraft, heightCheckSettingsError } from './heightCheck';
 import { DEFAULT_DESIGN, designError, designFromProposal, parseDesign } from './design';
 import {
   NO_SHEET,
@@ -214,6 +215,17 @@ function parseRecipe(value: unknown): ProjectRecipe {
       measuredHeightError(String(recipe.measured_height_mm), 1))
   )
     throw new Error('This project has an invalid independent height measurement.');
+  if (recipe.height_check !== undefined) {
+    const issue = heightCheckSettingsError(recipe.height_check);
+    if (issue || recipe.measured_height_mm === undefined)
+      throw new Error(
+        `This project has an invalid height check. ${issue ?? 'An independent height measurement is required.'}`,
+      );
+    recipe.height_check = {
+      allowance_mm: recipe.height_check.allowance_mm,
+      measurement_bound_mm: recipe.height_check.measurement_bound_mm,
+    };
+  }
   if (recipe.version !== 1) recipe.design = parseDesign(recipe.design);
   return recipe as ProjectRecipe;
 }
@@ -424,6 +436,8 @@ export default function App() {
   const [thicknessMm, setThicknessMm] = useState(4);
   const [referenceCalibration, setReferenceCalibration] = useState<Calibration | null>(null);
   const [measuredHeight, setMeasuredHeight] = useState('');
+  const [heightAllowance, setHeightAllowance] = useState('');
+  const [heightBound, setHeightBound] = useState('');
   const [measurementReset, setMeasurementReset] = useState(0);
   const [downloading, setDownloading] = useState<string | null>(null);
   const [exportError, setExportError] = useState('');
@@ -637,6 +651,8 @@ export default function App() {
       setSourceFile(file);
       setReferenceCalibration(null);
       setMeasuredHeight('');
+      setHeightAllowance('');
+      setHeightBound('');
       setMeasurementReset((previous) => previous + 1);
       setModel(null);
       setSample(isSample);
@@ -1026,6 +1042,8 @@ export default function App() {
       setMeasuredHeight(
         recipe.measured_height_mm === undefined ? '' : String(recipe.measured_height_mm),
       );
+      setHeightAllowance(recipe.height_check ? String(recipe.height_check.allowance_mm) : '');
+      setHeightBound(recipe.height_check ? String(recipe.height_check.measurement_bound_mm) : '');
       setMeasurementReset((previous) => previous + 1);
       setSample(false);
       setModel(null);
@@ -1088,9 +1106,13 @@ export default function App() {
     if (thickness.trim() !== '' && Number.isFinite(thicknessMm))
       setThickness((thicknessMm / factor).toFixed(next === 'in' ? 6 : 4));
     if (measuredHeight.trim() !== '' && Number.isFinite(Number(measuredHeight)))
-      setMeasuredHeight(
-        String(Number(((Number(measuredHeight) * unitFactor) / factor).toPrecision(12))),
-      );
+      setMeasuredHeight(String((Number(measuredHeight) * unitFactor) / factor));
+    const convert = (value: string) =>
+      value.trim() && Number.isFinite(Number(value))
+        ? String((Number(value) * unitFactor) / factor)
+        : value;
+    setHeightAllowance(convert);
+    setHeightBound(convert);
     setUnit(next);
   }
   function openTrace() {
@@ -1108,6 +1130,13 @@ export default function App() {
       setError(heightIssue);
       return;
     }
+    const check = heightCheckDraft(heightAllowance, heightBound, unitFactor);
+    if (check.error || (check.value && !measuredHeight.trim())) {
+      setError(
+        check.error ?? 'Enter an independent height measurement, or clear both decision inputs.',
+      );
+      return;
+    }
     downloadJson({
       format: 'pictures-to-cad',
       version: trace.profile.primitives || trace.profile.reference ? 3 : 2,
@@ -1118,6 +1147,7 @@ export default function App() {
       design,
       ...(referenceCalibration ? { reference_calibration: referenceCalibration } : {}),
       ...(measuredHeight.trim() ? { measured_height_mm: Number(measuredHeight) * unitFactor } : {}),
+      ...(check.value ? { height_check: check.value } : {}),
     });
     setNotice(
       'Project download started. Your outline, measurements and design settings are included; the photo is not.',
@@ -1663,6 +1693,8 @@ export default function App() {
               unit={unit}
               widthMm={validWidth ? widthMm : null}
               height={measuredHeight}
+              heightAllowance={heightAllowance}
+              heightBound={heightBound}
               disabled={!!busy}
               onApply={(value, calculatedWidth) => {
                 invalidate();
@@ -1676,6 +1708,14 @@ export default function App() {
               }}
               onHeight={(value) => {
                 setMeasuredHeight(value);
+                setError('');
+              }}
+              onHeightAllowance={(value) => {
+                setHeightAllowance(value);
+                setError('');
+              }}
+              onHeightBound={(value) => {
+                setHeightBound(value);
                 setError('');
               }}
             />
