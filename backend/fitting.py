@@ -81,6 +81,36 @@ def span_points(points, a, b):
     return points[np.r_[np.arange(a, n), np.arange(0, b + 1)]]
 
 
+def _arc_chord(points, edges, is_line, k, tol):
+    """Whether line edge k is really a chord of the arc that its neighbours trace.
+
+    The neighbours are the arc edges that adjoin it on either side. Where a side has
+    none, and the others are too straight to define a circle (a line fits them within
+    tol), the line edge on that side stands in. The edge is a chord when its own points
+    lie on the circle fitted to the neighbours, to an RMS of half the tolerance. A
+    straight stretch can pass only if it lies along that circle and is no longer than
+    the chords the breakpoints cut from it. A slot side never does: the arcs at its two
+    ends have different centres.
+    """
+    m = len(edges)
+    first = last = k
+    while not is_line[(first - 1) % m]:
+        first -= 1
+    while not is_line[(last + 1) % m]:
+        last += 1
+    for a, b in ((first, last), (first - (first == k), last + (last == k))):
+        around = np.vstack(
+            [span_points(points, edges[a % m][0], edges[k][0]), span_points(points, edges[k][1], edges[b % m][1])]
+        )
+        if line_tls(around)[2] >= tol:
+            break
+    else:
+        return False
+    cx, cy, r, _, _ = fit_circle(around)
+    own = span_points(points, *edges[k])
+    return bool(np.sqrt(np.mean((np.hypot(own[:, 0] - cx, own[:, 1] - cy) - r) ** 2)) < tol / 2)
+
+
 def fit_ring(points, tol, min_line, circle_rel=0.01):
     """A circle, a cycle of lines and arcs, or None (keep the polyline)."""
     cx, cy, r, rms, mx = fit_circle(points)
@@ -96,6 +126,23 @@ def fit_ring(points, tol, min_line, circle_rel=0.01):
         if np.linalg.norm(points[b] - points[a]) >= min_line:
             ok = line_tls(span_points(points, a, b))[2] < tol
         is_line.append(ok)
+    # A chord of an arc can be as long as sqrt(12 r tol) before a breakpoint splits it.
+    # Where that reaches min_line (a large radius, a wide blur or a small part) the
+    # chord passes for a line, and the arc would be cut into short straight pieces.
+    # Give such edges back to their arc, each judged against the arc as grown so far.
+    absorbed = []
+    changed = True
+    while changed:
+        changed = False
+        for k in range(m):
+            if is_line[k] and _arc_chord(points, edges, is_line, k, tol):
+                is_line[k] = False
+                absorbed.append(k)
+                changed = True
+    # One chord is not an arc: an edge still between two lines goes back to being one.
+    for k in absorbed:
+        if is_line[k - 1] and is_line[(k + 1) % m]:
+            is_line[k] = True
     if not any(is_line):
         return None
     first = is_line.index(True)

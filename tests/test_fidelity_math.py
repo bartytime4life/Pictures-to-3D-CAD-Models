@@ -651,6 +651,86 @@ def test_dominant_axis_ignores_line_direction_and_quarter_turns():
         assert abs(axis - true_axis) < 1e-12
 
 
+def outline_points(shape, turn_deg=0.0, step=0.2):
+    """Noise-free points at most `step` apart along a shapely outline, after turning it."""
+    import shapely
+    from shapely import affinity
+
+    turned = affinity.rotate(shape, turn_deg, origin=(0, 0))
+    return np.asarray(shapely.segmentize(turned.exterior, step).coords)[:-1]
+
+
+def arc_points(centre, radius, start_deg, sweep_deg, step=0.2):
+    """Exact points at most `step` apart along an arc, from start_deg through sweep_deg."""
+    count = math.ceil(radius * math.radians(abs(sweep_deg)) / step) + 1
+    angles = np.radians(start_deg + np.linspace(0, sweep_deg, count))
+    return [(centre[0] + radius * math.cos(a), centre[1] + radius * math.sin(a)) for a in angles]
+
+
+@pytest.mark.parametrize(
+    ("radius", "tol", "min_line"),
+    [(20.0, 0.05, 3.0), (60.0, 0.05, 3.0), (150.0, 0.03, 3.0), (400.0, 0.05, 3.0), (5.0, 0.03, 1.0)],
+)
+def test_arc_chords_long_enough_to_pass_for_lines_are_recovered_as_one_arc(radius, tol, min_line):
+    """Property: exact recovery from noise-free data. Breakpoints at 1.5 tol cut an arc
+    of radius R into chords of up to sqrt(12 R tol). Here that is over min_line, so the
+    chords pass the line test, and fit_ring has to give them back to their arc. A plate
+    with rounded corners then comes out as four lines and four arcs, and every arc has
+    its exact radius and centre."""
+    assert math.sqrt(12 * radius * tol) > min_line
+    width, height = 2 * radius + 60, 2 * radius + 30
+    corners = [(width - radius, height - radius), (radius, height - radius), (radius, radius), (width - radius, radius)]
+    outline = [p for k, c in enumerate(corners) for p in arc_points(c, radius, 90 * k, 90)]
+    prims = fitting.fit_ring(outline_points(Polygon(outline)), tol, min_line)
+    assert [p.kind for p in prims] == ["line", "arc"] * 4
+    for arc in prims[1::2]:
+        assert abs(arc.data["r"] - radius) < 1e-6
+        assert min(math.dist(arc.data["c"], c) for c in corners) < 1e-6
+
+
+def test_straight_edges_no_longer_than_an_arcs_chords_stay_lines():
+    """Property: a straight edge next to an arc is not taken for one of its chords,
+    even when it is no longer than they are, because it does not lie on the arc's
+    circle. A stadium's 4 mm sides between R30 ends, whose chords reach 4.2 mm, stay
+    lines. So does a 4 mm flat that runs tangentially off the end of an R60 arc, whose
+    chords reach 4.6 mm."""
+    stadium = synthetic.stadium(0.0, 0.0, 64.0, 60.0)
+    prims = fitting.fit_ring(outline_points(stadium), 0.05, 1.6)
+    assert [p.kind for p in prims] == ["line", "arc"] * 2
+    assert all(abs(p.data["r"] - 30) < 1e-6 for p in prims[1::2])
+    assert all(abs(p.data["d"][1]) < 1e-3 for p in prims[::2])
+
+    # Clockwise from the top edge: an R60 arc that turns 60 degrees, the flat, then a
+    # sharp corner with the right-hand edge.
+    arc = arc_points((0.0, -60.0), 60.0, 90, -60)
+    along = np.array([math.sin(math.radians(30)), -math.cos(math.radians(30))])
+    end = np.array(arc[-1]) + 4.0 * along
+    plate = Polygon([(-70, 0), *arc, tuple(end), (end[0], -90), (-70, -90)])
+    turn = math.radians(10)
+    prims = fitting.fit_ring(outline_points(plate, 10), 0.03, 3.0)
+    assert [p.kind for p in prims].count("line") == 5
+    (arc_fit,) = [p for p in prims if p.kind == "arc"]
+    assert abs(arc_fit.data["r"] - 60) < 1e-3
+    expected = np.array([[math.cos(turn), -math.sin(turn)], [math.sin(turn), math.cos(turn)]]) @ along
+    assert any(abs(abs(p.data["d"] @ expected) - 1) < 1e-4 for p in prims if p.kind == "line")
+
+
+def test_one_chord_between_two_lines_is_not_an_arc():
+    """Property: a corner turned by three 4 mm facets stays three lines. At this
+    tolerance each middle facet lies on the circle through its two neighbours (it bows
+    1.3 tol from it), but its neighbours do not follow it, and a single chord left
+    between two lines is a line."""
+    step = math.radians(22.5)
+    corner = np.cumsum([(4 * math.cos(-k * step), 4 * math.sin(-k * step)) for k in (1, 2, 3)], axis=0)
+    reach = corner[-1][0]
+    quarter = [(60 - reach, 35.0), *((60 - reach + x, 35 + y) for x, y in corner)]
+    outline = []
+    for sx, sy in ((1, 1), (1, -1), (-1, -1), (-1, 1)):
+        outline.extend([(sx * x, sy * y) for x, y in quarter][:: sx * sy])
+    prims = fitting.fit_ring(outline_points(Polygon(outline), 10), 0.15, 3.0)
+    assert [p.kind for p in prims] == ["line"] * 16
+
+
 def segment_area(ring):
     """Green's theorem for a boundary of lines and arcs: shoelace over the segment
     endpoints plus, for each arc of signed sweep phi, the circular segment
