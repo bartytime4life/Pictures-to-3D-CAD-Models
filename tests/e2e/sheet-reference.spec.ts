@@ -78,18 +78,31 @@ test('a photo on an A4 sheet is scaled by the sheet and exported with exact circ
   expect(Math.abs(h - 70)).toBeLessThan(0.1);
   expect(t).toBe(4);
 
-  for (const format of ['STEP', 'DXF', 'OpenSCAD']) {
+  for (const format of ['STEP', 'DXF', 'SVG', 'PDF', 'OpenSCAD']) {
     const downloadEvent = page.waitForEvent('download');
     await page.locator('.export-row').filter({ hasText: format }).click();
     const download = await downloadEvent;
     const output = testInfo.outputPath(download.suggestedFilename());
     await download.saveAs(output);
-    const text = (await readFile(output)).toString('utf8');
+    const text = (await readFile(output)).toString('latin1');
     if (format === 'STEP') expect(text.match(/CYLINDRICAL_SURFACE/g)).toHaveLength(11);
     if (format === 'DXF') {
       expect(text).toContain('CIRCLE');
       expect(text).toContain('ARC');
       expect(text).not.toContain('LWPOLYLINE');
+    }
+    if (format === 'SVG') {
+      // True circles and arcs at one unit per millimetre, not a traced polyline.
+      expect(text.match(/<circle /g)).toHaveLength(5);
+      expect(text).toMatch(/ A [\d.]+ [\d.]+ 0 0 [01] /);
+      const [, svgWidth] = text.match(/<svg [^>]*width="([\d.]+)mm"/)!;
+      expect(Math.abs(Number(svgWidth) - 2 - w)).toBeLessThan(0.01);
+    }
+    if (format === 'PDF') {
+      expect(text.startsWith('%PDF-1.4')).toBe(true);
+      // 210 x 279.4 mm: the area A4 and US Letter share.
+      expect(text).toContain('/MediaBox [0 0 595.276 792]');
+      expect(text).toContain('mm, drawn at 1:1');
     }
     if (format === 'OpenSCAD') expect(text.match(/circle\(r = /g)).toHaveLength(5);
   }

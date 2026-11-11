@@ -47,6 +47,8 @@ If a download link has expired, rebuild the current settings to create new artif
 
 If an STL appears 25.4 times too large or too small, check whether the receiving tool interpreted millimeters as inches or vice versa. If a DXF appears as a flat drawing, that is expected: DXF exports the planar profile, not thickness.
 
+If the printed PDF is the wrong size, print it again at 100 % ("actual size") and not fitted to the page, then measure its two 100 mm rulers. If an SVG imports at the wrong size, the receiving program has ignored the millimetre size the file states; set the document's units to millimetres there, or use the DXF.
+
 If STEP opens without the application's original sketch and extrusion history, that is also expected. Keep the recipe to regenerate the part with new dimensions. See [export formats](exports.md).
 
 If refreshing the page returns to the sample, restore your downloaded project through **Photo → Browse files**. The application has no automatic project persistence; the saved recipe is the recovery path.

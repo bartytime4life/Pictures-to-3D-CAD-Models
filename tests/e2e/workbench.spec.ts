@@ -48,7 +48,7 @@ test('sample creates real CAD, downloads valid formats, and renders the selected
   await page.screenshot({ path: 'docs/images/workbench.png', fullPage: true });
   await page.getByRole('button', { name: 'Review export', exact: true }).click();
   await expect(page.getByRole('dialog')).toBeVisible();
-  for (const format of ['STEP', 'STL', 'DXF', 'OpenSCAD']) {
+  for (const format of ['STEP', 'STL', 'DXF', 'SVG', 'PDF', 'OpenSCAD']) {
     const downloadEvent = page.waitForEvent('download');
     await page.locator('.export-row').filter({ hasText: format }).click();
     const download = await downloadEvent;
@@ -59,6 +59,16 @@ test('sample creates real CAD, downloads valid formats, and renders the selected
     if (format === 'STEP') expect(data.toString('utf8')).toContain('ISO-10303-21');
     if (format === 'STL') expect(data.length).toBe(84 + 50 * data.readUInt32LE(80));
     if (format === 'DXF') expect(data.toString('utf8')).toContain('LWPOLYLINE');
+    if (format === 'SVG') {
+      expect(download.suggestedFilename()).toMatch(/\.svg$/);
+      expect(data.toString('utf8')).toMatch(/<svg [^>]*width="[\d.]+mm"/);
+    }
+    if (format === 'PDF') {
+      expect(download.suggestedFilename()).toMatch(/\.pdf$/);
+      expect(data.subarray(0, 8).toString('latin1')).toBe('%PDF-1.4');
+      expect(data.toString('latin1')).toContain('drawn at 1:1');
+      await expect(page.locator('.notice')).toContainText('Print it at 100 %');
+    }
     if (format === 'OpenSCAD') {
       expect(download.suggestedFilename()).toMatch(/\.scad$/);
       expect(data.toString('utf8')).toContain('linear_extrude(height = thickness_mm');

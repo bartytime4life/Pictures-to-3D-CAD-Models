@@ -1172,7 +1172,11 @@ export default function App() {
           : kind === 'prusa'
             ? 'PrusaSlicer handoff ZIP'
             : kind.toUpperCase();
-      setNotice(`${label} download started. Exported geometry uses millimeters.`);
+      setNotice(
+        kind === 'pdf'
+          ? 'PDF download started. Print it at 100 % (actual size) and check its two 100 mm rulers.'
+          : `${label} download started. Exported geometry uses millimeters.`,
+      );
     } catch (err) {
       const message =
         err instanceof DOMException && (err.name === 'TimeoutError' || err.name === 'AbortError')
@@ -2010,9 +2014,10 @@ export default function App() {
           <div className="inline-note">
             <Info size={21} />
             <p>
-              STEP contains a CAD solid; STL is a triangle mesh in millimeters; DXF is a 2D outline;
-              SCAD is an editable polygon extrusion for OpenSCAD. Save the project JSON to keep your
-              outline and parameters. STEP does not retain a parametric feature history.
+              STEP contains a CAD solid; STL is a triangle mesh in millimeters; DXF and SVG are 2D
+              outlines; PDF is that outline to print at 1:1; SCAD is an editable polygon extrusion
+              for OpenSCAD. Save the project JSON to keep your outline and parameters. STEP does not
+              retain a parametric feature history.
             </p>
           </div>
           <p className="privacy-note">
@@ -2117,6 +2122,26 @@ export default function App() {
                   description: 'Flat outline for 2D workflows',
                   suffix: '.dxf',
                 },
+                ...(model.downloads.svg
+                  ? [
+                      {
+                        type: 'svg' as const,
+                        label: 'SVG',
+                        description: 'Flat outline for laser cutters and vector editors',
+                        suffix: '.svg',
+                      },
+                    ]
+                  : []),
+                ...(model.downloads.pdf
+                  ? [
+                      {
+                        type: 'pdf' as const,
+                        label: 'PDF',
+                        description: 'Drawing to print at 1:1 and lay the part on',
+                        suffix: '.pdf',
+                      },
+                    ]
+                  : []),
                 {
                   type: 'scad',
                   label: 'OpenSCAD',
@@ -2158,8 +2183,8 @@ export default function App() {
             <Info size={20} />
             <p>
               All geometry exports use millimeters, including when the interface displays inches.
-              Select millimeters when importing STL. Verify the dimensions before cutting or
-              printing.
+              Select millimeters when importing STL. Print the PDF at 100 % and measure its rulers.
+              Verify the dimensions before cutting or printing.
             </p>
           </div>
           <div className="modal-footer">

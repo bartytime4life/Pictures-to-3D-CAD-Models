@@ -30,7 +30,8 @@ export type Profile = {
 };
 export type Detail = 'coarse' | 'standard' | 'fine';
 export type SlicerId = 'bambu' | 'prusa';
-export type ExportKind = 'step' | 'stl' | 'dxf' | 'scad' | 'parts' | '3mf' | SlicerId;
+export type ExportKind =
+  'step' | 'stl' | 'dxf' | 'svg' | 'pdf' | 'scad' | 'parts' | '3mf' | SlicerId;
 export type SlicerProgram = {
   id: SlicerId;
   name: string;
@@ -148,6 +149,8 @@ export type ModelResult = {
     step: string;
     stl: string;
     dxf: string;
+    svg?: string;
+    pdf?: string;
     scad: string;
     project: string;
     parts?: string;

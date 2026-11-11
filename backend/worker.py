@@ -11,6 +11,7 @@ import ezdxf
 from shapely.geometry import Polygon
 from shapely.geometry.polygon import orient
 
+from . import drawing
 from .fitting import arc_geometry
 from .models import BuildRequest, DesignSettings, ring_polygon
 from .printing import (
@@ -128,10 +129,10 @@ def fitted_counts(rings):
 
 def write_fitted_dxf(path, rings):
     """LINE, ARC and CIRCLE entities: true geometry for CAD/CAM import."""
-    drawing = ezdxf.new("R2010")
-    drawing.units = ezdxf.units.MM
-    drawing.header["$MEASUREMENT"] = 1
-    modelspace = drawing.modelspace()
+    document = ezdxf.new("R2010")
+    document.units = ezdxf.units.MM
+    document.header["$MEASUREMENT"] = 1
+    modelspace = document.modelspace()
     for index, ring in enumerate(rings):
         layer = {"layer": "OUTLINE" if index == 0 else "HOLES"}
         for s in ring:
@@ -145,7 +146,7 @@ def write_fitted_dxf(path, rings):
                 modelspace.add_arc(
                     (cx, cy), r, math.degrees(start), math.degrees(end), dxfattribs=layer
                 )
-    drawing.saveas(path)
+    document.saveas(path)
 
 
 def dimensions_of(shape):
@@ -231,13 +232,15 @@ def build(job_dir: Path) -> dict:
     if fitted:
         (job_dir / "model.scad").write_text(fitted_source(rings, thickness), encoding="utf-8")
         write_fitted_dxf(job_dir / "profile.dxf", rings)
+        loops = drawing.fitted_loops(rings)
     else:
+        loops = drawing.polygon_loops(polygons)
         (job_dir / "model.scad").write_text(profile_source(polygons, thickness), encoding="utf-8")
         # Each closed DXF loop describes a real part outline, including split edges.
-        drawing = ezdxf.new("R2010")
-        drawing.units = ezdxf.units.MM
-        drawing.header["$MEASUREMENT"] = 1
-        modelspace = drawing.modelspace()
+        outline = ezdxf.new("R2010")
+        outline.units = ezdxf.units.MM
+        outline.header["$MEASUREMENT"] = 1
+        modelspace = outline.modelspace()
         for part in polygons:
             modelspace.add_lwpolyline(
                 list(part.exterior.coords)[:-1], close=True, dxfattribs={"layer": "OUTLINE"}
@@ -246,7 +249,10 @@ def build(job_dir: Path) -> dict:
                 modelspace.add_lwpolyline(
                     list(ring.coords)[:-1], close=True, dxfattribs={"layer": "HOLES"}
                 )
-        drawing.saveas(job_dir / "profile.dxf")
+        outline.saveas(job_dir / "profile.dxf")
+    # The same loops as the DXF, for cutters and vector editors and for a 1:1 print.
+    (job_dir / "profile.svg").write_text(drawing.svg(loops, request.name), encoding="utf-8")
+    (job_dir / "drawing.pdf").write_bytes(drawing.pdf(loops, request.name))
 
     parts = []
     bundle_files = []
@@ -323,7 +329,7 @@ def build(job_dir: Path) -> dict:
 
     downloads = {
         kind: f"/api/download/{job_dir.name}/{kind}"
-        for kind in ("step", "stl", "dxf", "scad", "project", "3mf", "bambu", "prusa")
+        for kind in ("step", "stl", "dxf", "svg", "pdf", "scad", "project", "3mf", "bambu", "prusa")
     }
     if design.output_mode == "split":
         manifest = {
@@ -379,7 +385,7 @@ def build(job_dir: Path) -> dict:
         "print_fit": aggregate_fit(parts),
     }
     for name in (
-        "profile.dxf", "model.scad", "project.json", "model.3mf",
+        "profile.dxf", "profile.svg", "drawing.pdf", "model.scad", "project.json", "model.3mf",
         "bambu-handoff.zip", "prusa-handoff.zip",
     ):
         if (job_dir / name).stat().st_size == 0:
