@@ -544,6 +544,36 @@ def test_half_level_edges_and_blur_correction_are_unbiased(radius, sigma):
     assert math.hypot(cx - centre[0], cy - centre[1]) < 0.01
 
 
+@pytest.mark.parametrize("radius_mm,sigma_px", [(8.0, 1.6), (4.0, 1.6), (2.5, 2.2)])
+def test_blurred_fillets_keep_their_radius_when_snapped(radius_mm, sigma_px):
+    """A rendered 120 x 70 mm plate with rounded corners at 5 px/mm, blurred, traced and
+    fitted as backend.reference does with design-intent snapping on. Fitting the
+    fillets without the blur in their model reads them about four blur shrinks large."""
+    from shapely.geometry import box
+
+    ppm = 5.0
+    part = box(10, 10, 130, 80).buffer(-radius_mm).buffer(radius_mm, 1024)
+    image = (236 - 188 * S.coverage(part, ppm, 0.0, 0.0, (450, 700))).astype(np.float32)
+    image = cv2.GaussianBlur(image, (0, 0), sigma_px)
+    rings, sigma, _ = edges.subpixel_rings((image < 142).astype(np.uint8), image, ppm)
+    points = next(r for r in rings if r["outer"])["points"]
+    tolerance = max(0.03, 0.15 * sigma / ppm) * ppm
+
+    def fitted(blur):
+        prims = fitting.fit_ring(points, tolerance, 3.0 * ppm)
+        fitting.snap_axes([prims])
+        fitting.refit_lines(points, prims)
+        fitting.fit_fillets(points, prims, tolerance, blur)
+        fitting.correct_blur(prims, sigma)
+        radii = np.array([p.data["r"] for p in prims if p.kind == "arc"]) / ppm
+        assert len(radii) == 4
+        return radii - radius_mm
+
+    shrink = (sigma / ppm) ** 2 / (2 * radius_mm)
+    assert np.abs(fitted(sigma)).max() < 0.01
+    assert fitted(0.0).min() > 3 * shrink > 0.02
+
+
 def test_rounded_rectangle_fits_four_lines_and_tangent_arcs():
     import shapely
     from shapely.geometry import box

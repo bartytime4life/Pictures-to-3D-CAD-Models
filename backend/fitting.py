@@ -206,11 +206,22 @@ def blur_corrected_radius(r, sigma):
     return r + sigma * sigma / (2 * r) - sigma**4 / (24 * r**3)
 
 
+def blur_shrink(radius, sigma):
+    """How far inside a circular edge of the given true radius its Gaussian-blurred
+    half-level contour lies (the series in blur_corrected_radius), and the derivative
+    of that distance with respect to the radius."""
+    return (
+        sigma**2 / (2 * radius) + 5 * sigma**4 / (24 * radius**3),
+        -(sigma**2) / (2 * radius**2) - 5 * sigma**4 / (8 * radius**4),
+    )
+
+
 def correct_blur(prims, sigma):
     """Undo the blur-curvature shrink of every fitted radius (see blur_corrected_radius).
-    Slot end caps take their radius from the line spacing, which blur does not bias."""
+    Slot end caps take their radius from the line spacing, which blur does not bias, and
+    a fillet fitted with the blur in its model (fit_fillets) already has its true radius."""
     for p in prims:
-        if p.kind in ("arc", "circle") and sigma > 0 and not p.data.get("end_cap"):
+        if p.kind in ("arc", "circle") and sigma > 0 and not (p.data.get("end_cap") or p.data.get("blur_modelled")):
             p.data["r"] = blur_corrected_radius(p.data["r"], sigma)
     place_fillets(prims)
 
@@ -282,7 +293,7 @@ def place_fillets(prims):
             p.data["c"] = tuple(np.asarray(c0) + p.data["r"] * np.asarray(v))
 
 
-def fit_fillets(points, prims, tol):
+def fit_fillets(points, prims, tol, sigma=0.0):
     """Constrain each arc between two lines to be tangent to both.
 
     Between non-parallel lines the arc becomes a fillet: its centre lies on the corner
@@ -290,6 +301,16 @@ def fit_fillets(points, prims, tol):
     distance), which is far less sensitive to noise than a free three-parameter circle.
     Between parallel lines it becomes a slot end cap: radius half the line spacing,
     centre on the mid-line.
+
+    `sigma` is the edge blur. Blur draws the traced arc toward its centre by
+    s = sigma^2 / (2r) while the centre stays where it is and the two edges stay where
+    they are. A fillet's centre is tied to its radius, so a fit that ignores the blur
+    cannot shrink the radius to follow the points: it has to move the centre as well,
+    and settles on a radius about 3 s too large (for a right-angle corner), where a free
+    circle would read s too small. The points are therefore fitted with a circle of
+    radius r - s(r) about c(r), which gives the true radius directly; correct_blur then
+    leaves the fillet alone. Within about 2.5 sigma of where the arc meets an edge the
+    traced curve is neither arc nor line, and those points are left out.
     """
     m = len(prims)
     for k, p in enumerate(prims):
@@ -326,14 +347,20 @@ def fit_fillets(points, prims, tol):
             continue
         _, c0, v = best
         seg = span_points(points, *p.span)
-        keep = (np.abs((seg - c1) @ n1) > tol) & (np.abs((seg - c2) @ n2) > tol)
+        # An arc point 2.5 sigma along the arc from an edge lies (2.5 sigma)^2 / (2r)
+        # off that edge.
+        clear = max(tol, 3.125 * sigma**2 / old_r)
+        keep = (np.abs((seg - c1) @ n1) > clear) & (np.abs((seg - c2) @ n2) > clear)
+        if keep.sum() < 5:
+            keep = (np.abs((seg - c1) @ n1) > tol) & (np.abs((seg - c2) @ n2) > tol)
         seg = seg[keep] if keep.sum() >= 5 else seg
         r = old_r
         for _ in range(20):
             delta = seg - (c0 + r * v)
             rho = np.maximum(np.linalg.norm(delta, axis=1), 1e-12)
-            residual = rho - r
-            jac = -(delta @ v) / rho - 1
+            shrink, slope = blur_shrink(r, sigma) if sigma > 0 else (0.0, 0.0)
+            residual = rho - (r - shrink)
+            jac = -(delta @ v) / rho - 1 + slope
             step = -float(jac @ residual) / float(jac @ jac)
             r += step
             if abs(step) < 1e-10:
@@ -342,8 +369,10 @@ def fit_fillets(points, prims, tol):
             continue
         p.data["r"] = float(r)
         p.data["fillet"] = (tuple(c0), tuple(v))
+        p.data["blur_modelled"] = sigma > 0
         place_fillets([p])
-        residual = np.linalg.norm(seg - np.asarray(p.data["c"]), axis=1) - r
+        shrink = blur_shrink(r, sigma)[0] if sigma > 0 else 0.0
+        residual = np.linalg.norm(seg - np.asarray(p.data["c"]), axis=1) - (r - shrink)
         p.rms, p.max_abs = float(np.sqrt(np.mean(residual**2))), float(np.abs(residual).max())
 
 

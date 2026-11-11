@@ -795,6 +795,53 @@ def test_tangent_constrained_fillet_fit_is_more_precise_than_a_free_arc():
     assert abs(np.mean(constrained) - 8.0) < 4 * standard_error + 0.005
 
 
+def blurred_corner_ring(radius, sigma, size=(100.0, 60.0), step=0.2):
+    """The outline of a rounded rectangle as blur leaves it, in exact form: its straight
+    edges in place, and each corner arc about its true centre but inside its true radius
+    by the blur-curvature shrink (fitting.blur_shrink). Points every `step`."""
+    shrink = sigma**2 / (2 * radius) + 5 * sigma**4 / (24 * radius**3)
+    w, h = size[0] / 2, size[1] / 2
+    corners = [((w - radius, h - radius), 0), ((radius - w, h - radius), 90), ((radius - w, radius - h), 180), ((w - radius, radius - h), 270)]
+    points = []
+    for index, ((cx, cy), start) in enumerate(corners):
+        angles = np.radians(start + np.arange(0, 90, math.degrees(step / radius)))
+        points.extend(zip(cx + (radius - shrink) * np.cos(angles), cy + (radius - shrink) * np.sin(angles)))
+        # The straight edge from this corner to the next, counter-clockwise.
+        (nx, ny), _ = corners[(index + 1) % 4]
+        a = np.array([cx + radius * math.cos(math.radians(start + 90)), cy + radius * math.sin(math.radians(start + 90))])
+        b = np.array([nx + radius * math.cos(math.radians(start + 90)), ny + radius * math.sin(math.radians(start + 90))])
+        count = max(2, round(float(np.linalg.norm(b - a)) / step))
+        points.extend(tuple(a + (b - a) * k / count) for k in range(count))
+    return np.array(points), shrink
+
+
+@pytest.mark.parametrize(("radius", "sigma"), [(8.0, 0.34), (8.0, 0.6), (4.0, 0.34), (2.5, 0.34)])
+def test_a_fillet_fitted_with_the_blur_in_its_model_keeps_its_true_radius(radius, sigma):
+    """Numerical analysis of fitting.fit_fillets. Blur draws a corner arc toward its
+    centre by s while its edges and its centre stay put. A fillet's centre is tied to
+    its radius, so a fit that ignores the blur cannot follow the points by shrinking:
+    it moves the centre too and settles near r + 3 s, and the correction meant for a
+    free circle adds another s. With the blur in the model the radius comes out within
+    a third of s; what is left comes from arc points that the edges' own fits take in
+    where arc and edge meet."""
+    ring, shrink = blurred_corner_ring(radius, sigma)
+    tol = max(0.03, 0.15 * sigma)
+
+    def fitted(blur):
+        prims = fitting.fit_ring(ring, tol, 3.0)
+        fitting.snap_axes([prims])
+        fitting.refit_lines(ring, prims)
+        fitting.fit_fillets(ring, prims, tol, blur)
+        fitting.correct_blur(prims, sigma)
+        radii = np.array([p.data["r"] for p in prims if p.kind == "arc"])
+        assert len(radii) == 4 and [p.kind for p in prims].count("line") == 4
+        return radii - radius
+
+    assert np.abs(fitted(sigma)).max() < 0.35 * shrink
+    ignored = fitted(0.0)
+    assert (ignored > 3.5 * shrink).all() and (ignored < 4.5 * shrink).all()
+
+
 def test_repeated_photos_are_precise_as_well_as_accurate():
     """Statistics: three photos differing only in sensor noise give hole diameters whose
     spread (precision) is far below the accuracy limit used elsewhere."""
