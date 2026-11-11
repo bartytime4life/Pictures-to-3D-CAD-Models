@@ -96,6 +96,8 @@ The bundled searchable [printer catalog](docs/printer-catalog.md) covers 429 mod
 | STL | Slicing or mesh workflows | Triangle surfaces in assembled positions; millimeter coordinates, no color |
 | 3MF | Importing geometry into a slicer | Millimetre units and separate mesh objects in assembled positions |
 | DXF | A flat profile for a CAD or CAM workflow | The planar boundary and holes; `LINE`, `ARC` and `CIRCLE` entities for a fitted outline |
+| SVG | A laser cutter's software or a vector editor | The same planar boundary and holes at one unit per millimetre; arcs and circles for a fitted outline |
+| PDF | Printing the outline at 1:1 to lay the real part on | The outline and holes at true size on a page that fits A4 and US Letter, a 100 mm ruler along each axis to check the print, and a centre mark in each round hole |
 | OpenSCAD | Editing the built profile in scripted CAD | Final scaled and simplified polygon boundaries, holes, thickness, and selectable split pieces in assembled positions; fitted circles stay `circle()` calls |
 | Parts ZIP | Importing generated pieces separately | A STEP, STL and 3MF per piece, plus a manifest |
 | Slicer handoff ZIP | Preparing a Bambu Studio or PrusaSlicer import | Geometry, split pieces, recipe, printer/material planning notes, instructions and payload hashes |

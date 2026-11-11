@@ -23,6 +23,7 @@ from PIL import Image, ImageDraw
 
 from backend import app as api
 from backend import heic, tracing
+from tests import readers
 
 
 @pytest.fixture(scope="module")
@@ -500,6 +501,34 @@ def test_dxf_export_units_and_closed_holes(client, model):
     assert len(rings) == 3
     assert all(ring.closed for ring in rings)
     assert sum(ring.dxf.layer == "HOLES" for ring in rings) == 2
+
+
+def test_svg_and_pdf_exports_hold_the_built_profile_at_true_size(client, model):
+    area = model["volume_mm3"] / model["dimensions"]["thickness"]
+    svg = client.get(model["downloads"]["svg"])
+    assert svg.headers["content-type"].startswith("image/svg+xml")
+    assert svg.headers["content-disposition"] == 'attachment; filename="profile.svg"'
+    region, root = readers.svg_region(svg.text)
+    assert region.area == pytest.approx(area)
+    assert len(region.interiors) == model["hole_count"] == 2
+    x0, y0, x1, y1 = region.bounds
+    assert (x1 - x0, y1 - y0) == pytest.approx((80, 48))
+    # One user unit is a millimetre: the drawing is the part plus a 1 mm border.
+    assert (root.get("width"), root.get("height")) == ("82mm", "50mm")
+    assert root.get("viewBox") == "0 0 82 50"
+
+    pdf = client.get(model["downloads"]["pdf"])
+    assert pdf.headers["content-type"] == "application/pdf"
+    assert pdf.headers["content-disposition"] == 'attachment; filename="drawing.pdf"'
+    page, content = readers.pdf_parts(pdf.content)
+    assert page == pytest.approx((210.0, 279.4), abs=1e-3)  # inside both A4 and US Letter
+    closed, strokes, texts = readers.pdf_paths(content)
+    outline, *holes = sorted((readers.Polygon(ring) for ring in closed), key=lambda p: -p.area)
+    assert outline.area - sum(hole.area for hole in holes) == pytest.approx(area)
+    x0, y0, x1, y1 = outline.bounds
+    assert (x1 - x0, y1 - y0) == pytest.approx((80, 48))
+    assert [readers.length(s) for s in strokes if readers.length(s) > 50] == pytest.approx([100, 100])
+    assert any("80.00 × 48.00 mm, drawn at 1:1" in text for text in texts)
 
 
 def test_scad_export_is_editable_numeric_source_for_current_build(client, model):

@@ -24,6 +24,7 @@ from PIL import Image
 from backend import app as api
 from backend import edges, fitting, sheet
 from backend.models import Profile
+from tests import readers
 from tests import synthetic as S
 
 CASES = {
@@ -369,6 +370,36 @@ def test_fitted_exports_carry_true_circles_and_arcs(client, fitted_build, tmp_pa
     assert scad.count("circle(r =") == 5 and "polygon(points" in scad
     stl = client.get(model["downloads"]["stl"]).content
     assert len(stl) > 84
+
+
+def test_fitted_drawings_hold_the_solid_s_profile_with_true_arcs(client, fitted_build):
+    _, model = fitted_build
+    size = (model["dimensions"]["width"], model["dimensions"]["height"])
+    area = model["volume_mm3"] / model["dimensions"]["thickness"]
+    region, root = readers.svg_region(client.get(model["downloads"]["svg"]).text)
+    # The SVG encloses the same area as the exact solid's face, at the same size.
+    assert region.area == pytest.approx(area, rel=2e-5)
+    x0, y0, x1, y1 = region.bounds
+    assert (x1 - x0, y1 - y0) == pytest.approx(size, abs=1e-4)
+    assert len(region.interiors) == 6
+    outline, holes = root.findall(f"{readers.SVG}g")
+    assert outline[0].get("d").count(" A ") == 4 and outline[0].get("d").count(" L ") == 4
+    radii = sorted(float(c.get("r")) for c in holes.findall(f"{readers.SVG}circle"))
+    assert len(radii) == 5 and radii[:4] == [radii[0]] * 4 and abs(radii[0] - 3.0) < LIMITS["small"]
+    (slot,) = holes.findall(f"{readers.SVG}path")
+    assert slot.get("d").count(" A ") == 4  # two half-turn ends, each written as two arcs
+
+    page, content = readers.pdf_parts(client.get(model["downloads"]["pdf"]).content)
+    assert page == pytest.approx((210.0, 279.4), abs=1e-3)
+    closed, strokes, _ = readers.pdf_paths(content)
+    outer, *inner = sorted((readers.Polygon(ring) for ring in closed), key=lambda p: -p.area)
+    assert len(inner) == 6
+    assert outer.area - sum(hole.area for hole in inner) == pytest.approx(area, rel=2e-5)
+    x0, y0, x1, y1 = outer.bounds
+    assert (x1 - x0, y1 - y0) == pytest.approx(size, abs=1e-4)
+    assert [readers.length(s) for s in strokes if readers.length(s) > 50] == pytest.approx([100, 100])
+    # Two crossing marks in each of the five round holes.
+    assert sum(readers.length(s) < 6 and readers.length(s) not in (1.5, 3.0) for s in strokes) == 10
 
 
 def test_fitted_recipe_is_version_3_and_restores(client, fitted_build):

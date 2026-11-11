@@ -14,7 +14,7 @@ flowchart LR
     J --> F[Validate planar profile]
     F --> G[Bounded CadQuery conversion]
     G --> H[Mesh for 3D preview]
-    G --> I[STEP · STL · 3MF · DXF · SCAD · parts ZIP · recipe]
+    G --> I[STEP · STL · 3MF · DXF · SVG · PDF · SCAD · parts ZIP · recipe]
     I --> K[Bambu Studio or PrusaSlicer handoff]
 ```
 
@@ -94,7 +94,7 @@ The profile is validated at the API boundary even when it originated in this app
 
 ### Export downloads
 
-`GET /api/download/{job_id}/{kind}` returns an artifact for `kind` equal to `step`, `stl`, `3mf`, `dxf`, `scad`, `project`, `parts`, `bambu`, or `prusa`. The parts artifact is a ZIP of separate STEP/STL/3MF files and a manifest. The `bambu` and `prusa` artifacts are tailored handoff ZIPs. Successful builds provide those links explicitly. Do not construct arbitrary filesystem paths from project names or user-provided extensions.
+`GET /api/download/{job_id}/{kind}` returns an artifact for `kind` equal to `step`, `stl`, `3mf`, `dxf`, `svg`, `pdf`, `scad`, `project`, `parts`, `bambu`, or `prusa`. The `svg` and `pdf` artifacts are the DXF's loops as a millimetre drawing and as a page that prints at 1:1 (`backend/drawing.py`, which writes both without a PDF or SVG library). The parts artifact is a ZIP of separate STEP/STL/3MF files and a manifest. The `bambu` and `prusa` artifacts are tailored handoff ZIPs. Successful builds provide those links explicitly. Do not construct arbitrary filesystem paths from project names or user-provided extensions.
 
 `DELETE /api/models/{job_id}` removes the generated model directory. It is an API capability; it is not a promise that the interface exposes a model-management screen. Deleting server artifacts does not delete copies already downloaded.
 

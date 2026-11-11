@@ -44,6 +44,8 @@ DOWNLOADS = {
     "step": ("model.step", "application/step"),
     "stl": ("model.stl", "model/stl"),
     "dxf": ("profile.dxf", "application/dxf"),
+    "svg": ("profile.svg", "image/svg+xml"),
+    "pdf": ("drawing.pdf", "application/pdf"),
     "scad": ("model.scad", "application/x-openscad"),
     "3mf": ("model.3mf", "model/3mf"),
     "bambu": ("bambu-handoff.zip", "application/zip"),

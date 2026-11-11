@@ -5,7 +5,7 @@ The workbench prepares a built part for either slicer. Open **Review export → 
 ## Take the current part into a slicer
 
 1. Review the model's dimensions, holes and design settings, then build it. Geometry changes require a fresh build before exporting.
-2. In the export dialog, choose your slicer and download its handoff ZIP. A plain **3MF** export is also available beside STEP, STL, DXF and OpenSCAD.
+2. In the export dialog, choose your slicer and download its handoff ZIP. A plain **3MF** export is also available beside STEP, STL, DXF, SVG, PDF and OpenSCAD.
 3. Extract the ZIP and import `model.3mf` into your slicer as geometry. Coordinates are millimetres. If the slicer asks whether to import another application's project settings, choose geometry only.
 4. For split output, use the individual `part-XX.3mf` files when arranging separate pieces. They start at XY zero with their bottom at Z zero. The combined `model.3mf` retains the assembly's coordinates with separate objects; touching split faces are not an arranged printing plate. STL alternatives are included.
 5. Select the exact printer, nozzle, build plate, filament and process settings inside the slicer. Arrange the pieces, check dimensions and fine features, review supports and orientation, slice, and inspect the layer preview. Save the native slicer project there to retain its reviewed settings.

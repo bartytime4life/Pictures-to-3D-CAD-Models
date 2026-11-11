@@ -50,6 +50,27 @@ Confirm millimeter units, closed contours, and the separation between the outer 
 
 In split mode, DXF records each piece's planar outline at its assembled position. Shared cuts can appear on both adjacent pieces; review duplicates and cutting order in CAM. The app does not supply kerf compensation or toolpaths.
 
+## SVG: the same profile for cutters and vector editors
+
+Use SVG for a laser or vinyl cutter's software, or for a vector editor. It holds the same closed loops as the DXF, unfilled, with a 0.1 mm black stroke, in two groups named `outline` and `holes`.
+
+One user unit is one millimetre. The file states its width and height in millimetres and a view box of the same numbers, with a 1 mm blank border round the part. After import, measure the outline: it should have the width and height the export dialog shows. A program that ignores the stated millimetres shows the part at another scale.
+
+A fitted single-piece outline is written as lines, circular arcs (`A` path commands) and `<circle>` elements. An arc longer than a third of a turn is written as two or more arcs: an SVG arc is defined by its end points, and near a half turn it loses accuracy to the rounding of those points. Other outlines are closed polygons. In split mode each piece appears at its assembled position.
+
+Like the DXF, the SVG is a flat profile. It holds no thickness, toolpaths, cutting order or kerf compensation.
+
+## PDF: a 1:1 drawing to print
+
+Use the PDF to check the outline against the real part before cutting or printing anything. Print it, lay the part on the paper, and look at every edge and hole. It also works as a paper template: each round hole carries a centre mark.
+
+- **Print at 100 %**, which print dialogs also call "actual size". Do not fit the page to the paper.
+- **Measure both rulers.** The page has a 100 mm ruler along each axis. A printer can scale the two directions differently, so measure both. If one reads 99.5 mm, every dimension in that direction is 0.5 % small.
+- **The page fits A4 and US Letter.** It is 210 × 279.4 mm, the area the two sizes share, and is turned on its side for a wide part. A part too large for it gets a page as large as the part needs; print that on a larger printer, or let the print dialog tile it.
+- **The print is a visual check, not a gauge.** Paper swells and shrinks with humidity, and a printed line has a width. Use calipers for dimensions that matter.
+
+The drawing holds lines only, with no fill or thickness. In split mode it shows the pieces in their assembled positions.
+
 ## OpenSCAD: editable polygon extrusion
 
 Choose **OpenSCAD** in the export dialog to download `model.scad`. For a fitted single-piece outline, circular holes stay `circle(r = …, $fn = …)` calls inside a `difference()`, with facet counts chosen for a 0.005 mm chord error; other fitted boundaries are polygons sampled within 0.005 mm. Source generation uses the same final profiles as the CAD worker, after the workbench's design percentages, geometry-detail approximation, and split cuts. The default SCAD values therefore describe the current built dimensions and holes. Generating this source does not require an OpenSCAD installation.

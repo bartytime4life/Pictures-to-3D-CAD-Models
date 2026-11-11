@@ -17,6 +17,7 @@ from backend import app as api
 from backend import printing
 from backend.models import BuildRequest, DesignSettings
 from backend.worker import build
+from tests import readers
 
 
 def request_body(**changes):
@@ -86,6 +87,22 @@ def test_design_scales_actual_geometry_without_replacing_measured_inputs(client,
     assert recipe["design"]["color"] == "#ff6600"
     assert recipe["design"]["material"] == "petg"
     assert recipe["design"]["scale_percent"] == 200
+
+
+def test_split_drawings_show_every_piece_in_its_assembled_place(client, split_model):
+    area = split_model["volume_mm3"] / split_model["dimensions"]["thickness"]
+    region, root = readers.svg_region(client.get(split_model["downloads"]["svg"]).text)
+    outline, holes = root.findall(f"{readers.SVG}g")
+    assert len(outline) == len(split_model["parts"]) == 2 and len(holes) == 1
+    assert region.area == pytest.approx(area)
+    x0, y0, x1, y1 = region.bounds
+    assert (x1 - x0, y1 - y0) == pytest.approx((160, 96))
+    page, content = readers.pdf_parts(client.get(split_model["downloads"]["pdf"]).content)
+    assert page == pytest.approx((210.0, 279.4), abs=1e-3)
+    closed, _, _ = readers.pdf_paths(content)
+    pieces = sorted((readers.Polygon(ring) for ring in closed), key=lambda p: -p.area)
+    assert len(pieces) == 3
+    assert pieces[0].area + pieces[1].area - pieces[2].area == pytest.approx(area)
 
 
 def test_split_zip_contains_distinct_valid_solids_with_matching_volume(

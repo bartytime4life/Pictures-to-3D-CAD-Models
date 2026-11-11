@@ -1,6 +1,20 @@
 # Validation results
 
-Latest workbench validation: November 10, 2026, on the local Linux workstation. The FreeCAD import check, the linear-light edge measurement, the phone-photo decoding and the photo benchmark runner of November 11 ran in a managed cloud session. The [reference-sensitivity record](validation/reference-sensitivity.md) covers the new endpoint-placement explorer. Earlier managed-environment and release results are recorded separately below. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
+Latest workbench validation: November 10, 2026, on the local Linux workstation. The FreeCAD import check, the linear-light edge measurement, the phone-photo decoding, the photo benchmark runner and the SVG and PDF drawings of November 11 ran in a managed cloud session. The [reference-sensitivity record](validation/reference-sensitivity.md) covers the new endpoint-placement explorer. Earlier managed-environment and release results are recorded separately below. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
+
+## SVG and 1:1 PDF drawings — November 11, 2026
+
+Branch `claude/drawing-exports`, on top of `claude/photo-benchmark` (`bfaa21e`). See [export formats](exports.md) for their use.
+
+- **What they are.** Every build now also writes the DXF's loops as `profile.svg`, at one user unit per millimetre, and as `drawing.pdf`, a page that prints at 1:1 with a 100 mm ruler along each axis and a centre mark in each round hole (`backend/drawing.py`). Both are written directly, without an SVG or PDF library. The PDF page is 210 × 279.4 mm, the area A4 and US Letter share.
+- **Read back by four programs that share no code with the writer**, on the fitted build of the rendered 4 mm plate, whose solid is 120.0175 × 70.0168 mm:
+  - Chromium 153 (SVG): outline 120.0175 × 70.0168 mm, slot 23.9797 × 7.9764 mm, bore 21.9749 mm.
+  - FreeCAD 1.0.2 (SVG import): the same sizes, and an outline perimeter of 366.2904 mm against 366.2905 from the fitted lines and arcs. FreeCAD's importer turns every edge into a B-spline, so the DXF and STEP remain the route into CAD.
+  - MuPDF 1.28.6 (PDF): outline 120.017 × 70.017 mm, bore 21.975 mm, both rulers 100.000 mm.
+  - pypdf 7.0.1 in strict mode (PDF): one page of 210.0 × 279.4 mm, the title and the four text lines, with no structural complaint.
+- **A defect found by the tests and fixed before any release.** An SVG arc is defined by its end points and radius. For a half turn, such as a slot's end, rounding the end points moved the arc by the square root of the rounding: 0.02 mm at four decimals on a 4 mm slot end. Arcs are now written in pieces of at most a third of a turn, with five decimals, and a test with slots at five angles fails without that.
+- **Checks run.** `pytest`: **386 passed** and 2 skipped (the OpenSCAD checks; OpenSCAD is not installed in this session). 21 tests are new: 18 in `tests/test_drawing.py`, which read both files back with parsers written for the tests and compare the enclosed regions with the design, and one each for plain, fitted and split builds through the API. Twenty faults planted one at a time in the writer (a mirrored drawing, a reversed arc, a wrong scale, a wrong page, a wrong ruler, a broken cross-reference table and others) each failed a test. Ruff and Prettier passed. The production build and the 10 browser scenarios of `workbench.spec.ts` and `sheet-reference.spec.ts` passed with Playwright's bundled Chromium, including downloads of both new files; the other scenarios were not re-run locally.
+- **Not verified.** No page was printed: this session has no printer. Whether a printer keeps the scale is what the rulers are for. No laser-cutter or vector-editor program other than the two above read the SVG. The PDF names the standard Helvetica font without embedding it, as PDF allows; it was not checked against PDF/A.
 
 ## Photo benchmark runner — November 11, 2026
 
