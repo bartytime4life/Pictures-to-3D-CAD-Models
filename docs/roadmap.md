@@ -43,6 +43,13 @@ Reference entry also includes an [endpoint-placement sensitivity explorer](refer
 
 ## Release discipline
 
+The [fixed-observation/covariance module](profile-observations.md) now represents
+known final sampling and finite smoothing operators. Conditional noise controls
+prevent counting shared pixels as independent evidence. This is a developer
+foundation; integrating earlier spatially varying rectification, camera/rounding
+discrepancy and covariance between profiles remains required before production
+uncertainty or joint wall/camera claims.
+
 The [wall-localization candidate](wall-localization.md) expands geometry
 hypotheses with candidate-dependent widths and numerical withholding. Its
 development record retains the rejected expanded observation window and camera

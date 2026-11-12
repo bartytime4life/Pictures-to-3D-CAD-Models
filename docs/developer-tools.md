@@ -15,6 +15,8 @@ an experiment in another worktree is a different implementation.
 | How do illumination and sampling affect local edge measurements? | `make material-gradient-study OUTPUT=NEW_DIRECTORY` | Complete development census through actual profile functions; no complete-camera qualification |
 | Can bounded lighting fit competing wall/silhouette interpretations? | `make wall-gradient-study OUTPUT=NEW_DIRECTORY` | Bounded source fits and constructed ambiguity witnesses; no production wall-model replacement |
 | Does a wall-fit change improve identical initial traces? | `make wall-localization-study OUTPUT=NEW_DIRECTORY` | Paired development scenes with a pinned baseline; retained unknowns and model failures, not camera qualification |
+| Does oversampling create misleading precision? | `make profile-noise-study OUTPUT=NEW_JSON` | Known correlated-noise and local-information controls, with support/rank counterexamples; no camera calibration |
+| Does the forward model include the known smoothing filter? | `make postblur-operator-study OUTPUT=NEW_JSON` | Declared finite-filter plus Keys composition on fixed fields; rounding and earlier-chain limits retained |
 | How do my reference-sheet photos compare with reserved measurements? | `make photo-benchmark PHOTOS=FOLDER` | Measured-photo comparison with coverage and failed traces retained; supplied comparison threshold is not an uncertainty budget |
 | Does a selected server trace, build and export the sample? | `make smoke` | API exercise against an already running server, including cleanup; not browser or physical acceptance |
 | Can an installed CAD application import the synthetic exports? | `make freecad` | Native FreeCAD check requiring `FREECADCMD`; not slicer or print qualification |
@@ -71,6 +73,13 @@ The comparator's pinned baseline must exist in the local Git object database.
 The prototypes change no tracing behavior and refuse existing JSON outputs.
 The wall-gradient result schema now distinguishes resolved, unresolved and
 execution-failure rows; its auditor also reads the archived version-1 results.
+
+The [fixed-observation and covariance guide](profile-observations.md) supplies
+two additional commands. Their `OUTPUT` is a fresh JSON file, rather than a
+study directory. They record all density/repetition controls and known-filter
+comparisons, including global aliases and omitted-mode counterexamples. Noise,
+optical spread and source geometry are supplied experimental conditions. Neither
+command changes production tracing or estimates physical confidence.
 
 Audit the wall study's complete row keys and summaries independently of its
 summary-writing code:

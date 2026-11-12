@@ -1,5 +1,11 @@
 # Architecture and API
 
+The developer [fixed-observation module](profile-observations.md) represents
+bounded Keys sampling/filter matrices and conditional shared-pixel covariance.
+Its study runners operate without the CAD service. They are not imported by the
+production trace/API or frontend; the production numerical pipeline retains its
+existing behavior and recorded limits.
+
 Pictures to CAD separates image interpretation from geometric construction. The photo supplies a planar profile. Scale comes from the entered outside width, a measured feature, or a reference sheet; thickness is entered separately. Optional design scales and print-planning settings then define the requested output. CadQuery constructs the resulting solid or split solids, which supply both the displayed mesh and the export artifacts. Use the [documentation index](README.md) for the user-facing guides.
 
 ```mermaid

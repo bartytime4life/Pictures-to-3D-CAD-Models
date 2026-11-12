@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 REFERENCE_PYTHON ?= $(CURDIR)/reference-library/.venv/bin/python
 
-.PHONY: help setup setup-app setup-library start dev build build-app build-library test test-app test-library lint smoke slicers freecad photo-benchmark corner-sweep material-gradient-study wall-gradient-study wall-localization-study
+.PHONY: help setup setup-app setup-library start dev build build-app build-library test test-app test-library lint smoke slicers freecad photo-benchmark corner-sweep material-gradient-study wall-gradient-study wall-localization-study profile-noise-study postblur-operator-study
 
 help:
 	@echo "make setup          install app and reference-library dependencies; build the app"
@@ -18,6 +18,8 @@ help:
 	@echo "make material-gradient-study OUTPUT=new-folder   run the local-profile development census"
 	@echo "make wall-gradient-study OUTPUT=new-folder   examine bounded wall/lighting ambiguity"
 	@echo "make wall-localization-study OUTPUT=new-folder   compare wall correction with a pinned baseline"
+	@echo "make profile-noise-study OUTPUT=new.json   examine correlated samples and false precision"
+	@echo "make postblur-operator-study OUTPUT=new.json   check known Gaussian plus Keys composition"
 	@echo "Append -app or -library to setup, build, or test to select one component."
 	@echo "Library browser checks use local HTTP; its own make check defaults to file URLs."
 
@@ -83,3 +85,11 @@ wall-gradient-study:
 wall-localization-study:
 	@test -n "$(OUTPUT)" || { echo "Usage: make wall-localization-study OUTPUT=new-folder (see docs/wall-localization.md)"; exit 2; }
 	.venv/bin/python scripts/wall_localization_study.py --output "$(OUTPUT)"
+
+profile-noise-study:
+	@test -n "$(OUTPUT)" || { echo "Usage: make profile-noise-study OUTPUT=new.json (see docs/profile-observations.md)"; exit 2; }
+	.venv/bin/python scripts/profile_noise_study.py --output "$(OUTPUT)"
+
+postblur-operator-study:
+	@test -n "$(OUTPUT)" || { echo "Usage: make postblur-operator-study OUTPUT=new.json (see docs/profile-observations.md)"; exit 2; }
+	.venv/bin/python scripts/postblur_operator_study.py --output "$(OUTPUT)"

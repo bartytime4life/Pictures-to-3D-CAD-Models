@@ -3,6 +3,17 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Fixed observations and conditional covariance — November 12, 2026
+
+- Add a bounded reusable Keys observation matrix, declared finite-filter
+  composition with explicit borders, and SVD accounting for shared input-pixel
+  noise. Retain support violations and rank/work limits.
+- Add repeatable false-precision and known-postblur controls, preserving genuine
+  row-space gains, truncation counterexamples, global wall aliases and float32
+  model discrepancy. [Method](profile-observations.md) and
+  [evidence](validation/profile-observations.md) distinguish this developer work
+  from production corrections and physical noise calibration.
+
 ## Local wall localization and observation-model development — November 12, 2026
 
 - Expand wall-edge hypotheses and update predicted width with candidate position.
