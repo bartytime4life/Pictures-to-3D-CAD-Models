@@ -14,8 +14,14 @@ independent dimensions. The [radial-domain and independent-renderer record](docs
 documents numerical safeguards and higher-order lens counterexamples. The
 [directional-blur research](docs/validation/directional-spread-qualification.md)
 also records missed cases; it does not supply a product accuracy status. The
-tracer traces a uniform directional blur by direction on synthetic photos
-([method](docs/reference-sheet.md)).
+tracer estimates a uniform directional blur from edge spreads and uses its
+covariance for supported nonparallel corner fits
+([method and recovery limits](docs/anisotropic-corners.md)). This empirical
+rectified-image model is not a physical camera calibration.
+An unresolved corner normally keeps its traced boundary. If thickness correction
+made that boundary invalid, a nearby line-only outline may be retained under
+bounded whole-boundary checks; otherwise the trace is refused. Neither recovery
+determines the corner radius. Review the notice and measure important radii.
 
 This repository contains two related tools:
 

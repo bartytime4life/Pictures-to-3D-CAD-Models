@@ -40,6 +40,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Understand initial fitted-boundary coverage | [Fit-support repair and evidence](validation/fit-support.md) |
 | Understand weak-edge refusal and recovery | [Contrast-recovery validation](validation/contrast-recovery.md) |
 | Understand arc-sector preservation after fillet movement | [Fillet-sweep repair](validation/fillet-sweep.md) |
+| Understand directional blur at nonparallel fitted corners and traced-outline recovery | [Anisotropic corner model](anisotropic-corners.md) |
 | Understand the lens inverse domain and independent synthetic camera checks | [Radial inverse and lens mismatch](validation/radial-inverse.md) |
 | Distinguish the earlier blur diagnostic from current directional tracing | [Historical qualification](validation/directional-spread-qualification.md), [current method](reference-sheet.md), [rank repair](validation/directional-blur-rank.md) |
 | Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |
