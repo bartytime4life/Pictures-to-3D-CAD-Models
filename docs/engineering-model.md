@@ -78,6 +78,18 @@ one radial lens term and top-face parallax; its assumptions and limits are in
 calibrated capture and independent measured features matter even when a digital
 solid is exact.
 
+Blur evidence also has a coordinate frame and processing stage. The production
+`edge_blur_mm` diagnostic describes a processed, rectified edge; it is not a
+raw optical PSF measurement. The research [source-context](source-context.md)
+retains prewarp working values, and [conditional source-edge fitting](psf-calibration.md)
+estimates a Gaussian width in working-image pixels under supplied target,
+response and noise assumptions. Width squared and its covariance use working
+pixels squared. At least three distinct unoriented directions with numerical
+rank three in the covariance design are needed to identify all three entries;
+opposite normals do not add a new direction. Full numerical rank and an SPD candidate do not
+validate the Gaussian model or establish physical calibration. See the
+[constructed response and non-Gaussian counterexamples](validation/psf-calibration.md).
+
 Wall correction also depends on which visible boundary supplies the tracing
 seed and whether the flat-tone model describes the capture. A low residual or
 an accepted shared wall tone is not a proof of a physical silhouette. The

@@ -19,6 +19,10 @@ Separate [numerical tools and studies](docs/developer-tools.md) investigate edge
 selection, lighting, blur, sampling, correlated noise, raw-source fitting and
 common-response calibration constraints with exact or bounded inputs, including
 [continuous shared edge/blur domains](docs/gaussian-response-domains.md).
+The [source-context API](docs/source-context.md) retains real trace observations
+in caller-owned Python memory; [conditional Gaussian blur tools](docs/psf-calibration.md)
+fit declared straight targets and inspect directional coverage. These Python
+tools add no HTTP endpoint, workbench calibration control or automatic correction.
 Their guides retain model assumptions, adverse results and unresolved cases.
 Developer research does not add an automatic physical-accuracy status to the workbench.
 
@@ -34,6 +38,11 @@ This repository contains two related tools:
 Browser-rendered workbench with the demonstration part and its **Next step** guide. The source photo is generated sample imagery; the displayed solid is constructed from its traced outline using demonstration measurements. See the [documentation index](docs/README.md) for task-based navigation.
 
 ## Start the app
+
+Use the [source-selection instructions](docs/development.md#choose-the-source-revision)
+before setup. The workbench can run from `main`; the source-context and Gaussian
+blur guides also describe a separately reviewed research line. Record the actual
+checkout rather than assuming a default clone contains every documented tool.
 
 Use **Python 3.12** (setup finds `python3.12` even when `python3` is another version, or set `PICAD_PYTHON`), Node.js 22.12 or later (24 recommended), npm, and GNU Make. Setup uses [uv](https://docs.astral.sh/uv/) if available, or installs a pinned local copy. From this repository:
 
@@ -150,10 +159,11 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 Start with the [documentation index](docs/README.md) for capture, engineering, export, development and evidence routes.
 
-The [current geometry and coverage record](docs/validation/canonical-arcs.md)
-identifies the source baseline and coverage of current guides, historical records
-and generated library material. Numerical experiments and analysis commands are
-collected in the [developer-tool catalog](docs/developer-tools.md).
+The [canonical-arc record](docs/validation/canonical-arcs.md) preserves its
+source-bound geometry checks and dated documentation coverage. Use the
+[validation overview](docs/validation.md) and [project status](docs/project-status.md)
+for later evidence. Numerical experiments and analysis commands are collected
+in the [developer-tool catalog](docs/developer-tools.md).
 
 - [Capture and calibration guide](docs/capture-guide.md)
 - [Engineering model and independent verification](docs/engineering-model.md)
@@ -170,6 +180,9 @@ collected in the [developer-tool catalog](docs/developer-tools.md).
 - [Project status and evidence](docs/project-status.md)
 - [Data handling and security boundaries](docs/privacy-security.md)
 - [Troubleshooting](docs/troubleshooting.md)
+- [Private source context and explicit fitting](docs/source-context.md)
+- [Conditional Gaussian edge fits, covariance and direction planning](docs/psf-calibration.md)
+- [Finite-shape source model and conditional fitting](docs/finite-shape-source.md)
 - [Research and design decisions](docs/research.md)
 - [Scope and roadmap](docs/roadmap.md)
 - [Validation results](docs/validation.md)

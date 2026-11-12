@@ -13,6 +13,13 @@ residual components omitted by it. Supplied geometry/optics/noise remain assumpt
 The [source-bound controls](validation/profile-observations.md) retain both
 false-precision examples and remaining model mismatch.
 
+Use the [source context](source-context.md) to obtain actual request-bound
+prewarp values and an observation operator. The [edge-spread fitter](psf-calibration.md)
+can then search a declared straight edge's offset and Gaussian width using
+`PixelNoise`'s fixed retained source modes. This does not estimate the noise
+factor: its input deviations remain supplied, and pooling directional variance
+summaries does not infer their correlations or standard deviations.
+
 ## Separate observations from their source
 
 Let `g` be the vector of unique input pixels and `S` the matrix of declared

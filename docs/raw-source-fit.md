@@ -12,6 +12,15 @@ The [known warp model](warp-observations.md) supplies `A = S G R`. The
 modes. The [complete experiment and regression record](validation/raw-source-fit.md)
 keeps matched controls, adverse outcomes and numerical limits together.
 
+Choose the fitter by what is known. This module holds the supplied PSF fixed
+and searches a plane-edge offset through a homography. The separate
+[edge-spread fitter](psf-calibration.md) searches offset and Gaussian width for
+a straight target specified directly in the working-photo frame. The
+[finite-shape fitter](finite-shape-source.md) searches a circular segment under
+supplied pose and PSF. The [source context](source-context.md) provides an
+explicit guarded bridge for the latter two; none of these APIs automatically
+replaces the accepted trace.
+
 ## Fit in the declared source projection
 
 For supplied independent raw standard deviations `D = diag(s)`, factor
@@ -51,10 +60,12 @@ out-of-sensor or mismatched coordinates are refused.
 
 Let `p0` be a plane anchor, `n` a supplied unit plane normal, and `e` a signed
 plane-distance offset. The material half-plane is
-`n^T(p-p0) >= e`. For known lens-free homography `H`, its raw line is
+`n^T(p-p0) >= e`. Orient the known lens-free homography at the anchor:
+`s = sign((H [p0_x, p0_y, 1]^T)_3)` and `H_oriented = s H`, with nonzero
+anchor denominator. On the checked common projective chart, its raw line is
 
 ```text
-ell_raw(e) = H^-T [n_x, n_y, -n^T p0 - e]^T
+ell_raw(e) = H_oriented^-T [n_x, n_y, -n^T p0 - e]^T
 v(e)^2 = ell_raw_xy(e)^T Sigma_raw ell_raw_xy(e)
 p_i(e) = Phi((ell_raw_xy(e)^T q_i + ell_raw_3(e)) / v(e))
 q_i = pixels_xy_i + 0.5
@@ -65,9 +76,11 @@ The offset `e` uses the plane-coordinate length unit determined by `H` (millimet
 in the included study).
 This describes the convolution of an ideal straight raw half-plane with a
 translation-invariant Gaussian and point-sensor observations. It is not a
-Gaussian approximation in the rectified coordinates. The implementation orients
-`H` at the anchor and checks a consistent inverse projective chart over the
-declared sensor. Multiplying `H` by a nonzero scalar must preserve the model.
+Gaussian approximation in the rectified coordinates. The implementation also
+normalizes the homography's magnitude and checks a consistent inverse projective
+chart over the declared sensor. Multiplying the supplied `H` by a nonzero scalar
+preserves the model; the anchor orientation prevents a negative multiplier from
+reversing the material side.
 An offset interval that makes a raw line degenerate is unsupported.
 
 Radial distortion can curve a line and is outside this primitive. Detector-area

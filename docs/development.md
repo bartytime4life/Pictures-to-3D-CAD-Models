@@ -5,6 +5,40 @@ Run commands from the repository root unless a command explicitly says otherwise
 See the [documentation index](README.md) for usage and method guides, and
 [Contributing](contributing.md) for change scope, review and evidence practices.
 
+## Choose the source revision
+
+Use `main` for the integrated workbench. The
+[source-context](source-context.md), [finite-shape](finite-shape-source.md) and
+[conditional Gaussian blur](psf-calibration.md) guides also cover the research
+line `codex/psf-calibration`, published for review in
+[PR #79](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/79).
+That source snapshot is `32d29f4b4884e6bdc3caf9d4415e48ec00d57562`; the branch
+can advance. A matching guide, passing local check or open PR does not establish
+that the code is integrated into `main` or installed on a running server.
+See [project status](project-status.md) for the recorded review chain.
+
+For a new copy of that exact research snapshot:
+
+```bash
+git clone --branch codex/psf-calibration --single-branch https://github.com/bartytime4life/Pictures-to-3D-CAD-Models.git Pictures-to-CAD-research
+cd Pictures-to-CAD-research
+git switch --detach 32d29f4b4884e6bdc3caf9d4415e48ec00d57562
+```
+
+Use an existing matching isolated checkout directly. Preserve unfinished work
+before changing an existing checkout; the commands above create a new directory.
+Before setup or a study, record:
+
+```bash
+git rev-parse HEAD
+git status --short --branch
+```
+
+Run setup inside that checkout. A `.venv`, compiled interface or server from a
+different worktree is not evidence for this revision. Research APIs run
+explicitly in Python; starting the workbench does not expose a source-context
+session, Gaussian calibration endpoint or automatic source-fit correction.
+
 ## Prerequisites
 
 - **Python 3.12** with `venv` and a working package installer, as recorded in `.python-version`. The project intentionally restricts Python to the tested CAD binary dependency combination; do not assume Python 3.13 compatibility. `python3` does not have to be 3.12: setup uses `PICAD_PYTHON` when set, otherwise the first of `python3.12` and `python3` that is 3.12, and prints the interpreter it chose.
@@ -103,6 +137,8 @@ successful developer study is separate from a successful workbench build.
 | `make postblur-operator-study OUTPUT=new.json` | Compare a declared finite filter plus final signed sampling with scalar approximations; [method](profile-observations.md) |
 | `make warp-observation-study OUTPUT=new.json` | Compare known raw-image rectification, smoothing and final sampling, retaining stage rounding; [method](warp-observations.md) |
 | `make raw-source-fit-study OUTPUT=new.json` | Fit a supplied raw Gaussian edge in fixed retained source modes, with bounded brightness and explicit numerical diagnostics; [method](raw-source-fit.md) |
+| `.venv/bin/python studies/verification/source-context-v1.py --output .local/source-context-new.json` | Replay real trace capture and fixed observations with generated images; [source context](source-context.md) |
+| `.venv/bin/python studies/verification/psf-calibration-v1.py --output .local/psf-calibration-new.json` | Run the declared conditional edge/covariance controls, retaining unresolved and model-mismatch outcomes; [Gaussian blur guide](psf-calibration.md) |
 | `make response-calibration-study OUTPUT=new.json` | Check exact common-response consistency and finite edge/calibration ambiguity; [method](response-calibration.md) |
 | `make response-rectangles-study OUTPUT=new.json` | Compare both input quantifiers with outward Gaussian input covers and retain undetermined cases; [method](response-rectangles.md) |
 | `make gaussian-response-domain-study OUTPUT=new.json` | Enclose continuous shared offset/blur domains and retain complete joint boxes; [method](gaussian-response-domains.md) |
@@ -119,6 +155,12 @@ successful developer study is separate from a successful workbench build.
 | `make test-app` / `make test-library` | Validate one component |
 
 The library's full build requires its PDF dependencies and fonts. The root library browser target uses an ephemeral loopback HTTP server; the standalone library check defaults to `file://`. `CAD_REFERENCE_BROWSER_TRANSPORT=file` or `http` selects that transport when invoking the library directly. This is a test mechanism; the distributed HTML still opens offline. See [library build instructions](../reference-library/BUILD.md) for its additional release, archive, and optional network-check targets.
+
+The source-context and PSF replays require a fresh output file in an existing
+directory; create `.local` first if necessary. They use bundled generated inputs,
+write numeric reports and need no running API. They do not ingest your photo
+folder, change the workbench model or qualify a real camera. Follow the
+[tool catalog](developer-tools.md) for each runner's report and replacement rules.
 
 ## Validate changes
 

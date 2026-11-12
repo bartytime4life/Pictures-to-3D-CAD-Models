@@ -3,8 +3,10 @@
 **Developer research candidate — November 12, 2026.** The forward evaluator and
 bounded circular-segment fitter have source-bound independent controls in the
 [validation record](validation/finite-shape-source.md). The Python API remains a
-research prototype. Production integration and general physical recovery remain
-open; the published-source documentation audit retains its separate binding.
+research prototype. An explicit [source-context bridge](source-context.md)
+connects real captured values to conditional fitting; automatic geometry
+refinement and general physical recovery remain open. The published-source
+documentation audit retains its separate binding.
 
 The developer-only [finite-shape evaluator](../backend/finite_shape.py) predicts
 Gaussian-blurred material coverage from a complete supplied boundary. A nearby

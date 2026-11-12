@@ -10,6 +10,21 @@ The conversion workflow does not send photographs to an external AI service. Thi
 
 The tracing response includes a normalized image so the browser can align the outline with the displayed pixels. The upload is closed after reading, and the original is not retained as a permanent project file. The normalized PNG omits the original image metadata. The decoder can use orientation and 35 mm-equivalent focal-length metadata for tracing; reference-sheet provenance can retain a derived camera height and the focal source (`sheet`, `exif`, `assumed` or `holes`). With entered thickness, suitable holes assumed round can supply the height estimate when the sheet and metadata do not. The recipe does not embed the original EXIF block. The selected file and normalized photograph can remain in browser memory while the workbench is open.
 
+### Opt-in Python source contexts
+
+The developer [source-context API](source-context.md) can retain the complete
+prewarp float32 working intensity field in caller-owned process memory after a
+successful reference-sheet trace. This is private image data, not sensor RAW.
+Its metadata binds source hashes, processing, frame, trace options and profile
+identity; dimensions and notes can remain sensitive even without pixel values.
+
+Normal HTTP tracing creates no such context or source session, and neither the
+UI nor saved recipe exposes it. The Python API adds no global cache or disk
+writes. The caller owns the result/context pair and any explicit copies or
+reports it chooses to save. A request ID or digest identifies that local binding;
+it is not a server lookup token or authorization mechanism. Releasing a context
+is separate from deleting model jobs or downloaded files.
+
 ## Optional local assistant
 
 When you ask a question, the browser sends that text and bounded project context to the CAD backend: entered measurements when present, trace settings, detected hole count, warnings, image/model presence flags, design and printer settings, and dimensions of the available built geometry and parts. The backend forwards those fields and bounded relevant printer-catalog facts to a local Ollama server. It does not forward photographs, outline vertices, CAD meshes, or exported files.
@@ -76,6 +91,14 @@ repository filenames. Review them before sharing. The recommended
 `.local/jobs` cleanup; these numerical tools do not automatically expire reports.
 Keep the reports needed to reproduce a decision. Other tools' report and replacement rules are
 listed in the catalog.
+
+The bundled source-context and [conditional Gaussian blur](psf-calibration.md)
+replays use generated fixtures and save numeric fit/check reports rather than
+image samples. Those reports do not create a persistent source session or enter
+the assistant context. A separate Python caller can explicitly copy or save
+captured arrays; such caller-created files and study reports are outside the
+model-job expiry mechanism. The research tools do not add an image upload,
+external AI request or automatic geometry correction.
 
 ## Input and execution boundaries
 

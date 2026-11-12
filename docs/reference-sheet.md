@@ -169,6 +169,14 @@ Without a shadow they are unchanged within 0.002 mm. `test_a_soft_shadow_no_long
 
 ## 4. Blur–curvature correction
 
+The scalar sigma in this section belongs to this branch's processed tracing
+model. It is not the working-photo Gaussian sigma fitted by the separate
+[source-edge API](psf-calibration.md). Neither a straight-edge covariance fit
+nor subtraction of the added `0.7`-pixel smoothing supplies a calibrated curved
+edge model. The source-context fit returns research candidates without changing
+this tracing correction. The independent `main` implementation has a different
+directional-blur path; see [source scope](project-status.md#source-and-review-state).
+
 A blurred curved edge's half-level contour moves toward its centre of curvature, for either polarity. Let X be the blurred position of a point at distance ρ from a disc's centre. Write the half-level condition P(|X| ≤ R) = ½ with tangential offset v ~ N(0, 1), and expand √(R² − σ² v²) in ε = σ/R. Using E v² = 1, E v⁴ = 3 and E v⁶ = 15 gives
 
 > half-level radius = R − σ²/(2R) − (5/24) σ⁴/R³ + O(σ⁶/R⁵),

@@ -52,9 +52,17 @@ This is the recommended capture. Lay the part flat on a sheet of known size, wit
 - **Review the camera-height source.** A straight-down sheet does not determine height. Without suitable EXIF, qualifying off-center holes assumed round can supply it if the search accepts an identifiable minimum. Otherwise a typical phone lens is assumed. One earlier rendered example was about 0.1 mm off under that assumption; this is not an error bound for your capture. Reserve physical dimensions to check either result.
 - **Contrast.** A dark part on white paper is typical. For a light part, use a dark sheet on a lighter surface and tick **Light part on a dark background**.
 - **Soften the light.** Use diffuse light from above. The tracer compensates a locally linear paper-side shadow slope, but a hard or curved shadow inside the sampled edge band is corrected only in part. The [method and rendered results](reference-sheet.md#3-segmentation-and-sub-pixel-edges) describe the tested cases; they do not bound every shadow or camera's sharpening.
-- **Use the photo as the camera saved it.** Edges are measured after undoing the standard sRGB tone curve. Filters and edited brightness or contrast change that curve and move the edges.
+- **Keep the original camera file.** Measurements decode the standard sRGB curve; this does not undo an unknown camera tone mapping. Filters, sharpening and edited brightness or contrast can change the edge response. Record any processing and retain the unedited source.
 
 With a sheet the width field is filled from the sheet. Measure the part's real width anyway, and compare: it is now an independent check, not the scale. A successful sheet trace reports the fitted geometry (circles, arcs, lines), design-intent snaps, measured edge blur, lens correction and proportions check. These are model evidence, not a real-photo accuracy guarantee. See [reference-sheet tracing](reference-sheet.md) for the method and its evidence.
+
+The reported blur is a Gaussian-equivalent spread after rectification and
+smoothing, not a full raw-image optical covariance. Separate developer
+[Gaussian blur tools](psf-calibration.md) investigate independently specified
+straight targets using [captured source observations](source-context.md).
+They add no calibration step to these workbench controls and do not automatically
+change the trace or establish camera accuracy. Continue to reserve physical
+dimensions for checking the exported geometry.
 
 Compare every fitted boundary with the photograph. An [initial-fit support
 check](validation/fit-support.md) now prevents the reproduced thin-segment
