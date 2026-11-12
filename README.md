@@ -6,6 +6,11 @@ The workbench is designed for plates, gaskets, spacers, and templates. It traces
 
 For reference-sheet tracing, photograph the whole flat sheet (A4, US Letter, or a sheet you have measured) and explicitly choose it as the **Scale reference**. A successful sheet trace sets scale from its stated size, estimates perspective and one radial lens correction, and fits lines, tangent arcs and circles. Entered thickness supports a side-wall/parallax correction under the method's assumptions. Ordinary tracing and the sample use measured-width scaling instead; they do not perform these corrections. See [reference-sheet tracing](docs/reference-sheet.md) for the mathematics and synthetic evidence, and the [engineering model](docs/engineering-model.md) for independent verification before fabrication.
 
+Review the [known fitting and benchmark limits](docs/validation/scientific-model-review.md)
+before relying on small residuals or reported error percentiles. A successful
+trace or valid CAD solid still needs comparison with the original outline and
+independent dimensions.
+
 This repository contains two related tools:
 
 | Component | Use it for | Entry point |
