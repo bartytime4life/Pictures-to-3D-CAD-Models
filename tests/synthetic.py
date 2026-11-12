@@ -11,8 +11,10 @@ linear light; uneven light, vignetting and the shadow scale that light; partial
 coverage and optical blur mix it; the result is then saved through a camera tone curve
 (sRGB's, or a plain gamma).
 
-Coverage is exact: an even-odd scanline at 8 x 8 samples per scene pixel (sample
-centres only, so no inclusive-boundary bias such as cv2.fillPoly's).
+Polygon coverage is integrated over each scene pixel, including holes. Lens
+inversion is independent of the production solver. The default radial model
+still agrees with production assumptions; optional k2 supplies model-mismatch
+experiments, not an extra correction supported by the workbench.
 """
 
 from __future__ import annotations
@@ -179,15 +181,84 @@ def project(polygon, matrix):
     return Polygon(tf(polygon.exterior.coords), [tf(r.coords) for r in polygon.interiors])
 
 
-def undistort_grid(u, v, k1, size):
-    """Ideal pixel positions for distorted ones (Newton on the radial cubic)."""
-    from backend.sheet import undistort_radius
+def _radial_inverse(rd, k1, k2=0.0):
+    """Independent central-branch inverse of rd = ru (1 + k1 ru² + k2 ru⁴).
+
+    For the cubic, use the triple-angle identities for sin/sinh, not production
+    Newton steps. For a quintic, bracket on its first increasing branch and bisect.
+    Refuse a requested sensor radius past a fold; a negative or later root would
+    not supply a single-valued central-camera image. Radii use half-diagonal units.
+    """
+    rd = np.asarray(rd, dtype=np.float64)
+    if not np.isfinite(rd).all() or (rd < 0).any() or not all(map(math.isfinite, (k1, k2))):
+        raise ValueError("Synthetic lens radii and coefficients must be finite; radii must be nonnegative.")
+    if k2 == 0:
+        if k1 == 0:
+            return rd.copy()
+        scale = math.sqrt(3 * abs(k1))
+        if not math.isfinite(scale):
+            raise ValueError("Synthetic lens coefficient exceeds the numerical renderer domain.")
+        argument = 1.5 * scale * rd
+        if k1 < 0:
+            if (argument > 1).any():
+                raise ValueError("Synthetic radial lens folds before the requested sensor radius.")
+            return (2 / scale) * np.sin(np.arcsin(argument) / 3)
+        return (2 / scale) * np.sinh(np.arcsinh(argument) / 3)
+
+    def forward(radius):
+        square = radius * radius
+        return radius * (1 + square * (k1 + k2 * square))
+
+    # The first positive root of 1 + 3 k1 q + 5 k2 q² (q = ru²) ends the
+    # central monotone branch. The conjugate form avoids subtractive cancellation.
+    discriminant = 9 * k1 * k1 - 20 * k2
+    limit = math.inf
+    if discriminant >= 0:
+        denominator = math.sqrt(discriminant) - 3 * k1
+        if denominator > 0:
+            limit = math.sqrt(2 / denominator)
+    maximum = float(np.max(rd, initial=0.0))
+    if math.isfinite(limit):
+        hi = limit
+        if maximum > forward(hi):
+            raise ValueError("Synthetic radial lens folds before the requested sensor radius.")
+    else:
+        hi = max(1.0, maximum)
+        for _ in range(64):
+            if forward(hi) >= maximum:
+                break
+            hi *= 2
+        else:
+            raise ValueError("Synthetic radial lens could not be bracketed.")
+    # Per-point brackets retain relative precision near the optical centre.
+    upper = 2 * np.minimum(rd, hi / 2)
+    for _ in range(64):
+        short = forward(upper) < rd
+        if not short.any():
+            break
+        expanded = np.minimum(hi, 2 * upper)
+        if np.any(short & (expanded <= upper)):
+            raise ValueError("Synthetic radial lens could not be bracketed at numerical precision.")
+        upper = np.where(short, expanded, upper)
+    else:
+        raise ValueError("Synthetic radial lens could not be bracketed.")
+    lower = np.zeros_like(rd)
+    for _ in range(54):
+        mid = lower + (upper - lower) / 2
+        below = forward(mid) < rd
+        lower = np.where(below, mid, lower)
+        upper = np.where(below, upper, mid)
+    return lower + (upper - lower) / 2
+
+
+def undistort_grid(u, v, k1, size, k2=0.0):
+    """Ideal pixel positions from an independently inverted radial lens map."""
 
     w, h = size
     cx, cy, s = w / 2, h / 2, math.hypot(w, h) / 2
     xd, yd = (u - cx) / s, (v - cy) / s
     rd = np.hypot(xd, yd)
-    factor = np.divide(undistort_radius(rd, k1), rd, out=np.ones_like(rd), where=rd > 0)
+    factor = np.divide(_radial_inverse(rd, k1, k2), rd, out=np.ones_like(rd), where=rd > 0)
     return cx + xd * factor * s, cy + yd * factor * s
 
 
@@ -195,6 +266,7 @@ def render(
     *,
     tilt=(22.0, -9.0, 4.0),
     k1=-0.035,
+    k2=0.0,
     thickness=0.0,
     slices=12,
     size=(2400, 1800),
@@ -223,6 +295,9 @@ def render(
     power law (saved = linear ** (1 / gamma)), for cameras whose curve differs from the
     sRGB decoding the tracer assumes. 1 saves linear light unchanged.
     `focal` (px) and `distance` (mm) place the camera as in `camera`.
+    `k2` is a second radial term for intentional camera-model mismatch. The
+    production tracer estimates only k1. Coefficients use radius normalised by
+    the image half-diagonal, not OpenCV's focal-length normalisation.
     """
     if gamma is None:
         to_linear, to_saved = srgb_to_linear, linear_to_srgb
@@ -292,7 +367,7 @@ def render(
     scene = cv2.GaussianBlur(scene.astype(np.float32), (0, 0), 0.8)
     w, h = size
     u, v = np.meshgrid(np.arange(w, dtype=np.float64) + 0.5, np.arange(h, dtype=np.float64) + 0.5)
-    iu, iv = undistort_grid(u, v, k1, size)
+    iu, iv = undistort_grid(u, v, k1, size, k2)
     den = floor_inv[2, 0] * iu + floor_inv[2, 1] * iv + floor_inv[2, 2]
     px = (floor_inv[0, 0] * iu + floor_inv[0, 1] * iv + floor_inv[0, 2]) / den
     py = (floor_inv[1, 0] * iu + floor_inv[1, 1] * iv + floor_inv[1, 2]) / den
@@ -319,6 +394,7 @@ def render(
     encoded = np.frombuffer(buffer.getvalue(), np.uint8)
     truth = {
         "k1": k1,
+        "k2": k2,
         "focal_px": float(k[0, 0]),
         "camera_centre_mm": centre.tolist(),
         "floor_homography": (floor / floor[2, 2]).tolist(),

@@ -9,6 +9,10 @@ Work used an isolated checkout; the original `codex/slicer-integration` checkout
 and existing worktrees were preserved. This review accompanies the source-support
 change; documentation and runtime checks are recorded separately below.
 
+The model-checks follow-up later on this page covers the expanded documentation
+and normal integration of `main` at `5c07d0f`. Earlier inventories and test totals
+remain records of their original reviewed revisions.
+
 ## Coverage
 
 The incoming documentation inventory contained 49 Markdown files, including the
@@ -92,3 +96,72 @@ refresh historical software tests, prove external-site availability, qualify
 native slicers or establish measured-photo accuracy, physical fit, structural
 performance or complete accessibility conformance. Hosted CI, source merge,
 installed state and deployment remain separate evidence.
+
+## Model checks follow-up
+
+After PR #44 merged at `03f71e0e4095ee873051b71264b45fde83f84891`, reviewed
+the current guides again for the [radial-domain repair and independent renderer](radial-inverse.md).
+The earlier review, library checks and test counts above retain their original
+inputs. This follow-up uses an isolated candidate on that integrated baseline;
+the separate contrast-recovery and fillet-sector PRs are excluded from its
+source and test totals.
+
+- Replaced the incorrect whole-frame inverse claim with the central-branch
+  domain, reference-observation feasibility bound and near-fold sensitivity.
+  Added the numerical figure, Decimal checks and six higher-order lens mismatch
+  results. Production still fits one radial coefficient.
+- Updated research, engineering limits, roadmap, architecture, README,
+  benchmark pointers and navigation for the separately implemented renderer.
+  Historical reports now point to later work without rewriting original
+  findings as successful tests of later code.
+- Added the [frozen 30-case directional-spread record](directional-spread-qualification.md),
+  including orientation-imbalanced misses, negative/unknown results, all planned
+  outcomes and local artifact hashes. The warning and anisotropic correction
+  remain research only; unflagged does not mean accurate.
+- Documented each test checkout's root `.venv` requirement. The first browser
+  invocation had **72 passes and 2 failures**: both export inspectors could not
+  start `.venv/bin/python` (`ENOENT`). Its logs, reports and traces were preserved
+  before creating this checkout's frozen Python environment. No product code,
+  assertions or timeout settings were changed to address that setup failure.
+
+The candidate passed **609 Python tests** in 141.30 s, including 30 new lens
+checks, with no skips; the [radial record](radial-inverse.md#completed-checks)
+also preserves the failing original controls. Ruff and the production frontend
+build passed. With its own frozen Python environment, the complete browser
+invocation passed **74 scenarios in 5.5 minutes**, with no failures or skips,
+against this checkout's CAD service on loopback port 18018. The service was
+stopped after the run. This completed invocation is separate from the preserved
+environment-failure run above.
+
+All **53 Markdown documents** parse; **490 local links**, including **36 fragment
+links**, resolve, and **79 tables** have consistent columns. The companion
+library's source and generated outputs are unchanged by this follow-up. Its
+earlier generated-output and 19-test documentation results remain those of the
+original review, not a new full library release.
+
+Local proof, hosted CI, merge, installed state and physical qualification remain
+separate. The earlier PR #44 [workbench run 104](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43167726360)
+and [library run 37](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43167726440)
+completed successfully; they do not validate this later radial candidate.
+
+### Integration with the merged recovery and fillet repairs
+
+PRs #45 and #46 then merged externally into `main` at
+`5c07d0f70d7df0200bc24227c8ac7e9b630f7f09`. The candidate normally integrated
+that revision, preserving both earlier change-log histories. The 609-test and
+74-scenario results above retain their pre-integration source binding; the
+six-case lens probe and pinned directional experiment were not silently rerun
+or relabeled as new evaluation data.
+
+The integrated complete Python invocation passed **623 tests in 142.24 s**, with
+no skips. Its fresh complete browser invocation passed **74 scenarios in 5.4
+minutes**, with no failures or skips, against this checkout's CAD service on
+loopback port 18018. The service was stopped after verification.
+Production frontend build, full `make lint` and whitespace checks
+passed. All **55 Markdown documents** parse, **503 local links**, including
+**37 fragment links**, resolve, and **79 tables** have consistent columns.
+The companion-library documentation invocation was freshly repeated against
+this checkout's unchanged library sources: **19 tests passed**. Its generated
+HTML, PDF, archive, catalogs and source files remain byte-identical to the
+integrated baseline. This documentation-only library check does not establish
+a new library release or native-tool qualification.

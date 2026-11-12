@@ -224,8 +224,11 @@ The [repair and validation record](validation/benchmark-correspondence.md)
 describes the independent exhaustive assignment oracle, coverage-conservation
 tests and work limits. The [scientific review](validation/scientific-model-review.md#benchmark-correspondence-and-coverage)
 preserves the original findings at `5588a52`; its benchmark defect is historical
-following this repair. Its separate fitting, blur and shared-renderer findings
-are not resolved by the benchmark change.
+following this repair. The benchmark change does not resolve the separate
+fitting and camera-model findings. Later records cover the
+[initial-fit guard](validation/fit-support.md),
+[independent lens inverse and mismatch cases](validation/radial-inverse.md), and
+[directional-spread qualification](validation/directional-spread-qualification.md).
 
 ## What a report holds
 

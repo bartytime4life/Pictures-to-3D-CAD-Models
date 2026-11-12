@@ -42,6 +42,13 @@ All geometry is stored internally in millimeters. The entered thickness is indep
 
 The pipeline preserves supported through-hole boundaries. It cannot infer whether a dark patch represents a hole, a marking, or surface relief; the user must review the trace.
 
+Reference-sheet radial inversion uses the increasing branch containing the
+image center. `backend/sheet.py` rejects observed radii outside that branch and
+restricts coefficient trials to invert all measured sheet corners and edge
+samples. Its residual measures agreement with that lens model, rather than
+physical part accuracy. The [domain and simulation record](validation/radial-inverse.md)
+describes the separate synthetic inverse and higher-order mismatch inputs.
+
 Geometry detail is a geometric approximation applied to the scaled profile. `original` retains it; `draft`, `balanced`, and `fine` use simplification tolerances of 0.5, 0.25, and 0.1 times the selected nozzle diameter in millimeters, respectively. The simplification preserves topology and checks that every hole remains. The modes can still change small features and must be inspected; they do not recover image information, measure minimum wall thickness, or prove printability. The original trace remains the recipe's source profile.
 
 Split mode makes actual solids with straight XY cuts. The default preview and combined STEP/STL/3MF keep those solids in their assembled positions. A separated inspection view displays the actual per-part meshes with temporary offsets; it does not change exported coordinates or claim a print-bed layout. Per-part exports translate each piece to a local XY origin and record the assembly offset in the bundle manifest. The program does not introduce alignment pins, joints, kerf compensation, or assembly tolerances.

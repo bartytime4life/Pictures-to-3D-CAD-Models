@@ -14,6 +14,13 @@ Subsequently, PR #43 merged the [benchmark correspondence and coverage repair](b
 at `d6a657f`. The matching/denominator examples below remain observations of the
 original `5588a52` baseline, rather than descriptions of that repaired runner.
 
+The later [radial-domain and independent-renderer repair](radial-inverse.md)
+removes the production-inverse dependency identified below and adds
+higher-order lens counterexamples. The [30-case directional-spread record](directional-spread-qualification.md)
+keeps the blur diagnostic in research after further missed cases. These later
+results do not replace the original experiment inputs or establish physical
+camera accuracy.
+
 ## Evidence classes
 
 | Finding | Evidence obtained | What it does not establish |

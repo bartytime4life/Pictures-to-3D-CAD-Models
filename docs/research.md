@@ -31,7 +31,7 @@ An optional measured outside height is compared with the source-profile estimate
 The reference-sheet stages are documented with their derivations and checks in [reference-sheet tracing](reference-sheet.md). The main sources and results they rely on:
 
 - Plane homography and camera pose from a plane: [OpenCV's homography tutorial](https://docs.opencv.org/4.x/d9/dab/tutorial_homography.html); the two orthonormality constraints on the rotation columns are those of [Zhang's plane-based calibration](https://www.microsoft.com/en-us/research/publication/a-flexible-new-technique-for-camera-calibration/) (2000), here used with one image and a known principal point to solve only the focal length.
-- Radial distortion from straight lines (the plumb-line method): D. C. Brown, "Close-range camera calibration", *Photogrammetric Engineering* 37 (1971). The model inverse is solved by Newton's method.
+- Radial distortion from straight lines (the plumb-line method): D. C. Brown, "Close-range camera calibration", *Photogrammetric Engineering* 37 (1971). The model inverse uses safeguarded Newton/bisection on its central branch; [domain and numerical checks](validation/radial-inverse.md) are separate from this historical method reference.
 - Tone curve: the sRGB transfer function of IEC 61966-2-1:1999, in the form given by the [CSS Color Module Level 4 conversion code](https://www.w3.org/TR/css-color-4/#color-conversion-code). Display P3 uses the same curve. Edges are measured after undoing it, because blur and partial pixel coverage mix light linearly.
 - Cubic convolution interpolation: [Keys (1981)](https://doi.org/10.1109/TASSP.1981.1163711), whose a = −½ kernel reproduces quadratics.
 - Circle fitting: the Kåsa algebraic fit refined by Gauss–Newton on geometric distance; see N. Chernov, *Circular and Linear Regression: Fitting Circles and Lines by Least Squares* (CRC Press, 2010) for bias and precision.
@@ -55,17 +55,27 @@ physical reconstruction; final forward-model adequacy remains further work. The
 adds global correspondence and complete dimension accounting; physical feature
 identity and independent measured-photo evaluation remain separate limits.
 
+The merged [fillet-sector repair](validation/fillet-sweep.md) preserves an arc's
+angular witness when its constrained center moves. Its independent anisotropic
+sharp-corner example still fits nonzero fillets after the representation defect
+is repaired. Topological validity, consistent arc sectors and forward-model
+adequacy are separate checks; the scalar Gaussian interpretation remains a
+research limit.
+
 [Al-Sharadqah and Chernov's circle-fit analysis](https://arxiv.org/abs/0907.0421)
 compares geometric and algebraic fits with coordinate errors. It motivates
 examining estimator assumptions; it does not establish that a low-residual
 circle covers the photographed boundary. A source-support guard needs its own
 geometric counterexamples and regression tests.
 
-The synthetic lens renderer shares the production inverse. This is useful for
-model-consistency tests, but independent validation also needs separately
-implemented forward/inverse calculations and mismatched cameras. [Wirgin's
-discussion of inverse crimes](https://arxiv.org/abs/math-ph/0401050) explains the
-problem of reusing the same model to generate and invert test data.
+The synthetic lens renderer previously called the production inverse. The
+[radial-domain repair and independent simulation](validation/radial-inverse.md)
+remove that code dependency, check both implementations against high-precision
+brackets and add a test-only higher-order lens term. The six mismatch cases
+show that low sheet residuals need not bound reserved part dimensions.
+Independent physical cameras remain necessary: [Wirgin's discussion of inverse
+crimes](https://arxiv.org/abs/math-ph/0401050) concerns reuse of the model as well
+as code when generating and inverting test data.
 
 Automatic tone recovery is a research candidate, not a reliable default for an
 arbitrary part photo. [Lin, Gu, Yamazaki and Shum's single-image method](https://www.gujinwei.org/research/radiocalib/index.html)
@@ -75,6 +85,11 @@ part color and one paper color need not supply that evidence. The current
 pipeline continues to decode sRGB under its stated assumption.
 
 ### Directional-blur experiment status — November 12, 2026
+
+The following 13-case experiment is historical development evidence. A later
+[frozen 30-case qualification attempt](validation/directional-spread-qualification.md)
+at `2d76aea` found orientation-imbalanced false negatives and additional unknown
+outcomes. No production blur warning or anisotropic correction was added.
 
 A local exploratory diagnostic was rerun against committed `eec45d0`, excluding
 the initial-fit support candidate. It estimates an empirical image-plane blur
@@ -116,9 +131,28 @@ unknown outcomes and independent captures before any production reporting.
 
 Ignored local scripts and hash-bound JSON receipts are retained under
 `.local/verification/directional-blur-current-eec45d0*`; they are not bundled
-reproducibility artifacts. The synthetic renderer still shares the production
-radial inverse, and feature measurement shares arc reconstruction. The independent
-integral checks one mathematical subproblem; it does not remove those limits.
+reproducibility artifacts. At that pinned revision the synthetic renderer shared
+the production radial inverse, and feature measurement shared arc reconstruction.
+The independent integral checks one mathematical subproblem. The separate lens
+repair above does not retrospectively change these experiment inputs or results.
+
+### Directional-spread qualification decision
+
+The frozen 30-case follow-up produced 27 traces: 6 flagged, 16 eligible-unflagged
+and 5 ineligible; 3 failed tracing. A long rectangle contributed 90 accepted
+profiles near one direction and only 11 near the perpendicular direction. A
+pooled median residual of 0.00839 hid a minority-direction median of 5.87425.
+Removing that median gate would also flag an isotropic rectangle. Numerical
+rank and conditioning therefore did not establish adequate orientation support.
+Two perpendicular straight-edge normals cannot identify a covariance cross
+term; sampled corner directions do not automatically supply valid independent
+straight-step equations. The [complete research record](validation/directional-spread-qualification.md)
+preserves all outcomes, the algebraic counterexample, artifacts and next steps.
+
+Keep the diagnostic in research. A successor needs orientation-balanced
+summaries, valid local support and explicit unknown states, specified before a
+fresh cohort. The 30 examined cases are now development evidence. An unflagged
+diagnostic cannot establish accurate geometry or a Gaussian optical cause.
 
 ## Outline to solid and exchange files
 

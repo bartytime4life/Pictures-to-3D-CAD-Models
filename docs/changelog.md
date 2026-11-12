@@ -3,6 +3,20 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Radial inverse and model-mismatch research — November 12, 2026
+
+- Radial inversion stays on the central camera branch, refuses radii without an
+  inverse and constrains sheet-fit trials to the measured reference domain.
+  Near-fold sensitivity remains; [mathematics and validation](validation/radial-inverse.md).
+- Synthetic lens inversion is separately implemented and Decimal-checked. An
+  optional test-only higher-order radial term exposes model mismatch; it is not
+  a new production correction or a physical camera qualification.
+- A frozen [30-case directional-spread study](validation/directional-spread-qualification.md)
+  found orientation-imbalanced missed cases and unknowns. No product warning or
+  anisotropic geometry correction was added.
+- Updated current guides and documentation navigation, retaining historical
+  source revisions, test counts, failures and qualification limits.
+
 ## Reference-sheet weak-edge recovery — November 12, 2026
 
 Initially based on `main` at `d6a657f93f13b818a8e44e2ace219b2d4598b4ef`, then

@@ -165,9 +165,13 @@ experiment, held-out functional dimensions and prototype inspection before
 expanding reconstruction scope or making an accuracy claim.
 
 The [scientific model review](validation/scientific-model-review.md) records
-the original whole-circle extrapolation and remaining limits:
-directional blur outside the scalar Gaussian model, shared renderer/inverse
-code, and conditional benchmark statistics. Residuals describe the selected
+the original whole-circle extrapolation and camera-model limits.
+The [radial-domain repair](validation/radial-inverse.md) removes the renderer's
+production-inverse dependency and supplies higher-order mismatch cases;
+physical camera assumptions remain. The [directional-spread qualification](validation/directional-spread-qualification.md)
+documents missed directional cases and unknown outcomes, with no production
+warning or correction. Benchmark statistics remain conditional on comparisons.
+Residuals describe the selected
 model's agreement with sampled points; they do not alone establish source
 coverage, identifiable radius, physical uncertainty or complete benchmark
 coverage. The [initial-fit support repair](validation/fit-support.md) addresses

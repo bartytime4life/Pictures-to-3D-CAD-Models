@@ -10,7 +10,10 @@ Review the [initial-fit support check](docs/validation/fit-support.md) and
 [known benchmark and camera-model limits](docs/validation/scientific-model-review.md)
 before relying on small residuals or reported error percentiles. A successful
 trace or valid CAD solid still needs comparison with the original outline and
-independent dimensions.
+independent dimensions. The [radial-domain and independent-renderer record](docs/validation/radial-inverse.md)
+documents numerical safeguards and higher-order lens counterexamples. The
+[directional-blur research](docs/validation/directional-spread-qualification.md)
+also records missed cases; it does not supply a product accuracy status.
 
 This repository contains two related tools:
 

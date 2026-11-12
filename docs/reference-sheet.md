@@ -18,18 +18,19 @@ This page describes each stage, the mathematics it depends on, and the tests tha
 
 ## Evidence boundary
 
-The accuracy figures here come from **synthetic photographs** with exact ground truth (`tests/synthetic.py`). The renderer models a pinhole camera with radial distortion, uneven light, vignetting, a soft shadow, optical blur, noise, JPEG compression and the walls of a thick part. It also uses the same single-coefficient lens model the estimator fits. Light is mixed and blurred in linear light and saved through the sRGB tone curve, the same curve the tracer decodes. A real camera adds its own tone mapping, which neither side models; §3 gives the cost of a mismatched curve. The sheet is exactly its nominal size and perfectly flat, and the walls are vertical with uniform tone.
+The accuracy figures here come from **synthetic photographs** with exact ground truth (`tests/synthetic.py`). The renderer models a pinhole camera with radial distortion, uneven light, vignetting, a soft shadow, optical blur, noise, JPEG compression and the walls of a thick part. Its default lens model has the same single coefficient the estimator fits; an optional test-only second term supplies mismatch cases. Light is mixed and blurred in linear light and saved through the sRGB tone curve, the same curve the tracer decodes. A real camera adds its own tone mapping, which neither side models; §3 gives the cost of a mismatched curve. The sheet is exactly its nominal size and perfectly flat, and the walls are vertical with uniform tone.
 
 Real lenses, paper tolerance, a curled sheet, chamfered or shiny edges introduce model mismatch that these renders do not establish a bound for. These figures report observed errors under the tested rendering conditions, not a universal error floor or a physical accuracy claim. A measured-photo benchmark with calipered parts and real phones remains necessary; [the photo benchmark](photo-benchmark.md) runs one on your own photos, and no result from real photos is recorded yet. Use [independent engineering checks](engineering-model.md) for dimensions reserved from calibration.
 
-The renderer also calls the production radial inverse, `sheet.undistort_radius`.
-Those lens cases check consistency within a shared model, rather than an
-independent camera oracle. The [scientific model review](validation/scientific-model-review.md)
-records this dependency, a fitting-stage extrapolation failure and exploratory
-directional-blur failures at its reviewed revision. The initial extrapolation
-failure now has a [source-support guard](validation/fit-support.md); directional
-blur and the shared lens inverse remain separate limits. Existing tables below
-retain their original conditions.
+Earlier lens tables used the production radial inverse in the renderer. The
+[radial-inverse repair](validation/radial-inverse.md) now uses separate cubic
+identities and a bracketed higher-order inverse in the renderer, with independent
+Decimal checks. This removes a code dependency, while the common camera
+assumptions remain. Its higher-order stress cases show that a small sheet-edge
+residual can coexist with substantial reserved-dimension errors. The initial
+extrapolation failure has a [source-support guard](validation/fit-support.md);
+the [directional-spread experiment](validation/directional-spread-qualification.md)
+remains research only. Existing tables below retain their original conditions.
 
 ## Pipeline
 
@@ -55,9 +56,9 @@ Coordinates follow the repository convention: pixel *i* spans [*i*, *i* + 1], so
 
 **Edges.** Each sheet side is sampled from 6 % to 94 % of its length, clear of the corners. Each sample moves along the side normal to the local mid-level crossing (§3). A second pass re-centres on the first crossings. Lens distortion bows a real edge several pixels away from the corner-to-corner chord, which would otherwise put one level window on the transition. With one pass, k₁ was underestimated by 8–16 %; with two, corners are within 0.05 px.
 
-**Lens model.** x_d = x_u (1 + k₁ r_u²), with r normalised by the image half-diagonal and centred on the image. A golden-section search over k₁ ∈ [−0.25, 0.25] minimises the RMS straightness of the four undistorted edges. A correction is kept only if it reduces that RMS by at least 20 %.
+**Lens model.** x_d = x_u (1 + k₁ r_u²), with r normalised by the image half-diagonal and centred on the image. A golden-section search within k₁ ∈ [−0.25, 0.25] minimises the RMS straightness of the four undistorted edges. Trial coefficients must also have a central-branch inverse for every measured sheet corner and edge sample. A correction is kept only if it reduces that RMS by at least 20 %. These coefficients use a different normalization from OpenCV's focal-normalized coefficients.
 
-**Inverse.** Undistorting solves r_u + k₁ r_u³ = r_d by Newton's method. The forward map is monotonic while 1 + 3 k₁ r_u² > 0, which holds over the whole frame for |k₁| ≤ 0.25. The earlier fixed-point inverse x = x_d / (1 + k₁ r²) contracts slowly at strong distortion. At k₁ = −0.25 it left a 4.6 px error at the image corners; Newton's method leaves ≤ 1.4 × 10⁻¹² px for every allowed k₁ (`test_newton_undistortion_is_the_inverse_of_the_lens_model`). Noise-free distorted edges give back k₁ within 10⁻⁶ (`test_plumb_line_recovers_the_radial_coefficient_from_noise_free_edges`).
+**Inverse.** Undistorting solves r_u + k₁ r_u³ = r_d by safeguarded Newton steps inside a sign bracket, with bisection when a step leaves it. For negative k₁, the increasing branch ends at r_u = 1/√(−3k₁), corresponding to r_d,max = 2/(3√(−3k₁)). At k₁ = −0.25 that observed-radius limit is approximately 0.769800359: a sensor radius of 0.9 has no central inverse. Such inputs are refused. If the largest reference radius is R, plumb-line search restricts k₁ to values above −4/(27R²), within its existing range. Near the turning point the inverse remains ill-conditioned; numerical convergence does not bound image or camera error. [Domain derivation, counterexamples and Decimal checks](validation/radial-inverse.md) replace the earlier whole-frame claim. The existing `test_newton_undistortion_is_the_inverse_of_the_lens_model` checks sampled forward-generated rays, while `test_plumb_line_recovers_the_radial_coefficient_from_noise_free_edges` recovers k₁ within 10⁻⁶ under its noise-free model.
 
 **Homography.** Total-least-squares lines through the undistorted edge points are intersected for the four corners, and `cv2.findHomography` maps the sheet's millimetre corners onto them. The longer pair of opposite sides is matched to the sheet's long dimension.
 
