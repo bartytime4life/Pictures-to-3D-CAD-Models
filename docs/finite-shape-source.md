@@ -312,6 +312,11 @@ explanation. Persistent source sessions, automatic refinement and a candidate
 review/acceptance flow remain open. The opt-in capture does not change the HTTP
 response, saved profile or accepted CAD geometry.
 
+The [edge-width and covariance APIs](psf-calibration.md) can now construct a
+conditional Gaussian hypothesis from separately declared straight target edges.
+Their rank, search and response ambiguities remain part of the input evidence;
+they do not silently promote a fitted matrix to known physical optics.
+
 The remaining model assumptions are substantive:
 
 - `H` and the Gaussian covariance are supplied hypotheses. Sheet-derived pose,

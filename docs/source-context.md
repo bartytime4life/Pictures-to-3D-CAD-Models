@@ -110,6 +110,7 @@ change the context or its checks.
 | `source_pixels(pixels_xy, *, profile)` | Reads 1–512 unique in-frame integer working-image `[x, y]` indices in the supplied order, with an identity sampling matrix. |
 | `observe_display(points, *, profile, smoothing=True)` | Composes final Keys sampling, optional known smoothing and actual rectification into one fixed source-pixel operator. |
 | `point_gaussian_geometry(*, profile)` | Returns the working `sensor_shape` and homography only when the guarded point-Gaussian model covers the recorded processing/geometry. |
+| `fit_edge_spread(observation, *, profile, input_std, **fit_options)` | Explicitly fits a declared straight working-photo edge's offset/Gaussian width; anchor and normal use the working-photo frame. See [conditional calibration](psf-calibration.md). |
 | `fit_circular_segment(observation, *, profile, input_std, psf_covariance, **fit_options)` | Explicitly runs the conditional fitter with this request's source observation and guarded geometry. It returns a candidate result without changing the profile. |
 
 For direct source pixels, geometric forward models evaluate at
@@ -270,6 +271,11 @@ accepted replacement. Keep its work limits, unresolved/rank diagnostics,
 competing candidates and residual decomposition with the supplied hypotheses.
 It does not mutate the captured or returned profile, apply `correct_blur`,
 qualify the camera or establish that the one-segment model describes the part.
+
+The explicit [edge-spread bridge](psf-calibration.md#use-the-source-context-bridge-explicitly)
+reuses the same model, request and source-value guards. Its normal, anchor, offset
+and width use the working-photo frame, while circular-segment geometry uses sheet
+mm. Fitting a target does not change any context calibration flag.
 
 This context supplies a missing in-memory data binding for future source-fit
 experiments. It does not implement automatic refinement, a saved capture

@@ -3,6 +3,20 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Conditional Gaussian optical calibration — November 12, 2026
+
+- Fit straight raw edge offset and positive Gaussian width directly in fixed
+  source/noise modes, with bounded brightness, analytic derivatives, complete
+  grid/search diagnostics and explicit numerical/rank limits.
+- Reconstruct a common covariance in orthonormal Frobenius coordinates; preserve
+  missing directions and indefinite candidates without eigenvalue clipping.
+  Keep every planned edge and withhold pooling when any fit is unresolved.
+- Plan an additional normal direction under supplied variance weights and
+  connect actual captured values through an explicit source-context fit.
+- Retain constructive orientation, response and non-Gaussian counterexamples in
+  the [guide](psf-calibration.md) and [validation record](validation/psf-calibration.md).
+  These tools do not change physical calibration flags or automatic geometry.
+
 ## Private source context and explicit fitting bridge — November 12, 2026
 
 - Capture the actual prewarp measurement field, source/working hashes, chosen

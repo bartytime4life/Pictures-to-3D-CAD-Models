@@ -33,6 +33,12 @@ retains its source, executable API example and completed checks.
 
 ## Current workbench evidence — November 12, 2026
 
+The [conditional PSF record](validation/psf-calibration.md) binds the direct
+source-edge fitter, all-row readiness gate, covariance reconstruction and direction
+planner to their numerical controls. Matched recovery, missing direction data,
+response aliases and optical/model qualification remain separate findings.
+
+
 The opt-in [source-context record](validation/source-context.md) binds actual
 prewarp fields, fixed operators, profile/request identities and the explicit
 conditional fitting bridge. Its digital replay preserves rounding discrepancies

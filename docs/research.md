@@ -1,5 +1,14 @@
 # Research and design decisions
 
+The [conditional optical-calibration investigation](psf-calibration.md) fits
+Gaussian width and edge offset directly in fixed raw working pixels. Three
+sufficiently separated unoriented directions can identify a common Gaussian
+covariance; two rectangle directions cannot. Frobenius-coordinate rank/condition
+and an explicit pooling gate keep missing or unresolved evidence visible. The
+[independent controls](validation/psf-calibration.md) also retain non-Gaussian
+and exact response ambiguities: covariance recovery alone cannot qualify a camera.
+
+
 The [real-trace source context](source-context.md) connects the actual prewarp
 working field to fixed source observations and an explicit conditional finite-
 shape fit. Its [integration replay](validation/source-context.md) compares the

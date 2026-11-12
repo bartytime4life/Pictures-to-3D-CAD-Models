@@ -44,6 +44,15 @@ The application does not call a paid or external inference service. Its optional
 
 ## Developer numerical tools
 
+The [conditional PSF tools](psf-calibration.md) directly fit raw edge offset and
+Gaussian width with bounded levels and fixed source/noise support. Covariance
+reconstruction preserves missing directions, conditioning and non-SPD results;
+all-row pooling withholds unresolved searches. The source context can explicitly
+dispatch those fits, without changing its calibration flags or accepted geometry.
+These APIs belong to this review branch; the separately evolving `main`
+directional-tracing implementation is not replaced by this change.
+
+
 The opt-in [source context](source-context.md) now captures the exact prewarp
 working field through the actual decode/reference trace path. It binds original,
 upright and working identities, chosen channel weights, known warp, display

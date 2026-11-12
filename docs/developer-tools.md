@@ -303,6 +303,22 @@ including failures. The [record](validation/source-context.md) distinguishes
 exact source binding, arithmetic discrepancy and conditional recovery from
 physical-camera qualification. No source images or pixel arrays are saved.
 
+## Conditional Gaussian optical calibration
+
+The [PSF guide](psf-calibration.md) covers direct raw edge-width fitting,
+all-row numerical readiness, covariance rank/conditioning and a finite orientation
+planner. Source-context dispatch keeps fixed source values and existing model
+guards. Fit quality does not supply physical response/PSF calibration.
+
+```bash
+.venv/bin/python studies/verification/psf-calibration-v1.py --output .local/psf-calibration-new.json
+```
+
+Use a new destination in an existing directory. The
+[fixed independent study](validation/psf-calibration.md) retains matched targets,
+unknown groups, constructive covariance/response aliases and model-mismatch
+controls, rather than replacing unresolved fits with an apparently valid tensor.
+
 ## Figures
 
 Matplotlib is optional and is not installed by the workbench setup. The published

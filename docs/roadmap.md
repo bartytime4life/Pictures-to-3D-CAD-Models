@@ -49,7 +49,9 @@ searches radius and chord fraction under supplied pose/PSF/noise. The
 [independent controls](validation/finite-shape-source.md) retain optical mismatch,
 nonidentification and incomplete searches. An opt-in immutable prewarp
 [source context](source-context.md) and explicit conditional fitting bridge now
-connect the actual trace path to fixed observations. Next steps include calibrated
+connect the actual trace path to fixed observations. The new [edge-width/covariance tools](psf-calibration.md) support conditional
+source fitting, direction planning and explicit unresolved pooling; they do not
+qualify optics or response. Next steps include independently calibrated
 or explicitly bounded source optics/response and observation operators, then
 automatic candidate generation and reviewed integration with the current geometry
 revision. The point-detector prototype does not identify those missing inputs
