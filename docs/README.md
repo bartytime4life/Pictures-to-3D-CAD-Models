@@ -18,6 +18,7 @@ the distinction between integrated code, pending review and qualification.
 | Interpret an independent source-height check | [Engineering model and verification](engineering-model.md) |
 | Resize, inspect printer fit or make straight-cut pieces | [Print planning](print-planning.md), [printer catalog](printer-catalog.md) |
 | Choose CAD, mesh, drawing or source files | [Exports and dimensional checks](exports.md) |
+| Verify a critical fitted radius or line/arc join | [Arc export checks and current limitation](exports.md#verify-critical-arc-geometry) |
 | Prepare Bambu Studio or PrusaSlicer handoffs | [Slicer integration](slicers.md) |
 | Ask the optional text-only local assistant | [Ollama setup and controls](ollama.md), [model evaluation plan](ollama-models.md) |
 | Recover from an error or missing result | [Troubleshooting](troubleshooting.md) |
@@ -62,7 +63,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |
 | Run a benchmark with measured photos | [Photo benchmark](photo-benchmark.md) |
 | Review completed checks | [Validation overview](validation.md), [design QA](../design-qa.md) |
-| Check current documentation coverage and source consistency | [Current coverage](validation/tapered-caps.md#documentation-coverage), [earlier complete review through PR #66](validation/documentation-response-state.md), [response implementation coverage](validation/response-calibration.md#documentation-coverage) |
+| Check current documentation coverage and source consistency | [Complete review through PR #70](validation/documentation-pr70.md), [earlier review through PR #66](validation/documentation-response-state.md), [response implementation coverage](validation/response-calibration.md#documentation-coverage) |
 | Interpret incomplete hosted runs and the overall job limit | [Runtime-budget evidence](validation/ci-runtime-budget.md), [exact-head CI status](project-status.md#evidence-by-scope) |
 | Review the recent interface changes | [Guided-workbench audit](validation/guided-workbench.md) |
 | Review scope and future work | [Roadmap](roadmap.md), [change log](changelog.md) |

@@ -52,6 +52,11 @@ existing behavior and recorded limits.
 The [warp extension](warp-observations.md) composes only required intermediate
 pixels through the fixed raw-coordinate map. Its ideal float64 matrix and the
 actual pipeline's float32 storage/filtering remain separate evidence lanes.
+These Keys operators describe the blur-estimation and wall-profile sampling
+branch. Production `sheet.half_level_search` uses bilinear samples for the
+primary outline crossing; a matched Keys operator does not model that different
+sampler automatically. In reference-sheet part tracing, both branches follow
+rectification and smoothing.
 The [raw-source fitting primitive](raw-source-fit.md) additionally profiles bounded
 brightness levels over a finite edge-offset search in retained source modes.
 Its raw/complement residual diagnostics and unresolved flags remain developer
@@ -104,6 +109,10 @@ describes the separate synthetic inverse and higher-order mismatch inputs.
 
 Geometry detail is a geometric approximation applied to the scaled profile. `original` retains it; `draft`, `balanced`, and `fine` use simplification tolerances of 0.5, 0.25, and 0.1 times the selected nozzle diameter in millimeters, respectively. The simplification preserves topology and checks that every hole remains. The modes can still change small features and must be inspected; they do not recover image information, measure minimum wall thickness, or prove printability. The original trace remains the recipe's source profile.
 
+Those detail tolerances apply to polygon output, including split pieces. A
+fitted single-piece build retains its supplied lines, arcs and circles and
+reports a warning when a non-original detail setting is selected.
+
 Split mode makes actual solids with straight XY cuts. The default preview and combined STEP/STL/3MF keep those solids in their assembled positions. A separated inspection view displays the actual per-part meshes with temporary offsets; it does not change exported coordinates or claim a print-bed layout. Per-part exports translate each piece to a local XY origin and record the assembly offset in the bundle manifest. The program does not introduce alignment pins, joints, kerf compensation, or assembly tolerances.
 
 3MF Core packages use millimetres and separate indexed mesh objects for split solids. Each mesh is checked for finite coordinates, nondegenerate triangles, closed oriented edges and positive volume. Slicer handoff ZIPs carry this geometry, STL alternatives, the recipe, printer/material planning notes, instructions and payload hashes. They do not contain native slicing presets or machine instructions.
@@ -115,6 +124,23 @@ Printer fit checks the selected Z height and searches continuous XY rotations in
 Known catalog printers resolve their bed geometry from the selected nozzle's source profile; the backend does not trust stale client-supplied dimensions for a known match. Missing profiles, several matching profiles that describe different beds, nonrectangular beds, and excluded bed areas produce an unknown-placement result instead of a rectangular-fit guarantee. Custom mode uses the user's rectangular volume. Unsupported hardware facts remain unknown.
 
 `backend.printing.suggest_split_plan` enumerates eleven supported straight-cut grids only after a polygon build exceeds the checked envelope. It validates clipping, connected pieces, area preservation and each piece's placement, then ranks by actual piece count, cut lines, rows and columns. An optional `split_plan` in the build result carries `status` (`suggested` or `no_fit`), `grids_considered`, `grids_failed`, a reason, and, for a suggestion, `columns`, `rows`, `piece_count` and per-piece dimensions, area and bed-fit witnesses. Numerical intersection failures qualify a partial search and do not invalidate the intact build. Fitted single-piece curves are excluded. The frontend displays proposals only for the current model revision; applying one changes only cut settings and requires a fresh build. Unapplied proposals are not serialized as generated parts in recipes or handoffs.
+
+### Remaining free-arc representation limit
+
+The tapered-cap repair constrains circles tangent to neighboring lines. A free
+arc can still have its internal radius changed by `correct_blur` or
+`equalise_radii` while `segments` takes its endpoints from the feet of its
+centre on the neighboring lines. Those endpoints need not lie on the changed
+circle. The emitted start/mid/end arc can therefore describe a different centre
+and radius from the fitter's internal values. The
+[retained limitation](validation/tapered-caps.md#regression-scope-and-remaining-work)
+is not repaired by the parallelism or iteration safeguards.
+
+The initial `supported_fit` check precedes these corrections. Later polygon
+validity and the build API's primitive/polygon area check do not enforce
+agreement between an emitted arc and the fitter's earlier centre/radius. The
+API carries three-point arcs, rather than that internal fit state. This source
+stage distinction remains relevant even when a CAD solid is valid.
 
 ## API overview
 
@@ -135,7 +161,7 @@ A multipart request includes:
 | Field | Meaning |
 | --- | --- |
 | `file` | PNG, JPEG, WebP, HEIC, or AVIF upload; a multi-picture (MPO) camera JPEG or a HEIC burst uses its primary image |
-| `threshold` | Intensity cutoff, or `-1` for automatic selection |
+| `threshold` | Ordinary-trace intensity cutoff, 0–255, or `-1` for automatic selection; reference-sheet tracing selects its own threshold |
 | `inverted` | Switch from the default dark-foreground interpretation |
 | `detail` | `coarse`, `standard`, or `fine` contour approximation |
 | `reference` | `none` (default), `a4`, `letter`, or `custom` scale reference sheet |

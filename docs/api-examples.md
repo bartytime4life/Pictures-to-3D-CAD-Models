@@ -110,12 +110,24 @@ sheet-finding/use failures. Other validation and final-profile failures still
 refuse the request. Review whether the returned profile actually has reference
 evidence.
 
+Ordinary tracing uses `threshold=-1` for automatic selection or an integer
+cutoff from 0 through 255. Reference-sheet tracing selects its own threshold;
+the submitted cutoff applies if an eligible failure takes the explicitly
+enabled ordinary fallback. `snap` applies to the reference-sheet fitting path.
+
 `profile.outer`, `profile.holes` and optional primitives use the normalized or
 rectified working-image pixel frame, with Y down. Build width and thickness are
 millimeters. The worker centers the outline and flips Y into CAD's XY frame.
 Keep the polygon rings, primitives and reference evidence in the same frame;
 do not mix pixel and millimeter coordinates within a profile. See
 [geometry conventions](architecture.md#geometry-conventions).
+
+An API arc has `kind: "arc"` and `start`, `mid`, `end` coordinate pairs; those
+three points define its circle and sweep. It has no separate centre/radius
+fields. Build validation checks that supplied boundary and its polygon, rather
+than the internal fit that preceded trace correction. Review the
+[free-arc stage limitation](architecture.md#remaining-free-arc-representation-limit)
+when comparing a fitted radius with an exported three-point arc.
 
 The browser's saved project recipe is not a `/api/build` request: it can contain
 format-version and browser-only calibration/height fields that the strict API

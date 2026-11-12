@@ -53,6 +53,12 @@ Keep the original source image separately when you need a record of how the mode
 
 There is no automatic project persistence across page refreshes. Download a recipe before leaving the workbench if you need to recover its current settings.
 
+The companion reference library's **Photos** workspace is a separate browser
+collection. It stores imported photos and notes in IndexedDB without uploading
+them to the workbench backend. Its persistence and backup controls differ from
+the workbench's upload and recipe workflow; see the
+[library photo-storage guide](../reference-library/README.md#your-reference-photos).
+
 Browser downloads are governed by the browser and host environment. Deleting an artifact from the running app does not delete copies already downloaded or stored in a host backup or environment snapshot.
 
 ## Numerical reports

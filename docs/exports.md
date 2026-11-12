@@ -27,6 +27,22 @@ For polygon-only profiles, the traced boundary remains a polygonal approximation
 
 After import, check the bounding-box width, height, thickness, number of solids, and hole topology. Single-piece mode produces one valid solid with positive volume. Split mode produces the reported valid piece solids; inspect the pieces separately rather than assuming the assembly view shows a print-bed arrangement.
 
+### Verify critical arc geometry
+
+For fit-critical curves, measure the actual STEP or DXF radius, centre position,
+hole spacing and joins between arcs and lines in CAD. Overall dimensions and a
+valid solid do not check every curve. A remaining free-arc limitation can make
+the exported three-point arc describe a different circle from the one recorded
+during blur correction, including with **Recover design intent** turned off.
+The [tapered-cap repair](validation/tapered-caps.md#regression-scope-and-remaining-work)
+does not resolve that separate path.
+
+Compare these features with independent physical measurements. If they disagree,
+rebuild the critical curves in CAD from reviewed dimensions, or use an ordinary
+polygon trace from a suitable front-on capture with measured scale. Preserve the
+original recipe and record downstream CAD edits as a new revision; those edits
+do not update the workbench's recipe or printer-fit result.
+
 ## 3MF and slicer handoffs
 
 The **3MF** export contains millimeter geometry with separate objects for split output. Each object uses welded mesh indices and retains its assembly position. Individual split pieces in the Parts ZIP and slicer packages are normalized to XY zero and Z zero. A neutral 3MF does not contain printer, filament, process, support or multi-material settings.

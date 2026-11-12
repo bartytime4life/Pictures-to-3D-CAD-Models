@@ -22,11 +22,13 @@ contract and validation record for the behavior you want to change.
 For a workbench change, run:
 
 ```bash
+npm run build
 make test-app
 make lint
 ```
 
-The test target runs Python tests, builds the frontend, then runs browser tests.
+Build before the test target so frontend-serving Python checks inspect current
+assets. The test target itself runs Python tests, builds the frontend, then runs browser tests.
 Confirm that port 8000 belongs to this checkout before allowing a local test to
 reuse it; see [test-server selection](development.md#validate-changes).
 
@@ -103,8 +105,8 @@ actions.
    tests for the affected behavior. Documentation parsing does not establish
    a fresh Python/browser regression suite. Update navigation and the change log.
 
-Use the [current coverage](validation/tapered-caps.md#documentation-coverage)
-and [baseline inventory](validation/documentation-response-state.md#coverage-inventory)
+Use the [current coverage and inventory](validation/documentation-pr70.md#coverage-inventory)
+and [earlier inventory](validation/documentation-response-state.md#coverage-inventory)
 to include guides, worksheets and generated/historical records in a review.
 The [developer-tool catalog](developer-tools.md) centralizes numerical commands
 and output rules. Preserve report files explicitly: some analysis tools refuse
