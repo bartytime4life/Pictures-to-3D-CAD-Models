@@ -3,6 +3,17 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Documentation consolidation through PR #51 — November 12, 2026
+
+- Updated the [source/review and hosted-CI snapshot](project-status.md) through
+  the shared-blur developer analysis, distinguishing open reviews from `main`
+  and source-bound Python results from earlier browser/build evidence.
+- Routed the task index and validation overview to the [latest documentation
+  record](validation/documentation-math-state.md). Retained historical reports,
+  their original counts and the companion library's release record.
+- Rechecked complete Markdown navigation and consistency with the published
+  CLI examples and verification receipts. This consolidation changes documentation.
+
 ## Joint corner-radius and blur domains — November 12, 2026
 
 - Version 2 of the developer CLI treats radius and supplied Gaussian blur

@@ -1,5 +1,10 @@
 # Current-state documentation review — November 12, 2026
 
+This is the historical PR #49 review. The later [documentation consolidation](documentation-math-state.md)
+covers the published developer tools and the review chain through PR #51.
+Statements below about unpublished or proposed numerical work describe this
+record's original source and time.
+
 This documentation follow-up uses the reviewed source
 `a3a2397cde2b1afbeda133ac86218eaae5a22edc`, including open PRs #47 and #48 on
 integrated `main` at `5c07d0f`. The isolated branch is
