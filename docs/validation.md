@@ -13,6 +13,14 @@ retains its source, executable API example and completed checks.
 
 ## Current workbench evidence — November 12, 2026
 
+The [material-gradient and sampling candidate](validation/material-gradients.md),
+based on PR #54 at `620d5c7`, passed **1,075 Python tests**. An independent crossed
+study retains 9,216 rows per run and 768 low-contrast rejections. A zero-centred
+profile grid reduces normal-reversal crossing differences from 0.0080943 px to
+about 1e-14 px in these fixtures, without acceptance changes. Material-gradient
+bias and pre-refinement wall offsets remain; the two-affine ablation is not a
+qualified correction. The new census is not a complete-photo or physical test.
+
 The [signed-stencil observation candidate](validation/signed-stencils.md), based
 on PR #53 at `e22ff3d`, passed **1,022 Python tests**. Whole-radius signed covers
 retain interior values that endpoint-only sampling could exclude. Exact gain/L1,

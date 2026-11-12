@@ -1,0 +1,56 @@
+{
+  "coverage_complete": true,
+  "same_frozen_plan": true,
+  "acceptance_changes": 0,
+  "results": {
+    "baseline": {
+      "cases_sha256": "b442d13c0f3cddbe181c97c196eb604143605772d2016bc110357902101e8f7b",
+      "source_sha256": {
+        "scripts/material_gradient_study.py": "e2d5c8fbd651f734de43ea933b70fc599eb2589718a1a79047971899a85e06d6",
+        "studies/material-gradients-v1.json": "7e9c4b8a0c9083938ec848744936cc803920dae2ec541ad0f479f4451b5859bb",
+        "backend/sheet.py": "799fac3ada1df475250769ecb1227a5939b44e804a1db6ac9c9098ae5669c0f9",
+        "backend/edges.py": "ef939256a69a775b6158c2cb5ace16ceecb43f72544c3ce2d9f31de1d1a123c1",
+        "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee"
+      },
+      "rows": 9216,
+      "world_scenes": 576,
+      "kept": 8448,
+      "rejected": 768,
+      "failed": 0,
+      "max_reversal_difference_px": 0.008094322993479432,
+      "reversal_by_stage_px": {
+        "point_known_sigma": 5.10702591327572e-15,
+        "aperture_known_sigma": 5.10702591327572e-15,
+        "aperture_resampled_estimated_sigma": 0.0043583980523216066,
+        "srgb8_aperture_resampled_estimated_sigma": 0.008094322993479432
+      },
+      "paired_reach_count_jumps": 0,
+      "all_summary_entries_independently_reconciled": true
+    },
+    "centred": {
+      "cases_sha256": "bff45945626051226e6aa02be1033e7e15bdba46d6044301219a140abfae3f60",
+      "source_sha256": {
+        "scripts/material_gradient_study.py": "e2d5c8fbd651f734de43ea933b70fc599eb2589718a1a79047971899a85e06d6",
+        "studies/material-gradients-v1.json": "7e9c4b8a0c9083938ec848744936cc803920dae2ec541ad0f479f4451b5859bb",
+        "backend/sheet.py": "c5a2b6404ff4be18519b37e7eef1aa33baabc19c2204fe3fafadfb3c3e6df5f8",
+        "backend/edges.py": "ef939256a69a775b6158c2cb5ace16ceecb43f72544c3ce2d9f31de1d1a123c1",
+        "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee"
+      },
+      "rows": 9216,
+      "world_scenes": 576,
+      "kept": 8448,
+      "rejected": 768,
+      "failed": 0,
+      "max_reversal_difference_px": 9.992007221626409e-15,
+      "reversal_by_stage_px": {
+        "point_known_sigma": 5.10702591327572e-15,
+        "aperture_known_sigma": 5.10702591327572e-15,
+        "aperture_resampled_estimated_sigma": 7.549516567451064e-15,
+        "srgb8_aperture_resampled_estimated_sigma": 9.992007221626409e-15
+      },
+      "paired_reach_count_jumps": 0,
+      "all_summary_entries_independently_reconciled": true
+    }
+  },
+  "limitations": "Single supplied profiles. Stage changes combined. No physical error bound or multiple-crossing guarantee."
+}

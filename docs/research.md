@@ -211,6 +211,25 @@ They do not validate this workbench's optical assumptions or turn its current
 standard deviations into maximum-error bounds. A sampled radius grid cannot
 certify that no compatible radii exist between samples.
 
+### Material gradients in actual edge profiles
+
+The [repeatable material-gradient study](material-gradients.md) uses an independent
+bounded piecewise-affine Gaussian convolution and uniform pixel means, followed
+by actual tone decoding, Keys rectification, smoothing, blur estimation and
+crossing functions. It separates spatial lighting slopes from a common gain and
+offset, which cancel in fixed accepted profile crossings. It retains both slope
+treatments and every low-contrast rejection; the two-affine branch is an ablation,
+not a qualified correction. The [development record](validation/material-gradients.md)
+keeps the stage boundaries and wall/edge confounding explicit.
+
+[Debevec and Malik (1997)](https://people.eecs.berkeley.edu/~malik/papers/debevec-malik97.pdf)
+recover radiometric response using differently exposed photographs and known
+exposure ratios. [Grossberg and Nayar (2002)](https://www.cs.columbia.edu/CAVE/publications/pdfs/Grossberg_ECCV02.pdf)
+analyze ambiguities in recovering that response from image brightness transfers.
+These primary sources support treating a camera response as a separate model;
+they do not establish that this workbench's sRGB decoding calibrates a particular
+phone, or that single-profile affine normalization undoes spatial illumination.
+
 ## Outline to solid and exchange files
 
 [CadQuery examples](https://github.com/CadQuery/cadquery/blob/master/doc/examples.rst) demonstrate profile extrusion and holes. This provides a direct, inspectable path from a valid planar boundary to a solid with a supplied thickness.
