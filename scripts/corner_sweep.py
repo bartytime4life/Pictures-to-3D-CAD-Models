@@ -21,17 +21,18 @@ along each true boundary normal by Illinois regula falsi.
 
 Errors are reported in units of the blur shrink s = sigma^2/2r + 5 sigma^4/24r^3. A
 corner is "lost" when it is neither one arc nor reported sharp. A corner reported
-sharp is checked against its stated bound (the largest fillet the photo leaves
-possible there), which must be at least the true radius; two edges that meet with no
-bound stated (a fillet that vanished silently) count as lost.
+sharp is checked against its model radius-resolution estimate (the legacy bound
+field), which this matched isotropic-model regression requires to exceed the true
+radius. It is not a physical upper radius bound. Two edges that meet without a
+resolution estimate (a fillet that vanished silently) count as lost.
 
     .venv/bin/python scripts/corner_sweep.py            # 24 cases, about four minutes
     .venv/bin/python scripts/corner_sweep.py --quick    # 4 cases
     .venv/bin/python scripts/corner_sweep.py --backend ../other-checkout
 
 --backend runs the fitting chain of another checkout, for a before-and-after comparison.
-The exit status is 1 if a corner is lost or a sharp corner's bound is below its true
-radius.
+The exit status is 1 if a corner is lost or its model resolution is below its true
+radius in these matched-model cases. It is not a physical qualification result.
 """
 
 from __future__ import annotations
@@ -206,7 +207,7 @@ def run_case(fitting, apex, r, sigma, step=1.0):
             t = np.linalg.solve(np.column_stack([d1, -d2]), c2 - c1)
             meet = c1 + t[0] * d1
             i = int(np.argmin(np.linalg.norm(vertices - meet, axis=1)))
-            # Reported sharp only with a bound on any fillet there; without one the
+            # Reported sharp only with a model resolution estimate; without one the
             # fillet vanished silently, and the corner is lost.
             if "sharp_bound" in q.data:
                 corners[i].update(kind="sharp", bound=float(q.data["sharp_bound"]))
@@ -249,7 +250,7 @@ def main():
                 results.append(case)
                 described = " ".join(
                     f"{c['angle']}:{c['error_s']:+.2f}" if c.get("kind") == "arc"
-                    else f"{c['angle']}:sharp<{c['bound']:.1f}" if c.get("kind") == "sharp"
+                    else f"{c['angle']}:sharp(resolution R{c['bound']:.1f}px)" if c.get("kind") == "sharp"
                     else f"{c['angle']}:lost"
                     for c in case["corners"]
                 )
@@ -262,7 +263,7 @@ def main():
         print(f"| {angle} deg | {cells[0]} | {cells[1]} |")
     sharp = sum(c.get("kind") == "sharp" for case in results for c in case["corners"])
     print(f"\nCorners lost (neither one arc nor reported sharp): {len(lost)} {lost if lost else ''}")
-    print(f"Corners reported sharp: {sharp}; with a bound below the true radius: {len(low_bound)} {low_bound if low_bound else ''}")
+    print(f"Corners reported sharp: {sharp}; model resolution below the true radius: {len(low_bound)} {low_bound if low_bound else ''}")
     if args.json:
         args.json.write_text(json.dumps(results, indent=1))
     return 1 if lost or low_bound else 0

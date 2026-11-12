@@ -154,6 +154,27 @@ summaries, valid local support and explicit unknown states, specified before a
 fresh cohort. The 30 examined cases are now development evidence. An unflagged
 diagnostic cannot establish accurate geometry or a Gaussian optical cause.
 
+### Corner resolution, adequacy and feasible radii
+
+The [corner-resolution review](validation/sharp-corner-resolution.md) separates
+two questions: whether a numerical search brackets its threshold, and whether
+the assumed blur model explains the observations. The search now checks its
+final upper endpoint and reports exhaustion as unresolved. Its estimate is
+explicitly conditional on the blur model; this does not implement an absolute
+adequacy test. An independent rounded-corner example retains a resolution
+estimate smaller than its known radius when that model is mismatched.
+
+[Jaulin and Walter (1993)](https://webperso.ensta.fr/jaulin/paper_automatica93.pdf)
+infer parameter sets whose discrepancies from observations fall within prior
+error bounds, using interval enclosures over complete parameter boxes.
+[Brynjarsdóttir and O'Hagan (2014)](https://www.tonyohagan.co.uk/academic/abs/simmach.html)
+show why calibration parameters can be confounded with model discrepancy.
+These primary sources motivate a future conditional feasible-radius set with
+separately declared observation-error, model-discrepancy and nuisance domains.
+They do not validate this workbench's optical assumptions or turn its current
+standard deviations into maximum-error bounds. A sampled radius grid cannot
+certify that no compatible radii exist between samples.
+
 ## Outline to solid and exchange files
 
 [CadQuery examples](https://github.com/CadQuery/cadquery/blob/master/doc/examples.rst) demonstrate profile extrusion and holes. This provides a direct, inspectable path from a valid planar boundary to a solid with a supplied thickness.

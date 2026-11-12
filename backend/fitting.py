@@ -561,8 +561,10 @@ def corner_level(points, centre, radius, start, sweep, sigma, pieces=None):
 def _exact_fillet(seg, lines, v, inward, r, sigma, noise, correlation=None):
     """Fit a fillet's radius to its traced points with the exact blurred corner
     (corner_level) as the model; returns (radius, sd, rms, max_abs, sharp_bound) or
-    None. sharp_bound is None for a fillet the photo shows; for one it cannot tell from
-    a sharp corner it is the smallest radius it would show.
+    None. The legacy sharp_bound field is a radius-resolution estimate within the
+    assumed blur model, not an upper bound on the physical fillet. It is None when
+    the model distinguishes the fitted corner from sharp; an unresolved threshold
+    search returns the existing fit-failure sentinel None.
 
     `lines` holds the two edges as (point, direction), `inward` their unit normals
     pointing toward the fillet's centre c(r) = c0 + r v, c0 their intersection. Each
@@ -576,8 +578,10 @@ def _exact_fillet(seg, lines, v, inward, r, sigma, noise, correlation=None):
 
     A fillet is visible when its traced outline differs somewhere from that of the
     sharp corner (r = 0) by twice the edge uncertainty, max(noise, EDGE_SYS_SD). One
-    that is not is reported as sharp, with the radius at which a fillet would become
-    visible found by bisection. (The standard deviation is no guide there: a fillet
+    that is not is reported as sharp under that model, with a resolution estimate
+    found by bracketed bisection. Candidate RMS also enters the threshold below;
+    model-to-model agreement does not establish physical model adequacy.
+    (The standard deviation is no guide there: a fillet
     much smaller than the blur changes the outline only as r squared.)
     """
     (c1, d1), (c2, d2) = lines
@@ -646,6 +650,11 @@ def _exact_fillet(seg, lines, v, inward, r, sigma, noise, correlation=None):
             if np.abs(residual(hi) - sharp).max() >= floor:
                 break
             lo, hi = hi, 2 * hi
+        # The last doubling leaves a new endpoint that has not yet been checked.
+        # A work limit is not a crossing: bisection needs a verified upper witness.
+        separation = float(np.abs(residual(hi) - sharp).max())
+        if not math.isfinite(separation) or separation < floor:
+            return None
         for _ in range(30):
             mid = (lo + hi) / 2
             lo, hi = (mid, hi) if np.abs(residual(mid) - sharp).max() < floor else (lo, mid)
@@ -729,7 +738,8 @@ def undetermined_radii(rings, sigma, scale=1.0, unit="mm", limit=300):
     the note says "or more". A free arc between two lines (no snapping) is reported
     when it is shorter than 5 sigma: blur then bends all of it, and the free circle's
     radius is not the part's. Corners that fit_fillets found sharp are counted, with the
-    largest fillet radius the photo leaves possible there.
+    radius-resolution estimate under the assumed blur model. It is not a physical
+    upper radius bound or an independently qualified uncertainty interval.
     """
     fillets, free, sharp = [], [], []
     for prims in rings:
@@ -773,7 +783,7 @@ def undetermined_radii(rings, sigma, scale=1.0, unit="mm", limit=300):
         notes.append(listed(f"{len(free)} arc(s) are too short to measure under this photo's blur: ", free, ". Turn on snapping, or measure them."))
     if sharp:
         notes.append(
-            f"{len(sharp)} corner(s) traced as sharp: any fillet there is under R{max(sharp) * scale:.2f} {unit}."[:limit]
+            f"{len(sharp)} corner(s) traced as sharp under the assumed blur; estimated radius resolution R{max(sharp) * scale:.2f} {unit}. Measure small fillets if they matter."[:limit]
         )
     return notes
 
@@ -878,8 +888,8 @@ def fit_fillets(points, prims, tol, sigma=0.0):
     standard deviation (r_sd; infinite when the exact fit finds no radius). Blur rounds
     a sharp corner too, and the exact model at r = 0 describes it: a fillet whose outline
     the photo cannot tell from a sharp corner's is removed, so its two edges meet, and
-    the following edge records the largest fillet radius the photo leaves possible there
-    (sharp_bound).
+    the following edge records the model's radius-resolution estimate (the legacy
+    sharp_bound field). This is not a physical upper radius bound.
     """
     m = len(prims)
     for k, p in enumerate(prims):
@@ -944,6 +954,9 @@ def fit_fillets(points, prims, tol, sigma=0.0):
         rms, max_abs = float(np.sqrt(np.mean(residual**2))), float(np.abs(residual).max())
         centre = c0 + r * v
         inward = [n * math.copysign(1.0, float((centre - c) @ n)) for n, c in ((n1, c1), (n2, c2))]
+        # Keep the corner angle available even if the exact fit cannot settle and
+        # the original observed arc is retained with an unresolved-radius note.
+        p.data["corner_deg"] = 180.0 - math.degrees(math.acos(max(-1.0, min(1.0, float(inward[0] @ inward[1])))))
         exact = None
         if sigma > 0:
             # The whole corner, with the edges up to 5 sigma beyond the tangent points.
@@ -957,14 +970,12 @@ def fit_fillets(points, prims, tol, sigma=0.0):
             if exact is not None:
                 r, sd, rms, max_abs, bound = exact
                 p.data["r_sd"] = sd
-            elif approximate:
+            else:
                 p.data["r_sd"] = math.inf  # the exact fit found no radius: not determined
         if exact is None and not approximate:
             continue
         p.data["r"] = float(r)
         p.data["fillet"] = (tuple(c0), tuple(v))
-        # The inward normals of the two edges are pi minus the corner angle apart.
-        p.data["corner_deg"] = 180.0 - math.degrees(math.acos(max(-1.0, min(1.0, float(inward[0] @ inward[1])))))
         p.data["blur_modelled"] = sigma > 0
         place_fillets([p])
         p.rms, p.max_abs = rms, max_abs

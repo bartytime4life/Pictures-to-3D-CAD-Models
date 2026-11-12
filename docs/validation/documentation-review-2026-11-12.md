@@ -165,3 +165,21 @@ this checkout's unchanged library sources: **19 tests passed**. Its generated
 HTML, PDF, archive, catalogs and source files remain byte-identical to the
 integrated baseline. This documentation-only library check does not establish
 a new library release or native-tool qualification.
+
+### Corner-resolution follow-up
+
+The next candidate, based on PR #47 head `ba94ef8`, adds the
+[search guard and conditional-resolution record](sharp-corner-resolution.md).
+Current method, engineering, research, change-log and CLI guidance replace
+physical upper-radius claims with conditional blur-model estimates. Historical
+tables retain their original fixtures and have a later-interpretation pointer.
+The new record preserves a direct-helper search failure, an independently
+constructed rounded-corner counterexample, excluded invalid development
+geometry and the primary-source requirements for future feasible-set inference.
+
+The complete candidate passed **630 Python tests**, **74 browser scenarios**,
+the four-case corner sweep, production build and full lint checks. All **56
+Markdown documents** parse; the local-link, fragment and table checks are
+recorded with the candidate's final source receipt. Companion-library sources
+and generated outputs are unchanged; no new library release or physical
+qualification is claimed.

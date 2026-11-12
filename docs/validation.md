@@ -7,7 +7,14 @@ original counts and environment; they are not later retests.
 
 ## Current workbench evidence — November 12, 2026
 
-The [radial inverse and independent-renderer candidate](validation/radial-inverse.md)
+The [corner-resolution candidate](validation/sharp-corner-resolution.md) on
+`ba94ef8` passed **630 Python tests**, including seven new search/fallback
+regressions, and **74 browser scenarios**. It checks that numerical bisection
+has an upper crossing and describes sharp-corner estimates as conditional on
+the blur model. Its independent rounded-corner counterexample remains a
+model-adequacy limitation; no physical radius bound is established.
+
+The preceding [radial inverse and independent-renderer candidate](validation/radial-inverse.md)
 after integration of `main` at `5c07d0f` passed **623 Python tests**, including 30
 new lens checks, and **74 browser scenarios** against its local CAD service.
 It restricts inversion to the central camera branch and
@@ -46,6 +53,7 @@ It changes guides relative to that integrated baseline, not runtime behavior.
 
 | Evidence | Revision and result | Scope |
 | --- | --- | --- |
+| Corner resolution and search validity | [Method and checks](validation/sharp-corner-resolution.md), candidate on `ba94ef8`: **630 Python tests**, **74 browser scenarios**, four-case independent corner sweep passed | Independent wedge observations, four failing original controls and three passing controls; rounded-corner mismatch remains, with conditional wording |
 | Weak-edge error recovery | PR #45, merged in `4e607d9`; [record](validation/contrast-recovery.md): **583 Python tests** at its PR #44 integration | Four original failures now recover or give actionable 422 guidance; thresholds and fallback policy retained |
 | Constrained fillet sectors | PR #46, merged in `5c07d0f`; [record](validation/fillet-sweep.md): **589 Python tests** at its PR #44 integration | Six failing original controls, genuine major arcs and exact STEP/DXF checks; scalar blur-model mismatch remains |
 | Radial inverse and independent simulation | [Domain and checks](validation/radial-inverse.md), candidate integrated with main `5c07d0f`: **623 Python tests**, **74 browser scenarios**; the separate earlier phase passed 609/74 | Decimal numerical oracles, independent lens code and source-bound higher-order mismatch examples; no physical camera qualification |
@@ -182,6 +190,12 @@ Branch `claude/corner-sweep`, on `main` at `48e17d2` (after the fillet-corner ch
 - **Checks run.** `tests/test_corner_sweep.py` checks the script's integral against the closed form at a disc's centre (to 10⁻¹⁰), a straight edge's half-level (to 10⁻⁸ px), and one case's fit; it takes about six seconds. `pytest`: **457 passed**. Ruff passed.
 
 ## Exact blurred corners, two-chord arcs and sharp corners — November 11, 2026
+
+Later interpretation: the [resolution-search review](validation/sharp-corner-resolution.md)
+replaces the physical upper-radius wording below with a conditional blur-model
+resolution estimate. The values and counts in this historical section retain
+their original matched-model fixtures and revision. They do not establish a
+bound for mismatched cameras or parts.
 
 Branch `claude/fillet-corners`, on `main` at `ae69552`. Its "before" figures were taken on `dd65399`, which has the large-radius and stub fixes below; the bed-placement change after it touches no tracing code. See [reference-sheet tracing](reference-sheet.md), §4 and §7, for the mathematics.
 

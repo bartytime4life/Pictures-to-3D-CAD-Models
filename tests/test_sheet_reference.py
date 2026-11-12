@@ -724,10 +724,11 @@ def test_inside_and_outside_fillets_of_an_l_shaped_plate(radius_mm, sigma_px):
 def test_sharp_corners_are_traced_sharp(sides, turn, sigma_px):
     """Rendered plates with sharp corners. Blur rounds a sharp corner; before the exact
     corner model each was fitted as a fillet of R0.4 to R1.1 mm. Now the corner is sharp,
-    its edges meet, and the note bounds any fillet there: under R0.5 mm at right and
+    its edges meet, and the model resolution is below R0.5 mm at right and
     wider angles, and under R0.75 mm at the triangle's 60 degree tips. There the
     tracer's local level cannot reach both plateaus, its points sit a little off the
-    half-level, and the bound, set by their residual, is looser."""
+    half-level, and the resolution estimate, set by their residual, is looser.
+    These matched-model checks do not establish a physical upper radius bound."""
     from shapely.geometry import Polygon, box
 
     ppm = 5.0
@@ -879,7 +880,7 @@ def test_a_stub_cut_off_a_straight_edge_is_fitted_as_part_of_it(flat_mm, turn_de
     of its edge it leaves five lines and five arcs. The R30 arc reads within 0.03 mm.
     Each right-angle corner is rounded by the blur alone, to under 0.6 mm, where the
     stub and the corner together had been an arc of 1.3 to 3.2 mm; with snapping, the
-    exact corner model traces it sharp, with a bound under 0.6 mm on any fillet there.
+    exact corner model traces it sharp, with a model resolution estimate below 0.6 mm.
     The outline encloses the plate's area within 0.03 %."""
     from shapely import affinity
     from shapely.geometry import Polygon
@@ -903,7 +904,7 @@ def test_a_stub_cut_off_a_straight_edge_is_fitted_as_part_of_it(flat_mm, turn_de
         assert [p.kind for p in prims].count("line") == 5
         assert abs(max(p.data["r"] for p in prims if p.kind == "arc") / ppm - radius) < 0.03
         # Each right angle: a blur-rounded arc, or (snapped, fitting.fit_fillets) a sharp
-        # corner with the bound on any fillet there, kept by the edge after it.
+        # corner with the model resolution estimate, kept by the edge after it.
         square, m = [], len(prims)
         for k, before in enumerate(prims):
             if before.kind != "line":

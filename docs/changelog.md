@@ -3,6 +3,17 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Corner resolution and search validity — November 12, 2026
+
+- Radius-resolution bisection now requires a finite checked upper crossing.
+  Exhausting the existing search range returns unresolved. Both fallback paths
+  retain an unresolved-radius note, including the correct corner angle.
+- Sharp-corner notes and corner-sweep output describe conditional blur-model
+  resolution, replacing the unsupported physical upper-radius claim.
+- Added independent Gaussian-wedge regressions, a rounded-corner mismatch
+  counterexample and primary research on conditional feasible parameter sets.
+  [Method, limits and checks](validation/sharp-corner-resolution.md).
+
 ## Radial inverse and model-mismatch research — November 12, 2026
 
 - Radial inversion stays on the central camera branch, refuses radii without an
