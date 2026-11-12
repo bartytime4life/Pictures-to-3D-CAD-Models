@@ -92,6 +92,9 @@ Read “Fits these geometric bounds” as a containment result. Review actual
 slicing and machine clearances before printing. A model that exceeds a printer
 preset can still be valid CAD; choosing another printer or changing the print
 plan preserves the measured size unless you explicitly change design scale.
+Containment does not establish local feature accuracy. For fit-critical arcs
+and holes, complete the [fitted-curve checks](exports.md#verify-critical-arc-geometry)
+before relying on the printer-fit result.
 
 ## Materials and appearance
 
@@ -203,7 +206,8 @@ cell is empty. A long narrow piece may fit its cell only after an XY turn.
 The proposal does not generate or export parts. **Use suggested split** sets
 Output, Columns and Rows, invalidates the previous fit and exports, and keeps
 measured dimensions unchanged. Select **Update model** to generate and inspect
-the actual solids, cut locations and exports. The ordinary Output, Columns and
+the actual solids, cut locations and exports, or use **Next step → Update preview**
+to build for inspection without opening Export. The ordinary Output, Columns and
 Rows controls remain editable. Changing the source, scale, bed or other build
 settings hides an old suggestion until a fresh build. Saved recipes and slicer
 manifests describe the built or explicitly selected settings, not unapplied

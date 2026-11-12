@@ -178,6 +178,14 @@ Profile validation and native solid import still passed. Tangency, source
 agreement, analytic area and exported arc identity are distinct checks. This
 repair does not establish the adequacy of a Gaussian camera model.
 
+A separate free-arc limitation remains: generic blur correction can change the
+stored radius while the emitted three-point arc still joins at neighbouring
+line feet. The emitted circle can then differ from the stored fitted circle;
+see [curve assembly limits](reference-sheet.md#7-lines-arcs-and-circles).
+Free-circle fit residuals precede this correction and do not measure the final
+exported curve's error. Inspect the actual CAD curve and reserved dimensions,
+including when snapping is off; successful topology validation is insufficient.
+
 The [scientific model review](validation/scientific-model-review.md) records
 the original whole-circle extrapolation and camera-model limits.
 The [radial-domain repair](validation/radial-inverse.md) removes the renderer's

@@ -6,7 +6,10 @@ checkout. Current source and regression checks are recorded separately in
 [project status](docs/project-status.md) and the
 [latest geometry validation](docs/validation/tapered-caps.md).
 The new tangent-geometry candidate has its own source-bound browser regression;
-the earlier Gaussian developer-only extension has no fresh browser run.
+the earlier Gaussian developer-only extension has no fresh browser run. The
+[documentation review through PR #70](docs/validation/documentation-pr70.md)
+updates the guides and records the remaining arc limitation; it adds no new
+visual, browser or accessibility acceptance result.
 
 ## Latest recorded workbench review — November 11, 2026
 

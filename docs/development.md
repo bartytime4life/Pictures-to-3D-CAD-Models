@@ -127,14 +127,16 @@ build and the serial browser suite. The [runtime-budget record](validation/ci-ru
 explains the observed incomplete 30-minute run and the retained per-test limits.
 
 ```bash
+make build-app
 make test
 make lint
 ```
 
 For just the workbench, use `make test-app` or the existing `./scripts/test.sh`.
-The script runs Python tests, builds, then runs browser tests. For manual
-validation, build first so tests that inspect served frontend assets use the
-current artifact:
+The script runs Python tests, builds, then runs browser tests. Its build does
+not precede the Python phase: after frontend edits, run `make build-app` first
+so tests that inspect served frontend assets use the current artifact. Setup
+already builds the initial checkout. The equivalent manual sequence is:
 
 ```bash
 npm run build
@@ -163,7 +165,9 @@ For tangent-circle and cap changes, begin with
 `tests/test_fidelity_math.py`. The [tapered-cap record](validation/tapered-caps.md)
 supplies independent geometry and actual CAD/DXF/STEP replay commands. Check
 line-anchor invariance and the exported three-point arc, not only the stored
-radius or solid validity.
+radius or solid validity. The repair covers constrained tangent geometry; the
+remaining [free-arc representation limitation](architecture.md#remaining-free-arc-representation-limit)
+also matters when reviewing blur correction or radius equalisation.
 
 For the continuous response-domain solver, run the two focused test files and
 its independent oracle, then replay the retained study as described in

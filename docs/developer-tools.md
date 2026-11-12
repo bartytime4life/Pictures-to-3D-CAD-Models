@@ -21,6 +21,7 @@ an experiment in another worktree is a different implementation.
 | Can a declared raw optical mean explain available prewarp samples? | `make raw-source-fit-study OUTPUT=NEW_JSON` | Bounded source-projection offset/brightness fitting with known geometry, PSF and noise; retains weak-mode, source-mismatch and ambiguity controls |
 | Can one common monotone response satisfy externally supplied calibration? | `scripts/response_calibration.py INPUT.json --output NEW_JSON` | Exact conditional consistency and tight pointwise bands; no automatic camera calibration or inverse |
 | Can one response fit bounded inputs as well as outputs? | `scripts/response_rectangles.py INPUT.json --output NEW_JSON` | Choose some or every allowed input; genuine unbounded envelopes and finite shared witnesses; no input-correlation inference |
+| Which shared Gaussian offset/blur pairs remain under supplied response bounds? | `scripts/gaussian_response_domains.py INPUT.json --output NEW_JSON` | Continuous joint boxes, conditional certificates and retained unknowns; outer projections are not independent parameter choices |
 | How do my reference-sheet photos compare with reserved measurements? | `make photo-benchmark PHOTOS=FOLDER` | Measured-photo comparison with coverage and failed traces retained; supplied comparison threshold is not an uncertainty budget |
 | Does a selected server trace, build and export the sample? | `make smoke` | API exercise against an already running server, including cleanup; not browser or physical acceptance |
 | Can an installed CAD application import the synthetic exports? | `make freecad` | Native FreeCAD check requiring `FREECADCMD`; not slicer or print qualification |
@@ -170,6 +171,12 @@ affine Gaussian covariance, projective variation and radial curved-edge response
 Known digital weights do not establish an optical source model or calibrate
 geometry estimated from the same image.
 
+These operator studies model fixed Keys profile samples. The production
+primary crossing search uses bilinear interpolation; matching the Keys branch
+does not also match that sampler. See the
+[sampling-stage boundary](architecture.md#developer-numerical-tools) before
+applying an operator result to a different production stage.
+
 The [raw-source fitting guide](raw-source-fit.md) adds `make raw-source-fit-study`
 with a fresh JSON destination. Both source observations and model use the same
 fixed retained source projection. The experiment keeps all matched fields,
@@ -234,6 +241,9 @@ extrusion, STEP readback and DXF checks. Its artifact directory retains syntheti
 geometry and native files. Read the [complete record](validation/tapered-caps.md)
 for baseline failures, conditioning limits and how to select an explicit prior
 source checkout. These checks require no personal photos or running service.
+They do not repair the separate
+[free-arc representation limit](architecture.md#remaining-free-arc-representation-limit)
+after blur correction or radius equalisation.
 
 ## Figures
 

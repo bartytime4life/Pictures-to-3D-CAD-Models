@@ -140,7 +140,7 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 - A single image supplies a 2D outline. Thickness is entered by the user; recesses, sloped walls, threads, and hidden features are not reconstructed.
 - One outside width or two-point reference sets uniform scale. It does not correct perspective, lens distortion, or an out-of-plane part. A reference sheet estimates perspective and one radial lens coefficient in the sheet's plane, and the parallax of a vertical-walled part of the entered thickness. Its edges are measured in linear light, decoding the photo as sRGB. The second edge pass follows a locally linear paper-side shadow slope; nonlinear shadows and a camera's own tone mapping remain limits. Near-frontal camera height can be inferred from suitable holes assumed round; without that evidence or EXIF, an assumed lens remains necessary. The recorded errors come from rendered photographs with exact ground truth. [The photo benchmark](docs/photo-benchmark.md) measures real photos against calipers, and no such result is recorded yet.
 - A reference sheet's stated size sets the scale. The workbench checks the sheet's proportions against the photo, but not its absolute size: measure your sheet.
-- Tracing approximates pixel boundaries. Smooth-looking geometry is not evidence of manufacturing accuracy. Sharp-corner radius notes describe resolution under an assumed blur model; measure small fillets that matter for fit.
+- Tracing approximates pixel boundaries. Smooth-looking geometry is not evidence of manufacturing accuracy. Sharp-corner radius notes describe resolution under an assumed blur model; measure small fillets that matter for fit. Free arcs can still export a different circle after a radius correction, including with **Recover design intent** disabled. Inspect critical radii and joins in CAD; see the [export limitation and verification steps](docs/exports.md#verify-critical-arc-geometry).
 - Relative detail can simplify the CAD outline; it does not recover missing image detail or establish a minimum printable wall thickness.
 - Split exports use straight cuts without joinery, kerf, or assembly tolerances. Combined STEP/STL/3MF exports show the assembled geometry, not separated parts arranged on a print bed.
 - The browser sends images to the app's backend. On a cloud host, that means uploading to that host; processing is not browser-only.
@@ -150,7 +150,7 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 Start with the [documentation index](docs/README.md) for capture, engineering, export, development and evidence routes.
 
-The [current coverage record](docs/validation/tapered-caps.md#documentation-coverage)
+The [current documentation review](docs/validation/documentation-pr70.md)
 identifies the source baseline and coverage of current guides, historical records
 and generated library material. Numerical experiments and analysis commands are
 collected in the [developer-tool catalog](docs/developer-tools.md).
@@ -199,11 +199,12 @@ Photos and saved browser drafts belong to that browser and page origin. Opening 
 From the repository root:
 
 ```bash
+make build-app
 make test
 make lint
 ```
 
-`make test` runs the workbench's Python tests, frontend type check/build, and browser scenarios, followed by the reference library's Python/Node tests and its browser checks (the page, Photos workspace, portable backup/restore, and OpenSCAD workspace) over loopback HTTP, plus native OpenSCAD checks when available. `make lint` runs the workbench Python and frontend/browser-source lint/format checks. Use `make test-app` or `make test-library` to work on one component; `make` lists the available commands.
+Build first so Python checks of the served interface inspect current assets. `make test` runs the workbench's Python tests, frontend type check/build, and browser scenarios, followed by the reference library's Python/Node tests and its browser checks (the page, Photos workspace, portable backup/restore, and OpenSCAD workspace) over loopback HTTP, plus native OpenSCAD checks when available. `make lint` runs the workbench Python and frontend/browser-source lint/format checks. Use `make test-app` or `make test-library` to work on one component; `make` lists the available commands.
 
 Browser checks use an installed Chromium or Google Chrome; if neither is available, run `npx playwright install chromium`. Native OpenSCAD checks may skip when OpenSCAD is absent; `make setup` does not install it. Those skips do not validate native rendering. See [development prerequisites](docs/development.md) for browser, PDF/font, and OpenSCAD requirements. The [validation report](docs/validation.md) distinguishes recorded successful runs from checks that have not yet run. A successful synthetic fixture does not establish dimensional accuracy for an arbitrary real-world photograph.
 

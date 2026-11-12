@@ -6,9 +6,10 @@ CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
 For a concise source/review snapshot, use [project status](project-status.md).
-The [current coverage](validation/tapered-caps.md#documentation-coverage)
-includes continuous shared Gaussian domains, the bounded-input response
-extension and their independent checks.
+The [current documentation review](validation/documentation-pr70.md)
+covers published PR #70, current commands and API contracts, and the remaining
+free-arc export limitation. The [PR #70 coverage](validation/tapered-caps.md#documentation-coverage)
+retains the documentation checks performed with that geometry repair.
 The [documentation review through PR #66](validation/documentation-response-state.md)
 audits the published PR #66 baseline, executable calibration examples, command
 help and API contracts. The [response implementation coverage](validation/response-calibration.md#documentation-coverage)
@@ -34,6 +35,10 @@ slot. Stable local coordinates and geometry-aware iteration stopping keep
 line-anchor choices and tiny radius increments from silently moving its centre.
 Independent exact profiles, actual CAD/DXF/STEP exports and retained numerical
 refusals separate digital geometry correctness from photo accuracy.
+Its source-bound record reports **1,556 Python tests and 74 browser scenarios**
+passing. This documentation pass does not rerun those suites. Free arcs can
+still emit a circle different from their stored centre/radius after correction;
+follow the [critical-arc checks](exports.md#verify-critical-arc-geometry).
 
 The [continuous Gaussian-domain developer extension](validation/gaussian-response-domains.md)
 retains every region of one supplied offset/sigma prior in accepted, excluded

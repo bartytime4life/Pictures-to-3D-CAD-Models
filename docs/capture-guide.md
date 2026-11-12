@@ -61,8 +61,13 @@ check](validation/fit-support.md) now prevents the reproduced thin-segment
 extrapolation and retains an outline when the analytic fit lacks support.
 Directional blur can still bias accepted geometry without a dedicated warning;
 the [camera-model limits](validation/scientific-model-review.md) remain.
-For an incorrect fit, use ordinary silhouette tracing with a measured scale or
-reconstruct the critical features in CAD, then check dimensions independently.
+Turning off **Recover design intent** leaves analytic fitting and blur correction
+active. A remaining limitation can make a free arc joined to lines export as a
+different circle after blur correction; see [fitted-curve checks](exports.md#verify-critical-arc-geometry).
+Measure fit-critical exported radii and joins in CAD against the real part.
+For an incorrect fit, use ordinary silhouette tracing from a suitable front-on
+capture with a measured scale, or reconstruct the critical features in CAD,
+then check dimensions independently.
 
 ## Set the scale
 
@@ -141,6 +146,6 @@ Use **Save project** to download the editable recipe. If an invalid independent 
 | Angled photograph of a volumetric object | The visible silhouette does not describe its unseen surfaces. |
 | Multiple overlapping parts | The image does not establish which hidden boundaries belong to each part. |
 | Transparent or strongly reflective material | Foreground/background separation may not match the physical edge. |
-| Tapered or varying-thickness part | A single extrusion cannot represent its full geometry. |
+| Part whose cross-section changes through its thickness, such as sloped walls | A single extrusion cannot represent its full geometry. A tapered 2D outline with a constant cross-section is supported. |
 | Threaded, recessed, or countersunk features | Interior shading is not a reliable depth measurement. |
 | Tiny features near the image resolution limit | Their dimensions may be dominated by blur, compression, and tracing approximation. |

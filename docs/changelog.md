@@ -3,6 +3,18 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Documentation review through PR #70 — November 12, 2026
+
+- Align the source/review snapshot with published PR #70 and refresh its exact-head
+  hosted observations, preserving earlier results under their original bindings.
+- Explain the remaining free-arc export limitation and independent radius/join
+  checks; distinguish in-plane taper from unsupported sloped walls.
+- Clarify build-before-test instructions, API/trace stage boundaries and the
+  difference between bounded developer models and production corrections.
+- Review all current guides, historical records and companion-library documents;
+  record the [complete inventory and checks](validation/documentation-pr70.md).
+  Runtime source, tests, archived studies and generated library artifacts are unchanged.
+
 ## Preserve tapered rounded-end geometry — November 12, 2026
 
 - Restrict constant-width slot geometry to genuinely parallel tangent lines.

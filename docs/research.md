@@ -538,4 +538,22 @@ Near parallelism, a small radius increment can still move the centre by
 `abs(delta_r) norm(v)`. The stopping rule includes that movement; a radius-ulp
 movement larger than the fit tolerance leaves the constraint unresolved.
 Those are arithmetic/representation checks, not physical uncertainty bounds.
-Exact parallel directions retain their separate constant-width cap model.
+Roundoff-level parallel directions retain their separate constant-width cap model.
+
+These constraints do not repair every free arc. The current generic blur
+correction can change a free circle's stored radius while boundary assembly
+still uses the feet of its neighbouring lines as endpoints. Those endpoints
+and the radius-derived midpoint can describe a different three-point circle.
+The [tapered-cap record](validation/tapered-caps.md#regression-scope-and-remaining-work)
+retains this separate limitation; a valid solid or an initial source-support
+check does not resolve it.
+
+A consistent future join must place the endpoints on the declared circle. For
+fixed centre `C`, radius `R` and a unit line direction `d`, let `h` be the
+perpendicular distance from `C` to the line. There are no intersections when
+`h > R`, one tangent join when `h = R`, and two candidates
+`foot(C) ± d sqrt(R²-h²)` when `h < R`. Original span/traversal evidence and the
+major/minor sector must therefore be retained; an absent or ambiguous join
+cannot be resolved by merely renaming the exported radius. This is a repair
+requirement, not an implemented branch-selection algorithm or a physical
+blur-accuracy claim.

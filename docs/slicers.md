@@ -10,6 +10,11 @@ The workbench prepares a built part for either slicer. Open **Review export → 
 4. For split output, use the individual `part-XX.3mf` files when arranging separate pieces. They start at XY zero with their bottom at Z zero. The combined `model.3mf` retains the assembly's coordinates with separate objects; touching split faces are not an arranged printing plate. STL alternatives are included.
 5. Select the exact printer, nozzle, build plate, filament and process settings inside the slicer. Arrange the pieces, check dimensions and fine features, review supports and orientation, slice, and inspect the layer preview. Save the native slicer project there to retain its reviewed settings.
 
+Check fit-critical fitted radii, hole positions and arc/line joins in STEP or
+DXF before slicing; [the curve-check guide](exports.md#verify-critical-arc-geometry)
+describes the remaining export limitation and recovery path. A successful mesh
+import or geometric bed-fit result does not establish those dimensions.
+
 The ZIP contains the geometry, editable workbench recipe, instructions and `manifest.json`. The manifest records built dimensions, part positions, the resolved printer/material plan and SHA-256 hashes. It does not include the original photograph. Its printer ID, nozzle, material and preview color remain planning notes; they do not install a native preset or assign filament.
 
 The ZIP's server-generated recipe preserves the source profile, size and design,
