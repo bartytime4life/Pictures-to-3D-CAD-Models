@@ -86,6 +86,15 @@ With a reference sheet, the display image is the rectified, perspective- and len
 
 The normalized image and trace share the same coordinate system. This avoids using uncorrected EXIF orientation for one while displaying the other differently.
 
+Before Gaussian reconstruction or design snapping, the [initial-fit support check](validation/fit-support.md)
+compares assembled candidates with the complete classified contour, while
+retaining only accepted subpixel points for precision fitting. These internal
+coverage points and indices are not new API fields. The build API's separate
+3 % primitive/polygon area check below validates the supplied profile; it does
+not recover agreement with source observations that were already discarded.
+With thickness correction, `reference.focal_source` can be `sheet`, `exif`,
+`assumed` or `holes`; the last records an accepted hole-roundness inference.
+
 ### `POST /api/build`
 
 A JSON request contains the reviewed `profile`, measured `width_mm` and `thickness_mm`, project `name`, a client `revision` identifier, and optional `design` settings. A profile's `primitives` are validated at the API boundary: they must be closed, must match the outline and every hole, and must agree with the traced polygon rings within 3 % symmetric-difference area. Single-piece output then extrudes the exact segments; the response's `geometry` reports `fitted` with line, arc and circle counts, or `polygon`. Design settings include XY/thickness percentages, appearance, material, relative detail, nozzle size, output mode and split grid, and printer/usable-volume choices.

@@ -26,8 +26,10 @@ The renderer also calls the production radial inverse, `sheet.undistort_radius`.
 Those lens cases check consistency within a shared model, rather than an
 independent camera oracle. The [scientific model review](validation/scientific-model-review.md)
 records this dependency, a fitting-stage extrapolation failure and exploratory
-directional-blur failures. These findings remain unresolved at the reviewed
-revision; the existing tables below retain their original conditions.
+directional-blur failures at its reviewed revision. The initial extrapolation
+failure now has a [source-support guard](validation/fit-support.md); directional
+blur and the shared lens inverse remain separate limits. Existing tables below
+retain their original conditions.
 
 ## Pipeline
 
@@ -182,9 +184,15 @@ The model is checked against a separate computation that shares no code with it.
 Each fillet's radius is then found by Gauss–Newton. The fit uses the arc's points and the edges' points out to 5 σ beyond the tangent points. Each point's residual is (u − ½)/|∇u|, its distance from the model's edge to first order. The fit's own derivatives carry four uncertainties into the radius's standard deviation r_sd:
 
 - the residual noise;
-- that noise's correlation along the edge, measured on the neighbouring straight edges as 1 + 2Σρₖ (Geyer's initial positive sequence);
+- that noise's correlation along the edge, estimated on neighbouring straight edges by the heuristic 1 + 2Σρₖ, stopping at the first nonpositive lag or the smaller of 25 lags and one quarter of the residual count;
 - a 5 % uncertainty in the measured blur;
 - a 0.03 px systematic error in each edge's position.
+
+The correlation rule is bounded and heuristic. It differs from
+[Geyer's initial-positive estimator](https://www.stat.umn.edu/geyer/mcmc/library/mcmc/html/initseq.html),
+which truncates consecutive autocovariance pairs under reversible-chain
+assumptions. The synthetic Monte Carlo check below supports its behavior in
+that experiment; it does not validate general covariance coverage on photos.
 
 A wide corner magnifies the last of these most. On exactly rendered edges the tracer is within 0.004 px at any angle and sub-pixel phase; the 0.03 px is an allowance for what rendering leaves out (demosaicing, JPEG, a lens blur that is not Gaussian) and has not been measured on real photos. A rendered octagon's 135° fillets read 0.022 mm small, within their reported ± 0.078 mm.
 
@@ -226,7 +234,7 @@ The table gives the worst radius errors on exact blurred pentagons (σ = 1.6 and
 
 - For each focal length on a geometric grid of 10–200 mm (35 mm equivalent), the camera is posed from the sheet, every hole is corrected and fitted as a circle, and the squared residuals of the holes that are round at some focal length are summed, each hole's points counted.
 - The least total is refined on a finer grid and by a parabola in log focal length. A minimum at an end of the grid, or not under half of both ends, determines nothing.
-- A hole counts as round where its circle fit's RMS is under the circle tolerance (the larger of 0.03 mm and 0.15 σ, or 1 % of its radius). A slot, or any hole that is not round, is left out; a hole centred on the nadir has no stretch and adds nothing.
+- A candidate needs at least 20 accepted points. It is retained only if its best circle-fit RMS passes the larger of the circle tolerance (max(0.03 mm, 0.15 σ)) and 1 % of its radius. The tested slot fails that gate; this is approximate-roundness screening, not a semantic classifier of every noncircular hole. A hole centred on the nadir has no stretch and adds nothing.
 - The walls are then refined again with the new camera, and the trace reports the focal length found and how many holes gave it.
 
 On exact silhouettes, the visible floor where a hole's bottom outline and its magnified top outline overlap, the focal length is recovered within 0.05 % (`test_the_camera_height_makes_thick_holes_round_again`). The holes are assumed round: a hole made oval along the direction from the nadir would bias the height.
@@ -286,16 +294,21 @@ Over 200 random cameras, the focal length is invariant and the ratio equals a/b 
 
 ## 7. Lines, arcs and circles
 
-**Known whole-circle support gap.** A small residual alone does not establish
-that a closed contour covers a whole circle. At the reviewed revision, a thin
-circular segment can pass the circle gate and be replaced by a much larger full
-circle, without a radius warning. The [stage-level reproduction](validation/scientific-model-review.md#whole-circle-extrapolation)
-records the input, result and limits of that evidence. Compare the fitted
-boundary with the original photograph, including long straight closing edges;
-the later validity check of a fitted solid does not test this lost source
-agreement. The support guard proposed in that record is not implemented.
+**Initial-fit source support.** A small radial or line residual alone does not
+establish boundary coverage. Whole circles now require an enclosed center, and
+the complete assembled initial boundary must pass a bounded source-tube check.
+Rejected subpixel profiles remain missing measurements; the complete classified
+contour supplies separate coverage, with a positional allowance measured from
+matched coarse/fine points rather than from the candidate's mismatch. Fits that
+lack support retain the traced polyline. The [repair record](validation/fit-support.md)
+derives the check and preserves the original counterexamples.
 
-- **Circles.** A Kåsa algebraic fit, then Gauss–Newton on geometric distance. A circle is accepted when its RMS residual is below max(tol, 1 % r) and its largest residual below four times that. The 1 % allowance keeps a slightly out-of-round hole a circle, but a rounded polygon can pass it too: a 12-gon on a 45 mm circle with R12 corners lies 0.39 mm RMS from one circle, eight times the line tolerance. A ring that passes only by that allowance is therefore also described as lines and arcs, and that description wins when it has straight edges and its worst residual is under a third of the circle's (`test_a_rounded_polygon_close_to_a_circle_is_not_taken_for_one`). A disc, and a hole 2 % out of round, stay circles. Noise-free arcs of 20–360° are recovered exactly, and the fit is equivariant under rotation, translation and scale (`test_circle_fit_is_exact_and_similarity_equivariant`). Its radius bias over 2000 noisy circles is within σ²/R + 4 standard errors (`test_geometric_circle_fit_bias_is_second_order_in_noise`).
+This check precedes design-intent snapping and Gaussian reconstruction. A
+correctly deblurred sharp apex intentionally differs from the blurred contour;
+the initial-fit check is not a final physical accuracy or model-adequacy test.
+Continue to compare important boundaries and independent dimensions.
+
+- **Circles.** A Kåsa algebraic fit, then Gauss–Newton on geometric distance. A circle is accepted when its RMS residual is below max(tol, 1 % r) and its largest residual below four times that. The 1 % allowance keeps a slightly out-of-round hole a circle, but a rounded polygon can pass it too: a 12-gon on a 45 mm circle with R12 corners lies 0.39 mm RMS from one circle, eight times the line tolerance. A ring that passes only by that allowance is therefore also described as lines and arcs, and that description wins when it has straight edges and its worst residual is under a third of the circle's (`test_a_rounded_polygon_close_to_a_circle_is_not_taken_for_one`). A disc, and a hole 2 % out of round, stay circles. The low-level `fit_circle` test recovers noise-free arcs of 20–360° exactly, and that optimizer is equivariant under rotation, translation and scale (`test_circle_fit_is_exact_and_similarity_equivariant`). Its radius bias over 2000 noisy circles is within σ²/R + 4 standard errors (`test_geometric_circle_fit_bias_is_second_order_in_noise`).
 - **Lines and arcs.** Douglas–Peucker breakpoints at 1.5 × tolerance split each ring. Breakpoint edges of at least `min_line` (2.5 % of the part, clamped to 1–3 mm) with a total-least-squares RMS below tolerance are taken as lines, unless they turn out to be chords of an arc (next item). Consecutive line edges that still fit one line are merged, and runs between lines become arcs. An "arc" between two lines running the same way is a noise bump and is merged into one line. Points within tolerance of a neighbouring line are trimmed before an arc's fit, because tangent-region points pull its centre. An arc too small to trim that way gives the straight run at each end back to its line (the item after next). Rings that cannot be described within tolerance stay as traced polylines.
 - **Chords that pass for lines.** A chord of length c on an arc of radius R bows c²/(8R) from the arc, and a breakpoint is placed only where that exceeds 1.5 × tolerance. Breakpoints therefore leave chords of up to √(12 R tol), and those chords are straight enough to pass the line test. Once √(12 R tol) reaches `min_line`, an arc would be cut into short straight pieces. With `min_line` at 3 mm that is from R25 at the 0.03 mm tolerance floor and from about R15 at a 0.34 mm blur. On a part under 40 mm across, where `min_line` is 1 mm, it is from about R3.
   - Each edge taken as a line is therefore tested against the circle fitted to its neighbours. The neighbours are the arc edges that adjoin it. Where a side has none and the others are too straight to define a circle (a line fits them within tolerance), the line edge on that side stands in. The edge is a chord when its own points lie on that circle to an RMS of half the tolerance.
@@ -309,7 +322,7 @@ agreement. The support guard proposed in that record is not implemented.
   - Each line beside a small arc therefore runs on to the last of the arc's points that lies within half the tolerance of it, and the arc is fitted to the points between. Fewer than three points define no circle: the arc is dropped and its two lines meet at a corner.
   - The test is made on single points and not on whole breakpoint edges, because a stub often runs on into the rise of the corner within one edge. Two tests on edges were tried first. Joining a short edge to the line beside it when the two together still fit one line within tolerance ends the polylines, but a long line outweighs what it takes in: on rendered 60 × 40 mm plates that turned 15 of 24 R1 corners into sharp ones and left points 9 to 14 tolerances off a line in its fit. Testing the short edge's own points against the line, more strictly the shorter it is, spared the fillets but left a stub wherever it shared an edge with the rise: on nine outlines from rendered photos of a sharp-cornered plate the size was still up to 1.5 mm off, against 0.05 mm with the test on points.
   - Larger arcs need none of this. Their points near a line are trimmed already, a stub's among them.
-  - On exact geometry a rectangle is four lines that meet at its corners wherever its ring starts, where a stub had been an arc with a radius in the millions (`test_a_stub_cut_off_by_the_rings_first_point_is_part_of_its_edge`). A corner cut by a single step is a corner (`test_two_points_between_two_lines_are_a_corner`). On the exact outline of a blurred sharp-cornered plate, the corners' radius is 1.7 to 1.9 σ at 25 ring starts, where it had been 1.7 to 20 σ, and 1.6 to 2.2 σ with edge noise of a fifth of the tolerance (`test_a_blurred_sharp_corner_is_fitted_alike_wherever_the_ring_starts`).
+  - On exact geometry a rectangle is four lines that meet at its corners wherever its ring starts, where a stub had been an arc with a radius in the millions (`test_a_stub_cut_off_by_the_rings_first_point_is_part_of_its_edge`). A tiny one-step corner cut may remain its measured polyline when joining the fitted lines would exceed the source-support allowance; it must not become an invented large arc (`test_two_points_between_two_lines_are_a_corner`). On the exact outline of a blurred sharp-cornered plate, the corners' radius is 1.7 to 1.9 σ at 25 ring starts, where it had been 1.7 to 20 σ, and 1.6 to 2.2 σ with edge noise of a fifth of the tolerance (`test_a_blurred_sharp_corner_is_fitted_alike_wherever_the_ring_starts`).
   - On rendered plates with sharp corners, an R30 arc and a stub of 2.4 mm, the outline is five lines and five arcs with the R30 arc within 0.03 mm, where it had stayed a polyline (`test_a_stub_cut_off_a_straight_edge_is_fitted_as_part_of_it`). Rounded corners with eight or more clear points are fitted exactly as before.
 - **Lines on their straight parts.** Douglas–Peucker hands a line the start of the next arc, up to where the arc leaves it by 1.5 tolerances; for a large radius that stretch is long. Fitted with it, the edges beside R80 px corners were tilted by 0.24°. Snapping then kept the tilt, and the fillets built tangent to those edges were up to 0.9 % off in radius. Each line is therefore refit before snapping on its points short of the neighbouring arcs' tangent points (less 3 σ in the trace): by total least squares, or for a snapped line by offset only.
 - **Design intent** (optional, reported):
@@ -356,8 +369,8 @@ The same full-frame photos cannot be traced without a reference at all ("The out
 - The photo is decoded as sRGB. A camera's own tone mapping is not undone; §3 gives the cost of a plain-gamma camera (0.02 mm at 2.2, 0.11 mm at 1.8).
 - An edge carried by colour and not by brightness is measured on the colour channels. A JPEG stores colour at lower resolution than brightness, and that case is tested only on lossless renders.
 - A soft shadow beside an edge is corrected where the paper's light is close to linear over 2.5–5 σ (§3): on the rendered photo, Ø22 reads 0.008 mm off under a shadow removing a quarter of the light, where it read 0.026 mm. A sharper shadow, or one whose edge falls within a few σ of the part, is corrected only in part. Diffuse light is still best.
-- One radial coefficient about the image centre; no tangential distortion or k₂. Cropped photos and screenshots break the principal-point assumption, which leaves the focal estimate inconsistent and falls back to EXIF or an assumed lens.
-- Vertical walls of constant thickness. Chamfers, draft, countersinks and shiny edges are not modelled. Where even one tone shared by the narrow walls is not determined (§5), an edge may read up to 0.2 σ into the part. Overhead with no known focal length the camera height comes from the holes' roundness (§5), which needs round holes away from the nadir; without them a typical lens is assumed, which left the rendered photo's outline 0.10 mm off.
+- One radial coefficient about the image centre; no tangential distortion or k₂. Cropped photos and screenshots break the principal-point assumption. An inconsistent sheet focal estimate initially falls back to EXIF or an assumed lens; with entered thickness, suitable holes can replace the assumed height (§5). Hole roundness does not repair a wrong principal point or a mismatched lens model.
+- Vertical walls of constant thickness. Chamfers, draft, countersinks and shiny edges are not modelled. Where even one tone shared by the narrow walls is not determined (§5), an edge may read up to 0.2 σ into the part. Overhead with no known focal length, qualifying off-center holes assumed round can determine camera height if the search accepts a sufficiently identifiable minimum (§5). Otherwise a typical lens is assumed. One earlier rendered example was 0.10 mm off with that assumption; this is not a general error bound.
 - Fitted lines, arcs and circles are descriptions of the photograph, not recovered design intent; review the snap list. Split output uses the traced polygon.
 - A run of short straight facets that stays within about 1.5 × tolerance of one circle is fitted as an arc, and so is a flat shorter than an arc's longest chord that runs tangentially off its end: neither can be told from that arc's own chords (§7). A large-radius corner whose traced edge wanders from its circle by more than half the tolerance over one chord is not recognised as one arc, and its outline stays a polyline.
 - With snapping on, a sharp corner between two fitted edges is traced sharp by the exact corner model (§4). Otherwise it is fitted as an arc of about 1.8 times the edge blur, 0.5 mm at a 0.3 mm blur. That arc is the blur's rounding, not the part's. Where it is not accepted as a tangent fillet, the radius correction of §4 enlarges it about its centre, it stands proud of its two edges, and the outline reads 0.04 to 0.1 mm large across it.
@@ -365,4 +378,4 @@ The same full-frame photos cannot be traced without a reference at all ("The out
 - A fillet at a wide corner is barely constrained by its outline (at 150° the outline moves 0.035 times a change of radius). The trace names radii it cannot determine and corners it traced sharp, with a bound; measure those if they matter. With snapping off, short free arcs at such corners are not corrected, only named.
 - The fillet uncertainty assumes a Gaussian blur and a 0.03 px systematic edge error; a real lens's blur is not exactly Gaussian.
 - A single median blur width does not characterize directional blur. Exploratory anisotropic renders exceed some of the existing regression guards while producing accepted profiles; [conditions and results](validation/scientific-model-review.md#directional-blur) are recorded separately from the original synthetic tables.
-- Whole-ring circle acceptance currently lacks a source-coverage check. A fitted circle can extrapolate far beyond a thin closed contour, and the radius notes need not flag it. See the [known support gap](#7-lines-arcs-and-circles).
+- Initial circle/piece fits require [source support](#7-lines-arcs-and-circles). Sparse, unsupported or over-budget fits retain the polyline. Later design-intent and Gaussian corrections remain model-dependent; the support test does not certify their physical accuracy.

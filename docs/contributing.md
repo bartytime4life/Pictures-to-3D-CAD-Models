@@ -59,7 +59,8 @@ test count is not a fresh result.
   the synthetic generator. Reserve independent geometry, dimensions and capture
   conditions for evaluation; retain failed traces and unmatched features beside
   conditional error statistics. The [scientific review](validation/scientific-model-review.md)
-  gives current counterexamples and proposed acceptance checks.
+  records the original findings at `5588a52`; follow the [fit-support record](validation/fit-support.md)
+  and current [benchmark guide](photo-benchmark.md) for later changes and remaining limits.
 
 ## Submit a reviewable result
 

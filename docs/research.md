@@ -44,10 +44,16 @@ The blur–curvature series, its third-order coefficient (5/24), the two-step wa
 
 The [November 11 scientific model review](validation/scientific-model-review.md)
 records reproducible limitations at `5588a52`, their evidence level and acceptance
-checks for future changes. A thin circular segment can become a whole circle;
+checks for future changes. At that baseline a thin circular segment became a whole circle;
 directional blur can bias accepted geometry; and greedy benchmark matching can
-hide valid comparisons. These are unresolved findings, not new algorithms
-delivered by the documentation update.
+hide valid comparisons. These findings were unresolved at that baseline; the documentation update
+did not deliver new algorithms. The subsequent [initial-fit support repair](validation/fit-support.md)
+adds separate center/coverage evidence and a complete assembled-boundary check.
+It keeps coverage points separate from precision measurements, and runs before
+physical reconstruction; final forward-model adequacy remains further work. The
+[benchmark repair](validation/benchmark-correspondence.md), merged in PR #43,
+adds global correspondence and complete dimension accounting; physical feature
+identity and independent measured-photo evaluation remain separate limits.
 
 [Al-Sharadqah and Chernov's circle-fit analysis](https://arxiv.org/abs/0907.0421)
 compares geometric and algebraic fits with coordinate errors. It motivates
@@ -67,6 +73,52 @@ uses selected RGB-edge distributions and a response prior; its project record
 requires enough edges spanning the intensity range. A scene dominated by one
 part color and one paper color need not supply that evidence. The current
 pipeline continues to decode sRGB under its stated assumption.
+
+### Directional-blur experiment status — November 12, 2026
+
+A local exploratory diagnostic was rerun against committed `eec45d0`, excluding
+the initial-fit support candidate. It estimates an empirical image-plane blur
+covariance from normal-profile variances and the local rectification Jacobian:
+`s_i² − 0.7² = (J_iᵀ n_i)ᵀ Σ (J_iᵀ n_i)`. The subtracted term is the known
+rectified smoothing variance. At least three independent orientation equations
+are needed for the symmetric covariance's three unknowns; two perpendicular
+straight-edge directions cannot determine its cross term. Fit rank, conditioning,
+profile rejection and residual thresholds are exploratory eligibility checks,
+not confidence levels or calibrated optical-PSF measurements.
+
+For a locally curved boundary with centered Gaussian covariance Σ in its
+normal/tangent frame, the leading half-level displacement derived for this
+experiment is `κ/2 × (Σ_tt − Σ_tn²/Σ_nn)`. Substituting normal variance alone
+loses the conditional-tangent term. This specializes the tangent-plane expansion
+in [Elsey and Esedoğlu's anisotropic threshold-dynamics paper, appendix](https://websites.umich.edu/~esedoglu/Papers_Preprints/elsey_esedoglu_anisotropy.pdf).
+An independent Gaussian-circle integral, using standard-library `erf` and
+quadrature rather than backend rendering/fitting routines, was checked on 24
+cases. Doubling quadrature order from 320 to 640 changed the computed shift by
+at most `2.85 × 10⁻¹³` in its pixel coordinates. Quadrature convergence does
+not establish end-to-end photo accuracy or bound the leading-order expansion.
+
+Across 13 frozen synthetic cases, both Keys and bilinear diagnostic sampling
+flagged six directional-blur cases and left seven other cases unflagged. These
+previously examined cases are not a new independent evaluation set. The proposed
+circle-radius correction still worsened the earlier held-out rotated-blur case:
+
+| Absolute error (mm) | Unmodified `eec45d0` trace | Experimental Keys-based correction |
+| --- | ---: | ---: |
+| Small-hole diameter | 0.035454 | 0.042050 |
+| Bore diameter | 0.035211 | 0.036602 |
+
+Bilinear-based correction also worsened both errors. A gamma-1.8 tone-mismatch
+control remained unflagged despite 0.086840 mm small-hole and 0.118973 mm outer
+errors. An absent directional flag therefore cannot mean accurate geometry.
+The candidate remains research only: no diagnostic or covariance correction
+has been added to the product. It needs fresh nuisance/PSF cases, explicit
+unknown outcomes and independent captures before any production reporting.
+
+Ignored local scripts and hash-bound JSON receipts are retained under
+`.local/verification/directional-blur-current-eec45d0*`; they are not bundled
+reproducibility artifacts. The synthetic renderer still shares the production
+radial inverse, and feature measurement shares arc reconstruction. The independent
+integral checks one mathematical subproblem; it does not remove those limits.
 
 ## Outline to solid and exchange files
 

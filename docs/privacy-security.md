@@ -8,7 +8,7 @@ The browser uploads the selected photograph to the app's Python backend for deco
 
 The conversion workflow does not send photographs to an external AI service. This is different from a claim that photos never leave the browser or device.
 
-The tracing response includes a normalized image so the browser can align the outline with the displayed pixels. The upload is closed after reading, and the original is not retained as a permanent project file. The normalized PNG omits the original image metadata. The decoder can use orientation and 35 mm-equivalent focal-length metadata for tracing; reference-sheet provenance can retain a derived camera height and the focal source (`sheet`, `exif` or `assumed`). It does not embed the original EXIF block in the recipe. The selected file and normalized photograph can remain in browser memory while the workbench is open.
+The tracing response includes a normalized image so the browser can align the outline with the displayed pixels. The upload is closed after reading, and the original is not retained as a permanent project file. The normalized PNG omits the original image metadata. The decoder can use orientation and 35 mm-equivalent focal-length metadata for tracing; reference-sheet provenance can retain a derived camera height and the focal source (`sheet`, `exif`, `assumed` or `holes`). With entered thickness, suitable holes assumed round can supply the height estimate when the sheet and metadata do not. The recipe does not embed the original EXIF block. The selected file and normalized photograph can remain in browser memory while the workbench is open.
 
 ## Optional local assistant
 

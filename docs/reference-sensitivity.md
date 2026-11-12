@@ -37,4 +37,4 @@ The equations above are a direct consequence of the workbench's uniform scale mo
 - [Gądek-Moszczak, *The impact of the resolution of the measured object on the assessment of its perimeter* (2019)](https://scispace.com/papers/the-impact-of-the-resolution-of-the-measured-object-on-the-35j4wau7ly): the abstract reviewed through SciSpace describes generated test objects and progressively reduced image resolution. It supports treating image resolution as relevant to measurement; its perimeter study is not a validation of this workbench's width scenario. Full methods and results were not reviewed.
 - [OpenCV camera calibration and 3D reconstruction](https://docs.opencv.org/4.12.0/d9/d0c/group__calib3d.html): intrinsic calibration and lens-distortion models are separate from a single uniform length scale. The scenario adds neither capability.
 
-Reviewed November 10, 2026. A measured-photo benchmark with independent ground truth remains future work.
+Reviewed November 10, 2026. The [photo-benchmark runner](photo-benchmark.md) is now available; independent real-photo results against measured ground truth remain unrecorded.

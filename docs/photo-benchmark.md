@@ -12,6 +12,12 @@ correspondence first maximizes admitted match count, then minimizes total size
 error within the unchanged gates. Read the [coverage and matching limits](#coverage-and-matching-limits)
 before interpreting a small reported error as overall performance.
 
+This guide describes the global matcher and coverage fields merged in
+[PR #43](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/43)
+at `d6a657f`. The [correspondence record](validation/benchmark-correspondence.md)
+separates earlier and integrated checks; older checkouts can still produce the
+previous report schema and greedy assignments.
+
 ## What you need
 
 - One or more flat parts of constant thickness, each with a few dimensions you can measure well.
@@ -163,7 +169,7 @@ The unexplained RMS is evaluated on the same samples used to fit these terms.
 It is an in-sample residual, not an independent prediction error or proof that
 the two terms capture all physical causes.
 
-**The photo table** shows which shot is the odd one out. In the example none is: every photo's worst error is about 0.015 mm. The trace notes, in the JSON report, still say what each photo relied on. In the overhead photo neither the sheet nor the metadata gave the focal length, so it was estimated from the holes' roundness; without round holes a typical phone lens is assumed, and a wrong camera height scales the top face's edges by the wrong amount (it left this photo's outline 0.10 mm short). **Sheet proportions** is the trace's own check of the sheet's shape against the entered size; a discrepancy whose magnitude exceeds 1 % calls for review. Sheet choice, entered size, camera-model or capture error may contribute; the sign can be negative and the check does not identify the cause.
+**The photo table** shows which shot is the odd one out. In the example none is: every photo's worst error is about 0.015 mm. The trace notes, in the JSON report, still say what each photo relied on. In the overhead photo neither the sheet nor the metadata gave the focal length, so it was estimated from the holes' roundness. Without suitable round holes a typical phone lens is assumed, and a wrong camera height scales the top face's edges by the wrong amount. Before hole-derived height was implemented, the assumed height left this example's outline 0.10 mm short; that is a historical result, not the current example's error. **Sheet proportions** is the trace's own check of the sheet's shape against the entered size; a discrepancy whose magnitude exceeds 1 % calls for review. Sheet choice, entered size, camera-model or capture error may contribute; the sign can be negative and the check does not identify the cause.
 
 ## Limits
 

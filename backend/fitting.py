@@ -13,6 +13,8 @@ import math
 from dataclasses import dataclass, field
 
 import numpy as np
+import shapely
+from shapely.geometry import LinearRing, LineString, Polygon
 
 from .sheet import intersect, line_tls
 
@@ -119,28 +121,114 @@ def _line(points, a, b):
     return Primitive("line", {"c": c, "d": d}, rms, float(res.max()), (a, b))
 
 
-def fit_ring(points, tol, min_line, circle_rel=0.01):
+def fit_ring(points, tol, min_line, circle_rel=0.01, support_points=None, support_error=0.0):
     """A circle, a cycle of lines and arcs, or None (keep the polyline).
 
-    A ring is one circle when a circle fits it within max(tol, circle_rel r) (RMS, and
+    A ring is one circle when its centre is inside the source ring and a circle fits
+    it within max(tol, circle_rel r) (RMS, and
     four times that at its worst point). The radius-relative allowance keeps a slightly
     out-of-round hole a circle, but a rounded polygon can pass it too: a 12-gon on a
     45 mm circle with R12 corners lies within 0.4 mm RMS of a circle. A ring that
     passes only by that allowance is therefore also described as lines and arcs, and
     that description wins when it has straight edges and its worst residual is under a
-    third of the circle's.
+    third of the circle's. Assembled boundaries must also have source support: small
+    radial/line residuals alone do not justify closing a short arc into a whole circle
+    or extending nearly parallel lines to a distant intersection.
     """
+    support = points if support_points is None else support_points
     cx, cy, r, rms, mx = fit_circle(points)
     gate = max(tol, circle_rel * r)
-    if rms < gate and mx < 4 * gate:
+    if rms < gate and mx < 4 * gate and shapely.contains_xy(Polygon(support), cx, cy):
         circle = [Primitive("circle", {"c": (cx, cy), "r": r}, rms, mx)]
-        if rms < tol and mx < 4 * tol:
+        if supported_fit(points, circle, tol, support, support_error):
+            if rms < tol and mx < 4 * tol:
+                return circle
+            pieces = _fit_pieces(points, tol, min_line, circle_rel)
+            if (
+                pieces and any(p.kind == "line" for p in pieces)
+                and max(p.max_abs for p in pieces) < mx / 3
+                and supported_fit(points, pieces, tol, support, support_error)
+            ):
+                return pieces
             return circle
-        pieces = _fit_pieces(points, tol, min_line, circle_rel)
-        if pieces and any(p.kind == "line" for p in pieces) and max(p.max_abs for p in pieces) < mx / 3:
-            return pieces
-        return circle
-    return _fit_pieces(points, tol, min_line, circle_rel)
+    pieces = _fit_pieces(points, tol, min_line, circle_rel)
+    return pieces if pieces and supported_fit(points, pieces, tol, support, support_error) else None
+
+
+MAX_SUPPORT_SAMPLES = 8192
+
+
+def supported_fit(points, prims, tol, support_points=None, support_error=0.0):
+    """Whether the complete assembled boundary stays near its observed source ring.
+
+    Observed-vertex -> fitted-polyline distances plus the existing line tolerance
+    define a source-boundary tube. Require the ENTIRE assembled fitted
+    polyline inside that tube, not just its vertices (discrete Hausdorff distance can
+    miss a shortcut between them). The analytic curve is at most tol/16 from these
+    chords, subject to floating-point evaluation. Thus the reverse distance
+    is bounded by observed deviation + tol + support_error + that sampling error. This is a geometric
+    support check BEFORE design-intent snapping and Gaussian reconstruction, not a
+    physical error budget. Deblurred sharp corners intentionally differ from blurred
+    observations; their acceptance belongs to the forward corner model, not this raw
+    distance check. No allowance is inferred from long
+    interpolating source edges, which could bless a sparse polygon as a full circle.
+    Optional support_points retain the full classified boundary when some sub-pixel
+    profiles were rejected; coarse coverage can support a missing measured arc without
+    feeding those coarse points into the geometric fit or claiming their precision.
+    support_error is a separately measured coarse-to-fine positional allowance. It
+    must not be inferred from the candidate's mismatch to the coarse boundary: that
+    could pay for extrapolating across a real, but unmeasured, straight closing edge.
+
+    If the sampling work limit or a numerical construction fails, retain the source
+    polyline instead of silently coarsening the curve and invalidating this bound.
+    """
+    error = tol / 16
+    if (
+        not prims or not math.isfinite(error) or error <= 0
+        or not math.isfinite(support_error) or support_error < 0
+    ):
+        return False
+    try:
+        samples = []
+        count = 0
+        for seg in segments(prims):
+            if seg[0] == "line":
+                sampled = np.asarray(seg[1:], dtype=np.float64)
+            else:
+                if seg[0] == "circle":
+                    _, c, r = seg
+                    start, sweep = 0.0, 2 * math.pi
+                else:
+                    c, r, start, sweep = arc_geometry(*seg[1:])
+                if not math.isfinite(r) or r <= 0:
+                    return False
+                # r (1 - cos(step/2)) = 2r sin^2(step/4). The asin form
+                # avoids cancellation for a large radius and a small requested error.
+                step = 4 * math.asin(math.sqrt(min(1.0, error / (2 * r))))
+                if step <= 0 or not math.isfinite(step):
+                    return False
+                n = max(4, math.ceil(abs(sweep) / step))
+                if count + n + 1 > MAX_SUPPORT_SAMPLES:
+                    return False
+                angle = np.linspace(start, start + sweep, n + 1)
+                sampled = np.asarray(c) + r * np.column_stack([np.cos(angle), np.sin(angle)])
+                if seg[0] == "arc":
+                    sampled[0], sampled[-1] = seg[1], seg[-1]
+            count += len(sampled)
+            if count > MAX_SUPPORT_SAMPLES or not np.isfinite(sampled).all():
+                return False
+            samples.append(sampled)
+        fitted = LineString(np.vstack([*samples, samples[0][:1]]))
+        support = points if support_points is None else support_points
+        source = LinearRing(support)
+        if not math.isfinite(fitted.length):
+            return False
+        forward = float(np.max(shapely.distance(shapely.points(points), fitted)))
+        # GEOS buffers approximate circular caps from inside; containment is
+        # conservative. Add no outward buffer padding that could weaken the check.
+        return bool(source.buffer(forward + tol + support_error).covers(fitted))
+    except (ValueError, OverflowError, shapely.errors.GEOSException):
+        return False
 
 
 def _fit_pieces(points, tol, min_line, circle_rel):
@@ -691,9 +779,12 @@ def undetermined_radii(rings, sigma, scale=1.0, unit="mm", limit=300):
 
 
 def correlation_factor(residual, max_lag=25):
-    """How many times the variance of a mean exceeds that of independent samples, for
-    residuals in order along an edge: 1 + 2 (rho_1 + rho_2 + ...), the autocorrelations
-    summed until the first that is not positive (Geyer's initial positive sequence)."""
+    """Heuristic variance inflation for residuals ordered along an edge.
+
+    Sum 1 + 2 (rho_1 + rho_2 + ...) until the first nonpositive lag, at most
+    min(max_lag, len(residual) // 4). This is not Geyer's paired initial-positive
+    estimator or a general guarantee of covariance coverage.
+    """
     r = np.asarray(residual, dtype=np.float64)
     r = r - r.mean()
     total_var = float(r @ r)

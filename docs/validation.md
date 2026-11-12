@@ -5,9 +5,24 @@ record below to assess its evidence. This page separates local checks, hosted
 CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
-## Current workbench evidence — November 11, 2026
+## Current workbench evidence — November 12, 2026
 
-The latest documentation follow-up reviews `main` at
+The [initial-fit support repair](validation/fit-support.md) adds enclosed-center
+and complete assembled-boundary checks while retaining separate coarse coverage
+and subpixel measurements. Integration with the merged wall/height changes passed
+**529 Python tests and 74 browser scenarios**; the later complete run including
+PR #43 passed **579 Python tests**. Its record separates these completed
+runs from earlier development and source-substitution controls. This
+does not establish final forward-model adequacy or physical accuracy.
+
+The [November 12 documentation review](validation/documentation-review-2026-11-12.md)
+covers the complete documentation set against `main` at `eec45d0`, then the
+merged PR #43 at `d6a657f` and the initial-fit support candidate. It includes
+the merged wall/height behavior, current benchmark schema and
+retains separate records for documentation checks, code/browser tests and
+research that has not entered the production pipeline.
+
+The earlier scientific documentation follow-up reviewed `main` at
 `5588a523c70e1797341329e54d056c161d0361ad`, after PR #39. Its
 [scientific model review](validation/scientific-model-review.md) records new
 counterexamples and documentation checks, without changing runtime behavior or
@@ -20,6 +35,9 @@ It changes guides relative to that integrated baseline, not runtime behavior.
 
 | Evidence | Revision and result | Scope |
 | --- | --- | --- |
+| Global benchmark correspondence | PR #43 merged at `d6a657f`; [candidate integration record](validation/benchmark-correspondence.md): **91 focused tests** and a fresh three-photo CLI example | Exact-cost matching oracles and coverage conservation; errors remain conditional, synthetic and separate from physical feature identity |
+| Integrated initial-fit support | [Method and checks](validation/fit-support.md), `d6a657f` plus the support candidate: **579 Python tests**, build and lint passed; **74 browser scenarios** before the benchmark-only merge | Synthetic geometry, generated photos and explicit transport fixtures; API/frontend sources unchanged by that merge; no physical-accuracy claim |
+| Current documentation review | [Coverage and checks](validation/documentation-review-2026-11-12.md), integrated `d6a657f` plus the support candidate | Source consistency, local navigation and companion-library documentation; older results remain historical |
 | Recorded camera-height checks | Branch `claude/camera-height`, on the narrow-wall commit: **508 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#camera-height-from-the-holes-roundness--november-11-2026) | Local result; synthetic photos and exact silhouettes |
 | Recorded narrow-wall and blur-sampling checks | Branch `claude/narrow-walls` on `5588a52`: **505 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#near-frontal-wall-tone-and-cubic-blur-measurement--november-11-2026) | Local result; synthetic photos and exact profiles, including what got worse |
 | Scientific documentation follow-up | [Findings and checks](validation/scientific-model-review.md), baseline `5588a52` | Circle fitting-stage and full-tracer directional-blur counterexamples, benchmark aggregation fixture, current guide corrections; not real-photo or physical qualification |

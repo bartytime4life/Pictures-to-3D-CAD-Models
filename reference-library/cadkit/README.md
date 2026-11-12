@@ -158,7 +158,7 @@ scad.render("examples/two-hole-plate.scad", "out.stl", params.to_openscad_define
 | `project` | `new_project`, `slugify`, `FOLDERS`, `PLACEMENT` |
 | `routes` | `load_routes`, `recommend`, `all_recommendations` |
 
-Single-number functions are plain formulas. Functions that return a dictionary include a `warnings` list. Warnings never change a result. Invalid input raises `ValueError` with a message. That includes malformed point lists, a homography `at` point beyond the vanishing line, and a result too large to represent, such as a `wind_power` or `ratio_uncertainty` overflow.
+Single-number calculator functions are plain formulas. Structured calculator reports and `homography.fit_report` include a `warnings` list; warnings never change their result. Other dictionary-returning APIs have their own schemas: `stl.analyze`, `params.load_register` and `params.values` do not universally supply that field. Invalid calculator input raises `ValueError` with a message. That includes malformed point lists, a homography `at` point beyond the vanishing line, and a result too large to represent, such as a `wind_power` or `ratio_uncertainty` overflow.
 
 ## Conventions shared with the browser calculators
 
