@@ -4,12 +4,12 @@ Every accuracy figure in this repository so far comes from rendered photographs.
 
 **No result from real photos is recorded yet.** The example report below comes from rendered photos and shows the format only.
 
-Everything runs on your computer. Each photo goes through the same function as an upload to the workbench, so the report describes what the workbench would give you.
+Everything runs on your computer. Each photo uses the workbench's reference-sheet trace function with the sheet, thickness and snapping settings specified here. The benchmark requires a successful sheet trace; it does not use the initial upload dialog's fallback to ordinary tracing when a sheet cannot be found.
 
-The current report's error statistics cover matched dimensions from successful
-traces. Failed photos are listed separately, but their expected dimensions do
-not enter the dimension totals. Size matching is greedy and can miss a valid
-assignment. Read the [coverage and matching limits](#coverage-and-matching-limits)
+The report counts every requested dimension, including those unavailable when
+a photo fails. Error statistics still cover matched dimensions only. Size
+correspondence first maximizes admitted match count, then minimizes total size
+error within the unchanged gates. Read the [coverage and matching limits](#coverage-and-matching-limits)
 before interpreting a small reported error as overall performance.
 
 ## What you need
@@ -82,18 +82,17 @@ Put the photos in one folder with a `benchmark.json` beside them:
 | Setting | Meaning |
 | --- | --- |
 | `sheet` | `"a4"` (the default), `"letter"`, or the sheet's measured `[width, height]`. A part may carry its own `sheet`. |
-| `caliper_uncertainty_mm` | A numeric comparison threshold in mm; 0.03 if left out. Mean errors beyond it are printed in bold. Record separately whether your entered specification is an accuracy limit, absolute bound or standard uncertainty. The runner does not distinguish them or propagate a measurement uncertainty budget. |
+| `caliper_uncertainty_mm` | A numeric comparison threshold above 0 and at most 5 mm; 0.03 if left out. Mean errors beyond it are printed in bold. Record separately whether your entered specification is an accuracy limit, absolute bound or standard uncertainty. The runner does not distinguish them or propagate a measurement uncertainty budget. |
 | `name` | A label for the report. Parts need different names. |
 | `photos` | File names or patterns, relative to the folder. |
 | `thickness_mm` | The part's thickness. With it, the trace removes the visible side walls, as **Build** does in the workbench. Leave it out for a part thin enough to ignore. |
 | `light_part` | `true` for a light part on a dark sheet. |
 | `measured` | The measurements of step 2. |
 
-A misspelt setting is refused by name, so a typing error cannot silently drop a measurement.
+A misspelt setting is refused by name, so a typing error cannot silently drop a measurement. Each measurement kind accepts at most **128 features per part**; an opening pair is one feature with two scalar dimensions. Matching also limits each kind to **2048 detected candidates** and **131072 expected-candidate pairs**. Exceeding a work limit stops the command with an explanation before matching costs are evaluated; it does not silently discard candidates. Split a large measurement list into smaller, separately named part entries, or simplify the outline.
 
-The generated report currently calls this threshold the calipers' uncertainty
-and says smaller errors cannot be distinguished from it. That sentence is not
-a statistical decision rule: no coverage factor, calibration contribution or
+The generated report labels this field a display threshold. It is not a
+statistical decision rule: no coverage factor, calibration contribution or
 reference-measurement model is evaluated. Keep the instrument specification and
 measurement procedure with your study. [NIST's terminology](https://www.nist.gov/pml/nist-technical-note-1297/nist-tn-1297-appendix-d1-terminology)
 distinguishes accuracy, uncertainty and repeatability.
@@ -110,21 +109,22 @@ or, with options:
 .venv/bin/python scripts/photo_benchmark.py path/to/folder --json report.json --markdown report.md
 ```
 
-- `--json FILE` saves every reading, each photo's trace notes and the per-photo fits.
+- `--json FILE` saves every reading, each photo's trace notes and fits, and complete dimension coverage at photo, part and summary levels.
 - `--markdown FILE` saves the printed tables.
 - `--no-snap` traces without design-intent snapping. With snapping on, as in the workbench, near-equal radii are made equal and straight edges are squared, so four equal holes share one reading per photo.
 - `--example FOLDER` writes three rendered photos and a `benchmark.json` to copy from. It takes about half a minute.
 
-A trace takes a few seconds per photo. The command exits with an error only when the file cannot be used or no photo could be traced.
+A trace takes a few seconds per photo. The command exits with an error when the manifest cannot be used, a correspondence work limit is exceeded, or no photo could be traced. A successful exit is not a dimensional-accuracy or manufacturing-acceptance decision.
 
 ## 6. Read the report
 
 This report is the `--example` folder: three **rendered** photos of the test plate at 22°, 9° and 0° tilt, 4 mm thick, with its design dimensions as the caliper values.
 
-> 3 of 3 photos traced; 48 dimensions compared.
-> Absolute error: median 0.005 mm, 95th percentile 0.043 mm, worst 0.104 mm.
+> 3 of 3 photos traced.
+> Dimensions: 48 of 48 requested compared; 0 unmatched in successful traces; 0 unavailable in failed traces.
+> Matched dimensions only: absolute error median 0.005 mm, 95th percentile 0.043 mm, worst 0.104 mm.
 
-| Dimension | Calipers (mm) | Readings | Mean error (mm) | Spread, SD (mm) | Worst (mm) | Not found |
+| Dimension | Reference (mm) | Readings | Mean error (mm) | Spread, SD (mm) | Worst (mm) | Unmatched |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | Outline length | 120.00 | 3 | **-0.033** | 0.062 | -0.104 |  |
 | Outline width | 70.00 | 3 | -0.020 | 0.033 | -0.058 |  |
@@ -137,7 +137,7 @@ This report is the `--example` folder: three **rendered** photos of the test pla
 | Centres 50 | 50.00 | 3 | -0.002 | 0.004 | -0.006 |  |
 | Centres 108.24 | 108.24 | 3 | -0.006 | 0.009 | -0.015 |  |
 
-> Scale error -0.011 % (SD 0.017 between photos); edge offset -0.005 mm (SD 0.012 between photos), positive when boundaries are found outside the material. What the two leave unexplained: 0.008 mm RMS.
+> Fitted scale term -0.011 % (SD 0.017 between photos); edge term -0.005 mm (SD 0.012 between photos), positive when boundaries are found outside the material. In-sample residual: 0.008 mm RMS. These diagnostic terms do not identify physical causes or predict held-out error.
 
 | Photo | Edge blur (mm) | Sheet proportions (%) | Worst error (mm) | Result |
 | --- | ---: | ---: | ---: | --- |
@@ -150,9 +150,9 @@ This report is the `--example` folder: three **rendered** photos of the test pla
 - **Mean error** is the observed mean signed error for the matched samples. A small study does not establish the population bias or show which physical effect caused it.
 - **Spread** is the sample standard deviation of the row's errors. For one identifiable feature it describes the observed repeat-shot spread. For a row of several equal features (×4) it also includes differences between them; snapping and common calibration can correlate the readings. Twelve readings of four holes in three photos are not twelve independent captures.
 - **Worst** is the largest single error, with its sign.
-- **Not found** counts unmatched expected dimensions within successful traces. The size gate is 1 mm or 15 %, whichever is larger. A missing circle, or a hole described as a non-circular opening, can land here. Greedy assignment can also leave a dimension unmatched even when a full assignment exists. Dimensions from completely failed traces are absent from this count.
+- **Unmatched** counts expected scalar dimensions without an admitted match in a successful trace. The size gate is 1 mm or 15% of the expected dimension, whichever is larger. Both sides of an outline/opening pair must pass. A missing circle, or a hole described as a non-circular opening, can land here. Dimensions from completely failed traces are counted separately as **unavailable**.
 
-**Scale error and edge offset.** Least squares fits a two-term diagnostic to each photo's matched errors:
+**Fitted scale term and edge term.** Least squares fits a two-term diagnostic to each photo's matched errors:
 
 - The **scale term** changes every dimension in proportion to its size. A wrong sheet size or perspective error could produce this pattern, but the fit does not identify the cause.
 - The **edge term** grows outside dimensions and shrinks holes by twice the offset, and leaves centre distances alone. Blur, shadow, tone mapping or non-vertical walls could contribute to this pattern.
@@ -168,7 +168,7 @@ the two terms capture all physical causes.
 ## Limits
 
 - **Your measurements are the reference.** Instrument error, alignment, contact force and a mistyped value affect the comparison. A displayed difference below the entered threshold is not proof of agreement within a known uncertainty.
-- **Features are matched by size.** The runner sorts admissible pairs by absolute size error and greedily takes unused pairs. It does not solve a global assignment or establish physical feature identity. See the counterexample below.
+- **Features are matched by size.** The runner maximizes admitted one-to-one matches, then minimizes their total absolute size error. Equal optima use deterministic value order and stable traversal. This global objective does not establish physical feature identity; equal-size features can remain ambiguous.
 - **Calipers and the trace do not measure the same edge on every part.** Calipers close on the widest section. The trace follows the part's silhouette, formed by its top edge on some sides and its bottom edge on others, and assumes a vertical wall between them. A chamfer, draft, burr or a printed part's flared first layer therefore shows up as an edge offset.
 - **The outline is the smallest enclosing rectangle.** That equals a caliper reading only across parallel sides.
 - **Scale error and edge offset form a two-term model.** A lens the single distortion coefficient does not describe, a curled sheet or a part that does not lie flat can affect both fitted terms and the residual.
@@ -181,37 +181,45 @@ dimensions**. A bad reconstruction outside the size gate is unscored, and a
 failed photo contributes no dimension samples. Always retain the per-photo
 failures and unmatched counts beside these statistics.
 
-Count requested scalar dimensions from the manifest: two for `outline`, one per
-`diameters`, two per `openings` pair, one per `radii` and one per
-`centre_distances`. Multiply each part's count by its photo count and add across
-parts. Until the runner reports all denominators, record this conservation
-check separately:
+The JSON report includes `requested`, `compared`, `unmatched` and `unavailable`
+in each photo's and part's `coverage` object and directly in `summary`:
 
 ```text
-requested = compared + unmatched in successful traces
-                     + unavailable in failed traces
+requested = compared + unmatched + unavailable
 ```
 
-For example, two requested diameters across two photos create four comparison
-opportunities. If one photo fails and the other compares one diameter, the
-current summary can show `samples: 1, missing: 1`; it does not include the failed
-photo's two dimensions in `missing`.
+Requested scalars are two for an `outline`, one per `diameters` value, two per
+`openings` pair, one per `radii` value and one per `centre_distances` value.
+Each part's resolved photo list is deduplicated across patterns before counting;
+separately named part entries remain separate experiments. `unmatched` refers
+to successful traces only; `unavailable` includes all requested dimensions in
+failed traces. The old summary names `samples` and `missing` remain aliases for
+`compared` and `unmatched`, respectively.
 
-The matching defect is reproducible without photos:
+For example, two requested diameters across two photos create four comparison
+opportunities. If one photo fails and only one diameter can be matched in the
+other, the summary reports `requested: 4, compared: 1, unmatched: 1,
+unavailable: 2`. Those two unavailable dimensions are retained in the total,
+not assigned invented errors or included in the conditional percentiles.
+
+The repaired assignment is reproducible without photos:
 
 ```python
 from scripts import photo_benchmark as pb
-assert pb.match([6, 7], [6.4, 5], pb._scalar_cost) == [0, None]
+assert pb.match([6, 7], [6.4, 5], pb._scalar_cost) == [1, 0]
 ```
 
-The greedy first choice is 6 → 6.4. It blocks 7, although 6 → 5 and 7 → 6.4
-both satisfy the unchanged gates. A future matcher should first maximize the
-number of admitted matches, then minimize total admitted error. Even that
-objective cannot prove physical identity for equal-size features. The gate is a
-correspondence heuristic, never a manufacturing or accuracy tolerance. The
-[scientific review](validation/scientific-model-review.md#benchmark-correspondence-and-coverage)
-records the proposed independent tests; this documentation update does not
-change the runner.
+This matches 6 → 5 and 7 → 6.4, both within the unchanged gates. The earlier
+greedy first choice, 6 → 6.4, left 7 unmatched. The new matcher also minimizes
+summed error among maximum-count assignments. The gate remains a correspondence
+heuristic, never a manufacturing or accuracy tolerance.
+
+The [repair and validation record](validation/benchmark-correspondence.md)
+describes the independent exhaustive assignment oracle, coverage-conservation
+tests and work limits. The [scientific review](validation/scientific-model-review.md#benchmark-correspondence-and-coverage)
+preserves the original findings at `5588a52`; its benchmark defect is historical
+following this repair. Its separate fitting, blur and shared-renderer findings
+are not resolved by the benchmark change.
 
 ## What a report holds
 
