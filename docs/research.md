@@ -1,5 +1,14 @@
 # Research and design decisions
 
+The [known warp-chain study](warp-observations.md) extends the fixed observation
+operator to `S G R`, including nonidentity projective/radial maps, explicit border
+order and rounding-stage accounting. An independent raw-edge study separates
+digital agreement from optical assumptions: affine straight edges permit a
+direction-specific Gaussian spread, homographies need spatial variation, and
+radially curved boundaries can shift a Gaussian half-level. The
+[complete record](validation/warp-observations.md) retains these controls;
+none calibrates a real camera or changes production tracing.
+
 The [fixed-observation/covariance investigation](profile-observations.md) now
 composes the known finite smoothing filter and final Keys sampler, rather than
 assuming one effective continuous Gaussian. A compact SVD accounts for shared

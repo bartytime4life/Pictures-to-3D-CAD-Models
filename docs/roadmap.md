@@ -43,11 +43,17 @@ Reference entry also includes an [endpoint-placement sensitivity explorer](refer
 
 ## Release discipline
 
+The [known warp-chain extension](warp-observations.md) now composes the fixed
+raw-to-rectified digital path. Optical adequacy remains separate: raw PSF and
+detector calibration, spatially varying/projective and curved-edge response,
+image-derived parameter uncertainty and full-photo reconstruction need their
+own evidence before a production correction or uncertainty result.
+
 The [fixed-observation/covariance module](profile-observations.md) now represents
 known final sampling and finite smoothing operators. Conditional noise controls
 prevent counting shared pixels as independent evidence. This is a developer
-foundation; integrating earlier spatially varying rectification, camera/rounding
-discrepancy and covariance between profiles remains required before production
+foundation; its known rectification extension is now available. Camera/rounding
+discrepancy and covariance between profiles remain required before production
 uncertainty or joint wall/camera claims.
 
 The [wall-localization candidate](wall-localization.md) expands geometry

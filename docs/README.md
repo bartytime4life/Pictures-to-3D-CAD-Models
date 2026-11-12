@@ -51,12 +51,13 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Examine joint lighting/wall ambiguity and bounded source fits | [Model and repeatable experiment](wall-gradients.md), [complete results](validation/wall-gradients.md) |
 | Review wall localization, sampling operators and retained camera regressions | [Method and comparison](wall-localization.md), [source-bound development record](validation/wall-localization.md) |
 | Understand correlated profile samples and compose a known smoothing filter | [Fixed observations and covariance](profile-observations.md), [complete controls](validation/profile-observations.md) |
+| Include known perspective/lens resampling and inspect raw optical assumptions | [Warp-chain model](warp-observations.md), [complete digital and optical controls](validation/warp-observations.md) |
 | Understand the lens inverse domain and independent synthetic camera checks | [Radial inverse and lens mismatch](validation/radial-inverse.md) |
 | Review why the blur diagnostic remains research only | [Directional-spread qualification](validation/directional-spread-qualification.md) |
 | Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |
 | Run a benchmark with measured photos | [Photo benchmark](photo-benchmark.md) |
 | Review completed checks | [Validation overview](validation.md), [design QA](../design-qa.md) |
-| Check current documentation coverage and source consistency | [Current coverage and checks](validation/profile-observations.md#documentation-coverage), [earlier complete review](validation/documentation-complete-2026-11-12.md), [earlier consolidation](validation/documentation-math-state.md) |
+| Check current documentation coverage and source consistency | [Current coverage and checks](validation/warp-observations.md#documentation-coverage), [earlier complete review](validation/documentation-complete-2026-11-12.md), [earlier consolidation](validation/documentation-math-state.md) |
 | Review the recent interface changes | [Guided-workbench audit](validation/guided-workbench.md) |
 | Review scope and future work | [Roadmap](roadmap.md), [change log](changelog.md) |
 | Reproduce bundled printer data | [Printer source record](../data/PRINTER_SOURCES.md) |

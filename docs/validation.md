@@ -17,6 +17,12 @@ retains its source, executable API example and completed checks.
 
 ## Current workbench evidence — November 12, 2026
 
+The [known warp-chain candidate](validation/warp-observations.md) composes the
+earlier perspective/radial sampler with smoothing and final profiles. Its 324
+readouts reuse six synthetic arrays; separate 18-field optical controls retain
+affine exactness, projective discrepancy and a radial curved-edge half-level
+shift. Digital agreement is not optical or physical qualification.
+
 The [fixed-observation/covariance candidate](validation/profile-observations.md)
 adds a reusable developer operator and known-filter composition. Seven density
 and repetition configurations reuse 8,192 input-noise draws; 12 postblur cases

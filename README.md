@@ -45,6 +45,9 @@ The [fixed-observation developer tools](docs/profile-observations.md) now compos
 declared smoothing and signed interpolation, and account for correlated profile
 samples under supplied input-pixel noise. Their reproducible controls distinguish
 local precision from global ambiguity; they do not add a photo accuracy label.
+The [known warp-chain extension](docs/warp-observations.md) also follows the
+earlier perspective/lens resampling and distinguishes those digital operations
+from assumptions about blur in the raw photograph.
 
 This repository contains two related tools:
 
