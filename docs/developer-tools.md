@@ -184,7 +184,9 @@ with a fresh JSON destination. Both source observations and model use the same
 fixed retained source projection. The experiment keeps all matched fields,
 wrong-PSF/nonlinear/quantization controls, common-noise draws, global aliases and
 unresolved searches. Raw residuals outside the selected source row space remain
-visible. This is not all-raw-pixel fitting or a calibrated photo likelihood.
+visible. This study uses a proper source projection; the API also permits all
+source modes, when its cost equals all-pixel standardized least squares. Neither
+choice alone establishes a calibrated photo likelihood.
 Use the [developer API reference](raw-source-fit.md#developer-api) for pixel order,
 units, finite-search budgets and standardized residual fields. To repeat its
 independent geometry and bounded-brightness checks without starting a server:

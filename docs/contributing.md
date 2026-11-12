@@ -105,8 +105,8 @@ actions.
    tests for the affected behavior. Documentation parsing does not establish
    a fresh Python/browser regression suite. Update navigation and the change log.
 
-Use the [current coverage](validation/canonical-arcs.md#documentation-coverage)
-and [complete preceding inventory](validation/documentation-pr70.md#coverage-inventory)
+Use the [current complete inventory](validation/documentation-pr72.md#coverage-inventory)
+and [geometry coverage](validation/canonical-arcs.md#documentation-coverage)
 to include guides, worksheets and generated/historical records in a review.
 The [developer-tool catalog](developer-tools.md) centralizes numerical commands
 and output rules. Preserve report files explicitly: some analysis tools refuse
