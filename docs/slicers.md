@@ -5,12 +5,18 @@ The workbench prepares a built part for either slicer. Open **Review export → 
 ## Take the current part into a slicer
 
 1. Review the model's dimensions, holes and design settings, then build it. Geometry changes require a fresh build before exporting.
-2. In the export dialog, choose your slicer and download its handoff ZIP. A plain **3MF** export is also available beside STEP, STL, DXF, SVG, PDF and OpenSCAD.
+2. Open **Choose an export** or **Review export**, choose your slicer and download its handoff ZIP. Plain **3MF**, STEP and STL are under **CAD & 3D printing**; DXF, SVG, PDF and OpenSCAD are under **Drawings & source files**.
 3. Extract the ZIP and import `model.3mf` into your slicer as geometry. Coordinates are millimetres. If the slicer asks whether to import another application's project settings, choose geometry only.
 4. For split output, use the individual `part-XX.3mf` files when arranging separate pieces. They start at XY zero with their bottom at Z zero. The combined `model.3mf` retains the assembly's coordinates with separate objects; touching split faces are not an arranged printing plate. STL alternatives are included.
 5. Select the exact printer, nozzle, build plate, filament and process settings inside the slicer. Arrange the pieces, check dimensions and fine features, review supports and orientation, slice, and inspect the layer preview. Save the native slicer project there to retain its reviewed settings.
 
 The ZIP contains the geometry, editable workbench recipe, instructions and `manifest.json`. The manifest records built dimensions, part positions, the resolved printer/material plan and SHA-256 hashes. It does not include the original photograph. Its printer ID, nozzle, material and preview color remain planning notes; they do not install a native preset or assign filament.
+
+The ZIP's server-generated recipe preserves the source profile, size and design,
+including sheet/fitted data when present. Browser-held known-feature endpoints,
+independent height and height-decision inputs are not sent to that recipe. Use
+**Save project** as a separate download to keep those optional measurement notes;
+see [recipe contents](exports.md#project-json-the-workbench-recipe).
 
 The standards-based 3MF includes millimetre units, separate mesh objects and their positions. It contains no printer settings, temperatures, AMS/MMU assignments, painting, supports or machine instructions. A slicer project saved by either application can carry application-specific settings beyond this interchange geometry.
 

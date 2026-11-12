@@ -1,10 +1,12 @@
 # Research and design decisions
 
+[Documentation index](README.md) · [Guided workbench review](validation/guided-workbench.md)
+
 This product starts with a deliberately constrained geometry problem: a photograph can provide a planar boundary, and a user can supply measured scale and thickness. The resulting extrusion is useful for flat parts without pretending that a single image identifies hidden surfaces.
 
 The research below informed the implementation and its acceptance criteria. It is a review of technical and accessibility sources, not a claim that user interviews, a physical metrology study, or a production security assessment have been completed.
 
-The [selected design reference](images/design-reference.png) is a generated concept. The [workbench screenshot](images/workbench.png) is browser-rendered implementation evidence. The sample photograph is generated demonstration input and is traced by the real conversion pipeline; it is not a measured reference specimen.
+The [original selected design reference](images/design-reference.png) is a generated concept. The [recorded workbench screenshot](images/workbench.png) is browser-rendered implementation evidence; the [guided-workbench review](validation/guided-workbench.md) records the reviewed interaction, screenshots and evidence date. The sample photograph is generated demonstration input and is traced by the real conversion pipeline; it is not a measured reference specimen.
 
 ## Image to outline
 
@@ -22,7 +24,7 @@ The workbench accepts either the full outside width or a measured distance betwe
 
 An optional measured outside height is compared with the source-profile estimate before design scaling. It does not enter the scale calculation or adjust geometry. A measurement used to set scale cannot also provide an independent test of that scale. If a reserved check is used to correct the model, it becomes development evidence for the revised model; retain the earlier result and seek a fresh check. The [independent-check worksheet](../reference-library/templates/INDEPENDENT-CHECKS.md) records that distinction.
 
-[JCGM 100:2008 (GUM), sections 3.1–3.3](https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf) explains why a measurement result needs an uncertainty statement and why several effects can contribute. Here those effects can include physical reference measurement, endpoint placement, trace approximation, perspective, and lens distortion. The height comparison reports a signed difference, not a numerical uncertainty budget or a manufacturing pass. Synthetic coordinate/export checks test the calculation and preservation of inputs; a measured-photo benchmark remains necessary to quantify physical performance.
+[JCGM 100:2008 (GUM), sections 3.1–3.3](https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf) explains why a measurement result needs an uncertainty statement and why several effects can contribute. Here those effects can include physical reference measurement, endpoint placement, trace approximation, perspective, and lens distortion. The height comparison reports a signed difference and, when the user supplies an allowance and an absolute measurement error bound, a conditional interval decision for that one source dimension. This is not a numerical uncertainty budget or a manufacturing pass; [engineering model and verification](engineering-model.md#bounded-source-height-decision) gives the decision rule and its limits. Synthetic coordinate/export checks test the calculation and preservation of inputs; a measured-photo benchmark remains necessary to quantify physical performance.
 
 ## Reference sheet, sub-pixel edges and fitting
 
@@ -34,7 +36,7 @@ The reference-sheet stages are documented with their derivations and checks in [
 - Cubic convolution interpolation: [Keys (1981)](https://doi.org/10.1109/TASSP.1981.1163711), whose a = −½ kernel reproduces quadratics.
 - Circle fitting: the Kåsa algebraic fit refined by Gauss–Newton on geometric distance; see N. Chernov, *Circular and Linear Regression: Fitting Circles and Lines by Least Squares* (CRC Press, 2010) for bias and precision.
 - The normal CDF is evaluated with [Abramowitz & Stegun 7.1.26](https://personal.math.ubc.ca/~cbm/aands/page_299.htm) (|erf error| < 1.5 × 10⁻⁷).
-- Exact identities are checked in rational arithmetic at random rational points. A nonzero rational function vanishes at a random point with negligible probability (the [Schwartz–Zippel lemma](https://en.wikipedia.org/wiki/Schwartz%E2%80%93Zippel_lemma)), so agreement at independent random points is strong evidence the identity holds generally.
+- Algebraic identities are checked in exact rational arithmetic at seeded, sampled rational points. These checks avoid floating-point cancellation and can expose counterexamples; they are not formal proofs that an identity holds for every input. The [Schwartz–Zippel lemma](https://en.wikipedia.org/wiki/Schwartz%E2%80%93Zippel_lemma) provides related background, but a numerical failure-probability claim would require explicit polynomial-degree and sampling-set bounds that this report does not establish.
 
 The blur–curvature series, its third-order coefficient (5/24), the two-step wall model and its degeneracy, the sheet-proportions check, the size of the tone-curve bias and the shift a sloped shadow causes were derived for this workbench and checked numerically; they are not taken from a cited source.
 
@@ -121,7 +123,8 @@ is withheld as unknown; the original solid and exports retain their orientation.
 Measurements, normalization offsets and this final witness check use
 `BRepBndLib.AddOptimal` with triangulation disabled. The
 [OCCT 7.8.1 API declaration](https://github.com/Open-Cascade-SAS/OCCT/blob/V7_8_1/src/BRepBndLib/BRepBndLib.hxx)
-matches the installed OCP wrapper's flags. This prevents cached STL/viewport
+was checked against the OCP wrapper during the recorded curved-placement work
+(see [that validation record](validation/curved-placement.md)). This prevents cached STL/viewport
 triangulation and its deflection allowance from inflating geometric dimensions.
 The fixed directions bound geometry approximation; they are not fixed trial
 placement angles. No universal enclosure-error or physical accuracy is claimed.
@@ -174,6 +177,15 @@ Those requirements differ substantially from a single-photo extrusion. A future 
 ## Interaction and accessibility
 
 The workbench keeps the photographed boundary and generated solid together so the user can compare them before export. Real measurements are entered explicitly. Geometry edits invalidate previous export state, and recoverable errors preserve the user's inputs.
+
+The [guided next-step flow](validation/guided-workbench.md) derives its action from the
+available outline, valid source measurements, design settings and current build
+revision. It distinguishes entering measurements from rebuilding stale geometry;
+it does not convert CAD readiness into a physical verification result. The export
+dialog groups CAD and mesh files first and leaves drawings/source files in a
+separate disclosure. If optional height notes prevent saving, the interface opens
+the measurement check and focuses the input needing attention while retaining
+the current CAD model.
 
 These design choices are supported by the following W3C guidance:
 

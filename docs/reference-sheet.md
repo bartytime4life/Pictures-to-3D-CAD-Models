@@ -1,11 +1,13 @@
 # Reference-sheet tracing: method, mathematics and evidence
 
-Lay the part on a sheet of known size, photograph the whole sheet, and choose that sheet as the **Scale reference**. The photo then supplies more than an outline:
+[Documentation index](README.md) · [Guided workbench review](validation/guided-workbench.md)
+
+Lay the part on a sheet of known size, photograph the whole sheet, and choose that sheet as the **Scale reference** before loading the photo. For an already loaded photo, choose it under **Adjust outline** and apply the new trace. The photo then supplies more than an outline, subject to the camera and part assumptions below:
 
 - **Scale** from the sheet's stated size, so no calipered outside width is needed. Your own width measurement becomes an independent check.
-- **Perspective and lens correction** from the sheet's four edges.
-- **Thickness parallax correction**: the camera's position, recovered from the sheet, together with the thickness you enter, removes the visible side walls of a thick part.
-- **Exact geometry**: lines, tangent arcs and circles fitted with residuals, then exported as true cylinders (STEP), `ARC`/`CIRCLE` entities (DXF) and `circle()` calls (OpenSCAD).
+- **Estimated perspective and lens correction** from the sheet's four edges, using the stated camera model.
+- **Thickness parallax correction**: an estimated camera position and the thickness you enter correct the top-face boundary for the modelled vertical walls. When thickness changes, building retraces from the source photo if it is still available; a restored outline without its photo instead reports that its earlier correction cannot be refreshed.
+- **Analytic fitted geometry**: accepted lines, tangent arcs and circles carry residuals and become exact entities in STEP and DXF. OpenSCAD retains fitted circles as `circle()` calls and samples other fitted curves; see [export representation limits](exports.md#openscad-editable-profile-extrusion). A fitted entity is not an exact measurement of the physical part.
 - **A check of the sheet you chose**: its proportions, though not its scale, are measured from the photo.
 
 ![The workbench after tracing a tilted phone photo of a 4 mm plate on an A4 sheet: the rectified, axis-aligned view with the fitted outline, the 120.02 mm width taken from the sheet, and the built model](images/reference-sheet.png)
@@ -18,7 +20,7 @@ This page describes each stage, the mathematics it depends on, and the tests tha
 
 The accuracy figures here come from **synthetic photographs** with exact ground truth (`tests/synthetic.py`). The renderer models a pinhole camera with radial distortion, uneven light, vignetting, a soft shadow, optical blur, noise, JPEG compression and the walls of a thick part. It also uses the same single-coefficient lens model the estimator fits. Light is mixed and blurred in linear light and saved through the sRGB tone curve, the same curve the tracer decodes. A real camera adds its own tone mapping, which neither side models; §3 gives the cost of a mismatched curve. The sheet is exactly its nominal size and perfectly flat, and the walls are vertical with uniform tone.
 
-Real lenses, paper tolerance, a curled sheet, chamfered or shiny edges will all do worse. These figures show which error sources each stage removes and the floor it reaches. They are not a physical accuracy claim. A measured-photo benchmark with calipered parts and real phones remains necessary; [the photo benchmark](photo-benchmark.md) runs one on your own photos, and no result from real photos is recorded yet.
+Real lenses, paper tolerance, a curled sheet, chamfered or shiny edges introduce model mismatch that these renders do not establish a bound for. These figures report observed errors under the tested rendering conditions, not a universal error floor or a physical accuracy claim. A measured-photo benchmark with calipered parts and real phones remains necessary; [the photo benchmark](photo-benchmark.md) runs one on your own photos, and no result from real photos is recorded yet. Use [independent engineering checks](engineering-model.md) for dimensions reserved from calibration.
 
 ## Pipeline
 
@@ -268,7 +270,7 @@ Over 200 random cameras, the focal length is invariant and the ratio equals a/b 
   - Between parallel lines the arc becomes a slot end cap: radius half the spacing, centre on the mid-line.
   - Radii within 3 % become equal.
   - The model is rotated so its straight edges lie along X and Y.
-- **Sampling.** Polygon rings sample every arc within a stated sagitta. Every chord lies within the tolerance and the area error is at most perimeter × tolerance (`test_sampled_arcs_stay_within_the_requested_sagitta`).
+- **Sampling.** Polygon rings target a stated sagitta. When the required sample count is below the implementation's segment cap, each chord stays within that tolerance and the area error is bounded by perimeter × tolerance. `test_sampled_arcs_stay_within_the_requested_sagitta` checks the plate fixture at 0.1, 0.01 and 0.001 units; it does not establish a universal bound for every imported radius. Trace sampling, CAD validation sampling and OpenSCAD use finite sample caps. [Export limits](exports.md#openscad-editable-profile-extrusion) explain the OpenSCAD target separately from the analytic STEP/DXF representation.
 
 The fitted CAD face area equals both the Green's-theorem area of its segments and the plate's closed-form area. The theorem's form is the shoelace sum over segment endpoints plus r²(φ − sin φ)/2 for each arc. The solid's volume is area × thickness, all to 10⁻⁹ (`test_greens_theorem_area_matches_the_cad_kernel_and_the_design`). DXF arc angles reproduce every arc's endpoints (`test_dxf_arcs_reproduce_their_endpoints`).
 

@@ -13,6 +13,12 @@
 
 This folder is the reference companion to the [photo-to-CAD workbench](../README.md) in this repository. The workbench traces one flat part; the library covers the wider route from photographs to printable CAD.
 
+When reading inside the repository, use the [documentation index](../docs/README.md)
+for current workbench guides and [contribution guide](../docs/contributing.md) for
+repository changes. This library's own revision, catalog snapshot, image limits,
+browser storage and verification record remain separate. Its portable reader
+works without a running workbench or those parent-repository guides.
+
 A practical, source-backed library for turning photographs into printable CAD: recover shape, establish dimensions, rebuild editable geometry, and check the part you print. **Revision 7, November 9, 2026.**
 
 It contains a 23-chapter handbook, 88 annotated sources (including 21 GitHub repository records), research notes, reusable worksheets, 10 explanatory figures, 14 calculators with a route finder, a local photo workspace, a Python command-line toolkit, and synthetic worked examples that are rendered and checked automatically.

@@ -1,11 +1,20 @@
 # Engineering model and verification
 
+[Documentation index](README.md) · [Guided workbench review](validation/guided-workbench.md)
+
 The useful engineering concept is a **measurement-assisted 2.5D reverse-engineering
 workbench**: reconstruct the boundary of a flat, constant-thickness part, verify
 reserved dimensions, then qualify the manufactured prototype for its intended use.
 The model is a planar profile extruded through a separately measured thickness.
 A single photograph does not identify hidden surfaces, blind holes, internal
 features, material properties, loads or process settings.
+
+The guided next step distinguishes missing measurements, invalid design settings,
+a model needing a rebuild, and a current model ready for export review. **Solid
+ready** means the digital model matches the current settings. The independent
+height decision and printer-fit result remain separate checks; neither the guide
+nor a successful build establishes physical acceptance. See [print planning](print-planning.md)
+and [export checks](exports.md) before moving to manufacturing.
 
 ## Define the requirement before tracing
 
@@ -42,8 +51,9 @@ millimeters and inches. The computed width normalizes floating-point contact
 with the supported 0.1 mm and 2000 mm limits using
 `64 * Number.EPSILON * max(abs(width), abs(limit))`. This is an arithmetic guard
 (about 2.84e-11 mm at 2000 mm), not a measurement allowance. Values outside that
-narrow guard remain outside the supported range. Endpoint sensitivity scenarios
-retain their unbounded results; they are not clipped to computational limits.
+narrow guard remain outside the supported range. Endpoint sensitivity scenario
+widths are not clipped to these build limits; a collapsed reference span still
+withholds the scenario as described in [endpoint placement](reference-sensitivity.md).
 
 The independent height check concerns the **source polygon's bounding spans**,
 not a resized design, a local fitted radius, an exported mesh or a printed part.

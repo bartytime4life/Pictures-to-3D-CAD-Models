@@ -1,5 +1,7 @@
 # Printer catalog
 
+[Documentation index](README.md) · [Guided workbench review](validation/guided-workbench.md)
+
 The workbench bundles **429 printer model groups with 1,106 nozzle-specific
 profiles across 70 manufacturer or profile families**. Examples include Bambu
 Lab, Prusa, Creality, Anycubic, Qidi, Sovol, Voron, RatRig, Flashforge, FLSun,
@@ -12,6 +14,12 @@ The data is in [printers.json](../data/printers.json). Search by model or family
 then choose the nozzle actually installed. Use custom dimensions when the
 catalog does not match the machine. No account, paid service, or internet
 connection is needed to read the bundled catalog.
+
+In **Design & print**, search filters the model list without changing the
+selected printer. If there is no match, shorten the search or choose **Custom
+printer** and enter the actual usable dimensions. Editing a bed dimension
+switches the plan to Custom; changing the nozzle for a catalog model selects
+that nozzle's available profile geometry on the next build.
 
 ## What is known
 
@@ -28,6 +36,11 @@ of the user's hardware. A model's summary uses a 0.4 mm variant when available;
 the selected variant's geometry takes precedence. Ten model groups have
 different dimensions across variants. For example, an upstream profile may
 reserve height and therefore list less Z travel than a marketing specification.
+
+More than one source profile can match a nozzle. The fit check can use them when
+they all describe the same bed geometry; different matching beds, or no matching
+profile, leave placement unknown. The application does not select a native
+slicer preset or infer the installed nozzle from this catalog choice.
 
 The source has 411 rectangular, 15 circular, and three polygonal default beds.
 Thirty defaults include exclusion paths. A circular bed's bounding rectangle

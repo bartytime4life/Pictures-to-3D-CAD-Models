@@ -43,3 +43,8 @@ flag remains labeled as a configuration flag, not verified installed hardware.
 See [the catalog guide](../docs/printer-catalog.md) for the schema and exact
 offline reproduction procedure. The application reads the bundled JSON; it
 does not contact OrcaSlicer or GitHub at runtime.
+
+The [documentation index](../docs/README.md) links the user workflow and
+[print-planning limits](../docs/print-planning.md). This provenance record and its
+November 8 snapshot date do not establish current installed hardware, imported
+slicer presets, or physical print acceptance.
