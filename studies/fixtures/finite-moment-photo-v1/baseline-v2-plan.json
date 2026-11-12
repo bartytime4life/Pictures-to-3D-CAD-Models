@@ -1,0 +1,85 @@
+{
+  "arc_vertices": 2049,
+  "cases": [
+    {
+      "blur": 1.2,
+      "fraction": 0.25,
+      "name": "small-isotropic",
+      "normal": 0.0,
+      "radius": 3.0
+    },
+    {
+      "blur": [
+        3.0,
+        1.0,
+        30.0
+      ],
+      "fraction": 0.25,
+      "name": "small-directional",
+      "normal": 0.0,
+      "radius": 3.0
+    },
+    {
+      "blur": [
+        3.0,
+        1.0,
+        30.0
+      ],
+      "fraction": 0.25,
+      "name": "medium-directional",
+      "normal": 0.0,
+      "radius": 6.0
+    },
+    {
+      "blur": [
+        3.0,
+        1.0,
+        30.0
+      ],
+      "fraction": 0.25,
+      "name": "large-directional",
+      "normal": 0.0,
+      "radius": 12.0
+    },
+    {
+      "blur": [
+        3.0,
+        1.0,
+        30.0
+      ],
+      "fraction": -0.4,
+      "name": "minor-directional",
+      "normal": 0.0,
+      "radius": 6.0
+    },
+    {
+      "blur": [
+        3.0,
+        1.0,
+        30.0
+      ],
+      "fraction": 0.6,
+      "name": "rotated-major-directional",
+      "normal": 37.0,
+      "radius": 6.0
+    }
+  ],
+  "centre_mm": [
+    30.0,
+    30.0
+  ],
+  "colors": {
+    "material": 40,
+    "paper": 230,
+    "table": 80
+  },
+  "contract": "Existing source only; all six outcomes retained; no new fitter imported.",
+  "ppm": 4.0,
+  "sheet_mm": [
+    60.0,
+    60.0
+  ],
+  "snapping": false,
+  "thickness": 0,
+  "version": 2
+}

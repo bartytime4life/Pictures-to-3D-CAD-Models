@@ -1,0 +1,25 @@
+[
+  {
+    "args": [
+      "--help"
+    ],
+    "exit_code": 0,
+    "stdout": "usage: runner.py [-h] --output OUTPUT\n\nRead-only frozen actual-g diagnostic; required NEW output, all12 lanes\nretained.\n\noptions:\n  -h, --help       show this help message and exit\n  --output OUTPUT\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "--output",
+      "/home/bartytime/.codex/worktrees/picad-finite-free-pose/.local/verification/d-photo-intensity-v1/plan.json"
+    ],
+    "exit_code": 2,
+    "stdout": "",
+    "stderr": "usage: runner.py [-h] --output OUTPUT\nrunner.py: error: output must be a NEW .json in this diagnostic directory\n"
+  },
+  {
+    "args": [],
+    "exit_code": 2,
+    "stdout": "",
+    "stderr": "usage: runner.py [-h] --output OUTPUT\nrunner.py: error: the following arguments are required: --output\n"
+  }
+]

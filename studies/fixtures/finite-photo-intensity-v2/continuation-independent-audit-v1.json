@@ -1,0 +1,21 @@
+{
+  "scope": "Independent saved-output+wrapper-source audit; no optimizer/forward model run. Wrapper source inspected to call saved original corefit after only first entry raises.",
+  "canonical_sha256": "967251c4458e7c06f88c6f5d4b01ab77654a0a744e1a181dd79c86df99d39127",
+  "continuation_sha256": "8bb6d605f2b03ceee83a54a32f02c0030d34aa809380c470ad179d1640295d18",
+  "continuation_contract_audit_sha256": "0a3f48d802b437aca42883e8f0be7b5811aea318e35ec3329cd425dbe0bc774c",
+  "wrapper_sha256": "546a3692f5da34e68c6d9ee8f88a8e473438a119e70c98f57fd492e509296843",
+  "runner_sha256": "74c76c9961bb7e8488c99af2c4db0227022a5bde06d26f306962e5d265d694c5",
+  "rows_retained": 12,
+  "first_failure_stage": "inverse_fit",
+  "first_pass_flags_reset": true,
+  "first_fit_heldout_truth_payloads_absent": true,
+  "later_rows_identical_except_runtime_seconds": 11,
+  "later_actual_optimizer_returns_recorded": 9,
+  "upstream_refusals_preserved": 2,
+  "saved_contract_checks_passed": 10,
+  "completions_recomputed": 9,
+  "targets_recomputed": 2,
+  "governing_source_closure_exact": true,
+  "observation_controls_identical": true,
+  "stdout_byteidentical": true
+}

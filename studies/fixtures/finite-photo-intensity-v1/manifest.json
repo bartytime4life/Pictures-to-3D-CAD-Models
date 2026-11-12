@@ -1,0 +1,29 @@
+{
+  "format": "pictures-to-cad-finite-photo-intensity-archive",
+  "version": 1,
+  "scope": "Byte-identical original v1 plan/result/runner preserved after terminal completion; no standalone replay or integration claimed.",
+  "raw_result_bytes": 1618042,
+  "original_source_unchanged": true,
+  "summary": {
+    "declared_lanes": 12,
+    "retained_lanes": 12,
+    "fit_attempts": 10,
+    "statuses": {
+      "fit_completed": 10,
+      "upstream_ineligible": 2
+    },
+    "completed": 7,
+    "targets_passed": 1
+  },
+  "runtime_seconds": 168.3701186669059,
+  "files": {
+    "studies/fixtures/finite-photo-intensity-v1/README.md": "de74dd2f1cae62c9e3f95a23aa9dd803288bb0ba5b2e4b357994360560a51340",
+    "studies/fixtures/finite-photo-intensity-v1/cli-contracts.json": "5c76703db5e083152130d519452a689375bb676c7bdab6cc8dc8d4a631d97351",
+    "studies/fixtures/finite-photo-intensity-v1/provenance.py.txt": "6544722335604516e4f27c86c02635bd22cb600503f556625bdc4ebed861ae55",
+    "studies/fixtures/finite-photo-intensity-v1/original-freeze.json": "0438ce3a449231b5f7ff1483a1729eae864fb66f228dcfdc69e2bd0840c3db5f",
+    "studies/fixtures/finite-photo-intensity-v1/input-aliases.json": "7e6679af3ac2ca33c684a3b2759cc9fad97cc9374a9c38e756f47bfaf79d830e",
+    "studies/finite-photo-intensity-v1.json": "083fb18d5b42479282fcae7214646a396bd8bba8936633ea02ec090235ec2e95",
+    "studies/results/finite-photo-intensity-v1.json": "27380cfa0db6e0f057527e398673cd7fa9c611677c395e73aa896734d7d5e6c9"
+  },
+  "existing_moment_fixture_unchanged": true
+}

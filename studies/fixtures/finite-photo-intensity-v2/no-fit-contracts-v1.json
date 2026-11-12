@@ -1,0 +1,3126 @@
+{
+  "format": "finite-photo-intensity-v2-no-fit-preflight",
+  "scope": "Actual observed-only preparation and forward means; no inverse fits. CLI success uses a report stub. Continuation routing uses explicit optimizer sentinels.",
+  "source_before": {
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+    "backend/edges.py": "c02bcf6f15958ea5c82444de3ea3af37f20031e6df463846dc8082e37abae9ee",
+    "backend/finite_centre_fit.py": "e2019bcc8b5813c0957967b469baf44bbdd784f50855418852c2686cc48b9ab4",
+    "backend/finite_observations.py": "09fa843f72b2fc265ba8d4a7111267bf10433eb4f3f2a0600a89cc7871cb3969",
+    "backend/finite_shape.py": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+    "backend/fitting.py": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+    "backend/reference.py": "23a94e699d5499d8a4621902193e3a70214062108a5d0d10abb04df9efb8b69d",
+    "backend/sheet.py": "e18cbe44c476894f1655d6ce66a5e1b11cefe9ca4f95e7e17eb7f52efc236531",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "studies/finite-free-centre-v1.json": "f8db267fd848363ba91b56cd5a01086f3123ad699f6c0c404166734f3bc582fd",
+    "studies/finite-photo-intensity-v1.json": "083fb18d5b42479282fcae7214646a396bd8bba8936633ea02ec090235ec2e95",
+    "studies/finite-photo-intensity-v2.json": "6563b63d283ad984cba38d2275cb20163c28da4b270c6d2a5d419548a15024ae",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v1-plan.json": "5ddf980ba75623cc1294e1f5863e44567c4752dda51889ec9c78fbd24c7ba73b",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v1-probe.py.txt": "62da6790f50e9861cfbbe90240c726a3ec58c8e4cbf2d9cd40f6326a35f07724",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v1-result.json": "3900c65b314057a110d02d9235b809afa24f5af1f017965717a45d089be5c6ac",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v2-plan.json": "2db3148f3be75ea7f9750aeae7115dd23762a581c1f3f879b484c7e1b3c9d687",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v2-probe.py.txt": "b3733f8fa037b9fa1c4401991c7a5ac23438dc8040232124ff1df63a7be3323a",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v2-result.json": "e8a07de6297f1c5f9b71d1cd13a3a70e14664242475ae34446e1fe9ffc7183da",
+    "studies/fixtures/finite-moment-photo-v1/large-directional-measurement.npz": "de00f76fcfd2c3f3ad7a3c7920b9716c45d93cebb55175ce04d17f0ed2455b9c",
+    "studies/fixtures/finite-moment-photo-v1/manifest.json": "dcb8803fdb99895a14ae86899536985604d134d02bd65117f8028d97fc050855",
+    "studies/fixtures/finite-moment-photo-v1/medium-directional-measurement.npz": "e5b903ac4e82191ad87e4ce50274bf25a502ba99f3003cbe810f38e769d403bf",
+    "studies/fixtures/finite-moment-photo-v1/original-moment-probe.py.txt": "2a63e9903e273d4ad18d30a84ab4a9d32db7e1bc5220f198bafdafeb22874861",
+    "studies/fixtures/finite-moment-photo-v1/original-moment-result.json": "23e8eff8c84ec50adc2c4f82815399ed15f20694717fcd0d02a2a4af16fd8fc6",
+    "studies/fixtures/finite-moment-photo-v1/rotated-major-directional-measurement.npz": "037e7d493ee9b6c612a70f0721af81a790ee543d975696996a7f928e99e2cbbc",
+    "studies/fixtures/finite-moment-photo-v1/small-directional-measurement.npz": "dc66ddb52ae895b9bed4ad28ef69bf548f07732ecf4a6f1a91844963ed642ab4",
+    "studies/fixtures/finite-moment-photo-v1/small-isotropic-measurement.npz": "9982be1be11d8d5a8ec27026984e13f3df0c0d42cf7cd16360e6e9ede7a862d9",
+    "studies/fixtures/finite-photo-intensity-v1/README.md": "de74dd2f1cae62c9e3f95a23aa9dd803288bb0ba5b2e4b357994360560a51340",
+    "studies/fixtures/finite-photo-intensity-v1/cli-contracts.json": "5c76703db5e083152130d519452a689375bb676c7bdab6cc8dc8d4a631d97351",
+    "studies/fixtures/finite-photo-intensity-v1/input-aliases.json": "7e6679af3ac2ca33c684a3b2759cc9fad97cc9374a9c38e756f47bfaf79d830e",
+    "studies/fixtures/finite-photo-intensity-v1/manifest.json": "ea6f3400327d35bfbc223b7e13118ed97976f93e64c123c5f4b0ce066216ca5c",
+    "studies/fixtures/finite-photo-intensity-v1/original-freeze.json": "0438ce3a449231b5f7ff1483a1729eae864fb66f228dcfdc69e2bd0840c3db5f",
+    "studies/fixtures/finite-photo-intensity-v1/provenance.py.txt": "6544722335604516e4f27c86c02635bd22cb600503f556625bdc4ebed861ae55",
+    "studies/results/finite-moment-photo-v1.json": "b0d4f56c0815a11c7c9a1b7a40f0b385b346ad16e11e604edcde7ef1c61f3c50",
+    "studies/results/finite-photo-intensity-v1.json": "27380cfa0db6e0f057527e398673cd7fa9c611677c395e73aa896734d7d5e6c9",
+    "studies/verification/finite-free-centre-v1.py": "0537540cbfddad2e6209b7b1483977e118c70b64f0d7938e810f942765e579f8",
+    "studies/verification/finite-photo-intensity-v2.py": "74c76c9961bb7e8488c99af2c4db0227022a5bde06d26f306962e5d265d694c5",
+    "uv.lock": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f",
+    "preflight_runner": "83240d379b2617e7d1d4ea08fae478710fdd58ae323094d3e9f8625c4a07537c"
+  },
+  "source_after": {
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+    "backend/edges.py": "c02bcf6f15958ea5c82444de3ea3af37f20031e6df463846dc8082e37abae9ee",
+    "backend/finite_centre_fit.py": "e2019bcc8b5813c0957967b469baf44bbdd784f50855418852c2686cc48b9ab4",
+    "backend/finite_observations.py": "09fa843f72b2fc265ba8d4a7111267bf10433eb4f3f2a0600a89cc7871cb3969",
+    "backend/finite_shape.py": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+    "backend/fitting.py": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+    "backend/reference.py": "23a94e699d5499d8a4621902193e3a70214062108a5d0d10abb04df9efb8b69d",
+    "backend/sheet.py": "e18cbe44c476894f1655d6ce66a5e1b11cefe9ca4f95e7e17eb7f52efc236531",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "studies/finite-free-centre-v1.json": "f8db267fd848363ba91b56cd5a01086f3123ad699f6c0c404166734f3bc582fd",
+    "studies/finite-photo-intensity-v1.json": "083fb18d5b42479282fcae7214646a396bd8bba8936633ea02ec090235ec2e95",
+    "studies/finite-photo-intensity-v2.json": "6563b63d283ad984cba38d2275cb20163c28da4b270c6d2a5d419548a15024ae",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v1-plan.json": "5ddf980ba75623cc1294e1f5863e44567c4752dda51889ec9c78fbd24c7ba73b",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v1-probe.py.txt": "62da6790f50e9861cfbbe90240c726a3ec58c8e4cbf2d9cd40f6326a35f07724",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v1-result.json": "3900c65b314057a110d02d9235b809afa24f5af1f017965717a45d089be5c6ac",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v2-plan.json": "2db3148f3be75ea7f9750aeae7115dd23762a581c1f3f879b484c7e1b3c9d687",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v2-probe.py.txt": "b3733f8fa037b9fa1c4401991c7a5ac23438dc8040232124ff1df63a7be3323a",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v2-result.json": "e8a07de6297f1c5f9b71d1cd13a3a70e14664242475ae34446e1fe9ffc7183da",
+    "studies/fixtures/finite-moment-photo-v1/large-directional-measurement.npz": "de00f76fcfd2c3f3ad7a3c7920b9716c45d93cebb55175ce04d17f0ed2455b9c",
+    "studies/fixtures/finite-moment-photo-v1/manifest.json": "dcb8803fdb99895a14ae86899536985604d134d02bd65117f8028d97fc050855",
+    "studies/fixtures/finite-moment-photo-v1/medium-directional-measurement.npz": "e5b903ac4e82191ad87e4ce50274bf25a502ba99f3003cbe810f38e769d403bf",
+    "studies/fixtures/finite-moment-photo-v1/original-moment-probe.py.txt": "2a63e9903e273d4ad18d30a84ab4a9d32db7e1bc5220f198bafdafeb22874861",
+    "studies/fixtures/finite-moment-photo-v1/original-moment-result.json": "23e8eff8c84ec50adc2c4f82815399ed15f20694717fcd0d02a2a4af16fd8fc6",
+    "studies/fixtures/finite-moment-photo-v1/rotated-major-directional-measurement.npz": "037e7d493ee9b6c612a70f0721af81a790ee543d975696996a7f928e99e2cbbc",
+    "studies/fixtures/finite-moment-photo-v1/small-directional-measurement.npz": "dc66ddb52ae895b9bed4ad28ef69bf548f07732ecf4a6f1a91844963ed642ab4",
+    "studies/fixtures/finite-moment-photo-v1/small-isotropic-measurement.npz": "9982be1be11d8d5a8ec27026984e13f3df0c0d42cf7cd16360e6e9ede7a862d9",
+    "studies/fixtures/finite-photo-intensity-v1/README.md": "de74dd2f1cae62c9e3f95a23aa9dd803288bb0ba5b2e4b357994360560a51340",
+    "studies/fixtures/finite-photo-intensity-v1/cli-contracts.json": "5c76703db5e083152130d519452a689375bb676c7bdab6cc8dc8d4a631d97351",
+    "studies/fixtures/finite-photo-intensity-v1/input-aliases.json": "7e6679af3ac2ca33c684a3b2759cc9fad97cc9374a9c38e756f47bfaf79d830e",
+    "studies/fixtures/finite-photo-intensity-v1/manifest.json": "ea6f3400327d35bfbc223b7e13118ed97976f93e64c123c5f4b0ce066216ca5c",
+    "studies/fixtures/finite-photo-intensity-v1/original-freeze.json": "0438ce3a449231b5f7ff1483a1729eae864fb66f228dcfdc69e2bd0840c3db5f",
+    "studies/fixtures/finite-photo-intensity-v1/provenance.py.txt": "6544722335604516e4f27c86c02635bd22cb600503f556625bdc4ebed861ae55",
+    "studies/results/finite-moment-photo-v1.json": "b0d4f56c0815a11c7c9a1b7a40f0b385b346ad16e11e604edcde7ef1c61f3c50",
+    "studies/results/finite-photo-intensity-v1.json": "27380cfa0db6e0f057527e398673cd7fa9c611677c395e73aa896734d7d5e6c9",
+    "studies/verification/finite-free-centre-v1.py": "0537540cbfddad2e6209b7b1483977e118c70b64f0d7938e810f942765e579f8",
+    "studies/verification/finite-photo-intensity-v2.py": "74c76c9961bb7e8488c99af2c4db0227022a5bde06d26f306962e5d265d694c5",
+    "uv.lock": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f",
+    "preflight_runner": "83240d379b2617e7d1d4ea08fae478710fdd58ae323094d3e9f8625c4a07537c"
+  },
+  "source_unchanged": true,
+  "contracts": [
+    {
+      "name": "help",
+      "passed": true,
+      "exit": 0
+    },
+    {
+      "name": "missing-output",
+      "passed": true,
+      "exit": 2
+    },
+    {
+      "name": "existing-output",
+      "passed": true,
+      "exit": 2
+    },
+    {
+      "name": "dangling-symlink",
+      "passed": true,
+      "exit": 2
+    },
+    {
+      "name": "invalid-suffix",
+      "passed": true,
+      "exit": 2
+    },
+    {
+      "name": "missing-parent",
+      "passed": true,
+      "exit": 2
+    },
+    {
+      "name": "fresh-strict-file-stdout",
+      "passed": true,
+      "scope": "stub report exercises CLI serialization, not fitting"
+    },
+    {
+      "name": "occupied-and-symlink-preserved",
+      "passed": true
+    },
+    {
+      "name": "overflow-float-json-refusal",
+      "passed": true
+    },
+    {
+      "name": "negative-overflow-float-json-refusal",
+      "passed": true
+    },
+    {
+      "name": "nonfinite-literal-json-refusal",
+      "passed": true
+    },
+    {
+      "name": "duplicate-key-json-refusal",
+      "passed": true
+    },
+    {
+      "name": "no-fit-during-actual-observation-controls",
+      "passed": true
+    },
+    {
+      "name": "control-failure-independent-fit-routing",
+      "passed": true,
+      "sentinel_fit_calls": 10,
+      "retained_lanes": 12,
+      "scope": "ten sentinel calls, zero inverse optimizers executed; actual first-fit continuation remains pending"
+    },
+    {
+      "name": "nonfinite-fit-payload-retained-json-safely",
+      "passed": true,
+      "retained_lanes": 12,
+      "stub_fit_calls": 10,
+      "scope": "ten dataclass stubs; first contains NaN; zero inverse optimizers"
+    },
+    {
+      "name": "exception-after-pass-resets-flags-and-retains-lanes",
+      "passed": true,
+      "retained_lanes": 12,
+      "scope": "row-serialization exception after injected pass flags; dataclass fit stubs only"
+    },
+    {
+      "name": "nonfinite-control-payload-does-not-abort-report-or-fits",
+      "passed": true,
+      "scope": "nonfinite diagnostic stub, ten dataclass fit stubs; zero inverse optimizers"
+    },
+    {
+      "name": "full-source-input-closure-unchanged",
+      "passed": true
+    }
+  ],
+  "observation_controls": [
+    {
+      "name": "small-isotropic",
+      "checks": [
+        {
+          "name": "byte-preserving-field-crop",
+          "passed": true,
+          "source_dtype": "<f4",
+          "crop_dtype": "<f4"
+        },
+        {
+          "name": "dirty-outside-crop",
+          "passed": true,
+          "scope": "Only pixels outside fixed ring crop changed; whole-source provenance may change."
+        },
+        {
+          "name": "integer-crop-translation",
+          "local_bytes_and_samples_identical": true,
+          "global_crop_frame_translated_exactly": true,
+          "maximum_global_parameter_shift_error_px": 0.0,
+          "passed": true,
+          "offset_xy": [
+            11,
+            7
+          ],
+          "translated_crop_origin": [
+            130,
+            126
+          ]
+        },
+        {
+          "name": "full-padding-edge-refusal",
+          "passed": true,
+          "reason": "crop_edge"
+        },
+        {
+          "name": "intensity-frame-legacy_sigma_squared_identity",
+          "available": true,
+          "maximum_global_crop_level_delta": 1.0474954237338352e-12,
+          "maximum_independent_area_level_delta": 1.1744987205020152e-09,
+          "independent32_64_level_delta": 8.526512829121202e-14,
+          "passed": true,
+          "scope": "Observed seed only, fixed0/255 diagnostic levels; numerical frame/mean checks, not Gaussian/camera validation."
+        },
+        {
+          "name": "intensity-frame-nominal_observed_moment_covariance",
+          "available": true,
+          "maximum_global_crop_level_delta": 1.1324274851176597e-12,
+          "maximum_independent_area_level_delta": 1.0308838227501838e-09,
+          "independent32_64_level_delta": 8.526512829121202e-14,
+          "passed": true,
+          "scope": "Observed seed only, fixed0/255 diagnostic levels; numerical frame/mean checks, not Gaussian/camera validation."
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "name": "small-directional",
+      "checks": [
+        {
+          "name": "byte-preserving-field-crop",
+          "passed": true,
+          "source_dtype": "<f4",
+          "crop_dtype": "<f4"
+        },
+        {
+          "name": "dirty-outside-crop",
+          "passed": true,
+          "scope": "Only pixels outside fixed ring crop changed; whole-source provenance may change."
+        },
+        {
+          "name": "integer-crop-translation",
+          "local_bytes_and_samples_identical": true,
+          "global_crop_frame_translated_exactly": true,
+          "maximum_global_parameter_shift_error_px": 0.0,
+          "passed": true,
+          "offset_xy": [
+            11,
+            7
+          ],
+          "translated_crop_origin": [
+            114,
+            111
+          ]
+        },
+        {
+          "name": "full-padding-edge-refusal",
+          "passed": true,
+          "reason": "crop_edge"
+        },
+        {
+          "name": "intensity-frame-legacy_sigma_squared_identity",
+          "available": true,
+          "maximum_global_crop_level_delta": 5.379030554308883e-13,
+          "maximum_independent_area_level_delta": 1.316131204021076e-09,
+          "independent32_64_level_delta": 8.526512829121202e-14,
+          "passed": true,
+          "scope": "Observed seed only, fixed0/255 diagnostic levels; numerical frame/mean checks, not Gaussian/camera validation."
+        },
+        {
+          "name": "intensity-frame-nominal_observed_moment_covariance",
+          "available": true,
+          "maximum_global_crop_level_delta": 6.086797732507421e-13,
+          "maximum_independent_area_level_delta": 6.454285994550446e-10,
+          "independent32_64_level_delta": 1.1368683772161603e-13,
+          "passed": true,
+          "scope": "Observed seed only, fixed0/255 diagnostic levels; numerical frame/mean checks, not Gaussian/camera validation."
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "name": "medium-directional",
+      "checks": [
+        {
+          "name": "byte-preserving-field-crop",
+          "passed": true,
+          "source_dtype": "<f4",
+          "crop_dtype": "<f4"
+        },
+        {
+          "name": "dirty-outside-crop",
+          "passed": true,
+          "scope": "Only pixels outside fixed ring crop changed; whole-source provenance may change."
+        },
+        {
+          "name": "integer-crop-translation",
+          "local_bytes_and_samples_identical": true,
+          "global_crop_frame_translated_exactly": true,
+          "maximum_global_parameter_shift_error_px": 0.0,
+          "passed": true,
+          "offset_xy": [
+            11,
+            7
+          ],
+          "translated_crop_origin": [
+            100,
+            96
+          ]
+        },
+        {
+          "name": "full-padding-edge-refusal",
+          "passed": true,
+          "reason": "crop_edge"
+        },
+        {
+          "name": "intensity-frame-legacy_sigma_squared_identity",
+          "available": true,
+          "maximum_global_crop_level_delta": 4.246603069191224e-13,
+          "maximum_independent_area_level_delta": 2.081918637486524e-09,
+          "independent32_64_level_delta": 8.526512829121202e-14,
+          "passed": true,
+          "scope": "Observed seed only, fixed0/255 diagnostic levels; numerical frame/mean checks, not Gaussian/camera validation."
+        },
+        {
+          "name": "intensity-frame-nominal_observed_moment_covariance",
+          "available": true,
+          "maximum_global_crop_level_delta": 6.653011475066251e-13,
+          "maximum_independent_area_level_delta": 1.0877272416109918e-09,
+          "independent32_64_level_delta": 1.1368683772161603e-13,
+          "passed": true,
+          "scope": "Observed seed only, fixed0/255 diagnostic levels; numerical frame/mean checks, not Gaussian/camera validation."
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "name": "large-directional",
+      "checks": [
+        {
+          "name": "byte-preserving-field-crop",
+          "passed": true,
+          "source_dtype": "<f4",
+          "crop_dtype": "<f4"
+        },
+        {
+          "name": "dirty-outside-crop",
+          "passed": true,
+          "scope": "Only pixels outside fixed ring crop changed; whole-source provenance may change."
+        },
+        {
+          "name": "integer-crop-translation",
+          "local_bytes_and_samples_identical": true,
+          "global_crop_frame_translated_exactly": true,
+          "maximum_global_parameter_shift_error_px": 0.0,
+          "passed": true,
+          "offset_xy": [
+            11,
+            7
+          ],
+          "translated_crop_origin": [
+            70,
+            66
+          ]
+        },
+        {
+          "name": "full-padding-edge-refusal",
+          "passed": true,
+          "reason": "crop_edge"
+        },
+        {
+          "name": "intensity-frame-legacy_sigma_squared_identity",
+          "available": true,
+          "maximum_global_crop_level_delta": 6.369904603786836e-13,
+          "maximum_independent_area_level_delta": 7.087805897754151e-10,
+          "independent32_64_level_delta": 1.7053025658242404e-13,
+          "passed": true,
+          "scope": "Observed seed only, fixed0/255 diagnostic levels; numerical frame/mean checks, not Gaussian/camera validation."
+        },
+        {
+          "name": "intensity-frame-nominal_observed_moment_covariance",
+          "available": true,
+          "maximum_global_crop_level_delta": 5.945244296867713e-13,
+          "maximum_independent_area_level_delta": 1.146133854490472e-09,
+          "independent32_64_level_delta": 1.9895196601282805e-13,
+          "passed": true,
+          "scope": "Observed seed only, fixed0/255 diagnostic levels; numerical frame/mean checks, not Gaussian/camera validation."
+        }
+      ],
+      "all_passed": true
+    },
+    {
+      "name": "minor-directional",
+      "status": "upstream_ineligible",
+      "all_passed": true
+    },
+    {
+      "name": "rotated-major-directional",
+      "checks": [
+        {
+          "name": "byte-preserving-field-crop",
+          "passed": true,
+          "source_dtype": "<f4",
+          "crop_dtype": "<f4"
+        },
+        {
+          "name": "dirty-outside-crop",
+          "passed": true,
+          "scope": "Only pixels outside fixed ring crop changed; whole-source provenance may change."
+        },
+        {
+          "name": "integer-crop-translation",
+          "local_bytes_and_samples_identical": true,
+          "global_crop_frame_translated_exactly": true,
+          "maximum_global_parameter_shift_error_px": 0.0,
+          "passed": true,
+          "offset_xy": [
+            11,
+            7
+          ],
+          "translated_crop_origin": [
+            99,
+            95
+          ]
+        },
+        {
+          "name": "full-padding-edge-refusal",
+          "passed": true,
+          "reason": "crop_edge"
+        },
+        {
+          "name": "intensity-frame-legacy_sigma_squared_identity",
+          "available": true,
+          "maximum_global_crop_level_delta": 3.680389326632394e-13,
+          "maximum_independent_area_level_delta": 6.461675639002351e-10,
+          "independent32_64_level_delta": 8.526512829121202e-14,
+          "passed": true,
+          "scope": "Observed seed only, fixed0/255 diagnostic levels; numerical frame/mean checks, not Gaussian/camera validation."
+        },
+        {
+          "name": "intensity-frame-nominal_observed_moment_covariance",
+          "available": true,
+          "maximum_global_crop_level_delta": 4.246603069191224e-13,
+          "maximum_independent_area_level_delta": 5.180993412068347e-10,
+          "independent32_64_level_delta": 1.1368683772161603e-13,
+          "passed": true,
+          "scope": "Observed seed only, fixed0/255 diagnostic levels; numerical frame/mean checks, not Gaussian/camera validation."
+        }
+      ],
+      "all_passed": true
+    }
+  ],
+  "prepared_contexts": [
+    {
+      "name": "small-isotropic",
+      "normal_from_frozen_observed_primitives": {
+        "normal": [
+          0.9999999999619007,
+          8.729189412545541e-06
+        ],
+        "line": {
+          "kind": "line",
+          "data": {
+            "c": [
+              153.72304175722365,
+              149.99999702423472
+            ],
+            "d": [
+              8.72918941254554e-06,
+              -0.9999999999619005
+            ],
+            "noise_corr": 1.3499381644194999,
+            "source_ends": [
+              [
+                153.59582136866072,
+                161.92803414575997
+              ],
+              [
+                153.59653352769598,
+                138.07180272837547
+              ]
+            ]
+          },
+          "span": [
+            39,
+            62
+          ],
+          "rms": 0.03889312165366222,
+          "max_abs": 0.1271162664627317
+        },
+        "arc_sector_witness": {
+          "kind": "arc",
+          "data": {
+            "c": [
+              149.62044391758855,
+              149.99787519842
+            ],
+            "r": 14.608693630114114,
+            "mid": [
+              135.12191087217056,
+              150.52453529536862
+            ],
+            "length": 56.93867097364617,
+            "source_ends": [
+              [
+                153.59653352769598,
+                138.07180272837547
+              ],
+              [
+                153.59582136866072,
+                161.92803414575997
+              ]
+            ],
+            "source_sweep": -3.7850477531648985
+          },
+          "span": [
+            62,
+            39
+          ],
+          "rms": 0.23227318563328894,
+          "max_abs": 0.9302860590686794
+        },
+        "negative_sector_dot": -14.498528447549859
+      },
+      "scalar_from_capture": 1.7422024820149602,
+      "common_sigma": 1.8603966867345814,
+      "observed": {
+        "crop_origin": [
+          119,
+          119
+        ],
+        "crop_bounds": [
+          119,
+          119,
+          171,
+          182
+        ],
+        "field_shape": [
+          63,
+          52
+        ],
+        "field_dtype": "<f4",
+        "field_sha256": "713bf5c726b5ed4b9a2f5963c5cb48b9e3dabefc2f9e284624f926e46ae56f0f",
+        "training_pixels": [
+          [
+            14,
+            30
+          ],
+          [
+            17,
+            28
+          ],
+          [
+            18,
+            26
+          ],
+          [
+            20,
+            21
+          ],
+          [
+            21,
+            17
+          ],
+          [
+            24,
+            18
+          ],
+          [
+            29,
+            17
+          ],
+          [
+            31,
+            17
+          ],
+          [
+            33,
+            18
+          ],
+          [
+            36,
+            21
+          ],
+          [
+            35,
+            24
+          ],
+          [
+            34,
+            27
+          ],
+          [
+            36,
+            32
+          ],
+          [
+            34,
+            34
+          ],
+          [
+            35,
+            37
+          ],
+          [
+            34,
+            41
+          ],
+          [
+            33,
+            43
+          ],
+          [
+            31,
+            44
+          ],
+          [
+            26,
+            46
+          ],
+          [
+            24,
+            43
+          ],
+          [
+            21,
+            44
+          ],
+          [
+            17,
+            39
+          ],
+          [
+            18,
+            35
+          ],
+          [
+            17,
+            33
+          ],
+          [
+            29,
+            18
+          ],
+          [
+            23,
+            22
+          ],
+          [
+            24,
+            26
+          ],
+          [
+            23,
+            28
+          ],
+          [
+            31,
+            31
+          ],
+          [
+            28,
+            33
+          ],
+          [
+            28,
+            37
+          ],
+          [
+            31,
+            39
+          ],
+          [
+            10,
+            10
+          ],
+          [
+            38,
+            11
+          ],
+          [
+            21,
+            16
+          ],
+          [
+            11,
+            21
+          ],
+          [
+            38,
+            34
+          ],
+          [
+            39,
+            40
+          ],
+          [
+            15,
+            48
+          ],
+          [
+            12,
+            50
+          ]
+        ],
+        "training_values": [
+          166.81407165527344,
+          54.17963409423828,
+          38.70800018310547,
+          70.60765075683594,
+          167.45799255371094,
+          67.3572006225586,
+          49.542747497558594,
+          51.247501373291016,
+          65.35062408447266,
+          170.4223175048828,
+          136.27064514160156,
+          92.93537902832031,
+          170.44418334960938,
+          92.93537902832031,
+          136.27064514160156,
+          93.52410125732422,
+          65.416748046875,
+          51.39091491699219,
+          155.6620330810547,
+          67.51766967773438,
+          167.56832885742188,
+          148.5709686279297,
+          38.752864837646484,
+          54.20855712890625,
+          23.13149070739746,
+          8.75977611541748,
+          5.408725738525391,
+          5.406643867492676,
+          11.404529571533203,
+          5.437654495239258,
+          5.4375081062316895,
+          11.40093994140625,
+          201.78097534179688,
+          201.78228759765625,
+          186.50929260253906,
+          201.78404235839844,
+          198.66873168945312,
+          201.23306274414062,
+          201.7809600830078,
+          201.78097534179688
+        ],
+        "heldout_pixels": [
+          [
+            17,
+            22
+          ],
+          [
+            26,
+            15
+          ],
+          [
+            34,
+            20
+          ],
+          [
+            36,
+            29
+          ],
+          [
+            36,
+            40
+          ],
+          [
+            29,
+            44
+          ],
+          [
+            20,
+            40
+          ],
+          [
+            14,
+            31
+          ],
+          [
+            24,
+            24
+          ],
+          [
+            19,
+            30
+          ],
+          [
+            27,
+            35
+          ],
+          [
+            30,
+            43
+          ],
+          [
+            35,
+            13
+          ],
+          [
+            12,
+            27
+          ],
+          [
+            15,
+            45
+          ],
+          [
+            40,
+            51
+          ]
+        ],
+        "heldout_values": [
+          148.47811889648438,
+          155.50486755371094,
+          93.51972198486328,
+          170.44418334960938,
+          170.422119140625,
+          49.6971549987793,
+          70.7371597290039,
+          166.8182830810547,
+          5.4445929527282715,
+          10.278166770935059,
+          5.4096832275390625,
+          22.982332229614258,
+          198.18411254882812,
+          199.6284942626953,
+          201.7913360595703,
+          201.78097534179688
+        ],
+        "homography": [
+          [
+            1.0,
+            0.0,
+            -119.0
+          ],
+          [
+            0.0,
+            1.0,
+            -119.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "normal": [
+          0.9999999999619007,
+          8.729189412545541e-06
+        ],
+        "seed_centre": [
+          149.95200793080846,
+          149.9976725735101
+        ],
+        "seed_radius": 14.866095122091041,
+        "seed_fraction": 0.2552125760234798,
+        "bounds": {
+          "centre_bounds": [
+            [
+              142.51896036976294,
+              157.385055491854
+            ],
+            [
+              142.56462501246457,
+              157.43072013455563
+            ]
+          ],
+          "radius_bounds": [
+            3.7165237805227602,
+            29.763229537662514
+          ],
+          "chord_fraction_bounds": [
+            -0.1947874239765202,
+            0.7052125760234798
+          ]
+        }
+      },
+      "metadata": {
+        "arithmetic_dtype": "<f8",
+        "background_estimate": 201.78097534179688,
+        "binding_sha256": "e69005d1b0bea7074acb6c24de576319749d8e9e91b1a6cb4d2d73bab54aff04",
+        "blur_sigma": 1.8603966867345814,
+        "bounds": {
+          "centre_bounds": [
+            [
+              142.51896036976294,
+              157.385055491854
+            ],
+            [
+              142.56462501246457,
+              157.43072013455563
+            ]
+          ],
+          "chord_fraction_bounds": [
+            -0.1947874239765202,
+            0.7052125760234798
+          ],
+          "radius_bounds": [
+            3.7165237805227602,
+            29.763229537662514
+          ]
+        },
+        "circular_support_count": 64,
+        "contour_count": 98,
+        "coordinate_contract": "global geometry; local integer samples; centres=indices+.5; Hcrop=translation(-origin)",
+        "crop_bounds": [
+          119,
+          119,
+          171,
+          182
+        ],
+        "crop_bounds_semantics": "half-open integer indices; complete padding, no clipping",
+        "crop_dtype": "<f4",
+        "crop_origin": [
+          119,
+          119
+        ],
+        "crop_sha256": "6f77fec05d7a891c3c8c349aef0256d0f76d8f161bcf27998c7305c092b2b333",
+        "crop_shape": [
+          63,
+          52
+        ],
+        "heldout_count": 16,
+        "heldout_pixels_sha256": "8b9aee56893cc1b0a014209802e3e2bebcc6a215655bd52819b1ab5be70c5ed5",
+        "heldout_values_sha256": "f39cba57450a7378b0ec3a9de0b6d4f91439fe580372ca03056810db7ea80764",
+        "homography": [
+          [
+            1.0,
+            0.0,
+            -119.0
+          ],
+          [
+            0.0,
+            1.0,
+            -119.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "material_estimate": 5.407286977767944,
+        "minimum_observed_contrast": 12.0,
+        "normal": [
+          0.9999999999619007,
+          8.729189412545541e-06
+        ],
+        "observed_contrast": -196.37368836402894,
+        "observed_extent": 29.763229537662514,
+        "padding": 16,
+        "polarity": "dark",
+        "policy": "measured-ring-finite-segment-observations-v1",
+        "ring_sha256": "0d2f546fdf81ac0af3d5f4a049c5df7b8b5c4901d395290a749e3348c7966cf4",
+        "roi_bounds_semantics": "inclusive local integer indices",
+        "roi_bounds_xy": [
+          10,
+          10,
+          40,
+          51
+        ],
+        "scope": "observed initializer and fixed strata only; no fit, PSF calibration, truth containment or topology qualification",
+        "seed_centre": [
+          149.95200793080846,
+          149.9976725735101
+        ],
+        "seed_fraction": 0.2552125760234798,
+        "seed_radius": 14.866095122091041,
+        "selected_values_dtype": "<f4",
+        "source_dtype": "<f4",
+        "source_sha256": "9de5591ea13e7c1df5d3feade4706799e887aa57a011eeb7f50afeec73453ede",
+        "source_shape": [
+          300,
+          300
+        ],
+        "training_count": 40,
+        "training_pixels_sha256": "dff95695775205e991087a0d86c0546869b859f852273901ce3b75bc177e81d5",
+        "training_values_sha256": "4657cafb0eaa6cff30464a26ef27b052e22bb7bfa5e0a8419d13f5e1efc2f7a8",
+        "unclipped_seed_radius": 14.866095122091041
+      },
+      "seed_inputs": "saved g, observed ring, normal from observed primitives, common sigma, declared dark polarity only; no truth geometry"
+    },
+    {
+      "name": "small-directional",
+      "normal_from_frozen_observed_primitives": {
+        "normal": [
+          0.9999963089808654,
+          0.002716988157067751
+        ],
+        "line": {
+          "kind": "line",
+          "data": {
+            "c": [
+              153.8432087896311,
+              150.46254995706076
+            ],
+            "d": [
+              0.0027169881570677508,
+              -0.9999963089808653
+            ],
+            "noise_corr": 1.3752226728201231,
+            "source_ends": [
+              [
+                153.76868028931318,
+                161.70517830267997
+              ],
+              [
+                153.58368310337164,
+                138.96861872734618
+              ]
+            ]
+          },
+          "span": [
+            39,
+            61
+          ],
+          "rms": 0.07354695958193838,
+          "max_abs": 0.2907536033744628
+        },
+        "arc_sector_witness": {
+          "kind": "arc",
+          "data": {
+            "c": [
+              149.28160563340697,
+              150.08711392740136
+            ],
+            "r": 14.402325915756165,
+            "mid": [
+              134.9875584905608,
+              150.5208884592102
+            ],
+            "length": 57.36389206539742,
+            "source_ends": [
+              [
+                153.58368310337164,
+                138.96861872734618
+              ],
+              [
+                153.76868028931318,
+                161.70517830267997
+              ]
+            ],
+            "source_sweep": -3.879347975209479
+          },
+          "span": [
+            61,
+            39
+          ],
+          "rms": 0.38923161434690534,
+          "max_abs": 1.636589196682591
+        },
+        "negative_sector_dot": -14.292815822978906
+      },
+      "scalar_from_capture": 3.05596253575212,
+      "common_sigma": 3.7830745066200016,
+      "observed": {
+        "crop_origin": [
+          103,
+          104
+        ],
+        "crop_bounds": [
+          103,
+          104,
+          186,
+          197
+        ],
+        "field_shape": [
+          93,
+          83
+        ],
+        "field_dtype": "<f4",
+        "field_sha256": "4be20e3ca34801f2607b260e225a944b74109bb0921d2bbe56fcbcfea9c1ccd5",
+        "training_pixels": [
+          [
+            29,
+            45
+          ],
+          [
+            31,
+            43
+          ],
+          [
+            30,
+            40
+          ],
+          [
+            32,
+            35
+          ],
+          [
+            34,
+            34
+          ],
+          [
+            37,
+            35
+          ],
+          [
+            40,
+            30
+          ],
+          [
+            43,
+            30
+          ],
+          [
+            46,
+            29
+          ],
+          [
+            51,
+            32
+          ],
+          [
+            48,
+            39
+          ],
+          [
+            50,
+            39
+          ],
+          [
+            52,
+            43
+          ],
+          [
+            51,
+            46
+          ],
+          [
+            53,
+            49
+          ],
+          [
+            47,
+            50
+          ],
+          [
+            51,
+            56
+          ],
+          [
+            52,
+            60
+          ],
+          [
+            48,
+            61
+          ],
+          [
+            44,
+            58
+          ],
+          [
+            40,
+            59
+          ],
+          [
+            35,
+            52
+          ],
+          [
+            33,
+            50
+          ],
+          [
+            31,
+            48
+          ],
+          [
+            42,
+            36
+          ],
+          [
+            41,
+            39
+          ],
+          [
+            39,
+            43
+          ],
+          [
+            46,
+            44
+          ],
+          [
+            36,
+            48
+          ],
+          [
+            42,
+            49
+          ],
+          [
+            46,
+            52
+          ],
+          [
+            45,
+            54
+          ],
+          [
+            20,
+            20
+          ],
+          [
+            27,
+            23
+          ],
+          [
+            57,
+            29
+          ],
+          [
+            58,
+            35
+          ],
+          [
+            23,
+            52
+          ],
+          [
+            55,
+            58
+          ],
+          [
+            48,
+            66
+          ],
+          [
+            55,
+            69
+          ]
+        ],
+        "training_values": [
+          158.08523559570312,
+          120.200439453125,
+          151.63906860351562,
+          158.48281860351562,
+          144.360107421875,
+          87.45301055908203,
+          149.3710174560547,
+          135.7725372314453,
+          169.5196990966797,
+          163.26605224609375,
+          56.21549606323242,
+          98.54301452636719,
+          142.66189575195312,
+          121.39239501953125,
+          160.55581665039062,
+          39.33515167236328,
+          121.38140869140625,
+          150.17645263671875,
+          129.3480224609375,
+          40.30168533325195,
+          124.6519775390625,
+          55.51953125,
+          86.02637481689453,
+          123.64707946777344,
+          26.07069206237793,
+          14.295228958129883,
+          11.646782875061035,
+          26.634742736816406,
+          24.898895263671875,
+          7.202325344085693,
+          26.635316848754883,
+          17.89654541015625,
+          201.78097534179688,
+          201.78097534179688,
+          201.78233337402344,
+          200.8531036376953,
+          201.7810821533203,
+          185.6578826904297,
+          201.34976196289062,
+          201.78216552734375
+        ],
+        "heldout_pixels": [
+          [
+            30,
+            37
+          ],
+          [
+            39,
+            35
+          ],
+          [
+            47,
+            35
+          ],
+          [
+            47,
+            43
+          ],
+          [
+            53,
+            52
+          ],
+          [
+            51,
+            62
+          ],
+          [
+            36,
+            56
+          ],
+          [
+            29,
+            46
+          ],
+          [
+            42,
+            41
+          ],
+          [
+            42,
+            46
+          ],
+          [
+            39,
+            51
+          ],
+          [
+            44,
+            57
+          ],
+          [
+            34,
+            26
+          ],
+          [
+            62,
+            43
+          ],
+          [
+            35,
+            63
+          ],
+          [
+            62,
+            72
+          ]
+        ],
+        "heldout_values": [
+          168.20315551757812,
+          61.59332275390625,
+          48.44723129272461,
+          39.334312438964844,
+          160.55581665039062,
+          165.04737854003906,
+          113.81798553466797,
+          159.4134979248047,
+          9.262636184692383,
+          7.430074691772461,
+          8.814785957336426,
+          24.0363712310791,
+          200.90794372558594,
+          201.78126525878906,
+          201.78367614746094,
+          201.78097534179688
+        ],
+        "homography": [
+          [
+            1.0,
+            0.0,
+            -103.0
+          ],
+          [
+            0.0,
+            1.0,
+            -104.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "normal": [
+          0.9999963089808654,
+          0.002716988157067751
+        ],
+        "seed_centre": [
+          149.47233274939202,
+          149.94575918808437
+        ],
+        "seed_radius": 14.456997422637572,
+        "seed_fraction": 0.29808407969916634,
+        "bounds": {
+          "centre_bounds": [
+            [
+              138.12310922953202,
+              160.82155626925203
+            ],
+            [
+              138.59653566822436,
+              161.29498270794437
+            ]
+          ],
+          "radius_bounds": [
+            3.614249355659393,
+            29.162520955546857
+          ],
+          "chord_fraction_bounds": [
+            -0.15191592030083367,
+            0.7480840796991663
+          ]
+        }
+      },
+      "metadata": {
+        "arithmetic_dtype": "<f8",
+        "background_estimate": 201.78097534179688,
+        "binding_sha256": "29b7ac92da71a3814cb03596f408674d5ef137124d25a268910969268e29710e",
+        "blur_sigma": 3.7830745066200016,
+        "bounds": {
+          "centre_bounds": [
+            [
+              138.12310922953202,
+              160.82155626925203
+            ],
+            [
+              138.59653566822436,
+              161.29498270794437
+            ]
+          ],
+          "chord_fraction_bounds": [
+            -0.15191592030083367,
+            0.7480840796991663
+          ],
+          "radius_bounds": [
+            3.614249355659393,
+            29.162520955546857
+          ]
+        },
+        "circular_support_count": 62,
+        "contour_count": 96,
+        "coordinate_contract": "global geometry; local integer samples; centres=indices+.5; Hcrop=translation(-origin)",
+        "crop_bounds": [
+          103,
+          104,
+          186,
+          197
+        ],
+        "crop_bounds_semantics": "half-open integer indices; complete padding, no clipping",
+        "crop_dtype": "<f4",
+        "crop_origin": [
+          103,
+          104
+        ],
+        "crop_sha256": "f13690356db0c0250caf637603bbb5ac1687e5c9e51ffcc31040b8b3c3e05bf3",
+        "crop_shape": [
+          93,
+          83
+        ],
+        "heldout_count": 16,
+        "heldout_pixels_sha256": "5ae82ed2e41f34a76b52a6d2f137e250524f283b7a2f27768465e5bb8bee5b08",
+        "heldout_values_sha256": "843421801406b0ab11d75282aa5f2bfaf3fbf904bd45fabfbdd26398f44b3304",
+        "homography": [
+          [
+            1.0,
+            0.0,
+            -103.0
+          ],
+          [
+            0.0,
+            1.0,
+            -104.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "material_estimate": 7.227662473678589,
+        "minimum_observed_contrast": 12.0,
+        "normal": [
+          0.9999963089808654,
+          0.002716988157067751
+        ],
+        "observed_contrast": -194.5533128681183,
+        "observed_extent": 29.162520955546857,
+        "padding": 31,
+        "polarity": "dark",
+        "policy": "measured-ring-finite-segment-observations-v1",
+        "ring_sha256": "88f434732c6b033a2f3921e8f434386461d4b779fa4e4b25f320dfc57a70a6b0",
+        "roi_bounds_semantics": "inclusive local integer indices",
+        "roi_bounds_xy": [
+          20,
+          20,
+          62,
+          72
+        ],
+        "scope": "observed initializer and fixed strata only; no fit, PSF calibration, truth containment or topology qualification",
+        "seed_centre": [
+          149.47233274939202,
+          149.94575918808437
+        ],
+        "seed_fraction": 0.29808407969916634,
+        "seed_radius": 14.456997422637572,
+        "selected_values_dtype": "<f4",
+        "source_dtype": "<f4",
+        "source_sha256": "654cc8a77fb8789e2f5b82ebf916175b77bc99fffcee4a3254d47fdf2c563eda",
+        "source_shape": [
+          300,
+          300
+        ],
+        "training_count": 40,
+        "training_pixels_sha256": "2e31e81f1c491805b3ad930b37185b42e5f83e4d4098f66d06473251285ad10d",
+        "training_values_sha256": "fca41e121660ad5f1424e2038b96fc891c8f254b5817e2905061f4c44e03a2f0",
+        "unclipped_seed_radius": 14.456997422637572
+      },
+      "seed_inputs": "saved g, observed ring, normal from observed primitives, common sigma, declared dark polarity only; no truth geometry"
+    },
+    {
+      "name": "medium-directional",
+      "normal_from_frozen_observed_primitives": {
+        "normal": [
+          0.9999999992350598,
+          -3.911368863862118e-05
+        ],
+        "line": {
+          "kind": "line",
+          "data": {
+            "c": [
+              157.45760225158446,
+              150.5020655802161
+            ],
+            "d": [
+              -3.911368863862118e-05,
+              -0.9999999992350598
+            ],
+            "noise_corr": 1.0050482209976375,
+            "source_ends": [
+              [
+                157.4322145183418,
+                175.91606145694988
+              ],
+              [
+                157.348818409129,
+                125.12575042489648
+              ]
+            ]
+          },
+          "span": [
+            84,
+            134
+          ],
+          "rms": 0.01660404889357702,
+          "max_abs": 0.1077912810824723
+        },
+        "arc_sector_witness": {
+          "kind": "arc",
+          "data": {
+            "c": [
+              149.66514546805314,
+              150.02274825082256
+            ],
+            "r": 29.653451646241113,
+            "mid": [
+              120.04007268678214,
+              150.48818554852272
+            ],
+            "length": 113.08651789866252,
+            "source_ends": [
+              [
+                157.348818409129,
+                125.12575042489648
+              ],
+              [
+                157.4322145183418,
+                175.91606145694988
+              ]
+            ],
+            "source_sweep": -3.7323614340183617
+          },
+          "span": [
+            134,
+            84
+          ],
+          "rms": 0.2379269318263584,
+          "max_abs": 1.626682446021622
+        },
+        "negative_sector_dot": -29.625090963579133
+      },
+      "scalar_from_capture": 3.408282781812532,
+      "common_sigma": 3.80347285674911,
+      "observed": {
+        "crop_origin": [
+          89,
+          89
+        ],
+        "crop_bounds": [
+          89,
+          89,
+          190,
+          212
+        ],
+        "field_shape": [
+          123,
+          101
+        ],
+        "field_dtype": "<f4",
+        "field_sha256": "2620117aecd7bd8c15b51ddda914fbe90e2df7c5f791da97addb06c67f3496df",
+        "training_pixels": [
+          [
+            28,
+            60
+          ],
+          [
+            31,
+            56
+          ],
+          [
+            30,
+            51
+          ],
+          [
+            35,
+            44
+          ],
+          [
+            40,
+            44
+          ],
+          [
+            42,
+            41
+          ],
+          [
+            48,
+            31
+          ],
+          [
+            53,
+            31
+          ],
+          [
+            59,
+            31
+          ],
+          [
+            65,
+            41
+          ],
+          [
+            66,
+            44
+          ],
+          [
+            66,
+            48
+          ],
+          [
+            70,
+            55
+          ],
+          [
+            70,
+            60
+          ],
+          [
+            65,
+            64
+          ],
+          [
+            70,
+            76
+          ],
+          [
+            69,
+            80
+          ],
+          [
+            69,
+            85
+          ],
+          [
+            64,
+            91
+          ],
+          [
+            57,
+            90
+          ],
+          [
+            49,
+            88
+          ],
+          [
+            34,
+            77
+          ],
+          [
+            33,
+            70
+          ],
+          [
+            28,
+            66
+          ],
+          [
+            59,
+            34
+          ],
+          [
+            53,
+            42
+          ],
+          [
+            63,
+            51
+          ],
+          [
+            39,
+            56
+          ],
+          [
+            36,
+            64
+          ],
+          [
+            36,
+            68
+          ],
+          [
+            48,
+            76
+          ],
+          [
+            45,
+            81
+          ],
+          [
+            19,
+            19
+          ],
+          [
+            74,
+            22
+          ],
+          [
+            72,
+            31
+          ],
+          [
+            20,
+            41
+          ],
+          [
+            28,
+            70
+          ],
+          [
+            26,
+            82
+          ],
+          [
+            31,
+            95
+          ],
+          [
+            24,
+            99
+          ]
+        ],
+        "training_values": [
+          156.4832763671875,
+          100.93446350097656,
+          142.85304260253906,
+          111.55941772460938,
+          38.36082458496094,
+          45.335811614990234,
+          151.91311645507812,
+          116.75627899169922,
+          92.86909484863281,
+          43.18703842163086,
+          60.917579650878906,
+          60.917579650878906,
+          147.5237579345703,
+          147.5237579345703,
+          43.18707275390625,
+          147.5237579345703,
+          126.97576141357422,
+          126.96826171875,
+          128.32398986816406,
+          97.46882629394531,
+          105.62787628173828,
+          148.53570556640625,
+          80.11904907226562,
+          170.57647705078125,
+          24.698732376098633,
+          5.65970516204834,
+          19.760414123535156,
+          8.531025886535645,
+          16.16338539123535,
+          19.396156311035156,
+          5.410844802856445,
+          6.729437828063965,
+          201.78097534179688,
+          201.78097534179688,
+          200.855712890625,
+          201.78097534179688,
+          186.60218811035156,
+          201.78097534179688,
+          201.78097534179688,
+          201.78097534179688
+        ],
+        "heldout_pixels": [
+          [
+            32,
+            47
+          ],
+          [
+            44,
+            35
+          ],
+          [
+            65,
+            33
+          ],
+          [
+            68,
+            51
+          ],
+          [
+            67,
+            69
+          ],
+          [
+            67,
+            87
+          ],
+          [
+            40,
+            83
+          ],
+          [
+            28,
+            61
+          ],
+          [
+            52,
+            47
+          ],
+          [
+            39,
+            60
+          ],
+          [
+            39,
+            72
+          ],
+          [
+            61,
+            87
+          ],
+          [
+            67,
+            26
+          ],
+          [
+            21,
+            55
+          ],
+          [
+            27,
+            90
+          ],
+          [
+            79,
+            102
+          ]
+        ],
+        "heldout_values": [
+          134.75314331054688,
+          112.7352066040039,
+          73.57029724121094,
+          104.2312240600586,
+          81.66323852539062,
+          84.00968933105469,
+          133.21693420410156,
+          157.20074462890625,
+          5.410162925720215,
+          7.045088291168213,
+          8.799749374389648,
+          23.39305877685547,
+          201.78045654296875,
+          201.765625,
+          201.78097534179688,
+          201.78097534179688
+        ],
+        "homography": [
+          [
+            1.0,
+            0.0,
+            -89.0
+          ],
+          [
+            0.0,
+            1.0,
+            -89.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "normal": [
+          0.9999999992350598,
+          -3.911368863862118e-05
+        ],
+        "seed_centre": [
+          149.8715341597233,
+          149.9322572018833
+        ],
+        "seed_radius": 29.824326849323555,
+        "seed_fraction": 0.2548563059891316,
+        "bounds": {
+          "centre_bounds": [
+            [
+              134.95937073506153,
+              164.78369758438507
+            ],
+            [
+              135.02009377722152,
+              164.84442062654506
+            ]
+          ],
+          "radius_bounds": [
+            7.456081712330889,
+            59.71491026865803
+          ],
+          "chord_fraction_bounds": [
+            -0.1951436940108684,
+            0.7048563059891316
+          ]
+        }
+      },
+      "metadata": {
+        "arithmetic_dtype": "<f8",
+        "background_estimate": 201.78097534179688,
+        "binding_sha256": "f881b12fe19d9eb2b6a1bc637bc0e932f649e8e393b9c53bec23058c415171c2",
+        "blur_sigma": 3.80347285674911,
+        "bounds": {
+          "centre_bounds": [
+            [
+              134.95937073506153,
+              164.78369758438507
+            ],
+            [
+              135.02009377722152,
+              164.84442062654506
+            ]
+          ],
+          "chord_fraction_bounds": [
+            -0.1951436940108684,
+            0.7048563059891316
+          ],
+          "radius_bounds": [
+            7.456081712330889,
+            59.71491026865803
+          ]
+        },
+        "circular_support_count": 126,
+        "contour_count": 194,
+        "coordinate_contract": "global geometry; local integer samples; centres=indices+.5; Hcrop=translation(-origin)",
+        "crop_bounds": [
+          89,
+          89,
+          190,
+          212
+        ],
+        "crop_bounds_semantics": "half-open integer indices; complete padding, no clipping",
+        "crop_dtype": "<f4",
+        "crop_origin": [
+          89,
+          89
+        ],
+        "crop_sha256": "ab822298c9631f0f815ad8231c9bcecadd2bf08a0f6d25edce38be58344b65c6",
+        "crop_shape": [
+          123,
+          101
+        ],
+        "heldout_count": 16,
+        "heldout_pixels_sha256": "eeab0a0bcb89f238a6332acfd9b2e0a0e23447dbfd98d78395e322ca2a91d743",
+        "heldout_values_sha256": "59df293add22d9ae62d5415d97b37f25701a138dc1643925ec6b14b11acf747b",
+        "homography": [
+          [
+            1.0,
+            0.0,
+            -89.0
+          ],
+          [
+            0.0,
+            1.0,
+            -89.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "material_estimate": 5.4086833000183105,
+        "minimum_observed_contrast": 12.0,
+        "normal": [
+          0.9999999992350598,
+          -3.911368863862118e-05
+        ],
+        "observed_contrast": -196.37229204177856,
+        "observed_extent": 59.71491026865803,
+        "padding": 31,
+        "polarity": "dark",
+        "policy": "measured-ring-finite-segment-observations-v1",
+        "ring_sha256": "5eca32bcccaa1fc90c3fd985e917ec2e8903779e734f6d7281ca2104cb234280",
+        "roi_bounds_semantics": "inclusive local integer indices",
+        "roi_bounds_xy": [
+          19,
+          19,
+          79,
+          102
+        ],
+        "scope": "observed initializer and fixed strata only; no fit, PSF calibration, truth containment or topology qualification",
+        "seed_centre": [
+          149.8715341597233,
+          149.9322572018833
+        ],
+        "seed_fraction": 0.2548563059891316,
+        "seed_radius": 29.824326849323555,
+        "selected_values_dtype": "<f4",
+        "source_dtype": "<f4",
+        "source_sha256": "8cec3f4116c90ee63505e1aeb12758e3b96289fbf1b249ba412a00c0918c42ab",
+        "source_shape": [
+          300,
+          300
+        ],
+        "training_count": 40,
+        "training_pixels_sha256": "5c4bbd7731cc078a4aa31099a49ffce24c4e2e2770b65ce71655ac71af3294a6",
+        "training_values_sha256": "66e86892555a7753538c07ada5713fd640aac56f97feaae86e0de0fd1ba33395",
+        "unclipped_seed_radius": 29.824326849323555
+      },
+      "seed_inputs": "saved g, observed ring, normal from observed primitives, common sigma, declared dark polarity only; no truth geometry"
+    },
+    {
+      "name": "large-directional",
+      "normal_from_frozen_observed_primitives": {
+        "normal": [
+          0.9999999899288678,
+          0.00014192344499151785
+        ],
+        "line": {
+          "kind": "line",
+          "data": {
+            "c": [
+              164.94702580854286,
+              123.99635498510969
+            ],
+            "d": [
+              0.00014192344499151785,
+              -0.9999999899288678
+            ],
+            "noise_corr": 11.275948981031494,
+            "source_ends": [
+              [
+                164.90250660198788,
+                205.50895303107714
+              ],
+              [
+                164.83703947581046,
+                96.03347699563479
+              ]
+            ]
+          },
+          "span": [
+            174,
+            282
+          ],
+          "rms": 0.0008223032348297203,
+          "max_abs": 0.0017656510862485081
+        },
+        "arc_sector_witness": {
+          "kind": "arc",
+          "data": {
+            "c": [
+              149.9377326030532,
+              149.96422826117507
+            ],
+            "r": 59.894894153979656,
+            "mid": [
+              90.2904201751733,
+              155.57825119632832
+            ],
+            "length": 209.67420570936386,
+            "source_ends": [
+              [
+                154.70431474922756,
+                90.25029373806224
+              ],
+              [
+                164.90250660198788,
+                205.50895303107714
+              ]
+            ],
+            "source_sweep": -3.484417099351469
+          },
+          "span": [
+            292,
+            174
+          ],
+          "rms": 0.0849685936770238,
+          "max_abs": 1.0459131728011428
+        },
+        "negative_sector_dot": -59.646515065688725
+      },
+      "scalar_from_capture": 2.3908810710223873,
+      "common_sigma": 3.8553984883509926,
+      "observed": {
+        "crop_origin": [
+          59,
+          59
+        ],
+        "crop_bounds": [
+          59,
+          59,
+          197,
+          242
+        ],
+        "field_shape": [
+          183,
+          138
+        ],
+        "field_dtype": "<f4",
+        "field_sha256": "4aab9adce10c00b05b6c7c3d4b2f563d27b2363a7f0d0b39ea3046c9c1a59392",
+        "training_pixels": [
+          [
+            27,
+            90
+          ],
+          [
+            31,
+            81
+          ],
+          [
+            35,
+            73
+          ],
+          [
+            42,
+            58
+          ],
+          [
+            47,
+            51
+          ],
+          [
+            54,
+            46
+          ],
+          [
+            70,
+            34
+          ],
+          [
+            81,
+            32
+          ],
+          [
+            96,
+            30
+          ],
+          [
+            107,
+            45
+          ],
+          [
+            108,
+            53
+          ],
+          [
+            106,
+            64
+          ],
+          [
+            108,
+            81
+          ],
+          [
+            108,
+            90
+          ],
+          [
+            102,
+            98
+          ],
+          [
+            109,
+            119
+          ],
+          [
+            102,
+            121
+          ],
+          [
+            102,
+            129
+          ],
+          [
+            102,
+            151
+          ],
+          [
+            88,
+            151
+          ],
+          [
+            71,
+            148
+          ],
+          [
+            42,
+            122
+          ],
+          [
+            34,
+            112
+          ],
+          [
+            34,
+            100
+          ],
+          [
+            86,
+            34
+          ],
+          [
+            54,
+            50
+          ],
+          [
+            53,
+            70
+          ],
+          [
+            44,
+            79
+          ],
+          [
+            50,
+            96
+          ],
+          [
+            89,
+            104
+          ],
+          [
+            97,
+            122
+          ],
+          [
+            66,
+            133
+          ],
+          [
+            19,
+            19
+          ],
+          [
+            32,
+            24
+          ],
+          [
+            24,
+            39
+          ],
+          [
+            32,
+            54
+          ],
+          [
+            19,
+            110
+          ],
+          [
+            36,
+            130
+          ],
+          [
+            52,
+            152
+          ],
+          [
+            104,
+            157
+          ]
+        ],
+        "training_values": [
+          172.21067810058594,
+          109.28223419189453,
+          67.62943267822266,
+          71.6532974243164,
+          78.21070098876953,
+          54.46866989135742,
+          106.51522827148438,
+          82.53294372558594,
+          133.29873657226562,
+          137.59683227539062,
+          156.47488403320312,
+          115.68608093261719,
+          156.47488403320312,
+          156.47488403320312,
+          35.753753662109375,
+          171.3675079345703,
+          35.753753662109375,
+          35.753753662109375,
+          147.94325256347656,
+          124.61450958251953,
+          141.30751037597656,
+          38.9221305847168,
+          117.49056243896484,
+          43.74675750732422,
+          24.519180297851562,
+          18.970001220703125,
+          5.4108476638793945,
+          5.4801201820373535,
+          5.410848140716553,
+          5.410848140716553,
+          6.604063034057617,
+          5.410848140716553,
+          201.78097534179688,
+          201.78097534179688,
+          201.78097534179688,
+          199.86293029785156,
+          201.78097534179688,
+          201.7861328125,
+          201.78097534179688,
+          201.6389923095703
+        ],
+        "heldout_pixels": [
+          [
+            38,
+            65
+          ],
+          [
+            60,
+            35
+          ],
+          [
+            102,
+            43
+          ],
+          [
+            102,
+            75
+          ],
+          [
+            106,
+            108
+          ],
+          [
+            104,
+            140
+          ],
+          [
+            53,
+            136
+          ],
+          [
+            28,
+            91
+          ],
+          [
+            87,
+            60
+          ],
+          [
+            84,
+            87
+          ],
+          [
+            78,
+            113
+          ],
+          [
+            95,
+            147
+          ],
+          [
+            58,
+            29
+          ],
+          [
+            110,
+            79
+          ],
+          [
+            45,
+            143
+          ],
+          [
+            117,
+            162
+          ]
+        ],
+        "heldout_values": [
+          71.29388427734375,
+          170.1549530029297,
+          35.753753662109375,
+          35.753753662109375,
+          115.68608093261719,
+          71.03430938720703,
+          60.71135711669922,
+          156.9196014404297,
+          5.410848140716553,
+          5.410848140716553,
+          5.410848140716553,
+          24.868432998657227,
+          201.61993408203125,
+          182.85971069335938,
+          201.78097534179688,
+          201.78097534179688
+        ],
+        "homography": [
+          [
+            1.0,
+            0.0,
+            -59.0
+          ],
+          [
+            0.0,
+            1.0,
+            -59.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "normal": [
+          0.9999999899288678,
+          0.00014192344499151785
+        ],
+        "seed_centre": [
+          149.952303425631,
+          149.95524065410922
+        ],
+        "seed_radius": 59.92731032693643,
+        "seed_fraction": 0.25070651391965615,
+        "bounds": {
+          "centre_bounds": [
+            [
+              119.98864826216277,
+              179.9159585890992
+            ],
+            [
+              119.991585490641,
+              179.91889581757744
+            ]
+          ],
+          "radius_bounds": [
+            14.981827581734107,
+            119.89168357288641
+          ],
+          "chord_fraction_bounds": [
+            -0.19929348608034386,
+            0.7007065139196562
+          ]
+        }
+      },
+      "metadata": {
+        "arithmetic_dtype": "<f8",
+        "background_estimate": 201.78097534179688,
+        "binding_sha256": "7b95192c1a3af47587612ad050b6dbc92905435a97fd14f484da86b234c67b50",
+        "blur_sigma": 3.8553984883509926,
+        "bounds": {
+          "centre_bounds": [
+            [
+              119.98864826216277,
+              179.9159585890992
+            ],
+            [
+              119.991585490641,
+              179.91889581757744
+            ]
+          ],
+          "chord_fraction_bounds": [
+            -0.19929348608034386,
+            0.7007065139196562
+          ],
+          "radius_bounds": [
+            14.981827581734107,
+            119.89168357288641
+          ]
+        },
+        "circular_support_count": 253,
+        "contour_count": 390,
+        "coordinate_contract": "global geometry; local integer samples; centres=indices+.5; Hcrop=translation(-origin)",
+        "crop_bounds": [
+          59,
+          59,
+          197,
+          242
+        ],
+        "crop_bounds_semantics": "half-open integer indices; complete padding, no clipping",
+        "crop_dtype": "<f4",
+        "crop_origin": [
+          59,
+          59
+        ],
+        "crop_sha256": "22d6af5859fa6869a28cdd8ff2c392513ba5101bb7bb8dcb0bae8104f31172c9",
+        "crop_shape": [
+          183,
+          138
+        ],
+        "heldout_count": 16,
+        "heldout_pixels_sha256": "305b970c59ed6572bfeff3498f4b12e46a8b78f744c3f9dabfe89ed47d18f085",
+        "heldout_values_sha256": "27299cea733edd63d8650471481e607b9347358c1caf0d6b9cf6ef73c89f2989",
+        "homography": [
+          [
+            1.0,
+            0.0,
+            -59.0
+          ],
+          [
+            0.0,
+            1.0,
+            -59.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "material_estimate": 5.408519032478332,
+        "minimum_observed_contrast": 12.0,
+        "normal": [
+          0.9999999899288678,
+          0.00014192344499151785
+        ],
+        "observed_contrast": -196.37245630931855,
+        "observed_extent": 119.89168357288641,
+        "padding": 31,
+        "polarity": "dark",
+        "policy": "measured-ring-finite-segment-observations-v1",
+        "ring_sha256": "734fcc473f9a59edeb4b3a65b3e903abce5a360c5ba8e1b96b67535104010483",
+        "roi_bounds_semantics": "inclusive local integer indices",
+        "roi_bounds_xy": [
+          19,
+          19,
+          117,
+          162
+        ],
+        "scope": "observed initializer and fixed strata only; no fit, PSF calibration, truth containment or topology qualification",
+        "seed_centre": [
+          149.952303425631,
+          149.95524065410922
+        ],
+        "seed_fraction": 0.25070651391965615,
+        "seed_radius": 59.92731032693643,
+        "selected_values_dtype": "<f4",
+        "source_dtype": "<f4",
+        "source_sha256": "be9f8aaf9ea33efe6a97e843fc5f108439024d16367767a22b576f532085f36a",
+        "source_shape": [
+          300,
+          300
+        ],
+        "training_count": 40,
+        "training_pixels_sha256": "d946d14669e04f96658d0322723d9dfcde88779001d37ab93e42dcb666a25ec7",
+        "training_values_sha256": "9098d386db1affcd45b9254d8a79d1c875755125fbd92380ecb99621494456a0",
+        "unclipped_seed_radius": 59.92731032693643
+      },
+      "seed_inputs": "saved g, observed ring, normal from observed primitives, common sigma, declared dark polarity only; no truth geometry"
+    },
+    {
+      "name": "rotated-major-directional",
+      "normal_from_frozen_observed_primitives": {
+        "normal": [
+          0.7986754509674457,
+          0.6017620161010059
+        ],
+        "line": {
+          "kind": "line",
+          "data": {
+            "c": [
+              164.06085212651826,
+              160.90653126051603
+            ],
+            "d": [
+              0.6017620161010059,
+              -0.7986754509674457
+            ],
+            "noise_corr": 3.7657905016238424,
+            "source_ends": [
+              [
+                151.868950351946,
+                177.079837648497
+              ],
+              [
+                176.20558348973628,
+                144.7814671668331
+              ]
+            ]
+          },
+          "span": [
+            78,
+            110
+          ],
+          "rms": 0.012396225425312513,
+          "max_abs": 0.026484024736552876
+        },
+        "arc_sector_witness": {
+          "kind": "arc",
+          "data": {
+            "c": [
+              149.91804274467358,
+              149.93453354778273
+            ],
+            "r": 29.771862821264815,
+            "mid": [
+              125.44112246473924,
+              133.10579242851253
+            ],
+            "length": 138.24854010697644,
+            "source_ends": [
+              [
+                176.20558348973628,
+                144.7814671668331
+              ],
+              [
+                151.868950351946,
+                177.079837648497
+              ]
+            ],
+            "source_sweep": -4.590562273318294
+          },
+          "span": [
+            110,
+            78
+          ],
+          "rms": 0.05692753403166477,
+          "max_abs": 0.3014183695436543
+        },
+        "negative_sector_dot": -29.676012527244723
+      },
+      "scalar_from_capture": 3.1105010554777293,
+      "common_sigma": 3.8975080343599973,
+      "observed": {
+        "crop_origin": [
+          88,
+          88
+        ],
+        "crop_bounds": [
+          88,
+          88,
+          212,
+          213
+        ],
+        "field_shape": [
+          125,
+          124
+        ],
+        "field_dtype": "<f4",
+        "field_sha256": "ac7d4f4cea0f2ea0da4213c42f36afe6ec0956e3c81b9624525ed715af54119f",
+        "training_pixels": [
+          [
+            28,
+            59
+          ],
+          [
+            29,
+            54
+          ],
+          [
+            30,
+            49
+          ],
+          [
+            37,
+            42
+          ],
+          [
+            39,
+            37
+          ],
+          [
+            43,
+            34
+          ],
+          [
+            54,
+            32
+          ],
+          [
+            61,
+            30
+          ],
+          [
+            68,
+            32
+          ],
+          [
+            85,
+            43
+          ],
+          [
+            87,
+            50
+          ],
+          [
+            91,
+            54
+          ],
+          [
+            80,
+            61
+          ],
+          [
+            82,
+            65
+          ],
+          [
+            80,
+            69
+          ],
+          [
+            75,
+            77
+          ],
+          [
+            73,
+            82
+          ],
+          [
+            70,
+            86
+          ],
+          [
+            63,
+            92
+          ],
+          [
+            58,
+            90
+          ],
+          [
+            49,
+            88
+          ],
+          [
+            35,
+            76
+          ],
+          [
+            32,
+            70
+          ],
+          [
+            29,
+            65
+          ],
+          [
+            60,
+            35
+          ],
+          [
+            76,
+            41
+          ],
+          [
+            77,
+            49
+          ],
+          [
+            51,
+            53
+          ],
+          [
+            56,
+            60
+          ],
+          [
+            48,
+            64
+          ],
+          [
+            41,
+            73
+          ],
+          [
+            57,
+            78
+          ],
+          [
+            20,
+            20
+          ],
+          [
+            36,
+            24
+          ],
+          [
+            101,
+            33
+          ],
+          [
+            21,
+            44
+          ],
+          [
+            96,
+            75
+          ],
+          [
+            38,
+            84
+          ],
+          [
+            69,
+            95
+          ],
+          [
+            85,
+            99
+          ]
+        ],
+        "training_values": [
+          172.24855041503906,
+          166.7897491455078,
+          171.7570343017578,
+          130.53465270996094,
+          165.2067108154297,
+          166.5149688720703,
+          116.75627136230469,
+          153.50408935546875,
+          119.2980728149414,
+          106.21955871582031,
+          52.13435363769531,
+          134.5419464111328,
+          40.32493209838867,
+          113.27965545654297,
+          130.12213134765625,
+          144.98931884765625,
+          167.3295135498047,
+          167.04913330078125,
+          146.30039978027344,
+          67.70196533203125,
+          80.50099182128906,
+          113.52483367919922,
+          124.08074188232422,
+          163.81275939941406,
+          23.906944274902344,
+          5.8031463623046875,
+          5.432042121887207,
+          5.410848140716553,
+          5.410848140716553,
+          5.410848140716553,
+          6.779200077056885,
+          5.5912370681762695,
+          201.78097534179688,
+          201.78097534179688,
+          201.78097534179688,
+          201.78097534179688,
+          201.78097534179688,
+          190.60594177246094,
+          199.11474609375,
+          201.78097534179688
+        ],
+        "heldout_pixels": [
+          [
+            33,
+            45
+          ],
+          [
+            50,
+            37
+          ],
+          [
+            77,
+            37
+          ],
+          [
+            86,
+            58
+          ],
+          [
+            79,
+            74
+          ],
+          [
+            66,
+            87
+          ],
+          [
+            41,
+            81
+          ],
+          [
+            28,
+            60
+          ],
+          [
+            47,
+            46
+          ],
+          [
+            73,
+            56
+          ],
+          [
+            54,
+            68
+          ],
+          [
+            56,
+            88
+          ],
+          [
+            52,
+            28
+          ],
+          [
+            97,
+            62
+          ],
+          [
+            87,
+            90
+          ],
+          [
+            101,
+            103
+          ]
+        ],
+        "heldout_values": [
+          158.3573455810547,
+          42.55548858642578,
+          65.97953796386719,
+          92.6519775390625,
+          166.96844482421875,
+          122.94991302490234,
+          45.15761184692383,
+          172.18101501464844,
+          7.252882957458496,
+          5.567543983459473,
+          5.410848140716553,
+          23.872114181518555,
+          193.76910400390625,
+          201.7099151611328,
+          201.78097534179688,
+          201.78097534179688
+        ],
+        "homography": [
+          [
+            1.0,
+            0.0,
+            -88.0
+          ],
+          [
+            0.0,
+            1.0,
+            -88.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "normal": [
+          0.7986754509674457,
+          0.6017620161010059
+        ],
+        "seed_centre": [
+          149.86641389670982,
+          149.90641932954614
+        ],
+        "seed_radius": 29.814695785379396,
+        "seed_fraction": 0.6090307364910256,
+        "bounds": {
+          "centre_bounds": [
+            [
+              134.95906600402012,
+              164.77376178939952
+            ],
+            [
+              134.99907143685644,
+              164.81376722223584
+            ]
+          ],
+          "radius_bounds": [
+            7.453673946344849,
+            59.62939157075879
+          ],
+          "chord_fraction_bounds": [
+            0.15903073649102556,
+            0.98
+          ]
+        }
+      },
+      "metadata": {
+        "arithmetic_dtype": "<f8",
+        "background_estimate": 201.78097534179688,
+        "binding_sha256": "e6ad770e65eb2c33efc1375ba3b5bd0175291ae97323fff7e98878dc744a7ee7",
+        "blur_sigma": 3.8975080343599973,
+        "bounds": {
+          "centre_bounds": [
+            [
+              134.95906600402012,
+              164.77376178939952
+            ],
+            [
+              134.99907143685644,
+              164.81376722223584
+            ]
+          ],
+          "chord_fraction_bounds": [
+            0.15903073649102556,
+            0.98
+          ],
+          "radius_bounds": [
+            7.453673946344849,
+            59.62939157075879
+          ]
+        },
+        "circular_support_count": 153,
+        "contour_count": 236,
+        "coordinate_contract": "global geometry; local integer samples; centres=indices+.5; Hcrop=translation(-origin)",
+        "crop_bounds": [
+          88,
+          88,
+          212,
+          213
+        ],
+        "crop_bounds_semantics": "half-open integer indices; complete padding, no clipping",
+        "crop_dtype": "<f4",
+        "crop_origin": [
+          88,
+          88
+        ],
+        "crop_sha256": "703e4b7889ead7dd0af682284b09dd6032a1d064b7c13ae236b54f1339f1ef14",
+        "crop_shape": [
+          125,
+          124
+        ],
+        "heldout_count": 16,
+        "heldout_pixels_sha256": "7a1121b46ff0e28a5481491e5988ed71fb4881f34521c4c8825b5275e9c21ca1",
+        "heldout_values_sha256": "3813a30921827216e6aaff266d05a8ba18949178b405e80a981d44d726258bcf",
+        "homography": [
+          [
+            1.0,
+            0.0,
+            -88.0
+          ],
+          [
+            0.0,
+            1.0,
+            -88.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "material_estimate": 5.40882396030426,
+        "minimum_observed_contrast": 12.0,
+        "normal": [
+          0.7986754509674457,
+          0.6017620161010059
+        ],
+        "observed_contrast": -196.3721513814926,
+        "observed_extent": 59.518861953167885,
+        "padding": 32,
+        "polarity": "dark",
+        "policy": "measured-ring-finite-segment-observations-v1",
+        "ring_sha256": "b37efa4a2a9df8ad57a4d3c51247bc1893cbd826ea4bdf68ce83340b6ed77af7",
+        "roi_bounds_semantics": "inclusive local integer indices",
+        "roi_bounds_xy": [
+          20,
+          20,
+          101,
+          103
+        ],
+        "scope": "observed initializer and fixed strata only; no fit, PSF calibration, truth containment or topology qualification",
+        "seed_centre": [
+          149.86641389670982,
+          149.90641932954614
+        ],
+        "seed_fraction": 0.6090307364910256,
+        "seed_radius": 29.814695785379396,
+        "selected_values_dtype": "<f4",
+        "source_dtype": "<f4",
+        "source_sha256": "b2f1a9737f8beaa7541d269e40f412529cc2d88212975c0b96f0db4ad551610c",
+        "source_shape": [
+          300,
+          300
+        ],
+        "training_count": 40,
+        "training_pixels_sha256": "ba8a8facf49ad3b369a6eb2245ca0d6c23c6f5006245a57eb1f5fdb82ba77e55",
+        "training_values_sha256": "61ec6a6946008035acdb0b7c6fc97d15f7476688332e913f7dd5000928daec15",
+        "unclipped_seed_radius": 29.814695785379396
+      },
+      "seed_inputs": "saved g, observed ring, normal from observed primitives, common sigma, declared dark polarity only; no truth geometry"
+    }
+  ],
+  "summary": {
+    "inverse_optimizers_executed": 0,
+    "prepared_cases": 5,
+    "retained_cases": 6,
+    "contract_checks": 18,
+    "contract_passes": 18,
+    "actual_observation_checks": 30,
+    "actual_observation_passes": 30,
+    "all_passed": true
+  }
+}

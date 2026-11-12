@@ -1,0 +1,104 @@
+"""Prospective moment inversion probe of all six fixed observed D-photo cases."""
+import hashlib
+import json
+import math
+from pathlib import Path
+
+import numpy as np
+
+ROOT=Path(__file__).parent
+BASE=ROOT/'d-photo-baseline-v2'
+OUT=ROOT/'d-moment-photo-v1'
+OUT.mkdir(exist_ok=True)
+PLAN=dict(version=1, source='d-photo-baseline-v2/result.json',
+          roi_sigmas=[6.,8.,12.],minimum_padding=16,
+          background='median of complete one-pixel ROI border; no truth levels',
+          background_perturbations=[0.,-.01,.01,-.1,.1],
+          fraction_domain=[-.8,.9],
+          geometry='largest-radius initial observed arc; longest chord candidate; no truth seed',
+          weights='signed background-minus-observation, never clipped; normalized by signed mass',
+          nominal='8 sigma with zero background perturbation',
+          targets=dict(centre_mm=.02,radius_mm=.02,roi_8_12_change_mm=.01),
+          policy='All75 attempted numerical rows and upstream ineligible case retained; no Gaussian certification or production integration.')
+data=(json.dumps(PLAN,sort_keys=True,indent=2)+'\n').encode()
+(OUT/'plan.json').write_bytes(data)
+print('FROZEN_PLAN '+hashlib.sha256(data).hexdigest(),flush=True)
+
+def unit(f):
+    s=math.sqrt((1-f)*(1+f)); angle=math.asin(f)+math.pi/2
+    area=angle+f*s; mean=-2*s**3/(3*area)
+    xx=(angle-f*s*(1-2*f*f))/(4*area)
+    yy=(3*angle+f*s*(5-2*f*f))/(12*area)
+    xxx=(-2*s**3/3+2*s**5/5)/area
+    xyy=-2*s**5/(15*area)
+    return dict(area=area,mean=mean,varx=xx-mean**2,vary=yy,
+                thirdx=xxx-3*mean*xx+2*mean**3,thirdxyy=xyy-mean*yy)
+
+rows=[]
+baseline=json.loads((BASE/'result.json').read_text())
+for case in baseline['rows']:
+    name=case['case']['name']; m=case['measurements']
+    if not m.get('initial_fits'):
+        rows.append(dict(name=name,status='upstream_ineligible',error=case.get('error')));continue
+    initial=m['initial_fits'][0]
+    arcs=[p for p in initial if p['kind']=='arc'];lines=[p for p in initial if p['kind']=='line']
+    if not arcs or not lines:
+        rows.append(dict(name=name,status='seed_ineligible'));continue
+    arc=max(arcs,key=lambda p:p['data']['r'])['data']
+    line=max(lines,key=lambda p:np.linalg.norm(np.subtract(*p['data']['source_ends'])))['data']
+    n=np.array([-line['d'][1],line['d'][0]])
+    if n@np.subtract(arc['mid'],arc['c'])>0:n=-n
+    n/=np.linalg.norm(n);t=np.array([-n[1],n[0]])
+    basis=np.column_stack((n,t));points=np.asarray(m['rings'][0]['points'])
+    g=np.load(BASE/(name+'-measurement.npz'))['g'];ppm=m['ppm']
+    for padding in PLAN['roi_sigmas']:
+        pad=max(PLAN['minimum_padding'],math.ceil(padding*m['sigma']))
+        low=np.maximum(np.floor(points.min(axis=0)-pad).astype(int),0)
+        high=np.minimum(np.ceil(points.max(axis=0)+pad).astype(int)+1,g.shape[::-1])
+        image=g[low[1]:high[1],low[0]:high[0]].astype(float)
+        border=np.concatenate((image[0],image[-1],image[1:-1,0],image[1:-1,-1]))
+        bg=float(np.median(border))
+        yy,xx=np.mgrid[low[1]:high[1],low[0]:high[0]]
+        q=np.column_stack((xx.ravel()+.5,yy.ravel()+.5))
+        for offset in PLAN['background_perturbations']:
+            row=dict(name=name,roi_sigmas=padding,roi=[low.tolist(),high.tolist()],background=bg,
+                     background_offset=offset,normal=n.tolist(),sensor_shape=list(g.shape))
+            try:
+                weights=(bg+offset-image).ravel();mass=float(weights.sum())
+                if mass<=0:raise ValueError('nonpositive signed mass')
+                mu=np.sum(q*weights[:,None],axis=0)/mass
+                local=(q-mu)@basis;x,y=local.T;prob=weights/mass
+                k30=float(prob@(x*x*x));k12=float(prob@(x*y*y))
+                row.update(mass=mass,centroid=mu.tolist(),third_xxx=k30,third_xyy=k12,
+                           third_xxy=float(prob@(x*x*y)),third_yyy=float(prob@(y*y*y)),
+                           negative_mass_fraction=float(-weights[weights<0].sum()/mass))
+                if k12<=0:raise ValueError('nonpositive transverse third moment')
+                target=k30/k12;lo,hi=PLAN['fraction_domain']
+                ratios=[unit(z)['thirdx']/unit(z)['thirdxyy'] for z in np.linspace(lo,hi,257)]
+                if not all(a>b for a,b in zip(ratios,ratios[1:])):raise ValueError('sampled ratio order failure')
+                if not ratios[-1]<target<ratios[0]:raise ValueError('observed ratio outside prescribed domain')
+                for _ in range(60):
+                    mid=(lo+hi)/2;mom=unit(mid)
+                    if mom['thirdx']/mom['thirdxyy']>target:lo=mid
+                    else:hi=mid
+                fraction=(lo+hi)/2;mom=unit(fraction)
+                radius=(k12/mom['thirdxyy'])**(1/3)
+                centre=mu-radius*mom['mean']*n
+                obs=(local.T*prob)@local
+                sigma=basis@(obs-radius**2*np.diag([mom['varx'],mom['vary']]))@basis.T
+                eigen=np.linalg.eigvalsh(sigma)
+                # Only AFTER inversion use synthetic truth for evaluation.
+                centre_error=float(np.linalg.norm(centre/ppm-np.array([30.,30.])))
+                radius_error=radius/ppm-case['case']['radius']
+                row.update(status='moment_proposal',centre_px=centre.tolist(),radius_px=radius,
+                           fraction=fraction,covariance=sigma.tolist(),covariance_eigenvalues=eigen.tolist(),
+                           implied_inside_level=bg-mass/(radius**2*mom['area']),
+                           centre_error_mm=centre_error,radius_error_mm=radius_error,
+                           target_pass=centre_error<=.02 and abs(radius_error)<=.02)
+            except Exception as exc:row.update(status='refused',error=dict(type=type(exc).__name__,message=str(exc)))
+            rows.append(row)
+            if padding==8 and offset==0:
+                print(json.dumps(row,allow_nan=False),flush=True)
+result=dict(plan_sha256=hashlib.sha256(data).hexdigest(),
+            baseline_sha256=hashlib.sha256((BASE/'result.json').read_bytes()).hexdigest(),rows=rows)
+(OUT/'result.json').write_text(json.dumps(result,indent=2,allow_nan=False)+'\n')
