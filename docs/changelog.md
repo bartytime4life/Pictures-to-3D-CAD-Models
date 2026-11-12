@@ -4,6 +4,16 @@ This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
 
+## A shadow's push on a hole's centre — November 12, 2026
+
+- The shadow correction's first harmonic round each ring is kept where it is
+  significant, by a jackknife over eight sectors, and only the rest is smoothed.
+  Smoothing had given each 6 mm hole its mean correction alone, so a soft shadow
+  moved its centre: under a 3 px blur hole positions went from 0.027 to 0.009 mm,
+  and under a 1 × 3 px blur with noise and JPEG from 0.021 to 0.007 mm
+  ([reference-sheet tracing](reference-sheet.md), §3). The slot and outline
+  under such shadows are not corrected.
+
 ## Slot end caps and directional blur — November 12, 2026
 
 - Slot end caps are placed along the slot with their radius fixed at half the
