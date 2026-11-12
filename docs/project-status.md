@@ -1,22 +1,22 @@
 # Project status and evidence
 
-Candidate snapshot: **November 12, 2026**. This bounded-input response candidate
-is based on published [draft PR #67](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/67)
-at `b27e48e09079b497d85dea766233db266e13cc90`. It adds explicit some/every-input
-rectangle constraints, tight extended marginals, finite common witnesses and
-outward Gaussian CDF bounds. The [guide](response-rectangles.md) and
-[complete controls](validation/response-rectangles.md) preserve correlated-input
-limits, wrong-calibration failures and box-undetermined cases. These tools do
-not infer physical calibration or enter the workbench trace/API/UI.
-Production tracing still comes from PR #59. Start with [setup](development.md),
-the [task index](README.md), [developer tools](developer-tools.md) or
-[API examples](api-examples.md).
+Candidate snapshot: **November 12, 2026**. This continuous-domain candidate
+is based on published [draft PR #68](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/68)
+at `0b359ecb38a4cbe8df5fd6e0a2cd9fd88fb42e4d`. It adds one shared edge-offset
+and positive Gaussian-blur domain under externally supplied response/calibration
+bounds. The [guide](gaussian-response-domains.md) and
+[complete controls](validation/gaussian-response-domains.md) distinguish accepted,
+excluded and unknown joint boxes, exact order certificates and retained ambiguity.
+These developer tools do not infer physical calibration or enter the workbench
+trace/API/UI. Production tracing still comes from PR #59. Start with
+[setup](development.md), the [task index](README.md),
+[developer tools](developer-tools.md) or [API examples](api-examples.md).
 
 ## Source and review state
 
 At this check, `main` was `5c07d0f70d7df0200bc24227c8ac7e9b630f7f09`.
-PRs #47–#66 retain their open/unmerged **14:27 UTC** observation; PR #67 was
-verified open, draft and unmerged at **14:45 UTC**.
+PRs #47–#68 were verified open and unmerged at **15:20 UTC**; PRs #48–#68
+remain drafts. This is a review-state observation, separate from CI results.
 This candidate branch includes their changes; that checkout of `main` does
 not contain them. The conditional corner
 analysis remains separate from production tracing; the grid and crossing repairs
@@ -46,6 +46,7 @@ affect the existing production edge-profile search.
 | `8b9c6a803b89d05daee38b7f48c079f70c76de3a` | Documentation review, setup/navigation and raw-source API/diagnostic guidance; complete 86-document audit | [PR #65](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/65), open draft; base PR #64's branch |
 | `81dd0871aab390b1613bedc0d2b7c7f0578cf280` | Exact common-response consistency, strict CLI, finite edge/calibration controls and independent certificate audits | [PR #66](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/66), open draft; base PR #65's branch |
 | `b27e48e09079b497d85dea766233db266e13cc90` | Complete documentation review, executable calibration examples, recovery and report-handling guidance | [PR #67](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/67), open draft; base PR #66's branch |
+| `0b359ecb38a4cbe8df5fd6e0a2cd9fd88fb42e4d` | Exact input/output-rectangle response constraints, outward Gaussian CDF covers and complete finite refinement controls | [PR #68](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/68), open draft; base PR #67's branch |
 
 The PR links show live review state. A documentation update does not install,
 merge or deploy those changes. Record the checkout used to start a service:
@@ -92,6 +93,7 @@ there is no product endpoint, automatic tracing correction or accuracy label.
 
 | Evidence | Recorded result | Interpretation |
 | --- | --- | --- |
+| Continuous Gaussian-response domain candidate | [Joint-domain controls](validation/gaussian-response-domains.md): 1,536 Python tests passed; all 27 analyses independently replayed, including 319 tree nodes and 396 CDF certificates | Supplied straight-edge/response model, complete retained unknowns and no general convergence or physical qualification |
 | Bounded-input response developer candidate | [Rectangle/CDF experiment](validation/response-rectangles.md): 1,446 Python tests passed; all 288 finite cases retained, with 200 outer-box exclusions, 82 every-input certificates and six box-undetermined cases | Supplied mathematical Gaussian/response model; Cartesian compatibility alone is insufficient for correlated input feasibility |
 | Common-response calibration developer candidate | [Exact response/edge controls](validation/response-calibration.md): 1,324 Python tests passed, 1,170 finite whole-profile candidates, nine gauges and independent exact graph/certificate checks | Exact supplied inputs and calibration bounds; no inferred physical calibration, inverse correction or continuous offset certificate |
 | Raw-source fitting developer candidate | [Complete source/conditioning controls](validation/raw-source-fit.md): 1,273 Python tests passed; 36 matched offset/brightness fits, 144 conditional noise fits, retained adverse cases and independent geometry/Decimal checks | Supplied lens-free geometry/optics/noise and fixed source modes; no production or physical acceptance |
@@ -121,7 +123,9 @@ results. The PR #61–#63 workbench rows retain the **November 12, 13:27 UTC**
 observation. PR #64 retains its **14:08 UTC** check. PR #65 and PR #66 workbench
 runs were checked on **November 12, 14:27 UTC**; PR #66's workbench result was
 refreshed at **14:35 UTC**, its library result at **14:30 UTC**, and PR #67's
-workbench run at **14:44 UTC**. Each result remains bound to its own head:
+workbench run at **15:17 UTC**, when it had completed successfully. PR #68's
+workbench and library runs were checked at **15:17 UTC**. Each result remains
+bound to its own head:
 
 | Head | Hosted workflow | Result at this observation |
 | --- | --- | --- |
@@ -152,7 +156,9 @@ workbench run at **14:44 UTC**. Each result remains bound to its own head:
 | `8b9c6a8` | [Workbench run 128](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43230540195) | Completed successfully at the 14:27 UTC check |
 | `81dd087` | [Workbench run 129](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43234835732) | Completed successfully at the 14:35 UTC check |
 | `81dd087` | [Library run 47](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43234835472) | Completed successfully at the 14:30 UTC check |
-| `b27e48e` | [Workbench run 130](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43238706845) | In progress at 14:44 UTC; no terminal result inferred |
+| `b27e48e` | [Workbench run 130](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43238706845) | Completed successfully at the 15:17 UTC check |
+| `0b359ec` | [Workbench run 131](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43241865289) | In progress at 15:17 UTC; no terminal result inferred |
+| `0b359ec` | [Library run 48](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43241865188) | Completed successfully at the 15:17 UTC check |
 
 Follow the exact run links for later results. The raw-source candidate's local 1,273-test result is
 separate from hosted CI. The response-calibration candidate records its own local
@@ -189,9 +195,11 @@ Unknown optics/response, radial/curved edges and jointly inferred geometry remai
 open before a production correction or physical likelihood is justified.
 The [response constraints](response-calibration.md) check one common curve at
 exact supplied inputs; the [rectangle extension](response-rectangles.md) adds
-closed input intervals and bounded mathematical CDF evaluation. Joint correlated
-calibration/geometry inference and justified camera-specific error budgets remain
-further engineering work.
+closed input intervals and bounded mathematical CDF evaluation. The
+[continuous Gaussian-domain tool](gaussian-response-domains.md) now couples
+one offset/blur pair under that supplied 1D model. Unknown camera optics,
+uncertain calibration coordinates, image-derived geometry and justified
+camera-specific error budgets remain further engineering work.
 Keep observation-error bounds separate from model discrepancy, local fit spread
 and endpoint-placement sensitivity. Numerical or work-budget exhaustion must
 remain unresolved rather than becoming a physical claim.

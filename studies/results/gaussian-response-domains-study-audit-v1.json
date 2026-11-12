@@ -1,0 +1,1519 @@
+{
+  "format": "independent-gaussian-response-domain-study-audit",
+  "version": 1,
+  "verification": "passed",
+  "run": "/home/bartytime/.codex/worktrees/picad-response-set-inversion/studies/results/gaussian-response-domains-v1.json",
+  "source_sha256_before": {
+    "studies/verification/gaussian-response-domains-oracle-v1.py": "77e7e439c17e9d38f811ee28589fed59d50ab8bd3344fc709cee2051728f08ce",
+    "studies/verification/normal-cdf-bounds-oracle-v1.py": "cf8ffca829c0e249db92bed19150843cad8b6d6ffae8fb16d7ae5e4e741801b8",
+    "studies/verification/response-rectangles-study-audit-v1.py": "eb6d66d09ef5f34b51b0953676b08584e723a98878ce63fbd23d4357110b9151",
+    "backend/gaussian_response_domains.py": "c15f46d5c986a494782c44363f1c2edfbe676c969df4a6bd7963105fcc7610ed",
+    "backend/response_rectangles.py": "674b151b9e8038922aaf234e4919ef96796e9eb326601ee8f720400cb8d2e5e6",
+    "backend/response_calibration.py": "b8a1c4acf8b5d70db3c3de10c9c2e1972af3bbff7f82193bb1f2e9fdc9a56aa4",
+    "backend/normal_cdf_bounds.py": "d736eac5fa2c5fa625f86fc70a6b7b78ea534666ddfef49d6600c44a18f45f1d",
+    "studies/results/gaussian-response-domains-v1.json": "11b0b1ffa03eda4b397041a8226dc62497b6e25a4eb61d3acba80d61d818071a",
+    "scripts/gaussian_response_domain_study.py": "7ea1042baf04daf5fb4d1324a04f46f8f9852458f36b2e3e483fe53b684a3e4f",
+    "studies/gaussian-response-domains-v1.json": "3d9db261236e8b858dce0102e8de1a99b3e010f09c528c43f6f6765886fc99c7"
+  },
+  "source_sha256_after": {
+    "studies/verification/gaussian-response-domains-oracle-v1.py": "77e7e439c17e9d38f811ee28589fed59d50ab8bd3344fc709cee2051728f08ce",
+    "studies/verification/normal-cdf-bounds-oracle-v1.py": "cf8ffca829c0e249db92bed19150843cad8b6d6ffae8fb16d7ae5e4e741801b8",
+    "studies/verification/response-rectangles-study-audit-v1.py": "eb6d66d09ef5f34b51b0953676b08584e723a98878ce63fbd23d4357110b9151",
+    "backend/gaussian_response_domains.py": "c15f46d5c986a494782c44363f1c2edfbe676c969df4a6bd7963105fcc7610ed",
+    "backend/response_rectangles.py": "674b151b9e8038922aaf234e4919ef96796e9eb326601ee8f720400cb8d2e5e6",
+    "backend/response_calibration.py": "b8a1c4acf8b5d70db3c3de10c9c2e1972af3bbff7f82193bb1f2e9fdc9a56aa4",
+    "backend/normal_cdf_bounds.py": "d736eac5fa2c5fa625f86fc70a6b7b78ea534666ddfef49d6600c44a18f45f1d",
+    "studies/results/gaussian-response-domains-v1.json": "11b0b1ffa03eda4b397041a8226dc62497b6e25a4eb61d3acba80d61d818071a",
+    "scripts/gaussian_response_domain_study.py": "7ea1042baf04daf5fb4d1324a04f46f8f9852458f36b2e3e483fe53b684a3e4f",
+    "studies/gaussian-response-domains-v1.json": "3d9db261236e8b858dce0102e8de1a99b3e010f09c528c43f6f6765886fc99c7"
+  },
+  "runtime": {
+    "python": "3.12.3",
+    "seconds": 1.1382102010538802
+  },
+  "population": {
+    "expected_analyses": 27,
+    "retained_rows": 27,
+    "truth_profiles": 1,
+    "truth_positions": 3
+  },
+  "summary": {
+    "all_checks": 122,
+    "failed_checks": 0,
+    "verified_analyses": 27,
+    "verified_nodes": 319,
+    "verified_CDF_certificates": 396,
+    "internal_analysis_checks": 766
+  },
+  "checks": [
+    {
+      "case": "plan_protocol",
+      "category": "population",
+      "details": {
+        "cases": 9,
+        "budgets": 3,
+        "expected_rows": 27
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "recorded_plan",
+      "category": "provenance",
+      "verification": "passed"
+    },
+    {
+      "case": "source_sha256_before",
+      "category": "provenance",
+      "verification": "passed"
+    },
+    {
+      "case": "source_sha256_after",
+      "category": "provenance",
+      "verification": "passed"
+    },
+    {
+      "case": "truth_population",
+      "category": "population",
+      "verification": "passed"
+    },
+    {
+      "case": "truth/0",
+      "category": "truth",
+      "details": {
+        "position": "-1",
+        "CDF_certificate": "independently replayed"
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "truth/1",
+      "category": "truth",
+      "details": {
+        "position": "0",
+        "CDF_certificate": "independently replayed"
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "truth/2",
+      "category": "truth",
+      "details": {
+        "position": "1",
+        "CDF_certificate": "independently replayed"
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "rounded_binary_control",
+      "category": "analytic_control",
+      "verification": "passed"
+    },
+    {
+      "case": "rounded_binary_outside_real_CDF_cover",
+      "category": "analytic_control",
+      "verification": "passed"
+    },
+    {
+      "case": "row_population",
+      "category": "population",
+      "verification": "passed"
+    },
+    {
+      "case": "model/0",
+      "category": "row_metadata",
+      "details": {
+        "case": "endpoint_order_family",
+        "max_boxes": 1,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/0",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 3,
+        "nodes": 1,
+        "CDF_certificates": 0,
+        "status": "compatible",
+        "summary": {
+          "evaluated_boxes": 1,
+          "created_nodes": 1,
+          "accepted_leaves": 1,
+          "unknown_leaves": 0,
+          "excluded_leaves": 0,
+          "cdf_evaluations": 0,
+          "response_work": 0,
+          "has_certified_feasible_parameters": true,
+          "feasible_parameters_exist": true
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/0",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "endpoint_order_family",
+        "max_boxes": 1,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/1",
+      "category": "row_metadata",
+      "details": {
+        "case": "endpoint_order_family",
+        "max_boxes": 7,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/1",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 3,
+        "nodes": 1,
+        "CDF_certificates": 0,
+        "status": "compatible",
+        "summary": {
+          "evaluated_boxes": 1,
+          "created_nodes": 1,
+          "accepted_leaves": 1,
+          "unknown_leaves": 0,
+          "excluded_leaves": 0,
+          "cdf_evaluations": 0,
+          "response_work": 0,
+          "has_certified_feasible_parameters": true,
+          "feasible_parameters_exist": true
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/1",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "endpoint_order_family",
+        "max_boxes": 7,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/2",
+      "category": "row_metadata",
+      "details": {
+        "case": "endpoint_order_family",
+        "max_boxes": 63,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/2",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 3,
+        "nodes": 1,
+        "CDF_certificates": 0,
+        "status": "compatible",
+        "summary": {
+          "evaluated_boxes": 1,
+          "created_nodes": 1,
+          "accepted_leaves": 1,
+          "unknown_leaves": 0,
+          "excluded_leaves": 0,
+          "cdf_evaluations": 0,
+          "response_work": 0,
+          "has_certified_feasible_parameters": true,
+          "feasible_parameters_exist": true
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/2",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "endpoint_order_family",
+        "max_boxes": 63,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/3",
+      "category": "row_metadata",
+      "details": {
+        "case": "reversed_order_contradiction",
+        "max_boxes": 1,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/3",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 3,
+        "nodes": 1,
+        "CDF_certificates": 0,
+        "status": "incompatible",
+        "summary": {
+          "evaluated_boxes": 1,
+          "created_nodes": 1,
+          "accepted_leaves": 0,
+          "unknown_leaves": 0,
+          "excluded_leaves": 1,
+          "cdf_evaluations": 0,
+          "response_work": 0,
+          "has_certified_feasible_parameters": false,
+          "feasible_parameters_exist": false
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/3",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "reversed_order_contradiction",
+        "max_boxes": 1,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/4",
+      "category": "row_metadata",
+      "details": {
+        "case": "reversed_order_contradiction",
+        "max_boxes": 7,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/4",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 3,
+        "nodes": 1,
+        "CDF_certificates": 0,
+        "status": "incompatible",
+        "summary": {
+          "evaluated_boxes": 1,
+          "created_nodes": 1,
+          "accepted_leaves": 0,
+          "unknown_leaves": 0,
+          "excluded_leaves": 1,
+          "cdf_evaluations": 0,
+          "response_work": 0,
+          "has_certified_feasible_parameters": false,
+          "feasible_parameters_exist": false
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/4",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "reversed_order_contradiction",
+        "max_boxes": 7,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/5",
+      "category": "row_metadata",
+      "details": {
+        "case": "reversed_order_contradiction",
+        "max_boxes": 63,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/5",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 3,
+        "nodes": 1,
+        "CDF_certificates": 0,
+        "status": "incompatible",
+        "summary": {
+          "evaluated_boxes": 1,
+          "created_nodes": 1,
+          "accepted_leaves": 0,
+          "unknown_leaves": 0,
+          "excluded_leaves": 1,
+          "cdf_evaluations": 0,
+          "response_work": 0,
+          "has_certified_feasible_parameters": false,
+          "feasible_parameters_exist": false
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/5",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "reversed_order_contradiction",
+        "max_boxes": 63,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/6",
+      "category": "row_metadata",
+      "details": {
+        "case": "finite_slope_feasible_overlap",
+        "max_boxes": 1,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/6",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 9,
+        "nodes": 3,
+        "CDF_certificates": 4,
+        "status": "unresolved",
+        "summary": {
+          "evaluated_boxes": 1,
+          "created_nodes": 3,
+          "accepted_leaves": 0,
+          "unknown_leaves": 2,
+          "excluded_leaves": 0,
+          "cdf_evaluations": 4,
+          "response_work": 702388,
+          "has_certified_feasible_parameters": false,
+          "feasible_parameters_exist": null
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/6",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "finite_slope_feasible_overlap",
+        "max_boxes": 1,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/7",
+      "category": "row_metadata",
+      "details": {
+        "case": "finite_slope_feasible_overlap",
+        "max_boxes": 7,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/7",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 16,
+        "nodes": 7,
+        "CDF_certificates": 7,
+        "status": "compatible",
+        "summary": {
+          "evaluated_boxes": 7,
+          "created_nodes": 7,
+          "accepted_leaves": 4,
+          "unknown_leaves": 0,
+          "excluded_leaves": 0,
+          "cdf_evaluations": 7,
+          "response_work": 5931102,
+          "has_certified_feasible_parameters": true,
+          "feasible_parameters_exist": true
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/7",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "finite_slope_feasible_overlap",
+        "max_boxes": 7,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/8",
+      "category": "row_metadata",
+      "details": {
+        "case": "finite_slope_feasible_overlap",
+        "max_boxes": 63,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/8",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 16,
+        "nodes": 7,
+        "CDF_certificates": 7,
+        "status": "compatible",
+        "summary": {
+          "evaluated_boxes": 7,
+          "created_nodes": 7,
+          "accepted_leaves": 4,
+          "unknown_leaves": 0,
+          "excluded_leaves": 0,
+          "cdf_evaluations": 7,
+          "response_work": 5931102,
+          "has_certified_feasible_parameters": true,
+          "feasible_parameters_exist": true
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/8",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "finite_slope_feasible_overlap",
+        "max_boxes": 63,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/9",
+      "category": "row_metadata",
+      "details": {
+        "case": "finite_slope_incompatible_overlap",
+        "max_boxes": 1,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/9",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 9,
+        "nodes": 3,
+        "CDF_certificates": 4,
+        "status": "unresolved",
+        "summary": {
+          "evaluated_boxes": 1,
+          "created_nodes": 3,
+          "accepted_leaves": 0,
+          "unknown_leaves": 2,
+          "excluded_leaves": 0,
+          "cdf_evaluations": 4,
+          "response_work": 1483215,
+          "has_certified_feasible_parameters": false,
+          "feasible_parameters_exist": null
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/9",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "finite_slope_incompatible_overlap",
+        "max_boxes": 1,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/10",
+      "category": "row_metadata",
+      "details": {
+        "case": "finite_slope_incompatible_overlap",
+        "max_boxes": 7,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/10",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 13,
+        "nodes": 5,
+        "CDF_certificates": 6,
+        "status": "incompatible",
+        "summary": {
+          "evaluated_boxes": 5,
+          "created_nodes": 5,
+          "accepted_leaves": 0,
+          "unknown_leaves": 0,
+          "excluded_leaves": 3,
+          "cdf_evaluations": 6,
+          "response_work": 3922965,
+          "has_certified_feasible_parameters": false,
+          "feasible_parameters_exist": false
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/10",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "finite_slope_incompatible_overlap",
+        "max_boxes": 7,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/11",
+      "category": "row_metadata",
+      "details": {
+        "case": "finite_slope_incompatible_overlap",
+        "max_boxes": 63,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/11",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 13,
+        "nodes": 5,
+        "CDF_certificates": 6,
+        "status": "incompatible",
+        "summary": {
+          "evaluated_boxes": 5,
+          "created_nodes": 5,
+          "accepted_leaves": 0,
+          "unknown_leaves": 0,
+          "excluded_leaves": 3,
+          "cdf_evaluations": 6,
+          "response_work": 3922965,
+          "has_certified_feasible_parameters": false,
+          "feasible_parameters_exist": false
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/11",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "finite_slope_incompatible_overlap",
+        "max_boxes": 63,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/12",
+      "category": "row_metadata",
+      "details": {
+        "case": "exact_zero_sigma_alias",
+        "max_boxes": 1,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/12",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 4,
+        "nodes": 1,
+        "CDF_certificates": 1,
+        "status": "compatible",
+        "summary": {
+          "evaluated_boxes": 1,
+          "created_nodes": 1,
+          "accepted_leaves": 1,
+          "unknown_leaves": 0,
+          "excluded_leaves": 0,
+          "cdf_evaluations": 1,
+          "response_work": 938,
+          "has_certified_feasible_parameters": true,
+          "feasible_parameters_exist": true
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/12",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "exact_zero_sigma_alias",
+        "max_boxes": 1,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/13",
+      "category": "row_metadata",
+      "details": {
+        "case": "exact_zero_sigma_alias",
+        "max_boxes": 7,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/13",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 4,
+        "nodes": 1,
+        "CDF_certificates": 1,
+        "status": "compatible",
+        "summary": {
+          "evaluated_boxes": 1,
+          "created_nodes": 1,
+          "accepted_leaves": 1,
+          "unknown_leaves": 0,
+          "excluded_leaves": 0,
+          "cdf_evaluations": 1,
+          "response_work": 938,
+          "has_certified_feasible_parameters": true,
+          "feasible_parameters_exist": true
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/13",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "exact_zero_sigma_alias",
+        "max_boxes": 7,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/14",
+      "category": "row_metadata",
+      "details": {
+        "case": "exact_zero_sigma_alias",
+        "max_boxes": 63,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/14",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 4,
+        "nodes": 1,
+        "CDF_certificates": 1,
+        "status": "compatible",
+        "summary": {
+          "evaluated_boxes": 1,
+          "created_nodes": 1,
+          "accepted_leaves": 1,
+          "unknown_leaves": 0,
+          "excluded_leaves": 0,
+          "cdf_evaluations": 1,
+          "response_work": 938,
+          "has_certified_feasible_parameters": true,
+          "feasible_parameters_exist": true
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/14",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "exact_zero_sigma_alias",
+        "max_boxes": 63,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/15",
+      "category": "row_metadata",
+      "details": {
+        "case": "thin_feasible_offset_line",
+        "max_boxes": 1,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/15",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 7,
+        "nodes": 3,
+        "CDF_certificates": 2,
+        "status": "unresolved",
+        "summary": {
+          "evaluated_boxes": 1,
+          "created_nodes": 3,
+          "accepted_leaves": 0,
+          "unknown_leaves": 2,
+          "excluded_leaves": 0,
+          "cdf_evaluations": 2,
+          "response_work": 929188,
+          "has_certified_feasible_parameters": false,
+          "feasible_parameters_exist": null
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/15",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "thin_feasible_offset_line",
+        "max_boxes": 1,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/16",
+      "category": "row_metadata",
+      "details": {
+        "case": "thin_feasible_offset_line",
+        "max_boxes": 7,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/16",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 20,
+        "nodes": 11,
+        "CDF_certificates": 7,
+        "status": "unresolved",
+        "summary": {
+          "evaluated_boxes": 7,
+          "created_nodes": 11,
+          "accepted_leaves": 0,
+          "unknown_leaves": 4,
+          "excluded_leaves": 2,
+          "cdf_evaluations": 7,
+          "response_work": 4484422,
+          "has_certified_feasible_parameters": false,
+          "feasible_parameters_exist": null
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/16",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "thin_feasible_offset_line",
+        "max_boxes": 7,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/17",
+      "category": "row_metadata",
+      "details": {
+        "case": "thin_feasible_offset_line",
+        "max_boxes": 63,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/17",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 98,
+        "nodes": 59,
+        "CDF_certificates": 37,
+        "status": "unresolved",
+        "summary": {
+          "evaluated_boxes": 59,
+          "created_nodes": 59,
+          "accepted_leaves": 0,
+          "unknown_leaves": 16,
+          "excluded_leaves": 14,
+          "cdf_evaluations": 37,
+          "response_work": 38148748,
+          "has_certified_feasible_parameters": false,
+          "feasible_parameters_exist": null
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/17",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "thin_feasible_offset_line",
+        "max_boxes": 63,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/18",
+      "category": "row_metadata",
+      "details": {
+        "case": "identity_joint_band",
+        "max_boxes": 1,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/18",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 11,
+        "nodes": 3,
+        "CDF_certificates": 6,
+        "status": "unresolved",
+        "summary": {
+          "evaluated_boxes": 1,
+          "created_nodes": 3,
+          "accepted_leaves": 0,
+          "unknown_leaves": 2,
+          "excluded_leaves": 0,
+          "cdf_evaluations": 6,
+          "response_work": 3000957,
+          "has_certified_feasible_parameters": false,
+          "feasible_parameters_exist": null
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/18",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "identity_joint_band",
+        "max_boxes": 1,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/19",
+      "category": "row_metadata",
+      "details": {
+        "case": "identity_joint_band",
+        "max_boxes": 7,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/19",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 36,
+        "nodes": 11,
+        "CDF_certificates": 23,
+        "status": "unresolved",
+        "summary": {
+          "evaluated_boxes": 7,
+          "created_nodes": 11,
+          "accepted_leaves": 0,
+          "unknown_leaves": 4,
+          "excluded_leaves": 2,
+          "cdf_evaluations": 23,
+          "response_work": 15770526,
+          "has_certified_feasible_parameters": false,
+          "feasible_parameters_exist": null
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/19",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "identity_joint_band",
+        "max_boxes": 7,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/20",
+      "category": "row_metadata",
+      "details": {
+        "case": "identity_joint_band",
+        "max_boxes": 63,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/20",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 209,
+        "nodes": 83,
+        "CDF_certificates": 124,
+        "status": "unresolved",
+        "summary": {
+          "evaluated_boxes": 63,
+          "created_nodes": 83,
+          "accepted_leaves": 2,
+          "unknown_leaves": 26,
+          "excluded_leaves": 14,
+          "cdf_evaluations": 124,
+          "response_work": 150935067,
+          "has_certified_feasible_parameters": true,
+          "feasible_parameters_exist": true
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/20",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "identity_joint_band",
+        "max_boxes": 63,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/21",
+      "category": "row_metadata",
+      "details": {
+        "case": "nonlinear_response_joint_band",
+        "max_boxes": 1,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/21",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 11,
+        "nodes": 3,
+        "CDF_certificates": 6,
+        "status": "unresolved",
+        "summary": {
+          "evaluated_boxes": 1,
+          "created_nodes": 3,
+          "accepted_leaves": 0,
+          "unknown_leaves": 2,
+          "excluded_leaves": 0,
+          "cdf_evaluations": 6,
+          "response_work": 6000656,
+          "has_certified_feasible_parameters": false,
+          "feasible_parameters_exist": null
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/21",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "nonlinear_response_joint_band",
+        "max_boxes": 1,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/22",
+      "category": "row_metadata",
+      "details": {
+        "case": "nonlinear_response_joint_band",
+        "max_boxes": 7,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/22",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 36,
+        "nodes": 11,
+        "CDF_certificates": 23,
+        "status": "unresolved",
+        "summary": {
+          "evaluated_boxes": 7,
+          "created_nodes": 11,
+          "accepted_leaves": 0,
+          "unknown_leaves": 4,
+          "excluded_leaves": 2,
+          "cdf_evaluations": 23,
+          "response_work": 31411976,
+          "has_certified_feasible_parameters": false,
+          "feasible_parameters_exist": null
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/22",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "nonlinear_response_joint_band",
+        "max_boxes": 7,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/23",
+      "category": "row_metadata",
+      "details": {
+        "case": "nonlinear_response_joint_band",
+        "max_boxes": 63,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/23",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 220,
+        "nodes": 93,
+        "CDF_certificates": 125,
+        "status": "unresolved",
+        "summary": {
+          "evaluated_boxes": 63,
+          "created_nodes": 93,
+          "accepted_leaves": 1,
+          "unknown_leaves": 34,
+          "excluded_leaves": 12,
+          "cdf_evaluations": 125,
+          "response_work": 310813432,
+          "has_certified_feasible_parameters": true,
+          "feasible_parameters_exist": true
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/23",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "nonlinear_response_joint_band",
+        "max_boxes": 63,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/24",
+      "category": "row_metadata",
+      "details": {
+        "case": "rounded_binary_level_singleton",
+        "max_boxes": 1,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/24",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 4,
+        "nodes": 1,
+        "CDF_certificates": 1,
+        "status": "incompatible",
+        "summary": {
+          "evaluated_boxes": 1,
+          "created_nodes": 1,
+          "accepted_leaves": 0,
+          "unknown_leaves": 0,
+          "excluded_leaves": 1,
+          "cdf_evaluations": 1,
+          "response_work": 277301,
+          "has_certified_feasible_parameters": false,
+          "feasible_parameters_exist": false
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/24",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "rounded_binary_level_singleton",
+        "max_boxes": 1,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/25",
+      "category": "row_metadata",
+      "details": {
+        "case": "rounded_binary_level_singleton",
+        "max_boxes": 7,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/25",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 4,
+        "nodes": 1,
+        "CDF_certificates": 1,
+        "status": "incompatible",
+        "summary": {
+          "evaluated_boxes": 1,
+          "created_nodes": 1,
+          "accepted_leaves": 0,
+          "unknown_leaves": 0,
+          "excluded_leaves": 1,
+          "cdf_evaluations": 1,
+          "response_work": 277301,
+          "has_certified_feasible_parameters": false,
+          "feasible_parameters_exist": false
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/25",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "rounded_binary_level_singleton",
+        "max_boxes": 7,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "model/26",
+      "category": "row_metadata",
+      "details": {
+        "case": "rounded_binary_level_singleton",
+        "max_boxes": 63,
+        "original_model_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "analysis/26",
+      "category": "saved_analysis",
+      "details": {
+        "verification": "passed",
+        "checks": 4,
+        "nodes": 1,
+        "CDF_certificates": 1,
+        "status": "incompatible",
+        "summary": {
+          "evaluated_boxes": 1,
+          "created_nodes": 1,
+          "accepted_leaves": 0,
+          "unknown_leaves": 0,
+          "excluded_leaves": 1,
+          "cdf_evaluations": 1,
+          "response_work": 277301,
+          "has_certified_feasible_parameters": false,
+          "feasible_parameters_exist": false
+        }
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "geometry/26",
+      "category": "analytic_geometry",
+      "details": {
+        "case": "rounded_binary_level_singleton",
+        "max_boxes": 63,
+        "analytic_geometry_retained": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary_population",
+      "category": "population",
+      "verification": "passed"
+    },
+    {
+      "case": "summary/0",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/1",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/2",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/3",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/4",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/5",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/6",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/7",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/8",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/9",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/10",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/11",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/12",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/13",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/14",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/15",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/16",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/17",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/18",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/19",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/20",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/21",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/22",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/23",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/24",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/25",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "summary/26",
+      "category": "study_summary",
+      "details": {
+        "summary_checked": true
+      },
+      "verification": "passed"
+    },
+    {
+      "case": "global_summary",
+      "category": "study_summary",
+      "verification": "passed"
+    },
+    {
+      "case": "source_unchanged",
+      "category": "provenance",
+      "verification": "passed"
+    }
+  ],
+  "limits": [
+    "All 27 fixed case/budget analyses are replayed without production imports/calls. Shared truth generation is independently certificate-checked; budgets reuse models and one truth profile rather than independent captures.",
+    "Exact closed-tree coverage and local certificates give conditional inner/outer parameter sets, not convergence, finite-resolution completeness, physical accuracy or a globally shared response over the accepted union.",
+    "The saved-analysis verifier caps 16 response rectangles, 511 nodes and 1024 CDF records per analysis; exceeding these is an audit-resource refusal, not mathematical incompatibility."
+  ]
+}

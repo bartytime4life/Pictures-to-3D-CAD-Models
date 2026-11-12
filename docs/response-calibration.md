@@ -33,7 +33,10 @@ the supplied values.
 Use the separate [rectangle solver](response-rectangles.md) when inputs have
 declared closed intervals. Its existential and every-input modes answer distinct
 questions, and its optional upstream Gaussian helper provides outward mathematical
-bounds without inferring a camera model.
+bounds without inferring a camera model. For a supplied straight Gaussian edge
+with one offset and blur width shared across all observations, use the separate
+[continuous-domain tool](gaussian-response-domains.md). Its joint inner/outer
+boxes retain parameter correlation and unresolved regions.
 
 For every pair `x1 < x2`, the declared model requires
 

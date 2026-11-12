@@ -3,6 +3,19 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Continuous shared Gaussian response domains and documentation — November 12, 2026
+
+- Enclose one shared offset/positive-blur domain under externally supplied
+  calibration, output and secant bounds; retain analytic order certificates,
+  outward numerical tests and complete accepted/excluded/unknown box coverage.
+- Add a strict CLI, fixed 27-analysis study, independent saved-certificate replay
+  and joint-box figure. The [guide](gaussian-response-domains.md) defines the
+  exact contracts; [validation](validation/gaussian-response-domains.md) retains
+  ambiguity, failures, source bindings and the 1,536-test regression.
+- Review the complete documentation set, update setup/developer navigation,
+  mathematical scope, recovery and current source/CI observations. Preserve
+  historical receipts and companion-library generated/release artifacts.
+
 ## Common response with bounded inputs — November 12, 2026
 
 - Add exact rectangle feasibility with explicit some/every-input quantifiers,

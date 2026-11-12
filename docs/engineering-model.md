@@ -268,6 +268,12 @@ The separate [rectangle extension](response-rectangles.md) now preserves declare
 input intervals. Its two quantifiers distinguish choosing one point per box from
 requiring one response for every input. Outward Gaussian covers address numerical
 evaluation error under a supplied optical formula; they do not justify that
-formula or its physical error budget. Shared offset/blur relationships still need
-a coupled model, unless the stronger every-input result already supplies a common
-response for the entire covering box.
+formula or its physical error budget. The separate [continuous Gaussian-domain solver](gaussian-response-domains.md)
+now maintains one shared offset and blur width across all observations under a
+supplied straight-edge model. Accepted boxes prove every parameter pair has a
+common response; excluded boxes have no feasible pair. Unknown boxes remain in
+the outer set, including a retained exact feasible line with no accepted box in
+the development study. Marginal offset/sigma projections lose correlation and
+cannot certify a pair. These conditional set results do not identify camera
+optics, justify the supplied calibration/error bounds or replace reserved
+physical measurements. See [complete controls](validation/gaussian-response-domains.md).

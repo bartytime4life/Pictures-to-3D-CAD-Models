@@ -504,3 +504,13 @@ restrict represented alternatives. Wrong calibration, quantization and channel/
 spatial/stage violations remain adverse results. No response is learned from
 one unknown edge, and exact finite inputs do not certify a continuous Gaussian
 integral or physical camera calibration.
+
+The [bounded-input response extension](response-rectangles.md) distinguishes
+existential and every-input rectangle constraints and supplies outward
+mathematical CDF covers. The [continuous domain extension](gaussian-response-domains.md)
+uses those tests plus Gaussian order invariants to enclose a shared offset/sigma
+feasible set. It preserves full closed-box coverage and unresolved regions;
+separate interval projections do not retain joint correlation. Its
+[complete development record](validation/gaussian-response-domains.md) includes
+order-only gauges, refinement and a thin feasible line. This is set inversion
+under supplied models, with no general convergence or physical-accuracy claim.

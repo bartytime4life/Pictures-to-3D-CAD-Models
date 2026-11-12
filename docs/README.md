@@ -55,12 +55,13 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Fit a supplied straight raw optical source without inverting weak profile modes | [Source-space variable projection](raw-source-fit.md), [complete controls and limitations](validation/raw-source-fit.md) |
 | Check externally bounded calibration for one common scalar response | [Exact response consistency](response-calibration.md), [edge/calibration controls](validation/response-calibration.md) |
 | Carry input intervals through one common response and bound supplied Gaussian inputs | [Rectangle quantifiers and outward CDF bounds](response-rectangles.md), [finite experiment and independent checks](validation/response-rectangles.md) |
+| Enclose continuous shared edge-offset/blur domains without choosing independent inputs | [Gaussian response domains](gaussian-response-domains.md), [complete boxes, controls and independent replay](validation/gaussian-response-domains.md) |
 | Understand the lens inverse domain and independent synthetic camera checks | [Radial inverse and lens mismatch](validation/radial-inverse.md) |
 | Review why the blur diagnostic remains research only | [Directional-spread qualification](validation/directional-spread-qualification.md) |
 | Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |
 | Run a benchmark with measured photos | [Photo benchmark](photo-benchmark.md) |
 | Review completed checks | [Validation overview](validation.md), [design QA](../design-qa.md) |
-| Check current documentation coverage and source consistency | [Current coverage](validation/response-rectangles.md#documentation-coverage), [complete review through PR #66](validation/documentation-response-state.md), [response implementation coverage](validation/response-calibration.md#documentation-coverage) |
+| Check current documentation coverage and source consistency | [Current coverage](validation/gaussian-response-domains.md#documentation-coverage), [earlier complete review through PR #66](validation/documentation-response-state.md), [response implementation coverage](validation/response-calibration.md#documentation-coverage) |
 | Interpret incomplete hosted runs and the overall job limit | [Runtime-budget evidence](validation/ci-runtime-budget.md), [exact-head CI status](project-status.md#evidence-by-scope) |
 | Review the recent interface changes | [Guided-workbench audit](validation/guided-workbench.md) |
 | Review scope and future work | [Roadmap](roadmap.md), [change log](changelog.md) |

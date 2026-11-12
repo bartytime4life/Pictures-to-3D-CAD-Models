@@ -58,16 +58,17 @@ Browser downloads are governed by the browser and host environment. Deleting an 
 ## Numerical reports
 
 The [developer tools](developer-tools.md) have their own local report files.
-The exact-response and rectangle CLIs retain the full submitted numeric request and unit labels,
-its input-byte hash, implementation hashes, Python version, Git revision and
-dirty-file names. Its output is both saved and printed to the terminal. It does
-not accept a photograph or contact the CAD API, Ollama or a hosted model.
+The exact-response, rectangle and Gaussian-domain CLIs retain the full
+submitted numeric request and unit labels,
+input-byte hashes, implementation hashes, Python version, Git revision and
+dirty-file names. Their outputs are both saved and printed to the terminal.
+They do not accept a photograph or contact the CAD API, Ollama or a hosted model.
 
 Report contents and terminal logs can still disclose measurements, labels or
 repository filenames. Review them before sharing. The recommended
-`.local/response-*.json` destinations are outside `.local/jobs` cleanup;
-the numerical CLI does not automatically expire its reports. Keep the reports
-needed to reproduce a decision. Other tools' report and replacement rules are
+`.local/response-*.json` and `.local/gaussian-*.json` destinations are outside
+`.local/jobs` cleanup; these numerical tools do not automatically expire reports.
+Keep the reports needed to reproduce a decision. Other tools' report and replacement rules are
 listed in the catalog.
 
 ## Input and execution boundaries
