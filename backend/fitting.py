@@ -837,11 +837,20 @@ def refit_lines(points, prims, margin=0.0):
 
 
 def place_fillets(prims):
-    """Recentre every constrained fillet for its current radius (centre = c0 + r v)."""
+    """Recentre constrained fillets and carry their angular sweep witness with them.
+
+    ``mid`` selects the side of the circle followed by the arc. Leaving it at an
+    observed world position while moving the centre can switch a minor arc to its
+    major complement. Preserve its direction about the old centre, including for
+    genuinely major arcs; it is a sweep witness, not a new observation.
+    """
     for p in prims:
         if "fillet" in p.data:
             c0, v = p.data["fillet"]
-            p.data["c"] = tuple(np.asarray(c0) + p.data["r"] * np.asarray(v))
+            direction = np.asarray(p.data["mid"]) - np.asarray(p.data["c"])
+            centre = np.asarray(c0) + p.data["r"] * np.asarray(v)
+            p.data["c"] = tuple(centre)
+            p.data["mid"] = tuple(centre + p.data["r"] * direction / np.linalg.norm(direction))
 
 
 def fit_fillets(points, prims, tol, sigma=0.0):

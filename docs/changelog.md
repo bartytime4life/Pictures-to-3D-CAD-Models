@@ -32,6 +32,13 @@ and [separate validation record](validation/benchmark-correspondence.md).
 - Unsupported fits retain the traced outline. Gaussian reconstruction and design
   snapping retain their separate assumptions. [Method and evidence](validation/fit-support.md).
 
+## Constrained fillet sweeps — November 12, 2026
+
+Moving a fitted fillet's center/radius now carries its angular witness with it,
+preventing accidental quarter-circle to 270° sector changes. Genuine major arcs
+remain supported. The scalar Gaussian model and radius warnings retain their
+separate limits. [Reproduction and checks](validation/fillet-sweep.md).
+
 ## Camera height and narrow-wall refinement — November 11, 2026
 
 Merged in PRs #41 and #42; these changes precede the support candidate above.
