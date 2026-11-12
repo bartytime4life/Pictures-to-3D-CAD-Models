@@ -216,10 +216,14 @@ this assembly repair.
 The separate [finite-material intensity inverse](finite-shape-inverse.md) now
 fits a circular segment's centre, radius and chord under supplied optics. Its
 conditional numerical results do not replace this automatic tracing path or
-the independent dimension checks above. The [captured-field diagnostic](validation/finite-free-centre.md)
-retains initialization and model failures, and the
+the independent dimension checks above. The [original captured-field diagnostic](validation/finite-free-centre.md)
+retains initialization and model failures. The later
+[measured-ring replay](validation/finite-photo-intensity-v2.md) removes the known
+whole-sheet initialization failure and completes all ten available fits, while
+only three of twelve declared records meet every target. Its remaining
+intensity mismatches still require a supported observation model. The
 [moment proposal study](validation/finite-moment-photo.md) retains background
-sensitivity. Neither establishes a physical uncertainty bound or a usable
+sensitivity. These studies do not establish a physical uncertainty bound or a usable
 covariance for an arbitrary photograph.
 
 A source-derived straight-edge direction may still align the display and

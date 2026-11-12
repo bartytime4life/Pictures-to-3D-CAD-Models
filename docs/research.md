@@ -98,8 +98,8 @@ conditioning. A derived angular `R^-3` shrink term is exploratory, and the exact
 whole-disk level-set model is conditional research rather than an automatically
 selected model for an arbitrary circular boundary span.
 
-The later [finite-material intensity inverse](finite-shape-inverse.md), published
-in draft PR #88, models the complete circular segment, including its closing
+The later [finite-material intensity inverse](finite-shape-inverse.md), introduced
+in PR #88, models the complete circular segment, including its closing
 chord, and fits centre, radius and chord fraction from fixed pixel intensities.
 Supplied optics and a bounded two-level variable-projection solve keep model
 assumptions explicit. Its [independent positive-area experiment](validation/finite-free-centre.md)
@@ -109,6 +109,15 @@ Captured-field initialization and mismatch failures remain separate. The
 central moments under centered symmetric convolution, with strong observed
 background sensitivity. Neither result supplies automatic optical calibration
 or replaces the workbench's current tracing path.
+
+PR #91 adds an [immutable measured-ring preparation contract](finite-shape-inverse.md#prepare-a-measured-ring-observation-set)
+and a [paired replay of saved measurement fields](validation/finite-photo-intensity-v2.md).
+It completes all ten available fits; three of twelve declared case/lane records
+meet every original target and two retain their upstream refusal. Both the crop
+and the shared-width preparation policy differ from version 1, so this is not a
+crop-only ablation. Held-out samples are excluded from fitting cost but influence
+initialization and moments. The remaining intensity mismatches and 8–19 second
+fit times leave optical adequacy and interactive latency unresolved.
 
 [Al-Sharadqah and Chernov's circle-fit analysis](https://arxiv.org/abs/0907.0421)
 compares geometric and algebraic fits with coordinate errors. It motivates

@@ -5,10 +5,11 @@ record below to assess its evidence. This page separates local checks, hosted
 CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
-## Current workbench evidence — November 12, 2026
+## Current candidate evidence — November 12, 2026
 
 The [measured-ring observation bridge](validation/finite-photo-intensity-v2.md)
-passes **899 local Python tests**, with build and lint checks. It adds an
+at PR #91 source `6539905` passes **899 local Python tests**, with build and lint
+checks. It adds an
 immutable Python preparation operator and a paired saved-field experiment;
 automatic tracing remains unchanged. Its evidence is separate from the
 preceding finite-material result below.
@@ -21,9 +22,15 @@ retains a missed nominal target and background-sensitive or incompatible
 covariance proposals. These developer models do not change automatic tracing
 or establish physical-camera accuracy.
 
-The [latest documentation review](validation/documentation-pr88-state.md)
-follows published draft PR #88 at `ed39d2c`. It checks documentation and preserves
-runtime source; it does not rerun or replace the geometry/browser results below.
+The [latest documentation review](validation/documentation-pr91-state.md)
+follows integrated main `ec41b0c` after PRs #90 and #91 merged, including PR #85's
+separate shadow-harmonic change. The 899-test result above predates that combined
+source. The review checks documentation, executable
+examples and navigation while preserving runtime and study bytes. The
+[PR #88 review](validation/documentation-pr88-state.md) retains its earlier
+scope. Neither documentation review reruns or replaces the geometry/browser
+results below; [current main and dependency states](project-status.md) have a
+separate timestamped snapshot.
 
 The preceding [circle-consistent join candidate](validation/directional-free-arcs.md)
 builds on PR #84. It tests the circle represented by actual emitted geometry,
