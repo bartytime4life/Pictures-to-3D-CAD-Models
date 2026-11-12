@@ -208,4 +208,10 @@ The geometry process has bounded execution and concurrency. A timed-out worker i
 
 ## Deployment boundary
 
+The separate [conditional corner CLI](corner-feasibility.md) uses
+`backend/corner_feasibility.py` and `backend/decimal_bounds.py` for developer
+analysis. It reads explicit model/observation JSON and returns bounded radius
+sets with provenance. The FastAPI tracing/build paths do not call it; no new
+endpoint, AI action or automatic geometry correction is introduced.
+
 The included runtime is a single-user application. It does not implement account authentication, per-user authorization, shared project storage, collaborative editing, a durable job queue, or a billing service. Those capabilities require an explicit design and implementation before a public multi-user deployment.

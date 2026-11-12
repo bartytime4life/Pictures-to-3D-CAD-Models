@@ -3,6 +3,18 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Conditional corner-radius developer analysis — November 12, 2026
+
+- Added explicit bounded-error radius analysis for a fixed right corner and
+  independent axis-aligned Gaussian blur. Outward Decimal probability covers
+  enclose whole radius intervals; budget/numerical limits retain unknown regions.
+- Added a provenance-bound CLI with exact decimal input, a synthetic demo and
+  exclusive output writes. It changes no production tracing or CAD behavior.
+- Independent development observations retain known radii under matching models,
+  reject the deliberately wrong scalar blur, and expose numerical-resolution
+  limits. [Method](corner-feasibility.md) and [validation](validation/corner-feasibility.md)
+  retain negative/unknown cases and separate physical qualification.
+
 ## Documentation and current-state review — November 12, 2026
 
 - Added a revision-bound [project-status page](project-status.md), endpoint map,

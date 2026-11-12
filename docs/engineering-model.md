@@ -185,3 +185,9 @@ blur model. It is separate from the user-bounded height decision above. The
 known rounded corner whose model estimate is smaller than its actual radius.
 Neither that estimate nor a local radius standard deviation is a physical upper
 radius bound. Reserve an independent measurement for fit-critical fillets.
+
+The separate [conditional corner analysis](corner-feasibility.md) encloses
+data-compatible radii for one fixed Gaussian right-corner model and explicitly
+supplied linear-light level intervals. It can retain unknown regions or reject
+an incompatible supplied model. It does not infer those observation bounds,
+replace the independent height decision, or qualify a physical fillet.

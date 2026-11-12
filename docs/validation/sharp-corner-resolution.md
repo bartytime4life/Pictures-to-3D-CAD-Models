@@ -166,6 +166,13 @@ claims; v2 constructs nonoverlapping bisector arms and checks polygon validity.
 
 ## Conditional feasible sets are future work
 
+Follow-up: the [fixed-corner developer tool](../corner-feasibility.md) now
+implements conservative inner/outer radius sets for supplied Gaussian blur and
+level bounds. Its [independent checks](corner-feasibility.md) retain numerical
+unknowns and wrong-model rejection. The broader nuisance/discrepancy inference
+outlined below remains future work; this historical record describes the
+earlier search-guard change.
+
 A successor could predeclare a finite radius/nuisance domain `P`, observation-
 error set `E` and model-discrepancy set `D`, then study
 `F = {(r, eta) in P : y - m(r, eta) in E (+) D}` and its radius projection.
