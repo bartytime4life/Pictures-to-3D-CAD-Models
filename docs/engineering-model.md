@@ -163,3 +163,12 @@ physical error bound. The [measured-photo benchmark](photo-benchmark.md) still
 needs real calipered parts and recorded capture conditions. Prioritize that
 experiment, held-out functional dimensions and prototype inspection before
 expanding reconstruction scope or making an accuracy claim.
+
+The [scientific model review](validation/scientific-model-review.md) records
+additional unresolved limits: whole-circle extrapolation from a thin contour,
+directional blur outside the scalar Gaussian model, shared renderer/inverse
+code, and conditional benchmark statistics. Residuals describe the selected
+model's agreement with sampled points; they do not alone establish source
+coverage, identifiable radius, physical uncertainty or complete benchmark
+coverage. The optional bounded-height decision above retains its separate,
+user-supplied assumptions.
