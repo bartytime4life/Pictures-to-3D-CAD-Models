@@ -135,6 +135,11 @@ For a library-only install, run `npx playwright install chromium` from `referenc
 
 The test configuration starts the built app on port 8000, or reuses an already running server outside CI. `PICAD_TEST_URL` selects an explicitly managed test server instead. Confirm that a reused server is this checkout's app, particularly after rebuilding. Browser results and failure traces are local generated outputs under `playwright-report/` and `test-results/`.
 
+Each checkout also needs its own root `.venv`: browser export inspectors invoke
+`.venv/bin/python` relative to the checkout. Starting the API with another
+worktree's interpreter does not prepare those helpers. Run `make setup-app` in
+the test checkout; preserve earlier reports before a rerun replaces them.
+
 The browser suite includes automated accessibility checks with `@axe-core/playwright`. Those checks cover the tested rendered states; they do not establish full accessibility conformance or replace keyboard and assistive-technology testing.
 
 ## Continuous integration

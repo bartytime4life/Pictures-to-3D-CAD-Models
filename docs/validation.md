@@ -7,6 +7,17 @@ original counts and environment; they are not later retests.
 
 ## Current workbench evidence — November 12, 2026
 
+The [radial inverse and independent-renderer candidate](validation/radial-inverse.md)
+after integration of `main` at `5c07d0f` passed **623 Python tests**, including 30
+new lens checks, and **74 browser scenarios** against its local CAD service.
+It restricts inversion to the central camera branch and
+adds separately implemented synthetic lens calculations. Higher-order lens
+stress cases retain nonzero reserved-dimension errors. The separate
+[30-case directional-spread study](validation/directional-spread-qualification.md)
+found missed directional cases and unknown outcomes; no production warning or
+anisotropic correction was added. The [documentation follow-up](validation/documentation-review-2026-11-12.md#model-checks-follow-up)
+records its browser and documentation checks separately.
+
 The [initial-fit support repair](validation/fit-support.md) adds enclosed-center
 and complete assembled-boundary checks while retaining separate coarse coverage
 and subpixel measurements. Integration with the merged wall/height changes passed
@@ -35,9 +46,13 @@ It changes guides relative to that integrated baseline, not runtime behavior.
 
 | Evidence | Revision and result | Scope |
 | --- | --- | --- |
+| Weak-edge error recovery | PR #45, merged in `4e607d9`; [record](validation/contrast-recovery.md): **583 Python tests** at its PR #44 integration | Four original failures now recover or give actionable 422 guidance; thresholds and fallback policy retained |
+| Constrained fillet sectors | PR #46, merged in `5c07d0f`; [record](validation/fillet-sweep.md): **589 Python tests** at its PR #44 integration | Six failing original controls, genuine major arcs and exact STEP/DXF checks; scalar blur-model mismatch remains |
+| Radial inverse and independent simulation | [Domain and checks](validation/radial-inverse.md), candidate integrated with main `5c07d0f`: **623 Python tests**, **74 browser scenarios**; the separate earlier phase passed 609/74 | Decimal numerical oracles, independent lens code and source-bound higher-order mismatch examples; no physical camera qualification |
+| Directional-spread qualification | [Frozen 30-case record](validation/directional-spread-qualification.md), pinned `2d76aea`: 27 traces, 6 flags, 16 eligible-unflagged, 5 ineligible, 3 trace failures | Synthetic research, orientation counterexamples and unknown states; no production warning/correction or population-rate claim |
 | Global benchmark correspondence | PR #43 merged at `d6a657f`; [candidate integration record](validation/benchmark-correspondence.md): **91 focused tests** and a fresh three-photo CLI example | Exact-cost matching oracles and coverage conservation; errors remain conditional, synthetic and separate from physical feature identity |
 | Integrated initial-fit support | [Method and checks](validation/fit-support.md), `d6a657f` plus the support candidate: **579 Python tests**, build and lint passed; **74 browser scenarios** before the benchmark-only merge | Synthetic geometry, generated photos and explicit transport fixtures; API/frontend sources unchanged by that merge; no physical-accuracy claim |
-| Current documentation review | [Coverage and checks](validation/documentation-review-2026-11-12.md), integrated `d6a657f` plus the support candidate | Source consistency, local navigation and companion-library documentation; older results remain historical |
+| Earlier PR #44 documentation review | [Coverage and checks](validation/documentation-review-2026-11-12.md), integrated `d6a657f` plus the support candidate | Source consistency, local navigation and companion-library documentation at that revision; later model-check follow-ups retain separate evidence |
 | Recorded camera-height checks | Branch `claude/camera-height`, on the narrow-wall commit: **508 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#camera-height-from-the-holes-roundness--november-11-2026) | Local result; synthetic photos and exact silhouettes |
 | Recorded narrow-wall and blur-sampling checks | Branch `claude/narrow-walls` on `5588a52`: **505 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#near-frontal-wall-tone-and-cubic-blur-measurement--november-11-2026) | Local result; synthetic photos and exact profiles, including what got worse |
 | Scientific documentation follow-up | [Findings and checks](validation/scientific-model-review.md), baseline `5588a52` | Circle fitting-stage and full-tracer directional-blur counterexamples, benchmark aggregation fixture, current guide corrections; not real-photo or physical qualification |

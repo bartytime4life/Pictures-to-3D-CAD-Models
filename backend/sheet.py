@@ -300,20 +300,42 @@ def find_sheet(gray, rgb=None):
     return Sheet(corners=quad, sides=sides, polarity=polarity)
 
 
-def undistort_radius(rd, k1, iterations=12):
-    """Solve r_u + k1 r_u^3 = r_d for r_u by Newton's method (quadratic convergence).
+def undistort_radius(rd, k1, iterations=64):
+    """Invert the radial cubic on the increasing branch containing the camera centre.
 
-    The forward model is monotonic, hence invertible, while 1 + 3 k1 r_u^2 > 0; with
-    |k1| <= 0.25 that holds across the whole image (normalised radius <= 1).
+    With negative k1, its maximum distorted radius is 2/(3 sqrt(-3 k1)); a
+    sensor radius beyond it has no central-camera inverse. Safeguarded Newton
+    steps stay in the physical branch, with bisection for an inadmissible step.
+    Near the turning point, input rounding and image noise are still amplified.
     """
-    ru = np.array(rd, dtype=np.float64, copy=True)
+    rd = np.asarray(rd, dtype=np.float64)
+    if not math.isfinite(k1) or not np.isfinite(rd).all() or (rd < 0).any():
+        raise SheetError("The radial lens model needs finite, nonnegative image radii.")
+    if k1 == 0:
+        return rd.copy()
+    if k1 < 0:
+        scale = math.sqrt(-3 * k1)
+        if np.any(rd > 2 / (3 * scale)):
+            raise SheetError("The radial lens model has no central-camera inverse at this image radius.")
+        upper = np.full_like(rd, 1 / scale)
+    else:
+        upper = rd.copy()
+    lower = np.zeros_like(rd)
+    ru = rd.copy()
     for _ in range(iterations):
+        residual = ru * (1 + k1 * ru * ru) - rd
+        lower = np.where(residual < 0, ru, lower)
+        upper = np.where(residual > 0, ru, upper)
         derivative = 1 + 3 * k1 * ru * ru
-        step = (ru + k1 * ru**3 - rd) / derivative
-        ru = ru - step
-        if np.all(np.abs(step) < 1e-15):
-            break
-    return ru
+        step = np.divide(residual, derivative, out=np.full_like(ru, np.nan), where=derivative > 0)
+        proposed = ru - step
+        admissible = np.isfinite(proposed) & ((residual == 0) | ((proposed > lower) & (proposed < upper)))
+        moved = np.where(admissible, proposed, lower + (upper - lower) / 2)
+        converged = np.abs(moved - ru) <= 4 * np.finfo(float).eps * np.maximum(1, np.abs(ru))
+        ru = moved
+        if converged.all():
+            return ru
+    raise SheetError("The radial lens model could not be inverted at numerical precision.")
 
 
 def undistort_points(points, k1, size):
@@ -345,6 +367,12 @@ def estimate_k1(sheet, size):
     """
     g = (math.sqrt(5) - 1) / 2
     a, b = K1_RANGE
+    # A trial lens must invert every reference observation on its central branch.
+    # Include detected corners as well as the measured interior edge samples.
+    observed = np.vstack([sheet.corners, *sheet.sides])
+    radius = np.max(np.linalg.norm((observed - np.array(size) / 2) / (math.hypot(*size) / 2), axis=1))
+    if radius > 0:
+        a = max(a, math.nextafter(-4 / (27 * radius * radius), math.inf))
     c, d = b - g * (b - a), a + g * (b - a)
     fc, fd = straightness(sheet.sides, c, size), straightness(sheet.sides, d, size)
     for _ in range(60):

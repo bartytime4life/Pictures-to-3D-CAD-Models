@@ -147,6 +147,9 @@ guide's 0.004/0.014/0.015 mm rounded median/p95/worst matched errors.
 
 Ignored local logs and receipts live in `.local/verification/`. These checks
 use synthetic geometry and generated images; no measured-photo accuracy,
-native-tool acceptance or physical fit is established. Directional blur,
-shared lens-renderer code, camera-model observability and downstream
-forward-model adequacy remain separate scientific work.
+native-tool acceptance or physical fit is established. At this reviewed
+revision, shared lens-renderer code remained a limit; a later
+[separate inverse and domain repair](radial-inverse.md) addresses that dependency
+and records higher-order mismatch. [Directional blur](directional-spread-qualification.md),
+camera-model observability and downstream forward-model adequacy remain
+separate scientific work.
