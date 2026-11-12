@@ -134,6 +134,12 @@ motion requires higher-order information, and allowing material slopes can
 also absorb its shoulder. A better gradient-only result does not establish
 correct wall geometry.
 
+The later [joint wall/lighting experiment](wall-gradients.md) bounds the source
+through five node levels and solves their constrained linear fit at each
+supplied geometry. It includes an exact wall-label ambiguity and retains all
+geometry/image-fit rows. This provides constructive alternatives under stated
+assumptions; it does not promote the two-slope ablation to an automatic correction.
+
 Wall rows report the pre-refinement crossing relative to the supplied outer
 silhouette. They do not test the later wall correction or identify a final
 top-face error. All observed offsets remain fixture errors in pixels; no

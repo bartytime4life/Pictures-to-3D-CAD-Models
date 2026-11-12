@@ -1,0 +1,15 @@
+{
+  "direct_rows": 840,
+  "image_rows": 576,
+  "complete_unique_cartesian_keys": true,
+  "all_fitted_source_nodes_physical": true,
+  "failed_rows": 0,
+  "image_summary_groups_recomputed": 36,
+  "witness_summary_groups_recomputed": 6,
+  "artifact_sha256": {
+    "geometry-fits.csv": "ef44b7c97ad8e1a4069ab97a0df91ef8b4de255b1a5b27aa86703e35f9be65f0",
+    "image-fits.csv": "6234b1040b9b72b8cffb1395adba5970b5cd30e89d22e335dc67e81c023db52c"
+  },
+  "audit_source_sha256": "6b393fbc631726284d7738224ac409b734daaff3baa1839cc2436ba254845936",
+  "scope": "Complete CSV arithmetic/coverage audit; not an independent production renderer, optimization certificate or physical qualification"
+}

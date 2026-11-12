@@ -222,3 +222,10 @@ The [crossing rule](edge-crossings.md) further distinguishes a uniquely nearest
 verified level crossing from an unresolved contact or tie. Its exact ranking
 concerns represented residual samples; it does not establish that the closest
 visible feature is the intended physical edge or supply a camera-noise bound.
+
+The [bounded wall/lighting model](wall-gradients.md) makes that distinction
+constructive: different silhouette labels can yield an identical local source
+field even with known wall width. Joint brightness fitting can expose alternatives
+but cannot manufacture missing information. Independent wall/feature evidence
+and a physically consistent capture remain necessary; no new accuracy decision
+or automatic correction follows from the developer experiment.

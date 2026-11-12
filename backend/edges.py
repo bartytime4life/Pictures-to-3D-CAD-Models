@@ -361,16 +361,19 @@ def pooled_wall_tone(g, points, normals, band, sigma, steps=17, sample=160):
     """One wall tone shared by many narrow wall bands, or None.
 
     Where no band is wide enough (2.5 sigma) for a free two-step fit, each narrow band
-    on its own confounds the wall tone with the edge offset (two_step_refine). One tone
-    for the whole part is still identifiable from many bands of 1-3.5 sigma: for each
-    candidate tone every point's edge offset is fitted with that tone fixed, and the
-    total residual is least at the true tone. The total is evaluated on a grid over the
+    on its own can confound the wall tone with the edge offset (two_step_refine).
+    Sharing one tone across bands of 1-3.5 sigma can constrain offsets under the
+    supplied flat-tone model. For each candidate tone every point's offset is fitted
+    with that tone fixed. An interior residual minimum is a heuristic selection,
+    not a guarantee of the physical tone or unique edge interpretation. The total
+    is evaluated on a grid over the
     image's light, from black to its 99.5th percentile, then on a finer grid around its
     least value, whose minimum is refined by a parabola. Each evaluation is cheap: for a
     given edge offset a point's residual is a quadratic in the tone, whose coefficients
     are found once (_wall_tone_parabolas). At most `sample` points, spread evenly, take
     part. A minimum at an end of the grid, or one not well below both ends, means the
-    tone is not determined.
+    fit withholds a tone. Passing those checks does not establish model adequacy;
+    see docs/wall-gradients.md for bounded lighting and exact wall-label ambiguity.
 
     Only bands of at least sigma take part. Below that a wall differs from an edge
     shift only at second order in w / sigma, so on noise-free profiles with bands under
@@ -476,7 +479,8 @@ def two_step_refine(g, points, normals, band, sigma, wall_tone=None, step=0.125,
 
     As w -> 0 the wall term tends to (B - C)(w / sigma) phi, which is indistinguishable
     from a shift of e, so B and e are confounded. Pass `wall_tone` (estimated where the
-    band is widest) to fix B and keep narrow-band fits well-posed. `band` holds each
+    band is widest) to fix B and reduce this confounding under the supplied model;
+    doing so does not establish physical identifiability or lighting adequacy. `band` holds each
     point's predicted w in image pixels. Returns (moved points, fitted wall tones), and
     with `with_residuals` also each point's least residual sum of squares.
     """

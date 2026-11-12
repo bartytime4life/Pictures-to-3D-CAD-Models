@@ -238,4 +238,11 @@ only when candidates compete. Nearest unresolved contacts, ties and non-finite
 searched data produce the existing rejected-profile `keep` result; ring smoothing
 and trace/support interfaces remain unchanged.
 
+`scripts/wall_gradient_study.py` is a separate [bounded lighting/wall experiment](wall-gradients.md).
+Five physical source nodes give a linear constrained fit at fixed geometry;
+the finite geometry grid produces constructive alternatives, not a confidence
+interval. The image lane calls the existing wall fitter with supplied geometry.
+It adds a repeatable developer command and data artifacts, with no production
+solver, API, assistant action or automatic correction.
+
 The included runtime is a single-user application. It does not implement account authentication, per-user authorization, shared project storage, collaborative editing, a durable job queue, or a billing service. Those capabilities require an explicit design and implementation before a public multi-user deployment.

@@ -142,6 +142,13 @@ The [complete development record](validation/material-gradients.md) separates
 sampled profiles, aperture means, resampling, encoded inputs and final physical
 qualification.
 
+The [joint wall/lighting experiment](wall-gradients.md) extends this investigation
+to bounded top and paper gradients with a flat wall. Even a supplied true wall
+tone leaves errors when the flat-lighting fit is mismatched. Distinct wall-tone
+interpretations can also produce the same local light field with different
+silhouette labels. Width heuristics and an interior residual minimum do not
+guarantee a physical edge; the new constrained solver remains a developer study.
+
 In the tilted rendered photo the shadow's effect is now small:
 
 | Light the shadow removes | Ø6 | Ø22 | Slot | Outer |

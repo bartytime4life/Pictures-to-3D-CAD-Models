@@ -244,6 +244,30 @@ The [verification record](validation/edge-crossings.md) includes an independent
 cohort's preservation check. Represented-sample correctness remains distinct
 from physical edge identification and photometric/model discrepancy.
 
+### Joint wall and lighting identifiability
+
+The [bounded wall/lighting study](wall-gradients.md) uses five physical source
+node levels and Gaussian convolution. Nonnegative source bases sum to one, so
+box constraints keep the entire source bounded. At each supplied geometry,
+SVD-based face enumeration fits these linear nuisance parameters; a finite
+grid supplies constructive geometric alternatives. The independent source
+quadrature and convex-optimality checks are retained in the
+[verification record](validation/wall-gradients.md).
+
+This follows the variable-projection principle reviewed by
+[O'Leary and Rust](https://www.cs.umd.edu/users/oleary/software/varpro.pdf): solve
+linear coefficients conditionally on nonlinear parameters. It does not implement
+their full nonlinear optimizer, infer an error distribution or turn a design
+matrix condition number into geometric confidence. The five-node derivation
+and exact wall-label ambiguity are local model results developed here.
+
+With flat top/paper levels `C,A`, wall width `w`, the interpretations `(e,B=C)`
+and `(e+w,B=A)` define identical source fields. A fixed known width alone does
+not remove that discrete ambiguity. A constructed midpoint between nearby
+predictions also demonstrates finite-error ambiguity; it is a different
+observation from the original truth samples. Neither result supplies a physical
+camera-noise prior, complete camera-scene construction or automatic correction.
+
 ## Outline to solid and exchange files
 
 [CadQuery examples](https://github.com/CadQuery/cadquery/blob/master/doc/examples.rst) demonstrate profile extrusion and holes. This provides a direct, inspectable path from a valid planar boundary to a solid with a supplied thickness.

@@ -65,6 +65,13 @@ The [material-gradient census](material-gradients.md) now tests actual profile
 functions, including the production paper-side guard, with independent bounded
 affine light and wall controls. It does not establish a safe material-slope
 correction; joint lighting/wall adequacy and real captures remain needed.
+The [bounded joint wall/lighting experiment](wall-gradients.md) now supplies
+physical source-level fits, exact local ambiguities and a full 1,416-row
+development record. It does not resolve wrong initial edge identity, qualify
+pooled tone estimation or infer a real observation-error budget. Next work must
+test those full-pipeline hypotheses and identify which independent measurements
+or capture conditions distinguish the competing surfaces before changing the
+production correction.
 The [nearest-crossing repair](edge-crossings.md) resolves sample-index ordering
 and refuses unresolved local contacts. Choosing the correct physical feature
 from a possibly wrong seed and qualifying noisy or under-sampled profiles remain

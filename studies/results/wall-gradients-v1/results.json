@@ -1,0 +1,501 @@
+{
+  "format": "pictures-to-cad-wall-gradient-study-result",
+  "version": 1,
+  "execution_complete": true,
+  "physical_qualification": false,
+  "direct_world_scenes": 60,
+  "direct_rows": 840,
+  "image_world_scenes": 144,
+  "image_rows": 576,
+  "failed_rows": 0,
+  "quadrature_max_change": 2.2171775526658166e-10,
+  "quadrature_check_passed": true,
+  "exact_ambiguity": {
+    "sigma_px": 1.0,
+    "band_px": 1.5,
+    "top_level": 48.0,
+    "paper_level": 236.0,
+    "first_edge_px": 0.0,
+    "second_edge_px": 1.5,
+    "claim": "A wall matching the top at e and a wall matching paper at e+w give the same flat source field with different silhouette positions",
+    "maximum_float_difference": 8.526512829121202e-14,
+    "edge_separation_px": 1.5,
+    "minimum_worst_case_error_px_for_same_returned_edge": 0.75,
+    "basis": "Identical real source fields: top left of first edge, paper right of it; the wall/edge labels differ"
+  },
+  "witness_summary": [
+    {
+      "model": "flat_tones",
+      "illustrative_level_bound": 0.025,
+      "alternative_fits_examined": 360,
+      "witnesses_found": 4,
+      "maximum_demonstrated_edge_separation_px": 0.165,
+      "not_an_uncertainty_enclosure": true
+    },
+    {
+      "model": "flat_tones",
+      "illustrative_level_bound": 0.25,
+      "alternative_fits_examined": 360,
+      "witnesses_found": 12,
+      "maximum_demonstrated_edge_separation_px": 0.4125,
+      "not_an_uncertainty_enclosure": true
+    },
+    {
+      "model": "flat_tones",
+      "illustrative_level_bound": 1.0,
+      "alternative_fits_examined": 360,
+      "witnesses_found": 24,
+      "maximum_demonstrated_edge_separation_px": 0.4125,
+      "not_an_uncertainty_enclosure": true
+    },
+    {
+      "model": "joint_gradients",
+      "illustrative_level_bound": 0.025,
+      "alternative_fits_examined": 360,
+      "witnesses_found": 12,
+      "maximum_demonstrated_edge_separation_px": 0.165,
+      "not_an_uncertainty_enclosure": true
+    },
+    {
+      "model": "joint_gradients",
+      "illustrative_level_bound": 0.25,
+      "alternative_fits_examined": 360,
+      "witnesses_found": 48,
+      "maximum_demonstrated_edge_separation_px": 0.4125,
+      "not_an_uncertainty_enclosure": true
+    },
+    {
+      "model": "joint_gradients",
+      "illustrative_level_bound": 1.0,
+      "alternative_fits_examined": 360,
+      "witnesses_found": 132,
+      "maximum_demonstrated_edge_separation_px": 0.825,
+      "not_an_uncertainty_enclosure": true
+    }
+  ],
+  "image_summary": [
+    {
+      "stage": "aperture_known_sigma",
+      "method": "free_wall_tone",
+      "condition": "both_slopes",
+      "band_sigmas": 0.6,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": 0.07361112975837561,
+      "maximum_absolute_offset_px": 0.08953059259292928,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "aperture_known_sigma",
+      "method": "free_wall_tone",
+      "condition": "both_slopes",
+      "band_sigmas": 1.5,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": 0.018824399189535847,
+      "maximum_absolute_offset_px": 0.08276494107781218,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "aperture_known_sigma",
+      "method": "free_wall_tone",
+      "condition": "both_slopes",
+      "band_sigmas": 2.8,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": -0.0378914854473826,
+      "maximum_absolute_offset_px": 0.05693863038216596,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "aperture_known_sigma",
+      "method": "free_wall_tone",
+      "condition": "flat",
+      "band_sigmas": 0.6,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": 0.17444562824033333,
+      "maximum_absolute_offset_px": 0.19700703453971613,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "aperture_known_sigma",
+      "method": "free_wall_tone",
+      "condition": "flat",
+      "band_sigmas": 1.5,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": 0.06817466208689255,
+      "maximum_absolute_offset_px": 0.1349358765432882,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "aperture_known_sigma",
+      "method": "free_wall_tone",
+      "condition": "flat",
+      "band_sigmas": 2.8,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": 0.013135318992908105,
+      "maximum_absolute_offset_px": 0.027251413218564835,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "aperture_known_sigma",
+      "method": "free_wall_tone",
+      "condition": "top_rises",
+      "band_sigmas": 0.6,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": 0.1760955804498327,
+      "maximum_absolute_offset_px": 0.22653587797864105,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "aperture_known_sigma",
+      "method": "free_wall_tone",
+      "condition": "top_rises",
+      "band_sigmas": 1.5,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": 0.13087552736007818,
+      "maximum_absolute_offset_px": 0.1737257627444393,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "aperture_known_sigma",
+      "method": "free_wall_tone",
+      "condition": "top_rises",
+      "band_sigmas": 2.8,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": 0.032831158059153154,
+      "maximum_absolute_offset_px": 0.03987535989215729,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "aperture_known_sigma",
+      "method": "true_fixed_wall_tone",
+      "condition": "both_slopes",
+      "band_sigmas": 0.6,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": -0.07934879863617314,
+      "maximum_absolute_offset_px": 0.10009006166836087,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "aperture_known_sigma",
+      "method": "true_fixed_wall_tone",
+      "condition": "both_slopes",
+      "band_sigmas": 1.5,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": -0.06995812806519015,
+      "maximum_absolute_offset_px": 0.08649920711800974,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "aperture_known_sigma",
+      "method": "true_fixed_wall_tone",
+      "condition": "both_slopes",
+      "band_sigmas": 2.8,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": -0.06702993352612568,
+      "maximum_absolute_offset_px": 0.08221321535430803,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "aperture_known_sigma",
+      "method": "true_fixed_wall_tone",
+      "condition": "flat",
+      "band_sigmas": 0.6,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": -0.0036011296281728278,
+      "maximum_absolute_offset_px": 0.006969686414800569,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "aperture_known_sigma",
+      "method": "true_fixed_wall_tone",
+      "condition": "flat",
+      "band_sigmas": 1.5,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": -0.005933204780582457,
+      "maximum_absolute_offset_px": 0.008816368851372687,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "aperture_known_sigma",
+      "method": "true_fixed_wall_tone",
+      "condition": "flat",
+      "band_sigmas": 2.8,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": -0.007840376666973015,
+      "maximum_absolute_offset_px": 0.011674204845433312,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "aperture_known_sigma",
+      "method": "true_fixed_wall_tone",
+      "condition": "top_rises",
+      "band_sigmas": 0.6,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": -0.040500623014707325,
+      "maximum_absolute_offset_px": 0.048882163591080996,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "aperture_known_sigma",
+      "method": "true_fixed_wall_tone",
+      "condition": "top_rises",
+      "band_sigmas": 1.5,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": -0.031691155990393995,
+      "maximum_absolute_offset_px": 0.03699421963401761,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "aperture_known_sigma",
+      "method": "true_fixed_wall_tone",
+      "condition": "top_rises",
+      "band_sigmas": 2.8,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": -0.025486672970010192,
+      "maximum_absolute_offset_px": 0.02732245472871142,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "point_known_sigma",
+      "method": "free_wall_tone",
+      "condition": "both_slopes",
+      "band_sigmas": 0.6,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": -0.002838830006114626,
+      "maximum_absolute_offset_px": 0.07045039823809418,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "point_known_sigma",
+      "method": "free_wall_tone",
+      "condition": "both_slopes",
+      "band_sigmas": 1.5,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": -0.03246854517460333,
+      "maximum_absolute_offset_px": 0.046452683846544184,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "point_known_sigma",
+      "method": "free_wall_tone",
+      "condition": "both_slopes",
+      "band_sigmas": 2.8,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": -0.05059058486054778,
+      "maximum_absolute_offset_px": 0.06488109906204667,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "point_known_sigma",
+      "method": "free_wall_tone",
+      "condition": "flat",
+      "band_sigmas": 0.6,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": 0.0987270866563712,
+      "maximum_absolute_offset_px": 0.2999321757750038,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "point_known_sigma",
+      "method": "free_wall_tone",
+      "condition": "flat",
+      "band_sigmas": 1.5,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": 0.007789113637011293,
+      "maximum_absolute_offset_px": 0.045421418403208236,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "point_known_sigma",
+      "method": "free_wall_tone",
+      "condition": "flat",
+      "band_sigmas": 2.8,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": 0.0012031084008121695,
+      "maximum_absolute_offset_px": 0.00829549404065233,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "point_known_sigma",
+      "method": "free_wall_tone",
+      "condition": "top_rises",
+      "band_sigmas": 0.6,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": 0.16155341441637183,
+      "maximum_absolute_offset_px": 0.20293058940414,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "point_known_sigma",
+      "method": "free_wall_tone",
+      "condition": "top_rises",
+      "band_sigmas": 1.5,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": 0.08606404113753974,
+      "maximum_absolute_offset_px": 0.09095223549660147,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "point_known_sigma",
+      "method": "free_wall_tone",
+      "condition": "top_rises",
+      "band_sigmas": 2.8,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": 0.021971966629022444,
+      "maximum_absolute_offset_px": 0.023767722050344275,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "point_known_sigma",
+      "method": "true_fixed_wall_tone",
+      "condition": "both_slopes",
+      "band_sigmas": 0.6,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": -0.07570574579213944,
+      "maximum_absolute_offset_px": 0.09750233965056765,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "point_known_sigma",
+      "method": "true_fixed_wall_tone",
+      "condition": "both_slopes",
+      "band_sigmas": 1.5,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": -0.06432372931308113,
+      "maximum_absolute_offset_px": 0.08240433980936501,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "point_known_sigma",
+      "method": "true_fixed_wall_tone",
+      "condition": "both_slopes",
+      "band_sigmas": 2.8,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": -0.05998216311676023,
+      "maximum_absolute_offset_px": 0.07736037859086053,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "point_known_sigma",
+      "method": "true_fixed_wall_tone",
+      "condition": "flat",
+      "band_sigmas": 0.6,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": -0.0005155351334309444,
+      "maximum_absolute_offset_px": 0.0034267017597543444,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "point_known_sigma",
+      "method": "true_fixed_wall_tone",
+      "condition": "flat",
+      "band_sigmas": 1.5,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": -0.000753455880140308,
+      "maximum_absolute_offset_px": 0.002546757975900424,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "point_known_sigma",
+      "method": "true_fixed_wall_tone",
+      "condition": "flat",
+      "band_sigmas": 2.8,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": -0.0009386125183290517,
+      "maximum_absolute_offset_px": 0.0030007028850755103,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "point_known_sigma",
+      "method": "true_fixed_wall_tone",
+      "condition": "top_rises",
+      "band_sigmas": 0.6,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": -0.037289958785076426,
+      "maximum_absolute_offset_px": 0.0466111476258817,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "point_known_sigma",
+      "method": "true_fixed_wall_tone",
+      "condition": "top_rises",
+      "band_sigmas": 1.5,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": -0.026372175619105154,
+      "maximum_absolute_offset_px": 0.03311490418978025,
+      "fitted_wall_outside_0_255": 0
+    },
+    {
+      "stage": "point_known_sigma",
+      "method": "true_fixed_wall_tone",
+      "condition": "top_rises",
+      "band_sigmas": 2.8,
+      "planned": 16,
+      "failed": 0,
+      "median_offset_px": -0.01868463833737253,
+      "maximum_absolute_offset_px": 0.02267037181488263,
+      "fitted_wall_outside_0_255": 0
+    }
+  ],
+  "source_sha256": {
+    "scripts/wall_gradient_study.py": "046a8202224b7066046974a2496f2f1839b2116703c9d0c3ca75cc0b097b5172",
+    "studies/wall-gradients-v1.json": "920214ef96ba56fcf220efaaddb95944ba10e03126b25a0a34cf75d2bfb92b1f",
+    "backend/edges.py": "d70fc6bae46c86015315cbf110a7c441d8ba04d8ebd6c4d732a52aa5099fa87e",
+    "backend/sheet.py": "a086d7216256726a0e392bd98cbdb1274f5cb5eb096802c17c805349a7747e31",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee"
+  },
+  "artifact_sha256": {
+    "geometry-fits.csv": "ef44b7c97ad8e1a4069ab97a0df91ef8b4de255b1a5b27aa86703e35f9be65f0",
+    "image-fits.csv": "6234b1040b9b72b8cffb1395adba5970b5cd30e89d22e335dc67e81c023db52c"
+  },
+  "git": {
+    "revision": "37eb4d2086c61dda983fe4e39391d9693dc82331",
+    "dirty": true
+  },
+  "runtime": {
+    "python": "3.12.3",
+    "numpy": "2.5.4",
+    "opencv": "4.14.0"
+  },
+  "limitations": [
+    "All observations are synthetic development data, with fixed Gaussian optics and known band width",
+    "Illustrative light-level bounds are supplied scenarios, not measured camera noise or physical uncertainty",
+    "Least-squares fitting supplies witnesses; absence of a witness at a grid point is not a proof of infinity-norm infeasibility",
+    "Five source-node levels bound the source everywhere but do not model a sloped wall, arbitrary light fields, tone errors or non-Gaussian optics",
+    "No segmentation, sheet detection, pose, pooled-tone estimation, ring smoothing, parallax, curve fitting, CAD export or physical acceptance is qualified"
+  ]
+}

@@ -3,6 +3,21 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Bounded wall and lighting experiment — November 12, 2026
+
+- Add `make wall-gradient-study OUTPUT=new-folder`, a bounded five-node source
+  model, SVD-based box fitting and complete geometry/image CSVs.
+- Demonstrate identical local light fields with different silhouette labels,
+  finite-error alternatives and lighting bias remaining with a known wall tone.
+- Retain all 840 direct fits and 576 image fits, independent source quadrature,
+  box-optimality checks and the updated capture/model guidance. The full Python
+  suite passed 1,131 tests. [Method](wall-gradients.md) and
+  [verification](validation/wall-gradients.md) distinguish constructed midpoint
+  observations from original samples, and local evidence from physical accuracy.
+- Clarify conditional wall-identifiability documentation without changing
+  production executable behavior. The new solver does not automatically alter
+  traces, add an accuracy status or qualify physical parts.
+
 ## Nearest verified edge crossing — November 12, 2026
 
 - Rank actual interpolated distances instead of bracket-left sample indices.

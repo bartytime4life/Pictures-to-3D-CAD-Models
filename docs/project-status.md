@@ -1,16 +1,17 @@
 # Project status and evidence
 
 Documentation snapshot: **November 12, 2026**. This page describes
-the [nearest-crossing candidate](validation/edge-crossings.md), based on published
-source `a5f99e5a4180ec2437c08215faa12058b6b490a9` (PR #55).
-It includes the pending review chain below, actual-distance crossing selection
-and explicit unresolved local contacts. Start with [setup](development.md), the
+the [bounded wall/lighting candidate](validation/wall-gradients.md), based on published
+source `37eb4d2086c61dda983fe4e39391d9693dc82331` (PR #56).
+It includes the pending review chain below and a separate developer experiment
+for bounded source fitting and local silhouette ambiguity. Production executable
+behavior matches PR #56. Start with [setup](development.md), the
 [task index](README.md) or the [API examples](api-examples.md).
 
 ## Source and review state
 
 At this check, `main` was `5c07d0f70d7df0200bc24227c8ac7e9b630f7f09`.
-PRs #47–#55 were open and unmerged. This candidate branch includes their
+PRs #47–#56 were open and unmerged. This candidate branch includes their
 changes; that checkout of `main` does not contain them. The conditional corner
 analysis remains separate from production tracing; the grid and crossing repairs
 affect the existing production edge-profile search.
@@ -27,6 +28,7 @@ affect the existing production edge-profile search.
 | `e22ff3d6608896c945bd3bc6ad338ff6a780e889` | Version-3 known normalized uniform pixel-aperture means | [PR #53](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/53), open draft; base PR #52's branch |
 | `620d5c717e21fd7d7a797b114972fd2b09e9ece9` | Version-4 known fixed signed sampling stencils with whole-radius bounds and exact gain accounting | [PR #54](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/54), open draft; base PR #53's branch |
 | `a5f99e5a4180ec2437c08215faa12058b6b490a9` | Symmetric production profile sampling and an independent material-gradient study | [PR #55](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/55), open draft; base PR #54's branch |
+| `37eb4d2086c61dda983fe4e39391d9693dc82331` | Actual-distance crossing ranking and explicit unresolved contacts | [PR #56](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/56), open draft; base PR #55's branch |
 
 The PR links show live review state. A documentation update does not install,
 merge or deploy those changes. Record the checkout used to start a service:
@@ -67,6 +69,7 @@ there is no product endpoint, automatic tracing correction or accuracy label.
 | Evidence | Recorded result | Interpretation |
 | --- | --- | --- |
 | Nearest-crossing candidate | [Rule and preservation checks](validation/edge-crossings.md): 1,111 Python tests passed, independent 3,888-case contact oracle | Actual-distance selection and explicit unresolved contacts; no physical edge or camera qualification |
+| Joint wall/lighting candidate | [Bounded source and full CSV checks](validation/wall-gradients.md): 1,131 Python tests passed; 840 direct and 576 image fits | Developer study; no automatic correction or physical uncertainty/accuracy status |
 | Material-gradient/sampling candidate | [Crossed study](validation/material-gradients.md): 1,075 Python tests passed; 9,216 rows in each before/after census | Production sampling symmetry repaired; material gradients, wall ambiguity and physical calibration remain open |
 | Signed-stencil candidate | [Whole-radius record](validation/signed-stencils.md): 1,022 Python tests passed | Known fixed signed observations, exact gain/work accounting and retained unknowns; no production-pipeline or physical calibration |
 | Pixel-aperture candidate | [Finite-area record](validation/pixel-apertures.md): 929 Python tests passed | Known normalized product-aperture means; center-sampling counterexamples and retained unknowns; no production-image or physical qualification |
@@ -92,9 +95,10 @@ results; the latest checks for `620d5c7` and `a5f99e5` were on **November 12**:
 | `b800edb` | [Workbench run 115](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43185322816) | Completed successfully |
 | `e22ff3d` | [Workbench run 116](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43188961747) | Cancelled at the subsequent check |
 | `620d5c7` | [Workbench run 117](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43192825464) | Completed successfully |
-| `a5f99e5` | [Workbench run 118](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43196410807), [library run 40](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43196410880) | Workbench in progress; library completed successfully |
+| `a5f99e5` | [Workbench run 118](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43196410807), [library run 40](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43196410880) | Both completed successfully |
+| `37eb4d2` | [Workbench run 119](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43200015707) | In progress |
 
-Follow the exact run links for later results. The candidate's local 1,111-test result is
+Follow the exact run links for later results. The candidate's local 1,131-test result is
 separate from hosted CI. Earlier observations remain in their dated validation
 records; successful CI does not merge, install or qualify a physical part.
 
@@ -108,6 +112,10 @@ symmetry fix does not resolve either model assumption.
 The nearest-contact rule now keeps ties, plateaus and unconfirmed local contacts
 unresolved. Correct feature identity from imperfect seeds and realistic image
 error bounds remain separate engineering work.
+The [joint wall/lighting record](validation/wall-gradients.md) now makes exact
+local ambiguity and bounded finite-error alternatives explicit. Full-pipeline
+initialization, common-tone assumptions and distinguishing capture/measurement
+evidence remain priorities before promoting that solver to production.
 Keep observation-error bounds separate from model discrepancy, local fit spread
 and endpoint-placement sensitivity. Numerical or work-budget exhaustion must
 remain unresolved rather than becoming a physical claim.
