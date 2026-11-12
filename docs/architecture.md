@@ -5,6 +5,10 @@ Pictures to CAD separates image interpretation from geometric construction. The 
 This contract describes the [reviewed main-based source](project-status.md).
 The separate source-observation/PSF research APIs are not HTTP capabilities or
 Python modules in this checkout.
+The finite-material operators in `backend.finite_shape` and
+`backend.finite_centre_fit` are available Python research APIs. They have no
+HTTP route and are not called by the automatic trace/build flow below. See
+[their observation and result contracts](finite-shape-inverse.md).
 
 ```mermaid
 flowchart LR
@@ -63,6 +67,24 @@ Neither numerical rank, model convergence nor positive definiteness converts
 these empirical widths into a calibrated camera PSF; [the tracing guide](reference-sheet.md#3-segmentation-and-sub-pixel-edges)
 defines the boundaries.
 
+### Circle-consistent final assembly
+
+Final reference-sheet arc assembly retains each accepted fitted circle's centre
+and radius. `backend.circular_joins` constructs line/circle roots and compares
+ordered cyclic choices using frozen source endpoints, line traversal and signed
+arc-sector witnesses. A unique separated minimum is a construction decision;
+it does not identify the physical boundary. Numerical guards, provenance and
+work limits can leave a join unavailable.
+
+Initial support may use a legacy geometric proxy when canonical construction
+cannot yet reach the correction stage; final analytic export must construct
+separately. An unavailable final join normally retains the affected traced ring
+with a targeted notice, while other accepted rings remain analytic. Invalid
+retained geometry produces actionable refusal rather than a missing-sheet
+fallback. Final circle checks, whole-profile validity and camera/model adequacy
+remain separate. See [curved joins](curved-joins.md) and
+[critical export checks](exports.md#verify-critical-arc-geometry).
+
 Geometry detail is a geometric approximation applied to the scaled profile. `original` retains it; `draft`, `balanced`, and `fine` use simplification tolerances of 0.5, 0.25, and 0.1 times the selected nozzle diameter in millimeters, respectively. The simplification preserves topology and checks that every hole remains. The modes can still change small features and must be inspected; they do not recover image information, measure minimum wall thickness, or prove printability. The original trace remains the recipe's source profile.
 
 Split mode makes actual solids with straight XY cuts. The default preview and combined STEP/STL/3MF keep those solids in their assembled positions. A separated inspection view displays the actual per-part meshes with temporary offsets; it does not change exported coordinates or claim a print-bed layout. Per-part exports translate each piece to a local XY origin and record the assembly offset in the bundle manifest. The program does not introduce alignment pins, joints, kerf compensation, or assembly tolerances.
@@ -107,13 +129,13 @@ A multipart request includes:
 | `detail` | `coarse`, `standard`, or `fine` contour approximation |
 | `reference` | `none` (default), `a4`, `letter`, or `custom` scale reference sheet |
 | `sheet_width_mm`, `sheet_height_mm` | Measured sides of a `custom` sheet, 10–2000 mm |
-| `thickness_mm` | Optional part thickness for the reference-sheet parallax correction |
+| `thickness_mm` | Optional positive part thickness, at most 500 mm, for the reference-sheet parallax correction; omission is unknown thickness |
 | `snap` | Recover design intent on a reference-sheet trace (default `true`) |
 | `fallback` | Trace without the sheet, with a warning, if it cannot be found or used |
 
 The response contains a normalized display image, its dimensions, the traced outer boundary and holes, the bounding box, the chosen threshold, and any relevant warnings.
 
-With a reference sheet, the display image is the rectified, perspective- and lens-corrected view of the part, rotated to its own axes when snapping found straight edges. The profile also carries `primitives`: exact `line`, `arc` (start, mid, end) and `circle` segments for the outer boundary and every hole, in the same display-pixel frame. It also carries `reference`, the evidence for that trace: sheet kind and size, `mm_per_px`, the lens coefficient, edge blur, any thickness correction with camera height and focal-length source, and notes such as the snap list and the sheet-proportions check. The outside width is the outline's span × `mm_per_px`. See [reference-sheet tracing](reference-sheet.md).
+With a reference sheet, the display image is the rectified, perspective- and lens-corrected view of the part. A detected straight-edge direction can set a rigid display/profile rotation even when an affected ring is retained as line geometry. This coordinate alignment is separate from accepting analytic geometry or claiming exact snapping. The profile also carries `primitives`: exact `line`, `arc` (start, mid, end) and `circle` segments for the outer boundary and every hole, in the same display-pixel frame. It also carries `reference`, the evidence for that trace: sheet kind and size, `mm_per_px`, the lens coefficient, edge blur, any thickness correction with camera height and focal-length source, and notes such as the snap list and the sheet-proportions check. The outside width is the outline's span in that frame × `mm_per_px`. See [reference-sheet tracing](reference-sheet.md) and [display alignment](curved-joins.md#display-alignment-is-a-coordinate-choice).
 
 The normalized image and trace share the same coordinate system. This avoids using uncorrected EXIF orientation for one while displaying the other differently.
 
@@ -134,6 +156,11 @@ that Gaussian and transforms the corner's ray geometry with it. The numerical
 fit has bounded convergence checks; it does not certify the physical blur model.
 The scalar path remains when no covariance is supplied, while failure of a
 supplied-covariance corner fit has no scalar replacement.
+
+`subpixel_rings` can return `covariance=None` both when the directional fit is
+unavailable and when a fitted covariance is below the directional-ratio switch.
+This return value does not identify which outcome occurred or establish a
+calibrated isotropic covariance for another inverse model.
 
 `reference.trace_on_sheet` carries the thickness map's per-point scale into the
 fit. A uniform scale `k` transforms covariance to `k² S`; mixed support in a

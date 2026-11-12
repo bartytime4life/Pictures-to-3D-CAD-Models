@@ -1,0 +1,1900 @@
+{
+  "format": "pictures-to-cad-canonical-arcs-oracle-result",
+  "version": 1,
+  "scope": "Replay finite canonical-arc geometry, search and conditional optical controls.\n\nReference intersections use Decimal80 raw-direction quadratics and exhaustive\nsmall-cycle products, independently of production foot construction, reduced\ncosts and dynamic programming. The Gaussian lane uses a separately specified\nfinite indicator and stdlib erfc quadrature. These are numerical developer\ncontrols, not formal exact constructions or physical-camera qualification.\n",
+  "assumptions": {
+    "geometry": "Finite supplied primitive/source-witness geometry. Decimal80 raw-line quadratic intersections and exhaustive small-cycle enumeration compare the numerical endpoint-displacement objective. Source partition endpoints are not physical junction measurements.",
+    "dp": "Frozen small ternary transition matrices; 0 forbidden,1 resolved,2 unresolved but eligible. Direct complete products independently compare lower/upper minima and distinct-path exclusion.",
+    "finite_gaussian": "Known finite indicator disc(R10) intersect x<=h for h=-6,0,+6, isotropic Gaussian sigma1.3 and point light levels. Independent stdlib erfc vertical-slice quadrature; no image segmentation,pixels,tone response,warp,sampling operator or physical camera. Actual primitive segmentation and blur correction are exercised. Every fallback/adverse outcome remains visible.",
+    "quantification": "No formal exact-arithmetic certificate, physical error budget, confidence interval, complete model adequacy or blanket analytic recovery is established."
+  },
+  "arithmetic": {
+    "production": "64*float_epsilon*max(1,coordinate magnitudes) engineering guards, root-conditioning propagation and guarded competing-cycle costs; these are not formally certified intervals or physical parameter uncertainties.",
+    "reference_decimal_precision": 80,
+    "geometry_match_absolute": "1e-8",
+    "score_match_absolute": "1e-8",
+    "dp_bound_match_absolute": "1e-10",
+    "gaussian_observations": 720,
+    "gaussian_radial_bisections": 34,
+    "gaussian_theta_subintervals": 8,
+    "gaussian_quadrature_orders": [
+      24,
+      48
+    ],
+    "gaussian_quadrature_difference_limit": "1e-10",
+    "gaussian_final_arc_chords": 1024,
+    "gaussian_true_boundary_samples": 720,
+    "quadrature_scope": "Order doubling is a numerical convergence check, not a rigorous integration error bound. Boundary discrepancy compares sampled curves; true area is analytic."
+  },
+  "source_before": {
+    "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+    "backend/fitting.py": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+    "backend/sheet.py": "e18cbe44c476894f1655d6ce66a5e1b11cefe9ca4f95e7e17eb7f52efc236531",
+    "studies/verification/canonical-arcs-oracle-v1.py": "f3c4ea66dc85200f9eba6d1321b1d43a06759018ff093b56c78684e8c8f6e384",
+    "studies/canonical-arcs-v1.json": "d8b1a72b2707a57db6ab922f465b7724fdd0de3fe74cbdf09593480a05fd48fe"
+  },
+  "source_after": {
+    "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+    "backend/fitting.py": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+    "backend/sheet.py": "e18cbe44c476894f1655d6ce66a5e1b11cefe9ca4f95e7e17eb7f52efc236531",
+    "studies/verification/canonical-arcs-oracle-v1.py": "f3c4ea66dc85200f9eba6d1321b1d43a06759018ff093b56c78684e8c8f6e384",
+    "studies/canonical-arcs-v1.json": "d8b1a72b2707a57db6ab922f465b7724fdd0de3fe74cbdf09593480a05fd48fe"
+  },
+  "source_unchanged": true,
+  "elapsed_seconds": 2.8338131469208747,
+  "summary": {
+    "rows": 132,
+    "failed_rows": 0,
+    "execution_failures": 0,
+    "checks": 394,
+    "geometry_statuses": {
+      "accepted": 31,
+      "ambiguous": 2
+    },
+    "optical_statuses": {
+      "initial_polyline": 2,
+      "analytic": 1
+    }
+  },
+  "rows": [
+    {
+      "name": "D-h-6.0",
+      "enumerated_feasible_cycles": 1,
+      "minimum_score": "0",
+      "runner_up_gap": null,
+      "status": "accepted",
+      "selected_score": "0",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "D-h0.0",
+      "enumerated_feasible_cycles": 1,
+      "minimum_score": "0",
+      "runner_up_gap": null,
+      "status": "accepted",
+      "selected_score": "0",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "D-h6.0",
+      "enumerated_feasible_cycles": 1,
+      "minimum_score": "0",
+      "runner_up_gap": null,
+      "status": "accepted",
+      "selected_score": "0",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "D-radius-update",
+      "enumerated_feasible_cycles": 1,
+      "minimum_score": "0.062857661183208879567765696637724364172091015801516986636135464472374678734922780",
+      "runner_up_gap": null,
+      "status": "accepted",
+      "selected_score": "0.062857661183208879567765696637724364172091015801516986636135464472374678734922780",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "two-arc-cycle",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "0.48946455558014419799659722048323779088331197366148743527927247714024182116231760",
+      "runner_up_gap": "135.9152677222099352906461533",
+      "status": "accepted",
+      "selected_score": "0.48946455558014419799659722048323779088331197366148743527927247714024182116231760",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "expanded-tangent",
+      "enumerated_feasible_cycles": 4,
+      "minimum_score": "16.409713777777780128771054377365455311680610909061415119769913872893596362700920",
+      "runner_up_gap": "2E-78",
+      "status": "ambiguous",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "seed-0",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "34.402932366079016493475846040665154433017136951486147530401094529422130206127650",
+      "runner_up_gap": "60.78032479016085243798770252",
+      "status": "accepted",
+      "selected_score": "34.402932366079016493475846040665154433017136951486147530401094529422130206127650",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "seed-1",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "15.238609689504050318029720932679211032144195135242273041510752909200838414820898",
+      "runner_up_gap": "104.4221810951675283895622288",
+      "status": "accepted",
+      "selected_score": "15.238609689504050318029720932679211032144195135242273041510752909200838414820898",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "seed-2",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "32.214116619904002876805200750078129024361153006502694653024043023041352397627534",
+      "runner_up_gap": "100.5778798488808220676386660",
+      "status": "accepted",
+      "selected_score": "32.214116619904002876805200750078129024361153006502694653024043023041352397627534",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "seed-3",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "63.641184828860920932676800436168475457731584608646020357886698747607634387743862",
+      "runner_up_gap": "134.5008789547163108945204053",
+      "status": "accepted",
+      "selected_score": "63.641184828860920932676800436168475457731584608646020357886698747607634387743862",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "seed-4",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "44.155997732703363721337837795761915913157184267968589768386062586835436260765446",
+      "runner_up_gap": "81.25419466278532864123700739",
+      "status": "accepted",
+      "selected_score": "44.155997732703363721337837795761915913157184267968589768386062586835436260765446",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "seed-5",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "38.714535372430484538332456934317689998670394937150864697038771492612480649995101",
+      "runner_up_gap": "113.2934054254811835879998261",
+      "status": "accepted",
+      "selected_score": "38.714535372430484538332456934317689998670394937150864697038771492612480649995101",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "seed-6",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "46.801765233799860902621313830473035011646900208969025360619916786578796915223730",
+      "runner_up_gap": "111.8647389171641739026387910",
+      "status": "accepted",
+      "selected_score": "46.801765233799860902621313830473035011646900208969025360619916786578796915223730",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "seed-7",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "13.389297635204560514680224094687123224990771180149109476630778825808440585534058",
+      "runner_up_gap": "135.2011603487343131234961835",
+      "status": "accepted",
+      "selected_score": "13.389297635204560514680224094687123224990771180149109476630778825808440585534058",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "seed-8",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "45.882310166239234594079467288634910278414667960343618131850995356932181531113957",
+      "runner_up_gap": "74.96081417557687677704344514",
+      "status": "accepted",
+      "selected_score": "45.882310166239234594079467288634910278414667960343618131850995356932181531113957",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "seed-9",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "46.171730564580775657913281107685910267081014647797719392614289586604965494813576",
+      "runner_up_gap": "82.90360729582011806728816170",
+      "status": "accepted",
+      "selected_score": "46.171730564580775657913281107685910267081014647797719392614289586604965494813576",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "seed-10",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "20.982521639542142698932119819285320165113893861075702966890721374602967075981639",
+      "runner_up_gap": "83.02013437485812190181016275",
+      "status": "accepted",
+      "selected_score": "20.982521639542142698932119819285320165113893861075702966890721374602967075981639",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "seed-11",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "26.794749181964651420760060524243980071201366463525917154054413575806604751819643",
+      "runner_up_gap": "102.3625798017408628344587848",
+      "status": "accepted",
+      "selected_score": "26.794749181964651420760060524243980071201366463525917154054413575806604751819643",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "seed-12",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "42.693214460847226795232234187211192903398462796416768524969111737333295976193619",
+      "runner_up_gap": "75.76346911047605274018249145",
+      "status": "accepted",
+      "selected_score": "42.693214460847226795232234187211192903398462796416768524969111737333295976193619",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "seed-13",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "48.832925042721584168138145455833475012977955007722806570144496544041526654324152",
+      "runner_up_gap": "77.90542522336876740560480877",
+      "status": "accepted",
+      "selected_score": "48.832925042721584168138145455833475012977955007722806570144496544041526654324152",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "seed-14",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "68.533669396702412913225804927260143934237026215561768022397322939611453028098263",
+      "runner_up_gap": "108.9961233046904305505975256",
+      "status": "accepted",
+      "selected_score": "68.533669396702412913225804927260143934237026215561768022397322939611453028098263",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "seed-15",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "33.757682291556326701994052951175392830922852318543782310030858430661837607758216",
+      "runner_up_gap": "107.8482149877119991621425770",
+      "status": "accepted",
+      "selected_score": "33.757682291556326701994052951175392830922852318543782310030858430661837607758216",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "seed-16",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "29.249512620253085135140872104580656070442764513358861994813870876705993265606634",
+      "runner_up_gap": "63.10205526546140212036398195",
+      "status": "accepted",
+      "selected_score": "29.249512620253085135140872104580656070442764513358861994813870876705993265606634",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "seed-17",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "50.353790137924877326878554282348033321025290680817063394168418610334910650998340",
+      "runner_up_gap": "26.24111601402025428479565084",
+      "status": "accepted",
+      "selected_score": "50.353790137924877326878554282348033321025290680817063394168418610334910650998340",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "seed-18",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "54.796918498832587746576913507139787351204186898099339537992170892243814156254351",
+      "runner_up_gap": "67.42010831921781063562477761",
+      "status": "accepted",
+      "selected_score": "54.796918498832587746576913507139787351204186898099339537992170892243814156254351",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "seed-19",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "27.285028892366568296625298921681237863102378364440160118786439647437200809923820",
+      "runner_up_gap": "104.6988164936477238407448330",
+      "status": "accepted",
+      "selected_score": "27.285028892366568296625298921681237863102378364440160118786439647437200809923820",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "seed-20",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "27.544417987706365500423149376940663679543693667663183551527413227507042018406078",
+      "runner_up_gap": "89.76348071583927379832463830",
+      "status": "accepted",
+      "selected_score": "27.544417987706365500423149376940663679543693667663183551527413227507042018406078",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "seed-21",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "45.231703458335634082954674658045939835308442825471829470236624606901001971832682",
+      "runner_up_gap": "107.6089256249512817370251907",
+      "status": "accepted",
+      "selected_score": "45.231703458335634082954674658045939835308442825471829470236624606901001971832682",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "seed-22",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "50.982614356951523386250813345747005871124935277160820023824122172489036954872643",
+      "runner_up_gap": "120.9176421567337162106251722",
+      "status": "accepted",
+      "selected_score": "50.982614356951523386250813345747005871124935277160820023824122172489036954872643",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "seed-23",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "38.413441235866342861538286457560721234039296484891968281095743825492120343525357",
+      "runner_up_gap": "91.57347570335629997496461906",
+      "status": "accepted",
+      "selected_score": "38.413441235866342861538286457560721234039296484891968281095743825492120343525357",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "D-rigid-reversed",
+      "enumerated_feasible_cycles": 1,
+      "minimum_score": "0.062857661183212742542526924288945538278653125961177394926856522435793591686641438",
+      "runner_up_gap": null,
+      "status": "accepted",
+      "selected_score": "0.062857661183212742542526924288945538278653125961177394926856522435793591686641438",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "tangent-rigid-reversed",
+      "enumerated_feasible_cycles": 4,
+      "minimum_score": "16.409713777777700016324849052162689014119387439958588766372105503031928493169126",
+      "runner_up_gap": "5.042784814798601330373057483E-14",
+      "status": "ambiguous",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "equivalent-line-representations",
+      "enumerated_feasible_cycles": 16,
+      "minimum_score": "0.48946455558014419799659722048323779088331197366148743527927247714024182116223253",
+      "runner_up_gap": "135.9152677222099352906461533",
+      "status": "accepted",
+      "selected_score": "0.48946455558014419799659722048323779088331197366148743527927247714024182116223253",
+      "checks": {
+        "expected_outcome": true
+      },
+      "pass": true,
+      "lane": "geometry"
+    },
+    {
+      "name": "ternary-seed-0",
+      "feasible_paths": 0,
+      "unknown_transitions": 2,
+      "checks": {
+        "minimum_lower": true,
+        "minimum_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-1",
+      "feasible_paths": 2,
+      "unknown_transitions": 4,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-2",
+      "feasible_paths": 2,
+      "unknown_transitions": 4,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-3",
+      "feasible_paths": 6,
+      "unknown_transitions": 4,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-4",
+      "feasible_paths": 18,
+      "unknown_transitions": 12,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-5",
+      "feasible_paths": 1,
+      "unknown_transitions": 1,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-6",
+      "feasible_paths": 5,
+      "unknown_transitions": 5,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-7",
+      "feasible_paths": 0,
+      "unknown_transitions": 5,
+      "checks": {
+        "minimum_lower": true,
+        "minimum_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-8",
+      "feasible_paths": 0,
+      "unknown_transitions": 4,
+      "checks": {
+        "minimum_lower": true,
+        "minimum_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-9",
+      "feasible_paths": 7,
+      "unknown_transitions": 14,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-10",
+      "feasible_paths": 2,
+      "unknown_transitions": 3,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-11",
+      "feasible_paths": 3,
+      "unknown_transitions": 4,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-12",
+      "feasible_paths": 5,
+      "unknown_transitions": 5,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-13",
+      "feasible_paths": 8,
+      "unknown_transitions": 10,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-14",
+      "feasible_paths": 8,
+      "unknown_transitions": 12,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-15",
+      "feasible_paths": 1,
+      "unknown_transitions": 1,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-16",
+      "feasible_paths": 1,
+      "unknown_transitions": 3,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-17",
+      "feasible_paths": 2,
+      "unknown_transitions": 2,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-18",
+      "feasible_paths": 16,
+      "unknown_transitions": 11,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-19",
+      "feasible_paths": 28,
+      "unknown_transitions": 12,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-20",
+      "feasible_paths": 0,
+      "unknown_transitions": 1,
+      "checks": {
+        "minimum_lower": true,
+        "minimum_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-21",
+      "feasible_paths": 3,
+      "unknown_transitions": 4,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-22",
+      "feasible_paths": 1,
+      "unknown_transitions": 3,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-23",
+      "feasible_paths": 0,
+      "unknown_transitions": 5,
+      "checks": {
+        "minimum_lower": true,
+        "minimum_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-24",
+      "feasible_paths": 6,
+      "unknown_transitions": 9,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-25",
+      "feasible_paths": 0,
+      "unknown_transitions": 0,
+      "checks": {
+        "minimum_lower": true,
+        "minimum_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-26",
+      "feasible_paths": 6,
+      "unknown_transitions": 6,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-27",
+      "feasible_paths": 0,
+      "unknown_transitions": 6,
+      "checks": {
+        "minimum_lower": true,
+        "minimum_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-28",
+      "feasible_paths": 2,
+      "unknown_transitions": 10,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-29",
+      "feasible_paths": 0,
+      "unknown_transitions": 7,
+      "checks": {
+        "minimum_lower": true,
+        "minimum_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-30",
+      "feasible_paths": 2,
+      "unknown_transitions": 2,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-31",
+      "feasible_paths": 0,
+      "unknown_transitions": 5,
+      "checks": {
+        "minimum_lower": true,
+        "minimum_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-32",
+      "feasible_paths": 12,
+      "unknown_transitions": 9,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-33",
+      "feasible_paths": 4,
+      "unknown_transitions": 5,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-34",
+      "feasible_paths": 5,
+      "unknown_transitions": 12,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-35",
+      "feasible_paths": 1,
+      "unknown_transitions": 3,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-36",
+      "feasible_paths": 4,
+      "unknown_transitions": 5,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-37",
+      "feasible_paths": 1,
+      "unknown_transitions": 7,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-38",
+      "feasible_paths": 4,
+      "unknown_transitions": 8,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-39",
+      "feasible_paths": 0,
+      "unknown_transitions": 6,
+      "checks": {
+        "minimum_lower": true,
+        "minimum_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-40",
+      "feasible_paths": 1,
+      "unknown_transitions": 3,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-41",
+      "feasible_paths": 4,
+      "unknown_transitions": 4,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-42",
+      "feasible_paths": 6,
+      "unknown_transitions": 7,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-43",
+      "feasible_paths": 3,
+      "unknown_transitions": 7,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-44",
+      "feasible_paths": 12,
+      "unknown_transitions": 9,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-45",
+      "feasible_paths": 4,
+      "unknown_transitions": 4,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-46",
+      "feasible_paths": 3,
+      "unknown_transitions": 5,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-47",
+      "feasible_paths": 2,
+      "unknown_transitions": 6,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-48",
+      "feasible_paths": 3,
+      "unknown_transitions": 7,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-49",
+      "feasible_paths": 2,
+      "unknown_transitions": 7,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-50",
+      "feasible_paths": 2,
+      "unknown_transitions": 3,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-51",
+      "feasible_paths": 3,
+      "unknown_transitions": 5,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-52",
+      "feasible_paths": 1,
+      "unknown_transitions": 5,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-53",
+      "feasible_paths": 4,
+      "unknown_transitions": 8,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-54",
+      "feasible_paths": 0,
+      "unknown_transitions": 10,
+      "checks": {
+        "minimum_lower": true,
+        "minimum_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-55",
+      "feasible_paths": 1,
+      "unknown_transitions": 2,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-56",
+      "feasible_paths": 3,
+      "unknown_transitions": 2,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-57",
+      "feasible_paths": 2,
+      "unknown_transitions": 2,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-58",
+      "feasible_paths": 3,
+      "unknown_transitions": 8,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-59",
+      "feasible_paths": 0,
+      "unknown_transitions": 9,
+      "checks": {
+        "minimum_lower": true,
+        "minimum_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-60",
+      "feasible_paths": 3,
+      "unknown_transitions": 6,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-61",
+      "feasible_paths": 3,
+      "unknown_transitions": 8,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-62",
+      "feasible_paths": 4,
+      "unknown_transitions": 6,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-63",
+      "feasible_paths": 1,
+      "unknown_transitions": 3,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-64",
+      "feasible_paths": 12,
+      "unknown_transitions": 9,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-65",
+      "feasible_paths": 2,
+      "unknown_transitions": 3,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-66",
+      "feasible_paths": 6,
+      "unknown_transitions": 6,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-67",
+      "feasible_paths": 2,
+      "unknown_transitions": 4,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-68",
+      "feasible_paths": 0,
+      "unknown_transitions": 6,
+      "checks": {
+        "minimum_lower": true,
+        "minimum_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-69",
+      "feasible_paths": 18,
+      "unknown_transitions": 11,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-70",
+      "feasible_paths": 2,
+      "unknown_transitions": 3,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-71",
+      "feasible_paths": 1,
+      "unknown_transitions": 1,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-72",
+      "feasible_paths": 4,
+      "unknown_transitions": 5,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-73",
+      "feasible_paths": 3,
+      "unknown_transitions": 7,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-74",
+      "feasible_paths": 16,
+      "unknown_transitions": 13,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-75",
+      "feasible_paths": 4,
+      "unknown_transitions": 5,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-76",
+      "feasible_paths": 1,
+      "unknown_transitions": 5,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-77",
+      "feasible_paths": 2,
+      "unknown_transitions": 7,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-78",
+      "feasible_paths": 8,
+      "unknown_transitions": 7,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-79",
+      "feasible_paths": 6,
+      "unknown_transitions": 10,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-80",
+      "feasible_paths": 1,
+      "unknown_transitions": 1,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-81",
+      "feasible_paths": 3,
+      "unknown_transitions": 1,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-82",
+      "feasible_paths": 2,
+      "unknown_transitions": 5,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-83",
+      "feasible_paths": 2,
+      "unknown_transitions": 5,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-84",
+      "feasible_paths": 0,
+      "unknown_transitions": 5,
+      "checks": {
+        "minimum_lower": true,
+        "minimum_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-85",
+      "feasible_paths": 3,
+      "unknown_transitions": 2,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-86",
+      "feasible_paths": 2,
+      "unknown_transitions": 3,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-87",
+      "feasible_paths": 6,
+      "unknown_transitions": 6,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-88",
+      "feasible_paths": 2,
+      "unknown_transitions": 6,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-89",
+      "feasible_paths": 4,
+      "unknown_transitions": 9,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-90",
+      "feasible_paths": 1,
+      "unknown_transitions": 1,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-91",
+      "feasible_paths": 3,
+      "unknown_transitions": 6,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-92",
+      "feasible_paths": 0,
+      "unknown_transitions": 2,
+      "checks": {
+        "minimum_lower": true,
+        "minimum_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-93",
+      "feasible_paths": 3,
+      "unknown_transitions": 10,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-94",
+      "feasible_paths": 15,
+      "unknown_transitions": 9,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "ternary-seed-95",
+      "feasible_paths": 3,
+      "unknown_transitions": 0,
+      "checks": {
+        "minimum_lower": true,
+        "different_path_lower": true,
+        "minimum_upper": true,
+        "different_path_upper": true
+      },
+      "status": "checked",
+      "pass": true,
+      "lane": "dp"
+    },
+    {
+      "name": "finite-D-h-6",
+      "radius": 10.0,
+      "chord": -6.0,
+      "sigma": 1.3,
+      "count": 720,
+      "input_sha256": "31d81f84070648e5e657b30a7a240c938c9536a01a88938df3f520db57ae4a17",
+      "GL24vs48_level_delta": 1.6653345369377348e-16,
+      "checks": {
+        "quadrature_order_agreement": true,
+        "finite_valid_output": true
+      },
+      "initial_kinds": null,
+      "initial_curves": null,
+      "status": "initial_polyline",
+      "final_polygon_valid": true,
+      "sampled_boundary_discrepancy": 2.267143069129179,
+      "true_area": 44.72952180016122,
+      "final_sampled_area": 37.031211074792,
+      "area_discrepancy": -7.698310725369225,
+      "corrected_curves": null,
+      "pass": true,
+      "lane": "finite_gaussian"
+    },
+    {
+      "name": "finite-D-h0",
+      "radius": 10.0,
+      "chord": 0.0,
+      "sigma": 1.3,
+      "count": 720,
+      "input_sha256": "a6ee01781f5097f50d5baa92b07efa549aa760428e76fc6d4c93ec5d944e593c",
+      "GL24vs48_level_delta": 2.220446049250313e-16,
+      "checks": {
+        "quadrature_order_agreement": true,
+        "finite_valid_output": true,
+        "stored_emitted_circle_agreement": true
+      },
+      "initial_kinds": [
+        "line",
+        "line",
+        "line",
+        "arc",
+        "line"
+      ],
+      "initial_curves": [
+        {
+          "kind": "arc",
+          "c": [
+            -0.06550396392597921,
+            0.009612267506303573
+          ],
+          "r": 9.857786913923423
+        }
+      ],
+      "status": "analytic",
+      "final_polygon_valid": true,
+      "sampled_boundary_discrepancy": 1.1527539999988923,
+      "true_area": 157.07963267948966,
+      "final_sampled_area": 153.6234377804446,
+      "area_discrepancy": -3.456194899045073,
+      "corrected_curves": [
+        {
+          "kind": "arc",
+          "c": [
+            -0.06550396392597921,
+            0.009612267506303573
+          ],
+          "r": 9.943381721543076
+        }
+      ],
+      "maximum_stored_emitted_circle_error": 5.526820282724038e-15,
+      "pass": true,
+      "lane": "finite_gaussian"
+    },
+    {
+      "name": "finite-D-h6",
+      "radius": 10.0,
+      "chord": 6.0,
+      "sigma": 1.3,
+      "count": 720,
+      "input_sha256": "974ef60ccebece2a8605c1ddf4ccc6ec998b6435195a9892d901e9ffb343f30b",
+      "GL24vs48_level_delta": 4.440892098500626e-16,
+      "checks": {
+        "quadrature_order_agreement": true,
+        "finite_valid_output": true
+      },
+      "initial_kinds": null,
+      "initial_curves": null,
+      "status": "initial_polyline",
+      "final_polygon_valid": true,
+      "sampled_boundary_discrepancy": 0.5703990232556058,
+      "true_area": 269.4297435588181,
+      "final_sampled_area": 264.0334181930156,
+      "area_discrepancy": -5.396325365802454,
+      "corrected_curves": null,
+      "pass": true,
+      "lane": "finite_gaussian"
+    }
+  ]
+}

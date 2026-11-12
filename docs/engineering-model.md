@@ -203,6 +203,31 @@ model adequacy. Radius resolution remains
 conditional on the chosen Gaussian geometry, fixed edges and heuristic error
 allowances. No source-space PSF calibration API is added to this main-based
 branch; the separate research draft keeps its own scope.
+
+The [canonical-join port](curved-joins.md) addresses a different error: an arc's
+serialized endpoints and interior point must describe its accepted fitted
+circle. That consistency does not validate the circle's physical radius or the
+blur model that produced it. Unavailable joins retain an affected outline when
+valid, with a notice and no rejected-radius claim; otherwise the profile is
+refused. Reserve [independent CAD and part checks](exports.md#verify-critical-arc-geometry)
+for dimensions that matter. No exact finite Gaussian disk fit is adopted by
+this assembly repair.
+
+The separate [finite-material intensity inverse](finite-shape-inverse.md) now
+fits a circular segment's centre, radius and chord under supplied optics. Its
+conditional numerical results do not replace this automatic tracing path or
+the independent dimension checks above. The [captured-field diagnostic](validation/finite-free-centre.md)
+retains initialization and model failures, and the
+[moment proposal study](validation/finite-moment-photo.md) retains background
+sensitivity. Neither establishes a physical uncertainty bound or a usable
+covariance for an arbitrary photograph.
+
+A source-derived straight-edge direction may still align the display and
+profile when a ring is retained as line geometry. The rigid rotation preserves
+distances and radii; axis-aligned width and height depend on that frame. This
+coordinate choice is separate from accepted analytic geometry and does not
+establish exact snapping or radius accuracy.
+
 Residuals describe the selected
 model's agreement with sampled points; they do not alone establish source
 coverage, identifiable radius, physical uncertainty or complete benchmark

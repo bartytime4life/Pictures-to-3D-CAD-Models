@@ -1,0 +1,87 @@
+{
+  "format": "pictures-to-cad-d-photo-intensity-diagnostic",
+  "version": 1,
+  "scope": "Prospectively frozen read-only fits of preserved actual production g fields; no trace integration, automatic acceptance, raw-PSF calibration or physical claim.",
+  "baseline": ".local/verification/d-photo-baseline-v2/result.json",
+  "moment_run": ".local/verification/d-moment-photo-v1/result.json",
+  "cases": [
+    "small-isotropic",
+    "small-directional",
+    "medium-directional",
+    "large-directional",
+    "minor-directional",
+    "rotated-major-directional"
+  ],
+  "lanes": [
+    "legacy_sigma_squared_identity",
+    "nominal_observed_moment_covariance"
+  ],
+  "population": 12,
+  "upstream_policy": "Retain every case/lane; no g means upstream_ineligible, never substitute another image. Initial primitive count is recorded, not an extra fit eligibility filter.",
+  "normal_policy": "Longest initial observed LINE by frozen source-end distance. Its unit perpendicular is oriented so dot(n, observed arc_mid-observed arc_centre)<0, using the largest-radius observed ARC as sector witness. No true normal or true centre is supplied.",
+  "covariance_policy": {
+    "legacy": "captured scalar sigma**2 * I",
+    "moment": "exactly roi_sigmas=8 and background_offset=0 record for this case",
+    "arithmetic_symmetry": "If maxabs(S-S.T)<=64*eps*maxabs(S), canonicalize (S+S.T)/2 and record raw/canonical/maxchange; otherwise refuse. Then Cholesky/SPD check; no eigenvalue clipping or indefinite repair."
+  },
+  "seed_helper": "studies/verification/finite-free-centre-v1.py:observed_seed_roi",
+  "helper_inputs": {
+    "homography": [
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "levels": [
+      1.0,
+      0.0
+    ],
+    "seed_level": 0.5,
+    "sensor_shape": "actual g.shape",
+    "normal_degrees": "atan2 of observed oriented normal",
+    "covariance": "this lane covariance"
+  },
+  "seed_and_roi": {
+    "minimum_observed_contrast": 12.0,
+    "training_count": 40,
+    "heldout_count": 16,
+    "policy": "Use whole fixed g. Same exact helper policy in both lanes; only covariance-dependent blur padding/ROI may differ. No truth geometry, bound widening, cropping, manual pixel selection or failed-stratum repair."
+  },
+  "fit_settings": {
+    "grid_points": 3,
+    "refinement_iterations": 24,
+    "max_basins": 4,
+    "max_evaluations": 512,
+    "forward_work_limit": 60000000,
+    "probability_tolerance": 1e-08,
+    "level_bounds": [
+      0.0,
+      255.0
+    ]
+  },
+  "targets": {
+    "centre_error_mm": 0.02,
+    "absolute_radius_error_mm": 0.02,
+    "heldout_intensity_max_error": 1.0,
+    "completion": "best exists; geometry_rank==4; no work_exhausted/refinement_limited/unrefined_basins/numerically_unsupported/flat/tied/endpoint/rank_deficient"
+  },
+  "scoring": "Only after fit and heldout intensity scoring, read baseline true centre_mm=[30,30], case radius/fraction. Convert fitted pixels using captured ppm. No target relaxation. Heldout means use same declared model at disjoint fixed g pixels, not training cost.",
+  "limits": [
+    "The two supplied effective-covariance lanes are hypotheses; neither is calibrated optical PSF.",
+    "g includes actual rendering, decoding, estimated sheet map, sampling, float32 and .7 smoothing; Gaussian/constant-level adequacy is not guaranteed.",
+    "Moment covariance is data-derived and background-sensitive; no claim that its numerical SPD proves Gaussian optics.",
+    "Fixed supplied normal is not fitted. Local finite search and complete coarse grid do not certify all minima.",
+    "Data-derived ROI/boxes and all refusals/errors/unfinished flags are retained."
+  ]
+}

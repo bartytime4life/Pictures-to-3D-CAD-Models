@@ -26,12 +26,16 @@ from shapely.errors import GEOSException
 from shapely.geometry import LineString, Polygon
 
 from . import edges, fitting, sheet, tone
+from .circular_joins import JoinConstructionError
 from .models import Profile
 
 DISPLAY_SIDE = 1400
 DISPLAY_MARGIN_MM = 12.0
 MAX_TOTAL_VERTICES = 1900
 POLYLINE_TOLERANCE_MM = {"coarse": 0.15, "standard": 0.05, "fine": 0.02}
+JOIN_RECOVERY_ERROR = (
+    "The fitted outline could not be joined reliably. Improve the photo or choose Simplified outline detail."
+)
 
 
 class ReferenceError_(ValueError):
@@ -54,14 +58,39 @@ def sheet_size(reference, sheet_mm):
     return (w, h)
 
 
-def _segments_for(points, prims, tolerance_px):
+def _segments_for(points, prims, tolerance_px, join_notices=None, boundary="boundary"):
     """Segments in rectified pixels: fitted primitives, else a simplified polyline."""
+    join_failure = None
     if prims:
-        return fitting.segments(prims), True
-    ring = Polygon(points).simplify(tolerance_px, preserve_topology=True)
-    vertices = np.asarray(ring.exterior.coords)[:-1] if not ring.is_empty else points
-    if len(vertices) < 3:
-        vertices = points
+        try:
+            return fitting.segments(prims), True
+        except JoinConstructionError as exc:
+            join_failure = exc
+    try:
+        ring = Polygon(points).simplify(tolerance_px, preserve_topology=True)
+        vertices = np.asarray(ring.exterior.coords)[:-1] if not ring.is_empty else points
+        if len(vertices) < 3:
+            vertices = points
+    except (GEOSException, ValueError) as exc:
+        if join_failure is None:
+            raise
+        raise ReferenceError_(JOIN_RECOVERY_ERROR, sheet_missing=False) from exc
+    if join_failure is not None and (not ring.is_valid or ring.area <= 0 or len(vertices) < 3):
+        raise ReferenceError_(JOIN_RECOVERY_ERROR, sheet_missing=False) from join_failure
+    if join_failure is not None and join_notices is not None:
+        cause = {
+            "near_contact": "nearly touching fitted curves",
+            "no_intersection": "fitted curves that do not intersect",
+            "ambiguous": "more than one possible fitted join",
+            "source_provenance": "insufficient source evidence for the fitted joins",
+            "numerical": "an unresolved numerical join",
+            "work_limit": "the fitted-join work limit",
+            "invalid_cycle": "inconsistent fitted joins",
+        }.get(join_failure.reason, "unresolved fitted joins")
+        join_notices.append(
+            f"The {boundary} was kept as a traced outline because of {cause}. "
+            "Review those edges and measure critical curves in CAD."
+        )
     return [("line", vertices[k], vertices[(k + 1) % len(vertices)]) for k in range(len(vertices))], False
 
 
@@ -82,7 +111,9 @@ def _geometric_source_polyline(points, prims, tolerance_px):
     try:
         sampled = []
         error = tolerance_px / 16
-        for segment in fitting.segments(prims):
+        # This frozen initial proxy is ONLY a bounded line-only recovery candidate
+        # for invalid measured support. It never claims a canonical fitted radius.
+        for segment in fitting._support_proxy_segments(prims):
             if segment[0] == "line":
                 piece = np.asarray(segment[1:], dtype=np.float64)
             else:
@@ -360,8 +391,7 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
     rings_prims = [p for _, p in fitted if p]
     axis = None
     if snap:
-        snap_notes, axis = fitting.snap_axes(rings_prims)
-        notes.extend(snap_notes)
+        _, axis = fitting.snap_axes(rings_prims)
         for ring, prims in fitted:
             if prims and any(p.kind == "line" for p in prims):
                 covariance = ring.get("covariance")
@@ -411,23 +441,40 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
         parts.append("Measure important corner radii.")
         blur_notes.append(" ".join(parts))
     rings_prims = [p for _, p in fitted if p]
+    invalid_unresolved_source = any(
+        prims is None
+        and id(ring) not in geometric_recoveries
+        and not Polygon(ring["points"]).is_valid
+        for ring, prims in fitted
+    )
     for ring, prims in fitted:
         if prims:
             fitting.correct_blur(prims, sigma, blur_scales=ring.get("blur_scales"))
     if snap:
-        notes.extend(fitting.equalise_radii(rings_prims, scale=1 / ppm, unit="mm"))
-    # First among the notes (after the fit summary), so the 16-note limit keeps them.
-    radius_notes = fitting.undetermined_radii(rings_prims, sigma, scale=1 / ppm, unit="mm")
-    notes[0:0] = blur_notes + radius_notes
+        fitting.equalise_radii(rings_prims, scale=1 / ppm, unit="mm")
     polyline_px = POLYLINE_TOLERANCE_MM.get(detail, 0.05) * ppm
     described = []
+    join_notices = []
+    retained_join_boundaries = []
+    accepted_prims = []
+    hole_index = 0
     for ring, prims in fitted:
+        if ring["outer"]:
+            boundary = "outer boundary"
+        else:
+            hole_index += 1
+            boundary = f"hole {hole_index} boundary"
         if id(ring) in geometric_recoveries:
             vertices = geometric_recoveries[id(ring)]
             segs = [("line", p, vertices[(i + 1) % len(vertices)]) for i, p in enumerate(vertices)]
             analytic = False
         else:
-            segs, analytic = _segments_for(ring["points"], prims, polyline_px)
+            previous_notices = len(join_notices)
+            segs, analytic = _segments_for(
+                ring["points"], prims, polyline_px, join_notices, boundary
+            )
+            if len(join_notices) != previous_notices:
+                retained_join_boundaries.append(None if ring["outer"] else hole_index)
         try:
             polygon = Polygon(fitting.sample_segments(segs, 0.01 * ppm))
         except ValueError:
@@ -436,6 +483,8 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
             polygon = None
         if analytic and (polygon is None or not polygon.is_valid or polygon.area <= 0):
             segs, analytic = _segments_for(ring["points"], None, polyline_px)
+        if analytic:
+            accepted_prims.append(prims)
         described.append({"outer": ring["outer"], "segments": segs, "analytic": analytic})
     mixed_blur_notes = []
     if any(
@@ -446,15 +495,50 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
             "Some curved edges use measurements from both the top and bottom of the part. "
             "Their blur correction is approximate; measure important radii."
         )
-        notes[0:0] = mixed_blur_notes
 
-    # Display view: the part plus a margin, rotated (when snapping found straight edges)
-    # so those edges run along the X and Y axes, at most DISPLAY_SIDE pixels long. One
-    # affine resampling of the rectified image; the geometry uses the same transform.
+    design_notes = []
+    if snap:
+        snapped = sum(
+            p.kind == "line" and p.data.get("snapped", False)
+            for prims in accepted_prims for p in prims
+        )
+        if snapped:
+            design_notes.append(f"{snapped} straight edge(s) made exactly parallel or perpendicular.")
+        equalised = {}
+        for prims in accepted_prims:
+            for p in prims:
+                if "equalised_to" in p.data:
+                    radius = p.data["equalised_to"]
+                    equalised[radius] = equalised.get(radius, 0) + 1
+        for radius, count in equalised.items():
+            design_notes.append(
+                f"{count} radii made equal at {radius / ppm:.3f} mm."
+                if count > 1 else f"1 fitted radius adjusted to {radius / ppm:.3f} mm during design-intent fitting."
+            )
+    # Discarded candidates contribute no fitted-radius or snapping claims.
+    radius_notes = fitting.undetermined_radii(accepted_prims, sigma, scale=1 / ppm, unit="mm")
+    saved_join_notices = join_notices
+    if len(join_notices) > 8:
+        locations = ["outer boundary"] if None in retained_join_boundaries else []
+        holes = [str(index) for index in retained_join_boundaries if index is not None]
+        if holes:
+            locations.append(f"holes {', '.join(holes)}")
+        saved_join_notices = [
+            (
+                f"{len(join_notices)} boundaries ({'; '.join(locations)}) were kept as traced outlines "
+                "because their fitted joins were unresolved. Review those edges and measure critical curves in CAD."
+            )
+        ]
+    notes[0:0] = [*saved_join_notices, *blur_notes, *mixed_blur_notes, *radius_notes, *design_notes]
+
+    # The detected source direction supplies a common display/profile frame when
+    # snapping is requested, independently of analytic acceptance. Retained source
+    # edges need not become exactly axial. One affine image resampling uses the
+    # same rigid rotation as the geometry, at most DISPLAY_SIDE pixels long.
     angle = -axis if axis is not None and abs(axis) > math.radians(0.05) else 0.0
     if angle:
         notes.append(
-            f"Rotated {math.degrees(-angle):.2f}° so the part's straight edges align with the X and Y axes."
+            f"Rotated {math.degrees(-angle):.2f}° using the detected straight-edge direction."
         )
     centre = outer_points.mean(axis=0)
     rotation = np.array([[math.cos(angle), -math.sin(angle)], [math.sin(angle), math.cos(angle)]])
@@ -526,6 +610,8 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
             reference=reference_info,
         )
     except ValidationError as exc:
+        if join_notices and not invalid_unresolved_source:
+            raise ReferenceError_(JOIN_RECOVERY_ERROR, sheet_missing=False) from exc
         raise ReferenceError_(
             "The traced outline could not form a valid profile. Improve the photo's contrast or choose Simplified outline detail."
         ) from exc
@@ -534,7 +620,7 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
     buffer = io.BytesIO()
     image.save(buffer, "PNG")
     px, py = zip(*profile.outer)
-    warnings_out = list(notices)
+    warnings_out = [*dict.fromkeys([*saved_join_notices, *join_notices]), *notices]
     warnings_out.append(
         f"Scaled from the {'A4' if reference == 'a4' else 'US Letter' if reference == 'letter' else 'custom'} "
         f"sheet ({size_mm[0]:g} × {size_mm[1]:g} mm), corrected for perspective"

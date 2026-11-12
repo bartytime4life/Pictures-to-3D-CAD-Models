@@ -1,0 +1,1076 @@
+{
+  "format": "pictures-to-cad-finite-moment-photo-fixtures",
+  "version": 1,
+  "scope": "Synthetic measured-field replay only; production trace is archived, not rerun.",
+  "original_moment_plan_sha256": "7aa2762c329bb42407addd2416ef7ddb90d552664c64051ac47845fe418a44ad",
+  "original_moment_result_sha256": "23e8eff8c84ec50adc2c4f82815399ed15f20694717fcd0d02a2a4af16fd8fc6",
+  "background_units": "linear-light intensity on the saved 0..255 scale, after Keys rectification and sigma=.7 smoothing",
+  "npz_loading": "Only numeric g/points members are read with allow_pickle=False; original object covariance members are not decoded.",
+  "baselines": {
+    "v1": {
+      "source_head": "dcb14e5c62ed6f4b3de4426e863aa48b007eb819",
+      "plan_sha256": "5ddf980ba75623cc1294e1f5863e44567c4752dda51889ec9c78fbd24c7ba73b",
+      "result_sha256": "3900c65b314057a110d02d9235b809afa24f5af1f017965717a45d089be5c6ac",
+      "sheet_mm": [
+        210.0,
+        297.0
+      ],
+      "source_hashes_before": {
+        "backend/reference.py": "23a94e699d5499d8a4621902193e3a70214062108a5d0d10abb04df9efb8b69d",
+        "backend/fitting.py": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+        "backend/edges.py": "c02bcf6f15958ea5c82444de3ea3af37f20031e6df463846dc8082e37abae9ee",
+        "backend/sheet.py": "e18cbe44c476894f1655d6ce66a5e1b11cefe9ca4f95e7e17eb7f52efc236531",
+        "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+        "tests/synthetic.py": "58a19b94363e71a9889fd49eb4904989f0e3101221c5c13b2a54bd536c424c4c"
+      },
+      "source_hashes_after": {
+        "backend/reference.py": "23a94e699d5499d8a4621902193e3a70214062108a5d0d10abb04df9efb8b69d",
+        "backend/fitting.py": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+        "backend/edges.py": "c02bcf6f15958ea5c82444de3ea3af37f20031e6df463846dc8082e37abae9ee",
+        "backend/sheet.py": "e18cbe44c476894f1655d6ce66a5e1b11cefe9ca4f95e7e17eb7f52efc236531",
+        "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+        "tests/synthetic.py": "58a19b94363e71a9889fd49eb4904989f0e3101221c5c13b2a54bd536c424c4c"
+      },
+      "outcomes": [
+        {
+          "name": "small-isotropic",
+          "case": {
+            "name": "small-isotropic",
+            "radius": 3.0,
+            "fraction": 0.25,
+            "normal": 0.0,
+            "blur": 1.2
+          },
+          "status": "trace_refused",
+          "error": {
+            "type": "ReferenceError_",
+            "message": "No reference sheet was found. Show the whole sheet, with all four corners and a contrasting surface around it, or choose No reference."
+          },
+          "ppm": null,
+          "sigma": null,
+          "initial_fits_summary": [],
+          "after_blur_summary": []
+        },
+        {
+          "name": "small-directional",
+          "case": {
+            "name": "small-directional",
+            "radius": 3.0,
+            "fraction": 0.25,
+            "normal": 0.0,
+            "blur": [
+              3.0,
+              1.0,
+              30.0
+            ]
+          },
+          "status": "trace_refused",
+          "error": {
+            "type": "ReferenceError_",
+            "message": "No reference sheet was found. Show the whole sheet, with all four corners and a contrasting surface around it, or choose No reference."
+          },
+          "ppm": null,
+          "sigma": null,
+          "initial_fits_summary": [],
+          "after_blur_summary": []
+        },
+        {
+          "name": "medium-directional",
+          "case": {
+            "name": "medium-directional",
+            "radius": 6.0,
+            "fraction": 0.25,
+            "normal": 0.0,
+            "blur": [
+              3.0,
+              1.0,
+              30.0
+            ]
+          },
+          "status": "trace_refused",
+          "error": {
+            "type": "ReferenceError_",
+            "message": "No reference sheet was found. Show the whole sheet, with all four corners and a contrasting surface around it, or choose No reference."
+          },
+          "ppm": null,
+          "sigma": null,
+          "initial_fits_summary": [],
+          "after_blur_summary": []
+        },
+        {
+          "name": "large-directional",
+          "case": {
+            "name": "large-directional",
+            "radius": 12.0,
+            "fraction": 0.25,
+            "normal": 0.0,
+            "blur": [
+              3.0,
+              1.0,
+              30.0
+            ]
+          },
+          "status": "trace_returned",
+          "error": null,
+          "ppm": 4.999911550032394,
+          "sigma": 2.388563914278294,
+          "initial_fits_summary": [
+            {
+              "centre_mm": [
+                106.68108147432216,
+                138.03880701324715
+              ],
+              "radius_mm": 1.3357007067102988,
+              "centre_error_mm": 10.595404363656733,
+              "radius_error_mm": -10.664299293289702
+            },
+            {
+              "centre_mm": [
+                104.99237717305813,
+                148.49564554735068
+              ],
+              "radius_mm": 11.981426233361503,
+              "centre_error_mm": 0.00877888082051967,
+              "radius_error_mm": -0.018573766638496636
+            }
+          ],
+          "after_blur_summary": [
+            {
+              "centre_mm": [
+                106.68108147432216,
+                138.03880701324715
+              ],
+              "radius_mm": 1.420219948047552,
+              "centre_error_mm": 10.595404363656733,
+              "radius_error_mm": -10.579780051952447
+            },
+            {
+              "centre_mm": [
+                104.99237717305813,
+                148.49564554735068
+              ],
+              "radius_mm": 11.990948778441872,
+              "centre_error_mm": 0.00877888082051967,
+              "radius_error_mm": -0.009051221558127764
+            }
+          ]
+        },
+        {
+          "name": "minor-directional",
+          "case": {
+            "name": "minor-directional",
+            "radius": 6.0,
+            "fraction": -0.4,
+            "normal": 0.0,
+            "blur": [
+              3.0,
+              1.0,
+              30.0
+            ]
+          },
+          "status": "trace_refused",
+          "error": {
+            "type": "ReferenceError_",
+            "message": "No reference sheet was found. Show the whole sheet, with all four corners and a contrasting surface around it, or choose No reference."
+          },
+          "ppm": null,
+          "sigma": null,
+          "initial_fits_summary": [],
+          "after_blur_summary": []
+        },
+        {
+          "name": "rotated-major-directional",
+          "case": {
+            "name": "rotated-major-directional",
+            "radius": 6.0,
+            "fraction": 0.6,
+            "normal": 37.0,
+            "blur": [
+              3.0,
+              1.0,
+              30.0
+            ]
+          },
+          "status": "trace_refused",
+          "error": {
+            "type": "ReferenceError_",
+            "message": "No reference sheet was found. Show the whole sheet, with all four corners and a contrasting surface around it, or choose No reference."
+          },
+          "ppm": null,
+          "sigma": null,
+          "initial_fits_summary": [],
+          "after_blur_summary": []
+        }
+      ]
+    },
+    "v2": {
+      "source_head": "dcb14e5c62ed6f4b3de4426e863aa48b007eb819",
+      "plan_sha256": "2db3148f3be75ea7f9750aeae7115dd23762a581c1f3f879b484c7e1b3c9d687",
+      "result_sha256": "e8a07de6297f1c5f9b71d1cd13a3a70e14664242475ae34446e1fe9ffc7183da",
+      "sheet_mm": [
+        60.0,
+        60.0
+      ],
+      "source_hashes_before": {
+        "backend/reference.py": "23a94e699d5499d8a4621902193e3a70214062108a5d0d10abb04df9efb8b69d",
+        "backend/fitting.py": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+        "backend/edges.py": "c02bcf6f15958ea5c82444de3ea3af37f20031e6df463846dc8082e37abae9ee",
+        "backend/sheet.py": "e18cbe44c476894f1655d6ce66a5e1b11cefe9ca4f95e7e17eb7f52efc236531",
+        "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+        "tests/synthetic.py": "58a19b94363e71a9889fd49eb4904989f0e3101221c5c13b2a54bd536c424c4c"
+      },
+      "source_hashes_after": {
+        "backend/reference.py": "23a94e699d5499d8a4621902193e3a70214062108a5d0d10abb04df9efb8b69d",
+        "backend/fitting.py": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+        "backend/edges.py": "c02bcf6f15958ea5c82444de3ea3af37f20031e6df463846dc8082e37abae9ee",
+        "backend/sheet.py": "e18cbe44c476894f1655d6ce66a5e1b11cefe9ca4f95e7e17eb7f52efc236531",
+        "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+        "tests/synthetic.py": "58a19b94363e71a9889fd49eb4904989f0e3101221c5c13b2a54bd536c424c4c"
+      },
+      "outcomes": [
+        {
+          "name": "small-isotropic",
+          "case": {
+            "name": "small-isotropic",
+            "radius": 3.0,
+            "fraction": 0.25,
+            "normal": 0.0,
+            "blur": 1.2
+          },
+          "status": "trace_returned",
+          "error": null,
+          "ppm": 4.9999237060546875,
+          "sigma": 1.7422024820149602,
+          "initial_fits_summary": [
+            {
+              "centre_mm": [
+                29.924545395843694,
+                30.00003280385642
+              ],
+              "radius_mm": 2.9217833088980196,
+              "centre_error_mm": 0.07545461128703684,
+              "radius_error_mm": -0.07821669110198037
+            }
+          ],
+          "after_blur_summary": [
+            {
+              "centre_mm": [
+                29.924545395843694,
+                30.00003280385642
+              ],
+              "radius_mm": 2.942536145604438,
+              "centre_error_mm": 0.07545461128703684,
+              "radius_error_mm": -0.05746385439556212
+            }
+          ]
+        },
+        {
+          "name": "small-directional",
+          "case": {
+            "name": "small-directional",
+            "radius": 3.0,
+            "fraction": 0.25,
+            "normal": 0.0,
+            "blur": [
+              3.0,
+              1.0,
+              30.0
+            ]
+          },
+          "status": "trace_returned",
+          "error": null,
+          "ppm": 4.999624410714008,
+          "sigma": 3.05596253575212,
+          "initial_fits_summary": [
+            {
+              "centre_mm": [
+                29.85856403803095,
+                30.019677799350344
+              ],
+              "radius_mm": 2.880681573778326,
+              "centre_error_mm": 0.14279827423811317,
+              "radius_error_mm": -0.11931842622167421
+            }
+          ],
+          "after_blur_summary": [
+            {
+              "centre_mm": [
+                29.85856403803095,
+                30.019677799350344
+              ],
+              "radius_mm": 2.9452861904692917,
+              "centre_error_mm": 0.14279827423811317,
+              "radius_error_mm": -0.05471380953070826
+            }
+          ]
+        },
+        {
+          "name": "medium-directional",
+          "case": {
+            "name": "medium-directional",
+            "radius": 6.0,
+            "fraction": 0.25,
+            "normal": 0.0,
+            "blur": [
+              3.0,
+              1.0,
+              30.0
+            ]
+          },
+          "status": "trace_returned",
+          "error": null,
+          "ppm": 4.999624410714008,
+          "sigma": 3.408282781812532,
+          "initial_fits_summary": [
+            {
+              "centre_mm": [
+                29.93527776753116,
+                30.006803696959597
+              ],
+              "radius_mm": 5.931135863465038,
+              "centre_error_mm": 0.0650788573045687,
+              "radius_error_mm": -0.0688641365349616
+            }
+          ],
+          "after_blur_summary": [
+            {
+              "centre_mm": [
+                29.93527776753116,
+                30.006803696959597
+              ],
+              "radius_mm": 5.970269503366065,
+              "centre_error_mm": 0.0650788573045687,
+              "radius_error_mm": -0.029730496633934678
+            }
+          ]
+        },
+        {
+          "name": "large-directional",
+          "case": {
+            "name": "large-directional",
+            "radius": 12.0,
+            "fraction": 0.25,
+            "normal": 0.0,
+            "blur": [
+              3.0,
+              1.0,
+              30.0
+            ]
+          },
+          "status": "trace_returned",
+          "error": null,
+          "ppm": 4.999624410714008,
+          "sigma": 2.3908810710223873,
+          "initial_fits_summary": [
+            {
+              "centre_mm": [
+                31.781634289929425,
+                19.472058919773808
+              ],
+              "radius_mm": 1.225210493032343,
+              "centre_error_mm": 10.677629143764385,
+              "radius_error_mm": -10.774789506967657
+            },
+            {
+              "centre_mm": [
+                29.98979929007112,
+                29.995098819784808
+              ],
+              "radius_mm": 11.979878733615896,
+              "centre_error_mm": 0.011317068991349708,
+              "radius_error_mm": -0.02012126638410372
+            }
+          ],
+          "after_blur_summary": [
+            {
+              "centre_mm": [
+                31.781634289929425,
+                19.472058919773808
+              ],
+              "radius_mm": 1.3173512436680739,
+              "centre_error_mm": 10.677629143764385,
+              "radius_error_mm": -10.682648756331925
+            },
+            {
+              "centre_mm": [
+                29.98979929007112,
+                29.995098819784808
+              ],
+              "radius_mm": 11.989422089018262,
+              "centre_error_mm": 0.011317068991349708,
+              "radius_error_mm": -0.01057791098173766
+            }
+          ]
+        },
+        {
+          "name": "minor-directional",
+          "case": {
+            "name": "minor-directional",
+            "radius": 6.0,
+            "fraction": -0.4,
+            "normal": 0.0,
+            "blur": [
+              3.0,
+              1.0,
+              30.0
+            ]
+          },
+          "status": "trace_refused",
+          "error": {
+            "type": "ReferenceError_",
+            "message": "The part's outline is not clear enough to trace. Improve the contrast."
+          },
+          "ppm": 4.999624410714008,
+          "sigma": null,
+          "initial_fits_summary": [],
+          "after_blur_summary": []
+        },
+        {
+          "name": "rotated-major-directional",
+          "case": {
+            "name": "rotated-major-directional",
+            "radius": 6.0,
+            "fraction": 0.6,
+            "normal": 37.0,
+            "blur": [
+              3.0,
+              1.0,
+              30.0
+            ]
+          },
+          "status": "trace_returned",
+          "error": null,
+          "ppm": 4.999624410714008,
+          "sigma": 3.1105010554777293,
+          "initial_fits_summary": [
+            {
+              "centre_mm": [
+                29.98586102256098,
+                29.989159430952178
+              ],
+              "radius_mm": 5.9548198775621675,
+              "centre_error_mm": 0.017816526605984456,
+              "radius_error_mm": -0.04518012243783254
+            }
+          ],
+          "after_blur_summary": [
+            {
+              "centre_mm": [
+                29.98586102256098,
+                29.989159430952178
+              ],
+              "radius_mm": 5.987290610507752,
+              "centre_error_mm": 0.017816526605984456,
+              "radius_error_mm": -0.012709389492248313
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "measurements": [
+    {
+      "name": "small-isotropic",
+      "file": "small-isotropic-measurement.npz",
+      "file_sha256": "9982be1be11d8d5a8ec27026984e13f3df0c0d42cf7cd16360e6e9ede7a862d9",
+      "g_sha256": "e024851e3baddc909d3c022d79c1bd8309bdd274a40c70d3feade6e44fb5af1a",
+      "g_shape": [
+        300,
+        300
+      ],
+      "g_dtype": "float32",
+      "points_sha256": "b1b5453f7b5570a100906f6c24429ff1639e7644c15e65ddea465ca4ffeeb32a",
+      "points_shape": [
+        70,
+        2
+      ],
+      "observed_ring_bounds_px": [
+        [
+          135.12174125129033,
+          135.13437872457828
+        ],
+        [
+          153.73714163552006,
+          164.86111743652035
+        ]
+      ],
+      "ppm": 4.9999237060546875,
+      "sigma": 1.7422024820149602,
+      "initial_seed_fits": [
+        {
+          "kind": "line",
+          "data": {
+            "c": [
+              153.72304175722365,
+              149.99999702423472
+            ],
+            "d": [
+              8.72918941254554e-06,
+              -0.9999999999619005
+            ],
+            "noise_corr": 1.3499381644194999,
+            "source_ends": [
+              [
+                153.59582136866072,
+                161.92803414575997
+              ],
+              [
+                153.59653352769598,
+                138.07180272837547
+              ]
+            ]
+          },
+          "span": [
+            39,
+            62
+          ],
+          "rms": 0.03889312165366222,
+          "max_abs": 0.1271162664627317
+        },
+        {
+          "kind": "arc",
+          "data": {
+            "c": [
+              149.62044391758855,
+              149.99787519842
+            ],
+            "r": 14.608693630114114,
+            "mid": [
+              135.12191087217056,
+              150.52453529536862
+            ],
+            "length": 56.93867097364617,
+            "source_ends": [
+              [
+                153.59653352769598,
+                138.07180272837547
+              ],
+              [
+                153.59582136866072,
+                161.92803414575997
+              ]
+            ],
+            "source_sweep": -3.7850477531648985
+          },
+          "span": [
+            62,
+            39
+          ],
+          "rms": 0.23227318563328894,
+          "max_abs": 0.9302860590686794
+        }
+      ],
+      "truth_after_inversion_only": {
+        "centre_mm": [
+          30.0,
+          30.0
+        ],
+        "name": "small-isotropic",
+        "radius": 3.0,
+        "fraction": 0.25,
+        "normal": 0.0,
+        "blur": 1.2
+      }
+    },
+    {
+      "name": "small-directional",
+      "file": "small-directional-measurement.npz",
+      "file_sha256": "dc66ddb52ae895b9bed4ad28ef69bf548f07732ecf4a6f1a91844963ed642ab4",
+      "g_sha256": "8937cf3237005db9c1d39ceb2c99c43a3f970a83decae67230545dde0d1302de",
+      "g_shape": [
+        300,
+        300
+      ],
+      "g_dtype": "float32",
+      "points_sha256": "0be4475b1e6f2bd694e5433248de240a41f5c17635dfdcc606a12880bd5bd4e9",
+      "points_shape": [
+        70,
+        2
+      ],
+      "observed_ring_bounds_px": [
+        [
+          134.9875584905608,
+          135.39514109519197
+        ],
+        [
+          153.98579629257972,
+          164.94092074145112
+        ]
+      ],
+      "ppm": 4.999624410714008,
+      "sigma": 3.05596253575212,
+      "initial_seed_fits": [
+        {
+          "kind": "line",
+          "data": {
+            "c": [
+              153.8432087896311,
+              150.46254995706076
+            ],
+            "d": [
+              0.0027169881570677508,
+              -0.9999963089808653
+            ],
+            "noise_corr": 1.3752226728201231,
+            "source_ends": [
+              [
+                153.76868028931318,
+                161.70517830267997
+              ],
+              [
+                153.58368310337164,
+                138.96861872734618
+              ]
+            ]
+          },
+          "span": [
+            39,
+            61
+          ],
+          "rms": 0.07354695958193838,
+          "max_abs": 0.2907536033744628
+        },
+        {
+          "kind": "arc",
+          "data": {
+            "c": [
+              149.28160563340697,
+              150.08711392740136
+            ],
+            "r": 14.402325915756165,
+            "mid": [
+              134.9875584905608,
+              150.5208884592102
+            ],
+            "length": 57.36389206539742,
+            "source_ends": [
+              [
+                153.58368310337164,
+                138.96861872734618
+              ],
+              [
+                153.76868028931318,
+                161.70517830267997
+              ]
+            ],
+            "source_sweep": -3.879347975209479
+          },
+          "span": [
+            61,
+            39
+          ],
+          "rms": 0.38923161434690534,
+          "max_abs": 1.636589196682591
+        }
+      ],
+      "truth_after_inversion_only": {
+        "centre_mm": [
+          30.0,
+          30.0
+        ],
+        "name": "small-directional",
+        "radius": 3.0,
+        "fraction": 0.25,
+        "normal": 0.0,
+        "blur": [
+          3.0,
+          1.0,
+          30.0
+        ]
+      }
+    },
+    {
+      "name": "medium-directional",
+      "file": "medium-directional-measurement.npz",
+      "file_sha256": "e5b903ac4e82191ad87e4ce50274bf25a502ba99f3003cbe810f38e769d403bf",
+      "g_sha256": "98af16d468b7d309f64385a6eecc6ceefee0dffde0c67186180a8d5b5b97e2ce",
+      "g_shape": [
+        300,
+        300
+      ],
+      "g_dtype": "float32",
+      "points_sha256": "9892c18f907f44c096498fd77151b079643b0f1a1ef34f28c5d0998ae7ff05a6",
+      "points_shape": [
+        146,
+        2
+      ],
+      "observed_ring_bounds_px": [
+        [
+          120.04007268678214,
+          120.14383839409244
+        ],
+        [
+          157.48430990039893,
+          179.89079946222208
+        ]
+      ],
+      "ppm": 4.999624410714008,
+      "sigma": 3.408282781812532,
+      "initial_seed_fits": [
+        {
+          "kind": "line",
+          "data": {
+            "c": [
+              157.45760225158446,
+              150.5020655802161
+            ],
+            "d": [
+              -3.911368863862118e-05,
+              -0.9999999992350598
+            ],
+            "noise_corr": 1.0050482209976375,
+            "source_ends": [
+              [
+                157.4322145183418,
+                175.91606145694988
+              ],
+              [
+                157.348818409129,
+                125.12575042489648
+              ]
+            ]
+          },
+          "span": [
+            84,
+            134
+          ],
+          "rms": 0.01660404889357702,
+          "max_abs": 0.1077912810824723
+        },
+        {
+          "kind": "arc",
+          "data": {
+            "c": [
+              149.66514546805314,
+              150.02274825082256
+            ],
+            "r": 29.653451646241113,
+            "mid": [
+              120.04007268678214,
+              150.48818554852272
+            ],
+            "length": 113.08651789866252,
+            "source_ends": [
+              [
+                157.348818409129,
+                125.12575042489648
+              ],
+              [
+                157.4322145183418,
+                175.91606145694988
+              ]
+            ],
+            "source_sweep": -3.7323614340183617
+          },
+          "span": [
+            134,
+            84
+          ],
+          "rms": 0.2379269318263584,
+          "max_abs": 1.626682446021622
+        }
+      ],
+      "truth_after_inversion_only": {
+        "centre_mm": [
+          30.0,
+          30.0
+        ],
+        "name": "medium-directional",
+        "radius": 6.0,
+        "fraction": 0.25,
+        "normal": 0.0,
+        "blur": [
+          3.0,
+          1.0,
+          30.0
+        ]
+      }
+    },
+    {
+      "name": "large-directional",
+      "file": "large-directional-measurement.npz",
+      "file_sha256": "de00f76fcfd2c3f3ad7a3c7920b9716c45d93cebb55175ce04d17f0ed2455b9c",
+      "g_sha256": "dca3ea79efcf34aa050b0e8c4a0a8fd76c4ba6b15e20724432ad62224f4d02c2",
+      "g_shape": [
+        300,
+        300
+      ],
+      "g_dtype": "float32",
+      "points_sha256": "85431f310eafecc2e5b47e2142763d18ff46d927dedd1da779a2ce74247aada7",
+      "points_shape": [
+        300,
+        2
+      ],
+      "observed_ring_bounds_px": [
+        [
+          90.02714719223442,
+          90.05735767546653
+        ],
+        [
+          164.95613466113724,
+          209.92672140016782
+        ]
+      ],
+      "ppm": 4.999624410714008,
+      "sigma": 2.3908810710223873,
+      "initial_seed_fits": [
+        {
+          "kind": "line",
+          "data": {
+            "c": [
+              164.94702580854286,
+              123.99635498510969
+            ],
+            "d": [
+              0.00014192344499151785,
+              -0.9999999899288678
+            ],
+            "noise_corr": 11.275948981031494,
+            "source_ends": [
+              [
+                164.90250660198788,
+                205.50895303107714
+              ],
+              [
+                164.83703947581046,
+                96.03347699563479
+              ]
+            ]
+          },
+          "span": [
+            174,
+            282
+          ],
+          "rms": 0.0008223032348297203,
+          "max_abs": 0.0017656510862485081
+        },
+        {
+          "kind": "arc",
+          "data": {
+            "c": [
+              158.89623460831652,
+              97.35298110216257
+            ],
+            "r": 6.1255922892274475,
+            "mid": [
+              162.6325457145994,
+              92.54090593920164
+            ],
+            "length": 6.960152638292444,
+            "source_ends": [
+              [
+                164.83703947581046,
+                96.03347699563479
+              ],
+              [
+                160.21351330788522,
+                91.32155803083474
+              ]
+            ],
+            "source_sweep": -1.137209443161713
+          },
+          "span": [
+            282,
+            287
+          ],
+          "rms": 0.046982337835442166,
+          "max_abs": 0.06466957691606545
+        },
+        {
+          "kind": "line",
+          "data": {
+            "c": [
+              157.4309368995836,
+              90.6832230220998
+            ],
+            "d": [
+              -0.9820376984652395,
+              -0.1886848133610531
+            ],
+            "noise_corr": 1.0,
+            "source_ends": [
+              [
+                160.21351330788522,
+                91.32155803083474
+              ],
+              [
+                154.70431474922756,
+                90.25029373806224
+              ]
+            ]
+          },
+          "span": [
+            287,
+            292
+          ],
+          "rms": 0.07192195723113506,
+          "max_abs": 0.10183913256458912
+        },
+        {
+          "kind": "arc",
+          "data": {
+            "c": [
+              149.9377326030532,
+              149.96422826117507
+            ],
+            "r": 59.894894153979656,
+            "mid": [
+              90.2904201751733,
+              155.57825119632832
+            ],
+            "length": 209.67420570936386,
+            "source_ends": [
+              [
+                154.70431474922756,
+                90.25029373806224
+              ],
+              [
+                164.90250660198788,
+                205.50895303107714
+              ]
+            ],
+            "source_sweep": -3.484417099351469
+          },
+          "span": [
+            292,
+            174
+          ],
+          "rms": 0.0849685936770238,
+          "max_abs": 1.0459131728011428
+        }
+      ],
+      "truth_after_inversion_only": {
+        "centre_mm": [
+          30.0,
+          30.0
+        ],
+        "name": "large-directional",
+        "radius": 12.0,
+        "fraction": 0.25,
+        "normal": 0.0,
+        "blur": [
+          3.0,
+          1.0,
+          30.0
+        ]
+      }
+    },
+    {
+      "name": "rotated-major-directional",
+      "file": "rotated-major-directional-measurement.npz",
+      "file_sha256": "037e7d493ee9b6c612a70f0721af81a790ee543d975696996a7f928e99e2cbbc",
+      "g_sha256": "9925ec1391fea8c7cb3217961e320154c20738e3ad21df1db9bdf2422d735319",
+      "g_shape": [
+        300,
+        300
+      ],
+      "g_dtype": "float32",
+      "points_sha256": "3edeb3cd1fa2e6939438f04f938653c37de389fd29990b3015c96fdc77a7bcf5",
+      "points_shape": [
+        145,
+        2
+      ],
+      "observed_ring_bounds_px": [
+        [
+          120.11501502065808,
+          120.13513117126382
+        ],
+        [
+          178.01393824350228,
+          179.54282076077587
+        ]
+      ],
+      "ppm": 4.999624410714008,
+      "sigma": 3.1105010554777293,
+      "initial_seed_fits": [
+        {
+          "kind": "line",
+          "data": {
+            "c": [
+              164.06085212651826,
+              160.90653126051603
+            ],
+            "d": [
+              0.6017620161010059,
+              -0.7986754509674457
+            ],
+            "noise_corr": 3.7657905016238424,
+            "source_ends": [
+              [
+                151.868950351946,
+                177.079837648497
+              ],
+              [
+                176.20558348973628,
+                144.7814671668331
+              ]
+            ]
+          },
+          "span": [
+            78,
+            110
+          ],
+          "rms": 0.012396225425312513,
+          "max_abs": 0.026484024736552876
+        },
+        {
+          "kind": "arc",
+          "data": {
+            "c": [
+              149.91804274467358,
+              149.93453354778273
+            ],
+            "r": 29.771862821264815,
+            "mid": [
+              125.44112246473924,
+              133.10579242851253
+            ],
+            "length": 138.24854010697644,
+            "source_ends": [
+              [
+                176.20558348973628,
+                144.7814671668331
+              ],
+              [
+                151.868950351946,
+                177.079837648497
+              ]
+            ],
+            "source_sweep": -4.590562273318294
+          },
+          "span": [
+            110,
+            78
+          ],
+          "rms": 0.05692753403166477,
+          "max_abs": 0.3014183695436543
+        }
+      ],
+      "truth_after_inversion_only": {
+        "centre_mm": [
+          30.0,
+          30.0
+        ],
+        "name": "rotated-major-directional",
+        "radius": 6.0,
+        "fraction": 0.6,
+        "normal": 37.0,
+        "blur": [
+          3.0,
+          1.0,
+          30.0
+        ]
+      }
+    }
+  ],
+  "archived_files": {
+    "original-moment-result.json": "23e8eff8c84ec50adc2c4f82815399ed15f20694717fcd0d02a2a4af16fd8fc6",
+    "baseline-v1-plan.json": "5ddf980ba75623cc1294e1f5863e44567c4752dda51889ec9c78fbd24c7ba73b",
+    "baseline-v1-result.json": "3900c65b314057a110d02d9235b809afa24f5af1f017965717a45d089be5c6ac",
+    "baseline-v2-plan.json": "2db3148f3be75ea7f9750aeae7115dd23762a581c1f3f879b484c7e1b3c9d687",
+    "baseline-v2-result.json": "e8a07de6297f1c5f9b71d1cd13a3a70e14664242475ae34446e1fe9ffc7183da",
+    "original-moment-probe.py.txt": "2a63e9903e273d4ad18d30a84ab4a9d32db7e1bc5220f198bafdafeb22874861",
+    "baseline-v1-probe.py.txt": "62da6790f50e9861cfbbe90240c726a3ec58c8e4cbf2d9cd40f6326a35f07724",
+    "baseline-v2-probe.py.txt": "b3733f8fa037b9fa1c4401991c7a5ac23438dc8040232124ff1df63a7be3323a"
+  }
+}

@@ -4,6 +4,11 @@ Turn a photograph of a **flat, constant-thickness part** into a scaled CAD solid
 
 The workbench is designed for plates, gaskets, spacers, and templates. It traces what is visible in the photograph; it does not recover hidden geometry or infer physical dimensions.
 
+For the reviewed source revision, draft PR dependencies and available research
+APIs, read [source scope and status](docs/project-status.md). The latest
+[documentation review](docs/validation/documentation-pr88-state.md) covers the
+workbench and companion library; older test results retain their original scope.
+
 For reference-sheet tracing, photograph the whole flat sheet (A4, US Letter, or a sheet you have measured) and explicitly choose it as the **Scale reference**. A successful sheet trace sets scale from its stated size, estimates perspective and one radial lens correction, and fits lines, tangent arcs and circles. Entered thickness supports a side-wall/parallax correction under the method's assumptions. Ordinary tracing and the sample use measured-width scaling instead; they do not perform these corrections. See [reference-sheet tracing](docs/reference-sheet.md) for the mathematics and synthetic evidence, and the [engineering model](docs/engineering-model.md) for independent verification before fabrication.
 
 Review the [initial-fit support check](docs/validation/fit-support.md) and
@@ -28,6 +33,19 @@ slot-cap fitting. Mixed-frame free curves, slot caps and scalar corner fits
 retain explicitly approximate geometry with a warning; important radii remain
 subject to independent measurement. See
 [blur frames and support rules](docs/blur-frames.md).
+
+Developers can also evaluate the [finite-material intensity fitter](docs/finite-shape-inverse.md)
+in draft PR #88. It fits a circular segment's centre, radius and chord position
+under supplied optics. It is a Python research API; uploading a photo or building
+a model still uses the tracing path described above. Its
+[validation record](docs/validation/finite-free-centre.md) retains numerical
+successes, model mismatches and initialization failures.
+
+Final fitted arcs also need [circle-consistent joins](docs/curved-joins.md).
+An unavailable join keeps an affected outline for review when valid, with a
+notice; it does not supply a measured radius. Check
+[critical arc geometry in imported CAD](docs/exports.md#verify-critical-arc-geometry)
+before relying on it for fit.
 
 This repository contains two related tools:
 
@@ -155,7 +173,7 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 ## Documentation
 
-Start with the [documentation index](docs/README.md) for capture, engineering, export, development and evidence routes. [Source scope and status](docs/project-status.md) distinguishes this main-based tracing, corner and blur-frame line from the separate source-space calibration research branch and records their review states.
+Start with the [documentation index](docs/README.md) for capture, engineering, export, development and evidence routes. [Source scope and status](docs/project-status.md) distinguishes this main-based tracing, corner, blur-frame and join line from the separate source-space calibration research branch and records their review states.
 
 - [Capture and calibration guide](docs/capture-guide.md)
 - [Engineering model and independent verification](docs/engineering-model.md)
