@@ -2,6 +2,15 @@
 
 All dates are 2026. Revisions are numbered in `library.json`, which feeds the HTML, the PDF, and the archive name. Revision 3 is the first revision kept in this repository; Revisions 1 and 2 were distributed as ZIP archives.
 
+Documentation corrections, November 12: a diagonal placement is permitted when
+the complete supported footprint and clearance fit; regenerate the handbook's
+HTML and PDF from the corrected source. The current STL checker excludes both
+collapsed faces and triangles with area at most `weld_tol²` from topology. Both
+remain counted as degenerates and fail mesh status. Revision 4's note below
+describes that historical implementation; Revision 6 changed the treatment.
+These corrections do not create a new library release or replace the dated
+[verification record](VERIFICATION.md).
+
 ## Revision 7 — November 9, 2026
 
 - Connect the photo-to-CAD workflow to OpenSCAD with an offline mounting-plate and clearance-coupon workspace, dimensioned sketches, evidence fields, and SCAD/CSV/SVG downloads.

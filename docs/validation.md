@@ -6,7 +6,10 @@ CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
 For a concise source/review snapshot, use [project status](project-status.md).
-The [current geometry and documentation record](validation/canonical-arcs.md)
+The [current documentation review](validation/documentation-pr72.md) checks the
+published PR #72 source, command examples, API maps and complete documentation
+inventory. Its checks are separate from the software regressions below.
+The [geometry and documentation record](validation/canonical-arcs.md)
 covers circle-consistent final assembly and explicit source-outline recovery.
 The [preceding documentation review](validation/documentation-pr70.md) retains
 its published PR #70 baseline, command/API checks and then-observed arc limitation. The [PR #70 coverage](validation/tapered-caps.md#documentation-coverage)

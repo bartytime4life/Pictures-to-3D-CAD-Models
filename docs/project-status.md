@@ -1,6 +1,7 @@
 # Project status and evidence
 
-Documentation snapshot: **November 12, 2026**. The current candidate repairs
+Documentation snapshot: **November 12, 2026**. Published
+[PR #72](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/72) repairs
 circle-consistent line/arc joins in production tracing, retaining an affected
 source outline with an explicit notice when analytic construction is unavailable.
 The [geometry and recovery record](validation/canonical-arcs.md) distinguishes
@@ -9,19 +10,22 @@ inputs and API/file schemas remain unchanged. Start with [setup](development.md)
 the [task index](README.md), [developer tools](developer-tools.md) or
 [API examples](api-examples.md).
 
-The reviewed baseline is PR #71 at
-`861de04baa0e55775e7a90faba9288ea2205abf6`, tree
-`ab586e3b1df58713461b869aa86c4ed9ed7e8416`. Its later merge into
-`codex/tapered-cap-geometry` at `cecb8b69f7dbeb275b553220ddc4660f43a7d38b`
-has the identical tree. The [preceding documentation review](validation/documentation-pr70.md)
-retains its original checks and historical review states.
+This documentation review targets PR #72 at
+`25ff63a2452d6d47ac382f2cf15bfb403d6a6203`, tree
+`f99a1738ebf34268194bc75cb2c0a73a2b336054`. It was merged into
+`codex/tapered-cap-geometry` at `c3bd7bfd43c92904959a970825f61544c7c5a206`,
+with the identical tree. This documentation update uses that merged base.
+The [current documentation audit](validation/documentation-pr72.md) records
+coverage and checks. The [preceding review](validation/documentation-pr70.md)
+retains its own source binding and historical review states.
 
 ## Source and review state
 
-At the **16:46 UTC** readback, `main` was
+At the **17:40 UTC** readback, `main` remained
 `485da7e01c6447177aae6e54e71ad2177544bdd6`, integrating PR #47.
-PRs **#47–#71 are closed and merged into their listed base branches**. Those
-individual merges do not propagate the whole stack into `main`: PRs #48–#71
+The earlier **16:46 UTC** review found PRs **#47–#71 closed and merged into their listed base branches**.
+PR #72 was merged into `codex/tapered-cap-geometry` at **17:34 UTC**. Those
+individual merges do not propagate the whole stack into `main`: PRs #48–#72
 were merged into successive review branches. The current candidate includes
 those changes; the observed `main` does not. The conditional corner and response
 analyses remain developer tools; production changes have their own records.
@@ -54,7 +58,7 @@ analyses remain developer tools; production changes have their own records.
 | `0d8bd37633900f4f88200be13bd5309d28ca58f2` | Continuous shared Gaussian offset/blur domains, strict CLI, independent proof replay and complete documentation review | [PR #69](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/69), merged into PR #68's branch |
 | `df53bc495a83ebf72c38f0f14a778e153d35b8db` | Tangent geometry for tapered rounded ends, stable local radius/centre updates and independent native-export controls | [PR #70](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/70), merged into PR #69's branch |
 | `861de04baa0e55775e7a90faba9288ea2205abf6` | Documentation review through PR #70, critical-arc checks and source-preserving command/API verification | [PR #71](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/71), merged into PR #70's branch |
-| Current candidate | Circle-consistent joins, explicit per-boundary recovery and independent circle/arc controls | Proposed on `codex/tapered-cap-geometry`; source-bound [local evidence](validation/canonical-arcs.md) |
+| `25ff63a2452d6d47ac382f2cf15bfb403d6a6203` | Circle-consistent joins, explicit per-boundary recovery and independent circle/arc controls | [PR #72](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/72), merged into PR #71's branch at `c3bd7bf`; source-bound [local evidence](validation/canonical-arcs.md) |
 
 The PR links show live review state. A documentation update does not install,
 merge or deploy those changes. Record the checkout used to start a service:
@@ -127,7 +131,8 @@ there is no product endpoint, automatic tracing correction or accuracy label.
 | Documentation alignment through PR #62 | [Coverage and checks](validation/documentation-alignment.md) | Source/review state, current commands and repository-wide documentation checks; prior product results retain their source bindings |
 | Documentation review through PR #64 | [Complete inventory and checks](validation/documentation-latest.md) | Current source/navigation, API/diagnostic wording and documentation checks; no fresh full software or physical qualification |
 | Documentation review through PR #66 | [Complete inventory and checks](validation/documentation-response-state.md) | Current source/review state, executable response examples, command/API contracts and repository-wide documentation checks |
-| Documentation review through PR #70 | [Current inventory and checks](validation/documentation-pr70.md) | Current guides, remaining arc limitation, command/API consistency and documentation checks; prior software regressions retain their source bindings |
+| Documentation review through PR #70 | [Preceding inventory and checks](validation/documentation-pr70.md) | Current guides, remaining arc limitation, command/API consistency and documentation checks at that source; prior software regressions retain their source bindings |
+| Documentation review through PR #72 | [Complete inventory and checks](validation/documentation-pr72.md) | Current source/review state, task navigation and command/API consistency; historical software and library results retain their source bindings |
 
 Hosted results are bound to exact heads. Earlier rows retain their last recorded
 results. The PR #61–#63 workbench rows retain the **November 12, 13:27 UTC**
@@ -138,7 +143,8 @@ workbench run at **15:17 UTC**, when it had completed successfully. PR #68's
 workbench and library runs were checked at **15:17 UTC**; its workbench
 result was refreshed at **15:39 UTC**. PR #69's two runs were checked at
 **15:39 UTC**; PR #69's workbench run was refreshed at **16:02 UTC**. PR #70's
-workbench run and PR #71's run were refreshed at **16:46 UTC**. Each result remains
+workbench run and PR #71's run were refreshed at **16:46 UTC**. PR #72's run
+was refreshed at **17:40 UTC** after its earlier in-progress observation. Each result remains
 bound to its own head:
 
 | Head | Hosted workflow | Result at this observation |
@@ -177,6 +183,7 @@ bound to its own head:
 | `0d8bd37` | [Library run 49](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43247853602) | Completed successfully at the 15:39 UTC check |
 | `df53bc4` | [Workbench run 133](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43252921196) | Completed successfully at the 16:46 UTC check |
 | `861de04b` | [Workbench run 134](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43255349019) | Completed successfully at the 16:46 UTC check |
+| `25ff63a` | [Workbench run 136](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43266175690) | In progress at 17:32 UTC; completed successfully at the 17:40 UTC check |
 
 Follow the exact run links for later results. The raw-source candidate's local 1,273-test result is
 separate from hosted CI. The response-calibration candidate records its own local

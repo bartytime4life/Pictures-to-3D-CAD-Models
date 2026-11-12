@@ -19,7 +19,13 @@ digital revision, not physical fit or manufacturing acceptance.
 
 Use STEP when continuing in a solid-modeling CAD application. The file contains the generated boundary representation of the extruded part and its through-holes. In split mode, the combined file contains the generated pieces in their assembled positions.
 
-A single-piece build with fitted primitives, including a reference-sheet trace, extrudes its fitted lines, arcs and circles. Holes and rounded corners are then true cylindrical faces with exact radii that downstream CAD can dimension and edit, and the export dialog reports the counts. A fitted radius describes the photograph; it is not recovered design intent. Split output still uses the traced polygon.
+A single-piece build extrudes its accepted fitted lines, arcs and circles.
+Accepted circles and arcs become exact cylindrical faces that downstream CAD
+can dimension and edit; boundaries retained as traced outlines remain polygonal.
+The export dialog reports the accepted primitive counts. A fitted radius is
+model-derived geometry, and **Recover design intent** can deliberately adjust
+it; it is not an independently measured physical radius. Split output still
+uses the traced polygon.
 
 STEP does not carry this application's original editable feature history. The receiving tool may support direct edits, but that is different from recovering a named sketch, constraints, or an extrusion feature. Keep the project recipe if you want to change width or thickness in this workbench later.
 

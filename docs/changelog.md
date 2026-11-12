@@ -3,6 +3,18 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Documentation review through PR #72 — November 12, 2026
+
+- Identify the published arc-join candidate by exact commit and tree; distinguish
+  its review-branch merge, exact-head hosted run and local evidence from integrated `main`.
+- Review current user/developer guides, historical records and companion-library
+  documents. Check navigation, command help, callable examples and API tables;
+  retain the [complete coverage record](validation/documentation-pr72.md).
+- Correct diagonal-placement guidance in the handbook and regenerate its HTML
+  and PDF. Clarify accepted STEP curves, full-source objectives and request
+  limits; preserve historical verification and unfinished finite-shape research.
+  This update changes documentation only.
+
 ## Circle-consistent arc joins and recovery — November 12, 2026
 
 - Construct final line/arc joins on the stored circles. A bounded cyclic search

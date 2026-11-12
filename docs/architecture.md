@@ -268,8 +268,8 @@ Returns the bundled, versioned printer catalog with source metadata, grouped mod
 
 | Boundary | Current limit |
 | --- | --- |
-| Photo upload | 32 MiB |
-| Any other request body | 10 MiB |
+| Photo file | 32 MiB; trace request body allows another 64 KiB for multipart framing and fields |
+| Any other request body | 10 MiB + 64 KiB |
 | Decoded image | 70 million pixels; at least 16 pixels per side |
 | HEIC decoding | A child process per file; 60-second timeout; 4 GiB address space and 60 s of processor time where the platform enforces them |
 | Normalized image | Longest side at most 1400 pixels (without a reference sheet) |

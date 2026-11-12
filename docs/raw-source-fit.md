@@ -38,9 +38,11 @@ flowchart LR
     F --> D[Raw residual split and numerical diagnostics]
 ```
 
-The selected row space is part of the input. Fitting every available raw pixel
-would be a different objective. Changing profile density or support can change
-that row space. The fitter does not change support with the candidate offset.
+The selected row space is part of the input. When it omits source modes, fitting
+every available raw pixel gives a different objective. If all source modes are
+retained, the projected and all-pixel standardized residual costs coincide.
+Changing profile density or support can change that row space. The fitter does
+not change support with the candidate offset.
 `PixelNoise` stores no pixel coordinates: callers must supply `pixels_xy` in
 exactly the order of its sampling-matrix columns. Duplicate, noninteger,
 out-of-sensor or mismatched coordinates are refused.

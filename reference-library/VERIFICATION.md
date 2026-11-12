@@ -6,6 +6,15 @@ Documentation correction, November 12: the browser file count below now matches
 the existing dated receipt. The receipt, check date and release status were not
 regenerated for this correction.
 
+Documentation correction, November 12: the handbook now allows a diagonal
+placement when its complete footprint, supports and clearance fit. The HTML
+reader and PDF are regenerated from that source. The checks below and
+`verification.json` retain the November 9 release binding; they are not a fresh
+verification of the revised artifacts. The repository's separate documentation
+audit (`docs/validation/documentation-pr72.md`) records the new build,
+documentation checks and PDF review. No library revision, archive or
+physical acceptance is created by this correction.
+
 ## What was checked automatically
 
 The checks fall into the three tiers described in handbook section 18. Tiers 1 and 2 ran; tier 3 did not.
