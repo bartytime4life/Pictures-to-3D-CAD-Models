@@ -152,11 +152,17 @@ def level_bounds(point, blur_sigma, radius, *, cells=32):
 
 
 def _level_bounds(point, blur_sigma, radius, cells):
+    return _level_bounds_with_sigma(
+        point, tuple(Interval.point(s) for s in blur_sigma), radius, cells
+    )
+
+
+def _level_bounds_with_sigma(point, blur_sigma, radius, cells, *, x_mass_bound=None):
     # Already validated inputs; internally chosen radius endpoints may have more
     # digits or smaller exponents than the external text-input limits.
     px, py = point
     sx, sy = blur_sigma
-    px, py, sx, sy = map(Interval.point, (px, py, sx, sy))
+    px, py = map(Interval.point, (px, py))
     wedge = normal_cdf(px / sx) * normal_cdf(py / sy)
     if radius == 0:
         return _probability(wedge)
@@ -170,7 +176,8 @@ def _level_bounds(point, blur_sigma, radius, cells):
     lower = upper = zero
     y_masses = [_mass(zero, h, py, sy) for h in heights]
     for i, (a, b) in enumerate(pairwise(partition)):
-        x_mass = _mass(Interval.point(a), Interval.point(b), px, sx)
+        x_mass = (_mass(Interval.point(a), Interval.point(b), px, sx)
+                  if x_mass_bound is None else x_mass_bound(a, b, px, sx))
         lower = lower + x_mass * y_masses[i + 1]
         upper = upper + x_mass * y_masses[i]
     cutout = Interval(lower.lo, upper.hi)

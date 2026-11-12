@@ -3,6 +3,8 @@
 Run `python scripts/corner_feasibility.py INPUT.json`, or `--demo` for a synthetic
 sharp-quadrant observation. All dimensional and level bounds must be decimal strings
 in the input; the analysis supplies no physical observation-error bounds for you.
+Version 2 uses one shared blur choice across all observation points. Its radius
+sets project joint (radius, sigma_x, sigma_y) boxes; blur cannot vary per point.
 Results are JSON on stdout. `--output FILE` also saves them, refusing an existing file.
 """
 
@@ -21,6 +23,7 @@ if str(ROOT) not in sys.path:
 
 SOURCE_FILES = (
     "backend/corner_feasibility.py",
+    "backend/corner_blur_domains.py",
     "backend/decimal_bounds.py",
     "scripts/corner_feasibility.py",
 )
@@ -96,7 +99,10 @@ def _run(raw_bytes, mode):
     hashes = _source_hashes()
     git_metadata = _git_metadata()
 
-    from backend.corner_feasibility import analyze
+    if isinstance(raw, dict) and type(raw.get("version")) is int and raw["version"] == 2:
+        from backend.corner_blur_domains import analyze
+    else:
+        from backend.corner_feasibility import analyze
 
     result = analyze(raw)
     if hashes != _source_hashes():
@@ -117,7 +123,7 @@ def main(arguments=None):
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     source = parser.add_mutually_exclusive_group(required=True)
-    source.add_argument("input", type=Path, nargs="?", help="version 1 model JSON input")
+    source.add_argument("input", type=Path, nargs="?", help="version 1 or 2 model JSON input")
     source.add_argument("--demo", action="store_true", help="analyze a synthetic sharp quadrant")
     parser.add_argument("--output", type=Path, metavar="FILE",
                         help="also save the JSON result; FILE must not already exist")

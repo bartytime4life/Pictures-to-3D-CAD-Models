@@ -1,5 +1,9 @@
 # Conditional corner-radius enclosures — November 12, 2026
 
+Follow-up: [joint blur domains](corner-blur-domains.md) extend the developer
+analysis with supplied sigma intervals and a padded Decimal exponential for
+density bounds. This record retains the original fixed-sigma source and runs.
+
 This candidate adds a developer CLI and numerical modules on the documentation
 review head `77b7f6f74ea411e336ff3cf613b33e406ee98d72`. It implements one
 restricted application of the feasible-set research proposed in the

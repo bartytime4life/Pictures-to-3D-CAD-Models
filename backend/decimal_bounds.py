@@ -125,6 +125,24 @@ class Interval:
               _NEAREST.next_plus(_NEAREST.sqrt(self.hi)))
         return Interval(lo, hi)
 
+    def exp(self):
+        """Enclose exp monotonically, padding its correctly rounded endpoints.
+
+        Decimal.exp always rounds HALF_EVEN, not toward the context's requested
+        direction. Adjacent context values bracket that rounded result; an
+        underflowed lower endpoint is clipped to the known lower bound zero.
+        exp(0)=1 is exact. A nonfinite padded upper endpoint is refused rather
+        than returned as a finite enclosure.
+        https://docs.python.org/3.12/library/decimal.html#decimal.Decimal.exp
+        """
+        lo = (_ONE if self.lo == 0 else
+              max(_ZERO, _NEAREST.next_minus(_NEAREST.exp(self.lo))))
+        hi = (_ONE if self.hi == 0 else
+              _NEAREST.next_plus(_NEAREST.exp(self.hi)))
+        if not lo.is_finite() or not hi.is_finite():
+            raise Overflow("exponential enclosure exceeds the finite context range")
+        return Interval(lo, hi)
+
 
 def _interval(value):
     return value if isinstance(value, Interval) else Interval.point(value)

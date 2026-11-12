@@ -191,3 +191,9 @@ data-compatible radii for one fixed Gaussian right-corner model and explicitly
 supplied linear-light level intervals. It can retain unknown regions or reject
 an incompatible supplied model. It does not infer those observation bounds,
 replace the independent height decision, or qualify a physical fillet.
+
+Its [version-2 extension](corner-feasibility.md#joint-blur-domains-version-2)
+can include supplied blur intervals as a joint nuisance domain. A radius needs
+one common blur pair for all observations; separate per-point fits cannot prove
+that. This still does not justify the blur bounds, accommodate spatially varying
+or correlated PSFs, or turn residual spread into a physical error bound.

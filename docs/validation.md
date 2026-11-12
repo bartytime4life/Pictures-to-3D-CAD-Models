@@ -11,6 +11,13 @@ records its own checks without rerunning or relabeling the historical suites.
 
 ## Current workbench evidence — November 12, 2026
 
+The [joint blur-domain extension](validation/corner-blur-domains.md), based on
+PR #50 at `be2a58c`, passed **839 Python tests**. It requires one common blur pair
+to satisfy all observations and projects only accepted/unknown joint boxes into
+radius bounds. Shared-blur contradictions, dependency controls and wider-domain
+unknowns remain explicit. This developer-only analysis changes no production
+trace, API/UI or physical qualification status.
+
 The separate [conditional corner-radius developer tool](validation/corner-feasibility.md),
 based on documentation head `77b7f6f`, passed **760 Python tests**, including
 130 new numerical, radius-set and CLI checks. It adds no API/UI or production

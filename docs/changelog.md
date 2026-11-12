@@ -3,6 +3,19 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Joint corner-radius and blur domains — November 12, 2026
+
+- Version 2 of the developer CLI treats radius and supplied Gaussian blur
+  intervals as one joint domain. One blur pair must explain every observation;
+  radius projections retain accepted and unknown parameter boxes.
+- Rejected nuisance boxes are kept separate from radius exclusions. Added
+  density/CDF mass intersections and outward Decimal exponentials to reduce
+  interval dependency loss without silently clipping numerical error.
+- Shared-blur contradictions and known-truth cases retain compatible,
+  incompatible and unknown outcomes. [Input contract](corner-feasibility.md#joint-blur-domains-version-2)
+  and [evidence](validation/corner-blur-domains.md) distinguish numerical coverage
+  from physical qualification. Version 1 remains supported; tracing/UI are unchanged.
+
 ## Conditional corner-radius developer analysis — November 12, 2026
 
 - Added explicit bounded-error radius analysis for a fixed right corner and

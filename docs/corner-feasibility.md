@@ -8,8 +8,9 @@ before introducing a correction or an accuracy label.
 
 The model fixes a right-angle corner's apex at `(0,0)`, its material in the
 positive X/Y quadrant, a circular fillet, exact observation coordinates and
-independent axis-aligned Gaussian blur with supplied widths. Radius is the only
-unknown. Uncertain pose, blur, coordinates, tone response, noncircular geometry,
+independent axis-aligned Gaussian blur. Version 1 supplies exact widths and
+varies radius only; version 2 supplies blur domains and varies radius and one
+shared blur pair. Uncertain pose, coordinates, tone response, noncircular geometry,
 nearby boundaries and model discrepancy require separate treatment.
 
 ## Run the synthetic demonstration
@@ -29,7 +30,7 @@ error budget.
 JSON goes to stdout; the demo explanation goes to stderr. Add
 `--output corner-result.json` to retain a result, choosing a path that does
 not already exist. The CLI refuses overwrites. The full input, exact decimal
-bounds, input-byte hash, three implementation-file hashes and Git metadata are
+bounds, input-byte hash, four implementation-file hashes and Git metadata are
 included in the report. An unknown or incompatible analysis is a valid result
 and exits 0; invalid input or execution failure exits nonzero.
 
@@ -89,6 +90,10 @@ nonlinear image intensities into valid bounded observations.
 
 ## Interpret the result
 
+Both versions use the status names and radius `inner`/`outer` sets below. The
+remaining field details in this section describe version-1 radius boxes;
+version-2 joint parameter boxes and their projections are described next.
+
 | `status` | What is established under the supplied assumptions |
 | --- | --- |
 | `conditional_compatible` | At least one complete radius box is accepted; the inner set is nonempty |
@@ -113,6 +118,77 @@ ceiling. That endpoint is not an image-derived maximum. An empty inner set does
 not prove rejection, and rejection does not prove the corner is sharp: the blur,
 coordinate frame, level bounds or prior can be wrong. Compatibility does not
 determine a unique radius or validate a physical part.
+
+## Joint blur domains: version 2
+
+Use version 2 when independently justified blur bounds are available. Replace
+`blur_sigma` with two closed `blur_sigma_intervals`, add two positive numerical
+`blur_resolution` stopping widths, and set `version` to 2. Other fields retain
+their version-1 meanings. For example:
+
+```json
+{
+  "format": "pictures-to-cad-corner-feasibility",
+  "version": 2,
+  "coordinate_unit": "px",
+  "points": [["0", "0"]],
+  "blur_sigma_intervals": [["1", "2"], ["1", "2"]],
+  "level_intervals": [["0.24", "0.26"]],
+  "radius_domain": ["0", "0"],
+  "radius_resolution": "0.1",
+  "blur_resolution": ["0.1", "0.1"],
+  "max_boxes": 64,
+  "cells": 16
+}
+```
+
+This is a synthetic sharp-apex control: level `0.25` holds for every positive
+blur pair. It does not determine blur. Use the same file command as above;
+`--demo` remains the version-1 example. Version 2 requires
+`2 × cells × number_of_points × max_boxes <= 65,536`. The other numeric,
+string, file and per-field limits remain. Singleton blur intervals are allowed.
+
+The prior is the Cartesian product of radius, sigma-X and sigma-Y domains.
+Each parameter box is classified as a whole. **One common blur pair must
+satisfy every observation.** Fitting each point with a different pair cannot
+establish joint compatibility.
+
+Version-2 reports give `parameter_order: ["radius", "sigma_x", "sigma_y"]`,
+`parameter_domain`, and `parameter_boxes` with `accepted`, `unknown` and
+`excluded` arrays. Each box contains three closed decimal-string intervals in
+that order. `inner` and `outer` remain radius sets:
+
+```text
+inner = radius projection of accepted parameter boxes
+outer = radius projection of accepted plus unknown parameter boxes
+```
+
+Each radius in the inner set has at least one common blur pair satisfying all
+observations. Different radii may use different pairs. This does not mean all
+prior blurs work or that one pair works for the entire projected radius set.
+The outer set retains every possible joint witness, including unresolved boxes.
+
+There is deliberately no version-2 radius-level `excluded` field: a rejected
+parameter box can share a radius with an accepted box at another blur. Projecting
+rejected nuisance boxes as rejected radii would discard valid answers. The
+`coverage_complete` and `classification_complete` flags concern the full joint
+domain; `prior_ceiling_reached` concerns its radius projection. Unknown reasons
+include `parameter_resolution` when all three stopping widths have been reached.
+
+Blur dependence uses interval division and CDF bounds, not an assumption that
+level is monotone in sigma. To limit repeated-CDF dependency loss, each X-strip
+mass is also enclosed by strip width times a Gaussian-density interval over the
+whole strip and blur domain. Intersecting these two valid mass enclosures keeps
+the result valid. The density exponential uses padded correctly rounded Decimal
+values. More cells and parameter subdivision can help, but coarse domains,
+dependency, tails and work limits can still leave unknowns.
+
+Supplying blur intervals does not justify them or account for model discrepancy.
+The family still fixes axes, independence, spatially constant blur, exact point
+coordinates and a circular right corner. The [joint-domain validation](validation/corner-blur-domains.md)
+retains common-blur counterexamples, interval-dependency probes and known-truth
+controls. Observational error and physical model discrepancy remain distinct,
+as discussed by [Brynjarsdóttir and O'Hagan](https://www.tonyohagan.co.uk/academic/pdf/simmach.pdf).
 
 ## Why the bounds cover whole radius intervals
 
@@ -141,8 +217,11 @@ A box is excluded only if one full output enclosure is **strictly disjoint**
 from its supplied level interval. Boundary contact is retained. A box is
 accepted only if every full output enclosure lies within its level interval.
 Other boxes are bisected or retained unknown; all queued boxes remain unknown
-when the classification budget ends. This is a one-dimensional bounded-error
-set-inversion application inspired by
+when the classification budget ends. Version 1 is a one-dimensional
+bounded-error set-inversion application; version 2 applies the same rules to
+joint radius/blur boxes. Radius nesting holds for every blur pair, and the
+version-2 probability bounds enclose the entire supplied blur domain.
+Both use the approach described by
 [Jaulin and Walter](https://webperso.ensta.fr/jaulin/paper_automatica93.pdf).
 Their general theory does not qualify this physical corner model.
 
