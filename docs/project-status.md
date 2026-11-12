@@ -1,7 +1,8 @@
 # Project status and evidence
 
 Documentation snapshot: **November 12, 2026**. The current developer candidate
-adds [whole finite-shape source prediction and conditional radius/chord fitting](finite-shape-source.md).
+adds a private [real-trace source context and explicit fitting bridge](source-context.md),
+with [digital integration evidence](validation/source-context.md). It builds on [whole finite-shape source prediction and conditional radius/chord fitting](finite-shape-source.md).
 Its [evidence record](validation/finite-shape-source.md) keeps supplied pose,
 optics, numerical recovery and model mismatch distinct. It adds no production
 trace endpoint or automatic CAD correction. Published
@@ -14,9 +15,10 @@ inputs and API/file schemas remain unchanged. Start with [setup](development.md)
 the [task index](README.md), [developer tools](developer-tools.md) or
 [API examples](api-examples.md).
 
-This candidate targets published PR #73 at
-`fa853df69e6c279ab63404cf1c4b9d989bd13ed2`, tree
-`023c6af1ecb39c9286784e7a3ad5ddfaa34ba5fc`.
+This candidate targets published draft [PR #74](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/74) at
+`c9daa2af289929efc15c3719677b9b0ae6b2ccfd`, tree
+`7735c3488c40ad34fcd972c3d1101401b8da9dd2`. The source-context change remains
+a separate review candidate; this does not imply merge or deployment.
 PR #72 was merged into `codex/tapered-cap-geometry` at
 `c3bd7bfd43c92904959a970825f61544c7c5a206`, preserving PR #72's published tree
 `f99a1738ebf34268194bc75cb2c0a73a2b336054`.
@@ -65,7 +67,8 @@ analyses remain developer tools; production changes have their own records.
 | `861de04baa0e55775e7a90faba9288ea2205abf6` | Documentation review through PR #70, critical-arc checks and source-preserving command/API verification | [PR #71](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/71), merged into PR #70's branch |
 | `25ff63a2452d6d47ac382f2cf15bfb403d6a6203` | Circle-consistent joins, explicit per-boundary recovery and independent circle/arc controls | [PR #72](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/72), merged into PR #71's branch at `c3bd7bf`; source-bound [local evidence](validation/canonical-arcs.md) |
 | `fa853df69e6c279ab63404cf1c4b9d989bd13ed2` | Complete documentation audit, corrected engineering guidance and regenerated handbook HTML/PDF | [PR #73](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/73), open draft at the 18:07 UTC observation |
-| Current developer candidate | Complete finite-material Gaussian source model and bounded joint circular-segment fitting | Proposed on PR #73's branch; [source-bound evidence](validation/finite-shape-source.md), with production integration and physical qualification still separate |
+| `c9daa2af289929efc15c3719677b9b0ae6b2ccfd` | Complete finite-material Gaussian source model and bounded joint circular-segment fitting | Draft [PR #74](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/74); [source-bound evidence](validation/finite-shape-source.md) |
+| Current source-context candidate | Immutable real-trace prewarp capture, fixed observations and an explicit guarded fitting bridge | [Integration evidence](validation/source-context.md); no automatic refinement, persistent source session or physical qualification |
 
 The PR links show live review state. A documentation update does not install,
 merge or deploy those changes. Record the checkout used to start a service:
@@ -112,6 +115,7 @@ there is no product endpoint, automatic tracing correction or accuracy label.
 
 | Evidence | Recorded result | Interpretation |
 | --- | --- | --- |
+| Real-trace source-context candidate | [Digital integration record](validation/source-context.md): 1,759 Python tests pass with 333 frozen product files unchanged; six real-trace replays, explicit generated finite-shape fit, API parity and request/source guards | Private opt-in Python capture; no automatic refinement, persisted source session or physical qualification |
 | Finite-shape source developer candidate | [Complete controls and regression](validation/finite-shape-source.md): 1,714 Python tests passed; 28 forward rows/182 checks and 29 inverse rows/256 checks | Supplied pose/optics/noise, retained ambiguity and work-limited cases; no production integration or physical qualification |
 | Circle-consistent final-assembly candidate | [Construction and recovery](validation/canonical-arcs.md): 1,609 Python tests, 74 isolated browser scenarios, 132 independent rows/394 checks and all six actual-fit controls pass | Digital circle consistency and explicit source recovery; original 72/74 browser run retains two unattributed build-busy failures; no physical qualification |
 | Tapered rounded-end geometry candidate | [Source-bound repair and native exports](validation/tapered-caps.md): 1,556 Python tests, 74 browser scenarios, 20 new focused cases and all 11 native-export rows pass | Exact synthetic geometry, line-anchor invariance and retained arithmetic limits; no physical camera or manufacturing qualification |

@@ -3,6 +3,20 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Private source context and explicit fitting bridge — November 12, 2026
+
+- Capture the actual prewarp measurement field, source/working hashes, chosen
+  channel mix, homography/lens map and display inverse in immutable caller-owned
+  memory after a successful sheet trace. Bind it to the profile and request.
+- Form ordered source reads and fixed signed sampling/noise operators, and
+  explicitly invoke the finite-shape fitter under its supported model guards.
+  Verify source values before fitting and reject observations from another request.
+- Record executed reduction even when rounded dimensions remain unchanged. Keep
+  the HTTP/UI/project schemas and automatic geometry behavior unchanged.
+- Add a [developer guide](source-context.md) and
+  [integration evidence](validation/source-context.md); calibration, automatic
+  candidate review and physical qualification remain open.
+
 ## Finite-shape source prediction and conditional joint fitting — November 12, 2026
 
 - Integrate the complete projected finite material under a supplied Gaussian

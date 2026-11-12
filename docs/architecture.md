@@ -44,10 +44,20 @@ The application does not call a paid or external inference service. Its optional
 
 ## Developer numerical tools
 
+The opt-in [source context](source-context.md) now captures the exact prewarp
+working field through the actual decode/reference trace path. It binds original,
+upright and working identities, chosen channel weights, known warp, display
+inverse and the resulting profile. Its explicit Python fitting bridge uses fixed
+source observations and supplied optics/noise; unsupported lens, reduction and
+thickness cases are refused. Contexts remain private caller-owned memory. Normal
+HTTP tracing retains no context, source session or changed response fields.
+
+
 The developer [fixed-observation module](profile-observations.md) represents
 bounded Keys sampling/filter matrices and conditional shared-pixel covariance.
-Its study runners operate without the CAD service. They are not imported by the
-production trace/API or frontend; the production numerical pipeline retains its
+Its study runners operate without the CAD service and remain standalone. Within
+actual tracing, this module is imported only by the opt-in Python capture path,
+not by default HTTP tracing or the frontend. The production numerical results retain their
 existing behavior and recorded limits.
 The [warp extension](warp-observations.md) composes only required intermediate
 pixels through the fixed raw-coordinate map. Its ideal float64 matrix and the

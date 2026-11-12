@@ -1,0 +1,595 @@
+{
+  "format": "pictures-to-cad-source-context-replay",
+  "version": 1,
+  "source_before": {
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/app.py": "345c7dc8bbc7bfbe616eb2934d2a58cd0b4fa1216dbdaa5272ab3a36b06d96bc",
+    "backend/assistant.py": "45f05aa8d0738a1da0e3b5040a2c4df8a01a35e9a835e1c06fd47ee3e81758c5",
+    "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+    "backend/corner_blur_domains.py": "7882b8dcd4ff7b431cf0fd71acef1fb7d12e071e9461a91926e95cd993eaa7f0",
+    "backend/corner_feasibility.py": "2d121667373da359740369169b8f7a7e51249c20ee508c42f53772f78c9321d7",
+    "backend/corner_pixel_apertures.py": "d305d5c5e258d9eff24f392f9d20d2979a65ebdbf115e006c6a4279c8191f51a",
+    "backend/corner_signed_stencils.py": "7e4ff05408a8ba8fae2e487909fb8a265ce7d86a2ecf740a02d4b0df860f1455",
+    "backend/curve_envelope.py": "d37525b42c920a770b783e0c94ff97cf3d5214272d85dcdceae9d23eb184ca27",
+    "backend/decimal_bounds.py": "81e08ee9abc0aeb33b5304191cdcc8a4448700fe73e2e53b34e9f5001a8a3f7f",
+    "backend/drawing.py": "560f087e28d369a2e0f3b733197c18c5a7aa87c390fe56de7516caf9a08a5e6d",
+    "backend/edges.py": "a32f01b6dac61da171781ecfb62630f10aece36bfb8cb0a8e8008178431645da",
+    "backend/finite_shape.py": "07e0a2bb0d03b7e4f12f4a9b0675b3f7598d54587d746c07c502ea83623d29d8",
+    "backend/finite_shape_fit.py": "9d476751d3863ab71cea606fbb490edc0177a6ceee4bf656775e78ec14f6dd82",
+    "backend/fitting.py": "99b9232624eef3bc8106c5d82277f47817cd5d0c62eb6d6d27fd2ac34c958489",
+    "backend/gaussian_response_domains.py": "c15f46d5c986a494782c44363f1c2edfbe676c969df4a6bd7963105fcc7610ed",
+    "backend/heic.py": "5e34870379991f8813bacfc4badc8fe7fcf5dbe8aa053156fa352456b208de33",
+    "backend/models.py": "21e7467766f4a086f52b3756f6b1fa8e4ec96a7b76cf0b4d1131c5f45709e6e1",
+    "backend/normal_cdf_bounds.py": "d736eac5fa2c5fa625f86fc70a6b7b78ea534666ddfef49d6600c44a18f45f1d",
+    "backend/placement.py": "e1745597ca2930d1260659e9f2dc4405f2b7239beb0c12c45fa92b6d3f5c03df",
+    "backend/printing.py": "58d121ad45f0176b02094f3446dcd020c254ccd78860e5a269b8b6a8d6479915",
+    "backend/profile_observations.py": "7eee8b71fc9024cb5c8453ec67aab75f2c21c8c77e975c1fba41b1e3be9f873b",
+    "backend/raw_source_fit.py": "6a877bc15759076adf95dbbb521c04d110b20e8ed397637148c2e87b3ba8b6af",
+    "backend/reference.py": "08f83e7a568aecf2b718c51269ac31afc1a95634e25a42dabb84682f68245648",
+    "backend/response_calibration.py": "b8a1c4acf8b5d70db3c3de10c9c2e1972af3bbff7f82193bb1f2e9fdc9a56aa4",
+    "backend/response_rectangles.py": "674b151b9e8038922aaf234e4919ef96796e9eb326601ee8f720400cb8d2e5e6",
+    "backend/scad.py": "d5cf18312ba10b7e3830d059952c3d078edc1e21813eb2fb03a4fd1ebaf2d534",
+    "backend/sheet.py": "a086d7216256726a0e392bd98cbdb1274f5cb5eb096802c17c805349a7747e31",
+    "backend/slicer_handoff.py": "774e78fa93dacc348c204d89a0ec4192a01701fb3fa3304ee09960e816101a50",
+    "backend/slicers.py": "03442055d64c37d46e5806bafdd0bd497b54dacf78bc409addf1ff8400c25bb9",
+    "backend/source_context.py": "a377dd0b5710d513de0594292eee50c55b0c98667babd30b4e36658a3e1cabba",
+    "backend/three_mf.py": "435afd61c90bb21c305876f681f845a3bfb193a64fa96589e649fb40fd821cf1",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "backend/tracing.py": "7f78c7ce7f709ff1169fa3842eb50fbd0bfa72551cde9054b90843c8b352c222",
+    "backend/worker.py": "9c869ffae551485b473aeb54ddc9a0116e8c8df22f92f2c08e2f3e97f24ca846",
+    "studies/source-context-v1.json": "0c2b46e97239f8373a60f7b324b067991973fb33aa51d1abe23ec026e5351f35",
+    "studies/verification/source-context-v1.py": "4db6410c7c1981f3c0f283398747f101c3c80721373db31a51e503824ced0227",
+    "tests/synthetic.py": "a9ce2cb09c2299024264c869006f31acbde04fbada1ff53eac11ea597f392517"
+  },
+  "source_after": {
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/app.py": "345c7dc8bbc7bfbe616eb2934d2a58cd0b4fa1216dbdaa5272ab3a36b06d96bc",
+    "backend/assistant.py": "45f05aa8d0738a1da0e3b5040a2c4df8a01a35e9a835e1c06fd47ee3e81758c5",
+    "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+    "backend/corner_blur_domains.py": "7882b8dcd4ff7b431cf0fd71acef1fb7d12e071e9461a91926e95cd993eaa7f0",
+    "backend/corner_feasibility.py": "2d121667373da359740369169b8f7a7e51249c20ee508c42f53772f78c9321d7",
+    "backend/corner_pixel_apertures.py": "d305d5c5e258d9eff24f392f9d20d2979a65ebdbf115e006c6a4279c8191f51a",
+    "backend/corner_signed_stencils.py": "7e4ff05408a8ba8fae2e487909fb8a265ce7d86a2ecf740a02d4b0df860f1455",
+    "backend/curve_envelope.py": "d37525b42c920a770b783e0c94ff97cf3d5214272d85dcdceae9d23eb184ca27",
+    "backend/decimal_bounds.py": "81e08ee9abc0aeb33b5304191cdcc8a4448700fe73e2e53b34e9f5001a8a3f7f",
+    "backend/drawing.py": "560f087e28d369a2e0f3b733197c18c5a7aa87c390fe56de7516caf9a08a5e6d",
+    "backend/edges.py": "a32f01b6dac61da171781ecfb62630f10aece36bfb8cb0a8e8008178431645da",
+    "backend/finite_shape.py": "07e0a2bb0d03b7e4f12f4a9b0675b3f7598d54587d746c07c502ea83623d29d8",
+    "backend/finite_shape_fit.py": "9d476751d3863ab71cea606fbb490edc0177a6ceee4bf656775e78ec14f6dd82",
+    "backend/fitting.py": "99b9232624eef3bc8106c5d82277f47817cd5d0c62eb6d6d27fd2ac34c958489",
+    "backend/gaussian_response_domains.py": "c15f46d5c986a494782c44363f1c2edfbe676c969df4a6bd7963105fcc7610ed",
+    "backend/heic.py": "5e34870379991f8813bacfc4badc8fe7fcf5dbe8aa053156fa352456b208de33",
+    "backend/models.py": "21e7467766f4a086f52b3756f6b1fa8e4ec96a7b76cf0b4d1131c5f45709e6e1",
+    "backend/normal_cdf_bounds.py": "d736eac5fa2c5fa625f86fc70a6b7b78ea534666ddfef49d6600c44a18f45f1d",
+    "backend/placement.py": "e1745597ca2930d1260659e9f2dc4405f2b7239beb0c12c45fa92b6d3f5c03df",
+    "backend/printing.py": "58d121ad45f0176b02094f3446dcd020c254ccd78860e5a269b8b6a8d6479915",
+    "backend/profile_observations.py": "7eee8b71fc9024cb5c8453ec67aab75f2c21c8c77e975c1fba41b1e3be9f873b",
+    "backend/raw_source_fit.py": "6a877bc15759076adf95dbbb521c04d110b20e8ed397637148c2e87b3ba8b6af",
+    "backend/reference.py": "08f83e7a568aecf2b718c51269ac31afc1a95634e25a42dabb84682f68245648",
+    "backend/response_calibration.py": "b8a1c4acf8b5d70db3c3de10c9c2e1972af3bbff7f82193bb1f2e9fdc9a56aa4",
+    "backend/response_rectangles.py": "674b151b9e8038922aaf234e4919ef96796e9eb326601ee8f720400cb8d2e5e6",
+    "backend/scad.py": "d5cf18312ba10b7e3830d059952c3d078edc1e21813eb2fb03a4fd1ebaf2d534",
+    "backend/sheet.py": "a086d7216256726a0e392bd98cbdb1274f5cb5eb096802c17c805349a7747e31",
+    "backend/slicer_handoff.py": "774e78fa93dacc348c204d89a0ec4192a01701fb3fa3304ee09960e816101a50",
+    "backend/slicers.py": "03442055d64c37d46e5806bafdd0bd497b54dacf78bc409addf1ff8400c25bb9",
+    "backend/source_context.py": "a377dd0b5710d513de0594292eee50c55b0c98667babd30b4e36658a3e1cabba",
+    "backend/three_mf.py": "435afd61c90bb21c305876f681f845a3bfb193a64fa96589e649fb40fd821cf1",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "backend/tracing.py": "7f78c7ce7f709ff1169fa3842eb50fbd0bfa72551cde9054b90843c8b352c222",
+    "backend/worker.py": "9c869ffae551485b473aeb54ddc9a0116e8c8df22f92f2c08e2f3e97f24ca846",
+    "studies/source-context-v1.json": "0c2b46e97239f8373a60f7b324b067991973fb33aa51d1abe23ec026e5351f35",
+    "studies/verification/source-context-v1.py": "4db6410c7c1981f3c0f283398747f101c3c80721373db31a51e503824ced0227",
+    "tests/synthetic.py": "a9ce2cb09c2299024264c869006f31acbde04fbada1ff53eac11ea597f392517"
+  },
+  "source_unchanged": true,
+  "cases": [
+    {
+      "name": "pinhole",
+      "passed": true,
+      "exact_prewarp_field_match": true,
+      "float64_operator_vs_float32_pipeline_max_level_error": 5.122011430103157e-06,
+      "source_columns": 281,
+      "operator_rows": 4,
+      "input_sha256": "f85c1a5254cda4940abe6c775601332bf2d821671fab79ca65da36e384b209f5",
+      "working_field_sha256": "4ec7b0cc4f9e0bdfd583f7564cb6105c1e2301bc818016ec36a2735aad794e82",
+      "working_shape": [
+        900,
+        1200
+      ],
+      "channel_weights": [
+        0.2126,
+        0.7152,
+        0.0722
+      ],
+      "lens_k1": 0.0,
+      "reduced": false,
+      "model_refusal": null,
+      "runtime_seconds": 2.0180129089858383
+    },
+    {
+      "name": "radial",
+      "passed": true,
+      "exact_prewarp_field_match": true,
+      "float64_operator_vs_float32_pipeline_max_level_error": 9.849913311654745e-06,
+      "source_columns": 263,
+      "operator_rows": 4,
+      "input_sha256": "56aa177a6d41e4f07b5330246f2855b7f4ef8ae50bda177b65b64e1c07e9a088",
+      "working_field_sha256": "0e009a5568a99e9710b47f7a528327148313b05e2e3a054a322e6db500b6ec62",
+      "working_shape": [
+        900,
+        1200
+      ],
+      "channel_weights": [
+        0.2126,
+        0.7152,
+        0.0722
+      ],
+      "lens_k1": -0.03492171760643649,
+      "reduced": false,
+      "model_refusal": "point-Gaussian source model does not cover nonzero lens distortion",
+      "runtime_seconds": 1.8247510209912434
+    },
+    {
+      "name": "thick",
+      "passed": true,
+      "exact_prewarp_field_match": true,
+      "float64_operator_vs_float32_pipeline_max_level_error": 7.67664225520548e-06,
+      "source_columns": 253,
+      "operator_rows": 4,
+      "input_sha256": "9b3b07380e34baa077abbed275acd204e25828cae9266cae59a4a98f8c47709d",
+      "working_field_sha256": "b3eee4ad67e75d9410462193295556920cafe73c73ce4aedbfdf4a16188729bb",
+      "working_shape": [
+        900,
+        1200
+      ],
+      "channel_weights": [
+        0.2126,
+        0.7152,
+        0.0722
+      ],
+      "lens_k1": -0.03492171760643649,
+      "reduced": false,
+      "model_refusal": "point-Gaussian source model does not cover nonzero lens distortion; top-face/wall parallax correction",
+      "runtime_seconds": 4.732653663959354
+    },
+    {
+      "name": "reduced",
+      "passed": true,
+      "exact_prewarp_field_match": true,
+      "float64_operator_vs_float32_pipeline_max_level_error": 8.137672040220423e-06,
+      "source_columns": 176,
+      "operator_rows": 4,
+      "input_sha256": "f85c1a5254cda4940abe6c775601332bf2d821671fab79ca65da36e384b209f5",
+      "working_field_sha256": "b5329346f0ae76b26f6b96e4c227b4242e5bd4d868d4c83237ec1e51e21e5591",
+      "working_shape": [
+        600,
+        800
+      ],
+      "channel_weights": [
+        0.2126,
+        0.7152,
+        0.0722
+      ],
+      "lens_k1": 0.0,
+      "reduced": true,
+      "model_refusal": "point-Gaussian source model does not cover prior area reduction and re-encoding",
+      "runtime_seconds": 1.8285562789533287
+    },
+    {
+      "name": "colour",
+      "passed": true,
+      "exact_prewarp_field_match": true,
+      "float64_operator_vs_float32_pipeline_max_level_error": 2.8369846631903783e-06,
+      "source_columns": 440,
+      "operator_rows": 4,
+      "input_sha256": "51c2d56603c0dfae8c442ad70a421a5b73d134e7395f5d40ab1b1c843a092a76",
+      "working_field_sha256": "0c8f8997ee0375b161c3f21d65281b77d376788f781640aa3b0ffe4fba6ab224",
+      "working_shape": [
+        1508,
+        1160
+      ],
+      "channel_weights": [
+        0.5,
+        0.0,
+        0.5
+      ],
+      "lens_k1": 0.0,
+      "reduced": false,
+      "model_refusal": null,
+      "runtime_seconds": 0.8444339879788458
+    },
+    {
+      "name": "finite-circular-segment",
+      "passed": true,
+      "exact_prewarp_field_match": true,
+      "float64_operator_vs_float32_pipeline_max_level_error": 8.150802685236158e-06,
+      "source_columns": 424,
+      "operator_rows": 4,
+      "input_sha256": "1bc1608e283b04981ee7ff340dae8569e2e62da8e6cde9ee3d673df0007ebfb9",
+      "working_field_sha256": "1d92473f0761141ab402d9962f012212194f707a9b70c8ec19fceba9b69d31d9",
+      "working_shape": [
+        1508,
+        1160
+      ],
+      "channel_weights": [
+        0.2126,
+        0.7152,
+        0.0722
+      ],
+      "lens_k1": 0.0,
+      "reduced": false,
+      "model_refusal": null,
+      "conditional_fit": {
+        "passed": true,
+        "radius_error_mm": 0.0006700600720002114,
+        "fraction_error": 6.710458095965377e-05,
+        "heldout_max_level_error": 0.5478092160370664,
+        "fit": {
+          "best": {
+            "radius": 20.129329939928,
+            "chord_fraction": 0.26693289541904036,
+            "chord_offset": 5.373180323710159,
+            "levels": [
+              200.78735198186766,
+              6.048428093067053
+            ],
+            "cost": 9.117778402799464,
+            "cost_lower_guard": 9.117778348270384,
+            "cost_upper_guard": 9.117778457328544,
+            "design_rank": 2,
+            "maximum_projected_residual": 1.4015692979367884,
+            "forward_residual_error_estimate": 3.4089547791544035e-09,
+            "kind": "refined_basin"
+          },
+          "candidates": [
+            {
+              "radius": 20.129329939928,
+              "chord_fraction": 0.26693289541904036,
+              "chord_offset": 5.373180323710159,
+              "levels": [
+                200.78735198186766,
+                6.048428093067053
+              ],
+              "cost": 9.117778402799464,
+              "cost_lower_guard": 9.117778348270384,
+              "cost_upper_guard": 9.117778457328544,
+              "design_rank": 2,
+              "maximum_projected_residual": 1.4015692979367884,
+              "forward_residual_error_estimate": 3.4089547791544035e-09,
+              "kind": "refined_basin"
+            },
+            {
+              "radius": 20.15,
+              "chord_fraction": 0.265,
+              "chord_offset": 5.3397499999999996,
+              "levels": [
+                200.20341265508935,
+                5.486977723614301
+              ],
+              "cost": 405.4942433076537,
+              "cost_lower_guard": 405.49424313756776,
+              "cost_upper_guard": 405.4942434777397,
+              "design_rank": 2,
+              "maximum_projected_residual": 6.305384916457655,
+              "forward_residual_error_estimate": 3.3804644309627975e-09,
+              "kind": "grid_basin"
+            },
+            {
+              "radius": 19.8,
+              "chord_fraction": 0.265,
+              "chord_offset": 5.247000000000001,
+              "levels": [
+                177.896148416099,
+                0.0
+              ],
+              "cost": 14462.551956821444,
+              "cost_lower_guard": 14462.551955923074,
+              "cost_upper_guard": 14462.551957719812,
+              "design_rank": 2,
+              "maximum_projected_residual": 43.13544903397536,
+              "forward_residual_error_estimate": 3.5939866738066035e-09,
+              "kind": "domain_face"
+            },
+            {
+              "radius": 20.5,
+              "chord_fraction": 0.265,
+              "chord_offset": 5.4325,
+              "levels": [
+                217.78989178408978,
+                26.579434994263963
+              ],
+              "cost": 19989.826745965158,
+              "cost_lower_guard": 19989.826744852126,
+              "cost_upper_guard": 19989.826747078187,
+              "design_rank": 2,
+              "maximum_projected_residual": 51.878658973311985,
+              "forward_residual_error_estimate": 3.81614020916699e-09,
+              "kind": "domain_face"
+            },
+            {
+              "radius": 20.15,
+              "chord_fraction": 0.31,
+              "chord_offset": 6.246499999999999,
+              "levels": [
+                218.30590355281848,
+                52.17843741924075
+              ],
+              "cost": 84169.42341433332,
+              "cost_lower_guard": 84169.42341248902,
+              "cost_upper_guard": 84169.42341617761,
+              "design_rank": 2,
+              "maximum_projected_residual": 81.72524272927869,
+              "forward_residual_error_estimate": 3.12000116032659e-09,
+              "kind": "domain_face"
+            },
+            {
+              "radius": 20.5,
+              "chord_fraction": 0.31,
+              "chord_offset": 6.3549999999999995,
+              "levels": [
+                255.0,
+                62.18946514148281
+              ],
+              "cost": 87515.62184014225,
+              "cost_lower_guard": 87515.6218380035,
+              "cost_upper_guard": 87515.62184228102,
+              "design_rank": 2,
+              "maximum_projected_residual": 81.64848641299297,
+              "forward_residual_error_estimate": 3.5574719006288946e-09,
+              "kind": "domain_face"
+            },
+            {
+              "radius": 20.15,
+              "chord_fraction": 0.22,
+              "chord_offset": 4.433,
+              "levels": [
+                150.40625610102134,
+                0.0
+              ],
+              "cost": 99561.74426268117,
+              "cost_lower_guard": 99561.74426031625,
+              "cost_upper_guard": 99561.74426504606,
+              "design_rank": 2,
+              "maximum_projected_residual": 93.85297589455352,
+              "forward_residual_error_estimate": 3.693672358413951e-09,
+              "kind": "domain_face"
+            },
+            {
+              "radius": 19.8,
+              "chord_fraction": 0.31,
+              "chord_offset": 6.138,
+              "levels": [
+                186.79719596895683,
+                47.37224327522298
+              ],
+              "cost": 99586.6347090473,
+              "cost_lower_guard": 99586.63470699856,
+              "cost_upper_guard": 99586.63471109602,
+              "design_rank": 2,
+              "maximum_projected_residual": 80.70911973562245,
+              "forward_residual_error_estimate": 3.19224148489855e-09,
+              "kind": "domain_face"
+            },
+            {
+              "radius": 19.8,
+              "chord_fraction": 0.22,
+              "chord_offset": 4.356,
+              "levels": [
+                139.23978614993365,
+                0.0
+              ],
+              "cost": 101556.72184640418,
+              "cost_lower_guard": 101556.72184417638,
+              "cost_upper_guard": 101556.72184863196,
+              "design_rank": 2,
+              "maximum_projected_residual": 95.51532690143385,
+              "forward_residual_error_estimate": 3.442115026405612e-09,
+              "kind": "domain_face"
+            },
+            {
+              "radius": 20.5,
+              "chord_fraction": 0.22,
+              "chord_offset": 4.51,
+              "levels": [
+                153.01453188780783,
+                29.49578332057564
+              ],
+              "cost": 126315.68956775988,
+              "cost_lower_guard": 126315.68956545329,
+              "cost_upper_guard": 126315.68957006652,
+              "design_rank": 2,
+              "maximum_projected_residual": 95.35156574549514,
+              "forward_residual_error_estimate": 3.1972826208226618e-09,
+              "kind": "domain_face"
+            }
+          ],
+          "grid": [
+            {
+              "radius": 19.8,
+              "chord_fraction": 0.22,
+              "chord_offset": 4.356,
+              "levels": [
+                139.23978614993365,
+                0.0
+              ],
+              "cost": 101556.72184640418,
+              "cost_lower_guard": 101556.72184417638,
+              "cost_upper_guard": 101556.72184863196,
+              "design_rank": 2,
+              "maximum_projected_residual": 95.51532690143385,
+              "forward_residual_error_estimate": 3.442115026405612e-09,
+              "kind": "grid"
+            },
+            {
+              "radius": 19.8,
+              "chord_fraction": 0.265,
+              "chord_offset": 5.247000000000001,
+              "levels": [
+                177.896148416099,
+                0.0
+              ],
+              "cost": 14462.551956821444,
+              "cost_lower_guard": 14462.551955923074,
+              "cost_upper_guard": 14462.551957719812,
+              "design_rank": 2,
+              "maximum_projected_residual": 43.13544903397536,
+              "forward_residual_error_estimate": 3.5939866738066035e-09,
+              "kind": "grid"
+            },
+            {
+              "radius": 19.8,
+              "chord_fraction": 0.31,
+              "chord_offset": 6.138,
+              "levels": [
+                186.79719596895683,
+                47.37224327522298
+              ],
+              "cost": 99586.6347090473,
+              "cost_lower_guard": 99586.63470699856,
+              "cost_upper_guard": 99586.63471109602,
+              "design_rank": 2,
+              "maximum_projected_residual": 80.70911973562245,
+              "forward_residual_error_estimate": 3.19224148489855e-09,
+              "kind": "grid"
+            },
+            {
+              "radius": 20.15,
+              "chord_fraction": 0.22,
+              "chord_offset": 4.433,
+              "levels": [
+                150.40625610102134,
+                0.0
+              ],
+              "cost": 99561.74426268117,
+              "cost_lower_guard": 99561.74426031625,
+              "cost_upper_guard": 99561.74426504606,
+              "design_rank": 2,
+              "maximum_projected_residual": 93.85297589455352,
+              "forward_residual_error_estimate": 3.693672358413951e-09,
+              "kind": "grid"
+            },
+            {
+              "radius": 20.15,
+              "chord_fraction": 0.265,
+              "chord_offset": 5.3397499999999996,
+              "levels": [
+                200.20341265508935,
+                5.486977723614301
+              ],
+              "cost": 405.4942433076537,
+              "cost_lower_guard": 405.49424313756776,
+              "cost_upper_guard": 405.4942434777397,
+              "design_rank": 2,
+              "maximum_projected_residual": 6.305384916457655,
+              "forward_residual_error_estimate": 3.3804644309627975e-09,
+              "kind": "grid"
+            },
+            {
+              "radius": 20.15,
+              "chord_fraction": 0.31,
+              "chord_offset": 6.246499999999999,
+              "levels": [
+                218.30590355281848,
+                52.17843741924075
+              ],
+              "cost": 84169.42341433332,
+              "cost_lower_guard": 84169.42341248902,
+              "cost_upper_guard": 84169.42341617761,
+              "design_rank": 2,
+              "maximum_projected_residual": 81.72524272927869,
+              "forward_residual_error_estimate": 3.12000116032659e-09,
+              "kind": "grid"
+            },
+            {
+              "radius": 20.5,
+              "chord_fraction": 0.22,
+              "chord_offset": 4.51,
+              "levels": [
+                153.01453188780783,
+                29.49578332057564
+              ],
+              "cost": 126315.68956775988,
+              "cost_lower_guard": 126315.68956545329,
+              "cost_upper_guard": 126315.68957006652,
+              "design_rank": 2,
+              "maximum_projected_residual": 95.35156574549514,
+              "forward_residual_error_estimate": 3.1972826208226618e-09,
+              "kind": "grid"
+            },
+            {
+              "radius": 20.5,
+              "chord_fraction": 0.265,
+              "chord_offset": 5.4325,
+              "levels": [
+                217.78989178408978,
+                26.579434994263963
+              ],
+              "cost": 19989.826745965158,
+              "cost_lower_guard": 19989.826744852126,
+              "cost_upper_guard": 19989.826747078187,
+              "design_rank": 2,
+              "maximum_projected_residual": 51.878658973311985,
+              "forward_residual_error_estimate": 3.81614020916699e-09,
+              "kind": "grid"
+            },
+            {
+              "radius": 20.5,
+              "chord_fraction": 0.31,
+              "chord_offset": 6.3549999999999995,
+              "levels": [
+                255.0,
+                62.18946514148281
+              ],
+              "cost": 87515.62184014225,
+              "cost_lower_guard": 87515.6218380035,
+              "cost_upper_guard": 87515.62184228102,
+              "design_rank": 2,
+              "maximum_projected_residual": 81.64848641299297,
+              "forward_residual_error_estimate": 3.5574719006288946e-09,
+              "kind": "grid"
+            }
+          ],
+          "grid_statuses": [
+            "resolved",
+            "resolved",
+            "resolved",
+            "resolved",
+            "resolved",
+            "resolved",
+            "resolved",
+            "resolved",
+            "resolved"
+          ],
+          "grid_shape": [
+            3,
+            3
+          ],
+          "evaluations": 28,
+          "forward_evaluations": 2093496,
+          "forward_panels": 127128,
+          "projection_rank": 36,
+          "raw_pixel_count": 36,
+          "flat": false,
+          "tied": false,
+          "endpoint": false,
+          "rank_deficient": false,
+          "geometry_rank": 2,
+          "geometry_condition": 2.8075958988649083,
+          "unrefined_basins": 0,
+          "work_exhausted": false,
+          "numerically_unsupported": false,
+          "raw_residual_l2": 3.0195659295334982,
+          "retained_residual_l2": 3.0195659295334982,
+          "omitted_source_residual_l2": 0.0,
+          "global_search_certified": false,
+          "pose_fitted": false,
+          "psf_fitted": false,
+          "refinement_limited": false
+        },
+        "caveat": "area rasterization, finite-support digital blur, quantization and estimated pose differ from a point-detector forward model; not physical qualification"
+      },
+      "runtime_seconds": 6.931010631029494
+    }
+  ],
+  "passed": true
+}

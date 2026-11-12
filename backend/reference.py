@@ -202,7 +202,8 @@ def _refine_walls(g, rings, camera, thickness_mm, sigma, ppm):
     return refined, notes
 
 
-def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, focal_35mm, snap, notices):
+def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, focal_35mm, snap, notices,
+                   _source_capture=None, _decode_info=None):
     size_mm = sheet_size(reference, sheet_mm)
     gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
     size = (gray.shape[1], gray.shape[0])
@@ -232,9 +233,12 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
         )
         weights = edges.measurement_weights(rectified, mask, ppm)
         # The measurement image: exact resampling of the linear-light mix.
-        g = cv2.GaussianBlur(
-            sheet.rectify_gray(tone.linear_mix(rgb, weights), matrix, k1, plane, ppm), (0, 0), 0.7
-        )
+        source_light = tone.linear_mix(rgb, weights)
+        # Capture the exact field before either resampling or smoothing. Opt-in only;
+        # the HTTP trace does not retain a source image or publish this context.
+        source_bytes = source_light.astype("<f4", copy=False).tobytes() if _source_capture is not None else None
+        g = cv2.GaussianBlur(sheet.rectify_gray(source_light, matrix, k1, plane, ppm), (0, 0), 0.7)
+        del source_light
         rings, sigma, tiny = edges.subpixel_rings(mask, g, ppm)
     except edges.EdgeError as exc:
         raise ReferenceError_(str(exc), sheet_missing=True) from exc
@@ -488,7 +492,7 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
         warnings_out.append(
             "Enter the part's thickness and re-trace (Build does this automatically) to correct for its visible side walls."
         )
-    return {
+    result = {
         "image": {
             "width": image.width,
             "height": image.height,
@@ -499,3 +503,11 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
         "threshold": 128,
         "warnings": warnings_out,
     }
+    if _source_capture is not None:
+        from .source_context import TraceSourceContext
+
+        _source_capture(TraceSourceContext._from_trace(
+            source_bytes, rgb, weights, matrix, k1, plane, ppm, transform,
+            result, _decode_info, thickness_mm,
+        ))
+    return result

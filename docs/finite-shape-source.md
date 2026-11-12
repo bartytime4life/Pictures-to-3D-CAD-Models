@@ -294,7 +294,8 @@ still does not qualify a photographed part or printer fit.
 
 Production reference tracing currently has access to working RGB and its
 linear-light channel mixture before rectification and added smoothing. That
-array is a potential authoritative source for a future fixed-source objective.
+array is captured by the opt-in [source-context API](source-context.md), which
+binds the actual trace to fixed observations and an explicit conditional fit.
 Here “raw” means this available prewarp working array, **not camera RAW or
 recovered scene radiance**. Image decoding, orientation, resizing, tone handling
 and quantization are already part of its history.
@@ -302,13 +303,14 @@ and quantization are already part of its history.
 Saved `Profile.reference` records sheet/scale, a lens coefficient, scalar blur
 and notes. It does not retain the source array, homography, channel weights,
 sampling support, PSF or noise factor. A saved profile therefore cannot recreate
-this fit from its blur summary. A future integration needs an immutable local
-capture context binding those inputs, coordinate frames and processing stages
-to the source and candidate revisions. Candidate geometry and residual evidence
+this fit from its blur summary. The private in-memory context now binds those
+working pixels, coordinate frames, processing stages and profile/request identity;
+it does not supply a calibrated PSF or noise factor. Candidate geometry and residual evidence
 should remain separate from the accepted profile until explicitly reviewed;
 unsupported candidates must retain the current boundary and an actionable
-explanation. No such capture-context persistence or review flow is implemented
-by these modules.
+explanation. Persistent source sessions, automatic refinement and a candidate
+review/acceptance flow remain open. The opt-in capture does not change the HTTP
+response, saved profile or accepted CAD geometry.
 
 The remaining model assumptions are substantive:
 

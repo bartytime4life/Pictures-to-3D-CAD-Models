@@ -153,6 +153,8 @@ def trace_image(
     thickness_mm: float | None = None,
     snap: bool = True,
     fallback: bool = False,
+    *,
+    _source_capture=None,
 ) -> dict:
     """Trace one part. With a reference sheet, see backend.reference.trace_on_sheet.
 
@@ -164,7 +166,8 @@ def trace_image(
     notices = []
     focal_35mm = None
     try:
-        if heic.is_heic(data):
+        is_heic = heic.is_heic(data)
+        if is_heic:
             try:
                 image, focal_35mm = heic.decode(data, MAX_PIXELS, MIN_SIDE)
             except heic.HeicError as exc:
@@ -174,9 +177,21 @@ def trace_image(
                 raise ValueError("The HEIC image could not be decoded.") from exc
         else:
             image, focal_35mm = decode_with_pillow(data, notices)
+        decode_info = None
+        if _source_capture is not None and reference != "none":
+            from .source_context import _decode_record
+
+            decode_info = _decode_record(data, image, "heic" if is_heic else "pillow")
+            decode_info["trace_options"] = {
+                "threshold": threshold, "inverted": inverted, "detail": detail,
+                "reference": reference, "sheet_mm": sheet_mm, "thickness_mm": thickness_mm,
+                "snap": snap, "fallback": fallback, "focal_35mm": focal_35mm,
+            }
         if reference == "none":
             image.thumbnail((MAX_SIDE, MAX_SIDE), Image.Resampling.LANCZOS)
         elif image.width * image.height > WORKING_PIXELS:
+            if decode_info is not None:
+                decode_info["reduction_applied"] = True
             megapixels = image.width * image.height / 1e6
             scale = math.sqrt(WORKING_PIXELS / (image.width * image.height))
             image = Image.fromarray(tone.reduce_in_linear_light(np.asarray(image), scale))
@@ -214,6 +229,8 @@ def trace_image(
                     focal_35mm=focal_35mm,
                     snap=snap,
                     notices=notices,
+                    **({"_source_capture": _source_capture, "_decode_info": decode_info}
+                       if _source_capture is not None else {}),
                 )
             except ReferenceError_:
                 raise

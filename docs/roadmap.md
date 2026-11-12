@@ -47,9 +47,11 @@ The [finite-shape developer model](finite-shape-source.md) now couples all
 boundaries before Gaussian source blur, and its circular-segment fitter jointly
 searches radius and chord fraction under supplied pose/PSF/noise. The
 [independent controls](validation/finite-shape-source.md) retain optical mismatch,
-nonidentification and incomplete searches. Next steps include immutable prewarp
-capture context, calibrated or explicitly bounded source optics/response and
-observation operators, then reviewed integration with the current geometry
+nonidentification and incomplete searches. An opt-in immutable prewarp
+[source context](source-context.md) and explicit conditional fitting bridge now
+connect the actual trace path to fixed observations. Next steps include calibrated
+or explicitly bounded source optics/response and observation operators, then
+automatic candidate generation and reviewed integration with the current geometry
 revision. The point-detector prototype does not identify those missing inputs
 from a saved trace or qualify physical recovery.
 
