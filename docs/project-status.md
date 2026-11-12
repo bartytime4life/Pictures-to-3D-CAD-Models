@@ -5,6 +5,10 @@ source at `a3a2397cde2b1afbeda133ac86218eaae5a22edc` and the documentation
 follow-up based on it. Start with [setup](development.md), the [task index](README.md)
 or the [API examples](api-examples.md).
 
+The next [conditional radius-analysis candidate](validation/corner-feasibility.md)
+is based on documentation head `77b7f6f`. It adds a developer tool; the source
+and review table below retains the earlier integrated baseline and open reviews.
+
 ## Source and review state
 
 At the repository check on November 12, `main` was
@@ -44,14 +48,16 @@ cannot identify which implementation a server is running.
 
 See [engineering equations and decisions](engineering-model.md),
 [method assumptions](reference-sheet.md), [export contents](exports.md) and the
-[roadmap](roadmap.md) for details. Conditional feasible-radius inference remains
-proposed research; there is no such product endpoint, CLI or accuracy label in
-this reviewed source.
+[roadmap](roadmap.md) for details. A [fixed-corner developer CLI](corner-feasibility.md)
+now implements conditional radius sets from supplied bounds. General inference
+with uncertain geometry, pose, blur and model discrepancy remains research;
+there is no product endpoint, automatic tracing correction or accuracy label.
 
 ## Evidence by scope
 
 | Evidence | Recorded result | Interpretation |
 | --- | --- | --- |
+| Conditional corner-analysis candidate | [Numerical/CLI record](validation/corner-feasibility.md): 760 Python tests passed | New developer-only analysis; no fresh browser/build or physical qualification |
 | Latest complete local workbench run | [Corner-resolution record](validation/sharp-corner-resolution.md): 630 Python tests and 74 browser scenarios; build and lint passed | Reviewed implementation behavior on the recorded inputs; not a new run by this documentation change |
 | Earlier radial candidate | [Radial record](validation/radial-inverse.md): 623 Python tests and 74 browser scenarios after integration with `5c07d0f` | Separate source binding; higher-order lens mismatch remains visible |
 | Model-mismatch research | [Directional study](validation/directional-spread-qualification.md) and [corner counterexample](validation/sharp-corner-resolution.md) retain misses, unknowns and negative outcomes | No production anisotropic correction or physical radius enclosure |
@@ -65,6 +71,14 @@ for `ba94ef8` was cancelled;
 for `a3a2397` was in progress. Neither was a successful hosted validation at that
 observation. Follow those exact run links for later results; local passes remain
 separate. The documentation branch has its own checks when published.
+
+Follow-up at **08:17 UTC on November 12**: run 111 completed successfully.
+For documentation head `77b7f6f`,
+[library run 39](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43179485496)
+completed successfully and
+[workbench run 112](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43179485257)
+was still in progress. These are separate from the conditional-analysis
+candidate's new local Python checks.
 
 ## Next engineering work
 

@@ -1,5 +1,14 @@
 # Research and design decisions
 
+The [conditional corner-radius developer tool](corner-feasibility.md) adds a
+bounded-error investigation alongside the production methods below. Rectangular
+Gaussian probability covers and monotone radius boxes give inner/outer sets
+under fixed geometry, blur and supplied level bounds. Its
+[development record](validation/corner-feasibility.md) retains unknown cases,
+wrong-model rejection and numerical-refinement results. This is a restricted
+set-inversion application, not automatic physical uncertainty or a new tracer
+correction.
+
 [Documentation index](README.md) · [Guided workbench review](validation/guided-workbench.md)
 
 This product starts with a deliberately constrained geometry problem: a photograph can provide a planar boundary, and a user can supply measured scale and thickness. The resulting extrusion is useful for flat parts without pretending that a single image identifies hidden surfaces.

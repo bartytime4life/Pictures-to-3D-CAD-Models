@@ -18,6 +18,11 @@ documents numerical safeguards and higher-order lens counterexamples. The
 [directional-blur research](docs/validation/directional-spread-qualification.md)
 also records missed cases; it does not supply a product accuracy status.
 
+A separate [conditional corner-radius tool](docs/corner-feasibility.md) explores
+which radii can explain explicitly bounded observations under a fixed Gaussian
+model. It preserves unresolved regions and can reject an incompatible model;
+it does not alter the workbench's trace or qualify a physical radius.
+
 This repository contains two related tools:
 
 | Component | Use it for | Entry point |

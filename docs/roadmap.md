@@ -43,6 +43,12 @@ Reference entry also includes an [endpoint-placement sensitivity explorer](refer
 
 ## Release discipline
 
+A [conditional corner-radius developer CLI](corner-feasibility.md) now explores
+one fixed right-angle/independent-Gaussian model with explicit bounded
+observations. It supplies no automatic image-error budget or production
+correction. Broader nuisance/discrepancy enclosures, non-right corners and
+reserved real-capture validation remain part of forward-model adequacy work.
+
 Before expanding the scope, keep the current workflow dependable: verify supported imports, hole topology, dimensional conversion, exports, outdated-result handling, failure recovery, keyboard access, and responsive behavior. Update the user guide when behavior changes, and record failures as well as passes.
 
 Initial circle/piece fits now have a source-support check. Benchmark correspondence and complete coverage accounting are now implemented.

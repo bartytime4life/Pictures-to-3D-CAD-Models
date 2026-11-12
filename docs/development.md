@@ -91,6 +91,7 @@ Run `make` for help. Component targets delegate to the existing scripts and libr
 | `make smoke` | Check an already running workbench through its real trace/build/export API |
 | `make photo-benchmark PHOTOS=folder` | Trace a folder of your own reference-sheet photos and compare them with your caliper measurements ([guide](photo-benchmark.md)) |
 | `make corner-sweep` | Fit synthetic blurred filleted corners and report radius error; it does not measure a real camera or part |
+| `.venv/bin/python scripts/corner_feasibility.py --demo` | Run a bounded synthetic radius-set analysis; [input contract and limits](corner-feasibility.md) |
 | `make freecad` | Check fitted synthetic STEP/DXF imports using a separately installed `FREECADCMD` |
 | `make slicers` | Inspect executable discovery without starting a slicer |
 | `make setup-app` / `make setup-library` | Prepare one component |

@@ -11,6 +11,13 @@ records its own checks without rerunning or relabeling the historical suites.
 
 ## Current workbench evidence — November 12, 2026
 
+The separate [conditional corner-radius developer tool](validation/corner-feasibility.md),
+based on documentation head `77b7f6f`, passed **760 Python tests**, including
+130 new numerical, radius-set and CLI checks. It adds no API/UI or production
+geometry change. Synthetic observations demonstrate compatible, incompatible
+and unresolved outcomes under explicit fixed assumptions; physical accuracy
+remains unqualified. Its browser/build evidence is separate from the runs below.
+
 The [corner-resolution candidate](validation/sharp-corner-resolution.md) at
 `a3a2397`, based on `ba94ef8`, passed **630 Python tests**, including seven new search/fallback
 regressions, and **74 browser scenarios**. It checks that numerical bisection
