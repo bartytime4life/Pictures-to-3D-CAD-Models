@@ -236,3 +236,23 @@ field even with known wall width. Joint brightness fitting can expose alternativ
 but cannot manufacture missing information. Independent wall/feature evidence
 and a physically consistent capture remain necessary; no new accuracy decision
 or automatic correction follows from the developer experiment.
+
+## Interpret developer fit diagnostics
+
+The [fixed-observation](profile-observations.md), [known-warp](warp-observations.md)
+and [raw-source fitting](raw-source-fit.md) tools make supplied digital and
+optical models explicit. They run separately from the upload/build path.
+Raw-source fitting compares both model and available prewarp samples in the same
+retained source projection; a small cost can hide mismatch in omitted modes.
+Its raw/complement residuals are divided by supplied input standard deviations,
+so their units differ from intensity residuals. Those deviations must be justified
+before giving the diagnostics a physical statistical interpretation.
+
+A rank-two brightness design only distinguishes its two coefficients at a fixed
+candidate offset. It does not prove that the offset, wall label or camera model
+is identifiable. Review flat/tied/endpoint/work flags, competing candidates and
+omitted-source residuals together. The finite search provides no global certificate
+or confidence interval. Physical/statistical interpretation of these diagnostics
+still needs independently justified camera response, optics and noise, followed
+by reserved measured captures. Decoding saved values as sRGB supplies no camera
+calibration.

@@ -1,20 +1,23 @@
 # Project status and evidence
 
-Candidate snapshot: **November 12, 2026**. This raw-source fitting branch is based
-on `ad7cc00fed4b2e7006aae957758a12b2f9f15528`, the published head of
-[draft PR #63](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/63).
-It adds a [source-space edge fitter](raw-source-fit.md) with bounded brightness,
-finite-search ambiguity and omitted-source residual diagnostics. The
-[complete record](validation/raw-source-fit.md) preserves source rounding,
-nonlinear/optical mismatch, global aliases and conditional noise controls.
-Production tracing code still comes from PR #59; later numerical tools remain
-developer-only. Start with [setup](development.md), the [task index](README.md),
-[developer tools](developer-tools.md) or [API examples](api-examples.md).
+Documentation snapshot: **November 12, 2026**. This documentation-only branch
+reviews published [draft PR #64](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/64)
+at `701aa91af7a0b1c62e5527eed35e0227bdf0e9f3`. That baseline includes the
+[source-space edge fitter](raw-source-fit.md), with bounded brightness,
+finite-search ambiguity and standardized omitted-source residual diagnostics.
+The [complete scientific record](validation/raw-source-fit.md) retains source
+rounding, nonlinear/optical mismatch, global aliases and conditional noise controls.
+The [current documentation review](validation/documentation-latest.md) records
+this pass separately. Production tracing code still comes from PR #59; later
+numerical tools remain developer-only. Start with [setup](development.md), the
+[task index](README.md), [developer tools](developer-tools.md) or
+[API examples](api-examples.md).
 
 ## Source and review state
 
 At this check, `main` was `5c07d0f70d7df0200bc24227c8ac7e9b630f7f09`.
-PRs #47–#63 were open and unmerged. This candidate branch includes their
+PRs #47–#64 were open and unmerged at the November 12, 13:41 UTC readback.
+This documentation branch includes their
 changes; that checkout of `main` does not contain them. The conditional corner
 analysis remains separate from production tracing; the grid and crossing repairs
 affect the existing production edge-profile search.
@@ -39,6 +42,7 @@ affect the existing production edge-profile search.
 | `8523862145ef264d265d84b9443b779ea09db072` | Known raw-photo warp, smoothing and profile composition; digital rounding and independent optical-source controls | [PR #61](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/61), open draft; base PR #60's branch |
 | `ca321442bd276c177c31f00bcd62fb0ea27b2e0e` | Hosted workbench job budget from 30 to 45 minutes; source, test set and individual limits retained | [PR #62](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/62), open draft; base PR #61's branch |
 | `ad7cc00fed4b2e7006aae957758a12b2f9f15528` | Complete documentation alignment, current source/CI snapshot, engineering wording and source-preserving verification | [PR #63](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/63), open draft; base PR #62's branch |
+| `701aa91af7a0b1c62e5527eed35e0227bdf0e9f3` | Raw-source edge fitting in fixed retained modes, bounded brightness, numerical ambiguity and standardized raw/complement diagnostics | [PR #64](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/64), open draft; base PR #63's branch |
 
 The PR links show live review state. A documentation update does not install,
 merge or deploy those changes. Record the checkout used to start a service:
@@ -103,11 +107,13 @@ there is no product endpoint, automatic tracing correction or accuracy label.
 | Earlier documentation follow-up | [PR #49 coverage and checks](validation/documentation-current-state.md) | Documentation parsing, links, commands and API example at its recorded source |
 | PR #52 documentation consolidation | [Coverage and checks](validation/documentation-math-state.md) | Navigation, review chain, source/receipt consistency and complete Markdown checks at its recorded source; no new product regression or physical result |
 | Documentation update through PR #57 | [Complete coverage and checks](validation/documentation-complete-2026-11-12.md) | Current guides, numerical-tool contracts and repository-wide Markdown checks; no new product or physical qualification |
-| Documentation alignment through PR #62 | [Current coverage and checks](validation/documentation-alignment.md) | Source/review state, current commands and repository-wide documentation checks; prior product results retain their source bindings |
+| Documentation alignment through PR #62 | [Coverage and checks](validation/documentation-alignment.md) | Source/review state, current commands and repository-wide documentation checks; prior product results retain their source bindings |
+| Documentation review through PR #64 | [Current complete inventory and checks](validation/documentation-latest.md) | Current source/navigation, API/diagnostic wording and documentation checks; no fresh full software or physical qualification |
 
 Hosted results are bound to exact heads. Earlier rows retain their last recorded
-results. The PR #61–#63 workbench rows were checked during this source review on
-**November 12, 13:27 UTC**; each result remains bound to its own head:
+results. The PR #61–#63 workbench rows retain the **November 12, 13:27 UTC**
+observation. PR #64 was checked on **November 12, 13:42 UTC**; each result
+remains bound to its own head:
 
 | Head | Hosted workflow | Result at this observation |
 | --- | --- | --- |
@@ -133,6 +139,8 @@ results. The PR #61–#63 workbench rows were checked during this source review 
 | `8523862` | [Library run 45](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43220874912) | Completed successfully |
 | `ca32144` | [Workbench run 125](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43221471259) | Completed successfully at 13:16 UTC; 1,249 Python tests and all 74 browser scenarios passed |
 | `ad7cc00` | [Workbench run 126](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43223199839) | Completed successfully at 13:21 UTC |
+| `701aa91` | [Workbench run 127](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43227832662) | In progress at 13:42 UTC; no terminal result inferred |
+| `701aa91` | [Library run 46](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43227832670) | Completed successfully at 13:31 UTC |
 
 Follow the exact run links for later results. The candidate's local 1,273-test result is
 separate from hosted CI. Earlier observations remain in their dated validation

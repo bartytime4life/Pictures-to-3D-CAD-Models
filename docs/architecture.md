@@ -1,19 +1,5 @@
 # Architecture and API
 
-The developer [fixed-observation module](profile-observations.md) represents
-bounded Keys sampling/filter matrices and conditional shared-pixel covariance.
-Its study runners operate without the CAD service. They are not imported by the
-production trace/API or frontend; the production numerical pipeline retains its
-existing behavior and recorded limits.
-The [warp extension](warp-observations.md) composes only required intermediate
-pixels through the fixed raw-coordinate map. Its ideal float64 matrix and the
-actual pipeline's float32 storage/filtering remain separate evidence lanes.
-The [raw-source fitting primitive](raw-source-fit.md) additionally profiles bounded
-brightness levels over a finite edge-offset search in retained source modes.
-Its raw/complement residual diagnostics and unresolved flags remain developer
-outputs. It does not enter the production trace, API, frontend or CAD generation.
-
-
 Pictures to CAD separates image interpretation from geometric construction. The photo supplies a planar profile. Scale comes from the entered outside width, a measured feature, or a reference sheet; thickness is entered separately. Optional design scales and print-planning settings then define the requested output. CadQuery constructs the resulting solid or split solids, which supply both the displayed mesh and the export artifacts. Use the [documentation index](README.md) for the user-facing guides.
 
 ```mermaid
@@ -55,6 +41,21 @@ candidate-dependent widths, fixed local observations and explicit numerical
 withholding. Sampling, lighting and initialization limits remain.
 
 The application does not call a paid or external inference service. Its optional assistant connects to Ollama through an HTTP loopback address on the backend host. It receives text context, including measured and built dimensions, but not the photograph, outline vertices, or mesh. An uploaded photograph still reaches the Python backend for tracing, which may run on the user's machine or on a cloud host.
+
+## Developer numerical tools
+
+The developer [fixed-observation module](profile-observations.md) represents
+bounded Keys sampling/filter matrices and conditional shared-pixel covariance.
+Its study runners operate without the CAD service. They are not imported by the
+production trace/API or frontend; the production numerical pipeline retains its
+existing behavior and recorded limits.
+The [warp extension](warp-observations.md) composes only required intermediate
+pixels through the fixed raw-coordinate map. Its ideal float64 matrix and the
+actual pipeline's float32 storage/filtering remain separate evidence lanes.
+The [raw-source fitting primitive](raw-source-fit.md) additionally profiles bounded
+brightness levels over a finite edge-offset search in retained source modes.
+Its raw/complement residual diagnostics and unresolved flags remain developer
+outputs. It does not enter the production trace, API, frontend or CAD generation.
 
 ## Geometry conventions
 

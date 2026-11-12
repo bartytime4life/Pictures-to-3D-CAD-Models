@@ -14,8 +14,9 @@ composes the known finite smoothing filter and final Keys sampler, rather than
 assuming one effective continuous Gaussian. A compact SVD accounts for shared
 input-pixel noise, retaining support violations and numerical rank decisions.
 Its [complete controls](validation/profile-observations.md) show false precision
-from independence assumptions and preserve global wall aliases. Earlier warping,
-camera response and real-noise calibration remain separate work.
+from independence assumptions and preserve global wall aliases. The known earlier
+warp is included by the extension above; calibration of image-derived warp
+parameters, camera response and real noise remains separate work.
 
 Related [known-PSF interpolation research](https://scispace.com/papers/optimal-linear-interpolation-of-images-with-known-point-xuwgxkheoe)
 considers autocorrelation and aliasing when choosing a linear interpolant.

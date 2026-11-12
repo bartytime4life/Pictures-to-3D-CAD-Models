@@ -4,56 +4,21 @@ Turn a photograph of a **flat, constant-thickness part** into a scaled CAD solid
 
 The workbench is designed for plates, gaskets, spacers, and templates. It traces what is visible in the photograph; it does not recover hidden geometry or infer physical dimensions.
 
-See [project status and evidence](docs/project-status.md) for the reviewed source
-revision, pending changes, completed checks and remaining engineering work.
+Start with [setup](#start-the-app), then [try the sample workflow](#try-the-complete-workflow).
+Use the [documentation index](docs/README.md) for task-based guides and
+[project status](docs/project-status.md) to identify the reviewed source and its evidence.
 
-For reference-sheet tracing, photograph the whole flat sheet (A4, US Letter, or a sheet you have measured) and explicitly choose it as the **Scale reference**. A successful sheet trace sets scale from its stated size, estimates perspective and one radial lens correction, and fits lines, tangent arcs and circles. Entered thickness supports a side-wall/parallax correction under the method's assumptions. Ordinary tracing and the sample use measured-width scaling instead; they do not perform these corrections. See [reference-sheet tracing](docs/reference-sheet.md) for the mathematics and synthetic evidence, and the [engineering model](docs/engineering-model.md) for independent verification before fabrication.
+For reference-sheet tracing, photograph the whole flat sheet (A4, US Letter, or a
+sheet you have measured), then explicitly choose it as the **Scale reference**.
+This path estimates perspective, one radial lens term and thickness parallax
+under stated assumptions. Ordinary tracing and the sample use measured-width
+scaling. Follow the [capture guide](docs/capture-guide.md) and
+[engineering model](docs/engineering-model.md) before using either result for fabrication.
 
-Review the [initial-fit support check](docs/validation/fit-support.md) and
-[known benchmark and camera-model limits](docs/validation/scientific-model-review.md)
-before relying on small residuals or reported error percentiles. A successful
-trace or valid CAD solid still needs comparison with the original outline and
-independent dimensions. The [radial-domain and independent-renderer record](docs/validation/radial-inverse.md)
-documents numerical safeguards and higher-order lens counterexamples. The
-[directional-blur research](docs/validation/directional-spread-qualification.md)
-also records missed cases; it does not supply a product accuracy status.
-
-A separate [conditional corner-radius tool](docs/corner-feasibility.md) explores
-which radii can explain explicitly bounded observations under a Gaussian model
-with fixed or supplied bounded blur, and point or known uniform pixel-aperture
-observations, including [known signed sampling stencils](docs/signed-stencils.md).
-It preserves unresolved regions and can reject an incompatible model;
-it does not alter the workbench's trace or qualify a physical radius.
-
-The [material-gradient study](docs/material-gradients.md) tests actual edge-profile
-functions against independent bounded light fields, preserving rejected profiles
-and comparing the paper-side guard with an explicit research ablation.
-The [crossing selector](docs/edge-crossings.md) chooses a uniquely nearest
-verified crossing and retains ambiguous contacts as missing measurements.
-The [joint wall/lighting experiment](docs/wall-gradients.md) adds bounded
-source-level fitting and demonstrates when different silhouette interpretations
-produce the same light field. It is a developer study, with no automatic
-lighting correction or physical accuracy status.
-
-The [local wall-fit candidate](docs/wall-localization.md) expands silhouette
-hypotheses with consistent candidate widths, local observations and numerical
-withholding. Its crossed comparison retains failures and unchanged seeds; a
-separate Keys-aware forward prototype remains developer research. Neither gives
-a physical accuracy guarantee.
-
-The [fixed-observation developer tools](docs/profile-observations.md) now compose
-declared smoothing and signed interpolation, and account for correlated profile
-samples under supplied input-pixel noise. Their reproducible controls distinguish
-local precision from global ambiguity; they do not add a photo accuracy label.
-The [known warp-chain extension](docs/warp-observations.md) also follows the
-earlier perspective/lens resampling and distinguishes those digital operations
-from assumptions about blur in the raw photograph.
-
-The [raw-source fitting tool](docs/raw-source-fit.md) fits available prewarp samples
-in a declared source projection, avoiding amplification from weak processed-profile
-modes. Its bounded brightness fit and finite search retain ambiguity and raw-model
-mismatch diagnostics. It is developer research with supplied optics and geometry;
-it does not change the workbench trace or infer camera accuracy.
+Separate [numerical tools and studies](docs/developer-tools.md) investigate edge
+selection, lighting, blur, sampling, correlated noise and raw-source fitting.
+Their guides retain model assumptions, adverse results and unresolved cases.
+Developer research does not add an automatic physical-accuracy status to the workbench.
 
 This repository contains two related tools:
 
@@ -183,7 +148,7 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 Start with the [documentation index](docs/README.md) for capture, engineering, export, development and evidence routes.
 
-The [current coverage record](docs/validation/raw-source-fit.md#documentation-coverage)
+The [current coverage record](docs/validation/documentation-latest.md)
 identifies the source baseline and coverage of current guides, historical records
 and generated library material. Numerical experiments and analysis commands are
 collected in the [developer-tool catalog](docs/developer-tools.md).

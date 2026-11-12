@@ -96,6 +96,16 @@ fixed retained source projection. The experiment keeps all matched fields,
 wrong-PSF/nonlinear/quantization controls, common-noise draws, global aliases and
 unresolved searches. Raw residuals outside the selected source row space remain
 visible. This is not all-raw-pixel fitting or a calibrated photo likelihood.
+Use the [developer API reference](raw-source-fit.md#developer-api) for pixel order,
+units, finite-search budgets and standardized residual fields. To repeat its
+independent geometry and bounded-brightness checks without starting a server:
+
+```bash
+.venv/bin/python studies/verification/raw-source-fit-oracle-v1.py --output .local/raw-source-oracle-new.json
+```
+
+That destination must also be new. A brightness-design rank of two does not
+establish a uniquely identified edge; preserve the search flags and candidates.
 
 Audit the wall study's complete row keys and summaries independently of its
 summary-writing code:
