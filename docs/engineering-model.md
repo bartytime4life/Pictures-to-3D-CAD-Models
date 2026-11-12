@@ -2,6 +2,9 @@
 
 [Documentation index](README.md) · [Guided workbench review](validation/guided-workbench.md)
 
+Use the [source-scope guide](project-status.md) to distinguish this main-based
+workbench from separately reviewed research branches.
+
 The useful engineering concept is a **measurement-assisted 2.5D reverse-engineering
 workbench**: reconstruct the boundary of a flat, constant-thickness part, verify
 reserved dimensions, then qualify the manufactured prototype for its intended use.
@@ -174,6 +177,16 @@ diagnostic. The tracer's own covariance fit adds orientation-support and
 per-direction adequacy rules and traces a uniform directional blur by direction
 ([reference-sheet tracing](reference-sheet.md), §3); synthetic only. Benchmark
 statistics remain conditional on comparisons.
+
+The production directional tensor describes rise widths after rectification and
+smoothing. A normal's `sigma_n` is used for edge and wall localization. Free
+circle/arc correction and the nonparallel fillet model still consume a scalar
+width; slot-end placement also uses the tensor's directional first-order term.
+The scalar corner model's radius resolution and sharp-corner bound remain
+conditional on its isotropic Gaussian, fixed-edge and error assumptions.
+They are not measured physical confidence limits or evidence that anisotropic
+corner bias has been removed. No source-space PSF calibration API is present
+on this main-based branch; the separate research draft has its own scope.
 Residuals describe the selected
 model's agreement with sampled points; they do not alone establish source
 coverage, identifiable radius, physical uncertainty or complete benchmark

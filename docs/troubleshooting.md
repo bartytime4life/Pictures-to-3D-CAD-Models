@@ -24,6 +24,13 @@ does not make an unclear capture measurable or establish dimensional accuracy.
 
 ## Scale and geometry problems
 
+For a directional-blur note, use a steadier, sharper capture and reserve independent
+feature checks. The estimator concerns rectified edge spreads. Normal-specific
+edge localization does not make the nonparallel fillet model fully anisotropic,
+and a rank/SPD check does not establish physical measurement accuracy. A missing
+directional note can mean insufficient independent direction support; it does
+not prove isotropic optics. See [model boundaries](reference-sheet.md#3-segmentation-and-sub-pixel-edges).
+
 An expected circle or arc may remain a traced outline when its initial fit lacks
 source support or exceeds the bounded sampling work. This preserves the source
 instead of extrapolating unsupported geometry; see the [fit-support check](validation/fit-support.md).

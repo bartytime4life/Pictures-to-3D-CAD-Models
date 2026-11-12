@@ -4,6 +4,10 @@ Start with the guide for your task. Pictures to CAD reconstructs one flat,
 constant-thickness part; the companion library also covers broader reconstruction
 methods, offline reference photos, calculators and parametric OpenSCAD examples.
 
+Read [source scope and status](project-status.md) first when switching branches.
+Main-line directional tracing, the draft rank repair and separate research APIs
+have different source and validation histories.
+
 ## Use the workbench
 
 | Task | Guide |
@@ -29,6 +33,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Task | Guide |
 | --- | --- |
 | Make and validate a change | [Contributing](contributing.md), [development](development.md) |
+| Find the commands available in this checkout | [Developer tools and output behavior](developer-tools.md) |
 | Understand components, API and data flow | [Architecture](architecture.md) |
 | Read mathematical methods and their limits | [Research and algorithms](research.md), [engineering model](engineering-model.md) |
 | Review original scientific findings and remaining model limits | [Scientific model review](validation/scientific-model-review.md) |
@@ -36,11 +41,11 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Understand weak-edge refusal and recovery | [Contrast-recovery validation](validation/contrast-recovery.md) |
 | Understand arc-sector preservation after fillet movement | [Fillet-sweep repair](validation/fillet-sweep.md) |
 | Understand the lens inverse domain and independent synthetic camera checks | [Radial inverse and lens mismatch](validation/radial-inverse.md) |
-| Review why the blur diagnostic remains research only | [Directional-spread qualification](validation/directional-spread-qualification.md) |
+| Distinguish the earlier blur diagnostic from current directional tracing | [Historical qualification](validation/directional-spread-qualification.md), [current method](reference-sheet.md), [rank repair](validation/directional-blur-rank.md) |
 | Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |
 | Run a benchmark with measured photos | [Photo benchmark](photo-benchmark.md) |
 | Review completed checks | [Validation overview](validation.md), [design QA](../design-qa.md) |
-| Check documentation coverage and source consistency | [November 12 documentation review](validation/documentation-review-2026-11-12.md) |
+| Check documentation coverage and source consistency | [Current source-scope review](validation/documentation-main77-state.md), [earlier November 12 review](validation/documentation-review-2026-11-12.md) |
 | Review the recent interface changes | [Guided-workbench audit](validation/guided-workbench.md) |
 | Review scope and future work | [Roadmap](roadmap.md), [change log](changelog.md) |
 | Reproduce bundled printer data | [Printer source record](../data/PRINTER_SOURCES.md) |

@@ -6,6 +6,10 @@ This product starts with a deliberately constrained geometry problem: a photogra
 
 The research below informed the implementation and its acceptance criteria. It is a review of technical and accessibility sources, not a claim that user interviews, a physical metrology study, or a production security assessment have been completed.
 
+The [source-scope guide](project-status.md) identifies which algorithms are in
+this main-based checkout. Draft source-space PSF research on a separate lineage
+does not replace the production rectified-width estimator or add new HTTP modes.
+
 The [original selected design reference](images/design-reference.png) is a generated concept. The [recorded workbench screenshot](images/workbench.png) is browser-rendered implementation evidence; the [guided-workbench review](validation/guided-workbench.md) records the reviewed interaction, screenshots and evidence date. The sample photograph is generated demonstration input and is traced by the real conversion pipeline; it is not a measured reference specimen.
 
 ## Image to outline
@@ -61,6 +65,14 @@ sharp-corner example still fits nonzero fillets after the representation defect
 is repaired. Topological validity, consistent arc sectors and forward-model
 adequacy are separate checks; the scalar Gaussian interpretation remains a
 research limit.
+
+The main-line directional path now supplies normal-specific edge/wall widths and
+directional slot-end shrink, with [numerical rank rejection](validation/directional-blur-rank.md)
+in this draft. Nonparallel fillets still use scalar `sigma` in `corner_level` and
+`_exact_fillet`. Passing the tensor's geometric-mean scalar to that model does
+not implement a general anisotropic corner integral. This source audit clarifies
+the approximation; it does not add a newly executed failure experiment or reuse
+another branch's synthetic results as current-main verification.
 
 [Al-Sharadqah and Chernov's circle-fit analysis](https://arxiv.org/abs/0907.0421)
 compares geometric and algebraic fits with coordinate errors. It motivates

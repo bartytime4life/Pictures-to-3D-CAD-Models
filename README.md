@@ -143,7 +143,7 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 ## Documentation
 
-Start with the [documentation index](docs/README.md) for capture, engineering, export, development and evidence routes.
+Start with the [documentation index](docs/README.md) for capture, engineering, export, development and evidence routes. [Source scope and status](docs/project-status.md) distinguishes merged main-line changes, the draft covariance-rank repair in this checkout and the separate source-space calibration research branch.
 
 - [Capture and calibration guide](docs/capture-guide.md)
 - [Engineering model and independent verification](docs/engineering-model.md)
@@ -153,6 +153,7 @@ Start with the [documentation index](docs/README.md) for capture, engineering, e
 - [Print planning, materials, and split parts](docs/print-planning.md)
 - [Printer catalog, provenance, and updates](docs/printer-catalog.md)
 - [Development and setup](docs/development.md)
+- [Developer commands and output behavior](docs/developer-tools.md)
 - [Optional local AI: setup and controls](docs/ollama.md)
 - [Local model choices and comparison](docs/ollama-models.md)
 - [Architecture and API](docs/architecture.md)
