@@ -9,7 +9,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from .sheet import _keys
+from .sheet import _keys, plane_to_photo
 
 MAX_PROFILE_SAMPLES = 512
 MAX_SOURCE_PIXELS = 2048
@@ -17,6 +17,8 @@ MAX_MATRIX_CELLS = 500_000
 MAX_FACTOR_WORK = 100_000_000
 MAX_FILTER_TERMS = 200_000
 MAX_FILTER_WORK = 50_000_000
+MAX_WARP_TERMS = 32_768
+MAX_WARP_WORK = 50_000_000
 
 
 def _frozen(array):
@@ -38,6 +40,29 @@ def _matrix(value, *, columns=None):
     if not np.isfinite(result).all():
         raise ValueError("matrix must be finite")
     return result
+
+
+def _image_shape(shape):
+    if (len(shape) != 2 or any(isinstance(n, (bool, np.bool_)) or
+            not isinstance(n, (int, np.integer)) or not 0 < n <= 10**9 for n in shape)):
+        raise ValueError("image shape must contain two positive bounded integers")
+    return tuple(shape)
+
+
+def _keys_terms(image_shape, x, y, limit):
+    height, width = _image_shape(image_shape)
+    if np.shape(x) != np.shape(y) or len(np.shape(x)) != 1 or not 0 < np.size(x) <= limit:
+        raise ValueError("coordinate arrays must have equal bounded nonempty 1-D shapes")
+    x, y = np.asarray(x, dtype=np.float64), np.asarray(y, dtype=np.float64)
+    if not (np.isfinite(x).all() and np.isfinite(y).all()) or max(np.max(np.abs(x)), np.max(np.abs(y))) > 10**9:
+        raise ValueError("sample coordinates must be finite and bounded")
+    x0, y0 = np.floor(x).astype(np.int64), np.floor(y).astype(np.int64)
+    terms, weights = [], []
+    for j in range(-1, 3):
+        for i in range(-1, 3):
+            terms.append(np.column_stack((np.clip(x0 + i, 0, width - 1), np.clip(y0 + j, 0, height - 1))))
+            weights.append(_keys(x - x0 - i) * _keys(y - y0 - j))
+    return np.stack(terms, axis=1), np.stack(weights, axis=1)
 
 
 @dataclass(frozen=True)
@@ -111,6 +136,63 @@ class KeysProfile:
         pixels.flags.writeable = False
         return KeysProfile(pixels, _frozen(matrix[:, keep]), self.image_shape)
 
+    def after_warp(self, source_shape, source_x, source_y):
+        """Compose a fixed Keys warp BEFORE this operator, with replicated borders.
+
+        Provide one source index coordinate for every current pixels_xy row. This
+        maps only the needed intermediate pixels and never allocates a full image
+        warp matrix. Nonlinear coordinate maps are allowed when fixed; dependence
+        on fitted geometry or image content is not represented by this linear map.
+        """
+        source_shape = _image_shape(source_shape)
+        count = len(self.pixels_xy)
+        if np.shape(source_x) != (count,) or np.shape(source_y) != (count,):
+            raise ValueError("warp coordinates require one pair per intermediate pixel")
+        if count * 16 > MAX_WARP_TERMS or count * 16 * len(self.matrix) > MAX_WARP_WORK:
+            raise ValueError("warp composition exceeds the declared work limits")
+        if count == 0:
+            return KeysProfile(self.pixels_xy, self.matrix, source_shape)
+        terms, weights = _keys_terms(source_shape, source_x, source_y, MAX_SOURCE_PIXELS)
+        pixels, inverse = np.unique(terms.reshape(-1, 2), axis=0, return_inverse=True)
+        if len(pixels) > MAX_SOURCE_PIXELS or len(self.matrix) * len(pixels) > MAX_MATRIX_CELLS:
+            raise ValueError("warped sampling matrix exceeds the declared allocation limits")
+        matrix = np.zeros((len(self.matrix), len(pixels)))
+        inverse = inverse.reshape(count, 16)
+        rows = np.arange(len(matrix))[:, None]
+        with np.errstate(over="ignore", invalid="ignore"):
+            for k in range(16):
+                np.add.at(matrix, (rows, inverse[:, k]), self.matrix * weights[:, k])
+        if not np.isfinite(matrix).all():
+            raise ValueError("warped sampling operator is not finite")
+        keep = np.any(matrix != 0, axis=0)
+        pixels = pixels[keep].copy()
+        pixels.flags.writeable = False
+        return KeysProfile(pixels, _frozen(matrix[:, keep]), source_shape)
+
+    def after_rectification(self, source_shape, matrix, k1, plane_size, ppm):
+        """Compose sheet.rectify_gray's fixed geometry, omitting its float32 cast.
+
+        Current image_shape must be the rounded plane-size-times-ppm grid. Mapping
+        applies homography, radial factor, then the source pixel-centre convention
+        exactly as sheet.rectify_gray. The earlier source field/PSF and camera
+        parameter uncertainty are not inferred or propagated by this operator.
+        """
+        source_shape = _image_shape(source_shape)
+        if np.shape(matrix) != (3, 3) or np.shape(plane_size) != (2,):
+            raise ValueError("rectification needs a 3 by 3 map and two plane dimensions")
+        matrix, plane = np.asarray(matrix, dtype=float), np.asarray(plane_size, dtype=float)
+        if not (np.isfinite(matrix).all() and np.isfinite(plane).all() and np.all(plane > 0)
+                and math.isfinite(k1) and math.isfinite(ppm) and ppm > 0):
+            raise ValueError("rectification geometry must be finite with positive plane size and ppm")
+        with np.errstate(over="ignore", invalid="ignore"):
+            size = plane * ppm
+        if not np.isfinite(size).all() or tuple(round(v) for v in size[::-1]) != self.image_shape:
+            raise ValueError("rectification output shape differs from the declared sampling geometry")
+        gx, gy = (self.pixels_xy.astype(float) + .5).T / ppm
+        with np.errstate(over="ignore", invalid="ignore", divide="ignore"):
+            x, y = plane_to_photo(matrix, k1, (source_shape[1], source_shape[0]), gx, gy)
+        return self.after_warp(source_shape, x - .5, y - .5)
+
 
 def keys_profile(image_shape, x, y):
     """Build the actual signed Keys operator for bounded 1-D coordinate arrays.
@@ -120,27 +202,13 @@ def keys_profile(image_shape, x, y):
     happens before duplicate source-pixel weights are added, so covariance is correct
     at replicated borders too. Matrix rows remain distinct even when samples repeat.
     """
-    if (len(image_shape) != 2 or any(isinstance(n, (bool, np.bool_)) or
-            not isinstance(n, (int, np.integer)) or not 0 < n <= 10**9 for n in image_shape)):
-        raise ValueError("image shape must contain two positive bounded integers")
-    if np.shape(x) != np.shape(y) or len(np.shape(x)) != 1 or not 0 < np.size(x) <= MAX_PROFILE_SAMPLES:
-        raise ValueError("coordinate arrays must have equal bounded nonempty 1-D shapes")
-    x, y = np.asarray(x, dtype=np.float64), np.asarray(y, dtype=np.float64)
-    if not (np.isfinite(x).all() and np.isfinite(y).all()) or max(np.max(np.abs(x)), np.max(np.abs(y))) > 10**9:
-        raise ValueError("sample coordinates must be finite and bounded")
-    height, width = image_shape
-    x0, y0 = np.floor(x).astype(np.int64), np.floor(y).astype(np.int64)
-    terms, weights = [], []
-    for j in range(-1, 3):
-        for i in range(-1, 3):
-            terms.append(np.column_stack((np.clip(x0 + i, 0, width - 1), np.clip(y0 + j, 0, height - 1))))
-            weights.append(_keys(x - x0 - i) * _keys(y - y0 - j))
-    terms = np.stack(terms, axis=1)
+    terms, weights = _keys_terms(image_shape, x, y, MAX_PROFILE_SAMPLES)
+    count = len(terms)
     pixels, inverse = np.unique(terms.reshape(-1, 2), axis=0, return_inverse=True)
-    if len(pixels) > MAX_SOURCE_PIXELS or len(x) * len(pixels) > MAX_MATRIX_CELLS:
+    if len(pixels) > MAX_SOURCE_PIXELS or count * len(pixels) > MAX_MATRIX_CELLS:
         raise ValueError("sampling matrix exceeds the declared allocation limits")
-    matrix = np.zeros((len(x), len(pixels)))
-    np.add.at(matrix, (np.arange(len(x))[:, None], inverse.reshape(len(x), 16)), np.stack(weights, axis=1))
+    matrix = np.zeros((count, len(pixels)))
+    np.add.at(matrix, (np.arange(count)[:, None], inverse.reshape(count, 16)), weights)
     keep = np.any(matrix != 0, axis=0)
     pixels = pixels[keep].copy()
     pixels.flags.writeable = False

@@ -5,6 +5,8 @@ measurements. A developer module now represents the actual fixed signed sampling
 operator, can compose a known finite smoothing filter, and accounts for shared
 input-pixel noise. It supports the next wall-model investigation; it does not
 change tracing, add a confidence badge or calibrate a real camera.
+The [warp-chain extension](warp-observations.md) now also composes the known
+earlier Keys rectification and retains raw optical-model countercontrols.
 The [source-bound controls](validation/profile-observations.md) retain both
 false-precision examples and remaining model mismatch.
 

@@ -1,0 +1,25 @@
+{
+  "format": "picad-warp-observations-plan",
+  "version": 1,
+  "source_shape": [60, 90],
+  "plane_size_mm": [64.0, 40.0],
+  "pixels_per_mm": [1.0, 1.5],
+  "maps": [
+    {"name": "translation", "matrix": [[1.0, 0.0, 5.37], [0.0, 1.0, 9.21], [0.0, 0.0, 1.0]]},
+    {"name": "affine", "matrix": [[1.15, 0.12, 5.37], [-0.08, 0.95, 9.21], [0.0, 0.0, 1.0]]},
+    {"name": "projective", "matrix": [[1.15, 0.12, 5.37], [-0.08, 0.95, 9.21], [0.002, -0.001, 1.0]]}
+  ],
+  "radial_k1": [-0.08, 0.0, 0.06],
+  "profiles": [
+    {"name": "interior", "seed_plane_mm": [32.37, 20.21], "normal": [0.8, 0.6]},
+    {"name": "corner", "seed_plane_mm": [0.37, 0.21], "normal": [0.8, 0.6]},
+    {"name": "outside", "seed_plane_mm": [67.37, -2.21], "normal": [-0.6, 0.8]}
+  ],
+  "profile_half_width_px": 3.0,
+  "profile_step_px": 0.125,
+  "smoothing_sigma_px": 0.7,
+  "smoothing_support": [-3, -2, -1, 0, 1, 2, 3],
+  "fields": ["constant", "ramp", "smooth", "random", "impulse", "gaussian_step"],
+  "random_seed": 20261112,
+  "scope": "Fixed declared maps and already-linear synthetic source arrays; no image-derived pose, raw detector/optics calibration, full trace or physical accuracy claim."
+}

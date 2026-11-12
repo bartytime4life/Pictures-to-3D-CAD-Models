@@ -17,6 +17,7 @@ an experiment in another worktree is a different implementation.
 | Does a wall-fit change improve identical initial traces? | `make wall-localization-study OUTPUT=NEW_DIRECTORY` | Paired development scenes with a pinned baseline; retained unknowns and model failures, not camera qualification |
 | Does oversampling create misleading precision? | `make profile-noise-study OUTPUT=NEW_JSON` | Known correlated-noise and local-information controls, with support/rank counterexamples; no camera calibration |
 | Does the forward model include the known smoothing filter? | `make postblur-operator-study OUTPUT=NEW_JSON` | Declared finite-filter plus Keys composition on fixed fields; rounding and earlier-chain limits retained |
+| Does the known full digital chain match the actual sampler? | `make warp-observation-study OUTPUT=NEW_JSON` | Supplied raw-to-rectified warp, smoothing and profile sampling; stage rounding retained separately |
 | How do my reference-sheet photos compare with reserved measurements? | `make photo-benchmark PHOTOS=FOLDER` | Measured-photo comparison with coverage and failed traces retained; supplied comparison threshold is not an uncertainty budget |
 | Does a selected server trace, build and export the sample? | `make smoke` | API exercise against an already running server, including cleanup; not browser or physical acceptance |
 | Can an installed CAD application import the synthetic exports? | `make freecad` | Native FreeCAD check requiring `FREECADCMD`; not slicer or print qualification |
@@ -80,6 +81,13 @@ study directory. They record all density/repetition controls and known-filter
 comparisons, including global aliases and omitted-mode counterexamples. Noise,
 optical spread and source geometry are supplied experimental conditions. Neither
 command changes production tracing or estimates physical confidence.
+
+The [warp-chain guide](warp-observations.md) adds `make warp-observation-study`
+with a fresh JSON file and a separately pinned raw-optical-edge runner. The first
+keeps all 324 readouts from six reused source arrays; the second distinguishes
+affine Gaussian covariance, projective variation and radial curved-edge response.
+Known digital weights do not establish an optical source model or calibrate
+geometry estimated from the same image.
 
 Audit the wall study's complete row keys and summaries independently of its
 summary-writing code:

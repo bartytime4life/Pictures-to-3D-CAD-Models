@@ -3,6 +3,17 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Known warp chain and raw optical models — November 12, 2026
+
+- Compose the earlier fixed Keys perspective/radial rectification with smoothing
+  and final profile sampling, preserving source sharing, border order, local
+  allocation caps and zero functionals.
+- Add 324 complete digital readouts, measured float32 stage accounting, 18 raw
+  optical fields and a separate radial-curvature quadrature control. Keep exact
+  affine behavior, projective approximations and optical/digital assumptions
+  distinct in the [method](warp-observations.md) and [record](validation/warp-observations.md).
+- This developer extension changes no production trace, frontend or dependencies.
+
 ## Fixed observations and conditional covariance — November 12, 2026
 
 - Add a bounded reusable Keys observation matrix, declared finite-filter

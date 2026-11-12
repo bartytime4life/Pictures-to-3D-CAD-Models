@@ -1,0 +1,1099 @@
+{
+  "cases": [
+    {
+      "mapping": "identity",
+      "minimum_raw_inverse_chart_denominator": 1.0,
+      "plane_normal_degrees": 0.0,
+      "H": [
+        [
+          1.0,
+          0.0,
+          96.16300000000001
+        ],
+        [
+          0.0,
+          1.0,
+          72.481
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "jacobian_at_edge": [
+        [
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "sigma_raw_px": 1.3,
+      "sigma_plane_normal": 1.3,
+      "raw_frozen_jacobian_maximum_error_levels": 0.0,
+      "after_actual_pipeline_frozen_jacobian_maximum_error_levels": 0.0,
+      "after_actual_pipeline_isotropic_scale_maximum_error_levels": 0.0,
+      "skipped_raw_rectification_maximum_error_levels": 0.23897806916137654,
+      "independent_float64_rectification_maximum_vs_actual_float32_levels": 7.58640487674711e-06,
+      "independent_float64_pipeline_maximum_vs_actual_levels": 2.15195404109636e-05,
+      "known_half_level_crossing_rectified_pixels": {
+        "truth": -0.006966437395627952,
+        "frozen_jacobian": -0.006966437395627952,
+        "isotropic": -0.006966437395627952,
+        "skip_raw": -0.0022403406576771588
+      },
+      "known_S_G_R_operator": {
+        "source_pixels": 144,
+        "matrix_cells": 18576,
+        "source_pixels_sha256": "c65a599591114b1e4020df4483ec0ad30e6c6ec261d261335d3c44a5c69be146",
+        "matrix_sha256": "f1cfb0113d49a196d37439eca15722bfc9167dcff448a2cc7461b59fa8492ee9",
+        "maximum_vs_independent_float64_pipeline_levels": 3.694822225952521e-13,
+        "maximum_vs_actual_float32_pipeline_levels": 2.1519540126746506e-05
+      },
+      "independent_128_node_gaussian_halfplane_cdf_maximum_error": 6.106226635438361e-15
+    },
+    {
+      "mapping": "identity",
+      "minimum_raw_inverse_chart_denominator": 1.0,
+      "plane_normal_degrees": 37.0,
+      "H": [
+        [
+          1.0,
+          0.0,
+          96.16300000000001
+        ],
+        [
+          0.0,
+          1.0,
+          72.481
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "jacobian_at_edge": [
+        [
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "sigma_raw_px": 1.3,
+      "sigma_plane_normal": 1.3,
+      "raw_frozen_jacobian_maximum_error_levels": 1.8189894035458565e-12,
+      "after_actual_pipeline_frozen_jacobian_maximum_error_levels": 0.0,
+      "after_actual_pipeline_isotropic_scale_maximum_error_levels": 0.0,
+      "skipped_raw_rectification_maximum_error_levels": 0.12923769187960943,
+      "independent_float64_rectification_maximum_vs_actual_float32_levels": 7.62458537906241e-06,
+      "independent_float64_pipeline_maximum_vs_actual_levels": 2.34100025124917e-05,
+      "known_half_level_crossing_rectified_pixels": {
+        "truth": -0.002635534059462163,
+        "frozen_jacobian": -0.002635534059462163,
+        "isotropic": -0.002635534059462163,
+        "skip_raw": -0.0013927305790051212
+      },
+      "known_S_G_R_operator": {
+        "source_pixels": 165,
+        "matrix_cells": 21285,
+        "source_pixels_sha256": "f14afb89e0e0326b135eb184d40dfa12c9330bdde91b50f010f68d29b5627337",
+        "matrix_sha256": "ac3da26e0f4aa4c8319af4d7d37a45a2d63e8fa802c4e6ba8faa2a92bc12c29e",
+        "maximum_vs_independent_float64_pipeline_levels": 3.979039320256561e-13,
+        "maximum_vs_actual_float32_pipeline_levels": 2.3410002796708795e-05
+      },
+      "independent_128_node_gaussian_halfplane_cdf_maximum_error": 6.106226635438361e-15
+    },
+    {
+      "mapping": "identity",
+      "minimum_raw_inverse_chart_denominator": 1.0,
+      "plane_normal_degrees": 90.0,
+      "H": [
+        [
+          1.0,
+          0.0,
+          96.16300000000001
+        ],
+        [
+          0.0,
+          1.0,
+          72.481
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "jacobian_at_edge": [
+        [
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "sigma_raw_px": 1.3,
+      "sigma_plane_normal": 1.3,
+      "raw_frozen_jacobian_maximum_error_levels": 5.400124791776761e-13,
+      "after_actual_pipeline_frozen_jacobian_maximum_error_levels": 0.0,
+      "after_actual_pipeline_isotropic_scale_maximum_error_levels": 0.0,
+      "skipped_raw_rectification_maximum_error_levels": 0.236506731337073,
+      "independent_float64_rectification_maximum_vs_actual_float32_levels": 6.888031748530921e-06,
+      "independent_float64_pipeline_maximum_vs_actual_levels": 1.6615242316220247e-05,
+      "known_half_level_crossing_rectified_pixels": {
+        "truth": 0.004309753992119982,
+        "frozen_jacobian": 0.004309753992119982,
+        "isotropic": 0.004309753992119982,
+        "skip_raw": -0.0011741471849854568
+      },
+      "known_S_G_R_operator": {
+        "source_pixels": 136,
+        "matrix_cells": 17544,
+        "source_pixels_sha256": "2faa0febf72c131306e32635755780fc1b65a2d4e5140f9bcbd158c5e2c7a403",
+        "matrix_sha256": "33b582a7383ce4f26fc0a70f17dc1679c706d03dd2a760a54654b3162f004bb7",
+        "maximum_vs_independent_float64_pipeline_levels": 3.126388037344441e-13,
+        "maximum_vs_actual_float32_pipeline_levels": 1.661524257201563e-05
+      },
+      "independent_128_node_gaussian_halfplane_cdf_maximum_error": 6.106226635438361e-15
+    },
+    {
+      "mapping": "affine_anisotropic",
+      "minimum_raw_inverse_chart_denominator": 1.0,
+      "plane_normal_degrees": 0.0,
+      "H": [
+        [
+          2.2,
+          0.0,
+          57.598600000000005
+        ],
+        [
+          0.0,
+          1.4,
+          62.793400000000005
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "jacobian_at_edge": [
+        [
+          2.2,
+          0.0
+        ],
+        [
+          0.0,
+          1.4
+        ]
+      ],
+      "sigma_raw_px": 1.3,
+      "sigma_plane_normal": 0.5909090909090909,
+      "raw_frozen_jacobian_maximum_error_levels": 5.684341886080801e-13,
+      "after_actual_pipeline_frozen_jacobian_maximum_error_levels": 0.0,
+      "after_actual_pipeline_isotropic_scale_maximum_error_levels": 5.125945252994882,
+      "skipped_raw_rectification_maximum_error_levels": 0.12584821330918317,
+      "independent_float64_rectification_maximum_vs_actual_float32_levels": 7.591796787664862e-06,
+      "independent_float64_pipeline_maximum_vs_actual_levels": 1.5324343479505842e-05,
+      "known_half_level_crossing_rectified_pixels": {
+        "truth": -0.007061135375354044,
+        "frozen_jacobian": -0.007061135375354044,
+        "isotropic": -0.004991743880700024,
+        "skip_raw": -0.008947778008452076
+      },
+      "known_S_G_R_operator": {
+        "source_pixels": 352,
+        "matrix_cells": 45408,
+        "source_pixels_sha256": "4c4c2ac82cfdd114c5b0ad6834113070b626f6fb129d03af85409583757c046e",
+        "matrix_sha256": "90336401485f03fdb1b52a4e2164d8bd7c25b638bedca5bc57027eaebbad24ff",
+        "maximum_vs_independent_float64_pipeline_levels": 1.9895196601282805e-13,
+        "maximum_vs_actual_float32_pipeline_levels": 1.5324343337397295e-05
+      },
+      "independent_128_node_gaussian_halfplane_cdf_maximum_error": 6.106226635438361e-15
+    },
+    {
+      "mapping": "affine_anisotropic",
+      "minimum_raw_inverse_chart_denominator": 1.0,
+      "plane_normal_degrees": 37.0,
+      "H": [
+        [
+          2.2,
+          0.0,
+          57.598600000000005
+        ],
+        [
+          0.0,
+          1.4,
+          62.793400000000005
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "jacobian_at_edge": [
+        [
+          2.2,
+          0.0
+        ],
+        [
+          0.0,
+          1.4
+        ]
+      ],
+      "sigma_raw_px": 1.3,
+      "sigma_plane_normal": 0.7314358560415112,
+      "raw_frozen_jacobian_maximum_error_levels": 2.1600499167107046e-12,
+      "after_actual_pipeline_frozen_jacobian_maximum_error_levels": 0.0,
+      "after_actual_pipeline_isotropic_scale_maximum_error_levels": 0.2987784319012121,
+      "skipped_raw_rectification_maximum_error_levels": 0.09187398625499554,
+      "independent_float64_rectification_maximum_vs_actual_float32_levels": 7.624710036679971e-06,
+      "independent_float64_pipeline_maximum_vs_actual_levels": 1.7382383077801933e-05,
+      "known_half_level_crossing_rectified_pixels": {
+        "truth": -0.0018957589982418778,
+        "frozen_jacobian": -0.0018957589982418778,
+        "isotropic": -0.0018575772166986647,
+        "skip_raw": -0.003901994892724926
+      },
+      "known_S_G_R_operator": {
+        "source_pixels": 391,
+        "matrix_cells": 50439,
+        "source_pixels_sha256": "a6dde7b2d7267c4d4613ca2ff6e82b021af93491c54232bde0afc6fbba16831c",
+        "matrix_sha256": "e68e225de9a91c2c7d70a12b4fe6a4fea47d155b8fe15374d0b6b46658bad919",
+        "maximum_vs_independent_float64_pipeline_levels": 2.2737367544323206e-13,
+        "maximum_vs_actual_float32_pipeline_levels": 1.7382382907271676e-05
+      },
+      "independent_128_node_gaussian_halfplane_cdf_maximum_error": 6.106226635438361e-15
+    },
+    {
+      "mapping": "affine_anisotropic",
+      "minimum_raw_inverse_chart_denominator": 1.0,
+      "plane_normal_degrees": 90.0,
+      "H": [
+        [
+          2.2,
+          0.0,
+          57.598600000000005
+        ],
+        [
+          0.0,
+          1.4,
+          62.793400000000005
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "jacobian_at_edge": [
+        [
+          2.2,
+          0.0
+        ],
+        [
+          0.0,
+          1.4
+        ]
+      ],
+      "sigma_raw_px": 1.3,
+      "sigma_plane_normal": 0.9285714285714286,
+      "raw_frozen_jacobian_maximum_error_levels": 9.947598300641403e-13,
+      "after_actual_pipeline_frozen_jacobian_maximum_error_levels": 0.0,
+      "after_actual_pipeline_isotropic_scale_maximum_error_levels": 5.444430794303756,
+      "skipped_raw_rectification_maximum_error_levels": 0.21011298078380491,
+      "independent_float64_rectification_maximum_vs_actual_float32_levels": 7.468121538067862e-06,
+      "independent_float64_pipeline_maximum_vs_actual_levels": 2.1919830032857135e-05,
+      "known_half_level_crossing_rectified_pixels": {
+        "truth": 0.002231007814438108,
+        "frozen_jacobian": 0.002231007814438108,
+        "isotropic": 0.003689837866666901,
+        "skip_raw": -0.002166622956695464
+      },
+      "known_S_G_R_operator": {
+        "source_pixels": 294,
+        "matrix_cells": 37926,
+        "source_pixels_sha256": "dc26643f2f7d67ad5b99ddcd5ddce535bfe11d5967a7622ce8f8cb31791a0c3d",
+        "matrix_sha256": "01ad33e9344781282fbf53d48b673f30e6de1c80c36646dc9aea89f2db1dd86e",
+        "maximum_vs_independent_float64_pipeline_levels": 4.831690603168681e-13,
+        "maximum_vs_actual_float32_pipeline_levels": 2.191983020338739e-05
+      },
+      "independent_128_node_gaussian_halfplane_cdf_maximum_error": 6.106226635438361e-15
+    },
+    {
+      "mapping": "affine_shear",
+      "minimum_raw_inverse_chart_denominator": 1.0,
+      "plane_normal_degrees": 0.0,
+      "H": [
+        [
+          2.0,
+          0.7,
+          47.07270000000001
+        ],
+        [
+          0.2,
+          1.5,
+          53.9441
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "jacobian_at_edge": [
+        [
+          2.0,
+          0.7
+        ],
+        [
+          0.2,
+          1.5
+        ]
+      ],
+      "sigma_raw_px": 1.3,
+      "sigma_plane_normal": 0.752406607147584,
+      "raw_frozen_jacobian_maximum_error_levels": 8.526512829121202e-13,
+      "after_actual_pipeline_frozen_jacobian_maximum_error_levels": 0.0,
+      "after_actual_pipeline_isotropic_scale_maximum_error_levels": 0.5081250366999086,
+      "skipped_raw_rectification_maximum_error_levels": 0.09303010753211538,
+      "independent_float64_rectification_maximum_vs_actual_float32_levels": 7.616745847371931e-06,
+      "independent_float64_pipeline_maximum_vs_actual_levels": 3.175823522383325e-05,
+      "known_half_level_crossing_rectified_pixels": {
+        "truth": -0.005330532070221703,
+        "frozen_jacobian": -0.005330532070221703,
+        "isotropic": -0.005141874540289078,
+        "skip_raw": -0.006029598721386806
+      },
+      "known_S_G_R_operator": {
+        "source_pixels": 321,
+        "matrix_cells": 41409,
+        "source_pixels_sha256": "79f939b1e85fde8abb5b7fd0017a5a8186449325cc4638bf1f53ae272c061102",
+        "matrix_sha256": "3a1292f0b19fa71a26a55f558c61efe4d3bfc296eb96b1f7619800c7644d85f8",
+        "maximum_vs_independent_float64_pipeline_levels": 2.8421709430404007e-13,
+        "maximum_vs_actual_float32_pipeline_levels": 3.175823525225496e-05
+      },
+      "independent_128_node_gaussian_halfplane_cdf_maximum_error": 6.217248937900877e-15
+    },
+    {
+      "mapping": "affine_shear",
+      "minimum_raw_inverse_chart_denominator": 1.0,
+      "plane_normal_degrees": 37.0,
+      "H": [
+        [
+          2.0,
+          0.7,
+          47.07270000000001
+        ],
+        [
+          0.2,
+          1.5,
+          53.9441
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "jacobian_at_edge": [
+        [
+          2.0,
+          0.7
+        ],
+        [
+          0.2,
+          1.5
+        ]
+      ],
+      "sigma_raw_px": 1.3,
+      "sigma_plane_normal": 0.5707561382444889,
+      "raw_frozen_jacobian_maximum_error_levels": 4.575895218295045e-12,
+      "after_actual_pipeline_frozen_jacobian_maximum_error_levels": 0.0,
+      "after_actual_pipeline_isotropic_scale_maximum_error_levels": 6.674512417203772,
+      "skipped_raw_rectification_maximum_error_levels": 0.09255418262145554,
+      "independent_float64_rectification_maximum_vs_actual_float32_levels": 7.626693417250863e-06,
+      "independent_float64_pipeline_maximum_vs_actual_levels": 1.7270022482307468e-05,
+      "known_half_level_crossing_rectified_pixels": {
+        "truth": -0.004656776830881405,
+        "frozen_jacobian": -0.004656776830881405,
+        "isotropic": -0.00291813594151847,
+        "skip_raw": -0.005783951415168331
+      },
+      "known_S_G_R_operator": {
+        "source_pixels": 387,
+        "matrix_cells": 49923,
+        "source_pixels_sha256": "930434e224422b420ec936e9f0d9a94327e57a69d3e32ca35f29269c988e7ab5",
+        "matrix_sha256": "b632c89529193ea77fc0a02e9b5295b1ee0df063c0140e092f7dce2c614e9351",
+        "maximum_vs_independent_float64_pipeline_levels": 2.8421709430404007e-13,
+        "maximum_vs_actual_float32_pipeline_levels": 1.7270022539150887e-05
+      },
+      "independent_128_node_gaussian_halfplane_cdf_maximum_error": 6.106226635438361e-15
+    },
+    {
+      "mapping": "affine_shear",
+      "minimum_raw_inverse_chart_denominator": 1.0,
+      "plane_normal_degrees": 90.0,
+      "H": [
+        [
+          2.0,
+          0.7,
+          47.07270000000001
+        ],
+        [
+          0.2,
+          1.5,
+          53.9441
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "jacobian_at_edge": [
+        [
+          2.0,
+          0.7
+        ],
+        [
+          0.2,
+          1.5
+        ]
+      ],
+      "sigma_raw_px": 1.3,
+      "sigma_plane_normal": 0.9136250564655356,
+      "raw_frozen_jacobian_maximum_error_levels": 1.3073986337985843e-12,
+      "after_actual_pipeline_frozen_jacobian_maximum_error_levels": 0.0,
+      "after_actual_pipeline_isotropic_scale_maximum_error_levels": 4.1836601641306,
+      "skipped_raw_rectification_maximum_error_levels": 0.20299228629335175,
+      "independent_float64_rectification_maximum_vs_actual_float32_levels": 7.624986011478541e-06,
+      "independent_float64_pipeline_maximum_vs_actual_levels": 2.361640872550197e-05,
+      "known_half_level_crossing_rectified_pixels": {
+        "truth": 0.0026348029827635536,
+        "frozen_jacobian": 0.0026348029827635536,
+        "isotropic": 0.003503118407308031,
+        "skip_raw": -0.0022293468402242687
+      },
+      "known_S_G_R_operator": {
+        "source_pixels": 319,
+        "matrix_cells": 41151,
+        "source_pixels_sha256": "9b20bca00dea6bcadac763ade5b71fe4de2b3cb2d7979a0dd06090ab10eaedc8",
+        "matrix_sha256": "a5c6749266641ead188cc07b7dc13b3c3e4fe346335c732be0e20044bbb6c98e",
+        "maximum_vs_independent_float64_pipeline_levels": 3.126388037344441e-13,
+        "maximum_vs_actual_float32_pipeline_levels": 2.3616408583393422e-05
+      },
+      "independent_128_node_gaussian_halfplane_cdf_maximum_error": 6.106226635438361e-15
+    },
+    {
+      "mapping": "affine_rotated",
+      "minimum_raw_inverse_chart_denominator": 1.0,
+      "plane_normal_degrees": 0.0,
+      "H": [
+        [
+          2.1751386888879596,
+          -0.5071419140888394,
+          70.68003797252526
+        ],
+        [
+          1.0142838281776787,
+          1.0875693444439798,
+          37.76411866076519
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "jacobian_at_edge": [
+        [
+          2.1751386888879596,
+          -0.5071419140888394
+        ],
+        [
+          1.0142838281776787,
+          1.0875693444439798
+        ]
+      ],
+      "sigma_raw_px": 1.3,
+      "sigma_plane_normal": 0.5416666666666667,
+      "raw_frozen_jacobian_maximum_error_levels": 7.105427357601002e-13,
+      "after_actual_pipeline_frozen_jacobian_maximum_error_levels": 0.0,
+      "after_actual_pipeline_isotropic_scale_maximum_error_levels": 7.6882016973160034,
+      "skipped_raw_rectification_maximum_error_levels": 0.049919895914115386,
+      "independent_float64_rectification_maximum_vs_actual_float32_levels": 7.628567090023353e-06,
+      "independent_float64_pipeline_maximum_vs_actual_levels": 2.6544672749651e-05,
+      "known_half_level_crossing_rectified_pixels": {
+        "truth": -0.009644422160384481,
+        "frozen_jacobian": -0.009644422160384481,
+        "isotropic": -0.0055946289203268286,
+        "skip_raw": -0.0102312309288649
+      },
+      "known_S_G_R_operator": {
+        "source_pixels": 351,
+        "matrix_cells": 45279,
+        "source_pixels_sha256": "6f9481bd836b76e5645aa8baf5afefbc56488861905e1c130b2c2aabff12892a",
+        "matrix_sha256": "c8de53ef9761fc23ab3782f76213963cd57f3d5fb899acfed76b9a7bf28f61a0",
+        "maximum_vs_independent_float64_pipeline_levels": 3.126388037344441e-13,
+        "maximum_vs_actual_float32_pipeline_levels": 2.6544672607542452e-05
+      },
+      "independent_128_node_gaussian_halfplane_cdf_maximum_error": 6.106226635438361e-15
+    },
+    {
+      "mapping": "affine_rotated",
+      "minimum_raw_inverse_chart_denominator": 1.0,
+      "plane_normal_degrees": 37.0,
+      "H": [
+        [
+          2.1751386888879596,
+          -0.5071419140888394,
+          70.68003797252526
+        ],
+        [
+          1.0142838281776787,
+          1.0875693444439798,
+          37.76411866076519
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "jacobian_at_edge": [
+        [
+          2.1751386888879596,
+          -0.5071419140888394
+        ],
+        [
+          1.0142838281776787,
+          1.0875693444439798
+        ]
+      ],
+      "sigma_raw_px": 1.3,
+      "sigma_plane_normal": 0.782430697033546,
+      "raw_frozen_jacobian_maximum_error_levels": 1.2221335055073723e-12,
+      "after_actual_pipeline_frozen_jacobian_maximum_error_levels": 0.0,
+      "after_actual_pipeline_isotropic_scale_maximum_error_levels": 0.5035017093492229,
+      "skipped_raw_rectification_maximum_error_levels": 0.17606799256014938,
+      "independent_float64_rectification_maximum_vs_actual_float32_levels": 7.6283356236217514e-06,
+      "independent_float64_pipeline_maximum_vs_actual_levels": 2.333104342255865e-05,
+      "known_half_level_crossing_rectified_pixels": {
+        "truth": -0.0035032657587471417,
+        "frozen_jacobian": -0.0035032657587471417,
+        "isotropic": -0.0035870153514016502,
+        "skip_raw": -0.003483322983223615
+      },
+      "known_S_G_R_operator": {
+        "source_pixels": 386,
+        "matrix_cells": 49794,
+        "source_pixels_sha256": "7c93732fc8e333a0fd4d80eb0e5852e91ce838ac742433190248b9078bb632ca",
+        "matrix_sha256": "82b9f23478feb6e957ca4c154f24ed376451c2d6d93025d0c83bcb8fc6024662",
+        "maximum_vs_independent_float64_pipeline_levels": 1.9895196601282805e-13,
+        "maximum_vs_actual_float32_pipeline_levels": 2.333104342255865e-05
+      },
+      "independent_128_node_gaussian_halfplane_cdf_maximum_error": 6.106226635438361e-15
+    },
+    {
+      "mapping": "affine_rotated",
+      "minimum_raw_inverse_chart_denominator": 1.0,
+      "plane_normal_degrees": 90.0,
+      "H": [
+        [
+          2.1751386888879596,
+          -0.5071419140888394,
+          70.68003797252526
+        ],
+        [
+          1.0142838281776787,
+          1.0875693444439798,
+          37.76411866076519
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "jacobian_at_edge": [
+        [
+          2.1751386888879596,
+          -0.5071419140888394
+        ],
+        [
+          1.0142838281776787,
+          1.0875693444439798
+        ]
+      ],
+      "sigma_raw_px": 1.3,
+      "sigma_plane_normal": 1.0833333333333335,
+      "raw_frozen_jacobian_maximum_error_levels": 8.526512829121202e-13,
+      "after_actual_pipeline_frozen_jacobian_maximum_error_levels": 0.0,
+      "after_actual_pipeline_isotropic_scale_maximum_error_levels": 8.470099504931838,
+      "skipped_raw_rectification_maximum_error_levels": 0.164933869128987,
+      "independent_float64_rectification_maximum_vs_actual_float32_levels": 7.627485103967047e-06,
+      "independent_float64_pipeline_maximum_vs_actual_levels": 1.8320199131949266e-05,
+      "known_half_level_crossing_rectified_pixels": {
+        "truth": -0.0023183250536601067,
+        "frozen_jacobian": -0.0023183250536601067,
+        "isotropic": -0.0036659318551842683,
+        "skip_raw": -0.001643824625381526
+      },
+      "known_S_G_R_operator": {
+        "source_pixels": 305,
+        "matrix_cells": 39345,
+        "source_pixels_sha256": "62e56bfb75aa6c9f6cee9d249331fd214b72f988dfcc2ad5c9ef4163e2ca00e5",
+        "matrix_sha256": "9f7196b9e367b86f7d5b4d62500264f8595cc7108e353eab5c248bd28b894c46",
+        "maximum_vs_independent_float64_pipeline_levels": 1.9895196601282805e-13,
+        "maximum_vs_actual_float32_pipeline_levels": 1.8320199103527557e-05
+      },
+      "independent_128_node_gaussian_halfplane_cdf_maximum_error": 6.106226635438361e-15
+    },
+    {
+      "mapping": "projective_mild",
+      "minimum_raw_inverse_chart_denominator": 0.30133753943217667,
+      "plane_normal_degrees": 0.0,
+      "H": [
+        [
+          2.7698,
+          -0.2132000000000001,
+          44.45042820000002
+        ],
+        [
+          0.6802,
+          1.2132,
+          45.4579218
+        ],
+        [
+          0.006,
+          -0.004,
+          0.904054
+        ]
+      ],
+      "jacobian_at_edge": [
+        [
+          2.0,
+          0.3
+        ],
+        [
+          0.1,
+          1.6
+        ]
+      ],
+      "sigma_raw_px": 1.3,
+      "sigma_plane_normal": 0.6675857026791678,
+      "raw_frozen_jacobian_maximum_error_levels": 8.030819594716888,
+      "after_actual_pipeline_frozen_jacobian_maximum_error_levels": 0.11089055395237324,
+      "after_actual_pipeline_isotropic_scale_maximum_error_levels": 2.1490805560545567,
+      "skipped_raw_rectification_maximum_error_levels": 0.13733052640000665,
+      "independent_float64_rectification_maximum_vs_actual_float32_levels": 7.617590256359108e-06,
+      "independent_float64_pipeline_maximum_vs_actual_levels": 2.051854426099453e-05,
+      "known_half_level_crossing_rectified_pixels": {
+        "truth": -0.004918760803046119,
+        "frozen_jacobian": -0.0061649251199317094,
+        "isotropic": -0.005317386828762773,
+        "skip_raw": -0.007360968941599529
+      },
+      "known_S_G_R_operator": {
+        "source_pixels": 333,
+        "matrix_cells": 42957,
+        "source_pixels_sha256": "d7d110eb1c14d807c973301028f43e2962930fc72981e8808c1c3d1302fbbf34",
+        "matrix_sha256": "5ade992b151c30167f27b5c9c0f34e4d357f85a5497f41c18684c64170b6685f",
+        "maximum_vs_independent_float64_pipeline_levels": 2.5579538487363607e-13,
+        "maximum_vs_actual_float32_pipeline_levels": 2.051854428941624e-05
+      },
+      "independent_128_node_gaussian_halfplane_cdf_maximum_error": 6.106226635438361e-15
+    },
+    {
+      "mapping": "projective_mild",
+      "minimum_raw_inverse_chart_denominator": 0.30133753943217667,
+      "plane_normal_degrees": 37.0,
+      "H": [
+        [
+          2.7698,
+          -0.2132000000000001,
+          44.45042820000002
+        ],
+        [
+          0.6802,
+          1.2132,
+          45.4579218
+        ],
+        [
+          0.006,
+          -0.004,
+          0.904054
+        ]
+      ],
+      "jacobian_at_edge": [
+        [
+          2.0,
+          0.3
+        ],
+        [
+          0.1,
+          1.6
+        ]
+      ],
+      "sigma_raw_px": 1.3,
+      "sigma_plane_normal": 0.6369032072400973,
+      "raw_frozen_jacobian_maximum_error_levels": 21.515187845195584,
+      "after_actual_pipeline_frozen_jacobian_maximum_error_levels": 0.04228336069472505,
+      "after_actual_pipeline_isotropic_scale_maximum_error_levels": 3.1481141004946664,
+      "skipped_raw_rectification_maximum_error_levels": 0.10294461602467209,
+      "independent_float64_rectification_maximum_vs_actual_float32_levels": 7.612928243361239e-06,
+      "independent_float64_pipeline_maximum_vs_actual_levels": 2.0715341008781252e-05,
+      "known_half_level_crossing_rectified_pixels": {
+        "truth": -0.002603243332452453,
+        "frozen_jacobian": -0.0030660223250168735,
+        "isotropic": -0.0024584731491203962,
+        "skip_raw": -0.004884949370885627
+      },
+      "known_S_G_R_operator": {
+        "source_pixels": 394,
+        "matrix_cells": 50826,
+        "source_pixels_sha256": "784d51b8da08de0892accc17f2cb7985fa70736abfecd931622d6d9917d69c11",
+        "matrix_sha256": "092cb9e4f7bd439bbf5baf5c8d1eef0b41ffac721666acdfa058851b49409420",
+        "maximum_vs_independent_float64_pipeline_levels": 1.7053025658242404e-13,
+        "maximum_vs_actual_float32_pipeline_levels": 2.0715340866672705e-05
+      },
+      "independent_128_node_gaussian_halfplane_cdf_maximum_error": 6.106226635438361e-15
+    },
+    {
+      "mapping": "projective_mild",
+      "minimum_raw_inverse_chart_denominator": 0.30133753943217667,
+      "plane_normal_degrees": 90.0,
+      "H": [
+        [
+          2.7698,
+          -0.2132000000000001,
+          44.45042820000002
+        ],
+        [
+          0.6802,
+          1.2132,
+          45.4579218
+        ],
+        [
+          0.006,
+          -0.004,
+          0.904054
+        ]
+      ],
+      "jacobian_at_edge": [
+        [
+          2.0,
+          0.3
+        ],
+        [
+          0.1,
+          1.6
+        ]
+      ],
+      "sigma_raw_px": 1.3,
+      "sigma_plane_normal": 0.8212138710678555,
+      "raw_frozen_jacobian_maximum_error_levels": 12.589931755593241,
+      "after_actual_pipeline_frozen_jacobian_maximum_error_levels": 0.09544674984667267,
+      "after_actual_pipeline_isotropic_scale_maximum_error_levels": 2.8481549198583593,
+      "skipped_raw_rectification_maximum_error_levels": 0.2669466279102295,
+      "independent_float64_rectification_maximum_vs_actual_float32_levels": 7.605295820667379e-06,
+      "independent_float64_pipeline_maximum_vs_actual_levels": 1.7877477972660927e-05,
+      "known_half_level_crossing_rectified_pixels": {
+        "truth": 0.0021668759358311885,
+        "frozen_jacobian": 0.0031911035771652577,
+        "isotropic": 0.0037817986085659366,
+        "skip_raw": -0.0026815690311622334
+      },
+      "known_S_G_R_operator": {
+        "source_pixels": 327,
+        "matrix_cells": 42183,
+        "source_pixels_sha256": "7cb90dd4044950bbcbdf93d20d35ef5cf7d25d85f08ac356ce8d0de15c381efb",
+        "matrix_sha256": "f425fb9bbea3cee42f98ccea3eec6695456623082bf970ce668a81eb45b58a1f",
+        "maximum_vs_independent_float64_pipeline_levels": 3.126388037344441e-13,
+        "maximum_vs_actual_float32_pipeline_levels": 1.7877478029504346e-05
+      },
+      "independent_128_node_gaussian_halfplane_cdf_maximum_error": 6.106226635438361e-15
+    },
+    {
+      "mapping": "projective_strong",
+      "minimum_raw_inverse_chart_denominator": 0.0900189274447949,
+      "plane_normal_degrees": 0.0,
+      "H": [
+        [
+          3.0264,
+          -0.3415000000000001,
+          39.31137170000001
+        ],
+        [
+          0.8736,
+          1.1165,
+          41.58460329999999
+        ],
+        [
+          0.008,
+          -0.005,
+          0.863999
+        ]
+      ],
+      "jacobian_at_edge": [
+        [
+          2.0,
+          0.3
+        ],
+        [
+          0.1,
+          1.6
+        ]
+      ],
+      "sigma_raw_px": 1.3,
+      "sigma_plane_normal": 0.6675857026791678,
+      "raw_frozen_jacobian_maximum_error_levels": 10.308858462288214,
+      "after_actual_pipeline_frozen_jacobian_maximum_error_levels": 0.14787474024517167,
+      "after_actual_pipeline_isotropic_scale_maximum_error_levels": 2.1864791140412336,
+      "skipped_raw_rectification_maximum_error_levels": 0.17230354502905243,
+      "independent_float64_rectification_maximum_vs_actual_float32_levels": 7.616458020720529e-06,
+      "independent_float64_pipeline_maximum_vs_actual_levels": 1.568740705693017e-05,
+      "known_half_level_crossing_rectified_pixels": {
+        "truth": -0.004521233207689825,
+        "frozen_jacobian": -0.006179869621891647,
+        "isotropic": -0.005334164193859684,
+        "skip_raw": -0.007360968941599529
+      },
+      "known_S_G_R_operator": {
+        "source_pixels": 336,
+        "matrix_cells": 43344,
+        "source_pixels_sha256": "bd8ad009e97e30ce527f4c1825392f9ae281ac60ea3de55259bb1f611b04da74",
+        "matrix_sha256": "5faf87270a96eca37592f5a41981a018768dab0b9ec2134f2013d76ce01c485b",
+        "maximum_vs_independent_float64_pipeline_levels": 3.410605131648481e-13,
+        "maximum_vs_actual_float32_pipeline_levels": 1.568740697166504e-05
+      },
+      "independent_128_node_gaussian_halfplane_cdf_maximum_error": 6.106226635438361e-15
+    },
+    {
+      "mapping": "projective_strong",
+      "minimum_raw_inverse_chart_denominator": 0.0900189274447949,
+      "plane_normal_degrees": 37.0,
+      "H": [
+        [
+          3.0264,
+          -0.3415000000000001,
+          39.31137170000001
+        ],
+        [
+          0.8736,
+          1.1165,
+          41.58460329999999
+        ],
+        [
+          0.008,
+          -0.005,
+          0.863999
+        ]
+      ],
+      "jacobian_at_edge": [
+        [
+          2.0,
+          0.3
+        ],
+        [
+          0.1,
+          1.6
+        ]
+      ],
+      "sigma_raw_px": 1.3,
+      "sigma_plane_normal": 0.6369032072400973,
+      "raw_frozen_jacobian_maximum_error_levels": 30.76096061126742,
+      "after_actual_pipeline_frozen_jacobian_maximum_error_levels": 0.0597602165103126,
+      "after_actual_pipeline_isotropic_scale_maximum_error_levels": 3.16341805252722,
+      "skipped_raw_rectification_maximum_error_levels": 0.11286415667348138,
+      "independent_float64_rectification_maximum_vs_actual_float32_levels": 7.620044698342099e-06,
+      "independent_float64_pipeline_maximum_vs_actual_levels": 2.0806737637713013e-05,
+      "known_half_level_crossing_rectified_pixels": {
+        "truth": -0.00240421400568372,
+        "frozen_jacobian": -0.0030600624624250792,
+        "isotropic": -0.002454609265434776,
+        "skip_raw": -0.004884949370885627
+      },
+      "known_S_G_R_operator": {
+        "source_pixels": 395,
+        "matrix_cells": 50955,
+        "source_pixels_sha256": "bbbe5196711e10140d0354b65f74b5ffc394a2173ab8bd08129ff9933e2a17fe",
+        "matrix_sha256": "23c808562140da8d6d5812ef25eab02771abea5984669979a6039c5cf89bd3fa",
+        "maximum_vs_independent_float64_pipeline_levels": 2.8421709430404007e-13,
+        "maximum_vs_actual_float32_pipeline_levels": 2.080673772297814e-05
+      },
+      "independent_128_node_gaussian_halfplane_cdf_maximum_error": 6.106226635438361e-15
+    },
+    {
+      "mapping": "projective_strong",
+      "minimum_raw_inverse_chart_denominator": 0.0900189274447949,
+      "plane_normal_degrees": 90.0,
+      "H": [
+        [
+          3.0264,
+          -0.3415000000000001,
+          39.31137170000001
+        ],
+        [
+          0.8736,
+          1.1165,
+          41.58460329999999
+        ],
+        [
+          0.008,
+          -0.005,
+          0.863999
+        ]
+      ],
+      "jacobian_at_edge": [
+        [
+          2.0,
+          0.3
+        ],
+        [
+          0.1,
+          1.6
+        ]
+      ],
+      "sigma_raw_px": 1.3,
+      "sigma_plane_normal": 0.8212138710678555,
+      "raw_frozen_jacobian_maximum_error_levels": 17.92108447640254,
+      "after_actual_pipeline_frozen_jacobian_maximum_error_levels": 0.11925271684273753,
+      "after_actual_pipeline_isotropic_scale_maximum_error_levels": 2.8696495881666237,
+      "skipped_raw_rectification_maximum_error_levels": 0.2872320674173494,
+      "independent_float64_rectification_maximum_vs_actual_float32_levels": 7.628996939956778e-06,
+      "independent_float64_pipeline_maximum_vs_actual_levels": 1.6202982664026422e-05,
+      "known_half_level_crossing_rectified_pixels": {
+        "truth": 0.0019525607255243599,
+        "frozen_jacobian": 0.0032354237727109207,
+        "isotropic": 0.0038289505711342625,
+        "skip_raw": -0.0026815690311622334
+      },
+      "known_S_G_R_operator": {
+        "source_pixels": 326,
+        "matrix_cells": 42054,
+        "source_pixels_sha256": "6c5397b144f0dffef2b2c338bf051489b11e95f69763e05dd9f2f7354f31504b",
+        "matrix_sha256": "b39793c7ddc29c5d736c6ae4441f45e1340f8e5c5d22c38e524134073ffe5301",
+        "maximum_vs_independent_float64_pipeline_levels": 2.5579538487363607e-13,
+        "maximum_vs_actual_float32_pipeline_levels": 1.6202982664026422e-05
+      },
+      "independent_128_node_gaussian_halfplane_cdf_maximum_error": 6.106226635438361e-15
+    }
+  ],
+  "digital_smoothing_kernel": {
+    "support": [
+      -3,
+      -2,
+      -1,
+      0,
+      1,
+      2,
+      3
+    ],
+    "one_dimensional_weights": [
+      5.8524623439908894e-05,
+      0.009618930814198505,
+      0.20539965263338858,
+      0.5698457838579462,
+      0.20539965263338858,
+      0.009618930814198505,
+      5.8524623439908894e-05
+    ],
+    "border": "reflect101",
+    "actual_runtime_impulse_maximum_error": 2.7755575615628914e-17
+  },
+  "radial_curve_controls": [
+    {
+      "quadrature_nodes": 128,
+      "half_tail_extent_sigma": 10,
+      "k1": 0.25,
+      "normalization_radius_px": 80.0,
+      "undistorted_line_offset_px": 35.0,
+      "optical_sigma_px": 3.0,
+      "true_boundary_response": 0.4985125165236439,
+      "half_level_shift_raw_px": 0.01118588527398856,
+      "leading_curvature_shift_px": 0.011206527413102595,
+      "omitted_probability_tail_upper_bound": 1.523970604832119e-23
+    },
+    {
+      "quadrature_nodes": 256,
+      "half_tail_extent_sigma": 10,
+      "k1": 0.25,
+      "normalization_radius_px": 80.0,
+      "undistorted_line_offset_px": 35.0,
+      "optical_sigma_px": 3.0,
+      "true_boundary_response": 0.4985125165236475,
+      "half_level_shift_raw_px": 0.011185885273960139,
+      "leading_curvature_shift_px": 0.011206527413102595,
+      "omitted_probability_tail_upper_bound": 1.523970604832119e-23
+    }
+  ],
+  "radial_N_2N_half_level_shift_difference_px": 2.842170943040401e-14,
+  "radial_N_2N_boundary_probability_difference": 3.552713678800501e-15,
+  "format": "picad-raw-gaussian-warp-edge-results",
+  "version": 1,
+  "git_revision_context": "778c3392c6dfe111d8f422959fbdbc09ad8ba75b",
+  "source_sha256": {
+    "backend/sheet.py": "a086d7216256726a0e392bd98cbdb1274f5cb5eb096802c17c805349a7747e31",
+    "backend/reference.py": "60a8681a3e0154c935cc3256b0aff7f93d19874e9a367d0d6619a5acee0846d0",
+    "backend/profile_observations.py": "7eee8b71fc9024cb5c8453ec67aab75f2c21c8c77e975c1fba41b1e3be9f873b",
+    "studies/verification/raw-gaussian-warp-edge-v1.py": "e2510cf394f436a34c534afd9e37216471c7b82d79b6a688c5f873903e14e8cc"
+  },
+  "source_pin_policy": "Exact production file hashes, independent of commit metadata; this script hash is recorded and checked for changes during execution.",
+  "runtime": {
+    "python": "3.12.3",
+    "numpy": "2.5.4",
+    "opencv": "4.14.0",
+    "seconds": 0.7273710910230875
+  },
+  "population": "18 declared synthetic fields: identity, three nonidentity affine maps, two nonidentity homographies, each with three plane edge orientations. Two additional radial quadrature orders.",
+  "fixed_inputs": {
+    "raw_shape": [
+      192,
+      256
+    ],
+    "plane_size": [
+      64.0,
+      48.0
+    ],
+    "ppm": 2.0,
+    "edge_point_plane": [
+      32.137,
+      24.219
+    ],
+    "mapped_edge_point_raw": [
+      128.3,
+      96.7
+    ],
+    "levels": [
+      80.0,
+      200.0
+    ],
+    "optical_sigma_raw_px": 1.3,
+    "postwarp_gaussian_sigma_rectified_px": 0.7,
+    "profile_step_rectified_px": 0.125
+  },
+  "limits": [
+    "Known digital S G R composition and optical source-model adequacy are separate checks. Operator agreement does not validate a PSF.",
+    "Synthetic point-sensor radiance means; no detector aperture, finite object, gradients, tone response or real-camera calibration.",
+    "Optical Gaussian is supplied, translation invariant, isotropic and defined in raw sensor coordinates before sampling.",
+    "Lens-free homographies use a positive inverse projective chart over the complete raw sensor grid. Ideal half-planes extend beyond the finite image.",
+    "Radial control is separate conditional quadrature of a known distorted vertical half-plane, not a complete radial pipeline or certified interval proof.",
+    "Radial omitted-tail bound is analytic Gaussian probability evaluated in ordinary floating arithmetic; N/2N agreement does not certify quadrature error.",
+    "Actual rectify_gray output is float32, followed by actual GaussianBlur and sample_keys; independent float64 composition retains rounding discrepancy.",
+    "Half-level roots linearly interpolate the fixed sampled profile; they are not position estimates with calibrated uncertainty.",
+    "The seven-tap digital Gaussian is checked against the recorded runtime impulse response, not assumed as an API guarantee.",
+    "No segmentation, fitted rings, CAD, production change, full-suite result or physical acceptance."
+  ]
+}
