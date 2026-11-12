@@ -90,7 +90,7 @@ A camera whose curve differs from sRGB leaves part of the bias. On the overhead 
 
 Phone cameras also apply their own tone mapping, which the file does not record. Its cost is not measured here.
 
-**Mid-level crossing.** Each boundary point is moved along its normal to where the profile crosses the mean of its two end medians. Profiles are sampled with exact float64 bilinear interpolation (§2). For a straight edge blurred by any symmetric point-spread function, the crossing of the continuous profile is the edge itself, whatever the blur width.
+**Mid-level crossing.** Each boundary point is moved along its normal to where the profile crosses the mean of its two end medians. Profiles are sampled with exact float64 bilinear interpolation (§2). For a straight edge blurred by any symmetric point-spread function, the crossing of the continuous profile is the edge itself, whatever the blur width. Bilinear sampling's error is proportional to the profile's curvature, which vanishes at a symmetric edge's mid-level, so it leaves the crossing in place. The blur measurement and the wall model (§5), which use whole profiles, sample them cubically.
 
 Sampling a pixel-integrated image adds a phase-dependent error ("pixel locking"):
 
@@ -102,7 +102,7 @@ This is checked at 16 phases by `test_half_level_crossing_on_symmetric_blur_is_u
 
 **Two passes.** Pass 1 starts from boundary-pixel centres, about half a pixel inside one side, so its level windows are asymmetric. That grew holes by about 0.09 px at σ = 2 px. Pass 2 re-centres every point, with windows beyond 3.5 σ on both sides.
 
-**Edge blur.** σ is the 25–75 % rise distance divided by 1.349 (the Gaussian value), taken as the median over the outer boundary. The reported `edge_blur_mm` is a Gaussian-equivalent edge spread, not a complete measurement of the point-spread function. It does not describe directional or spatial variation. Even isotropic blur in the camera image can become anisotropic and vary across the rectified plane.
+**Edge blur.** σ is the 25–75 % rise distance divided by 1.349 (the Gaussian value), taken as the median over the outer boundary. Its profiles are read by Keys cubic sampling (`sheet.sample_keys`, the kernel of §2). Bilinear sampling, used here before 2026-11-11, blurs what it reads by a variance of f(1 − f) at sub-pixel phase f, 1/6 px² on average, so it measured about √(σ² + 1/6). On exactly blurred straight edges at 0–45° and four phases it read σ 2.2–4.2 % high at 1.6 px and up to 8.4 % at 1.2 px. Cubic sampling measures the blur, a pixel's own box included, within 0.6 % and 2.3 % (`test_edge_blur_is_measured_without_the_samplers_own_blur`). Every model that takes σ, from the exact corner of §4 to the wall model of §5, had been given the larger blur. The reported `edge_blur_mm` is a Gaussian-equivalent edge spread, not a complete measurement of the point-spread function. It does not describe directional or spatial variation. Even isotropic blur in the camera image can become anisotropic and vary across the rectified plane.
 
 If no sampled profile meets the blur estimator's contrast requirement, it returns
 zero. The edge search then keeps the median-level method instead of attempting
@@ -230,15 +230,15 @@ The table gives the worst radius errors on exact blurred pentagons (σ = 1.6 and
 
 The bias grows roughly in proportion to the wall's share of the contrast. The rendered plate's dark walls (saved tone 78, top face 48, paper 236) have a 6 % share in linear light, so their bias is about a third of the table's.
 
-The profile is therefore modelled as I(t) = C(1 − P₁) + B(P₁ − P₂) + A P₂, with P₁ = Φ((t + w − e)/σ) and P₂ = Φ((t − e)/σ). This is linear in the tones A (sheet), B (wall) and C (top face) for a given edge offset e. Each candidate e is solved by least squares (variable projection), and the residual minimum is refined by a parabola.
+The profile is therefore modelled as I(t) = C(1 − P₁) + B(P₁ − P₂) + A P₂, with P₁ = Φ((t + w − e)/σ) and P₂ = Φ((t − e)/σ). This is linear in the tones A (sheet), B (wall) and C (top face) for a given edge offset e. Each candidate e is solved by least squares (variable projection), and the residual minimum is refined by a parabola. For a fixed e, with A and C fitted for each B, the residual is exactly a quadratic in the wall tone, c₀ + c₁B + c₂B². Its coefficients are found once per point and offset (`edges._wall_tone_parabolas`); a free fit takes the vertex, and c₂ ≥ 0 is what is left of the wall term after projecting out the other two. Profiles are read by cubic sampling: the fit uses every sample, and bilinear sampling's error at the shoulders of a blurred edge, up to 2.1 grey levels in 200 at σ = 1.7 px against cubic sampling's 0.33, biased it.
 
 As w → 0 the wall term tends to (B − C)(w/σ)φ, which is indistinguishable from a shift of e: the wall tone and the edge position are confounded. The fit is therefore made well-posed in three steps:
 
-- The wall tone is measured only where bands are at least 2.5 σ wide, where a free fit recovers it.
+- The wall tone is measured only where bands are at least 2.5 σ wide, where a free fit recovers it. Where fewer than 30 points have bands that wide, one tone shared by all bands of 1–3.5 σ is estimated instead (below).
 - That tone is then held fixed for the narrower bands.
 - The refinement is applied with full weight for 1.5–2.5 σ, tapering to zero at 0.5 and 3.5 σ so the boundary stays continuous.
 
-On exact profiles the fixed-tone fit is unbiased within 0.01 σ, while the free fit is biased (`test_two_step_wall_model_is_unbiased_with_a_known_wall_tone_and_degenerate_without`). The taper was chosen on 2026-11-10 with an earlier renderer that mixed tones on the saved scale: refinement over the whole 0.25–4 σ range made strongly tilted shots worse, because soft shadow and uneven wall shading break the flat-tone model, and the tapered 1–3 σ range was better on every feature at 9° and on four of five at 22°. That comparison has not been repeated in linear light.
+On exact profiles the fixed-tone fit is unbiased within 0.01 σ. With half a grey level of noise on a band of 0.5 σ, the free fit's edges scatter by 0.14 σ (SD) and its tones by 53 levels, while the fixed-tone fit keeps every edge within 0.01 σ (`test_two_step_wall_model_is_unbiased_with_a_known_wall_tone_and_degenerate_without`). The taper was chosen on 2026-11-10 with an earlier renderer that mixed tones on the saved scale: refinement over the whole 0.25–4 σ range made strongly tilted shots worse, because soft shadow and uneven wall shading break the flat-tone model, and the tapered 1–3 σ range was better on every feature at 9° and on four of five at 22°. That comparison has not been repeated in linear light.
 
 On the 9° photo of the 4 mm plate (2400 × 1800, linear light), the model's effect depends on the shadow:
 
@@ -249,9 +249,24 @@ On the 9° photo of the 4 mm plate (2400 × 1800, linear light), the model's eff
 | 25 % shadow, wall model | 0.0073 | 0.0184 | 0.0212 | 0.0058 | 0.0234 |
 | 25 % shadow, without it | 0.0029 | 0.0051 | 0.0303 | 0.0066 | 0.0233 |
 
-Without a shadow the model cuts the hole errors about eightfold. With the shadow, the uncorrected trace read these holes better only because two biases cancelled: the dark wall pulls the edge into the material and the shadow pushed it out. That table was recorded before the sloped paper levels of §3. With them the shadow's push is gone, and the wall-model trace of the same photo reads 0.0001 (Ø6), 0.0057 (Ø22), 0.0167 (slot), 0.0096 (position) and 0.0084 mm (outer) with the shadow, and 0.0017, 0.0028, 0.0219, 0.0049 and 0.0061 mm without it. With a lighter wall (saved tone 110) the model wins in both cases; with the shadow it takes Ø6 from 0.040 to 0.006 mm.
+Without a shadow the model cuts the hole errors about eightfold. With the shadow, the uncorrected trace read these holes better only because two biases cancelled: the dark wall pulls the edge into the material and the shadow pushed it out. That table was recorded before the sloped paper levels of §3. With them, and with the blur of §3 measured by cubic sampling, the shadow's push is gone, and the wall-model trace of the same photo reads 0.0001 (Ø6), 0.0047 (Ø22), 0.0175 (slot), 0.0097 (position) and 0.0074 mm (outer) with the shadow, and 0.0012, 0.0033, 0.0223, 0.0057 and 0.0067 mm without it. With a lighter wall (saved tone 110) the model wins in both cases; with the shadow it takes Ø6 from 0.040 to 0.006 mm.
 
-In a near-frontal photo the walls are too narrow to measure their tone. No refinement is attempted, and the trace notes a bound instead: edges facing the camera may read up to 0.2 σ into the part. That figure is the table's maximum, so it assumes a wall share of at most 16 %; a brighter wall can exceed it. A slightly tilted photo shows wider walls and avoids it.
+**Near-frontal photos.** Seen from nearly straight above, the walls are under 2.5 σ almost everywhere, and a free fit cannot measure their tone. One tone for the whole part is still identifiable from many narrow bands (`edges.pooled_wall_tone`). For each candidate tone B, every band's edge offset is fitted with B fixed, and the total residual over up to 160 bands of 1–3.5 σ is least at the true tone. Each band's residual is a quadratic in B for every offset, so the total costs little to evaluate. It is taken on 17 tones from black to the image's 99.5th percentile, then on a finer grid around the least value, whose minimum is refined by a parabola. The edges facing the camera are then refined as in a tilted photo, and the trace notes that the walls' tone was estimated jointly.
+
+The tone is not trusted in three cases: fewer than 30 bands qualify, the least total lies at an end of the grid, or it is not under 0.8 times both ends. The trace then notes the old bound instead: edges facing the camera may read up to 0.2 σ into the part. That figure is the table's maximum, so it assumes a wall share of at most 16 %; a brighter wall can exceed it. Bands under σ never take part, because there a wall differs from an edge shift only at second order in w/σ. On noise-free profiles with bands under 0.4 σ, cubic sampling's 0.3-level error alone made a false minimum that passed the test above: a tone of 186 for 15, which moved edges by 0.18 σ.
+
+On exact profiles with bands of 1–3.5 σ, a wall tone of 15 is recovered as 15.11, and fixing it puts every edge within 0.001 σ. With a grey level of noise the tone stays within 10 % of the wall's contrast with the top face. With 10 levels of noise on bands of 1–2 σ the residual is flat, and the estimate says the tone is not determined (`test_one_wall_tone_shared_by_narrow_bands_is_recovered`).
+
+On rendered photos of the 4 mm plate (worst errors in mm; Ø6, Ø22, slot, hole position, outer):
+
+| Photo | Before | Joint wall tone |
+| --- | --- | --- |
+| 5° tilt, 25 % shadow | 0.0205, 0.0130, 0.0466, 0.0125, 0.0072 | 0.0068, 0.0025, 0.0184, 0.0062, 0.0063 |
+| 5° tilt, no shadow | 0.0161, 0.0134, 0.0448, 0.0111, 0.0028 | 0.0042, 0.0053, 0.0189, 0.0052, 0.0020 |
+| Overhead, focal length from EXIF | 0.0159, 0.0099, 0.0305, 0.0164, 0.0203 | 0.0009, 0.0049, 0.0105, 0.0087, 0.0193 |
+| Overhead, phone lens assumed | 0.0505, 0.0138, 0.0475, 0.0149, 0.1048 | 0.0361, 0.0074, 0.0257, 0.0256, 0.1058 |
+
+"Before" includes the blur measured by bilinear sampling. With an assumed lens the holes and the slot improve, but hole positions read worse. The likely cause is the guessed camera height: the parallax correction then misplaces each hole's near side, and the wall's pull on its far side had partly offset that. The outline's 0.10 mm error in that photo is the same guess. The tone search adds about 0.05 s to a trace.
 
 ## 6. Sheet proportions check
 
@@ -299,19 +314,19 @@ The fitted CAD face area equals both the Green's-theorem area of its segments an
 
 ## Results on rendered photographs
 
-The plate is 120 × 70 mm with R8 corners, 4 × Ø6 holes, a Ø22 bore and a 24 × 8 slot. Figures are maximum absolute errors in mm, measured on the fitted geometry after a rigid fit of the six hole centres; no scale is fitted. Runs recorded on 2026-11-11 with sloped paper levels (§3) and exact pixel coverage (`synthetic.coverage`), light mixed in linear light, saved through the sRGB curve, and a shadow that removes 25 % of the light. The 5° row got worse with the sloped levels: before, the shadow's outward push happened to cancel the inward pull of walls too narrow to model (§5), and now only that pull is left:
+The plate is 120 × 70 mm with R8 corners, 4 × Ø6 holes, a Ø22 bore and a 24 × 8 slot. Figures are maximum absolute errors in mm, measured on the fitted geometry after a rigid fit of the six hole centres; no scale is fitted. Runs recorded on 2026-11-11 with sloped paper levels and the blur measured by cubic sampling (§3), the jointly estimated wall tone of near-frontal photos (§5), and exact pixel coverage (`synthetic.coverage`), light mixed in linear light, saved through the sRGB curve, and a shadow that removes 25 % of the light:
 
 | Photo | Ø6 | Ø22 | Slot | Hole position | Outer |
 | --- | --- | --- | --- | --- | --- |
-| 2400 × 1800, overhead, ideal light | 0.0006 | 0.0033 | 0.0042 | 0.0017 | 0.0023 |
-| 2400 × 1800, 22° tilt, lens, shadow | 0.0021 | 0.0084 | 0.0084 | 0.0092 | 0.0085 |
-| 2400 × 1800, 22° tilt, 4 mm thick | 0.0028 | 0.0058 | 0.0041 | 0.0076 | 0.0067 |
-| 2400 × 1800, 9° tilt, 4 mm thick | 0.0001 | 0.0057 | 0.0167 | 0.0096 | 0.0084 |
-| 2400 × 1800, 5° tilt, 4 mm thick (walls too narrow, bound noted) | 0.0205 | 0.0130 | 0.0466 | 0.0125 | 0.0072 |
-| 4000 × 3000, overhead, ideal light | 0.0000 | 0.0006 | 0.0034 | 0.0028 | 0.0019 |
-| 4000 × 3000, 22° tilt, lens, shadow | 0.0001 | 0.0012 | 0.0031 | 0.0028 | 0.0008 |
+| 2400 × 1800, overhead, ideal light | 0.0001 | 0.0022 | 0.0034 | 0.0017 | 0.0009 |
+| 2400 × 1800, 22° tilt, lens, shadow | 0.0036 | 0.0077 | 0.0073 | 0.0093 | 0.0074 |
+| 2400 × 1800, 22° tilt, 4 mm thick | 0.0038 | 0.0050 | 0.0038 | 0.0074 | 0.0074 |
+| 2400 × 1800, 9° tilt, 4 mm thick | 0.0001 | 0.0047 | 0.0175 | 0.0097 | 0.0074 |
+| 2400 × 1800, 5° tilt, 4 mm thick (wall tone estimated jointly) | 0.0068 | 0.0025 | 0.0184 | 0.0062 | 0.0063 |
+| 4000 × 3000, overhead, ideal light | 0.0002 | 0.0015 | 0.0025 | 0.0029 | 0.0007 |
+| 4000 × 3000, 22° tilt, lens, shadow | 0.0001 | 0.0006 | 0.0020 | 0.0026 | 0.0002 |
 
-The 2400 × 1800 rows other than 5° are the cases in `tests/test_sheet_reference.py`. The 5° row is `render(tilt=(5.0, -2.0, 4.0), thickness=4.0)`, and the 4000 × 3000 rows add `size=(4000, 3000)`, which shows the same field of view in more pixels.
+The 2400 × 1800 rows other than 5° are the cases in `tests/test_sheet_reference.py`. The 5° row is `render(tilt=(5.0, -2.0, 4.0), thickness=4.0)`, and the 4000 × 3000 rows add `size=(4000, 3000)`, which shows the same field of view in more pixels. Before the cubic blur measurement and the joint wall tone, the 5° row read 0.0205, 0.0130, 0.0466, 0.0125 and 0.0072 mm, and no other row was more than 0.0015 mm better than now.
 
 Traced on saved values, as before this correction, the same overhead photo gave 0.263 (Ø6), 0.250 (Ø22), 0.257 (slot) and 0.353 mm (outer): the tone-curve bias of §3. The table recorded on 2026-11-10 did not show it, because that renderer mixed tones on the saved scale.
 
@@ -322,7 +337,7 @@ The same full-frame photos cannot be traced without a reference at all ("The out
 | 22° tilt, thin | 1.041 | 0.811 | 2.808 |
 | 22° tilt, 4 mm thick | 2.327 | 1.801 | 1.754 |
 
-`tests/test_sheet_reference.py` asserts limits of 0.03 (Ø6), 0.05 (Ø22), 0.06 (slot), 0.05 (position) and 0.05 mm (outer) on the 2400 × 1800 cases, plus the 0.2 σ narrow-wall bound for frontal thick views. Those limits are regression guards, not accuracy claims.
+`tests/test_sheet_reference.py` asserts limits of 0.03 (Ø6), 0.05 (Ø22), 0.06 (slot), 0.05 (position) and 0.05 mm (outer) on the 2400 × 1800 cases, plus the 0.2 σ narrow-wall bound for frontal thick views, and 0.01 (Ø6 and Ø22) and 0.025 mm (slot) on the 5° photo. Those limits are regression guards, not accuracy claims.
 
 ## Limits
 
@@ -332,7 +347,7 @@ The same full-frame photos cannot be traced without a reference at all ("The out
 - An edge carried by colour and not by brightness is measured on the colour channels. A JPEG stores colour at lower resolution than brightness, and that case is tested only on lossless renders.
 - A soft shadow beside an edge is corrected where the paper's light is close to linear over 2.5–5 σ (§3): on the rendered photo, Ø22 reads 0.008 mm off under a shadow removing a quarter of the light, where it read 0.026 mm. A sharper shadow, or one whose edge falls within a few σ of the part, is corrected only in part. Diffuse light is still best.
 - One radial coefficient about the image centre; no tangential distortion or k₂. Cropped photos and screenshots break the principal-point assumption, which leaves the focal estimate inconsistent and falls back to EXIF or an assumed lens.
-- Vertical walls of constant thickness. Chamfers, draft, countersinks and shiny edges are not modelled. With walls too narrow to measure, an edge may read up to 0.2 σ into the part.
+- Vertical walls of constant thickness. Chamfers, draft, countersinks and shiny edges are not modelled. Where even one tone shared by the narrow walls is not determined (§5), an edge may read up to 0.2 σ into the part. Overhead with no known focal length, the guessed camera height leaves the outline 0.10 mm and hole positions 0.026 mm off on the rendered photo (§5).
 - Fitted lines, arcs and circles are descriptions of the photograph, not recovered design intent; review the snap list. Split output uses the traced polygon.
 - A run of short straight facets that stays within about 1.5 × tolerance of one circle is fitted as an arc, and so is a flat shorter than an arc's longest chord that runs tangentially off its end: neither can be told from that arc's own chords (§7). A large-radius corner whose traced edge wanders from its circle by more than half the tolerance over one chord is not recognised as one arc, and its outline stays a polyline.
 - With snapping on, a sharp corner between two fitted edges is traced sharp by the exact corner model (§4). Otherwise it is fitted as an arc of about 1.8 times the edge blur, 0.5 mm at a 0.3 mm blur. That arc is the blur's rounding, not the part's. Where it is not accepted as a tangent fillet, the radius correction of §4 enlarges it about its centre, it stands proud of its two edges, and the outline reads 0.04 to 0.1 mm large across it.

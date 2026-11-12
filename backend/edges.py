@@ -18,7 +18,7 @@ import numpy as np
 from shapely.geometry import Point, Polygon
 
 from . import tone
-from .sheet import half_level_search, sample_bilinear
+from .sheet import half_level_search, sample_keys
 from .tone import encoded_from_linear
 
 BORDER_MM = 3.0  # sheet margin excluded from the part search
@@ -156,11 +156,16 @@ def ring_normals(ring, sigma=2.0):
 
 def edge_sigma(g, points, normals, half=8.0, step=0.125):
     """Gaussian-equivalent edge blur from the 25-75 % rise distance (1.349 sigma), on a
-    linear-light image; profiles under 20 saved grey levels of contrast are skipped."""
+    linear-light image; profiles under 20 saved grey levels of contrast are skipped.
+
+    Profiles are read by Keys cubic sampling. Bilinear sampling blurs what it reads by
+    a variance of f (1 - f) at sub-pixel phase f, 1/6 px^2 on average: on exactly
+    blurred straight edges it measured sigma 2.2-4.2 % high at 1.6 px and up to 8.4 % at
+    1.2 px, where cubic sampling is within 0.6 % and 2.3 %."""
     t = np.arange(-half, half + step / 2, step)
     sx = points[:, None, 0] + t[None, :] * normals[:, None, 0] - 0.5
     sy = points[:, None, 1] + t[None, :] * normals[:, None, 1] - 0.5
-    profile = sample_bilinear(g, sx, sy)
+    profile = sample_keys(g, sx, sy)
     k = int(0.15 * len(t))
     low, high = np.median(profile[:, :k], axis=1), np.median(profile[:, -k:], axis=1)
     widths = []
@@ -270,7 +275,106 @@ def normal_cdf(z):
     return 0.5 * (1.0 + np.sign(z) * erf)
 
 
-def two_step_refine(g, points, normals, band, sigma, wall_tone=None, step=0.125):
+def pooled_wall_tone(g, points, normals, band, sigma, steps=17, sample=160):
+    """One wall tone shared by many narrow wall bands, or None.
+
+    Where no band is wide enough (2.5 sigma) for a free two-step fit, each narrow band
+    on its own confounds the wall tone with the edge offset (two_step_refine). One tone
+    for the whole part is still identifiable from many bands of 1-3.5 sigma: for each
+    candidate tone every point's edge offset is fitted with that tone fixed, and the
+    total residual is least at the true tone. The total is evaluated on a grid over the
+    image's light, from black to its 99.5th percentile, then on a finer grid around its
+    least value, whose minimum is refined by a parabola. Each evaluation is cheap: for a
+    given edge offset a point's residual is a quadratic in the tone, whose coefficients
+    are found once (_wall_tone_parabolas). At most `sample` points, spread evenly, take
+    part. A minimum at an end of the grid, or one not well below both ends, means the
+    tone is not determined.
+
+    Only bands of at least sigma take part. Below that a wall differs from an edge
+    shift only at second order in w / sigma, so on noise-free profiles with bands under
+    0.4 sigma the 0.3-level error of cubic sampling alone made a false minimum (a tone of
+    186 for 15, moving edges by 0.18 sigma), and with any noise the minimum is flat.
+    """
+    keep = band >= sigma
+    points, normals, band = points[keep], normals[keep], band[keep]
+    if len(points) < 30:
+        return None
+    if len(points) > sample:
+        pick = np.linspace(0, len(points) - 1, sample).round().astype(int)
+        points, normals, band = points[pick], normals[pick], band[pick]
+    _, c0, c1, c2 = _wall_tone_parabolas(g, points, normals, band, sigma)
+
+    def total(tone):
+        return _refined_minimum(c0 + (c1 + c2 * tone) * tone)[2].sum()
+
+    coarse = np.linspace(0.0, float(np.percentile(g, 99.5)), steps)
+    totals = np.array([total(tone) for tone in coarse])
+    k = int(np.argmin(totals))
+    if k in (0, steps - 1) or totals[k] > 0.8 * min(totals[0], totals[-1]):
+        return None
+    grid = np.linspace(coarse[k - 1], coarse[k + 1], 9)
+    totals = np.array([totals[k - 1], *(total(tone) for tone in grid[1:-1]), totals[k + 1]])
+    k = int(np.clip(np.argmin(totals), 1, len(grid) - 2))
+    r0, r1, r2 = totals[k - 1], totals[k], totals[k + 1]
+    denominator = r0 - 2 * r1 + r2
+    shift = 0.5 * (r0 - r2) / denominator if denominator > 0 else 0.0
+    return float(grid[k] + np.clip(shift, -1, 1) * (grid[1] - grid[0]))
+
+
+def _wall_tone_parabolas(g, points, normals, band, sigma, step=0.125):
+    """The two-step model's residual as a function of the wall tone B, for each point
+    and each candidate edge offset e (two_step_refine).
+
+    With e fixed the model is linear in the tones, so with A and C fitted for each B
+    the residual sum of squares is exactly c0 + c1 B + c2 B^2. With u = 1 - P1,
+    v = P1 - P2, w = P2, profile y, G the Gram matrix of (u, w) and r_a = (u.a, w.a):
+        c0 = y.y - r_y' G^-1 r_y,   c1 = -2 (v.y - r_v' G^-1 r_y),   c2 = v.v - r_v' G^-1 r_v,
+    where c2 >= 0 is what is left of v after projecting out u and w. Returns
+    (candidates, c0, c1, c2), each coefficient of shape (points, candidates).
+    """
+    t = np.arange(-(float(band.max()) + 4 * sigma), 4 * sigma + step / 2, step)
+    sx = points[:, None, 0] + t[None, :] * normals[:, None, 0] - 0.5
+    sy = points[:, None, 1] + t[None, :] * normals[:, None, 1] - 0.5
+    y = sample_keys(g, sx, sy)
+    yy = np.einsum("nt,nt->n", y, y)
+    candidates = np.arange(-0.6, 0.8 + 1e-9, 0.02) * sigma
+    c0, c1, c2 = (np.empty((len(points), len(candidates))) for _ in range(3))
+    for k, e in enumerate(candidates):
+        p1 = normal_cdf((t[None, :] + band[:, None] - e) / sigma)
+        p2 = normal_cdf((t - e) / sigma)
+        u, v = 1 - p1, p1 - p2[None, :]
+        gram = ((u * u).sum(1), u @ p2, p2 @ p2)
+        ry, rv = ((u * y).sum(1), y @ p2), ((u * v).sum(1), v @ p2)
+        c0[:, k] = yy - _inverse_form(gram, ry, ry)
+        c1[:, k] = -2 * ((v * y).sum(1) - _inverse_form(gram, rv, ry))
+        c2[:, k] = (v * v).sum(1) - _inverse_form(gram, rv, rv)
+    return candidates, c0, c1, c2
+
+
+def _inverse_form(gram, a, b):
+    """a' G^-1 b for 2-vectors a, b and the symmetric 2 x 2 G = [[guu, guw], [guw, gww]],
+    each entry an array over points."""
+    guu, guw, gww = gram
+    return (gww * a[0] * b[0] - guw * (a[0] * b[1] + a[1] * b[0]) + guu * a[1] * b[1]) / (guu * gww - guw * guw)
+
+
+def _refined_minimum(residuals):
+    """Per row of residuals over the candidate offsets: the index of the least value
+    (kept off the ends), the parabola's vertex shift from it in grid steps (within
+    one), and the parabola's least value where its vertex lies within the bracket,
+    never below zero, which a sum of squares cannot be."""
+    best = np.clip(np.argmin(residuals, axis=1), 1, residuals.shape[1] - 2)
+    rows = np.arange(len(residuals))
+    r0, r1, r2 = residuals[rows, best - 1], residuals[rows, best], residuals[rows, best + 1]
+    denominator = r0 - 2 * r1 + r2
+    safe = np.where(denominator > 0, denominator, 1)
+    shift = np.where(denominator > 0, 0.5 * (r0 - r2) / safe, 0)
+    inside = (denominator > 0) & (np.abs(shift) <= 1)
+    least = np.maximum(r1 - np.where(inside, 0.125 * (r0 - r2) ** 2 / safe, 0), 0.0)
+    return best, np.clip(shift, -1, 1), least
+
+
+def two_step_refine(g, points, normals, band, sigma, wall_tone=None, step=0.125, with_residuals=False):
     """Locate an edge that has a narrow wall band on its material side.
 
     `g` holds linear light, in which the model below is exact for flat tones.
@@ -281,42 +385,33 @@ def two_step_refine(g, points, normals, band, sigma, wall_tone=None, step=0.125)
         I(t) = C (1 - P1) + B (P1 - P2) + A P2,
         P1 = Phi((t + w - e) / sigma),  P2 = Phi((t - e) / sigma),
     linear in the tones A (sheet), B (wall) and C (top face) for a given edge offset e.
-    For each candidate e the tones follow by least squares (variable projection); the
-    residual minimum is refined by a parabola.
+    For each candidate e the tones follow by least squares (variable projection), here
+    through the residual's exact quadratic in B (_wall_tone_parabolas): a free fit takes
+    its vertex, a fixed tone its value. The residual minimum over e is refined by a
+    parabola. Profiles are read by Keys cubic sampling: the fit uses every sample, so
+    bilinear sampling's error at the shoulders of a blurred edge (up to 2.1 grey levels
+    in 200 at sigma = 1.7 px, against 0.33) would bias it.
 
     As w -> 0 the wall term tends to (B - C)(w / sigma) phi, which is indistinguishable
     from a shift of e, so B and e are confounded. Pass `wall_tone` (estimated where the
     band is widest) to fix B and keep narrow-band fits well-posed. `band` holds each
-    point's predicted w in image pixels. Returns (moved points, fitted wall tones).
+    point's predicted w in image pixels. Returns (moved points, fitted wall tones), and
+    with `with_residuals` also each point's least residual sum of squares.
     """
     if len(points) == 0:
-        return points, np.empty(0)
-    t = np.arange(-(float(band.max()) + 4 * sigma), 4 * sigma + step / 2, step)
-    sx = points[:, None, 0] + t[None, :] * normals[:, None, 0] - 0.5
-    sy = points[:, None, 1] + t[None, :] * normals[:, None, 1] - 0.5
-    y = sample_bilinear(g, sx, sy)
-    candidates = np.arange(-0.6, 0.8 + 1e-9, 0.02) * sigma
-    residuals = np.empty((len(points), len(candidates)))
-    walls = np.empty((len(points), len(candidates)))
-    for k, e in enumerate(candidates):
-        p1 = normal_cdf((t[None, :] + band[:, None] - e) / sigma)
-        p2 = np.broadcast_to(normal_cdf((t[None, :] - e) / sigma), p1.shape)
-        if wall_tone is None:
-            basis = np.stack([1 - p1, p1 - p2, p2], axis=2)
-            target = y
-        else:
-            basis = np.stack([1 - p1, p2], axis=2)
-            target = y - wall_tone * (p1 - p2)
-        size = basis.shape[2]
-        gram = np.einsum("nti,ntj->nij", basis, basis) + 1e-9 * np.eye(size)
-        rhs = np.einsum("nti,nt->ni", basis, target)
-        tones = np.linalg.solve(gram, rhs[..., None])[..., 0]
-        residuals[:, k] = np.einsum("nt,nt->n", target, target) - np.einsum("ni,ni->n", tones, rhs)
-        walls[:, k] = tones[:, 1] if wall_tone is None else wall_tone
-    best = np.clip(np.argmin(residuals, axis=1), 1, len(candidates) - 2)
+        return (points, np.empty(0), np.empty(0)) if with_residuals else (points, np.empty(0))
+    candidates, c0, c1, c2 = _wall_tone_parabolas(g, points, normals, band, sigma, step)
+    if wall_tone is None:
+        curvature = c2 + 1e-9  # a band too narrow to see leaves c2 at zero
+        walls = -c1 / (2 * curvature)
+        residuals = c0 - c1 * c1 / (4 * curvature)
+    else:
+        walls = np.full(c0.shape, float(wall_tone))
+        residuals = c0 + (c1 + c2 * wall_tone) * wall_tone
+    best, shift, least = _refined_minimum(residuals)
+    offset = candidates[best] + shift * (candidates[1] - candidates[0])
+    moved = points + offset[:, None] * normals
     rows = np.arange(len(points))
-    r0, r1, r2 = residuals[rows, best - 1], residuals[rows, best], residuals[rows, best + 1]
-    denominator = r0 - 2 * r1 + r2
-    shift = np.where(denominator > 0, 0.5 * (r0 - r2) / np.where(denominator > 0, denominator, 1), 0)
-    offset = candidates[best] + np.clip(shift, -1, 1) * (candidates[1] - candidates[0])
-    return points + offset[:, None] * normals, walls[rows, best]
+    if with_residuals:
+        return moved, walls[rows, best], least
+    return moved, walls[rows, best]

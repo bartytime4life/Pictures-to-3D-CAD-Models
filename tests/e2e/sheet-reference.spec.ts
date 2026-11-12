@@ -45,9 +45,11 @@ test('a photo on an A4 sheet is scaled by the sheet and exported with exact circ
   await page.getByLabel('Choose photo or project').setInputFiles(photo);
 
   // The sheet supplies the width; the user supplies only the thickness. Until the
-  // thickness is known the visible side walls still widen the outline (about 121.5 mm).
+  // thickness is known the visible side walls still widen the outline, and its rotation
+  // is taken from a silhouette that is not one flat shape (top and bottom faces
+  // together), so the provisional width is only approximate: 121-123 mm.
   const width = page.getByRole('spinbutton', { name: 'Reference width' });
-  await expect(width).toHaveValue(/^12[01]\.\d+/, { timeout: 30_000 });
+  await expect(width).toHaveValue(/^12[0-3]\.\d+/, { timeout: 30_000 });
   await expect(page.getByText(/From the A4 sheet/)).toBeVisible();
   await expect(page.getByText(/6 through holes detected · fitted/)).toBeVisible();
 
