@@ -65,6 +65,10 @@ The [material-gradient census](material-gradients.md) now tests actual profile
 functions, including the production paper-side guard, with independent bounded
 affine light and wall controls. It does not establish a safe material-slope
 correction; joint lighting/wall adequacy and real captures remain needed.
+The [nearest-crossing repair](edge-crossings.md) resolves sample-index ordering
+and refuses unresolved local contacts. Choosing the correct physical feature
+from a possibly wrong seed and qualifying noisy or under-sampled profiles remain
+part of model adequacy, rather than consequences of exact arithmetic.
 Prioritize final forward-model adequacy, then
 independently specified model-mismatch experiments and repeatable ground-truth
 capture. The lens renderer is now separately implemented, but the shared

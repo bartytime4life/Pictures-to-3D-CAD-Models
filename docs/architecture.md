@@ -232,4 +232,10 @@ zero-centred, mirrored integer-step profile grid. The paper-only slope guard is
 retained; the two-affine study branch remains an ablation. This runner does not
 add an API, assistant action or product accuracy status.
 
+The existing profile search now delegates to a [nearest-crossing selector](edge-crossings.md).
+It compares interpolated physical distances, using exact binary-data ranking
+only when candidates compete. Nearest unresolved contacts, ties and non-finite
+searched data produce the existing rejected-profile `keep` result; ring smoothing
+and trace/support interfaces remain unchanged.
+
 The included runtime is a single-user application. It does not implement account authentication, per-user authorization, shared project storage, collaborative editing, a durable job queue, or a billing service. Those capabilities require an explicit design and implementation before a public multi-user deployment.

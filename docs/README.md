@@ -46,6 +46,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Model known pixel-area averages instead of center samples | [Version-3 pixel apertures](pixel-apertures.md), [independent checks](validation/pixel-apertures.md) |
 | Analyze a declared signed resampling operator | [Version-4 signed stencils](signed-stencils.md), [whole-radius checks](validation/signed-stencils.md) |
 | Investigate material gradients in actual edge-profile functions | [Repeatable study](material-gradients.md), [development outcomes](validation/material-gradients.md) |
+| Understand nearest-edge choices and unresolved level contacts | [Crossing rule](edge-crossings.md), [independent checks](validation/edge-crossings.md) |
 | Understand the lens inverse domain and independent synthetic camera checks | [Radial inverse and lens mismatch](validation/radial-inverse.md) |
 | Review why the blur diagnostic remains research only | [Directional-spread qualification](validation/directional-spread-qualification.md) |
 | Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |

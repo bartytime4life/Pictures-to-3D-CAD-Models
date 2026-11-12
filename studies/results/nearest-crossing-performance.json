@@ -1,0 +1,83 @@
+{
+  "profiles_per_call": 1000,
+  "repetitions": 3,
+  "half_px": 16.0,
+  "step_px": 0.125,
+  "baseline_sheet_sha256": "c5a2b6404ff4be18519b37e7eef1aa33baabc19c2204fe3fafadfb3c3e6df5f8",
+  "candidate_sheet_sha256": "a086d7216256726a0e392bd98cbdb1274f5cb5eb096802c17c805349a7747e31",
+  "numpy": "2.5.4",
+  "runtime_python": "3.12.3",
+  "benchmark_script_sha256": "b9d44414df4fd3f5d8a2bc2097f77ece31ce34d57fcd2d7b1bb77a6c4c5044e9",
+  "results": [
+    {
+      "profile": "single",
+      "baseline": {
+        "seconds_per_1000_profiles_median": 0.017001122003421187,
+        "samples_seconds": [
+          0.01977311901282519,
+          0.017001122003421187,
+          0.01542756799608469
+        ],
+        "kept": 1000,
+        "first_offset_px": -0.5
+      },
+      "candidate": {
+        "seconds_per_1000_profiles_median": 0.02055533300153911,
+        "samples_seconds": [
+          0.02055533300153911,
+          0.02044160000514239,
+          0.020921999006532133
+        ],
+        "kept": 1000,
+        "first_offset_px": -0.5
+      }
+    },
+    {
+      "profile": "three",
+      "baseline": {
+        "seconds_per_1000_profiles_median": 0.010029386961832643,
+        "samples_seconds": [
+          0.010029386961832643,
+          0.009780352003872395,
+          0.010457849013619125
+        ],
+        "kept": 1000,
+        "first_offset_px": 0.10000000000000142
+      },
+      "candidate": {
+        "seconds_per_1000_profiles_median": 0.02906999597325921,
+        "samples_seconds": [
+          0.02902198606170714,
+          0.02906999597325921,
+          0.030049890046939254
+        ],
+        "kept": 1000,
+        "first_offset_px": -0.00999999999999801
+      }
+    },
+    {
+      "profile": "alternating_band",
+      "baseline": {
+        "seconds_per_1000_profiles_median": 0.00969839806202799,
+        "samples_seconds": [
+          0.010258306050673127,
+          0.00969839806202799,
+          0.009674713015556335
+        ],
+        "kept": 1000,
+        "first_offset_px": 0.5025125628140685
+      },
+      "candidate": {
+        "seconds_per_1000_profiles_median": 0.10097983398009092,
+        "samples_seconds": [
+          0.10094155196566135,
+          0.10147184494417161,
+          0.10097983398009092
+        ],
+        "kept": 0,
+        "first_offset_px": null
+      }
+    }
+  ],
+  "limits": "Local microbenchmark of repeated fixed profiles, not an end-to-end photo latency qualification. Timing includes bilinear sampling and level search."
+}

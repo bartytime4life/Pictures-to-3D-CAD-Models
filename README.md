@@ -28,6 +28,8 @@ it does not alter the workbench's trace or qualify a physical radius.
 The [material-gradient study](docs/material-gradients.md) tests actual edge-profile
 functions against independent bounded light fields, preserving rejected profiles
 and comparing the paper-side guard with an explicit research ablation.
+The [crossing selector](docs/edge-crossings.md) chooses a uniquely nearest
+verified crossing and retains ambiguous contacts as missing measurements.
 
 This repository contains two related tools:
 

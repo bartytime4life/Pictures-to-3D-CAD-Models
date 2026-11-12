@@ -1,0 +1,28 @@
+{
+  "format": "pictures-to-cad-nearest-crossing-preservation-audit",
+  "version": 1,
+  "base_sha": "a5f99e5a4180ec2437c08215faa12058b6b490a9",
+  "source_sha256": {
+    "scripts/material_gradient_study.py": "e2d5c8fbd651f734de43ea933b70fc599eb2589718a1a79047971899a85e06d6",
+    "studies/material-gradients-v1.json": "7e9c4b8a0c9083938ec848744936cc803920dae2ec541ad0f479f4451b5859bb",
+    "backend/sheet.py": "a086d7216256726a0e392bd98cbdb1274f5cb5eb096802c17c805349a7747e31",
+    "backend/edges.py": "ef939256a69a775b6158c2cb5ace16ceecb43f72544c3ce2d9f31de1d1a123c1",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee"
+  },
+  "same_frozen_plan": true,
+  "world_scenes": 576,
+  "rows": 9216,
+  "kept": 8448,
+  "rejected": 768,
+  "failed": 0,
+  "acceptance_changes": 0,
+  "sigma_changes": 0,
+  "max_offset_change_px": 5.10702591327572e-15,
+  "max_normal_reversal_difference_px": 9.992007221626409e-15,
+  "all_96_summary_groups_reconciled": true,
+  "all_cartesian_keys_reconciled": true,
+  "baseline_cases_sha256": "bff45945626051226e6aa02be1033e7e15bdba46d6044301219a140abfae3f60",
+  "candidate_cases_sha256": "df38b133c80253f81f321d72854c387106c8e71ef5ee0fa8a3ca6f9bf714dcc0",
+  "physical_qualification": false,
+  "scope": "Prior development cohort reused as preservation regression; adversarial multi-contact evidence is separate."
+}

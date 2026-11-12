@@ -217,3 +217,8 @@ fixtures. Kept crossings can still shift under material-side illumination slopes
 and wall tone/width can be confounded with edge position. Global affine intensity
 normalization does not remove those spatial effects. The [record](validation/material-gradients.md)
 keeps that model mismatch separate from sampling symmetry and physical accuracy.
+
+The [crossing rule](edge-crossings.md) further distinguishes a uniquely nearest
+verified level crossing from an unresolved contact or tie. Its exact ranking
+concerns represented residual samples; it does not establish that the closest
+visible feature is the intended physical edge or supply a camera-noise bound.

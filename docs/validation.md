@@ -13,6 +13,15 @@ retains its source, executable API example and completed checks.
 
 ## Current workbench evidence — November 12, 2026
 
+The [nearest-crossing candidate](validation/edge-crossings.md), based on PR #55
+at `a5f99e5`, passed **1,111 Python tests**. Physical-distance ranking repairs
+an actual 0.11-pixel normal-dependent choice in a bounded image fixture.
+Nearest unresolved contacts and distinct ties remain missing measurements.
+An independent 3,888-case oracle verifies the finite-data rule; the prior
+9,216-row profile census retains acceptance and blur estimates, with only
+roundoff-scale position changes. This does not identify a true physical edge
+or calibrate the lighting, camera or wall model.
+
 The [material-gradient and sampling candidate](validation/material-gradients.md),
 based on PR #54 at `620d5c7`, passed **1,075 Python tests**. An independent crossed
 study retains 9,216 rows per run and 768 low-contrast rejections. A zero-centred

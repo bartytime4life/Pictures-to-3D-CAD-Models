@@ -3,6 +3,20 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Nearest verified edge crossing — November 12, 2026
+
+- Rank actual interpolated distances instead of bracket-left sample indices.
+  A bounded three-crossing fixture previously selected different physical edges
+  when its normal was reversed; both directions now choose the nearer crossing.
+- Treat nearest unresolved level contacts and distinct equal minima as missing
+  measurements. Preserve rejected points and independent resolved profiles.
+- Compare competing distances using exact binary-data arithmetic, with scaled
+  interpolation that retains tiny roots. This supplies no physical confidence.
+- Add 36 independent regressions and a reproducible 3,888-case contact oracle.
+  The full suite passed 1,111 Python tests. [Method](edge-crossings.md) and
+  [verification](validation/edge-crossings.md) retain the model boundaries and
+  the previous profile cohort's preservation check.
+
 ## Symmetric edge sampling and material-gradient study — November 12, 2026
 
 - Centre local profile samples on the supplied point with paired integer steps.

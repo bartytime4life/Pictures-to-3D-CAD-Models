@@ -92,6 +92,7 @@ Run `make` for help. Component targets delegate to the existing scripts and libr
 | `make photo-benchmark PHOTOS=folder` | Trace a folder of your own reference-sheet photos and compare them with your caliper measurements ([guide](photo-benchmark.md)) |
 | `make corner-sweep` | Fit synthetic blurred filleted corners and report radius error; it does not measure a real camera or part |
 | `make material-gradient-study OUTPUT=new-folder` | Run the crossed local-profile study, retaining all measurements/rejections; [method and limits](material-gradients.md) |
+| `.venv/bin/python -m pytest -q tests/test_edge_crossings.py` | Check nearest-crossing decisions, exact ranking, unresolved contacts and rejected-point preservation; [method](edge-crossings.md) |
 | `.venv/bin/python scripts/corner_feasibility.py --demo` | Run a bounded synthetic radius-set analysis; [input contract and limits](corner-feasibility.md) |
 | `.venv/bin/python scripts/corner_feasibility.py pixel-input.json --output pixel-result.json` | Analyze supplied known uniform pixel means; [version-3 example](pixel-apertures.md) |
 | `.venv/bin/python scripts/corner_feasibility.py signed-input.json --output signed-result.json` | Analyze a declared fixed signed operator; [version-4 example](signed-stencils.md) |

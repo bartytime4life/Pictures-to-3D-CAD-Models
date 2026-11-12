@@ -1,5 +1,8 @@
 # Material-gradient census and symmetric edge sampling
 
+The later [crossing-selection record](edge-crossings.md) repairs the separate
+multi-contact selector. This page retains the source-bound PR #55 study below.
+
 ## Source and decision
 
 This candidate is based on published `620d5c717e21fd7d7a797b114972fd2b09e9ece9`
