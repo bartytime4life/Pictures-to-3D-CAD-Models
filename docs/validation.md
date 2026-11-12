@@ -20,6 +20,8 @@ It changes guides relative to that integrated baseline, not runtime behavior.
 
 | Evidence | Revision and result | Scope |
 | --- | --- | --- |
+| Recorded camera-height checks | Branch `claude/camera-height`, on the narrow-wall commit: **508 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#camera-height-from-the-holes-roundness--november-11-2026) | Local result; synthetic photos and exact silhouettes |
+| Recorded narrow-wall and blur-sampling checks | Branch `claude/narrow-walls` on `5588a52`: **505 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#near-frontal-wall-tone-and-cubic-blur-measurement--november-11-2026) | Local result; synthetic photos and exact profiles, including what got worse |
 | Scientific documentation follow-up | [Findings and checks](validation/scientific-model-review.md), baseline `5588a52` | Circle fitting-stage and full-tracer directional-blur counterexamples, benchmark aggregation fixture, current guide corrections; not real-photo or physical qualification |
 | Zero-blur fallback | PR #39, code `d02a593`; the existing targeted regression passed in this follow-up | One test of median-level fallback; not a new full Python/browser suite or measured low-contrast-photo validation |
 | Recorded shadow-correction checks | `bbd665bec6c0d32b8ed950c69d2c102e5f7b00ce`: **501 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#edge-levels-follow-a-shadows-slope--november-11-2026) | Upstream local result, not rerun for this documentation change; synthetic photos, including the reported near-frontal regression |
@@ -41,6 +43,60 @@ stub fix in managed cloud sessions. The [reference-sensitivity record](validatio
 covers the endpoint explorer. The original CAD release and optional Ollama
 integration retain separate historical evidence. These records do not establish
 that a newly created or published cloud task has been validated.
+
+## Camera height from the holes' roundness — November 11, 2026
+
+Branch `claude/camera-height`, on the narrow-wall commit below. It follows up that record's "what got worse". See [reference-sheet tracing](reference-sheet.md), §5, for the method.
+
+- **The defect.** In a frontal photo the sheet fixes neither the focal length nor the camera height. Without EXIF a typical 26 mm lens was assumed: 9 % off for the rendered 28.6 mm lens at 440 mm, which left the 4 mm plate's outline 0.105 mm off, and 35 % off for a 40 mm lens at 600 mm (0.43 mm).
+- **The fix** (`edges.roundness_focal`). A hole's near side is traced on the top edge and its far side on the bottom edge, so with a wrong height the corrected hole is stretched along the direction from the nadir. The focal length whose pose makes the round holes round is searched over 10–200 mm, the walls are refined again with that camera, and the trace says so. A slot, or any hole that is not round, is left out.
+- **Exact silhouettes.** Holes drawn as the overlap of a bottom outline and its magnified top outline give the focal length within 0.05 % (0.009 % measured). A hole centred on the nadir, or no round hole, determines nothing.
+- **Rendered overhead photos of the 4 mm plate** (worst errors in mm; Ø6, Ø22, slot, hole position, outer; camera height found against the true one):
+
+  | Photo | Lens assumed (narrow-wall commit) | Height from the holes | Height (mm) |
+  | --- | --- | --- | --- |
+  | 28.6 mm lens, 440 mm, shadow | 0.0361, 0.0074, 0.0257, 0.0256, 0.1058 | 0.0077, 0.0054, 0.0135, 0.0078, 0.0047 | 437.2 / 440.0 |
+  | Same, no shadow | 0.0351, 0.0083, 0.0264, 0.0262, 0.1079 | 0.0069, 0.0057, 0.0137, 0.0057, 0.0088 | 436.4 / 440.0 |
+  | 24 mm lens, 380 mm | 0.0220, 0.0059, 0.0081, 0.0245, 0.1043 | 0.0047, 0.0075, 0.0081, 0.0077, 0.0087 | 381.0 / 380.0 |
+  | 40 mm lens, 600 mm | 0.1250, 0.0140, 0.0685, 0.0913, 0.4289 | 0.0033, 0.0040, 0.0125, 0.0163, 0.0347 | 623.4 / 600.0 |
+  | Noise seed 3 | 0.0371, 0.0084, 0.0231, 0.0238, 0.1041 | 0.0008, 0.0060, 0.0077, 0.0078, 0.0250 | 448.5 / 440.0 |
+  | Noise seed 11, no shadow | 0.0323, 0.0093, 0.0067, 0.0259, 0.1075 | 0.0046, 0.0067, 0.0053, 0.0071, 0.0100 | 435.7 / 440.0 |
+
+  The longer lens's camera is farther away, where the parallax it measures is smaller, so its height is 3.9 % off. Photos whose focal length the sheet or EXIF gives are unchanged.
+- **The narrow-wall record's inference holds.** With the height from the holes, hole positions on the overhead photo read 0.0078 mm, against 0.0256 mm with the assumed lens: the guessed height had made them worse, not the wall model.
+- **Photo benchmark example.** Median absolute error 0.004 mm, 95th percentile from 0.033 to 0.014 mm, worst from 0.105 to 0.015 mm; the overhead photo's camera height is found as 444.5 mm for 440 mm.
+- **Not verified.** The holes are assumed round; a hole made oval along the direction from the nadir would bias the height. A part without round holes still uses the assumed lens.
+- **Zero blur.** #39 made the edge levels fall back when `edges.edge_sigma` returns 0. The wall refinement, now `reference._refine_walls`, divided by the same σ: its weights came out NaN and happened to leave the points alone, with numpy's warnings. It now returns the points as traced (`test_wall_refinement_leaves_points_as_traced_without_a_measured_blur`, which fails without the guard).
+- **Checks run.** `pytest`: **508 passed**. New: `test_the_camera_height_makes_thick_holes_round_again`, the zero-blur test above; `test_frontal_photo_without_exif_finds_its_camera_height_from_the_holes` replaces the test that allowed half as much again as the limits for the assumed lens, and holds two lenses to the plain limits. Four planted faults were each caught: a slot kept in the fit, no flatness test, no parabola refinement, and the estimate found but not used. Ruff passed. All 74 browser scenarios passed with the system Chrome. The height search adds about 0.1 s to a frontal trace without EXIF.
+
+## Near-frontal wall tone and cubic blur measurement — November 11, 2026
+
+Branch `claude/narrow-walls`, on `main` at `5588a52` (the browser scenarios on `de6f65a`; the one change between, #39, touches only a zero-blur fallback). It addresses the near-frontal regression recorded in the next section. See [reference-sheet tracing](reference-sheet.md), §3 and §5, for the mathematics.
+
+- **The defect.** At 5° tilt the 4 mm plate's walls are under 2.5 σ almost everywhere. No wall tone was measured, so nothing was corrected: Ø6 read 0.0205 mm off and the slot 0.0466 mm. A narrow band on its own confounds the wall tone with the edge offset.
+- **The fix** (`edges.pooled_wall_tone`): one tone shared by up to 160 bands of 1–3.5 σ, the one that minimises their total fixed-tone residual. For each edge offset a band's residual is exactly quadratic in the tone (`edges._wall_tone_parabolas`), so the search takes about 0.02 s; written as repeated fits it took 1 s, and the refactor agrees with them to 2 × 10⁻⁹ px. Where the minimum is flat or at an end of the range, the old bound is noted instead.
+- **What the first version found.**
+  - On exact profiles the tone came out at 16.8 for 15, with edges 0.014 σ off. The two-step fit read its profiles by bilinear sampling, which is off by up to 2.1 grey levels in 200 at a blurred edge's shoulders. With Keys cubic sampling the tone is 15.11 and the edges are within 0.001 σ.
+  - Cubic profiles alone made the rendered photos worse (5° Ø6 from 0.0068 to 0.0116 mm), until the blur was measured the same way. `edges.edge_sigma` also read bilinear profiles. Bilinear sampling adds a variance of 1/6 px² on average, so on exactly blurred edges it read σ 2.2–4.2 % high at 1.6 px and up to 8.4 % at 1.2 px, against 0.6 % and 2.3 % with cubic sampling. Every model that takes σ had been given the larger blur. The benchmark example's reported blur drops by 2.7 %.
+  - Bands under σ are left out. On noise-free profiles under 0.4 σ, cubic sampling's 0.3-level error alone made a false minimum (186 for 15, edges 0.18 σ off) that the flatness test passed.
+- **Rendered photos** (worst errors in mm; Ø6, Ø22, slot, hole position, outer):
+
+  | Photo | `main` | This branch |
+  | --- | --- | --- |
+  | 5° tilt, 4 mm, 25 % shadow | 0.0205, 0.0130, 0.0466, 0.0125, 0.0072 | 0.0068, 0.0025, 0.0184, 0.0062, 0.0063 |
+  | 5° tilt, 4 mm, no shadow | 0.0161, 0.0134, 0.0448, 0.0111, 0.0028 | 0.0042, 0.0053, 0.0189, 0.0052, 0.0020 |
+  | Overhead, 4 mm, focal length from EXIF | 0.0159, 0.0099, 0.0305, 0.0164, 0.0203 | 0.0009, 0.0049, 0.0105, 0.0087, 0.0193 |
+  | Overhead, 4 mm, phone lens assumed | 0.0505, 0.0138, 0.0475, 0.0149, 0.1048 | 0.0361, 0.0074, 0.0257, 0.0256, 0.1058 |
+  | Tilted 47 % shadow (blur measurement only) | 0.0018, 0.0093, 0.0155, 0.0150, 0.0101 | 0.0006, 0.0086, 0.0143, 0.0144, 0.0088 |
+
+  On the other documented photos ([reference-sheet tracing](reference-sheet.md), results) most figures improve slightly. The largest increase is 0.0015 mm: Ø6 on the tilted 2400 × 1800 photo, from 0.0021 to 0.0036 mm.
+- **Photo benchmark example.** Median absolute error from 0.005 to 0.004 mm, 95th percentile from 0.043 to 0.033 mm, worst 0.104 to 0.105 mm (the overhead photo's outline).
+- **What got worse.** Overhead with an assumed lens, hole positions go from 0.0149 to 0.0256 mm, and the benchmark example's centre distances from −0.015 to −0.035 mm at worst (the overhead photo). The likely cause is the guessed camera height: the parallax correction misplaces each hole's near side, and the wall's pull on its far side had partly offset it. With the focal length from EXIF, positions improve from 0.0164 to 0.0087 mm. This is inferred from that comparison, not isolated.
+- **Tests changed.**
+  - `test_two_step_wall_model_is_unbiased_with_a_known_wall_tone_and_degenerate_without` had shown the free fit's degeneracy through bilinear sampling's error. It now adds half a grey level of noise: the free fit's edges scatter by 0.14 σ, the fixed-tone fit's stay within 0.01 σ.
+  - `test_inside_and_outside_fillets_of_an_l_shaped_plate` allows 0.012 mm (was 0.01 mm), and under half each fillet's reported uncertainty. At the 2.5 px blur the inside R3 fillet reads 0.011 mm large. Given the true blur it reads 0.0106 mm large in this pixel phase and 0.0001 mm with the plate moved 0.37 px. That is the test renderer's discrete blur of edges on pixel boundaries, which the 1.2 % larger bilinear blur had offset.
+  - The sheet-reference browser scenario's provisional width, before a thickness is entered, now accepts 120–123 mm (was 120–121 mm). Traced without a thickness, the 4 mm part's silhouette is its top and bottom faces together. `main` kept that outline as traced and aligned it at 7.44°; the branch fits it as arcs and lines and aligns it at 6.47° (true 8.00°). With the thickness entered both trace 120 × 70 within 0.1 mm, which the scenario still checks.
+- **Checks run.** `pytest`: **505 passed**. New: `test_one_wall_tone_shared_by_narrow_bands_is_recovered`, `test_edge_blur_is_measured_without_the_samplers_own_blur` and `test_a_near_frontal_thick_photo_estimates_its_wall_tone_from_narrow_bands`. Five planted faults were each caught: bilinear profiles in the two-step fit or in the blur measurement, no band rule, no flatness test, and no parabola refinement of the tone. Ruff passed. All 74 browser scenarios passed with the system Chrome. A near-frontal trace takes 0.73 s, against 0.68 s on `main`.
 
 ## Edge levels follow a shadow's slope — November 11, 2026
 

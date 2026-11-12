@@ -1,13 +1,18 @@
 # Benchmark correspondence and coverage repair
 
-Current integration baseline: `6fbff38f23c044f32649c77dddf7eb284c0b4451`,
-freshly verified as `origin/main` on November 11, 2026, after the documentation
-review in PR #40. Implementation and focused checks began at source baseline
-`5588a523c70e1797341329e54d056c161d0361ad`. The subsequent fast-forward changed
-documentation only; both candidate Python files retained their exact hashes. This record concerns the local
-benchmark implementation in `scripts/photo_benchmark.py`, not the tracing
-algorithm, browser interface, or real-photo accuracy. No dependency changes,
-private inputs, server starts or deployments were needed.
+Current integration baseline: `eec45d04cf767f2a55e8581a009b8052fe349180`,
+freshly verified as `origin/main` before integrating the published benchmark
+candidate `f01c23de468e6a371ffb173f0e3c41c8c956bf4e`. The integration uses a
+normal two-parent merge, preserving that published candidate. Upstream PRs
+#41 and #42 changed the tracing/renderer behavior, so the fresh checks below
+replace earlier results as evidence for this integration.
+
+Implementation began at `5588a523c70e1797341329e54d056c161d0361ad` and was
+first integrated with the documentation-only main revision
+`6fbff38f23c044f32649c77dddf7eb284c0b4451`. Its earlier checks remain dated
+below. This record concerns benchmark correspondence and report accounting;
+it does not claim real-photo accuracy. No dependency changes, private inputs,
+server starts or deployments were needed.
 
 ## Problem and resulting behavior
 
@@ -68,7 +73,7 @@ uncertainty or acceptance rule. The report also distinguishes pooled sample
 spread from independent captures and labels scale/edge fitting residuals as
 in-sample diagnostics without causal or held-out claims.
 
-## Completed local checks
+## Earlier local checks at `6fbff38`
 
 The existing locked Python environment from `picad-guided` was used against
 this worktree's source. Its `uv.lock` and `pyproject.toml` hashes match this
@@ -99,11 +104,39 @@ retains its original baseline and findings.
 - After the documentation-only fast-forward, the three-photo rendered CLI
   example was generated again. All 48 of 48 requested scalars matched, with
   0 unmatched/unavailable; median/p95/worst absolute errors were
-  0.005/0.043/0.104 mm. The guide's sample tables match this output. This is
-  synthetic regression evidence, not a real-photo measurement study.
+  0.005/0.043/0.104 mm. Those were the guide's values at that baseline; the
+  fresh integration below regenerates them. This is synthetic regression
+  evidence, not a real-photo measurement study.
 - Ruff checks and `git diff --check` pass for this candidate.
 - The two changed documentation files pass six local link/heading-anchor
   checks, JSON-example parsing and Markdown-table width checks.
+
+## Fresh integration against `eec45d0`
+
+The two merge parents are the published candidate
+`f01c23de468e6a371ffb173f0e3c41c8c956bf4e` and main at
+`eec45d04cf767f2a55e8581a009b8052fe349180`. The benchmark runtime and its test
+file retain their published hashes; no oracle, correspondence gate or
+acceptance assertion was weakened to accommodate upstream changes. The only
+merge conflict was in the guide's generated statistics and diagnostic wording.
+It was resolved using a fresh CLI example, retaining complete coverage and
+conditional-error wording.
+
+- `python -m pytest -q tests/test_photo_benchmark.py`: **91 passed** in
+  7.20 seconds against the integrated tracing and renderer code. This reruns
+  the independent assignment oracle, coverage conservation and real-tracer
+  synthetic regressions on the changed source.
+- The new three-photo CLI example traced all three images and reported
+  **48 requested = 48 compared + 0 unmatched + 0 unavailable**.
+  Matched absolute-error median/p95/worst values are
+  **0.004/0.014/0.015 mm**. The fitted scale term is +0.002%, edge term
+  +0.002 mm and in-sample residual 0.003 mm RMS. These figures describe this
+  synthetic example; they are not a new real-photo accuracy claim.
+- The current [benchmark guide](../photo-benchmark.md) uses this output for
+  its headline, dimension and per-photo tables. Earlier results above are
+  retained as historical observations, not current-source proof.
+- Ruff checks and diff whitespace checks pass. The changed guide and record
+  pass local link/heading-anchor, JSON-example and Markdown-table checks.
 
 The change was prepared on an isolated local branch for review. No full-repository
 suite, browser review, remote CI, native CAD/slicer import, real-photo study,

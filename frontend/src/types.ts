@@ -23,7 +23,7 @@ export type TraceReference = {
   edge_blur_mm: number;
   thickness_mm?: number;
   camera_height_mm?: number;
-  focal_source?: 'sheet' | 'exif' | 'assumed';
+  focal_source?: 'sheet' | 'exif' | 'holes' | 'assumed';
   notes: string[];
 };
 export type Profile = {

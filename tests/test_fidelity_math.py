@@ -428,6 +428,122 @@ def test_ring_smoothing_averages_the_slope_correction_round_a_closed_ring():
     assert np.abs(smoothed - expected).max() < 2e-3
 
 
+def blurred_line_image(angle_deg, phase, sigma, size=80):
+    """An exact straight edge from 10 to 200 through the image centre, moved `phase` px
+    along its normal, blurred by a Gaussian of sigma and by a one-pixel box along the
+    normal (variance 1/12 px^2, a pixel's at any angle), sampled at pixel centres.
+    Returns (image, points on the edge, their normals)."""
+    n = np.array([math.cos(math.radians(angle_deg)), math.sin(math.radians(angle_deg))])
+    yy, xx = np.mgrid[0:size, 0:size] + 0.5
+    u = (xx - size / 2) * n[0] + (yy - size / 2) * n[1] - phase
+
+    def integral(v):  # of Phi(v / sigma) dv
+        return v * edges.normal_cdf(v / sigma) + sigma * np.exp(-0.5 * (v / sigma) ** 2) / math.sqrt(2 * math.pi)
+
+    image = 10 + 190 * (integral(u + 0.5) - integral(u - 0.5))
+    along = np.linspace(-15, 15, 31)[:, None] * np.array([-n[1], n[0]])
+    return image, size / 2 + phase * n + along, np.tile(n, (31, 1))
+
+
+def test_edge_blur_is_measured_without_the_samplers_own_blur():
+    """Numerical analysis of edges.edge_sigma. Bilinear sampling blurs what it reads by
+    a variance of f (1 - f) at sub-pixel phase f, 1/6 px^2 on average; on exactly
+    blurred straight edges at 0-45 degrees and four phases it measured sigma 2.2-4.2 %
+    high at 1.6 px and up to 8.4 % at 1.2 px. With Keys cubic sampling the blur, a
+    pixel's box included, is within 1 % at 1.6 and 2.5 px and 2.5 % at 1.2 px."""
+    for sigma, limit in ((1.2, 0.025), (1.6, 0.01), (2.5, 0.01)):
+        expected = math.sqrt(sigma**2 + 1 / 12)
+        for angle in (0.0, 17.0, 45.0):
+            for phase in (0.0, 0.3, 0.5, 0.8):
+                image, points, normals = blurred_line_image(angle, phase, sigma)
+                assert abs(edges.edge_sigma(image, points, normals) / expected - 1) < limit
+
+
+def wall_step_image(bands, sigma, tones=(210.0, 15.0, 6.0), edge=60.3, width=140):
+    """Rows of an exact blurred two-step edge in linear light: top face C left of
+    edge - w, wall B from there to the edge, sheet A beyond (tones = A, B, C), with the
+    band width w of each row from `bands`."""
+    a, b, c = tones
+    x = np.arange(width) + 0.5
+    rows = []
+    for w in bands:
+        p1 = edges.normal_cdf((x - edge + w) / sigma)
+        p2 = edges.normal_cdf((x - edge) / sigma)
+        rows.append(c * (1 - p1) + b * (p1 - p2) + a * p2)
+    return np.array(rows, dtype=np.float32)
+
+
+def test_one_wall_tone_shared_by_narrow_bands_is_recovered():
+    """Numerical analysis of edges.pooled_wall_tone. On exact blurred two-step profiles
+    with bands of 1 to 3.5 sigma, none wide enough for a free fit, the tone shared by
+    all of them is recovered within 2 % of the wall's contrast with the top face, and
+    fixing it puts every edge within 0.02 sigma; with a grey level of noise the tone is
+    still within 10 %. Where noise flattens the residual (10 levels on bands of 1-2
+    sigma), and for bands under 0.4 sigma, which are left out, the estimate says the
+    tone is not determined."""
+    sigma, wall = 1.7, 15.0
+    rng = np.random.default_rng(2)
+    bands = rng.uniform(1.0, 3.5, 300) * sigma
+    image = wall_step_image(bands, sigma)
+    points = np.column_stack([np.full(len(bands), 60.3 + 0.2), np.arange(len(bands)) + 0.5])
+    normals = np.tile([1.0, 0.0], (len(bands), 1))
+    tone = edges.pooled_wall_tone(image, points, normals, bands, sigma)
+    assert tone is not None and abs(tone - wall) < 0.02 * (wall - 6.0) + 0.2
+    moved, _ = edges.two_step_refine(image, points, normals, bands, sigma, wall_tone=tone)
+    assert np.abs(moved[:, 0] - 60.3).max() < 0.02 * sigma
+
+    noisy = wall_step_image(bands, sigma) + rng.normal(0, 1.0, image.shape).astype(np.float32)
+    tone = edges.pooled_wall_tone(noisy, points, normals, bands, sigma)
+    assert tone is not None and abs(tone - wall) < 0.1 * (wall - 6.0)
+
+    some = rng.uniform(1.0, 2.0, 300) * sigma
+    noisy = wall_step_image(some, sigma) + rng.normal(0, 10.0, image.shape).astype(np.float32)
+    assert edges.pooled_wall_tone(noisy, points, normals, some, sigma) is None
+    thin = rng.uniform(0.0, 0.4, 300) * sigma
+    assert edges.pooled_wall_tone(wall_step_image(thin, sigma), points, normals, thin, sigma) is None
+
+
+def hole_silhouette(centre, radius, nadir, height, thickness, slot=0.0):
+    """The exact silhouette of a vertical-walled hole seen from `height` above `nadir`:
+    the floor shows where the bottom outline and the top outline (magnified by
+    height / (height - thickness) about the nadir) overlap. `slot` > 0 makes it a slot
+    that long. Returns its points and material normals (into the hole)."""
+    from shapely import affinity
+    from shapely.geometry import LineString, Point
+
+    shape = (LineString([(centre[0] - slot / 2, centre[1]), (centre[0] + slot / 2, centre[1])]).buffer(radius, 2048)
+             if slot else Point(centre).buffer(radius, 2048))
+    scale = height / (height - thickness)
+    top = affinity.scale(shape, scale, scale, origin=tuple(nadir))
+    points = np.array(shape.intersection(top).exterior.coords)[:-1]
+    normals = edges.material_normals(points, False)
+    return points, normals
+
+
+def test_the_camera_height_makes_thick_holes_round_again():
+    """Exact geometry (edges.roundness_focal). A thick part's hole is traced on the top
+    edge where its normal faces away from the nadir and on the bottom edge elsewhere, so
+    with the wrong camera height its corrected outline is stretched along the direction
+    from the nadir. On exact silhouettes of round holes (and a slot, which is not round
+    and is left out), the focal length that makes them round again, searched over
+    lenses of 10-200 mm, is the true one within 0.05 %. A hole centred on the nadir has
+    no such stretch, and holes there alone, or no round hole, determine nothing."""
+    nadir, height, thickness, true_focal = np.array([105.0, 148.5]), 440.0, 4.0, 1980.0
+    diagonal = math.hypot(2400, 1800)
+
+    def pose_at(focal):
+        return {"nadir_mm": nadir, "height_mm": height * focal / true_focal}
+
+    holes = [hole_silhouette(c, r, nadir, height, thickness) for c, r in (((60, 120), 3), ((150, 175), 3), ((90, 160), 11))]
+    holes.append(hole_silhouette((120, 125), 4, nadir, height, thickness, slot=16))
+    focal, used = edges.roundness_focal(holes, pose_at, thickness, diagonal, gate=0.03)
+    assert abs(focal / true_focal - 1) < 5e-4 and used == 3
+
+    centred = [hole_silhouette(nadir, 5, nadir, height, thickness)]
+    assert edges.roundness_focal(centred, pose_at, thickness, diagonal, gate=0.03) is None
+    assert edges.roundness_focal(holes[3:], pose_at, thickness, diagonal, gate=0.03) is None
+
+
 def test_srgb_decoding_matches_the_standard_and_inverts_its_encoding():
     """Property: tone.linear_from_encoded is the IEC 61966-2-1 decoding. It agrees with
     the renderer's separately written copy and with the standard's own values (a saved
@@ -669,7 +785,9 @@ def test_two_step_wall_model_is_unbiased_with_a_known_wall_tone_and_degenerate_w
     """Numerical analysis of edges.two_step_refine on exact profiles (sigma = 1.6 px):
     the single crossing's analytic bias for a 1-3 sigma band is removed when the wall
     tone is known (|error| < 0.01 sigma), while a free three-tone fit cannot separate a
-    narrow band's tone from the edge offset (error > 0.05 sigma at 0.5 sigma)."""
+    narrow band's tone from the edge offset: with half a grey level of noise on a band
+    of 0.5 sigma, its edges scatter by over 0.05 sigma (SD) and its tones by over 20,
+    where the fit with the tone fixed keeps every edge within 0.02 sigma."""
     sigma, edge = 1.6, 100.3
     points = np.column_stack([np.full(4, edge - 0.2 * sigma), [5.0, 8.0, 11.0, 14.0]])
     normals = np.tile([1.0, 0.0], (4, 1))
@@ -679,9 +797,14 @@ def test_two_step_wall_model_is_unbiased_with_a_known_wall_tone_and_degenerate_w
         assert abs(moved[0, 0] - edge) < 0.01 * sigma
         crossing, _ = sheet.half_level_search(image, points, normals, half=3.5 * sigma, step=0.0625)
         assert edge - crossing[0, 0] > 0.1 * sigma  # the bias the model removes
-    image = two_step_image(edge, 0.5 * sigma, sigma)
-    free, tones = edges.two_step_refine(image, points, normals, np.full(4, 0.5 * sigma), sigma)
-    assert abs(free[0, 0] - edge) > 0.05 * sigma and abs(tones[0] - 78.0) > 20
+    rng = np.random.default_rng(4)
+    points = np.column_stack([np.full(200, edge - 0.2 * sigma), np.linspace(2.0, 17.0, 200)])
+    normals, band = np.tile([1.0, 0.0], (200, 1)), np.full(200, 0.5 * sigma)
+    image = two_step_image(edge, 0.5 * sigma, sigma) + rng.normal(0, 0.5, (20, 200))
+    free, tones = edges.two_step_refine(image, points, normals, band, sigma)
+    fixed, _ = edges.two_step_refine(image, points, normals, band, sigma, wall_tone=78.0)
+    assert np.std(free[:, 0] - edge) > 0.05 * sigma and np.std(tones) > 20
+    assert np.abs(fixed[:, 0] - edge).max() < 0.02 * sigma
 
 
 # ---------------------------------------------------------------------- properties

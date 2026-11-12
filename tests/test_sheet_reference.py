@@ -34,6 +34,7 @@ CASES = {
     "moderate-thick": {"tilt": (9.0, -4.0, 4.0), "thickness": 4.0},
     "frontal-thick-exif": {"tilt": (0.0, 0.0, 4.0), "thickness": 4.0, "exif_focal_35mm": 29},
     "frontal-thick": {"tilt": (0.0, 0.0, 4.0), "thickness": 4.0},
+    "frontal-thick-long-lens": {"tilt": (0.0, 0.0, 4.0), "thickness": 4.0, "focal": 2773.0, "distance": 600.0},
     "light-part-dark-sheet": {"tones": (200.0, 45.0, 215.0, 185.0), "shadow": 0.0},
 }
 # Maximum absolute errors (mm) a passing trace must stay within.
@@ -145,9 +146,53 @@ def test_thickness_correction_removes_side_wall_parallax(client, photos):
 
 def narrow_wall_bound(reference):
     """Analytic bound (edges.two_step_refine): when the visible walls are too narrow to
-    measure their tone, an edge facing the camera may read up to 0.2 sigma into the part."""
-    assert any("Side walls are visible but narrower" in note for note in reference["notes"])
+    measure their tone, an edge facing the camera may read up to 0.2 sigma into the part.
+    A near-frontal photo now has its tone estimated jointly from its narrow bands
+    (edges.pooled_wall_tone); the bound is kept for these tests' limits."""
+    assert any(
+        "Side walls are visible but narrower" in note or "their tone was estimated jointly" in note
+        for note in reference["notes"]
+    )
     return 0.2 * reference["edge_blur_mm"]
+
+
+def test_a_near_frontal_thick_photo_estimates_its_wall_tone_from_narrow_bands(client):
+    """At 5 degrees the 4 mm plate's walls are under 2.5 sigma almost everywhere, too
+    narrow for the free two-step fit, so they were not corrected: the slot read 0.047 mm
+    off and the small holes 0.021 mm. One tone shared by the hundreds of bands of 1-3.5
+    sigma is identifiable (edges.pooled_wall_tone), and with it the edges facing the
+    camera are corrected like those of a tilted photo."""
+    data, _ = S.render(tilt=(5.0, -2.0, 4.0), thickness=4.0)
+    response = trace(client, data, reference="a4", thickness_mm=4)
+    assert response.status_code == 200, response.text
+    reference = response.json()["profile"]["reference"]
+    assert any("their tone was estimated jointly" in note for note in reference["notes"])
+    errors = S.feature_errors(response.json()["profile"])
+    assert errors["small"] < 0.01 and errors["bore"] < 0.01 and errors["slot"] < 0.025
+
+
+def test_wall_refinement_leaves_points_as_traced_without_a_measured_blur():
+    """edges.edge_sigma returns 0 when no profile has the contrast to measure the blur.
+    The two-step wall model divides by sigma: without the guard its weights came out
+    NaN and happened to leave the points alone, with numpy's warnings. With it the
+    points are returned as traced without any NaN arithmetic."""
+    import warnings
+
+    from backend import reference as R
+
+    theta = np.linspace(0, 2 * np.pi, 120, endpoint=False)
+    rings = [
+        {"outer": True, "points": np.column_stack([400 + 300 * np.cos(theta), 400 + 300 * np.sin(theta)])},
+        {"outer": False, "points": np.column_stack([500 + 30 * np.cos(theta), 400 + 30 * np.sin(theta)])},
+    ]
+    camera = {"nadir_mm": np.array([40.0, 40.0]), "height_mm": 400.0}
+    image = np.full((800, 800), 100.0)
+    with warnings.catch_warnings():
+        warnings.simplefilter("error", RuntimeWarning)
+        refined, notes = R._refine_walls(image, rings, camera, 4.0, 0.0, 10.0)
+    for (points, normals), ring in zip(refined, rings):
+        assert np.array_equal(points, ring["points"]) and np.isfinite(normals).all()
+    assert notes == []
 
 
 def test_moderate_tilt_measures_the_wall_tone_and_refines_narrow_wall_bands(client, photos):
@@ -172,17 +217,23 @@ def test_frontal_photo_uses_exif_focal_length_for_thickness(client, photos):
     assert {k: v for k, v in errors.items() if v > LIMITS[k] + bound} == {}
 
 
-def test_frontal_photo_without_exif_assumes_a_phone_lens_and_says_so(client, photos):
-    result, _ = traced(client, photos, "frontal-thick", thickness_mm=4)
+@pytest.mark.parametrize(("name", "height_error"), [("frontal-thick", 0.02), ("frontal-thick-long-lens", 0.05)])
+def test_frontal_photo_without_exif_finds_its_camera_height_from_the_holes(client, photos, name, height_error):
+    """A frontal photo fixes neither the focal length nor the camera height, and its
+    metadata here holds none. A typical 26 mm lens was assumed: 9 % off for the 28.6 mm
+    lens at 440 mm, which left the outline 0.105 mm off, and 35 % off for a 40 mm lens
+    at 600 mm (0.43 mm). The holes' roundness after the parallax correction fixes the
+    height (edges.roundness_focal): within 2 % and 5 %, with every feature inside the
+    limits plus the narrow-wall bound."""
+    result, truth = traced(client, photos, name, thickness_mm=4)
     reference = result["profile"]["reference"]
-    assert reference["focal_source"] == "assumed"
-    assert any("typical phone lens was assumed" in note for note in reference["notes"])
-    # The assumed 26 mm lens differs from the true 28.6 mm, so the camera height and the
-    # thickness correction are about 9 % off: allow half as much again as the limits,
-    # on top of the narrow-wall bound that also applies to this frontal view.
+    assert reference["focal_source"] == "holes"
+    assert any("from the roundness of 5 hole(s)" in note for note in reference["notes"])
+    true_height = abs(truth["camera_centre_mm"][2])
+    assert abs(reference["camera_height_mm"] / true_height - 1) < height_error
     bound = narrow_wall_bound(reference)
     errors = S.feature_errors(result["profile"])
-    assert {k: v for k, v in errors.items() if v > 1.5 * LIMITS[k] + bound} == {}
+    assert {k: v for k, v in errors.items() if v > LIMITS[k] + bound} == {}
 
 
 def test_without_a_shadow_the_tilted_trace_is_several_times_tighter(client):
@@ -652,15 +703,21 @@ def test_inside_and_outside_fillets_of_an_l_shaped_plate(radius_mm, sigma_px):
     """A rendered L-shaped plate with every corner filleted, the inside one included.
     The blurred indicators of a corner and of its complement sum to one, so the traced
     edge and the exact corner model are the same for an inside fillet as for an
-    outside one: all six radii read within 0.01 mm."""
+    outside one: all six radii read within 0.012 mm, under half their reported
+    uncertainty. At the 2.5 px blur the inside fillet reads 0.011 mm large. Given the
+    true blur it still reads 0.0106 mm large in this pixel phase, and 0.0001 mm with the
+    plate moved 0.37 px: the test renderer's discrete blur of edges on pixel boundaries,
+    which the 1.2 % larger blur bilinear sampling measured had offset."""
     from shapely.geometry import box
 
     ppm = 5.0
     plate = box(10, 10, 130, 90).difference(box(60, 45, 140, 100))
     part = plate.buffer(radius_mm, 1024).buffer(-2 * radius_mm, 1024).buffer(radius_mm, 1024)
     prims, _ = snapped_fit_of_rendered(part, ppm, sigma_px, (500, 725))
-    radii = np.array([p.data["r"] for p in prims if p.kind == "arc"]) / ppm
-    assert len(radii) == 6 and np.abs(radii - radius_mm).max() < 0.01
+    arcs = [p for p in prims if p.kind == "arc"]
+    errors = np.array([abs(p.data["r"] / ppm - radius_mm) for p in arcs])
+    assert len(arcs) == 6 and errors.max() < 0.012
+    assert all(error < 0.5 * p.data["r_sd"] / ppm for error, p in zip(errors, arcs))
 
 
 @pytest.mark.parametrize(("sides", "turn", "sigma_px"), [(4, 0.0, 1.6), (4, 0.0, 2.5), (6, 0.2, 1.6), (3, 0.1, 1.6)])

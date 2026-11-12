@@ -60,7 +60,7 @@ class TraceReference(BaseModel):
     edge_blur_mm: float = Field(ge=0, le=100)
     thickness_mm: float | None = Field(default=None, gt=0, le=500)
     camera_height_mm: float | None = Field(default=None, gt=0, le=1_000_000)
-    focal_source: Literal["sheet", "exif", "assumed"] | None = None
+    focal_source: Literal["sheet", "exif", "holes", "assumed"] | None = None
     notes: list[Annotated[str, Field(max_length=300)]] = Field(default_factory=list, max_length=16)
 
     @field_validator("sheet_mm")
