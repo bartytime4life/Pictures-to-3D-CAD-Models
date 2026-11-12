@@ -31,6 +31,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Make and validate a change | [Contributing](contributing.md), [development](development.md) |
 | Understand components, API and data flow | [Architecture](architecture.md) |
 | Read mathematical methods and their limits | [Research and algorithms](research.md), [engineering model](engineering-model.md) |
+| Review unresolved fitting and benchmark findings | [Scientific model review](validation/scientific-model-review.md) |
 | Run a benchmark with measured photos | [Photo benchmark](photo-benchmark.md) |
 | Review completed checks | [Validation overview](validation.md), [design QA](../design-qa.md) |
 | Review the recent interface changes | [Guided-workbench audit](validation/guided-workbench.md) |
