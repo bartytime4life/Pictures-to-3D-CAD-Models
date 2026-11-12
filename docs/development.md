@@ -132,7 +132,10 @@ implementation was checked. A historical pass does not establish a later head,
 and listing a command here does not establish that it ran.
 
 The current main-based workflow preserves PR #82's 45-minute workbench job
-budget. It does not contain the larger research branch's test population. A
+budget. This PR #88-based checkout also contains the conditional finite-material
+Python operators and tests; source-space calibration APIs from the separate
+research lineage remain absent. The [862-test local run](validation/finite-free-centre.md#software-regression)
+belongs to PR #88's source, rather than main or an installed application. A
 cancelled or running job is not a completed pass; use the revision-bound
 [status and evidence](project-status.md) when reporting CI.
 

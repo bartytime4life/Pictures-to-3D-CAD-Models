@@ -20,6 +20,7 @@ scripts from a separate branch are not implied by this list.
 | Actual arc/chord fit comparison | `.venv/bin/python studies/verification/canonical-arcs-fit-v1.py --output NEW.json` | Six fixed cases; optional `--source-root PATH` selects an explicit local backend; deliberately mismatched nonzero blur checks representation, not optical recovery; creates missing parents |
 | Directional free-arc comparison | `.venv/bin/python studies/verification/directional-free-arcs-v1.py --output NEW.json` | Sixteen fixed conditional cases; supplied truth-derived local domains, fixed covariance/half-level and study-only finite-disk model; fresh JSON destination in an existing directory |
 | Finite-material centre/radius inverse | `.venv/bin/python studies/verification/finite-free-centre-v1.py --output NEW.json` | Twenty-four fixed supplied-optics cases, observation-derived domains and independent positive-area means; all outcomes retained; fresh JSON destination in an existing directory; [model](finite-shape-inverse.md) |
+| Supplemental same-pixel aperture audit | `.venv/bin/python studies/verification/finite-free-centre-aperture-audit-v1.py --output NEW.json` | Rechecks the saved 56 aperture observations at 8×8 and 16×16 order without refitting; fresh JSON destination in an existing directory; preserves the original failed 4×4/8×8 comparison |
 | Image-moment proposal replay | `.venv/bin/python studies/verification/finite-moment-photo-v1.py --output NEW.json` | Archived synthetic measurement fields, all 76 numerical/ineligible outcomes and background/crop sensitivity; fresh JSON destination; [limits](validation/finite-moment-photo.md) |
 | Corner sweep | `.venv/bin/python scripts/corner_sweep.py --help` | Synthetic fitting cases, optional `--quick`, `--backend PATH` and `--json FILE`; not a real-camera test |
 | Native FreeCAD import check | `make freecad` | Requires `FREECADCMD`; builds synthetic fixtures and launches FreeCAD. `freecad_check.py` and its `freecad_import.py` helper have no argparse help mode |
@@ -31,13 +32,29 @@ scripts from a separate branch are not implied by this list.
 
 Use a new scratch destination for generated benchmark/example reports. The
 photo-benchmark script can overwrite report paths, and `--example` writes into
-its chosen folder. Both independent study runners instead refuse an existing
-destination, including a dangling symbolic link. The canonical join runners
+its chosen folder. The independent corner, frame, directional, finite-centre,
+moment and supplemental-aperture runners refuse an existing destination,
+including a dangling symbolic link, and require its parent directory to exist.
+The canonical join runners
 also refuse existing destinations, but can create their output parent directories;
 the directional free-arc runner requires its parent to exist. The Ollama
 benchmark creates its output parent and writes both JSON and a `.md` sibling.
 Printer import defaults to the tracked `data/printers.json`. Review a generated
 diff before replacing committed data.
+
+The frozen 24-case finite-centre study exits **1** because its planned 4×4/8×8
+aperture-order comparison misses the unchanged tolerance, even though all 12
+matched recovery targets pass. Keep its full report. A separate supplemental
+8×8/16×16 pass does not replace that failure. Exit **2** reports parser/input or
+output-path refusal; see the [complete study record](validation/finite-free-centre.md).
+The moment replay's exit **0** means exact reproduction of its retained rows,
+including failed targets and refused proposals; it is not an all-target pass.
+
+The captured-field intensity diagnostic under
+[`studies/fixtures/finite-photo-intensity-v1/`](../studies/fixtures/finite-photo-intensity-v1/README.md)
+contains a `.py.txt` provenance archive and a complete result. It is not a
+standalone replay CLI. Its original absolute input aliases are documented and
+hash-bound; renaming that archive to `.py` does not make a portable experiment.
 
 `--help` is a read-only parser check only for the listed Python scripts
 with an argparse help mode. The listed study runners also provide `--help`. Do not append it to smoke or FreeCAD helpers and

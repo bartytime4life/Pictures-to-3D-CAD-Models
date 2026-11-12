@@ -19,6 +19,13 @@ An optional local Ollama assistant provides text guidance and reviewable trace/d
 
 The current implementation and [validation results](validation.md) are the source of truth for what works. Items below are future work, not hidden capabilities or delivery promises.
 
+Draft PR #88 adds a [conditional finite-material Python inverse](finite-shape-inverse.md),
+with [matched and adverse numerical evidence](validation/finite-free-centre.md).
+It has no automatic trace/build integration. Observation-region selection,
+supported covariance and thickness frames, held-out source adequacy, latency
+and preservation of final CAD geometry remain prerequisites for user adoption.
+The moment initializer's background-sensitive proposals are experimental.
+
 The [engineering model and verification plan](engineering-model.md) defines the 2.5D scope, camera-model assumptions, dimension equations and evidence needed through prototype qualification. The independent source-height check optionally compares a user-bounded measurement with a user-defined allowance; it reports within, outside or inconclusive without assigning a physical accuracy or confidence level.
 
 Reference entry also includes an [endpoint-placement sensitivity explorer](reference-sensitivity.md). It illustrates a user-selected pixel-shift scenario without applying scale or claiming an accuracy range.
