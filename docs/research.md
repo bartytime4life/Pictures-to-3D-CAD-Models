@@ -1,5 +1,14 @@
 # Research and design decisions
 
+The [conditional optical-calibration investigation](psf-calibration.md) fits
+Gaussian width and edge offset directly in fixed raw working pixels. Three
+sufficiently separated unoriented directions can identify a common Gaussian
+covariance; two rectangle directions cannot. Frobenius-coordinate rank/condition
+and an explicit pooling gate keep missing or unresolved evidence visible. The
+[independent controls](validation/psf-calibration.md) also retain non-Gaussian
+and exact response ambiguities: covariance recovery alone cannot qualify a camera.
+
+
 The [real-trace source context](source-context.md) connects the actual prewarp
 working field to fixed source observations and an explicit conditional finite-
 shape fit. Its [integration replay](validation/source-context.md) compares the
@@ -562,8 +571,10 @@ The conditional circular-segment fitter jointly searches radius and chord
 fraction with fixed pose, raw covariance and source/noise support. Bounded
 brightness is profiled at every geometry; local domain-scaled Gauss–Newton steps
 use actual profiled-cost backtracking. Error estimates and local ranks remain
-numerical diagnostics. Pixel apertures, unknown radiometry, joint camera/PSF
-inference and production source-context capture remain separate work.
+numerical diagnostics. Pixel apertures, unknown radiometry and joint camera/PSF
+inference remain open. The private [source context](source-context.md) now
+captures actual working values and provides an explicit guarded fitting bridge;
+automatic geometry refinement and acceptance remain separate work.
 
 ## Circle-consistent joins and minimum-edit cycles
 

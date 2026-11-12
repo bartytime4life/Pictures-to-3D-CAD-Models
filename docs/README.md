@@ -30,6 +30,12 @@ settings. Physical dimensions, fit and strength need their own evidence.
 
 ## Develop and evaluate
 
+First [choose the source revision](development.md#choose-the-source-revision).
+The research guides below can describe tools on a review branch that is separate
+from `main`. Their Python APIs and study runners are separate from workbench
+controls; a successful fit does not automatically update a trace or calibrate
+its camera.
+
 | Task | Guide |
 | --- | --- |
 | Make and validate a change | [Contributing](contributing.md), [development](development.md) |
@@ -56,17 +62,18 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Understand correlated profile samples and compose a known smoothing filter | [Fixed observations and covariance](profile-observations.md), [complete controls](validation/profile-observations.md) |
 | Include known perspective/lens resampling and inspect raw optical assumptions | [Warp-chain model](warp-observations.md), [complete digital and optical controls](validation/warp-observations.md) |
 | Fit a supplied straight raw optical source without inverting weak profile modes | [Source-space variable projection](raw-source-fit.md), [complete controls and limitations](validation/raw-source-fit.md) |
+| Investigate raw Gaussian edge width, common covariance and missing target directions | [Conditional Gaussian blur model](psf-calibration.md), [independent controls](validation/psf-calibration.md) |
 | Keep real trace pixels, processing and geometry bound to one private request | [Source context and explicit fitting bridge](source-context.md), [digital integration checks](validation/source-context.md) |
 | Predict a complete finite boundary and conditionally fit radius/chord from source intensities | [Source model and integration contract](finite-shape-source.md), [independent controls and limitations](validation/finite-shape-source.md) |
 | Check externally bounded calibration for one common scalar response | [Exact response consistency](response-calibration.md), [edge/calibration controls](validation/response-calibration.md) |
 | Carry input intervals through one common response and bound supplied Gaussian inputs | [Rectangle quantifiers and outward CDF bounds](response-rectangles.md), [finite experiment and independent checks](validation/response-rectangles.md) |
 | Enclose continuous shared edge-offset/blur domains without choosing independent inputs | [Gaussian response domains](gaussian-response-domains.md), [complete boxes, controls and independent replay](validation/gaussian-response-domains.md) |
 | Understand the lens inverse domain and independent synthetic camera checks | [Radial inverse and lens mismatch](validation/radial-inverse.md) |
-| Review why the blur diagnostic remains research only | [Directional-spread qualification](validation/directional-spread-qualification.md) |
+| Review directional-spread experiments and why they add no production warning | [Directional-spread qualification](validation/directional-spread-qualification.md) |
 | Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |
 | Run a benchmark with measured photos | [Photo benchmark](photo-benchmark.md) |
 | Review completed checks | [Validation overview](validation.md), [design QA](../design-qa.md) |
-| Check current documentation coverage and source consistency | [Complete review through PR #72](validation/documentation-pr72.md), [geometry coverage](validation/canonical-arcs.md#documentation-coverage), [preceding review through PR #70](validation/documentation-pr70.md) |
+| Review documentation coverage and its recorded source | [Validation overview](validation.md), [earlier review through PR #72](validation/documentation-pr72.md), [canonical-arc coverage](validation/canonical-arcs.md#documentation-coverage) |
 | Interpret incomplete hosted runs and the overall job limit | [Runtime-budget evidence](validation/ci-runtime-budget.md), [exact-head CI status](project-status.md#evidence-by-scope) |
 | Review the recent interface changes | [Guided-workbench audit](validation/guided-workbench.md) |
 | Review scope and future work | [Roadmap](roadmap.md), [change log](changelog.md) |

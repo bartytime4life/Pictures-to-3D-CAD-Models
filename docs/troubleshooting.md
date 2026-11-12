@@ -125,7 +125,9 @@ Opening a project replaces the current work only after its CAD build succeeds. I
 ## Numerical developer tools
 
 These commands run separately from the workbench. Start with the
-[tool catalog](developer-tools.md) and the selected tool's input guide.
+[tool catalog](developer-tools.md), [matching source revision](development.md#choose-the-source-revision)
+and the selected tool's input guide. There is no additional calibration control
+to enable in the workbench.
 
 | Symptom | Next action |
 | --- | --- |
@@ -136,10 +138,22 @@ These commands run separately from the workbench. Start with the
 | A Gaussian-domain report exits 0 but says `unresolved` | Read the unknown-leaf reasons and `summary.feasible_parameters_exist`: `null` means existence has not been decided, while `true` can coexist with unresolved regions. An empty inner set is not an empty feasible set. See [result interpretation](gaussian-response-domains.md#read-the-result-and-its-tree). |
 | A pair lies in both outer projections | Inspect the joint outer boxes. Two marginal intervals lose correlation, and an unknown box is only retained possibility. Projection membership does not certify the pair. |
 | An experiment's Git revision differs from its source hashes | Read its dirty-file context and retained source bindings. A run made before committing can identify a parent revision plus new files; a revision label alone does not identify the evaluated implementation. |
+| A source-context or PSF module is missing | Check the checkout revision and prepared root `.venv`. These tools are on the documented research line; installing an unrelated package or restarting a `main` server does not add them. See [source selection](development.md#choose-the-source-revision). |
+| `trace_with_source` returns no context | The request used ordinary tracing or an allowed sheet fallback. Review the trace warnings and sheet choice; only a complete successful sheet trace publishes a context. |
+| A source fit rejects a profile, observation or model guard | Keep the result/context pair from the same trace. A changed profile or different-request observation needs fresh bindings. Nonzero lens distortion, prior reduction or entered thickness can make the point-Gaussian model unsupported even when the ordinary trace remains usable. Do not erase those records to bypass the guard. See [source-context contracts](source-context.md). |
+| A PSF report has `reconstruction: null` or `covariance: null` | Read every planned edge's status, direction rank and SPD/numerical diagnostics. Unresolved edge fits withhold pooling; two perpendicular directions leave the covariance cross term unidentified. Preserve the rows and obtain a suitable independent oblique target edge when missing direction information is the cause. |
+| PSF rank or condition diagnostics are `null` | An unavailable local rank is not zero, and a missing condition number is not perfect conditioning. Inspect the corresponding rank and work/numerical limits in the [Gaussian blur guide](psf-calibration.md). |
+| A covariance exists but standardized residual norms are `null` | Parameter reconstruction can be representable while diagnostic arithmetic underflows or overflows. Inspect `numerically_supported`; do not replace missing norms with zero or treat the covariance as calibrated optics. |
+| PSF sizes or direction angles seem inconsistent | Edge offset and sigma use working-photo pixels; directional variances, covariance and `variance_std` use working pixels squared. Planner angles are radians. Display pixels, sheet millimetres and the trace's rectified `edge_blur_mm` are different quantities; use the [declared frame and units](psf-calibration.md). |
 
 The [response guide](response-calibration.md) includes a runnable input, exact
 output example, limits and independent replay commands. No server restart,
 photograph upload or model download is required for those commands.
+
+JSON `null` is field-specific. In the response-rectangle tool an unbounded query
+endpoint represents infinity; in PSF outputs it can mean a withheld reconstruction
+or unavailable diagnostic. It does not universally mean zero, failure or an
+unbounded parameter. The corresponding guide defines each field.
 
 ## Report a reproducible problem
 

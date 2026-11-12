@@ -6,9 +6,11 @@ CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
 For a concise source/review snapshot, use [project status](project-status.md).
-The [current documentation review](validation/documentation-pr72.md) checks the
-published PR #72 source, command examples, API maps and complete documentation
-inventory. Its checks are separate from the software regressions below.
+The [current documentation review](validation/documentation-psf-state.md) checks
+published PR #79's source, branch availability, command examples, API maps and
+the complete documentation inventory. Its checks are separate from the software
+regressions below. The [earlier PR #72 documentation review](validation/documentation-pr72.md)
+retains its original source and generated-handbook checks.
 The [geometry and documentation record](validation/canonical-arcs.md)
 covers circle-consistent final assembly and explicit source-outline recovery.
 The [preceding documentation review](validation/documentation-pr70.md) retains
@@ -32,6 +34,12 @@ The [earlier PR #49 documentation follow-up](validation/documentation-current-st
 retains its source, executable API example and completed checks.
 
 ## Current workbench evidence — November 12, 2026
+
+The [conditional PSF record](validation/psf-calibration.md) binds the direct
+source-edge fitter, all-row readiness gate, covariance reconstruction and direction
+planner to their numerical controls. Matched recovery, missing direction data,
+response aliases and optical/model qualification remain separate findings.
+
 
 The opt-in [source-context record](validation/source-context.md) binds actual
 prewarp fields, fixed operators, profile/request identities and the explicit

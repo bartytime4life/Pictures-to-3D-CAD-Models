@@ -1,0 +1,59 @@
+{
+  "format": "pictures-to-cad-psf-calibration-plan",
+  "version": 1,
+  "purpose": "Conditional source-edge Gaussian widths, covariance identifiability, and explicit PSF/response countercontrols; no physical calibration.",
+  "defaults": {
+    "sensor_shape": [96, 96],
+    "anchor": [48.17, 47.71],
+    "offset": 0.23719,
+    "levels": [40.0, 210.0],
+    "covariance": [[2.25, 0.6], [0.6, 1.21]],
+    "angles_degrees": [0, 60, 120],
+    "pixel_offsets": [-8, -6, -4, -2, 0, 2, 4, 6, 8],
+    "offset_bounds": [-1.2, 1.2],
+    "sigma_bounds": [0.4, 5.5],
+    "grid_points": 3,
+    "refinement_iterations": 32,
+    "max_basins": 2,
+    "max_evaluations": 192
+  },
+  "matched_targets": {
+    "offset_error_px": 0.00001,
+    "sigma_error_px": 0.00001,
+    "covariance_frobenius_error_px2": 0.0001,
+    "heldout_profile_max_level_error": 0.001,
+    "finite_D_max_level_error": 0.002,
+    "finite_D_oracle_order_delta": 0.0000001
+  },
+  "finite_D": {
+    "centre": [48.3, 47.7], "radius": 10.0, "fraction": 0.23,
+    "pixels": [[38, 48], [40, 42], [44, 38], [49, 38], [51, 44], [50, 52], [44, 57], [38, 50]],
+    "oracle_orders": [32, 64],
+    "oracle_sha256": "912c7cd63c30e0b26b0dabdbc65c0cf2152966897b30fc44de26ca18448b2b3a",
+    "tail_multipliers": [-12, -8, -6, -4, -2, -1, 0, 1, 2, 4, 6, 8, 12]
+  },
+  "cases": [
+    {"name": "matched-balanced-correlated-SPD", "kind": "edges", "source": "gaussian", "finite_D": true, "matched": true},
+    {"name": "matched-rotated-SPD-fourth-direction", "kind": "edges", "source": "gaussian", "covariance": [[0.91, -0.42], [-0.42, 3.24]], "angles_degrees": [17, 77, 137], "fourth_direction": 41, "matched": true},
+    {"name": "correlated-observations-and-noise-unit-controls", "kind": "noise_controls", "seed": 3752026, "input_std_range": [0.2, 0.4], "unit_scales": [0.000001, 1000000], "parameter_invariance_max": 0.00000001, "directional_variance_invariance_max": 0.0000001},
+    {"name": "rectangle-offdiagonal-aliases", "kind": "rectangle"},
+    {"name": "rational-nearparallel-positive-variances-indefinite", "kind": "nearparallel", "c": "39999/40001", "d": "400/40001", "centre_variance_perturbation": "1/10000"},
+    {"name": "weighted-Fraction-oracle-and-unit-rescaling", "kind": "weighted", "unit_scales": [0.000001, 1, 1000000]},
+    {"name": "orientation-information-planner", "kind": "planner"},
+    {"name": "positive-Gaussian-mixture-equivalent-covariance", "kind": "edges", "source": "mixture", "covariance": [[1.69, 0], [0, 1.69]], "mixture": [[0.9, 1], [0.1, 25]], "finite_D": true},
+    {"name": "exact-common-response-alias", "kind": "edges", "source": "probit_response", "response_a": 1.35, "response_b": 0.25, "alias_targets": true},
+    {"name": "uniform-pixel-aperture-fitted-as-point", "kind": "edges", "source": "aperture", "aperture_orders": [16, 32], "oracle_max_level_delta": 0.00000001},
+    {"name": "common-gamma-response-mismatch", "kind": "edges", "source": "gamma", "gamma": 1.6},
+    {"name": "constant-source-nonidentification", "kind": "constant", "constant": 128.0},
+    {"name": "complete-grid-no-refinement-budget", "kind": "budget", "max_evaluations": 9}
+  ],
+  "limitations": [
+    "All observations are generated source-pixel means. No uploaded or measured camera data, production trace, image file, or physical calibration is used.",
+    "Known unit normals and a single stationary working-image PSF are supplied; uncertainty in normals/pose or variation between edges is not inferred.",
+    "Optional variance weighting is a supplied diagonal summary-error hypothesis, not uncertainty derived from the width fits.",
+    "Rank three and an SPD Gaussian-equivalent covariance do not validate Gaussian PSF shape, camera response, detector apertures, or a real optical covariance.",
+    "Exact common probit response can preserve perfect Gaussian edge fits while rescaling the inferred covariance; covariance/response calibration requires additional evidence.",
+    "The finite-D holdout compares a known complete shape using an independent positive area/slice oracle; it is not inverse shape recovery or physical qualification.",
+    "All finite-grid, incomplete-refinement, work-limit, tie, boundary, and rank flags are retained. Adverse best candidates are not asserted to be converged intrinsic biases."
+  ]
+}

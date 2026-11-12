@@ -288,6 +288,19 @@ class TraceSourceContext:
         from another request is refused even if that request produced equal geometry.
         """
         geometry = self.point_gaussian_geometry(profile=profile)
+        pixels, values, noise = self._fit_observation(observation, input_std)
+        from .finite_shape_fit import fit_circular_segment
+
+        return fit_circular_segment(
+            pixels,
+            values,
+            noise,
+            **geometry,
+            psf_covariance=psf_covariance,
+            **fit_options,
+        )
+
+    def _fit_observation(self, observation, input_std):
         if (
             not isinstance(observation, SourceObservation)
             or observation.context_sha256 != self.sha256
@@ -312,14 +325,29 @@ class TraceSourceContext:
             observation.raw_values, self.working_field[pixels[:, 1], pixels[:, 0]]
         ):
             raise ValueError("observation values differ from this request's source pixels")
-        from .finite_shape_fit import fit_circular_segment
-
-        return fit_circular_segment(
+        return (
             _immutable(pixels, "<i8"),
             _immutable(self.working_field[pixels[:, 1], pixels[:, 0]]),
             PixelNoise.factor(_immutable(observation.matrix), input_std),
-            **geometry,
-            psf_covariance=psf_covariance,
+        )
+
+    def fit_edge_spread(self, observation, *, profile, input_std, **fit_options):
+        """Fit one declared straight raw edge's offset/width under a Gaussian model.
+
+        Normal and anchor use the working-photo geometric frame, not display
+        coordinates or sheet mm. A declared independent target and justified fixed
+        normals/ROIs are needed for calibration work. A good fit does not validate
+        a Gaussian PSF, estimate response, change geometry or calibrate this context.
+        """
+        geometry = self.point_gaussian_geometry(profile=profile)
+        pixels, values, noise = self._fit_observation(observation, input_std)
+        from .edge_spread import fit_edge_spread
+
+        return fit_edge_spread(
+            pixels,
+            values,
+            noise,
+            sensor_shape=geometry["sensor_shape"],
             **fit_options,
         )
 

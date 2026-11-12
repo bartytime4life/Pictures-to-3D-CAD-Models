@@ -10,6 +10,10 @@ an experiment in another worktree is a different implementation.
 
 | Question | Tool | Interpretation |
 | --- | --- | --- |
+| Can a declared straight target explain fixed source pixels while offset and blur vary? | `backend.edge_spread.fit_edge_spread` | Bounded Python search with fitted brightness, retained unknowns and local geometry rank; [executable example](api-examples.md#python-example-fit-a-declared-straight-source-edge) |
+| Do edge directions identify a common Gaussian covariance, and which direction adds information? | `backend.psf_calibration` | All-row pooling, rank/conditioning, indefinite candidates and finite planning under supplied variance weights; [guide](psf-calibration.md) |
+| Can those PSF tools retain the fixed independent controls and adverse cases? | `.venv/bin/python studies/verification/psf-calibration-v1.py --output NEW_JSON` | All 13 planned cases remain visible; numerical readiness does not establish Gaussian adequacy or camera calibration |
+| Which actual prewarp values belong to a successful sheet trace? | `backend.source_context.trace_with_source` | Caller-owned immutable field and request/profile-bound observations; explicit guarded Python fits, no source-session HTTP API |
 | Which radii can explain explicitly bounded observations? | `scripts/corner_feasibility.py` | Conditional sets under supplied geometry, optics and observation bounds; no photo ingestion or automatic correction |
 | Does the fitting chain retain synthetic rounded corners? | `make corner-sweep` | Matched-model regression, including unresolved numerical searches; no physical radius bound |
 | Do final line/arc joins preserve the supplied circles and source traversal? | `studies/verification/canonical-arcs-oracle-v1.py --output NEW_JSON` | Independent geometry and finite-cycle controls; guarded minimum-edit decisions, not physical uniqueness |
@@ -302,6 +306,22 @@ operator replay and a quantized finite-shape fixture. Every case is retained,
 including failures. The [record](validation/source-context.md) distinguishes
 exact source binding, arithmetic discrepancy and conditional recovery from
 physical-camera qualification. No source images or pixel arrays are saved.
+
+## Conditional Gaussian optical calibration
+
+The [PSF guide](psf-calibration.md) covers direct raw edge-width fitting,
+all-row numerical readiness, covariance rank/conditioning and a finite orientation
+planner. Source-context dispatch keeps fixed source values and existing model
+guards. Fit quality does not supply physical response/PSF calibration.
+
+```bash
+.venv/bin/python studies/verification/psf-calibration-v1.py --output .local/psf-calibration-new.json
+```
+
+Use a new destination in an existing directory. The
+[fixed independent study](validation/psf-calibration.md) retains matched targets,
+unknown groups, constructive covariance/response aliases and model-mismatch
+controls, rather than replacing unresolved fits with an apparently valid tensor.
 
 ## Figures
 
