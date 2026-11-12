@@ -81,6 +81,10 @@ The reference library intentionally commits generated HTML, figures, and its PDF
 
 Run `make` for help. Component targets delegate to the existing scripts and library Makefile.
 
+Use the [developer-tool catalog](developer-tools.md) for numerical CLI versions,
+study/audit commands, output handling and optional plotting requirements. A
+successful developer study is separate from a successful workbench build.
+
 | Command | Scope |
 | --- | --- |
 | `make setup` | Prepare both components; no system tools, browser, or model downloads |

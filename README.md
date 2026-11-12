@@ -163,6 +163,11 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 Start with the [documentation index](docs/README.md) for capture, engineering, export, development and evidence routes.
 
+The [complete documentation review](docs/validation/documentation-complete-2026-11-12.md)
+identifies the source baseline and coverage of current guides, historical records
+and generated library material. Numerical experiments and analysis commands are
+collected in the [developer-tool catalog](docs/developer-tools.md).
+
 - [Capture and calibration guide](docs/capture-guide.md)
 - [Engineering model and independent verification](docs/engineering-model.md)
 - [Reference-sheet tracing: method, mathematics and evidence](docs/reference-sheet.md)

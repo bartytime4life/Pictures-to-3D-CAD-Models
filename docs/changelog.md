@@ -3,6 +3,20 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Complete documentation update — November 12, 2026
+
+- Refresh the [source/review snapshot](project-status.md) through published
+  PR #57 and add a [numerical-tool catalog](developer-tools.md) with versioned
+  contracts, repeatable study/audit commands and output-preservation rules.
+- Replace unconditional wall-identification and error-cap claims with the
+  published search limits and model assumptions. Correct sharp-corner,
+  short-feature and linear-channel wording without changing tracing behavior.
+- Clarify benchmark report replacement and environment-dependent PDF
+  reproducibility. Review the complete Markdown set, retaining historical
+  evidence and generated library outputs under their original source bindings.
+- The [coverage and verification record](validation/documentation-complete-2026-11-12.md)
+  describes this documentation update separately from product regression tests.
+
 ## Bounded wall and lighting experiment — November 12, 2026
 
 - Add `make wall-gradient-study OUTPUT=new-folder`, a bounded five-node source

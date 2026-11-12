@@ -124,7 +124,7 @@ Folder export uses the browser's [directory picker](https://developer.mozilla.or
 
 ## Reproducibility
 
-- The PDF uses ReportLab's invariant mode, so unchanged sources rebuild byte for byte. The trade-off is that its internal creation date reads 2000-01-01. The date that matters is printed on every page.
+- The PDF uses ReportLab's invariant mode to fix timestamps. Byte-identical reproduction also requires matching fonts, rendering dependencies and environment; invariant mode alone does not make different font builds identical. Its internal creation date reads 2000-01-01; the document date is printed on every page.
 - The ZIP sorts its entries and fixes their timestamps and permissions.
 - `index.html` and the SVG figures contain no timestamps.
 - `SHA256SUMS` paths are relative to the repository root: `cd ..` and run `sha256sum -c reference-library/SHA256SUMS`. The manifest and `dist/` are build products and are not committed.

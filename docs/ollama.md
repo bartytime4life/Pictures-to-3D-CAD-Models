@@ -94,10 +94,12 @@ Add further installed model tags as positional arguments to compare up to five m
 After confirming and downloading all shortlist artifacts, the comparison command is:
 
 ```bash
-.venv/bin/python scripts/benchmark_ollama.py qwen3:1.7b qwen3.5:2b qwen3.5:4b --output .local/ollama-benchmark.json
+.venv/bin/python scripts/benchmark_ollama.py qwen3:1.7b qwen3.5:2b qwen3.5:4b --output .local/ollama-comparison-new.json
 ```
 
 The JSON report records raw responses, model metadata and digests, prompt/schema hashes, runtime options, host CPU/cgroup limits, Ollama version, durations, output token rate, and human-review criteria. It does not measure resident model memory. An adjacent Markdown summary makes the results easier to inspect. Exit status 0 means usable response schemas, 1 means a missing model or inference/schema failure, and 2 means the service is unavailable. None is a semantic-quality verdict; review the actual answers before recommending a model.
+
+The benchmark replaces the selected JSON file and adjacent Markdown summary if they already exist, including when a service-unavailable preflight is saved. Choose a fresh destination for each run and preserve earlier reports before repeating it. See the [developer-tool catalog](developer-tools.md) for other local checks and their output rules.
 
 A successful software test with a mocked response verifies integration behavior, not the model's reasoning. A useful model comparison records model digests, runtime settings, cold and warm latency, raw answers, and human review. Do not choose a winner from parameter counts alone.
 

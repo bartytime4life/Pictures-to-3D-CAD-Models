@@ -43,6 +43,14 @@ Reference entry also includes an [endpoint-placement sensitivity explorer](refer
 
 ## Release discipline
 
+The [published wall search](reference-sheet.md#5-camera-pose-and-thickness-parallax)
+still uses fixed seed-derived widths and a short offset window. Improving
+initialization and candidate geometry needs full call-path regressions, retained
+ambiguous cases and bounded runtime/memory before publication. The unfinished
+local wall-localization experiment is not a completed roadmap item. The
+[developer-tool catalog](developer-tools.md) identifies the existing study and
+audit commands for evaluating such changes.
+
 A [conditional corner-radius developer CLI](corner-feasibility.md) now explores
 one fixed right-angle/independent-Gaussian model with explicit bounded
 observations and either fixed blur widths or supplied joint blur domains.
