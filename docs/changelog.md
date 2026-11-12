@@ -3,6 +3,20 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Documentation alignment with published PR #91 — November 12, 2026
+
+- Updated current source, dependency, main and hosted-CI snapshots. The latest
+  [documentation review](validation/documentation-pr91-state.md) covers all
+  Markdown, with executable coordinate/preparation examples and command help.
+- Linked the 899-test software record and complete paired replay without
+  replacing older test totals, scientific misses or upstream refusals. Added
+  an archived-data preparation example and clarified the remaining latency,
+  optical-model and automatic-export requirements.
+- Based the final documentation on integrated main `ec41b0c` after PRs #90
+  and #91 merged, including PR #85's separate shadow-harmonic change. Every
+  non-Markdown byte matches that main revision. Separate unfinished performance
+  work is excluded from this documentation change.
+
 ## Measured-ring observation preparation — November 12, 2026
 
 - Added a data-only circular-segment preparation operator using the measured

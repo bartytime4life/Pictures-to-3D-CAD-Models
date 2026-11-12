@@ -82,7 +82,8 @@ without calling an inverse fitter. Supply the saved rectified measurement
 field, its already measured ring in global geometric pixels, a fixed unit chord
 normal and an explicit common blur width in pixels. `polarity="light"` is also
 supported. The function does not infer covariance, a physical material boundary
-or the intended chord normal.
+or the intended chord normal. `blur_sigma` controls padding, centre-search bounds
+and the sampling-region margin; it is a preparation input, not an estimated PSF.
 
 The integer padding is `ceil(max(16,8*blur_sigma))`. Lower bounds are
 `floor(min(ring_points))-padding`; exclusive upper bounds are
@@ -99,6 +100,7 @@ The result retains these distinct frames and data:
 | `field`, `training_values`, `heldout_values` | Preserve the source crop/selected values' dtype and bytes; initializer arithmetic uses a separate float64 buffer |
 | `training_pixels`, `heldout_pixels` | Local integer indices; exactly 40 and 16 unique, disjoint samples with edge/material/background strata |
 | `homography`, `crop_origin`, `crop_bounds` | Explicit global-to-crop translation and half-open crop bounds; pixel centres remain index plus 0.5 |
+| `sensor_shape` | Cropped `(height,width)` for the later forward/fit call, rather than the original field dimensions |
 | `seed_centre`, `bounds` | Global geometry coordinates; radius, fraction and their bounds retain their geometric units |
 | `metadata()` | Detached provenance including field/ring/crop/selection hashes, estimates, policy and content binding |
 
@@ -120,6 +122,67 @@ uses one common preparation for both supplied covariance hypotheses. Its
 held-out pixels are omitted from the nonlinear fitting objective; the same
 image values still influence initialization and moment estimates. They are
 not independent evaluation captures.
+
+### Replay preparation without fitting
+
+This example uses the bundled synthetic field and the saved **observational**
+normal/common-width policy for the first version 2 case. It uses no fitted
+geometry or evaluation truth and runs no inverse optimizer. Run from the
+repository root after setup:
+
+```python
+import json
+from pathlib import Path
+import numpy as np
+from backend.finite_observations import prepare_segment_observations
+
+row = json.loads(Path("studies/results/finite-photo-intensity-v2.json").read_text())["rows"][0]
+with np.load(row["capture_path"], allow_pickle=False) as saved:
+    observations = prepare_segment_observations(
+        saved["g"], saved["points"],
+        normal=row["normal_from_observations"]["normal"],
+        blur_sigma=row["common_sigma"],
+        polarity="dark",
+    )
+assert observations.metadata() == row["preparation_metadata"]
+assert observations.training_pixels.shape == (40, 2)
+assert observations.heldout_pixels.shape == (16, 2)
+print(observations.crop_origin, observations.sensor_shape)
+```
+
+For a new field, supply its own measured ring, fixed normal and declared width.
+Catch `ObservationPreparationError` and retain its `reason` when preparation is
+refused. A refused crop or stratum is not permission to silently clip padding,
+drop samples or borrow a covariance from this synthetic example. The returned
+`bounds` mapping can be passed explicitly to a later fit together with the
+training arrays, crop `sensor_shape`, crop `homography` and supplied optics;
+preparation itself does not make that fit or select a CAD boundary.
+
+The handoff can be written as a caller-controlled function. Defining it below
+does not run a fit; calling it performs the bounded inverse search described
+later in this guide. Supply a separately justified covariance in squared
+crop-pixel units (px²) and brightness bounds appropriate to the field:
+
+```python
+from backend.finite_centre_fit import fit_circular_segment
+
+def fit_prepared(observations, covariance, *, level_bounds):
+    return fit_circular_segment(
+        observations.training_pixels,
+        observations.training_values,
+        sensor_shape=observations.sensor_shape,
+        homography=observations.homography,
+        psf_covariance=covariance,
+        normal=observations.normal,
+        level_bounds=level_bounds,
+        **observations.bounds,
+    )
+```
+
+Keep the held-out arrays outside that call. Geometry bounds already use global
+coordinates; do not add the crop origin again or replace the crop transform
+with an identity matrix while retaining those bounds. Inspect every completion
+and ambiguity flag before interpreting a returned `best` result.
 
 ## Separable least squares
 

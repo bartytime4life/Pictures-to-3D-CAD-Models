@@ -6,6 +6,15 @@ Run these from the repository root after setup. `make` prints the supported
 targets. These are the tools present in the reviewed main-based source; research
 scripts from a separate branch are not implied by this list.
 
+For lightweight checks of the finite-material documentation, use the
+[supplied-model example](finite-shape-inverse.md#coordinate-example),
+[archived preparation example](finite-shape-inverse.md#replay-preparation-without-fitting)
+and the listed runners' `--help` modes. The no-fit contract runner additionally
+evaluates preparation and forward probabilities; it runs no inverse optimizer.
+Full replay and continuation commands below perform real fitting and are
+separate, slower scientific checks. Follow each receipt's source hashes when
+reproducing an archived result; a later backend can invalidate that binding.
+
 | Tool | Entry point | Execution and output |
 | --- | --- | --- |
 | Workbench setup/start/development | `make setup-app`, `make start`, `make dev` | Setup installs locked dependencies and builds; start/dev launch services |
