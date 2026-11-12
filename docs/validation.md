@@ -7,6 +7,12 @@ original counts and environment; they are not later retests.
 
 ## Current workbench evidence — November 12, 2026
 
+The [measured-ring observation bridge](validation/finite-photo-intensity-v2.md)
+passes **899 local Python tests**, with build and lint checks. It adds an
+immutable Python preparation operator and a paired saved-field experiment;
+automatic tracing remains unchanged. Its evidence is separate from the
+preceding finite-material result below.
+
 The new [finite-material centre inverse](validation/finite-free-centre.md)
 passes 862 Python tests and all 12 matched conditional recovery targets. Its
 24-row experiment retains a failed planned aperture-order check, supplemented

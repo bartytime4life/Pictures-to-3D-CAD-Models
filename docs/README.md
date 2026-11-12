@@ -37,6 +37,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Understand components, API and data flow | [Architecture](architecture.md) |
 | Read mathematical methods and their limits | [Research and algorithms](research.md), [engineering model](engineering-model.md) |
 | Investigate conditional finite-material intensity fitting | [Developer model and numerical limits](finite-shape-inverse.md) |
+| Prepare fixed samples from a measured ring and compare covariance hypotheses | [Observation contract](finite-shape-inverse.md#prepare-a-measured-ring-observation-set), [paired saved-field replay](validation/finite-photo-intensity-v2.md) |
 | Review original scientific findings and remaining model limits | [Scientific model review](validation/scientific-model-review.md) |
 | Understand initial fitted-boundary coverage | [Fit-support repair and evidence](validation/fit-support.md) |
 | Understand weak-edge refusal and recovery | [Contrast-recovery validation](validation/contrast-recovery.md) |
@@ -49,7 +50,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |
 | Run a benchmark with measured photos | [Photo benchmark](photo-benchmark.md) |
 | Review completed checks | [Validation overview](validation.md), [design QA](../design-qa.md) |
-| Check documentation coverage and source consistency | [Current PR #88 source-scope review](validation/documentation-pr88-state.md), [preceding PR #86 review](validation/documentation-pr86-state.md), [main-line review](validation/documentation-main77-state.md) |
+| Check documentation coverage and source consistency | [PR #88 documentation baseline](validation/documentation-pr88-state.md), [measured-ring candidate](validation/finite-photo-intensity-v2.md), [preceding PR #86 review](validation/documentation-pr86-state.md) |
 | Review the recent interface changes | [Guided-workbench audit](validation/guided-workbench.md) |
 | Review scope and future work | [Roadmap](roadmap.md), [change log](changelog.md) |
 | Reproduce bundled printer data | [Printer source record](../data/PRINTER_SOURCES.md) |

@@ -1,0 +1,91 @@
+{
+  "format": "pictures-to-cad-finite-photo-intensity-plan",
+  "version": 2,
+  "design_status": "prospectively frozen before any v2 recovery; same archived fields/cases/targets as v1",
+  "scope": "Controlled ring-conditioned observation-contract correction for preserved production measurement fields. No rendering, rerunning old traces, image replacement, automatic trace promotion, calibrated optics or physical accuracy claim.",
+  "inputs": {
+    "moment_manifest": "studies/fixtures/finite-moment-photo-v1/manifest.json",
+    "baseline": "studies/fixtures/finite-moment-photo-v1/baseline-v2-result.json",
+    "baseline_plan": "studies/fixtures/finite-moment-photo-v1/baseline-v2-plan.json",
+    "moment_result": "studies/results/finite-moment-photo-v1.json",
+    "v1_result": "studies/results/finite-photo-intensity-v1.json",
+    "v1_archive_manifest": "studies/fixtures/finite-photo-intensity-v1/manifest.json"
+  },
+  "cases": [
+    "small-isotropic",
+    "small-directional",
+    "medium-directional",
+    "large-directional",
+    "minor-directional",
+    "rotated-major-directional"
+  ],
+  "lanes": [
+    "legacy_sigma_squared_identity",
+    "nominal_observed_moment_covariance"
+  ],
+  "population": 12,
+  "upstream_policy": "Retain every case/lane; no g means upstream_ineligible, never substitute another image. Initial primitive count is recorded, not an extra fit eligibility filter.",
+  "normal_policy": "Longest initial observed LINE by frozen source-end distance. Its unit perpendicular is oriented so dot(n, observed arc_mid-observed arc_centre)<0, using the largest-radius observed ARC as sector witness. No true normal or true centre is supplied.",
+  "covariance_policy": {
+    "legacy": "captured scalar sigma**2 * I",
+    "moment": "exactly roi_sigmas=8 and background_offset=0 record for this case",
+    "arithmetic_symmetry": "If maxabs(S-S.T)<=64*eps*maxabs(S), canonicalize (S+S.T)/2 and record raw/canonical/maxchange; otherwise refuse. Then Cholesky/SPD check; no eigenvalue clipping or indefinite repair."
+  },
+  "observation_contract": {
+    "helper_module": "backend.finite_observations",
+    "common_sigma": "max(captured scalar sigma, sqrt(lambda_max(canonical valid nominal roi_sigmas=8/background_offset=0 moment covariance))). If nominal moment covariance absent/invalid, common sigma is captured scalar only and that lane remains explicitly ineligible.",
+    "crop": "ONE common crop per observed ring, reused for BOTH covariance lanes. Padding=ceil(max(16,8*common_sigma)); lower=floor(min ring coordinate)-padding; exclusive upper=ceil(max ring coordinate)+padding+1. Request must fit source; crop_edge refusal rather than clipping or padding search.",
+    "coordinate_contract": "Measurement ring points already use geometric centres. Local integer crop indices query centre i+.5. Hcrop=[[1,0,-origin_x],[0,1,-origin_y],[0,0,1]] maps GLOBAL rectified-plane geometry into cropped observation coordinates. Fitted C remains GLOBAL, R unchanged. No extra half-pixel shift.",
+    "field": "Byte-preserving immutable crop of saved g; no rerender, re-encoding, interpolation or additional smoothing.",
+    "background_material": "Border median and polarity-directed robust extrema now come from the same ring-conditioned crop; dark material declared. Constant levels remain hypotheses, not physical plateau certification.",
+    "seed": "Frozen65th-percentile circle support, centered Kasa circle and97th-percentile chord support policy from observed crop/normal only. Geometry bounds use common_sigma, not this lane Sigma. No source truth before heldout scoring; no truth widening.",
+    "selection": "ONE identical40training/16heldout selection for both lanes:24edge+8high+8low;8edge+4high+4low heldout, unique/disjoint local integer indices. Same seed,bounds,H,crop bytes and observed values in both lanes.",
+    "sole_change_from_v1": "Replace whole-field observation preparation by declared ring-conditioned crop and hold covariance-dependent preparation fixed between lanes. Fitting algorithm, source fields, upstream population, normal rule and targets remain unchanged."
+  },
+  "fit_settings": {
+    "grid_points": 3,
+    "refinement_iterations": 24,
+    "max_basins": 4,
+    "max_evaluations": 512,
+    "forward_work_limit": 60000000,
+    "probability_tolerance": 1e-08,
+    "level_bounds": [
+      0.0,
+      255.0
+    ]
+  },
+  "targets": {
+    "centre_error_mm": 0.02,
+    "absolute_radius_error_mm": 0.02,
+    "heldout_intensity_max_error": 1.0,
+    "completion": "best exists; geometry_rank==4; no work_exhausted/refinement_limited/unrefined_basins/numerically_unsupported/flat/tied/endpoint/rank_deficient"
+  },
+  "scoring": "Only after fit and heldout intensity scoring, read baseline true centre_mm=[30,30], case radius/fraction. Convert fitted pixels using captured ppm. No target relaxation. Heldout means use same declared model at disjoint fixed g pixels, not training cost.",
+  "controls": {
+    "case_population": "All six cases and two lanes retained, including minor-directional upstream refusal; no eligibility changes based on true shape or primitive count.",
+    "controlled_covariance_lanes": "Prepare once per case and assert exact same crop bytes/local training and heldout indices/values/H/global seed/bounds for both lanes; only Sigma changes.",
+    "dirty_outside_crop": "For every prepared field, replace ONLY source pixels outside requested crop by deterministic0/255 checkerboard. Preparing again must keep crop bytes, selections, H, seed and bounds exactly identical; ignore intentionally changed whole-source provenance hash.",
+    "integer_translation": "Paste SAME g into a larger constant-valued canvas at offset(+11,+7), shift observed ring and primitive c/mid/source_ends by that offset. Local crop bytes/indices/values stay exactly identical; crop origin/global seed/global C bounds shift(+11,+7), R/f/radius/f bounds unchanged within1e-8pixel arithmetic tolerance. No fit or rendering for this metamorphic control.",
+    "independent_mean_frame": "At the DATA-DERIVED seed and fixed sampled pixels, compare global integer queries with H=I against local crop queries with Hcrop, using the same global geometry and lane Sigma. Independently integrate the projected conic vertical slices with erfc/GL32 and64 via frozen finite-free-centre-v1 area oracle. Require numerical intensity differences<=2e-5 and independent32/64 delta<=1e-7; no quadrature certification.",
+    "edge_refusal": "Translate ring toward source edge without changing source field; requested full padded crop must refuse with crop_edge. No partial-crop repair.",
+    "v1_comparison": "Read all12 archived parsed v1 rows only, hash each parsed row, compare status/completion/targets/C/R/heldout and observation estimates for every keyed case/lane. Do not rerun or alter v1; keep every adverse outcome."
+  },
+  "cli_contract": "Required --output NEW_JSON checked before backend import/analysis; help/missing/existing/dangling-symlink refuse without fitting. Strict JSON saved and stdout identical. All12 case/lane records survive first actual fit failure; later rows execute. Source/input hashes before/after.",
+  "limits": [
+    "The two supplied effective-covariance lanes are hypotheses; neither is calibrated optical PSF.",
+    "g includes actual rendering, decoding, estimated sheet map, sampling, float32 and .7 smoothing; Gaussian/constant-level adequacy is not guaranteed.",
+    "Moment covariance is data-derived and background-sensitive; no claim that its numerical SPD proves Gaussian optics.",
+    "Fixed supplied normal is not fitted. Local finite search and complete coarse grid do not certify all minima.",
+    "Data-derived ROI/boxes and all refusals/errors/unfinished flags are retained.",
+    "Only archived synthetic rendered measurement fields are exercised; this is not a new full-photo pipeline run or real-camera qualification.",
+    "Shared crop removes a known contaminated whole-field border hypothesis but does not guarantee correct background, Gaussian PSF, constant illumination, normal or globally unique geometry."
+  ],
+  "input_sha256": {
+    "studies/fixtures/finite-moment-photo-v1/manifest.json": "dcb8803fdb99895a14ae86899536985604d134d02bd65117f8028d97fc050855",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v2-result.json": "e8a07de6297f1c5f9b71d1cd13a3a70e14664242475ae34446e1fe9ffc7183da",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v2-plan.json": "2db3148f3be75ea7f9750aeae7115dd23762a581c1f3f879b484c7e1b3c9d687",
+    "studies/results/finite-moment-photo-v1.json": "b0d4f56c0815a11c7c9a1b7a40f0b385b346ad16e11e604edcde7ef1c61f3c50",
+    "studies/results/finite-photo-intensity-v1.json": "27380cfa0db6e0f057527e398673cd7fa9c611677c395e73aa896734d7d5e6c9",
+    "studies/fixtures/finite-photo-intensity-v1/manifest.json": "ea6f3400327d35bfbc223b7e13118ed97976f93e64c123c5f4b0ce066216ca5c"
+  }
+}

@@ -3,6 +3,21 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Measured-ring observation preparation — November 12, 2026
+
+- Added a data-only circular-segment preparation operator using the measured
+  ring, fixed padding, explicit crop/global mapping, observed-only seed and
+  fixed disjoint 40/16 samples. Both supplied covariance hypotheses can use the
+  same observations and bounds; no fit or CAD promotion happens in preparation.
+- Preserved original crop/selected-value dtype and bytes with immutable stored
+  descriptors and fresh read-only views. Added typed input, crop, contrast,
+  resource and numerical refusals, with 37 focused regression cases.
+- Added a prospectively frozen paired replay of the original captured fields,
+  preserving all version 1 results and upstream failures. Strict JSON failures
+  keep their stage and safe provenance without leaving stale pass flags.
+  [Contract](finite-shape-inverse.md#prepare-a-measured-ring-observation-set)
+  · [source-bound evidence](validation/finite-photo-intensity-v2.md).
+
 ## Documentation alignment with published PR #88 — November 12, 2026
 
 - Updated current source identity, dependency and hosted-run snapshots, and

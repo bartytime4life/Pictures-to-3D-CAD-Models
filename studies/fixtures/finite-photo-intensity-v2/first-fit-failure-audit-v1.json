@@ -1,0 +1,216 @@
+{
+  "format": "finite-photo-intensity-v2-actual-first-fit-failure-contract",
+  "scope": "Only first fit entry raises; nine later real optimizers execute. All eleven later parsed rows compared, including both upstream refusals; only runtime_seconds fields removed.",
+  "canonical": {
+    "path": "studies/results/finite-photo-intensity-v2.json",
+    "sha256": "967251c4458e7c06f88c6f5d4b01ab77654a0a744e1a181dd79c86df99d39127"
+  },
+  "control_result": {
+    "path": ".local/verification/finite-photo-intensity-v2-first-fit-failure-v1.json",
+    "sha256": "8bb6d605f2b03ceee83a54a32f02c0030d34aa809380c470ad179d1640295d18"
+  },
+  "runner_sha256": "74c76c9961bb7e8488c99af2c4db0227022a5bde06d26f306962e5d265d694c5",
+  "contract_script_sha256": "546a3692f5da34e68c6d9ee8f88a8e473438a119e70c98f57fd492e509296843",
+  "study_exit_code": 1,
+  "fit_entries": [
+    {
+      "index": 0,
+      "pixel_count": 40,
+      "actual_optimizer": false,
+      "status": "injected_first_entry_exception"
+    },
+    {
+      "index": 1,
+      "pixel_count": 40,
+      "actual_optimizer": true,
+      "status": "actual_optimizer_returned"
+    },
+    {
+      "index": 2,
+      "pixel_count": 40,
+      "actual_optimizer": true,
+      "status": "actual_optimizer_returned"
+    },
+    {
+      "index": 3,
+      "pixel_count": 40,
+      "actual_optimizer": true,
+      "status": "actual_optimizer_returned"
+    },
+    {
+      "index": 4,
+      "pixel_count": 40,
+      "actual_optimizer": true,
+      "status": "actual_optimizer_returned"
+    },
+    {
+      "index": 5,
+      "pixel_count": 40,
+      "actual_optimizer": true,
+      "status": "actual_optimizer_returned"
+    },
+    {
+      "index": 6,
+      "pixel_count": 40,
+      "actual_optimizer": true,
+      "status": "actual_optimizer_returned"
+    },
+    {
+      "index": 7,
+      "pixel_count": 40,
+      "actual_optimizer": true,
+      "status": "actual_optimizer_returned"
+    },
+    {
+      "index": 8,
+      "pixel_count": 40,
+      "actual_optimizer": true,
+      "status": "actual_optimizer_returned"
+    },
+    {
+      "index": 9,
+      "pixel_count": 40,
+      "actual_optimizer": true,
+      "status": "actual_optimizer_returned"
+    }
+  ],
+  "later_row_comparisons": [
+    {
+      "index": 1,
+      "name": "small-isotropic",
+      "lane": "nominal_observed_moment_covariance",
+      "identical_except_runtime_seconds": true,
+      "canonical_parsed_row_sha256": "2d8e958625ac2e7f04257fd0a4d1ee1e10cba91142ee1454613b713e97955c44",
+      "continuation_parsed_row_sha256": "2d8e958625ac2e7f04257fd0a4d1ee1e10cba91142ee1454613b713e97955c44"
+    },
+    {
+      "index": 2,
+      "name": "small-directional",
+      "lane": "legacy_sigma_squared_identity",
+      "identical_except_runtime_seconds": true,
+      "canonical_parsed_row_sha256": "5da68adbce22cf8a3f3eed124a39749ee5ed1a02bda4dc55503f0972782314bc",
+      "continuation_parsed_row_sha256": "5da68adbce22cf8a3f3eed124a39749ee5ed1a02bda4dc55503f0972782314bc"
+    },
+    {
+      "index": 3,
+      "name": "small-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "identical_except_runtime_seconds": true,
+      "canonical_parsed_row_sha256": "8fcf99ac94b50cd637a3ca4d4f7913e1fab5a64629478bba278e1a223572450b",
+      "continuation_parsed_row_sha256": "8fcf99ac94b50cd637a3ca4d4f7913e1fab5a64629478bba278e1a223572450b"
+    },
+    {
+      "index": 4,
+      "name": "medium-directional",
+      "lane": "legacy_sigma_squared_identity",
+      "identical_except_runtime_seconds": true,
+      "canonical_parsed_row_sha256": "abee6081e685ff42a83c7c68de0332e3fc4c39faad59ef7d004e2e60b06fab6e",
+      "continuation_parsed_row_sha256": "abee6081e685ff42a83c7c68de0332e3fc4c39faad59ef7d004e2e60b06fab6e"
+    },
+    {
+      "index": 5,
+      "name": "medium-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "identical_except_runtime_seconds": true,
+      "canonical_parsed_row_sha256": "81e037d71211206a8d9d58809ee8f001e9cfe50d73eb0266fac9e9287af42cb4",
+      "continuation_parsed_row_sha256": "81e037d71211206a8d9d58809ee8f001e9cfe50d73eb0266fac9e9287af42cb4"
+    },
+    {
+      "index": 6,
+      "name": "large-directional",
+      "lane": "legacy_sigma_squared_identity",
+      "identical_except_runtime_seconds": true,
+      "canonical_parsed_row_sha256": "2b43cf77a545996910c42622510a3f5c960aa9778d22772004b09b1f219843f2",
+      "continuation_parsed_row_sha256": "2b43cf77a545996910c42622510a3f5c960aa9778d22772004b09b1f219843f2"
+    },
+    {
+      "index": 7,
+      "name": "large-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "identical_except_runtime_seconds": true,
+      "canonical_parsed_row_sha256": "66fa5f332b2afc9762af2dc3632f14ec2523737153462a54947dd3fb132783ef",
+      "continuation_parsed_row_sha256": "66fa5f332b2afc9762af2dc3632f14ec2523737153462a54947dd3fb132783ef"
+    },
+    {
+      "index": 8,
+      "name": "minor-directional",
+      "lane": "legacy_sigma_squared_identity",
+      "identical_except_runtime_seconds": true,
+      "canonical_parsed_row_sha256": "084aa43a408016962a08f9ede5b385a1b61f975584d4648e3c8e4c5b45252c52",
+      "continuation_parsed_row_sha256": "084aa43a408016962a08f9ede5b385a1b61f975584d4648e3c8e4c5b45252c52"
+    },
+    {
+      "index": 9,
+      "name": "minor-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "identical_except_runtime_seconds": true,
+      "canonical_parsed_row_sha256": "9f6d8cad1a27d13aabac029174fdbf434a4e91f0ced67529580627d022d1b65d",
+      "continuation_parsed_row_sha256": "9f6d8cad1a27d13aabac029174fdbf434a4e91f0ced67529580627d022d1b65d"
+    },
+    {
+      "index": 10,
+      "name": "rotated-major-directional",
+      "lane": "legacy_sigma_squared_identity",
+      "identical_except_runtime_seconds": true,
+      "canonical_parsed_row_sha256": "ede6d06ec687a0b19afb686a40fe822207835a5b2961c0e0709a04edf2d11c43",
+      "continuation_parsed_row_sha256": "ede6d06ec687a0b19afb686a40fe822207835a5b2961c0e0709a04edf2d11c43"
+    },
+    {
+      "index": 11,
+      "name": "rotated-major-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "identical_except_runtime_seconds": true,
+      "canonical_parsed_row_sha256": "fe4c0bbea6409406f0e5f6abc46e9720521908117b6747933a421c8ce86f22da",
+      "continuation_parsed_row_sha256": "fe4c0bbea6409406f0e5f6abc46e9720521908117b6747933a421c8ce86f22da"
+    }
+  ],
+  "checks": [
+    {
+      "name": "all-twelve-planned-rows-retained",
+      "passed": true
+    },
+    {
+      "name": "one-entry-injected-nine-later-real-optimizers",
+      "passed": true
+    },
+    {
+      "name": "first-failure-explicit-and-no-pass-flags",
+      "passed": true
+    },
+    {
+      "name": "all-eleven-later-parsed-rows-identical",
+      "passed": true
+    },
+    {
+      "name": "two-original-upstream-refusals-retained",
+      "passed": true
+    },
+    {
+      "name": "same-observation-checks",
+      "passed": true
+    },
+    {
+      "name": "strict-file-stdout-identical",
+      "passed": true
+    },
+    {
+      "name": "full-governing-closure-unchanged",
+      "passed": true
+    },
+    {
+      "name": "canonical-preserved",
+      "passed": true
+    },
+    {
+      "name": "runner-and-contract-script-unchanged",
+      "passed": true
+    }
+  ],
+  "summary": {
+    "checks": 10,
+    "passes": 10,
+    "actual_optimizers_executed": 9,
+    "retained_rows": 12,
+    "all_passed": true
+  }
+}

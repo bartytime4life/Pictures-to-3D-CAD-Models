@@ -70,7 +70,56 @@ global geometry coordinates, the mapping is
 the cropped `(height,width)`. The translation leaves covariance unchanged; it
 does not add another half-pixel shift. Snapshot the crop, pixels, values, bounds
 and transform before fitting, and keep validation pixels disjoint from training.
-This is a caller contract, not an automatic ROI-preparation API in PR #88.
+PR #88 leaves observation preparation to the caller. The subsequent developer
+bridge below implements a declared measured-ring policy; neither path changes
+automatic workbench tracing.
+
+### Prepare a measured-ring observation set
+
+`backend.finite_observations.prepare_segment_observations(field, ring_points,
+normal=..., blur_sigma=..., polarity="dark")` prepares a crop and observations
+without calling an inverse fitter. Supply the saved rectified measurement
+field, its already measured ring in global geometric pixels, a fixed unit chord
+normal and an explicit common blur width in pixels. `polarity="light"` is also
+supported. The function does not infer covariance, a physical material boundary
+or the intended chord normal.
+
+The integer padding is `ceil(max(16,8*blur_sigma))`. Lower bounds are
+`floor(min(ring_points))-padding`; exclusive upper bounds are
+`ceil(max(ring_points))+padding+1`. The full crop must fit the field, and its
+threshold material must not reach the border. Neither clipping nor a search
+for more favorable padding repairs a refused crop. Within the crop, border
+medians, robust material levels, threshold crossings and a centered circle seed
+define bounds and fixed samples from observations alone.
+
+The result retains these distinct frames and data:
+
+| Result | Contract |
+| --- | --- |
+| `field`, `training_values`, `heldout_values` | Preserve the source crop/selected values' dtype and bytes; initializer arithmetic uses a separate float64 buffer |
+| `training_pixels`, `heldout_pixels` | Local integer indices; exactly 40 and 16 unique, disjoint samples with edge/material/background strata |
+| `homography`, `crop_origin`, `crop_bounds` | Explicit global-to-crop translation and half-open crop bounds; pixel centres remain index plus 0.5 |
+| `seed_centre`, `bounds` | Global geometry coordinates; radius, fraction and their bounds retain their geometric units |
+| `metadata()` | Detached provenance including field/ring/crop/selection hashes, estimates, policy and content binding |
+
+Stored array descriptors and bytes are immutable; each exposed NumPy view is
+read-only and fresh. Reshaping or changing the dtype of a caller's view cannot
+alter the stored observation or reported sensor shape. Copy a view when mutable
+working data is needed. `bounds` and metadata also return detached values.
+
+`ObservationPreparationError.reason` distinguishes `invalid_input`, `nonfinite`,
+`work_limit`, `crop_edge`, `contrast`, `insufficient_contour`, `seed_rank` and
+`insufficient_stratum`. Limits are 16 million source pixels, one million crop
+pixels, 20,000 ring points and 100,000 threshold crossings; blur width must lie
+in `[0.001,1000]` pixels and observed contrast must reach 12 linear-light levels.
+A returned seed is not a guarantee of truth containment, correct topology,
+Gaussian optics or adequate illumination.
+
+The [paired captured-field experiment](validation/finite-photo-intensity-v2.md)
+uses one common preparation for both supplied covariance hypotheses. Its
+held-out pixels are omitted from the nonlinear fitting objective; the same
+image values still influence initialization and moment estimates. They are
+not independent evaluation captures.
 
 ## Separable least squares
 
@@ -186,7 +235,10 @@ The captured-field diagnostic retains two failures whose whole-sheet initializer
 selects the reference border and excludes the actual part from the search box.
 The [complete record](validation/finite-free-centre.md#captured-field-integration-diagnostic)
 keeps these initialization failures separate from converged model bias. A
-ring-conditioned observation bridge remains further work at this source revision.
+ring-conditioned developer bridge now supplies the explicit crop and snapshots
+above. Its [new experiment](validation/finite-photo-intensity-v2.md) retains the
+old diagnostic rather than substituting corrected results into it. Automatic
+trace integration and physical/model qualification remain further work.
 
 Integration also needs a supported thickness frame. The trace endpoint accepts
 an omitted thickness or a positive value; omission means unknown thickness.

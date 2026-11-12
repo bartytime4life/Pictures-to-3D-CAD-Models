@@ -19,10 +19,12 @@ An optional local Ollama assistant provides text guidance and reviewable trace/d
 
 The current implementation and [validation results](validation.md) are the source of truth for what works. Items below are future work, not hidden capabilities or delivery promises.
 
-Draft PR #88 adds a [conditional finite-material Python inverse](finite-shape-inverse.md),
+PR #88 introduced a [conditional finite-material Python inverse](finite-shape-inverse.md),
 with [matched and adverse numerical evidence](validation/finite-free-centre.md).
-It has no automatic trace/build integration. Observation-region selection,
-supported covariance and thickness frames, held-out source adequacy, latency
+It has no automatic trace/build integration. A subsequent
+[measured-ring developer bridge](validation/finite-photo-intensity-v2.md) supplies
+explicit observation-region selection and immutable paired samples. Supported
+covariance and thickness frames, independently evaluated source adequacy, latency
 and preservation of final CAD geometry remain prerequisites for user adoption.
 The moment initializer's background-sensitive proposals are experimental.
 

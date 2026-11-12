@@ -1,0 +1,13 @@
+{"index": 0, "name": "small-isotropic", "lane": "legacy_sigma_squared_identity", "status": "execution_failure", "targets_passed": false}
+{"index": 1, "name": "small-isotropic", "lane": "nominal_observed_moment_covariance", "status": "fit_completed", "targets_passed": false}
+{"index": 2, "name": "small-directional", "lane": "legacy_sigma_squared_identity", "status": "fit_completed", "targets_passed": false}
+{"index": 3, "name": "small-directional", "lane": "nominal_observed_moment_covariance", "status": "fit_completed", "targets_passed": false}
+{"index": 4, "name": "medium-directional", "lane": "legacy_sigma_squared_identity", "status": "fit_completed", "targets_passed": false}
+{"index": 5, "name": "medium-directional", "lane": "nominal_observed_moment_covariance", "status": "fit_completed", "targets_passed": true}
+{"index": 6, "name": "large-directional", "lane": "legacy_sigma_squared_identity", "status": "fit_completed", "targets_passed": false}
+{"index": 7, "name": "large-directional", "lane": "nominal_observed_moment_covariance", "status": "fit_completed", "targets_passed": true}
+{"index": 8, "name": "minor-directional", "lane": "legacy_sigma_squared_identity", "status": "upstream_ineligible", "targets_passed": false}
+{"index": 9, "name": "minor-directional", "lane": "nominal_observed_moment_covariance", "status": "upstream_ineligible", "targets_passed": false}
+{"index": 10, "name": "rotated-major-directional", "lane": "legacy_sigma_squared_identity", "status": "fit_completed", "targets_passed": false}
+{"index": 11, "name": "rotated-major-directional", "lane": "nominal_observed_moment_covariance", "status": "fit_completed", "targets_passed": false}
+{"continuation_audit": {"checks": 10, "passes": 10, "actual_optimizers_executed": 9, "retained_rows": 12, "all_passed": true}}
