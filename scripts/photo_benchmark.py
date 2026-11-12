@@ -13,6 +13,7 @@ image data, camera metadata or folder path.
 from __future__ import annotations
 
 import argparse
+import heapq
 import json
 import math
 import re
@@ -30,11 +31,14 @@ sys.path.insert(0, str(ROOT))
 MANIFEST = "benchmark.json"
 SHEETS = ("a4", "letter")
 KINDS = ("outline", "diameters", "openings", "radii", "centre_distances")
-# Digital calipers are typically stated accurate to 0.02-0.03 mm; errors below the
-# manifest's figure cannot be told from the calipers' own.
+# Legacy manifest name; this only controls display emphasis, not a metrological
+# uncertainty budget, confidence interval or manufacturing acceptance rule.
 CALIPER_UNCERTAINTY_MM = 0.03
 SAMPLE_SAGITTA_MM = 0.0005
 PART_KEYS = {"name", "photos", "measured", "thickness_mm", "light_part", "sheet"}
+MAX_MATCH_EXPECTED = 128
+MAX_MATCH_CANDIDATES = 2048
+MAX_MATCH_PAIRS = 131_072
 
 
 class ManifestError(ValueError):
@@ -77,6 +81,11 @@ def _measured(value, part):
             entry = [entry]
         if not isinstance(entry, list) or not entry:
             raise ManifestError(f"{what} must be a list of measurements.")
+        if len(entry) > MAX_MATCH_EXPECTED:
+            raise ManifestError(
+                f"{what}: use at most {MAX_MATCH_EXPECTED} features per kind in one part. "
+                "Split the measurements into separately named part entries."
+            )
         if kind in ("outline", "openings"):
             pairs = []
             for pair in entry:
@@ -225,22 +234,97 @@ def tolerance(expected):
 
 
 def match(expected, candidates, cost):
-    """Pair each expected value with a distinct candidate, closest pairs first.
+    """Maximize admitted match count, then minimize total admitted size error.
 
     Returns, per expected value, the index of its candidate or None. `cost` gives a
     pair's distance, or None when the candidate is too far to be the same feature.
+
+    Unit-capacity min-cost flow uses shortest augmenting paths and integer reduced
+    costs. Float costs are scaled to their exact common binary denominator, without
+    quantization or epsilon tie penalties. Canonical value order and stable graph
+    traversal resolve equal optima deterministically; they do not identify physical
+    features of equal size. Work is O(K E log V), K <= min(n, m), with explicit bounds.
     """
-    pairs = sorted(
-        (c, i, j)
-        for i, e in enumerate(expected)
-        for j, m in enumerate(candidates)
-        if (c := cost(e, m)) is not None
-    )
-    chosen, used = [None] * len(expected), set()
-    for _, i, j in pairs:
-        if chosen[i] is None and j not in used:
-            chosen[i] = j
-            used.add(j)
+    n, m = len(expected), len(candidates)
+    chosen = [None] * n
+    if not n:
+        return chosen
+    if n > MAX_MATCH_EXPECTED or m > MAX_MATCH_CANDIDATES or n * m > MAX_MATCH_PAIRS:
+        raise ManifestError(
+            "Benchmark correspondence exceeds its work limit "
+            f"({MAX_MATCH_EXPECTED} expected features, {MAX_MATCH_CANDIDATES} candidates, "
+            f"{MAX_MATCH_PAIRS} candidate pairs per kind). "
+            "Split the measurement list into smaller named part entries or simplify the outline."
+        )
+    if not m:
+        return chosen
+    expected_order = sorted(range(n), key=lambda i: expected[i])
+    candidate_order = sorted(range(m), key=lambda j: candidates[j])
+    pairs, denominator = [], 1
+    for i, original_i in enumerate(expected_order):
+        for j, original_j in enumerate(candidate_order):
+            value = cost(expected[original_i], candidates[original_j])
+            if value is None:
+                continue
+            if not math.isfinite(value) or value < 0:
+                raise ManifestError(
+                    "Benchmark correspondence costs must be finite and nonnegative."
+                )
+            numerator, divisor = float(value).as_integer_ratio()
+            denominator = max(denominator, divisor)  # float denominators are powers of two
+            pairs.append((i, j, numerator, divisor))
+    if not pairs:
+        return chosen
+
+    source, sink = n + m, n + m + 1
+    graph = [[] for _ in range(sink + 1)]
+
+    def edge(a, b, value):
+        forward = [b, len(graph[b]), 1, value]
+        graph[a].append(forward)
+        graph[b].append([a, len(graph[a]) - 1, 0, -value])
+        return forward
+
+    for i in range(n):
+        edge(source, i, 0)
+    for j in range(m):
+        edge(n + j, sink, 0)
+    admitted = [
+        (i, j, edge(i, n + j, numerator * (denominator // divisor)))
+        for i, j, numerator, divisor in pairs
+    ]
+    potential = [0] * len(graph)
+    while True:
+        distance, previous = [None] * len(graph), [None] * len(graph)
+        distance[source] = 0
+        queue = [(0, source)]
+        while queue:
+            current, a = heapq.heappop(queue)
+            if distance[a] != current:
+                continue
+            for index, (b, _, capacity, value) in enumerate(graph[a]):
+                if not capacity:
+                    continue
+                trial = current + value + potential[a] - potential[b]
+                if distance[b] is None or trial < distance[b]:
+                    distance[b], previous[b] = trial, (a, index)
+                    heapq.heappush(queue, (trial, b))
+        if distance[sink] is None:
+            break
+        # Truncation also preserves nonnegative reduced costs on edges from nodes
+        # unreachable this round, without assigning infinity to their potentials.
+        for a, value in enumerate(distance):
+            potential[a] += distance[sink] if value is None else min(value, distance[sink])
+        b = sink
+        while b != source:
+            a, index = previous[b]
+            forward = graph[a][index]
+            forward[2] -= 1
+            graph[b][forward[1]][2] += 1
+            b = a
+    for i, j, forward in admitted:
+        if not forward[2]:
+            chosen[expected_order[i]] = candidate_order[j]
     return chosen
 
 
@@ -417,6 +501,36 @@ def rows_of(photos):
     return out
 
 
+def dimension_count(measured):
+    """Requested scalar comparisons per photo, including both sides of a pair."""
+    return sum(
+        len(values) * (2 if kind in ("outline", "openings") else 1)
+        for kind, values in measured.items()
+    )
+
+
+def photo_coverage(photo, requested):
+    """Keep failed traces distinct from unmatched features in successful traces."""
+    compared = (
+        sum(s["measured_mm"] is not None for s in photo.get("samples", []))
+        if photo["traced"]
+        else 0
+    )
+    return {
+        "requested": requested,
+        "compared": compared,
+        "unmatched": requested - compared if photo["traced"] else 0,
+        "unavailable": 0 if photo["traced"] else requested,
+    }
+
+
+def total_coverage(records):
+    return {
+        key: sum(record["coverage"][key] for record in records)
+        for key in ("requested", "compared", "unmatched", "unavailable")
+    }
+
+
 def run(folder, snap=True, progress=None):
     """Trace every photo the folder's manifest names and collect the report."""
     folder = Path(folder)
@@ -424,11 +538,14 @@ def run(folder, snap=True, progress=None):
     parts = []
     for part in manifest["parts"]:
         photos = []
+        requested = dimension_count(part["measured"])
         for path in part["photos"]:
             name = path.relative_to(folder).as_posix()  # tells apart subfolders' photos
             if progress:
-                progress(f'{part["name"]}: {name}')
-            photos.append(trace_photo(path, part, snap, name))
+                progress(f"{part['name']}: {name}")
+            photo = trace_photo(path, part, snap, name)
+            photo["coverage"] = photo_coverage(photo, requested)
+            photos.append(photo)
         fits = [p["fit"] for p in photos if p.get("fit")]
         parts.append(
             {
@@ -436,6 +553,7 @@ def run(folder, snap=True, progress=None):
                 "sheet": part["sheet"],
                 "thickness_mm": part["thickness_mm"],
                 "photos": photos,
+                "coverage": total_coverage(photos),
                 "rows": rows_of(photos),
                 "fit": {
                     key: {
@@ -456,8 +574,11 @@ def run(folder, snap=True, progress=None):
         "caliper_uncertainty_mm": manifest["caliper_uncertainty_mm"],
         "parts": parts,
         "summary": {
+            **total_coverage(parts),
             "photos": sum(len(part["photos"]) for part in parts),
             "traced": traced,
+            # Retain these legacy aliases. Missing still means unmatched in a
+            # successful trace, while unavailable counts wholly failed photos.
             "samples": len(errors),
             "missing": sum(row["missing"] for part in parts for row in part["rows"]),
             "median_abs_error_mm": statistics.median(errors) if errors else None,
@@ -485,20 +606,35 @@ def render(report):
     lines = [
         "# Photo benchmark",
         "",
-        f"{summary['traced']} of {summary['photos']} photos traced; {summary['samples']} dimensions compared"
-        + (f", {summary['missing']} not found in a trace" if summary["missing"] else "")
-        + ".",
+        f"{summary['traced']} of {summary['photos']} photos traced.",
+        (
+            f"Dimensions: {summary['compared']} of {summary['requested']} requested compared; "
+            f"{summary['unmatched']} unmatched in successful traces; "
+            f"{summary['unavailable']} unavailable in failed traces."
+        ),
     ]
     if summary["samples"]:
         lines.append(
-            f"Absolute error: median {summary['median_abs_error_mm']:.3f} mm, 95th percentile"
+            f"Matched dimensions only: absolute error median {summary['median_abs_error_mm']:.3f} mm, 95th percentile"
             f" {summary['p95_abs_error_mm']:.3f} mm, worst {summary['worst_abs_error_mm']:.3f} mm."
         )
+    else:
+        lines.append("No dimensions matched; absolute-error statistics are unavailable.")
     lines += [
         (
-            "Errors are the trace minus your caliper value. The calipers' own uncertainty was taken as"
-            f" {report['caliper_uncertainty_mm']:g} mm; smaller errors cannot be told from it, and mean"
-            " errors beyond it are in bold."
+            "Errors are the trace minus your reference measurement. "
+            f"Display threshold (caliper_uncertainty_mm): {report['caliper_uncertainty_mm']:g} mm; "
+            "mean errors beyond it are in bold. This input is not a propagated uncertainty, "
+            "confidence level or manufacturing acceptance rule."
+        ),
+        (
+            "Size correspondence maximizes admitted match count, then minimizes total absolute size error. "
+            "Each expected scalar uses a max(1 mm, 15%) correspondence gate; paired dimensions must both pass. "
+            "The gate and equal-size tie choices do not establish accuracy or physical feature identity."
+        ),
+        (
+            "Spread is the observed sample SD. Equal-size features and shared calibration can correlate "
+            "readings; pooled readings are not independent captures."
         ),
         "Design-intent snapping was " + ("on, as in the workbench." if report["snap"] else "off."),
     ]
@@ -509,10 +645,18 @@ def render(report):
             "",
             f"## {part['name']}",
             "",
+            (
+                f"Dimensions: {part['coverage']['compared']} of {part['coverage']['requested']} requested compared; "
+                f"{part['coverage']['unmatched']} unmatched; {part['coverage']['unavailable']} unavailable in failed traces."
+            ),
             f"Sheet: {described}."
-            + (f" Thickness: {part['thickness_mm']:g} mm." if part["thickness_mm"] else " No thickness given."),
+            + (
+                f" Thickness: {part['thickness_mm']:g} mm."
+                if part["thickness_mm"]
+                else " No thickness given."
+            ),
             "",
-            "| Dimension | Calipers (mm) | Readings | Mean error (mm) | Spread, SD (mm) | Worst (mm) | Not found |",
+            "| Dimension | Reference (mm) | Readings | Mean error (mm) | Spread, SD (mm) | Worst (mm) | Unmatched |",
             "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
         ]
         for row in part["rows"]:
@@ -529,15 +673,20 @@ def render(report):
             scale, edge = fit["scale_percent"], fit["edge_offset_mm"]
 
             def between(value, unit, digits):
-                spread = "" if value["spread"] is None else f" (SD {value['spread']:.{digits}f} between photos)"
+                spread = (
+                    ""
+                    if value["spread"] is None
+                    else f" (SD {value['spread']:.{digits}f} between photos)"
+                )
                 return f"{value['mean']:+.{digits}f} {unit}{spread}"
 
             lines += [
                 "",
                 (
-                    f"Scale error {between(scale, '%', 3)}; edge offset {between(edge, 'mm', 3)},"
+                    f"Fitted scale term {between(scale, '%', 3)}; edge term {between(edge, 'mm', 3)},"
                     " positive when boundaries are found outside the material."
-                    f" What the two leave unexplained: {fit['residual_mm']['mean']:.3f} mm RMS."
+                    f" In-sample residual: {fit['residual_mm']['mean']:.3f} mm RMS. "
+                    "These diagnostic terms do not identify physical causes or predict held-out error."
                 ),
             ]
         lines += [
@@ -547,16 +696,21 @@ def render(report):
         ]
         for photo in part["photos"]:
             if not photo["traced"]:
-                lines.append(f"| {photo['file']} | | | | Not traced: {photo['reason']} |")
+                lines.append(
+                    f"| {photo['file']} | | | | Not traced: {photo['reason']} "
+                    f"({photo['coverage']['unavailable']} dimensions unavailable) |"
+                )
                 continue
             errors = [
-                s["measured_mm"] - s["expected_mm"] for s in photo["samples"] if s["measured_mm"] is not None
+                s["measured_mm"] - s["expected_mm"]
+                for s in photo["samples"]
+                if s["measured_mm"] is not None
             ]
             missing = len(photo["samples"]) - len(errors)
             lines.append(
                 f"| {photo['file']} | {photo['edge_blur_mm']:.3f} | {_plain(photo['sheet_proportions_percent'], 2)}"
                 f" | {_signed(max(errors, key=abs, default=None))}"
-                f" | {'Traced' if not missing else f'Traced; {missing} dimension(s) not found'} |"
+                f" | {'Traced' if not missing else f'Traced; {missing} dimension(s) unmatched'} |"
             )
     return "\n".join(lines) + "\n"
 

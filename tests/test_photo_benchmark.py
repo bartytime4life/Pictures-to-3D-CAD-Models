@@ -6,8 +6,11 @@ guards for the runner and say nothing about real photos.
 """
 
 import io
+import itertools
 import json
 import math
+import random
+from fractions import Fraction
 
 import numpy as np
 import pytest
@@ -134,6 +137,102 @@ def test_each_caliper_value_takes_the_nearest_unused_feature():
     assert rows["Opening 24 × 8 width"][0]["edge"] == -2
     assert rows["Centres 96"][0]["edge"] == 0
     assert rows["R8"][0]["edge"] is None
+
+
+def assignment_objective(costs, chosen):
+    edges = [(i, j) for i, j in enumerate(chosen) if j is not None]
+    assert len({j for _, j in edges}) == len(edges)
+    assert all(costs[i][j] is not None for i, j in edges)
+    return -len(edges), sum((Fraction(float(costs[i][j])) for i, j in edges), Fraction())
+
+
+def exhaustive_assignment_objective(costs, columns):
+    """Independent oracle: enumerate every partial injection, with no graph solver."""
+    for count in range(min(len(costs), columns), -1, -1):
+        totals = []
+        for rows in itertools.combinations(range(len(costs)), count):
+            for cols in itertools.permutations(range(columns), count):
+                values = [costs[i][j] for i, j in zip(rows, cols)]
+                if all(value is not None for value in values):
+                    totals.append(sum((Fraction(float(value)) for value in values), Fraction()))
+        if totals:
+            return -count, min(totals)
+    raise AssertionError("The empty assignment must always exist")
+
+
+@pytest.mark.parametrize("rows,columns", list(itertools.product(range(6), repeat=2)))
+def test_global_assignment_matches_an_exhaustive_independent_oracle(rows, columns):
+    rng = random.Random(1_237 + rows * 31 + columns)
+    for _ in range(12):
+        costs = [
+            [
+                rng.choice([None, None, 0, 1, 3, 0.1, math.nextafter(0.1, math.inf)])
+                for _ in range(columns)
+            ]
+            for _ in range(rows)
+        ]
+        chosen = pb.match(list(range(rows)), list(range(columns)), lambda i, j, costs=costs: costs[i][j])
+        assert assignment_objective(costs, chosen) == exhaustive_assignment_objective(
+            costs, columns
+        )
+
+
+@pytest.mark.parametrize(
+    "expected,candidates,values",
+    [
+        ([6, 7], [6.4, 5], [5, 6.4]),  # greedy leaves 7 unmatched
+        ([100, 101], [100.4, 99], [99, 100.4]),  # greedy matches both but costs 2.4, not 1.6
+    ],
+)
+def test_global_size_assignment_repairs_both_greedy_failure_modes(expected, candidates, values):
+    chosen = pb.match(expected, candidates, pb._scalar_cost)
+    assert [candidates[j] for j in chosen] == values
+
+
+def test_unique_correspondence_is_invariant_to_input_permutations_and_extra_candidates():
+    for expected in itertools.permutations([6, 7, 10]):
+        for candidates in itertools.permutations([6.4, 5, 10.1, 50]):
+            chosen = pb.match(expected, candidates, pb._scalar_cost)
+            assert {e: candidates[j] for e, j in zip(expected, chosen)} == {6: 5, 7: 6.4, 10: 10.1}
+
+
+def test_paired_dimensions_use_global_assignment_without_relaxing_either_gate():
+    expected, candidates = [(10, 5), (11, 5)], [(10.4, 5), (9, 5)]
+    assert pb.match(expected, candidates, pb._pair_cost) == [1, 0]
+    assert pb.match([(10, 5)], [(10, 7)], pb._pair_cost) == [None]
+    assert pb.match([6], [7], pb._scalar_cost) == [0]
+    assert pb.match([6], [math.nextafter(7, math.inf)], pb._scalar_cost) == [None]
+
+
+def test_equal_costs_and_duplicate_sizes_have_deterministic_ties():
+    for _ in range(4):
+        assert pb.match([6, 7], [6.5, 6.5], pb._scalar_cost) == [0, 1]
+        assert pb.match([6, 6, 6], [6, 6], pb._scalar_cost) == [0, 1, None]
+    assert pb.match([1], [], pb._scalar_cost) == [None]
+    assert pb.match([], [1], pb._scalar_cost) == []
+    assert pb.match([6, 7], [50, 60], pb._scalar_cost) == [None, None]
+
+
+def test_small_real_cost_differences_are_not_erased_by_tie_penalties_or_float_summation():
+    costs = [[1.0, 1.0], [0.0, math.ulp(1.0) / 4]]
+    chosen = pb.match([0, 1], [0, 1], lambda i, j: costs[i][j])
+    assert chosen == [1, 0]
+    assert assignment_objective(costs, chosen) == exhaustive_assignment_objective(costs, 2)
+
+
+@pytest.mark.parametrize("value", [math.nan, math.inf, -1])
+def test_invalid_matching_costs_are_refused(value):
+    with pytest.raises(pb.ManifestError, match="finite and nonnegative"):
+        pb.match([1], [1], lambda a, b: value)
+
+
+@pytest.mark.parametrize("shape", [(129, 1), (1, 2049), (128, 1025)])
+def test_matching_work_limits_refuse_instead_of_pruning_or_evaluating_costs(shape):
+    def no_cost(a, b):
+        raise AssertionError("Work limit must be checked before evaluating candidate costs")
+
+    with pytest.raises(pb.ManifestError, match="work limit"):
+        pb.match(list(range(shape[0])), list(range(shape[1])), no_cost)
 
 
 def sample(expected, edge, error):
@@ -310,6 +409,82 @@ def test_a_folder_without_a_manifest_stops_the_command(tmp_path, capsys):
     assert f"No {pb.MANIFEST}" in capsys.readouterr().err
 
 
+def test_manifest_measurement_limit_is_explicit_and_actionable(tmp_path):
+    manifest = {"parts": [part(measured={"radii": [8.0] * 129})]}
+    with pytest.raises(pb.ManifestError, match="at most 128 features per kind"):
+        pb.load_manifest(write_folder(tmp_path, manifest))
+
+
+def test_coverage_conserves_all_requested_scalars_across_parts_failures_and_missing_features(
+    tmp_path, monkeypatch
+):
+    manifest = {
+        "parts": [
+            part(name="holes", photos=["good.jpg", "failed.jpg"], measured={"diameters": [6, 7]}),
+            part(
+                name="plate",
+                photos="partial.jpg",
+                measured={
+                    "outline": [120, 70],
+                    "openings": [[24, 8]],
+                    "radii": [8],
+                    "centre_distances": [50],
+                },
+            ),
+        ]
+    }
+    write_folder(tmp_path, manifest, photos=("good.jpg", "failed.jpg", "partial.jpg"))
+
+    def trace(path, part, snap, name):
+        if name == "failed.jpg":
+            return {"file": name, "traced": False, "reason": "Explicit failed-trace fixture"}
+        found = {
+            "outline": [(120.04, 70.02)] if name == "partial.jpg" else [],
+            "diameters": [(6.4, False), (5, False)] if name == "good.jpg" else [],
+            "openings": [],
+            "radii": [8.03] if name == "partial.jpg" else [],
+            "centre_distances": [],
+        }
+        return {
+            "file": name,
+            "traced": True,
+            "samples": pb.samples(part["measured"], found),
+            "fit": None,
+            "edge_blur_mm": 0.1,
+            "sheet_proportions_percent": 0.0,
+        }
+
+    monkeypatch.setattr(pb, "trace_photo", trace)
+    report = pb.run(tmp_path)
+    assert {
+        key: report["summary"][key] for key in ("requested", "compared", "unmatched", "unavailable")
+    } == {
+        "requested": 10,
+        "compared": 5,
+        "unmatched": 3,
+        "unavailable": 2,
+    }
+    assert report["summary"]["samples"] == 5 and report["summary"]["missing"] == 3
+    for record in [
+        *report["parts"],
+        *(photo for part in report["parts"] for photo in part["photos"]),
+    ]:
+        counts = record["coverage"]
+        assert (
+            counts["requested"] == counts["compared"] + counts["unmatched"] + counts["unavailable"]
+        )
+    assert report["summary"]["worst_abs_error_mm"] == pytest.approx(1.0)
+    table = pb.render(report)
+    assert (
+        "5 of 10 requested compared; 3 unmatched in successful traces; 2 unavailable in failed traces"
+        in table
+    )
+    assert "Matched dimensions only" in table and "correspondence gate" in table
+    assert "physical feature identity" in table and "not a propagated uncertainty" in table
+    assert "2 dimensions unavailable" in table
+    assert "smaller errors cannot be told" not in table
+
+
 def test_a_run_in_which_nothing_traced_fails_and_says_why(tmp_path, capsys):
     write_folder(tmp_path, {"parts": [part(photos=["a.jpg", "set-*/a.jpg"])]})
     for name in ("set-1", "set-2"):
@@ -318,6 +493,11 @@ def test_a_run_in_which_nothing_traced_fails_and_says_why(tmp_path, capsys):
     assert pb.main([str(tmp_path)]) == 1
     printed = capsys.readouterr().out
     assert "0 of 3 photos traced" in printed
+    assert (
+        "0 of 3 requested compared; 0 unmatched in successful traces; 3 unavailable in failed traces"
+        in printed
+    )
+    assert "No dimensions matched" in printed
     # Photos of the same name in different subfolders stay distinguishable.
     for name in ("a.jpg", "set-1/a.jpg", "set-2/a.jpg"):
         assert f"| {name} | | | | Not traced: " in printed
@@ -356,6 +536,14 @@ def test_rendered_photos_are_measured_against_the_manifest(example_run):
     report = json.loads(example_run["json"])
     assert report["summary"]["photos"] == 3 and report["summary"]["traced"] == 2
     assert report["summary"]["missing"] == 2  # the absent Ø40, once per traced photo
+    assert {
+        key: report["summary"][key] for key in ("requested", "compared", "unmatched", "unavailable")
+    } == {
+        "requested": 51,
+        "compared": 32,
+        "unmatched": 2,
+        "unavailable": 17,
+    }
     assert report["summary"]["worst_abs_error_mm"] < 0.06
     (plate,) = report["parts"]
     assert "thickness_mm" not in json.loads((example_run["folder"] / pb.MANIFEST).read_text())
@@ -409,12 +597,17 @@ def test_the_report_holds_no_image_data_and_no_folder_path(example_run):
 
 def test_the_printed_tables_show_readings_misses_and_failures(example_run):
     table = example_run["markdown"]
-    assert "2 of 3 photos traced; 32 dimensions compared, 2 not found in a trace." in table
+    assert "2 of 3 photos traced." in table
+    assert (
+        "32 of 51 requested compared; 2 unmatched in successful traces; 17 unavailable in failed traces"
+        in table
+    )
     assert "| Ø6 (×4) | 6.00 | 8 | " in table
     assert "| Ø40 | 40.00 | 0 | — | — | — | 2 |" in table
     assert "| blank.jpg | | | | Not traced: " in table
-    assert "Traced; 1 dimension(s) not found" in table
-    assert "Scale error " in table and "between photos" in table
+    assert "Traced; 1 dimension(s) unmatched" in table
+    assert "Fitted scale term " in table and "between photos" in table
+    assert "In-sample residual" in table and "do not identify physical causes" in table
     assert "Sheet: 210 × 297 mm. No thickness given." in table
 
 
@@ -437,9 +630,26 @@ def test_mean_errors_beyond_the_calipers_are_marked():
     report = {
         "snap": False,
         "caliper_uncertainty_mm": 0.03,
-        "summary": {"photos": 0, "traced": 0, "samples": 0, "missing": 0},
+        "summary": {
+            "photos": 0,
+            "traced": 0,
+            "samples": 0,
+            "missing": 0,
+            "requested": 0,
+            "compared": 0,
+            "unmatched": 0,
+            "unavailable": 0,
+        },
         "parts": [
-            {"name": "p", "sheet": [200, 300], "thickness_mm": 2, "photos": [], "fit": None, "rows": [row(e)]}
+            {
+                "name": "p",
+                "sheet": [200, 300],
+                "thickness_mm": 2,
+                "photos": [],
+                "fit": None,
+                "rows": [row(e)],
+                "coverage": {"requested": 1, "compared": 1, "unmatched": 0, "unavailable": 0},
+            }
             for e in (0.029, -0.031)
         ],
     }
