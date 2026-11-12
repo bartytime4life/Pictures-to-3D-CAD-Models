@@ -503,6 +503,47 @@ def test_one_wall_tone_shared_by_narrow_bands_is_recovered():
     assert edges.pooled_wall_tone(wall_step_image(thin, sigma), points, normals, thin, sigma) is None
 
 
+def hole_silhouette(centre, radius, nadir, height, thickness, slot=0.0):
+    """The exact silhouette of a vertical-walled hole seen from `height` above `nadir`:
+    the floor shows where the bottom outline and the top outline (magnified by
+    height / (height - thickness) about the nadir) overlap. `slot` > 0 makes it a slot
+    that long. Returns its points and material normals (into the hole)."""
+    from shapely import affinity
+    from shapely.geometry import LineString, Point
+
+    shape = (LineString([(centre[0] - slot / 2, centre[1]), (centre[0] + slot / 2, centre[1])]).buffer(radius, 2048)
+             if slot else Point(centre).buffer(radius, 2048))
+    scale = height / (height - thickness)
+    top = affinity.scale(shape, scale, scale, origin=tuple(nadir))
+    points = np.array(shape.intersection(top).exterior.coords)[:-1]
+    normals = edges.material_normals(points, False)
+    return points, normals
+
+
+def test_the_camera_height_makes_thick_holes_round_again():
+    """Exact geometry (edges.roundness_focal). A thick part's hole is traced on the top
+    edge where its normal faces away from the nadir and on the bottom edge elsewhere, so
+    with the wrong camera height its corrected outline is stretched along the direction
+    from the nadir. On exact silhouettes of round holes (and a slot, which is not round
+    and is left out), the focal length that makes them round again, searched over
+    lenses of 10-200 mm, is the true one within 0.05 %. A hole centred on the nadir has
+    no such stretch, and holes there alone, or no round hole, determine nothing."""
+    nadir, height, thickness, true_focal = np.array([105.0, 148.5]), 440.0, 4.0, 1980.0
+    diagonal = math.hypot(2400, 1800)
+
+    def pose_at(focal):
+        return {"nadir_mm": nadir, "height_mm": height * focal / true_focal}
+
+    holes = [hole_silhouette(c, r, nadir, height, thickness) for c, r in (((60, 120), 3), ((150, 175), 3), ((90, 160), 11))]
+    holes.append(hole_silhouette((120, 125), 4, nadir, height, thickness, slot=16))
+    focal, used = edges.roundness_focal(holes, pose_at, thickness, diagonal, gate=0.03)
+    assert abs(focal / true_focal - 1) < 5e-4 and used == 3
+
+    centred = [hole_silhouette(nadir, 5, nadir, height, thickness)]
+    assert edges.roundness_focal(centred, pose_at, thickness, diagonal, gate=0.03) is None
+    assert edges.roundness_focal(holes[3:], pose_at, thickness, diagonal, gate=0.03) is None
+
+
 def test_srgb_decoding_matches_the_standard_and_inverts_its_encoding():
     """Property: tone.linear_from_encoded is the IEC 61966-2-1 decoding. It agrees with
     the renderer's separately written copy and with the standard's own values (a saved

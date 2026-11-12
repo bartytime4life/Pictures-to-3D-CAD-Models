@@ -95,6 +95,72 @@ class _Transform:
         return (float(p[0]), float(p[1]))
 
 
+def _refine_walls(g, rings, camera, thickness_mm, sigma, ppm):
+    """Each ring's points with the edges that show a narrow side wall refined by the
+    two-step model (edges.two_step_refine), before the parallax correction, with their
+    material normals and the notes. The rings are not changed. With no measured edge
+    blur (edges.edge_sigma returns 0 when no profile has the contrast) the model has no
+    scale, and the points are returned as traced."""
+    notes = []
+    if sigma <= 0:
+        return [(ring["points"].copy(), edges.material_normals(ring["points"] / ppm, ring["outer"])) for ring in rings], notes
+    ratio = camera["height_mm"] / (camera["height_mm"] - thickness_mm)
+    # Bottom-edge silhouette points have the visible wall on their material side, a
+    # band (ratio - 1) |(p - N) . n| wide. A single mid-level crossing is biased into
+    # the material by up to 0.2 sigma for bands of 1-3 sigma (edges.two_step_refine).
+    prepared = []
+    for ring in rings:
+        mm = ring["points"] / ppm
+        normals = edges.material_normals(mm, ring["outer"])
+        facing = np.einsum("ij,ij->i", normals, mm - camera["nadir_mm"])
+        band = (ratio - 1) * np.maximum(-facing, 0) * ppm
+        prepared.append((ring, normals, band))
+    # The wall tone is identifiable only where the band is wide (>= 2.5 sigma); there
+    # a free two-step fit measures it. Narrower bands are then fitted with it fixed.
+    wide = [(r["points"][b >= 2.5 * sigma], n[b >= 2.5 * sigma], b[b >= 2.5 * sigma]) for r, n, b in prepared]
+    wide_points = np.vstack([w[0] for w in wide]) if wide else np.empty((0, 2))
+    # Refine mainly bands of 1-3 sigma, where a single crossing is biased by 0.14-0.20
+    # sigma. Below that the wall tone and edge offset are nearly confounded; above it
+    # the local levels already see the wall. In synthetic tests, refining the whole
+    # 0.25-4 sigma range made results worse (see docs/validation.md).
+    narrow_count = sum(int(((b >= sigma) & (b <= 3 * sigma)).sum()) for _, _, b in prepared)
+    wall_tone = None
+    if len(wide_points) >= 30:
+        _, tones = edges.two_step_refine(
+            g, wide_points, np.vstack([w[1] for w in wide]), np.concatenate([w[2] for w in wide]), sigma
+        )
+        wall_tone = float(np.median(tones))
+    else:
+        # Too few wide bands: one tone shared by all bands of 1-3.5 sigma
+        # (edges.pooled_wall_tone), where a near-frontal photo still has hundreds.
+        pool = [(r["points"][(b >= sigma) & (b <= 3.5 * sigma)], n[(b >= sigma) & (b <= 3.5 * sigma)], b[(b >= sigma) & (b <= 3.5 * sigma)]) for r, n, b in prepared]
+        pooled = sum(len(p[0]) for p in pool)
+        if pooled >= 30:
+            wall_tone = edges.pooled_wall_tone(
+                g, np.vstack([p[0] for p in pool]), np.vstack([p[1] for p in pool]), np.concatenate([p[2] for p in pool]), sigma
+            )
+        if wall_tone is not None:
+            notes.append(
+                f"Side walls are narrower than about 2.5 times the edge blur; their tone was estimated jointly from {pooled} edge points and the edges facing the camera were corrected with it."
+            )
+    if wall_tone is None and narrow_count:
+        notes.append(
+            f"Side walls are visible but narrower than about 2.5 times the edge blur, so their tone cannot be measured; edges facing the camera may read up to {0.2 * sigma / ppm:.3f} mm into the part. A slightly tilted photo shows wider walls."
+        )
+    refined = []
+    for ring, normals, band in prepared:
+        # Full weight for 1.5-2.5 sigma, tapering linearly to zero at 0.5 and 3.5
+        # sigma, so the boundary stays continuous where refinement starts and stops.
+        weight = np.clip((band - 0.5 * sigma) / sigma, 0, 1) * np.clip((3.5 * sigma - band) / sigma, 0, 1)
+        narrow = weight > 0
+        points = ring["points"].copy()
+        if wall_tone is not None and narrow.any():
+            moved, _ = edges.two_step_refine(g, points[narrow], normals[narrow], band[narrow], sigma, wall_tone=wall_tone)
+            points[narrow] += weight[narrow, None] * (moved - points[narrow])
+        refined.append((points, normals))
+    return refined, notes
+
+
 def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, focal_35mm, snap, notices):
     size_mm = sheet_size(reference, sheet_mm)
     gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
@@ -152,67 +218,37 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
         camera = sheet.camera_pose(matrix, size, focal_35mm)
         if thickness_mm >= 0.5 * camera["height_mm"]:
             raise ReferenceError_("The entered thickness is too large for this camera distance. Check the thickness.")
-        ratio = camera["height_mm"] / (camera["height_mm"] - thickness_mm)
-        # Bottom-edge silhouette points have the visible wall on their material side, a
-        # band (ratio - 1) |(p - N) . n| wide. A single mid-level crossing is biased into
-        # the material by up to 0.2 sigma for bands of 1-3 sigma (edges.two_step_refine).
-        prepared = []
-        for ring in rings:
-            mm = ring["points"] / ppm
-            normals = edges.material_normals(mm, ring["outer"])
-            facing = np.einsum("ij,ij->i", normals, mm - camera["nadir_mm"])
-            band = (ratio - 1) * np.maximum(-facing, 0) * ppm
-            prepared.append((ring, normals, band))
-        # The wall tone is identifiable only where the band is wide (>= 2.5 sigma); there
-        # a free two-step fit measures it. Narrower bands are then fitted with it fixed.
-        wide = [(r["points"][b >= 2.5 * sigma], n[b >= 2.5 * sigma], b[b >= 2.5 * sigma]) for r, n, b in prepared]
-        wide_points = np.vstack([w[0] for w in wide]) if wide else np.empty((0, 2))
-        # Refine mainly bands of 1-3 sigma, where a single crossing is biased by 0.14-0.20
-        # sigma. Below that the wall tone and edge offset are nearly confounded; above it
-        # the local levels already see the wall. In synthetic tests, refining the whole
-        # 0.25-4 sigma range made results worse (see docs/validation.md).
-        narrow_count = sum(int(((b >= sigma) & (b <= 3 * sigma)).sum()) for _, _, b in prepared)
-        wall_tone = None
-        if len(wide_points) >= 30:
-            _, tones = edges.two_step_refine(
-                g, wide_points, np.vstack([w[1] for w in wide]), np.concatenate([w[2] for w in wide]), sigma
+        refined, wall_notes = _refine_walls(g, rings, camera, thickness_mm, sigma, ppm)
+        holes_used = 0
+        if camera["focal_source"] == "assumed":
+            # A nearly frontal view does not fix the focal length, and so the camera
+            # height; the holes' roundness after the parallax correction does
+            # (edges.roundness_focal). The walls are then refined again with it.
+            found = edges.roundness_focal(
+                [(points / ppm, normals) for (points, normals), ring in zip(refined, rings) if not ring["outer"]],
+                lambda focal: sheet.camera_pose(matrix, size, focal_px=focal),
+                thickness_mm,
+                math.hypot(*size),
+                max(0.03, 0.15 * sigma / ppm),
             )
-            wall_tone = float(np.median(tones))
-        else:
-            # Too few wide bands: one tone shared by all bands of 1-3.5 sigma
-            # (edges.pooled_wall_tone), where a near-frontal photo still has hundreds.
-            pool = [(r["points"][(b >= sigma) & (b <= 3.5 * sigma)], n[(b >= sigma) & (b <= 3.5 * sigma)], b[(b >= sigma) & (b <= 3.5 * sigma)]) for r, n, b in prepared]
-            pooled = sum(len(p[0]) for p in pool)
-            if pooled >= 30:
-                wall_tone = edges.pooled_wall_tone(
-                    g, np.vstack([p[0] for p in pool]), np.vstack([p[1] for p in pool]), np.concatenate([p[2] for p in pool]), sigma
-                )
-            if wall_tone is not None:
-                notes.append(
-                    f"Side walls are narrower than about 2.5 times the edge blur; their tone was estimated jointly from {pooled} edge points and the edges facing the camera were corrected with it."
-                )
-        if wall_tone is None and narrow_count:
-            notes.append(
-                f"Side walls are visible but narrower than about 2.5 times the edge blur, so their tone cannot be measured; edges facing the camera may read up to {0.2 * sigma / ppm:.3f} mm into the part. A slightly tilted photo shows wider walls."
-            )
-        for ring, normals, band in prepared:
-            # Full weight for 1.5-2.5 sigma, tapering linearly to zero at 0.5 and 3.5
-            # sigma, so the boundary stays continuous where refinement starts and stops.
-            weight = np.clip((band - 0.5 * sigma) / sigma, 0, 1) * np.clip((3.5 * sigma - band) / sigma, 0, 1)
-            narrow = weight > 0
-            if wall_tone is not None and narrow.any():
-                refined, _ = edges.two_step_refine(
-                    g, ring["points"][narrow], normals[narrow], band[narrow], sigma, wall_tone=wall_tone
-                )
-                ring["points"] = ring["points"].copy()
-                ring["points"][narrow] += weight[narrow, None] * (refined - ring["points"][narrow])
+            if found is not None:
+                camera = {**sheet.camera_pose(matrix, size, focal_px=found[0]), "focal_source": "holes"}
+                holes_used = found[1]
+                refined, wall_notes = _refine_walls(g, rings, camera, thickness_mm, sigma, ppm)
+        notes.extend(wall_notes)
+        for ring, (points, normals) in zip(rings, refined):
             corrected, _ = edges.correct_thickness(
-                ring["points"] / ppm, normals, camera["nadir_mm"], camera["height_mm"], thickness_mm
+                points / ppm, normals, camera["nadir_mm"], camera["height_mm"], thickness_mm
             )
             ring["points"] = corrected * ppm
         if camera["focal_source"] == "assumed":
             notes.append(
-                "The camera's focal length could not be found from the sheet or the photo's metadata, so a typical phone lens was assumed for the thickness correction."
+                "The camera's focal length could not be found from the sheet, the photo's metadata or the holes' shape, so a typical phone lens was assumed for the thickness correction."
+            )
+        elif camera["focal_source"] == "holes":
+            equivalent = camera["focal_px"] / math.hypot(*size) * math.hypot(36, 24)
+            notes.append(
+                f"The camera's focal length could not be found from the sheet or the photo's metadata. It was estimated as {equivalent:.1f} mm (35 mm equivalent) from the roundness of {holes_used} hole(s): their near and far sides are traced at different heights, and only the right camera height makes them round."
             )
     outer_points = next(r["points"] for r in rings if r["outer"])
     extent_mm = float(np.ptp(outer_points, axis=0).max()) / ppm

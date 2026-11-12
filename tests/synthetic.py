@@ -208,6 +208,8 @@ def render(
     tones=(106.0, 236.0, 48.0, 78.0),
     exif_focal_35mm=None,
     gamma=None,
+    focal=None,
+    distance=440.0,
 ):
     """Returns (jpeg bytes, truth dict).
 
@@ -220,6 +222,7 @@ def render(
     `gamma` is the camera's tone curve: None for sRGB's, or the exponent of a plain
     power law (saved = linear ** (1 / gamma)), for cameras whose curve differs from the
     sRGB decoding the tracer assumes. 1 saves linear light unchanged.
+    `focal` (px) and `distance` (mm) place the camera as in `camera`.
     """
     if gamma is None:
         to_linear, to_saved = srgb_to_linear, linear_to_srgb
@@ -233,7 +236,7 @@ def render(
 
     rng = np.random.default_rng(seed)
     part = part_on_sheet()
-    k, rotation, t = camera(tilt, size)
+    k, rotation, t = camera(tilt, size, focal, distance)
     centre = -rotation.T @ t
     up = -1.0 if centre[2] < 0 else 1.0
     floor = k @ np.column_stack([rotation[:, 0], rotation[:, 1], t])
