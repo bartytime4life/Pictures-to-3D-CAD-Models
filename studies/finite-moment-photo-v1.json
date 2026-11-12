@@ -1,0 +1,31 @@
+{
+  "background": "median of complete one-pixel ROI border; no truth levels",
+  "background_perturbations": [
+    0.0,
+    -0.01,
+    0.01,
+    -0.1,
+    0.1
+  ],
+  "fraction_domain": [
+    -0.8,
+    0.9
+  ],
+  "geometry": "largest-radius initial observed arc; longest chord candidate; no truth seed",
+  "minimum_padding": 16,
+  "nominal": "8 sigma with zero background perturbation",
+  "policy": "All75 attempted numerical rows and upstream ineligible case retained; no Gaussian certification or production integration.",
+  "roi_sigmas": [
+    6.0,
+    8.0,
+    12.0
+  ],
+  "source": "d-photo-baseline-v2/result.json",
+  "targets": {
+    "centre_mm": 0.02,
+    "radius_mm": 0.02,
+    "roi_8_12_change_mm": 0.01
+  },
+  "version": 1,
+  "weights": "signed background-minus-observation, never clipped; normalized by signed mass"
+}

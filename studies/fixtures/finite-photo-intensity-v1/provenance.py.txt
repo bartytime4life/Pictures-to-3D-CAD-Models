@@ -1,0 +1,384 @@
+"""Read-only frozen actual-g diagnostic; required NEW output, all12 lanes retained."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import importlib.util
+import json
+import math
+import subprocess
+import sys
+import time
+from dataclasses import asdict
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[2]
+
+
+def sha(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def strict_json(path):
+    def pairs(items):
+        answer = {}
+        for key, value in items:
+            if key in answer:
+                raise ValueError(f"duplicate JSON key: {key}")
+            answer[key] = value
+        return answer
+
+    def nonfinite(value):
+        raise ValueError(f"nonfinite JSON token: {value}")
+
+    return json.loads(Path(path).read_text(), object_pairs_hook=pairs, parse_constant=nonfinite)
+
+
+def write(path, value):
+    with path.open("x") as out:
+        json.dump(value, out, indent=2, allow_nan=False)
+
+
+def checkpoint(report):
+    target = HERE / "partial.json"
+    temporary = HERE / "partial.tmp"
+    temporary.write_text(json.dumps(report, indent=2, allow_nan=False))
+    temporary.replace(target)
+
+
+def run(output):
+    import numpy as np
+
+    sys.path.insert(0, str(ROOT))
+    from backend import finite_centre_fit as core
+
+    manifest = strict_json(HERE / "freeze.json")
+    before = {p: sha(ROOT / p) for p in manifest["files"]}
+    if before != manifest["files"]:
+        raise ValueError("frozen source/helper/input mismatch before analysis")
+    plan = strict_json(HERE / "plan.json")
+    baseline = strict_json(ROOT / plan["baseline"])
+    baseline_plan = strict_json(ROOT / ".local/verification/d-photo-baseline-v2/plan.json")
+    moments = strict_json(ROOT / plan["moment_run"])
+    spec = importlib.util.spec_from_file_location(
+        "frozen_photo_seed_helper", ROOT / "studies/verification/finite-free-centre-v1.py"
+    )
+    helper = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = helper
+    spec.loader.exec_module(helper)
+    rows_by_name = {r["case"]["name"]: r for r in baseline["rows"]}
+    if list(rows_by_name) != plan["cases"]:
+        raise ValueError("six-case baseline population/order mismatch")
+    nominal = {
+        r["name"]: r
+        for r in moments["rows"]
+        if r.get("roi_sigmas") == 8 and r.get("background_offset") == 0
+    }
+    report = {
+        "plan": plan,
+        "plan_sha256": sha(HERE / "plan.json"),
+        "runner_sha256": sha(__file__),
+        "freeze_sha256": sha(HERE / "freeze.json"),
+        "source_before": before,
+        "git_head": subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
+        ).strip(),
+        "rows": [],
+        "started_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    }
+    start = time.monotonic()
+    for name in plan["cases"]:
+        original = rows_by_name[name]
+        measured = original.get("measurements", {})
+        path = ROOT / f".local/verification/d-photo-baseline-v2/{name}-measurement.npz"
+        for lane in plan["lanes"]:
+            started = time.monotonic()
+            row = {
+                "index": len(report["rows"]),
+                "name": name,
+                "lane": lane,
+                "targets_passed": False,
+                "completion_passed": False,
+                "fit_attempted": False,
+            }
+            print(
+                json.dumps(
+                    {"event": "row_started", "index": row["index"], "name": name, "lane": lane}
+                ),
+                flush=True,
+            )
+            try:
+                if not path.exists() or not measured.get("rings"):
+                    row.update(
+                        status="upstream_ineligible",
+                        reason=original.get("error", "no preserved g/ring"),
+                    )
+                    continue
+                with np.load(path, allow_pickle=False) as archive:
+                    field = archive["g"].copy()
+                row.update(
+                    g_shape=list(field.shape),
+                    g_dtype=field.dtype.str,
+                    g_sha256=hashlib.sha256(field.tobytes()).hexdigest(),
+                    capture_path=str(path.relative_to(ROOT)),
+                    capture_sha256=sha(path),
+                    ppm=float(measured["ppm"]),
+                    captured_scalar_sigma=float(measured["sigma"]),
+                )
+                outer_index = next(i for i, r in enumerate(measured["rings"]) if r["outer"])
+                prims = measured["initial_fits"][outer_index]
+                row["initial_primitive_kinds"] = [p["kind"] for p in prims or []]
+                lines = [p for p in prims or [] if p["kind"] == "line"]
+                arcs = [p for p in prims or [] if p["kind"] == "arc"]
+                if not lines or not arcs:
+                    row.update(
+                        status="observed_seed_ineligible", reason="no observed line/arc witnesses"
+                    )
+                    continue
+                line = max(
+                    lines,
+                    key=lambda p: np.linalg.norm(
+                        np.diff(np.asarray(p["data"]["source_ends"]), axis=0)
+                    ),
+                )
+                arc = max(arcs, key=lambda p: p["data"]["r"])
+                direction = np.asarray(line["data"]["d"], float)
+                direction /= np.linalg.norm(direction)
+                normal = np.array([-direction[1], direction[0]])
+                witness = np.asarray(arc["data"]["mid"]) - arc["data"]["c"]
+                projection = float(normal @ witness)
+                if not math.isfinite(projection) or projection == 0:
+                    row.update(
+                        status="observed_seed_ineligible",
+                        reason="arc sector cannot orient chord normal",
+                    )
+                    continue
+                if projection > 0:
+                    normal = -normal
+                row["normal_from_observations"] = {
+                    "normal": normal.tolist(),
+                    "line": line,
+                    "arc_sector_witness": arc,
+                    "negative_sector_dot": float(normal @ witness),
+                }
+                if lane == "legacy_sigma_squared_identity":
+                    raw = np.eye(2) * float(measured["sigma"]) ** 2
+                elif name not in nominal:
+                    row.update(status="covariance_ineligible", reason="nominal moment row absent")
+                    continue
+                else:
+                    row["moment_source"] = {
+                        k: nominal[name][k]
+                        for k in ("name", "roi_sigmas", "background_offset", "status")
+                    }
+                    raw = np.asarray(nominal[name]["covariance"], float)
+                row["raw_covariance"] = raw.tolist()
+                asym = float(np.max(np.abs(raw - raw.T)))
+                guard = 64 * np.finfo(float).eps * float(np.max(np.abs(raw)))
+                row.update(covariance_asymmetry=asym, covariance_arithmetic_guard=guard)
+                if not np.isfinite(raw).all() or asym > guard:
+                    row.update(
+                        status="covariance_ineligible",
+                        reason="nonfinite or beyond-arithmetic asymmetry",
+                    )
+                    continue
+                covariance = (raw + raw.T) / 2
+                row["covariance"] = covariance.tolist()
+                row["covariance_maximum_representation_change"] = float(
+                    np.max(np.abs(covariance - raw))
+                )
+                eigenvalues = np.linalg.eigvalsh(covariance)
+                row["covariance_eigenvalues"] = eigenvalues.tolist()
+                if np.any(eigenvalues <= 0):
+                    row.update(
+                        status="covariance_ineligible", reason="indefinite covariance, not repaired"
+                    )
+                    continue
+                config = {
+                    "sensor_shape": list(field.shape),
+                    "homography": np.eye(3).tolist(),
+                    "normal_degrees": math.degrees(math.atan2(normal[1], normal[0])),
+                    "levels": [1.0, 0.0],
+                    "seed_level": 0.5,
+                    "covariance": covariance.tolist(),
+                }
+                row["helper_configuration"] = config
+                try:
+                    observed = helper.observed_seed_roi(field, config, plan)
+                except ValueError as error:
+                    row.update(status="observed_seed_ineligible", reason=str(error))
+                    continue
+                row["observed"] = observed
+                train = np.asarray(observed["training_pixels"], int)
+                held = np.asarray(observed["heldout_pixels"], int)
+                if (
+                    len(train) != 40
+                    or len(held) != 16
+                    or len(np.unique(np.vstack((train, held)), axis=0)) != 56
+                ):
+                    raise ValueError("frozen helper did not produce disjoint40+16 fixed pixels")
+                y = field[train[:, 1], train[:, 0]].astype(float)
+                yh = field[held[:, 1], held[:, 0]].astype(float)
+                row.update(observed_values_training=y.tolist(), observed_values_heldout=yh.tolist())
+                args = dict(
+                    sensor_shape=field.shape,
+                    homography=np.eye(3),
+                    psf_covariance=covariance,
+                    normal=normal,
+                    **observed["bounds"],
+                    **plan["fit_settings"],
+                )
+                row["fit_attempted"] = True
+                fitted = core.fit_circular_segment(train, y, **args)
+                row.update(status="fit_completed", fit=asdict(fitted))
+                if fitted.best is None:
+                    continue
+                best = fitted.best
+                prediction = core.circular_segment_probabilities(
+                    held,
+                    best.radius,
+                    best.chord_fraction,
+                    centre=best.centre,
+                    normal=normal,
+                    sensor_shape=field.shape,
+                    homography=np.eye(3),
+                    psf_covariance=covariance,
+                    probability_tolerance=plan["fit_settings"]["probability_tolerance"],
+                )
+                row["heldout_forward"] = asdict(prediction)
+                held_ok = all(s == "resolved" for s in prediction.statuses)
+                if held_ok:
+                    means = best.levels[0] * (
+                        1 - np.asarray(prediction.probabilities)
+                    ) + best.levels[1] * np.asarray(prediction.probabilities)
+                    row["heldout_predicted_intensities"] = means.tolist()
+                    row["heldout_intensity_max_error"] = float(np.max(abs(means - yh)))
+                # No true geometry has entered normal/config/helper/ROI/fit/heldout scoring.
+                ppm = float(measured["ppm"])
+                truth_centre = np.asarray(baseline_plan["centre_mm"], float)
+                truth_radius = float(original["case"]["radius"])
+                row["truth_after_scoring"] = {
+                    "centre_mm": truth_centre.tolist(),
+                    "radius_mm": truth_radius,
+                    "fraction": original["case"]["fraction"],
+                }
+                row["geometry_after_scoring"] = {
+                    "centre_mm": (np.asarray(best.centre) / ppm).tolist(),
+                    "radius_mm": best.radius / ppm,
+                    "fraction": best.chord_fraction,
+                    "centre_error_mm": float(
+                        np.linalg.norm(np.asarray(best.centre) / ppm - truth_centre)
+                    ),
+                    "absolute_radius_error_mm": abs(best.radius / ppm - truth_radius),
+                    "absolute_fraction_error": abs(
+                        best.chord_fraction - original["case"]["fraction"]
+                    ),
+                }
+                truth = [*(truth_centre * ppm), truth_radius * ppm, original["case"]["fraction"]]
+                boxes = [
+                    *observed["bounds"]["centre_bounds"],
+                    observed["bounds"]["radius_bounds"],
+                    observed["bounds"]["chord_fraction_bounds"],
+                ]
+                row["truth_in_observed_domain_after_scoring"] = all(
+                    a <= v <= b for v, (a, b) in zip(truth, boxes, strict=True)
+                )
+                row["completion_passed"] = bool(
+                    not (
+                        fitted.work_exhausted
+                        or fitted.refinement_limited
+                        or fitted.unrefined_basins
+                        or fitted.numerically_unsupported
+                        or fitted.flat
+                        or fitted.tied
+                        or fitted.endpoint
+                        or fitted.rank_deficient
+                    )
+                    and fitted.geometry_rank == 4
+                )
+                target = plan["targets"]
+                row["targets_passed"] = bool(
+                    row["completion_passed"]
+                    and held_ok
+                    and row["geometry_after_scoring"]["centre_error_mm"]
+                    <= target["centre_error_mm"]
+                    and row["geometry_after_scoring"]["absolute_radius_error_mm"]
+                    <= target["absolute_radius_error_mm"]
+                    and row["heldout_intensity_max_error"] <= target["heldout_intensity_max_error"]
+                )
+            except Exception as error:  # noqa: BLE001 - preserve every planned row after numerical failures
+                row.update(
+                    status="execution_failure",
+                    error={"type": type(error).__name__, "message": str(error)},
+                )
+            finally:
+                row["runtime_seconds"] = time.monotonic() - started
+                report["rows"].append(row)
+                checkpoint(report)
+                print(
+                    json.dumps(
+                        {
+                            "event": "row_finished",
+                            "index": row["index"],
+                            "name": name,
+                            "lane": lane,
+                            "status": row.get("status"),
+                            "targets_passed": row["targets_passed"],
+                            "runtime_seconds": row["runtime_seconds"],
+                        }
+                    ),
+                    flush=True,
+                )
+    report["source_after"] = {p: sha(ROOT / p) for p in manifest["files"]}
+    report["source_unchanged"] = report["source_before"] == report["source_after"]
+    report["runtime_seconds"] = time.monotonic() - start
+    report["summary"] = {
+        "declared_lanes": 12,
+        "retained_lanes": len(report["rows"]),
+        "fit_attempts": sum(r["fit_attempted"] for r in report["rows"]),
+        "statuses": {
+            s: sum(r.get("status") == s for r in report["rows"])
+            for s in sorted({r.get("status") for r in report["rows"]})
+        },
+        "completed": sum(r["completion_passed"] for r in report["rows"]),
+        "targets_passed": sum(r["targets_passed"] for r in report["rows"]),
+    }
+    write(output, report)
+    print(
+        json.dumps(
+            {
+                "event": "terminal",
+                "summary": report["summary"],
+                "source_unchanged": report["source_unchanged"],
+            },
+            sort_keys=True,
+        ),
+        flush=True,
+    )
+    return (
+        0
+        if report["source_unchanged"]
+        and len(report["rows"]) == 12
+        and report["summary"]["targets_passed"] == 12
+        else 1
+    )
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    if (
+        args.output.parent.resolve() != HERE
+        or args.output.suffix != ".json"
+        or args.output.exists()
+        or args.output.is_symlink()
+    ):
+        parser.error("output must be a NEW .json in this diagnostic directory")
+    return run(args.output)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
