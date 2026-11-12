@@ -2,6 +2,9 @@
 
 Use the [documentation index](README.md) to find the user guide, implementation
 contract and validation record for the behavior you want to change.
+The [source-scope guide](project-status.md) distinguishes the main-based repair
+from research PRs targeting another branch. Record the actual base and executable
+revision; a higher PR number or test count does not imply integration into main.
 
 ## Prepare a change
 

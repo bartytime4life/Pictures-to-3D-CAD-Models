@@ -235,7 +235,9 @@ def edge_covariance(g, points, normals, sigma, step=0.125, min_ratio=None):
     The fit must be supported in several directions, not just numerically possible.
     The profiles are grouped by normal direction into DIRECTION_BINS bins (modulo 180
     degrees), and a bin counts with MIN_PER_BIN clean profiles. Three unknowns need three
-    such bins: a part with edges in two directions (a rectangle, whose corners add only a
+    such bins and a numerical rank-three covariance design: opposite normals can
+    straddle a bin boundary through floating angle rounding without adding information.
+    A part with edges in two directions (a rectangle, whose corners add only a
     few, often unclean profiles) cannot separate the cross term from the rest. Each
     counted bin weighs the same in the least squares: a part's long straight edges
     give two bins most of the profiles, and an unweighted fit follows them and pushes
@@ -271,7 +273,9 @@ def edge_covariance(g, points, normals, sigma, step=0.125, min_ratio=None):
         ok &= counted[direction]
         for _ in range(3):
             weight = 1.0 / np.sqrt(np.maximum(np.bincount(direction[ok], minlength=DIRECTION_BINS), 1))[direction]
-            fit, *_ = np.linalg.lstsq(design[ok] * weight[ok, None], widths[ok] ** 2 * weight[ok], rcond=None)
+            fit, _, rank, _ = np.linalg.lstsq(design[ok] * weight[ok, None], widths[ok] ** 2 * weight[ok], rcond=None)
+            if rank < 3:
+                return None
             residual = np.where(ok, design @ fit - widths**2, np.inf)
             # A robust spread, floored at 1 % of the squared widths, so that exact data
             # are not trimmed to nothing.

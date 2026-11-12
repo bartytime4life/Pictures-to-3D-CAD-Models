@@ -3,6 +3,25 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Main-line documentation scope — November 12, 2026
+
+- Added a [source-scope guide](project-status.md) separating main's PRs #76/#77,
+  the draft #78 rank repair and research draft #79 on another lineage.
+- Clarified rectified directional widths, scalar nonparallel fillet fitting and
+  conditional radius-model limits. Added the current developer-command inventory
+  and output behavior, and aligned current navigation and evidence summaries.
+- Reviewed the Markdown set while preserving dated evidence, library-generated
+  assets and all executable bytes; [checks and scope](validation/documentation-main77-state.md).
+
+## Directional-blur design rank — November 12, 2026
+
+- Covariance fitting now rejects a numerical rank below three at every weighted
+  least-squares solve. Opposite normals at a rounded angular-bin boundary could
+  previously count as separate supported directions and produce an unidentified
+  positive-definite covariance. Bin support and model-adequacy thresholds remain
+  unchanged. Actual sampled Gaussian-step regressions and the bounded scope are
+  recorded in [directional-blur rank validation](validation/directional-blur-rank.md).
+
 
 ## Slot end caps and directional blur — November 12, 2026
 

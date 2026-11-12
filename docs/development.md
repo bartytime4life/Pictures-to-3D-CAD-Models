@@ -4,6 +4,9 @@ Run commands from the repository root unless a command explicitly says otherwise
 
 See the [documentation index](README.md) for usage and method guides, and
 [Contributing](contributing.md) for change scope, review and evidence practices.
+Check [source scope and status](project-status.md) before borrowing a command
+from another branch. [Developer tools](developer-tools.md) lists this checkout's
+scripts, side effects and output-overwrite behavior.
 
 ## Prerequisites
 
@@ -101,11 +104,14 @@ make test
 make lint
 ```
 
-For just the workbench, use `make test-app` or the existing `./scripts/test.sh`. Its individual stages remain:
+For just the workbench, use `make test-app` or `./scripts/test.sh`, which currently
+runs Python tests, the frontend build, then browser scenarios. Setup already
+builds the frontend. When replaying stages manually from a clean checkout, build
+first so checks that serve the compiled interface use current assets:
 
 ```bash
-.venv/bin/python -m pytest -q
 npm run build
+.venv/bin/python -m pytest -q
 npm run test:e2e
 ```
 
@@ -124,6 +130,11 @@ provides concrete regression examples.
 Use the revision-bound records in [validation.md](validation.md) to identify which
 implementation was checked. A historical pass does not establish a later head,
 and listing a command here does not establish that it ran.
+
+The main-based workflow file has a 30-minute workbench job budget. It does not
+contain the larger research branch's timeout changes or test population. A
+cancelled or running job is not a completed pass; use the revision-bound
+[status and evidence](project-status.md) when reporting CI.
 
 Browser tests use `PLAYWRIGHT_CHROMIUM_EXECUTABLE` when supplied, otherwise `/usr/bin/chromium` when available, otherwise Playwright's installed Chromium, otherwise an installed Google Chrome (`/usr/bin/google-chrome`, `google-chrome-stable`, or the macOS application). If none of these is present, install the browser after `npm ci`:
 

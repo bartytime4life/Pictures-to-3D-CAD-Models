@@ -112,7 +112,7 @@ This is checked at 16 phases by `test_half_level_crossing_on_symmetric_blur_is_u
 **Directional blur.** A shaken camera blurs more along its motion than across it. A Gaussian blur of covariance S spreads an edge with unit normal n by σₙ² = nᵀSn, so every profile's width gives one linear equation in (S_xx, S_xy, S_yy) (`edges.edge_covariance`), in the rectified image the edges are traced in. On a photo blurred 1 × 3 px, every hole gave the same S ≈ [[2.9, 0.8], [0.8, 14.2]] px², and σₙ² = nᵀSn fitted each profile within 0.03 px; the off-diagonal term is the sheet's 4° turn in the photo, (14.2 − 2.9) sin 4° cos 4° = 0.79. The fit takes the rules the [directional-spread qualification](validation/directional-spread-qualification.md) found necessary:
 
 - **Clean steps only.** A profile that falls back after its rise or overshoots its plateaus has reached another edge (across a thin hole, at a sharp corner) and is left out. An evenly blurred thin circular-segment hole had read as a blur 2.45 times wider one way.
-- **Supported directions.** The normals are grouped into six bins of 30°, modulo 180°, and a bin counts with 15 clean profiles. Three unknowns need three counted bins, so a part whose edges face two ways (a rectangle with sharp corners) is not fitted at all: its cross term is not determined. Each counted bin weighs the same in the least squares: a long outline gives two bins most of the profiles, and on a rendered tilted photo an unweighted fit followed them and left another direction 11.5 % off (7 % weighted).
+- **Supported directions.** The normals are grouped into six bins of 30°, modulo 180°, and a bin counts with 15 clean profiles. Three unknowns need three counted bins and a numerically rank-three weighted covariance design, checked at every fit including after trimming. Bins alone do not establish rank: opposite normals can straddle a bin boundary through floating angle rounding while giving identical covariance equations. A two-direction design cannot separate the cross term from the rest; see the [rank regression](validation/directional-blur-rank.md). Each counted bin weighs the same in the least squares: a long outline gives two bins most of the profiles, and on a rendered tilted photo an unweighted fit followed them and left another direction 11.5 % off (7 % weighted).
 - **Adequacy per direction.** One profile's width is good to a few per cent, so a bin's median absolute residual is mostly noise; a wrong model shifts a whole bin. A bin whose median relative variance residual is beyond both 10 % and three standard errors of that median means the blur is not one Gaussian covariance, and the fit is rejected. Each bin is judged alone, so a dominant direction cannot hide a minority one's disagreement in a pooled statistic. Bins of 30° do not see a variation that repeats within one.
 - **A switch, not a blend.** Rendered photos tilted up to 22° fit principal spreads 1.00–1.05 apart, the larger from foreshortening; shaken ones 1.25–2.56. Above a ratio of 1.15 (`edges.DIRECTIONAL_RATIO`) the trace works by direction; below it, or without an accepted fit, the one measured σ stands and the trace is as before.
 
@@ -122,6 +122,23 @@ Working by direction:
 - Curves need another width. A curved edge of radius R is drawn in by the median of w_n + w_t²/(2R), where w_n and w_t are the blur's components across and along it. To first order that is the variance of w_t given w_n = 0, Σ_tt − Σ_tn²/Σ_nn = det S / nᵀSn, so the shrink at direction n is det S / (2R nᵀSn), not S_tt / (2R); the [directional-blur experiment](research.md#directional-blur-experiment-status--november-12-2026) derived the same leading term. Round a circle it averages √det S / (2R), because the mean of 1/(nᵀSn) over all directions is 1/√det S. The curvature corrections of §4 therefore take σ = (det S)^¼, the geometric mean of the principal spreads. On exactly blurred holes of 34 and 68 px under a 1.7 × 3.77 px blur the exact mid-level contour's mean shrink agrees with √det S / (2R) within 5 %, where tr S / (4R) is 30 % too large; the fit recovers S within 5 %, and the traced hole, corrected, is within 0.01 px of its radius (`test_a_directional_blur_shrinks_a_circle_by_its_geometric_mean_variance`).
 - A slot end cap is placed mostly by its tip (§7), so its points take their own first-order shrink, det S / (2r nᵀSn).
 - The trace notes the blur's range across directions.
+
+**Stage boundaries.** Here `S` describes empirical rise widths in the rectified
+measurement field, after Keys resampling, float32 storage and the additional
+0.7 px Gaussian smoothing. It is not a calibrated covariance in the original
+camera frame; a projective warp can change both its direction and its spatial
+variation. `sigma_n` is used for each second-pass edge search and wall profile.
+`subpixel_rings` also returns the scalar `(det S)^¼` for later fitting and
+`reference.edge_blur_mm` when a directional fit is accepted.
+
+The nonparallel fillet path in `fitting.fit_fillets` and `_exact_fillet` still
+passes only that scalar to the isotropic `corner_level` model. The covariance
+argument is used by the slot-end axial fit, whose first-order shrink varies
+with direction and whose higher-order term remains isotropic. Likewise, using
+the circle-average scalar in a partial free arc is an approximation. Directional
+edge tracing therefore does not imply that every corner uses a full anisotropic
+forward model. These are implementation/model limits, not newly measured errors
+or new physical uncertainty bounds from this documentation review.
 
 Correcting curvature alone does not work: with every edge still traced with one width, a curvature-only σ made a 1 × 3 px render's outline worse, 0.106 mm against 0.038 mm. The level search across each edge needs its own σₙ.
 
@@ -205,7 +222,7 @@ Fillets are therefore fitted to a circle of radius r − s(r) about c(r), with s
 - On rendered, blurred plates (`test_blurred_fillets_keep_their_radius_when_snapped`), R8, R4 and R2.5 corners read within 0.007 mm at blurs of 0.34 and 0.46 mm. Before, they read 0.027, 0.053 and 0.16 mm large.
 - On the rendered photos of the test plate, the R8 corners' mean error fell from +0.029 to +0.005 mm, with every other dimension unchanged ([photo benchmark](photo-benchmark.md)).
 
-**The exact blurred corner.** The shrink s(r) is the disc's, and a fillet is a disc only in the middle of a long arc. Near its ends, and over the whole of a short arc, the blurred edge is neither arc nor line. At a 150° corner a fillet's arc spans only 30°, and on exact outlines the fit above read radii up to 19 s large, with nothing flagging them. Fillets are therefore refined against the exact blurred corner, `fitting.corner_level`. It treats the corner as an arc of radius r about c, from angle a₁ through a sweep β < π, plus the two tangent lines running away from it. The corner is star-shaped from c. A ray at angle α leaves it at:
+**The scalar-Gaussian corner model.** The shrink s(r) is the disc's, and a fillet is a disc only in the middle of a long arc. Near its ends, and over the whole of a short arc, the blurred edge is neither arc nor line. At a 150° corner a fillet's arc spans only 30°, and on exact outlines the fit above read radii up to 19 s large, with nothing flagging them. Fillets are therefore refined against the blurred corner under an isotropic Gaussian hypothesis, `fitting.corner_level`. “Exact” in the implementation refers to that assumed corner model rather than an arbitrary camera image or certified numerical quadrature. It treats the corner as an arc of radius r about c, from angle a₁ through a sweep β < π, plus the two tangent lines running away from it. The corner is star-shaped from c. A ray at angle α leaves it at:
 
 - R(α) = r across the arc;
 - R(α) = r / cos(α − aᵢ) beyond each tangent point, for a quarter turn;
