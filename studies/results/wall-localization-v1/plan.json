@@ -1,0 +1,54 @@
+{
+  "format": "pictures-to-cad-wall-localization-plan",
+  "version": 1,
+  "baseline_revision": "7dfe0fe698c8831e9c02ae960f03bcdc533701dc",
+  "wall_levels": [
+    90.0,
+    110.0,
+    130.0,
+    150.0,
+    165.0,
+    170.0
+  ],
+  "sigmas_px": [
+    1.2,
+    1.75
+  ],
+  "phases_px": [
+    0.3,
+    0.67
+  ],
+  "quarter_turns": [
+    0,
+    1
+  ],
+  "contrast_inversions": [
+    false,
+    true
+  ],
+  "observations": [
+    "point",
+    "uniform_pixel_mean"
+  ],
+  "image_size": [
+    180,
+    160
+  ],
+  "top_level": 90.0,
+  "paper_level": 170.0,
+  "ppm": 5.0,
+  "camera_height_mm": 105.0,
+  "thickness_mm": 5.0,
+  "geometry": "Rectangle [60+phase,130+phase] x [40+phase,120+phase], left wall of width lambda*(60+phase), nadir [0,80+phase]/ppm",
+  "selection": "Original-coordinate left boundary, x<left+10 and y in [top+15,bottom-15]; every selected point retained",
+  "development_population": true,
+  "purpose": "Compare actual segmentation/subpixel/wall correction under shared independent light fields, including exact light-matching wall controls",
+  "limitations": [
+    "The four original bright-wall examples informed this development plan; this is not held-out qualification",
+    "Supplied camera and scale; independent linear image is passed to subpixel/wall stages; saved sRGB8 is used for actual segmentation",
+    "Gaussian point fields or exact uniform pixel means; no camera-tone inference, image noise, JPEG, rectification or postblur",
+    "No full physical camera-scene consistency, pose estimation, parallax, curve/CAD/export, real captures or fabrication qualification",
+    "Correction taper remains; local fit accuracy and final tapered boundary error are distinct",
+    "Synthetic elapsed times are observations, not whole-photo/browser latency qualification"
+  ]
+}

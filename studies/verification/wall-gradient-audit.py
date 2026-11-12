@@ -17,6 +17,7 @@ def main():
     args = parser.parse_args()
     plan = json.loads((args.run / "plan.json").read_text())
     result = json.loads((args.run / "results.json").read_text())
+    assert result["version"] in (1, 2)
     records = {}
     for name in ("geometry-fits.csv", "image-fits.csv"):
         path = args.run / name
@@ -58,17 +59,28 @@ def main():
         assert row["condition"] == condition["name"] and row["contrast_inverted"] == str(inverted)
         assert float(row["normal_degrees"]) == angle and float(row["phase_px"]) == phase
         assert row["error"] == ""
-        assert all(math.isfinite(float(row[k])) for k in ("offset_px", "offset_sigmas", "wall_level", "reported_sse"))
+        resolved = result["version"] == 1 or row["resolved"] == "True"
+        if result["version"] == 2:
+            assert row["resolved"] in ("True", "False")
+        if resolved:
+            assert all(math.isfinite(float(row[k])) for k in ("offset_px", "offset_sigmas", "wall_level", "reported_sse"))
+        else:
+            assert all(row[k] == "" for k in ("offset_px", "offset_sigmas", "wall_level", "reported_sse"))
     for summary in result["image_summary"]:
         group = [r for r in images if all(r[k] == summary[k] for k in ("stage", "method", "condition"))
                  and float(r["band_sigmas"]) == summary["band_sigmas"]]
-        offsets = [float(r["offset_px"]) for r in group]
+        valid = [r for r in group if result["version"] == 1 or r["resolved"] == "True"]
+        offsets = [float(r["offset_px"]) for r in valid]
         assert summary["planned"] == len(group) and summary["failed"] == 0
-        assert summary["median_offset_px"] == statistics.median(offsets)
-        assert summary["maximum_absolute_offset_px"] == max(abs(v) for v in offsets)
-        assert summary["fitted_wall_outside_0_255"] == sum(not 0 <= float(r["wall_level"]) <= 255 for r in group)
+        if result["version"] == 2:
+            assert summary["resolved"] == len(valid)
+            assert summary["unresolved"] == len(group) - len(valid)
+        assert summary["median_offset_px"] == (statistics.median(offsets) if offsets else None)
+        assert summary["maximum_absolute_offset_px"] == (max(abs(v) for v in offsets) if offsets else None)
+        assert summary["fitted_wall_outside_0_255"] == sum(not 0 <= float(r["wall_level"]) <= 255 for r in valid)
     report = {"direct_rows": len(direct), "image_rows": len(images), "complete_unique_cartesian_keys": True,
               "all_fitted_source_nodes_physical": True, "failed_rows": 0,
+              "unresolved_image_rows": sum(result["version"] == 2 and row["resolved"] == "False" for row in images),
               "image_summary_groups_recomputed": len(result["image_summary"]),
               "witness_summary_groups_recomputed": len(result["witness_summary"]),
               "artifact_sha256": result["artifact_sha256"],

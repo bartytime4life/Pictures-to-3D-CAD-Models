@@ -3,6 +3,19 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Local wall localization and observation-model development — November 12, 2026
+
+- Expand wall-edge hypotheses and update predicted width with candidate position.
+  Use direct SVD refinement, bounded wall brightness, bounded allocations and
+  explicit unchanged-point outcomes for unresolved numerical fits.
+- Keep observations local to the seed. Preserve the earlier expanded-window
+  candidate, its two camera-height failures and the ablations that isolate the
+  inappropriate flat-lighting support rather than weakening existing guards.
+- Add a complete paired segmentation/subpixel/wall study, versioned unknown
+  outcome accounting, CSV audits and matched final-Keys developer controls.
+- [Method](wall-localization.md) and [source-bound evidence](validation/wall-localization.md)
+  retain adverse outcomes, sampling/lighting limits and physical qualification work.
+
 ## Complete documentation update — November 12, 2026
 
 - Refresh the [source/review snapshot](project-status.md) through published

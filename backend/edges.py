@@ -13,6 +13,8 @@ in linear light (backend.tone), where blur and partial coverage mix tones linear
 
 from __future__ import annotations
 
+import math
+
 import cv2
 import numpy as np
 from shapely.geometry import Point, Polygon
@@ -24,6 +26,9 @@ from .tone import encoded_from_linear
 
 BORDER_MM = 3.0  # sheet margin excluded from the part search
 TINY_AREA_MM2 = 0.1  # boundary regions below this are under the trace resolution
+MAX_WALL_CANDIDATES = 2048
+MAX_WALL_SAMPLES = 4096
+MAX_WALL_BATCH_WORK = 20_000_000  # profiles x candidates x samples, before allocation
 
 
 class EdgeError(ValueError):
@@ -357,7 +362,7 @@ def normal_cdf(z):
     return 0.5 * (1.0 + np.sign(z) * erf)
 
 
-def pooled_wall_tone(g, points, normals, band, sigma, steps=17, sample=160):
+def pooled_wall_tone(g, points, normals, band, sigma, steps=17, sample=160, band_rate=0.0):
     """One wall tone shared by many narrow wall bands, or None.
 
     Where no band is wide enough (2.5 sigma) for a free two-step fit, each narrow band
@@ -380,20 +385,35 @@ def pooled_wall_tone(g, points, normals, band, sigma, steps=17, sample=160):
     0.4 sigma the 0.3-level error of cubic sampling alone made a false minimum (a tone of
     186 for 15, moving edges by 0.18 sigma), and with any noise the minimum is flat.
     """
-    keep = band >= sigma
+    if not math.isfinite(sigma) or sigma <= 0 or not math.isfinite(band_rate) or band_rate < 0:
+        return None
+    keep = ((band >= sigma) & np.isfinite(band)
+            & np.isfinite(points).all(axis=1) & np.isfinite(normals).all(axis=1))
     points, normals, band = points[keep], normals[keep], band[keep]
     if len(points) < 30:
         return None
     if len(points) > sample:
         pick = np.linspace(0, len(points) - 1, sample).round().astype(int)
         points, normals, band = points[pick], normals[pick], band[pick]
-    _, c0, c1, c2 = _wall_tone_parabolas(g, points, normals, band, sigma)
+    batches = []
+    for indices in _wall_batches(band, sigma, 0.125, band_rate):
+        candidates, c0, c1, c2, t, profile = _wall_tone_parabolas(
+            g, points[indices], normals[indices], band[indices], sigma,
+            band_rate=band_rate, with_profile=True)
+        valid = np.isfinite(profile).all(axis=1)
+        if valid.any():
+            batches.append((candidates, c0[valid], c1[valid], c2[valid], t, profile[valid], band[indices][valid]))
+    if sum(len(batch[-1]) for batch in batches) < 30:
+        return None
 
     def total(tone):
-        return _refined_minimum(c0 + (c1 + c2 * tone) * tone)[2].sum()
+        return sum(_refined_minimum(c0 + (c1 + c2 * tone) * tone)[2].sum()
+                   for _, c0, c1, c2, _, _, _ in batches)
 
-    coarse = np.linspace(0.0, float(np.percentile(g, 99.5)), steps)
+    coarse = np.linspace(0.0, float(np.clip(np.percentile(g, 99.5), 0, 255)), steps)
     totals = np.array([total(tone) for tone in coarse])
+    if not np.isfinite(totals).all():
+        return None
     k = int(np.argmin(totals))
     if k in (0, steps - 1) or totals[k] > 0.8 * min(totals[0], totals[-1]):
         return None
@@ -403,10 +423,54 @@ def pooled_wall_tone(g, points, normals, band, sigma, steps=17, sample=160):
     r0, r1, r2 = totals[k - 1], totals[k], totals[k + 1]
     denominator = r0 - 2 * r1 + r2
     shift = 0.5 * (r0 - r2) / denominator if denominator > 0 else 0.0
-    return float(grid[k] + np.clip(shift, -1, 1) * (grid[1] - grid[0]))
+    selected = float(grid[k] + np.clip(shift, -1, 1) * (grid[1] - grid[0]))
+    resolved = sum(math.isfinite(_wall_profile_minimum(
+        candidates, c0[i] + (c1[i] + c2[i] * selected) * selected,
+        t, profile[i], widths[i], sigma, band_rate, selected, check_alias=True)[0])
+        for candidates, c0, c1, c2, t, profile, widths in batches for i in range(len(widths)))
+    return selected if resolved >= 30 else None
 
 
-def _wall_tone_parabolas(g, points, normals, band, sigma, step=0.125):
+def _wall_grid_spec(band, sigma, step, band_rate):
+    """Integer grid bounds, or None when the complete declared search exceeds caps."""
+    if not all(math.isfinite(v) for v in (band, sigma, step, band_rate)) or band < 0 or sigma <= 0 or step <= 0 or band_rate < 0:
+        return None
+    upper = max(0.8 * sigma, (band + 0.8 * sigma) / (1 + band_rate))
+    stride = 0.02 * sigma
+    if stride <= 0 or not math.isfinite(upper) or not math.isfinite(upper / stride):
+        return None
+    last_candidate = math.ceil(upper / stride)
+    if last_candidate + 31 > MAX_WALL_CANDIDATES:
+        return None
+    # Keep the observations local to the supplied seed. Expanding the geometry
+    # hypotheses does not require sampling farther into unmodelled illumination;
+    # longer flat-tail windows selected a false bright-wall basin on real call paths.
+    low = -band - 4 * sigma
+    high = 4 * sigma
+    if not math.isfinite(low / step) or not math.isfinite(high / step):
+        return None
+    first_sample, last_sample = math.floor(low / step), math.ceil(high / step)
+    if not 3 <= last_sample - first_sample + 1 <= MAX_WALL_SAMPLES:
+        return None
+    return last_candidate, first_sample, last_sample
+
+
+def _wall_batches(band, sigma, step, band_rate):
+    """Group nearby widths and cap each allocation; oversized profiles stay unresolved."""
+    groups = {}
+    for index, width in enumerate(band):
+        spec = _wall_grid_spec(float(width), sigma, step, band_rate)
+        if spec is not None:
+            groups.setdefault(math.floor(width / sigma), []).append(index)
+    for indices in groups.values():
+        spec = _wall_grid_spec(float(np.max(band[indices])), sigma, step, band_rate)
+        last, low, high = spec
+        batch = max(1, MAX_WALL_BATCH_WORK // ((last + 31) * (high - low + 1)))
+        for start in range(0, len(indices), batch):
+            yield np.asarray(indices[start:start + batch])
+
+
+def _wall_tone_parabolas(g, points, normals, band, sigma, step=0.125, band_rate=0.0, with_profile=False):
     """The two-step model's residual as a function of the wall tone B, for each point
     and each candidate edge offset e (two_step_refine).
 
@@ -417,15 +481,25 @@ def _wall_tone_parabolas(g, points, normals, band, sigma, step=0.125):
     where c2 >= 0 is what is left of v after projecting out u and w. Returns
     (candidates, c0, c1, c2), each coefficient of shape (points, candidates).
     """
-    t = np.arange(-(float(band.max()) + 4 * sigma), 4 * sigma + step / 2, step)
+    # A seed may follow the top/wall step instead of the bottom silhouette.
+    # Cover that band as well as the old local margin. For a camera-derived
+    # positive band, moving outward by e shrinks it to max(band-band_rate*e,0).
+    spec = _wall_grid_spec(float(band.max()), sigma, step, band_rate)
+    if spec is None:
+        raise ValueError("wall profile search exceeds processing limits")
+    last, low, high = spec
+    if len(points) * (last + 31) * (high - low + 1) > MAX_WALL_BATCH_WORK:
+        raise ValueError("wall profile batch exceeds processing limits")
+    candidates = np.arange(-30, last + 1) * (0.02 * sigma)
+    t = np.arange(low, high + 1) * step
     sx = points[:, None, 0] + t[None, :] * normals[:, None, 0] - 0.5
     sy = points[:, None, 1] + t[None, :] * normals[:, None, 1] - 0.5
     y = sample_keys(g, sx, sy)
     yy = np.einsum("nt,nt->n", y, y)
-    candidates = np.arange(-0.6, 0.8 + 1e-9, 0.02) * sigma
     c0, c1, c2 = (np.empty((len(points), len(candidates))) for _ in range(3))
     for k, e in enumerate(candidates):
-        p1 = normal_cdf((t[None, :] + band[:, None] - e) / sigma)
+        width = np.maximum(band - band_rate * e, 0)
+        p1 = normal_cdf((t[None, :] + width[:, None] - e) / sigma)
         p2 = normal_cdf((t - e) / sigma)
         u, v = 1 - p1, p1 - p2[None, :]
         gram = ((u * u).sum(1), u @ p2, p2 @ p2)
@@ -433,7 +507,8 @@ def _wall_tone_parabolas(g, points, normals, band, sigma, step=0.125):
         c0[:, k] = yy - _inverse_form(gram, ry, ry)
         c1[:, k] = -2 * ((v * y).sum(1) - _inverse_form(gram, rv, ry))
         c2[:, k] = (v * v).sum(1) - _inverse_form(gram, rv, rv)
-    return candidates, c0, c1, c2
+    result = candidates, c0, c1, c2
+    return (*result, t, y) if with_profile else result
 
 
 def _inverse_form(gram, a, b):
@@ -445,35 +520,158 @@ def _inverse_form(gram, a, b):
 
 def _refined_minimum(residuals):
     """Per row of residuals over the candidate offsets: the index of the least value
-    (kept off the ends), the parabola's vertex shift from it in grid steps (within
-    one), and the parabola's least value where its vertex lies within the bracket,
-    never below zero, which a sum of squares cannot be."""
-    best = np.clip(np.argmin(residuals, axis=1), 1, residuals.shape[1] - 2)
+    including endpoints, the parabola's shift at an interior bracket, and its
+    nonnegative least cost. An endpoint retains its actual cost and zero shift;
+    it is not replaced with the neighbouring interior sample."""
+    best = np.argmin(residuals, axis=1)
     rows = np.arange(len(residuals))
-    r0, r1, r2 = residuals[rows, best - 1], residuals[rows, best], residuals[rows, best + 1]
+    middle = np.clip(best, 1, residuals.shape[1] - 2)
+    r0, r1, r2 = residuals[rows, middle - 1], residuals[rows, middle], residuals[rows, middle + 1]
     denominator = r0 - 2 * r1 + r2
     safe = np.where(denominator > 0, denominator, 1)
     shift = np.where(denominator > 0, 0.5 * (r0 - r2) / safe, 0)
-    inside = (denominator > 0) & (np.abs(shift) <= 1)
-    least = np.maximum(r1 - np.where(inside, 0.125 * (r0 - r2) ** 2 / safe, 0), 0.0)
-    return best, np.clip(shift, -1, 1), least
+    inside = (best == middle) & (denominator > 0) & (np.abs(shift) <= 1)
+    least = np.maximum(np.where(inside, r1 - 0.125 * (r0 - r2) ** 2 / safe,
+                                residuals[rows, best]), 0.0)
+    return best, np.where(inside, shift, 0), least
 
 
-def two_step_refine(g, points, normals, band, sigma, wall_tone=None, step=0.125, with_residuals=False):
+def _wall_profile_fit(t, profile, band, sigma, offset, band_rate, wall_tone):
+    """Direct SVD fit and nonnegative residual at one geometry, without Gram subtraction.
+
+    The wall level is constrained to [0,255]; end levels retain the existing
+    unconstrained linear model. This is not a bounded-source or noise model.
+    """
+    width = max(band - band_rate * offset, 0.0)
+    p1, p2 = normal_cdf((t + width - offset) / sigma), normal_cdf((t - offset) / sigma)
+    u, v = 1 - p1, p1 - p2
+    if wall_tone is None:
+        design = np.column_stack((u, v, p2))
+        coefficients, _, rank, _ = np.linalg.lstsq(design, profile, rcond=None)
+        if rank != 3:
+            return math.nan, math.inf
+        wall = float(np.clip(coefficients[1], 0, 255))
+    else:
+        wall = float(wall_tone)
+    design = np.column_stack((u, p2))
+    ends, _, rank, _ = np.linalg.lstsq(design, profile - wall * v, rcond=None)
+    if rank != 2:
+        return math.nan, math.inf
+    residual = profile - design @ ends - wall * v
+    cost = float(residual @ residual)
+    return (wall, cost) if math.isfinite(cost) else (math.nan, math.inf)
+
+
+def _wall_profile_minimum(candidates, curve, t, profile, band, sigma, band_rate, wall_tone, check_alias=False):
+    """Search represented basins; withhold endpoint, flat or tied numerical minima.
+
+    The energy-scaled guard is an arithmetic heuristic, not a camera-error bound.
+    A bounded grid and local refinements do not certify every continuous minimum.
+    """
+    unresolved = math.nan, math.nan, math.inf
+    if not np.isfinite(profile).all() or np.isnan(curve).any():
+        return unresolved
+    finite = np.isfinite(curve)
+    if not finite.any():
+        return unresolved
+    guard = 64 * np.finfo(float).eps * max(1.0, float(profile @ profile))
+    if np.ptp(curve[finite]) <= guard:
+        return unresolved
+    local = np.flatnonzero(finite[1:-1] & finite[:-2] & finite[2:]
+                           & (curve[1:-1] <= curve[:-2]) & (curve[1:-1] <= curve[2:])) + 1
+    # A complex landscape stays unresolved instead of spending unbounded work.
+    if not len(local) or len(local) > 16:
+        return unresolved
+    golden = (math.sqrt(5) - 1) / 2
+    minima = []
+
+    def fit(offset):
+        wall, cost = _wall_profile_fit(t, profile, band, sigma, offset, band_rate, wall_tone)
+        return float(offset), wall, cost
+
+    for index in local:
+        low, high = float(candidates[index - 1]), float(candidates[index + 1])
+        tolerance = max(math.sqrt(np.finfo(float).eps) * sigma,
+                        8 * np.finfo(float).eps * max(abs(low), abs(high), sigma))
+        a, b = fit(high - golden * (high - low)), fit(low + golden * (high - low))
+        for _ in range(48):
+            if high - low <= tolerance:
+                break
+            if a[2] <= b[2]:
+                high, b = b[0], a
+                a = fit(high - golden * (high - low))
+            else:
+                low, a = a[0], b
+                b = fit(low + golden * (high - low))
+        else:
+            return unresolved
+        minima.append(min((a, b, fit(candidates[index])), key=lambda result: result[2]))
+    winner = min(minima, key=lambda result: result[2])
+    if not math.isfinite(winner[2]):
+        return unresolved
+    if any(fit(candidates[index])[2] <= winner[2] + guard for index in (0, len(candidates) - 1)):
+        return unresolved
+    position_guard = 8 * math.sqrt(np.finfo(float).eps) * max(sigma, abs(winner[0]))
+    if any(result[2] <= winner[2] + guard and abs(result[0] - winner[0]) > position_guard for result in minima):
+        return unresolved
+    if wall_tone is None or check_alias:
+        # The two single-step submodels have identical fields but different edge
+        # labels, even if their minima share one coarse-grid basin.
+        def single_step(location):
+            p = normal_cdf((t - location) / sigma)
+            design = np.column_stack((1 - p, p))
+            levels, _, rank, _ = np.linalg.lstsq(design, profile, rcond=None)
+            # A feasible witness is enough; boundary levels must survive rounding.
+            residual = profile - design @ np.clip(levels, 0, 255)
+            return location, float(residual @ residual) if rank == 2 else math.inf
+
+        for visible in (winner[0], (1 + band_rate) * winner[0] - band):
+            # Refine the single-step location too. A tiny free wall can absorb
+            # CDF/sampling error and shift the three-level optimum away from the
+            # best one-step location, without resolving the physical labels.
+            radius = 0.02 * sigma * (1 + band_rate)
+            low = max(candidates[0], (1 + band_rate) * candidates[0] - band, visible - radius)
+            high = min(candidates[-1], (1 + band_rate) * candidates[-1] - band, visible + radius)
+            if low >= high:
+                continue
+            a = single_step(high - golden * (high - low))
+            b = single_step(low + golden * (high - low))
+            tolerance = max(math.sqrt(np.finfo(float).eps) * sigma,
+                            8 * np.finfo(float).eps * max(abs(low), abs(high), sigma))
+            for _ in range(48):
+                if high - low <= tolerance:
+                    break
+                if a[1] <= b[1]:
+                    high, b = b[0], a
+                    a = single_step(high - golden * (high - low))
+                else:
+                    low, a = a[0], b
+                    b = single_step(low + golden * (high - low))
+            else:
+                return unresolved
+            first, cost = min((a, b, single_step(float(np.clip(visible, low, high)))), key=lambda fit: fit[1])
+            second = (first + band) / (1 + band_rate)
+            if second - first > position_guard and cost <= winner[2] + guard:
+                return unresolved
+    return winner
+
+
+def two_step_refine(g, points, normals, band, sigma, wall_tone=None, step=0.125, with_residuals=False, band_rate=0.0):
     """Locate an edge that has a narrow wall band on its material side.
 
     `g` holds linear light, in which the model below is exact for flat tones.
     Where a thick part's bottom edge forms the silhouette, the visible side wall lies
     between the bottom edge (t = 0, the edge sought) and the top edge (t = -w) along the
     material-outward normal t. A single mid-level crossing is biased into the material
-    by up to 0.2 sigma when w is 1-3 sigma. The profile is modelled as a blurred two-step
+    toward the top edge by a substantial fraction of w. The profile is modelled as a blurred two-step
         I(t) = C (1 - P1) + B (P1 - P2) + A P2,
         P1 = Phi((t + w - e) / sigma),  P2 = Phi((t - e) / sigma),
     linear in the tones A (sheet), B (wall) and C (top face) for a given edge offset e.
     For each candidate e the tones follow by least squares (variable projection), here
     through the residual's exact quadratic in B (_wall_tone_parabolas): a free fit takes
-    its vertex, a fixed tone its value. The residual minimum over e is refined by a
-    parabola. Profiles are read by Keys cubic sampling: the fit uses every sample, so
+    its vertex constrained to [0,255], a fixed tone its value. Represented basins
+    are refined by bounded golden searches with direct SVD residuals. Profiles
+    are read by Keys cubic sampling: the fit uses every sample, so
     bilinear sampling's error at the shoulders of a blurred edge (up to 2.1 grey levels
     in 200 at sigma = 1.7 px, against 0.33) would bias it.
 
@@ -483,21 +681,41 @@ def two_step_refine(g, points, normals, band, sigma, wall_tone=None, step=0.125,
     doing so does not establish physical identifiability or lighting adequacy. `band` holds each
     point's predicted w in image pixels. Returns (moved points, fitted wall tones), and
     with `with_residuals` also each point's least residual sum of squares.
+
+    `band_rate` is h/(H-h) for camera-derived positive bands: moving the candidate
+    outward by e changes its width to max(band-band_rate*e,0). Zero means a supplied
+    fixed width. Endpoint/flat/tied/invalid fits and work-limit exhaustion leave
+    the point unchanged, with NaN tone and infinite residual. These numerical
+    checks supply no physical uncertainty or guarantee of geometric identity.
     """
     if len(points) == 0:
         return (points, np.empty(0), np.empty(0)) if with_residuals else (points, np.empty(0))
-    candidates, c0, c1, c2 = _wall_tone_parabolas(g, points, normals, band, sigma, step)
-    if wall_tone is None:
-        curvature = c2 + 1e-9  # a band too narrow to see leaves c2 at zero
-        walls = -c1 / (2 * curvature)
-        residuals = c0 - c1 * c1 / (4 * curvature)
-    else:
-        walls = np.full(c0.shape, float(wall_tone))
-        residuals = c0 + (c1 + c2 * wall_tone) * wall_tone
-    best, shift, least = _refined_minimum(residuals)
-    offset = candidates[best] + shift * (candidates[1] - candidates[0])
-    moved = points + offset[:, None] * normals
-    rows = np.arange(len(points))
+    moved = points.astype(float).copy()
+    walls, least = np.full(len(points), np.nan), np.full(len(points), np.inf)
+    valid_scalar = (math.isfinite(sigma) and sigma > 0 and math.isfinite(step) and step > 0
+                    and math.isfinite(band_rate) and band_rate >= 0
+                    and (wall_tone is None or math.isfinite(wall_tone) and 0 <= wall_tone <= 255))
+    eligible = (np.isfinite(points).all(axis=1) & np.isfinite(normals).all(axis=1)
+                & np.isfinite(band) & (band >= 0) & ((band > 0) | (band_rate == 0))) if valid_scalar else np.zeros(len(points), dtype=bool)
+    indices = np.flatnonzero(eligible)
+    if not len(indices):
+        return (moved, walls, least) if with_residuals else (moved, walls)
+    for batch in _wall_batches(band[eligible], sigma, step, band_rate):
+        chosen = indices[batch]
+        candidates, c0, c1, c2, t, profile = _wall_tone_parabolas(
+            g, points[chosen], normals[chosen], band[chosen], sigma, step, band_rate, with_profile=True)
+        if wall_tone is None:
+            levels = np.clip(np.divide(-c1, 2 * c2, out=np.full_like(c1, np.nan), where=c2 > 0), 0, 255)
+            residuals = np.where(c2 > 0, c0 + (c1 + c2 * levels) * levels, np.inf)
+        else:
+            residuals = c0 + (c1 + c2 * wall_tone) * wall_tone
+        results = np.asarray([_wall_profile_minimum(candidates, residuals[i], t, profile[i],
+                                                   float(band[chosen[i]]), sigma, band_rate, wall_tone)
+                              for i in range(len(chosen))])
+        offset, fitted_walls, fitted_least = results.T
+        walls[chosen], least[chosen] = fitted_walls, fitted_least
+        resolved = np.isfinite(offset)
+        moved[chosen[resolved]] += offset[resolved, None] * normals[chosen[resolved]]
     if with_residuals:
-        return moved, walls[rows, best], least
-    return moved, walls[rows, best]
+        return moved, walls, least
+    return moved, walls

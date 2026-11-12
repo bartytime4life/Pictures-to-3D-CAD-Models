@@ -1,19 +1,19 @@
 # Project status and evidence
 
-Documentation snapshot: **November 12, 2026**. The reviewed source baseline is
-`7dfe0fe698c8831e9c02ae960f03bcdc533701dc`, the published head of
-[draft PR #57](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/57).
-It includes the review chain below and the separate [bounded wall/lighting
-experiment](validation/wall-gradients.md). Production executable behavior
-matches PR #56; PR #57 adds the developer study and documentation clarifications.
-The [complete documentation update](validation/documentation-complete-2026-11-12.md)
-changes guides on that baseline. Start with [setup](development.md), the
+Candidate snapshot: **November 12, 2026**. This wall-localization branch is based on
+`0f5f888708b623245854b53458431af495b387fe`, the published head of
+[draft PR #58](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/58).
+It adds [local wall-search repairs](wall-localization.md) and separate matched-Keys
+developer controls. The [source-bound record](validation/wall-localization.md)
+preserves the failed development window, final checks and remaining model limits.
+The parent documentation update itself left production behavior unchanged from
+PR #56. Start with [setup](development.md), the
 [task index](README.md), [developer tools](developer-tools.md) or [API examples](api-examples.md).
 
 ## Source and review state
 
 At this check, `main` was `5c07d0f70d7df0200bc24227c8ac7e9b630f7f09`.
-PRs #47–#57 were open and unmerged. This documentation branch includes their
+PRs #47–#58 were open and unmerged. This candidate branch includes their
 changes; that checkout of `main` does not contain them. The conditional corner
 analysis remains separate from production tracing; the grid and crossing repairs
 affect the existing production edge-profile search.
@@ -32,6 +32,7 @@ affect the existing production edge-profile search.
 | `a5f99e5a4180ec2437c08215faa12058b6b490a9` | Symmetric production profile sampling and an independent material-gradient study | [PR #55](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/55), open draft; base PR #54's branch |
 | `37eb4d2086c61dda983fe4e39391d9693dc82331` | Actual-distance crossing ranking and explicit unresolved contacts | [PR #56](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/56), open draft; base PR #55's branch |
 | `7dfe0fe698c8831e9c02ae960f03bcdc533701dc` | Bounded five-node wall/lighting study, complete CSVs and constructive local ambiguity | [PR #57](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/57), open draft; base PR #56's branch |
+| `0f5f888708b623245854b53458431af495b387fe` | Complete documentation review, numerical-tool catalog and corrected mathematical limits | [PR #58](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/58), open draft; base PR #57's branch |
 
 The PR links show live review state. A documentation update does not install,
 merge or deploy those changes. Record the checkout used to start a service:
@@ -44,13 +45,12 @@ git status --short --branch
 The health endpoint's `version: "0.1.0"` is shared by multiple revisions and
 cannot identify which implementation a server is running.
 
-Uncommitted wall-localization work in the separate local
-`codex/wall-localization` branch is outside this baseline. Its expanded search,
-candidate-dependent width, tone constraints and withholding experiments are
-unfinished; this documentation does not describe them as published or validated
-product behavior. The primary `codex/slicer-integration` checkout remains at
-`d747e30697a99a8f90d747d23d6ab7c1fa8b95ed` and does not become this newer source
-merely because its repository has newer review branches.
+The wall-localization candidate remains separate from integrated `main` and the
+primary `codex/slicer-integration` checkout at
+`d747e30697a99a8f90d747d23d6ab7c1fa8b95ed`. Its broader search and conditional
+numerical checks do not establish physical edge identity. The matched final-Keys
+prototype is developer research and is not applied to tracing. New review
+branches do not change an already running or installed application.
 
 ## Implemented capabilities and remaining limits
 
@@ -79,6 +79,7 @@ there is no product endpoint, automatic tracing correction or accuracy label.
 
 | Evidence | Recorded result | Interpretation |
 | --- | --- | --- |
+| Local wall-localization candidate | [Complete comparison and regressions](validation/wall-localization.md): 1,178 Python tests and 74 browser scenarios passed; build and lint passed; 192 paired observation scenes and 24 separate matched-operator controls | Retains failed development camera checks and unresolved/model-mismatch cases; no physical calibration or universal improvement claim |
 | Nearest-crossing candidate | [Rule and preservation checks](validation/edge-crossings.md): 1,111 Python tests passed, independent 3,888-case contact oracle | Actual-distance selection and explicit unresolved contacts; no physical edge or camera qualification |
 | Joint wall/lighting candidate | [Bounded source and full CSV checks](validation/wall-gradients.md): 1,131 Python tests passed; 840 direct and 576 image fits | Developer study; no automatic correction or physical uncertainty/accuracy status |
 | Material-gradient/sampling candidate | [Crossed study](validation/material-gradients.md): 1,075 Python tests passed; 9,216 rows in each before/after census | Production sampling symmetry repaired; material gradients, wall ambiguity and physical calibration remain open |
@@ -86,7 +87,7 @@ there is no product endpoint, automatic tracing correction or accuracy label.
 | Pixel-aperture candidate | [Finite-area record](validation/pixel-apertures.md): 929 Python tests passed | Known normalized product-aperture means; center-sampling counterexamples and retained unknowns; no production-image or physical qualification |
 | Joint blur-domain candidate | [Shared-blur record](validation/corner-blur-domains.md): 839 Python tests passed | Joint nuisance domains and safe projection; no new browser or physical qualification |
 | Conditional corner-analysis candidate | [Numerical/CLI record](validation/corner-feasibility.md): 760 Python tests passed | New developer-only analysis; no fresh browser/build or physical qualification |
-| Latest detailed local browser/build record | [Corner-resolution record](validation/sharp-corner-resolution.md): 630 Python tests and 74 browser scenarios; build and lint passed | That source and recorded inputs; later local developer-tool Python results do not refresh this browser/build record |
+| Earlier local browser/build record | [Corner-resolution record](validation/sharp-corner-resolution.md): 630 Python tests and 74 browser scenarios; build and lint passed | That source and recorded inputs; the wall-localization row records the fresh run separately |
 | Earlier radial candidate | [Radial record](validation/radial-inverse.md): 623 Python tests and 74 browser scenarios after integration with `5c07d0f` | Separate source binding; higher-order lens mismatch remains visible |
 | Model-mismatch research | [Directional study](validation/directional-spread-qualification.md) and [corner counterexample](validation/sharp-corner-resolution.md) retain misses, unknowns and negative outcomes | No production anisotropic correction or physical radius enclosure |
 | Companion library | [Revision 7 verification](../reference-library/VERIFICATION.md) | Its own dated release record, not a new library release |
@@ -95,8 +96,8 @@ there is no product endpoint, automatic tracing correction or accuracy label.
 | Documentation update through PR #57 | [Complete coverage and checks](validation/documentation-complete-2026-11-12.md) | Current guides, numerical-tool contracts and repository-wide Markdown checks; no new product or physical qualification |
 
 Hosted results are bound to exact heads. Earlier rows retain their last recorded
-results; `37eb4d2` and `7dfe0fe` were checked again during this documentation
-update on **November 12**:
+results; `37eb4d2`, `7dfe0fe` and `0f5f888` were checked again during this
+documentation update on **November 12**:
 
 | Head | Hosted workflow | Result at this observation |
 | --- | --- | --- |
@@ -112,8 +113,10 @@ update on **November 12**:
 | `37eb4d2` | [Workbench run 119](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43200015707) | Completed successfully |
 | `7dfe0fe` | [Workbench run 120](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43203756110) | Cancelled at the final documentation observation |
 | `7dfe0fe` | [Library run 41](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43203755932) | Completed successfully |
+| `0f5f888` | [Workbench run 121](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43209391346) | Completed successfully |
+| `0f5f888` | [Library run 42](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43209391383) | Completed successfully |
 
-Follow the exact run links for later results. The candidate's local 1,131-test result is
+Follow the exact run links for later results. The candidate's local 1,178-test result is
 separate from hosted CI. Earlier observations remain in their dated validation
 records; successful CI does not merge, install or qualify a physical part.
 
@@ -131,6 +134,10 @@ The [joint wall/lighting record](validation/wall-gradients.md) now makes exact
 local ambiguity and bounded finite-error alternatives explicit. Full-pipeline
 initialization, common-tone assumptions and distinguishing capture/measurement
 evidence remain priorities before promoting that solver to production.
+The [localization record](validation/wall-localization.md) additionally isolates
+an inappropriate observation-window extension and demonstrates why matching the
+final signed sampler matters. Earlier image-processing operators, effective blur,
+lighting and joint camera/shape evidence remain open work.
 Keep observation-error bounds separate from model discrepancy, local fit spread
 and endpoint-placement sensitivity. Numerical or work-budget exhaustion must
 remain unresolved rather than becoming a physical claim.

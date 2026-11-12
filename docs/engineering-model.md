@@ -81,7 +81,7 @@ solid is exact.
 Wall correction also depends on which visible boundary supplies the tracing
 seed and whether the flat-tone model describes the capture. A low residual or
 an accepted shared wall tone is not a proof of a physical silhouette. The
-[published local search limits](reference-sheet.md#5-camera-pose-and-thickness-parallax)
+[local search and observation limits](wall-localization.md)
 and [bounded lighting counterexamples](wall-gradients.md) explain why this
 requires reserved measurements rather than a universal pixel-error allowance.
 

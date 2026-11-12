@@ -17,6 +17,14 @@ retains its source, executable API example and completed checks.
 
 ## Current workbench evidence — November 12, 2026
 
+The [wall-localization development record](validation/wall-localization.md)
+retains the complete paired scene comparison, rejected window/camera regressions,
+final source-bound regression receipt and matched-sampling prototype. Its fresh
+checks passed **1,178 Python tests and 74 browser scenarios**, plus the production
+interface build and lint. It
+distinguishes successful execution and local geometry improvements from
+remaining lighting, sampling and physical-identification limits.
+
 The [bounded wall/lighting candidate](validation/wall-gradients.md), based on
 PR #56 at `37eb4d2`, passed **1,131 Python tests**. Its 840 direct fits and 576
 image fits record constructive ambiguity and model mismatch with zero execution

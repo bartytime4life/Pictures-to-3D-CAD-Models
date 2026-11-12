@@ -134,6 +134,14 @@ the full [CSV and validation record](validation/wall-gradients.md) retain them.
 
 ## Repeat and interpret
 
+The numerical findings above retain the published PR #57 source binding in the
+original validation record. The [later wall-localization candidate](validation/wall-localization.md)
+reruns the complete population separately; its changed helper does not silently
+replace the original CSVs or test counts. Current result schema version 2 records
+resolved, unresolved and failed image rows separately. Unresolved rows retain
+their keys with empty measurements; they are not execution failures or zero errors.
+The CSV auditor also reads the historical version-1 result.
+
 ```bash
 make wall-gradient-study OUTPUT=.local/wall-gradients-new
 ```

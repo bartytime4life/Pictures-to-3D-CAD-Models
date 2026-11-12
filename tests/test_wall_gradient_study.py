@@ -3,6 +3,9 @@
 import copy
 import json
 import math
+import subprocess
+import sys
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -142,3 +145,24 @@ def test_cli_writes_complete_source_bound_outputs_and_refuses_overwrite(tmp_path
     with pytest.raises(SystemExit, match="2"):
         study.main(["--output", str(output)])
     assert (output / "results.json").read_bytes() == previous
+
+
+def test_withheld_production_profiles_remain_unknown_without_execution_failures(tmp_path, monkeypatch):
+    path = tmp_path / "plan.json"
+    path.write_text(json.dumps(small_plan()))
+    monkeypatch.setattr(study, "PLAN", path)
+
+    def unresolved(image, points, *args, **kwargs):
+        return points.copy(), np.full(len(points), np.nan), np.full(len(points), np.inf)
+
+    monkeypatch.setattr(study.edges, "two_step_refine", unresolved)
+    output = tmp_path / "run"
+    assert study.main(["--output", str(output)]) == 0
+    result = json.loads((output / "results.json").read_text())
+    assert result["version"] == 2
+    assert all(group["failed"] == 0 and group["resolved"] == 0 and group["unresolved"] == 1
+               and group["maximum_absolute_offset_px"] is None for group in result["image_summary"])
+    audit = tmp_path / "audit.json"
+    script = Path(study.ROOT) / "studies/verification/wall-gradient-audit.py"
+    subprocess.run([sys.executable, str(script), "--run", str(output), "--output", str(audit)], check=True)
+    assert json.loads(audit.read_text())["unresolved_image_rows"] == 4

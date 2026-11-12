@@ -97,6 +97,7 @@ successful developer study is separate from a successful workbench build.
 | `make corner-sweep` | Fit synthetic blurred filleted corners and report radius error; it does not measure a real camera or part |
 | `make material-gradient-study OUTPUT=new-folder` | Run the crossed local-profile study, retaining all measurements/rejections; [method and limits](material-gradients.md) |
 | `make wall-gradient-study OUTPUT=new-folder` | Run bounded source fits, constructive wall/edge ambiguity and actual local wall-fit comparisons; [method and limits](wall-gradients.md) |
+| `make wall-localization-study OUTPUT=new-folder` | Compare actual segmentation/subpixel/wall correction against the plan's pinned local Git baseline; [method and limits](wall-localization.md) |
 | `.venv/bin/python -m pytest -q tests/test_edge_crossings.py` | Check nearest-crossing decisions, exact ranking, unresolved contacts and rejected-point preservation; [method](edge-crossings.md) |
 | `.venv/bin/python scripts/corner_feasibility.py --demo` | Run a bounded synthetic radius-set analysis; [input contract and limits](corner-feasibility.md) |
 | `.venv/bin/python scripts/corner_feasibility.py pixel-input.json --output pixel-result.json` | Analyze supplied known uniform pixel means; [version-3 example](pixel-apertures.md) |

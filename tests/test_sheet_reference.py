@@ -145,12 +145,12 @@ def test_thickness_correction_removes_side_wall_parallax(client, photos):
 
 
 def narrow_wall_bound(reference):
-    """Analytic bound (edges.two_step_refine): when the visible walls are too narrow to
-    measure their tone, an edge facing the camera may read up to 0.2 sigma into the part.
+    """Retained allowance for these matched-tone synthetic fixtures, not a physical
+    wall-error bound. Bright walls can produce larger initial offsets.
     A near-frontal photo now has its tone estimated jointly from its narrow bands
     (edges.pooled_wall_tone); the bound is kept for these tests' limits."""
     assert any(
-        "Side walls are visible but narrower" in note or "their tone was estimated jointly" in note
+        "could not determine a shared wall brightness" in note or "Side-wall brightness was estimated jointly" in note
         for note in reference["notes"]
     )
     return 0.2 * reference["edge_blur_mm"]
@@ -166,7 +166,7 @@ def test_a_near_frontal_thick_photo_estimates_its_wall_tone_from_narrow_bands(cl
     response = trace(client, data, reference="a4", thickness_mm=4)
     assert response.status_code == 200, response.text
     reference = response.json()["profile"]["reference"]
-    assert any("their tone was estimated jointly" in note for note in reference["notes"])
+    assert any("Side-wall brightness was estimated jointly" in note for note in reference["notes"])
     errors = S.feature_errors(response.json()["profile"])
     assert errors["small"] < 0.01 and errors["bore"] < 0.01 and errors["slot"] < 0.025
 
@@ -203,7 +203,7 @@ def test_moderate_tilt_measures_the_wall_tone_and_refines_narrow_wall_bands(clie
     (docs/reference-sheet.md)."""
     result, _ = traced(client, photos, "moderate-thick", thickness_mm=4)
     reference = result["profile"]["reference"]
-    assert not any("Side walls are visible but narrower" in note for note in reference["notes"])
+    assert not any("could not determine a shared wall brightness" in note for note in reference["notes"])
     assert within_limits(S.feature_errors(result["profile"])) == {}
 
 

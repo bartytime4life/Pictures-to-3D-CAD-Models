@@ -35,6 +35,12 @@ source-level fitting and demonstrates when different silhouette interpretations
 produce the same light field. It is a developer study, with no automatic
 lighting correction or physical accuracy status.
 
+The [local wall-fit candidate](docs/wall-localization.md) expands silhouette
+hypotheses with consistent candidate widths, local observations and numerical
+withholding. Its crossed comparison retains failures and unchanged seeds; a
+separate Keys-aware forward prototype remains developer research. Neither gives
+a physical accuracy guarantee.
+
 This repository contains two related tools:
 
 | Component | Use it for | Entry point |
