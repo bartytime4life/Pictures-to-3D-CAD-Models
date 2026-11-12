@@ -42,6 +42,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Understand arc-sector preservation after fillet movement | [Fillet-sweep repair](validation/fillet-sweep.md) |
 | Understand directional blur at nonparallel fitted corners and traced-outline recovery | [Anisotropic corner model](anisotropic-corners.md) |
 | Understand blur units after thickness correction and mixed-curve warnings | [Blur frames and support rules](blur-frames.md) |
+| Understand circle-consistent final joins, retained outlines and critical CAD checks | [Curved joins](curved-joins.md), [arc export checks](exports.md#verify-critical-arc-geometry) |
 | Understand the lens inverse domain and independent synthetic camera checks | [Radial inverse and lens mismatch](validation/radial-inverse.md) |
 | Distinguish the earlier blur diagnostic from current directional tracing | [Historical qualification](validation/directional-spread-qualification.md), [current method](reference-sheet.md), [rank repair](validation/directional-blur-rank.md) |
 | Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |

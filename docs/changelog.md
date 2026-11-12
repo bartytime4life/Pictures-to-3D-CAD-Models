@@ -3,6 +3,31 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Circle-consistent final arc joins — November 12, 2026
+
+- Final fitted arcs now preserve their stored center and radius. Line/circle
+  roots are selected as an ordered cycle with source-endpoint evidence, rather
+  than joining line feet to a radius-dependent midpoint that can define another
+  circle. Minor, half and major arc/chord profiles can reach analytic assembly.
+- Unavailable or ambiguous joins retain only the affected traced boundary and
+  explain the reason; invalid unsupported profiles remain refused. Radius,
+  equalization and snapping notes describe accepted final fitted geometry.
+  Initial eligibility and bounded line-only source recovery remain separate.
+- Local circle reconstruction avoids squared world-coordinate cancellation;
+  moved fillet/cap centers carry their angular witnesses. Direct unit-normal
+  solving preserves prescribed contacts. Source-derived rigid display alignment
+  remains available when a ring is retained as lines, without claiming snapping.
+- Covariance-corner optimization now checks its existing unhalved projected-step
+  criterion before requiring more descent, retaining the current iterate when
+  resolved. A large proposal shortened by backtracking cannot establish
+  convergence; non-finite and unresolved arithmetic remain refused.
+- Reused the reviewed canonical geometry implementation on this main-based
+  source while preserving covariance and thickness-frame behavior. Separate
+  prospective directional free-arc comparisons retain conditioning, finite
+  material and threshold counterexamples. No disk forward fit or new blur series
+  is automatically applied to photographs.
+  [Guide](curved-joins.md) · [evidence](validation/directional-free-arcs.md).
+
 ## Blur transport through known thickness scales — November 12, 2026
 
 - Uniform top-face maps now transport standard deviations by `k` and supplied

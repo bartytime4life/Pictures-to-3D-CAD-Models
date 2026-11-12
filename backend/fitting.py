@@ -16,6 +16,7 @@ import numpy as np
 import shapely
 from shapely.geometry import LinearRing, LineString, Polygon
 
+from .circular_joins import JoinConstructionError, assemble
 from .sheet import intersect, line_tls
 
 
@@ -179,6 +180,13 @@ def supported_fit(points, prims, tol, support_points=None, support_error=0.0):
     must not be inferred from the candidate's mismatch to the coarse boundary: that
     could pay for extrapolating across a real, but unmeasured, straight closing edge.
 
+    Before blur reconstruction, independently fitted observed circles can miss
+    their neighboring lines. Try canonical assembly first (including transverse
+    arcs closed by a chord), then the historical line-foot/midpoint support proxy.
+    That proxy is candidate eligibility only, not the canonical circle and not an
+    exportable final boundary. Final assembly must independently succeed after
+    correction; no root association is inferred from the proxy's different circle.
+
     If the sampling work limit or a numerical construction fails, retain the source
     polyline instead of silently coarsening the curve and invalidating this bound.
     """
@@ -191,7 +199,11 @@ def supported_fit(points, prims, tol, support_points=None, support_error=0.0):
     try:
         samples = []
         count = 0
-        for seg in segments(prims):
+        try:
+            candidate_segments = segments(prims)
+        except JoinConstructionError:
+            candidate_segments = _support_proxy_segments(prims)
+        for seg in candidate_segments:
             if seg[0] == "line":
                 sampled = np.asarray(seg[1:], dtype=np.float64)
             else:
@@ -386,6 +398,15 @@ def _fit_pieces(points, tol, min_line, circle_rel):
                 return None
     if len(prims) < 2:
         return None
+    # Freeze the ordered source partition only after merging and span trimming.
+    # It witnesses traversal, not the physical location of a corrected join.
+    for p in prims:
+        own = span_points(points, *p.span)
+        p.data["source_ends"] = (tuple(own[0]), tuple(own[-1]))
+        if p.kind == "arc":
+            local = own - np.asarray(p.data["c"])
+            angles = np.unwrap(np.arctan2(local[:, 1], local[:, 0]))
+            p.data["source_sweep"] = float(angles[-1] - angles[0])
     return prims
 
 
@@ -712,17 +733,35 @@ def _exact_fillet_core(seg, lines, v, inward, r, sigma, noise, correlation=None,
         f = residual(r)
         step_r = max(1e-3 * (sigma if step_scale is None else step_scale), 1e-4 * r)
         jac = (residual(r + step_r) - f) / step_r
-        power = float(jac @ jac)
-        if covariance is not None and (not math.isfinite(power) or power <= 0):
-            return None
-        step = min(-float(jac @ f) / power, 0.5 * max(r, sigma))
+        if covariance is not None:
+            with np.errstate(over="ignore", invalid="ignore", divide="ignore"):
+                power = float(jac @ jac)
+                gradient_dot = float(jac @ f)
+                cost = float(f @ f)
+            if not (math.isfinite(power) and power > 0
+                    and math.isfinite(gradient_dot) and math.isfinite(cost)):
+                return None
+            raw_step = -gradient_dot / power
+            if not math.isfinite(raw_step):
+                return None
+        else:
+            power = float(jac @ jac)
+            raw_step = -float(jac @ f) / power
+        step = min(raw_step, 0.5 * max(r, sigma))
         # r = 0 is the sharp corner, which the same model describes.
         new_r = max(0.0, r + step)
         if new_r > 5 * max(start_r, sigma):
             return None
         if covariance is not None:
+            if not math.isfinite(new_r):
+                return None
+            # Apply the existing finite-difference parameter-resolution criterion
+            # to the unhalved projected proposal, retaining the current iterate.
+            # Backtracking alone can make any movement small; it is not convergence.
+            if abs(new_r - r) < 1e-6 * max(r, sigma):
+                converged = True
+                break
             # Use the represented objective for descent; a limit is not convergence.
-            cost = float(f @ f)
             for _ in range(16):
                 trial = residual(new_r)
                 if float(trial @ trial) <= cost + 1e-16 * max(1.0, cost):
@@ -731,7 +770,7 @@ def _exact_fillet_core(seg, lines, v, inward, r, sigma, noise, correlation=None,
                 new_r = max(0.0, r + step)
             else:
                 return None
-        done = abs(new_r - r) < 1e-6 * max(r, sigma)
+        done = covariance is None and abs(new_r - r) < 1e-6 * max(r, sigma)
         r = new_r
         converged = done
         if done:
@@ -874,6 +913,7 @@ def equalise_radii(rings, radius_rel=0.03, scale=1.0, unit="mm"):
             mean = float(np.mean([q.data["r"] for q in group]))
             for q in group:
                 q.data["r"] = mean
+                q.data["equalised_to"] = mean
             notes.append(f"{len(group)} radii made equal at {mean * scale:.3f} {unit}.")
     for prims in rings:
         place_fillets(prims)
@@ -1022,6 +1062,14 @@ def refit_lines(points, prims, margin=0.0, *, blur_scales=None):
         p.data["noise_corr"] = correlation_factor(residual)
 
 
+def _move_arc_centre(p, centre, radius):
+    """Move the angular witness with its circle, including parallel slot caps."""
+    direction = np.asarray(p.data["mid"]) - np.asarray(p.data["c"])
+    length = np.linalg.norm(direction)
+    p.data["c"], p.data["r"] = tuple(centre), float(radius)
+    p.data["mid"] = tuple(centre + radius * direction / length) if length > 0 else tuple(centre)
+
+
 def place_fillets(prims):
     """Recentre constrained fillets and carry their angular sweep witness with them.
 
@@ -1033,10 +1081,8 @@ def place_fillets(prims):
     for p in prims:
         if "fillet" in p.data:
             c0, v = p.data["fillet"]
-            direction = np.asarray(p.data["mid"]) - np.asarray(p.data["c"])
             centre = np.asarray(c0) + p.data["r"] * np.asarray(v)
-            p.data["c"] = tuple(centre)
-            p.data["mid"] = tuple(centre + p.data["r"] * direction / np.linalg.norm(direction))
+            _move_arc_centre(p, centre, p.data["r"])
 
 
 def fit_fillets(points, prims, tol, sigma=0.0, covariance=None, *, blur_scales=None):
@@ -1134,8 +1180,7 @@ def fit_fillets(points, prims, tol, sigma=0.0, covariance=None, *, blur_scales=N
             axial = _end_cap_axial(
                 span_points(points, *p.span), mid, d1, n1, o1, o2, r, float((old_c - mid) @ d1), tol, sigma, local_covariance
             )
-            p.data["c"] = tuple(mid + d1 * axial)
-            p.data["r"] = r
+            _move_arc_centre(p, mid + d1 * axial, r)
             p.data["end_cap"] = True
             continue
         best = None
@@ -1143,7 +1188,7 @@ def fit_fillets(points, prims, tol, sigma=0.0, covariance=None, *, blur_scales=N
             for s2 in (-1, 1):
                 try:
                     c0 = intersect(c1, d1, c2, d2)
-                    v = intersect(c1 + n1 * s1, d1, c2 + n2 * s2, d2) - c0
+                    v = np.linalg.solve(np.vstack([n1, n2]), [s1, s2])
                 except np.linalg.LinAlgError:
                     continue
                 distance = np.linalg.norm(c0 + old_r * v - old_c)
@@ -1284,7 +1329,17 @@ def _foot(line, point):
 
 
 def segments(prims):
-    """Ordered closed-ring segments: ("line", a, b), ("arc", a, mid, b) or ("circle", c, r)."""
+    """Canonical final segments, or JoinConstructionError for unavailable joins."""
+    return assemble(prims)
+
+
+def _support_proxy_segments(prims):
+    """Historical eligibility proxy BEFORE correction; never final export geometry.
+
+    Its line feet and radial midpoint can define another circle. This permits a
+    blurred/noisy tangent candidate to reach model fitting without treating that
+    proxy as the stored circle. Only ``segments`` may construct final geometry.
+    """
     if len(prims) == 1 and prims[0].kind == "circle":
         return [("circle", np.array(prims[0].data["c"], float), float(prims[0].data["r"]))]
     m = len(prims)
@@ -1324,17 +1379,20 @@ def segments(prims):
 def arc_geometry(a, m, b):
     """Centre, radius, start angle and signed sweep of the arc through a, m, b."""
     ax, ay = a
-    bx, by = m
-    cx, cy = b
-    d = 2 * (ax * (by - cy) + bx * (cy - ay) + cx * (ay - by))
+    mx, my = m[0] - ax, m[1] - ay
+    bx, by = b[0] - ax, b[1] - ay
+    d = 2 * (mx * by - my * bx)
     if abs(d) < 1e-12:
         raise ValueError("arc points are collinear")
-    ux = ((ax * ax + ay * ay) * (by - cy) + (bx * bx + by * by) * (cy - ay) + (cx * cx + cy * cy) * (ay - by)) / d
-    uy = ((ax * ax + ay * ay) * (cx - bx) + (bx * bx + by * by) * (ax - cx) + (cx * cx + cy * cy) * (bx - ax)) / d
+    # Local differences avoid cancellation between squared world coordinates;
+    # retaining scalar arithmetic also preserves the exact rational test lane.
+    mm, bb = mx * mx + my * my, bx * bx + by * by
+    ux = ax + (mm * by - bb * my) / d
+    uy = ay + (mx * bb - bx * mm) / d
     r = math.hypot(ax - ux, ay - uy)
     a0 = math.atan2(ay - uy, ax - ux)
-    a1 = math.atan2(cy - uy, cx - ux)
-    am = math.atan2(by - uy, bx - ux)
+    a1 = math.atan2(b[1] - uy, b[0] - ux)
+    am = math.atan2(m[1] - uy, m[0] - ux)
     ccw = (a1 - a0) % (2 * math.pi)
     sweep = ccw if (am - a0) % (2 * math.pi) < ccw else ccw - 2 * math.pi
     return (ux, uy), r, a0, sweep

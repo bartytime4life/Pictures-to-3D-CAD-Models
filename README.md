@@ -29,6 +29,12 @@ retain explicitly approximate geometry with a warning; important radii remain
 subject to independent measurement. See
 [blur frames and support rules](docs/blur-frames.md).
 
+Final fitted arcs also need [circle-consistent joins](docs/curved-joins.md).
+An unavailable join keeps an affected outline for review when valid, with a
+notice; it does not supply a measured radius. Check
+[critical arc geometry in imported CAD](docs/exports.md#verify-critical-arc-geometry)
+before relying on it for fit.
+
 This repository contains two related tools:
 
 | Component | Use it for | Entry point |
@@ -155,7 +161,7 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 ## Documentation
 
-Start with the [documentation index](docs/README.md) for capture, engineering, export, development and evidence routes. [Source scope and status](docs/project-status.md) distinguishes this main-based tracing, corner and blur-frame line from the separate source-space calibration research branch and records their review states.
+Start with the [documentation index](docs/README.md) for capture, engineering, export, development and evidence routes. [Source scope and status](docs/project-status.md) distinguishes this main-based tracing, corner, blur-frame and join line from the separate source-space calibration research branch and records their review states.
 
 - [Capture and calibration guide](docs/capture-guide.md)
 - [Engineering model and independent verification](docs/engineering-model.md)

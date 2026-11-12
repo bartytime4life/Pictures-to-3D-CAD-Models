@@ -19,13 +19,41 @@ digital revision, not physical fit or manufacturing acceptance.
 
 Use STEP when continuing in a solid-modeling CAD application. The file contains the generated boundary representation of the extruded part and its through-holes. In split mode, the combined file contains the generated pieces in their assembled positions.
 
-A single-piece build with fitted primitives, including a reference-sheet trace, extrudes its fitted lines, arcs and circles. Holes and rounded corners are then true cylindrical faces with exact radii that downstream CAD can dimension and edit, and the export dialog reports the counts. A fitted radius describes the photograph; it is not recovered design intent. Split output still uses the traced polygon.
+A single-piece build with fitted primitives, including a reference-sheet trace, extrudes its final lines, arcs and circles. Accepted curved entities become cylindrical faces that downstream CAD can dimension and edit. An affected ring retained after an unavailable analytic join stays polygonal, while other rings can remain analytic. A fitted radius is a digital model parameter, not an exact physical measurement or recovered design intent. Split output still uses the traced polygon.
 
 STEP does not carry this application's original editable feature history. The receiving tool may support direct edits, but that is different from recovering a named sketch, constraints, or an extrusion feature. Keep the project recipe if you want to change width or thickness in this workbench later.
 
 For polygon-only profiles, the traced boundary remains a polygonal approximation in STEP. For fitted profiles, accepting an analytic circle changes its digital representation; it does not establish that the photographed feature is perfectly round or that its radius is an exact physical measurement.
 
 After import, check the bounding-box width, height, thickness, number of solids, and hole topology. Single-piece mode produces one valid solid with positive volume. Split mode produces the reported valid piece solids; inspect the pieces separately rather than assuming the assembly view shows a print-bed arrangement.
+
+### Verify critical arc geometry
+
+Use these checks when an arc radius, chord or tangent contact controls assembly
+fit:
+
+1. Build the current revision and read its trace warnings. An outline retained
+   after join recovery is an approximation; its rejected fitted radius is not a
+   measurement of that outline.
+2. Import STEP or DXF in millimetres. Measure the actual arc radius and centre,
+   chord endpoints and selected sweep, and inspect the connections to neighboring
+   lines. Also check complete loop closure, hole count and outside dimensions.
+3. Compare those dimensions with independent measurements of the part. A
+   circle-consistent export establishes which digital circle was built; it does
+   not establish that the photo model recovered the physical radius.
+4. If a critical radius remains unknown or only a polygon is retained, rebuild
+   that feature in CAD using independently measured radius, spacing and tangent
+   constraints, then recheck the whole profile before fabrication.
+
+An aligned preview can use a source-derived straight-edge direction even when
+a boundary is retained as line geometry. Alignment does not establish an
+accepted analytic fit, exact snapping or a measured radius.
+
+The [curved-join guide](curved-joins.md) explains construction and refusal.
+It does not introduce an exact finite-disk Gaussian correction for free arcs.
+For an older saved profile or export, trace the original photo again when
+available and rebuild to use the updated fitter. Reopening serialized geometry
+does not recover missing source-circle information.
 
 ## 3MF and slicer handoffs
 

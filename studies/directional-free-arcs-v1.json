@@ -1,0 +1,26 @@
+{
+  "format": "free-arc-model-research-plan", "version": 1,
+  "scope": "Read-only conditional local fits of unknown disk centre/radius from exact-level points. Known stationary Gaussian covariance and normalized threshold are supplied. No production repair, global identifiability, camera or physical claim.",
+  "generator": "Frozen curve-blur-frames-v1 conditional area oracle, GL32/64 and 44 bisections.",
+  "comparators": ["current_scalar_radius_only", "directional_first_order_joint_C_R", "finite_disk_joint_C_R", "exploratory_directional_third_order_joint_C_R"],
+  "settings": {"points": 21, "root_iterations": 44, "iterations": 30, "evaluations": 180, "flux_tolerance": 1e-10, "derivative_orders": [512, 1024], "search": "centre in observed-fit centre +-Rtruth, radius [.1Rtruth,3Rtruth], fixed before execution", "matched_geometry_target_pixels": 0.0001, "oracle_order_delta": 1e-8},
+  "cases": [
+    {"id":"historical120", "radius":12, "covariance":[[1,0],[0,9]], "angle":0, "sweep":120, "points":33, "lane":"matched_disk"},
+    {"id":"isotropic120", "radius":12, "covariance":[[3,0],[0,3]], "angle":0, "sweep":120, "lane":"matched_disk"},
+    {"id":"weak120", "radius":34, "covariance":[[1,0],[0,9]], "angle":0, "sweep":120, "lane":"matched_disk"},
+    {"id":"strong120", "radius":4, "covariance":[[0.36,0],[0,4]], "angle":0, "sweep":120, "lane":"matched_disk"},
+    {"id":"narrow60", "radius":12, "covariance":[[1,0],[0,9]], "angle":0, "sweep":60, "lane":"matched_disk"},
+    {"id":"narrow30", "radius":12, "covariance":[[1,0],[0,9]], "angle":0, "sweep":30, "lane":"matched_disk"},
+    {"id":"narrow15", "radius":12, "covariance":[[1,0],[0,9]], "angle":0, "sweep":15, "lane":"matched_disk"},
+    {"id":"relative90", "radius":12, "covariance":[[1,0],[0,9]], "angle":90, "sweep":120, "lane":"matched_disk"},
+    {"id":"correlated120", "radius":12, "covariance":[[5,4],[4,5]], "angle":0, "sweep":120, "lane":"matched_disk"},
+    {"id":"rigid37", "radius":12, "covariance":[[1,0],[0,9]], "angle":0, "sweep":120, "rotation":37, "points":33, "lane":"matched_disk"},
+    {"id":"perturbed30", "radius":12, "covariance":[[1,0],[0,9]], "angle":0, "sweep":30, "perturbation":0.002, "seed":17, "lane":"point_perturbation"},
+    {"id":"wrong_halflevel", "radius":12, "covariance":[[1,0],[0,9]], "angle":0, "sweep":120, "level":0.51, "lane":"threshold_mismatch"},
+    {"id":"finite_D_near_join", "radius":12, "covariance":[[1,0],[0,9]], "angle":120, "sweep":100, "chord":6, "lane":"material_mismatch"},
+    {"id":"finite_D_far_join", "radius":12, "covariance":[[1,0],[0,9]], "angle":180, "sweep":120, "chord":6, "lane":"material_mismatch"},
+    {"id":"capsule160", "radius":12, "covariance":[[1,0],[0,9]], "angle":0, "sweep":160, "capsule_core":60, "lane":"material_mismatch"},
+    {"id":"no_halflevel", "radius":1, "covariance":[[1,0],[0,9]], "angle":0, "sweep":120, "lane":"no_level_set"}
+  ],
+  "policy": "Retain all rows and negative outcomes. Only finite-disk matched rows carry the predeclared recovery criterion; asymptotic comparators have no required improvement. Source mismatch and point perturbations have no recovery assertion. Local fits do not choose joins or justify a whole disk from a free arc."
+}
