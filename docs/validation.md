@@ -14,6 +14,7 @@ It changes guides relative to that integrated baseline, not runtime behavior.
 
 | Evidence | Revision and result | Scope |
 | --- | --- | --- |
+| Recorded narrow-wall and blur-sampling checks | Branch `claude/narrow-walls` on `5588a52`: **505 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#near-frontal-wall-tone-and-cubic-blur-measurement--november-11-2026) | Local result; synthetic photos and exact profiles, including what got worse |
 | Recorded shadow-correction checks | `bbd665bec6c0d32b8ed950c69d2c102e5f7b00ce`: **501 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#edge-levels-follow-a-shadows-slope--november-11-2026) | Upstream local result, not rerun for this documentation change; synthetic photos, including the reported near-frontal regression |
 | Earlier guided-workbench checks | Guided code `900999b119eb3688ed75ed4212902c185023454b`: **498 Python tests**, **74 frontend/browser tests**, build and lint passed | Real local CAD backend; synthetic inputs and explicit AI response fixtures; before PR #37 |
 | Hosted guided-workbench CI | PR head `aa556cfc75c3fe23a3b68e12be8973bf88705d7a`: [Validate workbench run 88](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43120297057) completed successfully | That exact revision, separate from later tracing and documentation CI |
@@ -33,6 +34,35 @@ stub fix in managed cloud sessions. The [reference-sensitivity record](validatio
 covers the endpoint explorer. The original CAD release and optional Ollama
 integration retain separate historical evidence. These records do not establish
 that a newly created or published cloud task has been validated.
+
+## Near-frontal wall tone and cubic blur measurement — November 11, 2026
+
+Branch `claude/narrow-walls`, on `main` at `5588a52` (the browser scenarios on `de6f65a`; the one change between, #39, touches only a zero-blur fallback). It addresses the near-frontal regression recorded in the next section. See [reference-sheet tracing](reference-sheet.md), §3 and §5, for the mathematics.
+
+- **The defect.** At 5° tilt the 4 mm plate's walls are under 2.5 σ almost everywhere. No wall tone was measured, so nothing was corrected: Ø6 read 0.0205 mm off and the slot 0.0466 mm. A narrow band on its own confounds the wall tone with the edge offset.
+- **The fix** (`edges.pooled_wall_tone`): one tone shared by up to 160 bands of 1–3.5 σ, the one that minimises their total fixed-tone residual. For each edge offset a band's residual is exactly quadratic in the tone (`edges._wall_tone_parabolas`), so the search takes about 0.02 s; written as repeated fits it took 1 s, and the refactor agrees with them to 2 × 10⁻⁹ px. Where the minimum is flat or at an end of the range, the old bound is noted instead.
+- **What the first version found.**
+  - On exact profiles the tone came out at 16.8 for 15, with edges 0.014 σ off. The two-step fit read its profiles by bilinear sampling, which is off by up to 2.1 grey levels in 200 at a blurred edge's shoulders. With Keys cubic sampling the tone is 15.11 and the edges are within 0.001 σ.
+  - Cubic profiles alone made the rendered photos worse (5° Ø6 from 0.0068 to 0.0116 mm), until the blur was measured the same way. `edges.edge_sigma` also read bilinear profiles. Bilinear sampling adds a variance of 1/6 px² on average, so on exactly blurred edges it read σ 2.2–4.2 % high at 1.6 px and up to 8.4 % at 1.2 px, against 0.6 % and 2.3 % with cubic sampling. Every model that takes σ had been given the larger blur. The benchmark example's reported blur drops by 2.7 %.
+  - Bands under σ are left out. On noise-free profiles under 0.4 σ, cubic sampling's 0.3-level error alone made a false minimum (186 for 15, edges 0.18 σ off) that the flatness test passed.
+- **Rendered photos** (worst errors in mm; Ø6, Ø22, slot, hole position, outer):
+
+  | Photo | `main` | This branch |
+  | --- | --- | --- |
+  | 5° tilt, 4 mm, 25 % shadow | 0.0205, 0.0130, 0.0466, 0.0125, 0.0072 | 0.0068, 0.0025, 0.0184, 0.0062, 0.0063 |
+  | 5° tilt, 4 mm, no shadow | 0.0161, 0.0134, 0.0448, 0.0111, 0.0028 | 0.0042, 0.0053, 0.0189, 0.0052, 0.0020 |
+  | Overhead, 4 mm, focal length from EXIF | 0.0159, 0.0099, 0.0305, 0.0164, 0.0203 | 0.0009, 0.0049, 0.0105, 0.0087, 0.0193 |
+  | Overhead, 4 mm, phone lens assumed | 0.0505, 0.0138, 0.0475, 0.0149, 0.1048 | 0.0361, 0.0074, 0.0257, 0.0256, 0.1058 |
+  | Tilted 47 % shadow (blur measurement only) | 0.0018, 0.0093, 0.0155, 0.0150, 0.0101 | 0.0006, 0.0086, 0.0143, 0.0144, 0.0088 |
+
+  On the other documented photos ([reference-sheet tracing](reference-sheet.md), results) most figures improve slightly. The largest increase is 0.0015 mm: Ø6 on the tilted 2400 × 1800 photo, from 0.0021 to 0.0036 mm.
+- **Photo benchmark example.** Median absolute error from 0.005 to 0.004 mm, 95th percentile from 0.043 to 0.033 mm, worst 0.104 to 0.105 mm (the overhead photo's outline).
+- **What got worse.** Overhead with an assumed lens, hole positions go from 0.0149 to 0.0256 mm, and the benchmark example's centre distances from −0.015 to −0.035 mm at worst (the overhead photo). The likely cause is the guessed camera height: the parallax correction misplaces each hole's near side, and the wall's pull on its far side had partly offset it. With the focal length from EXIF, positions improve from 0.0164 to 0.0087 mm. This is inferred from that comparison, not isolated.
+- **Tests changed.**
+  - `test_two_step_wall_model_is_unbiased_with_a_known_wall_tone_and_degenerate_without` had shown the free fit's degeneracy through bilinear sampling's error. It now adds half a grey level of noise: the free fit's edges scatter by 0.14 σ, the fixed-tone fit's stay within 0.01 σ.
+  - `test_inside_and_outside_fillets_of_an_l_shaped_plate` allows 0.012 mm (was 0.01 mm), and under half each fillet's reported uncertainty. At the 2.5 px blur the inside R3 fillet reads 0.011 mm large. Given the true blur it reads 0.0106 mm large in this pixel phase and 0.0001 mm with the plate moved 0.37 px. That is the test renderer's discrete blur of edges on pixel boundaries, which the 1.2 % larger bilinear blur had offset.
+  - The sheet-reference browser scenario's provisional width, before a thickness is entered, now accepts 120–123 mm (was 120–121 mm). Traced without a thickness, the 4 mm part's silhouette is its top and bottom faces together. `main` kept that outline as traced and aligned it at 7.44°; the branch fits it as arcs and lines and aligns it at 6.47° (true 8.00°). With the thickness entered both trace 120 × 70 within 0.1 mm, which the scenario still checks.
+- **Checks run.** `pytest`: **505 passed**. New: `test_one_wall_tone_shared_by_narrow_bands_is_recovered`, `test_edge_blur_is_measured_without_the_samplers_own_blur` and `test_a_near_frontal_thick_photo_estimates_its_wall_tone_from_narrow_bands`. Five planted faults were each caught: bilinear profiles in the two-step fit or in the blur measurement, no band rule, no flatness test, and no parabola refinement of the tone. Ruff passed. All 74 browser scenarios passed with the system Chrome. A near-frontal trace takes 0.73 s, against 0.68 s on `main`.
 
 ## Edge levels follow a shadow's slope — November 11, 2026
 

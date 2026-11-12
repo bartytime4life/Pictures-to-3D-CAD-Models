@@ -178,7 +178,20 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
                 g, wide_points, np.vstack([w[1] for w in wide]), np.concatenate([w[2] for w in wide]), sigma
             )
             wall_tone = float(np.median(tones))
-        elif narrow_count:
+        else:
+            # Too few wide bands: one tone shared by all bands of 1-3.5 sigma
+            # (edges.pooled_wall_tone), where a near-frontal photo still has hundreds.
+            pool = [(r["points"][(b >= sigma) & (b <= 3.5 * sigma)], n[(b >= sigma) & (b <= 3.5 * sigma)], b[(b >= sigma) & (b <= 3.5 * sigma)]) for r, n, b in prepared]
+            pooled = sum(len(p[0]) for p in pool)
+            if pooled >= 30:
+                wall_tone = edges.pooled_wall_tone(
+                    g, np.vstack([p[0] for p in pool]), np.vstack([p[1] for p in pool]), np.concatenate([p[2] for p in pool]), sigma
+                )
+            if wall_tone is not None:
+                notes.append(
+                    f"Side walls are narrower than about 2.5 times the edge blur; their tone was estimated jointly from {pooled} edge points and the edges facing the camera were corrected with it."
+                )
+        if wall_tone is None and narrow_count:
             notes.append(
                 f"Side walls are visible but narrower than about 2.5 times the edge blur, so their tone cannot be measured; edges facing the camera may read up to {0.2 * sigma / ppm:.3f} mm into the part. A slightly tilted photo shows wider walls."
             )
