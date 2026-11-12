@@ -48,7 +48,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |
 | Run a benchmark with measured photos | [Photo benchmark](photo-benchmark.md) |
 | Review completed checks | [Validation overview](validation.md), [design QA](../design-qa.md) |
-| Check documentation coverage and source consistency | [November 12 documentation review](validation/documentation-review-2026-11-12.md) |
+| Check current documentation coverage and source consistency | [Latest consolidation](validation/documentation-math-state.md), [earlier November 12 review](validation/documentation-review-2026-11-12.md) |
 | Review the recent interface changes | [Guided-workbench audit](validation/guided-workbench.md) |
 | Review scope and future work | [Roadmap](roadmap.md), [change log](changelog.md) |
 | Reproduce bundled printer data | [Printer source record](../data/PRINTER_SOURCES.md) |
@@ -60,7 +60,7 @@ or a later commit. Start at the validation overview for the relevant evidence.
 Detailed records cover [height decisions](validation/engineering-audit.md),
 [curved placement](validation/curved-placement.md), [suggested splits](validation/split-plans.md),
 [project import recovery](validation/project-import-recovery.md),
-[endpoint sensitivity](validation/reference-sensitivity.md), and this
+[endpoint sensitivity](validation/reference-sensitivity.md), and the earlier
 [documentation refresh](validation/documentation-refresh.md).
 
 ## Companion reference library

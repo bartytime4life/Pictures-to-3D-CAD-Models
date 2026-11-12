@@ -6,8 +6,10 @@ CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
 For a concise source/review snapshot, use [project status](project-status.md).
-The [current documentation follow-up](validation/documentation-current-state.md)
+The [current documentation consolidation](validation/documentation-math-state.md)
 records its own checks without rerunning or relabeling the historical suites.
+The [earlier PR #49 documentation follow-up](validation/documentation-current-state.md)
+retains its source, executable API example and completed checks.
 
 ## Current workbench evidence — November 12, 2026
 

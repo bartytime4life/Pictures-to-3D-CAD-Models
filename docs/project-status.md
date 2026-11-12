@@ -1,30 +1,26 @@
 # Project status and evidence
 
-Documentation snapshot: **November 12, 2026**. This page describes the reviewed
-source at `a3a2397cde2b1afbeda133ac86218eaae5a22edc` and the documentation
-follow-up based on it. Start with [setup](development.md), the [task index](README.md)
-or the [API examples](api-examples.md).
-
-The next [conditional radius-analysis candidate](validation/corner-feasibility.md)
-is based on documentation head `77b7f6f`. It adds a developer tool; the source
-and review table below retains the earlier integrated baseline and open reviews.
-
-The subsequent [shared-blur candidate](validation/corner-blur-domains.md) is
-based on PR #50 at `be2a58c`; it adds a version-2 joint parameter domain and
-passes 839 Python tests. The table below remains the earlier dated review snapshot.
+Documentation snapshot: **November 12, 2026, 08:39 UTC**. This page describes
+source at `b366b3f2cda4ca33a34b2b2aa109a9b1718acb0c` and the documentation
+follow-up based on it. It includes the pending review chain below, through the
+shared-blur analysis in PR #51. Start with [setup](development.md), the
+[task index](README.md) or the [API examples](api-examples.md).
 
 ## Source and review state
 
-At the repository check on November 12, `main` was
-`5c07d0f70d7df0200bc24227c8ac7e9b630f7f09`. The latest two algorithm changes
-were still open for review. This documentation branch includes both changes;
-an older checkout of `main` does not contain them.
+At this check, `main` was `5c07d0f70d7df0200bc24227c8ac7e9b630f7f09`.
+PRs #47–#51 were open and unmerged. This documentation branch includes their
+changes; that checkout of `main` does not contain them. The developer analysis
+is separate from the workbench's production tracing and interface.
 
 | Source | Included changes | Review state at this snapshot |
 | --- | --- | --- |
 | `main` at `5c07d0f` | Initial-fit support, benchmark correspondence/coverage, weak-edge recovery and fillet-sector preservation | Integrated through PRs #43–#46 |
 | `ba94ef8e55bbc39b8074840052244f92c72be661` | Central radial-inverse branch safeguards and an independently implemented synthetic lens inverse | [PR #47](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/47), open; base `main` |
 | `a3a2397cde2b1afbeda133ac86218eaae5a22edc` | Verified corner-resolution crossing and conditional radius messages | [PR #48](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/48), open draft; base PR #47's branch |
+| `77b7f6f74ea411e336ff3cf613b33e406ee98d72` | Current-state guides, API example, mathematical wording and library maintenance instructions | [PR #49](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/49), open draft; base PR #48's branch |
+| `be2a58cedb7a69702a57c9953a0e0d1e965feae8` | Version-1 conditional corner-radius analysis with fixed blur and provenance-bound CLI reports | [PR #50](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/50), open draft; base PR #49's branch |
+| `b366b3f2cda4ca33a34b2b2aa109a9b1718acb0c` | Version-2 joint radius/blur domains, common-blur consistency and conservative radius projections | [PR #51](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/51), open draft; base PR #50's branch |
 
 The PR links show live review state. A documentation update does not install,
 merge or deploy those changes. Record the checkout used to start a service:
@@ -64,27 +60,26 @@ there is no product endpoint, automatic tracing correction or accuracy label.
 | --- | --- | --- |
 | Joint blur-domain candidate | [Shared-blur record](validation/corner-blur-domains.md): 839 Python tests passed | Joint nuisance domains and safe projection; no new browser or physical qualification |
 | Conditional corner-analysis candidate | [Numerical/CLI record](validation/corner-feasibility.md): 760 Python tests passed | New developer-only analysis; no fresh browser/build or physical qualification |
-| Latest complete local workbench run | [Corner-resolution record](validation/sharp-corner-resolution.md): 630 Python tests and 74 browser scenarios; build and lint passed | Reviewed implementation behavior on the recorded inputs; not a new run by this documentation change |
+| Latest recorded browser/build run | [Corner-resolution record](validation/sharp-corner-resolution.md): 630 Python tests and 74 browser scenarios; build and lint passed | That source and recorded inputs; later developer-tool Python results do not refresh browser/build evidence |
 | Earlier radial candidate | [Radial record](validation/radial-inverse.md): 623 Python tests and 74 browser scenarios after integration with `5c07d0f` | Separate source binding; higher-order lens mismatch remains visible |
 | Model-mismatch research | [Directional study](validation/directional-spread-qualification.md) and [corner counterexample](validation/sharp-corner-resolution.md) retain misses, unknowns and negative outcomes | No production anisotropic correction or physical radius enclosure |
 | Companion library | [Revision 7 verification](../reference-library/VERIFICATION.md) | Its own dated release record, not a new library release |
-| This documentation follow-up | [Coverage and checks](validation/documentation-current-state.md) | Documentation parsing, links, commands and API example; separate from full product regression suites |
+| Earlier documentation follow-up | [PR #49 coverage and checks](validation/documentation-current-state.md) | Documentation parsing, links, commands and API example at its recorded source |
+| Current documentation consolidation | [Coverage and checks](validation/documentation-math-state.md) | Current navigation, review chain, source/receipt consistency and complete Markdown checks; no new product regression or physical result |
 
-Hosted CI was checked at **07:50 UTC on November 12**:
-[workbench run 110](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43173672079)
-for `ba94ef8` was cancelled;
-[run 111](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43176958836)
-for `a3a2397` was in progress. Neither was a successful hosted validation at that
-observation. Follow those exact run links for later results; local passes remain
-separate. The documentation branch has its own checks when published.
+Hosted CI status is bound to each exact head. At **08:39 UTC on November 12**:
 
-Follow-up at **08:17 UTC on November 12**: run 111 completed successfully.
-For documentation head `77b7f6f`,
-[library run 39](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43179485496)
-completed successfully and
-[workbench run 112](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43179485257)
-was still in progress. These are separate from the conditional-analysis
-candidate's new local Python checks.
+| Head | Hosted workflow | Result at this observation |
+| --- | --- | --- |
+| `ba94ef8` | [Workbench run 110](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43173672079) | Cancelled |
+| `a3a2397` | [Workbench run 111](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43176958836) | Completed successfully |
+| `77b7f6f` | [Workbench run 112](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43179485257), [library run 39](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43179485496) | Both completed successfully |
+| `be2a58c` | [Workbench run 113](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43181910268) | In progress; no conclusion |
+| `b366b3f` | [Workbench run 114](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43184279416) | In progress; no conclusion |
+
+Follow the exact run links for later results. The local 839-test result is
+separate from hosted CI. Earlier observations remain in their dated validation
+records; successful CI does not merge, install or qualify a physical part.
 
 ## Next engineering work
 
