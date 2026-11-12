@@ -7,6 +7,18 @@ original counts and environment; they are not later retests.
 
 ## Current workbench evidence — November 12, 2026
 
+The new [finite-material centre inverse](validation/finite-free-centre.md)
+passes 862 Python tests and all 12 matched conditional recovery targets. Its
+24-row experiment retains a failed planned aperture-order check, supplemented
+by a separately bound higher-order audit. The [moment-field study](validation/finite-moment-photo.md)
+retains a missed nominal target and background-sensitive or incompatible
+covariance proposals. These developer models do not change automatic tracing
+or establish physical-camera accuracy.
+
+The [latest documentation review](validation/documentation-pr86-state.md)
+follows published draft PR #86 at `dcb14e5`. It checks documentation and preserves
+runtime source; it does not rerun or replace the geometry/browser results below.
+
 The current [circle-consistent join candidate](validation/directional-free-arcs.md)
 builds on PR #84. It tests the circle represented by actual emitted geometry,
 retains the six failed analytic baseline cases and replays independent geometric,

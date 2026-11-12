@@ -1,0 +1,26 @@
+{
+  "scope": "Frozen before first diagnostic fit; includes five capture NPZ, actual-g helper/core and prospective plan/runner",
+  "files": {
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/finite_centre_fit.py": "e2019bcc8b5813c0957967b469baf44bbdd784f50855418852c2686cc48b9ab4",
+    "backend/finite_shape.py": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+    "backend/fitting.py": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+    "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+    "backend/sheet.py": "e18cbe44c476894f1655d6ce66a5e1b11cefe9ca4f95e7e17eb7f52efc236531",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "backend/edges.py": "c02bcf6f15958ea5c82444de3ea3af37f20031e6df463846dc8082e37abae9ee",
+    "uv.lock": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f",
+    "studies/verification/finite-free-centre-v1.py": "0537540cbfddad2e6209b7b1483977e118c70b64f0d7938e810f942765e579f8",
+    "studies/finite-free-centre-v1.json": "f8db267fd848363ba91b56cd5a01086f3123ad699f6c0c404166734f3bc582fd",
+    ".local/verification/d-photo-baseline-v2/plan.json": "2db3148f3be75ea7f9750aeae7115dd23762a581c1f3f879b484c7e1b3c9d687",
+    ".local/verification/d-photo-baseline-v2/result.json": "e8a07de6297f1c5f9b71d1cd13a3a70e14664242475ae34446e1fe9ffc7183da",
+    ".local/verification/d-moment-photo-v1/result.json": "23e8eff8c84ec50adc2c4f82815399ed15f20694717fcd0d02a2a4af16fd8fc6",
+    ".local/verification/d-photo-intensity-v1/plan.json": "083fb18d5b42479282fcae7214646a396bd8bba8936633ea02ec090235ec2e95",
+    ".local/verification/d-photo-intensity-v1/runner.py": "6544722335604516e4f27c86c02635bd22cb600503f556625bdc4ebed861ae55",
+    ".local/verification/d-photo-baseline-v2/large-directional-measurement.npz": "de00f76fcfd2c3f3ad7a3c7920b9716c45d93cebb55175ce04d17f0ed2455b9c",
+    ".local/verification/d-photo-baseline-v2/medium-directional-measurement.npz": "e5b903ac4e82191ad87e4ce50274bf25a502ba99f3003cbe810f38e769d403bf",
+    ".local/verification/d-photo-baseline-v2/rotated-major-directional-measurement.npz": "037e7d493ee9b6c612a70f0721af81a790ee543d975696996a7f928e99e2cbbc",
+    ".local/verification/d-photo-baseline-v2/small-directional-measurement.npz": "dc66ddb52ae895b9bed4ad28ef69bf548f07732ecf4a6f1a91844963ed642ab4",
+    ".local/verification/d-photo-baseline-v2/small-isotropic-measurement.npz": "9982be1be11d8d5a8ec27026984e13f3df0c0d42cf7cd16360e6e9ede7a862d9"
+  }
+}

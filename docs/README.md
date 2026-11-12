@@ -36,6 +36,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Find the commands available in this checkout | [Developer tools and output behavior](developer-tools.md) |
 | Understand components, API and data flow | [Architecture](architecture.md) |
 | Read mathematical methods and their limits | [Research and algorithms](research.md), [engineering model](engineering-model.md) |
+| Investigate conditional finite-material intensity fitting | [Developer model and numerical limits](finite-shape-inverse.md) |
 | Review original scientific findings and remaining model limits | [Scientific model review](validation/scientific-model-review.md) |
 | Understand initial fitted-boundary coverage | [Fit-support repair and evidence](validation/fit-support.md) |
 | Understand weak-edge refusal and recovery | [Contrast-recovery validation](validation/contrast-recovery.md) |
@@ -48,7 +49,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |
 | Run a benchmark with measured photos | [Photo benchmark](photo-benchmark.md) |
 | Review completed checks | [Validation overview](validation.md), [design QA](../design-qa.md) |
-| Check documentation coverage and source consistency | [Current source-scope review](validation/documentation-main77-state.md), [earlier November 12 review](validation/documentation-review-2026-11-12.md) |
+| Check documentation coverage and source consistency | [Current PR #86 source-scope review](validation/documentation-pr86-state.md), [preceding main-line review](validation/documentation-main77-state.md), [earlier November 12 review](validation/documentation-review-2026-11-12.md) |
 | Review the recent interface changes | [Guided-workbench audit](validation/guided-workbench.md) |
 | Review scope and future work | [Roadmap](roadmap.md), [change log](changelog.md) |
 | Reproduce bundled printer data | [Printer source record](../data/PRINTER_SOURCES.md) |

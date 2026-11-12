@@ -3,6 +3,33 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Finite-material intensity inverse and moment study — November 12, 2026
+
+- Added a conditional developer inverse for unknown circular-segment centre,
+  radius and chord fraction with two bounded brightness levels. A supplied
+  homography, chord normal, covariance, observation set and residual metric
+  retain explicit numerical and model limits; automatic tracing is unchanged.
+- Boundary-shape derivatives and the complete fixed-face variable-projection
+  Jacobian keep optimization separate from geometric mean-information rank.
+  Direct local curves preserve requested geometry at large coordinates; rank,
+  transform snapshots, numerical failures and work limits have regressions.
+- The independent 24-case study retains all matched and adverse outcomes,
+  including its failed planned aperture-order comparison. The separate portable
+  moment study retains background sensitivity, a missed nominal target and
+  incompatible covariance proposals. Added small-part reference-sheet guidance.
+  [Model](finite-shape-inverse.md) · [inverse evidence](validation/finite-free-centre.md)
+  · [moment evidence](validation/finite-moment-photo.md).
+
+## Documentation publication and navigation — November 12, 2026
+
+- Identified published draft PR #86 and its dependency on draft PR #84 in the
+  source-scope guide. Linked the latest complete documentation review from the
+  README, documentation index and validation overview.
+- Kept the unknown-centre finite-material prototype and its unreviewed plan
+  separate from available software and the completed conditional study.
+  Runtime, generated library files and previous evidence remain unchanged;
+  [coverage and checks](validation/documentation-pr86-state.md).
+
 ## Circle-consistent final arc joins — November 12, 2026
 
 - Final fitted arcs now preserve their stored center and radius. Line/circle

@@ -22,6 +22,13 @@ The [weak-edge recovery check](validation/contrast-recovery.md) records this
 specific reference-sheet failure and subsequent successful tracing. Its guidance
 does not make an unclear capture measurable or establish dimensional accuracy.
 
+If a very small part is missed on a large reference sheet, use a smaller flat
+reference with accurately measured sides and choose **Custom sheet, measured**.
+Keep the whole sheet and contrasting margins visible. The
+[synthetic capture study](validation/finite-moment-photo.md) retains both the
+A4 detection failures and the smaller-sheet outcomes; a successful trace still
+needs comparison with independent dimensions.
+
 ## Scale and geometry problems
 
 For a directional-blur note, use a steadier, sharper capture and reserve independent
@@ -47,6 +54,16 @@ Compare the photograph and important dimensions if an analytic fit or later
 design-intent correction disagrees. Use ordinary tracing with measured scale or
 rebuild critical features in CAD when needed. Turning off design-intent snapping
 does not disable whole-circle fitting or the initial support check.
+
+A later note that a fitted arc could not be joined means the final line/circle
+assembly was unavailable or ambiguous. A valid affected boundary stays as traced
+lines; other accepted boundaries can remain analytic. This retained outline does
+not determine the missing radius. Compare it with the photograph and measure
+critical features before export. If the retained boundary cannot form a valid
+profile, the request is refused; correct the capture or rebuild the feature in
+CAD. The previous successful model can remain visible after that error, so check
+the outdated-result notice. See [join recovery](curved-joins.md#when-a-join-cannot-be-constructed)
+and [critical arc export checks](exports.md#verify-critical-arc-geometry).
 
 | Symptom | Likely cause | Next action |
 | --- | --- | --- |
