@@ -399,6 +399,21 @@ def test_sloped_plateau_levels_put_the_crossing_on_the_edge():
         assert sloped_error < 0.005 and sloped_error <= median_error
 
 
+def test_a_zero_blur_estimate_keeps_the_median_level_search():
+    """edges.edge_sigma returns 0 when every sampled profile is under 20 grey levels of
+    contrast, which segmentation still accepts. The sloped search would then divide by
+    zero; with sigma 0 it must fall back to the median-level search, not drop every point."""
+    sigma, edge = 2.0, 200.3
+    t = np.arange(400) + 0.5 - edge
+    image = np.tile(20 + 180 * edges.normal_cdf(t / sigma), (12, 1))
+    points = np.column_stack([np.full(4, edge + 0.1), [3.0, 5.0, 7.0, 9.0]])
+    normals = np.tile([1.0, 0.0], (4, 1))
+    median, median_keep = sheet.half_level_search(image, points, normals, half=4.0)
+    zero, zero_keep = sheet.half_level_search(image, points, normals, half=4.0, sigma=0.0, ring_smoothing=20.0)
+    assert zero_keep.all() and np.array_equal(zero_keep, median_keep)
+    assert np.allclose(zero, median)
+
+
 def test_ring_smoothing_averages_the_slope_correction_round_a_closed_ring():
     """Properties of the smoothing applied to the slope correction: it keeps a constant,
     wraps round the ring's ends, and skips missing values."""

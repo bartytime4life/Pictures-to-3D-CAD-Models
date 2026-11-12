@@ -106,7 +106,9 @@ def half_level_search(
     there, while the material side can hold a thick part's narrow side wall, whose own
     blurred step would read as a slope; that side keeps its end median.
     """
-    sloped = sigma is not None
+    # edges.edge_sigma returns 0 when no profile has the contrast to measure the blur;
+    # the median-level search then stands.
+    sloped = sigma is not None and sigma > 0
     reach = max(half, 5 * sigma) if sloped else half
     t = np.arange(-reach, reach + step / 2, step)
     sx = points[:, None, 0] + t[None, :] * normals[:, None, 0] - 0.5
