@@ -5,8 +5,8 @@ constant-thickness part; the companion library also covers broader reconstructio
 methods, offline reference photos, calculators and parametric OpenSCAD examples.
 
 Read [source scope and status](project-status.md) first when switching branches.
-Main-line directional tracing, the draft rank repair and separate research APIs
-have different source and validation histories.
+Workbench tracing, corner/frame repairs and separate research APIs have
+different source and validation histories.
 
 ## Use the workbench
 
@@ -40,6 +40,8 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Understand initial fitted-boundary coverage | [Fit-support repair and evidence](validation/fit-support.md) |
 | Understand weak-edge refusal and recovery | [Contrast-recovery validation](validation/contrast-recovery.md) |
 | Understand arc-sector preservation after fillet movement | [Fillet-sweep repair](validation/fillet-sweep.md) |
+| Understand directional blur at nonparallel fitted corners and traced-outline recovery | [Anisotropic corner model](anisotropic-corners.md) |
+| Understand blur units after thickness correction and mixed-curve warnings | [Blur frames and support rules](blur-frames.md) |
 | Understand the lens inverse domain and independent synthetic camera checks | [Radial inverse and lens mismatch](validation/radial-inverse.md) |
 | Distinguish the earlier blur diagnostic from current directional tracing | [Historical qualification](validation/directional-spread-qualification.md), [current method](reference-sheet.md), [rank repair](validation/directional-blur-rank.md) |
 | Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |

@@ -3,6 +3,44 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Blur transport through known thickness scales — November 12, 2026
+
+- Uniform top-face maps now transport standard deviations by `k` and supplied
+  covariance by `k²` for free-radius corrections, scalar corners and slot caps.
+  Line-refit exclusion windows use their point-bound scale context. Free arcs
+  use their own inclusive support, including spans that wrap around the ring.
+- Mixed free curves and caps retain an explicitly warned approximation. Mixed
+  scalar corners keep the legacy geometry with infinite internal radius
+  uncertainty and no sharp-corner bound or deletion; unusable zero/nonfinite
+  model radii retain a positive initial geometric arc without another correction.
+  Mixed supplied-covariance nonparallel corners keep their existing refusal.
+- Added a predeclared independent 46-row frame experiment and retained finite
+  approximation biases separately. A topology-cleanup probe passed a source
+  distance check but failed the original fixture size limit and was rejected.
+  No cleanup operator or acceptance-threshold change was added.
+  [Mathematics](blur-frames.md) · [evidence](validation/curve-blur-frames.md).
+
+## Covariance-aware nonparallel corners — November 12, 2026
+
+- Supported nonparallel fillets use the empirical rectified Gaussian covariance
+  directly, transforming the corner geometry during Gaussian standardization
+  instead of replacing directional blur by one scalar width.
+- Uniform thickness-map scales transform covariance in squared units. Mixed
+  support maps or unresolved covariance fits normally retain the affected traced
+  boundary, without accepting a scalar fallback. An invalid corrected ring may
+  instead retain a frozen supported initial geometric fit as a line-only polygon,
+  with validity, point-cap and bidirectional whole-boundary checks within the
+  existing fitting tolerance. Otherwise profile refusal remains. Notices
+  distinguish this nearby polygon and its undetermined radius. No generic
+  topology-repair operator, component deletion or polyline-detail tolerance
+  increase is introduced; intended source topology remains unqualified.
+- Numerical convergence and sharp-resolution searches have explicit refusal
+  paths. The common 5% blur-scale sensitivity remains a heuristic; general free
+  arcs and slot end caps retain their separate approximations. The
+  [model guide](anisotropic-corners.md) records the source-bound 16-case
+  conditional study, including its unresolved and sharp-classified cases;
+  it does not qualify physical camera accuracy.
+
 ## Main-line documentation scope — November 12, 2026
 
 - Added a [source-scope guide](project-status.md) separating main's PRs #76/#77,

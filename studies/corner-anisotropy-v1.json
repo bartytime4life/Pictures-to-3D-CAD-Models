@@ -1,0 +1,43 @@
+{
+  "format": "pictures-to-cad-corner-anisotropy-study",
+  "version": 1,
+  "scope": "Independent conditional Gaussian infinite rounded-corner half-level observations; known tangent lines, radius seed and covariance. Not a full photo pipeline, camera calibration or physical uncertainty certificate.",
+  "scalar_sigma": "det(covariance)**0.25, matching production subpixel_rings",
+  "oracle": {
+    "method": "Conditional X CDF integrated over standardized Y using stdlib math.erfc and composite Gauss-Legendre, split at both tangent heights",
+    "standardized_y_limit": 12,
+    "maximum_panel_width": 0.5,
+    "orders": [16, 32],
+    "bisection_iterations": 48,
+    "arc_y_samples": 31,
+    "line_samples_per_side": 8,
+    "line_extent_sigma_y": 5
+  },
+  "criteria": {
+    "quadrature_order_delta": 1e-8,
+    "half_level_error": 1e-8,
+    "isotropic_scalar_radius_error": 0.005,
+    "covariance_resolved_radius_error": 0.005,
+    "covariance_radius_cases": ["isotropic-right", "isotropic-acute", "isotropic-obtuse", "right-axis-anisotropy", "right-axis-swapped", "right-correlated", "right-correlated-rotated", "acute-anisotropy", "obtuse-anisotropy", "large-radius-anisotropy", "isotropic-rotated", "wide-sweep-correlated"],
+    "adverse_cases": ["sharp-anisotropy", "small-radius-anisotropy", "transition-radius-anisotropy", "weak-radius-anisotropy"],
+    "adverse_policy": "Retain all outcomes, errors, residuals, sharp bounds and unresolved states; no required recovery or claimed physical radius bound."
+  },
+  "cases": [
+    {"id":"isotropic-right","radius":4,"sweep_degrees":90,"covariance":[[1.44,0],[0,1.44]],"rotation_degrees":0,"complement":false},
+    {"id":"isotropic-acute","radius":4,"sweep_degrees":120,"covariance":[[1.44,0],[0,1.44]],"rotation_degrees":0,"complement":false},
+    {"id":"isotropic-obtuse","radius":4,"sweep_degrees":60,"covariance":[[1.44,0],[0,1.44]],"rotation_degrees":0,"complement":true},
+    {"id":"right-axis-anisotropy","radius":4,"sweep_degrees":90,"covariance":[[0.36,0],[0,4]],"rotation_degrees":0,"complement":false},
+    {"id":"right-axis-swapped","radius":4,"sweep_degrees":90,"covariance":[[4,0],[0,0.36]],"rotation_degrees":0,"complement":false},
+    {"id":"right-correlated","radius":4,"sweep_degrees":90,"covariance":[[1.44,0.9],[0.9,2.56]],"rotation_degrees":0,"complement":false},
+    {"id":"right-correlated-rotated","radius":4,"sweep_degrees":90,"covariance":[[1.44,0.9],[0.9,2.56]],"rotation_degrees":37,"complement":true},
+    {"id":"acute-anisotropy","radius":4,"sweep_degrees":120,"covariance":[[0.36,0],[0,4]],"rotation_degrees":19,"complement":false},
+    {"id":"obtuse-anisotropy","radius":4,"sweep_degrees":60,"covariance":[[0.36,0],[0,4]],"rotation_degrees":-23,"complement":true},
+    {"id":"sharp-anisotropy","radius":0,"sweep_degrees":90,"covariance":[[0.25,0],[0,2.25]],"rotation_degrees":0,"complement":false},
+    {"id":"small-radius-anisotropy","radius":0.6,"sweep_degrees":90,"covariance":[[0.25,0],[0,2.25]],"rotation_degrees":0,"complement":false},
+    {"id":"transition-radius-anisotropy","radius":1.5,"sweep_degrees":90,"covariance":[[0.25,0],[0,2.25]],"rotation_degrees":0,"complement":true},
+    {"id":"large-radius-anisotropy","radius":10,"sweep_degrees":90,"covariance":[[0.36,0],[0,4]],"rotation_degrees":31,"complement":false},
+    {"id":"isotropic-rotated","radius":4,"sweep_degrees":90,"covariance":[[1.44,0],[0,1.44]],"rotation_degrees":37,"complement":true},
+    {"id":"weak-radius-anisotropy","radius":4,"sweep_degrees":30,"covariance":[[0.36,0],[0,4]],"rotation_degrees":11,"complement":false},
+    {"id":"wide-sweep-correlated","radius":4,"sweep_degrees":150,"covariance":[[1.44,0.9],[0.9,2.56]],"rotation_degrees":-41,"complement":false}
+  ]
+}

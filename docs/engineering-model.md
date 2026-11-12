@@ -175,18 +175,34 @@ physical camera assumptions remain. The [directional-spread qualification](valid
 documents missed directional cases and unknown outcomes for its research
 diagnostic. The tracer's own covariance fit adds orientation-support and
 per-direction adequacy rules and traces a uniform directional blur by direction
-([reference-sheet tracing](reference-sheet.md), §3); synthetic only. Benchmark
-statistics remain conditional on comparisons.
+([reference-sheet tracing](reference-sheet.md), §3). Supported nonparallel
+fillets now use that empirical rectified-image covariance in their
+[Gaussian corner model](anisotropic-corners.md); unresolved covariance fits or
+mixed supplied-covariance supports normally retain the affected traced boundary.
+If the corrected source ring is invalid, a frozen, already accepted geometric fit
+can provide a line-only polygon only after valid-ring, point-cap and
+bidirectional whole-boundary tolerance checks. Otherwise the profile is refused.
+This [bounded recovery](anisotropic-corners.md#when-the-corrected-source-ring-is-invalid)
+uses no generic topology-repair operator or component deletion. It does not
+determine the invalid source's intended topology, a corner radius or physical
+accuracy. Final profile validation remains. The 5% common blur-scale sensitivity
+remains a heuristic, not inferred covariance uncertainty or physical coverage.
+Evidence remains synthetic, and
+benchmark statistics remain conditional on comparisons.
 
-The production directional tensor describes rise widths after rectification and
-smoothing. A normal's `sigma_n` is used for edge and wall localization. Free
-circle/arc correction and the nonparallel fillet model still consume a scalar
-width; slot-end placement also uses the tensor's directional first-order term.
-The scalar corner model's radius resolution and sharp-corner bound remain
-conditional on its isotropic Gaussian, fixed-edge and error assumptions.
-They are not measured physical confidence limits or evidence that anisotropic
-corner bias has been removed. No source-space PSF calibration API is present
-on this main-based branch; the separate research draft has its own scope.
+General free arcs/circles still use a scalar correction, and slot-end placement
+retains its directional first-order approximation. These calculations now
+[transport a known uniform thickness scale](blur-frames.md) into the blur width
+and covariance in the geometry's frame. Mixed free curves, caps and scalar-only
+corner fits retain the earlier geometry approximation with a visible warning,
+without an averaged covariance or calibrated uncertainty. A mixed scalar
+corner's radius remains undetermined, with no sharp-bound/deletion claim;
+supplied-covariance mixed corners retain the separate withholding policy above.
+Frame consistency does not establish finite-shape
+model adequacy. Radius resolution remains
+conditional on the chosen Gaussian geometry, fixed edges and heuristic error
+allowances. No source-space PSF calibration API is added to this main-based
+branch; the separate research draft keeps its own scope.
 Residuals describe the selected
 model's agreement with sampled points; they do not alone establish source
 coverage, identifiable radius, physical uncertainty or complete benchmark
