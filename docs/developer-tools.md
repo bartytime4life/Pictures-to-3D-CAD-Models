@@ -12,6 +12,8 @@ an experiment in another worktree is a different implementation.
 | --- | --- | --- |
 | Which radii can explain explicitly bounded observations? | `scripts/corner_feasibility.py` | Conditional sets under supplied geometry, optics and observation bounds; no photo ingestion or automatic correction |
 | Does the fitting chain retain synthetic rounded corners? | `make corner-sweep` | Matched-model regression, including unresolved numerical searches; no physical radius bound |
+| Do final line/arc joins preserve the supplied circles and source traversal? | `studies/verification/canonical-arcs-oracle-v1.py --output NEW_JSON` | Independent geometry and finite-cycle controls; guarded minimum-edit decisions, not physical uniqueness |
+| Does actual fitting retain minor, half and major circular segments? | `studies/verification/canonical-arcs-fit-v1.py --output NEW_JSON` | Six exact-input representation controls; optional pinned local baseline, including deliberately mismatched blur edits |
 | How do illumination and sampling affect local edge measurements? | `make material-gradient-study OUTPUT=NEW_DIRECTORY` | Complete development census through actual profile functions; no complete-camera qualification |
 | Can bounded lighting fit competing wall/silhouette interpretations? | `make wall-gradient-study OUTPUT=NEW_DIRECTORY` | Bounded source fits and constructed ambiguity witnesses; no production wall-model replacement |
 | Does a wall-fit change improve identical initial traces? | `make wall-localization-study OUTPUT=NEW_DIRECTORY` | Paired development scenes with a pinned baseline; retained unknowns and model failures, not camera qualification |
@@ -241,9 +243,21 @@ extrusion, STEP readback and DXF checks. Its artifact directory retains syntheti
 geometry and native files. Read the [complete record](validation/tapered-caps.md)
 for baseline failures, conditioning limits and how to select an explicit prior
 source checkout. These checks require no personal photos or running service.
-They do not repair the separate
-[free-arc representation limit](architecture.md#remaining-free-arc-representation-limit)
-after blur correction or radius equalisation.
+Their historical receipts retain their original scope. The later
+[canonical final assembler](architecture.md#circle-consistent-final-assembly)
+separately preserves circle identity or withholds unresolved joins after blur
+correction and radius equalisation.
+
+```bash
+.venv/bin/python studies/verification/canonical-arcs-oracle-v1.py --output .local/canonical-arcs-new.json
+```
+
+This runner uses its committed finite plan and requires a new output path.
+It retains geometry cases and cycle-search outcomes with source hashes. The
+[canonical-assembly record](validation/canonical-arcs.md) explains the independent
+controls, shared-code limits and per-boundary recovery checks. Initial support
+proxy eligibility is not final assembly, and guarded objective separation is
+not a physical uncertainty interval or a formal arithmetic certificate.
 
 ## Figures
 

@@ -144,6 +144,23 @@ npm run build
 npm run test:e2e
 ```
 
+Use an exclusively test-owned server for a source-bound browser run. With
+`CI=1`, Playwright refuses an existing default-port server. Alternatively,
+`PICAD_TEST_URL` selects a running server and disables automatic startup:
+record its checkout, process and build, and give it an unused loopback port and
+fresh temporary directories. In one terminal, for example:
+
+```bash
+PICTURES_CAD_JOB_DIR="$PWD/.local/browser-jobs-new" \
+PICAD_SLICER_HANDOFF_DIR="$PWD/.local/browser-handoffs-new" \
+.venv/bin/python -m uvicorn backend.app:app --host 127.0.0.1 --port 18026
+```
+
+In another, run `CI=1 PICAD_TEST_URL=http://127.0.0.1:18026 npm run test:e2e`.
+Concurrent clients can trigger the service's intentional build-busy response.
+Retain any failed run and its trace separately; a later isolated pass does not
+identify the earlier requester or prove a concurrency defect was fixed.
+
 `make test-library` runs the independent library tests and browser checks without rerunning CAD workbench tests. Native OpenSCAD checks report skips if the tool is absent; those skips do not establish that rendering passed. Workbench source export does not require the executable. When it is available, `tests/test_mesh_interop.py` renders exported SCAD and compares simplified/scaled single and split-piece geometry, volume, and holes with the built CAD result. The library CI installs OpenSCAD and executes the required plate pipeline separately.
 
 Backend checks should exercise image parsing, geometry validation, dimensional bounds, topology, and exported-file re-imports. Browser checks should exercise the actual conversion path, edits, outdated-result handling, exports, input failures, and responsive navigation.
@@ -165,9 +182,16 @@ For tangent-circle and cap changes, begin with
 `tests/test_fidelity_math.py`. The [tapered-cap record](validation/tapered-caps.md)
 supplies independent geometry and actual CAD/DXF/STEP replay commands. Check
 line-anchor invariance and the exported three-point arc, not only the stored
-radius or solid validity. The repair covers constrained tangent geometry; the
-remaining [free-arc representation limitation](architecture.md#remaining-free-arc-representation-limit)
-also matters when reviewing blur correction or radius equalisation.
+radius or solid validity.
+
+For final assembly changes, add `tests/test_arc_joins.py` and
+`tests/test_arc_join_recovery.py`. The
+[canonical-assembly record](validation/canonical-arcs.md) covers circle identity,
+global ordered joins, guarded ambiguity and per-boundary recovery. Preserve the
+separation between initial canonical-first/proxy eligibility and final export
+construction. Check major arcs, source traversal, free near-contact refusal,
+and STEP/DXF/SVG geometry after radius changes. An unresolved candidate must
+not silently become another circle or contribute discarded radius/snap claims.
 
 For the continuous response-domain solver, run the two focused test files and
 its independent oracle, then replay the retained study as described in

@@ -125,9 +125,17 @@ do not mix pixel and millimeter coordinates within a profile. See
 An API arc has `kind: "arc"` and `start`, `mid`, `end` coordinate pairs; those
 three points define its circle and sweep. It has no separate centre/radius
 fields. Build validation checks that supplied boundary and its polygon, rather
-than the internal fit that preceded trace correction. Review the
-[free-arc stage limitation](architecture.md#remaining-free-arc-representation-limit)
-when comparing a fitted radius with an exported three-point arc.
+than the internal fit that preceded trace correction. The trace path now checks
+[circle-consistent final assembly](architecture.md#circle-consistent-final-assembly)
+before returning fitted arcs. Unresolved joins recover per boundary as traced
+polylines, with warnings and reference notes; other boundaries may remain
+analytic. This changes neither the arc schema nor the meaning of the build
+API's separate primitive/polygon validation.
+
+If the recovered outline cannot form a valid profile, tracing returns 422 with
+a recovery message. This is not a sheet-finding failure and is not converted
+to ordinary tracing by `fallback=true`. Correct the capture or explicitly choose
+ordinary tracing; do not treat an initial eligibility proxy as an exported arc.
 
 The browser's saved project recipe is not a `/api/build` request: it can contain
 format-version and browser-only calibration/height fields that the strict API

@@ -540,20 +540,46 @@ movement larger than the fit tolerance leaves the constraint unresolved.
 Those are arithmetic/representation checks, not physical uncertainty bounds.
 Roundoff-level parallel directions retain their separate constant-width cap model.
 
-These constraints do not repair every free arc. The current generic blur
-correction can change a free circle's stored radius while boundary assembly
-still uses the feet of its neighbouring lines as endpoints. Those endpoints
-and the radius-derived midpoint can describe a different three-point circle.
-The [tapered-cap record](validation/tapered-caps.md#regression-scope-and-remaining-work)
-retains this separate limitation; a valid solid or an initial source-support
-check does not resolve it.
+## Circle-consistent joins and minimum-edit cycles
 
-A consistent future join must place the endpoints on the declared circle. For
-fixed centre `C`, radius `R` and a unit line direction `d`, let `h` be the
-perpendicular distance from `C` to the line. There are no intersections when
-`h > R`, one tangent join when `h = R`, and two candidates
-`foot(C) ± d sqrt(R²-h²)` when `h < R`. Original span/traversal evidence and the
-major/minor sector must therefore be retained; an absent or ambiguous join
-cannot be resolved by merely renaming the exported radius. This is a repair
-requirement, not an implemented branch-selection algorithm or a physical
-blur-accuracy claim.
+The [canonical-arc candidate](validation/canonical-arcs.md) repairs the separate
+free-arc representation defect retained in the [tapered-cap record](validation/tapered-caps.md#regression-scope-and-remaining-work).
+For fixed centre `C`, radius `R`, unit line direction `d` and perpendicular
+distance `h`, intersections are absent for `h > R`, tangent for `h = R`, and
+`F ± s d` for `h < R`, where `F` is the perpendicular foot and
+`s = sqrt((R-h)(R+h))`. The product form avoids cancellation in `R²-h²`.
+Near contact, `ds/dR = R/s`: tiny distance errors can produce square-root-scale
+endpoint changes. A linear radial guard is not an endpoint-accuracy guarantee.
+
+Ordered source endpoints are frozen after fitting/trimming; signed source sweep
+and an interior angular witness preserve traversal and major arcs. For one
+source endpoint `P`, the squared endpoint-displacement objective has reduced
+costs `±2s d·(F-P)` after removing the candidate-independent terms. Both adjacent
+primitives contribute a witness at each join. A cyclic dynamic program enforces
+line progress and arc winding while minimizing additive score bounds. A winner
+must have an upper score below every distinct competitor's lower score.
+Numerically unresolved compatibility remains a competitor; it cannot be
+silently discarded to manufacture uniqueness. Work limits retain unknowns.
+
+These are engineering arithmetic guards, not certified exact constructions or
+physical uncertainty bounds. A narrow observed-tangent normalization exists
+only for prescribed tangent constraints and an explicit design-intent attempt
+whose original circle already reaches both lines to roundoff precision. Free
+near-contact cases remain unresolved unless represented tangency is exact.
+The selected three-point circle is checked in local coordinates against stored
+`C,R`; the complete boundary still needs its separate validity check.
+
+Source partition endpoints include blurred transitions. Their unique minimum
+is only an algorithmic choice. Hard containment of all old arc angles is also
+incorrect: changing a radius at a fixed chord legitimately trims angular
+support. Finite Gaussian D-shape controls retain both polyline outcomes and
+nonzero shape error; consistent exports do not qualify a blur model or camera.
+
+The distinction between predicates and constructions follows established
+computational geometry practice. [Shewchuk's robust-predicate work](https://www.cs.cmu.edu/~quake/robust.html)
+explains why near-zero geometric tests require care; the
+[CGAL circular-kernel design](https://doc.cgal.org/latest/Circular_kernel_2/index.html)
+separates circle/arc objects and intersection constructions and provides an
+exact circular kernel. This implementation uses neither CGAL nor that exact
+construction guarantee. No dependency or physical calibration follows from
+these references.

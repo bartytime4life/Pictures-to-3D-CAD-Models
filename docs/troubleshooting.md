@@ -33,6 +33,16 @@ design-intent correction disagrees. Use ordinary tracing with measured scale or
 rebuild critical features in CAD when needed. Turning off design-intent snapping
 does not disable analytic fitting, blur correction or the initial support check.
 
+Final assembly also keeps an affected boundary as a traced outline when its
+fitted joins cannot be resolved. Read the named boundary and reason in the
+warnings or trace notes. Sheet scale/corrections and other accepted fitted
+boundaries remain; radius/design notes and fitted counts describe accepted
+final geometry. If the retained outline cannot form a valid profile, tracing
+returns a specific recovery error rather than treating the sheet as missing.
+The previous project remains available after a failed trace.
+See [canonical-arc behavior](validation/canonical-arcs.md) and
+[critical curve checks](exports.md#verify-critical-arc-geometry).
+
 An **estimated radius resolution** note is conditional on the assumed blur;
 it does not bound every physical fillet. A **fit could not settle** note means
 the radius search is unresolved. Measure fit-critical small fillets or rebuild
@@ -42,7 +52,8 @@ radius evidence. See [corner-resolution limits](validation/sharp-corner-resoluti
 | Symptom | Likely cause | Next action |
 | --- | --- | --- |
 | Width is correct but height is wrong | Perspective, image distortion, or a reference width that does not match the full horizontal span. | Review [calibration](capture-guide.md), retake front-on, and compare a second physical measurement. |
-| A fitted arc or its join disagrees even though the solid opens correctly | Curve fitting or later correction can change local geometry; a remaining free-arc export limitation can also change the circle represented after blur correction. | Measure the STEP/DXF radius, centre and joins in CAD against the real part. Rebuild critical curves from reviewed dimensions if needed; turning off **Recover design intent** alone does not resolve this path. See [fitted-curve checks](exports.md#verify-critical-arc-geometry). |
+| A fitted-join warning says a boundary was kept as a traced outline | The fitted curves nearly touch, do not intersect, have ambiguous joins, lack source evidence or exceed numerical/work limits. | Review the named outer boundary or hole against the photograph and reserved dimensions. Other accepted fitted boundaries remain. Rebuild a critical curve in CAD from reviewed measurements when needed; enabling snapping is a design choice, not a guaranteed repair. |
+| A fitted curve disagrees with the real part even though the solid opens correctly | The capture or fitting model may not match the physical boundary; valid digital geometry does not establish physical accuracy. | Measure the actual STEP/DXF radius, centre and joins against the real part. Rebuild critical curves from reviewed dimensions if needed. See [fitted-curve checks](exports.md#verify-critical-arc-geometry). |
 | Thickness does not match the part | The app uses the entered thickness, not a thickness inferred from the photo. | Measure and enter the constant thickness separately. |
 | Invalid profile or solid | Boundaries intersect, touch incorrectly, or form unsupported topology. | Simplify the source, adjust tracing, and inspect small features or near-touching holes. |
 | Build is busy | Another geometry conversion is using the bounded worker. | Let it finish, then retry. Repeated rapid submissions will not speed it up. |

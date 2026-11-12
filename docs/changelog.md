@@ -3,6 +3,19 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Circle-consistent arc joins and recovery — November 12, 2026
+
+- Construct final line/arc joins on the stored circles. A bounded cyclic search
+  preserves source traversal and refuses unresolved alternatives.
+- Keep only an affected source boundary as a traced outline when a join is
+  unavailable, with explicit saved notes and warnings; report radii only for
+  accepted analytic geometry. Invalid recovery returns actionable guidance.
+- Preserve initial eligibility so correction can still recover supported arcs;
+  add independent circle, minor/major chord, actual-fit, finite-blur and native
+  export controls. Record the [complete evidence and documentation review](validation/canonical-arcs.md).
+- Align usage, API, engineering, recovery and export guides; preserve historical
+  results and companion-library artifacts. Physical accuracy remains unqualified.
+
 ## Documentation review through PR #70 — November 12, 2026
 
 - Align the source/review snapshot with published PR #70 and refresh its exact-head

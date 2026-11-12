@@ -4,12 +4,15 @@ This page connects the workbench's recorded design reviews. It is not a claim th
 older screenshots, test totals or runtime observations validate the current
 checkout. Current source and regression checks are recorded separately in
 [project status](docs/project-status.md) and the
-[latest geometry validation](docs/validation/tapered-caps.md).
-The new tangent-geometry candidate has its own source-bound browser regression;
-the earlier Gaussian developer-only extension has no fresh browser run. The
+[latest geometry validation](docs/validation/canonical-arcs.md).
+The join-repair candidate retains the existing interface controls and uses the
+existing warning surface for retained outlines. Its regression evidence is
+recorded separately from the earlier design captures below: all 74 scenarios
+pass in the isolated comparison, while the earlier two build-busy failures
+remain preserved without an attributed requester. The preceding
 [documentation review through PR #70](docs/validation/documentation-pr70.md)
-updates the guides and records the remaining arc limitation; it adds no new
-visual, browser or accessibility acceptance result.
+retains its historical arc limitation and checks. No new visual-design or
+accessibility acceptance is inferred from a geometry regression.
 
 ## Latest recorded workbench review — November 11, 2026
 

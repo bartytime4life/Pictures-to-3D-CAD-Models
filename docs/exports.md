@@ -31,11 +31,24 @@ After import, check the bounding-box width, height, thickness, number of solids,
 
 For fit-critical curves, measure the actual STEP or DXF radius, centre position,
 hole spacing and joins between arcs and lines in CAD. Overall dimensions and a
-valid solid do not check every curve. A remaining free-arc limitation can make
-the exported three-point arc describe a different circle from the one recorded
-during blur correction, including with **Recover design intent** turned off.
-The [tapered-cap repair](validation/tapered-caps.md#regression-scope-and-remaining-work)
-does not resolve that separate path.
+valid solid do not check every curve.
+
+Final arc assembly preserves the final fitted centre and radius. It chooses
+shared endpoints using the source-end evidence and a uniquely resolved
+endpoint-movement rule; see [the assembly method](architecture.md#circle-consistent-final-assembly).
+This is a digital construction rule, not evidence that the fitted circle matches
+the physical part.
+
+Nearly touching or disjoint curves, ambiguous joins, missing source evidence,
+and numerical or work limits can leave that construction unresolved. The
+affected boundary is then kept as a traced outline with an explicit notice,
+instead of emitting an arc on a different circle. Other accepted analytic
+boundaries, including fitted holes, remain available with the sheet scale and
+corrections. The fitted counts and radius/design notes refer to accepted final
+geometry. A retained boundary exports as straight segments and has no accepted
+analytic radius. This also applies with **Recover design intent** turned off.
+The [canonical-arc record](validation/canonical-arcs.md) separates the repair,
+retained cases and remaining model limits.
 
 Compare these features with independent physical measurements. If they disagree,
 rebuild the critical curves in CAD from reviewed dimensions, or use an ordinary
