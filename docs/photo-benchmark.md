@@ -136,14 +136,14 @@ This report is the `--example` folder: three **rendered** photos of the test pla
 | Outline width | 70.00 | 3 | +0.003 | 0.009 | +0.011 |  |
 | Ø22 | 22.00 | 3 | -0.002 | 0.004 | -0.005 |  |
 | Ø6 (×4) | 6.00 | 12 | -0.004 | 0.001 | -0.004 |  |
-| Opening 24 × 8 length | 24.00 | 3 | -0.004 | 0.004 | -0.007 |  |
+| Opening 24 × 8 length | 24.00 | 3 | -0.005 | 0.009 | -0.015 |  |
 | Opening 24 × 8 width | 8.00 | 3 | -0.005 | 0.009 | -0.015 |  |
 | R8 (×4) | 8.00 | 12 | -0.002 | 0.008 | -0.014 |  |
 | Centres 96 | 96.00 | 3 | +0.003 | 0.006 | +0.007 |  |
 | Centres 50 | 50.00 | 3 | +0.001 | 0.003 | +0.004 |  |
 | Centres 108.24 | 108.24 | 3 | +0.003 | 0.007 | +0.010 |  |
 
-> Fitted scale term +0.002 % (SD 0.006 between photos); edge term +0.002 mm (SD 0.001 between photos), positive when boundaries are found outside the material. In-sample residual: 0.003 mm RMS. These diagnostic terms do not identify physical causes or predict held-out error.
+> Fitted scale term +0.002 % (SD 0.007 between photos); edge term +0.002 mm (SD 0.001 between photos), positive when boundaries are found outside the material. In-sample residual: 0.003 mm RMS. These diagnostic terms do not identify physical causes or predict held-out error.
 
 | Photo | Edge blur (mm) | Sheet proportions (%) | Worst error (mm) | Result |
 | --- | ---: | ---: | ---: | --- |

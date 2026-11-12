@@ -897,8 +897,9 @@ def fit_fillets(points, prims, tol, sigma=0.0):
                 continue  # same-direction neighbours: not an end cap
             o1, o2 = float(c1 @ n1), float(c2 @ n1)
             mid = n1 * (o1 + o2) / 2
-            p.data["c"] = tuple(mid + d1 * float((old_c - mid) @ d1))
-            p.data["r"] = abs(o1 - o2) / 2
+            r = abs(o1 - o2) / 2
+            p.data["c"] = tuple(mid + d1 * _end_cap_axial(span_points(points, *p.span), mid, d1, n1, o1, o2, r, float((old_c - mid) @ d1), tol, sigma))
+            p.data["r"] = r
             p.data["end_cap"] = True
             continue
         best = None
@@ -974,6 +975,36 @@ def fit_fillets(points, prims, tol, sigma=0.0):
             p.data["sharp"] = True
             l2.data["sharp_bound"] = max(l2.data.get("sharp_bound", 0.0), bound)
     prims[:] = [p for p in prims if not p.data.get("sharp")]
+
+
+def _end_cap_axial(seg, mid, d, n, o1, o2, r, start, tol, sigma):
+    """Where a slot end cap's centre lies along the slot's mid-line (mid + d x).
+
+    The radius is fixed: half the spacing of the two side lines, which blur does not
+    bias. A free circle fit would couple the centre's place along the axis with its
+    own radius, so an error that differs between the cap's flanks (one traced on a
+    thick part's top edge, the other beside a visible wall) moves the centre along the
+    axis. With the radius fixed, the cap's tip places it. As for a fillet, the points
+    are fitted with the blurred radius r - s(r), leaving out those within 2.5 sigma
+    along the arc of the tangent points, which lie (2.5 sigma)^2 / (2r) off the lines.
+    """
+    clear = max(tol, 3.125 * sigma**2 / r) if sigma > 0 else tol
+    offsets = seg @ n
+    keep = (np.abs(offsets - o1) > clear) & (np.abs(offsets - o2) > clear)
+    seg = seg[keep] if keep.sum() >= 5 else seg
+    if len(seg) < 3:
+        return start
+    shrink = blur_shrink(r, sigma)[0] if sigma > 0 else 0.0
+    x = start
+    for _ in range(20):
+        delta = seg - (mid + d * x)
+        rho = np.maximum(np.linalg.norm(delta, axis=1), 1e-12)
+        jac = -(delta @ d) / rho
+        step = -float(jac @ (rho - (r - shrink))) / max(float(jac @ jac), 1e-12)
+        x += step
+        if abs(step) < 1e-10:
+            break
+    return float(x) if abs(x - start) < r else start
 
 
 def _foot(line, point):

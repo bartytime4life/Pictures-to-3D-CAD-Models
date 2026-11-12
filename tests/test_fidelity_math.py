@@ -544,6 +544,60 @@ def test_the_camera_height_makes_thick_holes_round_again():
     assert edges.roundness_focal(holes[3:], pose_at, thickness, diagonal, gate=0.03) is None
 
 
+def traced_slot(rng, r=32.0, half=64.0, sigma=2.3, side=0.0, noise=0.0, corr=4, step=0.5):
+    """The traced outline of a blurred slot (px): straight sides exact, end caps drawn
+    in by the blur shrink, one whole side (its line and both caps' flanks) moved out by
+    `side`, and noise along the normal correlated over `corr` points."""
+    shrink = fitting.blur_shrink(r, sigma)[0]
+    pts, out = [], []
+    for x in np.arange(-half, half, step):
+        pts.append((x, -r)), out.append((0.0, -1.0))
+    for a in np.arange(-90, 90, step / r * 180 / math.pi):
+        t = math.radians(a)
+        pts.append((half + (r - shrink) * math.cos(t), (r - shrink) * math.sin(t) + side * (t > 0)))
+        out.append((math.cos(t), math.sin(t)))
+    for x in np.arange(half, -half, -step):
+        pts.append((x, r + side)), out.append((0.0, 1.0))
+    for a in np.arange(90, 270, step / r * 180 / math.pi):
+        t = math.radians(a)
+        pts.append((-half + (r - shrink) * math.cos(t), (r - shrink) * math.sin(t) + side * (math.sin(t) > 0)))
+        out.append((math.cos(t), math.sin(t)))
+    pts, out = np.array(pts), np.array(out)
+    if noise:
+        e = np.convolve(rng.normal(0, noise, len(pts) + corr), np.ones(corr) / math.sqrt(corr), "valid")[: len(pts)]
+        pts = pts + out * e[:, None]
+    return pts + np.array([400.3, 300.7])
+
+
+def slot_length_error(points, sigma=2.3, tol=0.3):
+    prims = fitting.fit_ring(points, tol, 8.0)
+    fitting.snap_axes([prims])
+    fitting.refit_lines(points, prims, margin=3 * sigma)
+    fitting.fit_fillets(points, prims, tol, sigma)
+    fitting.correct_blur(prims, sigma)
+    caps = [p for p in prims if p.kind == "arc" and p.data.get("end_cap")]
+    if len(caps) != 2:
+        return None
+    return abs(caps[0].data["c"][0] - caps[1].data["c"][0]) - 128.0
+
+
+def test_slot_end_caps_are_placed_with_their_radius_fixed():
+    """Statistics of fitting._end_cap_axial. An end cap's radius is half its sides'
+    spacing; only its centre's place along the slot is fitted. A free circle fit couples
+    that place with its own radius: over a half turn the Fisher information gives the
+    axial centre a variance of 1 / (1/2 - (2/pi)^2) = 10.6 noise units, against 2 with
+    the radius fixed, 2.3 times the standard deviation. On blurred slot outlines with
+    noise of 0.05 px correlated over 4 points the length's spread is 0.017 px, where the
+    free fit gave 0.032 px. A noise-free outline is exact, and moving one whole side out
+    by 0.1 px leaves the length 0.064 px off (0.104 px with the free fit)."""
+    rng = np.random.default_rng(1)
+    assert abs(slot_length_error(traced_slot(rng))) < 1e-3
+    assert abs(slot_length_error(traced_slot(rng, side=0.1))) < 0.08
+    errors = [slot_length_error(traced_slot(rng, noise=0.05)) for _ in range(40)]
+    errors = np.array([e for e in errors if e is not None])
+    assert len(errors) >= 35 and errors.std() < 0.024 and abs(errors.mean()) < 0.01
+
+
 def test_srgb_decoding_matches_the_standard_and_inverts_its_encoding():
     """Property: tone.linear_from_encoded is the IEC 61966-2-1 decoding. It agrees with
     the renderer's separately written copy and with the standard's own values (a saved
