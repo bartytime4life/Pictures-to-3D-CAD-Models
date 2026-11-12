@@ -9,7 +9,7 @@ Use the visible error message and the **Next step** guide to identify the action
 | Unsupported or unreadable image | The bytes are not a supported image, or the file is damaged. | Export a fresh PNG, JPEG, WebP, HEIC, or AVIF; changing the extension alone does not convert a file. A HEIC that uses a codec other than HEVC is not supported. |
 | Upload rejected as too large | Encoded size or decoded image dimensions exceed the server limit. | Resize the image before uploading, keeping the relevant boundary sharp. |
 | A selected reference sheet was not used | The whole sheet could not be detected or measured, and the initial upload fell back to ordinary tracing with a warning. | Enter a measured width, or retake the whole flat sheet with all four corners visible and choose the matching **Scale reference**. A fallback does not supply sheet correction or fitted geometry. |
-| Sheet measurement is rejected even with all corners visible | Weak part-to-sheet contrast or defocus can leave too few usable edge measurements. The current generic error may emphasize the sheet instead of this cause. | Improve focus, contrast and diffuse lighting, then retry. Alternatively choose **No reference** and use a measured width. A rejected sheet measurement does not establish that ordinary tracing is suitable; review the new outline. |
+| The part's outline is not clear enough to measure, even with all sheet corners visible | The sheet and part were found, but too few outer-edge measurements survived; weak local contrast or blur can cause this. | Retake the photo in focus with stronger contrast between the part and the sheet. Keep the whole sheet visible and use diffuse lighting that leaves the boundary clear. Alternatively choose **None: I will enter a measured width** and review the ordinary trace before relying on it. |
 | Contrast threshold is disabled | Reference-sheet tracing measures contrast locally. | Review sheet choice, foreground interpretation, capture and trace notes. To use manual contrast on an ordinary silhouette, choose **None: I will enter a measured width**. |
 | No useful outline | Low contrast, a blank image, or the wrong foreground interpretation. | Check the foreground setting and threshold; retake with a plain contrasting background if necessary. |
 | Background selected as the part | Foreground and background are reversed or merge at the image edge. | Invert the foreground interpretation and leave a clear margin around the whole part. |
@@ -17,6 +17,10 @@ Use the visible error message and the **Next step** guide to identify the action
 | Hole missing or false hole present | Reflection, shadow, texture, or thresholding changed the interior boundary. | Compare the trace with the real part and adjust the threshold or capture. Do not export an unreviewed hole pattern. |
 | Outline and image appear rotated differently | Orientation or coordinate handling is incorrect. | Re-export the source with its orientation applied and report the reproducible case. The normalized display image and trace should align. |
 | Warning that orientation metadata could not be read | The file's EXIF block is damaged, so the photo was traced as stored rather than rotated. | If the part appears sideways or mirrored, rotate the photo or re-export it with its orientation applied, then trace again. |
+
+The [weak-edge recovery check](validation/contrast-recovery.md) records this
+specific reference-sheet failure and subsequent successful tracing. Its guidance
+does not make an unclear capture measurable or establish dimensional accuracy.
 
 ## Scale and geometry problems
 

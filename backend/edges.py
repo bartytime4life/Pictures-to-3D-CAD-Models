@@ -216,7 +216,12 @@ def subpixel_rings(mask, g, ppm):
         # Keep the complete classified boundary as coverage evidence. Rejected
         # sub-pixel profiles are missing measurements, not observed straight chords.
         first.append((i == outer_index, moved[keep], ring, np.flatnonzero(keep)))
-    outer = next(points for is_outer, points, _, _ in first if is_outer)
+    outer = next((points for is_outer, points, _, _ in first if is_outer), None)
+    if outer is None:
+        raise EdgeError(
+            "The part's outline is not clear enough to measure. Retake the photo in focus "
+            "with stronger contrast between the part and the sheet."
+        )
     _, normals = ring_normals(outer)
     sigma = edge_sigma(g, outer[::4], normals[::4])
     half = max(4.0, 3.5 * sigma)
