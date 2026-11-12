@@ -41,6 +41,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Understand initial fitted-boundary coverage | [Fit-support repair and evidence](validation/fit-support.md) |
 | Understand weak-edge refusal and recovery | [Contrast-recovery validation](validation/contrast-recovery.md) |
 | Understand arc-sector preservation after fillet movement | [Fillet-sweep repair](validation/fillet-sweep.md) |
+| Understand tangent geometry for tapered rounded ends | [Tapered-cap repair, exact geometry and native exports](validation/tapered-caps.md) |
 | Interpret sharp-corner radius estimates and unresolved searches | [Corner-resolution evidence](validation/sharp-corner-resolution.md) |
 | Investigate radius compatibility under explicit fixed-model bounds | [Conditional corner CLI](corner-feasibility.md), [independent checks](validation/corner-feasibility.md) |
 | Include bounded blur uncertainty without mixing per-point fits | [Version-2 joint domains](corner-feasibility.md#joint-blur-domains-version-2), [projection checks](validation/corner-blur-domains.md) |
@@ -61,7 +62,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |
 | Run a benchmark with measured photos | [Photo benchmark](photo-benchmark.md) |
 | Review completed checks | [Validation overview](validation.md), [design QA](../design-qa.md) |
-| Check current documentation coverage and source consistency | [Current coverage](validation/gaussian-response-domains.md#documentation-coverage), [earlier complete review through PR #66](validation/documentation-response-state.md), [response implementation coverage](validation/response-calibration.md#documentation-coverage) |
+| Check current documentation coverage and source consistency | [Current coverage](validation/tapered-caps.md#documentation-coverage), [earlier complete review through PR #66](validation/documentation-response-state.md), [response implementation coverage](validation/response-calibration.md#documentation-coverage) |
 | Interpret incomplete hosted runs and the overall job limit | [Runtime-budget evidence](validation/ci-runtime-budget.md), [exact-head CI status](project-status.md#evidence-by-scope) |
 | Review the recent interface changes | [Guided-workbench audit](validation/guided-workbench.md) |
 | Review scope and future work | [Roadmap](roadmap.md), [change log](changelog.md) |

@@ -221,6 +221,20 @@ the oracle's repository-root lookup; redirecting stdout alone does not relocate
 its sidecar. The oracle checks finite-data crossing selection, not physical feature identity.
 Its [verification record](validation/edge-crossings.md) explains the population.
 
+## Tangent-circle geometry and native-export replay
+
+```bash
+.venv/bin/python studies/verification/tapered-cap-conditioning-v1.py --output .local/tapered-conditioning-new.json
+.venv/bin/python studies/verification/tapered-cap-exports-v1.py --output .local/tapered-exports-new.json --artifacts .local/tapered-exports-new
+```
+
+Both commands require fresh outputs. The export replay constructs independent
+exact profiles, then runs the actual fitting chain, Profile validation, CAD
+extrusion, STEP readback and DXF checks. Its artifact directory retains synthetic
+geometry and native files. Read the [complete record](validation/tapered-caps.md)
+for baseline failures, conditioning limits and how to select an explicit prior
+source checkout. These checks require no personal photos or running service.
+
 ## Figures
 
 Matplotlib is optional and is not installed by the workbench setup. The published

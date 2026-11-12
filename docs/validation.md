@@ -6,7 +6,7 @@ CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
 For a concise source/review snapshot, use [project status](project-status.md).
-The [current coverage](validation/gaussian-response-domains.md#documentation-coverage)
+The [current coverage](validation/tapered-caps.md#documentation-coverage)
 includes continuous shared Gaussian domains, the bounded-input response
 extension and their independent checks.
 The [documentation review through PR #66](validation/documentation-response-state.md)
@@ -27,6 +27,13 @@ The [earlier PR #49 documentation follow-up](validation/documentation-current-st
 retains its source, executable API example and completed checks.
 
 ## Current workbench evidence — November 12, 2026
+
+The [tapered-cap repair](validation/tapered-caps.md) preserves the actual tangent
+lines of a rounded end. A small real taper no longer becomes a constant-width
+slot. Stable local coordinates and geometry-aware iteration stopping keep
+line-anchor choices and tiny radius increments from silently moving its centre.
+Independent exact profiles, actual CAD/DXF/STEP exports and retained numerical
+refusals separate digital geometry correctness from photo accuracy.
 
 The [continuous Gaussian-domain developer extension](validation/gaussian-response-domains.md)
 retains every region of one supplied offset/sigma prior in accepted, excluded

@@ -4,8 +4,9 @@ This page connects the workbench's recorded design reviews. It is not a claim th
 older screenshots, test totals or runtime observations validate the current
 checkout. Current source and regression checks are recorded separately in
 [project status](docs/project-status.md) and the
-[latest developer validation](docs/validation/gaussian-response-domains.md).
-No fresh browser or accessibility run accompanies that developer-only change.
+[latest geometry validation](docs/validation/tapered-caps.md).
+The new tangent-geometry candidate has its own source-bound browser regression;
+the earlier Gaussian developer-only extension has no fresh browser run.
 
 ## Latest recorded workbench review — November 11, 2026
 

@@ -1,0 +1,3149 @@
+{
+  "format": "pictures-to-cad-tapered-cap-conditioning",
+  "version": 1,
+  "verification": "passed",
+  "source_sha256_before": {
+    "studies/verification/tapered-cap-conditioning-v1.py": "2f44d573562101f553e03b1d8c3a4b3bf41df1a5489ad0b7d62cfcae8e889dc0",
+    "backend/fitting.py": "27f1009199fb830ed3d3ac6207082958618431bc97417b2b64afea8425a235ae",
+    "backend/sheet.py": "a086d7216256726a0e392bd98cbdb1274f5cb5eb096802c17c805349a7747e31"
+  },
+  "source_sha256_after": {
+    "studies/verification/tapered-cap-conditioning-v1.py": "2f44d573562101f553e03b1d8c3a4b3bf41df1a5489ad0b7d62cfcae8e889dc0",
+    "backend/fitting.py": "27f1009199fb830ed3d3ac6207082958618431bc97417b2b64afea8425a235ae",
+    "backend/sheet.py": "a086d7216256726a0e392bd98cbdb1274f5cb5eb096802c17c805349a7747e31"
+  },
+  "head": "0d8bd37633900f4f88200be13bd5309d28ca58f2",
+  "in_memory_control": {
+    "base_source_sha256": "27f1009199fb830ed3d3ac6207082958618431bc97417b2b64afea8425a235ae",
+    "altered_source_sha256": "cac0106fb7d90315795dbf3194064dadc3907eac777dac9e9e12c6a683943cfe",
+    "replacement_from": "if abs(r - previous_r) * max(1.0, float(np.linalg.norm(v))) < 1e-10:",
+    "replacement_to": "if abs(step) < 1e-10:",
+    "all_other_source_preserved": true
+  },
+  "runtime": {
+    "python": "3.12.3",
+    "numpy": "2.5.4",
+    "seconds": 0.05507428990676999
+  },
+  "population": {
+    "cases": 54,
+    "methods_per_case": 2,
+    "angles": [
+      0.03490658503988659,
+      0.0001,
+      1e-06,
+      1e-08,
+      1e-09,
+      1e-10,
+      1e-11,
+      1e-12,
+      1e-13
+    ],
+    "translations": [
+      [
+        400.0,
+        20.0
+      ],
+      [
+        100000.0,
+        -100000.0
+      ]
+    ],
+    "frames": [
+      [
+        false,
+        0.0
+      ],
+      [
+        true,
+        0.0
+      ],
+      [
+        false,
+        0.37
+      ]
+    ]
+  },
+  "settings": {
+    "true_radius": 10.0,
+    "old_radius": "10+0.75*theta",
+    "arc_points": 501,
+    "line_anchor_distance": 200.0,
+    "tolerance": 0.03,
+    "sigma": 0.0
+  },
+  "summary": {
+    "retained_case_pairs": 54,
+    "executed_case_pairs": 54,
+    "method_execution_failures": 0,
+    "checks": 7,
+    "failed_checks": 0,
+    "current_maximum_centre_error": 0.0017763568394002505,
+    "legacy_maximum_centre_error": 0.12416648051871321,
+    "current_constrained_cases": 46,
+    "current_retained_cases": 8
+  },
+  "checks": [
+    {
+      "name": "all_54_case_pairs_retained_and_executed",
+      "verification": "passed"
+    },
+    {
+      "name": "no_nonparallel_fixture_forced_into_constant_width_branch",
+      "verification": "passed"
+    },
+    {
+      "name": "all_current_centre_errors_within_declared_fit_tolerance",
+      "verification": "passed"
+    },
+    {
+      "name": "current_controls_include_retained_unresolved_geometry",
+      "verification": "passed"
+    },
+    {
+      "name": "legacy_small_radius_step_causes_material_centre_error",
+      "verification": "passed"
+    },
+    {
+      "name": "spatial_step_resolves_decisive_exact_circle",
+      "verification": "passed"
+    },
+    {
+      "name": "source_unchanged_during_census",
+      "verification": "passed"
+    }
+  ],
+  "rows": [
+    {
+      "index": 0,
+      "config": {
+        "theta": 0.03490658503988659,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.026179938779915,
+            "radius": 10.0,
+            "centre": [
+              400.0,
+              20.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 1.1775968891724008e-14,
+            "maximum_residual": 2.6645352591003757e-14,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 1.0178291720306409e-13,
+            "fixture_tangency_representation_error": 0.0,
+            "old_apex_subtraction_true_radius_centre_error": 3.410605131648481e-13,
+            "direct_solve_true_radius_centre_error": 0.0
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.026179938779915,
+            "radius": 10.0,
+            "centre": [
+              400.0,
+              20.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 1.1775968891724008e-14,
+            "maximum_residual": 2.6645352591003757e-14,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 1.0178291720306409e-13,
+            "fixture_tangency_representation_error": 0.0,
+            "old_apex_subtraction_true_radius_centre_error": 3.410605131648481e-13,
+            "direct_solve_true_radius_centre_error": 0.0
+          }
+        }
+      }
+    },
+    {
+      "index": 1,
+      "config": {
+        "theta": 0.03490658503988659,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": true,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.026179938779915,
+            "radius": 10.0,
+            "centre": [
+              400.0,
+              20.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 1.1775968891724008e-14,
+            "maximum_residual": 2.6645352591003757e-14,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 1.0178291720306409e-13,
+            "fixture_tangency_representation_error": 0.0,
+            "old_apex_subtraction_true_radius_centre_error": 3.410605131648481e-13,
+            "direct_solve_true_radius_centre_error": 0.0
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.026179938779915,
+            "radius": 10.0,
+            "centre": [
+              400.0,
+              20.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 1.1775968891724008e-14,
+            "maximum_residual": 2.6645352591003757e-14,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 1.0178291720306409e-13,
+            "fixture_tangency_representation_error": 0.0,
+            "old_apex_subtraction_true_radius_centre_error": 3.410605131648481e-13,
+            "direct_solve_true_radius_centre_error": 0.0
+          }
+        }
+      }
+    },
+    {
+      "index": 2,
+      "config": {
+        "theta": 0.03490658503988659,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.37
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.026179938779915,
+            "radius": 10.000000000000002,
+            "centre": [
+              365.69862960311457,
+              163.2927196981055
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 2.6805057733071613e-14,
+            "maximum_residual": 8.526512829121202e-14,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 1.0178291720306409e-13,
+            "fixture_tangency_representation_error": 7.105427357601002e-15,
+            "old_apex_subtraction_true_radius_centre_error": 1.3736832867828721e-12,
+            "direct_solve_true_radius_centre_error": 0.0
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.026179938779915,
+            "radius": 10.000000000000002,
+            "centre": [
+              365.69862960311457,
+              163.2927196981055
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 2.6805057733071613e-14,
+            "maximum_residual": 8.526512829121202e-14,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 1.0178291720306409e-13,
+            "fixture_tangency_representation_error": 7.105427357601002e-15,
+            "old_apex_subtraction_true_radius_centre_error": 1.3736832867828721e-12,
+            "direct_solve_true_radius_centre_error": 0.0
+          }
+        }
+      }
+    },
+    {
+      "index": 3,
+      "config": {
+        "theta": 0.03490658503988659,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.026179938779915,
+            "radius": 9.99999999999161,
+            "centre": [
+              100000.00000000001,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 1.4551915228366852e-11,
+            "rms": 6.073156524671902e-12,
+            "maximum_residual": 1.4262369063544611e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 1.0178291720306409e-13,
+            "fixture_tangency_representation_error": 8.565592679588008e-12,
+            "old_apex_subtraction_true_radius_centre_error": 1.877197064459324e-09,
+            "direct_solve_true_radius_centre_error": 4.94765117764473e-10
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.026179938779915,
+            "radius": 9.99999999999161,
+            "centre": [
+              100000.00000000001,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 1.4551915228366852e-11,
+            "rms": 6.073156524671902e-12,
+            "maximum_residual": 1.4262369063544611e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 1.0178291720306409e-13,
+            "fixture_tangency_representation_error": 8.565592679588008e-12,
+            "old_apex_subtraction_true_radius_centre_error": 1.877197064459324e-09,
+            "direct_solve_true_radius_centre_error": 4.94765117764473e-10
+          }
+        }
+      }
+    },
+    {
+      "index": 4,
+      "config": {
+        "theta": 0.03490658503988659,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": true,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.026179938779915,
+            "radius": 9.99999999999161,
+            "centre": [
+              100000.00000000001,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 1.4551915228366852e-11,
+            "rms": 6.073156524671902e-12,
+            "maximum_residual": 1.4262369063544611e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 1.0178291720306409e-13,
+            "fixture_tangency_representation_error": 8.565592679588008e-12,
+            "old_apex_subtraction_true_radius_centre_error": 1.877197064459324e-09,
+            "direct_solve_true_radius_centre_error": 4.94765117764473e-10
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.026179938779915,
+            "radius": 9.99999999999161,
+            "centre": [
+              100000.00000000001,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 1.4551915228366852e-11,
+            "rms": 6.073156524671902e-12,
+            "maximum_residual": 1.4262369063544611e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 1.0178291720306409e-13,
+            "fixture_tangency_representation_error": 8.565592679588008e-12,
+            "old_apex_subtraction_true_radius_centre_error": 1.877197064459324e-09,
+            "direct_solve_true_radius_centre_error": 4.94765117764473e-10
+          }
+        }
+      }
+    },
+    {
+      "index": 5,
+      "config": {
+        "theta": 0.03490658503988659,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.37
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.026179938779915,
+            "radius": 9.999999999990685,
+            "centre": [
+              129394.27775709965,
+              -57071.19136410724
+            ],
+            "centre_error_from_analytic": 2.0579515874459978e-11,
+            "rms": 8.525375492221925e-12,
+            "maximum_residual": 2.5906388145813253e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 1.0178291720306409e-13,
+            "fixture_tangency_representation_error": 1.5411671938636573e-11,
+            "old_apex_subtraction_true_radius_centre_error": 1.145911351929537e-09,
+            "direct_solve_true_radius_centre_error": 5.64766185425834e-10
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.026179938779915,
+            "radius": 9.999999999990685,
+            "centre": [
+              129394.27775709965,
+              -57071.19136410724
+            ],
+            "centre_error_from_analytic": 2.0579515874459978e-11,
+            "rms": 8.525375492221925e-12,
+            "maximum_residual": 2.5906388145813253e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 1.0178291720306409e-13,
+            "fixture_tangency_representation_error": 1.5411671938636573e-11,
+            "old_apex_subtraction_true_radius_centre_error": 1.145911351929537e-09,
+            "direct_solve_true_radius_centre_error": 5.64766185425834e-10
+          }
+        }
+      }
+    },
+    {
+      "index": 6,
+      "config": {
+        "theta": 0.0001,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000075,
+            "radius": 10.0,
+            "centre": [
+              399.99999999998226,
+              20.0
+            ],
+            "centre_error_from_analytic": 1.77351466845721e-11,
+            "rms": 1.286383438615074e-11,
+            "maximum_residual": 1.7752910252966103e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713680280798e-11,
+            "fixture_tangency_representation_error": 1.7763568394002505e-15,
+            "old_apex_subtraction_true_radius_centre_error": 2.9103830456733704e-10,
+            "direct_solve_true_radius_centre_error": 1.779199010343291e-11
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000075,
+            "radius": 10.0,
+            "centre": [
+              399.99999999998226,
+              20.0
+            ],
+            "centre_error_from_analytic": 1.77351466845721e-11,
+            "rms": 1.286383438615074e-11,
+            "maximum_residual": 1.7752910252966103e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713680280798e-11,
+            "fixture_tangency_representation_error": 1.7763568394002505e-15,
+            "old_apex_subtraction_true_radius_centre_error": 2.9103830456733704e-10,
+            "direct_solve_true_radius_centre_error": 1.779199010343291e-11
+          }
+        }
+      }
+    },
+    {
+      "index": 7,
+      "config": {
+        "theta": 0.0001,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": true,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000075,
+            "radius": 10.0,
+            "centre": [
+              399.99999999998226,
+              20.0
+            ],
+            "centre_error_from_analytic": 1.77351466845721e-11,
+            "rms": 1.286383438615074e-11,
+            "maximum_residual": 1.7752910252966103e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713680280798e-11,
+            "fixture_tangency_representation_error": 1.7763568394002505e-15,
+            "old_apex_subtraction_true_radius_centre_error": 2.9103830456733704e-10,
+            "direct_solve_true_radius_centre_error": 1.779199010343291e-11
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000075,
+            "radius": 10.0,
+            "centre": [
+              399.99999999998226,
+              20.0
+            ],
+            "centre_error_from_analytic": 1.77351466845721e-11,
+            "rms": 1.286383438615074e-11,
+            "maximum_residual": 1.7752910252966103e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713680280798e-11,
+            "fixture_tangency_representation_error": 1.7763568394002505e-15,
+            "old_apex_subtraction_true_radius_centre_error": 2.9103830456733704e-10,
+            "direct_solve_true_radius_centre_error": 1.779199010343291e-11
+          }
+        }
+      }
+    },
+    {
+      "index": 8,
+      "config": {
+        "theta": 0.0001,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.37
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000075,
+            "radius": 9.999999999999996,
+            "centre": [
+              365.698629603098,
+              163.29271969809906
+            ],
+            "centre_error_from_analytic": 1.7744800150908265e-11,
+            "rms": 1.2862013227714092e-11,
+            "maximum_residual": 1.7768897464520705e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713680283848e-11,
+            "fixture_tangency_representation_error": 0.0,
+            "old_apex_subtraction_true_radius_centre_error": 1.0719317264193418e-09,
+            "direct_solve_true_radius_centre_error": 0.0
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000075,
+            "radius": 9.999999999999996,
+            "centre": [
+              365.698629603098,
+              163.29271969809906
+            ],
+            "centre_error_from_analytic": 1.7744800150908265e-11,
+            "rms": 1.2862013227714092e-11,
+            "maximum_residual": 1.7768897464520705e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713680283848e-11,
+            "fixture_tangency_representation_error": 0.0,
+            "old_apex_subtraction_true_radius_centre_error": 1.0719317264193418e-09,
+            "direct_solve_true_radius_centre_error": 0.0
+          }
+        }
+      }
+    },
+    {
+      "index": 9,
+      "config": {
+        "theta": 0.0001,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000075,
+            "radius": 10.000000000000977,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 4.594602482092033e-12,
+            "maximum_residual": 1.0683010032153106e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713680280798e-11,
+            "fixture_tangency_representation_error": 9.769962616701378e-13,
+            "old_apex_subtraction_true_radius_centre_error": 3.123423084616661e-07,
+            "direct_solve_true_radius_centre_error": 1.9543222151696682e-08
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000075,
+            "radius": 10.000000000000977,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 4.594602482092033e-12,
+            "maximum_residual": 1.0683010032153106e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713680280798e-11,
+            "fixture_tangency_representation_error": 9.769962616701378e-13,
+            "old_apex_subtraction_true_radius_centre_error": 3.123423084616661e-07,
+            "direct_solve_true_radius_centre_error": 1.9543222151696682e-08
+          }
+        }
+      }
+    },
+    {
+      "index": 10,
+      "config": {
+        "theta": 0.0001,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": true,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000075,
+            "radius": 10.000000000000977,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 4.594602482092033e-12,
+            "maximum_residual": 1.0683010032153106e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713680280798e-11,
+            "fixture_tangency_representation_error": 9.769962616701378e-13,
+            "old_apex_subtraction_true_radius_centre_error": 3.123423084616661e-07,
+            "direct_solve_true_radius_centre_error": 1.9543222151696682e-08
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000075,
+            "radius": 10.000000000000977,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 4.594602482092033e-12,
+            "maximum_residual": 1.0683010032153106e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713680280798e-11,
+            "fixture_tangency_representation_error": 9.769962616701378e-13,
+            "old_apex_subtraction_true_radius_centre_error": 3.123423084616661e-07,
+            "direct_solve_true_radius_centre_error": 1.9543222151696682e-08
+          }
+        }
+      }
+    },
+    {
+      "index": 11,
+      "config": {
+        "theta": 0.0001,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.37
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000075,
+            "radius": 9.999999999999968,
+            "centre": [
+              129394.27775709963,
+              -57071.19136410726
+            ],
+            "centre_error_from_analytic": 1.626953582672133e-11,
+            "rms": 1.8471766808658598e-11,
+            "maximum_residual": 3.8966163629083894e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713680283848e-11,
+            "fixture_tangency_representation_error": 7.887024366937112e-13,
+            "old_apex_subtraction_true_radius_centre_error": 6.234372012161006e-07,
+            "direct_solve_true_radius_centre_error": 6.404496113730532e-10
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000075,
+            "radius": 9.999999999999968,
+            "centre": [
+              129394.27775709963,
+              -57071.19136410726
+            ],
+            "centre_error_from_analytic": 1.626953582672133e-11,
+            "rms": 1.8471766808658598e-11,
+            "maximum_residual": 3.8966163629083894e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713680283848e-11,
+            "fixture_tangency_representation_error": 7.887024366937112e-13,
+            "old_apex_subtraction_true_radius_centre_error": 6.234372012161006e-07,
+            "direct_solve_true_radius_centre_error": 6.404496113730532e-10
+          }
+        }
+      }
+    },
+    {
+      "index": 12,
+      "config": {
+        "theta": 1e-06,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000075,
+            "radius": 10.0,
+            "centre": [
+              400.0,
+              20.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 1.2648490546243932e-14,
+            "maximum_residual": 2.842170943040401e-14,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136788006494e-09,
+            "fixture_tangency_representation_error": 1.7763568394002505e-15,
+            "old_apex_subtraction_true_radius_centre_error": 2.2351741790771484e-08,
+            "direct_solve_true_radius_centre_error": 3.552713678800501e-09
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000075,
+            "radius": 10.0,
+            "centre": [
+              400.0,
+              20.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 1.2648490546243932e-14,
+            "maximum_residual": 2.842170943040401e-14,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136788006494e-09,
+            "fixture_tangency_representation_error": 1.7763568394002505e-15,
+            "old_apex_subtraction_true_radius_centre_error": 2.2351741790771484e-08,
+            "direct_solve_true_radius_centre_error": 3.552713678800501e-09
+          }
+        }
+      }
+    },
+    {
+      "index": 13,
+      "config": {
+        "theta": 1e-06,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": true,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000075,
+            "radius": 10.0,
+            "centre": [
+              400.0,
+              20.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 1.2648490546243932e-14,
+            "maximum_residual": 2.842170943040401e-14,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136788006494e-09,
+            "fixture_tangency_representation_error": 1.7763568394002505e-15,
+            "old_apex_subtraction_true_radius_centre_error": 2.2351741790771484e-08,
+            "direct_solve_true_radius_centre_error": 3.552713678800501e-09
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000075,
+            "radius": 10.0,
+            "centre": [
+              400.0,
+              20.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 1.2648490546243932e-14,
+            "maximum_residual": 2.842170943040401e-14,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136788006494e-09,
+            "fixture_tangency_representation_error": 1.7763568394002505e-15,
+            "old_apex_subtraction_true_radius_centre_error": 2.2351741790771484e-08,
+            "direct_solve_true_radius_centre_error": 3.552713678800501e-09
+          }
+        }
+      }
+    },
+    {
+      "index": 14,
+      "config": {
+        "theta": 1e-06,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.37
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000075,
+            "radius": 10.0,
+            "centre": [
+              365.69862960311457,
+              163.2927196981055
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 2.6261892029639196e-14,
+            "maximum_residual": 9.414691248821327e-14,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136789591724e-09,
+            "fixture_tangency_representation_error": 7.105427357601002e-15,
+            "old_apex_subtraction_true_radius_centre_error": 1.3673835247940688e-07,
+            "direct_solve_true_radius_centre_error": 7.105433152216758e-09
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000075,
+            "radius": 10.0,
+            "centre": [
+              365.69862960311457,
+              163.2927196981055
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 2.6261892029639196e-14,
+            "maximum_residual": 9.414691248821327e-14,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136789591724e-09,
+            "fixture_tangency_representation_error": 7.105427357601002e-15,
+            "old_apex_subtraction_true_radius_centre_error": 1.3673835247940688e-07,
+            "direct_solve_true_radius_centre_error": 7.105433152216758e-09
+          }
+        }
+      }
+    },
+    {
+      "index": 15,
+      "config": {
+        "theta": 1e-06,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000075,
+            "radius": 9.9999999999965,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 5.182070260786283e-12,
+            "maximum_residual": 1.2891021583527618e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136788006494e-09,
+            "fixture_tangency_representation_error": 3.5011993304578937e-12,
+            "old_apex_subtraction_true_radius_centre_error": 9.480863809585571e-06,
+            "direct_solve_true_radius_centre_error": 7.0023961598053575e-06
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000075,
+            "radius": 9.9999999999965,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 5.182070260786283e-12,
+            "maximum_residual": 1.2891021583527618e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136788006494e-09,
+            "fixture_tangency_representation_error": 3.5011993304578937e-12,
+            "old_apex_subtraction_true_radius_centre_error": 9.480863809585571e-06,
+            "direct_solve_true_radius_centre_error": 7.0023961598053575e-06
+          }
+        }
+      }
+    },
+    {
+      "index": 16,
+      "config": {
+        "theta": 1e-06,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": true,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000075,
+            "radius": 9.9999999999965,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 5.182070260786283e-12,
+            "maximum_residual": 1.2891021583527618e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136788006494e-09,
+            "fixture_tangency_representation_error": 3.5011993304578937e-12,
+            "old_apex_subtraction_true_radius_centre_error": 9.480863809585571e-06,
+            "direct_solve_true_radius_centre_error": 7.0023961598053575e-06
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000075,
+            "radius": 9.9999999999965,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 5.182070260786283e-12,
+            "maximum_residual": 1.2891021583527618e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136788006494e-09,
+            "fixture_tangency_representation_error": 3.5011993304578937e-12,
+            "old_apex_subtraction_true_radius_centre_error": 9.480863809585571e-06,
+            "direct_solve_true_radius_centre_error": 7.0023961598053575e-06
+          }
+        }
+      }
+    },
+    {
+      "index": 17,
+      "config": {
+        "theta": 1e-06,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.37
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000075,
+            "radius": 9.999999999998968,
+            "centre": [
+              129394.27775709964,
+              -57071.19136410725
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 8.101914804466656e-12,
+            "maximum_residual": 2.3987922759260982e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136789591724e-09,
+            "fixture_tangency_representation_error": 4.064304448547773e-12,
+            "old_apex_subtraction_true_radius_centre_error": 3.099075939352776e-05,
+            "direct_solve_true_radius_centre_error": 2.060574811783729e-06
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000075,
+            "radius": 9.999999999998968,
+            "centre": [
+              129394.27775709964,
+              -57071.19136410725
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 8.101914804466656e-12,
+            "maximum_residual": 2.3987922759260982e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136789591724e-09,
+            "fixture_tangency_representation_error": 4.064304448547773e-12,
+            "old_apex_subtraction_true_radius_centre_error": 3.099075939352776e-05,
+            "direct_solve_true_radius_centre_error": 2.060574811783729e-06
+          }
+        }
+      }
+    },
+    {
+      "index": 18,
+      "config": {
+        "theta": 1e-08,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.0000000075,
+            "radius": 10.0,
+            "centre": [
+              399.9999998223643,
+              20.0
+            ],
+            "centre_error_from_analytic": 1.7763568394002505e-07,
+            "rms": 1.2885725837127983e-07,
+            "maximum_residual": 1.7763568394002505e-07,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713678800501e-07,
+            "fixture_tangency_representation_error": 1.7763568394002505e-15,
+            "old_apex_subtraction_true_radius_centre_error": 2.384185791015625e-07,
+            "direct_solve_true_radius_centre_error": 1.7763568394002505e-07
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.0000000075,
+            "radius": 10.0,
+            "centre": [
+              399.9999998223643,
+              20.0
+            ],
+            "centre_error_from_analytic": 1.7763568394002505e-07,
+            "rms": 1.2885725837127983e-07,
+            "maximum_residual": 1.7763568394002505e-07,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713678800501e-07,
+            "fixture_tangency_representation_error": 1.7763568394002505e-15,
+            "old_apex_subtraction_true_radius_centre_error": 2.384185791015625e-07,
+            "direct_solve_true_radius_centre_error": 1.7763568394002505e-07
+          }
+        }
+      }
+    },
+    {
+      "index": 19,
+      "config": {
+        "theta": 1e-08,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": true,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.0000000075,
+            "radius": 10.0,
+            "centre": [
+              399.9999998223643,
+              20.0
+            ],
+            "centre_error_from_analytic": 1.7763568394002505e-07,
+            "rms": 1.2885725837127983e-07,
+            "maximum_residual": 1.7763568394002505e-07,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713678800501e-07,
+            "fixture_tangency_representation_error": 1.7763568394002505e-15,
+            "old_apex_subtraction_true_radius_centre_error": 2.384185791015625e-07,
+            "direct_solve_true_radius_centre_error": 1.7763568394002505e-07
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.0000000075,
+            "radius": 10.0,
+            "centre": [
+              399.9999998223643,
+              20.0
+            ],
+            "centre_error_from_analytic": 1.7763568394002505e-07,
+            "rms": 1.2885725837127983e-07,
+            "maximum_residual": 1.7763568394002505e-07,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713678800501e-07,
+            "fixture_tangency_representation_error": 1.7763568394002505e-15,
+            "old_apex_subtraction_true_radius_centre_error": 2.384185791015625e-07,
+            "direct_solve_true_radius_centre_error": 1.7763568394002505e-07
+          }
+        }
+      }
+    },
+    {
+      "index": 20,
+      "config": {
+        "theta": 1e-08,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.37
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.0000000075,
+            "radius": 10.000000000000002,
+            "centre": [
+              365.69862943749996,
+              163.2927196338697
+            ],
+            "centre_error_from_analytic": 1.776356817011492e-07,
+            "rms": 1.2885724014049206e-07,
+            "maximum_residual": 1.776356910454524e-07,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136570534377e-07,
+            "fixture_tangency_representation_error": 0.0,
+            "old_apex_subtraction_true_radius_centre_error": 4.145954669808752e-06,
+            "direct_solve_true_radius_centre_error": 0.0
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.0000000075,
+            "radius": 10.000000000000002,
+            "centre": [
+              365.69862943749996,
+              163.2927196338697
+            ],
+            "centre_error_from_analytic": 1.776356817011492e-07,
+            "rms": 1.2885724014049206e-07,
+            "maximum_residual": 1.776356910454524e-07,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136570534377e-07,
+            "fixture_tangency_representation_error": 0.0,
+            "old_apex_subtraction_true_radius_centre_error": 4.145954669808752e-06,
+            "direct_solve_true_radius_centre_error": 0.0
+          }
+        }
+      }
+    },
+    {
+      "index": 21,
+      "config": {
+        "theta": 1e-08,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.0000000075,
+            "radius": 10.000000000006938,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 8.132268476575337e-12,
+            "maximum_residual": 1.5429435507030576e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713678800501e-07,
+            "fixture_tangency_representation_error": 6.938449814697378e-12,
+            "old_apex_subtraction_true_radius_centre_error": 0.0013873577117919922,
+            "direct_solve_true_radius_centre_error": 0.0013876899611204863
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.0000000075,
+            "radius": 10.000000000006938,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 8.132268476575337e-12,
+            "maximum_residual": 1.5429435507030576e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713678800501e-07,
+            "fixture_tangency_representation_error": 6.938449814697378e-12,
+            "old_apex_subtraction_true_radius_centre_error": 0.0013873577117919922,
+            "direct_solve_true_radius_centre_error": 0.0013876899611204863
+          }
+        }
+      }
+    },
+    {
+      "index": 22,
+      "config": {
+        "theta": 1e-08,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": true,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.0000000075,
+            "radius": 10.000000000006938,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 8.132268476575337e-12,
+            "maximum_residual": 1.5429435507030576e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713678800501e-07,
+            "fixture_tangency_representation_error": 6.938449814697378e-12,
+            "old_apex_subtraction_true_radius_centre_error": 0.0013873577117919922,
+            "direct_solve_true_radius_centre_error": 0.0013876899611204863
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.0000000075,
+            "radius": 10.000000000006938,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 8.132268476575337e-12,
+            "maximum_residual": 1.5429435507030576e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713678800501e-07,
+            "fixture_tangency_representation_error": 6.938449814697378e-12,
+            "old_apex_subtraction_true_radius_centre_error": 0.0013873577117919922,
+            "direct_solve_true_radius_centre_error": 0.0013876899611204863
+          }
+        }
+      }
+    },
+    {
+      "index": 23,
+      "config": {
+        "theta": 1e-08,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.37
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.0000000075,
+            "radius": 10.000000000006397,
+            "centre": [
+              129394.27775726526,
+              -57071.19136404302
+            ],
+            "centre_error_from_analytic": 1.776350551465806e-07,
+            "rms": 1.2885750662566688e-07,
+            "maximum_residual": 1.77629036812732e-07,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136570534377e-07,
+            "fixture_tangency_representation_error": 9.86233317235019e-12,
+            "old_apex_subtraction_true_radius_centre_error": 0.0019523866495492898,
+            "direct_solve_true_radius_centre_error": 0.001278976923797723
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.0000000075,
+            "radius": 10.000000000006395,
+            "centre": [
+              129394.27775693403,
+              -57071.19136417149
+            ],
+            "centre_error_from_analytic": 1.7763768623444063e-07,
+            "rms": 1.288580067437938e-07,
+            "maximum_residual": 1.776514615414726e-07,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136570534377e-07,
+            "fixture_tangency_representation_error": 9.86233317235019e-12,
+            "old_apex_subtraction_true_radius_centre_error": 0.0019523866495492898,
+            "direct_solve_true_radius_centre_error": 0.001278976923797723
+          }
+        }
+      }
+    },
+    {
+      "index": 24,
+      "config": {
+        "theta": 1e-09,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000000075,
+            "radius": 9.999999999999998,
+            "centre": [
+              399.99999822364316,
+              20.0
+            ],
+            "centre_error_from_analytic": 1.7763568394002505e-06,
+            "rms": 1.2885726251443403e-06,
+            "maximum_residual": 1.7763568411766073e-06,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136788005005e-06,
+            "fixture_tangency_representation_error": 1.7763568394002505e-15,
+            "old_apex_subtraction_true_radius_centre_error": 3.814697265625e-06,
+            "direct_solve_true_radius_centre_error": 1.7763568394002505e-06
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000000075,
+            "radius": 9.999999999999973,
+            "centre": [
+              399.99994848565166,
+              20.0
+            ],
+            "centre_error_from_analytic": 5.1514348342607263e-05,
+            "rms": 3.7368645225561645e-05,
+            "maximum_residual": 5.1514348369252616e-05,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136788005005e-06,
+            "fixture_tangency_representation_error": 1.7763568394002505e-15,
+            "old_apex_subtraction_true_radius_centre_error": 3.814697265625e-06,
+            "direct_solve_true_radius_centre_error": 1.7763568394002505e-06
+          }
+        }
+      }
+    },
+    {
+      "index": 25,
+      "config": {
+        "theta": 1e-09,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": true,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000000075,
+            "radius": 9.999999999999998,
+            "centre": [
+              399.99999822364316,
+              20.0
+            ],
+            "centre_error_from_analytic": 1.7763568394002505e-06,
+            "rms": 1.2885726251443403e-06,
+            "maximum_residual": 1.7763568411766073e-06,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136788005005e-06,
+            "fixture_tangency_representation_error": 1.7763568394002505e-15,
+            "old_apex_subtraction_true_radius_centre_error": 3.814697265625e-06,
+            "direct_solve_true_radius_centre_error": 1.7763568394002505e-06
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000000075,
+            "radius": 9.999999999999973,
+            "centre": [
+              399.99994848565166,
+              20.0
+            ],
+            "centre_error_from_analytic": 5.1514348342607263e-05,
+            "rms": 3.7368645225561645e-05,
+            "maximum_residual": 5.1514348369252616e-05,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136788005005e-06,
+            "fixture_tangency_representation_error": 1.7763568394002505e-15,
+            "old_apex_subtraction_true_radius_centre_error": 3.814697265625e-06,
+            "direct_solve_true_radius_centre_error": 1.7763568394002505e-06
+          }
+        }
+      }
+    },
+    {
+      "index": 26,
+      "config": {
+        "theta": 1e-09,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.37
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000000075,
+            "radius": 10.000000000000004,
+            "centre": [
+              365.69862794696854,
+              163.29271905574745
+            ],
+            "centre_error_from_analytic": 1.7763568051257287e-06,
+            "rms": 1.2885725818963027e-06,
+            "maximum_residual": 1.7763568127548979e-06,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136697457005e-06,
+            "fixture_tangency_representation_error": 1.4210854715202004e-14,
+            "old_apex_subtraction_true_radius_centre_error": 2.216441477789932e-05,
+            "direct_solve_true_radius_centre_error": 0.0
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000000075,
+            "radius": 9.999999999999979,
+            "centre": [
+              365.69858157487903,
+              163.29270106972223
+            ],
+            "centre_error_from_analytic": 5.1514348213932307e-05,
+            "rms": 3.736864511388139e-05,
+            "maximum_residual": 5.1514348246683994e-05,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136697457005e-06,
+            "fixture_tangency_representation_error": 1.4210854715202004e-14,
+            "old_apex_subtraction_true_radius_centre_error": 2.216441477789932e-05,
+            "direct_solve_true_radius_centre_error": 0.0
+          }
+        }
+      }
+    },
+    {
+      "index": 27,
+      "config": {
+        "theta": 1e-09,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000000075,
+            "radius": 9.999999999999238,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 4.112543561102305e-12,
+            "maximum_residual": 8.993694677883468e-12,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136788005005e-06,
+            "fixture_tangency_representation_error": 7.620570841027074e-13,
+            "old_apex_subtraction_true_radius_centre_error": 0.00152587890625,
+            "direct_solve_true_radius_centre_error": 0.0015241141663864255
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000000075,
+            "radius": 9.999999999999211,
+            "centre": [
+              99999.9999467093,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 5.32906997250393e-05,
+            "rms": 3.8657217064492295e-05,
+            "maximum_residual": 5.329070051374174e-05,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136788005005e-06,
+            "fixture_tangency_representation_error": 7.620570841027074e-13,
+            "old_apex_subtraction_true_radius_centre_error": 0.00152587890625,
+            "direct_solve_true_radius_centre_error": 0.0015241141663864255
+          }
+        }
+      }
+    },
+    {
+      "index": 28,
+      "config": {
+        "theta": 1e-09,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": true,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000000075,
+            "radius": 9.999999999999238,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 4.112543561102305e-12,
+            "maximum_residual": 8.993694677883468e-12,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136788005005e-06,
+            "fixture_tangency_representation_error": 7.620570841027074e-13,
+            "old_apex_subtraction_true_radius_centre_error": 0.00152587890625,
+            "direct_solve_true_radius_centre_error": 0.0015241141663864255
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000000075,
+            "radius": 9.999999999999211,
+            "centre": [
+              99999.9999467093,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 5.32906997250393e-05,
+            "rms": 3.8657217064492295e-05,
+            "maximum_residual": 5.329070051374174e-05,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136788005005e-06,
+            "fixture_tangency_representation_error": 7.620570841027074e-13,
+            "old_apex_subtraction_true_radius_centre_error": 0.00152587890625,
+            "direct_solve_true_radius_centre_error": 0.0015241141663864255
+          }
+        }
+      }
+    },
+    {
+      "index": 29,
+      "config": {
+        "theta": 1e-09,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.37
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000000075,
+            "radius": 10.000000000000957,
+            "centre": [
+              129394.27775709964,
+              -57071.19136410725
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 7.522109190377125e-12,
+            "maximum_residual": 1.9666046569000173e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136697457005e-06,
+            "fixture_tangency_representation_error": 3.865352482534945e-12,
+            "old_apex_subtraction_true_radius_centre_error": 0.022205773648339706,
+            "direct_solve_true_radius_centre_error": 0.0019113599499054415
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000000075,
+            "radius": 10.000000000000933,
+            "centre": [
+              129394.27771072755,
+              -57071.19138209328
+            ],
+            "centre_error_from_analytic": 4.973799647523398e-05,
+            "rms": 3.608007749690425e-05,
+            "maximum_residual": 4.9738007957600416e-05,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527136697457005e-06,
+            "fixture_tangency_representation_error": 3.865352482534945e-12,
+            "old_apex_subtraction_true_radius_centre_error": 0.022205773648339706,
+            "direct_solve_true_radius_centre_error": 0.0019113599499054415
+          }
+        }
+      }
+    },
+    {
+      "index": 30,
+      "config": {
+        "theta": 1e-10,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000000000075,
+            "radius": 10.0,
+            "centre": [
+              400.0,
+              20.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 1.2181088769595708e-14,
+            "maximum_residual": 2.842170943040401e-14,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713678800501e-05,
+            "fixture_tangency_representation_error": 0.0,
+            "old_apex_subtraction_true_radius_centre_error": 3.0517578125e-05,
+            "direct_solve_true_radius_centre_error": 0.0
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000000000075,
+            "radius": 9.99999999999752,
+            "centre": [
+              399.95040411704395,
+              20.0
+            ],
+            "centre_error_from_analytic": 0.04959588295605499,
+            "rms": 0.03601441119632548,
+            "maximum_residual": 0.04959588295853479,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713678800501e-05,
+            "fixture_tangency_representation_error": 0.0,
+            "old_apex_subtraction_true_radius_centre_error": 3.0517578125e-05,
+            "direct_solve_true_radius_centre_error": 0.0
+          }
+        }
+      }
+    },
+    {
+      "index": 31,
+      "config": {
+        "theta": 1e-10,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": true,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000000000075,
+            "radius": 10.0,
+            "centre": [
+              400.0,
+              20.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 1.2181088769595708e-14,
+            "maximum_residual": 2.842170943040401e-14,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713678800501e-05,
+            "fixture_tangency_representation_error": 0.0,
+            "old_apex_subtraction_true_radius_centre_error": 3.0517578125e-05,
+            "direct_solve_true_radius_centre_error": 0.0
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000000000075,
+            "radius": 9.99999999999752,
+            "centre": [
+              399.95040411704395,
+              20.0
+            ],
+            "centre_error_from_analytic": 0.04959588295605499,
+            "rms": 0.03601441119632548,
+            "maximum_residual": 0.04959588295853479,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713678800501e-05,
+            "fixture_tangency_representation_error": 0.0,
+            "old_apex_subtraction_true_radius_centre_error": 3.0517578125e-05,
+            "direct_solve_true_radius_centre_error": 0.0
+          }
+        }
+      }
+    },
+    {
+      "index": 32,
+      "config": {
+        "theta": 1e-10,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.37
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000000000075,
+            "radius": 10.000000000000005,
+            "centre": [
+              365.69862960311457,
+              163.29271969810546
+            ],
+            "centre_error_from_analytic": 2.842170943040401e-14,
+            "rms": 3.327913646081406e-14,
+            "maximum_residual": 8.881784197001252e-14,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527146722928167e-05,
+            "fixture_tangency_representation_error": 1.4210854715202004e-14,
+            "old_apex_subtraction_true_radius_centre_error": 0.00017736702013196486,
+            "direct_solve_true_radius_centre_error": 0.00014210858690738316
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000000000075,
+            "radius": 9.999999999997526,
+            "centre": [
+              365.6523899922746,
+              163.27478505645132
+            ],
+            "centre_error_from_analytic": 0.04959589682518506,
+            "rms": 0.036014421277936755,
+            "maximum_residual": 0.04959589682766996,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527146722928167e-05,
+            "fixture_tangency_representation_error": 1.4210854715202004e-14,
+            "old_apex_subtraction_true_radius_centre_error": 0.00017736702013196486,
+            "direct_solve_true_radius_centre_error": 0.00014210858690738316
+          }
+        }
+      }
+    },
+    {
+      "index": 33,
+      "config": {
+        "theta": 1e-10,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000000000075,
+            "radius": 10.000000000002835,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 5.12115782964789e-12,
+            "maximum_residual": 1.1157297308272973e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713678800501e-05,
+            "fixture_tangency_representation_error": 2.8350655156827997e-12,
+            "old_apex_subtraction_true_radius_centre_error": 0.056671142578125,
+            "direct_solve_true_radius_centre_error": 0.056701310313655995
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000000000075,
+            "radius": 10.00000000000054,
+            "centre": [
+              99999.95409893927,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.04590106073010247,
+            "rms": 0.033328809718191965,
+            "maximum_residual": 0.04590106072956246,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713678800501e-05,
+            "fixture_tangency_representation_error": 2.8350655156827997e-12,
+            "old_apex_subtraction_true_radius_centre_error": 0.056671142578125,
+            "direct_solve_true_radius_centre_error": 0.056701310313655995
+          }
+        }
+      }
+    },
+    {
+      "index": 34,
+      "config": {
+        "theta": 1e-10,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": true,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000000000075,
+            "radius": 10.000000000002835,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 5.12115782964789e-12,
+            "maximum_residual": 1.1157297308272973e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713678800501e-05,
+            "fixture_tangency_representation_error": 2.8350655156827997e-12,
+            "old_apex_subtraction_true_radius_centre_error": 0.056671142578125,
+            "direct_solve_true_radius_centre_error": 0.056701310313655995
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000000000075,
+            "radius": 10.00000000000054,
+            "centre": [
+              99999.95409893927,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.04590106073010247,
+            "rms": 0.033328809718191965,
+            "maximum_residual": 0.04590106072956246,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.552713678800501e-05,
+            "fixture_tangency_representation_error": 2.8350655156827997e-12,
+            "old_apex_subtraction_true_radius_centre_error": 0.056671142578125,
+            "direct_solve_true_radius_centre_error": 0.056701310313655995
+          }
+        }
+      }
+    },
+    {
+      "index": 35,
+      "config": {
+        "theta": 1e-10,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.37
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000000000075,
+            "radius": 10.000000000004826,
+            "centre": [
+              129394.27775709964,
+              -57071.191364107246
+            ],
+            "centre_error_from_analytic": 7.275957614183426e-12,
+            "rms": 7.54385542120632e-12,
+            "maximum_residual": 1.8756551867227245e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527146722928167e-05,
+            "fixture_tangency_representation_error": 1.007549599307822e-11,
+            "old_apex_subtraction_true_radius_centre_error": 0.3002054955649362,
+            "direct_solve_true_radius_centre_error": 0.09663383908754433
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000000000075,
+            "radius": 10.000000000002657,
+            "centre": [
+              129394.23731400161,
+              -57071.20705049511
+            ],
+            "centre_error_from_analytic": 0.04337864615296947,
+            "rms": 0.031495617267457476,
+            "maximum_residual": 0.04337864616272569,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 3.5527146722928167e-05,
+            "fixture_tangency_representation_error": 1.007549599307822e-11,
+            "old_apex_subtraction_true_radius_centre_error": 0.3002054955649362,
+            "direct_solve_true_radius_centre_error": 0.09663383908754433
+          }
+        }
+      }
+    },
+    {
+      "index": 36,
+      "config": {
+        "theta": 1e-11,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.0000000000075,
+            "radius": 10.0,
+            "centre": [
+              400.0,
+              20.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 1.175225204145551e-14,
+            "maximum_residual": 2.842170943040401e-14,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.0003552713678800501,
+            "fixture_tangency_representation_error": 0.0,
+            "old_apex_subtraction_true_radius_centre_error": 0.0,
+            "direct_solve_true_radius_centre_error": 0.0
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.0000000000075,
+            "radius": 9.999999999999751,
+            "centre": [
+              399.9502620084968,
+              20.0
+            ],
+            "centre_error_from_analytic": 0.04973799150320701,
+            "rms": 0.03611771183932164,
+            "maximum_residual": 0.0497379915034557,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.0003552713678800501,
+            "fixture_tangency_representation_error": 0.0,
+            "old_apex_subtraction_true_radius_centre_error": 0.0,
+            "direct_solve_true_radius_centre_error": 0.0
+          }
+        }
+      }
+    },
+    {
+      "index": 37,
+      "config": {
+        "theta": 1e-11,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": true,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.0000000000075,
+            "radius": 10.0,
+            "centre": [
+              400.0,
+              20.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 1.175225204145551e-14,
+            "maximum_residual": 2.842170943040401e-14,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.0003552713678800501,
+            "fixture_tangency_representation_error": 0.0,
+            "old_apex_subtraction_true_radius_centre_error": 0.0,
+            "direct_solve_true_radius_centre_error": 0.0
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.0000000000075,
+            "radius": 9.999999999999751,
+            "centre": [
+              399.9502620084968,
+              20.0
+            ],
+            "centre_error_from_analytic": 0.04973799150320701,
+            "rms": 0.03611771183932164,
+            "maximum_residual": 0.0497379915034557,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.0003552713678800501,
+            "fixture_tangency_representation_error": 0.0,
+            "old_apex_subtraction_true_radius_centre_error": 0.0,
+            "direct_solve_true_radius_centre_error": 0.0
+          }
+        }
+      }
+    },
+    {
+      "index": 38,
+      "config": {
+        "theta": 1e-11,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.37
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.0000000000075,
+            "radius": 10.000000000000002,
+            "centre": [
+              365.69846398965933,
+              163.29265546274712
+            ],
+            "centre_error_from_analytic": 0.00017763444998125376,
+            "rms": 0.0001288568438916145,
+            "maximum_residual": 0.00017763444999019384,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.00035526889990912395,
+            "fixture_tangency_representation_error": 0.0,
+            "old_apex_subtraction_true_radius_centre_error": 0.004347572366063124,
+            "direct_solve_true_radius_centre_error": 0.0
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.0000000000075,
+            "radius": 9.999999999999755,
+            "centre": [
+              365.65242344910973,
+              163.27479803312522
+            ],
+            "centre_error_from_analytic": 0.04956001153736124,
+            "rms": 0.03598833586734488,
+            "maximum_residual": 0.04956001153761669,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.00035526889990912395,
+            "fixture_tangency_representation_error": 0.0,
+            "old_apex_subtraction_true_radius_centre_error": 0.004347572366063124,
+            "direct_solve_true_radius_centre_error": 0.0
+          }
+        }
+      }
+    },
+    {
+      "index": 39,
+      "config": {
+        "theta": 1e-11,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.0000000000075,
+            "radius": 9.999999999995918,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 5.995427224288102e-12,
+            "maximum_residual": 1.3057999126431241e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.0003552713678800501,
+            "fixture_tangency_representation_error": 4.0820680169417756e-12,
+            "old_apex_subtraction_true_radius_centre_error": 0.81640625,
+            "direct_solve_true_radius_centre_error": 0.8164136033883551
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.0000000000075,
+            "radius": 9.999999999995328,
+            "centre": [
+              99999.88204990586,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.11795009413617663,
+            "rms": 0.08577266550972432,
+            "maximum_residual": 0.11795009414084845,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.0003552713678800501,
+            "fixture_tangency_representation_error": 4.0820680169417756e-12,
+            "old_apex_subtraction_true_radius_centre_error": 0.81640625,
+            "direct_solve_true_radius_centre_error": 0.8164136033883551
+          }
+        }
+      }
+    },
+    {
+      "index": 40,
+      "config": {
+        "theta": 1e-11,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": true,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.0000000000075,
+            "radius": 9.999999999995918,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 5.995427224288102e-12,
+            "maximum_residual": 1.3057999126431241e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.0003552713678800501,
+            "fixture_tangency_representation_error": 4.0820680169417756e-12,
+            "old_apex_subtraction_true_radius_centre_error": 0.81640625,
+            "direct_solve_true_radius_centre_error": 0.8164136033883551
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.0000000000075,
+            "radius": 9.999999999995328,
+            "centre": [
+              99999.88204990586,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.11795009413617663,
+            "rms": 0.08577266550972432,
+            "maximum_residual": 0.11795009414084845,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.0003552713678800501,
+            "fixture_tangency_representation_error": 4.0820680169417756e-12,
+            "old_apex_subtraction_true_radius_centre_error": 0.81640625,
+            "direct_solve_true_radius_centre_error": 0.8164136033883551
+          }
+        }
+      }
+    },
+    {
+      "index": 41,
+      "config": {
+        "theta": 1e-11,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.37
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.0000000000075,
+            "radius": 9.999999999995609,
+            "centre": [
+              129394.27759148618,
+              -57071.191428342616
+            ],
+            "centre_error_from_analytic": 0.0001776344516937889,
+            "rms": 0.00012885685417848302,
+            "maximum_residual": 0.0001776344684998321,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.00035526889990912395,
+            "fixture_tangency_representation_error": 5.137223979545524e-12,
+            "old_apex_subtraction_true_radius_centre_error": 4.111372523951753,
+            "direct_solve_true_radius_centre_error": 0.8775141827759937
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.0000000000075,
+            "radius": 9.999999999994989,
+            "centre": [
+              129394.16199329444,
+              -57071.23626462274
+            ],
+            "centre_error_from_analytic": 0.12416648051871321,
+            "rms": 0.09030487349400808,
+            "maximum_residual": 0.12416648053613955,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.00035526889990912395,
+            "fixture_tangency_representation_error": 5.137223979545524e-12,
+            "old_apex_subtraction_true_radius_centre_error": 4.111372523951753,
+            "direct_solve_true_radius_centre_error": 0.8775141827759937
+          }
+        }
+      }
+    },
+    {
+      "index": 42,
+      "config": {
+        "theta": 1e-12,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000000000075,
+            "radius": 10.0,
+            "centre": [
+              399.9982236431606,
+              20.0
+            ],
+            "centre_error_from_analytic": 0.0017763568394002505,
+            "rms": 0.0012886207097109778,
+            "maximum_residual": 0.0017763568394002505,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.003552713678800501,
+            "fixture_tangency_representation_error": 1.7763568394002505e-15,
+            "old_apex_subtraction_true_radius_centre_error": 0.00390625,
+            "direct_solve_true_radius_centre_error": 0.0017763568394002505
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000000000075,
+            "radius": 9.999999999999977,
+            "centre": [
+              399.9520383653362,
+              20.0
+            ],
+            "centre_error_from_analytic": 0.04796163466380676,
+            "rms": 0.03482649786342811,
+            "maximum_residual": 0.047961634663829855,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.003552713678800501,
+            "fixture_tangency_representation_error": 1.7763568394002505e-15,
+            "old_apex_subtraction_true_radius_centre_error": 0.00390625,
+            "direct_solve_true_radius_centre_error": 0.0017763568394002505
+          }
+        }
+      }
+    },
+    {
+      "index": 43,
+      "config": {
+        "theta": 1e-12,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": true,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000000000075,
+            "radius": 10.0,
+            "centre": [
+              399.9982236431606,
+              20.0
+            ],
+            "centre_error_from_analytic": 0.0017763568394002505,
+            "rms": 0.0012886207097109778,
+            "maximum_residual": 0.0017763568394002505,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.003552713678800501,
+            "fixture_tangency_representation_error": 1.7763568394002505e-15,
+            "old_apex_subtraction_true_radius_centre_error": 0.00390625,
+            "direct_solve_true_radius_centre_error": 0.0017763568394002505
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000000000075,
+            "radius": 9.999999999999977,
+            "centre": [
+              399.9520383653362,
+              20.0
+            ],
+            "centre_error_from_analytic": 0.04796163466380676,
+            "rms": 0.03482649786342811,
+            "maximum_residual": 0.047961634663829855,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.003552713678800501,
+            "fixture_tangency_representation_error": 1.7763568394002505e-15,
+            "old_apex_subtraction_true_radius_centre_error": 0.00390625,
+            "direct_solve_true_radius_centre_error": 0.0017763568394002505
+          }
+        }
+      }
+    },
+    {
+      "index": 44,
+      "config": {
+        "theta": 1e-12,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.37
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000000000075,
+            "radius": 10.00000000000001,
+            "centre": [
+              365.69697357493794,
+              163.29207738578114
+            ],
+            "centre_error_from_analytic": 0.001776230402787008,
+            "rms": 0.0012885289854814418,
+            "maximum_residual": 0.0017762304027879594,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.003552460805539579,
+            "fixture_tangency_representation_error": 2.1316282072803006e-14,
+            "old_apex_subtraction_true_radius_centre_error": 0.08984618551363319,
+            "direct_solve_true_radius_centre_error": 0.021314764833218616
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000000000075,
+            "radius": 9.999999999999988,
+            "centre": [
+              365.65391684234635,
+              163.2753772653476
+            ],
+            "centre_error_from_analytic": 0.04795822087481881,
+            "rms": 0.034824016510525795,
+            "maximum_residual": 0.04795822087484147,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.003552460805539579,
+            "fixture_tangency_representation_error": 2.1316282072803006e-14,
+            "old_apex_subtraction_true_radius_centre_error": 0.08984618551363319,
+            "direct_solve_true_radius_centre_error": 0.021314764833218616
+          }
+        }
+      }
+    },
+    {
+      "index": 45,
+      "config": {
+        "theta": 1e-12,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000000000075,
+            "radius": 10.00000000000075,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 0.0,
+            "maximum_residual": 0.0,
+            "constrained": false,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.003552713678800501,
+            "fixture_tangency_representation_error": 1.8633983245308627e-12,
+            "old_apex_subtraction_true_radius_centre_error": 3.7265625,
+            "direct_solve_true_radius_centre_error": 3.7267966490617255
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000000000075,
+            "radius": 10.00000000000075,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 0.0,
+            "maximum_residual": 0.0,
+            "constrained": false,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.003552713678800501,
+            "fixture_tangency_representation_error": 1.8633983245308627e-12,
+            "old_apex_subtraction_true_radius_centre_error": 3.7265625,
+            "direct_solve_true_radius_centre_error": 3.7267966490617255
+          }
+        }
+      }
+    },
+    {
+      "index": 46,
+      "config": {
+        "theta": 1e-12,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": true,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000000000075,
+            "radius": 10.00000000000075,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 0.0,
+            "maximum_residual": 0.0,
+            "constrained": false,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.003552713678800501,
+            "fixture_tangency_representation_error": 1.8633983245308627e-12,
+            "old_apex_subtraction_true_radius_centre_error": 3.7265625,
+            "direct_solve_true_radius_centre_error": 3.7267966490617255
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000000000075,
+            "radius": 10.00000000000075,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 0.0,
+            "maximum_residual": 0.0,
+            "constrained": false,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.003552713678800501,
+            "fixture_tangency_representation_error": 1.8633983245308627e-12,
+            "old_apex_subtraction_true_radius_centre_error": 3.7265625,
+            "direct_solve_true_radius_centre_error": 3.7267966490617255
+          }
+        }
+      }
+    },
+    {
+      "index": 47,
+      "config": {
+        "theta": 1e-12,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.37
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000000000075,
+            "radius": 10.000000000000906,
+            "centre": [
+              129394.27775709964,
+              -57071.19136410725
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 7.975450444201005e-12,
+            "maximum_residual": 2.0623502905436908e-11,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.003552460805539579,
+            "fixture_tangency_representation_error": 1.2505552149377763e-12,
+            "old_apex_subtraction_true_radius_centre_error": 89.962099400764,
+            "direct_solve_true_radius_centre_error": 1.818859932434655
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.00000000000075,
+            "radius": 10.000000000000904,
+            "centre": [
+              129394.2744450433,
+              -57071.19264873191
+            ],
+            "centre_error_from_analytic": 0.0035524608003667797,
+            "rms": 0.0025771542133637953,
+            "maximum_residual": 0.0035524608118766565,
+            "constrained": true,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.003552460805539579,
+            "fixture_tangency_representation_error": 1.2505552149377763e-12,
+            "old_apex_subtraction_true_radius_centre_error": 89.962099400764,
+            "direct_solve_true_radius_centre_error": 1.818859932434655
+          }
+        }
+      }
+    },
+    {
+      "index": 48,
+      "config": {
+        "theta": 1e-13,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000000000000075,
+            "radius": 10.000000000000075,
+            "centre": [
+              400.0,
+              20.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 0.0,
+            "maximum_residual": 0.0,
+            "constrained": false,
+            "end_cap": false,
+            "unresolved_radius_note": true,
+            "radius_ulp_times_v_norm": 0.03552713678800501,
+            "fixture_tangency_representation_error": 1.7763568394002505e-15,
+            "old_apex_subtraction_true_radius_centre_error": 0.03125,
+            "direct_solve_true_radius_centre_error": 0.017763568394002505
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000000000000075,
+            "radius": 10.000000000000075,
+            "centre": [
+              400.0,
+              20.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 0.0,
+            "maximum_residual": 0.0,
+            "constrained": false,
+            "end_cap": false,
+            "unresolved_radius_note": true,
+            "radius_ulp_times_v_norm": 0.03552713678800501,
+            "fixture_tangency_representation_error": 1.7763568394002505e-15,
+            "old_apex_subtraction_true_radius_centre_error": 0.03125,
+            "direct_solve_true_radius_centre_error": 0.017763568394002505
+          }
+        }
+      }
+    },
+    {
+      "index": 49,
+      "config": {
+        "theta": 1e-13,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": true,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000000000000075,
+            "radius": 10.000000000000075,
+            "centre": [
+              400.0,
+              20.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 0.0,
+            "maximum_residual": 0.0,
+            "constrained": false,
+            "end_cap": false,
+            "unresolved_radius_note": true,
+            "radius_ulp_times_v_norm": 0.03552713678800501,
+            "fixture_tangency_representation_error": 1.7763568394002505e-15,
+            "old_apex_subtraction_true_radius_centre_error": 0.03125,
+            "direct_solve_true_radius_centre_error": 0.017763568394002505
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000000000000075,
+            "radius": 10.000000000000075,
+            "centre": [
+              400.0,
+              20.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 0.0,
+            "maximum_residual": 0.0,
+            "constrained": false,
+            "end_cap": false,
+            "unresolved_radius_note": true,
+            "radius_ulp_times_v_norm": 0.03552713678800501,
+            "fixture_tangency_representation_error": 1.7763568394002505e-15,
+            "old_apex_subtraction_true_radius_centre_error": 0.03125,
+            "direct_solve_true_radius_centre_error": 0.017763568394002505
+          }
+        }
+      }
+    },
+    {
+      "index": 50,
+      "config": {
+        "theta": 1e-13,
+        "centre": [
+          400.0,
+          20.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.37
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000000000000075,
+            "radius": 10.000000000000075,
+            "centre": [
+              365.69862960311457,
+              163.2927196981055
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 0.0,
+            "maximum_residual": 0.0,
+            "constrained": false,
+            "end_cap": false,
+            "unresolved_radius_note": true,
+            "radius_ulp_times_v_norm": 0.03551035259474059,
+            "fixture_tangency_representation_error": 1.4210854715202004e-14,
+            "old_apex_subtraction_true_radius_centre_error": 0.24148736647271693,
+            "direct_solve_true_radius_centre_error": 0.07102070518948639
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000000000000075,
+            "radius": 10.000000000000075,
+            "centre": [
+              365.69862960311457,
+              163.2927196981055
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 0.0,
+            "maximum_residual": 0.0,
+            "constrained": false,
+            "end_cap": false,
+            "unresolved_radius_note": true,
+            "radius_ulp_times_v_norm": 0.03551035259474059,
+            "fixture_tangency_representation_error": 1.4210854715202004e-14,
+            "old_apex_subtraction_true_radius_centre_error": 0.24148736647271693,
+            "direct_solve_true_radius_centre_error": 0.07102070518948639
+          }
+        }
+      }
+    },
+    {
+      "index": 51,
+      "config": {
+        "theta": 1e-13,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000000000000075,
+            "radius": 10.000000000000075,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 0.0,
+            "maximum_residual": 0.0,
+            "constrained": false,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.03552713678800501,
+            "fixture_tangency_representation_error": 4.552802579382842e-12,
+            "old_apex_subtraction_true_radius_centre_error": 91.03125,
+            "direct_solve_true_radius_centre_error": 91.05605158765684
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000000000000075,
+            "radius": 10.000000000000075,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 0.0,
+            "maximum_residual": 0.0,
+            "constrained": false,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.03552713678800501,
+            "fixture_tangency_representation_error": 4.552802579382842e-12,
+            "old_apex_subtraction_true_radius_centre_error": 91.03125,
+            "direct_solve_true_radius_centre_error": 91.05605158765684
+          }
+        }
+      }
+    },
+    {
+      "index": 52,
+      "config": {
+        "theta": 1e-13,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": true,
+        "rotation": 0.0
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000000000000075,
+            "radius": 10.000000000000075,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 0.0,
+            "maximum_residual": 0.0,
+            "constrained": false,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.03552713678800501,
+            "fixture_tangency_representation_error": 4.552802579382842e-12,
+            "old_apex_subtraction_true_radius_centre_error": 91.03125,
+            "direct_solve_true_radius_centre_error": 91.05605158765684
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000000000000075,
+            "radius": 10.000000000000075,
+            "centre": [
+              100000.0,
+              -100000.0
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 0.0,
+            "maximum_residual": 0.0,
+            "constrained": false,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.03552713678800501,
+            "fixture_tangency_representation_error": 4.552802579382842e-12,
+            "old_apex_subtraction_true_radius_centre_error": 91.03125,
+            "direct_solve_true_radius_centre_error": 91.05605158765684
+          }
+        }
+      }
+    },
+    {
+      "index": 53,
+      "config": {
+        "theta": 1e-13,
+        "centre": [
+          100000.0,
+          -100000.0
+        ],
+        "reverse_direction": false,
+        "rotation": 0.37
+      },
+      "methods": {
+        "current": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000000000000075,
+            "radius": 10.000000000000075,
+            "centre": [
+              129394.27775709964,
+              -57071.19136410725
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 0.0,
+            "maximum_residual": 0.0,
+            "constrained": false,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.03551035259474059,
+            "fixture_tangency_representation_error": 4.291678123991005e-12,
+            "old_apex_subtraction_true_radius_centre_error": 802.0341957396041,
+            "direct_solve_true_radius_centre_error": 79.11706558108172
+          }
+        },
+        "legacy_radius_stop": {
+          "verification": "executed",
+          "measurement": {
+            "radius_origin": 10.000000000000075,
+            "radius": 10.000000000000075,
+            "centre": [
+              129394.27775709964,
+              -57071.19136410725
+            ],
+            "centre_error_from_analytic": 0.0,
+            "rms": 0.0,
+            "maximum_residual": 0.0,
+            "constrained": false,
+            "end_cap": false,
+            "unresolved_radius_note": false,
+            "radius_ulp_times_v_norm": 0.03551035259474059,
+            "fixture_tangency_representation_error": 4.291678123991005e-12,
+            "old_apex_subtraction_true_radius_centre_error": 802.0341957396041,
+            "direct_solve_true_radius_centre_error": 79.11706558108172
+          }
+        }
+      }
+    }
+  ],
+  "limits": [
+    "This fixed development census includes previously inspected controls; it is not a new holdout or a physical-photo benchmark.",
+    "The direct synthetic fitting-stage controls use exact analytic circles/tangents before float64 representation; extreme-angle translated inputs retain finite representation and dot-product error.",
+    "The legacy control changes only the current stopping predicate in memory. It does not reconstruct every historical implementation change or isolate the 5-degree branch defect.",
+    "Retained free arcs and radius-ulp checks are numerical safeguards. Twenty Gauss-Newton iterations are not a certified global minimum or a physical uncertainty bound.",
+    "The independent analytic centre comparison and tangent construction do not use production circle fitting, rendering, blurring or photo tracing. Production intersect is used only for the explicitly labeled old-apex diagnostic."
+  ]
+}

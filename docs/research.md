@@ -514,3 +514,28 @@ separate interval projections do not retain joint correlation. Its
 [complete development record](validation/gaussian-response-domains.md) includes
 order-only gauges, refinement and a thin feasible line. This is set inversion
 under supplied models, with no general convergence or physical-accuracy claim.
+
+
+## Stable tangent-circle geometry
+
+A rounded end between distinct nonparallel lines does not have constant width.
+The [tapered-cap repair](validation/tapered-caps.md) preserves its two signed
+distance constraints. For unit line normals collected in rows of `N`, signs
+`s`, observed circle `(C*,r*)` and signed distances `d` from `C*` to the lines,
+solve
+
+```text
+shift = solve(N, r* s - d)
+v = solve(N, s)
+anchor = C* + shift
+C(r) = anchor + (r-r*) v
+```
+
+Changing a line anchor along its direction leaves its geometric constraint
+unchanged. Subtract coordinates before taking the normal dot product, and keep
+the reference radius instead of subtracting a distant virtual apex from `r v`.
+Near parallelism, a small radius increment can still move the centre by
+`abs(delta_r) norm(v)`. The stopping rule includes that movement; a radius-ulp
+movement larger than the fit tolerance leaves the constraint unresolved.
+Those are arithmetic/representation checks, not physical uncertainty bounds.
+Exact parallel directions retain their separate constant-width cap model.

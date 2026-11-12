@@ -1,0 +1,2662 @@
+{
+  "format": "pictures-to-cad-tapered-cap-export-regression",
+  "version": 1,
+  "source_root": "/home/bartytime/.codex/worktrees/picad-response-set-inversion",
+  "git": {
+    "revision": "0d8bd37633900f4f88200be13bd5309d28ca58f2",
+    "dirty_files": []
+  },
+  "source_sha256_before": {
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/app.py": "345c7dc8bbc7bfbe616eb2934d2a58cd0b4fa1216dbdaa5272ab3a36b06d96bc",
+    "backend/assistant.py": "45f05aa8d0738a1da0e3b5040a2c4df8a01a35e9a835e1c06fd47ee3e81758c5",
+    "backend/corner_blur_domains.py": "7882b8dcd4ff7b431cf0fd71acef1fb7d12e071e9461a91926e95cd993eaa7f0",
+    "backend/corner_feasibility.py": "2d121667373da359740369169b8f7a7e51249c20ee508c42f53772f78c9321d7",
+    "backend/corner_pixel_apertures.py": "d305d5c5e258d9eff24f392f9d20d2979a65ebdbf115e006c6a4279c8191f51a",
+    "backend/corner_signed_stencils.py": "7e4ff05408a8ba8fae2e487909fb8a265ce7d86a2ecf740a02d4b0df860f1455",
+    "backend/curve_envelope.py": "d37525b42c920a770b783e0c94ff97cf3d5214272d85dcdceae9d23eb184ca27",
+    "backend/decimal_bounds.py": "81e08ee9abc0aeb33b5304191cdcc8a4448700fe73e2e53b34e9f5001a8a3f7f",
+    "backend/drawing.py": "560f087e28d369a2e0f3b733197c18c5a7aa87c390fe56de7516caf9a08a5e6d",
+    "backend/edges.py": "a32f01b6dac61da171781ecfb62630f10aece36bfb8cb0a8e8008178431645da",
+    "backend/fitting.py": "ccf6306c2a12833e7815c5030db09649db80a3c0a41d012decf40a2ee991c7ee",
+    "backend/gaussian_response_domains.py": "c15f46d5c986a494782c44363f1c2edfbe676c969df4a6bd7963105fcc7610ed",
+    "backend/heic.py": "5e34870379991f8813bacfc4badc8fe7fcf5dbe8aa053156fa352456b208de33",
+    "backend/models.py": "21e7467766f4a086f52b3756f6b1fa8e4ec96a7b76cf0b4d1131c5f45709e6e1",
+    "backend/normal_cdf_bounds.py": "d736eac5fa2c5fa625f86fc70a6b7b78ea534666ddfef49d6600c44a18f45f1d",
+    "backend/placement.py": "e1745597ca2930d1260659e9f2dc4405f2b7239beb0c12c45fa92b6d3f5c03df",
+    "backend/printing.py": "58d121ad45f0176b02094f3446dcd020c254ccd78860e5a269b8b6a8d6479915",
+    "backend/profile_observations.py": "7eee8b71fc9024cb5c8453ec67aab75f2c21c8c77e975c1fba41b1e3be9f873b",
+    "backend/raw_source_fit.py": "6a877bc15759076adf95dbbb521c04d110b20e8ed397637148c2e87b3ba8b6af",
+    "backend/reference.py": "60a8681a3e0154c935cc3256b0aff7f93d19874e9a367d0d6619a5acee0846d0",
+    "backend/response_calibration.py": "b8a1c4acf8b5d70db3c3de10c9c2e1972af3bbff7f82193bb1f2e9fdc9a56aa4",
+    "backend/response_rectangles.py": "674b151b9e8038922aaf234e4919ef96796e9eb326601ee8f720400cb8d2e5e6",
+    "backend/scad.py": "d5cf18312ba10b7e3830d059952c3d078edc1e21813eb2fb03a4fd1ebaf2d534",
+    "backend/sheet.py": "a086d7216256726a0e392bd98cbdb1274f5cb5eb096802c17c805349a7747e31",
+    "backend/slicer_handoff.py": "774e78fa93dacc348c204d89a0ec4192a01701fb3fa3304ee09960e816101a50",
+    "backend/slicers.py": "03442055d64c37d46e5806bafdd0bd497b54dacf78bc409addf1ff8400c25bb9",
+    "backend/three_mf.py": "435afd61c90bb21c305876f681f845a3bfb193a64fa96589e649fb40fd821cf1",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "backend/tracing.py": "b822716050b285152bcbefe07a0b7da1e02716ecb5d990cbf29af86598a14d2e",
+    "backend/worker.py": "9c869ffae551485b473aeb54ddc9a0116e8c8df22f92f2c08e2f3e97f24ca846",
+    "pyproject.toml": "89db6bd352114ad6ed7c979c070e66d47551ef7cca7062778f832bb8934507ab",
+    "uv.lock": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f"
+  },
+  "source_sha256_after": {
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/app.py": "345c7dc8bbc7bfbe616eb2934d2a58cd0b4fa1216dbdaa5272ab3a36b06d96bc",
+    "backend/assistant.py": "45f05aa8d0738a1da0e3b5040a2c4df8a01a35e9a835e1c06fd47ee3e81758c5",
+    "backend/corner_blur_domains.py": "7882b8dcd4ff7b431cf0fd71acef1fb7d12e071e9461a91926e95cd993eaa7f0",
+    "backend/corner_feasibility.py": "2d121667373da359740369169b8f7a7e51249c20ee508c42f53772f78c9321d7",
+    "backend/corner_pixel_apertures.py": "d305d5c5e258d9eff24f392f9d20d2979a65ebdbf115e006c6a4279c8191f51a",
+    "backend/corner_signed_stencils.py": "7e4ff05408a8ba8fae2e487909fb8a265ce7d86a2ecf740a02d4b0df860f1455",
+    "backend/curve_envelope.py": "d37525b42c920a770b783e0c94ff97cf3d5214272d85dcdceae9d23eb184ca27",
+    "backend/decimal_bounds.py": "81e08ee9abc0aeb33b5304191cdcc8a4448700fe73e2e53b34e9f5001a8a3f7f",
+    "backend/drawing.py": "560f087e28d369a2e0f3b733197c18c5a7aa87c390fe56de7516caf9a08a5e6d",
+    "backend/edges.py": "a32f01b6dac61da171781ecfb62630f10aece36bfb8cb0a8e8008178431645da",
+    "backend/fitting.py": "ccf6306c2a12833e7815c5030db09649db80a3c0a41d012decf40a2ee991c7ee",
+    "backend/gaussian_response_domains.py": "c15f46d5c986a494782c44363f1c2edfbe676c969df4a6bd7963105fcc7610ed",
+    "backend/heic.py": "5e34870379991f8813bacfc4badc8fe7fcf5dbe8aa053156fa352456b208de33",
+    "backend/models.py": "21e7467766f4a086f52b3756f6b1fa8e4ec96a7b76cf0b4d1131c5f45709e6e1",
+    "backend/normal_cdf_bounds.py": "d736eac5fa2c5fa625f86fc70a6b7b78ea534666ddfef49d6600c44a18f45f1d",
+    "backend/placement.py": "e1745597ca2930d1260659e9f2dc4405f2b7239beb0c12c45fa92b6d3f5c03df",
+    "backend/printing.py": "58d121ad45f0176b02094f3446dcd020c254ccd78860e5a269b8b6a8d6479915",
+    "backend/profile_observations.py": "7eee8b71fc9024cb5c8453ec67aab75f2c21c8c77e975c1fba41b1e3be9f873b",
+    "backend/raw_source_fit.py": "6a877bc15759076adf95dbbb521c04d110b20e8ed397637148c2e87b3ba8b6af",
+    "backend/reference.py": "60a8681a3e0154c935cc3256b0aff7f93d19874e9a367d0d6619a5acee0846d0",
+    "backend/response_calibration.py": "b8a1c4acf8b5d70db3c3de10c9c2e1972af3bbff7f82193bb1f2e9fdc9a56aa4",
+    "backend/response_rectangles.py": "674b151b9e8038922aaf234e4919ef96796e9eb326601ee8f720400cb8d2e5e6",
+    "backend/scad.py": "d5cf18312ba10b7e3830d059952c3d078edc1e21813eb2fb03a4fd1ebaf2d534",
+    "backend/sheet.py": "a086d7216256726a0e392bd98cbdb1274f5cb5eb096802c17c805349a7747e31",
+    "backend/slicer_handoff.py": "774e78fa93dacc348c204d89a0ec4192a01701fb3fa3304ee09960e816101a50",
+    "backend/slicers.py": "03442055d64c37d46e5806bafdd0bd497b54dacf78bc409addf1ff8400c25bb9",
+    "backend/three_mf.py": "435afd61c90bb21c305876f681f845a3bfb193a64fa96589e649fb40fd821cf1",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "backend/tracing.py": "b822716050b285152bcbefe07a0b7da1e02716ecb5d990cbf29af86598a14d2e",
+    "backend/worker.py": "9c869ffae551485b473aeb54ddc9a0116e8c8df22f92f2c08e2f3e97f24ca846",
+    "pyproject.toml": "89db6bd352114ad6ed7c979c070e66d47551ef7cca7062778f832bb8934507ab",
+    "uv.lock": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f"
+  },
+  "runner_sha256_before": "2735cc4fcab7e161365afbab68c4c545dbdac9e4e420edf43bbceb726bf16bed",
+  "runner_sha256_after": "2735cc4fcab7e161365afbab68c4c545dbdac9e4e420edf43bbceb726bf16bed",
+  "runtime": {
+    "python": "3.12.3",
+    "numpy": "2.5.4",
+    "shapely": "2.2.0",
+    "cadquery": "2.7.0",
+    "ezdxf": "1.4.5"
+  },
+  "artifact_directory": "/home/bartytime/.codex/worktrees/picad-response-set-inversion/.local/verification/forward-adequacy-ux-tapered-exports-baseline-v2",
+  "settings": {
+    "source_step_px": 0.15,
+    "mm_per_px": 0.2,
+    "geometry_tolerance_px": 0.05,
+    "thickness_mm": 4.0
+  },
+  "rows": [
+    {
+      "case": "tapered_cap_L50",
+      "checks": [
+        {
+          "name": "initial_analytic_fit",
+          "passed": true
+        },
+        {
+          "name": "source_boundary_preserved",
+          "passed": false,
+          "hausdorff_px": 0.436725579321346,
+          "tolerance_px": 0.05
+        },
+        {
+          "name": "stored_and_emitted_arc_radii_agree",
+          "passed": false,
+          "absolute_errors_px": [
+            0.43259711303224435
+          ]
+        },
+        {
+          "name": "actual_profile_validation",
+          "passed": true
+        },
+        {
+          "name": "step_dimensions_match_truth",
+          "passed": false,
+          "errors_mm": [
+            0.08732721509172414,
+            1.509903313490213e-14
+          ],
+          "tolerance_mm": 0.010000000000000002
+        },
+        {
+          "name": "step_volume_matches_truth",
+          "passed": false,
+          "volume_mm3": 193.5404660304537,
+          "expected_mm3": 192.13916804556305,
+          "tolerance_mm3": 1.2254356725723812
+        },
+        {
+          "name": "cad_valid_single_solid",
+          "passed": true
+        },
+        {
+          "name": "dxf_units_and_arc_count",
+          "passed": true,
+          "arc_count": 1,
+          "expected_arc_count": 1
+        },
+        {
+          "name": "dxf_arc_centers_and_radii_match_truth",
+          "passed": false,
+          "center_radius_errors_px": [
+            [
+              0.43444608944787033,
+              0.0021901154475845175
+            ]
+          ],
+          "tolerance_px": 0.05
+        },
+        {
+          "name": "svg_dimensions_match_truth",
+          "passed": false,
+          "errors_mm": [
+            0.08732999999999969,
+            -6.107399848076511e-07
+          ],
+          "tolerance_mm": 0.010000000000000002
+        },
+        {
+          "name": "svg_arc_radii_match_truth",
+          "passed": true,
+          "maximum_radius_error_px": 0.002200000000000202
+        }
+      ],
+      "errors": [],
+      "artifacts": {
+        "profile.json": {
+          "sha256": "05d1402edb86e37a414e41ad06dcaf8cfa5dad2f3a353e9ffb53580a843b1973",
+          "bytes": 8435
+        },
+        "model.step": {
+          "sha256": "97baf0ac303b55b94cef4d5dd1e03364c52eee5a432dff7277697bee62a8c8f6",
+          "bytes": 16928
+        },
+        "profile.dxf": {
+          "sha256": "96e4f897e43ce0ff60f2ca52f77573855ca9304de6908647b153064fbf8d74c7",
+          "bytes": 15929
+        },
+        "profile.svg": {
+          "sha256": "4bf5968d9c68f4eea230910c2e56273707a368fb3df2ba0317861d9477afd09e",
+          "bytes": 470
+        }
+      },
+      "truth": {
+        "area_px2": 1200.8698002847689,
+        "bounds_px": [
+          -50.0,
+          -10.874276526849961,
+          10.0,
+          10.874276526849961
+        ],
+        "arcs": [
+          {
+            "center": [
+              0.0,
+              0.0
+            ],
+            "radius": 10.0
+          }
+        ],
+        "source_chord_error_px": 0.00027885347727019116
+      },
+      "transform_degrees": 0,
+      "reversed": false,
+      "fitting_settings": {
+        "tolerance_px": 0.15,
+        "min_line_px": 5.0,
+        "sigma_px": 0
+      },
+      "initial_metadata": [
+        {
+          "kind": "line",
+          "rms": 1.9564135265787626e-15,
+          "max_abs": 2.913883005735587e-15,
+          "radius_px": null,
+          "center_px": [
+            -24.91273796781359,
+            10.436376739206935
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 0.0,
+          "max_abs": 0.0,
+          "radius_px": null,
+          "center_px": [
+            -50.0,
+            3.893384853480001e-16
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 1.8147633042328455e-15,
+          "max_abs": 2.7278727965024165e-15,
+          "radius_px": null,
+          "center_px": [
+            -24.91273796781358,
+            -10.436376739206938
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 7.271519869656809e-16,
+          "max_abs": 1.7763568394002505e-15,
+          "radius_px": 10.0,
+          "center_px": [
+            -6.396769652276636e-16,
+            8.074924662184331e-17
+          ],
+          "end_cap": false,
+          "fillet": false
+        }
+      ],
+      "final_metadata": [
+        {
+          "kind": "line",
+          "rms": 1.9564135265787626e-15,
+          "max_abs": 2.913883005735587e-15,
+          "radius_px": null,
+          "center_px": [
+            -24.91273796781359,
+            10.436376739206935
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 3.8707512938414947e-16,
+          "max_abs": 6.658573970825001e-16,
+          "radius_px": null,
+          "center_px": [
+            -50.0,
+            5.30908849156176e-17
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 1.8147633042328455e-15,
+          "max_abs": 2.7278727965024165e-15,
+          "radius_px": null,
+          "center_px": [
+            -24.91273796781358,
+            -10.436376739206938
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 7.271519869656809e-16,
+          "max_abs": 1.7763568394002505e-15,
+          "radius_px": 10.434787228479829,
+          "center_px": [
+            -0.007588083425170674,
+            0.43472100827899035
+          ],
+          "end_cap": true,
+          "fillet": false
+        }
+      ],
+      "notes": [
+        "1 straight edge(s) made exactly parallel or perpendicular."
+      ],
+      "cad_area_mm2": 48.38511650760654,
+      "index": 0,
+      "passed": false
+    },
+    {
+      "case": "tapered_cap_L100",
+      "checks": [
+        {
+          "name": "initial_analytic_fit",
+          "passed": true
+        },
+        {
+          "name": "source_boundary_preserved",
+          "passed": false,
+          "hausdorff_px": 0.8938044744808168,
+          "tolerance_px": 0.05
+        },
+        {
+          "name": "stored_and_emitted_arc_radii_agree",
+          "passed": false,
+          "absolute_errors_px": [
+            0.8471385716177746
+          ]
+        },
+        {
+          "name": "actual_profile_validation",
+          "passed": true
+        },
+        {
+          "name": "step_dimensions_match_truth",
+          "passed": false,
+          "errors_mm": [
+            0.17873748509900267,
+            -3.375077994860476e-13
+          ],
+          "tolerance_mm": 0.010000000000000002
+        },
+        {
+          "name": "step_volume_matches_truth",
+          "passed": false,
+          "volume_mm3": 376.01684364661685,
+          "expected_mm3": 373.10961844644953,
+          "tolerance_mm3": 2.0395215869500256
+        },
+        {
+          "name": "cad_valid_single_solid",
+          "passed": true
+        },
+        {
+          "name": "dxf_units_and_arc_count",
+          "passed": true,
+          "arc_count": 1,
+          "expected_arc_count": 1
+        },
+        {
+          "name": "dxf_arc_centers_and_radii_match_truth",
+          "passed": false,
+          "center_radius_errors_px": [
+            [
+              0.8697296478458633,
+              0.023958817794142107
+            ]
+          ],
+          "tolerance_px": 0.05
+        },
+        {
+          "name": "svg_dimensions_match_truth",
+          "passed": false,
+          "errors_mm": [
+            0.17874000000000123,
+            -1.9093043377438335e-06
+          ],
+          "tolerance_mm": 0.010000000000000002
+        },
+        {
+          "name": "svg_arc_radii_match_truth",
+          "passed": true,
+          "maximum_radius_error_px": 0.02394999999999925
+        }
+      ],
+      "errors": [],
+      "artifacts": {
+        "profile.json": {
+          "sha256": "2a240149123fae4f1837ff96ecd2897747a1504b9405828c0ac70ff48f7e88f7",
+          "bytes": 8715
+        },
+        "model.step": {
+          "sha256": "dca0481d19d4bd0accf7b172472c72c519d48fc50c57cc8d5bde4a23993c99d4",
+          "bytes": 16929
+        },
+        "profile.dxf": {
+          "sha256": "c9ee69b049cc11d69d81059b143c10c026259fdf641527d759d953d0a37a8e9d",
+          "bytes": 15936
+        },
+        "profile.svg": {
+          "sha256": "60a260dc1adcb21b7484422a4a66bbc9eb0c6a9ff79614d1c394d725b311827f",
+          "bytes": 468
+        }
+      },
+      "truth": {
+        "area_px2": 2331.935115290309,
+        "bounds_px": [
+          -100.0,
+          -11.747029773260843,
+          10.0,
+          11.747029773260843
+        ],
+        "arcs": [
+          {
+            "center": [
+              0.0,
+              0.0
+            ],
+            "radius": 10.0
+          }
+        ],
+        "source_chord_error_px": 0.00027885347727019116
+      },
+      "transform_degrees": 0,
+      "reversed": false,
+      "fitting_settings": {
+        "tolerance_px": 0.15,
+        "min_line_px": 5.0,
+        "sigma_px": 0
+      },
+      "initial_metadata": [
+        {
+          "kind": "line",
+          "rms": 1.2554649670683203e-15,
+          "max_abs": 2.2299581901496583e-15,
+          "radius_px": null,
+          "center_px": [
+            -49.91273796781359,
+            10.872753362412377
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 0.0,
+          "max_abs": 0.0,
+          "radius_px": null,
+          "center_px": [
+            -100.0,
+            -3.37282944189921e-16
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 2.7785450012447238e-15,
+          "max_abs": 3.898129515062226e-15,
+          "radius_px": null,
+          "center_px": [
+            -49.912737967813584,
+            -10.87275336241238
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 4.721641149806954e-16,
+          "max_abs": 1.7763568394002505e-15,
+          "radius_px": 10.0,
+          "center_px": [
+            3.7319933940628785e-16,
+            8.795144398657713e-17
+          ],
+          "end_cap": false,
+          "fillet": false
+        }
+      ],
+      "final_metadata": [
+        {
+          "kind": "line",
+          "rms": 1.2554649670683203e-15,
+          "max_abs": 2.2299581901496583e-15,
+          "radius_px": null,
+          "center_px": [
+            -49.91273796781359,
+            10.872753362412377
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 4.179237326515917e-16,
+          "max_abs": 7.192981205656275e-16,
+          "radius_px": null,
+          "center_px": [
+            -100.0,
+            -3.669384148954482e-16
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 2.7785450012447238e-15,
+          "max_abs": 3.898129515062226e-15,
+          "radius_px": null,
+          "center_px": [
+            -49.912737967813584,
+            -10.87275336241238
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 4.721641149806954e-16,
+          "max_abs": 1.7763568394002505e-15,
+          "radius_px": 10.871097389411918,
+          "center_px": [
+            -0.015202745686473115,
+            0.8709647170602551
+          ],
+          "end_cap": true,
+          "fillet": false
+        }
+      ],
+      "notes": [
+        "1 straight edge(s) made exactly parallel or perpendicular."
+      ],
+      "cad_area_mm2": 94.0042109116541,
+      "index": 1,
+      "passed": false
+    },
+    {
+      "case": "tapered_cap_L200",
+      "checks": [
+        {
+          "name": "initial_analytic_fit",
+          "passed": true
+        },
+        {
+          "name": "source_boundary_preserved",
+          "passed": false,
+          "hausdorff_px": 1.8637472734282323,
+          "tolerance_px": 0.05
+        },
+        {
+          "name": "stored_and_emitted_arc_radii_agree",
+          "passed": false,
+          "absolute_errors_px": [
+            1.6183834836678326
+          ]
+        },
+        {
+          "name": "actual_profile_validation",
+          "passed": true
+        },
+        {
+          "name": "step_dimensions_match_truth",
+          "passed": false,
+          "errors_mm": [
+            0.3727151705969973,
+            1.0409451078885468e-12
+          ],
+          "tolerance_mm": 0.010000000000000002
+        },
+        {
+          "name": "step_volume_matches_truth",
+          "passed": false,
+          "volume_mm3": 783.1815222311701,
+          "expected_mm3": 776.9426750759449,
+          "tolerance_mm3": 3.667693415705421
+        },
+        {
+          "name": "cad_valid_single_solid",
+          "passed": true
+        },
+        {
+          "name": "dxf_units_and_arc_count",
+          "passed": true,
+          "arc_count": 1,
+          "expected_arc_count": 1
+        },
+        {
+          "name": "dxf_arc_centers_and_radii_match_truth",
+          "passed": false,
+          "center_radius_errors_px": [
+            [
+              1.7382499552571673,
+              0.12533422760826696
+            ]
+          ],
+          "tolerance_px": 0.05
+        },
+        {
+          "name": "svg_dimensions_match_truth",
+          "passed": false,
+          "errors_mm": [
+            0.37272000000000105,
+            -4.506433045392555e-06
+          ],
+          "tolerance_mm": 0.010000000000000002
+        },
+        {
+          "name": "svg_arc_radii_match_truth",
+          "passed": false,
+          "maximum_radius_error_px": 0.12534999999999918
+        }
+      ],
+      "errors": [],
+      "artifacts": {
+        "profile.json": {
+          "sha256": "f8f7c0330a420b0b8728a720b919ebe9bd0daa5b7f0b38a85adb3a0f854825b9",
+          "bytes": 9152
+        },
+        "model.step": {
+          "sha256": "7658397e7065fa379b321d49096aeed34458f4a7ffb8d832c3352c47f2269703",
+          "bytes": 16901
+        },
+        "profile.dxf": {
+          "sha256": "cbe99e9206f13a798a8c6daeed1f42e5bf996236745556da31122810dbcf57cb",
+          "bytes": 15934
+        },
+        "profile.svg": {
+          "sha256": "80d87425bb41fb1db00eb1643a6ffb4af71b65af3abb298fe5672e661a688700",
+          "bytes": 468
+        }
+      },
+      "truth": {
+        "area_px2": 4855.8917192246545,
+        "bounds_px": [
+          -200.0,
+          -13.492536266082611,
+          10.0,
+          13.492536266082611
+        ],
+        "arcs": [
+          {
+            "center": [
+              0.0,
+              0.0
+            ],
+            "radius": 10.0
+          }
+        ],
+        "source_chord_error_px": 0.00027885347727019116
+      },
+      "transform_degrees": 0,
+      "reversed": false,
+      "fitting_settings": {
+        "tolerance_px": 0.15,
+        "min_line_px": 5.25,
+        "sigma_px": 0
+      },
+      "initial_metadata": [
+        {
+          "kind": "line",
+          "rms": 1.0477307730439175e-15,
+          "max_abs": 2.1338916211502556e-15,
+          "radius_px": null,
+          "center_px": [
+            -99.9127379678136,
+            11.745506608823263
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 0.0,
+          "max_abs": 0.0,
+          "radius_px": null,
+          "center_px": [
+            -200.0,
+            4.318215521193979e-16
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 2.7165117815438948e-15,
+          "max_abs": 3.949017057921982e-15,
+          "radius_px": null,
+          "center_px": [
+            -99.91273796781367,
+            -11.745506608823261
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 7.271519869656809e-16,
+          "max_abs": 1.7763568394002505e-15,
+          "radius_px": 10.0,
+          "center_px": [
+            -6.396769652276636e-16,
+            8.074924662184331e-17
+          ],
+          "end_cap": false,
+          "fillet": false
+        }
+      ],
+      "final_metadata": [
+        {
+          "kind": "line",
+          "rms": 1.0477307730439175e-15,
+          "max_abs": 2.1338916211502556e-15,
+          "radius_px": null,
+          "center_px": [
+            -99.9127379678136,
+            11.745506608823263
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 4.796376474908576e-16,
+          "max_abs": 8.261795675318825e-16,
+          "radius_px": null,
+          "center_px": [
+            -200.0,
+            -3.124905510828997e-16
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 2.7165117815438948e-15,
+          "max_abs": 3.949017057921982e-15,
+          "radius_px": null,
+          "center_px": [
+            -99.91273796781367,
+            -11.745506608823261
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 7.271519869656809e-16,
+          "max_abs": 1.7763568394002505e-15,
+          "radius_px": 11.743717711276098,
+          "center_px": [
+            -0.030432070209081084,
+            1.7434521346227874
+          ],
+          "end_cap": true,
+          "fillet": false
+        }
+      ],
+      "notes": [
+        "1 straight edge(s) made exactly parallel or perpendicular."
+      ],
+      "cad_area_mm2": 195.7953805577562,
+      "index": 2,
+      "passed": false
+    },
+    {
+      "case": "tapered_cap_L400",
+      "checks": [
+        {
+          "name": "initial_analytic_fit",
+          "passed": true
+        },
+        {
+          "name": "source_boundary_preserved",
+          "passed": false,
+          "hausdorff_px": 4.0144996288829145,
+          "tolerance_px": 0.05
+        },
+        {
+          "name": "stored_and_emitted_arc_radii_agree",
+          "passed": false,
+          "absolute_errors_px": [
+            2.9418947833959272
+          ]
+        },
+        {
+          "name": "actual_profile_validation",
+          "passed": true
+        },
+        {
+          "name": "step_dimensions_match_truth",
+          "passed": false,
+          "errors_mm": [
+            0.8028334243930004,
+            8.08242361927114e-14
+          ],
+          "tolerance_mm": 0.010000000000000002
+        },
+        {
+          "name": "step_volume_matches_truth",
+          "passed": false,
+          "volume_mm3": 1766.49075955826,
+          "expected_mm3": 1752.1774116458253,
+          "tolerance_mm3": 6.9240370732167085
+        },
+        {
+          "name": "cad_valid_single_solid",
+          "passed": true
+        },
+        {
+          "name": "dxf_units_and_arc_count",
+          "passed": true,
+          "arc_count": 1,
+          "expected_arc_count": 1
+        },
+        {
+          "name": "dxf_arc_centers_and_radii_match_truth",
+          "passed": false,
+          "center_radius_errors_px": [
+            [
+              3.467170067314014,
+              0.5470635716085273
+            ]
+          ],
+          "tolerance_px": 0.05
+        },
+        {
+          "name": "svg_dimensions_match_truth",
+          "passed": false,
+          "errors_mm": [
+            0.8028300000000002,
+            2.993095407077817e-07
+          ],
+          "tolerance_mm": 0.010000000000000002
+        },
+        {
+          "name": "svg_arc_radii_match_truth",
+          "passed": false,
+          "maximum_radius_error_px": 0.5470499999999987
+        }
+      ],
+      "errors": [],
+      "artifacts": {
+        "profile.json": {
+          "sha256": "f53c8edb08f1b4273f2f8d2d2400f795721c486681e0c83c56aa94888a138584",
+          "bytes": 10025
+        },
+        "model.step": {
+          "sha256": "9d40e4746c12b5b19a6a39c27318c5c0cc0eb5032889a01e0f9c8861a0b8dc7f",
+          "bytes": 16914
+        },
+        "profile.dxf": {
+          "sha256": "7bcdda4d3811186ab2613ffac66794f0f326219efeac26d566556ccc45401c8c",
+          "bytes": 15934
+        },
+        "profile.svg": {
+          "sha256": "f56c7af668ddc5da00638980ce686e9ca57b458739745602fac3e2d336ae8c86",
+          "bytes": 471
+        }
+      },
+      "truth": {
+        "area_px2": 10951.108822786406,
+        "bounds_px": [
+          -400.0,
+          -16.983549251726146,
+          10.0,
+          16.983549251726146
+        ],
+        "arcs": [
+          {
+            "center": [
+              0.0,
+              0.0
+            ],
+            "radius": 10.0
+          }
+        ],
+        "source_chord_error_px": 0.00027885347727019116
+      },
+      "transform_degrees": 0,
+      "reversed": false,
+      "fitting_settings": {
+        "tolerance_px": 0.15,
+        "min_line_px": 10.25,
+        "sigma_px": 0
+      },
+      "initial_metadata": [
+        {
+          "kind": "line",
+          "rms": 3.38112600872095e-15,
+          "max_abs": 5.624860884180344e-15,
+          "radius_px": null,
+          "center_px": [
+            -199.9127379678135,
+            13.49101310164503
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 0.0,
+          "max_abs": 0.0,
+          "radius_px": null,
+          "center_px": [
+            -400.0,
+            4.0513401600356587e-16
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 3.162917949930195e-15,
+          "max_abs": 6.58351905406827e-15,
+          "radius_px": null,
+          "center_px": [
+            -199.91273796781363,
+            -13.491013101645027
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 7.271519869656809e-16,
+          "max_abs": 1.7763568394002505e-15,
+          "radius_px": 10.0,
+          "center_px": [
+            -6.396769652276636e-16,
+            8.074924662184331e-17
+          ],
+          "end_cap": false,
+          "fillet": false
+        }
+      ],
+      "final_metadata": [
+        {
+          "kind": "line",
+          "rms": 3.38112600872095e-15,
+          "max_abs": 5.624860884180344e-15,
+          "radius_px": null,
+          "center_px": [
+            -199.9127379678135,
+            13.49101310164503
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 6.030502422832319e-16,
+          "max_abs": 1.0399424614643925e-15,
+          "radius_px": null,
+          "center_px": [
+            -400.0,
+            4.3838807881083553e-16
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 3.162917949930195e-15,
+          "max_abs": 6.58351905406827e-15,
+          "radius_px": null,
+          "center_px": [
+            -199.91273796781363,
+            -13.491013101645027
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 7.271519869656809e-16,
+          "max_abs": 1.7763568394002505e-15,
+          "radius_px": 13.488958355004456,
+          "center_px": [
+            -0.06089071925429482,
+            3.488426969747842
+          ],
+          "end_cap": true,
+          "fillet": false
+        }
+      ],
+      "notes": [
+        "1 straight edge(s) made exactly parallel or perpendicular."
+      ],
+      "cad_area_mm2": 441.62268988953815,
+      "index": 3,
+      "passed": false
+    },
+    {
+      "case": "tapered_cap_L200_rotated_reversed",
+      "checks": [
+        {
+          "name": "initial_analytic_fit",
+          "passed": true
+        },
+        {
+          "name": "source_boundary_preserved",
+          "passed": false,
+          "hausdorff_px": 1.863747273428342,
+          "tolerance_px": 0.05
+        },
+        {
+          "name": "stored_and_emitted_arc_radii_agree",
+          "passed": false,
+          "absolute_errors_px": [
+            1.6183834836678503
+          ]
+        },
+        {
+          "name": "actual_profile_validation",
+          "passed": true
+        },
+        {
+          "name": "step_dimensions_match_truth",
+          "passed": false,
+          "errors_mm": [
+            0.3033588565400649,
+            0.23342728534017
+          ],
+          "tolerance_mm": 0.010000000000000002
+        },
+        {
+          "name": "step_volume_matches_truth",
+          "passed": false,
+          "volume_mm3": 783.1815222298858,
+          "expected_mm3": 776.9426750759445,
+          "tolerance_mm3": 3.6676934157053536
+        },
+        {
+          "name": "cad_valid_single_solid",
+          "passed": true
+        },
+        {
+          "name": "dxf_units_and_arc_count",
+          "passed": true,
+          "arc_count": 1,
+          "expected_arc_count": 1
+        },
+        {
+          "name": "dxf_arc_centers_and_radii_match_truth",
+          "passed": false,
+          "center_radius_errors_px": [
+            [
+              1.7382499552571478,
+              0.12533422760820656
+            ]
+          ],
+          "tolerance_px": 0.05
+        },
+        {
+          "name": "svg_dimensions_match_truth",
+          "passed": false,
+          "errors_mm": [
+            0.30335739303781395,
+            0.23342535737917203
+          ],
+          "tolerance_mm": 0.010000000000000002
+        },
+        {
+          "name": "svg_arc_radii_match_truth",
+          "passed": false,
+          "maximum_radius_error_px": 0.12534999999999918
+        }
+      ],
+      "errors": [],
+      "artifacts": {
+        "profile.json": {
+          "sha256": "ddddf367d5398774d380dce72794a00cf469047763b433527742e71ea6d6614d",
+          "bytes": 9162
+        },
+        "model.step": {
+          "sha256": "e1bc5f0310df93ecbc7dbc480d52066d06fdc7d5bf7f53a999d4dddffdef4099",
+          "bytes": 17094
+        },
+        "profile.dxf": {
+          "sha256": "0f8d91a534ac45fea99342e1436bb96a119cc937e629ab12772e6a6f6d7b75e9",
+          "bytes": 15987
+        },
+        "profile.svg": {
+          "sha256": "fa78389961fd1f46c8d0dc03b2453e449479f2699a66f7ca92cf7ae318a85d17",
+          "bytes": 495
+        }
+      },
+      "truth": {
+        "area_px2": 4855.891719224653,
+        "bounds_px": [
+          -96.84711303481092,
+          -174.13862321310413,
+          81.0,
+          -33.0
+        ],
+        "arcs": [
+          {
+            "center": [
+              71.0,
+              -43.0
+            ],
+            "radius": 10.0
+          }
+        ],
+        "source_chord_error_px": 0.00027885347727019116
+      },
+      "transform_degrees": 37,
+      "reversed": true,
+      "fitting_settings": {
+        "tolerance_px": 0.15,
+        "min_line_px": 5.0,
+        "sigma_px": 0
+      },
+      "initial_metadata": [
+        {
+          "kind": "line",
+          "rms": 2.1803981246435343e-14,
+          "max_abs": 5.535781339832345e-14,
+          "radius_px": null,
+          "center_px": [
+            -15.862482778867845,
+            -93.74860805198288
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 3.2962038661229663e-15,
+          "max_abs": 7.105427357601002e-15,
+          "radius_px": 10.0,
+          "center_px": [
+            71.0,
+            -43.0
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 2.915603480510309e-14,
+          "max_abs": 6.609894119694593e-14,
+          "radius_px": null,
+          "center_px": [
+            -1.7252381154248282,
+            -112.50936537458566
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 3.4279871508415595e-14,
+          "max_abs": 4.914123952355148e-14,
+          "radius_px": null,
+          "center_px": [
+            -88.7271020094586,
+            -163.36300463040965
+          ],
+          "end_cap": false,
+          "fillet": false
+        }
+      ],
+      "final_metadata": [
+        {
+          "kind": "line",
+          "rms": 2.1803981246435343e-14,
+          "max_abs": 5.535781339832345e-14,
+          "radius_px": null,
+          "center_px": [
+            -15.862482778867845,
+            -93.74860805198288
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 3.2962038661229663e-15,
+          "max_abs": 7.105427357601002e-15,
+          "radius_px": 11.743717711276076,
+          "center_px": [
+            72.02493155484927,
+            -44.410697261814946
+          ],
+          "end_cap": true,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 2.915603480510309e-14,
+          "max_abs": 6.609894119694593e-14,
+          "radius_px": null,
+          "center_px": [
+            -1.7252381154248282,
+            -112.50936537458566
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 6.096915927497601e-15,
+          "max_abs": 1.50933599125015e-14,
+          "radius_px": null,
+          "center_px": [
+            -88.72710200945856,
+            -163.36300463040965
+          ],
+          "end_cap": false,
+          "fillet": false
+        }
+      ],
+      "notes": [
+        "1 straight edge(s) made exactly parallel or perpendicular."
+      ],
+      "cad_area_mm2": 195.7953805577558,
+      "index": 4,
+      "passed": false
+    },
+    {
+      "case": "unequal_circle_capsule",
+      "checks": [
+        {
+          "name": "initial_analytic_fit",
+          "passed": true
+        },
+        {
+          "name": "source_boundary_preserved",
+          "passed": false,
+          "hausdorff_px": 2.036697278796018,
+          "tolerance_px": 0.05
+        },
+        {
+          "name": "stored_and_emitted_arc_radii_agree",
+          "passed": false,
+          "absolute_errors_px": [
+            2.0435277045032088,
+            1.9344185267327951
+          ]
+        },
+        {
+          "name": "actual_profile_validation",
+          "passed": true
+        },
+        {
+          "name": "step_dimensions_match_truth",
+          "passed": false,
+          "errors_mm": [
+            0.011337170889994752,
+            -0.0035037490469207455
+          ],
+          "tolerance_mm": 0.010000000000000002
+        },
+        {
+          "name": "step_volume_matches_truth",
+          "passed": true,
+          "volume_mm3": 1370.2134356963047,
+          "expected_mm3": 1372.0475727290632,
+          "tolerance_mm3": 3.6666385047850447
+        },
+        {
+          "name": "cad_valid_single_solid",
+          "passed": true
+        },
+        {
+          "name": "dxf_units_and_arc_count",
+          "passed": true,
+          "arc_count": 2,
+          "expected_arc_count": 2
+        },
+        {
+          "name": "dxf_arc_centers_and_radii_match_truth",
+          "passed": false,
+          "center_radius_errors_px": [
+            [
+              1.982952261883761,
+              0.05370471600385329
+            ],
+            [
+              2.0097465992938464,
+              0.02977770450322481
+            ]
+          ],
+          "tolerance_px": 0.05
+        },
+        {
+          "name": "svg_dimensions_match_truth",
+          "passed": false,
+          "errors_mm": [
+            0.011339999999997019,
+            -0.0035000000000007248
+          ],
+          "tolerance_mm": 0.010000000000000002
+        },
+        {
+          "name": "svg_arc_radii_match_truth",
+          "passed": false,
+          "maximum_radius_error_px": 0.05369999999999919
+        }
+      ],
+      "errors": [],
+      "artifacts": {
+        "profile.json": {
+          "sha256": "241384619b87b9956366e7127a3393267059ee37047f83560ca5213689c3cc8c",
+          "bytes": 22397
+        },
+        "model.step": {
+          "sha256": "12d5498d3ed365836f071bbc659fd70b620441fd525cfd5601307ef63179610d",
+          "bytes": 17257
+        },
+        "profile.dxf": {
+          "sha256": "7ac8ba83ca74f1a8d2e075c86bd7037ad87b9c22fc2593d563aa02e4449bd16e",
+          "bytes": 15999
+        },
+        "profile.svg": {
+          "sha256": "5f7f43bb1efa024239ca5e5b79cc98f55f801169573c4e7284264f664d4b5c03",
+          "bytes": 549
+        }
+      },
+      "truth": {
+        "area_px2": 8575.297329556643,
+        "bounds_px": [
+          -20.0,
+          -24.0,
+          184.0,
+          24.0
+        ],
+        "arcs": [
+          {
+            "center": [
+              0.0,
+              0.0
+            ],
+            "radius": 20.0
+          },
+          {
+            "center": [
+              160.0,
+              0.0
+            ],
+            "radius": 24.0
+          }
+        ],
+        "source_chord_error_px": 0.0001400884944602332
+      },
+      "transform_degrees": 0,
+      "reversed": false,
+      "fitting_settings": {
+        "tolerance_px": 0.15,
+        "min_line_px": 5.099993572049577,
+        "sigma_px": 0
+      },
+      "initial_metadata": [
+        {
+          "kind": "line",
+          "rms": 4.048102924465685e-15,
+          "max_abs": 6.589019655829176e-15,
+          "radius_px": null,
+          "center_px": [
+            79.52492970946578,
+            -21.994997753844974
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 6.340636659647333e-15,
+          "max_abs": 1.7763568394002505e-14,
+          "radius_px": 24.0,
+          "center_px": [
+            160.0,
+            9.385434522262497e-16
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 2.1834479316542464e-15,
+          "max_abs": 4.477207713443626e-15,
+          "radius_px": null,
+          "center_px": [
+            79.45,
+            21.993123925445424
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 1.2360821236584828e-15,
+          "max_abs": 3.552713678800501e-15,
+          "radius_px": 20.0,
+          "center_px": [
+            6.29268972325239e-16,
+            1.4770352610956814e-16
+          ],
+          "end_cap": false,
+          "fillet": false
+        }
+      ],
+      "final_metadata": [
+        {
+          "kind": "line",
+          "rms": 4.048102924465685e-15,
+          "max_abs": 6.589019655829176e-15,
+          "radius_px": null,
+          "center_px": [
+            79.52492970946578,
+            -21.994997753844974
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 6.340636659647333e-15,
+          "max_abs": 1.7763568394002505e-14,
+          "radius_px": 21.986250000000005,
+          "center_px": [
+            159.94965625,
+            -2.013120604766627
+          ],
+          "end_cap": true,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 2.1834479316542464e-15,
+          "max_abs": 4.477207713443626e-15,
+          "radius_px": null,
+          "center_px": [
+            79.45,
+            21.993123925445424
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 1.2360821236584828e-15,
+          "max_abs": 3.552713678800501e-15,
+          "radius_px": 21.98812324273665,
+          "center_px": [
+            0.04970308106841679,
+            -1.9875018571166132
+          ],
+          "end_cap": true,
+          "fillet": false
+        }
+      ],
+      "notes": [],
+      "cad_area_mm2": 342.55335892404264,
+      "index": 5,
+      "passed": false
+    },
+    {
+      "case": "unequal_circle_capsule_rotated_reversed",
+      "checks": [
+        {
+          "name": "initial_analytic_fit",
+          "passed": true
+        },
+        {
+          "name": "source_boundary_preserved",
+          "passed": false,
+          "hausdorff_px": 2.034686707718019,
+          "tolerance_px": 0.05
+        },
+        {
+          "name": "stored_and_emitted_arc_radii_agree",
+          "passed": false,
+          "absolute_errors_px": [
+            1.9326924743504854,
+            2.0415526946598206
+          ]
+        },
+        {
+          "name": "actual_profile_validation",
+          "passed": true
+        },
+        {
+          "name": "step_dimensions_match_truth",
+          "passed": false,
+          "errors_mm": [
+            0.012479895405633101,
+            0.013271731703454748
+          ],
+          "tolerance_mm": 0.010000000000000002
+        },
+        {
+          "name": "step_volume_matches_truth",
+          "passed": true,
+          "volume_mm3": 1370.2130954833178,
+          "expected_mm3": 1372.0475727290634,
+          "tolerance_mm3": 3.6666385047852064
+        },
+        {
+          "name": "cad_valid_single_solid",
+          "passed": true
+        },
+        {
+          "name": "dxf_units_and_arc_count",
+          "passed": true,
+          "arc_count": 2,
+          "expected_arc_count": 2
+        },
+        {
+          "name": "dxf_arc_centers_and_radii_match_truth",
+          "passed": false,
+          "center_radius_errors_px": [
+            [
+              1.981088740221549,
+              0.05355752564952354
+            ],
+            [
+              2.0078807899350832,
+              0.029675937396358876
+            ]
+          ],
+          "tolerance_px": 0.05
+        },
+        {
+          "name": "svg_dimensions_match_truth",
+          "passed": false,
+          "errors_mm": [
+            0.012483678486631788,
+            0.013269259134450095
+          ],
+          "tolerance_mm": 0.010000000000000002
+        },
+        {
+          "name": "svg_arc_radii_match_truth",
+          "passed": false,
+          "maximum_radius_error_px": 0.05355000000000132
+        }
+      ],
+      "errors": [],
+      "artifacts": {
+        "profile.json": {
+          "sha256": "6373bca0ede973dabb0842e87d806fc1a8be54dcb32713f60a3bc5b901356af6",
+          "bytes": 22297
+        },
+        "model.step": {
+          "sha256": "3460ac6ab6ddf190ec3f1d56dacdd8f351d532a5d03c85e78ddf6cc9e0177616",
+          "bytes": 17265
+        },
+        "profile.dxf": {
+          "sha256": "ce01855ed899d5b27d5c34858254a44e0d44cbb7907b7c0a0550476b83b669ef",
+          "bytes": 16003
+        },
+        "profile.svg": {
+          "sha256": "8612a2d369e78e0d38336273a76ecb971edb0ad9616a8569ca4c65ed10fc1023",
+          "bytes": 577
+        }
+      },
+      "truth": {
+        "area_px2": 8575.297329556644,
+        "bounds_px": [
+          51.0,
+          -63.0,
+          222.78168160756684,
+          77.29040370432773
+        ],
+        "arcs": [
+          {
+            "center": [
+              71.0,
+              -43.0
+            ],
+            "radius": 20.0
+          },
+          {
+            "center": [
+              198.78168160756684,
+              53.29040370432773
+            ],
+            "radius": 24.0
+          }
+        ],
+        "source_chord_error_px": 0.0001400884944602332
+      },
+      "transform_degrees": 37,
+      "reversed": true,
+      "fitting_settings": {
+        "tolerance_px": 0.15,
+        "min_line_px": 5.0,
+        "sigma_px": 0
+      },
+      "initial_metadata": [
+        {
+          "kind": "line",
+          "rms": 1.7204955902624423e-14,
+          "max_abs": 4.087583151647339e-14,
+          "radius_px": null,
+          "center_px": [
+            147.74835288245376,
+            -12.706688835363881
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 2.7699657539669384e-15,
+          "max_abs": 7.105427357601002e-15,
+          "radius_px": 20.0,
+          "center_px": [
+            71.0,
+            -43.0
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 1.7357206922940608e-14,
+          "max_abs": 3.652989390995252e-14,
+          "radius_px": null,
+          "center_px": [
+            121.15708506022438,
+            22.33210300242512
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 6.9999326534565925e-15,
+          "max_abs": 1.7763568394002505e-14,
+          "radius_px": 24.0,
+          "center_px": [
+            198.78168160756684,
+            53.29040370432773
+          ],
+          "end_cap": false,
+          "fillet": false
+        }
+      ],
+      "final_metadata": [
+        {
+          "kind": "line",
+          "rms": 1.7204955902624423e-14,
+          "max_abs": 4.087583151647339e-14,
+          "radius_px": null,
+          "center_px": [
+            147.74835288245376,
+            -12.706688835363881
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 2.7699657539669384e-15,
+          "max_abs": 7.105427357601002e-15,
+          "radius_px": 21.986250000000002,
+          "center_px": [
+            69.84467576166075,
+            -41.384322133961746
+          ],
+          "end_cap": true,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 1.7844627292672804e-14,
+          "max_abs": 4.712546642948517e-14,
+          "radius_px": null,
+          "center_px": [
+            121.21579888887962,
+            22.378693333161664
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 6.9999326534565925e-15,
+          "max_abs": 1.7763568394002505e-14,
+          "radius_px": 21.988123242736638,
+          "center_px": [
+            197.531113471967,
+            54.86638829328751
+          ],
+          "end_cap": true,
+          "fillet": false
+        }
+      ],
+      "notes": [],
+      "cad_area_mm2": 342.55327387092285,
+      "index": 6,
+      "passed": false
+    },
+    {
+      "case": "parallel_cap_L50",
+      "checks": [
+        {
+          "name": "initial_analytic_fit",
+          "passed": true
+        },
+        {
+          "name": "source_boundary_preserved",
+          "passed": true,
+          "hausdorff_px": 0.0009791113000113517,
+          "tolerance_px": 0.05
+        },
+        {
+          "name": "stored_and_emitted_arc_radii_agree",
+          "passed": true,
+          "absolute_errors_px": [
+            1.7763568394002505e-15
+          ]
+        },
+        {
+          "name": "actual_profile_validation",
+          "passed": true
+        },
+        {
+          "name": "step_dimensions_match_truth",
+          "passed": true,
+          "errors_mm": [
+            0.0,
+            0.0
+          ],
+          "tolerance_mm": 0.010000000000000002
+        },
+        {
+          "name": "step_volume_matches_truth",
+          "passed": true,
+          "volume_mm3": 185.13274122871948,
+          "expected_mm3": 185.1327412287184,
+          "tolerance_mm3": 1.2113250686598218
+        },
+        {
+          "name": "cad_valid_single_solid",
+          "passed": true
+        },
+        {
+          "name": "dxf_units_and_arc_count",
+          "passed": true,
+          "arc_count": 1,
+          "expected_arc_count": 1
+        },
+        {
+          "name": "dxf_arc_centers_and_radii_match_truth",
+          "passed": true,
+          "center_radius_errors_px": [
+            [
+              4.440892098500624e-15,
+              0.0
+            ]
+          ],
+          "tolerance_px": 0.05
+        },
+        {
+          "name": "svg_dimensions_match_truth",
+          "passed": true,
+          "errors_mm": [
+            0.0,
+            -1.7763568394002505e-15
+          ],
+          "tolerance_mm": 0.010000000000000002
+        },
+        {
+          "name": "svg_arc_radii_match_truth",
+          "passed": true,
+          "maximum_radius_error_px": 0.0
+        }
+      ],
+      "errors": [],
+      "artifacts": {
+        "profile.json": {
+          "sha256": "c1c5fb9b1a210219d632a6822f1945d5a634af67e99dacb69dd1acb94048a11b",
+          "bytes": 8175
+        },
+        "model.step": {
+          "sha256": "5475a6cddcb7b4a3eea48b795b91a4f4958306e209e6fd16959463e6935554cb",
+          "bytes": 16063
+        },
+        "profile.dxf": {
+          "sha256": "144815826ae5a8a5e24cafab776d6d2b532625f2a63ba9153d940ae5c0c2b8d4",
+          "bytes": 15812
+        },
+        "profile.svg": {
+          "sha256": "d08afa891150a4fba5def84d5e485622e71c7ee6d8f1d593471ecb9a0dc6ffc8",
+          "bytes": 370
+        }
+      },
+      "truth": {
+        "area_px2": 1157.0796326794898,
+        "bounds_px": [
+          -50.0,
+          -10.000000000000004,
+          10.0,
+          10.000000000000004
+        ],
+        "arcs": [
+          {
+            "center": [
+              0.0,
+              0.0
+            ],
+            "radius": 10.0
+          }
+        ],
+        "source_chord_error_px": 0.00027974938730190857
+      },
+      "transform_degrees": 0,
+      "reversed": false,
+      "fitting_settings": {
+        "tolerance_px": 0.15,
+        "min_line_px": 5.0,
+        "sigma_px": 0
+      },
+      "initial_metadata": [
+        {
+          "kind": "line",
+          "rms": 1.844278908977549e-15,
+          "max_abs": 2.7685860476018433e-15,
+          "radius_px": null,
+          "center_px": [
+            -25.0,
+            10.0
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 0.0,
+          "max_abs": 0.0,
+          "radius_px": null,
+          "center_px": [
+            -50.0,
+            -3.1579677144893343e-16
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 4.959042984441354e-16,
+          "max_abs": 9.922292082015933e-16,
+          "radius_px": null,
+          "center_px": [
+            -25.0,
+            -10.000000000000002
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 9.977814256809975e-16,
+          "max_abs": 1.7763568394002505e-15,
+          "radius_px": 9.999999999999998,
+          "center_px": [
+            1.7471362295572746e-15,
+            6.572954645935231e-17
+          ],
+          "end_cap": false,
+          "fillet": false
+        }
+      ],
+      "final_metadata": [
+        {
+          "kind": "line",
+          "rms": 1.944697751986758e-15,
+          "max_abs": 3.2979988203767522e-15,
+          "radius_px": null,
+          "center_px": [
+            -25.0,
+            10.000000000000004
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 3.5615355501875244e-16,
+          "max_abs": 6.123233995736768e-16,
+          "radius_px": null,
+          "center_px": [
+            -50.0,
+            -1.1418046434500458e-16
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 2.1302936879934375e-15,
+          "max_abs": 3.4746482559574457e-15,
+          "radius_px": null,
+          "center_px": [
+            -25.0,
+            -10.0
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 9.977814256809975e-16,
+          "max_abs": 1.7763568394002505e-15,
+          "radius_px": 10.000000000000002,
+          "center_px": [
+            1.7471362295572746e-15,
+            1.7763568394002505e-15
+          ],
+          "end_cap": true,
+          "fillet": false
+        }
+      ],
+      "notes": [
+        "3 straight edge(s) made exactly parallel or perpendicular."
+      ],
+      "cad_area_mm2": 46.2831853071796,
+      "index": 7,
+      "passed": true
+    },
+    {
+      "case": "parallel_cap_L200",
+      "checks": [
+        {
+          "name": "initial_analytic_fit",
+          "passed": true
+        },
+        {
+          "name": "source_boundary_preserved",
+          "passed": true,
+          "hausdorff_px": 0.0009791113000165949,
+          "tolerance_px": 0.05
+        },
+        {
+          "name": "stored_and_emitted_arc_radii_agree",
+          "passed": true,
+          "absolute_errors_px": [
+            7.105427357601002e-15
+          ]
+        },
+        {
+          "name": "actual_profile_validation",
+          "passed": true
+        },
+        {
+          "name": "step_dimensions_match_truth",
+          "passed": true,
+          "errors_mm": [
+            0.0,
+            0.0
+          ],
+          "tolerance_mm": 0.010000000000000002
+        },
+        {
+          "name": "step_volume_matches_truth",
+          "passed": true,
+          "volume_mm3": 665.1327412287197,
+          "expected_mm3": 665.1327412287188,
+          "tolerance_mm3": 3.6113250686597635
+        },
+        {
+          "name": "cad_valid_single_solid",
+          "passed": true
+        },
+        {
+          "name": "dxf_units_and_arc_count",
+          "passed": true,
+          "arc_count": 1,
+          "expected_arc_count": 1
+        },
+        {
+          "name": "dxf_arc_centers_and_radii_match_truth",
+          "passed": true,
+          "center_radius_errors_px": [
+            [
+              9.550499576785464e-15,
+              1.7763568394002505e-15
+            ]
+          ],
+          "tolerance_px": 0.05
+        },
+        {
+          "name": "svg_dimensions_match_truth",
+          "passed": true,
+          "errors_mm": [
+            0.0,
+            -5.329070518200751e-15
+          ],
+          "tolerance_mm": 0.010000000000000002
+        },
+        {
+          "name": "svg_arc_radii_match_truth",
+          "passed": true,
+          "maximum_radius_error_px": 0.0
+        }
+      ],
+      "errors": [],
+      "artifacts": {
+        "profile.json": {
+          "sha256": "d38a789f07e6961c900174c86085593d2f2648b40070fb6e15f170eac868e8a4",
+          "bytes": 8311
+        },
+        "model.step": {
+          "sha256": "05f78d199e08183bd78adc2cd2fb00de782d0815105f49b2993c18ad02e15210",
+          "bytes": 16140
+        },
+        "profile.dxf": {
+          "sha256": "c2d52ab3f237159a8824503b7f865bb0eb0fe79b92cdbf38a6ad949024fd4d6b",
+          "bytes": 15906
+        },
+        "profile.svg": {
+          "sha256": "c9149b3d3d219726b4e6fbfb9553658d7a712aebdd8234df94f34219413db5fe",
+          "bytes": 371
+        }
+      },
+      "truth": {
+        "area_px2": 4157.079632679492,
+        "bounds_px": [
+          -200.0,
+          -10.000000000000012,
+          10.0,
+          10.000000000000012
+        ],
+        "arcs": [
+          {
+            "center": [
+              0.0,
+              0.0
+            ],
+            "radius": 10.0
+          }
+        ],
+        "source_chord_error_px": 0.00027974938730190857
+      },
+      "transform_degrees": 0,
+      "reversed": false,
+      "fitting_settings": {
+        "tolerance_px": 0.15,
+        "min_line_px": 5.25,
+        "sigma_px": 0
+      },
+      "initial_metadata": [
+        {
+          "kind": "line",
+          "rms": 6.238900270118237e-15,
+          "max_abs": 7.152954711243585e-15,
+          "radius_px": null,
+          "center_px": [
+            -100.0,
+            10.0
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 0.0,
+          "max_abs": 0.0,
+          "radius_px": null,
+          "center_px": [
+            -200.0,
+            6.315935428978669e-16
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 4.470889310528351e-15,
+          "max_abs": 5.376597871843342e-15,
+          "radius_px": null,
+          "center_px": [
+            -99.99999999999996,
+            -10.000000000000002
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 9.977814256809975e-16,
+          "max_abs": 1.7763568394002505e-15,
+          "radius_px": 9.999999999999998,
+          "center_px": [
+            1.7471362295572746e-15,
+            6.572954645935231e-17
+          ],
+          "end_cap": false,
+          "fillet": false
+        }
+      ],
+      "final_metadata": [
+        {
+          "kind": "line",
+          "rms": 3.595965486516604e-15,
+          "max_abs": 6.931144226943709e-15,
+          "radius_px": null,
+          "center_px": [
+            -100.0,
+            10.000000000000007
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 3.5615355501875273e-16,
+          "max_abs": 6.123233995736773e-16,
+          "radius_px": null,
+          "center_px": [
+            -200.0,
+            3.8540286648380377e-16
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 3.741740453205752e-15,
+          "max_abs": 7.060459102112649e-15,
+          "radius_px": null,
+          "center_px": [
+            -100.0,
+            -10.000000000000005
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 9.977814256809975e-16,
+          "max_abs": 1.7763568394002505e-15,
+          "radius_px": 10.000000000000007,
+          "center_px": [
+            1.7471362295572746e-15,
+            8.881784197001252e-16
+          ],
+          "end_cap": true,
+          "fillet": false
+        }
+      ],
+      "notes": [
+        "3 straight edge(s) made exactly parallel or perpendicular."
+      ],
+      "cad_area_mm2": 166.28318530717968,
+      "index": 8,
+      "passed": true
+    },
+    {
+      "case": "parallel_equal_circle_capsule",
+      "checks": [
+        {
+          "name": "initial_analytic_fit",
+          "passed": true
+        },
+        {
+          "name": "source_boundary_preserved",
+          "passed": true,
+          "hausdorff_px": 0.0009883699421506297,
+          "tolerance_px": 0.05
+        },
+        {
+          "name": "stored_and_emitted_arc_radii_agree",
+          "passed": true,
+          "absolute_errors_px": [
+            3.552713678800501e-15,
+            0.0
+          ]
+        },
+        {
+          "name": "actual_profile_validation",
+          "passed": true
+        },
+        {
+          "name": "step_dimensions_match_truth",
+          "passed": true,
+          "errors_mm": [
+            0.0,
+            3.552713678800501e-15
+          ],
+          "tolerance_mm": 0.010000000000000002
+        },
+        {
+          "name": "step_volume_matches_truth",
+          "passed": true,
+          "volume_mm3": 1225.0619298297554,
+          "expected_mm3": 1225.061929829747,
+          "tolerance_mm3": 3.565307294316237
+        },
+        {
+          "name": "cad_valid_single_solid",
+          "passed": true
+        },
+        {
+          "name": "dxf_units_and_arc_count",
+          "passed": true,
+          "arc_count": 2,
+          "expected_arc_count": 2
+        },
+        {
+          "name": "dxf_arc_centers_and_radii_match_truth",
+          "passed": true,
+          "center_radius_errors_px": [
+            [
+              5.978733960281817e-15,
+              0.0
+            ],
+            [
+              0.0,
+              3.552713678800501e-15
+            ]
+          ],
+          "tolerance_px": 0.05
+        },
+        {
+          "name": "svg_dimensions_match_truth",
+          "passed": true,
+          "errors_mm": [
+            0.0,
+            0.0
+          ],
+          "tolerance_mm": 0.010000000000000002
+        },
+        {
+          "name": "svg_arc_radii_match_truth",
+          "passed": true,
+          "maximum_radius_error_px": 0.0
+        }
+      ],
+      "errors": [],
+      "artifacts": {
+        "profile.json": {
+          "sha256": "1ce86f4ca79a6cb9a8e5c518963b53b1fef8bc378cfe61ad058888c913638173",
+          "bytes": 21330
+        },
+        "model.step": {
+          "sha256": "5a4b5b5c07095b0d10d3f2eccaf7f2010e47c137ea21b09132039822fb1d2fcd",
+          "bytes": 16355
+        },
+        "profile.dxf": {
+          "sha256": "a27ee7cdf85fb004f80eaf68538cbc0f8bf8e480029d839305a9a52c9b870bd8",
+          "bytes": 15860
+        },
+        "profile.svg": {
+          "sha256": "c92b300390b591d97623100da83e3e30f6bdab59d39a2ce9f3caae4f6164ff22",
+          "bytes": 410
+        }
+      },
+      "truth": {
+        "area_px2": 7656.6370614359175,
+        "bounds_px": [
+          -20.0,
+          -20.0,
+          180.0,
+          20.0
+        ],
+        "arcs": [
+          {
+            "center": [
+              0.0,
+              0.0
+            ],
+            "radius": 20.0
+          },
+          {
+            "center": [
+              160.0,
+              0.0
+            ],
+            "radius": 20.0
+          }
+        ],
+        "source_chord_error_px": 0.00014054364069870928
+      },
+      "transform_degrees": 0,
+      "reversed": false,
+      "fitting_settings": {
+        "tolerance_px": 0.15,
+        "min_line_px": 5.0,
+        "sigma_px": 0
+      },
+      "initial_metadata": [
+        {
+          "kind": "line",
+          "rms": 0.0,
+          "max_abs": 0.0,
+          "radius_px": null,
+          "center_px": [
+            79.92502343017809,
+            -20.0
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 6.428950660795054e-15,
+          "max_abs": 1.4210854715202004e-14,
+          "radius_px": 20.0,
+          "center_px": [
+            160.0,
+            1.4976599069027617e-15
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 0.0,
+          "max_abs": 0.0,
+          "radius_px": null,
+          "center_px": [
+            80.07497656982194,
+            20.0
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 1.555544414121585e-15,
+          "max_abs": 3.552713678800501e-15,
+          "radius_px": 20.0,
+          "center_px": [
+            -5.501143612667794e-16,
+            -1.2692086209681684e-15
+          ],
+          "end_cap": false,
+          "fillet": false
+        }
+      ],
+      "final_metadata": [
+        {
+          "kind": "line",
+          "rms": 2.8308500054585532e-15,
+          "max_abs": 4.898587196589413e-15,
+          "radius_px": null,
+          "center_px": [
+            80.0,
+            -20.0
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 6.428950660795054e-15,
+          "max_abs": 1.4210854715202004e-14,
+          "radius_px": 20.0,
+          "center_px": [
+            160.0,
+            8.020817553778576e-15
+          ],
+          "end_cap": true,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 6.684057263156484e-15,
+          "max_abs": 1.3349888071979327e-14,
+          "radius_px": null,
+          "center_px": [
+            80.0,
+            20.000000000000004
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 1.555544414121585e-15,
+          "max_abs": 3.552713678800501e-15,
+          "radius_px": 20.0,
+          "center_px": [
+            -5.501143612667786e-16,
+            -8.881784197001252e-15
+          ],
+          "end_cap": true,
+          "fillet": false
+        }
+      ],
+      "notes": [
+        "2 straight edge(s) made exactly parallel or perpendicular."
+      ],
+      "cad_area_mm2": 306.26548245743663,
+      "index": 9,
+      "passed": true
+    },
+    {
+      "case": "parallel_equal_circle_capsule_rotated_reversed",
+      "checks": [
+        {
+          "name": "initial_analytic_fit",
+          "passed": true
+        },
+        {
+          "name": "source_boundary_preserved",
+          "passed": true,
+          "hausdorff_px": 0.0009883699419886414,
+          "tolerance_px": 0.05
+        },
+        {
+          "name": "stored_and_emitted_arc_radii_agree",
+          "passed": true,
+          "absolute_errors_px": [
+            3.552713678800501e-15,
+            7.105427357601002e-15
+          ]
+        },
+        {
+          "name": "actual_profile_validation",
+          "passed": true
+        },
+        {
+          "name": "step_dimensions_match_truth",
+          "passed": true,
+          "errors_mm": [
+            -3.694822225952521e-13,
+            4.511946372076636e-13
+          ],
+          "tolerance_mm": 0.010000000000000002
+        },
+        {
+          "name": "step_volume_matches_truth",
+          "passed": true,
+          "volume_mm3": 1225.0619298301137,
+          "expected_mm3": 1225.0619298297468,
+          "tolerance_mm3": 3.5653072943162063
+        },
+        {
+          "name": "cad_valid_single_solid",
+          "passed": true
+        },
+        {
+          "name": "dxf_units_and_arc_count",
+          "passed": true,
+          "arc_count": 2,
+          "expected_arc_count": 2
+        },
+        {
+          "name": "dxf_arc_centers_and_radii_match_truth",
+          "passed": true,
+          "center_radius_errors_px": [
+            [
+              3.1776437161565096e-14,
+              3.552713678800501e-15
+            ],
+            [
+              2.089768879877275e-13,
+              5.684341886080802e-14
+            ]
+          ],
+          "tolerance_px": 0.05
+        },
+        {
+          "name": "svg_dimensions_match_truth",
+          "passed": true,
+          "errors_mm": [
+            3.678486628189148e-06,
+            -7.408655484653082e-07
+          ],
+          "tolerance_mm": 0.010000000000000002
+        },
+        {
+          "name": "svg_arc_radii_match_truth",
+          "passed": true,
+          "maximum_radius_error_px": 0.0
+        }
+      ],
+      "errors": [],
+      "artifacts": {
+        "profile.json": {
+          "sha256": "0fd9b72674d8437ce2b43fa74062e6c0fbd29f057aeda7a1869bf0c56337b7d7",
+          "bytes": 21358
+        },
+        "model.step": {
+          "sha256": "41e2ac24136d147bb2b3585d4af6d86f84694a14b7a14d5099c5457c909bcf2c",
+          "bytes": 17081
+        },
+        "profile.dxf": {
+          "sha256": "ea4045be718c9ceaee330baa06f727de1e4f66217bbf635c47807f0543ca28b8",
+          "bytes": 16006
+        },
+        "profile.svg": {
+          "sha256": "bf790197d723715ad2685f55070aa5af47ce680a07beeb5f7e0c175431033703",
+          "bytes": 538
+        }
+      },
+      "truth": {
+        "area_px2": 7656.637061435916,
+        "bounds_px": [
+          51.0,
+          -63.0,
+          218.78168160756684,
+          73.29040370432773
+        ],
+        "arcs": [
+          {
+            "center": [
+              71.0,
+              -43.0
+            ],
+            "radius": 20.0
+          },
+          {
+            "center": [
+              198.78168160756684,
+              53.29040370432773
+            ],
+            "radius": 20.0
+          }
+        ],
+        "source_chord_error_px": 0.00014054364069870928
+      },
+      "transform_degrees": 37,
+      "reversed": true,
+      "fitting_settings": {
+        "tolerance_px": 0.15,
+        "min_line_px": 5.0,
+        "sigma_px": 0
+      },
+      "initial_metadata": [
+        {
+          "kind": "line",
+          "rms": 9.205913102621612e-15,
+          "max_abs": 2.5750819334987892e-14,
+          "radius_px": null,
+          "center_px": [
+            122.79466138966113,
+            21.072790027006484
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 7.119219853319548e-15,
+          "max_abs": 1.7763568394002505e-14,
+          "radius_px": 20.0,
+          "center_px": [
+            198.78168160756684,
+            53.29040370432773
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 1.0569276428109617e-14,
+          "max_abs": 2.7963201850206932e-14,
+          "radius_px": null,
+          "center_px": [
+            146.86726231574306,
+            -10.87263037488525
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 2.7304484354532396e-15,
+          "max_abs": 7.105427357601002e-15,
+          "radius_px": 20.0,
+          "center_px": [
+            71.0,
+            -43.0
+          ],
+          "end_cap": false,
+          "fillet": false
+        }
+      ],
+      "final_metadata": [
+        {
+          "kind": "line",
+          "rms": 6.808981946808922e-15,
+          "max_abs": 1.9108062546242375e-14,
+          "radius_px": null,
+          "center_px": [
+            122.85454034074246,
+            21.11791205310972
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 7.119219853319548e-15,
+          "max_abs": 1.7763568394002505e-14,
+          "radius_px": 20.000000000000007,
+          "center_px": [
+            198.78168160756684,
+            53.2904037043277
+          ],
+          "end_cap": true,
+          "fillet": false
+        },
+        {
+          "kind": "line",
+          "rms": 7.377220932759069e-15,
+          "max_abs": 2.8492986540650857e-14,
+          "radius_px": null,
+          "center_px": [
+            146.92714126682438,
+            -10.827508348782004
+          ],
+          "end_cap": false,
+          "fillet": false
+        },
+        {
+          "kind": "arc",
+          "rms": 2.7304484354532396e-15,
+          "max_abs": 7.105427357601002e-15,
+          "radius_px": 20.0,
+          "center_px": [
+            70.99999999999999,
+            -42.999999999999986
+          ],
+          "end_cap": true,
+          "fillet": false
+        }
+      ],
+      "notes": [
+        "2 straight edge(s) made exactly parallel or perpendicular."
+      ],
+      "cad_area_mm2": 306.26548245743686,
+      "index": 10,
+      "passed": true
+    }
+  ],
+  "summary": {
+    "expected_rows": 11,
+    "retained_rows": 11,
+    "passed_rows": 4,
+    "failed_rows": 7,
+    "source_stable": true
+  },
+  "limits": [
+    "Exact synthetic tangent geometry, sigma zero; not a rendered/full-photo accuracy study.",
+    "Profile/CAD/STEP use the actual production classes and OCC kernel; STEP readback is not an independent CAD kernel.",
+    "Truth uses analytic circle/tangent geometry, Green integrals and cardinal extrema; source chord error is recorded.",
+    "A numerical geometry tolerance is a digital regression allowance, not a physical error bound."
+  ]
+}

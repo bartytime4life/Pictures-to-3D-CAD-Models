@@ -1,22 +1,21 @@
 # Project status and evidence
 
-Candidate snapshot: **November 12, 2026**. This continuous-domain candidate
-is based on published [draft PR #68](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/68)
-at `0b359ecb38a4cbe8df5fd6e0a2cd9fd88fb42e4d`. It adds one shared edge-offset
-and positive Gaussian-blur domain under externally supplied response/calibration
-bounds. The [guide](gaussian-response-domains.md) and
-[complete controls](validation/gaussian-response-domains.md) distinguish accepted,
-excluded and unknown joint boxes, exact order certificates and retained ambiguity.
-These developer tools do not infer physical calibration or enter the workbench
-trace/API/UI. Production tracing still comes from PR #59. Start with
+Candidate snapshot: **November 12, 2026**. This tangent-geometry candidate is
+based on published [draft PR #69](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/69)
+at `0d8bd37633900f4f88200be13bd5309d28ca58f2`. It repairs production fitting of
+rounded ends whose sides have a small real taper. The
+[exact-geometry and native-export record](validation/tapered-caps.md) checks
+tangency, line-anchor invariance, radius/centre consistency and numerical limits.
+The interface, scale inputs and API/file schemas are unchanged. This is a
+digital geometry repair, not physical camera calibration. Start with
 [setup](development.md), the [task index](README.md),
 [developer tools](developer-tools.md) or [API examples](api-examples.md).
 
 ## Source and review state
 
 At this check, `main` was `5c07d0f70d7df0200bc24227c8ac7e9b630f7f09`.
-PRs #47–#68 were verified open and unmerged at **15:20 UTC**; PRs #48–#68
-remain drafts. This is a review-state observation, separate from CI results.
+PRs #47–#68 retain their open/unmerged **15:20 UTC** observation. PR #69
+was verified open, draft and unmerged at **15:50 UTC**. This is a review-state observation, separate from CI results.
 This candidate branch includes their changes; that checkout of `main` does
 not contain them. The conditional corner
 analysis remains separate from production tracing; the grid and crossing repairs
@@ -47,6 +46,7 @@ affect the existing production edge-profile search.
 | `81dd0871aab390b1613bedc0d2b7c7f0578cf280` | Exact common-response consistency, strict CLI, finite edge/calibration controls and independent certificate audits | [PR #66](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/66), open draft; base PR #65's branch |
 | `b27e48e09079b497d85dea766233db266e13cc90` | Complete documentation review, executable calibration examples, recovery and report-handling guidance | [PR #67](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/67), open draft; base PR #66's branch |
 | `0b359ecb38a4cbe8df5fd6e0a2cd9fd88fb42e4d` | Exact input/output-rectangle response constraints, outward Gaussian CDF covers and complete finite refinement controls | [PR #68](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/68), open draft; base PR #67's branch |
+| `0d8bd37633900f4f88200be13bd5309d28ca58f2` | Continuous shared Gaussian offset/blur domains, strict CLI, independent proof replay and complete documentation review | [PR #69](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/69), open draft; base PR #68's branch |
 
 The PR links show live review state. A documentation update does not install,
 merge or deploy those changes. Record the checkout used to start a service:
@@ -93,6 +93,7 @@ there is no product endpoint, automatic tracing correction or accuracy label.
 
 | Evidence | Recorded result | Interpretation |
 | --- | --- | --- |
+| Tapered rounded-end geometry candidate | [Source-bound repair and native exports](validation/tapered-caps.md): 1,556 Python tests, 74 browser scenarios, 20 new focused cases and all 11 native-export rows pass | Exact synthetic geometry, line-anchor invariance and retained arithmetic limits; no physical camera or manufacturing qualification |
 | Continuous Gaussian-response domain candidate | [Joint-domain controls](validation/gaussian-response-domains.md): 1,536 Python tests passed; all 27 analyses independently replayed, including 319 tree nodes and 396 CDF certificates | Supplied straight-edge/response model, complete retained unknowns and no general convergence or physical qualification |
 | Bounded-input response developer candidate | [Rectangle/CDF experiment](validation/response-rectangles.md): 1,446 Python tests passed; all 288 finite cases retained, with 200 outer-box exclusions, 82 every-input certificates and six box-undetermined cases | Supplied mathematical Gaussian/response model; Cartesian compatibility alone is insufficient for correlated input feasibility |
 | Common-response calibration developer candidate | [Exact response/edge controls](validation/response-calibration.md): 1,324 Python tests passed, 1,170 finite whole-profile candidates, nine gauges and independent exact graph/certificate checks | Exact supplied inputs and calibration bounds; no inferred physical calibration, inverse correction or continuous offset certificate |
@@ -124,7 +125,9 @@ observation. PR #64 retains its **14:08 UTC** check. PR #65 and PR #66 workbench
 runs were checked on **November 12, 14:27 UTC**; PR #66's workbench result was
 refreshed at **14:35 UTC**, its library result at **14:30 UTC**, and PR #67's
 workbench run at **15:17 UTC**, when it had completed successfully. PR #68's
-workbench and library runs were checked at **15:17 UTC**. Each result remains
+workbench and library runs were checked at **15:17 UTC**; its workbench
+result was refreshed at **15:39 UTC**. PR #69's two runs were checked at
+**15:39 UTC**; PR #69's workbench run was refreshed at **15:50 UTC**. Each result remains
 bound to its own head:
 
 | Head | Hosted workflow | Result at this observation |
@@ -157,8 +160,10 @@ bound to its own head:
 | `81dd087` | [Workbench run 129](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43234835732) | Completed successfully at the 14:35 UTC check |
 | `81dd087` | [Library run 47](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43234835472) | Completed successfully at the 14:30 UTC check |
 | `b27e48e` | [Workbench run 130](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43238706845) | Completed successfully at the 15:17 UTC check |
-| `0b359ec` | [Workbench run 131](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43241865289) | In progress at 15:17 UTC; no terminal result inferred |
+| `0b359ec` | [Workbench run 131](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43241865289) | Completed successfully at the 15:39 UTC check |
 | `0b359ec` | [Library run 48](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43241865188) | Completed successfully at the 15:17 UTC check |
+| `0d8bd37` | [Workbench run 132](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43247853904) | In progress at 15:50 UTC; no terminal result inferred |
+| `0d8bd37` | [Library run 49](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43247853602) | Completed successfully at the 15:39 UTC check |
 
 Follow the exact run links for later results. The raw-source candidate's local 1,273-test result is
 separate from hosted CI. The response-calibration candidate records its own local
