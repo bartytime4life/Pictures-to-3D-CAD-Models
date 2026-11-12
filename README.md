@@ -21,7 +21,8 @@ also records missed cases; it does not supply a product accuracy status.
 A separate [conditional corner-radius tool](docs/corner-feasibility.md) explores
 which radii can explain explicitly bounded observations under a Gaussian model
 with fixed or supplied bounded blur, and point or known uniform pixel-aperture
-observations. It preserves unresolved regions and can reject an incompatible model;
+observations, including [known signed sampling stencils](docs/signed-stencils.md).
+It preserves unresolved regions and can reject an incompatible model;
 it does not alter the workbench's trace or qualify a physical radius.
 
 This repository contains two related tools:

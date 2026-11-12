@@ -58,6 +58,20 @@ def aperture_config(**changes):
     return raw
 
 
+def stencil_config(**changes):
+    """Explicit known signed functionals; weights retain their supplied gain."""
+    raw = blur_config()
+    del raw["points"]
+    raw.update({
+        "version": 4,
+        "sampling_stencils": [[{
+            "weight": "1", "pixel_aperture": [["0", "0"], ["0", "0"]],
+        }]],
+    })
+    raw.update(changes)
+    return raw
+
+
 def write_input(folder, raw=None):
     path = folder / "input.json"
     path.write_text(json.dumps(config() if raw is None else raw), encoding="utf-8")
@@ -123,18 +137,25 @@ def test_valid_scientific_outcomes_all_exit_successfully(changes, status, tmp_pa
         assert report["outer"] == []
 
 
-@pytest.mark.parametrize("version", [1, 2, 3])
+@pytest.mark.parametrize("version", [1, 2, 3, 4])
 def test_saved_result_equals_stdout_and_hashes_exact_input_and_current_sources(
     version, tmp_path, capsys,
 ):
     path = tmp_path / "input.json"
     # The hash must bind the supplied bytes, including CRLF and noncanonical spacing.
-    model = {1: config, 2: blur_config, 3: aperture_config}[version]
+    model = {1: config, 2: blur_config, 3: aperture_config, 4: stencil_config}[version]
     supplied = model(radius_resolution="0.10000000000000000000000000000000000001")
     if version == 3:
         supplied["pixel_apertures"] = [
             [["0.10000000000000000000000000000000000001", "0.2"], ["0", "0"]]
         ]
+    elif version == 4:
+        supplied["sampling_stencils"] = [[{
+            "weight": "1.00000000000000000000000000000000000001",
+            "pixel_aperture": [
+                ["0.10000000000000000000000000000000000001", "0.2"], ["0", "0"],
+            ],
+        }]]
     raw = (json.dumps(supplied, indent=3) + "\r\n").encode("utf-8")
     path.write_bytes(raw)
     output = tmp_path / "result.json"
@@ -149,13 +170,17 @@ def test_saved_result_equals_stdout_and_hashes_exact_input_and_current_sources(
         assert report["input"]["pixel_apertures"][0][0][0] == (
             "0.10000000000000000000000000000000000001"
         )
+    elif version == 4:
+        term = report["input"]["sampling_stencils"][0][0]
+        assert term["weight"] == "1.00000000000000000000000000000000000001"
+        assert term["pixel_aperture"][0][0] == "0.10000000000000000000000000000000000001"
     provenance = report["provenance"]
     assert provenance["input_mode"] == "file"
     assert provenance["input_sha256"] == hashlib.sha256(raw).hexdigest()
     names = {
         "backend/corner_feasibility.py", "backend/decimal_bounds.py",
         "backend/corner_blur_domains.py", "backend/corner_pixel_apertures.py",
-        "scripts/corner_feasibility.py",
+        "backend/corner_signed_stencils.py", "scripts/corner_feasibility.py",
     }
     assert set(provenance["source_sha256"]) == names
     for name in names:
@@ -193,10 +218,10 @@ def test_the_128_kib_input_boundary_is_inclusive(tmp_path, capsys):
     assert json.loads(capsys.readouterr().out)["status"] == "conditional_compatible"
 
 
-@pytest.mark.parametrize("version", [1, 2, 3])
+@pytest.mark.parametrize("version", [1, 2, 3, 4])
 @pytest.mark.parametrize("same_as_input", [False, True])
 def test_output_never_overwrites_an_existing_file(version, same_as_input, tmp_path, capsys):
-    model = {1: config, 2: blur_config, 3: aperture_config}[version]
+    model = {1: config, 2: blur_config, 3: aperture_config, 4: stencil_config}[version]
     path = write_input(tmp_path, model())
     output = path if same_as_input else tmp_path / "result.json"
     if not same_as_input:
@@ -320,6 +345,8 @@ def test_help_explains_that_one_blur_choice_must_explain_every_observation(capsy
     assert "one shared blur choice" in help_text and "cannot vary per point" in help_text
     assert "known uniform product pixel apertures" in help_text
     assert "not arbitrary position uncertainty or total flux" in help_text
+    assert "signed stencil weights without normalization" in help_text
+    assert "not clamped to [0,1]" in help_text
 
 
 @pytest.mark.parametrize("levels", [[["0", "1"]], [["0.99", "1"]], [["0.24", "0.26"]]])
@@ -425,12 +452,175 @@ def test_only_exact_integer_version_three_dispatches_to_the_pixel_analyzer(
     assert captured.out == "" and "Traceback" not in captured.err
 
 
-def test_dirty_pixel_source_is_reported_even_when_it_is_the_only_modified_file(
-    tmp_path, monkeypatch,
+@pytest.mark.parametrize(
+    ("weight", "point", "target"),
+    [
+        ("-1", "0", ["-0.26", "-0.24"]),
+        ("2", "0", ["0.49", "0.51"]),
+        ("2", "10", ["1.9", "2"]),
+    ],
+)
+def test_signed_stencil_cli_accepts_negative_and_superunit_functionals_without_normalization(
+    weight, point, target, tmp_path, capsys,
+):
+    raw = stencil_config(
+        sampling_stencils=[[{
+            "weight": weight, "pixel_aperture": [[point, point], [point, point]],
+        }]],
+        blur_sigma_intervals=[["1", "1"], ["1", "1"]],
+        radius_domain=["0", "0"], level_intervals=[target],
+    )
+    path = write_input(tmp_path, raw)
+    assert cli.main([str(path)]) == 0
+    captured = capsys.readouterr()
+    report = json.loads(captured.out)
+    assert captured.err == "" and report["version"] == 4
+    assert report["status"] == "conditional_compatible"
+    assert report["inner"] == report["outer"] == [["0", "0"]]
+    assert report["input"] == raw
+    summary = report["stencil_summaries"][0]
+    assert Decimal(summary["weight_sum"]) == Decimal(weight)
+    assert Decimal(summary["l1"]) == abs(Decimal(weight))
+    assert Decimal(summary["negative_sum"]) == min(Decimal(0), Decimal(weight))
+    assert Decimal(summary["positive_sum"]) == max(Decimal(0), Decimal(weight))
+    assert summary["terms"] == summary["nonzero_terms"] == 1
+    assert summary["constant_preserving"] is False
+    assert report["aperture_evaluations"] >= 1
+    assert report["level_evaluations"] == 1  # One whole-observation box attempt.
+    assumptions = report["assumptions"]
+    assert "signed sum, not probability" in assumptions["measurement"]
+    assert "no weight normalization or output clamping" in assumptions["measurement"]
+    assert "composite need not be monotone" in assumptions["radius_enclosure"]
+    assert "excluded" not in report
+
+
+def test_negative_stencil_guide_keeps_gain_and_radius_witness(tmp_path, capsys):
+    raw = stencil_config(
+        sampling_stencils=[[{
+            "weight": "-1", "pixel_aperture": [["0", "0"], ["0", "0"]],
+        }]],
+        blur_sigma_intervals=[["1", "1"], ["1", "1"]],
+        level_intervals=[["-0.26", "-0.24"]], max_boxes=64, cells=32,
+    )
+    path = write_input(tmp_path, raw)
+    assert cli.main([str(path)]) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["status"] == "conditional_compatible"
+    assert any(Decimal(lo) <= 0 <= Decimal(hi) for lo, hi in report["inner"])
+    assert Decimal(report["stencil_summaries"][0]["weight_sum"]) == -1
+    assert report["input"] == raw
+    assert report["level_evaluations"] == report["boxes_evaluated"]
+
+
+@pytest.mark.parametrize("target", [["2", "3"], ["-3", "-2"]])
+def test_target_outside_a_known_functional_range_is_a_valid_incompatible_analysis(
+    target, tmp_path, capsys,
+):
+    path = write_input(tmp_path, stencil_config(level_intervals=[target]))
+    assert cli.main([str(path)]) == 0
+    captured = capsys.readouterr()
+    report = json.loads(captured.out)
+    assert captured.err == "" and report["version"] == 4
+    assert report["status"] == "conditional_incompatible"
+    assert report["inner"] == report["outer"] == []
+    assert report["parameter_boxes"]["excluded"]
+
+
+@pytest.mark.parametrize("weights", [["0"], ["0", "0"], ["1", "-1"]])
+def test_zero_sum_stencils_are_not_implicitly_normalized(weights, tmp_path, capsys):
+    raw = stencil_config(
+        sampling_stencils=[[{
+            "weight": weight, "pixel_aperture": [["0", "0"], ["0", "0"]],
+        } for weight in weights]],
+        radius_domain=["0", "0"], level_intervals=[["0", "0"]],
+    )
+    path = write_input(tmp_path, raw)
+    assert cli.main([str(path)]) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["status"] == "conditional_compatible"
+    summary = report["stencil_summaries"][0]
+    assert Decimal(summary["weight_sum"]) == 0 and summary["constant_preserving"] is False
+    assert summary["terms"] == len(weights)
+    assert summary["nonzero_terms"] == sum(Decimal(weight) != 0 for weight in weights)
+    if summary["nonzero_terms"] == 0:
+        assert report["aperture_evaluations"] == 0
+
+
+@pytest.mark.parametrize(
+    ("change", "message"),
+    [
+        ("missing_stencils", "missing"),
+        ("points_instead", "sampling_stencils"),
+        ("numeric_weight", "decimal string"),
+        ("numeric_coordinate", "decimal string"),
+        ("wrong_format", "format"),
+        ("unknown_term", "exactly"),
+        ("too_many_terms", "256"),
+        ("l1_excess", "absolute weights"),
+        ("target_excess", "level_intervals"),
+        ("work_excess", "work"),
+    ],
+)
+def test_version_four_rejects_malformed_stencils_and_resource_excess(
+    change, message, tmp_path, capsys,
+):
+    raw = stencil_config()
+    if change == "missing_stencils":
+        del raw["sampling_stencils"]
+    elif change == "points_instead":
+        del raw["sampling_stencils"]
+        raw["points"] = [["0", "0"]]
+    elif change == "numeric_weight":
+        raw["sampling_stencils"][0][0]["weight"] = 1
+    elif change == "numeric_coordinate":
+        raw["sampling_stencils"][0][0]["pixel_aperture"][0][0] = 0
+    elif change == "wrong_format":
+        raw["format"] = "another-analysis"
+    elif change == "unknown_term":
+        raw["sampling_stencils"][0][0]["normalize"] = True
+    elif change == "too_many_terms":
+        raw["sampling_stencils"][0] *= 257
+    elif change == "l1_excess":
+        raw["sampling_stencils"][0] = [
+            {"weight": weight, "pixel_aperture": [["0", "0"], ["0", "0"]]}
+            for weight in ("3", "2")
+        ]
+    elif change == "target_excess":
+        raw["level_intervals"] = [["-4.1", "0"]]
+    else:
+        raw["sampling_stencils"][0] *= 2
+        raw.update(cells=256, max_boxes=65)
+    path = write_input(tmp_path, raw)
+    output = tmp_path / "result.json"
+    assert cli.main([str(path), "--output", str(output)]) == 1
+    captured = capsys.readouterr()
+    assert captured.out == "" and message in captured.err.lower()
+    assert "Traceback" not in captured.err and not output.exists()
+
+
+@pytest.mark.parametrize("version", [True, False, 4.0, "4", 5])
+def test_only_exact_integer_version_four_dispatches_to_the_signed_analyzer(
+    version, tmp_path, capsys, monkeypatch,
+):
+    from backend import corner_signed_stencils
+
+    def wrong_dispatch(raw):
+        pytest.fail("only exact integer version 4 may dispatch to the signed analyzer")
+
+    monkeypatch.setattr(corner_signed_stencils, "analyze", wrong_dispatch)
+    path = write_input(tmp_path, stencil_config(version=version))
+    assert cli.main([str(path)]) == 1
+    captured = capsys.readouterr()
+    assert captured.out == "" and "Traceback" not in captured.err
+
+
+@pytest.mark.parametrize("module", ["corner_pixel_apertures.py", "corner_signed_stencils.py"])
+def test_dirty_observation_source_is_reported_even_when_it_is_the_only_modified_file(
+    module, tmp_path, monkeypatch,
 ):
     # Use a separate local repository: changes in the real checkout cannot mask a
     # forgotten provenance path, and no project source or existing Git state changes.
-    source = tmp_path / "backend" / "corner_pixel_apertures.py"
+    source = tmp_path / "backend" / module
     source.parent.mkdir()
     source.write_text("# temporary provenance control\n", encoding="utf-8")
 
@@ -441,7 +631,7 @@ def test_dirty_pixel_source_is_reported_even_when_it_is_the_only_modified_file(
         ).stdout.strip()
 
     git("init", "--quiet")
-    git("add", "--", "backend/corner_pixel_apertures.py")
+    git("add", "--", f"backend/{module}")
     git("-c", "core.hooksPath=/dev/null", "-c", "user.name=CLI provenance test",
         "-c", "user.email=cli-test@example.invalid", "-c", "commit.gpgSign=false",
         "commit", "--quiet", "-m", "Temporary source baseline")

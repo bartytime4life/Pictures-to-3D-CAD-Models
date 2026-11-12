@@ -3,6 +3,18 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Signed sampling observations — November 12, 2026
+
+- Version 4 of the developer CLI encloses fixed signed aperture combinations
+  over complete radius/blur boxes. Actual Keys examples show why composite
+  endpoint values cannot bound a nonmonotone signed response.
+- Preserve negative/superunit values, exact gain/L1 metadata, zero operators and
+  duplicate cancellation. Raw nonzero terms determine the work cap, with six-file
+  provenance and versions 1–3 retained.
+- [Method](signed-stencils.md) and [evidence](validation/signed-stencils.md)
+  keep calibration assumptions, model-mismatch controls and unknown results
+  explicit. Production tracing/API/UI/CAD paths are unchanged.
+
 ## Known pixel-aperture observations — November 12, 2026
 
 - Version 3 of the conditional corner CLI integrates known uniform rectangular

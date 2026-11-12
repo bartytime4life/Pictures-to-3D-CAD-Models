@@ -93,6 +93,7 @@ Run `make` for help. Component targets delegate to the existing scripts and libr
 | `make corner-sweep` | Fit synthetic blurred filleted corners and report radius error; it does not measure a real camera or part |
 | `.venv/bin/python scripts/corner_feasibility.py --demo` | Run a bounded synthetic radius-set analysis; [input contract and limits](corner-feasibility.md) |
 | `.venv/bin/python scripts/corner_feasibility.py pixel-input.json --output pixel-result.json` | Analyze supplied known uniform pixel means; [version-3 example](pixel-apertures.md) |
+| `.venv/bin/python scripts/corner_feasibility.py signed-input.json --output signed-result.json` | Analyze a declared fixed signed operator; [version-4 example](signed-stencils.md) |
 | `make freecad` | Check fitted synthetic STEP/DXF imports using a separately installed `FREECADCMD` |
 | `make slicers` | Inspect executable discovery without starting a slicer |
 | `make setup-app` / `make setup-library` | Prepare one component |

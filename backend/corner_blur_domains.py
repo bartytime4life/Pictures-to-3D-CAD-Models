@@ -113,8 +113,13 @@ def _point_level_bounds(point, sigma, radius, cells):
     return fixed._level_bounds_with_sigma(point, sigma, radius, cells, x_mass_bound=_x_mass)
 
 
-def _analyze(config, *, level_evaluator=_point_level_bounds):
-    """Shared joint-box engine; the callback encloses one supplied observation."""
+def _analyze(config, *, level_evaluator=_point_level_bounds, box_evaluator=None):
+    """Shared joint-box engine with an optional whole-radius observation cover.
+
+    The default scalar-radius callback is for radius-monotone observations.
+    A box callback instead encloses its observation over the complete radius
+    interval; its attempt count is recorded as ``level_evaluations``.
+    """
     common = config.fixed
     domain = (common.radius_domain, *config.blur_domains)
     resolutions = (common.radius_resolution, *config.blur_resolution)
@@ -139,8 +144,15 @@ def _analyze(config, *, level_evaluator=_point_level_bounds):
         evaluated += 1
         radius, *sigma = box
         try:
-            low, high = levels(radius.hi, sigma), levels(radius.lo, sigma)
-            images = tuple(Interval(a.lo, b.hi) for a, b in zip(low, high))
+            if box_evaluator is None:
+                low, high = levels(radius.hi, sigma), levels(radius.lo, sigma)
+                images = tuple(Interval(a.lo, b.hi) for a, b in zip(low, high))
+            else:
+                values = []
+                for point in common.points:
+                    level_evaluations += 1
+                    values.append(box_evaluator(point, sigma, radius, common.cells))
+                images = tuple(values)
         except ArithmeticError:
             unknown.append(box)
             reasons["numerical_enclosure"] += 1

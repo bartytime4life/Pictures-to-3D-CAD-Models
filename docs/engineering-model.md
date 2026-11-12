@@ -204,3 +204,8 @@ level enough to exclude a known radius under a center-sample model. This
 extension bounds the explicit mean calculation; it does not calibrate real
 pixels, justify signed/interpolated samples, or infer pre-aperture optical blur
 from the workbench's processed edge spread.
+
+[Version 4](signed-stencils.md) can include explicitly known signed sampling
+stencils. It accounts for negative coefficients, DC/error gain and whole-radius
+nonmonotonicity without clamping a response to `[0,1]`. This still does not infer
+the production kernel, source-error bounds or photometric baseline calibration.

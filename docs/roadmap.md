@@ -50,6 +50,10 @@ Its [version-3 observation model](pixel-apertures.md) also supports known
 normalized uniform pixel-aperture means. Actual sensor response, pre-aperture
 blur calibration, warped footprints and the production resampling chain remain
 unqualified; finite-area support is not automatic photo-error inference.
+The [version-4 signed model](signed-stencils.md) can represent explicit fixed
+sampling operators with whole-radius bounds and gain accounting. Automatic
+stencil extraction, numeric/image-pipeline calibration and real captures remain
+needed before using it for product accuracy decisions.
 It supplies no automatic image-error budget or production
 correction. Broader nuisance/discrepancy enclosures, non-right corners and
 reserved real-capture validation remain part of forward-model adequacy work.

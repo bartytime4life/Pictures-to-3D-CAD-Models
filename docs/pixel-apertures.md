@@ -58,7 +58,7 @@ The output has `version: 3` and the same joint parameter boxes, radius
 projections, status and accounting fields as version 2. Accepted joint boxes
 satisfy every known aperture observation throughout the box. Rejected blur
 boxes are never projected as rejected radii; numerical or budget limits retain
-unknown boxes. The report records the complete input, byte hash, five
+unknown boxes. The report records the complete input, byte hash, six
 implementation hashes and Git/source state. Existing output files are refused.
 
 ## Why a pixel center can give a different answer
@@ -123,6 +123,9 @@ camera tone mapping, compression or signed interpolation kernels. In particular,
 the workbench uses Keys cubic resampling in several paths; its negative weights
 cannot be treated as a nonnegative pixel-aperture average. This tool does not
 automatically convert those processed samples into valid observations.
+The separate [version-4 model](signed-stencils.md) can enclose explicit known
+fixed signed combinations; it does not infer the production pipeline's weights
+or qualify its samples.
 
 The level intervals require independently justified photometric normalization
 and error/discrepancy bounds. Input blur describes the Gaussian **before** this

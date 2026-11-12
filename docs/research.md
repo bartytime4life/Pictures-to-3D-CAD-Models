@@ -27,6 +27,15 @@ retains false radius exclusions under center sampling, compatible finite-area
 controls and shared-blur unknowns. Uniform product apertures do not model the
 workbench's signed Keys resampling or general warped sensor footprints.
 
+The [signed-stencil extension](signed-stencils.md) encloses a declared fixed
+linear resampling operator. Actual Keys counterexamples show a signed response
+outside the convex hull of its radius-endpoint values, so each aperture term
+is bounded over the whole radius box before signed summation. Exact DC/L1
+summaries also expose affine normalization and worst-case error gain. The
+[development record](validation/signed-stencils.md) retains disconnected outer
+sets, unknowns and the calibration boundary; it does not qualify the full image
+processor or supply an automatic tracing correction.
+
 [Documentation index](README.md) · [Guided workbench review](validation/guided-workbench.md)
 
 This product starts with a deliberately constrained geometry problem: a photograph can provide a planar boundary, and a user can supply measured scale and thickness. The resulting extrusion is useful for flat parts without pretending that a single image identifies hidden surfaces.

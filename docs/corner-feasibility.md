@@ -11,7 +11,9 @@ positive X/Y quadrant, a circular fillet, exact observation coordinates and
 independent axis-aligned Gaussian blur. Version 1 supplies exact widths and
 varies radius only; version 2 supplies blur domains and varies radius and one
 shared blur pair. [Version 3](pixel-apertures.md) observes normalized means over
-known uniform rectangular pixel apertures. Uncertain pose, coordinate error,
+known uniform rectangular pixel apertures. [Version 4](signed-stencils.md)
+accepts known signed linear combinations of those responses with whole-radius
+bounds. Uncertain pose, coordinate error,
 tone response, noncircular geometry, nearby boundaries and model discrepancy
 require separate treatment.
 
@@ -32,7 +34,7 @@ error budget.
 JSON goes to stdout; the demo explanation goes to stderr. Add
 `--output corner-result.json` to retain a result, choosing a path that does
 not already exist. The CLI refuses overwrites. The full input, exact decimal
-bounds, input-byte hash, five implementation-file hashes and Git metadata are
+bounds, input-byte hash, six implementation-file hashes and Git metadata are
 included in the report. An unknown or incompatible analysis is a valid result
 and exits 0; invalid input or execution failure exits nonzero.
 
@@ -92,9 +94,9 @@ nonlinear image intensities into valid bounded observations.
 
 ## Interpret the result
 
-All three versions use the status names and radius `inner`/`outer` sets below. The
+All four versions use the status names and radius `inner`/`outer` sets below. The
 remaining field details in this section describe version-1 radius boxes;
-versions 2/3 use joint parameter boxes and projections as described next.
+versions 2–4 use joint parameter boxes and projections as described next.
 
 | `status` | What is established under the supplied assumptions |
 | --- | --- |
@@ -200,6 +202,14 @@ blur pair and the version-2 joint-box/projection rules. The guide gives a runnab
 input, the bounded antiderivative calculation and a center-sampling counterexample.
 Known pixel integration is distinct from arbitrary coordinate uncertainty,
 processed-image interpolation and real-camera qualification.
+
+## Signed sampling stencils: version 4
+
+[Known signed observations](signed-stencils.md) combine aperture responses using
+fixed declared weights. Composite values may be negative, exceed one or vary
+nonmonotonically with radius. Version 4 therefore supplies whole-radius-box
+enclosures to the joint engine. The guide defines signed targets, exact gain/L1
+summaries, term-based work limits and the remaining calibration requirements.
 
 ## Why the bounds cover whole radius intervals
 

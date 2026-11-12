@@ -7,6 +7,8 @@ Version 2 uses one shared blur choice across all observation points. Its radius
 sets project joint (radius, sigma_x, sigma_y) boxes; blur cannot vary per point.
 Version 3 observes normalized means over known uniform product pixel apertures,
 not arbitrary position uncertainty or total flux.
+Version 4 applies supplied signed stencil weights without normalization; the
+resulting linear functional is not a probability and is not clamped to [0,1].
 Results are JSON on stdout. `--output FILE` also saves them, refusing an existing file.
 """
 
@@ -27,6 +29,7 @@ SOURCE_FILES = (
     "backend/corner_feasibility.py",
     "backend/corner_blur_domains.py",
     "backend/corner_pixel_apertures.py",
+    "backend/corner_signed_stencils.py",
     "backend/decimal_bounds.py",
     "scripts/corner_feasibility.py",
 )
@@ -102,7 +105,9 @@ def _run(raw_bytes, mode):
     hashes = _source_hashes()
     git_metadata = _git_metadata()
 
-    if isinstance(raw, dict) and type(raw.get("version")) is int and raw["version"] == 3:
+    if isinstance(raw, dict) and type(raw.get("version")) is int and raw["version"] == 4:
+        from backend.corner_signed_stencils import analyze
+    elif isinstance(raw, dict) and type(raw.get("version")) is int and raw["version"] == 3:
         from backend.corner_pixel_apertures import analyze
     elif isinstance(raw, dict) and type(raw.get("version")) is int and raw["version"] == 2:
         from backend.corner_blur_domains import analyze
@@ -128,7 +133,7 @@ def main(arguments=None):
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     source = parser.add_mutually_exclusive_group(required=True)
-    source.add_argument("input", type=Path, nargs="?", help="version 1, 2 or 3 model JSON input")
+    source.add_argument("input", type=Path, nargs="?", help="version 1, 2, 3 or 4 model JSON input")
     source.add_argument("--demo", action="store_true", help="analyze a synthetic sharp quadrant")
     parser.add_argument("--output", type=Path, metavar="FILE",
                         help="also save the JSON result; FILE must not already exist")
