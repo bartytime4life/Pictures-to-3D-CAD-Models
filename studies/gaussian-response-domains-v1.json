@@ -1,0 +1,28 @@
+{
+  "format": "pictures-to-cad-gaussian-response-domain-study-plan",
+  "version": 1,
+  "budgets": [1, 7, 63],
+  "cdf_places": 24,
+  "tolerances": ["0.03125", "0.0625"],
+  "max_depth": 24,
+  "truth": {
+    "offset": "0",
+    "sigma": "1",
+    "positions": ["-1", "0", "1"],
+    "generation_places": 30,
+    "additional_output_halfwidth": "0.03125",
+    "response": "h(u)=u+(3/20)*u*(1-u)"
+  },
+  "cases": [
+    "endpoint_order_family",
+    "reversed_order_contradiction",
+    "finite_slope_feasible_overlap",
+    "finite_slope_incompatible_overlap",
+    "exact_zero_sigma_alias",
+    "thin_feasible_offset_line",
+    "identity_joint_band",
+    "nonlinear_response_joint_band",
+    "rounded_binary_level_singleton"
+  ],
+  "scope": "Fixed development controls and exhaustive closed parameter-box covers for each request; cases and budgets reuse declared models and truth data, not independent camera captures."
+}

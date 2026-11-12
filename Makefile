@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 REFERENCE_PYTHON ?= $(CURDIR)/reference-library/.venv/bin/python
 
-.PHONY: help setup setup-app setup-library start dev build build-app build-library test test-app test-library lint smoke slicers freecad photo-benchmark corner-sweep material-gradient-study wall-gradient-study wall-localization-study profile-noise-study postblur-operator-study warp-observation-study raw-source-fit-study response-calibration-study response-rectangles-study
+.PHONY: help setup setup-app setup-library start dev build build-app build-library test test-app test-library lint smoke slicers freecad photo-benchmark corner-sweep material-gradient-study wall-gradient-study wall-localization-study profile-noise-study postblur-operator-study warp-observation-study raw-source-fit-study response-calibration-study response-rectangles-study gaussian-response-domain-study
 
 help:
 	@echo "make setup          install app and reference-library dependencies; build the app"
@@ -24,6 +24,7 @@ help:
 	@echo "make raw-source-fit-study OUTPUT=new.json   fit declared raw source in retained noise modes"
 	@echo "make response-calibration-study OUTPUT=new.json   check common-response and calibration limits"
 	@echo "make response-rectangles-study OUTPUT=new.json   retain uncertain-input response and Gaussian covers"
+	@echo "make gaussian-response-domain-study OUTPUT=new.json   enclose shared edge/blur/response domains"
 	@echo "Append -app or -library to setup, build, or test to select one component."
 	@echo "Library browser checks use local HTTP; its own make check defaults to file URLs."
 
@@ -113,3 +114,7 @@ response-calibration-study:
 response-rectangles-study:
 	@test -n "$(OUTPUT)" || { echo "Usage: make response-rectangles-study OUTPUT=new.json (see docs/response-rectangles.md)"; exit 2; }
 	.venv/bin/python scripts/response_rectangles_study.py --output "$(OUTPUT)"
+
+gaussian-response-domain-study:
+	@test -n "$(OUTPUT)" || { echo "Usage: make gaussian-response-domain-study OUTPUT=new.json (see docs/gaussian-response-domains.md)"; exit 2; }
+	.venv/bin/python scripts/gaussian_response_domain_study.py --output "$(OUTPUT)"

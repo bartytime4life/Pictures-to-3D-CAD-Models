@@ -2,8 +2,10 @@
 
 This page connects the workbench's recorded design reviews. It is not a claim that
 older screenshots, test totals or runtime observations validate the current
-checkout. No browser, geometry or accessibility tests were rerun for this
-documentation refresh.
+checkout. Current source and regression checks are recorded separately in
+[project status](docs/project-status.md) and the
+[latest developer validation](docs/validation/gaussian-response-domains.md).
+No fresh browser or accessibility run accompanies that developer-only change.
 
 ## Latest recorded workbench review — November 11, 2026
 

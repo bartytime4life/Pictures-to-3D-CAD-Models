@@ -6,8 +6,9 @@ CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
 For a concise source/review snapshot, use [project status](project-status.md).
-The [current coverage](validation/response-rectangles.md#documentation-coverage)
-includes the bounded-input response extension and its independent checks.
+The [current coverage](validation/gaussian-response-domains.md#documentation-coverage)
+includes continuous shared Gaussian domains, the bounded-input response
+extension and their independent checks.
 The [documentation review through PR #66](validation/documentation-response-state.md)
 audits the published PR #66 baseline, executable calibration examples, command
 help and API contracts. The [response implementation coverage](validation/response-calibration.md#documentation-coverage)
@@ -26,6 +27,14 @@ The [earlier PR #49 documentation follow-up](validation/documentation-current-st
 retains its source, executable API example and completed checks.
 
 ## Current workbench evidence — November 12, 2026
+
+The [continuous Gaussian-domain developer extension](validation/gaussian-response-domains.md)
+retains every region of one supplied offset/sigma prior in accepted, excluded
+or unknown boxes. Its 27 fixed analyses include order-family certificates,
+refinement controls, a feasible line and a deliberately rounded exact output.
+The source-bound regression passes **1,536 Python tests** with no skips;
+independent replay checks the complete box tree and saved certificates.
+No production trace/API/UI behavior or physical-camera qualification is added.
 
 The [rectangle-response developer extension](validation/response-rectangles.md)
 preserves closed input intervals with explicit existential and every-input

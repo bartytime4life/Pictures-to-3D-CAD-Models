@@ -119,8 +119,10 @@ These commands run separately from the workbench. Start with the
 | --- | --- |
 | A response-calibration report says `incompatible` | Read its indexed contradiction against the original node list. Check units, processing stage and supplied bounds before revising an assumption; an exact conflict does not diagnose the camera. |
 | The command exits 2 without a report | Read standard error. Correct the schema, decimal-string values, domain or stated resource limit. A refused request is not proof of mathematical incompatibility. |
-| A result path already exists | Preserve the earlier result and choose a new filename. Response calibration, its study and its auditors refuse replacement. Other tools can have different output rules. |
+| A result path already exists | Preserve the earlier result and choose a new filename. Response calibration, rectangle/domain tools, their studies and auditors refuse replacement. Other tools can have different output rules. |
 | Two query bands look individually plausible but conflict together | Add the proposed outputs as nodes in one request. Marginal bounds do not permit independent response choices. |
+| A Gaussian-domain report exits 0 but says `unresolved` | Read the unknown-leaf reasons and `summary.feasible_parameters_exist`: `null` means existence has not been decided, while `true` can coexist with unresolved regions. An empty inner set is not an empty feasible set. See [result interpretation](gaussian-response-domains.md#read-the-result-and-its-tree). |
+| A pair lies in both outer projections | Inspect the joint outer boxes. Two marginal intervals lose correlation, and an unknown box is only retained possibility. Projection membership does not certify the pair. |
 | An experiment's Git revision differs from its source hashes | Read its dirty-file context and retained source bindings. A run made before committing can identify a parent revision plus new files; a revision label alone does not identify the evaluated implementation. |
 
 The [response guide](response-calibration.md) includes a runnable input, exact

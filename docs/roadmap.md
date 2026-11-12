@@ -56,8 +56,13 @@ response and contradiction evidence; it does not infer those physical bounds or
 undo source encoding. A [rectangle extension](response-rectangles.md) now handles
 declared input intervals and carries outward mathematical Gaussian bounds into
 both quantifiers. Its finite refinement experiment preserves box-undetermined
-cases rather than substituting midpoints. Unknown PSF/response, correlated
-calibration parameters and joint geometry remain open. Retained-mode whitening
+cases rather than substituting midpoints. A separate
+[continuous Gaussian-domain solver](gaussian-response-domains.md) now encloses
+one shared offset and positive blur width with response certificates and
+retained unknown boxes. Its [development controls](validation/gaussian-response-domains.md)
+preserve order-only ambiguity and thin feasible sets. Camera-specific PSF/response
+justification, uncertain calibration coordinates, image-derived camera geometry
+and physical error budgets remain open. Retained-mode whitening
 alone cannot establish a calibrated likelihood.
 
 The [fixed-observation/covariance module](profile-observations.md) now represents

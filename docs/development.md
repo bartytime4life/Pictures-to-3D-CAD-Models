@@ -105,6 +105,8 @@ successful developer study is separate from a successful workbench build.
 | `make raw-source-fit-study OUTPUT=new.json` | Fit a supplied raw Gaussian edge in fixed retained source modes, with bounded brightness and explicit numerical diagnostics; [method](raw-source-fit.md) |
 | `make response-calibration-study OUTPUT=new.json` | Check exact common-response consistency and finite edge/calibration ambiguity; [method](response-calibration.md) |
 | `make response-rectangles-study OUTPUT=new.json` | Compare both input quantifiers with outward Gaussian input covers and retain undetermined cases; [method](response-rectangles.md) |
+| `make gaussian-response-domain-study OUTPUT=new.json` | Enclose continuous shared offset/blur domains and retain complete joint boxes; [method](gaussian-response-domains.md) |
+| `.venv/bin/python scripts/gaussian_response_domains.py INPUT.json --output new.json` | Analyze a declared straight Gaussian edge under shared response bounds; [input example](gaussian-response-domains.md#run-a-declared-example) |
 | `.venv/bin/python scripts/response_calibration.py INPUT.json --output new.json` | Check exact calibration constraints without a server; [complete input example](response-calibration.md#run-an-exact-example) |
 | `.venv/bin/python -m pytest -q tests/test_edge_crossings.py` | Check nearest-crossing decisions, exact ranking, unresolved contacts and rejected-point preservation; [method](edge-crossings.md) |
 | `.venv/bin/python scripts/corner_feasibility.py --demo` | Run a bounded synthetic radius-set analysis; [input contract and limits](corner-feasibility.md) |
@@ -129,11 +131,14 @@ make test
 make lint
 ```
 
-For just the workbench, use `make test-app` or the existing `./scripts/test.sh`. Its individual stages remain:
+For just the workbench, use `make test-app` or the existing `./scripts/test.sh`.
+The script runs Python tests, builds, then runs browser tests. For manual
+validation, build first so tests that inspect served frontend assets use the
+current artifact:
 
 ```bash
-.venv/bin/python -m pytest -q
 npm run build
+.venv/bin/python -m pytest -q
 npm run test:e2e
 ```
 
@@ -152,6 +157,12 @@ also supplies the finite study and its separate certificate auditor:
 
 These checks require no CAD server. They establish the supplied mathematical
 contract; they do not replace affected product tests or measured-camera evidence.
+
+For the continuous response-domain solver, run the two focused test files and
+its independent oracle, then replay the retained study as described in
+[the developer catalog](developer-tools.md#continuous-shared-gaussian-edge-and-response-domains).
+Keep budget/depth/tolerance unknowns, exact shared-face coverage and three-valued
+existence checks; an empty inner set alone does not prove incompatibility.
 
 Design/print checks should also verify that XY and thickness percentages preserve measured inputs, that relative-detail approximation remains valid, and that generated split solids have consistent volumes and per-part exports. Check continuous-angle placement witnesses, conservative curve enclosures and unknown-fit cases rather than just 0°/90°. Cover version 2 polygon and version 3 fitted/reference recipe round-trips, version 1 import defaults, and browser-held measurement notes separately from server handoff recipes. Color/material preview must not alter mesh coordinates or imply material/strength simulation. Test assistant Apply/Undo, stale advice-only answers and invalid-setting recovery separately from live model quality.
 

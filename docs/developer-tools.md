@@ -108,6 +108,29 @@ shared analytic relationships: some-box compatibility alone cannot establish
 compatibility of a correlated optical model. Read the independent audit and
 supplied-model limits before interpreting a candidate.
 
+## Continuous shared Gaussian edge and response domains
+
+```bash
+.venv/bin/python scripts/gaussian_response_domains.py INPUT.json --output .local/gaussian-domains-new.json
+make gaussian-response-domain-study OUTPUT=.local/gaussian-study-new.json
+.venv/bin/python studies/verification/gaussian-response-domains-oracle-v1.py --output .local/gaussian-oracle-new.json
+.venv/bin/python studies/verification/gaussian-response-domains-oracle-v1.py --run studies/results/gaussian-response-domains-v1.json --output .local/gaussian-study-audit-new.json
+```
+
+Use fresh destinations. The [input example and contract](gaussian-response-domains.md)
+define exact positions, closed output bands, one shared offset/positive sigma,
+external calibration and secant bounds. The search retains accepted, excluded
+and unknown joint boxes with complete closed split-tree coverage. A larger
+budget does not guarantee resolution, uniqueness or physical accuracy.
+
+The [fixed 27-analysis experiment](validation/gaussian-response-domains.md)
+retains order-only ambiguity, numerical refinement, a thin feasible line and
+rounded-value rejection. The independent saved-record auditor replays the tree,
+CDF certificates and original response constraints without production calls.
+Its bounded audit scope is smaller than the solver capacity; a refusal is not
+a mathematical result. Read the three-valued existence field and joint boxes
+before using an outer projection.
+
 ## Local-profile and wall studies
 
 Choose fresh output paths and preserve earlier reports:
@@ -212,6 +235,16 @@ python studies/verification/plot-wall-gradients.py --run .local/wall-gradients-n
 
 The plotter refuses existing output files. Inspect labels, units, legends and
 clipping; a figure is a view of the retained data, not additional validation.
+
+The Gaussian-domain figure has a separate saved-result plotter:
+
+```bash
+python studies/verification/plot-gaussian-response-domains.py --run studies/results/gaussian-response-domains-v1.json --output .local/gaussian-domains-new.svg --preview .local/gaussian-domains-new.png
+```
+
+Use an environment with Matplotlib. The command reads the retained boxes and
+requires fresh outputs; it does not compute a new feasible set. Keep its JSON
+receipt with the figure to bind the input, plotter and output hashes.
 
 ## Measured photos and native imports
 

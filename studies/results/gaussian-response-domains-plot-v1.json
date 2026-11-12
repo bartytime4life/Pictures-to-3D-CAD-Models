@@ -1,0 +1,17 @@
+{
+  "source_sha256": {
+    "run": "11b0b1ffa03eda4b397041a8226dc62497b6e25a4eb61d3acba80d61d818071a",
+    "plot_source": "040e0873407a42ef4d7837e1d91f7c9c19d02191bd9e453afdbbea5b9384f92e"
+  },
+  "selected_row_indices": [
+    17,
+    20,
+    23
+  ],
+  "matplotlib": "3.11.2",
+  "outputs": {
+    "docs/images/gaussian-response-domains.svg": "015020b3a065110cce1133b967d88c0bdb4daa23f1b37b0814c6e8948bc5d3cd",
+    "docs/images/gaussian-response-domains.png": "dd17efb3cd9b7e31a360b0109cd489e16ab35da58efc19bec41a1d4c4e7f9597"
+  },
+  "scope": "Retained closed parameter boxes; coordinate hulls are not a feasible Cartesian product."
+}

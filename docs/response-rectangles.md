@@ -11,6 +11,12 @@ Use the [exact-input response guide](response-calibration.md) for fixed knots,
 the [developer catalog](developer-tools.md) for related commands, and
 [raw-source fitting](raw-source-fit.md) for a separate supplied optical model.
 
+For a supplied straight Gaussian edge, the separate
+[continuous-domain solver](gaussian-response-domains.md) now couples offset and
+blur width across every observation. It uses these rectangle tests within a
+complete shared-parameter box tree; some-box compatibility alone still does not
+prove analytic feasibility. See its [full controls](validation/gaussian-response-domains.md).
+
 ## Choose the input quantifier
 
 Let `f` be one continuous nondecreasing function on the closed span of all

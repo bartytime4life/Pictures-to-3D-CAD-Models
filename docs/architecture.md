@@ -67,6 +67,13 @@ Neither module is imported by production tracing. The finite study distinguishes
 outer-box exclusion, a response valid for all covered inputs and undetermined
 boxes; it does not silently turn Cartesian feasibility into a correlated optical
 or physical-camera conclusion.
+The separate [Gaussian domain solver](gaussian-response-domains.md) now couples
+one offset and one positive blur width across every observation. Analytic order
+certificates and outward CDF/rectangle tests classify closed parameter boxes;
+unresolved leaves preserve full prior coverage. It returns inner and outer
+unions, source-indexed certificates and a complete split tree. It permits a
+different common response for each alternative parameter pair. No new endpoint,
+production import, image correction or UI state follows from this developer API.
 
 ## Geometry conventions
 
