@@ -416,16 +416,50 @@ def test_a_zero_blur_estimate_keeps_the_median_level_search():
 
 def test_ring_smoothing_averages_the_slope_correction_round_a_closed_ring():
     """Properties of the smoothing applied to the slope correction: it keeps a constant,
-    wraps round the ring's ends, and skips missing values."""
+    wraps round the ring's ends, and skips missing values. A slower wave than the first
+    harmonic keeps its shape, attenuated by the transfer of the Gaussian (truncated at 3
+    standard deviations); the first harmonic itself is kept whole
+    (test_ring_smoothing_keeps_a_significant_first_harmonic)."""
     values = np.full(200, 0.07)
     values[[5, 150]] = np.nan
     smoothed = sheet._smooth_along_ring(values, 20.0)
     assert np.isnan(smoothed[[5, 150]]).all() and np.allclose(np.delete(smoothed, [5, 150]), 0.07)
-    wave = np.cos(np.linspace(0, 2 * np.pi, 400, endpoint=False))
-    smoothed = sheet._smooth_along_ring(wave, 20.0)
-    # A slow wave keeps its shape (attenuated by the Gaussian's transfer exp(-k^2 s^2 / 2)).
-    expected = wave * math.exp(-0.5 * (2 * math.pi / 400 * 20.0) ** 2)
-    assert np.abs(smoothed - expected).max() < 2e-3
+    angle = np.linspace(0, 2 * np.pi, 400, endpoint=False)
+    wave = np.cos(3 * angle)
+    lag = np.arange(-60, 61)
+    kernel = np.exp(-0.5 * (lag / 20.0) ** 2)
+    transfer = float((kernel * np.cos(3 * 2 * math.pi / 400 * lag)).sum() / kernel.sum())
+    assert np.abs(sheet._smooth_along_ring(wave, 20.0) - transfer * wave).max() < 1e-9
+    assert np.abs(sheet._smooth_along_ring(np.cos(angle), 20.0) - np.cos(angle)).max() < 1e-9
+
+
+def test_ring_smoothing_keeps_a_significant_first_harmonic():
+    """The slope correction's first harmonic round a hole is the shift a soft shadow
+    gives its centre. A Gaussian of 20 samples gave a ring of fewer than 120 samples its
+    mean alone, so a 6 mm hole's centre kept the shadow's whole push (0.027 mm of hole
+    position under a 3 px blur, test_a_soft_shadow_under_a_wide_blur_keeps_the_holes_in_place).
+    On a 99-sample ring a 0.2 px harmonic in noise of 0.02 px is kept within 5 % (its
+    estimate's standard error is 1.4 %) and the mean is unchanged; in pure noise of 0.05 px the harmonic, within three standard
+    errors of zero, is dropped as before in at least 47 of 50 rings; and on unevenly
+    spaced points it is fitted in arc length, the ring's own angle."""
+    n = 99
+    angle = 2 * np.pi * np.arange(n) / n
+    rng = np.random.default_rng(5)
+    values = 0.3 + 0.2 * np.cos(angle - 0.7) + rng.normal(0, 0.02, n)
+    smoothed = sheet._smooth_along_ring(values, 20.0)
+    kept = 2 * np.abs(np.mean((smoothed - smoothed.mean()) * np.exp(-1j * angle)))
+    assert abs(kept / 0.2 - 1) < 0.05 and abs(smoothed.mean() - values.mean()) < 1e-12
+    dropped = 0
+    for seed in range(50):
+        noise = np.random.default_rng(seed).normal(0, 0.05, n)
+        dropped += np.ptp(sheet._smooth_along_ring(noise, 20.0)) < 1e-12
+    assert dropped >= 47
+    # Points crowded on one side of a circle: sample order is not the angle round it.
+    phi = angle + 0.4 * np.sin(angle)
+    points = 16.0 * np.column_stack([np.cos(phi), np.sin(phi)])
+    dipole = 0.2 * np.cos(phi - 0.7)
+    assert np.abs(sheet._smooth_along_ring(dipole, 20.0, points) - dipole).max() < 1e-3
+    assert np.abs(sheet._smooth_along_ring(dipole, 20.0) - dipole).max() > 0.03
 
 
 def blurred_line_image(angle_deg, phase, sigma, size=80):

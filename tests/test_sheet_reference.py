@@ -264,6 +264,24 @@ def test_a_soft_shadow_no_longer_pushes_edges_out(client, shadow):
     assert max(errors["small"], errors["bore"], errors["outer"]) < 0.0125
 
 
+def test_a_soft_shadow_under_a_wide_blur_keeps_the_holes_in_place(client):
+    """A shadow falls deeper on one side of a hole than the other, so its slope
+    correction differs round the hole, and that difference, the correction's first
+    harmonic, is what keeps the hole's centre in place. Smoothing along the ring had
+    given each 6 mm hole (99 points) its mean correction alone: on the tilted photo with
+    a 3 px blur and the 25 % shadow, without noise, the holes read 0.027 mm out of
+    position against 0.005 mm without the shadow. The harmonic is now kept where it is
+    significant (sheet._smooth_along_ring): 0.009 mm. Under a 1 x 3 px blur with
+    noise, JPEG, lens and uneven light, 0.021 mm became 0.007 mm."""
+    clean = {"k1": 0.0, "gradient": 0.0, "noise": 0.0, "quality": 100}
+    data, _ = S.render(blur=3.0, shadow=0.25, **clean)
+    response = trace(client, data, reference="a4")
+    assert response.status_code == 200, response.text
+    assert S.feature_errors(response.json()["profile"])["position"] < 0.014
+    data, _ = S.render(blur=(1.0, 3.0))
+    assert S.feature_errors(trace(client, data, reference="a4").json()["profile"])["position"] < 0.014
+
+
 def test_a_directional_blur_is_measured_by_direction_and_stays_within_limits(client):
     """The scientific model review's directional-blur case: the sensor blur is 1 px
     across and 3 px along the photo (a shaken camera). One median blur width for every

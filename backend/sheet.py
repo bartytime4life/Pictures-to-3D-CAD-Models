@@ -101,7 +101,9 @@ def half_level_search(
     noisier than medians, while a shadow's slope changes slowly along an edge: with
     `ring_smoothing` (points in order round a closed ring), the correction from the
     median level's crossing to the sloped level's is smoothed along the ring with a
-    Gaussian of that many points before it is applied. `paper_side` (+1 or -1 per point:
+    Gaussian of that many points before it is applied, except for its first harmonic
+    round the ring, which is kept where it is significant (_smooth_along_ring): that
+    harmonic is how a shadow moves a hole's centre. `paper_side` (+1 or -1 per point:
     the side of t the paper lies on) confines the slope to the paper: a shadow is cast
     there, while the material side can hold a thick part's narrow side wall, whose own
     blurred step would read as a slope; that side keeps its end median.
@@ -177,7 +179,7 @@ def half_level_search(
     if sloped:
         correction = crossing(level_t) - offset
         if ring_smoothing > 0:
-            correction = _smooth_along_ring(correction, ring_smoothing)
+            correction = _smooth_along_ring(correction, ring_smoothing, points)
         offset = offset + correction
     keep &= np.isfinite(offset)
     moved = points.astype(np.float64).copy()
@@ -194,9 +196,57 @@ def _upper_tail(z):
     return np.where(x >= 0, 0.5 * erfc, 1.0 - 0.5 * erfc)
 
 
-def _smooth_along_ring(values, scale):
+RING_SECTORS = 8  # contiguous sectors of a ring for the jackknife in _smooth_along_ring
+SIGNIFICANT_DIPOLE = 3.0  # standard errors
+
+
+def _smooth_along_ring(values, scale, points=None):
     """Gaussian smoothing (standard deviation `scale` samples) of values in order round a
-    closed ring, over the finite ones; non-finite values stay non-finite."""
+    closed ring, over the finite ones; non-finite values stay non-finite. The values'
+    first harmonic round the ring is kept, shrunk only by its uncertainty.
+
+    A Gaussian of s samples keeps a ring of N samples' first harmonic by exp(-(2 pi s /
+    N)^2 / 2), and a ring of fewer than 6 s samples was given its mean alone. For the
+    slope correction of a hole that harmonic is the centre's shift: on a 6 mm hole of 99
+    samples a soft shadow's whole effect on its centre was dropped, and a blur of 3 px
+    with a 25 % shadow put the holes 0.027 mm out of position. The harmonic is therefore
+    fitted (by least squares in arc length round `points`, the ring's positions, or in
+    sample order without them) and kept with the gain max(0, 1 - k^2 V / |d|^2), where d
+    is its amplitude, V the variance of that estimate by a jackknife over RING_SECTORS
+    contiguous sectors (neighbouring profiles share pixels, so their noise is
+    correlated), and k = SIGNIFICANT_DIPOLE: a harmonic within k standard errors of zero
+    is noise and is dropped, as before. Only the rest is smoothed.
+    """
+    ok = np.isfinite(values)
+    n = len(values)
+    if ok.sum() >= 4 * RING_SECTORS:
+        if points is None:
+            theta = 2 * math.pi * np.arange(n) / n
+        else:
+            step = np.linalg.norm(np.diff(points, axis=0, append=points[:1]), axis=1)
+            theta = 2 * math.pi * np.concatenate([[0.0], np.cumsum(step[:-1])]) / step.sum()
+        design = np.column_stack([np.ones(n), np.cos(theta), np.sin(theta)])
+        coef = np.linalg.lstsq(design[ok], values[ok], rcond=None)[0]
+        sector = np.minimum((theta * RING_SECTORS / (2 * math.pi)).astype(int), RING_SECTORS - 1)
+        left_out = np.array([
+            np.linalg.lstsq(design[ok & (sector != b)], values[ok & (sector != b)], rcond=None)[0][1:]
+            for b in range(RING_SECTORS)
+        ])
+        variance = (RING_SECTORS - 1) / RING_SECTORS * float(((left_out - left_out.mean(0)) ** 2).sum())
+        amplitude2 = float((coef[1:] ** 2).sum())
+        gain = max(0.0, 1 - SIGNIFICANT_DIPOLE**2 * variance / amplitude2) if amplitude2 > 0 else 0.0
+        if gain > 0:
+            dipole = gain * (design[:, 1:] @ coef[1:])
+            out = _gaussian_along_ring(values - dipole, scale) + dipole
+            out[~ok] = np.nan
+            return out
+    return _gaussian_along_ring(values, scale)
+
+
+def _gaussian_along_ring(values, scale):
+    """Gaussian smoothing (standard deviation `scale` samples) of values in order round a
+    closed ring, over the finite ones; a ring of fewer than 6 `scale` finite values is
+    given their mean. Non-finite values stay non-finite."""
     ok = np.isfinite(values)
     v = values[ok]
     if len(v) < 6 * scale:
