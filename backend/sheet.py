@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
+from fractions import Fraction
 
 import cv2
 import numpy as np
@@ -75,6 +76,73 @@ def sample_bilinear(image, x, y):
     top = img[y0, x0] * (1 - fx) + img[y0, x0 + 1] * fx
     bottom = img[y0 + 1, x0] * (1 - fx) + img[y0 + 1, x0 + 1] * fx
     return top * (1 - fy) + bottom * fy
+
+
+def _nearest_profile_crossing(t, residual, searched):
+    """Nearest verified crossing of a finite piecewise-linear residual profile.
+
+    A nearest tangent, zero plateau, unconfirmed boundary contact or distinct
+    equal-distance root is unresolved. Farther contacts do not invalidate a
+    nearer verified crossing. Exact binary-rational comparisons rank multiple
+    candidates without turning a floating-point tie into an arbitrary choice;
+    the returned interpolation is the same ordinary float in either path.
+    This is a sampled-profile decision, not a physical uncertainty statement.
+    """
+    segments = np.flatnonzero(searched)
+    if not len(segments):
+        return math.nan
+    used = np.zeros(len(t), dtype=bool)
+    used[segments] = used[segments + 1] = True
+    if not np.isfinite(t[used]).all() or not np.isfinite(residual[used]).all():
+        return math.nan
+
+    # (kind, first index, last index, floating offset): brackets and confirmed
+    # singleton zeros are verified; all other zero components are contacts.
+    candidates = []
+    left, right = residual[segments], residual[segments + 1]
+    opposite = ((left < 0) & (right > 0)) | ((left > 0) & (right < 0))
+    for index in segments[opposite]:
+        a, b = float(residual[index]), float(residual[index + 1])
+        scale = max(abs(a), abs(b))
+        a, b = abs(a) / scale, abs(b) / scale
+        total = a + b
+        # Compute both barycentric weights directly: 1 - fraction can erase a
+        # tiny weight when a crossing lies very close to a sampled zero.
+        value = (b / total) * t[index] + (a / total) * t[index + 1]
+        candidates.append(("bracket", index, index + 1, float(value)))
+
+    zeros = np.flatnonzero(used & (residual == 0))
+    if len(zeros):
+        cuts = np.flatnonzero((np.diff(zeros) != 1) | ~searched[zeros[:-1]]) + 1
+        for run in np.split(zeros, cuts):
+            first, last = int(run[0]), int(run[-1])
+            confirmed = (first == last and 0 < first < len(t) - 1
+                         and searched[first - 1] and searched[first]
+                         and ((residual[first - 1] < 0 < residual[first + 1])
+                              or (residual[first + 1] < 0 < residual[first - 1])))
+            candidates.append(("zero" if confirmed else "contact", first, last, float(t[first])))
+    if not candidates:
+        return math.nan
+    if len(candidates) == 1:
+        kind, _, _, value = candidates[0]
+        return value if kind != "contact" and math.isfinite(value) else math.nan
+
+    def exact_distance(candidate):
+        kind, first, last, _ = candidate
+        low, high = Fraction(float(t[first])), Fraction(float(t[last]))
+        if kind == "bracket":
+            a, b = Fraction(float(residual[first])), Fraction(float(residual[last]))
+            return abs((low * b - high * a) / (b - a))
+        if low <= 0 <= high:
+            return Fraction(0)
+        return min(abs(low), abs(high))
+
+    distances = [exact_distance(candidate) for candidate in candidates]
+    best = min(distances)
+    nearest = [candidate for candidate, distance in zip(candidates, distances) if distance == best]
+    if len(nearest) != 1 or nearest[0][0] == "contact" or not math.isfinite(nearest[0][3]):
+        return math.nan
+    return nearest[0][3]
 
 
 def half_level_search(
@@ -150,22 +218,14 @@ def half_level_search(
             b0, b1 = np.where(material_low, b0, b_flat), np.where(material_low, b1, 0.0)
         level_t = (a0 + b0)[:, None] / 2 + ((a1 + b1)[:, None] / 2) * t[None, :]
         level_t += ((b1 - a1) * sigma / math.sqrt(2 * math.pi))[:, None]
-    sign = np.sign(high - low)[:, None]
     keep = np.abs(encoded_from_linear(high) - encoded_from_linear(low)) >= min_contrast
     searched = inner[1:] & inner[:-1]
-    centre = len(t) // 2
 
     def crossing(level):
         """Offset along each normal of the profile's crossing with `level` (per sample)."""
-        above = (profile - level) * sign > 0
         offset = np.full(len(points), np.nan)
         for i in np.nonzero(keep)[0]:
-            crossings = np.nonzero((above[i, 1:] != above[i, :-1]) & searched)[0]
-            if len(crossings) == 0:
-                continue
-            j = crossings[np.argmin(np.abs(crossings - centre))]
-            p0, p1 = profile[i, j] - level[i, j], profile[i, j + 1] - level[i, j + 1]
-            offset[i] = t[j] + (p0 / (p0 - p1) if p0 != p1 else 0.5) * step
+            offset[i] = _nearest_profile_crossing(t, profile[i] - level[i], searched)
         return offset
 
     offset = crossing(np.repeat(((low + high) / 2)[:, None], len(t), axis=1))

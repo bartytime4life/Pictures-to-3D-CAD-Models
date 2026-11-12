@@ -98,8 +98,9 @@ and independent noninteger-window regressions check the resulting fix.
 For a fixed single-crossing profile, reversing the normal and `paper_side`
 reflects the paired samples, plateau masks and crossing target. The physical
 crossing should therefore agree to floating-point precision. This is not a
-general guarantee for profiles with several competing crossings: the existing
-nearest-crossing selection is a separate ambiguity. The grid repair does not
+general guarantee for profiles with several competing crossings. The subsequent
+[nearest-crossing repair](edge-crossings.md) ranks actual interpolated distances
+and leaves nearest unresolved contacts or equal minima unlocalized. The grid repair does not
 infer missing light-field, wall or PSF parameters.
 
 ## Why global brightness calibration is not enough

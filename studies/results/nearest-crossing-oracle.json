@@ -1,0 +1,72 @@
+{
+  "format": "picad-math-nearest-contact-audit",
+  "version": 1,
+  "physical_qualification": false,
+  "git_revision": "a5f99e5a4180ec2437c08215faa12058b6b490a9",
+  "source_sha256": {
+    "backend/sheet.py": "a086d7216256726a0e392bd98cbdb1274f5cb5eb096802c17c805349a7747e31",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee"
+  },
+  "script_sha256": "489dfb0ad059c7b7b1d5b6e13c85d7568470dabcef4de46a107fe44f6d79330b",
+  "runtime": {
+    "python": "3.12.3",
+    "numpy": "2.5.4"
+  },
+  "enumerated_cases": 3888,
+  "maximum_root_float_error": 0.0,
+  "maximum_reflection_error": 0.0,
+  "tiny_roots": [
+    {
+      "residual": [
+        -1.0,
+        1e-20,
+        1.0
+      ],
+      "expected": -1.25e-21,
+      "actual": -1.25e-21,
+      "reflected": 1.25e-21
+    },
+    {
+      "residual": [
+        -1.0,
+        1e-200,
+        1.0
+      ],
+      "expected": -1.25e-201,
+      "actual": -1.25e-201,
+      "reflected": 1.25e-201
+    },
+    {
+      "residual": [
+        -1e+308,
+        1.0,
+        1.0
+      ],
+      "expected": -1.25e-309,
+      "actual": -1.25e-309,
+      "reflected": 1.25e-309
+    },
+    {
+      "residual": [
+        -1e+308,
+        1e+308,
+        1e+308
+      ],
+      "expected": -0.0625,
+      "actual": -0.0625,
+      "reflected": 0.0625
+    }
+  ],
+  "actual_bounded_three_root_image": [
+    {
+      "normal_sign": -1,
+      "kept": true,
+      "offset_px": -1.3000000000000007
+    },
+    {
+      "normal_sign": 1,
+      "kept": true,
+      "offset_px": -1.3000000000000007
+    }
+  ]
+}

@@ -230,6 +230,20 @@ These primary sources support treating a camera response as a separate model;
 they do not establish that this workbench's sRGB decoding calibrates a particular
 phone, or that single-profile affine normalization undoes spatial illumination.
 
+### Nearest local crossing and numerical predicates
+
+The [nearest-crossing rule](edge-crossings.md) compares actual piecewise-linear
+root distances. Strict brackets and confirmed isolated zeros are distinguished
+from unresolved target-level contacts; equal minima do not justify averaging.
+[Shewchuk (1997)](https://www.cs.cmu.edu/~quake/robust.html) explains how roundoff
+near a predicate boundary can alter geometric decisions. That motivates exact
+binary-data rational comparison for competing candidates here, not adoption of
+the paper's orientation/incircle implementation or performance claims.
+The [verification record](validation/edge-crossings.md) includes an independent
+3,888-case contact/mask enumeration, direct image counterexamples and the prior
+cohort's preservation check. Represented-sample correctness remains distinct
+from physical edge identification and photometric/model discrepancy.
+
 ## Outline to solid and exchange files
 
 [CadQuery examples](https://github.com/CadQuery/cadquery/blob/master/doc/examples.rst) demonstrate profile extrusion and holes. This provides a direct, inspectable path from a valid planar boundary to a solid with a supplied thickness.
