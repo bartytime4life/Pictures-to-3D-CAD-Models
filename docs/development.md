@@ -104,6 +104,7 @@ successful developer study is separate from a successful workbench build.
 | `make warp-observation-study OUTPUT=new.json` | Compare known raw-image rectification, smoothing and final sampling, retaining stage rounding; [method](warp-observations.md) |
 | `make raw-source-fit-study OUTPUT=new.json` | Fit a supplied raw Gaussian edge in fixed retained source modes, with bounded brightness and explicit numerical diagnostics; [method](raw-source-fit.md) |
 | `make response-calibration-study OUTPUT=new.json` | Check exact common-response consistency and finite edge/calibration ambiguity; [method](response-calibration.md) |
+| `.venv/bin/python scripts/response_calibration.py INPUT.json --output new.json` | Check exact calibration constraints without a server; [complete input example](response-calibration.md#run-an-exact-example) |
 | `.venv/bin/python -m pytest -q tests/test_edge_crossings.py` | Check nearest-crossing decisions, exact ranking, unresolved contacts and rejected-point preservation; [method](edge-crossings.md) |
 | `.venv/bin/python scripts/corner_feasibility.py --demo` | Run a bounded synthetic radius-set analysis; [input contract and limits](corner-feasibility.md) |
 | `.venv/bin/python scripts/corner_feasibility.py pixel-input.json --output pixel-result.json` | Analyze supplied known uniform pixel means; [version-3 example](pixel-apertures.md) |
@@ -138,6 +139,18 @@ npm run test:e2e
 `make test-library` runs the independent library tests and browser checks without rerunning CAD workbench tests. Native OpenSCAD checks report skips if the tool is absent; those skips do not establish that rendering passed. Workbench source export does not require the executable. When it is available, `tests/test_mesh_interop.py` renders exported SCAD and compares simplified/scaled single and split-piece geometry, volume, and holes with the built CAD result. The library CI installs OpenSCAD and executes the required plate pipeline separately.
 
 Backend checks should exercise image parsing, geometry validation, dimensional bounds, topology, and exported-file re-imports. Browser checks should exercise the actual conversion path, edits, outdated-result handling, exports, input failures, and responsive navigation.
+
+For response-calibration changes, start with the two focused files and the
+independent graph oracle. The [guide](response-calibration.md#repeat-the-edge-and-calibration-controls)
+also supplies the finite study and its separate certificate auditor:
+
+```bash
+.venv/bin/python -m pytest -q tests/test_response_calibration.py tests/test_response_calibration_cli.py
+.venv/bin/python studies/verification/response-calibration-oracle-v1.py --output .local/response-oracle-new.json
+```
+
+These checks require no CAD server. They establish the supplied mathematical
+contract; they do not replace affected product tests or measured-camera evidence.
 
 Design/print checks should also verify that XY and thickness percentages preserve measured inputs, that relative-detail approximation remains valid, and that generated split solids have consistent volumes and per-part exports. Check continuous-angle placement witnesses, conservative curve enclosures and unknown-fit cases rather than just 0°/90°. Cover version 2 polygon and version 3 fitted/reference recipe round-trips, version 1 import defaults, and browser-held measurement notes separately from server handoff recipes. Color/material preview must not alter mesh coordinates or imply material/strength simulation. Test assistant Apply/Undo, stale advice-only answers and invalid-setting recovery separately from live model quality.
 

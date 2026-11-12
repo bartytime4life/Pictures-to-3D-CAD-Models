@@ -55,6 +55,21 @@ There is no automatic project persistence across page refreshes. Download a reci
 
 Browser downloads are governed by the browser and host environment. Deleting an artifact from the running app does not delete copies already downloaded or stored in a host backup or environment snapshot.
 
+## Numerical reports
+
+The [developer tools](developer-tools.md) have their own local report files.
+Response calibration retains the full submitted numeric request and unit labels,
+its input-byte hash, implementation hashes, Python version, Git revision and
+dirty-file names. Its output is both saved and printed to the terminal. It does
+not accept a photograph or contact the CAD API, Ollama or a hosted model.
+
+Report contents and terminal logs can still disclose measurements, labels or
+repository filenames. Review them before sharing. The recommended
+`.local/response-*.json` destinations are outside `.local/jobs` cleanup;
+the numerical CLI does not automatically expire its reports. Keep the reports
+needed to reproduce a decision. Other tools' report and replacement rules are
+listed in the catalog.
+
 ## Input and execution boundaries
 
 The backend validates the decoded image format and dimensions rather than trusting a filename extension alone. It limits upload and geometry size, rejects invalid dimensional inputs, and checks planar geometry before running CAD operations.

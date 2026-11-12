@@ -66,6 +66,10 @@ and one shared piecewise-linear witness. All commands require fresh output files
 The CLI retains incompatible constraints as exact proofs; invalid/resource
 requests are refusals, not mathematical incompatibility. Its reports bind the
 submitted bytes, core/CLI sources and Git state.
+Use exact input knots: version 1 accepts output uncertainty but no input intervals.
+Python callers may use bounded integers or `Fraction` values; the CLI requires
+decimal strings. Computed rational output strings are not accepted as CLI input
+syntax. See [input and work limits](response-calibration.md#input-and-work-limits).
 
 The separate fixed experiment retains every finite edge-offset/response candidate,
 including wrong calibration and unidentifiable alternatives. It does not provide

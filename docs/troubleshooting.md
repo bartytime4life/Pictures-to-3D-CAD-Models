@@ -110,6 +110,23 @@ Opening a project replaces the current work only after its CAD build succeeds. I
 | AI cannot send with invalid settings | Follow the deterministic **Next step** correction first. Valid settings that request oversized geometry can still ask for a repair suggestion; applying it remains explicit and validated. |
 | The answer seems wrong | Ignore it or undo an applied suggestion. Check the photograph, measured part, and capture guide. A valid response format does not prove the advice is correct. |
 
+## Numerical developer tools
+
+These commands run separately from the workbench. Start with the
+[tool catalog](developer-tools.md) and the selected tool's input guide.
+
+| Symptom | Next action |
+| --- | --- |
+| A response-calibration report says `incompatible` | Read its indexed contradiction against the original node list. Check units, processing stage and supplied bounds before revising an assumption; an exact conflict does not diagnose the camera. |
+| The command exits 2 without a report | Read standard error. Correct the schema, decimal-string values, domain or stated resource limit. A refused request is not proof of mathematical incompatibility. |
+| A result path already exists | Preserve the earlier result and choose a new filename. Response calibration, its study and its auditors refuse replacement. Other tools can have different output rules. |
+| Two query bands look individually plausible but conflict together | Add the proposed outputs as nodes in one request. Marginal bounds do not permit independent response choices. |
+| An experiment's Git revision differs from its source hashes | Read its dirty-file context and retained source bindings. A run made before committing can identify a parent revision plus new files; a revision label alone does not identify the evaluated implementation. |
+
+The [response guide](response-calibration.md) includes a runnable input, exact
+output example, limits and independent replay commands. No server restart,
+photograph upload or model download is required for those commands.
+
 ## Report a reproducible problem
 
 Include the failing stage, exact error text, input format and approximate dimensions, entered width and thickness with units, browser, operating system, and the relevant application revision. Attach a non-sensitive sample when possible. Avoid uploading confidential parts or credentials to an issue report.
