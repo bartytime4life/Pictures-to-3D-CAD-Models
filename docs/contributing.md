@@ -64,8 +64,41 @@ test count is not a fresh result.
 
 ## Submit a reviewable result
 
+Use [project status](project-status.md) to identify open changes and avoid
+describing an unmerged algorithm as installed or deployed.
+
 Explain the concrete trigger, changed behavior and relevant validation. Link the
 guide or evidence record and include screenshots for visible interface changes.
 Identify untested boundaries that materially affect the result. A pull request
 is a review artifact; merging, deployment and physical acceptance are separate
 actions.
+
+## Documentation maintenance
+
+1. Identify the source revision with `git rev-parse HEAD` and record local
+   changes. Update the guide for that implementation; distinguish open review
+   branches from `main` in [project status](project-status.md).
+2. Check commands against the root and library Makefiles, setup scripts and
+   lockfiles. Check API fields/defaults against `backend/app.py`,
+   `backend/models.py`, and `/openapi.json`; exercise changed examples against a
+   deliberately selected local server.
+3. Review source Markdown, relative targets, heading fragments and table
+   columns across the repository. Generated library `REFERENCES.md`,
+   `GITHUB.md`, HTML, figures and PDF come from the
+   [generation map](../reference-library/BUILD.md#what-is-generated-from-what);
+   do not hand-edit them or refresh dated external metadata merely to change
+   a documentation date.
+4. Run the existing documentation-accuracy tests from `reference-library/`:
+
+   ```bash
+   .venv/bin/python -m unittest discover -s tests/python -p test_docs.py -v
+   ```
+
+   These tests cover library claims and local files; they are not a complete
+   root-guide or external-URL audit. Check the rest separately. Rebuild with
+   `make build-library` when generated-reader inputs change, then inspect the
+   resulting diff. Guide-only edits do not create a new library release.
+5. Keep old results in their dated records. Add a separately scoped evidence
+   entry for the current checks, identify any executable changes, and choose
+   tests for the affected behavior. Documentation parsing does not establish
+   a fresh Python/browser regression suite. Update navigation and the change log.

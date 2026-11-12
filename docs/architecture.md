@@ -38,7 +38,11 @@ The application does not call a paid or external inference service. Its optional
 
 Traced points use image pixel coordinates, with the image's vertical coordinate increasing downward. Pixel *i* spans *i* to *i* + 1, so the image spans 0 to its pixel width. Outlines follow the outer edges of boundary pixels: a part covering pixel columns 50–450 spans 50 to 451, and a hole follows the edges of the material around it. Conversion translates and scales the profile into a centered XY model plane, then extrudes along Z. The measured scale is the entered reference width divided by the traced profile's horizontal span. An explicit XY design percentage multiplies that scale; a separate thickness percentage multiplies the entered thickness. Design choices do not overwrite the source measurements.
 
-All geometry is stored internally in millimeters. The entered thickness is independent of image scale. Changing display units must convert the entered values rather than reinterpret the same number in another unit.
+CAD geometry and build dimensions use millimeters. Source `Profile` coordinates,
+including fitted primitives, remain in the working-image pixel frame and are
+saved in that frame in recipes. The entered thickness is independent of image
+scale. Changing display units must convert the entered values rather than
+reinterpret the same number in another unit.
 
 The pipeline preserves supported through-hole boundaries. It cannot infer whether a dark patch represents a hole, a marking, or surface relief; the user must review the trace.
 
@@ -66,6 +70,10 @@ Known catalog printers resolve their bed geometry from the selected nozzle's sou
 ## API overview
 
 Use the running server's `/docs` page for the exact generated request schemas and validation constraints.
+The same server exposes `/openapi.json`. The [API examples](api-examples.md)
+include a synthetic build, response-driven download, cleanup and error handling.
+The service's `0.1.0` version string does not identify a Git revision; record the
+running checkout separately when comparing results.
 
 ### `GET /api/health`
 
@@ -85,13 +93,16 @@ A multipart request includes:
 | `sheet_width_mm`, `sheet_height_mm` | Measured sides of a `custom` sheet, 10–2000 mm |
 | `thickness_mm` | Optional part thickness for the reference-sheet parallax correction |
 | `snap` | Recover design intent on a reference-sheet trace (default `true`) |
-| `fallback` | Trace without the sheet, with a warning, if it cannot be found or used |
+| `fallback` | Default `false`; explicitly allow ordinary tracing with a warning for eligible sheet-finding/use failures; other validation failures still refuse |
 
 The response contains a normalized display image, its dimensions, the traced outer boundary and holes, the bounding box, the chosen threshold, and any relevant warnings.
 
 With a reference sheet, the display image is the rectified, perspective- and lens-corrected view of the part, rotated to its own axes when snapping found straight edges. The profile also carries `primitives`: exact `line`, `arc` (start, mid, end) and `circle` segments for the outer boundary and every hole, in the same display-pixel frame. It also carries `reference`, the evidence for that trace: sheet kind and size, `mm_per_px`, the lens coefficient, edge blur, any thickness correction with camera height and focal-length source, and notes such as the snap list and the sheet-proportions check. The outside width is the outline's span × `mm_per_px`. See [reference-sheet tracing](reference-sheet.md).
 
 The normalized image and trace share the same coordinate system. This avoids using uncorrected EXIF orientation for one while displaying the other differently.
+The browser's initial photo upload explicitly requests `fallback=true`; direct
+API callers get the default refusal unless they opt in. Inspect the returned
+reference evidence and warnings before treating a result as sheet-corrected.
 
 Before Gaussian reconstruction or design snapping, the [initial-fit support check](validation/fit-support.md)
 compares assembled candidates with the complete classified contour, while

@@ -3,6 +3,20 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Documentation and current-state review — November 12, 2026
+
+- Added a revision-bound [project-status page](project-status.md), endpoint map,
+  executable synthetic [API example](api-examples.md) and error-recovery guide.
+  Clarified browser URLs, development startup, trace fallback and source pixels
+  versus CAD millimeters.
+- Restricted interpolation and phase-error claims to their tested fixtures;
+  explained that nonlinear radius spread is not calibrated by a local standard
+  deviation. Matching source/test docstrings changed without altering behavior.
+- Added corner-note recovery, corrected historical interpretation pointers and
+  fixed the library's isolated-install and interrupted-release instructions.
+  [Coverage and completed checks](validation/documentation-current-state.md)
+  are separate from prior full workbench and library release results.
+
 ## Corner resolution and search validity — November 12, 2026
 
 - Radius-resolution bisection now requires a finite checked upper crossing.

@@ -5,10 +5,14 @@ record below to assess its evidence. This page separates local checks, hosted
 CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
+For a concise source/review snapshot, use [project status](project-status.md).
+The [current documentation follow-up](validation/documentation-current-state.md)
+records its own checks without rerunning or relabeling the historical suites.
+
 ## Current workbench evidence — November 12, 2026
 
-The [corner-resolution candidate](validation/sharp-corner-resolution.md) on
-`ba94ef8` passed **630 Python tests**, including seven new search/fallback
+The [corner-resolution candidate](validation/sharp-corner-resolution.md) at
+`a3a2397`, based on `ba94ef8`, passed **630 Python tests**, including seven new search/fallback
 regressions, and **74 browser scenarios**. It checks that numerical bisection
 has an upper crossing and describes sharp-corner estimates as conditional on
 the blur model. Its independent rounded-corner counterexample remains a
@@ -170,6 +174,10 @@ Branch `claude/circle-gate`, on `main` at `363f295` (after the renderer fix belo
 
 ## Exact coverage in the test renderer — November 11, 2026
 
+Later interpretation: radius “bounds” in this historical section are conditional
+blur-model resolution estimates. The [resolution-search review](validation/sharp-corner-resolution.md)
+retains the original fixtures and explains why they are not physical upper bounds.
+
 Branch `claude/edge-orientation`, on `main` at `5cebd27`. It resolves the first item found and not fixed in the exact-corner entry below.
 
 - **The finding.** That entry blamed the sub-pixel tracer for placing edges along the pixel axes and along the diagonals about 0.03 px apart. The cause is the test renderer instead. `synthetic.coverage` sampled each pixel's coverage on eight sub-rows, exact along each sub-row and quantised across them. At rational slopes, where every pixel along an edge has the same sub-pixel phase, that quantisation does not average out: square edges at 45° and at 26.6° (slope ½) read 0.012 to 0.027 px out or in, depending on the phase, against at most 0.003 px at other angles.
@@ -182,6 +190,10 @@ Branch `claude/edge-orientation`, on `main` at `5cebd27`. It resolves the first 
 - **Checks run.** `pytest`: **472 passed**. The new `test_rendered_coverage_is_exact_and_edges_keep_their_place_at_any_phase` fails with the earlier sub-row coverage. Ruff passed.
 
 ## Corner sweep script — November 11, 2026
+
+Later interpretation: “bound” below is the historical CLI terminology. Current
+output calls it a conditional radius-resolution estimate; see the
+[search guard and model limits](validation/sharp-corner-resolution.md).
 
 Branch `claude/corner-sweep`, on `main` at `48e17d2` (after the fillet-corner change below). It adds `scripts/corner_sweep.py` and `make corner-sweep`, the exact-blur corner sweep behind the entry below, so that its figures can be reproduced.
 

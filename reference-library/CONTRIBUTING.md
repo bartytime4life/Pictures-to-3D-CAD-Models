@@ -52,8 +52,8 @@ Edit `assets/data/routes.json`. The JavaScript (`CadCalc.recommendRoute`) and Py
 2. Add a `## Revision N` entry at the top of `CHANGELOG.md` and a note in handbook section 22.
 3. Run `make links` and review any `blocked` or `broken` URLs. Record real changes in `RESEARCH-NOTES.md`.
 4. Run `make release`.
-5. Update `VERIFICATION.md` from `verification.json`. `make verify` refuses to finish while the two disagree.
-6. Run `make dist-check`, then from the repository root `sha256sum -c reference-library/SHA256SUMS`. Attach `dist/*.zip` to a GitHub release if you publish one.
+5. If verification writes `verification.json` and then stops because the documentation disagrees, update `VERIFICATION.md` from that record. The interrupted `make release` has not reached archive generation. Run `make release` again, or `make verify dist`, and require successful completion before continuing.
+6. Run `make dist-check`, then from the repository root `sha256sum -c reference-library/SHA256SUMS`. Check the newly generated archive rather than a retained older one. Attach `dist/*.zip` to a GitHub release if you publish one.
 
 ## Style
 

@@ -31,7 +31,7 @@ make start
 
 The normal server uses port 8000. Do not assume a background process will survive a new cloud task or an environment snapshot restore; run the start script again in the restored environment.
 
-The default bind address is `127.0.0.1`. The supported startup settings are:
+The default bind address is `127.0.0.1`. Runtime and verification settings are:
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
@@ -39,6 +39,8 @@ The default bind address is `127.0.0.1`. The supported startup settings are:
 | `PICAD_HOST` | `127.0.0.1` | API and built-interface bind address for `start.sh` |
 | `PICAD_PORT` | `8000` | API and built-interface port for `start.sh` |
 | `PICAD_DEV_HOST` | `127.0.0.1` | Vite bind address for `dev.sh`; the development API remains on port 8000 |
+| `PICAD_BASE_URL` | `http://127.0.0.1:8000` | Existing server used by `make smoke`; not a startup setting |
+| `PICAD_TEST_URL` | Playwright-managed local server | Explicit existing server for workbench browser tests; verify its source revision |
 | `PICTURES_CAD_JOB_DIR` | Repository `.local/jobs` | Temporary model artifact directory |
 | `PICTURES_CAD_OLLAMA_URL` | `http://127.0.0.1:11434` | Optional assistant's HTTP loopback endpoint on the backend host |
 | `PICTURES_CAD_OLLAMA_MODEL` | `qwen3:1.7b` | Preferred installed assistant model; otherwise selects that default if installed, then the smallest local model |
@@ -53,7 +55,10 @@ For frontend development:
 make dev
 ```
 
-Development uses a Vite frontend on port 4173 and a Python backend on port 8000. Vite proxies `/api` and `/reference-library` requests to the backend. Start both services; opening Vite alone does not validate conversion or export.
+`make dev` starts both the Vite frontend on port 4173 and Python backend on port
+8000. Open http://127.0.0.1:4173 on that host. Vite proxies `/api` and
+`/reference-library` requests to the backend. If starting components manually,
+run both; opening Vite alone does not validate conversion or export.
 
 ## Project layout
 
@@ -124,6 +129,8 @@ provides concrete regression examples.
 Use the revision-bound records in [validation.md](validation.md) to identify which
 implementation was checked. A historical pass does not establish a later head,
 and listing a command here does not establish that it ran.
+For a bounded API-only exercise, use the [synthetic example](api-examples.md#build-a-synthetic-rectangle).
+For documentation changes, follow the [documentation maintenance procedure](contributing.md#documentation-maintenance).
 
 Browser tests use `PLAYWRIGHT_CHROMIUM_EXECUTABLE` when supplied, otherwise `/usr/bin/chromium` when available, otherwise Playwright's installed Chromium, otherwise an installed Google Chrome (`/usr/bin/google-chrome`, `google-chrome-stable`, or the macOS application). If none of these is present, install the browser after `npm ci`:
 
