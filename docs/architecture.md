@@ -56,6 +56,10 @@ The [raw-source fitting primitive](raw-source-fit.md) additionally profiles boun
 brightness levels over a finite edge-offset search in retained source modes.
 Its raw/complement residual diagnostics and unresolved flags remain developer
 outputs. It does not enter the production trace, API, frontend or CAD generation.
+The [common-response primitive](response-calibration.md) separately checks exact
+supplied calibration constraints by rational interval propagation. Its CLI and
+study do not import into the production upload/build path or infer a response
+from a photograph. A compatible witness is not an image-correction function.
 
 ## Geometry conventions
 

@@ -488,3 +488,19 @@ wrong-PSF/nonlinear response, flat/tied searches and invisible raw-source mismat
 This remains conditional developer inference, not production correction or
 physical uncertainty. Unknown optics, radial/curved edges, data-derived geometry
 and global wall identity need further evidence.
+
+## Conditional common-response consistency
+
+The [response tool](response-calibration.md) uses exact chain reachability for
+one scalar nondecreasing function with supplied exact abscissae and closed
+output/slope bounds. Forward/backward interval propagation gives tight marginals;
+a common piecewise-linear witness proves existence. Duplicate inputs share one
+value. General exact difference-constraint closure supplies an independent oracle.
+
+For an affine Gaussian edge, changing position/spread can be absorbed into a
+reparameterized monotone response. The [finite controls](validation/response-calibration.md)
+retain this ambiguity and show how independently supplied patch/slope assumptions
+restrict represented alternatives. Wrong calibration, quantization and channel/
+spatial/stage violations remain adverse results. No response is learned from
+one unknown edge, and exact finite inputs do not certify a continuous Gaussian
+integral or physical camera calibration.

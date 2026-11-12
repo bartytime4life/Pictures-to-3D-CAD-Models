@@ -50,8 +50,10 @@ image-derived parameter uncertainty and full-photo reconstruction need their
 own evidence before a production correction or uncertainty result. A separate
 [raw-source primitive](raw-source-fit.md) now fits a declared lens-free Gaussian
 edge in fixed source modes, with bounded brightness, finite-search flags and
-retained/complement raw residuals. Unknown PSF/response and joint geometry remain
-open. Retained-mode whitening alone cannot establish a calibrated likelihood.
+retained/complement raw residuals. An [exact common-response tool](response-calibration.md) now tests externally
+supplied exact calibration knots and output/slope bounds. It preserves a shared
+response and contradiction evidence; it does not infer those physical bounds or
+undo source encoding. Unknown PSF/response and joint geometry remain open. Retained-mode whitening alone cannot establish a calibrated likelihood.
 
 The [fixed-observation/covariance module](profile-observations.md) now represents
 known final sampling and finite smoothing operators. Conditional noise controls

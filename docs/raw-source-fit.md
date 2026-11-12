@@ -179,3 +179,9 @@ its column order, and provide sensor shape, homography, unit normal, anchor,
 optical covariance and finite search bounds. `result.best` is a numerical
 candidate even when flags are set; inspect all candidates and diagnostics before
 interpretation. The result never automatically accepts or moves CAD geometry.
+
+The separate [common-response tool](response-calibration.md) can check externally
+supplied exact calibration bands. It does not estimate a response from this fitter's
+edge, alter the objective, or justify inverse-transforming samples and reusing the
+same noise covariance. Its [controls](validation/response-calibration.md) retain
+response/edge ambiguity and incorrect-calibration failures.

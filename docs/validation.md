@@ -6,8 +6,10 @@ CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
 For a concise source/review snapshot, use [project status](project-status.md).
-The [current documentation review](validation/documentation-latest.md) covers
-all current Markdown, commands and the published PR #64 baseline. The
+The [current coverage](validation/response-calibration.md#documentation-coverage)
+includes the common-response guide and its source-bound controls. The
+[documentation review at PR #65](validation/documentation-latest.md) retains
+its complete inventory and published PR #64 baseline. The
 [raw-source coverage record](validation/raw-source-fit.md#documentation-coverage)
 retains the checks run with that scientific candidate. The [earlier documentation alignment](validation/documentation-alignment.md)
 reviews the published PR #62 baseline, current numerical-tool contracts and all
@@ -20,6 +22,14 @@ The [earlier PR #49 documentation follow-up](validation/documentation-current-st
 retains its source, executable API example and completed checks.
 
 ## Current workbench evidence — November 12, 2026
+
+The [common-response candidate](validation/response-calibration.md) checks exact
+supplied calibration knots, output bands and common slope constraints. A shared
+piecewise-linear witness establishes conditional existence; indexed exact
+contradictions preserve incompatibility. All 1,170 finite whole-profile candidates
+and nine edge/response gauges remain visible, including wrong calibration that
+excludes truth. These are developer controls, not inferred camera response,
+a continuous offset enclosure or physical uncertainty.
 
 The [raw-source fitting candidate](validation/raw-source-fit.md) separates one
 finite-search offset from two bounded brightness levels in fixed retained source
