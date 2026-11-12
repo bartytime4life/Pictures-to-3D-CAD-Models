@@ -1,0 +1,199 @@
+{
+  "format": "pictures-to-cad-wall-localization-result",
+  "version": 1,
+  "execution_complete": true,
+  "physical_qualification": false,
+  "world_scenes": 192,
+  "baseline_revision": "7dfe0fe698c8831e9c02ae960f03bcdc533701dc",
+  "baseline_loaded_source_sha256": {
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/edges.py": "d70fc6bae46c86015315cbf110a7c441d8ba04d8ebd6c4d732a52aa5099fa87e",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "backend/fitting.py": "ccf6306c2a12833e7815c5030db09649db80a3c0a41d012decf40a2ee991c7ee",
+    "backend/sheet.py": "a086d7216256726a0e392bd98cbdb1274f5cb5eb096802c17c805349a7747e31",
+    "backend/reference.py": "472277ab931eba121df70d0778e3f551582efc287feb066f8154699c61a9ba2f",
+    "backend/models.py": "21e7467766f4a086f52b3756f6b1fa8e4ec96a7b76cf0b4d1131c5f45709e6e1"
+  },
+  "source_sha256": {
+    "scripts/wall_localization_study.py": "bc380b282e20a91dec438d4c838c5e4b7dd70e95d821a3fce592f99933a9b16a",
+    "studies/wall-localization-v1.json": "5e321e83aaa0bb643976fdb0ddc3b5bf0f1accf647223704a0c848e3e2e5926c",
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/app.py": "345c7dc8bbc7bfbe616eb2934d2a58cd0b4fa1216dbdaa5272ab3a36b06d96bc",
+    "backend/assistant.py": "45f05aa8d0738a1da0e3b5040a2c4df8a01a35e9a835e1c06fd47ee3e81758c5",
+    "backend/corner_blur_domains.py": "7882b8dcd4ff7b431cf0fd71acef1fb7d12e071e9461a91926e95cd993eaa7f0",
+    "backend/corner_feasibility.py": "2d121667373da359740369169b8f7a7e51249c20ee508c42f53772f78c9321d7",
+    "backend/corner_pixel_apertures.py": "d305d5c5e258d9eff24f392f9d20d2979a65ebdbf115e006c6a4279c8191f51a",
+    "backend/corner_signed_stencils.py": "7e4ff05408a8ba8fae2e487909fb8a265ce7d86a2ecf740a02d4b0df860f1455",
+    "backend/curve_envelope.py": "d37525b42c920a770b783e0c94ff97cf3d5214272d85dcdceae9d23eb184ca27",
+    "backend/decimal_bounds.py": "81e08ee9abc0aeb33b5304191cdcc8a4448700fe73e2e53b34e9f5001a8a3f7f",
+    "backend/drawing.py": "560f087e28d369a2e0f3b733197c18c5a7aa87c390fe56de7516caf9a08a5e6d",
+    "backend/edges.py": "94f03183196e35fb980f933a44ce2e058ba25afaabb6e831925a716f51ca3dde",
+    "backend/fitting.py": "ccf6306c2a12833e7815c5030db09649db80a3c0a41d012decf40a2ee991c7ee",
+    "backend/heic.py": "5e34870379991f8813bacfc4badc8fe7fcf5dbe8aa053156fa352456b208de33",
+    "backend/models.py": "21e7467766f4a086f52b3756f6b1fa8e4ec96a7b76cf0b4d1131c5f45709e6e1",
+    "backend/placement.py": "e1745597ca2930d1260659e9f2dc4405f2b7239beb0c12c45fa92b6d3f5c03df",
+    "backend/printing.py": "58d121ad45f0176b02094f3446dcd020c254ccd78860e5a269b8b6a8d6479915",
+    "backend/reference.py": "60a8681a3e0154c935cc3256b0aff7f93d19874e9a367d0d6619a5acee0846d0",
+    "backend/scad.py": "d5cf18312ba10b7e3830d059952c3d078edc1e21813eb2fb03a4fd1ebaf2d534",
+    "backend/sheet.py": "a086d7216256726a0e392bd98cbdb1274f5cb5eb096802c17c805349a7747e31",
+    "backend/slicer_handoff.py": "774e78fa93dacc348c204d89a0ec4192a01701fb3fa3304ee09960e816101a50",
+    "backend/slicers.py": "03442055d64c37d46e5806bafdd0bd497b54dacf78bc409addf1ff8400c25bb9",
+    "backend/three_mf.py": "435afd61c90bb21c305876f681f845a3bfb193a64fa96589e649fb40fd821cf1",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "backend/tracing.py": "b822716050b285152bcbefe07a0b7da1e02716ecb5d990cbf29af86598a14d2e",
+    "backend/worker.py": "9c869ffae551485b473aeb54ddc9a0116e8c8df22f92f2c08e2f3e97f24ca846"
+  },
+  "cases_sha256": "95fac192fae05ba84acd9cc2a45ce302a26d1ec52317041ec6d58395a36f1ff5",
+  "failed_lanes": 0,
+  "summary": [
+    {
+      "wall_level": 90.0,
+      "observation": "point",
+      "planned": 16,
+      "baseline_failed": 0,
+      "baseline_maximum_absolute_error_px": 0.00852312943596445,
+      "baseline_scenes_with_movement": 10,
+      "candidate_failed": 0,
+      "candidate_maximum_absolute_error_px": 0.012627184100452382,
+      "candidate_scenes_with_movement": 4
+    },
+    {
+      "wall_level": 90.0,
+      "observation": "uniform_pixel_mean",
+      "planned": 16,
+      "baseline_failed": 0,
+      "baseline_maximum_absolute_error_px": 0.014721356752858128,
+      "baseline_scenes_with_movement": 8,
+      "candidate_failed": 0,
+      "candidate_maximum_absolute_error_px": 0.01604919398614868,
+      "candidate_scenes_with_movement": 0
+    },
+    {
+      "wall_level": 110.0,
+      "observation": "point",
+      "planned": 16,
+      "baseline_failed": 0,
+      "baseline_maximum_absolute_error_px": 0.01833950586291877,
+      "baseline_scenes_with_movement": 16,
+      "candidate_failed": 0,
+      "candidate_maximum_absolute_error_px": 0.022554472217677812,
+      "candidate_scenes_with_movement": 16
+    },
+    {
+      "wall_level": 110.0,
+      "observation": "uniform_pixel_mean",
+      "planned": 16,
+      "baseline_failed": 0,
+      "baseline_maximum_absolute_error_px": 0.014443653153165315,
+      "baseline_scenes_with_movement": 16,
+      "candidate_failed": 0,
+      "candidate_maximum_absolute_error_px": 0.022789287929882107,
+      "candidate_scenes_with_movement": 16
+    },
+    {
+      "wall_level": 130.0,
+      "observation": "point",
+      "planned": 16,
+      "baseline_failed": 0,
+      "baseline_maximum_absolute_error_px": 1.0003247151413888,
+      "baseline_scenes_with_movement": 16,
+      "candidate_failed": 0,
+      "candidate_maximum_absolute_error_px": 0.16281631198381774,
+      "candidate_scenes_with_movement": 16
+    },
+    {
+      "wall_level": 130.0,
+      "observation": "uniform_pixel_mean",
+      "planned": 16,
+      "baseline_failed": 0,
+      "baseline_maximum_absolute_error_px": 0.9017378483760226,
+      "baseline_scenes_with_movement": 16,
+      "candidate_failed": 0,
+      "candidate_maximum_absolute_error_px": 0.03090736946162309,
+      "candidate_scenes_with_movement": 16
+    },
+    {
+      "wall_level": 150.0,
+      "observation": "point",
+      "planned": 16,
+      "baseline_failed": 0,
+      "baseline_maximum_absolute_error_px": 2.4708176189825792,
+      "baseline_scenes_with_movement": 16,
+      "candidate_failed": 0,
+      "candidate_maximum_absolute_error_px": 0.3454984595231849,
+      "candidate_scenes_with_movement": 16
+    },
+    {
+      "wall_level": 150.0,
+      "observation": "uniform_pixel_mean",
+      "planned": 16,
+      "baseline_failed": 0,
+      "baseline_maximum_absolute_error_px": 2.4035823227483917,
+      "baseline_scenes_with_movement": 16,
+      "candidate_failed": 0,
+      "candidate_maximum_absolute_error_px": 0.14470370699783075,
+      "candidate_scenes_with_movement": 16
+    },
+    {
+      "wall_level": 165.0,
+      "observation": "point",
+      "planned": 16,
+      "baseline_failed": 0,
+      "baseline_maximum_absolute_error_px": 2.9475039938560172,
+      "baseline_scenes_with_movement": 12,
+      "candidate_failed": 0,
+      "candidate_maximum_absolute_error_px": 2.948445183391783,
+      "candidate_scenes_with_movement": 12
+    },
+    {
+      "wall_level": 165.0,
+      "observation": "uniform_pixel_mean",
+      "planned": 16,
+      "baseline_failed": 0,
+      "baseline_maximum_absolute_error_px": 2.9374865787419537,
+      "baseline_scenes_with_movement": 12,
+      "candidate_failed": 0,
+      "candidate_maximum_absolute_error_px": 2.9478315219204774,
+      "candidate_scenes_with_movement": 12
+    },
+    {
+      "wall_level": 170.0,
+      "observation": "point",
+      "planned": 16,
+      "baseline_failed": 0,
+      "baseline_maximum_absolute_error_px": 3.0420685684760045,
+      "baseline_scenes_with_movement": 12,
+      "candidate_failed": 0,
+      "candidate_maximum_absolute_error_px": 3.046090844609587,
+      "candidate_scenes_with_movement": 8
+    },
+    {
+      "wall_level": 170.0,
+      "observation": "uniform_pixel_mean",
+      "planned": 16,
+      "baseline_failed": 0,
+      "baseline_maximum_absolute_error_px": 3.0421594505818916,
+      "baseline_scenes_with_movement": 12,
+      "candidate_failed": 0,
+      "candidate_maximum_absolute_error_px": 3.046306087081959,
+      "candidate_scenes_with_movement": 8
+    }
+  ],
+  "git": {
+    "revision": "0f5f888708b623245854b53458431af495b387fe",
+    "dirty": true
+  },
+  "runtime": {
+    "python": "3.12.3",
+    "numpy": "2.5.4",
+    "opencv": "4.14.0"
+  },
+  "limitations": [
+    "The four original bright-wall examples informed this development plan; this is not held-out qualification",
+    "Supplied camera and scale; independent linear image is passed to subpixel/wall stages; saved sRGB8 is used for actual segmentation",
+    "Gaussian point fields or exact uniform pixel means; no camera-tone inference, image noise, JPEG, rectification or postblur",
+    "No full physical camera-scene consistency, pose estimation, parallax, curve/CAD/export, real captures or fabrication qualification",
+    "Correction taper remains; local fit accuracy and final tapered boundary error are distinct",
+    "Synthetic elapsed times are observations, not whole-photo/browser latency qualification"
+  ]
+}

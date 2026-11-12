@@ -204,6 +204,7 @@ def image_study(plan):
             row = {"scene_id": scene, "condition": condition["name"], "sigma_px": sigma,
                    "band_sigmas": width, "contrast_inverted": inverted,
                    "normal_degrees": angle, "phase_px": phase, "stage": stage, "method": method,
+                   "resolved": False,
                    "offset_px": None, "offset_sigmas": None, "wall_level": None,
                    "reported_sse": None, "error": None}
             try:
@@ -214,9 +215,12 @@ def image_study(plan):
                     step=plan["profile_step_px"], with_residuals=True)
                 offset = float((moved[0] - centre) @ normal)
                 values = (offset, float(walls[0]), float(residual[0]))
+                if math.isnan(values[1]) and values[2] == math.inf and np.array_equal(moved[0], seed):
+                    rows.append(row)
+                    continue
                 if not all(math.isfinite(v) for v in values):
                     raise ArithmeticError("non-finite production fit")
-                row.update(offset_px=offset, offset_sigmas=offset / sigma,
+                row.update(resolved=True, offset_px=offset, offset_sigmas=offset / sigma,
                            wall_level=values[1], reported_sse=values[2])
             except (ArithmeticError, ValueError, np.linalg.LinAlgError, cv2.error) as exc:
                 row["error"] = f"{type(exc).__name__}: {exc}"
@@ -243,9 +247,11 @@ def summarize_images(rows):
         groups[(row["stage"], row["method"], row["condition"], row["band_sigmas"])].append(row)
     result = []
     for key, group in sorted(groups.items()):
-        values = np.asarray([row["offset_px"] for row in group if row["error"] is None])
+        values = np.asarray([row["offset_px"] for row in group if row["error"] is None and row["resolved"]])
         result.append(dict(zip(("stage", "method", "condition", "band_sigmas"), key)) | {
             "planned": len(group), "failed": sum(row["error"] is not None for row in group),
+            "resolved": len(values),
+            "unresolved": sum(row["error"] is None and not row["resolved"] for row in group),
             "median_offset_px": float(np.median(values)) if len(values) else None,
             "maximum_absolute_offset_px": float(np.max(np.abs(values))) if len(values) else None,
             "fitted_wall_outside_0_255": sum(row["wall_level"] is not None and not 0 <= row["wall_level"] <= 255
@@ -296,7 +302,7 @@ def main(arguments=None):
                           "witnesses_found": len(found),
                           "maximum_demonstrated_edge_separation_px": max((abs(r["offset_px"]) for r in found), default=None),
                           "not_an_uncertainty_enclosure": True})
-    results = {"format": "pictures-to-cad-wall-gradient-study-result", "version": 1,
+    results = {"format": "pictures-to-cad-wall-gradient-study-result", "version": 2,
                "execution_complete": True, "physical_qualification": False,
                "direct_world_scenes": direct_worlds, "direct_rows": len(direct),
                "image_world_scenes": image_worlds, "image_rows": len(images),

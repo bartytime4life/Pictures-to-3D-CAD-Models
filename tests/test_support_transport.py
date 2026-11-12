@@ -74,13 +74,14 @@ def test_support_uses_final_camera_once_and_final_refined_pairs(monkeypatch, sig
     monkeypatch.setattr(sheet, "camera_pose", pose)
     wall_calls = []
 
-    def wall_fit(image, points, normals, band, blur, wall_tone=None):
+    def wall_fit(image, points, normals, band, blur, wall_tone=None, band_rate=0.0):
         assert blur > 0  # The zero-blur branch must never fit a wall profile.
+        assert band_rate > 0
         wall_calls.append(wall_tone)
         return points + 0.4 * normals, np.full(len(points), 27.0)
 
     monkeypatch.setattr(edges, "two_step_refine", wall_fit)
-    monkeypatch.setattr(edges, "pooled_wall_tone", lambda *args: 27.0)
+    monkeypatch.setattr(edges, "pooled_wall_tone", lambda *args, **kwargs: 27.0)
     refine_calls = []
     real_refine = reference._refine_walls
 

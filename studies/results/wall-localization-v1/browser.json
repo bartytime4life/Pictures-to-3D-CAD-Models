@@ -1,0 +1,339 @@
+{
+  "command": [
+    "PICAD_TEST_URL=http://127.0.0.1:18059",
+    "npm",
+    "run",
+    "test:e2e"
+  ],
+  "scope": "Complete local browser suite against the final wall-localization backend and freshly built interface; generated fixtures, no native slicer or physical qualification",
+  "stats": {
+    "total": 74,
+    "expected": 74,
+    "unexpected": 0,
+    "flaky": 0,
+    "skipped": 0,
+    "ok": true
+  },
+  "report_duration_ms": 319392.62200000003,
+  "workers": 1,
+  "environment": {
+    "node": "22.13.1",
+    "npm": "10.9.2",
+    "browser": "Google Chrome 157.0.8103.50",
+    "python": "3.12.3"
+  },
+  "server": {
+    "bind": "127.0.0.1:18059",
+    "started_for_this_run": true,
+    "stopped_after_run": true,
+    "production_build": true
+  },
+  "html_report_sha256": "310d0a3ec0ba17862d71b72122c32091b76b5f49a85f857d74b4fc41c2665fff",
+  "last_run_sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903",
+  "source_sha256": {
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/app.py": "345c7dc8bbc7bfbe616eb2934d2a58cd0b4fa1216dbdaa5272ab3a36b06d96bc",
+    "backend/assistant.py": "45f05aa8d0738a1da0e3b5040a2c4df8a01a35e9a835e1c06fd47ee3e81758c5",
+    "backend/corner_blur_domains.py": "7882b8dcd4ff7b431cf0fd71acef1fb7d12e071e9461a91926e95cd993eaa7f0",
+    "backend/corner_feasibility.py": "2d121667373da359740369169b8f7a7e51249c20ee508c42f53772f78c9321d7",
+    "backend/corner_pixel_apertures.py": "d305d5c5e258d9eff24f392f9d20d2979a65ebdbf115e006c6a4279c8191f51a",
+    "backend/corner_signed_stencils.py": "7e4ff05408a8ba8fae2e487909fb8a265ce7d86a2ecf740a02d4b0df860f1455",
+    "backend/curve_envelope.py": "d37525b42c920a770b783e0c94ff97cf3d5214272d85dcdceae9d23eb184ca27",
+    "backend/decimal_bounds.py": "81e08ee9abc0aeb33b5304191cdcc8a4448700fe73e2e53b34e9f5001a8a3f7f",
+    "backend/drawing.py": "560f087e28d369a2e0f3b733197c18c5a7aa87c390fe56de7516caf9a08a5e6d",
+    "backend/edges.py": "a32f01b6dac61da171781ecfb62630f10aece36bfb8cb0a8e8008178431645da",
+    "backend/fitting.py": "ccf6306c2a12833e7815c5030db09649db80a3c0a41d012decf40a2ee991c7ee",
+    "backend/heic.py": "5e34870379991f8813bacfc4badc8fe7fcf5dbe8aa053156fa352456b208de33",
+    "backend/models.py": "21e7467766f4a086f52b3756f6b1fa8e4ec96a7b76cf0b4d1131c5f45709e6e1",
+    "backend/placement.py": "e1745597ca2930d1260659e9f2dc4405f2b7239beb0c12c45fa92b6d3f5c03df",
+    "backend/printing.py": "58d121ad45f0176b02094f3446dcd020c254ccd78860e5a269b8b6a8d6479915",
+    "backend/reference.py": "60a8681a3e0154c935cc3256b0aff7f93d19874e9a367d0d6619a5acee0846d0",
+    "backend/scad.py": "d5cf18312ba10b7e3830d059952c3d078edc1e21813eb2fb03a4fd1ebaf2d534",
+    "backend/sheet.py": "a086d7216256726a0e392bd98cbdb1274f5cb5eb096802c17c805349a7747e31",
+    "backend/slicer_handoff.py": "774e78fa93dacc348c204d89a0ec4192a01701fb3fa3304ee09960e816101a50",
+    "backend/slicers.py": "03442055d64c37d46e5806bafdd0bd497b54dacf78bc409addf1ff8400c25bb9",
+    "backend/three_mf.py": "435afd61c90bb21c305876f681f845a3bfb193a64fa96589e649fb40fd821cf1",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "backend/tracing.py": "b822716050b285152bcbefe07a0b7da1e02716ecb5d990cbf29af86598a14d2e",
+    "backend/worker.py": "9c869ffae551485b473aeb54ddc9a0116e8c8df22f92f2c08e2f3e97f24ca846",
+    "frontend/index.html": "8da0424e7152742f31ed6ed9d05662b4b436fa989f21363bc95528dc8b3c3a1d",
+    "frontend/public/favicon.svg": "9cbc8c1149974e2ba6e69490aeef5353b94ff2d936831e17aadd68e96c950d67",
+    "frontend/public/metal-texture.png": "99e19354692a6324e611a0b70d5d1114f0a949386c40be3b27cb6896b8d45d6a",
+    "frontend/public/sample.png": "03bc8781c98f89372ce9814db112cfaba34cb5b04c714ea1d35eb33ccc5d0ee9",
+    "frontend/src/App.tsx": "30c6e81512c598651ba17c9bb25e71bf62afe7139c5f7f8207b8031421adbb0a",
+    "frontend/src/ExportFormats.tsx": "19121b752978e4123dac15eae9c9c30ea9f00f36ebae606e6ef92b78c7c660f7",
+    "frontend/src/HeightDecision.tsx": "edf7288e16db344287e9d978fd9883488b665f227c022e803495861e70264a24",
+    "frontend/src/LocalAssistant.tsx": "8c1416a83b23d4cf29d382a5480125ffa1459e8bbfe07f9b38dd689627f11a21",
+    "frontend/src/ModelViewer.tsx": "b4c5fbc92a1fe8d7f797b57a4a44696f9253c80f239151259f123fb8867a8dd4",
+    "frontend/src/PrintSettings.css": "04f187ea9e06c5654a0dc1abbe642d70ae89ebc128143c370fc0d695009e6b1e",
+    "frontend/src/PrintSettings.tsx": "1671f35145ff2eb3b10468ad40c0ad607a19cfceef3955f70851f7b0b48ce9f2",
+    "frontend/src/ReferenceCalibration.css": "e093fb069ef8fa2f90e93c2dd68a34396fa6e787fe998fa54632eaef3bf60421",
+    "frontend/src/ReferenceCalibration.tsx": "8e9180f92f474466f534b6fe4618ed5ac20b8c2a97da0a43a2b6d1c88d532e18",
+    "frontend/src/ReferenceSensitivity.tsx": "2274cf54522f4820d56a9b3489785e7e6fba10578940d9c6d77cde7498d32d2c",
+    "frontend/src/SheetReference.tsx": "c00e748e29db122fb7efcfe671c97bf69f24d7488d69404e386bc85a2896b380",
+    "frontend/src/SlicerHandoff.css": "b8ae37c5a525dba1f5d9ab1dc986a29acc85e4a398d3a1b03b323cf38eab9749",
+    "frontend/src/SlicerHandoff.tsx": "289f934630aa73d328bece747340a55e500d93dbb92febc0b448206340041ac9",
+    "frontend/src/calibration.ts": "5de745dcc9b297c293f53d25c53a509f14b0bf133e2ccf2d12405ff40d1f68a7",
+    "frontend/src/design.ts": "9d7935c08c5eff9db112e74748778287d2b7f328448f97d5d9863b42d7c10293",
+    "frontend/src/heightCheck.ts": "07e6f8aa6e8b93cdb368aa2e4023c37f8b212ed1a376f5d1f0a07f807c2efca6",
+    "frontend/src/main.tsx": "4f6c9aa3b1838f60f46a167e87e2aeaf7b58c1ce3e0738529bf5b5b515b88b19",
+    "frontend/src/sheet.ts": "1fef757f1c2b8a0bef4194af84d3c41a4fbfe2f0e54ac9e9e9ebca2a32f78571",
+    "frontend/src/styles.css": "793036321ce83f9c069b350b1f15ebb61896cdeb684b6e99759c5dc63ad732e8",
+    "frontend/src/types.ts": "b6af57c38467ac3bce34e829ac4a14c1b7ae885e25fc1291ef07f950e5ceecb8",
+    "frontend/src/vite-env.d.ts": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5",
+    "frontend/src/workflow.ts": "6defd39dee8c609d5b6e31d05f91503804149d0125243c625549b0df39f79bf0",
+    "frontend/tsconfig.json": "4f920f3c8c22e16c608b33443b9b25e9a3542a3dec01f2eed7697003c8691e95",
+    "frontend/vite.config.ts": "8b429e37e6a7cf03f051ee683f5fe22a18597f808c7aa7596ce32771df27ab2d",
+    "package-lock.json": "92b89d19cee04b314c8851ffd2dba05d000d99af724f69d319eaad958e9a4f2a",
+    "package.json": "c13a64e95bd31f105b243029114ee19c97bd21fdb2a5c5e687483ab855877b07",
+    "playwright.config.ts": "0f5bd4b8c63ddb2dc50b529fbef6a7b0aec4bae685a9a2295204b50a526a88ed",
+    "tests/e2e/assistant.spec.ts": "32fbb95b8791c2ee397ae0f72ad88c779bdba251446532ee5a77bba516ef2c15",
+    "tests/e2e/calibration-lifecycle.spec.ts": "86d152dfd6d6dbe20cf1bfa415f8c6c8c86b82b5a56883e2787e481882994520",
+    "tests/e2e/calibration.spec.ts": "583416f92c982a646e7f6be59d47a98f462685f0f8fc1558d994322b967a14da",
+    "tests/e2e/curve-placement.spec.ts": "115fddf84b1ecfd1e919ec19cd76583895bc19f1a6e5fcb89467e6149be42aad",
+    "tests/e2e/fixtures/plate-on-a4.jpg": "2677ac9c85014e4daaa1451f746acaf6fd2e97f1a2b44fa1ea238922b2570a69",
+    "tests/e2e/guided-workbench.spec.ts": "80051add17179373b085f9de5b6692be8b4a9c7d018d7f143c5f4efdd149aab6",
+    "tests/e2e/height-check.spec.ts": "e0b924b8a080bfa5f7169a65a844e4953f1f1993b6ec504917fddf2f4ce5a00f",
+    "tests/e2e/placement.spec.ts": "11edbbb7ef8249311c0712bce1365c7795b2059411fc23c48ca195c182ae6d7f",
+    "tests/e2e/print-planning.spec.ts": "c020f9da577936a6465f36625e6ca39ad2f5aadde24dcfa3d43e49c063bf05e6",
+    "tests/e2e/printer-search.spec.ts": "f75ce6222d742beae860b6c48cbb42095f056520b6d1e73e8eadd1a4758dd10f",
+    "tests/e2e/project-import.spec.ts": "e42fa6792900266897568ebb9f38bd2b66dcfa80836708af7c18054d08edce0b",
+    "tests/e2e/recovery.spec.ts": "31868e53c0e99c17333780b2a1bad679d118de913e68eef5c0f515c808f54eaa",
+    "tests/e2e/reference-roundoff.spec.ts": "e884aa5ce4d2a65405b7268bd3dd4be9b8a626926a70de61b812c1654adcce7b",
+    "tests/e2e/reference-sensitivity.spec.ts": "40927cfb20c447dff43d03de9d9652ccba44b69c7b8accc5e1031b7bbc722384",
+    "tests/e2e/reference-units.spec.ts": "cea2d9db6ca5191aed9aaebba193ee8d91b88f46bfe4330fed3aae0f26a1197d",
+    "tests/e2e/sheet-reference.spec.ts": "dd76b71530736238f14b8b5131fffcaeb7b8ba4c2f7ee9e9507d4e8858b5402c",
+    "tests/e2e/slicers.spec.ts": "cb2491d11c4194c8c739a6266e380e0260a64000ea4074ef4a8791d6243a5ce9",
+    "tests/e2e/split-plans.spec.ts": "0ee7053f48f687466f2aae29c8e1328efc0bf47f3eff906a51888ce1934d6b64",
+    "tests/e2e/workbench.spec.ts": "9cb6cb0f8c2452fd70cf9d8fb324b9baa6f1685f6bb9bcf91059cc67570e71b1"
+  },
+  "dist_sha256": {
+    "frontend/dist/assets/index-DcXNdldi.js": "f1b8be2bf6362de591c8639ea8ffb7a410613706bfa4ea3430601825d6879e13",
+    "frontend/dist/assets/index-k_fgu2bv.css": "7eb31ab464c9792bf16896f9fadfcbbdfe797c7783bb417697e370a23978064c",
+    "frontend/dist/assets/inter-cyrillic-ext-wght-normal-BOeWTOD4.woff2": "ca157063339ac4ad418f214f3abfed119b0798ab4d377386ce5c9e5a7a435ebd",
+    "frontend/dist/assets/inter-cyrillic-wght-normal-DqGufNeO.woff2": "71d5ee93cc1e9f1d520a3a8b66456de18c7879d8df09d57fcd2eaff75fef0075",
+    "frontend/dist/assets/inter-greek-ext-wght-normal-DlzME5K_.woff2": "6e9e020a25f9b56d418f2c085b1d3c09725a4da23fe693a5b463064606732190",
+    "frontend/dist/assets/inter-greek-wght-normal-CkhJZR-_.woff2": "1be3448e292fbf05ffe176fe1e43f135013d50b1e7d324ad1a558f623d3bb6f6",
+    "frontend/dist/assets/inter-latin-ext-wght-normal-DO1Apj_S.woff2": "34b9c504cab7a73e37b746343a449132e56cf7b5481af2cb81dc74dcff25c956",
+    "frontend/dist/assets/inter-latin-wght-normal-Dx4kXJAl.woff2": "3100e775e8616cd2611beecfa23a4263d7037586789b43f035236a2e6fbd4c62",
+    "frontend/dist/assets/inter-vietnamese-wght-normal-CBcvBZtf.woff2": "5c66f9e07e90c6d4ac4922cc68d60de26c17b1858e677fb5e603fce3952b3ff2",
+    "frontend/dist/assets/jetbrains-mono-cyrillic-wght-normal-D73BlboJ.woff2": "d274604c40757f98f07df623a8b8fb5194508a6fa4f5413a7a107f09e3b7452a",
+    "frontend/dist/assets/jetbrains-mono-greek-wght-normal-Bw9x6K1M.woff2": "ee863198077f3093ffa81c072581cc4bd608a04e60a8a9c0b846396ce4f14109",
+    "frontend/dist/assets/jetbrains-mono-latin-ext-wght-normal-DBQx-q_a.woff2": "79bfdab9ba467e26eea4122e6f2567e188dd8a09a8c730d501fc487c4ab99c6e",
+    "frontend/dist/assets/jetbrains-mono-latin-wght-normal-B9CIFXIH.woff2": "18be452724bfdc236c074ca94a249a7f41a86752c7d04ab258ce9ed5651f6a7e",
+    "frontend/dist/assets/jetbrains-mono-vietnamese-wght-normal-Bt-aOZkq.woff2": "2288795da89dd97e648954b96e22b4501bd85dfc453264460b252f888b582ca2",
+    "frontend/dist/assets/rolldown-runtime-XKyaHtl9.js": "548d1dbf321e7d2ae804fcc158b588706a7c52f8ca175de1490c6ccb4dbe55b7",
+    "frontend/dist/assets/three-BL69_uvO.js": "fe0397a44d1e1aeac95818dce0c8cb06cdf0e98f7204ae51be0648b0ae704586",
+    "frontend/dist/assets/vendor-MuR1ZvzJ.js": "3a6bb75e5f0510a965769003199d348d22c75490a8cc4fb7db5da955b08a4de7",
+    "frontend/dist/assets/vendor-vwP0uNFC.css": "0af1ca445d642daf51014f32013418ca146f58e1fdb4cf3a9f1fcd61f935ab9b",
+    "frontend/dist/favicon.svg": "9cbc8c1149974e2ba6e69490aeef5353b94ff2d936831e17aadd68e96c950d67",
+    "frontend/dist/index.html": "988cf5f62db342abaaac2e6676b59f0c0231194b1f44811a5627afc0461fa7f4",
+    "frontend/dist/metal-texture.png": "99e19354692a6324e611a0b70d5d1114f0a949386c40be3b27cb6896b8d45d6a",
+    "frontend/dist/sample.png": "03bc8781c98f89372ce9814db112cfaba34cb5b04c714ea1d35eb33ccc5d0ee9"
+  },
+  "file_stats": [
+    {
+      "fileName": "assistant.spec.ts",
+      "stats": {
+        "total": 9,
+        "expected": 9,
+        "unexpected": 0,
+        "flaky": 0,
+        "skipped": 0,
+        "ok": true
+      }
+    },
+    {
+      "fileName": "calibration-lifecycle.spec.ts",
+      "stats": {
+        "total": 4,
+        "expected": 4,
+        "unexpected": 0,
+        "flaky": 0,
+        "skipped": 0,
+        "ok": true
+      }
+    },
+    {
+      "fileName": "calibration.spec.ts",
+      "stats": {
+        "total": 4,
+        "expected": 4,
+        "unexpected": 0,
+        "flaky": 0,
+        "skipped": 0,
+        "ok": true
+      }
+    },
+    {
+      "fileName": "curve-placement.spec.ts",
+      "stats": {
+        "total": 2,
+        "expected": 2,
+        "unexpected": 0,
+        "flaky": 0,
+        "skipped": 0,
+        "ok": true
+      }
+    },
+    {
+      "fileName": "guided-workbench.spec.ts",
+      "stats": {
+        "total": 6,
+        "expected": 6,
+        "unexpected": 0,
+        "flaky": 0,
+        "skipped": 0,
+        "ok": true
+      }
+    },
+    {
+      "fileName": "height-check.spec.ts",
+      "stats": {
+        "total": 7,
+        "expected": 7,
+        "unexpected": 0,
+        "flaky": 0,
+        "skipped": 0,
+        "ok": true
+      }
+    },
+    {
+      "fileName": "placement.spec.ts",
+      "stats": {
+        "total": 2,
+        "expected": 2,
+        "unexpected": 0,
+        "flaky": 0,
+        "skipped": 0,
+        "ok": true
+      }
+    },
+    {
+      "fileName": "print-planning.spec.ts",
+      "stats": {
+        "total": 4,
+        "expected": 4,
+        "unexpected": 0,
+        "flaky": 0,
+        "skipped": 0,
+        "ok": true
+      }
+    },
+    {
+      "fileName": "printer-search.spec.ts",
+      "stats": {
+        "total": 2,
+        "expected": 2,
+        "unexpected": 0,
+        "flaky": 0,
+        "skipped": 0,
+        "ok": true
+      }
+    },
+    {
+      "fileName": "project-import.spec.ts",
+      "stats": {
+        "total": 2,
+        "expected": 2,
+        "unexpected": 0,
+        "flaky": 0,
+        "skipped": 0,
+        "ok": true
+      }
+    },
+    {
+      "fileName": "recovery.spec.ts",
+      "stats": {
+        "total": 7,
+        "expected": 7,
+        "unexpected": 0,
+        "flaky": 0,
+        "skipped": 0,
+        "ok": true
+      }
+    },
+    {
+      "fileName": "reference-roundoff.spec.ts",
+      "stats": {
+        "total": 4,
+        "expected": 4,
+        "unexpected": 0,
+        "flaky": 0,
+        "skipped": 0,
+        "ok": true
+      }
+    },
+    {
+      "fileName": "reference-sensitivity.spec.ts",
+      "stats": {
+        "total": 3,
+        "expected": 3,
+        "unexpected": 0,
+        "flaky": 0,
+        "skipped": 0,
+        "ok": true
+      }
+    },
+    {
+      "fileName": "reference-units.spec.ts",
+      "stats": {
+        "total": 1,
+        "expected": 1,
+        "unexpected": 0,
+        "flaky": 0,
+        "skipped": 0,
+        "ok": true
+      }
+    },
+    {
+      "fileName": "sheet-reference.spec.ts",
+      "stats": {
+        "total": 2,
+        "expected": 2,
+        "unexpected": 0,
+        "flaky": 0,
+        "skipped": 0,
+        "ok": true
+      }
+    },
+    {
+      "fileName": "slicers.spec.ts",
+      "stats": {
+        "total": 5,
+        "expected": 5,
+        "unexpected": 0,
+        "flaky": 0,
+        "skipped": 0,
+        "ok": true
+      }
+    },
+    {
+      "fileName": "split-plans.spec.ts",
+      "stats": {
+        "total": 2,
+        "expected": 2,
+        "unexpected": 0,
+        "flaky": 0,
+        "skipped": 0,
+        "ok": true
+      }
+    },
+    {
+      "fileName": "workbench.spec.ts",
+      "stats": {
+        "total": 8,
+        "expected": 8,
+        "unexpected": 0,
+        "flaky": 0,
+        "skipped": 0,
+        "ok": true
+      }
+    }
+  ],
+  "related_checks": {
+    "npm run build": "passed",
+    "make lint": "passed",
+    "companion_python_documentation_tests": 19
+  }
+}

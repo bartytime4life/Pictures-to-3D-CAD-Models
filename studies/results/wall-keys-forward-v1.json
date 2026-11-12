@@ -1,0 +1,2467 @@
+{
+  "format": "picad-keys-wall-forward-prototype",
+  "version": 1,
+  "source_sha256": {
+    "backend/edges.py": "a32f01b6dac61da171781ecfb62630f10aece36bfb8cb0a8e8008178431645da",
+    "backend/sheet.py": "a086d7216256726a0e392bd98cbdb1274f5cb5eb096802c17c805349a7747e31"
+  },
+  "runner_sha256": "eb89f4e4a7c4c51b59482e303d848f605c1676518448ab7c0ff21c28b04da2ea",
+  "git_revision": "0f5f888708b623245854b53458431af495b387fe",
+  "runtime": {
+    "python": "3.12.3",
+    "numpy": "2.5.4",
+    "seconds": 0.661746461992152
+  },
+  "sampling_window": "Fixed local [-band_seed-4*sigma,4*sigma], rounded outward to step0.125 by current _wall_grid_spec; not the initial expanded-window run.",
+  "assumptions": [
+    "Known raw sampling coordinates, Keys a=-0.5 weights, exact edge replication and pixel-centre convention.",
+    "Locally infinite straight edge, fixed unit normal and exact constant source tones.",
+    "Known isotropic Gaussian optical spread; axis mean additionally assumes known uniform unit detector aperture.",
+    "The observed input array is ideal point or uniform-mean data, with no prior warp/smoothing/nonlinear response.",
+    "Weights intentionally reuse production sheet._keys; independent erfc fields and actual sample_keys check composition.",
+    "Finite offset grid and bounded local searches supply numerical witnesses, not exhaustive parameter enclosures."
+  ],
+  "limits": [
+    "Curvature, nearby boundaries, nonuniform tones, uncertain/correlated PSF and raw-to-rectified composition are absent.",
+    "No production code change, camera-height repair, segmentation/whole-ring benchmark, physical qualification or uncertainty claim."
+  ],
+  "edge_replication_prediction_max_error": 5.684341886080802e-14,
+  "cases": [
+    {
+      "name": "single_step_reported_alias",
+      "sigma": 1.3,
+      "band_true": 3.25,
+      "band_seed": 3.25,
+      "band_rate": 0.05,
+      "true_bottom": [
+        60.3,
+        16.3
+      ],
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "seed_error": 0.0,
+      "levels_CBA": [
+        90.0,
+        90.0,
+        170.0
+      ],
+      "observation": "point",
+      "candidate_bounds": [
+        -0.78,
+        4.1080000000000005
+      ],
+      "sampling_bounds": [
+        -8.5,
+        5.25
+      ],
+      "samples": 111,
+      "unique_raw_pixels": 72,
+      "stencil_partition_max_error": 2.220446049250313e-16,
+      "stencil_max_l1": 1.4470999999999998,
+      "matched_operator_true_prediction_max_error": 5.684341886080802e-14,
+      "matched_operator_fit_at_truth": {
+        "edge": 0.0,
+        "levels": [
+          89.99999999999997,
+          89.99999999999996,
+          170.0
+        ],
+        "rss": 1.0905213153775267e-25,
+        "maximum": 5.684341886080802e-14
+      },
+      "results": {
+        "continuous": {
+          "best": {
+            "edge": 3.0909474177818956,
+            "levels": [
+              90.00034658350282,
+              169.81916441981764,
+              170.08500766567965
+            ],
+            "rss": 0.9686545909497428,
+            "maximum": 0.31244593366832873,
+            "edge_error": 3.0909474177818956
+          },
+          "basins": [
+            {
+              "edge": 3.0909474177818956,
+              "levels": [
+                90.00034658350282,
+                169.81916441981764,
+                170.08500766567965
+              ],
+              "rss": 0.9686545909497428,
+              "maximum": 0.31244593366832873,
+              "edge_error": 3.0909474177818956
+            },
+            {
+              "edge": 0.0028131541126018363,
+              "levels": [
+                89.97867730150246,
+                90.11364028463504,
+                169.99391701504902
+              ],
+              "rss": 1.0238329316138894,
+              "maximum": 0.29276883584023494
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                91.85049489679348,
+                78.24429083570105,
+                164.73897491181606
+              ],
+              "rss": 2830.05105023777,
+              "maximum": 11.125116464035884
+            },
+            {
+              "edge": 4.1080000000000005,
+              "levels": [
+                94.17724186828558,
+                192.33587448655425,
+                154.65686156999476
+              ],
+              "rss": 5274.64624463882,
+              "maximum": 15.97419531043343
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": -0.0002525142652049093,
+            "levels": [
+              90.00786670586176,
+              169.983261057314
+            ],
+            "rss": 1.0975613915742173
+          },
+          "single_step_partner": 3.0949976054617094,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.4804623918196816e-08
+        },
+        "keys_point": {
+          "best": {
+            "edge": 0.0,
+            "levels": [
+              89.99999999999997,
+              89.99999999999996,
+              170.0
+            ],
+            "rss": 1.0905213153775267e-25,
+            "maximum": 5.684341886080802e-14,
+            "edge_error": 0.0
+          },
+          "basins": [
+            {
+              "edge": 0.0,
+              "levels": [
+                89.99999999999997,
+                89.99999999999996,
+                170.0
+              ],
+              "rss": 1.0905213153775267e-25,
+              "maximum": 5.684341886080802e-14,
+              "edge_error": 0.0
+            },
+            {
+              "edge": 3.0952380962440134,
+              "levels": [
+                90.000000003223,
+                170.00000002471134,
+                169.99999999150143
+              ],
+              "rss": 3.921849137341402e-15,
+              "maximum": 1.2995826637052232e-08
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                91.88462390967214,
+                78.14145812077037,
+                164.76947358866695
+              ],
+              "rss": 2793.6562835604327,
+              "maximum": 10.92018641604578
+            },
+            {
+              "edge": 4.1080000000000005,
+              "levels": [
+                94.14250934707532,
+                192.606250210468,
+                154.34297589317342
+              ],
+              "rss": 5177.554815615368,
+              "maximum": 15.839079314222133
+            }
+          ],
+          "roundoff_tied_distinct_minima": 1,
+          "single_step_witness": {
+            "edge": 4.874836644734993e-10,
+            "levels": [
+              90.00000000212314,
+              170.00000000391904
+            ],
+            "rss": 1.6828772436477354e-15
+          },
+          "single_step_partner": 3.0952380957023653,
+          "single_step_alias_detected": true,
+          "arithmetic_guard": 2.4804623918196816e-08
+        }
+      }
+    },
+    {
+      "name": "bright_wall_shifted_seed",
+      "sigma": 1.3,
+      "band_true": 3.25,
+      "band_seed": 3.38,
+      "band_rate": 0.05,
+      "true_bottom": [
+        60.3,
+        16.3
+      ],
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "seed_error": 2.6,
+      "levels_CBA": [
+        90.0,
+        110.0,
+        170.0
+      ],
+      "observation": "point",
+      "candidate_bounds": [
+        -0.78,
+        4.212000000000001
+      ],
+      "sampling_bounds": [
+        -8.625,
+        5.25
+      ],
+      "samples": 112,
+      "unique_raw_pixels": 72,
+      "stencil_partition_max_error": 4.440892098500626e-16,
+      "stencil_max_l1": 1.4470999999999996,
+      "matched_operator_true_prediction_max_error": 8.526512829121202e-14,
+      "matched_operator_fit_at_truth": {
+        "edge": 2.6,
+        "levels": [
+          90.0,
+          109.99999999999999,
+          169.99999999999991
+        ],
+        "rss": 1.1955344790805478e-25,
+        "maximum": 1.1368683772161603e-13
+      },
+      "results": {
+        "continuous": {
+          "best": {
+            "edge": 2.6007970374987286,
+            "levels": [
+              89.99523544886216,
+              110.05849630417683,
+              169.95471204258368
+            ],
+            "rss": 0.5048169963697251,
+            "maximum": 0.20297827544064262,
+            "edge_error": 0.0007970374987285034
+          },
+          "basins": [
+            {
+              "edge": 2.6007970374987286,
+              "levels": [
+                89.99523544886216,
+                110.05849630417683,
+                169.95471204258368
+              ],
+              "rss": 0.5048169963697251,
+              "maximum": 0.20297827544064262,
+              "edge_error": 0.0007970374987285034
+            },
+            {
+              "edge": 4.212000000000001,
+              "levels": [
+                91.12371725758248,
+                142.16556877278308,
+                181.38878391990275
+              ],
+              "rss": 491.5365198038851,
+              "maximum": 4.27365967313564
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                92.02576695977727,
+                78.18570259327446,
+                141.50362222233568
+              ],
+              "rss": 16927.530292801515,
+              "maximum": 27.30760798075383
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": 1.042600000000001,
+            "levels": [
+              90.14872877442144,
+              155.81607708476773
+            ],
+            "rss": 3168.818536399616
+          },
+          "single_step_partner": 4.212000000000001,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.046122336963995e-08
+        },
+        "keys_point": {
+          "best": {
+            "edge": 2.6,
+            "levels": [
+              90.0,
+              109.99999999999999,
+              169.99999999999991
+            ],
+            "rss": 1.1955344790805478e-25,
+            "maximum": 1.1368683772161603e-13,
+            "edge_error": 0.0
+          },
+          "basins": [
+            {
+              "edge": 2.6,
+              "levels": [
+                90.0,
+                109.99999999999999,
+                169.99999999999991
+              ],
+              "rss": 1.1955344790805478e-25,
+              "maximum": 1.1368683772161603e-13,
+              "edge_error": 0.0
+            },
+            {
+              "edge": 4.212000000000001,
+              "levels": [
+                91.11946499593124,
+                142.16584729621795,
+                181.41379520126816
+              ],
+              "rss": 476.37637450241095,
+              "maximum": 4.195100605560597
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                92.060461173917,
+                78.08023311793244,
+                141.53746928629607
+              ],
+              "rss": 16865.435412156854,
+              "maximum": 27.273088807912814
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": 1.042600000000001,
+            "levels": [
+              90.1373703452394,
+              155.8438074870764
+            ],
+            "rss": 3133.3414699638415
+          },
+          "single_step_partner": 4.212000000000001,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.046122336963995e-08
+        }
+      }
+    },
+    {
+      "name": "bright_wall_shifted_seed",
+      "sigma": 1.3,
+      "band_true": 3.25,
+      "band_seed": 3.38,
+      "band_rate": 0.05,
+      "true_bottom": [
+        60.3,
+        16.3
+      ],
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "seed_error": 2.6,
+      "levels_CBA": [
+        90.0,
+        130.0,
+        170.0
+      ],
+      "observation": "point",
+      "candidate_bounds": [
+        -0.78,
+        4.212000000000001
+      ],
+      "sampling_bounds": [
+        -8.625,
+        5.25
+      ],
+      "samples": 112,
+      "unique_raw_pixels": 72,
+      "stencil_partition_max_error": 4.440892098500626e-16,
+      "stencil_max_l1": 1.4470999999999996,
+      "matched_operator_true_prediction_max_error": 5.684341886080802e-14,
+      "matched_operator_fit_at_truth": {
+        "edge": 2.6,
+        "levels": [
+          89.99999999999997,
+          130.00000000000006,
+          169.99999999999994
+        ],
+        "rss": 1.510573970189611e-25,
+        "maximum": 8.526512829121202e-14
+      },
+      "results": {
+        "continuous": {
+          "best": {
+            "edge": 2.5979646779874868,
+            "levels": [
+              89.9989565712787,
+              129.97031201785938,
+              169.96894013748104
+            ],
+            "rss": 0.369880087483652,
+            "maximum": 0.14412599501878276,
+            "edge_error": -0.0020353220125133298
+          },
+          "basins": [
+            {
+              "edge": 2.5979646779874868,
+              "levels": [
+                89.9989565712787,
+                129.97031201785938,
+                169.96894013748104
+              ],
+              "rss": 0.369880087483652,
+              "maximum": 0.14412599501878276,
+              "edge_error": -0.0020353220125133298
+            },
+            {
+              "edge": 4.212000000000001,
+              "levels": [
+                93.41666839188086,
+                160.78028157743296,
+                170.29903503691895
+              ],
+              "rss": 2389.027364416047,
+              "maximum": 11.221777459072385
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                91.46159255943142,
+                81.39069682890188,
+                150.76295309195075
+              ],
+              "rss": 7890.847275339474,
+              "maximum": 18.444906566924146
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": 0.6727959210703326,
+            "levels": [
+              91.92615559276196,
+              160.97242321149653
+            ],
+            "rss": 2094.9097979030785
+          },
+          "single_step_partner": 3.8598056391146023,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.2292795400913135e-08
+        },
+        "keys_point": {
+          "best": {
+            "edge": 2.6,
+            "levels": [
+              89.99999999999997,
+              130.00000000000006,
+              169.99999999999994
+            ],
+            "rss": 1.510573970189611e-25,
+            "maximum": 8.526512829121202e-14,
+            "edge_error": 0.0
+          },
+          "basins": [
+            {
+              "edge": 2.6,
+              "levels": [
+                89.99999999999997,
+                130.00000000000006,
+                169.99999999999994
+              ],
+              "rss": 1.510573970189611e-25,
+              "maximum": 8.526512829121202e-14,
+              "edge_error": 0.0
+            },
+            {
+              "edge": 4.212000000000001,
+              "levels": [
+                93.39904016717746,
+                160.89664926308478,
+                170.15746030854731
+              ],
+              "rss": 2353.3959946079704,
+              "maximum": 11.208315459531178
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                91.4914266132196,
+                81.29968928881055,
+                150.7922132094053
+              ],
+              "rss": 7845.4490378606315,
+              "maximum": 18.41491036087723
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": 0.6741870946212054,
+            "levels": [
+              91.91821059671551,
+              161.0101041702865
+            ],
+            "rss": 2052.500165654432
+          },
+          "single_step_partner": 3.86113056630591,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.2292795400913135e-08
+        }
+      }
+    },
+    {
+      "name": "bright_wall_shifted_seed",
+      "sigma": 1.3,
+      "band_true": 3.25,
+      "band_seed": 3.38,
+      "band_rate": 0.05,
+      "true_bottom": [
+        60.3,
+        16.3
+      ],
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "seed_error": 2.6,
+      "levels_CBA": [
+        90.0,
+        150.0,
+        170.0
+      ],
+      "observation": "point",
+      "candidate_bounds": [
+        -0.78,
+        4.212000000000001
+      ],
+      "sampling_bounds": [
+        -8.625,
+        5.25
+      ],
+      "samples": 112,
+      "unique_raw_pixels": 72,
+      "stencil_partition_max_error": 4.440892098500626e-16,
+      "stencil_max_l1": 1.4470999999999996,
+      "matched_operator_true_prediction_max_error": 5.684341886080802e-14,
+      "matched_operator_fit_at_truth": {
+        "edge": 2.6,
+        "levels": [
+          89.99999999999997,
+          150.00000000000006,
+          169.99999999999991
+        ],
+        "rss": 1.71252236192619e-25,
+        "maximum": 1.1368683772161603e-13
+      },
+      "results": {
+        "continuous": {
+          "best": {
+            "edge": 2.5964412287720027,
+            "levels": [
+              89.99918609884791,
+              149.8990368041722,
+              170.0101752160171
+            ],
+            "rss": 0.5317000854750975,
+            "maximum": 0.21396510606123798,
+            "edge_error": -0.003558771227997415
+          },
+          "basins": [
+            {
+              "edge": 2.5964412287720027,
+              "levels": [
+                89.99918609884791,
+                149.8990368041722,
+                170.0101752160171
+              ],
+              "rss": 0.5317000854750975,
+              "maximum": 0.21396510606123798,
+              "edge_error": -0.003558771227997415
+            },
+            {
+              "edge": 0.08173374897522523,
+              "levels": [
+                89.26937570117946,
+                97.50015480768312,
+                164.70840331653895
+              ],
+              "rss": 648.7389981920933,
+              "maximum": 4.898312602854361
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                90.89741815908557,
+                84.59569106452922,
+                160.02228396156588
+              ],
+              "rss": 2273.652975648089,
+              "maximum": 9.582205153094463
+            },
+            {
+              "edge": 4.212000000000001,
+              "levels": [
+                95.70961952617924,
+                179.39499438208276,
+                159.20928615393518
+              ],
+              "rss": 7175.699458901456,
+              "maximum": 18.5454593754272
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": -0.1865359822408558,
+            "levels": [
+              90.81448331079295,
+              163.69254662400164
+            ],
+            "rss": 850.8099282303135
+          },
+          "single_step_partner": 3.041394302627756,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.429132230055753e-08
+        },
+        "keys_point": {
+          "best": {
+            "edge": 2.6,
+            "levels": [
+              89.99999999999997,
+              150.00000000000006,
+              169.99999999999991
+            ],
+            "rss": 1.71252236192619e-25,
+            "maximum": 1.1368683772161603e-13,
+            "edge_error": 0.0
+          },
+          "basins": [
+            {
+              "edge": 2.6,
+              "levels": [
+                89.99999999999997,
+                150.00000000000006,
+                169.99999999999991
+              ],
+              "rss": 1.71252236192619e-25,
+              "maximum": 1.1368683772161603e-13,
+              "edge_error": 0.0
+            },
+            {
+              "edge": 0.08146403069085814,
+              "levels": [
+                89.2810632781942,
+                97.44277028761938,
+                164.72969476442913
+              ],
+              "rss": 630.8720017252929,
+              "maximum": 4.880149676135488
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                90.92239205252217,
+                84.51914545968864,
+                160.0469571325145
+              ],
+              "rss": 2247.516635758897,
+              "maximum": 9.556731913841702
+            },
+            {
+              "edge": 4.212000000000001,
+              "levels": [
+                95.67861533842374,
+                179.62745122995156,
+                158.90112541582644
+              ],
+              "rss": 7087.487582863951,
+              "maximum": 18.527731382717576
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": -0.18473445683358394,
+            "levels": [
+              90.81075703608856,
+              163.72232527426263
+            ],
+            "rss": 828.1846736892378
+          },
+          "single_step_partner": 3.043110041110872,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.429132230055753e-08
+        }
+      }
+    },
+    {
+      "name": "bright_wall_shifted_seed",
+      "sigma": 1.3,
+      "band_true": 3.25,
+      "band_seed": 3.38,
+      "band_rate": 0.05,
+      "true_bottom": [
+        60.3,
+        16.3
+      ],
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "seed_error": 2.6,
+      "levels_CBA": [
+        90.0,
+        165.0,
+        170.0
+      ],
+      "observation": "point",
+      "candidate_bounds": [
+        -0.78,
+        4.212000000000001
+      ],
+      "sampling_bounds": [
+        -8.625,
+        5.25
+      ],
+      "samples": 112,
+      "unique_raw_pixels": 72,
+      "stencil_partition_max_error": 4.440892098500626e-16,
+      "stencil_max_l1": 1.4470999999999996,
+      "matched_operator_true_prediction_max_error": 5.684341886080802e-14,
+      "matched_operator_fit_at_truth": {
+        "edge": 2.6,
+        "levels": [
+          90.0,
+          165.0,
+          169.99999999999997
+        ],
+        "rss": 6.684491766480766e-26,
+        "maximum": 8.526512829121202e-14
+      },
+      "results": {
+        "continuous": {
+          "best": {
+            "edge": 2.5965474486814415,
+            "levels": [
+              90.00117007958723,
+              164.8690918073654,
+              170.04511630560944
+            ],
+            "rss": 0.854133927921217,
+            "maximum": 0.27709715612456876,
+            "edge_error": -0.0034525513185585943
+          },
+          "basins": [
+            {
+              "edge": 2.5965474486814415,
+              "levels": [
+                90.00117007958723,
+                164.8690918073654,
+                170.04511630560944
+              ],
+              "rss": 0.854133927921217,
+              "maximum": 0.27709715612456876,
+              "edge_error": -0.0034525513185585943
+            },
+            {
+              "edge": -0.5241682786663627,
+              "levels": [
+                89.832539258116,
+                91.26428878553497,
+                168.34616270068568
+              ],
+              "rss": 58.24772342885138,
+              "maximum": 1.5560021910231967
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                90.47428735882617,
+                86.99943674124978,
+                166.9667821137772
+              ],
+              "rss": 304.79672191654186,
+              "maximum": 3.341877521536418
+            },
+            {
+              "edge": 4.212000000000001,
+              "levels": [
+                97.42933287690303,
+                193.35602898557008,
+                150.89197449169745
+              ],
+              "rss": 12661.728724994826,
+              "maximum": 24.125582772602044
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": -0.5576499227486517,
+            "levels": [
+              90.18531312425836,
+              168.24054776521456
+            ],
+            "rss": 66.63522765115584
+          },
+          "single_step_partner": 2.6879524545250932,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.5899781607659438e-08
+        },
+        "keys_point": {
+          "best": {
+            "edge": 2.6,
+            "levels": [
+              90.0,
+              165.0,
+              169.99999999999997
+            ],
+            "rss": 6.684491766480766e-26,
+            "maximum": 8.526512829121202e-14,
+            "edge_error": 0.0
+          },
+          "basins": [
+            {
+              "edge": 2.6,
+              "levels": [
+                90.0,
+                165.0,
+                169.99999999999997
+              ],
+              "rss": 6.684491766480766e-26,
+              "maximum": 8.526512829121202e-14,
+              "edge_error": 0.0
+            },
+            {
+              "edge": -0.5261053765777102,
+              "levels": [
+                89.85272982629677,
+                91.17527206107408,
+                168.35562272200215
+              ],
+              "rss": 53.472640035434665,
+              "maximum": 1.5449386284664683
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                90.49561613199909,
+                86.93373758784726,
+                166.9880150748464
+              ],
+              "rss": 294.7902534352376,
+              "maximum": 3.0597401136691076
+            },
+            {
+              "edge": 4.212000000000001,
+              "levels": [
+                97.38829671685838,
+                193.67555270510158,
+                150.458874246286
+              ],
+              "rss": 12513.009753154649,
+              "maximum": 24.10079999876612
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": -0.5571069229225679,
+            "levels": [
+              90.1780824560634,
+              168.25783580841178
+            ],
+            "rss": 60.57547064425866
+          },
+          "single_step_partner": 2.688469597216602,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.5899781607659438e-08
+        }
+      }
+    },
+    {
+      "name": "single_step_reported_alias",
+      "sigma": 1.3,
+      "band_true": 3.25,
+      "band_seed": 3.25,
+      "band_rate": 0.05,
+      "true_bottom": [
+        60.3,
+        16.3
+      ],
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "seed_error": 0.0,
+      "levels_CBA": [
+        90.0,
+        90.0,
+        170.0
+      ],
+      "observation": "uniform_pixel_mean",
+      "candidate_bounds": [
+        -0.78,
+        4.1080000000000005
+      ],
+      "sampling_bounds": [
+        -8.5,
+        5.25
+      ],
+      "samples": 111,
+      "unique_raw_pixels": 72,
+      "stencil_partition_max_error": 2.220446049250313e-16,
+      "stencil_max_l1": 1.4470999999999998,
+      "matched_operator_true_prediction_max_error": 8.526512829121202e-14,
+      "matched_operator_fit_at_truth": {
+        "edge": 0.0,
+        "levels": [
+          90.00000000000004,
+          90.00000000000007,
+          170.00000000000003
+        ],
+        "rss": 3.473512337869159e-25,
+        "maximum": 1.4210854715202004e-13
+      },
+      "results": {
+        "continuous": {
+          "best": {
+            "edge": 3.0709264579885294,
+            "levels": [
+              90.06303820417071,
+              168.94086644668027,
+              170.29778145341677
+            ],
+            "rss": 3.7066145269890227,
+            "maximum": 0.5088815673613851,
+            "edge_error": 3.0709264579885294
+          },
+          "basins": [
+            {
+              "edge": 3.0709264579885294,
+              "levels": [
+                90.06303820417071,
+                168.94086644668027,
+                170.29778145341677
+              ],
+              "rss": 3.7066145269890227,
+              "maximum": 0.5088815673613851,
+              "edge_error": 3.0709264579885294
+            },
+            {
+              "edge": 0.01627380508243967,
+              "levels": [
+                89.92273590564281,
+                90.76576223079266,
+                169.85350514019783
+              ],
+              "rss": 4.211773322229487,
+              "maximum": 0.42633985990150336
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                91.79264065301415,
+                78.64901252143592,
+                164.56315463179612
+              ],
+              "rss": 2811.816407106896,
+              "maximum": 11.018124322308338
+            },
+            {
+              "edge": 4.1080000000000005,
+              "levels": [
+                94.28295560305018,
+                191.84442766799282,
+                154.97121094248928
+              ],
+              "rss": 5281.179568951551,
+              "maximum": 15.925393379994716
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": -0.003282722912467761,
+            "levels": [
+              90.10282204224904,
+              169.78476843593597
+            ],
+            "rss": 7.035969588210064
+          },
+          "single_step_partner": 3.092111692464316,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.479166236665319e-08
+        },
+        "keys_point": {
+          "best": {
+            "edge": 3.075158290887557,
+            "levels": [
+              90.06247610046717,
+              169.11780860788494,
+              170.21784825664608
+            ],
+            "rss": 1.612484096525213,
+            "maximum": 0.2362872242322709,
+            "edge_error": 3.075158290887557
+          },
+          "basins": [
+            {
+              "edge": 3.075158290887557,
+              "levels": [
+                90.06247610046717,
+                169.11780860788494,
+                170.21784825664608
+              ],
+              "rss": 1.612484096525213,
+              "maximum": 0.2362872242322709,
+              "edge_error": 3.075158290887557
+            },
+            {
+              "edge": 0.013414872449383736,
+              "levels": [
+                89.94378600621796,
+                90.65132748939646,
+                169.85963387777957
+              ],
+              "rss": 1.7864487382393295,
+              "maximum": 0.2558315488829237
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                91.82644961099044,
+                78.5467175810534,
+                164.59359447121113
+              ],
+              "rss": 2774.9509924577505,
+              "maximum": 10.868586374882952
+            },
+            {
+              "edge": 4.1080000000000005,
+              "levels": [
+                94.24848434222146,
+                192.11222557246668,
+                154.6606781144399
+              ],
+              "rss": 5185.2362252823805,
+              "maximum": 15.791388540491852
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": -0.0030332821203411155,
+            "levels": [
+              90.09471101501559,
+              169.80182385259116
+            ],
+            "rss": 3.761083919029142
+          },
+          "single_step_partner": 3.0923492551234846,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.479166236665319e-08
+        },
+        "keys_uniform_pixel_mean": {
+          "best": {
+            "edge": 0.0,
+            "levels": [
+              90.00000000000004,
+              90.00000000000007,
+              170.00000000000003
+            ],
+            "rss": 3.473512337869159e-25,
+            "maximum": 1.4210854715202004e-13,
+            "edge_error": 0.0
+          },
+          "basins": [
+            {
+              "edge": 0.0,
+              "levels": [
+                90.00000000000004,
+                90.00000000000007,
+                170.00000000000003
+              ],
+              "rss": 3.473512337869159e-25,
+              "maximum": 1.4210854715202004e-13,
+              "edge_error": 0.0
+            },
+            {
+              "edge": 3.0952380962440134,
+              "levels": [
+                90.00000000316581,
+                170.0000000250191,
+                169.9999999913446
+              ],
+              "rss": 3.6542977182811966e-15,
+              "maximum": 1.2420997563822311e-08
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                91.92913681534792,
+                77.97543042872493,
+                164.82620653110203
+              ],
+              "rss": 2639.466210318979,
+              "maximum": 10.500904598443597
+            },
+            {
+              "edge": 4.1080000000000005,
+              "levels": [
+                94.0583290607575,
+                193.17231063623976,
+                153.95152873683375
+              ],
+              "rss": 4856.356708004957,
+              "maximum": 15.169341658978581
+            }
+          ],
+          "roundoff_tied_distinct_minima": 1,
+          "single_step_witness": {
+            "edge": 4.874836644734993e-10,
+            "levels": [
+              90.00000000211836,
+              170.00000000392689
+            ],
+            "rss": 1.620795693817693e-15
+          },
+          "single_step_partner": 3.0952380957023653,
+          "single_step_alias_detected": true,
+          "arithmetic_guard": 2.479166236665319e-08
+        }
+      }
+    },
+    {
+      "name": "bright_wall_shifted_seed",
+      "sigma": 1.3,
+      "band_true": 3.25,
+      "band_seed": 3.38,
+      "band_rate": 0.05,
+      "true_bottom": [
+        60.3,
+        16.3
+      ],
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "seed_error": 2.6,
+      "levels_CBA": [
+        90.0,
+        110.0,
+        170.0
+      ],
+      "observation": "uniform_pixel_mean",
+      "candidate_bounds": [
+        -0.78,
+        4.212000000000001
+      ],
+      "sampling_bounds": [
+        -8.625,
+        5.25
+      ],
+      "samples": 112,
+      "unique_raw_pixels": 72,
+      "stencil_partition_max_error": 4.440892098500626e-16,
+      "stencil_max_l1": 1.4470999999999996,
+      "matched_operator_true_prediction_max_error": 8.526512829121202e-14,
+      "matched_operator_fit_at_truth": {
+        "edge": 2.6,
+        "levels": [
+          90.00000000000001,
+          109.99999999999994,
+          170.00000000000014
+        ],
+        "rss": 4.0591626739052383e-25,
+        "maximum": 1.7053025658242404e-13
+      },
+      "results": {
+        "continuous": {
+          "best": {
+            "edge": 2.603487264852739,
+            "levels": [
+              90.01048875039896,
+              110.38113925589407,
+              169.63719790809293
+            ],
+            "rss": 1.4389431084516588,
+            "maximum": 0.2631447603043853,
+            "edge_error": 0.0034872648527390915
+          },
+          "basins": [
+            {
+              "edge": 2.603487264852739,
+              "levels": [
+                90.01048875039896,
+                110.38113925589407,
+                169.63719790809293
+              ],
+              "rss": 1.4389431084516588,
+              "maximum": 0.2631447603043853,
+              "edge_error": 0.0034872648527390915
+            },
+            {
+              "edge": 4.212000000000001,
+              "levels": [
+                91.17333424782171,
+                142.26280075754997,
+                180.8371257795922
+              ],
+              "rss": 475.76448774622185,
+              "maximum": 4.287562855277258
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                92.0048076088516,
+                78.33906390440978,
+                141.44787304468002
+              ],
+              "rss": 16600.59673783744,
+              "maximum": 27.202223011279955
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": 1.042600000000001,
+            "levels": [
+              90.21447550814077,
+              155.6874815841357
+            ],
+            "rss": 3065.1958964211544
+          },
+          "single_step_partner": 4.212000000000001,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.0455546446351902e-08
+        },
+        "keys_point": {
+          "best": {
+            "edge": 2.602599966849986,
+            "levels": [
+              90.0150821003755,
+              110.32173544377774,
+              169.68142991789182
+            ],
+            "rss": 0.42516146454967096,
+            "maximum": 0.15089497911259286,
+            "edge_error": 0.0025999668499858686
+          },
+          "basins": [
+            {
+              "edge": 2.602599966849986,
+              "levels": [
+                90.0150821003755,
+                110.32173544377774,
+                169.68142991789182
+              ],
+              "rss": 0.42516146454967096,
+              "maximum": 0.15089497911259286,
+              "edge_error": 0.0025999668499858686
+            },
+            {
+              "edge": 4.212000000000001,
+              "levels": [
+                91.16891497529186,
+                142.2651308218481,
+                180.85866700939303
+              ],
+              "rss": 461.17229651114184,
+              "maximum": 4.202556795945242
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                92.03931147198188,
+                78.23416355146693,
+                141.48153840043977
+              ],
+              "rss": 16539.144578447893,
+              "maximum": 27.167887768878643
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": 1.042600000000001,
+            "levels": [
+              90.20319555646353,
+              155.71502768969862
+            ],
+            "rss": 3030.272755879524
+          },
+          "single_step_partner": 4.212000000000001,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.0455546446351902e-08
+        },
+        "keys_uniform_pixel_mean": {
+          "best": {
+            "edge": 2.6,
+            "levels": [
+              90.00000000000001,
+              109.99999999999994,
+              170.00000000000014
+            ],
+            "rss": 4.0591626739052383e-25,
+            "maximum": 1.7053025658242404e-13,
+            "edge_error": 0.0
+          },
+          "basins": [
+            {
+              "edge": 2.6,
+              "levels": [
+                90.00000000000001,
+                109.99999999999994,
+                170.00000000000014
+              ],
+              "rss": 4.0591626739052383e-25,
+              "maximum": 1.7053025658242404e-13,
+              "edge_error": 0.0
+            },
+            {
+              "edge": 4.212000000000001,
+              "levels": [
+                91.10320642855868,
+                142.27280549475557,
+                181.07338610306246
+              ],
+              "rss": 424.20166865886915,
+              "maximum": 3.980451922294421
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                92.16652449365577,
+                77.66281181618649,
+                141.7083899058604
+              ],
+              "rss": 16261.434658546643,
+              "maximum": 26.940898358686212
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": 1.042600000000001,
+            "levels": [
+              90.11078452314595,
+              155.92479536408635
+            ],
+            "rss": 2936.071606774056
+          },
+          "single_step_partner": 4.212000000000001,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.0455546446351902e-08
+        }
+      }
+    },
+    {
+      "name": "bright_wall_shifted_seed",
+      "sigma": 1.3,
+      "band_true": 3.25,
+      "band_seed": 3.38,
+      "band_rate": 0.05,
+      "true_bottom": [
+        60.3,
+        16.3
+      ],
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "seed_error": 2.6,
+      "levels_CBA": [
+        90.0,
+        130.0,
+        170.0
+      ],
+      "observation": "uniform_pixel_mean",
+      "candidate_bounds": [
+        -0.78,
+        4.212000000000001
+      ],
+      "sampling_bounds": [
+        -8.625,
+        5.25
+      ],
+      "samples": 112,
+      "unique_raw_pixels": 72,
+      "stencil_partition_max_error": 4.440892098500626e-16,
+      "stencil_max_l1": 1.4470999999999996,
+      "matched_operator_true_prediction_max_error": 5.684341886080802e-14,
+      "matched_operator_fit_at_truth": {
+        "edge": 2.6,
+        "levels": [
+          90.00000000000003,
+          129.99999999999991,
+          170.00000000000017
+        ],
+        "rss": 4.271208485228646e-25,
+        "maximum": 1.7053025658242404e-13
+      },
+      "results": {
+        "continuous": {
+          "best": {
+            "edge": 2.580748762180221,
+            "levels": [
+              90.0318569345338,
+              129.7106549203786,
+              169.69152621918187
+            ],
+            "rss": 1.3134080378626842,
+            "maximum": 0.22292898452454324,
+            "edge_error": -0.01925123781977911
+          },
+          "basins": [
+            {
+              "edge": 2.580748762180221,
+              "levels": [
+                90.0318569345338,
+                129.7106549203786,
+                169.69152621918187
+              ],
+              "rss": 1.3134080378626842,
+              "maximum": 0.22292898452454324,
+              "edge_error": -0.01925123781977911
+            },
+            {
+              "edge": 4.212000000000001,
+              "levels": [
+                93.47718200599624,
+                160.71364776106398,
+                170.03639353343777
+              ],
+              "rss": 2399.1575313926714,
+              "maximum": 11.145885503142878
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                91.434013330145,
+                81.62025051124131,
+                150.6643654391178
+              ],
+              "rss": 7815.717990139356,
+              "maximum": 18.436136007648315
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": 0.6664231566581227,
+            "levels": [
+              91.97206405379936,
+              160.79830557526049
+            ],
+            "rss": 2085.2844467506575
+          },
+          "single_step_partner": 3.8537363396744024,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.2287220738674756e-08
+        },
+        "keys_point": {
+          "best": {
+            "edge": 2.5824384394767854,
+            "levels": [
+              90.03245083032894,
+              129.7335246965892,
+              169.72128055649392
+            ],
+            "rss": 0.488183064258938,
+            "maximum": 0.14359264143050154,
+            "edge_error": -0.01756156052321467
+          },
+          "basins": [
+            {
+              "edge": 2.5824384394767854,
+              "levels": [
+                90.03245083032894,
+                129.7335246965892,
+                169.72128055649392
+              ],
+              "rss": 0.488183064258938,
+              "maximum": 0.14359264143050154,
+              "edge_error": -0.01756156052321467
+            },
+            {
+              "edge": 4.212000000000001,
+              "levels": [
+                93.4595945184015,
+                160.8301110229653,
+                169.89431811201536
+              ],
+              "rss": 2364.001124047407,
+              "maximum": 11.13238277920999
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                91.46371048949653,
+                81.52951825850867,
+                150.69356813555603
+              ],
+              "rss": 7770.359048438554,
+              "maximum": 18.40620070233581
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": 0.6677542247643483,
+            "levels": [
+              91.9639946642892,
+              160.83520339066857
+            ],
+            "rss": 2043.5220732134164
+          },
+          "single_step_partner": 3.855004023585093,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.2287220738674756e-08
+        },
+        "keys_uniform_pixel_mean": {
+          "best": {
+            "edge": 2.6,
+            "levels": [
+              90.00000000000003,
+              129.99999999999991,
+              170.00000000000017
+            ],
+            "rss": 4.271208485228646e-25,
+            "maximum": 1.7053025658242404e-13,
+            "edge_error": 0.0
+          },
+          "basins": [
+            {
+              "edge": 2.6,
+              "levels": [
+                90.00000000000003,
+                129.99999999999991,
+                170.00000000000017
+              ],
+              "rss": 4.271208485228646e-25,
+              "maximum": 1.7053025658242404e-13,
+              "edge_error": 0.0
+            },
+            {
+              "edge": 4.212000000000001,
+              "levels": [
+                93.34159773496032,
+                161.2717547001493,
+                169.6801078816631
+              ],
+              "rss": 2224.6605177253978,
+              "maximum": 10.759286182311556
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                91.56422639894141,
+                81.01448261367005,
+                150.9085023212486
+              ],
+              "rss": 7565.66818244372,
+              "maximum": 18.191117266251467
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": 0.6749088409295487,
+            "levels": [
+              91.88314445732345,
+              161.10442327732332
+            ],
+            "rss": 1901.6860870215887
+          },
+          "single_step_partner": 3.8618179437424267,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.2287220738674756e-08
+        }
+      }
+    },
+    {
+      "name": "bright_wall_shifted_seed",
+      "sigma": 1.3,
+      "band_true": 3.25,
+      "band_seed": 3.38,
+      "band_rate": 0.05,
+      "true_bottom": [
+        60.3,
+        16.3
+      ],
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "seed_error": 2.6,
+      "levels_CBA": [
+        90.0,
+        150.0,
+        170.0
+      ],
+      "observation": "uniform_pixel_mean",
+      "candidate_bounds": [
+        -0.78,
+        4.212000000000001
+      ],
+      "sampling_bounds": [
+        -8.625,
+        5.25
+      ],
+      "samples": 112,
+      "unique_raw_pixels": 72,
+      "stencil_partition_max_error": 4.440892098500626e-16,
+      "stencil_max_l1": 1.4470999999999996,
+      "matched_operator_true_prediction_max_error": 8.526512829121202e-14,
+      "matched_operator_fit_at_truth": {
+        "edge": 2.6,
+        "levels": [
+          90.00000000000001,
+          149.99999999999991,
+          170.00000000000017
+        ],
+        "rss": 4.658949397362878e-25,
+        "maximum": 2.2737367544323206e-13
+      },
+      "results": {
+        "continuous": {
+          "best": {
+            "edge": 2.5765612303717615,
+            "levels": [
+              90.04539942353495,
+              149.33775604556328,
+              169.95080312328466
+            ],
+            "rss": 2.0682045207613964,
+            "maximum": 0.37825648489322816,
+            "edge_error": -0.023438769628238543
+          },
+          "basins": [
+            {
+              "edge": 2.5765612303717615,
+              "levels": [
+                90.04539942353495,
+                149.33775604556328,
+                169.95080312328466
+              ],
+              "rss": 2.0682045207613964,
+              "maximum": 0.37825648489322816,
+              "edge_error": -0.023438769628238543
+            },
+            {
+              "edge": 0.1194743618170839,
+              "levels": [
+                89.21912927736501,
+                98.41012675798986,
+                164.72678710775756
+              ],
+              "rss": 641.5065710886829,
+              "maximum": 4.826617017310042
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                90.86321905143842,
+                84.90143711807278,
+                159.8808578335556
+              ],
+              "rss": 2312.553618658135,
+              "maximum": 9.670049004016619
+            },
+            {
+              "edge": 4.212000000000001,
+              "levels": [
+                95.78102976417073,
+                179.164494764578,
+                159.23566128728328
+              ],
+              "rss": 7133.303418524313,
+              "maximum": 18.366394747336315
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": -0.18627703582820188,
+            "levels": [
+              90.90239606207055,
+              163.56555098963366
+            ],
+            "rss": 884.3571420371195
+          },
+          "single_step_partner": 3.0416409182588553,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.4283319760567922e-08
+        },
+        "keys_point": {
+          "best": {
+            "edge": 2.58006293527577,
+            "levels": [
+              90.04601567780307,
+              149.4365566747366,
+              169.94198114004456
+            ],
+            "rss": 0.8602379317800924,
+            "maximum": 0.1856080540389371,
+            "edge_error": -0.01993706472423007
+          },
+          "basins": [
+            {
+              "edge": 2.58006293527577,
+              "levels": [
+                90.04601567780307,
+                149.4365566747366,
+                169.94198114004456
+              ],
+              "rss": 0.8602379317800924,
+              "maximum": 0.1856080540389371,
+              "edge_error": -0.01993706472423007
+            },
+            {
+              "edge": 0.11875458765350831,
+              "levels": [
+                89.23110225212966,
+                98.34551905469549,
+                164.74594516762423
+              ],
+              "rss": 623.5783397400305,
+              "maximum": 4.801207107670251
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                90.88810950701124,
+                84.82487296555044,
+                159.9055978706723
+              ],
+              "rss": 2285.67187573122,
+              "maximum": 9.644513635792947
+            },
+            {
+              "edge": 4.212000000000001,
+              "levels": [
+                95.75027406151116,
+                179.3950912240825,
+                158.92996921463768
+              ],
+              "rss": 7046.551132178191,
+              "maximum": 18.34879926657949
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": -0.18455820980079274,
+            "levels": [
+              90.8982205622626,
+              163.59486166603523
+            ],
+            "rss": 860.8772233866098
+          },
+          "single_step_partner": 3.043277895427816,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.4283319760567922e-08
+        },
+        "keys_uniform_pixel_mean": {
+          "best": {
+            "edge": 2.6,
+            "levels": [
+              90.00000000000001,
+              149.99999999999991,
+              170.00000000000017
+            ],
+            "rss": 4.658949397362878e-25,
+            "maximum": 2.2737367544323206e-13,
+            "edge_error": 0.0
+          },
+          "basins": [
+            {
+              "edge": 2.6,
+              "levels": [
+                90.00000000000001,
+                149.99999999999991,
+                170.00000000000017
+              ],
+              "rss": 4.658949397362878e-25,
+              "maximum": 2.2737367544323206e-13,
+              "edge_error": 0.0
+            },
+            {
+              "edge": 0.10044146556401734,
+              "levels": [
+                89.26717272977474,
+                97.70085326269094,
+                164.85898191710126
+              ],
+              "rss": 575.2857988628164,
+              "maximum": 4.688364187988839
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                90.96192830422703,
+                84.36615341115369,
+                160.1086147366367
+              ],
+              "rss": 2167.6686081177477,
+              "maximum": 9.44133617381678
+            },
+            {
+              "edge": 4.212000000000001,
+              "levels": [
+                95.57998904136201,
+                180.27070390554294,
+                158.28682966026386
+              ],
+              "rss": 6721.503505992008,
+              "maximum": 17.842177724412664
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": -0.17837727187490338,
+            "levels": [
+              90.81366587863894,
+              163.80773345534308
+            ],
+            "rss": 774.1612049896453
+          },
+          "single_step_partner": 3.049164502976282,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.4283319760567922e-08
+        }
+      }
+    },
+    {
+      "name": "bright_wall_shifted_seed",
+      "sigma": 1.3,
+      "band_true": 3.25,
+      "band_seed": 3.38,
+      "band_rate": 0.05,
+      "true_bottom": [
+        60.3,
+        16.3
+      ],
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "seed_error": 2.6,
+      "levels_CBA": [
+        90.0,
+        165.0,
+        170.0
+      ],
+      "observation": "uniform_pixel_mean",
+      "candidate_bounds": [
+        -0.78,
+        4.212000000000001
+      ],
+      "sampling_bounds": [
+        -8.625,
+        5.25
+      ],
+      "samples": 112,
+      "unique_raw_pixels": 72,
+      "stencil_partition_max_error": 4.440892098500626e-16,
+      "stencil_max_l1": 1.4470999999999996,
+      "matched_operator_true_prediction_max_error": 5.684341886080802e-14,
+      "matched_operator_fit_at_truth": {
+        "edge": 2.6,
+        "levels": [
+          90.00000000000001,
+          165.0,
+          170.00000000000014
+        ],
+        "rss": 4.794254819826386e-25,
+        "maximum": 1.9895196601282805e-13
+      },
+      "results": {
+        "continuous": {
+          "best": {
+            "edge": 2.5788845725649026,
+            "levels": [
+              90.06720136580932,
+              164.1661629041087,
+              170.14701005725206
+            ],
+            "rss": 3.5015611091513024,
+            "maximum": 0.48731604004225915,
+            "edge_error": -0.021115427435097534
+          },
+          "basins": [
+            {
+              "edge": 2.5788845725649026,
+              "levels": [
+                90.06720136580932,
+                164.1661629041087,
+                170.14701005725206
+              ],
+              "rss": 3.5015611091513024,
+              "maximum": 0.48731604004225915,
+              "edge_error": -0.021115427435097534
+            },
+            {
+              "edge": -0.5078493010182586,
+              "levels": [
+                89.76879201708208,
+                91.89967024118349,
+                168.24833111984444
+              ],
+              "rss": 72.08463431390736,
+              "maximum": 1.6527511009469151
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                90.43512334240845,
+                87.36232707319643,
+                166.793227129384
+              ],
+              "rss": 338.80539943953795,
+              "maximum": 3.621175481727704
+            },
+            {
+              "edge": 4.212000000000001,
+              "levels": [
+                97.50891558280159,
+                193.0026300172135,
+                151.13511210266742
+              ],
+              "rss": 12528.469387410209,
+              "maximum": 23.875527332881546
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": -0.5587520229062882,
+            "levels": [
+              90.28722098754056,
+              168.08608432781887
+            ],
+            "rss": 90.33337874652668
+          },
+          "single_step_partner": 2.6869028353273445,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.588829775576833e-08
+        },
+        "keys_point": {
+          "best": {
+            "edge": 2.5823170312935524,
+            "levels": [
+              90.06586811430344,
+              164.29552759257942,
+              170.1039509312078
+            ],
+            "rss": 1.541962565267865,
+            "maximum": 0.24126987901547636,
+            "edge_error": -0.0176829687064477
+          },
+          "basins": [
+            {
+              "edge": 2.5823170312935524,
+              "levels": [
+                90.06586811430344,
+                164.29552759257942,
+                170.1039509312078
+              ],
+              "rss": 1.541962565267865,
+              "maximum": 0.24126987901547636,
+              "edge_error": -0.0176829687064477
+            },
+            {
+              "edge": -0.5098427729300825,
+              "levels": [
+                89.78870895043774,
+                91.80979444735055,
+                168.257707675612
+              ],
+              "rss": 66.0784255503576,
+              "maximum": 1.6295691197121869
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                90.45640877014725,
+                87.2963889958318,
+                166.8146201720094
+              ],
+              "rss": 327.34604318015795,
+              "maximum": 3.3235187792215584
+            },
+            {
+              "edge": 4.212000000000001,
+              "levels": [
+                97.46828371884338,
+                193.3188263749204,
+                150.7067075416045
+              ],
+              "rss": 12382.655663041447,
+              "maximum": 23.851007050388944
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": -0.5582264330021437,
+            "levels": [
+              90.2796893834967,
+              168.10352965635812
+            ],
+            "rss": 82.37322287801416
+          },
+          "single_step_partner": 2.687403397140815,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.588829775576833e-08
+        },
+        "keys_uniform_pixel_mean": {
+          "best": {
+            "edge": 2.6,
+            "levels": [
+              90.00000000000001,
+              165.0,
+              170.00000000000014
+            ],
+            "rss": 4.794254819826386e-25,
+            "maximum": 1.9895196601282805e-13,
+            "edge_error": 0.0
+          },
+          "basins": [
+            {
+              "edge": 2.6,
+              "levels": [
+                90.00000000000001,
+                165.0,
+                170.00000000000014
+              ],
+              "rss": 4.794254819826386e-25,
+              "maximum": 1.9895196601282805e-13,
+              "edge_error": 0.0
+            },
+            {
+              "edge": -0.522531009287877,
+              "levels": [
+                89.84747562773026,
+                91.22124151998491,
+                168.38250042726548
+              ],
+              "rss": 49.67395812618321,
+              "maximum": 1.5045891151247588
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                90.51020473319124,
+                86.87990650926638,
+                167.00869904817787
+              ],
+              "rss": 283.32845666439266,
+              "maximum": 2.976979744400751
+            },
+            {
+              "edge": 4.212000000000001,
+              "levels": [
+                97.25878252116327,
+                194.51991580958816,
+                149.74187099421445
+              ],
+              "rss": 11863.637838542043,
+              "maximum": 23.24745234378561
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": -0.5554039952315064,
+            "levels": [
+              90.18018128777781,
+              168.27887452000223
+            ],
+            "rss": 56.96162404737173
+          },
+          "single_step_partner": 2.690091433112851,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.588829775576833e-08
+        }
+      }
+    },
+    {
+      "name": "oblique_bright_wall",
+      "sigma": 1.3,
+      "band_true": 3.25,
+      "band_seed": 3.38,
+      "band_rate": 0.05,
+      "true_bottom": [
+        60.3,
+        16.3
+      ],
+      "normal": [
+        0.7986355100472928,
+        0.6018150231520483
+      ],
+      "seed_error": 2.6,
+      "levels_CBA": [
+        90.0,
+        150.0,
+        170.0
+      ],
+      "observation": "point",
+      "candidate_bounds": [
+        -0.78,
+        4.212000000000001
+      ],
+      "sampling_bounds": [
+        -8.625,
+        5.25
+      ],
+      "samples": 112,
+      "unique_raw_pixels": 92,
+      "stencil_partition_max_error": 1.5543122344752192e-15,
+      "stencil_max_l1": 1.5570831886270744,
+      "matched_operator_true_prediction_max_error": 8.526512829121202e-14,
+      "matched_operator_fit_at_truth": {
+        "edge": 2.6,
+        "levels": [
+          89.99999999999999,
+          150.00000000000009,
+          170.0
+        ],
+        "rss": 1.722619781513019e-25,
+        "maximum": 1.1368683772161603e-13
+      },
+      "results": {
+        "continuous": {
+          "best": {
+            "edge": 2.5978326817010013,
+            "levels": [
+              89.99907967698472,
+              149.94073950455117,
+              170.00381839628707
+            ],
+            "rss": 0.15673918025390066,
+            "maximum": 0.10870839528119802,
+            "edge_error": -0.002167318298998744
+          },
+          "basins": [
+            {
+              "edge": 2.5978326817010013,
+              "levels": [
+                89.99907967698472,
+                149.94073950455117,
+                170.00381839628707
+              ],
+              "rss": 0.15673918025390066,
+              "maximum": 0.10870839528119802,
+              "edge_error": -0.002167318298998744
+            },
+            {
+              "edge": 0.07705032356910003,
+              "levels": [
+                89.28030272855813,
+                97.40398460544783,
+                164.69170901863382
+              ],
+              "rss": 650.4024121937446,
+              "maximum": 4.892843970310622
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                90.902900370387,
+                84.57909470412002,
+                160.02789058920527
+              ],
+              "rss": 2267.88555968593,
+              "maximum": 9.554468348320029
+            },
+            {
+              "edge": 4.212000000000001,
+              "levels": [
+                95.70861705515297,
+                179.4021092447897,
+                159.2014496832613
+              ],
+              "rss": 7183.905508191637,
+              "maximum": 18.562392681491943
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": -0.18712709693117832,
+            "levels": [
+              90.80981669431826,
+              163.6922945196158
+            ],
+            "rss": 848.1910783760716
+          },
+          "single_step_partner": 3.04083133625602,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.4291607193137634e-08
+        },
+        "keys_point": {
+          "best": {
+            "edge": 2.6,
+            "levels": [
+              89.99999999999999,
+              150.00000000000009,
+              170.0
+            ],
+            "rss": 1.722619781513019e-25,
+            "maximum": 1.1368683772161603e-13,
+            "edge_error": 0.0
+          },
+          "basins": [
+            {
+              "edge": 2.6,
+              "levels": [
+                89.99999999999999,
+                150.00000000000009,
+                170.0
+              ],
+              "rss": 1.722619781513019e-25,
+              "maximum": 1.1368683772161603e-13,
+              "edge_error": 0.0
+            },
+            {
+              "edge": 0.07667360998204967,
+              "levels": [
+                89.28705440771688,
+                97.36852302288538,
+                164.70227886381528
+              ],
+              "rss": 640.6598365997186,
+              "maximum": 4.881723329606075
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                90.91676853879098,
+                84.53648054526747,
+                160.04154113157193
+              ],
+              "rss": 2253.5617090003516,
+              "maximum": 9.540736125633686
+            },
+            {
+              "edge": 4.212000000000001,
+              "levels": [
+                95.69122433667663,
+                179.53120137692957,
+                159.0335607124508
+              ],
+              "rss": 7133.316875414239,
+              "maximum": 18.42070690798485
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": -0.18622705715490434,
+            "levels": [
+              90.80726830256658,
+              163.70817947704265
+            ],
+            "rss": 835.5875517152256
+          },
+          "single_step_partner": 3.041688516995329,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.4291607193137634e-08
+        }
+      }
+    },
+    {
+      "name": "oblique_bright_wall",
+      "sigma": 1.3,
+      "band_true": 3.25,
+      "band_seed": 3.38,
+      "band_rate": 0.05,
+      "true_bottom": [
+        60.3,
+        16.3
+      ],
+      "normal": [
+        -0.7986355100472929,
+        0.6018150231520482
+      ],
+      "seed_error": 2.6,
+      "levels_CBA": [
+        90.0,
+        150.0,
+        170.0
+      ],
+      "observation": "point",
+      "candidate_bounds": [
+        -0.78,
+        4.212000000000001
+      ],
+      "sampling_bounds": [
+        -8.625,
+        5.25
+      ],
+      "samples": 112,
+      "unique_raw_pixels": 92,
+      "stencil_partition_max_error": 1.5543122344752192e-15,
+      "stencil_max_l1": 1.5604800190391868,
+      "matched_operator_true_prediction_max_error": 5.684341886080802e-14,
+      "matched_operator_fit_at_truth": {
+        "edge": 2.6,
+        "levels": [
+          90.00000000000009,
+          149.99999999999991,
+          170.0
+        ],
+        "rss": 4.311598163575962e-25,
+        "maximum": 1.1368683772161603e-13
+      },
+      "results": {
+        "continuous": {
+          "best": {
+            "edge": 2.597814901911013,
+            "levels": [
+              89.99906688898598,
+              149.9393168551381,
+              170.0058824237549
+            ],
+            "rss": 0.16944500985971822,
+            "maximum": 0.11943164915408033,
+            "edge_error": -0.0021850980889870364
+          },
+          "basins": [
+            {
+              "edge": 2.597814901911013,
+              "levels": [
+                89.99906688898598,
+                149.9393168551381,
+                170.0058824237549
+              ],
+              "rss": 0.16944500985971822,
+              "maximum": 0.11943164915408033,
+              "edge_error": -0.0021850980889870364
+            },
+            {
+              "edge": 0.07716066754484487,
+              "levels": [
+                89.28020427331063,
+                97.40534885741326,
+                164.69298238307132
+              ],
+              "rss": 650.7286612833348,
+              "maximum": 4.91364007007121
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                90.90297662292743,
+                84.57864726451893,
+                160.02847549943417
+              ],
+              "rss": 2268.503324363327,
+              "maximum": 9.575952076587441
+            },
+            {
+              "edge": 4.212000000000001,
+              "levels": [
+                95.70866358113442,
+                179.4000646219768,
+                159.20796794748333
+              ],
+              "rss": 7184.200160991339,
+              "maximum": 18.580536725771083
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": -0.18707621069139432,
+            "levels": [
+              90.80989197871908,
+              163.6932845590355
+            ],
+            "rss": 848.5675904412725
+          },
+          "single_step_partner": 3.040879799341529,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.429170998665614e-08
+        },
+        "keys_point": {
+          "best": {
+            "edge": 2.6,
+            "levels": [
+              90.00000000000009,
+              149.99999999999991,
+              170.0
+            ],
+            "rss": 4.311598163575962e-25,
+            "maximum": 1.1368683772161603e-13,
+            "edge_error": 0.0
+          },
+          "basins": [
+            {
+              "edge": 2.6,
+              "levels": [
+                90.00000000000009,
+                149.99999999999991,
+                170.0
+              ],
+              "rss": 4.311598163575962e-25,
+              "maximum": 1.1368683772161603e-13,
+              "edge_error": 0.0
+            },
+            {
+              "edge": 0.07670521979073898,
+              "levels": [
+                89.28705944643096,
+                97.36841476465976,
+                164.70334008181666
+              ],
+              "rss": 641.0062726720557,
+              "maximum": 4.900811396674328
+            },
+            {
+              "edge": -0.78,
+              "levels": [
+                90.91676211598445,
+                84.53633003844651,
+                160.0422411195158
+              ],
+              "rss": 2254.1028983046576,
+              "maximum": 9.56192361429163
+            },
+            {
+              "edge": 4.212000000000001,
+              "levels": [
+                95.6912791716495,
+                179.5273186488188,
+                159.04629852371244
+              ],
+              "rss": 7133.640040802258,
+              "maximum": 18.568291535301086
+            }
+          ],
+          "roundoff_tied_distinct_minima": 0,
+          "single_step_witness": {
+            "edge": -0.18619420096051595,
+            "levels": [
+              90.80726185460223,
+              163.7092254537571
+            ],
+            "rss": 835.9278711858419
+          },
+          "single_step_partner": 3.0417198086090322,
+          "single_step_alias_detected": false,
+          "arithmetic_guard": 2.429170998665614e-08
+        }
+      }
+    }
+  ]
+}

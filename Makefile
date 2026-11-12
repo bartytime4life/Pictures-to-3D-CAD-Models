@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 REFERENCE_PYTHON ?= $(CURDIR)/reference-library/.venv/bin/python
 
-.PHONY: help setup setup-app setup-library start dev build build-app build-library test test-app test-library lint smoke slicers freecad photo-benchmark corner-sweep material-gradient-study wall-gradient-study
+.PHONY: help setup setup-app setup-library start dev build build-app build-library test test-app test-library lint smoke slicers freecad photo-benchmark corner-sweep material-gradient-study wall-gradient-study wall-localization-study
 
 help:
 	@echo "make setup          install app and reference-library dependencies; build the app"
@@ -17,6 +17,7 @@ help:
 	@echo "make corner-sweep   fit exactly blurred filleted corners (60-150 degrees) and report radius errors"
 	@echo "make material-gradient-study OUTPUT=new-folder   run the local-profile development census"
 	@echo "make wall-gradient-study OUTPUT=new-folder   examine bounded wall/lighting ambiguity"
+	@echo "make wall-localization-study OUTPUT=new-folder   compare wall correction with a pinned baseline"
 	@echo "Append -app or -library to setup, build, or test to select one component."
 	@echo "Library browser checks use local HTTP; its own make check defaults to file URLs."
 
@@ -78,3 +79,7 @@ material-gradient-study:
 wall-gradient-study:
 	@test -n "$(OUTPUT)" || { echo "Usage: make wall-gradient-study OUTPUT=new-folder (see docs/wall-gradients.md)"; exit 2; }
 	.venv/bin/python scripts/wall_gradient_study.py --output "$(OUTPUT)"
+
+wall-localization-study:
+	@test -n "$(OUTPUT)" || { echo "Usage: make wall-localization-study OUTPUT=new-folder (see docs/wall-localization.md)"; exit 2; }
+	.venv/bin/python scripts/wall_localization_study.py --output "$(OUTPUT)"

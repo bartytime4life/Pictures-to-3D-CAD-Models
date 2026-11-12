@@ -1,0 +1,10 @@
+{
+  "world_scenes": 192,
+  "paired_successful_initial_matches": 192,
+  "failed_lanes": 0,
+  "complete_unique_cartesian_keys": true,
+  "summary_groups_recomputed": 12,
+  "cases_sha256": "593b38355f46277aa370570391fe213e3552cee48bde5e16f0fef32da35382eb",
+  "auditor_sha256": "56b6069b2b787b4364b071e69e459b61fb40fa6976a0166aecae15b07b82976c",
+  "scope": "CSV accounting, finite outcomes and summaries; not independent rendering or physical qualification"
+}

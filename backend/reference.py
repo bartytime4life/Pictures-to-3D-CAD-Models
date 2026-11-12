@@ -105,9 +105,10 @@ def _refine_walls(g, rings, camera, thickness_mm, sigma, ppm):
     if sigma <= 0:
         return [(ring["points"].copy(), edges.material_normals(ring["points"] / ppm, ring["outer"])) for ring in rings], notes
     ratio = camera["height_mm"] / (camera["height_mm"] - thickness_mm)
+    band_rate = ratio - 1
     # Bottom-edge silhouette points have the visible wall on their material side, a
-    # band (ratio - 1) |(p - N) . n| wide. A single mid-level crossing is biased into
-    # the material by up to 0.2 sigma for bands of 1-3 sigma (edges.two_step_refine).
+    # band (ratio - 1) |(p - N) . n| wide. A bright wall can put the initial
+    # crossing near the top edge, beyond the old sub-sigma local search.
     prepared = []
     for ring in rings:
         mm = ring["points"] / ppm
@@ -127,27 +128,31 @@ def _refine_walls(g, rings, camera, thickness_mm, sigma, ppm):
     wall_tone = None
     if len(wide_points) >= 30:
         _, tones = edges.two_step_refine(
-            g, wide_points, np.vstack([w[1] for w in wide]), np.concatenate([w[2] for w in wide]), sigma
+            g, wide_points, np.vstack([w[1] for w in wide]), np.concatenate([w[2] for w in wide]), sigma,
+            band_rate=band_rate
         )
-        wall_tone = float(np.median(tones))
-    else:
+        tones = tones[np.isfinite(tones)]
+        if len(tones) >= 30:
+            wall_tone = float(np.median(tones))
+    if wall_tone is None:
         # Too few wide bands: one tone shared by all bands of 1-3.5 sigma
         # (edges.pooled_wall_tone), where a near-frontal photo still has hundreds.
         pool = [(r["points"][(b >= sigma) & (b <= 3.5 * sigma)], n[(b >= sigma) & (b <= 3.5 * sigma)], b[(b >= sigma) & (b <= 3.5 * sigma)]) for r, n, b in prepared]
         pooled = sum(len(p[0]) for p in pool)
         if pooled >= 30:
             wall_tone = edges.pooled_wall_tone(
-                g, np.vstack([p[0] for p in pool]), np.vstack([p[1] for p in pool]), np.concatenate([p[2] for p in pool]), sigma
+                g, np.vstack([p[0] for p in pool]), np.vstack([p[1] for p in pool]), np.concatenate([p[2] for p in pool]), sigma,
+                band_rate=band_rate
             )
         if wall_tone is not None:
             notes.append(
-                f"Side walls are narrower than about 2.5 times the edge blur; their tone was estimated jointly from {pooled} edge points and the edges facing the camera were corrected with it."
+                f"Side-wall brightness was estimated jointly from up to 160 of {pooled} available edge profiles. The supported local wall corrections use that shared value."
             )
     if wall_tone is None and narrow_count:
         notes.append(
-            f"Side walls are visible but narrower than about 2.5 times the edge blur, so their tone cannot be measured; edges facing the camera may read up to {0.2 * sigma / ppm:.3f} mm into the part. A slightly tilted photo shows wider walls."
+            "The side-wall model could not determine a shared wall brightness, so wall correction was not applied. Review the silhouette, lighting and independent measurements."
         )
-    refined = []
+    refined, unresolved = [], 0
     for ring, normals, band in prepared:
         # Full weight for 1.5-2.5 sigma, tapering linearly to zero at 0.5 and 3.5
         # sigma, so the boundary stays continuous where refinement starts and stops.
@@ -155,9 +160,14 @@ def _refine_walls(g, rings, camera, thickness_mm, sigma, ppm):
         narrow = weight > 0
         points = ring["points"].copy()
         if wall_tone is not None and narrow.any():
-            moved, _ = edges.two_step_refine(g, points[narrow], normals[narrow], band[narrow], sigma, wall_tone=wall_tone)
+            moved, fitted_tones = edges.two_step_refine(
+                g, points[narrow], normals[narrow], band[narrow], sigma,
+                wall_tone=wall_tone, band_rate=band_rate)
+            unresolved += int(np.count_nonzero(~np.isfinite(fitted_tones)))
             points[narrow] += weight[narrow, None] * (moved - points[narrow])
         refined.append((points, normals))
+    if unresolved:
+        notes.append(f"Wall correction was withheld for {unresolved} unresolved edge profiles; their traced points were kept. Review those boundaries against independent measurements.")
     return refined, notes
 
 

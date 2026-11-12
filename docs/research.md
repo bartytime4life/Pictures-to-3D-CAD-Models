@@ -52,6 +52,23 @@ The [original selected design reference](images/design-reference.png) is a gener
 
 [Contour approximation](https://github.com/opencv/opencv/blob/4.x/doc/py_tutorials/py_imgproc/py_contours/py_contour_features/py_contour_features.markdown) uses a distance parameter to simplify an outline. That parameter controls approximation of the traced pixels. It does not establish the accuracy of the camera, source photograph, or physical measurement.
 
+### Local wall geometry and observation operators
+
+The [wall-localization candidate](wall-localization.md) keeps one fixed local
+observation window while expanding geometric hypotheses and updating predicted
+width with each candidate. Its failed expanded-window development version exposed
+an illumination-model mismatch that reversed the pooled-tone branch and damaged
+camera-height inference. The [complete comparison](validation/wall-localization.md)
+retains both versions and adverse cases.
+
+A separate developer prototype models the final signed Keys operator as
+`y ≈ S D(e) theta`: `D(e)` predicts source basis values at input-array pixel
+centres and the fixed matrix `S` applies the actual sampling weights. Linearity
+preserves exact source-field aliases. Known pixel means require aperture
+integration too. The controls support that supplied final-operator model;
+earlier rectification, smoothing, sensor response, curvature and independently
+justified observation/model-error bounds remain separate research.
+
 ## Known-feature scale and dimensional checks
 
 The workbench accepts either the full outside width or a measured distance between two image points. For the latter, the Euclidean pixel distance defines one millimeter-per-pixel factor, applied to both axes. Endpoints use the orientation-adjusted working-image coordinate frame, not the resized browser preview. The measured reference, endpoints, and frame are retained separately from the resulting outside width and intentional design percentages.

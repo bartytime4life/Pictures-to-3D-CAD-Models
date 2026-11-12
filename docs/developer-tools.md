@@ -14,6 +14,7 @@ an experiment in another worktree is a different implementation.
 | Does the fitting chain retain synthetic rounded corners? | `make corner-sweep` | Matched-model regression, including unresolved numerical searches; no physical radius bound |
 | How do illumination and sampling affect local edge measurements? | `make material-gradient-study OUTPUT=NEW_DIRECTORY` | Complete development census through actual profile functions; no complete-camera qualification |
 | Can bounded lighting fit competing wall/silhouette interpretations? | `make wall-gradient-study OUTPUT=NEW_DIRECTORY` | Bounded source fits and constructed ambiguity witnesses; no production wall-model replacement |
+| Does a wall-fit change improve identical initial traces? | `make wall-localization-study OUTPUT=NEW_DIRECTORY` | Paired development scenes with a pinned baseline; retained unknowns and model failures, not camera qualification |
 | How do my reference-sheet photos compare with reserved measurements? | `make photo-benchmark PHOTOS=FOLDER` | Measured-photo comparison with coverage and failed traces retained; supplied comparison threshold is not an uncertainty budget |
 | Does a selected server trace, build and export the sample? | `make smoke` | API exercise against an already running server, including cleanup; not browser or physical acceptance |
 | Can an installed CAD application import the synthetic exports? | `make freecad` | Native FreeCAD check requiring `FREECADCMD`; not slicer or print qualification |
@@ -53,15 +54,23 @@ Choose fresh output paths and preserve earlier reports:
 ```bash
 make material-gradient-study OUTPUT=.local/material-gradients-new
 make wall-gradient-study OUTPUT=.local/wall-gradients-new
+make wall-localization-study OUTPUT=.local/wall-localization-new
 ```
 
-Both commands require `OUTPUT` and refuse an existing directory. They retain the
+These commands require `OUTPUT` and refuse an existing directory. They retain the
 executed plan, full CSVs, summaries, runtime versions and source hashes. The
 [material-gradient guide](material-gradients.md) distinguishes measurement
 rejections, execution failures, production treatment and research ablation.
 The [wall guide](wall-gradients.md) distinguishes original observations from
 pair-specific constructed midpoints and supplied true wall tone from estimation.
-Neither command identifies a physical error bound from a small residual.
+None of these commands identifies a physical error bound from a small residual.
+
+The [wall-localization guide](wall-localization.md#repeat) supplies its complete
+paired-CSV audit and the two fixed-population Keys-forward prototype commands.
+The comparator's pinned baseline must exist in the local Git object database.
+The prototypes change no tracing behavior and refuse existing JSON outputs.
+The wall-gradient result schema now distinguishes resolved, unresolved and
+execution-failure rows; its auditor also reads the archived version-1 results.
 
 Audit the wall study's complete row keys and summaries independently of its
 summary-writing code:
