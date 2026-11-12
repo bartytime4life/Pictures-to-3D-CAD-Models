@@ -10,8 +10,10 @@ The model fixes a right-angle corner's apex at `(0,0)`, its material in the
 positive X/Y quadrant, a circular fillet, exact observation coordinates and
 independent axis-aligned Gaussian blur. Version 1 supplies exact widths and
 varies radius only; version 2 supplies blur domains and varies radius and one
-shared blur pair. Uncertain pose, coordinates, tone response, noncircular geometry,
-nearby boundaries and model discrepancy require separate treatment.
+shared blur pair. [Version 3](pixel-apertures.md) observes normalized means over
+known uniform rectangular pixel apertures. Uncertain pose, coordinate error,
+tone response, noncircular geometry, nearby boundaries and model discrepancy
+require separate treatment.
 
 ## Run the synthetic demonstration
 
@@ -30,7 +32,7 @@ error budget.
 JSON goes to stdout; the demo explanation goes to stderr. Add
 `--output corner-result.json` to retain a result, choosing a path that does
 not already exist. The CLI refuses overwrites. The full input, exact decimal
-bounds, input-byte hash, four implementation-file hashes and Git metadata are
+bounds, input-byte hash, five implementation-file hashes and Git metadata are
 included in the report. An unknown or incompatible analysis is a valid result
 and exits 0; invalid input or execution failure exits nonzero.
 
@@ -90,9 +92,9 @@ nonlinear image intensities into valid bounded observations.
 
 ## Interpret the result
 
-Both versions use the status names and radius `inner`/`outer` sets below. The
+All three versions use the status names and radius `inner`/`outer` sets below. The
 remaining field details in this section describe version-1 radius boxes;
-version-2 joint parameter boxes and their projections are described next.
+versions 2/3 use joint parameter boxes and projections as described next.
 
 | `status` | What is established under the supplied assumptions |
 | --- | --- |
@@ -189,6 +191,15 @@ coordinates and a circular right corner. The [joint-domain validation](validatio
 retains common-blur counterexamples, interval-dependency probes and known-truth
 controls. Observational error and physical model discrepancy remain distinct,
 as discussed by [Brynjarsdóttir and O'Hagan](https://www.tonyohagan.co.uk/academic/pdf/simmach.pdf).
+
+## Pixel aperture means: version 3
+
+[Pixel-integrated observations](pixel-apertures.md) replace exact point samples
+with known normalized uniform rectangle averages, while retaining one common
+blur pair and the version-2 joint-box/projection rules. The guide gives a runnable
+input, the bounded antiderivative calculation and a center-sampling counterexample.
+Known pixel integration is distinct from arbitrary coordinate uncertainty,
+processed-image interpolation and real-camera qualification.
 
 ## Why the bounds cover whole radius intervals
 

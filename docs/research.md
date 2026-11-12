@@ -16,6 +16,17 @@ Gaussian density/CDF mass bounds reduce repeated-CDF dependency loss. Wider
 domains can still remain unknown; pose, model discrepancy and real-capture
 adequacy require separate evidence.
 
+The [pixel-aperture extension](pixel-apertures.md) distinguishes a point sample
+from a known normalized uniform rectangle average. A bounded Gaussian-CDF
+antiderivative supplies averaged marginal masses to the same nested-cutout
+cover and joint-box rules. This follows the physical distinction between
+continuous images and pixel integrals studied by
+[Chao et al.](https://pmc.ncbi.nlm.nih.gov/articles/PMC4523554/), without adopting
+their localization-accuracy claims for CAD. Its [development record](validation/pixel-apertures.md)
+retains false radius exclusions under center sampling, compatible finite-area
+controls and shared-blur unknowns. Uniform product apertures do not model the
+workbench's signed Keys resampling or general warped sensor footprints.
+
 [Documentation index](README.md) · [Guided workbench review](validation/guided-workbench.md)
 
 This product starts with a deliberately constrained geometry problem: a photograph can provide a planar boundary, and a user can supply measured scale and thickness. The resulting extrusion is useful for flat parts without pretending that a single image identifies hidden surfaces.

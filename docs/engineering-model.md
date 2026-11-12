@@ -197,3 +197,10 @@ can include supplied blur intervals as a joint nuisance domain. A radius needs
 one common blur pair for all observations; separate per-point fits cannot prove
 that. This still does not justify the blur bounds, accommodate spatially varying
 or correlated PSFs, or turn residual spread into a physical error bound.
+
+[Version 3](pixel-apertures.md) models known uniform rectangular pixel means
+instead of point samples. Finite detector integration can change the measured
+level enough to exclude a known radius under a center-sample model. This
+extension bounds the explicit mean calculation; it does not calibrate real
+pixels, justify signed/interpolated samples, or infer pre-aperture optical blur
+from the workbench's processed edge spread.

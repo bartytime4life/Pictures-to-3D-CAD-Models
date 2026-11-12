@@ -106,7 +106,15 @@ def analyze(raw):
     projection. Another blur box can explain the same radius. Full joint boxes
     and separate projected inner/outer sets keep that distinction reviewable.
     """
-    config = parse_config(raw)
+    return _analyze(parse_config(raw))
+
+
+def _point_level_bounds(point, sigma, radius, cells):
+    return fixed._level_bounds_with_sigma(point, sigma, radius, cells, x_mass_bound=_x_mass)
+
+
+def _analyze(config, *, level_evaluator=_point_level_bounds):
+    """Shared joint-box engine; the callback encloses one supplied observation."""
     common = config.fixed
     domain = (common.radius_domain, *config.blur_domains)
     resolutions = (common.radius_resolution, *config.blur_resolution)
@@ -122,9 +130,7 @@ def analyze(raw):
             values = []
             for point in common.points:
                 level_evaluations += 1
-                values.append(fixed._level_bounds_with_sigma(
-                    point, sigma, radius, common.cells, x_mass_bound=_x_mass
-                ))
+                values.append(level_evaluator(point, sigma, radius, common.cells))
             cache[key] = tuple(values)
         return cache[key]
 

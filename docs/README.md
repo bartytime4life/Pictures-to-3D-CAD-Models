@@ -43,12 +43,13 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Interpret sharp-corner radius estimates and unresolved searches | [Corner-resolution evidence](validation/sharp-corner-resolution.md) |
 | Investigate radius compatibility under explicit fixed-model bounds | [Conditional corner CLI](corner-feasibility.md), [independent checks](validation/corner-feasibility.md) |
 | Include bounded blur uncertainty without mixing per-point fits | [Version-2 joint domains](corner-feasibility.md#joint-blur-domains-version-2), [projection checks](validation/corner-blur-domains.md) |
+| Model known pixel-area averages instead of center samples | [Version-3 pixel apertures](pixel-apertures.md), [independent checks](validation/pixel-apertures.md) |
 | Understand the lens inverse domain and independent synthetic camera checks | [Radial inverse and lens mismatch](validation/radial-inverse.md) |
 | Review why the blur diagnostic remains research only | [Directional-spread qualification](validation/directional-spread-qualification.md) |
 | Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |
 | Run a benchmark with measured photos | [Photo benchmark](photo-benchmark.md) |
 | Review completed checks | [Validation overview](validation.md), [design QA](../design-qa.md) |
-| Check current documentation coverage and source consistency | [Latest consolidation](validation/documentation-math-state.md), [earlier November 12 review](validation/documentation-review-2026-11-12.md) |
+| Check current documentation coverage and source consistency | [Current candidate checks](validation/pixel-apertures.md#numerical-and-contract-checks), [earlier consolidation](validation/documentation-math-state.md), [earlier November 12 review](validation/documentation-review-2026-11-12.md) |
 | Review the recent interface changes | [Guided-workbench audit](validation/guided-workbench.md) |
 | Review scope and future work | [Roadmap](roadmap.md), [change log](changelog.md) |
 | Reproduce bundled printer data | [Printer source record](../data/PRINTER_SOURCES.md) |
