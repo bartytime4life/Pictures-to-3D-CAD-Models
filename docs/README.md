@@ -42,6 +42,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Understand arc-sector preservation after fillet movement | [Fillet-sweep repair](validation/fillet-sweep.md) |
 | Interpret sharp-corner radius estimates and unresolved searches | [Corner-resolution evidence](validation/sharp-corner-resolution.md) |
 | Investigate radius compatibility under explicit fixed-model bounds | [Conditional corner CLI](corner-feasibility.md), [independent checks](validation/corner-feasibility.md) |
+| Include bounded blur uncertainty without mixing per-point fits | [Version-2 joint domains](corner-feasibility.md#joint-blur-domains-version-2), [projection checks](validation/corner-blur-domains.md) |
 | Understand the lens inverse domain and independent synthetic camera checks | [Radial inverse and lens mismatch](validation/radial-inverse.md) |
 | Review why the blur diagnostic remains research only | [Directional-spread qualification](validation/directional-spread-qualification.md) |
 | Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |

@@ -213,5 +213,7 @@ The separate [conditional corner CLI](corner-feasibility.md) uses
 analysis. It reads explicit model/observation JSON and returns bounded radius
 sets with provenance. The FastAPI tracing/build paths do not call it; no new
 endpoint, AI action or automatic geometry correction is introduced.
+Version 2 adds `backend/corner_blur_domains.py` for one shared blur-domain pair
+across all observations and projects full joint parameter boxes into radius sets.
 
 The included runtime is a single-user application. It does not implement account authentication, per-user authorization, shared project storage, collaborative editing, a durable job queue, or a billing service. Those capabilities require an explicit design and implementation before a public multi-user deployment.

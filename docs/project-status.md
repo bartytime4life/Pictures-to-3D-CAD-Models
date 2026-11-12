@@ -9,6 +9,10 @@ The next [conditional radius-analysis candidate](validation/corner-feasibility.m
 is based on documentation head `77b7f6f`. It adds a developer tool; the source
 and review table below retains the earlier integrated baseline and open reviews.
 
+The subsequent [shared-blur candidate](validation/corner-blur-domains.md) is
+based on PR #50 at `be2a58c`; it adds a version-2 joint parameter domain and
+passes 839 Python tests. The table below remains the earlier dated review snapshot.
+
 ## Source and review state
 
 At the repository check on November 12, `main` was
@@ -49,14 +53,16 @@ cannot identify which implementation a server is running.
 See [engineering equations and decisions](engineering-model.md),
 [method assumptions](reference-sheet.md), [export contents](exports.md) and the
 [roadmap](roadmap.md) for details. A [fixed-corner developer CLI](corner-feasibility.md)
-now implements conditional radius sets from supplied bounds. General inference
-with uncertain geometry, pose, blur and model discrepancy remains research;
+now implements conditional radius sets with fixed or bounded independent
+axis-aligned blur. General inference with uncertain geometry, pose, correlated
+or spatially varying PSFs and model discrepancy remains research;
 there is no product endpoint, automatic tracing correction or accuracy label.
 
 ## Evidence by scope
 
 | Evidence | Recorded result | Interpretation |
 | --- | --- | --- |
+| Joint blur-domain candidate | [Shared-blur record](validation/corner-blur-domains.md): 839 Python tests passed | Joint nuisance domains and safe projection; no new browser or physical qualification |
 | Conditional corner-analysis candidate | [Numerical/CLI record](validation/corner-feasibility.md): 760 Python tests passed | New developer-only analysis; no fresh browser/build or physical qualification |
 | Latest complete local workbench run | [Corner-resolution record](validation/sharp-corner-resolution.md): 630 Python tests and 74 browser scenarios; build and lint passed | Reviewed implementation behavior on the recorded inputs; not a new run by this documentation change |
 | Earlier radial candidate | [Radial record](validation/radial-inverse.md): 623 Python tests and 74 browser scenarios after integration with `5c07d0f` | Separate source binding; higher-order lens mismatch remains visible |

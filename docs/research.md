@@ -9,6 +9,13 @@ wrong-model rejection and numerical-refinement results. This is a restricted
 set-inversion application, not automatic physical uncertainty or a new tracer
 correction.
 
+The [shared-blur extension](validation/corner-blur-domains.md) adds one bounded
+nuisance domain to that investigation. It distinguishes a radius projection of
+joint feasible boxes from independently optimized per-point fits. Intersected
+Gaussian density/CDF mass bounds reduce repeated-CDF dependency loss. Wider
+domains can still remain unknown; pose, model discrepancy and real-capture
+adequacy require separate evidence.
+
 [Documentation index](README.md) · [Guided workbench review](validation/guided-workbench.md)
 
 This product starts with a deliberately constrained geometry problem: a photograph can provide a planar boundary, and a user can supply measured scale and thickness. The resulting extrusion is useful for flat parts without pretending that a single image identifies hidden surfaces.

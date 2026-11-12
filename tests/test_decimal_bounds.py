@@ -147,6 +147,66 @@ def test_square_root_bounds_are_verified_by_exact_squaring(low, high):
         assert result == Interval.point(0)
 
 
+def rational_exp_enclosure(value):
+    """Independent exact-rational Taylor enclosure, for |value|<=8.
+
+    For positive x the tail after term160 is bounded geometrically: its first
+    term is a161, and every following ratio is <=x/162<1. Negative x uses the
+    reciprocal enclosure. No Decimal.exp or floating exponential is used.
+    """
+    value = Fraction(value)
+    if value < 0:
+        low, high = rational_exp_enclosure(-value)
+        return 1 / high, 1 / low
+    assert value <= 8
+    term = total = Fraction(1)
+    for n in range(1, 161):
+        term = term * value / n
+        total += term
+    first_omitted = term * value / 161
+    return total, total + first_omitted / (1 - value / 162)
+
+
+@pytest.mark.parametrize("value", ["-8", "-3", "-1", "-.125", "0", ".125", ".5", "1", "3", "8"])
+def test_exponential_contains_an_independent_rational_enclosure(value):
+    low, high = rational_exp_enclosure(Decimal(value))
+    result = Interval.point(value).exp()
+    assert Fraction(result.lo) <= low <= high <= Fraction(result.hi)
+    if value == "0":
+        assert result == Interval.point(1)
+
+
+def test_exponential_interval_is_monotone_and_preserves_exact_zero_endpoint():
+    result = Interval("-3", ".125").exp()
+    low, _ = rational_exp_enclosure(-3)
+    _, high = rational_exp_enclosure(Fraction(1, 8))
+    assert Fraction(result.lo) <= low and high <= Fraction(result.hi)
+    assert result.lo == Interval.point(-3).exp().lo
+    assert result.hi == Interval.point(".125").exp().hi
+    assert Interval("-1", "0").exp().hi == 1
+    assert Interval("0", "1").exp().lo == 1
+    assert Interval.point("-0").exp() == Interval.point(1)
+
+
+def test_exponential_underflow_retains_positive_upper_bound():
+    # exp(-3000000) is positive but below the smallest output subnormal. It
+    # cannot become the singleton zero. Gaussian exponents may reach this case.
+    result = Interval.point(-3_000_000).exp()
+    assert result.lo == 0 and result.hi == Decimal("1e-1000058")
+    assert Interval(-3_000_000, 0).exp() == Interval(0, 1)
+
+
+def test_exponential_overflow_is_explicit_even_when_only_padding_overflows(monkeypatch):
+    with pytest.raises(Overflow):
+        Interval.point(3_000_000).exp()
+    # At prec3/Emax2, exp(6.907) rounds to finite999 but its next value is
+    # Infinity. Refuse this too; finite endpoints must not hide upper overflow.
+    monkeypatch.setattr(bounds, "_NEAREST", Context(prec=3, Emin=-2, Emax=2))
+    assert bounds._NEAREST.exp(Decimal("6.907")) == Decimal(999)
+    with pytest.raises(Overflow, match="enclosure exceeds"):
+        Interval.point("6.907").exp()
+
+
 def test_underflow_rounds_outward_in_both_signs_and_square_root():
     # At prec60/Emin-999999 the smallest positive subnormal is 1e-1000058.
     # These exact Decimal literals remain representable as inputs even when an
@@ -233,7 +293,7 @@ def test_tail_enclosures_are_explicitly_coarse_and_monotone():
 def test_all_primitives_ignore_adversarial_global_context():
     def calculation():
         a, b = Interval("-.1234567890123456789", "2.7890123456789012345"), Interval(".3", "1.7")
-        return (a + b, a - b, -a, a * b, a / b, b.sqrt(),
+        return (a + b, a - b, -a, a * b, a / b, b.sqrt(), a.exp(), b.exp(),
                 Interval.point(0.1), normal_cdf(Interval("-.3141592653589793", "7.123456789012345")))
 
     expected = calculation()
@@ -255,7 +315,7 @@ def test_context_factory_is_independent_of_mutated_default_context(monkeypatch):
     # current context. Recreate the private contexts under an adversarial default
     # without reloading the module or changing the public Interval class identity.
     argument = Interval("-.2718281828459045", "7.6543210987654321")
-    expected = normal_cdf(argument)
+    expected = normal_cdf(argument), argument.exp()
     for name, value in {"prec": 2, "rounding": ROUND_UP, "Emin": -2,
                         "Emax": 2, "capitals": 0, "clamp": 1}.items():
         monkeypatch.setattr(DefaultContext, name, value)
@@ -271,7 +331,7 @@ def test_context_factory_is_independent_of_mutated_default_context(monkeypatch):
         monkeypatch.setattr(bounds, name, fresh)
     bounds._cdf_endpoint.cache_clear()
     bounds._normalizer.cache_clear()
-    assert normal_cdf(argument) == expected
+    assert (normal_cdf(argument), argument.exp()) == expected
 
 
 def test_exhausted_series_raises_without_partial_result(monkeypatch):
