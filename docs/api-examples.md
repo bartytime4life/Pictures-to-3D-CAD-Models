@@ -10,6 +10,12 @@ The service is single-user and has no account authentication. Generated IDs
 identify temporary artifacts; they do not grant per-user authorization. Keep
 the server's access appropriate for that scope.
 
+The endpoint map below describes HTTP operations. The research branch also has
+[private source-context](source-context.md) and [conditional blur-fitting](psf-calibration.md)
+Python APIs. They have no HTTP route, saved source session or automatic geometry
+update. Check [which source line you are using](project-status.md#source-and-review-state)
+before importing those modules.
+
 ## Endpoint map
 
 | Method and path | Purpose | Successful response |
@@ -141,6 +147,50 @@ The browser's saved project recipe is not a `/api/build` request: it can contain
 format-version and browser-only calibration/height fields that the strict API
 does not accept. Use the documented build schema. Backend handoff recipes omit
 those browser-only notes; see [recipe contents](exports.md).
+
+## Python example: fit a declared straight source edge
+
+Run this from the repository root with `.venv/bin/python` on the PR #79 research
+line. It creates exact synthetic point-sample means, supplies independent unit
+noise and fits offset, width and both levels. It needs no server or photograph.
+
+```python
+import json
+import math
+from dataclasses import asdict
+
+import numpy as np
+from backend.edge_spread import fit_edge_spread
+from backend.profile_observations import PixelNoise
+
+pixels = np.array([(x, y) for x in range(8, 25) for y in (14, 17, 20)])
+normal = np.array([0.8, 0.6])
+anchor = np.array([16.3, 16.7])
+distance = (pixels + 0.5 - anchor) @ normal
+probability = np.array([
+    0.5 * math.erfc(-(float(d) - 0.237) / (math.sqrt(2) * 1.37))
+    for d in distance
+])
+values = 31.0 * (1.0 - probability) + 207.0 * probability
+noise = PixelNoise.factor(np.eye(len(pixels)), 1.0)
+fit = fit_edge_spread(
+    pixels, values, noise, sensor_shape=(32, 32), normal=normal, anchor=anchor,
+    offset_bounds=(-1.0, 1.0), sigma_bounds=(0.7, 2.3),
+)
+print(json.dumps(asdict(fit), allow_nan=False))
+```
+
+The best candidate is near offset `0.237` and sigma `1.37` working-image pixels,
+with fitted levels near `31` and `207`. The explicit `+0.5` constructs the
+synthetic pixel-centre means; pass integer pixel indices to the fitter, which
+applies its own centre convention. Do not add the shift to the indices too.
+
+Read the whole report: `best` can be `None`, and an interior best candidate does
+not settle ties, unfinished basins, local rank or the noise/optical assumptions.
+Python `None` serializes as JSON `null`; it is not zero. Pooling several edge
+fits requires the [all-edge readiness checks](psf-calibration.md#pool-fitted-edges-without-dropping-unresolved-attempts).
+The supplied unit noise is an example assumption, not a measured uncertainty.
+Successful synthetic recovery does not calibrate a physical camera.
 
 ## Errors and recovery
 

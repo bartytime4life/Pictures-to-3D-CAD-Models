@@ -1,16 +1,22 @@
 # Project status and evidence
 
-Documentation snapshot: **November 12, 2026**. This review candidate adds
+Documentation snapshot: **November 12, 2026, 19:11 UTC**. These guides review
+published draft [PR #79](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/79),
+head `32d29f4b4884e6bdc3caf9d4415e48ec00d57562`, tree
+`1f65bf8e7b49733906cabd484e6cc94521d2e70a`. That candidate adds
 [conditional raw edge-width and Gaussian covariance tools](psf-calibration.md),
 with [source-bound numerical controls](validation/psf-calibration.md). It builds
 on the private [source context](source-context.md) and
 [finite-shape fitter](finite-shape-source.md). Search readiness, directional
 identification, Gaussian-model adequacy and physical calibration remain separate.
-There is no new HTTP control or automatic geometry change in this candidate.
+There is no new HTTP control or automatic geometry change in that candidate.
+This documentation follow-up changes no product code; its
+[coverage and executable checks](validation/documentation-psf-state.md) remain
+separate from the candidate's software evidence.
 Start with [setup](development.md), the [task index](README.md),
 [developer tools](developer-tools.md) or [API examples](api-examples.md).
 
-The candidate targets the published [PR #75](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/75)
+PR #79 targets the published [PR #75](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/75)
 head `0c35777b021f16968e06f9848df330b53b04855d`, tree
 `8b051c5f1417c6a6ac098ceee715bec2e8309451`, on
 `codex/source-observation-context`. That PR was owner-merged into
@@ -35,7 +41,17 @@ on the earlier PR #47 main line. The pinned PR #75 review head and that main
 have merge base `ba94ef8e55bbc39b8074840052244f92c72be661`; neither is a
 complete substitute for the other. `main` does not contain the source-context,
 finite-shape and conditional-response modules in this review stack. This
-candidate does not replace its independent directional-tracing implementation.
+research candidate does not replace its independent directional-tracing implementation.
+
+| To use or review | Source line | Availability at this snapshot |
+| --- | --- | --- |
+| Integrated workbench | `main`, `f1679bb` | Slot caps and directional tracing from PRs #76/#77; no private source-context or conditional PSF modules |
+| Directional rank repair | `codex/directional-blur-rank`, `185d682` | Draft PR #78 targets `main`; three occupied angle bins alone no longer admit a rank-two covariance |
+| Source-context and PSF research | `codex/psf-calibration`, `32d29f4` | Draft PR #79 targets `codex/source-observation-context`; includes the successive research stack, without PR #77's directional tracing |
+
+Select a source line before setup and record its full commit. A matching
+package version or successful health check cannot establish that a running
+server has any of these branch-specific capabilities.
 
 PRs #48–#75 were merged into their successive listed review branches. Those
 merges do not propagate the whole stack into `main`. The tables and local test
@@ -76,7 +92,7 @@ production equivalence or qualification of the separate main implementation.
 | `c9daa2af289929efc15c3719677b9b0ae6b2ccfd` | Complete finite-material Gaussian source model and bounded joint circular-segment fitting | [PR #74](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/74), owner-merged into PR #73's branch at `f084749`; [source-bound evidence](validation/finite-shape-source.md) |
 | `0c35777b021f16968e06f9848df330b53b04855d` | Immutable real-trace prewarp capture, fixed observations and an explicit guarded fitting bridge | [PR #75](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/75), owner-merged into PR #74's branch; [integration evidence](validation/source-context.md) |
 | `185d682197437581083a8ecd46de6357d7adb846` | Reject rank-deficient directional covariance on the separate main line | Draft [PR #78](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/78); 633 main-based tests pass, separate from this candidate |
-| Current PSF candidate | Direct edge-width fitting, retained numerical unknowns, covariance rank/conditioning and finite direction planning | [Conditional-model evidence](validation/psf-calibration.md); no physical calibration or automatic geometry change |
+| `32d29f4b4884e6bdc3caf9d4415e48ec00d57562` | Direct edge-width fitting, retained numerical unknowns, covariance rank/conditioning and finite direction planning | Draft [PR #79](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/79) on the PR #75 head; [conditional-model evidence](validation/psf-calibration.md), without physical calibration or automatic geometry change |
 
 The PR links show live review state. A documentation update does not install,
 merge or deploy those changes. Record the checkout used to start a service:
@@ -207,6 +223,8 @@ bound to its own head:
 | `25ff63a` | [Workbench run 136](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43266175690) | In progress at 17:32 UTC; completed successfully at the 17:40 UTC check |
 | `fa853df` | [Workbench run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43272297785) | In progress, with no conclusion at the 18:07 UTC check |
 | `fa853df` | [Library run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43272297950) | Completed successfully at the 18:07 UTC check |
+| `185d682` | [PR #78 workbench run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43285958681) | In progress, with no conclusion at the 19:11 UTC documentation check |
+| `32d29f4` | [PR #79 workbench run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43286254583) | In progress, with no conclusion at the 19:11 UTC documentation check |
 
 Follow the exact run links for later results. The raw-source candidate's local 1,273-test result is
 separate from hosted CI. The response-calibration candidate records its own local

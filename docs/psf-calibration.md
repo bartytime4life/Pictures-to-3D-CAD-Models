@@ -7,6 +7,14 @@ into a common two-dimensional Gaussian candidate and plans an additional edge
 direction. These are Python research tools, not a workbench calibration button,
 automatic correction or physical-camera qualification.
 
+This guide covers published draft
+[PR #79](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/79),
+head `32d29f4b4884e6bdc3caf9d4415e48ec00d57562`. Use the
+[runnable synthetic edge-fit example](api-examples.md#python-example-fit-a-declared-straight-source-edge)
+for a first call, then the contracts below for supplied target observations.
+The [source map](project-status.md#source-and-review-state) distinguishes these
+APIs from the directional tracing on `main` and draft rank repair PR #78.
+
 A useful optical investigation needs **independently specified straight target
 geometry**, fixed observations and justified response/noise assumptions. Fitting
 the same part edges whose geometry is being recovered does not independently
@@ -118,7 +126,8 @@ All those matrices are positive definite and give the same two axis variances,
 while their diagonal-edge predictions differ. At 45 degrees,
 `v_45 = (v_x + v_y)/2 + c`. A third oblique direction can identify the cross term
 under this model; nearly repeated directions can remain ill-conditioned.
-Equal-noise normal orientations `0`, `60` and `120` degrees give rank three and
+Equal-weight directional-variance equations at normal orientations `0`, `60`
+and `120` degrees give rank three and
 Frobenius-coordinate condition number `sqrt(2)`. This is an ideal design
 calculation, not a physical target-placement guarantee.
 

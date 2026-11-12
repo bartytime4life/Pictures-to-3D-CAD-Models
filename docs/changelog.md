@@ -3,6 +3,18 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Documentation alignment through PR #79 — November 12, 2026
+
+- Identify draft PSF PR #79 and the separate main-based rank repair #78 by
+  published source; keep their review states and validation results distinct.
+- Connect setup, API, engineering, privacy and troubleshooting guides to the
+  explicit source-context/blur-fitting workflow. Add a runnable synthetic Python
+  edge-fit example and clarify working-pixel units and retained unknowns.
+- Audit the complete Markdown inventory, command help, OpenAPI maps and worked
+  examples while preserving product files and historical evidence. The
+  [documentation audit](validation/documentation-psf-state.md) records coverage
+  and checks; this entry is not a software release or physical retest.
+
 ## Conditional Gaussian optical calibration — November 12, 2026
 
 - Fit straight raw edge offset and positive Gaussian width directly in fixed

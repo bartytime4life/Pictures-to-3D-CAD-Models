@@ -11,7 +11,8 @@ This is a Python developer API. It adds no HTTP endpoint, workbench control,
 Capturing a context does not automatically run the
 [finite-shape fitter](finite-shape-source.md), replace geometry or infer a
 camera's PSF, noise, response or pose uncertainty. A separate explicit fitting
-method is described below.
+method is described below. The separate [straight-edge blur fit](psf-calibration.md)
+also uses this context explicitly; neither fit is triggered by capture alone.
 
 ## Capture only after a successful sheet trace
 

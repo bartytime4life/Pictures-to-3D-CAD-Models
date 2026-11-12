@@ -14,10 +14,15 @@ records their tested behavior; the [documentation index](README.md) maps the gui
 
 An optional local Ollama assistant provides text guidance and reviewable trace/design/print-setting proposals. Its integration is separate from geometric conversion; model downloads and live quality comparisons are still subject to the [recorded verification status](ollama.md).
 
-The current implementation and [validation results](validation.md) are the source of truth for what works. Items below are future work, not hidden capabilities or delivery promises.
+The current implementation and [validation results](validation.md) are the source of truth for what works. Read implemented portions and remaining work separately in the table below; future items are not delivery promises.
 The dated [project-status snapshot](project-status.md) identifies the integrated
 baseline and open algorithm reviews; this guide can describe changes present in
-its branch before they reach `main`.
+its branch before they reach `main`. These guides now cover draft
+[PR #79](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/79);
+the separate `main` line already contains independent directional tracing from
+PR #77, and draft PR #78 repairs that path's covariance-rank check. The research
+stack here does not contain that directional implementation. Its earlier
+30-case directional study remains a historical result on its own source.
 
 The [engineering model and verification plan](engineering-model.md) defines the 2.5D scope, camera-model assumptions, dimension equations and evidence needed through prototype qualification. The independent source-height check optionally compares a user-bounded measurement with a user-defined allowance; it reports within, outside or inconclusive without assigning a physical accuracy or confidence level.
 
@@ -33,7 +38,7 @@ Reference entry also includes an [endpoint-placement sensitivity explorer](refer
 | Parametric CAD recipes | Make more of the construction editable downstream | A defined feature schema, stable regeneration, and version migration |
 | Analytic line and circle fitting | Replace suitable traced approximations with editable geometric features | **Implemented for reference-sheet photos**, with residual gates, an [initial-fit support check](validation/fit-support.md), [stable tapered tangent constraints](validation/tapered-caps.md), [conditional corner-resolution estimates](validation/sharp-corner-resolution.md), a reported and optional snap list, and polyline fallback. The [canonical-arc candidate](validation/canonical-arcs.md) adds circle-consistent final joins and explicit per-ring recovery. Further work: physical branch identification and forward-model adequacy after Gaussian/design reconstruction, per-item snap review, fitted geometry for split output and for photos without a sheet, validated per-dimension uncertainty |
 | Measured-photo benchmark | Quantify error on real parts | **The runner is implemented** (`make photo-benchmark`; [guide](photo-benchmark.md)): bounded global size correspondence, complete dimension-coverage totals, conditional per-dimension error, observed spread, and a two-term scale/edge diagnostic. Still needed: independently evaluated, calipered parts photographed with real phones under predeclared crossed conditions and reserved checks |
-| Directional blur and independent simulation | Expose model mismatch before applying unsupported corrections | **Implemented:** a separate synthetic radial inverse, production inverse-domain safeguards and test-only higher-order lens stress inputs; [record](validation/radial-inverse.md). The [30-case blur qualification](validation/directional-spread-qualification.md) found missed directional cases and unknown outcomes, so no production warning or anisotropic correction is justified. Needed: balanced valid orientation support, forward-model adequacy checks, independently specified new evaluations and reserved real captures |
+| Directional blur and independent simulation | Expose model mismatch before applying unsupported corrections | **Implemented:** a separate synthetic radial inverse, production inverse-domain safeguards and test-only higher-order lens stress inputs; [record](validation/radial-inverse.md). On this research line, the [30-case blur qualification](validation/directional-spread-qualification.md) found missed directional cases and unknown outcomes; neither that diagnostic nor the new source-target fitter automatically changes tracing. The separate main path is identified above. Needed: balanced valid orientation support, forward-model adequacy checks, independently specified new evaluations and reserved real captures |
 | Measured local-model selection | Choose the smallest assistant that gives useful advice quickly | Installed artifact/license verification, repeatable latency results, and human review of fixed project-specific cases |
 | Opt-in vision guidance | Give capture advice based on the actual photograph | Explicit image-sharing control, a verified local vision model, resource bounds, and evaluation against visible evidence |
 | Assembly-aware splitting | Add useful joints or locating features between pieces | Measured clearance/kerf, topology checks, validated joinery, and explicit assembly assumptions |
