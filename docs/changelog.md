@@ -3,6 +3,15 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Directional-blur design rank — November 12, 2026
+
+- Covariance fitting now rejects a numerical rank below three at every weighted
+  least-squares solve. Opposite normals at a rounded angular-bin boundary could
+  previously count as separate supported directions and produce an unidentified
+  positive-definite covariance. Bin support and model-adequacy thresholds remain
+  unchanged. Actual sampled Gaussian-step regressions and the bounded scope are
+  recorded in [directional-blur rank validation](validation/directional-blur-rank.md).
+
 
 ## Slot end caps and directional blur — November 12, 2026
 
