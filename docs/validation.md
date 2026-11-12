@@ -15,11 +15,11 @@ retains a missed nominal target and background-sensitive or incompatible
 covariance proposals. These developer models do not change automatic tracing
 or establish physical-camera accuracy.
 
-The [latest documentation review](validation/documentation-pr86-state.md)
-follows published draft PR #86 at `dcb14e5`. It checks documentation and preserves
+The [latest documentation review](validation/documentation-pr88-state.md)
+follows published draft PR #88 at `ed39d2c`. It checks documentation and preserves
 runtime source; it does not rerun or replace the geometry/browser results below.
 
-The current [circle-consistent join candidate](validation/directional-free-arcs.md)
+The preceding [circle-consistent join candidate](validation/directional-free-arcs.md)
 builds on PR #84. It tests the circle represented by actual emitted geometry,
 retains the six failed analytic baseline cases and replays independent geometric,
 search and finite-source controls. Its separate prospective directional free-arc
@@ -109,6 +109,7 @@ It changes guides relative to that integrated baseline, not runtime behavior.
 
 | Evidence | Revision and result | Scope |
 | --- | --- | --- |
+| Finite-material centre/radius inverse and observed-field diagnostics | PR #88 (`ed39d2c`); [complete record](validation/finite-free-centre.md), [moment record](validation/finite-moment-photo.md) | 862 local Python tests; 12 matched recovery targets pass, planned aperture-order and captured-field failures retained; no automatic tracing, new browser run or physical qualification |
 | Circle-consistent fitted joins and partial-arc research | Candidate based on PR #84 (`123160e`); [current complete record](validation/directional-free-arcs.md) | Actual fit/assembly/native-export representation; independent cycle controls and separately declared conditional forward-model comparison; physical accuracy remains unqualified |
 | Blur-frame transport | Candidate based on PR #83 (`48e4bb5`), integrating main `cad695f`; [725 Python tests, two focused browser scenarios and complete fixed experiment](validation/curve-blur-frames.md) | Stored radius/center and point-map equivariance; retained finite-source biases and negative controls; no calibrated uncertainty or physical-camera qualification |
 | Covariance-aware nonparallel corners | Candidate based on PR #81 (`60732a7`); [687 Python tests, two focused browser scenarios and complete study](validation/anisotropic-corners.md) | Fixed 16-case conditional experiment, thickness-frame controls and bounded line-only recovery; first failed integration retained; no physical-camera qualification |

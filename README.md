@@ -6,7 +6,7 @@ The workbench is designed for plates, gaskets, spacers, and templates. It traces
 
 For the reviewed source revision, draft PR dependencies and available research
 APIs, read [source scope and status](docs/project-status.md). The latest
-[documentation review](docs/validation/documentation-pr86-state.md) covers the
+[documentation review](docs/validation/documentation-pr88-state.md) covers the
 workbench and companion library; older test results retain their original scope.
 
 For reference-sheet tracing, photograph the whole flat sheet (A4, US Letter, or a sheet you have measured) and explicitly choose it as the **Scale reference**. A successful sheet trace sets scale from its stated size, estimates perspective and one radial lens correction, and fits lines, tangent arcs and circles. Entered thickness supports a side-wall/parallax correction under the method's assumptions. Ordinary tracing and the sample use measured-width scaling instead; they do not perform these corrections. See [reference-sheet tracing](docs/reference-sheet.md) for the mathematics and synthetic evidence, and the [engineering model](docs/engineering-model.md) for independent verification before fabrication.
@@ -33,6 +33,13 @@ slot-cap fitting. Mixed-frame free curves, slot caps and scalar corner fits
 retain explicitly approximate geometry with a warning; important radii remain
 subject to independent measurement. See
 [blur frames and support rules](docs/blur-frames.md).
+
+Developers can also evaluate the [finite-material intensity fitter](docs/finite-shape-inverse.md)
+in draft PR #88. It fits a circular segment's centre, radius and chord position
+under supplied optics. It is a Python research API; uploading a photo or building
+a model still uses the tracing path described above. Its
+[validation record](docs/validation/finite-free-centre.md) retains numerical
+successes, model mismatches and initialization failures.
 
 Final fitted arcs also need [circle-consistent joins](docs/curved-joins.md).
 An unavailable join keeps an affected outline for review when valid, with a

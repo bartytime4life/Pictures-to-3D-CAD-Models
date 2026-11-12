@@ -36,6 +36,42 @@ it does not reproduce the complete acquisition operator. Missing covariance
 remains unknown. A fixed-covariance study cannot establish its value for a
 different photograph.
 
+In particular, the current edge pipeline uses `covariance=None` for both an
+unavailable directional fit and a fitted covariance below its anisotropy switch.
+It does not preserve a reason that would authorize `sigma**2 * I` as calibrated
+optics. A positive-definite moment proposal also needs independent source-model
+checks; positive definiteness alone is insufficient.
+
+### Coordinate example
+
+Run this from the repository root after workbench setup. It evaluates a supplied
+model at four integer pixel indices; it neither fits a photograph nor builds CAD.
+
+```python
+import numpy as np
+from backend.finite_centre_fit import circular_segment_probabilities
+
+result = circular_segment_probabilities(
+    np.array([[12, 12], [18, 12], [12, 18], [20, 20]]),
+    6.5, 0.25,
+    centre=(16.0, 16.0),
+    normal=(1.0, 0.0),
+    sensor_shape=(32, 32),  # height, width
+    homography=np.eye(3),
+    psf_covariance=np.array([[1.0, 0.2], [0.2, 2.0]]),
+)
+print(result.statuses)  # inspect every status before using probabilities
+```
+
+`H` maps geometry-plane coordinates to the observation field. If a caller crops
+an already rectified field at integer array origin `(x0,y0)` while retaining
+global geometry coordinates, the mapping is
+`H_crop = [[1,0,-x0],[0,1,-y0],[0,0,1]]`. Supply local integer pixel indices and
+the cropped `(height,width)`. The translation leaves covariance unchanged; it
+does not add another half-pixel shift. Snapshot the crop, pixels, values, bounds
+and transform before fitting, and keep validation pixels disjoint from training.
+This is a caller contract, not an automatic ROI-preparation API in PR #88.
+
 ## Separable least squares
 
 For each geometry, the two brightness columns are `A=T[1-P,P]`, with target
@@ -108,6 +144,27 @@ No finite grid or local refinement proves a global minimum. Quadrature guards
 are engineering estimates, not certified bounds. The PSF and chord normal are
 supplied hypotheses, not fitted outputs.
 
+`fit_circular_segment` returns a `CentreFit` record, not a pass/fail certificate.
+`best` can be absent, or present while `work_exhausted`,
+`numerically_unsupported`, `refinement_limited` or `unrefined_basins` reports
+incomplete work. Inspect `flat`, `tied`, `endpoint`, `rank_deficient` and
+`geometry_rank` separately, together with held-out source residuals and the
+declared model assumptions. `raw_residual_l2` and `transformed_residual_l2`
+describe different metrics. A finite four-dimensional grid retains evaluated
+points, not a certificate covering every cell. `global_search_certified`,
+`psf_fitted` and `normal_fitted` remain false.
+
+At defaults, `grid_points=3` proposes 81 coarse-grid points and requires
+`max_evaluations >= 81`, though work exhaustion can prevent completing the grid.
+At most eight seeds are selected for up to 32 refinement iterations each, with
+512 objective attempts and a shared 20-million kernel-work cap. Derivative work
+uses that shared cap and is counted separately from objective attempts. More
+basins can remain represented and unrefined. These caps are resource limits,
+not completion guarantees; callers can
+set them explicitly. The independent study uses its own frozen settings. A
+normal study fit takes roughly 20 seconds on its recorded runtime, so this API
+has no qualified interactive latency claim.
+
 Measurements only along one level contour are insufficient when the two levels
 are free: for constant observed value `c`, choosing `a=b=c` gives zero residual
 for every geometry. A fixed observation region must include useful contrast and
@@ -122,3 +179,26 @@ bindings belong to the [validation record](validation/finite-free-centre.md). Th
 [moment experiment](validation/finite-moment-photo.md) investigates a possible
 initializer when covariance is missing; its background-sensitive proposals are
 not accepted optical calibration or automatic CAD geometry.
+
+## Requirements before automatic trace integration
+
+The captured-field diagnostic retains two failures whose whole-sheet initializer
+selects the reference border and excludes the actual part from the search box.
+The [complete record](validation/finite-free-centre.md#captured-field-integration-diagnostic)
+keeps these initialization failures separate from converged model bias. A
+ring-conditioned observation bridge remains further work at this source revision.
+
+Integration also needs a supported thickness frame. The trace endpoint accepts
+an omitted thickness or a positive value; omission means unknown thickness.
+CAD builds require positive thickness and can retrace from the source photo.
+The experiment's no-thickness correction is not evidence that a photographed
+part has zero thickness or that a finite wall can be ignored.
+
+An accepted intensity-fit boundary would need to preserve its centre, radius,
+chord and source support through final assembly. Reapplying snapping, line or
+fillet refitting, scalar blur correction or radius equalization can change the
+chosen model. The polygon, analytic primitives, display bounds, notes and native
+exports must describe the same final geometry. Optional-model rejection must
+retain the existing trace or its ordinary actionable refusal; it must not be
+misreported as missing reference paper. These are integration requirements,
+not capabilities added by this developer API.

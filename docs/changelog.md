@@ -3,6 +3,19 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Documentation alignment with published PR #88 — November 12, 2026
+
+- Updated current source identity, dependency and hosted-run snapshots, and
+  routed the README, documentation index and validation overview to the
+  [complete documentation review](validation/documentation-pr88-state.md).
+- Reconciled architecture, setup, engineering and research guides with the
+  finite-material Python operators while preserving their research scope.
+  Documented coordinate mapping, result flags, work limits, study exit codes,
+  supplemental audit and provenance-only archives.
+- Clarified unknown thickness and missing covariance, and recorded requirements
+  before automatic trace/export adoption. Executable code, studies, historical
+  evidence and generated library outputs are unchanged.
+
 ## Finite-material intensity inverse and moment study — November 12, 2026
 
 - Added a conditional developer inverse for unknown circular-segment centre,

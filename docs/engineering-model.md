@@ -213,6 +213,15 @@ refused. Reserve [independent CAD and part checks](exports.md#verify-critical-ar
 for dimensions that matter. No exact finite Gaussian disk fit is adopted by
 this assembly repair.
 
+The separate [finite-material intensity inverse](finite-shape-inverse.md) now
+fits a circular segment's centre, radius and chord under supplied optics. Its
+conditional numerical results do not replace this automatic tracing path or
+the independent dimension checks above. The [captured-field diagnostic](validation/finite-free-centre.md)
+retains initialization and model failures, and the
+[moment proposal study](validation/finite-moment-photo.md) retains background
+sensitivity. Neither establishes a physical uncertainty bound or a usable
+covariance for an arbitrary photograph.
+
 A source-derived straight-edge direction may still align the display and
 profile when a ring is retained as line geometry. The rigid rotation preserves
 distances and radii; axis-aligned width and height depend on that frame. This

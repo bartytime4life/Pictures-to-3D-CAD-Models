@@ -1,6 +1,10 @@
 # Source scope and verification status
 
-This research candidate adds a [finite-material intensity inverse](finite-shape-inverse.md)
+This documentation follow-up reviews published draft
+[PR #88](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/88)
+at `ed39d2c71c99636debc1a282a2d6ef738bdfce84`, tree
+`30f967ab21bc18cf94101fb8df39d836cde869a5`. That research candidate adds a
+[finite-material intensity inverse](finite-shape-inverse.md)
 and a separate [moment experiment](validation/finite-moment-photo.md), building
 on documentation [PR #87](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/87)
 at `d5d24e5123dcd118416569dd34d947723343d297`. Its developer functions do not
@@ -40,7 +44,7 @@ numerical controls from historical tests and physical qualification.
 
 | Source lane | What it contains | Evidence boundary |
 | --- | --- | --- |
-| Finite-material research candidate based on PR #87 | Unknown-centre intensity inverse and separate observed-field moment proposals | [Current numerical record](validation/finite-free-centre.md); conditional model recovery and retained failures, no automatic trace integration |
+| Finite-material research candidate, PR #88 (`ed39d2c`), based on PR #87 | Unknown-centre intensity inverse and separate observed-field moment proposals | [Current numerical record](validation/finite-free-centre.md); conditional model recovery and retained failures, no automatic trace integration |
 | Preceding workbench join candidate, PR #86 (`dcb14e5`), based on PR #84 | Canonical fitted-circle joins, per-boundary recovery and separately retained directional model comparison | [Workbench integration and science record](validation/directional-free-arcs.md); selected circle representation and conditional model comparisons, not physical accuracy |
 | Preceding frame-transport candidate, PR #84, based on PR #83 | Point-bound scale transport for free curves, caps and line windows; explicit mixed-frame approximation policy | [Independent and regression record](validation/curve-blur-frames.md); stored-geometry equivariance, not physical-model adequacy |
 | Preceding corner candidate, PR #83, based on PR #81 | Full-covariance nonparallel fillets, uniform-scale transport and bounded per-ring outline recovery | [Independent and regression record](validation/anisotropic-corners.md); exact supplied mathematical inputs, no camera qualification |
@@ -52,15 +56,23 @@ The November 12, 2026 repository readback at **21:41 UTC** showed PRs #78,
 #79, #80, #81, #82 and #83 merged into their respective bases. PR #83 landed
 on `codex/documentation-main77-state` at `6316df8` after that branch's PR #81
 had already closed; its corner implementation is absent from main `cad695f`.
-A fresh readback at **22:02 UTC** confirms PR #86 open, draft and unmerged at
-`dcb14e5`, with PR #84 as its base. PR #84 remains open, draft and unmerged at
-`123160e`; main remains `cad695f`. This join candidate is stacked on that
+A fresh readback at **22:50 UTC** confirms PR #88 open, draft and unmerged at
+`ed39d2c`, based on PR #87 (`d5d24e5`). PRs #87 and #86 remain open, draft and
+unmerged. PR #84 is open and unmerged at `123160e` and is no longer marked
+draft; main remains `cad695f`. The PR #88 workbench implementation follows
+the join candidate stacked on that
 reviewed frame branch. The frame branch
 carries the reviewed corner implementation and frame follow-up onto that main
 baseline while preserving the upstream CI change. A merge into
 one branch does not establish inclusion in another. The preceding
 [timestamped review](validation/documentation-main77-state.md) retains its
 original open-draft and hosted-run snapshot.
+
+At that readback, [PR #88's workbench CI run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43322129352)
+is still in progress, with no conclusion. The completed local 862-test result
+does not stand in for that hosted run. This documentation pass preserves
+executable and study bytes; its own [coverage record](validation/documentation-pr88-state.md)
+does not claim a new geometry or browser run.
 
 Local tests, hosted CI, branch inclusion, installation, deployment and physical
 acceptance remain separate evidence. The larger research suite is not the main

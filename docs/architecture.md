@@ -5,6 +5,10 @@ Pictures to CAD separates image interpretation from geometric construction. The 
 This contract describes the [reviewed main-based source](project-status.md).
 The separate source-observation/PSF research APIs are not HTTP capabilities or
 Python modules in this checkout.
+The finite-material operators in `backend.finite_shape` and
+`backend.finite_centre_fit` are available Python research APIs. They have no
+HTTP route and are not called by the automatic trace/build flow below. See
+[their observation and result contracts](finite-shape-inverse.md).
 
 ```mermaid
 flowchart LR
@@ -125,7 +129,7 @@ A multipart request includes:
 | `detail` | `coarse`, `standard`, or `fine` contour approximation |
 | `reference` | `none` (default), `a4`, `letter`, or `custom` scale reference sheet |
 | `sheet_width_mm`, `sheet_height_mm` | Measured sides of a `custom` sheet, 10–2000 mm |
-| `thickness_mm` | Optional part thickness for the reference-sheet parallax correction |
+| `thickness_mm` | Optional positive part thickness, at most 500 mm, for the reference-sheet parallax correction; omission is unknown thickness |
 | `snap` | Recover design intent on a reference-sheet trace (default `true`) |
 | `fallback` | Trace without the sheet, with a warning, if it cannot be found or used |
 
@@ -152,6 +156,11 @@ that Gaussian and transforms the corner's ray geometry with it. The numerical
 fit has bounded convergence checks; it does not certify the physical blur model.
 The scalar path remains when no covariance is supplied, while failure of a
 supplied-covariance corner fit has no scalar replacement.
+
+`subpixel_rings` can return `covariance=None` both when the directional fit is
+unavailable and when a fitted covariance is below the directional-ratio switch.
+This return value does not identify which outcome occurred or establish a
+calibrated isotropic covariance for another inverse model.
 
 `reference.trace_on_sheet` carries the thickness map's per-point scale into the
 fit. A uniform scale `k` transforms covariance to `k² S`; mixed support in a

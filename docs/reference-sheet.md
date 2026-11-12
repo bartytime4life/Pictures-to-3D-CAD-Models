@@ -117,6 +117,13 @@ This is checked at 16 phases by `test_half_level_crossing_on_symmetric_blur_is_u
 - **Adequacy per direction.** One profile's width is good to a few per cent, so a bin's median absolute residual is mostly noise; a wrong model shifts a whole bin. A bin whose median relative variance residual is beyond both 10 % and three standard errors of that median means the blur is not one Gaussian covariance, and the fit is rejected. Each bin is judged alone, so a dominant direction cannot hide a minority one's disagreement in a pooled statistic. Bins of 30° do not see a variation that repeats within one.
 - **A switch, not a blend.** Rendered photos tilted up to 22° fit principal spreads 1.00–1.05 apart, the larger from foreshortening; shaken ones 1.25–2.56. Above a ratio of 1.15 (`edges.DIRECTIONAL_RATIO`) the trace works by direction; below it, or without an accepted fit, the one measured σ stands and the trace is as before.
 
+Internally, a missing covariance can mean either insufficient/rejected fit
+support or a fitted covariance below the directional-ratio switch. The return
+value alone does not distinguish those cases. The scalar fallback preserves
+the existing tracer; it does not calibrate isotropic optics for a different
+inverse model. The separate [finite-material developer API](finite-shape-inverse.md)
+requires an explicitly supplied covariance and is not called by this pipeline.
+
 Working by direction:
 
 - Each point's second-pass level search (its windows, the step's tail and the paper's slope) uses its own σₙ, and so does the wall model of §5.
