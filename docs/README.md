@@ -48,7 +48,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |
 | Run a benchmark with measured photos | [Photo benchmark](photo-benchmark.md) |
 | Review completed checks | [Validation overview](validation.md), [design QA](../design-qa.md) |
-| Check documentation coverage and source consistency | [Current source-scope review](validation/documentation-main77-state.md), [earlier November 12 review](validation/documentation-review-2026-11-12.md) |
+| Check documentation coverage and source consistency | [Current PR #86 source-scope review](validation/documentation-pr86-state.md), [preceding main-line review](validation/documentation-main77-state.md), [earlier November 12 review](validation/documentation-review-2026-11-12.md) |
 | Review the recent interface changes | [Guided-workbench audit](validation/guided-workbench.md) |
 | Review scope and future work | [Roadmap](roadmap.md), [change log](changelog.md) |
 | Reproduce bundled printer data | [Printer source record](../data/PRINTER_SOURCES.md) |

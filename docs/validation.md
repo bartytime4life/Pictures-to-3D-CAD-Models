@@ -7,6 +7,10 @@ original counts and environment; they are not later retests.
 
 ## Current workbench evidence — November 12, 2026
 
+The [latest documentation review](validation/documentation-pr86-state.md)
+follows published draft PR #86 at `dcb14e5`. It checks documentation and preserves
+runtime source; it does not rerun or replace the geometry/browser results below.
+
 The current [circle-consistent join candidate](validation/directional-free-arcs.md)
 builds on PR #84. It tests the circle represented by actual emitted geometry,
 retains the six failed analytic baseline cases and replays independent geometric,

@@ -3,6 +3,16 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Documentation publication and navigation — November 12, 2026
+
+- Identified published draft PR #86 and its dependency on draft PR #84 in the
+  source-scope guide. Linked the latest complete documentation review from the
+  README, documentation index and validation overview.
+- Kept the unknown-centre finite-material prototype and its unreviewed plan
+  separate from available software and the completed conditional study.
+  Runtime, generated library files and previous evidence remain unchanged;
+  [coverage and checks](validation/documentation-pr86-state.md).
+
 ## Circle-consistent final arc joins — November 12, 2026
 
 - Final fitted arcs now preserve their stored center and radius. Line/circle
