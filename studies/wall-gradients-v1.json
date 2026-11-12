@@ -1,0 +1,52 @@
+{
+  "format": "pictures-to-cad-wall-gradient-study-plan",
+  "version": 1,
+  "purpose": "Joint lighting/wall model adequacy and constructive ambiguity witnesses; not an automatic correction or accuracy qualification",
+  "development_population": true,
+  "profile_step_px": 0.125,
+  "source_tail_sigmas": 12.0,
+  "sigmas_px": [0.85, 1.65],
+  "conditions": [
+    {"name": "flat", "levels": [48.0, 48.0, 78.0, 236.0, 236.0]},
+    {"name": "top_rises", "levels": [24.0, 48.0, 78.0, 236.0, 236.0]},
+    {"name": "both_slopes", "levels": [24.0, 48.0, 78.0, 236.0, 212.0]}
+  ],
+  "contrast_inversions": [false, true],
+  "direct_lane": {
+    "band_width_sigmas": [0.15, 0.4, 1.0, 2.5, 4.0],
+    "offsets_sigmas": [-0.5, -0.25, -0.1, 0.0, 0.1, 0.25, 0.5],
+    "models": ["flat_tones", "joint_gradients"],
+    "illustrative_level_error_bounds": [0.025, 0.25, 1.0],
+    "observation": "Direct continuum point samples; no production sampler or optical-width estimate",
+    "claim": "Each recorded physical fit is a constructive witness at one supplied geometry; this finite grid does not enclose all compatible geometries"
+  },
+  "image_lane": {
+    "band_width_sigmas": [0.6, 1.5, 2.8],
+    "normal_angles_degrees": [0.0, 37.0],
+    "normal_phases_px": [0.17, 0.61],
+    "stages": ["point_known_sigma", "aperture_known_sigma"],
+    "methods": ["free_wall_tone", "true_fixed_wall_tone"],
+    "start_offset_sigmas": -0.15,
+    "image_size": 64,
+    "aperture_quadrature_order": 6,
+    "aperture_check_order": 12,
+    "quadrature_check_tolerance": 0.000001,
+    "claim": "Actual local two-step fits with supplied true band/optical sigma; true fixed tone is an oracle ablation, not a deployable estimate"
+  },
+  "exact_ambiguity": {
+    "sigma_px": 1.0,
+    "band_px": 1.5,
+    "top_level": 48.0,
+    "paper_level": 236.0,
+    "first_edge_px": 0.0,
+    "second_edge_px": 1.5,
+    "claim": "A wall matching the top at e and a wall matching paper at e+w give the same flat source field with different silhouette positions"
+  },
+  "limitations": [
+    "All observations are synthetic development data, with fixed Gaussian optics and known band width",
+    "Illustrative light-level bounds are supplied scenarios, not measured camera noise or physical uncertainty",
+    "Least-squares fitting supplies witnesses; absence of a witness at a grid point is not a proof of infinity-norm infeasibility",
+    "Five source-node levels bound the source everywhere but do not model a sloped wall, arbitrary light fields, tone errors or non-Gaussian optics",
+    "No segmentation, sheet detection, pose, pooled-tone estimation, ring smoothing, parallax, curve fitting, CAD export or physical acceptance is qualified"
+  ]
+}

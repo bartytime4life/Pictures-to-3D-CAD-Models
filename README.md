@@ -30,6 +30,10 @@ functions against independent bounded light fields, preserving rejected profiles
 and comparing the paper-side guard with an explicit research ablation.
 The [crossing selector](docs/edge-crossings.md) chooses a uniquely nearest
 verified crossing and retains ambiguous contacts as missing measurements.
+The [joint wall/lighting experiment](docs/wall-gradients.md) adds bounded
+source-level fitting and demonstrates when different silhouette interpretations
+produce the same light field. It is a developer study, with no automatic
+lighting correction or physical accuracy status.
 
 This repository contains two related tools:
 

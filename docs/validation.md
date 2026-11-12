@@ -13,6 +13,13 @@ retains its source, executable API example and completed checks.
 
 ## Current workbench evidence — November 12, 2026
 
+The [bounded wall/lighting candidate](validation/wall-gradients.md), based on
+PR #56 at `37eb4d2`, passed **1,131 Python tests**. Its 840 direct fits and 576
+image fits record constructive ambiguity and model mismatch with zero execution
+failures. Independent source quadrature and constrained-fit checks support the
+new developer solver; production executable behavior is unchanged. A finite-grid
+midpoint witness is not a physical uncertainty interval or an automatic correction.
+
 The [nearest-crossing candidate](validation/edge-crossings.md), based on PR #55
 at `a5f99e5`, passed **1,111 Python tests**. Physical-distance ranking repairs
 an actual 0.11-pixel normal-dependent choice in a bounded image fixture.

@@ -47,12 +47,13 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Analyze a declared signed resampling operator | [Version-4 signed stencils](signed-stencils.md), [whole-radius checks](validation/signed-stencils.md) |
 | Investigate material gradients in actual edge-profile functions | [Repeatable study](material-gradients.md), [development outcomes](validation/material-gradients.md) |
 | Understand nearest-edge choices and unresolved level contacts | [Crossing rule](edge-crossings.md), [independent checks](validation/edge-crossings.md) |
+| Examine joint lighting/wall ambiguity and bounded source fits | [Model and repeatable experiment](wall-gradients.md), [complete results](validation/wall-gradients.md) |
 | Understand the lens inverse domain and independent synthetic camera checks | [Radial inverse and lens mismatch](validation/radial-inverse.md) |
 | Review why the blur diagnostic remains research only | [Directional-spread qualification](validation/directional-spread-qualification.md) |
 | Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |
 | Run a benchmark with measured photos | [Photo benchmark](photo-benchmark.md) |
 | Review completed checks | [Validation overview](validation.md), [design QA](../design-qa.md) |
-| Check current documentation coverage and source consistency | [Current candidate checks](validation/signed-stencils.md#regression-and-contract-evidence), [earlier consolidation](validation/documentation-math-state.md), [earlier November 12 review](validation/documentation-review-2026-11-12.md) |
+| Check current documentation coverage and source consistency | [Current candidate checks](validation/wall-gradients.md#regression-and-source-binding), [earlier consolidation](validation/documentation-math-state.md), [earlier November 12 review](validation/documentation-review-2026-11-12.md) |
 | Review the recent interface changes | [Guided-workbench audit](validation/guided-workbench.md) |
 | Review scope and future work | [Roadmap](roadmap.md), [change log](changelog.md) |
 | Reproduce bundled printer data | [Printer source record](../data/PRINTER_SOURCES.md) |

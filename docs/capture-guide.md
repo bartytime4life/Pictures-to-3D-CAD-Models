@@ -21,6 +21,14 @@ The bundled sample uses ordinary tracing with demonstration measurements. Choosi
 4. Use diffuse, even light. Hard shadows, bright reflections, and a dark background visible through holes can become false geometry.
 5. Keep the image sharp enough to distinguish the smallest feature you need. A higher-resolution file cannot recover a feature that is blurred or obscured.
 
+For a visible side wall, check that the boundary you see belongs to the intended
+surface. A wall matching the top or background can hide one of its boundaries;
+the [wall/lighting model](wall-gradients.md) shows why brightness fitting alone
+cannot always resolve that choice. A further view or lighting condition must
+actually distinguish the surfaces, and reserved feature measurements remain
+necessary for fit-critical geometry. The app does not automatically detect
+this ambiguity.
+
 Upload a still PNG, JPEG, WebP, HEIC, or AVIF of at most **32 MiB** and **70 million decoded pixels**, with both dimensions at least 16 pixels. That covers phone cameras' 12 to 64 megapixel modes, so a photo can be used as the camera saved it. Animated images are rejected. A HEIC's stored rotation is applied, and a HEIC burst uses its primary image. A camera JPEG that embeds a preview or second view (MPO) is accepted, and only its primary image is traced. A 16-bit grayscale PNG is reduced to 8 bits before tracing. For ordinary tracing, the backend applies image orientation and downsizes the longest side to at most **1400 pixels**. A reference-sheet photo is traced at full resolution up to 16 megapixels; a larger one is first reduced to 16 megapixels by averaging linear light, which keeps edges in place, and a notice says so. If the orientation metadata is damaged, the image is traced as stored and a warning says so; check that the outline is oriented like the part before measuring. Inspect the resulting outline rather than assuming that every original pixel became a geometric feature.
 
 ## Review the outline before measuring

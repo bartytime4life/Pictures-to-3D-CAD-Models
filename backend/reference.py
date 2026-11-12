@@ -115,8 +115,8 @@ def _refine_walls(g, rings, camera, thickness_mm, sigma, ppm):
         facing = np.einsum("ij,ij->i", normals, mm - camera["nadir_mm"])
         band = (ratio - 1) * np.maximum(-facing, 0) * ppm
         prepared.append((ring, normals, band))
-    # The wall tone is identifiable only where the band is wide (>= 2.5 sigma); there
-    # a free two-step fit measures it. Narrower bands are then fitted with it fixed.
+    # Wide bands (>= 2.5 sigma) support the model's free tone fit; this width rule
+    # is not a guarantee of physical identifiability. Narrower bands use it fixed.
     wide = [(r["points"][b >= 2.5 * sigma], n[b >= 2.5 * sigma], b[b >= 2.5 * sigma]) for r, n, b in prepared]
     wide_points = np.vstack([w[0] for w in wide]) if wide else np.empty((0, 2))
     # Refine mainly bands of 1-3 sigma, where a single crossing is biased by 0.14-0.20
