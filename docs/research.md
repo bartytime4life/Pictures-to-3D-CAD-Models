@@ -63,16 +63,18 @@ The merged [fillet-sector repair](validation/fillet-sweep.md) preserves an arc's
 angular witness when its constrained center moves. Its independent anisotropic
 sharp-corner example still fits nonzero fillets after the representation defect
 is repaired. Topological validity, consistent arc sectors and forward-model
-adequacy are separate checks; the scalar Gaussian interpretation remains a
-research limit.
+adequacy are separate checks. That scalar-model counterexample is historical;
+the covariance-aware replacement below addresses its nonparallel-corner model
+without establishing general physical-camera adequacy.
 
 The main-line directional path now supplies normal-specific edge/wall widths and
 directional slot-end shrink, with [numerical rank rejection](validation/directional-blur-rank.md)
-in this draft. Nonparallel fillets still use scalar `sigma` in `corner_level` and
-`_exact_fillet`. Passing the tensor's geometric-mean scalar to that model does
-not implement a general anisotropic corner integral. This source audit clarifies
-the approximation; it does not add a newly executed failure experiment or reuse
-another branch's synthetic results as current-main verification.
+in the preceding rank-repair candidate. The [new nonparallel-corner model](anisotropic-corners.md)
+now uses the full covariance and transports the corner geometry into a whitened
+Gaussian frame. Its [independent fixed experiment](validation/anisotropic-corners.md)
+reproduces scalar-model bias and retains numerical refusals, weak-radius controls
+and the remaining physical-model limits. General free curves and slot caps retain
+their separate approximations; this does not import the source-space research stack.
 
 [Al-Sharadqah and Chernov's circle-fit analysis](https://arxiv.org/abs/0907.0421)
 compares geometric and algebraic fits with coordinate errors. It motivates

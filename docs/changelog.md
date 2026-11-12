@@ -3,6 +3,27 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Covariance-aware nonparallel corners — November 12, 2026
+
+- Supported nonparallel fillets use the empirical rectified Gaussian covariance
+  directly, transforming the corner geometry during Gaussian standardization
+  instead of replacing directional blur by one scalar width.
+- Uniform thickness-map scales transform covariance in squared units. Mixed
+  support maps or unresolved covariance fits normally retain the affected traced
+  boundary, without accepting a scalar fallback. An invalid corrected ring may
+  instead retain a frozen supported initial geometric fit as a line-only polygon,
+  with validity, point-cap and bidirectional whole-boundary checks within the
+  existing fitting tolerance. Otherwise profile refusal remains. Notices
+  distinguish this nearby polygon and its undetermined radius. No generic
+  topology-repair operator, component deletion or polyline-detail tolerance
+  increase is introduced; intended source topology remains unqualified.
+- Numerical convergence and sharp-resolution searches have explicit refusal
+  paths. The common 5% blur-scale sensitivity remains a heuristic; general free
+  arcs and slot end caps retain their separate approximations. The
+  [model guide](anisotropic-corners.md) records the source-bound 16-case
+  conditional study, including its unresolved and sharp-classified cases;
+  it does not qualify physical camera accuracy.
+
 ## Main-line documentation scope — November 12, 2026
 
 - Added a [source-scope guide](project-status.md) separating main's PRs #76/#77,

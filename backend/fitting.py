@@ -497,7 +497,76 @@ SIGMA_REL_SD = 0.05  # relative uncertainty of a measured edge blur (edges.edge_
 EDGE_SYS_SD = 0.03
 
 
-def corner_level(points, centre, radius, start, sweep, sigma, pieces=None):
+def _blur_transform(covariance):
+    """A supported Gaussian square root; never infer missing covariance entries."""
+    matrix = np.asarray(covariance)
+    if matrix.shape != (2, 2) or not np.isrealobj(matrix):
+        raise ValueError("corner covariance must be a real 2 by 2 matrix")
+    matrix = np.asarray(matrix, dtype=np.float64)
+    magnitude = float(np.max(np.abs(matrix)))
+    if not np.isfinite(matrix).all() or magnitude <= 0:
+        raise ValueError("corner covariance must be finite and positive definite")
+    normalized = matrix / magnitude
+    if np.max(np.abs(normalized - normalized.T)) > 64 * np.finfo(float).eps:
+        raise ValueError("corner covariance must be symmetric")
+    matrix = matrix / 2 + matrix.T / 2
+    values = np.linalg.eigvalsh(normalized / 2 + normalized.T / 2)
+    if not np.isfinite(values).all() or values[0] <= 64 * np.finfo(float).eps * values[-1]:
+        raise ValueError("corner covariance is not numerically positive definite")
+    return np.linalg.cholesky(matrix), np.sqrt(values) * math.sqrt(magnitude)
+
+
+def corner_level(points, centre, radius, start, sweep, sigma, pieces=None, *, covariance=None):
+    """Gaussian mass of an unbounded rounded corner in the measurement frame.
+
+    Without covariance this preserves the scalar model. For supplied SPD covariance
+    S=L L.T, whiten q by solve(L,q), integrate the unit Gaussian over whitened angle,
+    and map a unit ray e back by L e. Its geometric reach is R(arg(L e))/|L e|.
+    Arc/tangent transition rays are transformed by solve(L,u), preserving their order.
+    Radius, points and covariance use the same frame (covariance in squared units).
+
+    The anisotropic path compares successive GL6 angular subdivisions at absolute
+    level tolerance 5e-8. This is a numerical agreement check, not a certified error
+    enclosure. It retains the existing erfc approximation and 9-standard-deviation
+    truncation. At most 1280 panels, 1e6 nodes per pass and 3e6 total nodes are allowed;
+    unsupported arithmetic/convergence raises ValueError rather than using a scalar.
+    """
+    if covariance is None:
+        return _corner_level(points, centre, radius, start, sweep, sigma, pieces)
+    transform, _ = _blur_transform(covariance)
+    p = np.atleast_2d(np.asarray(points, dtype=np.float64))
+    c = np.asarray(centre, dtype=np.float64)
+    if (p.ndim != 2 or p.shape[1] != 2 or c.shape != (2,)
+            or not np.isfinite(p).all() or not np.isfinite(c).all()
+            or not all(math.isfinite(x) for x in (radius, start, sweep))
+            or radius < 0 or not 0 < sweep < math.pi):
+        raise ValueError("supply finite corner geometry, radius >= 0 and 0 < sweep < pi")
+    if not len(p):
+        return np.empty(0)
+    if pieces is not None and (isinstance(pieces, bool) or not isinstance(pieces, (int, np.integer)) or not 1 <= pieces <= 640):
+        raise ValueError("directional corner pieces must be an integer in 1..640")
+    try:
+        with np.errstate(over="raise", invalid="raise", divide="raise"):
+            distance = np.linalg.norm(np.linalg.solve(transform, (c - p).T).T, axis=1)
+            panels = pieces if pieces is not None else (40 if (distance > 9).all() else 160)
+            previous, work = None, 0
+            while panels <= 1280:
+                nodes = len(p) * (panels + 5) * 6
+                work += nodes
+                if nodes > 1_000_000 or work > 3_000_000:
+                    break
+                value = _corner_level(p, c, radius, start, sweep, 1.0, panels, transform=transform)
+                if not np.isfinite(value).all() or np.any(value < -5e-8) or np.any(value > 1 + 5e-8):
+                    raise ValueError("directional corner integral has unsupported values")
+                if previous is not None and np.max(np.abs(value - previous)) <= 5e-8:
+                    return value
+                previous, panels = value, 2 * panels
+    except (FloatingPointError, np.linalg.LinAlgError) as exc:
+        raise ValueError("directional corner arithmetic is unsupported") from exc
+    raise ValueError("directional corner quadrature did not resolve within its work limit")
+
+
+def _corner_level(points, centre, radius, start, sweep, sigma, pieces=None, *, transform=None):
     """The blurred indicator of a rounded corner, at each point: the probability that a
     Gaussian of `sigma` about the point falls inside the corner.
 
@@ -523,6 +592,9 @@ def corner_level(points, centre, radius, start, sweep, sigma, pieces=None):
     """
     p = np.atleast_2d(np.asarray(points, dtype=np.float64))
     q = np.asarray(centre, dtype=np.float64)[None] - p
+    if transform is not None:
+        q = np.linalg.solve(transform, q.T).T
+        sigma = 1.0
     dist2 = (q * q).sum(axis=1)
     dist = np.sqrt(dist2)
     toward = np.arctan2(-q[:, 1], -q[:, 0])
@@ -532,6 +604,10 @@ def corner_level(points, centre, radius, start, sweep, sigma, pieces=None):
     lo, hi = toward - half, toward + half
     end = start + sweep
     base = np.array([start - math.pi / 2, start, end, end + math.pi / 2])
+    if transform is not None:
+        directions = np.column_stack([np.cos(base), np.sin(base)])
+        whitened = np.linalg.solve(transform, directions.T).T
+        base = np.arctan2(whitened[:, 1], whitened[:, 0])
     nearest = base[None] + 2 * math.pi * np.round((toward[:, None] - base[None]) / (2 * math.pi))
     cuts = np.clip(nearest, lo[:, None], hi[:, None])
     grid = lo[:, None] + (hi - lo)[:, None] * np.linspace(0.0, 1.0, pieces + 1)[None]
@@ -540,15 +616,26 @@ def corner_level(points, centre, radius, start, sweep, sigma, pieces=None):
     nodes, weights = _GL6
     angle = (a + b) / 2 + (b - a) / 2 * nodes
     weight = (b - a) / 2 * weights
-    turn = np.mod(angle - (start - math.pi / 2), 2 * math.pi)
+    physical = angle
+    length = 1.0
+    if transform is not None:
+        dx = transform[0, 0] * np.cos(angle) + transform[0, 1] * np.sin(angle)
+        dy = transform[1, 0] * np.cos(angle) + transform[1, 1] * np.sin(angle)
+        length = np.hypot(dx, dy)
+        physical = np.arctan2(dy, dx)
+    turn = np.mod(physical - (start - math.pi / 2), 2 * math.pi)
     with np.errstate(divide="ignore", over="ignore", invalid="ignore"):
-        c1, c2 = np.cos(angle - start), np.cos(angle - end)
+        c1, c2 = np.cos(physical - start), np.cos(physical - end)
         reach = np.full(angle.shape, np.inf)
         reach = np.where((turn < math.pi / 2) & (c1 > 0), radius / c1, reach)
         reach = np.where((turn >= math.pi / 2) & (turn < math.pi / 2 + sweep), radius, reach)
         reach = np.where((turn >= math.pi / 2 + sweep) & (turn < math.pi + sweep) & (c2 > 0), radius / c2, reach)
+        reach = reach / length
         along = q[:, 0, None, None] * np.cos(angle) + q[:, 1, None, None] * np.sin(angle)
-        off2 = np.maximum(dist2[:, None, None] - along * along, 0.0)
+        off2 = (
+            (q[:, 0, None, None] * np.sin(angle) - q[:, 1, None, None] * np.cos(angle)) ** 2
+            if transform is not None else np.maximum(dist2[:, None, None] - along * along, 0.0)
+        )
         far = reach + along
         two_s2 = 2 * sigma * sigma
         outer = np.where(np.isinf(far), 0.0, np.exp(-(far * far + off2) / two_s2))
@@ -557,8 +644,20 @@ def corner_level(points, centre, radius, start, sweep, sigma, pieces=None):
         second = -along / (sigma * math.sqrt(2 * math.pi)) * np.exp(-off2 / two_s2) * tails
     return ((first + second) * weight).sum(axis=(1, 2))
 
+def _exact_fillet(seg, lines, v, inward, r, sigma, noise, correlation=None, *, covariance=None):
+    if covariance is None:
+        return _exact_fillet_core(seg, lines, v, inward, r, sigma, noise, correlation)
+    try:
+        _, spreads = _blur_transform(covariance)
+        if not math.isfinite(sigma) or sigma <= 0:
+            return None
+        return _exact_fillet_core(seg, lines, v, inward, r, sigma, noise, correlation,
+                                  covariance=np.asarray(covariance, float), step_scale=float(spreads[0]))
+    except (ValueError, FloatingPointError, np.linalg.LinAlgError, ZeroDivisionError):
+        return None
 
-def _exact_fillet(seg, lines, v, inward, r, sigma, noise, correlation=None):
+
+def _exact_fillet_core(seg, lines, v, inward, r, sigma, noise, correlation=None, *, covariance=None, step_scale=None):
     """Fit a fillet's radius to its traced points with the exact blurred corner
     (corner_level) as the model; returns (radius, sd, rms, max_abs, sharp_bound) or
     None. sharp_bound is None for a fillet the photo shows; for one it cannot tell from
@@ -595,9 +694,10 @@ def _exact_fillet(seg, lines, v, inward, r, sigma, noise, correlation=None):
         return None
 
     def level(radius, s=sigma, at=seg, apex=c0):
-        return corner_level(at, apex + radius * v, radius, a1, sweep, s)
+        cov = None if covariance is None else covariance * (s / sigma) ** 2
+        return corner_level(at, apex + radius * v, radius, a1, sweep, s, covariance=cov)
 
-    h = 0.1 * sigma
+    h = 0.1 * (sigma if step_scale is None else step_scale)
     gx = level(r, at=seg + [h, 0]) - level(r, at=seg - [h, 0])
     gy = level(r, at=seg + [0, h]) - level(r, at=seg - [0, h])
     gradient = np.hypot(gx, gy) / (2 * h)
@@ -608,22 +708,42 @@ def _exact_fillet(seg, lines, v, inward, r, sigma, noise, correlation=None):
         return (level(radius, s, apex=apex) - 0.5) / gradient
 
     start_r = r
+    converged = False
     for _ in range(25):
         f = residual(r)
-        step_r = max(1e-3 * sigma, 1e-4 * r)
+        step_r = max(1e-3 * (sigma if step_scale is None else step_scale), 1e-4 * r)
         jac = (residual(r + step_r) - f) / step_r
-        step = min(-float(jac @ f) / float(jac @ jac), 0.5 * max(r, sigma))
+        power = float(jac @ jac)
+        if covariance is not None and (not math.isfinite(power) or power <= 0):
+            return None
+        step = min(-float(jac @ f) / power, 0.5 * max(r, sigma))
         # r = 0 is the sharp corner, which the same model describes.
         new_r = max(0.0, r + step)
         if new_r > 5 * max(start_r, sigma):
             return None
+        if covariance is not None:
+            # Use the represented objective for descent; a limit is not convergence.
+            cost = float(f @ f)
+            for _ in range(16):
+                trial = residual(new_r)
+                if float(trial @ trial) <= cost + 1e-16 * max(1.0, cost):
+                    break
+                step *= 0.5
+                new_r = max(0.0, r + step)
+            else:
+                return None
         done = abs(new_r - r) < 1e-6 * max(r, sigma)
         r = new_r
+        converged = done
         if done:
             break
+    if covariance is not None and not converged:
+        return None
     f = residual(r)
-    step_r = max(1e-3 * sigma, 1e-4 * r)
+    step_r = max(1e-3 * (sigma if step_scale is None else step_scale), 1e-4 * r)
     jac = (residual(r + step_r) - f) / step_r
+    if covariance is not None and (not np.isfinite(jac).all() or float(jac @ jac) <= 0):
+        return None
     jac_sigma = (residual(r, sigma * 1.01) - f) / (0.01 * sigma)
     spacing = float(np.median(np.linalg.norm(np.diff(seg, axis=0), axis=1)))
     rms = float(np.sqrt(np.mean(f * f)))
@@ -646,6 +766,8 @@ def _exact_fillet(seg, lines, v, inward, r, sigma, noise, correlation=None):
             if np.abs(residual(hi) - sharp).max() >= floor:
                 break
             lo, hi = hi, 2 * hi
+        if covariance is not None and np.abs(residual(hi) - sharp).max() < floor:
+            return None  # no crossing bracket: never manufacture a finite sharp bound
         for _ in range(30):
             mid = (lo + hi) / 2
             lo, hi = (mid, hi) if np.abs(residual(mid) - sharp).max() < floor else (lo, mid)
@@ -658,7 +780,9 @@ def correct_blur(prims, sigma):
     Slot end caps take their radius from the line spacing, which blur does not bias, and
     a fillet fitted with the blur in its model (fit_fillets) already has its true radius."""
     for p in prims:
-        if p.kind in ("arc", "circle") and sigma > 0 and not (p.data.get("end_cap") or p.data.get("blur_modelled")):
+        if p.kind in ("arc", "circle") and sigma > 0 and not (
+            p.data.get("end_cap") or p.data.get("blur_modelled") or p.data.get("blur_unresolved")
+        ):
             p.data["r"] = blur_corrected_radius(p.data["r"], sigma)
     place_fillets(prims)
 
@@ -853,7 +977,7 @@ def place_fillets(prims):
             p.data["mid"] = tuple(centre + p.data["r"] * direction / np.linalg.norm(direction))
 
 
-def fit_fillets(points, prims, tol, sigma=0.0, covariance=None):
+def fit_fillets(points, prims, tol, sigma=0.0, covariance=None, *, blur_scales=None):
     """Constrain each arc between two lines to be tangent to both.
 
     Between non-parallel lines the arc becomes a fillet: its centre lies on the corner
@@ -881,11 +1005,28 @@ def fit_fillets(points, prims, tol, sigma=0.0, covariance=None):
     the following edge records the largest fillet radius the photo leaves possible there
     (sharp_bound).
 
-    `covariance` is a directional blur's (edges.edge_covariance), when it was traced by
-    direction; slot end caps then take each point's own blur shrink.
+    A supplied `covariance` is the full measurement-frame Gaussian covariance.
+    Nonparallel corners use its whitened forward model; slot caps keep their older
+    first-order directional approximation. Optional point-bound `blur_scales` retain
+    a known parallax homothety: one common scale transports covariance by scale**2.
+    Mixed maps or unresolved quadrature/optimization retain `blur_unresolved` so the
+    caller can preserve the source boundary instead of inferring a scalar radius.
+    The inherited scale/error allowances remain conditional heuristics.
     """
+    source_sigma = sigma
+    scales = np.ones(len(points)) if blur_scales is None else np.asarray(blur_scales, float)
+    if scales.shape != (len(points),) or not np.isfinite(scales).all() or np.any(scales <= 0):
+        raise ValueError("blur scales must be positive, finite and bound to every point")
+    supported_covariance = True
+    spreads = None
+    if covariance is not None:
+        try:
+            _, spreads = _blur_transform(covariance)
+        except (ValueError, np.linalg.LinAlgError):
+            supported_covariance = False
     m = len(prims)
     for k, p in enumerate(prims):
+        sigma = source_sigma
         if p.kind != "arc":
             continue
         l1, l2 = prims[k - 1], prims[(k + 1) % m]
@@ -908,6 +1049,18 @@ def fit_fillets(points, prims, tol, sigma=0.0, covariance=None):
             p.data["r"] = r
             p.data["end_cap"] = True
             continue
+        local_covariance = covariance
+        reach_sigma = sigma
+        if covariance is not None:
+            corner_scales = span_points(scales, l1.span[0], l2.span[1])
+            if not supported_covariance or not len(corner_scales) or not np.all(corner_scales == corner_scales[0]):
+                # Mixed parallax maps do not define one convolved Gaussian corner.
+                p.data.update(r_sd=math.inf, blur_unresolved=True)
+                continue
+            scale = float(corner_scales[0])
+            sigma = source_sigma * scale
+            local_covariance = np.asarray(covariance, float) * scale**2
+            reach_sigma = float(spreads[-1]) * scale
         best = None
         for s1 in (-1, 1):
             for s2 in (-1, 1):
@@ -920,12 +1073,14 @@ def fit_fillets(points, prims, tol, sigma=0.0, covariance=None):
                 if best is None or distance < best[0]:
                     best = (distance, c0, v)
         if best is None or best[0] > max(2.0, 0.25 * old_r):
+            if covariance is not None:
+                p.data.update(r_sd=math.inf, blur_unresolved=True)
             continue
         _, c0, v = best
         seg = span_points(points, *p.span)
         # An arc point 2.5 sigma along the arc from an edge lies (2.5 sigma)^2 / (2r)
         # off that edge.
-        clear = max(tol, 3.125 * sigma**2 / old_r)
+        clear = max(tol, 3.125 * reach_sigma**2 / old_r)
         keep = (np.abs((seg - c1) @ n1) > clear) & (np.abs((seg - c2) @ n2) > clear)
         if keep.sum() < 5:
             keep = (np.abs((seg - c1) @ n1) > tol) & (np.abs((seg - c2) @ n2) > tol)
@@ -937,11 +1092,15 @@ def fit_fillets(points, prims, tol, sigma=0.0, covariance=None):
             shrink, slope = blur_shrink(r, sigma) if sigma > 0 else (0.0, 0.0)
             residual = rho - (r - shrink)
             jac = -(delta @ v) / rho - 1 + slope
-            step = -float(jac @ residual) / float(jac @ jac)
+            power = float(jac @ jac)
+            if covariance is not None and (not math.isfinite(power) or power <= 0):
+                r = old_r
+                break
+            step = -float(jac @ residual) / power
             r += step
             if abs(step) < 1e-10:
                 break
-        approximate = 0.5 * old_r < r < 2 * old_r
+        approximate = math.isfinite(r) and 0.5 * old_r < r < 2 * old_r
         if not approximate:
             if sigma <= 0:
                 continue
@@ -955,17 +1114,22 @@ def fit_fillets(points, prims, tol, sigma=0.0, covariance=None):
         if sigma > 0:
             # The whole corner, with the edges up to 5 sigma beyond the tangent points.
             around = span_points(points, l1.span[0], l2.span[1])
-            near = around[np.linalg.norm(around - centre, axis=1) <= math.sqrt(r * r + 25 * sigma * sigma)]
+            limit = math.sqrt(r * r + 25 * sigma * sigma) if covariance is None else math.hypot(r, 5 * reach_sigma)
+            near = around[np.linalg.norm(around - centre, axis=1) <= limit]
             if len(near) >= 5:
                 corr = [q.data["noise_corr"] for q in (l1, l2) if "noise_corr" in q.data]
                 exact = _exact_fillet(
-                    near, ((c1, d1), (c2, d2)), v, inward, r, sigma, (l1.rms + l2.rms) / 2, max(corr) if corr else None
+                    near, ((c1, d1), (c2, d2)), v, inward, r, sigma, (l1.rms + l2.rms) / 2,
+                    max(corr) if corr else None, covariance=local_covariance,
                 )
             if exact is not None:
                 r, sd, rms, max_abs, bound = exact
                 p.data["r_sd"] = sd
             elif approximate:
                 p.data["r_sd"] = math.inf  # the exact fit found no radius: not determined
+        if covariance is not None and exact is None:
+            p.data.update(r_sd=math.inf, blur_unresolved=True)
+            continue  # retain unknowns; do not substitute a scalar fit or sharp bound
         if exact is None and not approximate:
             continue
         p.data["r"] = float(r)
