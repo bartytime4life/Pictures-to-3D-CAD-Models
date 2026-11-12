@@ -219,5 +219,10 @@ Version 3 adds `backend/corner_pixel_apertures.py` for normalized means over kno
 uniform product apertures. It supplies a bounded observation callback to the
 same joint-box engine; [pixel assumptions and limits](pixel-apertures.md) remain
 separate from production sampling and camera qualification.
+Version 4 adds `backend/corner_signed_stencils.py` for declared fixed signed
+operators. Its whole-radius callback encloses every term before summation;
+signed combinations cannot reuse composite endpoint monotonicity. Exact gain/L1
+accounting, raw-term work caps and bounded caching retain their
+[separate observation contract](signed-stencils.md).
 
 The included runtime is a single-user application. It does not implement account authentication, per-user authorization, shared project storage, collaborative editing, a durable job queue, or a billing service. Those capabilities require an explicit design and implementation before a public multi-user deployment.

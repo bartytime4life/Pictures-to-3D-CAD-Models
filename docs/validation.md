@@ -13,6 +13,13 @@ retains its source, executable API example and completed checks.
 
 ## Current workbench evidence — November 12, 2026
 
+The [signed-stencil observation candidate](validation/signed-stencils.md), based
+on PR #53 at `e22ff3d`, passed **1,022 Python tests**. Whole-radius signed covers
+retain interior values that endpoint-only sampling could exclude. Exact gain/L1,
+term-based work caps, zero/duplicate handling and six-file provenance preserve
+the declared operator. All 12 development truths remain retained; five reports
+stay unknown. This developer model does not calibrate the production pipeline.
+
 The [pixel-aperture observation candidate](validation/pixel-apertures.md), based
 on PR #52 at `b800edb`, passed **929 Python tests**. It integrates known normalized
 uniform rectangular pixel means and retains one common blur pair. Independent
