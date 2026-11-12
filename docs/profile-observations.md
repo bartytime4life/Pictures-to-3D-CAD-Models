@@ -7,6 +7,9 @@ input-pixel noise. It supports the next wall-model investigation; it does not
 change tracing, add a confidence badge or calibrate a real camera.
 The [warp-chain extension](warp-observations.md) now also composes the known
 earlier Keys rectification and retains raw optical-model countercontrols.
+The [raw-source fitter](raw-source-fit.md) now uses the available source samples
+for both target and model, preserving the declared row space and reporting raw
+residual components omitted by it. Supplied geometry/optics/noise remain assumptions.
 The [source-bound controls](validation/profile-observations.md) retain both
 false-precision examples and remaining model mismatch.
 

@@ -6,7 +6,8 @@ CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
 For a concise source/review snapshot, use [project status](project-status.md).
-The [current documentation alignment](validation/documentation-alignment.md)
+The [current coverage record](validation/raw-source-fit.md#documentation-coverage)
+includes the raw-source guides. The [earlier documentation alignment](validation/documentation-alignment.md)
 reviews the published PR #62 baseline, current numerical-tool contracts and all
 Markdown navigation. The [earlier complete update](validation/documentation-complete-2026-11-12.md)
 retains its PR #57 baseline. Documentation checks are separate from the source-bound
@@ -17,6 +18,14 @@ The [earlier PR #49 documentation follow-up](validation/documentation-current-st
 retains its source, executable API example and completed checks.
 
 ## Current workbench evidence — November 12, 2026
+
+The [raw-source fitting candidate](validation/raw-source-fit.md) separates one
+finite-search offset from two bounded brightness levels in fixed retained source
+modes. Its matched controls expose processed-whitening instability while retaining
+wrong optics, nonlinear response, encoding/source rounding, global wall aliases
+and raw-model mismatch outside the chosen source space. All 144 supplied-noise
+fits and unresolved controls remain in the artifact. This is developer inference,
+not a new workbench correction or a physical confidence result.
 
 The [known warp-chain candidate](validation/warp-observations.md) composes the
 earlier perspective/radial sampler with smoothing and final profiles. Its 324

@@ -1,0 +1,691 @@
+{
+  "format": "independent-raw-source-fit-api-audit",
+  "version": 1,
+  "source_sha256": {
+    "studies/verification/raw-source-fit-oracle-v1.py": "220b7184638739a232dbfac6b24da2e241d5f8072ce985bc20f1cfc09ad374fa",
+    "backend/raw_source_fit.py": "6a877bc15759076adf95dbbb521c04d110b20e8ed397637148c2e87b3ba8b6af",
+    "backend/profile_observations.py": "7eee8b71fc9024cb5c8453ec67aab75f2c21c8c77e975c1fba41b1e3be9f873b",
+    "backend/sheet.py": "a086d7216256726a0e392bd98cbdb1274f5cb5eb096802c17c805349a7747e31"
+  },
+  "git_revision": "ad7cc00fed4b2e7006aae957758a12b2f9f15528",
+  "runtime": {
+    "python": "3.12.3",
+    "numpy": "2.5.4"
+  },
+  "control_count": 14,
+  "bounded_level_oracle_count": 4,
+  "seconds": 0.05803203699178994,
+  "oracle_probability_maximum_error": 1.2101430968414206e-14,
+  "cases": [
+    {
+      "case": "anisotropic_nonidentity_independent_source",
+      "result": {
+        "best": {
+          "offset": 0.13718999999978862,
+          "levels": [
+            200.0000000000041,
+            80.0000000000068
+          ],
+          "cost": 1.6425395701505795e-21,
+          "design_rank": 2,
+          "kind": "refined_minimum",
+          "bracket": [
+            0.13718999999763265,
+            0.13719000000112105
+          ],
+          "maximum_projected_residual": 7.30437932361383e-12
+        },
+        "evaluations": 115,
+        "work": 9147154,
+        "projection_rank": 81,
+        "raw_pixel_count": 81,
+        "comparison_tolerance": 1.1608238966581859e-07,
+        "flat": false,
+        "plateau": false,
+        "tied": false,
+        "endpoint": false,
+        "rank_deficient": false,
+        "work_exhausted": false,
+        "numerically_unsupported": false,
+        "raw_residual_l2": 4.052825644103851e-11,
+        "raw_residual_maximum": 7.30437932361383e-12,
+        "retained_residual_l2": 4.052825644103851e-11,
+        "omitted_source_residual_l2": 0.0,
+        "global_search_certified": false,
+        "offset_error": -2.113864638886298e-13
+      }
+    },
+    {
+      "case": "H_scale_-1.0",
+      "result": {
+        "best": {
+          "offset": 0.13718999999978862,
+          "levels": [
+            200.0000000000041,
+            80.0000000000068
+          ],
+          "cost": 1.6425395701505795e-21,
+          "design_rank": 2,
+          "kind": "refined_minimum",
+          "bracket": [
+            0.13718999999763265,
+            0.13719000000112105
+          ],
+          "maximum_projected_residual": 7.30437932361383e-12
+        },
+        "evaluations": 115,
+        "work": 9147154,
+        "projection_rank": 81,
+        "raw_pixel_count": 81,
+        "comparison_tolerance": 1.1608238966581859e-07,
+        "flat": false,
+        "plateau": false,
+        "tied": false,
+        "endpoint": false,
+        "rank_deficient": false,
+        "work_exhausted": false,
+        "numerically_unsupported": false,
+        "raw_residual_l2": 4.052825644103851e-11,
+        "raw_residual_maximum": 7.30437932361383e-12,
+        "retained_residual_l2": 4.052825644103851e-11,
+        "omitted_source_residual_l2": 0.0,
+        "global_search_certified": false,
+        "offset_error": -2.113864638886298e-13
+      }
+    },
+    {
+      "case": "H_scale_1e-120",
+      "result": {
+        "best": {
+          "offset": 0.13718999999978862,
+          "levels": [
+            200.0000000000043,
+            80.00000000000708
+          ],
+          "cost": 1.801102177200039e-21,
+          "design_rank": 2,
+          "kind": "refined_minimum",
+          "bracket": [
+            0.13718999999763265,
+            0.13719000000112105
+          ],
+          "maximum_projected_residual": 7.815970093361102e-12
+        },
+        "evaluations": 115,
+        "work": 9147154,
+        "projection_rank": 81,
+        "raw_pixel_count": 81,
+        "comparison_tolerance": 1.1608238966581859e-07,
+        "flat": false,
+        "plateau": false,
+        "tied": false,
+        "endpoint": false,
+        "rank_deficient": false,
+        "work_exhausted": false,
+        "numerically_unsupported": false,
+        "raw_residual_l2": 4.243939416627008e-11,
+        "raw_residual_maximum": 7.815970093361102e-12,
+        "retained_residual_l2": 4.243939416627008e-11,
+        "omitted_source_residual_l2": 0.0,
+        "global_search_certified": false,
+        "offset_error": -2.113864638886298e-13
+      }
+    },
+    {
+      "case": "H_scale_-1e+120",
+      "result": {
+        "best": {
+          "offset": 0.13718999999978862,
+          "levels": [
+            200.00000000000415,
+            80.00000000000654
+          ],
+          "cost": 1.5222930353620848e-21,
+          "design_rank": 2,
+          "kind": "refined_minimum",
+          "bracket": [
+            0.13718999999763265,
+            0.13719000000112105
+          ],
+          "maximum_projected_residual": 7.048583938740194e-12
+        },
+        "evaluations": 115,
+        "work": 9147154,
+        "projection_rank": 81,
+        "raw_pixel_count": 81,
+        "comparison_tolerance": 1.1608238966581859e-07,
+        "flat": false,
+        "plateau": false,
+        "tied": false,
+        "endpoint": false,
+        "rank_deficient": false,
+        "work_exhausted": false,
+        "numerically_unsupported": false,
+        "raw_residual_l2": 3.9016573854736206e-11,
+        "raw_residual_maximum": 7.048583938740194e-12,
+        "retained_residual_l2": 3.9016573854736206e-11,
+        "omitted_source_residual_l2": 0.0,
+        "global_search_certified": false,
+        "offset_error": -2.113864638886298e-13
+      }
+    },
+    {
+      "case": "noise_units_1e-06",
+      "result": {
+        "best": {
+          "offset": 0.13718999999978862,
+          "levels": [
+            200.00000000000423,
+            80.0000000000068
+          ],
+          "cost": 1.6424106519252746e-09,
+          "design_rank": 2,
+          "kind": "refined_minimum",
+          "bracket": [
+            0.13718999999763265,
+            0.13719000000112105
+          ],
+          "maximum_projected_residual": 7.241964340209961e-06
+        },
+        "evaluations": 115,
+        "work": 9147154,
+        "projection_rank": 81,
+        "raw_pixel_count": 81,
+        "comparison_tolerance": 116082.3896658186,
+        "flat": false,
+        "plateau": false,
+        "tied": false,
+        "endpoint": false,
+        "rank_deficient": false,
+        "work_exhausted": false,
+        "numerically_unsupported": false,
+        "raw_residual_l2": 4.051912174944656e-05,
+        "raw_residual_maximum": 7.219114195322618e-06,
+        "retained_residual_l2": 4.051912174944656e-05,
+        "omitted_source_residual_l2": 0.0,
+        "global_search_certified": false,
+        "offset_error": -2.113864638886298e-13
+      }
+    },
+    {
+      "case": "noise_units_1000000.0",
+      "result": {
+        "best": {
+          "offset": 0.13718999999978862,
+          "levels": [
+            200.00000000000435,
+            80.0000000000068
+          ],
+          "cost": 1.642752253248193e-33,
+          "design_rank": 2,
+          "kind": "refined_minimum",
+          "bracket": [
+            0.13718999999763265,
+            0.13719000000112105
+          ],
+          "maximum_projected_residual": 7.182839392716467e-18
+        },
+        "evaluations": 115,
+        "work": 9147154,
+        "projection_rank": 81,
+        "raw_pixel_count": 81,
+        "comparison_tolerance": 1.160823896658186e-19,
+        "flat": false,
+        "plateau": false,
+        "tied": false,
+        "endpoint": false,
+        "rank_deficient": false,
+        "work_exhausted": false,
+        "numerically_unsupported": false,
+        "raw_residual_l2": 4.0526911034756175e-17,
+        "raw_residual_maximum": 7.16227077646181e-18,
+        "retained_residual_l2": 4.0526911034756175e-17,
+        "omitted_source_residual_l2": 0.0,
+        "global_search_certified": false,
+        "offset_error": -2.113864638886298e-13
+      }
+    },
+    {
+      "case": "normal_reversed",
+      "result": {
+        "best": {
+          "offset": -0.1371899999997886,
+          "levels": [
+            80.00000000000682,
+            200.00000000000432
+          ],
+          "cost": 1.640939936939634e-21,
+          "design_rank": 2,
+          "kind": "refined_minimum",
+          "bracket": [
+            -0.13719000000112103,
+            -0.13718999999763262
+          ],
+          "maximum_projected_residual": 7.16227077646181e-12
+        },
+        "evaluations": 115,
+        "work": 9147154,
+        "projection_rank": 81,
+        "raw_pixel_count": 81,
+        "comparison_tolerance": 1.1608238966581859e-07,
+        "flat": false,
+        "plateau": false,
+        "tied": false,
+        "endpoint": false,
+        "rank_deficient": false,
+        "work_exhausted": false,
+        "numerically_unsupported": false,
+        "raw_residual_l2": 4.0508516844481406e-11,
+        "raw_residual_maximum": 7.16227077646181e-12,
+        "retained_residual_l2": 4.0508516844481406e-11,
+        "omitted_source_residual_l2": 0.0,
+        "global_search_certified": false,
+        "offset_error": 2.1141421946424543e-13
+      }
+    },
+    {
+      "case": "sensor_axes_swapped",
+      "result": {
+        "best": {
+          "offset": 0.13718999999978862,
+          "levels": [
+            200.00000000000423,
+            80.00000000000679
+          ],
+          "cost": 1.6522106766824525e-21,
+          "design_rank": 2,
+          "kind": "refined_minimum",
+          "bracket": [
+            0.13718999999763265,
+            0.13719000000112105
+          ],
+          "maximum_projected_residual": 7.247535904753022e-12
+        },
+        "evaluations": 115,
+        "work": 9147154,
+        "projection_rank": 81,
+        "raw_pixel_count": 81,
+        "comparison_tolerance": 1.1608238966581859e-07,
+        "flat": false,
+        "plateau": false,
+        "tied": false,
+        "endpoint": false,
+        "rank_deficient": false,
+        "work_exhausted": false,
+        "numerically_unsupported": false,
+        "raw_residual_l2": 4.064739446363632e-11,
+        "raw_residual_maximum": 7.247535904753022e-12,
+        "retained_residual_l2": 4.064739446363632e-11,
+        "omitted_source_residual_l2": 0.0,
+        "global_search_certified": false,
+        "offset_error": -2.113864638886298e-13
+      }
+    },
+    {
+      "case": "source_order_permuted",
+      "result": {
+        "best": {
+          "offset": 0.13718999999978862,
+          "levels": [
+            200.00000000000423,
+            80.00000000000678
+          ],
+          "cost": 1.642188785794133e-21,
+          "design_rank": 2,
+          "kind": "refined_minimum",
+          "bracket": [
+            0.13718999999763265,
+            0.13719000000112105
+          ],
+          "maximum_projected_residual": 7.247535904753022e-12
+        },
+        "evaluations": 115,
+        "work": 9147154,
+        "projection_rank": 81,
+        "raw_pixel_count": 81,
+        "comparison_tolerance": 1.160823896658186e-07,
+        "flat": false,
+        "plateau": false,
+        "tied": false,
+        "endpoint": false,
+        "rank_deficient": false,
+        "work_exhausted": false,
+        "numerically_unsupported": false,
+        "raw_residual_l2": 4.052392855824979e-11,
+        "raw_residual_maximum": 7.247535904753022e-12,
+        "retained_residual_l2": 4.052392855824979e-11,
+        "omitted_source_residual_l2": 0.0,
+        "global_search_certified": false,
+        "offset_error": -2.113864638886298e-13
+      }
+    },
+    {
+      "case": "constant_0.0",
+      "result": {
+        "best": {
+          "offset": -0.6,
+          "levels": [
+            0.0,
+            0.0
+          ],
+          "cost": 0.0,
+          "design_rank": 2,
+          "kind": "endpoint",
+          "bracket": [
+            -0.6,
+            -0.6
+          ],
+          "maximum_projected_residual": 0.0
+        },
+        "evaluations": 65,
+        "work": 5191754,
+        "projection_rank": 81,
+        "raw_pixel_count": 81,
+        "comparison_tolerance": 0.0,
+        "flat": true,
+        "plateau": true,
+        "tied": true,
+        "endpoint": true,
+        "rank_deficient": false,
+        "work_exhausted": false,
+        "numerically_unsupported": false,
+        "raw_residual_l2": 0.0,
+        "raw_residual_maximum": 0.0,
+        "retained_residual_l2": 0.0,
+        "omitted_source_residual_l2": 0.0,
+        "global_search_certified": false,
+        "offset_error": -0.73719
+      }
+    },
+    {
+      "case": "constant_128.0",
+      "result": {
+        "best": {
+          "offset": -0.31875,
+          "levels": [
+            128.0,
+            128.0
+          ],
+          "cost": 0.0,
+          "design_rank": 2,
+          "kind": "plateau_grid",
+          "bracket": [
+            -0.6,
+            0.6
+          ],
+          "maximum_projected_residual": 0.0
+        },
+        "evaluations": 65,
+        "work": 5191754,
+        "projection_rank": 81,
+        "raw_pixel_count": 81,
+        "comparison_tolerance": 7.543712854385376e-08,
+        "flat": true,
+        "plateau": true,
+        "tied": true,
+        "endpoint": true,
+        "rank_deficient": false,
+        "work_exhausted": false,
+        "numerically_unsupported": false,
+        "raw_residual_l2": 0.0,
+        "raw_residual_maximum": 0.0,
+        "retained_residual_l2": 0.0,
+        "omitted_source_residual_l2": 0.0,
+        "global_search_certified": false,
+        "offset_error": -0.45594
+      }
+    },
+    {
+      "case": "no_refinement_budget",
+      "result": {
+        "best": {
+          "offset": 0.13124999999999998,
+          "levels": [
+            200.1085063917915,
+            80.17299408293151
+          ],
+          "cost": 1.0746925592485885,
+          "design_rank": 2,
+          "kind": "unfinished_minimum",
+          "bracket": [
+            0.11250000000000004,
+            0.15000000000000002
+          ],
+          "maximum_projected_residual": 0.18203174985222859
+        },
+        "evaluations": 65,
+        "work": 5191754,
+        "projection_rank": 81,
+        "raw_pixel_count": 81,
+        "comparison_tolerance": 1.1608238966581859e-07,
+        "flat": false,
+        "plateau": false,
+        "tied": false,
+        "endpoint": false,
+        "rank_deficient": false,
+        "work_exhausted": true,
+        "numerically_unsupported": false,
+        "raw_residual_l2": 1.0366737959689096,
+        "raw_residual_maximum": 0.18203174985222859,
+        "retained_residual_l2": 1.0366737959689096,
+        "omitted_source_residual_l2": 0.0,
+        "global_search_certified": false,
+        "offset_error": -0.005940000000000029
+      }
+    },
+    {
+      "case": "observations_outside_mean_bounds",
+      "result": {
+        "best": {
+          "offset": 0.1259432371331742,
+          "levels": [
+            0.0,
+            255.0
+          ],
+          "cost": 24008.065168523437,
+          "design_rank": 2,
+          "kind": "refined_minimum",
+          "bracket": [
+            0.12594323713101824,
+            0.12594323713450664
+          ],
+          "maximum_projected_residual": 24.992840522992083
+        },
+        "evaluations": 115,
+        "work": 9147154,
+        "projection_rank": 81,
+        "raw_pixel_count": 81,
+        "comparison_tolerance": 1.0578404116288739e-07,
+        "flat": false,
+        "plateau": false,
+        "tied": false,
+        "endpoint": false,
+        "rank_deficient": false,
+        "work_exhausted": false,
+        "numerically_unsupported": false,
+        "raw_residual_l2": 154.94536188128845,
+        "raw_residual_maximum": 24.992840522992083,
+        "retained_residual_l2": 154.94536188128845,
+        "omitted_source_residual_l2": 0.0,
+        "global_search_certified": false,
+        "offset_error": -0.011246762866825799
+      }
+    },
+    {
+      "case": "orthogonal_full_rowspace_basis",
+      "result": {
+        "best": {
+          "offset": 0.13718999999978862,
+          "levels": [
+            200.00000000000432,
+            80.00000000000686
+          ],
+          "cost": 1.6393420930816962e-21,
+          "design_rank": 2,
+          "kind": "refined_minimum",
+          "bracket": [
+            0.13718999999763265,
+            0.13719000000112105
+          ],
+          "maximum_projected_residual": 1.1077361250499962e-11
+        },
+        "evaluations": 115,
+        "work": 9147154,
+        "projection_rank": 81,
+        "raw_pixel_count": 81,
+        "comparison_tolerance": 1.1608238966581861e-07,
+        "flat": false,
+        "plateau": false,
+        "tied": false,
+        "endpoint": false,
+        "rank_deficient": false,
+        "work_exhausted": false,
+        "numerically_unsupported": false,
+        "raw_residual_l2": 4.0538970758807365e-11,
+        "raw_residual_maximum": 7.16227077646181e-12,
+        "retained_residual_l2": 4.0538970758807365e-11,
+        "omitted_source_residual_l2": 2.9893233329139105e-26,
+        "global_search_certified": false,
+        "offset_error": -2.113864638886298e-13
+      }
+    }
+  ],
+  "bounded_level_oracle_cases": [
+    {
+      "design": [
+        [
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "observed": [
+        -5.0,
+        270.0,
+        250.0
+      ],
+      "actual_cost": 275.0,
+      "oracle_cost": 275.0,
+      "actual_levels": [
+        0.0,
+        255.0
+      ],
+      "oracle_levels": [
+        0.0,
+        255.0
+      ],
+      "design_rank": 2
+    },
+    {
+      "design": [
+        [
+          1.0,
+          -1.0
+        ],
+        [
+          2.0,
+          1.0
+        ],
+        [
+          -1.0,
+          3.0
+        ]
+      ],
+      "observed": [
+        400.0,
+        -20.0,
+        500.0
+      ],
+      "actual_cost": 303800.0,
+      "oracle_cost": 303800.0,
+      "actual_levels": [
+        10.00000000000002,
+        100.00000000000006
+      ],
+      "oracle_levels": [
+        10.0,
+        100.0
+      ],
+      "design_rank": 2
+    },
+    {
+      "design": [
+        [
+          1.0,
+          1.0
+        ],
+        [
+          2.0,
+          2.0
+        ],
+        [
+          3.0,
+          3.0
+        ]
+      ],
+      "observed": [
+        600.0,
+        1000.0,
+        1700.0
+      ],
+      "actual_cost": 37400.0,
+      "oracle_cost": 37400.0,
+      "actual_levels": [
+        255.0,
+        255.0
+      ],
+      "oracle_levels": [
+        255.0,
+        255.0
+      ],
+      "design_rank": 1
+    },
+    {
+      "design": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "observed": [
+        -1.0,
+        2.0,
+        3.0
+      ],
+      "actual_cost": 14.0,
+      "oracle_cost": 14.0,
+      "actual_levels": [
+        0.0,
+        0.0
+      ],
+      "oracle_levels": [
+        0.0,
+        0.0
+      ],
+      "design_rank": 0
+    }
+  ],
+  "chart_rejection": "declared sensor crosses the positive inverse projective chart",
+  "limits": [
+    "All cases are declared development controls, not holdout or physical qualification.",
+    "Source halfplane renderer crosses forward-projected points and uses scalar erfc with anisotropic covariance.",
+    "Decimal box oracle independently solves two-parameter active edges and interior from exact representations of input float values.",
+    "Identity/orthogonal source projections deliberately retain all source modes for these invariance controls; the separate raw-source study covers its declared truncated SGR operators.",
+    "No production source or tests were edited."
+  ]
+}

@@ -18,6 +18,7 @@ an experiment in another worktree is a different implementation.
 | Does oversampling create misleading precision? | `make profile-noise-study OUTPUT=NEW_JSON` | Known correlated-noise and local-information controls, with support/rank counterexamples; no camera calibration |
 | Does the forward model include the known smoothing filter? | `make postblur-operator-study OUTPUT=NEW_JSON` | Declared finite-filter plus Keys composition on fixed fields; rounding and earlier-chain limits retained |
 | Does the known full digital chain match the actual sampler? | `make warp-observation-study OUTPUT=NEW_JSON` | Supplied raw-to-rectified warp, smoothing and profile sampling; stage rounding retained separately |
+| Can a declared raw optical mean explain available prewarp samples? | `make raw-source-fit-study OUTPUT=NEW_JSON` | Bounded source-projection offset/brightness fitting with known geometry, PSF and noise; retains weak-mode, source-mismatch and ambiguity controls |
 | How do my reference-sheet photos compare with reserved measurements? | `make photo-benchmark PHOTOS=FOLDER` | Measured-photo comparison with coverage and failed traces retained; supplied comparison threshold is not an uncertainty budget |
 | Does a selected server trace, build and export the sample? | `make smoke` | API exercise against an already running server, including cleanup; not browser or physical acceptance |
 | Can an installed CAD application import the synthetic exports? | `make freecad` | Native FreeCAD check requiring `FREECADCMD`; not slicer or print qualification |
@@ -88,6 +89,13 @@ keeps all 324 readouts from six reused source arrays; the second distinguishes
 affine Gaussian covariance, projective variation and radial curved-edge response.
 Known digital weights do not establish an optical source model or calibrate
 geometry estimated from the same image.
+
+The [raw-source fitting guide](raw-source-fit.md) adds `make raw-source-fit-study`
+with a fresh JSON destination. Both source observations and model use the same
+fixed retained source projection. The experiment keeps all matched fields,
+wrong-PSF/nonlinear/quantization controls, common-noise draws, global aliases and
+unresolved searches. Raw residuals outside the selected source row space remain
+visible. This is not all-raw-pixel fitting or a calibrated photo likelihood.
 
 Audit the wall study's complete row keys and summaries independently of its
 summary-writing code:

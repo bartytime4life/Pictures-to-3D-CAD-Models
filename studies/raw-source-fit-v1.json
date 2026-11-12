@@ -1,0 +1,525 @@
+{
+  "format": "raw-source-offset-study-plan",
+  "version": 1,
+  "maps": [
+    {
+      "name": "identity",
+      "jacobian": [
+        [
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "projective_vector": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "affine_anisotropic",
+      "jacobian": [
+        [
+          2.2,
+          0.0
+        ],
+        [
+          0.0,
+          1.4
+        ]
+      ],
+      "projective_vector": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "affine_shear",
+      "jacobian": [
+        [
+          2.0,
+          0.7
+        ],
+        [
+          0.2,
+          1.5
+        ]
+      ],
+      "projective_vector": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "affine_rotated_25deg",
+      "jacobian": null,
+      "projective_vector": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "projective_mild",
+      "jacobian": [
+        [
+          2.0,
+          0.3
+        ],
+        [
+          0.1,
+          1.6
+        ]
+      ],
+      "projective_vector": [
+        0.006,
+        -0.004
+      ]
+    },
+    {
+      "name": "projective_strong",
+      "jacobian": [
+        [
+          2.0,
+          0.3
+        ],
+        [
+          0.1,
+          1.6
+        ]
+      ],
+      "projective_vector": [
+        0.008,
+        -0.005
+      ]
+    }
+  ],
+  "baseline_fields": [
+    {
+      "map": "identity",
+      "normal_degrees": 0.0,
+      "true_edge_plane": 0.13719,
+      "levels": [
+        80.0,
+        200.0
+      ]
+    },
+    {
+      "map": "identity",
+      "normal_degrees": 0.0,
+      "true_edge_plane": -0.21973,
+      "levels": [
+        200.0,
+        80.0
+      ]
+    },
+    {
+      "map": "identity",
+      "normal_degrees": 37.0,
+      "true_edge_plane": 0.13719,
+      "levels": [
+        200.0,
+        80.0
+      ]
+    },
+    {
+      "map": "identity",
+      "normal_degrees": 37.0,
+      "true_edge_plane": -0.21973,
+      "levels": [
+        80.0,
+        200.0
+      ]
+    },
+    {
+      "map": "identity",
+      "normal_degrees": 90.0,
+      "true_edge_plane": 0.13719,
+      "levels": [
+        80.0,
+        200.0
+      ]
+    },
+    {
+      "map": "identity",
+      "normal_degrees": 90.0,
+      "true_edge_plane": -0.21973,
+      "levels": [
+        200.0,
+        80.0
+      ]
+    },
+    {
+      "map": "affine_anisotropic",
+      "normal_degrees": 0.0,
+      "true_edge_plane": 0.13719,
+      "levels": [
+        200.0,
+        80.0
+      ]
+    },
+    {
+      "map": "affine_anisotropic",
+      "normal_degrees": 0.0,
+      "true_edge_plane": -0.21973,
+      "levels": [
+        80.0,
+        200.0
+      ]
+    },
+    {
+      "map": "affine_anisotropic",
+      "normal_degrees": 37.0,
+      "true_edge_plane": 0.13719,
+      "levels": [
+        80.0,
+        200.0
+      ]
+    },
+    {
+      "map": "affine_anisotropic",
+      "normal_degrees": 37.0,
+      "true_edge_plane": -0.21973,
+      "levels": [
+        200.0,
+        80.0
+      ]
+    },
+    {
+      "map": "affine_anisotropic",
+      "normal_degrees": 90.0,
+      "true_edge_plane": 0.13719,
+      "levels": [
+        200.0,
+        80.0
+      ]
+    },
+    {
+      "map": "affine_anisotropic",
+      "normal_degrees": 90.0,
+      "true_edge_plane": -0.21973,
+      "levels": [
+        80.0,
+        200.0
+      ]
+    },
+    {
+      "map": "affine_shear",
+      "normal_degrees": 0.0,
+      "true_edge_plane": 0.13719,
+      "levels": [
+        80.0,
+        200.0
+      ]
+    },
+    {
+      "map": "affine_shear",
+      "normal_degrees": 0.0,
+      "true_edge_plane": -0.21973,
+      "levels": [
+        200.0,
+        80.0
+      ]
+    },
+    {
+      "map": "affine_shear",
+      "normal_degrees": 37.0,
+      "true_edge_plane": 0.13719,
+      "levels": [
+        200.0,
+        80.0
+      ]
+    },
+    {
+      "map": "affine_shear",
+      "normal_degrees": 37.0,
+      "true_edge_plane": -0.21973,
+      "levels": [
+        80.0,
+        200.0
+      ]
+    },
+    {
+      "map": "affine_shear",
+      "normal_degrees": 90.0,
+      "true_edge_plane": 0.13719,
+      "levels": [
+        80.0,
+        200.0
+      ]
+    },
+    {
+      "map": "affine_shear",
+      "normal_degrees": 90.0,
+      "true_edge_plane": -0.21973,
+      "levels": [
+        200.0,
+        80.0
+      ]
+    },
+    {
+      "map": "affine_rotated_25deg",
+      "normal_degrees": 0.0,
+      "true_edge_plane": 0.13719,
+      "levels": [
+        200.0,
+        80.0
+      ]
+    },
+    {
+      "map": "affine_rotated_25deg",
+      "normal_degrees": 0.0,
+      "true_edge_plane": -0.21973,
+      "levels": [
+        80.0,
+        200.0
+      ]
+    },
+    {
+      "map": "affine_rotated_25deg",
+      "normal_degrees": 37.0,
+      "true_edge_plane": 0.13719,
+      "levels": [
+        80.0,
+        200.0
+      ]
+    },
+    {
+      "map": "affine_rotated_25deg",
+      "normal_degrees": 37.0,
+      "true_edge_plane": -0.21973,
+      "levels": [
+        200.0,
+        80.0
+      ]
+    },
+    {
+      "map": "affine_rotated_25deg",
+      "normal_degrees": 90.0,
+      "true_edge_plane": 0.13719,
+      "levels": [
+        200.0,
+        80.0
+      ]
+    },
+    {
+      "map": "affine_rotated_25deg",
+      "normal_degrees": 90.0,
+      "true_edge_plane": -0.21973,
+      "levels": [
+        80.0,
+        200.0
+      ]
+    },
+    {
+      "map": "projective_mild",
+      "normal_degrees": 0.0,
+      "true_edge_plane": 0.13719,
+      "levels": [
+        80.0,
+        200.0
+      ]
+    },
+    {
+      "map": "projective_mild",
+      "normal_degrees": 0.0,
+      "true_edge_plane": -0.21973,
+      "levels": [
+        200.0,
+        80.0
+      ]
+    },
+    {
+      "map": "projective_mild",
+      "normal_degrees": 37.0,
+      "true_edge_plane": 0.13719,
+      "levels": [
+        200.0,
+        80.0
+      ]
+    },
+    {
+      "map": "projective_mild",
+      "normal_degrees": 37.0,
+      "true_edge_plane": -0.21973,
+      "levels": [
+        80.0,
+        200.0
+      ]
+    },
+    {
+      "map": "projective_mild",
+      "normal_degrees": 90.0,
+      "true_edge_plane": 0.13719,
+      "levels": [
+        80.0,
+        200.0
+      ]
+    },
+    {
+      "map": "projective_mild",
+      "normal_degrees": 90.0,
+      "true_edge_plane": -0.21973,
+      "levels": [
+        200.0,
+        80.0
+      ]
+    },
+    {
+      "map": "projective_strong",
+      "normal_degrees": 0.0,
+      "true_edge_plane": 0.13719,
+      "levels": [
+        200.0,
+        80.0
+      ]
+    },
+    {
+      "map": "projective_strong",
+      "normal_degrees": 0.0,
+      "true_edge_plane": -0.21973,
+      "levels": [
+        80.0,
+        200.0
+      ]
+    },
+    {
+      "map": "projective_strong",
+      "normal_degrees": 37.0,
+      "true_edge_plane": 0.13719,
+      "levels": [
+        80.0,
+        200.0
+      ]
+    },
+    {
+      "map": "projective_strong",
+      "normal_degrees": 37.0,
+      "true_edge_plane": -0.21973,
+      "levels": [
+        200.0,
+        80.0
+      ]
+    },
+    {
+      "map": "projective_strong",
+      "normal_degrees": 90.0,
+      "true_edge_plane": 0.13719,
+      "levels": [
+        200.0,
+        80.0
+      ]
+    },
+    {
+      "map": "projective_strong",
+      "normal_degrees": 90.0,
+      "true_edge_plane": -0.21973,
+      "levels": [
+        80.0,
+        200.0
+      ]
+    }
+  ],
+  "stress_fields": [
+    {
+      "map": "identity",
+      "normal_degrees": 37.0,
+      "true_edge_plane": 0.13719,
+      "levels": [
+        200.0,
+        80.0
+      ]
+    },
+    {
+      "map": "affine_anisotropic",
+      "normal_degrees": 37.0,
+      "true_edge_plane": 0.13719,
+      "levels": [
+        80.0,
+        200.0
+      ]
+    },
+    {
+      "map": "affine_shear",
+      "normal_degrees": 37.0,
+      "true_edge_plane": 0.13719,
+      "levels": [
+        200.0,
+        80.0
+      ]
+    },
+    {
+      "map": "affine_rotated_25deg",
+      "normal_degrees": 37.0,
+      "true_edge_plane": 0.13719,
+      "levels": [
+        80.0,
+        200.0
+      ]
+    },
+    {
+      "map": "projective_mild",
+      "normal_degrees": 37.0,
+      "true_edge_plane": 0.13719,
+      "levels": [
+        200.0,
+        80.0
+      ]
+    },
+    {
+      "map": "projective_strong",
+      "normal_degrees": 37.0,
+      "true_edge_plane": 0.13719,
+      "levels": [
+        80.0,
+        200.0
+      ]
+    }
+  ],
+  "raw_shape": [
+    192,
+    256
+  ],
+  "plane_size": [
+    64.0,
+    48.0
+  ],
+  "ppm": 2.0,
+  "plane_seed": [
+    32.137,
+    24.219
+  ],
+  "raw_mapped_seed": [
+    128.3,
+    96.7
+  ],
+  "profile_half_width_rectified_px": 8.0,
+  "profile_step_rectified_px": 0.125,
+  "true_raw_optical_sigma": 1.3,
+  "postwarp_smoothing_sigma_rectified_px": 0.7,
+  "edge_search_plane": [
+    -0.6,
+    0.6
+  ],
+  "edge_grid_points": 61,
+  "golden_iterations": 48,
+  "sigma_factors_fixed": [
+    0.8,
+    1.25
+  ],
+  "nonlinear_response_coefficient": 0.15,
+  "alias_band_plane": 1.625,
+  "alias_band_rate": 0.05,
+  "level_bounds": [
+    0.0,
+    255.0
+  ],
+  "scope": "Retained-source-projection variable projection with supplied straight raw Gaussian source, fixed lens-free H/normal/PSF/noise; source rounding, encoding quantization, nonlinear response, blur mismatch, aliases and processed-GLS conditioning remain explicit.",
+  "common_noise_draws": 24,
+  "noise_seed": 20261112,
+  "supplied_raw_noise_std": 1.0,
+  "max_evaluations_per_fit": 512,
+  "source_fit_work_limit": 50000000
+}
