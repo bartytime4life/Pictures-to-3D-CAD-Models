@@ -178,3 +178,10 @@ coverage. The [initial-fit support repair](validation/fit-support.md) addresses
 the reproduced extrapolation before Gaussian/design reconstruction; it does not
 establish final model adequacy. The optional bounded-height decision above retains its separate,
 user-supplied assumptions.
+
+A sharp-corner note reports an estimated radius resolution under the assumed
+blur model. It is separate from the user-bounded height decision above. The
+[corner-resolution record](validation/sharp-corner-resolution.md) reproduces a
+known rounded corner whose model estimate is smaller than its actual radius.
+Neither that estimate nor a local radius standard deviation is a physical upper
+radius bound. Reserve an independent measurement for fit-critical fillets.

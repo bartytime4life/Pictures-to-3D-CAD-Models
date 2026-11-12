@@ -1431,8 +1431,8 @@ def test_fillets_keep_their_radius_at_every_corner_angle_and_size(apex, multiple
     assert kinds.count("l") == 5 and "aa" not in kinds
     for k, p in enumerate(prims):
         if p.kind == "line" and prims[k - 1].kind == "line":
-            # A corner reported sharp never hides a fillet larger than its stated bound,
-            # and only a wide corner's small fillet can be hidden.
+            # In these matched isotropic-model cases, the legacy resolution
+            # estimate exceeds the true radius; this is not a physical bound.
             assert p.data["sharp_bound"] > radius and multiple <= 2.0 and apex == 60
         if p.kind == "arc":
             error = abs(p.data["r"] - radius)
