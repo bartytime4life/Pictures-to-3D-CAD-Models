@@ -339,10 +339,10 @@ def stepped_row(edge, kernel):
 def test_half_level_crossing_on_symmetric_blur_is_unbiased_on_average(kernel):
     """Property and bound. For a straight edge blurred by a symmetric point-spread
     function the mid-level crossing of the continuous profile is the edge itself.
-    Sampling the pixel-integrated image adds a phase-dependent error (pixel locking):
-    zero for a box blur (the interpolated profile is exact), bounded by 0.03 px for
-    Gaussian or triangular blur, and zero-mean over the sub-pixel phase, so it averages
-    out along any edge not aligned with the pixel grid."""
+    The specific kernels and widths below are checked at 16 selected phases:
+    box crossing error below 1e-9 px, Gaussian/triangle error below 0.03 px and
+    mean below 1e-3 px. These finite fixtures do not establish universal bounds
+    or cancellation along arbitrary non-axis-aligned edges."""
     errors = []
     for edge in np.linspace(40.0, 41.0, 17)[:-1]:
         points = np.column_stack([np.full(6, edge + 0.6), np.linspace(10.5, 29.5, 6)])

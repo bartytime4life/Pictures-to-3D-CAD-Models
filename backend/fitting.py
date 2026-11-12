@@ -734,8 +734,9 @@ def undetermined_radii(rings, sigma, scale=1.0, unit="mm", limit=300):
     where the outline moves only (1/sin(theta/2) - 1) times a change of radius (0.035
     at 150 degrees), so the edge barely constrains the radius; the note gives how far
     the outline itself is uncertain. r_sd is a linearised estimate; once it is a large
-    part of the radius the fit is no longer linear and the spread is larger still, so
-    the note says "or more". A free arc between two lines (no snapping) is reported
+    part of the radius linearisation may be unreliable. The note's "or more" warns
+    of that limitation; it is not a calibrated coverage bound. A free arc between
+    two lines (no snapping) is reported
     when it is shorter than 5 sigma: blur then bends all of it, and the free circle's
     radius is not the part's. Corners that fit_fillets found sharp are counted, with the
     radius-resolution estimate under the assumed blur model. It is not a physical

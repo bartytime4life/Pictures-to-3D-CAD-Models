@@ -15,6 +15,9 @@ records their tested behavior; the [documentation index](README.md) maps the gui
 An optional local Ollama assistant provides text guidance and reviewable trace/design/print-setting proposals. Its integration is separate from geometric conversion; model downloads and live quality comparisons are still subject to the [recorded verification status](ollama.md).
 
 The current implementation and [validation results](validation.md) are the source of truth for what works. Items below are future work, not hidden capabilities or delivery promises.
+The dated [project-status snapshot](project-status.md) identifies the integrated
+baseline and open algorithm reviews; this guide can describe changes present in
+its branch before they reach `main`.
 
 The [engineering model and verification plan](engineering-model.md) defines the 2.5D scope, camera-model assumptions, dimension equations and evidence needed through prototype qualification. The independent source-height check optionally compares a user-bounded measurement with a user-defined allowance; it reports within, outside or inconclusive without assigning a physical accuracy or confidence level.
 

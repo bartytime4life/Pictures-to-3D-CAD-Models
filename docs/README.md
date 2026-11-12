@@ -4,6 +4,9 @@ Start with the guide for your task. Pictures to CAD reconstructs one flat,
 constant-thickness part; the companion library also covers broader reconstruction
 methods, offline reference photos, calculators and parametric OpenSCAD examples.
 
+Read [project status and evidence](project-status.md) for the source revision and
+the distinction between integrated code, pending review and qualification.
+
 ## Use the workbench
 
 | Task | Guide |
@@ -30,6 +33,8 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | --- | --- |
 | Make and validate a change | [Contributing](contributing.md), [development](development.md) |
 | Understand components, API and data flow | [Architecture](architecture.md) |
+| Call the local API and handle expired or rejected requests | [API examples and recovery](api-examples.md) |
+| Identify the latest reviewed implementation and its evidence | [Project status](project-status.md) |
 | Read mathematical methods and their limits | [Research and algorithms](research.md), [engineering model](engineering-model.md) |
 | Review original scientific findings and remaining model limits | [Scientific model review](validation/scientific-model-review.md) |
 | Understand initial fitted-boundary coverage | [Fit-support repair and evidence](validation/fit-support.md) |

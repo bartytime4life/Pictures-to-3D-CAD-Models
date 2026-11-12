@@ -32,6 +32,12 @@ design-intent correction disagrees. Use ordinary tracing with measured scale or
 rebuild critical features in CAD when needed. Turning off design-intent snapping
 does not disable whole-circle fitting or the initial support check.
 
+An **estimated radius resolution** note is conditional on the assumed blur;
+it does not bound every physical fillet. A **fit could not settle** note means
+the radius search is unresolved. Measure fit-critical small fillets or rebuild
+them explicitly in CAD; increasing contour detail does not supply missing
+radius evidence. See [corner-resolution limits](validation/sharp-corner-resolution.md).
+
 | Symptom | Likely cause | Next action |
 | --- | --- | --- |
 | Width is correct but height is wrong | Perspective, image distortion, or a reference width that does not match the full horizontal span. | Review [calibration](capture-guide.md), retake front-on, and compare a second physical measurement. |

@@ -13,14 +13,19 @@ Reading the HTML or the PDF needs no tools: open `index.html` in a browser. The 
 | Plate pipeline and render tests | OpenSCAD (optional; those steps are skipped without it) |
 | Link check, GitHub refresh | Network access |
 
-Install the packages once, from `reference-library/`. `package-lock.json` pins the exact versions; use `npm ci` to reproduce them:
+From the repository root, `make setup-library` prepares this component's isolated
+Python environment and Node dependencies; follow the [repository setup guide](../docs/development.md).
+For a standalone copy, run the following from `reference-library/`.
+`package-lock.json` pins the Node versions; the Python PDF requirements use the
+version ranges in `requirements.txt`:
 
 ```bash
 npm ci
 ```
 
 ```bash
-python3 -m pip install -r requirements.txt
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
 ```
 
 If Chrome is not installed, run `npx playwright install chromium`, or set `CAD_REFERENCE_CHROME` to a browser executable.
@@ -30,6 +35,12 @@ The Node scripts look for packages in `reference-library/node_modules`, then `$C
 ## Everyday commands
 
 Run these from `reference-library/`.
+
+When using that local environment for a build or test, select it explicitly:
+
+```bash
+make build test PYTHON=.venv/bin/python PDF_PYTHON=.venv/bin/python CAD_REFERENCE_PYTHON=.venv/bin/python
+```
 
 | Command | What it does |
 | --- | --- |

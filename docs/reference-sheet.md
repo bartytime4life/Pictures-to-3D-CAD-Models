@@ -93,15 +93,24 @@ A camera whose curve differs from sRGB leaves part of the bias. On the overhead 
 
 Phone cameras also apply their own tone mapping, which the file does not record. Its cost is not measured here.
 
-**Mid-level crossing.** Each boundary point is moved along its normal to where the profile crosses the mean of its two end medians. Profiles are sampled with exact float64 bilinear interpolation (§2). For a straight edge blurred by any symmetric point-spread function, the crossing of the continuous profile is the edge itself, whatever the blur width. Bilinear sampling's error is proportional to the profile's curvature, which vanishes at a symmetric edge's mid-level, so it leaves the crossing in place. The blur measurement and the wall model (§5), which use whole profiles, sample them cubically.
+**Mid-level crossing.** Each boundary point is moved along its normal to where the profile crosses the mean of its two end medians. Profiles use float64 bilinear interpolation (§2). For an isolated straight step with constant plateaus and symmetric blur, the continuous mid-level crossing is at the edge. Discrete interpolation can still shift that crossing with subpixel phase; zero local curvature does not make asymmetric bracketing samples exact. The blur measurement and the wall model (§5), which use whole profiles, sample them cubically.
 
-Sampling a pixel-integrated image adds a phase-dependent error ("pixel locking"):
+Sampling a pixel-integrated image adds a phase-dependent error ("pixel locking").
+The specific fixtures in `test_half_level_crossing_on_symmetric_blur_is_unbiased_on_average`
+use a Gaussian with σ = 1.7 px, a width-5 box, and a triangle made by two width-5
+box passes, each at 16 selected phases. In those fixtures:
 
-- zero for a box blur, because the interpolated profile is exact;
-- at most 0.03 px for Gaussian or triangular blur;
-- zero-mean over the sub-pixel phase, so it averages out along any edge that is not aligned with the pixel grid.
+- the box-blur crossing error is below 10⁻⁹ px;
+- Gaussian and triangular errors are below 0.03 px;
+- their mean error over the selected phases is below 0.001 px.
 
-This is checked at 16 phases by `test_half_level_crossing_on_symmetric_blur_is_unbiased_on_average`. Cubic profile interpolation did not reduce it. An area (moment) estimator removes it on noise-free data, but with realistic sensor noise its per-point spread was larger (0.052 against 0.043 px), so the crossing is kept.
+These finite tests do not establish universal bounds or cancellation along any
+non-axis-aligned edge. A 45° lattice edge can repeat the same normal phase;
+cancellation depends on which phases a finite edge actually samples. Cubic
+profile interpolation did not reduce the tested phase error. In the recorded
+noise-free comparison an area (moment) estimator removed it, but the noisy
+comparison had greater per-point spread (0.052 against 0.043 px), so the crossing
+is kept.
 
 **Two passes.** Pass 1 starts from boundary-pixel centres, about half a pixel inside one side, so its level windows are asymmetric. That grew holes by about 0.09 px at σ = 2 px. Pass 2 re-centres every point, with windows beyond 3.5 σ on both sides.
 
@@ -201,7 +210,7 @@ A wide corner magnifies the last of these most. On exactly rendered edges the tr
 
 This comparison does not prove that either prediction adequately explains the observations. Its fitted RMS can increase the threshold, and the allowance is not a measured maximum error. On the earlier matched-model sharp 120 × 70 mm fixture, the reported resolution was R0.23 mm (`test_sharp_corners_are_traced_sharp`). A later independent directional-blur example has true R0.45 mm corners but a smaller R0.25 mm resolution estimate while tracing them sharp. That is a fitting-stage synthetic counterexample, not a full-phone accuracy result. The [resolution-search repair and research record](validation/sharp-corner-resolution.md) explain why the estimate is conditional, rather than a physical upper radius bound.
 
-**What the photo cannot resolve.** At the corner's midpoint a radius error moves the outline only (1/sin(θ/2) − 1) times as far: 1.0 at 60°, 0.41 at 90°, 0.15 at 120°, 0.035 at 150°. A radius whose r_sd exceeds 10 % of it is named in the trace's notes and warnings, with the outline's own uncertainty. The note says "or more", because once r_sd is a large share of r the fit is no longer linear and the spread is larger still.
+**What the photo cannot resolve.** At the corner's midpoint a radius error moves the outline only (1/sin(θ/2) − 1) times as far: 1.0 at 60°, 0.41 at 90°, 0.15 at 120°, 0.035 at 150°. A radius whose r_sd exceeds 10 % of it is named in the trace's notes and warnings, with the outline's own estimated uncertainty. When r_sd is a large fraction of r, linearization may be unreliable. The note's "or more" warns of that limitation; it is not a calibrated coverage bound or proof that nonlinear spread must be larger.
 
 Evidence:
 

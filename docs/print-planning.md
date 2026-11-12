@@ -39,7 +39,8 @@ claim that the printer lacks that feature.
 A custom usable volume can be smaller than the
 nominal machine volume because of clips, excluded areas, or the user's setup.
 An application edge margin is a planning allowance, not a manufacturer
-specification; display its value and let the user change it.
+specification. Review and edit **Bed margin (mm)** in **Design & print** for your
+setup; the fit calculation subtracts it from both sides of each bed axis.
 
 For this workbench's flat parts, the fit check compares thickness with usable Z
 height, subtracts the selected margin from both edges of each bed axis, and
@@ -87,16 +88,18 @@ toolhead clearance, or a slicer's placement rules. The 0.000001 mm comparison
 tolerance accommodates floating-point arithmetic; it is not a physical allowance
 or an accuracy estimate. See [algorithm derivation and sources](research.md#continuous-angle-rectangular-placement).
 
-Prefer “Fits these geometric bounds” to “Ready to print.” A model that exceeds a
-printer preset can still be valid CAD; choosing another printer or changing the
-print plan should not silently rescale the measured part.
+Read “Fits these geometric bounds” as a containment result. Review actual
+slicing and machine clearances before printing. A model that exceeds a printer
+preset can still be valid CAD; choosing another printer or changing the print
+plan preserves the measured size unless you explicitly change design scale.
 
 ## Materials and appearance
 
-Keep material and color as explicit user choices. A color changes the preview
+Choose material and color explicitly. A color changes the preview
 and saved plan; it does not select a physical filament spool or prove that an
 export preserves color. STL has no standard material/color representation.
-Report exactly what each export includes.
+Check the [export contents](exports.md) before transferring appearance or
+material information to another tool.
 
 | Planning choice | Useful guidance                                                                                                                 | What it does not establish                                                      |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |

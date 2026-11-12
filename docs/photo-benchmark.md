@@ -1,6 +1,12 @@
 # Photo benchmark: your photos against your calipers
 
-Every accuracy figure in this repository so far comes from rendered photographs. `make photo-benchmark` measures the reference-sheet tracer on real ones: you photograph parts you have measured, list those measurements in a small file, and it reports how far each traced dimension lies from your calipers and how much it moves between repeat shots.
+No dimensional-accuracy result from real photographs is recorded. Existing
+evidence comes from synthetic rendered images, independent continuum
+observations and numerical/geometry checks. `make photo-benchmark` measures the
+reference-sheet tracer on your photographs: you photograph parts you have
+measured, list those measurements in a small file, and it reports how far each
+traced dimension lies from your calipers and how much it moves between repeat
+shots.
 
 **No result from real photos is recorded yet.** The example report below comes from rendered photos and shows the format only.
 

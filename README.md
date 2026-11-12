@@ -4,6 +4,9 @@ Turn a photograph of a **flat, constant-thickness part** into a scaled CAD solid
 
 The workbench is designed for plates, gaskets, spacers, and templates. It traces what is visible in the photograph; it does not recover hidden geometry or infer physical dimensions.
 
+See [project status and evidence](docs/project-status.md) for the reviewed source
+revision, pending changes, completed checks and remaining engineering work.
+
 For reference-sheet tracing, photograph the whole flat sheet (A4, US Letter, or a sheet you have measured) and explicitly choose it as the **Scale reference**. A successful sheet trace sets scale from its stated size, estimates perspective and one radial lens correction, and fits lines, tangent arcs and circles. Entered thickness supports a side-wall/parallax correction under the method's assumptions. Ordinary tracing and the sample use measured-width scaling instead; they do not perform these corrections. See [reference-sheet tracing](docs/reference-sheet.md) for the mathematics and synthetic evidence, and the [engineering model](docs/engineering-model.md) for independent verification before fabrication.
 
 Review the [initial-fit support check](docs/validation/fit-support.md) and
@@ -39,7 +42,7 @@ Setup prepares the workbench and reference-library dependencies in separate loca
 
 For workbench-only setup, use `make setup-app`. The existing `./scripts/setup.sh` and `./scripts/start.sh` commands remain supported and apply only to the workbench.
 
-The server listens on the local machine at port **8000**. In a managed cloud environment, use the environment's supported browser or forwarding mechanism. A server running on a remote machine is not your device's localhost.
+Open **http://127.0.0.1:8000** on the machine running the server. In a managed cloud environment, use the environment's supported browser or forwarding mechanism. A server running on a remote machine is not your device's localhost.
 
 The app's **OpenSCAD** link opens the companion workspace in a separate tab and keeps the current traced part available. The same server serves the published library at `/reference-library/index.html#cad`; its handbook and browser tools also open offline from `reference-library/index.html`.
 
@@ -154,6 +157,8 @@ Start with the [documentation index](docs/README.md) for capture, engineering, e
 - [Optional local AI: setup and controls](docs/ollama.md)
 - [Local model choices and comparison](docs/ollama-models.md)
 - [Architecture and API](docs/architecture.md)
+- [API examples and error recovery](docs/api-examples.md)
+- [Project status and evidence](docs/project-status.md)
 - [Data handling and security boundaries](docs/privacy-security.md)
 - [Troubleshooting](docs/troubleshooting.md)
 - [Research and design decisions](docs/research.md)

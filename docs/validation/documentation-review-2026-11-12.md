@@ -59,7 +59,8 @@ preflights were not refreshed; their dates remain explicit.
   field on every mapping returned by its APIs.
 - Troubleshooting covers weak contrast/focus even when the whole sheet is
   visible. The reproduced path returns a contained 422 response with generic
-  guidance; actionable internal error handling remains further work.
+  guidance at this review's baseline. The later [weak-edge recovery repair](contrast-recovery.md)
+  adds actionable focus/contrast guidance without changing the measurement gates.
 - The [benchmark guide](../photo-benchmark.md) now describes the global matcher
   and complete dimension-coverage counters merged in PR #43. Original greedy
   and failed-photo-denominator findings remain explicitly historical. Size
