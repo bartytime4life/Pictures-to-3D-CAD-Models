@@ -2,6 +2,10 @@
 
 Pictures to CAD separates image interpretation from geometric construction. The photo supplies a planar profile. Scale comes from the entered outside width, a measured feature, or a reference sheet; thickness is entered separately. Optional design scales and print-planning settings then define the requested output. CadQuery constructs the resulting solid or split solids, which supply both the displayed mesh and the export artifacts. Use the [documentation index](README.md) for the user-facing guides.
 
+This contract describes the [reviewed main-based source](project-status.md).
+The separate source-observation/PSF research APIs are not HTTP capabilities or
+Python modules in this checkout.
+
 ```mermaid
 flowchart LR
     A[Photo upload] --> B[Validate and normalize image]
@@ -38,7 +42,7 @@ The application does not call a paid or external inference service. Its optional
 
 Traced points use image pixel coordinates, with the image's vertical coordinate increasing downward. Pixel *i* spans *i* to *i* + 1, so the image spans 0 to its pixel width. Outlines follow the outer edges of boundary pixels: a part covering pixel columns 50–450 spans 50 to 451, and a hole follows the edges of the material around it. Conversion translates and scales the profile into a centered XY model plane, then extrudes along Z. The measured scale is the entered reference width divided by the traced profile's horizontal span. An explicit XY design percentage multiplies that scale; a separate thickness percentage multiplies the entered thickness. Design choices do not overwrite the source measurements.
 
-All geometry is stored internally in millimeters. The entered thickness is independent of image scale. Changing display units must convert the entered values rather than reinterpret the same number in another unit.
+Source profiles and their image overlays use pixels; built CAD coordinates and physical inputs use millimeters. A reference-sheet profile retains `mm_per_px` for its display frame. The entered thickness is independent of image scale. Changing display units must convert entered physical values rather than reinterpret the same number in another unit.
 
 The pipeline preserves supported through-hole boundaries. It cannot infer whether a dark patch represents a hole, a marking, or surface relief; the user must review the trace.
 
@@ -48,6 +52,16 @@ restricts coefficient trials to invert all measured sheet corners and edge
 samples. Its residual measures agreement with that lens model, rather than
 physical part accuracy. The [domain and simulation record](validation/radial-inverse.md)
 describes the separate synthetic inverse and higher-order mismatch inputs.
+
+Reference-sheet analysis mixes decoded sRGB channels in linear light, rectifies
+with Keys sampling into float32, then smooths by Gaussian sigma 0.7 px. The
+directional rise-width covariance belongs to this rectified field. Normal-specific
+widths drive edge/wall localization; the scalar `(det S)^¼` drives general
+blur/fillet fitting, while slot-end placement also consumes the covariance.
+The nonparallel corner forward model remains isotropic. Neither the rank-three
+guard nor positive definiteness converts these empirical widths into a calibrated
+camera PSF; [the tracing guide](reference-sheet.md#3-segmentation-and-sub-pixel-edges)
+defines the boundaries.
 
 Geometry detail is a geometric approximation applied to the scaled profile. `original` retains it; `draft`, `balanced`, and `fine` use simplification tolerances of 0.5, 0.25, and 0.1 times the selected nozzle diameter in millimeters, respectively. The simplification preserves topology and checks that every hole remains. The modes can still change small features and must be inspected; they do not recover image information, measure minimum wall thickness, or prove printability. The original trace remains the recipe's source profile.
 
@@ -70,6 +84,13 @@ Use the running server's `/docs` page for the exact generated request schemas an
 ### `GET /api/health`
 
 Returns API health information. A successful health response establishes service availability, not that a conversion, export, or browser interaction has passed.
+
+### `GET /api/printers`
+
+Returns the bundled pinned printer catalog. The frontend loads it when the
+design/print panel needs it; this route does not refresh upstream profiles or
+identify the connected printer. Hardware facts absent from the source stay
+unknown. See the [catalog and importer contract](printer-catalog.md).
 
 ### `POST /api/trace`
 

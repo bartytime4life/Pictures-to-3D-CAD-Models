@@ -123,6 +123,23 @@ Working by direction:
 - A slot end cap is placed mostly by its tip (§7), so its points take their own first-order shrink, det S / (2r nᵀSn).
 - The trace notes the blur's range across directions.
 
+**Stage boundaries.** Here `S` describes empirical rise widths in the rectified
+measurement field, after Keys resampling, float32 storage and the additional
+0.7 px Gaussian smoothing. It is not a calibrated covariance in the original
+camera frame; a projective warp can change both its direction and its spatial
+variation. `sigma_n` is used for each second-pass edge search and wall profile.
+`subpixel_rings` also returns the scalar `(det S)^¼` for later fitting and
+`reference.edge_blur_mm` when a directional fit is accepted.
+
+The nonparallel fillet path in `fitting.fit_fillets` and `_exact_fillet` still
+passes only that scalar to the isotropic `corner_level` model. The covariance
+argument is used by the slot-end axial fit, whose first-order shrink varies
+with direction and whose higher-order term remains isotropic. Likewise, using
+the circle-average scalar in a partial free arc is an approximation. Directional
+edge tracing therefore does not imply that every corner uses a full anisotropic
+forward model. These are implementation/model limits, not newly measured errors
+or new physical uncertainty bounds from this documentation review.
+
 Correcting curvature alone does not work: with every edge still traced with one width, a curvature-only σ made a 1 × 3 px render's outline worse, 0.106 mm against 0.038 mm. The level search across each edge needs its own σₙ.
 
 | Synthetic case (worst errors in mm; before in brackets) | Ø6 | Ø22 | Slot | Hole position | Outer |
@@ -205,7 +222,7 @@ Fillets are therefore fitted to a circle of radius r − s(r) about c(r), with s
 - On rendered, blurred plates (`test_blurred_fillets_keep_their_radius_when_snapped`), R8, R4 and R2.5 corners read within 0.007 mm at blurs of 0.34 and 0.46 mm. Before, they read 0.027, 0.053 and 0.16 mm large.
 - On the rendered photos of the test plate, the R8 corners' mean error fell from +0.029 to +0.005 mm, with every other dimension unchanged ([photo benchmark](photo-benchmark.md)).
 
-**The exact blurred corner.** The shrink s(r) is the disc's, and a fillet is a disc only in the middle of a long arc. Near its ends, and over the whole of a short arc, the blurred edge is neither arc nor line. At a 150° corner a fillet's arc spans only 30°, and on exact outlines the fit above read radii up to 19 s large, with nothing flagging them. Fillets are therefore refined against the exact blurred corner, `fitting.corner_level`. It treats the corner as an arc of radius r about c, from angle a₁ through a sweep β < π, plus the two tangent lines running away from it. The corner is star-shaped from c. A ray at angle α leaves it at:
+**The scalar-Gaussian corner model.** The shrink s(r) is the disc's, and a fillet is a disc only in the middle of a long arc. Near its ends, and over the whole of a short arc, the blurred edge is neither arc nor line. At a 150° corner a fillet's arc spans only 30°, and on exact outlines the fit above read radii up to 19 s large, with nothing flagging them. Fillets are therefore refined against the blurred corner under an isotropic Gaussian hypothesis, `fitting.corner_level`. “Exact” in the implementation refers to that assumed corner model rather than an arbitrary camera image or certified numerical quadrature. It treats the corner as an arc of radius r about c, from angle a₁ through a sweep β < π, plus the two tangent lines running away from it. The corner is star-shaped from c. A ray at angle α leaves it at:
 
 - R(α) = r across the arc;
 - R(α) = r / cos(α − aᵢ) beyond each tangent point, for a quarter turn;

@@ -2,6 +2,9 @@
 
 ## Current product boundary
 
+This page concerns the [main-based source described here](project-status.md).
+Research PRs targeting other branches are not additional current capabilities.
+
 The workflow is a single-user photo-to-profile workbench for one connected, constant-thickness source part. It provides visible outline review, scale from the complete outside width, two points on a known feature or a reference sheet, a separate thickness input, an optional independent source-height comparison, explicit design scales, relative-detail choices, approximate color/material preview, editable printer-volume planning, and optional straight-cut parts. Browser-saved recipes use version 2 for polygon profiles and version 3 for fitted/reference-sheet profiles, preserving design choices and optional reference/check inputs. Versions 1, 2 and 3 remain importable. Server handoff recipes do not carry the browser-only measurement notes; see [exports](exports.md).
 
 Known-feature endpoints can be selected on the working-image preview or entered numerically. Their measured length defines one uniform scale, and the outside-height comparison does not adjust geometry. This endpoint method does not correct camera distortion. The separate [reference-sheet pipeline](reference-sheet.md) estimates perspective, one radial lens term and thickness parallax under stated assumptions; neither method quantifies general physical accuracy or certifies fabrication suitability. See the [capture guide](capture-guide.md) for the coordinate frame, assumptions, and held-out checks.
@@ -43,7 +46,8 @@ Reference entry also includes an [endpoint-placement sensitivity explorer](refer
 Before expanding the scope, keep the current workflow dependable: verify supported imports, hole topology, dimensional conversion, exports, outdated-result handling, failure recovery, keyboard access, and responsive behavior. Update the user guide when behavior changes, and record failures as well as passes.
 
 Initial circle/piece fits now have a source-support check. Benchmark correspondence and complete coverage accounting are now implemented.
-Prioritize final forward-model adequacy, then
+Prioritize final forward-model adequacy, including the scalar nonparallel-corner
+model under direction-dependent blur, then
 independently specified model-mismatch experiments and repeatable ground-truth
 capture. The lens renderer is now separately implemented, but the shared
 physical assumptions and observed higher-order mismatch remain. Keep the
