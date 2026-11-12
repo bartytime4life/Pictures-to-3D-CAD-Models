@@ -46,6 +46,18 @@ def blur_config(**changes):
     return raw
 
 
+def aperture_config(**changes):
+    """Known uniform product apertures, with a point aperture as a cheap control."""
+    raw = blur_config()
+    del raw["points"]
+    raw.update({
+        "version": 3,
+        "pixel_apertures": [[["0", "0"], ["0", "0"]]],
+    })
+    raw.update(changes)
+    return raw
+
+
 def write_input(folder, raw=None):
     path = folder / "input.json"
     path.write_text(json.dumps(config() if raw is None else raw), encoding="utf-8")
@@ -111,15 +123,19 @@ def test_valid_scientific_outcomes_all_exit_successfully(changes, status, tmp_pa
         assert report["outer"] == []
 
 
-@pytest.mark.parametrize("version", [1, 2])
+@pytest.mark.parametrize("version", [1, 2, 3])
 def test_saved_result_equals_stdout_and_hashes_exact_input_and_current_sources(
     version, tmp_path, capsys,
 ):
     path = tmp_path / "input.json"
     # The hash must bind the supplied bytes, including CRLF and noncanonical spacing.
-    model = config if version == 1 else blur_config
-    raw = (json.dumps(model(radius_resolution="0.10000000000000000000000000000000000001"),
-                      indent=3) + "\r\n").encode("utf-8")
+    model = {1: config, 2: blur_config, 3: aperture_config}[version]
+    supplied = model(radius_resolution="0.10000000000000000000000000000000000001")
+    if version == 3:
+        supplied["pixel_apertures"] = [
+            [["0.10000000000000000000000000000000000001", "0.2"], ["0", "0"]]
+        ]
+    raw = (json.dumps(supplied, indent=3) + "\r\n").encode("utf-8")
     path.write_bytes(raw)
     output = tmp_path / "result.json"
     assert cli.main([str(path), "--output", str(output)]) == 0
@@ -129,12 +145,17 @@ def test_saved_result_equals_stdout_and_hashes_exact_input_and_current_sources(
     report = json.loads(captured.out)
     assert report["input"] == json.loads(raw)
     assert report["input"]["radius_resolution"] == "0.10000000000000000000000000000000000001"
+    if version == 3:
+        assert report["input"]["pixel_apertures"][0][0][0] == (
+            "0.10000000000000000000000000000000000001"
+        )
     provenance = report["provenance"]
     assert provenance["input_mode"] == "file"
     assert provenance["input_sha256"] == hashlib.sha256(raw).hexdigest()
     names = {
         "backend/corner_feasibility.py", "backend/decimal_bounds.py",
-        "backend/corner_blur_domains.py", "scripts/corner_feasibility.py",
+        "backend/corner_blur_domains.py", "backend/corner_pixel_apertures.py",
+        "scripts/corner_feasibility.py",
     }
     assert set(provenance["source_sha256"]) == names
     for name in names:
@@ -172,10 +193,11 @@ def test_the_128_kib_input_boundary_is_inclusive(tmp_path, capsys):
     assert json.loads(capsys.readouterr().out)["status"] == "conditional_compatible"
 
 
-@pytest.mark.parametrize("version", [1, 2])
+@pytest.mark.parametrize("version", [1, 2, 3])
 @pytest.mark.parametrize("same_as_input", [False, True])
 def test_output_never_overwrites_an_existing_file(version, same_as_input, tmp_path, capsys):
-    path = write_input(tmp_path, config() if version == 1 else blur_config())
+    model = {1: config, 2: blur_config, 3: aperture_config}[version]
+    path = write_input(tmp_path, model())
     output = path if same_as_input else tmp_path / "result.json"
     if not same_as_input:
         output.write_bytes(b"keep this existing result\n")
@@ -296,6 +318,141 @@ def test_help_explains_that_one_blur_choice_must_explain_every_observation(capsy
     assert error.value.code == 0
     help_text = capsys.readouterr().out
     assert "one shared blur choice" in help_text and "cannot vary per point" in help_text
+    assert "known uniform product pixel apertures" in help_text
+    assert "not arbitrary position uncertainty or total flux" in help_text
+
+
+@pytest.mark.parametrize("levels", [[["0", "1"]], [["0.99", "1"]], [["0.24", "0.26"]]])
+def test_zero_width_aperture_cli_retains_point_observation_outcomes(levels, tmp_path, capsys):
+    path = write_input(tmp_path, aperture_config(level_intervals=levels))
+    assert cli.main([str(path)]) == 0
+    captured = capsys.readouterr()
+    aperture = json.loads(captured.out)
+    assert captured.err == "" and aperture["version"] == 3
+    assert aperture["input"]["pixel_apertures"] == [[["0", "0"], ["0", "0"]]]
+    path = write_input(tmp_path, blur_config(level_intervals=levels))
+    assert cli.main([str(path)]) == 0
+    point = json.loads(capsys.readouterr().out)
+    for field in ("status", "inner", "outer", "parameter_order", "parameter_domain",
+                  "parameter_boxes", "coverage_complete", "classification_complete"):
+        assert aperture[field] == point[field]
+    assert "excluded" not in aperture
+
+
+def test_uniform_aperture_guide_input_preserves_the_sharp_radius_without_point_substitution(
+    tmp_path, capsys,
+):
+    raw = aperture_config(
+        pixel_apertures=[[["0", "1"], ["0", "1"]]],
+        blur_sigma_intervals=[["1", "1"], ["1", "1"]],
+        level_intervals=[["0.4683", "0.4685"]],
+        radius_domain=["0", "2"], radius_resolution="0.0625", max_boxes=64, cells=16,
+    )
+    path = write_input(tmp_path, raw)
+    assert cli.main([str(path)]) == 0
+    captured = capsys.readouterr()
+    report = json.loads(captured.out)
+    assert captured.err == "" and report["version"] == 3
+    assert report["input"] == raw
+    # For a sharp quadrant this known aperture's normalized mean is in the supplied band.
+    assert any(Decimal(lo) <= 0 <= Decimal(hi) for lo, hi in report["outer"])
+    assert report["coverage_complete"] is True
+    assumptions = report["assumptions"]
+    assert "known axis-aligned uniform PRODUCT" in assumptions["pixel_apertures"]
+    assert "normalized mean, not total flux" in assumptions["measurement"]
+    assert "one common blur pair" in assumptions["measurement"]
+    assert "Keys" in assumptions["not_modelled"]
+    assert "aperture bounds" in assumptions["not_inferred"]
+    # Its center point has a different level and cannot stand in for the uniform mean.
+    point = blur_config(
+        points=[["0.5", "0.5"]], blur_sigma_intervals=[["1", "1"], ["1", "1"]],
+        level_intervals=raw["level_intervals"], radius_domain=["0", "0"],
+    )
+    path = write_input(tmp_path, point)
+    assert cli.main([str(path)]) == 0
+    assert json.loads(capsys.readouterr().out)["status"] == "conditional_incompatible"
+
+
+@pytest.mark.parametrize(
+    ("change", "message"),
+    [
+        ("missing_apertures", "missing"),
+        ("points_instead", "pixel_apertures"),
+        ("numeric_coordinate", "decimal string"),
+        ("reversed_interval", "lower"),
+        ("wrong_format", "format"),
+        ("unknown_response", "unknown"),
+    ],
+)
+def test_version_three_refuses_implicit_or_unsupported_aperture_inputs(
+    change, message, tmp_path, capsys,
+):
+    raw = aperture_config()
+    if change == "missing_apertures":
+        del raw["pixel_apertures"]
+    elif change == "points_instead":
+        del raw["pixel_apertures"]
+        raw["points"] = [["0", "0"]]
+    elif change == "numeric_coordinate":
+        raw["pixel_apertures"][0][0][0] = 0
+    elif change == "reversed_interval":
+        raw["pixel_apertures"][0][0] = ["1", "0"]
+    elif change == "wrong_format":
+        raw["format"] = "another-analysis"
+    else:
+        raw["response_weights"] = ["1", "-1"]
+    path = write_input(tmp_path, raw)
+    output = tmp_path / "result.json"
+    assert cli.main([str(path), "--output", str(output)]) == 1
+    captured = capsys.readouterr()
+    assert captured.out == "" and message in captured.err and "Traceback" not in captured.err
+    assert not output.exists()
+
+
+@pytest.mark.parametrize("version", [True, False, 3.0, "3", 4])
+def test_only_exact_integer_version_three_dispatches_to_the_pixel_analyzer(
+    version, tmp_path, capsys, monkeypatch,
+):
+    from backend import corner_pixel_apertures
+
+    def wrong_dispatch(raw):
+        pytest.fail("only exact integer version 3 may dispatch to the pixel analyzer")
+
+    monkeypatch.setattr(corner_pixel_apertures, "analyze", wrong_dispatch)
+    path = write_input(tmp_path, aperture_config(version=version))
+    assert cli.main([str(path)]) == 1
+    captured = capsys.readouterr()
+    assert captured.out == "" and "Traceback" not in captured.err
+
+
+def test_dirty_pixel_source_is_reported_even_when_it_is_the_only_modified_file(
+    tmp_path, monkeypatch,
+):
+    # Use a separate local repository: changes in the real checkout cannot mask a
+    # forgotten provenance path, and no project source or existing Git state changes.
+    source = tmp_path / "backend" / "corner_pixel_apertures.py"
+    source.parent.mkdir()
+    source.write_text("# temporary provenance control\n", encoding="utf-8")
+
+    def git(*args):
+        return subprocess.run(
+            ["git", "-C", str(tmp_path), *args],
+            check=True, capture_output=True, text=True,
+        ).stdout.strip()
+
+    git("init", "--quiet")
+    git("add", "--", "backend/corner_pixel_apertures.py")
+    git("-c", "core.hooksPath=/dev/null", "-c", "user.name=CLI provenance test",
+        "-c", "user.email=cli-test@example.invalid", "-c", "commit.gpgSign=false",
+        "commit", "--quiet", "-m", "Temporary source baseline")
+    monkeypatch.setattr(cli, "ROOT", tmp_path)
+    baseline = cli._git_metadata()
+    assert baseline["revision"] == git("rev-parse", "HEAD")
+    assert baseline["worktree_dirty"] is False and baseline["source_dirty"] is False
+    source.write_text("# changed temporary provenance control\n", encoding="utf-8")
+    changed = cli._git_metadata()
+    assert changed["revision"] == baseline["revision"]
+    assert changed["worktree_dirty"] is True and changed["source_dirty"] is True
 
 
 def test_different_blur_choices_per_observation_cannot_make_a_joint_problem_compatible(

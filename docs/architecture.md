@@ -215,5 +215,9 @@ sets with provenance. The FastAPI tracing/build paths do not call it; no new
 endpoint, AI action or automatic geometry correction is introduced.
 Version 2 adds `backend/corner_blur_domains.py` for one shared blur-domain pair
 across all observations and projects full joint parameter boxes into radius sets.
+Version 3 adds `backend/corner_pixel_apertures.py` for normalized means over known
+uniform product apertures. It supplies a bounded observation callback to the
+same joint-box engine; [pixel assumptions and limits](pixel-apertures.md) remain
+separate from production sampling and camera qualification.
 
 The included runtime is a single-user application. It does not implement account authentication, per-user authorization, shared project storage, collaborative editing, a durable job queue, or a billing service. Those capabilities require an explicit design and implementation before a public multi-user deployment.

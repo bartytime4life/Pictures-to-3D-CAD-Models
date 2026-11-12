@@ -1,15 +1,16 @@
 # Project status and evidence
 
-Documentation snapshot: **November 12, 2026, 08:39 UTC**. This page describes
-source at `b366b3f2cda4ca33a34b2b2aa109a9b1718acb0c` and the documentation
-follow-up based on it. It includes the pending review chain below, through the
-shared-blur analysis in PR #51. Start with [setup](development.md), the
+Documentation snapshot: **November 12, 2026, 09:05 UTC**. This page describes
+the [pixel-aperture candidate](validation/pixel-apertures.md), based on published
+source `b800edbcf0a20ac2d30b82a9a135cfc46aa76a55` (PR #52). It includes the
+pending review chain below and adds known uniform pixel means to the developer
+analysis. Start with [setup](development.md), the
 [task index](README.md) or the [API examples](api-examples.md).
 
 ## Source and review state
 
 At this check, `main` was `5c07d0f70d7df0200bc24227c8ac7e9b630f7f09`.
-PRs #47–#51 were open and unmerged. This documentation branch includes their
+PRs #47–#52 were open and unmerged. This candidate branch includes their
 changes; that checkout of `main` does not contain them. The developer analysis
 is separate from the workbench's production tracing and interface.
 
@@ -21,6 +22,7 @@ is separate from the workbench's production tracing and interface.
 | `77b7f6f74ea411e336ff3cf613b33e406ee98d72` | Current-state guides, API example, mathematical wording and library maintenance instructions | [PR #49](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/49), open draft; base PR #48's branch |
 | `be2a58cedb7a69702a57c9953a0e0d1e965feae8` | Version-1 conditional corner-radius analysis with fixed blur and provenance-bound CLI reports | [PR #50](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/50), open draft; base PR #49's branch |
 | `b366b3f2cda4ca33a34b2b2aa109a9b1718acb0c` | Version-2 joint radius/blur domains, common-blur consistency and conservative radius projections | [PR #51](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/51), open draft; base PR #50's branch |
+| `b800edbcf0a20ac2d30b82a9a135cfc46aa76a55` | Documentation consolidation, complete review chain and source-bound validation navigation | [PR #52](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/52), open draft; base PR #51's branch |
 
 The PR links show live review state. A documentation update does not install,
 merge or deploy those changes. Record the checkout used to start a service:
@@ -50,7 +52,8 @@ See [engineering equations and decisions](engineering-model.md),
 [method assumptions](reference-sheet.md), [export contents](exports.md) and the
 [roadmap](roadmap.md) for details. A [fixed-corner developer CLI](corner-feasibility.md)
 now implements conditional radius sets with fixed or bounded independent
-axis-aligned blur. General inference with uncertain geometry, pose, correlated
+axis-aligned blur, using point observations or known uniform pixel-aperture means.
+General inference with uncertain geometry, pose, correlated
 or spatially varying PSFs and model discrepancy remains research;
 there is no product endpoint, automatic tracing correction or accuracy label.
 
@@ -58,6 +61,7 @@ there is no product endpoint, automatic tracing correction or accuracy label.
 
 | Evidence | Recorded result | Interpretation |
 | --- | --- | --- |
+| Pixel-aperture candidate | [Finite-area record](validation/pixel-apertures.md): 929 Python tests passed | Known normalized product-aperture means; center-sampling counterexamples and retained unknowns; no production-image or physical qualification |
 | Joint blur-domain candidate | [Shared-blur record](validation/corner-blur-domains.md): 839 Python tests passed | Joint nuisance domains and safe projection; no new browser or physical qualification |
 | Conditional corner-analysis candidate | [Numerical/CLI record](validation/corner-feasibility.md): 760 Python tests passed | New developer-only analysis; no fresh browser/build or physical qualification |
 | Latest recorded browser/build run | [Corner-resolution record](validation/sharp-corner-resolution.md): 630 Python tests and 74 browser scenarios; build and lint passed | That source and recorded inputs; later developer-tool Python results do not refresh browser/build evidence |
@@ -65,19 +69,20 @@ there is no product endpoint, automatic tracing correction or accuracy label.
 | Model-mismatch research | [Directional study](validation/directional-spread-qualification.md) and [corner counterexample](validation/sharp-corner-resolution.md) retain misses, unknowns and negative outcomes | No production anisotropic correction or physical radius enclosure |
 | Companion library | [Revision 7 verification](../reference-library/VERIFICATION.md) | Its own dated release record, not a new library release |
 | Earlier documentation follow-up | [PR #49 coverage and checks](validation/documentation-current-state.md) | Documentation parsing, links, commands and API example at its recorded source |
-| Current documentation consolidation | [Coverage and checks](validation/documentation-math-state.md) | Current navigation, review chain, source/receipt consistency and complete Markdown checks; no new product regression or physical result |
+| PR #52 documentation consolidation | [Coverage and checks](validation/documentation-math-state.md) | Navigation, review chain, source/receipt consistency and complete Markdown checks at its recorded source; no new product regression or physical result |
 
-Hosted CI status is bound to each exact head. At **08:39 UTC on November 12**:
+Hosted CI status is bound to each exact head. At **09:04 UTC on November 12**:
 
 | Head | Hosted workflow | Result at this observation |
 | --- | --- | --- |
 | `ba94ef8` | [Workbench run 110](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43173672079) | Cancelled |
 | `a3a2397` | [Workbench run 111](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43176958836) | Completed successfully |
 | `77b7f6f` | [Workbench run 112](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43179485257), [library run 39](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43179485496) | Both completed successfully |
-| `be2a58c` | [Workbench run 113](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43181910268) | In progress; no conclusion |
+| `be2a58c` | [Workbench run 113](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43181910268) | Completed successfully |
 | `b366b3f` | [Workbench run 114](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43184279416) | In progress; no conclusion |
+| `b800edb` | [Workbench run 115](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43185322816) | Completed successfully |
 
-Follow the exact run links for later results. The local 839-test result is
+Follow the exact run links for later results. The candidate's local 929-test result is
 separate from hosted CI. Earlier observations remain in their dated validation
 records; successful CI does not merge, install or qualify a physical part.
 

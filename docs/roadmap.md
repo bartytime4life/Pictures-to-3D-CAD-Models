@@ -46,6 +46,10 @@ Reference entry also includes an [endpoint-placement sensitivity explorer](refer
 A [conditional corner-radius developer CLI](corner-feasibility.md) now explores
 one fixed right-angle/independent-Gaussian model with explicit bounded
 observations and either fixed blur widths or supplied joint blur domains.
+Its [version-3 observation model](pixel-apertures.md) also supports known
+normalized uniform pixel-aperture means. Actual sensor response, pre-aperture
+blur calibration, warped footprints and the production resampling chain remain
+unqualified; finite-area support is not automatic photo-error inference.
 It supplies no automatic image-error budget or production
 correction. Broader nuisance/discrepancy enclosures, non-right corners and
 reserved real-capture validation remain part of forward-model adequacy work.

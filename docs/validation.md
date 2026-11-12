@@ -6,12 +6,20 @@ CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
 For a concise source/review snapshot, use [project status](project-status.md).
-The [current documentation consolidation](validation/documentation-math-state.md)
+The [earlier dedicated documentation consolidation](validation/documentation-math-state.md)
 records its own checks without rerunning or relabeling the historical suites.
 The [earlier PR #49 documentation follow-up](validation/documentation-current-state.md)
 retains its source, executable API example and completed checks.
 
 ## Current workbench evidence — November 12, 2026
+
+The [pixel-aperture observation candidate](validation/pixel-apertures.md), based
+on PR #52 at `b800edb`, passed **929 Python tests**. It integrates known normalized
+uniform rectangular pixel means and retains one common blur pair. Independent
+counterexamples expose radius exclusions from a center-sampling mismatch;
+matching finite-area cases retain truth, including unresolved joint domains.
+This is a developer observation model, not a production-image correction or
+real-camera qualification.
 
 The [joint blur-domain extension](validation/corner-blur-domains.md), based on
 PR #50 at `be2a58c`, passed **839 Python tests**. It requires one common blur pair

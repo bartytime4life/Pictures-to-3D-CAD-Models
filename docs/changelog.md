@@ -3,6 +3,20 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Known pixel-aperture observations — November 12, 2026
+
+- Version 3 of the conditional corner CLI integrates known uniform rectangular
+  apertures instead of substituting their center samples. Outward antiderivative,
+  support and density bounds retain complete continuous means.
+- Reused the common radius/blur classification and safe projection engine,
+  preserving versions 1/2 and exact two-Dirac point calculations. Reports retain
+  the exact aperture input and five implementation hashes.
+- Independent pixel-area observations expose radius exclusions under the point
+  model and retain matching truth with the aperture model; uncertain-blur and
+  numerical limits remain unknown. [Method](pixel-apertures.md) and
+  [checks](validation/pixel-apertures.md) distinguish this developer analysis
+  from production tracing, camera calibration and physical qualification.
+
 ## Documentation consolidation through PR #51 — November 12, 2026
 
 - Updated the [source/review and hosted-CI snapshot](project-status.md) through
