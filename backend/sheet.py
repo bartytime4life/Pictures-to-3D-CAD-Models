@@ -519,14 +519,15 @@ def aspect_ratio_check(matrix, size, focal):
     return float(np.linalg.norm(m[:, 0]) / np.linalg.norm(m[:, 1]))
 
 
-def camera_pose(matrix, size, exif_focal_35mm=None):
+def camera_pose(matrix, size, exif_focal_35mm=None, focal_px=None):
     """Focal length, camera centre and height above the plane from the homography.
 
     Assumes square pixels, zero skew and the principal point at the image centre. The
     focal length follows from the two orthonormality constraints on the rotation's
     first columns. Each constraint gives its own estimate; when they disagree (a nearly
     frontal view, or a cropped photo) the EXIF 35 mm-equivalent focal length is used,
-    else a typical phone value. Returns a dict; `focal_source` says which was used.
+    else a typical phone value. `focal_px` imposes a focal length found otherwise
+    (edges.roundness_focal). Returns a dict; `focal_source` says which was used.
     """
     w, h = size
     diagonal = math.hypot(w, h)
@@ -538,8 +539,8 @@ def camera_pose(matrix, size, exif_focal_35mm=None):
     for a, b in ((a1, b1), (a2, b2)):
         if abs(a) > 1e-12 and -b / a > 0:
             estimates.append(1 / math.sqrt(-b / a))
-    focal, source = None, None
-    if len(estimates) == 2:
+    focal, source = (float(focal_px), "given") if focal_px else (None, None)
+    if focal is None and len(estimates) == 2:
         u = -(a1 * b1 + a2 * b2) / (a1 * a1 + a2 * a2)
         if u > 0:
             candidate = 1 / math.sqrt(u)

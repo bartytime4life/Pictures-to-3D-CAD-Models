@@ -14,6 +14,7 @@ It changes guides relative to that integrated baseline, not runtime behavior.
 
 | Evidence | Revision and result | Scope |
 | --- | --- | --- |
+| Recorded camera-height checks | Branch `claude/camera-height`, on the narrow-wall commit: **508 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#camera-height-from-the-holes-roundness--november-11-2026) | Local result; synthetic photos and exact silhouettes |
 | Recorded narrow-wall and blur-sampling checks | Branch `claude/narrow-walls` on `5588a52`: **505 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#near-frontal-wall-tone-and-cubic-blur-measurement--november-11-2026) | Local result; synthetic photos and exact profiles, including what got worse |
 | Recorded shadow-correction checks | `bbd665bec6c0d32b8ed950c69d2c102e5f7b00ce`: **501 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#edge-levels-follow-a-shadows-slope--november-11-2026) | Upstream local result, not rerun for this documentation change; synthetic photos, including the reported near-frontal regression |
 | Earlier guided-workbench checks | Guided code `900999b119eb3688ed75ed4212902c185023454b`: **498 Python tests**, **74 frontend/browser tests**, build and lint passed | Real local CAD backend; synthetic inputs and explicit AI response fixtures; before PR #37 |
@@ -34,6 +35,31 @@ stub fix in managed cloud sessions. The [reference-sensitivity record](validatio
 covers the endpoint explorer. The original CAD release and optional Ollama
 integration retain separate historical evidence. These records do not establish
 that a newly created or published cloud task has been validated.
+
+## Camera height from the holes' roundness — November 11, 2026
+
+Branch `claude/camera-height`, on the narrow-wall commit below. It follows up that record's "what got worse". See [reference-sheet tracing](reference-sheet.md), §5, for the method.
+
+- **The defect.** In a frontal photo the sheet fixes neither the focal length nor the camera height. Without EXIF a typical 26 mm lens was assumed: 9 % off for the rendered 28.6 mm lens at 440 mm, which left the 4 mm plate's outline 0.105 mm off, and 35 % off for a 40 mm lens at 600 mm (0.43 mm).
+- **The fix** (`edges.roundness_focal`). A hole's near side is traced on the top edge and its far side on the bottom edge, so with a wrong height the corrected hole is stretched along the direction from the nadir. The focal length whose pose makes the round holes round is searched over 10–200 mm, the walls are refined again with that camera, and the trace says so. A slot, or any hole that is not round, is left out.
+- **Exact silhouettes.** Holes drawn as the overlap of a bottom outline and its magnified top outline give the focal length within 0.05 % (0.009 % measured). A hole centred on the nadir, or no round hole, determines nothing.
+- **Rendered overhead photos of the 4 mm plate** (worst errors in mm; Ø6, Ø22, slot, hole position, outer; camera height found against the true one):
+
+  | Photo | Lens assumed (narrow-wall commit) | Height from the holes | Height (mm) |
+  | --- | --- | --- | --- |
+  | 28.6 mm lens, 440 mm, shadow | 0.0361, 0.0074, 0.0257, 0.0256, 0.1058 | 0.0077, 0.0054, 0.0135, 0.0078, 0.0047 | 437.2 / 440.0 |
+  | Same, no shadow | 0.0351, 0.0083, 0.0264, 0.0262, 0.1079 | 0.0069, 0.0057, 0.0137, 0.0057, 0.0088 | 436.4 / 440.0 |
+  | 24 mm lens, 380 mm | 0.0220, 0.0059, 0.0081, 0.0245, 0.1043 | 0.0047, 0.0075, 0.0081, 0.0077, 0.0087 | 381.0 / 380.0 |
+  | 40 mm lens, 600 mm | 0.1250, 0.0140, 0.0685, 0.0913, 0.4289 | 0.0033, 0.0040, 0.0125, 0.0163, 0.0347 | 623.4 / 600.0 |
+  | Noise seed 3 | 0.0371, 0.0084, 0.0231, 0.0238, 0.1041 | 0.0008, 0.0060, 0.0077, 0.0078, 0.0250 | 448.5 / 440.0 |
+  | Noise seed 11, no shadow | 0.0323, 0.0093, 0.0067, 0.0259, 0.1075 | 0.0046, 0.0067, 0.0053, 0.0071, 0.0100 | 435.7 / 440.0 |
+
+  The longer lens's camera is farther away, where the parallax it measures is smaller, so its height is 3.9 % off. Photos whose focal length the sheet or EXIF gives are unchanged.
+- **The narrow-wall record's inference holds.** With the height from the holes, hole positions on the overhead photo read 0.0078 mm, against 0.0256 mm with the assumed lens: the guessed height had made them worse, not the wall model.
+- **Photo benchmark example.** Median absolute error 0.004 mm, 95th percentile from 0.033 to 0.014 mm, worst from 0.105 to 0.015 mm; the overhead photo's camera height is found as 444.5 mm for 440 mm.
+- **Not verified.** The holes are assumed round; a hole made oval along the direction from the nadir would bias the height. A part without round holes still uses the assumed lens.
+- **Zero blur.** #39 made the edge levels fall back when `edges.edge_sigma` returns 0. The wall refinement, now `reference._refine_walls`, divided by the same σ: its weights came out NaN and happened to leave the points alone, with numpy's warnings. It now returns the points as traced (`test_wall_refinement_leaves_points_as_traced_without_a_measured_blur`, which fails without the guard).
+- **Checks run.** `pytest`: **508 passed**. New: `test_the_camera_height_makes_thick_holes_round_again`, the zero-blur test above; `test_frontal_photo_without_exif_finds_its_camera_height_from_the_holes` replaces the test that allowed half as much again as the limits for the assumed lens, and holds two lenses to the plain limits. Four planted faults were each caught: a slot kept in the fit, no flatness test, no parabola refinement, and the estimate found but not used. Ruff passed. All 74 browser scenarios passed with the system Chrome. The height search adds about 0.1 s to a frontal trace without EXIF.
 
 ## Near-frontal wall tone and cubic blur measurement — November 11, 2026
 

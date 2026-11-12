@@ -100,28 +100,28 @@ A trace takes a few seconds per photo. The command exits with an error only when
 This report is the `--example` folder: three **rendered** photos of the test plate at 22°, 9° and 0° tilt, 4 mm thick, with its design dimensions as the caliper values.
 
 > 3 of 3 photos traced; 48 dimensions compared.
-> Absolute error: median 0.004 mm, 95th percentile 0.033 mm, worst 0.105 mm.
+> Absolute error: median 0.004 mm, 95th percentile 0.014 mm, worst 0.015 mm.
 
 | Dimension | Calipers (mm) | Readings | Mean error (mm) | Spread, SD (mm) | Worst (mm) | Not found |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Outline length | 120.00 | 3 | **-0.034** | 0.062 | -0.105 |  |
-| Outline width | 70.00 | 3 | -0.021 | 0.034 | -0.059 |  |
-| Ø22 | 22.00 | 3 | -0.001 | 0.006 | +0.006 |  |
-| Ø6 (×4) | 6.00 | 12 | +0.008 | 0.016 | +0.030 |  |
-| Opening 24 × 8 length | 24.00 | 3 | +0.001 | 0.006 | +0.008 |  |
+| Outline length | 120.00 | 3 | +0.006 | 0.007 | +0.014 |  |
+| Outline width | 70.00 | 3 | +0.003 | 0.009 | +0.011 |  |
+| Ø22 | 22.00 | 3 | -0.002 | 0.004 | -0.005 |  |
+| Ø6 (×4) | 6.00 | 12 | -0.004 | 0.001 | -0.004 |  |
+| Opening 24 × 8 length | 24.00 | 3 | -0.004 | 0.004 | -0.007 |  |
 | Opening 24 × 8 width | 8.00 | 3 | -0.005 | 0.009 | -0.015 |  |
-| R8 (×4) | 8.00 | 12 | -0.005 | 0.008 | -0.014 |  |
-| Centres 96 | 96.00 | 3 | -0.009 | 0.018 | -0.029 |  |
-| Centres 50 | 50.00 | 3 | -0.006 | 0.009 | -0.016 |  |
-| Centres 108.24 | 108.24 | 3 | -0.012 | 0.020 | -0.035 |  |
+| R8 (×4) | 8.00 | 12 | -0.002 | 0.008 | -0.014 |  |
+| Centres 96 | 96.00 | 3 | +0.003 | 0.006 | +0.007 |  |
+| Centres 50 | 50.00 | 3 | +0.001 | 0.003 | +0.004 |  |
+| Centres 108.24 | 108.24 | 3 | +0.003 | 0.007 | +0.010 |  |
 
-> Scale error -0.016 % (SD 0.026 between photos); edge offset -0.003 mm (SD 0.009 between photos), positive when boundaries are found outside the material. What the two leave unexplained: 0.006 mm RMS.
+> Scale error +0.002 % (SD 0.006 between photos); edge offset +0.002 mm (SD 0.001 between photos), positive when boundaries are found outside the material. What the two leave unexplained: 0.003 mm RMS.
 
 | Photo | Edge blur (mm) | Sheet proportions (%) | Worst error (mm) | Result |
 | --- | ---: | ---: | ---: | --- |
 | plate-1.jpg | 0.317 | 0.00 | -0.014 | Traced |
 | plate-2.jpg | 0.302 | 0.00 | -0.015 | Traced |
-| plate-3.jpg | 0.294 | 0.00 | -0.105 | Traced |
+| plate-3.jpg | 0.294 | 0.00 | +0.014 | Traced |
 
 **The dimension table.** An error is the traced value minus your caliper value.
 
@@ -137,7 +137,7 @@ This report is the `--example` folder: three **rendered** photos of the test pla
 
 The line gives their mean over the part's photos and their spread between photos. Radii take no part. The split is made only when a photo holds at least four dimensions that can separate the two: a mix of sizes, or of outside dimensions, holes and centre distances.
 
-**The photo table** shows which shot is the odd one out. In the example it is the overhead photo, which reads the outline 0.10 mm short and puts the hole centres up to 0.035 mm closer together. Its trace notes, in the JSON report, say what to suspect: no focal length was found in the photo or its metadata, so a typical phone lens was assumed for the thickness correction. A wrong camera height scales the top face's edges by the wrong amount. **Sheet proportions** is the trace's own check of the sheet's shape against the entered size; a value above 1 % means the wrong sheet was chosen or a side was mistyped.
+**The photo table** shows which shot is the odd one out. In the example none is: every photo's worst error is about 0.015 mm. The trace notes, in the JSON report, still say what each photo relied on. In the overhead photo neither the sheet nor the metadata gave the focal length, so it was estimated from the holes' roundness; without round holes a typical phone lens is assumed, and a wrong camera height scales the top face's edges by the wrong amount (it left this photo's outline 0.10 mm short). **Sheet proportions** is the trace's own check of the sheet's shape against the entered size; a value above 1 % means the wrong sheet was chosen or a side was mistyped.
 
 ## Limits
 

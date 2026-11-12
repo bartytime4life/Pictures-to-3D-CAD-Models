@@ -200,13 +200,22 @@ The table gives the worst radius errors on exact blurred pentagons (σ = 1.6 and
 > (h₁₁h₁₂ + h₂₁h₂₂)/f² + h₃₁h₃₂ = 0 (r₁ ⊥ r₂),
 > (h₁₁² + h₂₁² − h₁₂² − h₂₂²)/f² + h₃₁² − h₃₂² = 0 (|r₁| = |r₂|).
 
-`test_exact_focal_length_constraints` checks both exactly, in rational arithmetic, for random rational cameras built with Cayley-transform rotations. The pose uses the least-squares solution when the two individual estimates agree within 15 %. Otherwise, as in a frontal or cropped view, it uses the EXIF 35 mm-equivalent focal length, and failing that a typical 26 mm phone lens, which is reported. Over 200 random tilted cameras, focal length is recovered to 10⁻⁹ and the camera centre C = −Rᵀt to 10⁻⁶ mm (`test_camera_pose_recovers_random_cameras_and_refuses_frontal_ones`).
+`test_exact_focal_length_constraints` checks both exactly, in rational arithmetic, for random rational cameras built with Cayley-transform rotations. The pose uses the least-squares solution when the two individual estimates agree within 15 %. Otherwise, as in a frontal or cropped view, it uses the EXIF 35 mm-equivalent focal length. Failing that, a thick part's holes fix it (below), and failing those a typical 26 mm phone lens is assumed and reported. Over 200 random tilted cameras, focal length is recovered to 10⁻⁹ and the camera centre C = −Rᵀt to 10⁻⁶ mm (`test_camera_pose_recovers_random_cameras_and_refuses_frontal_ones`).
 
 **Top-face parallax.** Seen from C, at height D above the nadir N, a face at height t projects onto the sheet plane by a central similarity:
 
 > q = N + (p − N) · D/(D − t).
 
 `test_exact_top_face_projection_is_a_homothety_about_the_nadir` verifies H₀⁻¹H_t equals exactly this homothety matrix, in rational arithmetic, for random cameras and thicknesses. A silhouette point whose material-outward normal faces away from N is formed by the top edge and is scaled back by (D − t)/D. A point facing N is formed by the bottom edge and is left unchanged. The same rule applies to holes, using the material's outward normal, which points into the hole.
+
+**Camera height from the holes.** In a frontal view the sheet fixes neither the focal length nor, with it, the camera height D, and an assumed lens is typically 10 % off. A hole's silhouette is formed by the top edge on the side nearer the nadir and by the bottom edge on the far side, so the correction above scales only part of it. With a wrong height that part lands off the true circle by t |p − N| (1/D_true − 1/D), and the corrected hole is stretched along the direction from the nadir: 0.04 mm on a hole 50 mm out at 4 mm thickness and a 10 % error. Its roundness therefore measures D (`edges.roundness_focal`):
+
+- For each focal length on a geometric grid of 10–200 mm (35 mm equivalent), the camera is posed from the sheet, every hole is corrected and fitted as a circle, and the squared residuals of the holes that are round at some focal length are summed, each hole's points counted.
+- The least total is refined on a finer grid and by a parabola in log focal length. A minimum at an end of the grid, or not under half of both ends, determines nothing.
+- A hole counts as round where its circle fit's RMS is under the circle tolerance (the larger of 0.03 mm and 0.15 σ, or 1 % of its radius). A slot, or any hole that is not round, is left out; a hole centred on the nadir has no stretch and adds nothing.
+- The walls are then refined again with the new camera, and the trace reports the focal length found and how many holes gave it.
+
+On exact silhouettes, the visible floor where a hole's bottom outline and its magnified top outline overlap, the focal length is recovered within 0.05 % (`test_the_camera_height_makes_thick_holes_round_again`). The holes are assumed round: a hole made oval along the direction from the nadir would bias the height.
 
 **Walls narrower than the blur.** Where the bottom edge forms the silhouette, the visible wall lies between it and the top edge in a band of width w = (D/(D − t) − 1)·|(p − N)·n|. The profile is then a blurred two-step (sheet → wall → top face). For a wall whose step above the top face is 16 % of the sheet-to-top contrast in linear light, a single mid-level crossing is biased into the material by:
 
@@ -251,8 +260,9 @@ On rendered photos of the 4 mm plate (worst errors in mm; Ø6, Ø22, slot, hole 
 | 5° tilt, no shadow | 0.0161, 0.0134, 0.0448, 0.0111, 0.0028 | 0.0042, 0.0053, 0.0189, 0.0052, 0.0020 |
 | Overhead, focal length from EXIF | 0.0159, 0.0099, 0.0305, 0.0164, 0.0203 | 0.0009, 0.0049, 0.0105, 0.0087, 0.0193 |
 | Overhead, phone lens assumed | 0.0505, 0.0138, 0.0475, 0.0149, 0.1048 | 0.0361, 0.0074, 0.0257, 0.0256, 0.1058 |
+| Overhead, height from the holes | (lens assumed, as above) | 0.0077, 0.0054, 0.0135, 0.0078, 0.0047 |
 
-"Before" includes the blur measured by bilinear sampling. With an assumed lens the holes and the slot improve, but hole positions read worse. The likely cause is the guessed camera height: the parallax correction then misplaces each hole's near side, and the wall's pull on its far side had partly offset that. The outline's 0.10 mm error in that photo is the same guess. The tone search adds about 0.05 s to a trace.
+"Before" includes the blur measured by bilinear sampling. With the assumed lens alone the holes and the slot improve, but hole positions read worse: the guessed camera height made the parallax correction misplace each hole's near side, and the wall's pull on its far side had partly offset that. With the height from the holes (above) the positions read 0.0078 mm and the outline, which the same guess had left 0.10 mm off, 0.0047 mm. The tone search adds about 0.05 s to a trace, and the height search about 0.1 s.
 
 ## 6. Sheet proportions check
 
@@ -324,7 +334,7 @@ The same full-frame photos cannot be traced without a reference at all ("The out
 - An edge carried by colour and not by brightness is measured on the colour channels. A JPEG stores colour at lower resolution than brightness, and that case is tested only on lossless renders.
 - A soft shadow beside an edge is corrected where the paper's light is close to linear over 2.5–5 σ (§3): on the rendered photo, Ø22 reads 0.008 mm off under a shadow removing a quarter of the light, where it read 0.026 mm. A sharper shadow, or one whose edge falls within a few σ of the part, is corrected only in part. Diffuse light is still best.
 - One radial coefficient about the image centre; no tangential distortion or k₂. Cropped photos and screenshots break the principal-point assumption, which leaves the focal estimate inconsistent and falls back to EXIF or an assumed lens.
-- Vertical walls of constant thickness. Chamfers, draft, countersinks and shiny edges are not modelled. Where even one tone shared by the narrow walls is not determined (§5), an edge may read up to 0.2 σ into the part. Overhead with no known focal length, the guessed camera height leaves the outline 0.10 mm and hole positions 0.026 mm off on the rendered photo (§5).
+- Vertical walls of constant thickness. Chamfers, draft, countersinks and shiny edges are not modelled. Where even one tone shared by the narrow walls is not determined (§5), an edge may read up to 0.2 σ into the part. Overhead with no known focal length the camera height comes from the holes' roundness (§5), which needs round holes away from the nadir; without them a typical lens is assumed, which left the rendered photo's outline 0.10 mm off.
 - Fitted lines, arcs and circles are descriptions of the photograph, not recovered design intent; review the snap list. Split output uses the traced polygon.
 - A run of short straight facets that stays within about 1.5 × tolerance of one circle is fitted as an arc, and so is a flat shorter than an arc's longest chord that runs tangentially off its end: neither can be told from that arc's own chords (§7). A large-radius corner whose traced edge wanders from its circle by more than half the tolerance over one chord is not recognised as one arc, and its outline stays a polyline.
 - With snapping on, a sharp corner between two fitted edges is traced sharp by the exact corner model (§4). Otherwise it is fitted as an arc of about 1.8 times the edge blur, 0.5 mm at a 0.3 mm blur. That arc is the blur's rounding, not the part's. Where it is not accepted as a tangent fillet, the radius correction of §4 enlarges it about its centre, it stands proud of its two edges, and the outline reads 0.04 to 0.1 mm large across it.

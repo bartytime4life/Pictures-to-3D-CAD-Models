@@ -18,6 +18,7 @@ import numpy as np
 from shapely.geometry import Point, Polygon
 
 from . import tone
+from .fitting import fit_circle
 from .sheet import half_level_search, sample_keys
 from .tone import encoded_from_linear
 
@@ -264,6 +265,77 @@ def correct_thickness(points, normals, nadir, height, thickness):
     corrected = points.copy()
     corrected[top] = nadir + relative[top] * (height - thickness) / height
     return corrected, top
+
+
+def roundness_focal(holes, pose_at, thickness, diagonal, gate, lo=10.0, hi=200.0, steps=49):
+    """The focal length at which a thick part's holes are round after the parallax
+    correction, or None.
+
+    A hole's silhouette is formed by the top edge where its material normal faces away
+    from the nadir and by the bottom edge where it faces it (correct_thickness), so only
+    part of it is scaled back by (D - t) / D. With a wrong camera height D, that part
+    lands off the true circle by t |p - N| (1/D_true - 1/D) and the corrected hole is
+    stretched along the direction from the nadir. Its roundness therefore measures D,
+    which the sheet alone does not fix in a nearly frontal view. For each candidate
+    focal length the camera is posed from the sheet (`pose_at(focal_px)`), every hole is
+    corrected and fitted as a circle, and the total squared residual of the holes that
+    are round at some candidate is least at the true focal length.
+
+    `holes` holds each hole's points (mm) before the parallax correction, with the edges
+    that show a narrow wall already refined, and their material normals. `gate` is the
+    circle tolerance in mm (a hole is round where its RMS is under max(gate, 1 % of its
+    radius)). Focal lengths run from `lo` to `hi` mm (35 mm equivalent) on a geometric
+    grid, then on a finer grid round the least total, refined by a parabola in log focal
+    length. Returns (focal_px, holes used), or None when no hole is round, or the least
+    total lies at an end of the grid or is not under half of both ends.
+    """
+    holes = [(p, n) for p, n in holes if len(p) >= 20]
+    if not holes:
+        return None
+    per_mm = diagonal / np.hypot(36.0, 24.0)
+
+    def residuals(f35, chosen):
+        camera = pose_at(f35 * per_mm)
+        if thickness >= 0.5 * camera["height_mm"]:
+            return None
+        out = []
+        for points, normals in chosen:
+            corrected, _ = correct_thickness(points, normals, camera["nadir_mm"], camera["height_mm"], thickness)
+            _, _, radius, rms, _ = fit_circle(corrected)
+            out.append((rms, radius))
+        return np.array(out)
+
+    grid = np.geomspace(lo, hi, steps)
+    table = [residuals(f, holes) for f in grid]
+    valid = np.array([t is not None for t in table])
+    if valid.sum() < 3:
+        return None
+    grid = grid[valid]
+    table = np.array([t for t in table if t is not None])  # (focal, hole, (rms, radius))
+    counts = np.array([len(p) for p, _ in holes], float)
+    rms, radius = table[:, :, 0], table[:, :, 1]
+    best = rms.argmin(axis=0)
+    round_ = rms[best, np.arange(len(holes))] < np.maximum(gate, 0.01 * radius[best, np.arange(len(holes))])
+    if not round_.any():
+        return None
+    keep = [h for h, ok in zip(holes, round_) if ok]
+    weights = counts[round_]
+    totals = (rms[:, round_] ** 2 * weights).sum(axis=1)
+    k = int(np.argmin(totals))
+    if k in (0, len(grid) - 1) or totals[k] > 0.5 * min(totals[0], totals[-1]):
+        return None
+    fine = np.geomspace(grid[k - 1], grid[k + 1], 9)
+    rows = [residuals(f, keep) for f in fine[1:-1]]
+    if any(r is None for r in rows):
+        return None
+    inner = (np.array([r[:, 0] for r in rows]) ** 2 * weights).sum(axis=1)
+    values = np.concatenate([[totals[k - 1]], inner, [totals[k + 1]]])
+    j = int(np.clip(np.argmin(values), 1, len(fine) - 2))
+    r0, r1, r2 = values[j - 1], values[j], values[j + 1]
+    denominator = r0 - 2 * r1 + r2
+    shift = float(np.clip(0.5 * (r0 - r2) / denominator, -1, 1)) if denominator > 0 else 0.0
+    step = np.log(fine[1] / fine[0])
+    return float(fine[j] * np.exp(shift * step) * per_mm), int(round_.sum())
 
 
 def normal_cdf(z):
