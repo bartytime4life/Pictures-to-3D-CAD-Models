@@ -102,3 +102,9 @@ actions.
    entry for the current checks, identify any executable changes, and choose
    tests for the affected behavior. Documentation parsing does not establish
    a fresh Python/browser regression suite. Update navigation and the change log.
+
+Use the [complete coverage inventory](validation/documentation-complete-2026-11-12.md#coverage-inventory)
+to include guides, worksheets and generated/historical records in a review.
+The [developer-tool catalog](developer-tools.md) centralizes numerical commands
+and output rules. Preserve report files explicitly: some analysis tools refuse
+existing paths, while photo and Ollama benchmarks replace their report files.

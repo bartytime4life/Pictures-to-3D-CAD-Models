@@ -6,6 +6,10 @@ CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
 For a concise source/review snapshot, use [project status](project-status.md).
+The [complete documentation update](validation/documentation-complete-2026-11-12.md)
+reviews the published PR #57 baseline, current numerical-tool contracts and all
+Markdown navigation. Its documentation checks are separate from the source-bound
+software and scientific runs below.
 The [earlier dedicated documentation consolidation](validation/documentation-math-state.md)
 records its own checks without rerunning or relabeling the historical suites.
 The [earlier PR #49 documentation follow-up](validation/documentation-current-state.md)

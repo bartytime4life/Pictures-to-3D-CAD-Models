@@ -97,7 +97,7 @@ Put the photos in one folder with a `benchmark.json` beside them:
 | `caliper_uncertainty_mm` | A numeric comparison threshold above 0 and at most 5 mm; 0.03 if left out. Mean errors beyond it are printed in bold. Record separately whether your entered specification is an accuracy limit, absolute bound or standard uncertainty. The runner does not distinguish them or propagate a measurement uncertainty budget. |
 | `name` | A label for the report. Parts need different names. |
 | `photos` | File names or patterns, relative to the folder. |
-| `thickness_mm` | The part's thickness. With it, the trace removes the visible side walls, as **Build** does in the workbench. Leave it out for a part thin enough to ignore. |
+| `thickness_mm` | The measured constant thickness enables the model-dependent wall/parallax correction used by **Build**. It does not guarantee removal of wall bias; inspect trace notes and reserved dimensions. Leave it out only when thickness effects are negligible for the intended comparison. |
 | `light_part` | `true` for a light part on a dark sheet. |
 | `measured` | The measurements of step 2. |
 
@@ -125,6 +125,11 @@ or, with options:
 - `--markdown FILE` saves the printed tables.
 - `--no-snap` traces without design-intent snapping. With snapping on, as in the workbench, near-equal radii are made equal and straight edges are squared, so four equal holes share one reading per photo.
 - `--example FOLDER` writes three rendered photos and a `benchmark.json` to copy from. It takes about half a minute.
+
+The `--json` and `--markdown` destinations are overwritten if they already exist.
+Use fresh report paths for each run so revised measurements, source changes and
+failed attempts retain separate evidence. Inspect filenames and notes before
+sharing a report; its absence of embedded photos does not make every note public.
 
 A trace takes a few seconds per photo. The command exits with an error when the manifest cannot be used, a correspondence work limit is exceeded, or no photo could be traced. A successful exit is not a dimensional-accuracy or manufacturing-acceptance decision.
 

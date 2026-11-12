@@ -32,6 +32,12 @@ flowchart LR
 | CadQuery / OpenCascade | Solid construction, topology checks, tessellation, and CAD exports |
 | Optional local Ollama | Text advice and validated trace/design/print-setting proposals for explicit user review |
 
+The [developer-tool catalog](developer-tools.md) lists the separate numerical
+CLIs, their input contracts and outputs. Conditional corner analysis and bounded
+wall/lighting source fitting do not run inside the upload/build path and expose
+no product endpoint. Production wall correction still uses its local flat-tone
+search; see [its search and initialization limits](reference-sheet.md#5-camera-pose-and-thickness-parallax).
+
 The application does not call a paid or external inference service. Its optional assistant connects to Ollama through an HTTP loopback address on the backend host. It receives text context, including measured and built dimensions, but not the photograph, outline vertices, or mesh. An uploaded photograph still reaches the Python backend for tracing, which may run on the user's machine or on a cloud host.
 
 ## Geometry conventions

@@ -205,8 +205,10 @@ infer parameter sets whose discrepancies from observations fall within prior
 error bounds, using interval enclosures over complete parameter boxes.
 [Brynjarsdóttir and O'Hagan (2014)](https://www.tonyohagan.co.uk/academic/abs/simmach.html)
 show why calibration parameters can be confounded with model discrepancy.
-These primary sources motivate a future conditional feasible-radius set with
-separately declared observation-error, model-discrepancy and nuisance domains.
+These primary sources motivate the implemented [conditional radius sets](corner-feasibility.md)
+under their fixed-model assumptions, including supplied shared blur domains,
+known pixel apertures and declared signed stencils. Broader sets with separately
+justified model-discrepancy, pose and other nuisance domains remain future work.
 They do not validate this workbench's optical assumptions or turn its current
 standard deviations into maximum-error bounds. A sampled radius grid cannot
 certify that no compatible radii exist between samples.

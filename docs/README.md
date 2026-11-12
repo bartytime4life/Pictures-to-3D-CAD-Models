@@ -32,6 +32,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Task | Guide |
 | --- | --- |
 | Make and validate a change | [Contributing](contributing.md), [development](development.md) |
+| Choose a numerical CLI or repeat a study and audit its outputs | [Developer-tool catalog](developer-tools.md) |
 | Understand components, API and data flow | [Architecture](architecture.md) |
 | Call the local API and handle expired or rejected requests | [API examples and recovery](api-examples.md) |
 | Identify the latest reviewed implementation and its evidence | [Project status](project-status.md) |
@@ -53,7 +54,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |
 | Run a benchmark with measured photos | [Photo benchmark](photo-benchmark.md) |
 | Review completed checks | [Validation overview](validation.md), [design QA](../design-qa.md) |
-| Check current documentation coverage and source consistency | [Current candidate checks](validation/wall-gradients.md#regression-and-source-binding), [earlier consolidation](validation/documentation-math-state.md), [earlier November 12 review](validation/documentation-review-2026-11-12.md) |
+| Check current documentation coverage and source consistency | [Complete documentation review](validation/documentation-complete-2026-11-12.md), [source-bound study checks](validation/wall-gradients.md#regression-and-source-binding), [earlier consolidation](validation/documentation-math-state.md) |
 | Review the recent interface changes | [Guided-workbench audit](validation/guided-workbench.md) |
 | Review scope and future work | [Roadmap](roadmap.md), [change log](changelog.md) |
 | Reproduce bundled printer data | [Printer source record](../data/PRINTER_SOURCES.md) |

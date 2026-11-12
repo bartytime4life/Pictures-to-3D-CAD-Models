@@ -1,17 +1,19 @@
 # Project status and evidence
 
-Documentation snapshot: **November 12, 2026**. This page describes
-the [bounded wall/lighting candidate](validation/wall-gradients.md), based on published
-source `37eb4d2086c61dda983fe4e39391d9693dc82331` (PR #56).
-It includes the pending review chain below and a separate developer experiment
-for bounded source fitting and local silhouette ambiguity. Production executable
-behavior matches PR #56. Start with [setup](development.md), the
-[task index](README.md) or the [API examples](api-examples.md).
+Documentation snapshot: **November 12, 2026**. The reviewed source baseline is
+`7dfe0fe698c8831e9c02ae960f03bcdc533701dc`, the published head of
+[draft PR #57](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/57).
+It includes the review chain below and the separate [bounded wall/lighting
+experiment](validation/wall-gradients.md). Production executable behavior
+matches PR #56; PR #57 adds the developer study and documentation clarifications.
+The [complete documentation update](validation/documentation-complete-2026-11-12.md)
+changes guides on that baseline. Start with [setup](development.md), the
+[task index](README.md), [developer tools](developer-tools.md) or [API examples](api-examples.md).
 
 ## Source and review state
 
 At this check, `main` was `5c07d0f70d7df0200bc24227c8ac7e9b630f7f09`.
-PRs #47–#56 were open and unmerged. This candidate branch includes their
+PRs #47–#57 were open and unmerged. This documentation branch includes their
 changes; that checkout of `main` does not contain them. The conditional corner
 analysis remains separate from production tracing; the grid and crossing repairs
 affect the existing production edge-profile search.
@@ -29,6 +31,7 @@ affect the existing production edge-profile search.
 | `620d5c717e21fd7d7a797b114972fd2b09e9ece9` | Version-4 known fixed signed sampling stencils with whole-radius bounds and exact gain accounting | [PR #54](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/54), open draft; base PR #53's branch |
 | `a5f99e5a4180ec2437c08215faa12058b6b490a9` | Symmetric production profile sampling and an independent material-gradient study | [PR #55](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/55), open draft; base PR #54's branch |
 | `37eb4d2086c61dda983fe4e39391d9693dc82331` | Actual-distance crossing ranking and explicit unresolved contacts | [PR #56](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/56), open draft; base PR #55's branch |
+| `7dfe0fe698c8831e9c02ae960f03bcdc533701dc` | Bounded five-node wall/lighting study, complete CSVs and constructive local ambiguity | [PR #57](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/57), open draft; base PR #56's branch |
 
 The PR links show live review state. A documentation update does not install,
 merge or deploy those changes. Record the checkout used to start a service:
@@ -40,6 +43,14 @@ git status --short --branch
 
 The health endpoint's `version: "0.1.0"` is shared by multiple revisions and
 cannot identify which implementation a server is running.
+
+Uncommitted wall-localization work in the separate local
+`codex/wall-localization` branch is outside this baseline. Its expanded search,
+candidate-dependent width, tone constraints and withholding experiments are
+unfinished; this documentation does not describe them as published or validated
+product behavior. The primary `codex/slicer-integration` checkout remains at
+`d747e30697a99a8f90d747d23d6ab7c1fa8b95ed` and does not become this newer source
+merely because its repository has newer review branches.
 
 ## Implemented capabilities and remaining limits
 
@@ -81,9 +92,11 @@ there is no product endpoint, automatic tracing correction or accuracy label.
 | Companion library | [Revision 7 verification](../reference-library/VERIFICATION.md) | Its own dated release record, not a new library release |
 | Earlier documentation follow-up | [PR #49 coverage and checks](validation/documentation-current-state.md) | Documentation parsing, links, commands and API example at its recorded source |
 | PR #52 documentation consolidation | [Coverage and checks](validation/documentation-math-state.md) | Navigation, review chain, source/receipt consistency and complete Markdown checks at its recorded source; no new product regression or physical result |
+| Documentation update through PR #57 | [Complete coverage and checks](validation/documentation-complete-2026-11-12.md) | Current guides, numerical-tool contracts and repository-wide Markdown checks; no new product or physical qualification |
 
 Hosted results are bound to exact heads. Earlier rows retain their last recorded
-results; the latest checks for `620d5c7` and `a5f99e5` were on **November 12**:
+results; `37eb4d2` and `7dfe0fe` were checked again during this documentation
+update on **November 12**:
 
 | Head | Hosted workflow | Result at this observation |
 | --- | --- | --- |
@@ -96,7 +109,9 @@ results; the latest checks for `620d5c7` and `a5f99e5` were on **November 12**:
 | `e22ff3d` | [Workbench run 116](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43188961747) | Cancelled at the subsequent check |
 | `620d5c7` | [Workbench run 117](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43192825464) | Completed successfully |
 | `a5f99e5` | [Workbench run 118](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43196410807), [library run 40](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43196410880) | Both completed successfully |
-| `37eb4d2` | [Workbench run 119](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43200015707) | In progress |
+| `37eb4d2` | [Workbench run 119](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43200015707) | Completed successfully |
+| `7dfe0fe` | [Workbench run 120](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43203756110) | Cancelled at the final documentation observation |
+| `7dfe0fe` | [Library run 41](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43203755932) | Completed successfully |
 
 Follow the exact run links for later results. The candidate's local 1,131-test result is
 separate from hosted CI. Earlier observations remain in their dated validation
