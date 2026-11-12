@@ -33,6 +33,12 @@ retains its source, executable API example and completed checks.
 
 ## Current workbench evidence — November 12, 2026
 
+The separate [finite-shape source record](validation/finite-shape-source.md)
+documents the new developer evaluator and conditional radius/chord fitter.
+It retains independent forward/inverse controls, model mismatch, ambiguity,
+work limits and source-bound numerical regressions. These modules add no
+workbench endpoint or automatic CAD correction.
+
 The [circle-consistent assembly candidate](validation/canonical-arcs.md) preserves
 stored circles in emitted arcs and retains an affected source outline when joins
 are missing, ambiguous or numerically unresolved. Independent exact, actual-fit

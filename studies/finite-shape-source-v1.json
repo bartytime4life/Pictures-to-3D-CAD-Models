@@ -1,0 +1,1130 @@
+{
+  "format": "pictures-to-cad-finite-shape-source-plan",
+  "version": 1,
+  "scope": "Finite supplied raw point-sensor shape means, independent controls; no optimization, segmentation, camera calibration or physical qualification.",
+  "defaults": {
+    "sensor_shape": [
+      96,
+      96
+    ],
+    "homography": [
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    "probability_tolerance": 1e-08,
+    "max_panels": 4096,
+    "max_evaluations": 2000000
+  },
+  "oracle": {
+    "slice_orders": [
+      32,
+      64
+    ],
+    "area_orders": [
+      24,
+      48
+    ],
+    "tail_multipliers": [
+      -12,
+      -8,
+      -6,
+      -4,
+      -2,
+      -1,
+      0,
+      1,
+      2,
+      4,
+      6,
+      8,
+      12
+    ],
+    "reference_order_tolerance": 2e-10,
+    "absolute_comparison_tolerance": 5e-08,
+    "notes": "Slice cuts include x-Gaussian locations and exact intersections of circle with conditional-y Gaussian locations. Quadrature doubling is an independent numerical check, not a formal bound."
+  },
+  "cases": [
+    {
+      "name": "historical-R10-h-6",
+      "shape": {
+        "kind": "disk_segment",
+        "center": [
+          40.5,
+          40.5
+        ],
+        "radius": 10,
+        "chord": -6
+      },
+      "sigma": 1.3,
+      "pixels": [
+        [
+          30,
+          40
+        ],
+        [
+          34,
+          40
+        ],
+        [
+          40,
+          40
+        ],
+        [
+          40,
+          45
+        ],
+        [
+          46,
+          40
+        ],
+        [
+          40,
+          50
+        ]
+      ]
+    },
+    {
+      "name": "historical-R10-h0",
+      "shape": {
+        "kind": "disk_segment",
+        "center": [
+          40.5,
+          40.5
+        ],
+        "radius": 10,
+        "chord": 0
+      },
+      "sigma": 1.3,
+      "pixels": [
+        [
+          30,
+          40
+        ],
+        [
+          34,
+          40
+        ],
+        [
+          40,
+          40
+        ],
+        [
+          40,
+          45
+        ],
+        [
+          46,
+          40
+        ],
+        [
+          40,
+          50
+        ]
+      ]
+    },
+    {
+      "name": "historical-R10-h6",
+      "shape": {
+        "kind": "disk_segment",
+        "center": [
+          40.5,
+          40.5
+        ],
+        "radius": 10,
+        "chord": 6
+      },
+      "sigma": 1.3,
+      "pixels": [
+        [
+          30,
+          40
+        ],
+        [
+          34,
+          40
+        ],
+        [
+          40,
+          40
+        ],
+        [
+          40,
+          45
+        ],
+        [
+          46,
+          40
+        ],
+        [
+          40,
+          50
+        ]
+      ]
+    },
+    {
+      "name": "new-R2.75-phase-sigma.37",
+      "shape": {
+        "kind": "disk_segment",
+        "center": [
+          40.13,
+          40.72
+        ],
+        "radius": 2.75,
+        "chord": -0.8
+      },
+      "sigma": 0.37,
+      "pixels": [
+        [
+          30,
+          40
+        ],
+        [
+          34,
+          40
+        ],
+        [
+          40,
+          40
+        ],
+        [
+          40,
+          45
+        ],
+        [
+          46,
+          40
+        ],
+        [
+          40,
+          50
+        ]
+      ]
+    },
+    {
+      "name": "new-R17.25-phase-sigma2.05",
+      "shape": {
+        "kind": "disk_segment",
+        "center": [
+          40.81,
+          40.29
+        ],
+        "radius": 17.25,
+        "chord": 4.6
+      },
+      "sigma": 2.05,
+      "pixels": [
+        [
+          30,
+          40
+        ],
+        [
+          34,
+          40
+        ],
+        [
+          40,
+          40
+        ],
+        [
+          40,
+          45
+        ],
+        [
+          46,
+          40
+        ],
+        [
+          40,
+          50
+        ]
+      ]
+    },
+    {
+      "name": "new-R12.75-narrow-sigma.025",
+      "shape": {
+        "kind": "disk_segment",
+        "center": [
+          40.17,
+          40.21
+        ],
+        "radius": 12.75,
+        "chord": 0.341
+      },
+      "sigma": 0.025,
+      "pixels": [
+        [
+          30,
+          40
+        ],
+        [
+          34,
+          40
+        ],
+        [
+          40,
+          40
+        ],
+        [
+          40,
+          45
+        ],
+        [
+          46,
+          40
+        ],
+        [
+          40,
+          50
+        ]
+      ]
+    },
+    {
+      "name": "new-R.7-sigma1.1",
+      "shape": {
+        "kind": "disk_segment",
+        "center": [
+          40.31,
+          40.63
+        ],
+        "radius": 0.7,
+        "chord": 0.2
+      },
+      "sigma": 1.1,
+      "pixels": [
+        [
+          30,
+          40
+        ],
+        [
+          34,
+          40
+        ],
+        [
+          40,
+          40
+        ],
+        [
+          40,
+          45
+        ],
+        [
+          46,
+          40
+        ],
+        [
+          40,
+          50
+        ]
+      ]
+    },
+    {
+      "name": "centered-disk-R0.35",
+      "shape": {
+        "kind": "disk",
+        "center": [
+          40.5,
+          40.5
+        ],
+        "radius": 0.35
+      },
+      "sigma": 1.0,
+      "pixels": [
+        [
+          40,
+          40
+        ]
+      ],
+      "oracle": "centered_disk"
+    },
+    {
+      "name": "centered-disk-R2.75",
+      "shape": {
+        "kind": "disk",
+        "center": [
+          40.5,
+          40.5
+        ],
+        "radius": 2.75
+      },
+      "sigma": 1.0,
+      "pixels": [
+        [
+          40,
+          40
+        ]
+      ],
+      "oracle": "centered_disk"
+    },
+    {
+      "name": "centered-disk-R10",
+      "shape": {
+        "kind": "disk",
+        "center": [
+          40.5,
+          40.5
+        ],
+        "radius": 10
+      },
+      "sigma": 1.0,
+      "pixels": [
+        [
+          40,
+          40
+        ]
+      ],
+      "oracle": "centered_disk"
+    },
+    {
+      "name": "centered-disk-R10000",
+      "shape": {
+        "kind": "disk",
+        "center": [
+          40.5,
+          40.5
+        ],
+        "radius": 10000.0
+      },
+      "sigma": 1.0,
+      "pixels": [
+        [
+          40,
+          40
+        ]
+      ],
+      "oracle": "centered_disk"
+    },
+    {
+      "name": "giant-disk-boundary-layer-R1e4",
+      "shape": {
+        "kind": "disk",
+        "center": [
+          -9959.5,
+          40.5
+        ],
+        "radius": 10000
+      },
+      "sigma": 1.0,
+      "pixels": [
+        [
+          40,
+          40
+        ],
+        [
+          39,
+          40
+        ],
+        [
+          41,
+          40
+        ],
+        [
+          40,
+          41
+        ]
+      ]
+    },
+    {
+      "name": "giant-disk-tiny-PSF",
+      "shape": {
+        "kind": "disk",
+        "center": [
+          -959.5,
+          40.5
+        ],
+        "radius": 1000
+      },
+      "sigma": 0.1,
+      "pixels": [
+        [
+          40,
+          40
+        ],
+        [
+          39,
+          40
+        ],
+        [
+          41,
+          40
+        ]
+      ]
+    },
+    {
+      "name": "rectangle-product-exact",
+      "shape": {
+        "kind": "rectangle",
+        "bounds": [
+          [
+            35.2,
+            47.1
+          ],
+          [
+            36.8,
+            44.6
+          ]
+        ]
+      },
+      "covariance": [
+        [
+          0.49,
+          0
+        ],
+        [
+          0,
+          2.25
+        ]
+      ],
+      "pixels": [
+        [
+          35,
+          40
+        ],
+        [
+          40,
+          40
+        ],
+        [
+          47,
+          44
+        ],
+        [
+          48,
+          45
+        ]
+      ]
+    },
+    {
+      "name": "rectangle-with-hole",
+      "shape": {
+        "kind": "rectangle",
+        "bounds": [
+          [
+            31.2,
+            49.7
+          ],
+          [
+            30.8,
+            50.2
+          ]
+        ],
+        "hole": {
+          "kind": "rectangle",
+          "bounds": [
+            [
+              37.4,
+              43.1
+            ],
+            [
+              36.9,
+              44.2
+            ]
+          ]
+        }
+      },
+      "sigma": 1.3,
+      "pixels": [
+        [
+          40,
+          40
+        ],
+        [
+          35,
+          40
+        ],
+        [
+          43,
+          40
+        ],
+        [
+          30,
+          30
+        ]
+      ]
+    },
+    {
+      "name": "concentric-annulus-center",
+      "shape": {
+        "kind": "disk",
+        "center": [
+          40.5,
+          40.5
+        ],
+        "radius": 8.0,
+        "hole": {
+          "kind": "disk",
+          "center": [
+            40.5,
+            40.5
+          ],
+          "radius": 3.0
+        }
+      },
+      "sigma": 2.0,
+      "pixels": [
+        [
+          40,
+          40
+        ]
+      ],
+      "oracle": "centered_disk"
+    },
+    {
+      "name": "anisotropic-correlated-D",
+      "shape": {
+        "kind": "disk_segment",
+        "center": [
+          40.13,
+          40.72
+        ],
+        "radius": 8.25,
+        "chord": 2.1
+      },
+      "sigma": 1.3,
+      "pixels": [
+        [
+          30,
+          40
+        ],
+        [
+          34,
+          40
+        ],
+        [
+          40,
+          40
+        ],
+        [
+          40,
+          45
+        ],
+        [
+          46,
+          40
+        ],
+        [
+          40,
+          50
+        ]
+      ],
+      "covariance": [
+        [
+          0.49,
+          0.21
+        ],
+        [
+          0.21,
+          1.69
+        ]
+      ]
+    },
+    {
+      "name": "affine-shear-D",
+      "shape": {
+        "kind": "disk_segment",
+        "center": [
+          24.5,
+          28.5
+        ],
+        "radius": 10,
+        "chord": 2.75
+      },
+      "sigma": 1.3,
+      "pixels": [
+        [
+          30,
+          40
+        ],
+        [
+          34,
+          40
+        ],
+        [
+          40,
+          40
+        ],
+        [
+          40,
+          45
+        ],
+        [
+          46,
+          40
+        ],
+        [
+          40,
+          50
+        ]
+      ],
+      "homography": [
+        [
+          1.15,
+          0.25,
+          5
+        ],
+        [
+          -0.2,
+          0.9,
+          12
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "name": "affine-reflection-D",
+      "shape": {
+        "kind": "disk_segment",
+        "center": [
+          40.5,
+          40.5
+        ],
+        "radius": 10,
+        "chord": -2.75
+      },
+      "sigma": 1.3,
+      "pixels": [
+        [
+          30,
+          40
+        ],
+        [
+          34,
+          40
+        ],
+        [
+          40,
+          40
+        ],
+        [
+          40,
+          45
+        ],
+        [
+          46,
+          40
+        ],
+        [
+          40,
+          50
+        ]
+      ],
+      "homography": [
+        [
+          -1,
+          0,
+          81
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "name": "negative-homography-gauge-D",
+      "shape": {
+        "kind": "disk_segment",
+        "center": [
+          40.5,
+          40.5
+        ],
+        "radius": 10,
+        "chord": -2.75
+      },
+      "sigma": 1.3,
+      "pixels": [
+        [
+          30,
+          40
+        ],
+        [
+          34,
+          40
+        ],
+        [
+          40,
+          40
+        ],
+        [
+          40,
+          45
+        ],
+        [
+          46,
+          40
+        ],
+        [
+          40,
+          50
+        ]
+      ],
+      "homography": [
+        [
+          7,
+          0,
+          -567
+        ],
+        [
+          0,
+          -7,
+          0
+        ],
+        [
+          0,
+          0,
+          -7
+        ]
+      ]
+    },
+    {
+      "name": "huge-homography-gauge-D",
+      "shape": {
+        "kind": "disk_segment",
+        "center": [
+          40.5,
+          40.5
+        ],
+        "radius": 10,
+        "chord": 6
+      },
+      "sigma": 1.3,
+      "pixels": [
+        [
+          30,
+          40
+        ],
+        [
+          34,
+          40
+        ],
+        [
+          40,
+          40
+        ],
+        [
+          40,
+          45
+        ],
+        [
+          46,
+          40
+        ],
+        [
+          40,
+          50
+        ]
+      ],
+      "homography": [
+        [
+          1e+40,
+          0,
+          0
+        ],
+        [
+          0,
+          1e+40,
+          0
+        ],
+        [
+          0,
+          0,
+          1e+40
+        ]
+      ]
+    },
+    {
+      "name": "reversed-closed-boundary-D",
+      "shape": {
+        "kind": "disk_segment",
+        "center": [
+          40.5,
+          40.5
+        ],
+        "radius": 10,
+        "chord": 6
+      },
+      "sigma": 1.3,
+      "pixels": [
+        [
+          30,
+          40
+        ],
+        [
+          34,
+          40
+        ],
+        [
+          40,
+          40
+        ],
+        [
+          40,
+          45
+        ],
+        [
+          46,
+          40
+        ],
+        [
+          40,
+          50
+        ]
+      ],
+      "reverse": true
+    },
+    {
+      "name": "cyclic-closed-boundary-D",
+      "shape": {
+        "kind": "disk_segment",
+        "center": [
+          40.5,
+          40.5
+        ],
+        "radius": 10,
+        "chord": 6
+      },
+      "sigma": 1.3,
+      "pixels": [
+        [
+          30,
+          40
+        ],
+        [
+          34,
+          40
+        ],
+        [
+          40,
+          40
+        ],
+        [
+          40,
+          45
+        ],
+        [
+          46,
+          40
+        ],
+        [
+          40,
+          50
+        ]
+      ],
+      "cyclic_shift": 1
+    },
+    {
+      "name": "projective-D-moderate",
+      "shape": {
+        "kind": "disk_segment",
+        "center": [
+          25.5,
+          25.5
+        ],
+        "radius": 3.25,
+        "chord": 0.7
+      },
+      "sigma": 1.1,
+      "homography": [
+        [
+          1.1,
+          0.1,
+          9
+        ],
+        [
+          -0.1,
+          0.95,
+          10
+        ],
+        [
+          0.002,
+          -0.001,
+          1
+        ]
+      ],
+      "pixels": [
+        [
+          35,
+          30
+        ],
+        [
+          36,
+          31
+        ],
+        [
+          37,
+          32
+        ],
+        [
+          39,
+          31
+        ]
+      ],
+      "oracle": "plane_area"
+    },
+    {
+      "name": "projective-reflected-D-moderate",
+      "shape": {
+        "kind": "disk_segment",
+        "center": [
+          25.5,
+          25.5
+        ],
+        "radius": 3.25,
+        "chord": -0.7
+      },
+      "covariance": [
+        [
+          1.21,
+          0.15
+        ],
+        [
+          0.15,
+          0.81
+        ]
+      ],
+      "homography": [
+        [
+          -1.1,
+          -0.1,
+          72
+        ],
+        [
+          -0.1,
+          0.95,
+          10
+        ],
+        [
+          0.002,
+          -0.001,
+          1
+        ]
+      ],
+      "pixels": [
+        [
+          40,
+          30
+        ],
+        [
+          41,
+          31
+        ],
+        [
+          42,
+          32
+        ],
+        [
+          43,
+          31
+        ]
+      ],
+      "oracle": "plane_area"
+    },
+    {
+      "name": "work-limit-retains-unresolved",
+      "shape": {
+        "kind": "disk",
+        "center": [
+          -9959.5,
+          40.5
+        ],
+        "radius": 10000
+      },
+      "sigma": 1.0,
+      "pixels": [
+        [
+          40,
+          40
+        ]
+      ],
+      "max_panels": 1,
+      "max_evaluations": 16,
+      "expected": "unresolved"
+    },
+    {
+      "name": "source-horizon-refused",
+      "shape": {
+        "kind": "disk",
+        "center": [
+          0,
+          0
+        ],
+        "radius": 2
+      },
+      "sigma": 1.0,
+      "pixels": [
+        [
+          40,
+          40
+        ]
+      ],
+      "homography": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0.6,
+          0,
+          1
+        ]
+      ],
+      "expected": "refused"
+    },
+    {
+      "name": "indefinite-PSF-refused",
+      "shape": {
+        "kind": "disk",
+        "center": [
+          40.5,
+          40.5
+        ],
+        "radius": 2
+      },
+      "covariance": [
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "pixels": [
+        [
+          40,
+          40
+        ]
+      ],
+      "expected": "refused"
+    }
+  ]
+}

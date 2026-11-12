@@ -3,6 +3,18 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Finite-shape source prediction and conditional joint fitting — November 12, 2026
+
+- Integrate the complete projected finite material under a supplied Gaussian
+  source PSF, preserving holes, off-sensor contributions and numerical unknowns.
+- Fit radius and chord fraction jointly with bounded shared brightness,
+  fixed source/noise support, local variable projection and complete grid/limit
+  diagnostics. Preserve large omitted residuals and strict JSON output.
+- Add independent area-integral forward/inverse controls, held-out predictions,
+  model-mismatch and nonidentification cases. The
+  [API guide](finite-shape-source.md) and [validation record](validation/finite-shape-source.md)
+  distinguish conditional numerical recovery from production/physical acceptance.
+
 ## Documentation review through PR #72 — November 12, 2026
 
 - Identify the published arc-join candidate by exact commit and tree; distinguish

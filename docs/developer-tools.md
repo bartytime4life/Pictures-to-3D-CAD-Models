@@ -21,6 +21,8 @@ an experiment in another worktree is a different implementation.
 | Does the forward model include the known smoothing filter? | `make postblur-operator-study OUTPUT=NEW_JSON` | Declared finite-filter plus Keys composition on fixed fields; rounding and earlier-chain limits retained |
 | Does the known full digital chain match the actual sampler? | `make warp-observation-study OUTPUT=NEW_JSON` | Supplied raw-to-rectified warp, smoothing and profile sampling; stage rounding retained separately |
 | Can a declared raw optical mean explain available prewarp samples? | `make raw-source-fit-study OUTPUT=NEW_JSON` | Bounded source-projection offset/brightness fitting with known geometry, PSF and noise; retains weak-mode, source-mismatch and ambiguity controls |
+| Does a complete finite material predict supplied raw point samples? | `.venv/bin/python studies/verification/finite-shape-oracle-v1.py --output NEW_JSON` | Independent positive-area controls for the finite-boundary model, with holes, projection and numerical/work refusals; no camera calibration |
+| Can a supplied finite circular segment be recovered jointly from source intensities? | `.venv/bin/python studies/verification/finite-shape-fit-oracle-v1.py --output NEW_JSON` | Fixed independent matched/mismatch/ambiguity controls with held-out pixels and retained work limits; supplied pose/PSF are additional information |
 | Can one common monotone response satisfy externally supplied calibration? | `scripts/response_calibration.py INPUT.json --output NEW_JSON` | Exact conditional consistency and tight pointwise bands; no automatic camera calibration or inverse |
 | Can one response fit bounded inputs as well as outputs? | `scripts/response_rectangles.py INPUT.json --output NEW_JSON` | Choose some or every allowed input; genuine unbounded envelopes and finite shared witnesses; no input-correlation inference |
 | Which shared Gaussian offset/blur pairs remain under supplied response bounds? | `scripts/gaussian_response_domains.py INPUT.json --output NEW_JSON` | Continuous joint boxes, conditional certificates and retained unknowns; outer projections are not independent parameter choices |
@@ -260,6 +262,28 @@ It retains geometry cases and cycle-search outcomes with source hashes. The
 controls, shared-code limits and per-boundary recovery checks. Initial support
 proxy eligibility is not final assembly, and guarded objective separation is
 not a physical uncertainty interval or a formal arithmetic certificate.
+
+## Finite-shape source prediction
+
+The [finite-shape developer API](finite-shape-source.md) predicts the complete
+projected material before Gaussian blur. Its separate radius/chord fitter uses
+fixed pose, supplied raw covariance and a fixed source/noise projection; it does
+not infer those inputs from a saved trace. Keep unresolved samples, local search
+flags and standardized omitted-source residuals. These modules do not enter the
+workbench trace/API or apply a second generic blur correction.
+
+```bash
+.venv/bin/python studies/verification/finite-shape-oracle-v1.py --output .local/finite-shape-oracle-new.json
+.venv/bin/python studies/verification/finite-shape-fit-oracle-v1.py --output .local/finite-shape-fit-new.json
+```
+
+Use a fresh JSON destination. The independent runner checks finite-area Gaussian
+integrals and complete geometry, including off-sensor material. Its quadrature
+cross-check is numerical evidence, rather than a certified integration error or
+physical measurement bound.
+The [inverse record](validation/finite-shape-source.md) retains every declared
+case, including work-limited matched and adverse results. A successful target
+check does not imply that every represented basin converged.
 
 ## Figures
 

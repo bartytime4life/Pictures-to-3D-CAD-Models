@@ -43,6 +43,16 @@ Reference entry also includes an [endpoint-placement sensitivity explorer](refer
 
 ## Release discipline
 
+The [finite-shape developer model](finite-shape-source.md) now couples all
+boundaries before Gaussian source blur, and its circular-segment fitter jointly
+searches radius and chord fraction under supplied pose/PSF/noise. The
+[independent controls](validation/finite-shape-source.md) retain optical mismatch,
+nonidentification and incomplete searches. Next steps include immutable prewarp
+capture context, calibrated or explicitly bounded source optics/response and
+observation operators, then reviewed integration with the current geometry
+revision. The point-detector prototype does not identify those missing inputs
+from a saved trace or qualify physical recovery.
+
 The [known warp-chain extension](warp-observations.md) now composes the fixed
 raw-to-rectified digital path. Optical adequacy remains separate: raw PSF and
 detector calibration, spatially varying/projective and curved-edge response,

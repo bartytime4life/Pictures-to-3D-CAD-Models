@@ -1,0 +1,3507 @@
+{
+  "format": "pictures-to-cad-finite-shape-independent-oracle",
+  "version": 1,
+  "verification": "passed",
+  "source_before": {
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/finite_shape.py": "07e0a2bb0d03b7e4f12f4a9b0675b3f7598d54587d746c07c502ea83623d29d8",
+    "backend/fitting.py": "99b9232624eef3bc8106c5d82277f47817cd5d0c62eb6d6d27fd2ac34c958489",
+    "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+    "backend/sheet.py": "a086d7216256726a0e392bd98cbdb1274f5cb5eb096802c17c805349a7747e31",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "studies/verification/finite-shape-oracle-v1.py": "912c7cd63c30e0b26b0dabdbc65c0cf2152966897b30fc44de26ca18448b2b3a",
+    "studies/finite-shape-source-v1.json": "fe18367b4112ca18aee1e8da0d2b0e7a4b1f7efce79e5f6917c78f22cb9d7978"
+  },
+  "source_after": {
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/finite_shape.py": "07e0a2bb0d03b7e4f12f4a9b0675b3f7598d54587d746c07c502ea83623d29d8",
+    "backend/fitting.py": "99b9232624eef3bc8106c5d82277f47817cd5d0c62eb6d6d27fd2ac34c958489",
+    "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+    "backend/sheet.py": "a086d7216256726a0e392bd98cbdb1274f5cb5eb096802c17c805349a7747e31",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "studies/verification/finite-shape-oracle-v1.py": "912c7cd63c30e0b26b0dabdbc65c0cf2152966897b30fc44de26ca18448b2b3a",
+    "studies/finite-shape-source-v1.json": "fe18367b4112ca18aee1e8da0d2b0e7a4b1f7efce79e5f6917c78f22cb9d7978"
+  },
+  "source_unchanged": true,
+  "runtime": {
+    "python": "3.12.3",
+    "numpy": "2.5.4",
+    "seconds": 0.7725415040040389
+  },
+  "summary": {
+    "declared_rows": 28,
+    "retained_rows": 28,
+    "failed_rows": 0,
+    "execution_failures": 0,
+    "checks": 182,
+    "maximum_probability_difference": 2.9132070300984054e-12,
+    "maximum_reference_order_delta": 5.762057497804562e-14
+  },
+  "rows": [
+    {
+      "index": 0,
+      "name": "historical-R10-h-6",
+      "input": {
+        "name": "historical-R10-h-6",
+        "shape": {
+          "kind": "disk_segment",
+          "center": [
+            40.5,
+            40.5
+          ],
+          "radius": 10,
+          "chord": -6
+        },
+        "sigma": 1.3,
+        "pixels": [
+          [
+            30,
+            40
+          ],
+          [
+            34,
+            40
+          ],
+          [
+            40,
+            40
+          ],
+          [
+            40,
+            45
+          ],
+          [
+            46,
+            40
+          ],
+          [
+            40,
+            50
+          ]
+        ]
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "independent_order_agreement": true,
+        "resolved_forward_targets": true,
+        "independent_probability_agreement": true
+      },
+      "result": {
+        "probabilities": [
+          0.47296769551892964,
+          0.49862122336296993,
+          1.9618394206709702e-06,
+          1.927831468189964e-06,
+          0.0,
+          9.137924329629538e-08
+        ],
+        "statuses": [
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved"
+        ],
+        "estimated_errors": [
+          1.3501348051073418e-14,
+          1.421156616620237e-14,
+          4.168420377785706e-12,
+          2.908158881757949e-12,
+          1.859838608472471e-14,
+          2.8147128551267995e-12
+        ],
+        "tail_bounds": [
+          0.0,
+          0.0,
+          4.144607343536732e-12,
+          2.887783601082102e-12,
+          1.7609671443155973e-19,
+          2.7992866751302805e-12
+        ],
+        "evaluations": 10924,
+        "panels": 602,
+        "chart_margin": 0.9999999999999712,
+        "reflected": false,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "reference": {
+        "method": "slice",
+        "orders": [
+          32,
+          64
+        ],
+        "values": [
+          0.47296769551892975,
+          0.49862122336297005,
+          1.9618398973331654e-06,
+          1.9278311289394847e-06,
+          1.3434762218124694e-20,
+          9.137924234514617e-08
+        ],
+        "previous_order_values": [
+          0.47296769551892953,
+          0.49862122336297,
+          1.961839897333174e-06,
+          1.927831128939486e-06,
+          1.3434762218124774e-20,
+          9.137924234514653e-08
+        ],
+        "maximum_order_delta": 2.220446049250313e-16,
+        "targeted_intervals_or_area_nodes": [
+          [
+            7,
+            7,
+            6,
+            10,
+            6,
+            7
+          ],
+          [
+            7,
+            7,
+            6,
+            10,
+            6,
+            7
+          ]
+        ],
+        "certified": false
+      },
+      "absolute_differences": [
+        1.1102230246251565e-16,
+        1.1102230246251565e-16,
+        4.766621951441915e-13,
+        3.3925047914249796e-13,
+        1.3434762218124694e-20,
+        9.511492048093945e-16
+      ],
+      "status": "resolved",
+      "passed": true
+    },
+    {
+      "index": 1,
+      "name": "historical-R10-h0",
+      "input": {
+        "name": "historical-R10-h0",
+        "shape": {
+          "kind": "disk_segment",
+          "center": [
+            40.5,
+            40.5
+          ],
+          "radius": 10,
+          "chord": 0
+        },
+        "sigma": 1.3,
+        "pixels": [
+          [
+            30,
+            40
+          ],
+          [
+            34,
+            40
+          ],
+          [
+            40,
+            40
+          ],
+          [
+            40,
+            45
+          ],
+          [
+            46,
+            40
+          ],
+          [
+            40,
+            50
+          ]
+        ]
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "independent_order_agreement": true,
+        "resolved_forward_targets": true,
+        "independent_probability_agreement": true
+      },
+      "result": {
+        "probabilities": [
+          0.47401344184926336,
+          0.9986192614604534,
+          0.5,
+          0.4999567648316121,
+          1.961839834512674e-06,
+          0.23700672092463163
+        ],
+        "statuses": [
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved"
+        ],
+        "estimated_errors": [
+          3.0557712400771025e-12,
+          4.621330742663238e-12,
+          8.026976192709987e-12,
+          3.2271367312021845e-12,
+          5.808206976339443e-13,
+          1.6371608146097647e-12
+        ],
+        "tail_bounds": [
+          3.0335878871771207e-12,
+          4.587884687005228e-12,
+          8.001639227123948e-12,
+          3.2054501503347637e-12,
+          5.524803558716888e-13,
+          1.6208946516694167e-12
+        ],
+        "evaluations": 14320,
+        "panels": 824,
+        "chart_margin": 0.9999999999999712,
+        "reflected": false,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "reference": {
+        "method": "slice",
+        "orders": [
+          32,
+          64
+        ],
+        "values": [
+          0.47401344184882127,
+          0.9986192614591314,
+          0.49999999999992906,
+          0.4999567648305058,
+          1.9618399396675743e-06,
+          0.2370067209244142
+        ],
+        "previous_order_values": [
+          0.474013441848821,
+          0.9986192614591313,
+          0.499999999999929,
+          0.4999567648305057,
+          1.961839939667586e-06,
+          0.2370067209244141
+        ],
+        "maximum_order_delta": 2.7755575615628914e-16,
+        "targeted_intervals_or_area_nodes": [
+          [
+            9,
+            11,
+            9,
+            13,
+            8,
+            11
+          ],
+          [
+            9,
+            11,
+            9,
+            13,
+            8,
+            11
+          ]
+        ],
+        "certified": false
+      },
+      "absolute_differences": [
+        4.4209080840573733e-13,
+        1.3220535777236364e-12,
+        7.09432512735475e-14,
+        1.1063372440389685e-12,
+        1.0515490015468743e-13,
+        2.174371793728369e-13
+      ],
+      "status": "resolved",
+      "passed": true
+    },
+    {
+      "index": 2,
+      "name": "historical-R10-h6",
+      "input": {
+        "name": "historical-R10-h6",
+        "shape": {
+          "kind": "disk_segment",
+          "center": [
+            40.5,
+            40.5
+          ],
+          "radius": 10,
+          "chord": 6
+        },
+        "sigma": 1.3,
+        "pixels": [
+          [
+            30,
+            40
+          ],
+          [
+            34,
+            40
+          ],
+          [
+            40,
+            40
+          ],
+          [
+            40,
+            45
+          ],
+          [
+            46,
+            40
+          ],
+          [
+            40,
+            50
+          ]
+        ]
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "independent_order_agreement": true,
+        "resolved_forward_targets": true,
+        "independent_probability_agreement": true
+      },
+      "result": {
+        "probabilities": [
+          0.47401344184895355,
+          0.9986212232997721,
+          0.9999980381605794,
+          0.9999116018306211,
+          0.4999999999369754,
+          0.4740133504700145
+        ],
+        "statuses": [
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved"
+        ],
+        "estimated_errors": [
+          1.523709297327281e-12,
+          3.2427067385161984e-12,
+          6.013305664605569e-12,
+          2.773511982334032e-12,
+          2.8247160931699195e-12,
+          2.40966934747679e-12
+        ],
+        "tail_bounds": [
+          1.4993995274968723e-12,
+          3.2041233181659947e-12,
+          5.969194020147915e-12,
+          2.7358726907364335e-12,
+          2.7974889944986696e-12,
+          2.3845041747059524e-12
+        ],
+        "evaluations": 12488,
+        "panels": 754,
+        "chart_margin": 0.9999999999999712,
+        "reflected": false,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "reference": {
+        "method": "slice",
+        "orders": [
+          32,
+          64
+        ],
+        "values": [
+          0.4740134418488285,
+          0.9986212232990711,
+          0.9999980381599614,
+          0.9999116018298831,
+          0.49999999993610067,
+          0.4740133504695863
+        ],
+        "previous_order_values": [
+          0.4740134418488282,
+          0.998621223299071,
+          0.9999980381599616,
+          0.9999116018298834,
+          0.4999999999361006,
+          0.47401335046958626
+        ],
+        "maximum_order_delta": 2.7755575615628914e-16,
+        "targeted_intervals_or_area_nodes": [
+          [
+            12,
+            14,
+            13,
+            17,
+            12,
+            16
+          ],
+          [
+            12,
+            14,
+            13,
+            17,
+            12,
+            16
+          ]
+        ],
+        "certified": false
+      },
+      "absolute_differences": [
+        1.2506662372402388e-13,
+        7.009948177483238e-13,
+        6.180611578088246e-13,
+        7.379652444683416e-13,
+        8.747447211021608e-13,
+        4.282130205979229e-13
+      ],
+      "status": "resolved",
+      "passed": true
+    },
+    {
+      "index": 3,
+      "name": "new-R2.75-phase-sigma.37",
+      "input": {
+        "name": "new-R2.75-phase-sigma.37",
+        "shape": {
+          "kind": "disk_segment",
+          "center": [
+            40.13,
+            40.72
+          ],
+          "radius": 2.75,
+          "chord": -0.8
+        },
+        "sigma": 0.37,
+        "pixels": [
+          [
+            30,
+            40
+          ],
+          [
+            34,
+            40
+          ],
+          [
+            40,
+            40
+          ],
+          [
+            40,
+            45
+          ],
+          [
+            46,
+            40
+          ],
+          [
+            40,
+            50
+          ]
+        ]
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "independent_order_agreement": true,
+        "resolved_forward_targets": true,
+        "independent_probability_agreement": true
+      },
+      "result": {
+        "probabilities": [
+          -1.3877787807814457e-17,
+          0.0,
+          0.0007830116502185796,
+          1.368377633426121e-12,
+          -1.3877787807814457e-17,
+          -6.938893903907228e-18
+        ],
+        "statuses": [
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved"
+        ],
+        "estimated_errors": [
+          9.84660787545678e-15,
+          5.752175828889093e-14,
+          2.820485069436162e-12,
+          1.2671072289240342e-12,
+          1.1148446484846782e-14,
+          5.358036816275416e-15
+        ],
+        "tail_bounds": [
+          1.906465223738365e-76,
+          3.825283276409485e-14,
+          2.7909892418571226e-12,
+          1.2539334491053802e-12,
+          9.643227216959491e-83,
+          1.9358366003407517e-84
+        ],
+        "evaluations": 1312,
+        "panels": 116,
+        "chart_margin": 0.9999999999999712,
+        "reflected": false,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "reference": {
+        "method": "slice",
+        "orders": [
+          32,
+          64
+        ],
+        "values": [
+          8.340192849593141e-78,
+          2.226411814900292e-15,
+          0.0007830116502628305,
+          1.5924733762482348e-12,
+          5.874562559667503e-84,
+          5.033658931092773e-87
+        ],
+        "previous_order_values": [
+          8.340192849592974e-78,
+          2.226411814900278e-15,
+          0.0007830116502628256,
+          1.5924733762482504e-12,
+          5.874562559667202e-84,
+          5.033658931092896e-87
+        ],
+        "maximum_order_delta": 4.87890977618477e-18,
+        "targeted_intervals_or_area_nodes": [
+          [
+            10,
+            12,
+            13,
+            7,
+            10,
+            4
+          ],
+          [
+            10,
+            12,
+            13,
+            7,
+            10,
+            4
+          ]
+        ],
+        "certified": false
+      },
+      "absolute_differences": [
+        1.3877787807814457e-17,
+        2.226411814900292e-15,
+        4.4250844308257875e-14,
+        2.2409574282211377e-13,
+        1.3877787807814457e-17,
+        6.938893903907228e-18
+      ],
+      "status": "resolved",
+      "passed": true
+    },
+    {
+      "index": 4,
+      "name": "new-R17.25-phase-sigma2.05",
+      "input": {
+        "name": "new-R17.25-phase-sigma2.05",
+        "shape": {
+          "kind": "disk_segment",
+          "center": [
+            40.81,
+            40.29
+          ],
+          "radius": 17.25,
+          "chord": 4.6
+        },
+        "sigma": 2.05,
+        "pixels": [
+          [
+            30,
+            40
+          ],
+          [
+            34,
+            40
+          ],
+          [
+            40,
+            40
+          ],
+          [
+            40,
+            45
+          ],
+          [
+            46,
+            40
+          ],
+          [
+            40,
+            50
+          ]
+        ]
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "independent_order_agreement": true,
+        "resolved_forward_targets": true,
+        "independent_probability_agreement": true
+      },
+      "result": {
+        "probabilities": [
+          0.999530227373253,
+          0.9999998684509189,
+          0.9916925809355086,
+          0.991692577152663,
+          0.2974643616679088,
+          0.9913072713811291
+        ],
+        "statuses": [
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved"
+        ],
+        "estimated_errors": [
+          4.5641456389223686e-12,
+          6.955949971348451e-12,
+          2.0982795039937333e-12,
+          4.5045766286266816e-12,
+          2.4990455606053636e-12,
+          3.3052092717212602e-12
+        ],
+        "tail_bounds": [
+          4.524624596631557e-12,
+          6.918342949012124e-12,
+          2.0560063058915815e-12,
+          4.466604572405201e-12,
+          2.4669101554573064e-12,
+          3.2681913247562337e-12
+        ],
+        "evaluations": 17444,
+        "panels": 1018,
+        "chart_margin": 0.9999999999999712,
+        "reflected": false,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "reference": {
+        "method": "slice",
+        "orders": [
+          32,
+          64
+        ],
+        "values": [
+          0.9995302273720512,
+          0.9999998684486453,
+          0.9916925809353936,
+          0.9916925771518921,
+          0.29746436166798285,
+          0.991307271380407
+        ],
+        "previous_order_values": [
+          0.9995302273720511,
+          0.9999998684486453,
+          0.9916925809353935,
+          0.991692577151892,
+          0.29746436166798274,
+          0.991307271380407
+        ],
+        "maximum_order_delta": 1.1102230246251565e-16,
+        "targeted_intervals_or_area_nodes": [
+          [
+            20,
+            20,
+            21,
+            19,
+            18,
+            19
+          ],
+          [
+            20,
+            20,
+            21,
+            19,
+            18,
+            19
+          ]
+        ],
+        "certified": false
+      },
+      "absolute_differences": [
+        1.201816424156732e-12,
+        2.273625732129858e-12,
+        1.1501910535116622e-13,
+        7.709388682997087e-13,
+        7.405187574249794e-14,
+        7.220890552162018e-13
+      ],
+      "status": "resolved",
+      "passed": true
+    },
+    {
+      "index": 5,
+      "name": "new-R12.75-narrow-sigma.025",
+      "input": {
+        "name": "new-R12.75-narrow-sigma.025",
+        "shape": {
+          "kind": "disk_segment",
+          "center": [
+            40.17,
+            40.21
+          ],
+          "radius": 12.75,
+          "chord": 0.341
+        },
+        "sigma": 0.025,
+        "pixels": [
+          [
+            30,
+            40
+          ],
+          [
+            34,
+            40
+          ],
+          [
+            40,
+            40
+          ],
+          [
+            40,
+            45
+          ],
+          [
+            46,
+            40
+          ],
+          [
+            40,
+            50
+          ]
+        ]
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "independent_order_agreement": true,
+        "resolved_forward_targets": true,
+        "independent_probability_agreement": true
+      },
+      "result": {
+        "probabilities": [
+          1.0,
+          1.0,
+          0.670031446339463,
+          0.6700314463394565,
+          -1.6653345369377348e-16,
+          0.670031446339462
+        ],
+        "statuses": [
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved"
+        ],
+        "estimated_errors": [
+          2.7383950477473483e-13,
+          2.764563408418833e-13,
+          1.3599669806449426e-12,
+          7.424414254624098e-13,
+          5.185392645570208e-14,
+          1.0355989091106787e-12
+        ],
+        "tail_bounds": [
+          9.540421654119816e-29,
+          9.540421654119816e-29,
+          9.93680458382256e-13,
+          6.579953870049166e-13,
+          1.5e-323,
+          9.623412490194422e-13
+        ],
+        "evaluations": 3560,
+        "panels": 268,
+        "chart_margin": 0.9999999999999712,
+        "reflected": false,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "reference": {
+        "method": "slice",
+        "orders": [
+          32,
+          64
+        ],
+        "values": [
+          0.9999999999999963,
+          1.000000000000012,
+          0.6700314463394589,
+          0.6700314463394589,
+          0.0,
+          0.6700314463394589
+        ],
+        "previous_order_values": [
+          0.9999999999999983,
+          1.0000000000000226,
+          0.6700314463394623,
+          0.6700314463394623,
+          0.0,
+          0.6700314463394623
+        ],
+        "maximum_order_delta": 1.0658141036401503e-14,
+        "targeted_intervals_or_area_nodes": [
+          [
+            28,
+            28,
+            22,
+            22,
+            15,
+            22
+          ],
+          [
+            28,
+            28,
+            22,
+            22,
+            15,
+            22
+          ]
+        ],
+        "certified": false
+      },
+      "absolute_differences": [
+        3.6637359812630166e-15,
+        1.199040866595169e-14,
+        4.107825191113079e-15,
+        2.3314683517128287e-15,
+        1.6653345369377348e-16,
+        3.1086244689504383e-15
+      ],
+      "status": "resolved",
+      "passed": true
+    },
+    {
+      "index": 6,
+      "name": "new-R.7-sigma1.1",
+      "input": {
+        "name": "new-R.7-sigma1.1",
+        "shape": {
+          "kind": "disk_segment",
+          "center": [
+            40.31,
+            40.63
+          ],
+          "radius": 0.7,
+          "chord": 0.2
+        },
+        "sigma": 1.1,
+        "pixels": [
+          [
+            30,
+            40
+          ],
+          [
+            34,
+            40
+          ],
+          [
+            40,
+            40
+          ],
+          [
+            40,
+            45
+          ],
+          [
+            46,
+            40
+          ],
+          [
+            40,
+            50
+          ]
+        ]
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "independent_order_agreement": true,
+        "resolved_forward_targets": true,
+        "independent_probability_agreement": true
+      },
+      "result": {
+        "probabilities": [
+          0.0,
+          4.959004180770006e-07,
+          0.11945462780060143,
+          1.6410982977535642e-05,
+          1.176577538820672e-08,
+          4.272434185950691e-18
+        ],
+        "statuses": [
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved"
+        ],
+        "estimated_errors": [
+          2.5104358583916394e-15,
+          2.188219696927773e-15,
+          3.4020978254782858e-15,
+          1.6725767454755082e-15,
+          2.038578712689035e-15,
+          1.3066600006200615e-15
+        ],
+        "tail_bounds": [
+          8.220475453551949e-17,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          6.6987384549454e-17
+        ],
+        "evaluations": 1912,
+        "panels": 92,
+        "chart_margin": 0.9999999999999712,
+        "reflected": false,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "reference": {
+        "method": "slice",
+        "orders": [
+          32,
+          64
+        ],
+        "values": [
+          1.486073507580906e-17,
+          4.959004180862025e-07,
+          0.11945462780060045,
+          1.641098297753123e-05,
+          1.1765775376425406e-08,
+          7.07357055525896e-18
+        ],
+        "previous_order_values": [
+          1.4860735075809043e-17,
+          4.959004180862018e-07,
+          0.11945462780060027,
+          1.6410982977531238e-05,
+          1.1765775376425396e-08,
+          7.073570555259004e-18
+        ],
+        "maximum_order_delta": 1.8041124150158794e-16,
+        "targeted_intervals_or_area_nodes": [
+          [
+            3,
+            3,
+            4,
+            4,
+            4,
+            3
+          ],
+          [
+            3,
+            3,
+            4,
+            4,
+            4,
+            3
+          ]
+        ],
+        "certified": false
+      },
+      "absolute_differences": [
+        1.486073507580906e-17,
+        9.201848301615499e-18,
+        9.71445146547012e-16,
+        4.411347589300396e-18,
+        1.1781313434549834e-17,
+        2.8011363693082686e-18
+      ],
+      "status": "resolved",
+      "passed": true
+    },
+    {
+      "index": 7,
+      "name": "centered-disk-R0.35",
+      "input": {
+        "name": "centered-disk-R0.35",
+        "shape": {
+          "kind": "disk",
+          "center": [
+            40.5,
+            40.5
+          ],
+          "radius": 0.35
+        },
+        "sigma": 1.0,
+        "pixels": [
+          [
+            40,
+            40
+          ]
+        ],
+        "oracle": "centered_disk"
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "independent_order_agreement": true,
+        "resolved_forward_targets": true,
+        "independent_probability_agreement": true
+      },
+      "result": {
+        "probabilities": [
+          0.059411936635657935
+        ],
+        "statuses": [
+          "resolved"
+        ],
+        "estimated_errors": [
+          1.6911908849702097e-15
+        ],
+        "tail_bounds": [
+          0.0
+        ],
+        "evaluations": 318,
+        "panels": 15,
+        "chart_margin": 0.9999999999999712,
+        "reflected": false,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "reference": {
+        "method": "centered_disk",
+        "orders": [
+          32,
+          64
+        ],
+        "values": [
+          0.05941193663565793
+        ],
+        "previous_order_values": [
+          0.05941193663565793
+        ],
+        "maximum_order_delta": 0.0,
+        "targeted_intervals_or_area_nodes": [
+          [
+            0
+          ],
+          [
+            0
+          ]
+        ],
+        "certified": false
+      },
+      "absolute_differences": [
+        6.938893903907228e-18
+      ],
+      "status": "resolved",
+      "passed": true
+    },
+    {
+      "index": 8,
+      "name": "centered-disk-R2.75",
+      "input": {
+        "name": "centered-disk-R2.75",
+        "shape": {
+          "kind": "disk",
+          "center": [
+            40.5,
+            40.5
+          ],
+          "radius": 2.75
+        },
+        "sigma": 1.0,
+        "pixels": [
+          [
+            40,
+            40
+          ]
+        ],
+        "oracle": "centered_disk"
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "independent_order_agreement": true,
+        "resolved_forward_targets": true,
+        "independent_probability_agreement": true
+      },
+      "result": {
+        "probabilities": [
+          0.9772058191163875
+        ],
+        "statuses": [
+          "resolved"
+        ],
+        "estimated_errors": [
+          2.780855431414544e-14
+        ],
+        "tail_bounds": [
+          0.0
+        ],
+        "evaluations": 2558,
+        "panels": 127,
+        "chart_margin": 0.9999999999999712,
+        "reflected": false,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "reference": {
+        "method": "centered_disk",
+        "orders": [
+          32,
+          64
+        ],
+        "values": [
+          0.9772058191163877
+        ],
+        "previous_order_values": [
+          0.9772058191163877
+        ],
+        "maximum_order_delta": 0.0,
+        "targeted_intervals_or_area_nodes": [
+          [
+            0
+          ],
+          [
+            0
+          ]
+        ],
+        "certified": false
+      },
+      "absolute_differences": [
+        2.220446049250313e-16
+      ],
+      "status": "resolved",
+      "passed": true
+    },
+    {
+      "index": 9,
+      "name": "centered-disk-R10",
+      "input": {
+        "name": "centered-disk-R10",
+        "shape": {
+          "kind": "disk",
+          "center": [
+            40.5,
+            40.5
+          ],
+          "radius": 10
+        },
+        "sigma": 1.0,
+        "pixels": [
+          [
+            40,
+            40
+          ]
+        ],
+        "oracle": "centered_disk"
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "independent_order_agreement": true,
+        "resolved_forward_targets": true,
+        "independent_probability_agreement": true
+      },
+      "result": {
+        "probabilities": [
+          1.0
+        ],
+        "statuses": [
+          "resolved"
+        ],
+        "estimated_errors": [
+          5.986520189327341e-14
+        ],
+        "tail_bounds": [
+          8.069022618103113e-15
+        ],
+        "evaluations": 62,
+        "panels": 31,
+        "chart_margin": 0.9999999999999712,
+        "reflected": false,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "reference": {
+        "method": "centered_disk",
+        "orders": [
+          32,
+          64
+        ],
+        "values": [
+          1.0
+        ],
+        "previous_order_values": [
+          1.0
+        ],
+        "maximum_order_delta": 0.0,
+        "targeted_intervals_or_area_nodes": [
+          [
+            0
+          ],
+          [
+            0
+          ]
+        ],
+        "certified": false
+      },
+      "absolute_differences": [
+        0.0
+      ],
+      "status": "resolved",
+      "passed": true
+    },
+    {
+      "index": 10,
+      "name": "centered-disk-R10000",
+      "input": {
+        "name": "centered-disk-R10000",
+        "shape": {
+          "kind": "disk",
+          "center": [
+            40.5,
+            40.5
+          ],
+          "radius": 10000.0
+        },
+        "sigma": 1.0,
+        "pixels": [
+          [
+            40,
+            40
+          ]
+        ],
+        "oracle": "centered_disk"
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "independent_order_agreement": true,
+        "resolved_forward_targets": true,
+        "independent_probability_agreement": true
+      },
+      "result": {
+        "probabilities": [
+          1.0
+        ],
+        "statuses": [
+          "resolved"
+        ],
+        "estimated_errors": [
+          5.68434188608096e-14
+        ],
+        "tail_bounds": [
+          0.0
+        ],
+        "evaluations": 30,
+        "panels": 15,
+        "chart_margin": 0.9999999999999712,
+        "reflected": false,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "reference": {
+        "method": "centered_disk",
+        "orders": [
+          32,
+          64
+        ],
+        "values": [
+          1.0
+        ],
+        "previous_order_values": [
+          1.0
+        ],
+        "maximum_order_delta": 0.0,
+        "targeted_intervals_or_area_nodes": [
+          [
+            0
+          ],
+          [
+            0
+          ]
+        ],
+        "certified": false
+      },
+      "absolute_differences": [
+        0.0
+      ],
+      "status": "resolved",
+      "passed": true
+    },
+    {
+      "index": 11,
+      "name": "giant-disk-boundary-layer-R1e4",
+      "input": {
+        "name": "giant-disk-boundary-layer-R1e4",
+        "shape": {
+          "kind": "disk",
+          "center": [
+            -9959.5,
+            40.5
+          ],
+          "radius": 10000
+        },
+        "sigma": 1.0,
+        "pixels": [
+          [
+            40,
+            40
+          ],
+          [
+            39,
+            40
+          ],
+          [
+            41,
+            40
+          ],
+          [
+            40,
+            41
+          ]
+        ]
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "independent_order_agreement": true,
+        "resolved_forward_targets": true,
+        "independent_probability_agreement": true
+      },
+      "result": {
+        "probabilities": [
+          0.4999800528859328,
+          0.8413326466247415,
+          0.1586431563025596,
+          0.49996010577208055
+        ],
+        "statuses": [
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved"
+        ],
+        "estimated_errors": [
+          9.308050625947412e-13,
+          2.2400709483137086e-12,
+          2.23244653887412e-12,
+          1.8948860768733286e-12
+        ],
+        "tail_bounds": [
+          7.542912914297884e-13,
+          2.058289569026621e-12,
+          2.0478441126928492e-12,
+          1.7215100911532953e-12
+        ],
+        "evaluations": 9552,
+        "panels": 690,
+        "chart_margin": 0.9999999999999712,
+        "reflected": false,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "reference": {
+        "method": "slice",
+        "orders": [
+          32,
+          64
+        ],
+        "values": [
+          0.4999800528859689,
+          0.8413326466248698,
+          0.1586431563025234,
+          0.49996010577207095
+        ],
+        "previous_order_values": [
+          0.499980052886,
+          0.8413326466248717,
+          0.1586431563025344,
+          0.49996010577212857
+        ],
+        "maximum_order_delta": 5.762057497804562e-14,
+        "targeted_intervals_or_area_nodes": [
+          [
+            20,
+            21,
+            19,
+            24
+          ],
+          [
+            20,
+            21,
+            19,
+            24
+          ]
+        ],
+        "certified": false
+      },
+      "absolute_differences": [
+        3.6137759451548845e-14,
+        1.283417816466681e-13,
+        3.6193270602780103e-14,
+        9.603429163007604e-15
+      ],
+      "status": "resolved",
+      "passed": true
+    },
+    {
+      "index": 12,
+      "name": "giant-disk-tiny-PSF",
+      "input": {
+        "name": "giant-disk-tiny-PSF",
+        "shape": {
+          "kind": "disk",
+          "center": [
+            -959.5,
+            40.5
+          ],
+          "radius": 1000
+        },
+        "sigma": 0.1,
+        "pixels": [
+          [
+            40,
+            40
+          ],
+          [
+            39,
+            40
+          ],
+          [
+            41,
+            40
+          ]
+        ]
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "independent_order_agreement": true,
+        "resolved_forward_targets": true,
+        "independent_probability_agreement": true
+      },
+      "result": {
+        "probabilities": [
+          0.4999800528859219,
+          0.999999999999961,
+          3.894801148263127e-14
+        ],
+        "statuses": [
+          "resolved",
+          "resolved",
+          "resolved"
+        ],
+        "estimated_errors": [
+          9.130021586325614e-13,
+          1.683861456948502e-13,
+          1.3120666754242855e-12
+        ],
+        "tail_bounds": [
+          7.542912914297896e-13,
+          1.6165471164622346e-18,
+          1.7047901257835103e-20
+        ],
+        "evaluations": 2538,
+        "panels": 225,
+        "chart_margin": 0.9999999999999712,
+        "reflected": false,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "reference": {
+        "method": "slice",
+        "orders": [
+          32,
+          64
+        ],
+        "values": [
+          0.4999800528859615,
+          1.0000000000000744,
+          7.616008607787232e-24
+        ],
+        "previous_order_values": [
+          0.49998005288598485,
+          1.0000000000000708,
+          7.616008606256737e-24
+        ],
+        "maximum_order_delta": 2.3370194668359545e-14,
+        "targeted_intervals_or_area_nodes": [
+          [
+            20,
+            26,
+            15
+          ],
+          [
+            20,
+            26,
+            15
+          ]
+        ],
+        "certified": false
+      },
+      "absolute_differences": [
+        3.957945082788683e-14,
+        1.1335377081422848e-13,
+        3.894801147501526e-14
+      ],
+      "status": "resolved",
+      "passed": true
+    },
+    {
+      "index": 13,
+      "name": "rectangle-product-exact",
+      "input": {
+        "name": "rectangle-product-exact",
+        "shape": {
+          "kind": "rectangle",
+          "bounds": [
+            [
+              35.2,
+              47.1
+            ],
+            [
+              36.8,
+              44.6
+            ]
+          ]
+        },
+        "covariance": [
+          [
+            0.49,
+            0
+          ],
+          [
+            0,
+            2.25
+          ]
+        ],
+        "pixels": [
+          [
+            35,
+            40
+          ],
+          [
+            40,
+            40
+          ],
+          [
+            47,
+            44
+          ],
+          [
+            48,
+            45
+          ]
+        ]
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "independent_order_agreement": true,
+        "resolved_forward_targets": true,
+        "independent_probability_agreement": true
+      },
+      "result": {
+        "probabilities": [
+          0.6592544321509689,
+          0.9900462954697827,
+          0.14947110234397226,
+          0.006239294540941801
+        ],
+        "statuses": [
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved"
+        ],
+        "estimated_errors": [
+          1.352404725261116e-12,
+          5.070358861304309e-12,
+          3.211159342296864e-12,
+          2.5763262603874167e-12
+        ],
+        "tail_bounds": [
+          1.3273241757216192e-12,
+          5.036584270394839e-12,
+          3.194908579311089e-12,
+          2.5584694333967437e-12
+        ],
+        "evaluations": 10324,
+        "panels": 572,
+        "chart_margin": 0.9999999999999712,
+        "reflected": false,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "reference": {
+        "method": "slice",
+        "orders": [
+          32,
+          64
+        ],
+        "values": [
+          0.6592544321507832,
+          0.9900462954691003,
+          0.14947110234322727,
+          0.006239294540580083
+        ],
+        "previous_order_values": [
+          0.6592544321507832,
+          0.9900462954691003,
+          0.14947110234322727,
+          0.006239294540580083
+        ],
+        "maximum_order_delta": 0.0,
+        "targeted_intervals_or_area_nodes": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "certified": false
+      },
+      "absolute_differences": [
+        1.857403120197887e-13,
+        6.824540932370837e-13,
+        7.449874050990957e-13,
+        3.617184676785179e-13
+      ],
+      "status": "resolved",
+      "passed": true
+    },
+    {
+      "index": 14,
+      "name": "rectangle-with-hole",
+      "input": {
+        "name": "rectangle-with-hole",
+        "shape": {
+          "kind": "rectangle",
+          "bounds": [
+            [
+              31.2,
+              49.7
+            ],
+            [
+              30.8,
+              50.2
+            ]
+          ],
+          "hole": {
+            "kind": "rectangle",
+            "bounds": [
+              [
+                37.4,
+                43.1
+              ],
+              [
+                36.9,
+                44.2
+              ]
+            ]
+          }
+        },
+        "sigma": 1.3,
+        "pixels": [
+          [
+            40,
+            40
+          ],
+          [
+            35,
+            40
+          ],
+          [
+            43,
+            40
+          ],
+          [
+            30,
+            30
+          ]
+        ]
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "independent_order_agreement": true,
+        "resolved_forward_targets": true,
+        "independent_probability_agreement": true
+      },
+      "result": {
+        "probabilities": [
+          0.036163425196723865,
+          0.9279570482979111,
+          0.6227463081868883,
+          0.12063319834391892
+        ],
+        "statuses": [
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved"
+        ],
+        "estimated_errors": [
+          4.085763746006129e-12,
+          1.5926249028166123e-12,
+          1.1695916315986413e-12,
+          3.395554234161796e-12
+        ],
+        "tail_bounds": [
+          4.01233799489927e-12,
+          1.5338688082126703e-12,
+          1.1118583098806867e-12,
+          3.3650656289967964e-12
+        ],
+        "evaluations": 10800,
+        "panels": 576,
+        "chart_margin": 0.9999999999999712,
+        "reflected": false,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "reference": {
+        "method": "slice",
+        "orders": [
+          32,
+          64
+        ],
+        "values": [
+          0.03616342519547966,
+          0.9279570482976754,
+          0.6227463081866782,
+          0.12063319834393474
+        ],
+        "previous_order_values": [
+          0.03616342519547966,
+          0.9279570482976754,
+          0.6227463081866782,
+          0.12063319834393474
+        ],
+        "maximum_order_delta": 0.0,
+        "targeted_intervals_or_area_nodes": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "certified": false
+      },
+      "absolute_differences": [
+        1.2442061270157012e-12,
+        2.3570034812792073e-13,
+        2.1005419625907962e-13,
+        1.582067810090848e-14
+      ],
+      "status": "resolved",
+      "passed": true
+    },
+    {
+      "index": 15,
+      "name": "concentric-annulus-center",
+      "input": {
+        "name": "concentric-annulus-center",
+        "shape": {
+          "kind": "disk",
+          "center": [
+            40.5,
+            40.5
+          ],
+          "radius": 8.0,
+          "hole": {
+            "kind": "disk",
+            "center": [
+              40.5,
+              40.5
+            ],
+            "radius": 3.0
+          }
+        },
+        "sigma": 2.0,
+        "pixels": [
+          [
+            40,
+            40
+          ]
+        ],
+        "oracle": "centered_disk"
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "independent_order_agreement": true,
+        "resolved_forward_targets": true,
+        "independent_probability_agreement": true
+      },
+      "result": {
+        "probabilities": [
+          0.32431700473044717
+        ],
+        "statuses": [
+          "resolved"
+        ],
+        "estimated_errors": [
+          4.766048277410555e-14
+        ],
+        "tail_bounds": [
+          0.0
+        ],
+        "evaluations": 6396,
+        "panels": 318,
+        "chart_margin": 0.9999999999999712,
+        "reflected": false,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "reference": {
+        "method": "centered_disk",
+        "orders": [
+          32,
+          64
+        ],
+        "values": [
+          0.3243170047304472
+        ],
+        "previous_order_values": [
+          0.3243170047304472
+        ],
+        "maximum_order_delta": 0.0,
+        "targeted_intervals_or_area_nodes": [
+          [
+            0
+          ],
+          [
+            0
+          ]
+        ],
+        "certified": false
+      },
+      "absolute_differences": [
+        5.551115123125783e-17
+      ],
+      "status": "resolved",
+      "passed": true
+    },
+    {
+      "index": 16,
+      "name": "anisotropic-correlated-D",
+      "input": {
+        "name": "anisotropic-correlated-D",
+        "shape": {
+          "kind": "disk_segment",
+          "center": [
+            40.13,
+            40.72
+          ],
+          "radius": 8.25,
+          "chord": 2.1
+        },
+        "sigma": 1.3,
+        "pixels": [
+          [
+            30,
+            40
+          ],
+          [
+            34,
+            40
+          ],
+          [
+            40,
+            40
+          ],
+          [
+            40,
+            45
+          ],
+          [
+            46,
+            40
+          ],
+          [
+            40,
+            50
+          ]
+        ],
+        "covariance": [
+          [
+            0.49,
+            0.21
+          ],
+          [
+            0.21,
+            1.69
+          ]
+        ]
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "independent_order_agreement": true,
+        "resolved_forward_targets": true,
+        "independent_probability_agreement": true
+      },
+      "result": {
+        "probabilities": [
+          0.0182306689108088,
+          0.9992970991479003,
+          0.9932712778801615,
+          0.9890326537133616,
+          5.296681288013971e-10,
+          0.11507626952012878
+        ],
+        "statuses": [
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved"
+        ],
+        "estimated_errors": [
+          2.1802445332264855e-12,
+          1.7340693713594139e-12,
+          5.815163757933148e-12,
+          1.918074223503407e-12,
+          2.350460120091387e-12,
+          1.4916920739966316e-12
+        ],
+        "tail_bounds": [
+          2.158195989333643e-12,
+          1.6981455379728216e-12,
+          5.775431365172304e-12,
+          1.8771892270625906e-12,
+          2.3224843356724782e-12,
+          1.4614469644925097e-12
+        ],
+        "evaluations": 12168,
+        "panels": 702,
+        "chart_margin": 0.9999999999999712,
+        "reflected": false,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "reference": {
+        "method": "slice",
+        "orders": [
+          32,
+          64
+        ],
+        "values": [
+          0.018230668910708785,
+          0.9992970991476513,
+          0.993271277878214,
+          0.9890326537131714,
+          5.303415296259127e-10,
+          0.115076269520018
+        ],
+        "previous_order_values": [
+          0.018230668910708788,
+          0.9992970991476514,
+          0.9932712778782143,
+          0.9890326537131716,
+          5.303415296259146e-10,
+          0.11507626952001804
+        ],
+        "maximum_order_delta": 3.3306690738754696e-16,
+        "targeted_intervals_or_area_nodes": [
+          [
+            17,
+            20,
+            21,
+            20,
+            14,
+            19
+          ],
+          [
+            17,
+            20,
+            21,
+            20,
+            14,
+            19
+          ]
+        ],
+        "certified": false
+      },
+      "absolute_differences": [
+        1.0001374728396684e-13,
+        2.490230244234226e-13,
+        1.947442207494987e-12,
+        1.9018120411828932e-13,
+        6.734008245155472e-13,
+        1.1078638006978281e-13
+      ],
+      "status": "resolved",
+      "passed": true
+    },
+    {
+      "index": 17,
+      "name": "affine-shear-D",
+      "input": {
+        "name": "affine-shear-D",
+        "shape": {
+          "kind": "disk_segment",
+          "center": [
+            24.5,
+            28.5
+          ],
+          "radius": 10,
+          "chord": 2.75
+        },
+        "sigma": 1.3,
+        "pixels": [
+          [
+            30,
+            40
+          ],
+          [
+            34,
+            40
+          ],
+          [
+            40,
+            40
+          ],
+          [
+            40,
+            45
+          ],
+          [
+            46,
+            40
+          ],
+          [
+            40,
+            50
+          ]
+        ],
+        "homography": [
+          [
+            1.15,
+            0.25,
+            5
+          ],
+          [
+            -0.2,
+            0.9,
+            12
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ]
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "independent_order_agreement": true,
+        "resolved_forward_targets": true,
+        "independent_probability_agreement": true
+      },
+      "result": {
+        "probabilities": [
+          0.06808220328550463,
+          0.5613247645623893,
+          0.8605083881777403,
+          0.002924966834170896,
+          0.1680103716663629,
+          1.896681856711213e-11
+        ],
+        "statuses": [
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved"
+        ],
+        "estimated_errors": [
+          2.4637201911258093e-12,
+          3.253869324178765e-12,
+          1.594393060638912e-12,
+          2.5880712715248105e-12,
+          1.5148736794919218e-12,
+          5.048346531492173e-12
+        ],
+        "tail_bounds": [
+          2.437017960417967e-12,
+          3.2279812528668505e-12,
+          1.5610687171575713e-12,
+          2.5608922690416045e-12,
+          1.494935959590985e-12,
+          5.024534677867363e-12
+        ],
+        "evaluations": 11084,
+        "panels": 646,
+        "chart_margin": 0.9999999999996586,
+        "reflected": false,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "reference": {
+        "method": "slice",
+        "orders": [
+          32,
+          64
+        ],
+        "values": [
+          0.06808220328538432,
+          0.5613247645620524,
+          0.8605083881775112,
+          0.0029249668341073992,
+          0.16801037166633725,
+          2.093573036804254e-11
+        ],
+        "previous_order_values": [
+          0.06808220328538435,
+          0.5613247645620522,
+          0.8605083881775112,
+          0.0029249668341074014,
+          0.1680103716663373,
+          2.0935730368042557e-11
+        ],
+        "maximum_order_delta": 2.220446049250313e-16,
+        "targeted_intervals_or_area_nodes": [
+          [
+            16,
+            18,
+            17,
+            14,
+            14,
+            13
+          ],
+          [
+            16,
+            18,
+            17,
+            14,
+            14,
+            13
+          ]
+        ],
+        "certified": false
+      },
+      "absolute_differences": [
+        1.2030654250594353e-13,
+        3.36952687973735e-13,
+        2.291500322826323e-13,
+        6.349695075291706e-14,
+        2.5646151868841116e-14,
+        1.9689118009304095e-12
+      ],
+      "status": "resolved",
+      "passed": true
+    },
+    {
+      "index": 18,
+      "name": "affine-reflection-D",
+      "input": {
+        "name": "affine-reflection-D",
+        "shape": {
+          "kind": "disk_segment",
+          "center": [
+            40.5,
+            40.5
+          ],
+          "radius": 10,
+          "chord": -2.75
+        },
+        "sigma": 1.3,
+        "pixels": [
+          [
+            30,
+            40
+          ],
+          [
+            34,
+            40
+          ],
+          [
+            40,
+            40
+          ],
+          [
+            40,
+            45
+          ],
+          [
+            46,
+            40
+          ],
+          [
+            40,
+            50
+          ]
+        ],
+        "homography": [
+          [
+            -1,
+            0,
+            81
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ]
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "independent_order_agreement": true,
+        "resolved_forward_targets": true,
+        "independent_probability_agreement": true
+      },
+      "result": {
+        "probabilities": [
+          -2.7755575615628914e-17,
+          5.525215701629449e-12,
+          0.017198589971437597,
+          0.017192594994350913,
+          0.9924115579737744,
+          0.005837724278774999
+        ],
+        "statuses": [
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved"
+        ],
+        "estimated_errors": [
+          2.158496311453922e-14,
+          5.513184271903908e-12,
+          6.938117745772935e-12,
+          2.7530811932270032e-12,
+          3.4236267532567237e-12,
+          1.5115428201531355e-12
+        ],
+        "tail_bounds": [
+          9.019863150806951e-22,
+          5.487283538308502e-12,
+          6.905727709678733e-12,
+          2.724633985803331e-12,
+          3.3933087254528833e-12,
+          1.4916961871509256e-12
+        ],
+        "evaluations": 7628,
+        "panels": 466,
+        "chart_margin": 0.9999999999976975,
+        "reflected": true,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "reference": {
+        "method": "slice",
+        "orders": [
+          32,
+          64
+        ],
+        "values": [
+          5.216353906644786e-23,
+          8.438422731727854e-12,
+          0.01719858997156071,
+          0.017192594993901963,
+          0.9924115579732955,
+          0.005837724278687681
+        ],
+        "previous_order_values": [
+          5.216353906644867e-23,
+          8.438422731727922e-12,
+          0.01719858997156079,
+          0.017192594993902043,
+          0.9924115579732954,
+          0.005837724278687695
+        ],
+        "maximum_order_delta": 1.1102230246251565e-16,
+        "targeted_intervals_or_area_nodes": [
+          [
+            6,
+            7,
+            7,
+            11,
+            10,
+            9
+          ],
+          [
+            6,
+            7,
+            7,
+            11,
+            10,
+            9
+          ]
+        ],
+        "certified": false
+      },
+      "absolute_differences": [
+        2.775562777916798e-17,
+        2.9132070300984054e-12,
+        1.23113325090074e-13,
+        4.4894990502974963e-13,
+        4.789502128232925e-13,
+        8.731730616329259e-14
+      ],
+      "status": "resolved",
+      "passed": true
+    },
+    {
+      "index": 19,
+      "name": "negative-homography-gauge-D",
+      "input": {
+        "name": "negative-homography-gauge-D",
+        "shape": {
+          "kind": "disk_segment",
+          "center": [
+            40.5,
+            40.5
+          ],
+          "radius": 10,
+          "chord": -2.75
+        },
+        "sigma": 1.3,
+        "pixels": [
+          [
+            30,
+            40
+          ],
+          [
+            34,
+            40
+          ],
+          [
+            40,
+            40
+          ],
+          [
+            40,
+            45
+          ],
+          [
+            46,
+            40
+          ],
+          [
+            40,
+            50
+          ]
+        ],
+        "homography": [
+          [
+            7,
+            0,
+            -567
+          ],
+          [
+            0,
+            -7,
+            0
+          ],
+          [
+            0,
+            0,
+            -7
+          ]
+        ]
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "independent_order_agreement": true,
+        "resolved_forward_targets": true,
+        "independent_probability_agreement": true
+      },
+      "result": {
+        "probabilities": [
+          -2.7755575615628914e-17,
+          5.525215701629449e-12,
+          0.017198589971437597,
+          0.017192594994350913,
+          0.9924115579737744,
+          0.005837724278774999
+        ],
+        "statuses": [
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved"
+        ],
+        "estimated_errors": [
+          2.158496311453922e-14,
+          5.513184271903908e-12,
+          6.938117745772935e-12,
+          2.7530811932270032e-12,
+          3.4236267532567237e-12,
+          1.5115428201531355e-12
+        ],
+        "tail_bounds": [
+          9.019863150806951e-22,
+          5.487283538308502e-12,
+          6.905727709678733e-12,
+          2.724633985803331e-12,
+          3.3933087254528833e-12,
+          1.4916961871509256e-12
+        ],
+        "evaluations": 7628,
+        "panels": 466,
+        "chart_margin": 0.9999999999976975,
+        "reflected": true,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "reference": {
+        "method": "slice",
+        "orders": [
+          32,
+          64
+        ],
+        "values": [
+          5.216353906644786e-23,
+          8.438422731727854e-12,
+          0.01719858997156071,
+          0.017192594993901963,
+          0.9924115579732955,
+          0.005837724278687681
+        ],
+        "previous_order_values": [
+          5.216353906644867e-23,
+          8.438422731727922e-12,
+          0.01719858997156079,
+          0.017192594993902043,
+          0.9924115579732954,
+          0.005837724278687695
+        ],
+        "maximum_order_delta": 1.1102230246251565e-16,
+        "targeted_intervals_or_area_nodes": [
+          [
+            6,
+            7,
+            7,
+            11,
+            10,
+            9
+          ],
+          [
+            6,
+            7,
+            7,
+            11,
+            10,
+            9
+          ]
+        ],
+        "certified": false
+      },
+      "absolute_differences": [
+        2.775562777916798e-17,
+        2.9132070300984054e-12,
+        1.23113325090074e-13,
+        4.4894990502974963e-13,
+        4.789502128232925e-13,
+        8.731730616329259e-14
+      ],
+      "status": "resolved",
+      "passed": true
+    },
+    {
+      "index": 20,
+      "name": "huge-homography-gauge-D",
+      "input": {
+        "name": "huge-homography-gauge-D",
+        "shape": {
+          "kind": "disk_segment",
+          "center": [
+            40.5,
+            40.5
+          ],
+          "radius": 10,
+          "chord": 6
+        },
+        "sigma": 1.3,
+        "pixels": [
+          [
+            30,
+            40
+          ],
+          [
+            34,
+            40
+          ],
+          [
+            40,
+            40
+          ],
+          [
+            40,
+            45
+          ],
+          [
+            46,
+            40
+          ],
+          [
+            40,
+            50
+          ]
+        ],
+        "homography": [
+          [
+            1e+40,
+            0,
+            0
+          ],
+          [
+            0,
+            1e+40,
+            0
+          ],
+          [
+            0,
+            0,
+            1e+40
+          ]
+        ]
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "independent_order_agreement": true,
+        "resolved_forward_targets": true,
+        "independent_probability_agreement": true
+      },
+      "result": {
+        "probabilities": [
+          0.47401344184895355,
+          0.9986212232997721,
+          0.9999980381605794,
+          0.9999116018306211,
+          0.4999999999369754,
+          0.4740133504700145
+        ],
+        "statuses": [
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved"
+        ],
+        "estimated_errors": [
+          1.523709297327281e-12,
+          3.2427067385161984e-12,
+          6.013305664605569e-12,
+          2.773511982334032e-12,
+          2.8247160931699195e-12,
+          2.40966934747679e-12
+        ],
+        "tail_bounds": [
+          1.4993995274968723e-12,
+          3.2041233181659947e-12,
+          5.969194020147915e-12,
+          2.7358726907364335e-12,
+          2.7974889944986696e-12,
+          2.3845041747059524e-12
+        ],
+        "evaluations": 12488,
+        "panels": 754,
+        "chart_margin": 0.9999999999999712,
+        "reflected": false,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "reference": {
+        "method": "slice",
+        "orders": [
+          32,
+          64
+        ],
+        "values": [
+          0.4740134418488285,
+          0.9986212232990711,
+          0.9999980381599614,
+          0.9999116018298831,
+          0.49999999993610067,
+          0.4740133504695863
+        ],
+        "previous_order_values": [
+          0.4740134418488282,
+          0.998621223299071,
+          0.9999980381599616,
+          0.9999116018298834,
+          0.4999999999361006,
+          0.47401335046958626
+        ],
+        "maximum_order_delta": 2.7755575615628914e-16,
+        "targeted_intervals_or_area_nodes": [
+          [
+            12,
+            14,
+            13,
+            17,
+            12,
+            16
+          ],
+          [
+            12,
+            14,
+            13,
+            17,
+            12,
+            16
+          ]
+        ],
+        "certified": false
+      },
+      "absolute_differences": [
+        1.2506662372402388e-13,
+        7.009948177483238e-13,
+        6.180611578088246e-13,
+        7.379652444683416e-13,
+        8.747447211021608e-13,
+        4.282130205979229e-13
+      ],
+      "status": "resolved",
+      "passed": true
+    },
+    {
+      "index": 21,
+      "name": "reversed-closed-boundary-D",
+      "input": {
+        "name": "reversed-closed-boundary-D",
+        "shape": {
+          "kind": "disk_segment",
+          "center": [
+            40.5,
+            40.5
+          ],
+          "radius": 10,
+          "chord": 6
+        },
+        "sigma": 1.3,
+        "pixels": [
+          [
+            30,
+            40
+          ],
+          [
+            34,
+            40
+          ],
+          [
+            40,
+            40
+          ],
+          [
+            40,
+            45
+          ],
+          [
+            46,
+            40
+          ],
+          [
+            40,
+            50
+          ]
+        ],
+        "reverse": true
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "independent_order_agreement": true,
+        "resolved_forward_targets": true,
+        "independent_probability_agreement": true
+      },
+      "result": {
+        "probabilities": [
+          0.4740134418489535,
+          0.9986212232997721,
+          0.9999980381605793,
+          0.999911601830621,
+          0.4999999999369754,
+          0.4740133504700145
+        ],
+        "statuses": [
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved"
+        ],
+        "estimated_errors": [
+          1.5237086468059776e-12,
+          3.2427093406014124e-12,
+          6.0133091340507e-12,
+          2.7735249927589826e-12,
+          2.8247169605316575e-12,
+          2.4096782785912665e-12
+        ],
+        "tail_bounds": [
+          1.4993995274968723e-12,
+          3.2041233181659947e-12,
+          5.9691940201460935e-12,
+          2.735872690735314e-12,
+          2.7974889944986696e-12,
+          2.384504174705033e-12
+        ],
+        "evaluations": 12488,
+        "panels": 754,
+        "chart_margin": 0.9999999999999712,
+        "reflected": false,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "reference": {
+        "method": "slice",
+        "orders": [
+          32,
+          64
+        ],
+        "values": [
+          0.4740134418488285,
+          0.9986212232990711,
+          0.9999980381599614,
+          0.9999116018298831,
+          0.49999999993610067,
+          0.4740133504695863
+        ],
+        "previous_order_values": [
+          0.4740134418488282,
+          0.998621223299071,
+          0.9999980381599616,
+          0.9999116018298834,
+          0.4999999999361006,
+          0.47401335046958626
+        ],
+        "maximum_order_delta": 2.7755575615628914e-16,
+        "targeted_intervals_or_area_nodes": [
+          [
+            12,
+            14,
+            13,
+            17,
+            12,
+            16
+          ],
+          [
+            12,
+            14,
+            13,
+            17,
+            12,
+            16
+          ]
+        ],
+        "certified": false
+      },
+      "absolute_differences": [
+        1.2501111257279263e-13,
+        7.009948177483238e-13,
+        6.179501355063621e-13,
+        7.37854222165879e-13,
+        8.747447211021608e-13,
+        4.282130205979229e-13
+      ],
+      "status": "resolved",
+      "passed": true
+    },
+    {
+      "index": 22,
+      "name": "cyclic-closed-boundary-D",
+      "input": {
+        "name": "cyclic-closed-boundary-D",
+        "shape": {
+          "kind": "disk_segment",
+          "center": [
+            40.5,
+            40.5
+          ],
+          "radius": 10,
+          "chord": 6
+        },
+        "sigma": 1.3,
+        "pixels": [
+          [
+            30,
+            40
+          ],
+          [
+            34,
+            40
+          ],
+          [
+            40,
+            40
+          ],
+          [
+            40,
+            45
+          ],
+          [
+            46,
+            40
+          ],
+          [
+            40,
+            50
+          ]
+        ],
+        "cyclic_shift": 1
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "independent_order_agreement": true,
+        "resolved_forward_targets": true,
+        "independent_probability_agreement": true
+      },
+      "result": {
+        "probabilities": [
+          0.4740134418489535,
+          0.9986212232997721,
+          0.9999980381605793,
+          0.9999116018306211,
+          0.4999999999369754,
+          0.4740133504700145
+        ],
+        "statuses": [
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved"
+        ],
+        "estimated_errors": [
+          1.5237086468059776e-12,
+          3.2427093406014124e-12,
+          6.0133091340507e-12,
+          2.7735119823337077e-12,
+          2.8247169605316575e-12,
+          2.409753706876959e-12
+        ],
+        "tail_bounds": [
+          1.4993995274968723e-12,
+          3.2041233181659947e-12,
+          5.9691940201460935e-12,
+          2.7358726907361087e-12,
+          2.7974889944986696e-12,
+          2.3845041747067723e-12
+        ],
+        "evaluations": 12488,
+        "panels": 754,
+        "chart_margin": 0.9999999999999712,
+        "reflected": false,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "reference": {
+        "method": "slice",
+        "orders": [
+          32,
+          64
+        ],
+        "values": [
+          0.4740134418488285,
+          0.9986212232990711,
+          0.9999980381599614,
+          0.9999116018298831,
+          0.49999999993610067,
+          0.4740133504695863
+        ],
+        "previous_order_values": [
+          0.4740134418488282,
+          0.998621223299071,
+          0.9999980381599616,
+          0.9999116018298834,
+          0.4999999999361006,
+          0.47401335046958626
+        ],
+        "maximum_order_delta": 2.7755575615628914e-16,
+        "targeted_intervals_or_area_nodes": [
+          [
+            12,
+            14,
+            13,
+            17,
+            12,
+            16
+          ],
+          [
+            12,
+            14,
+            13,
+            17,
+            12,
+            16
+          ]
+        ],
+        "certified": false
+      },
+      "absolute_differences": [
+        1.2501111257279263e-13,
+        7.009948177483238e-13,
+        6.179501355063621e-13,
+        7.379652444683416e-13,
+        8.747447211021608e-13,
+        4.282130205979229e-13
+      ],
+      "status": "resolved",
+      "passed": true
+    },
+    {
+      "index": 23,
+      "name": "projective-D-moderate",
+      "input": {
+        "name": "projective-D-moderate",
+        "shape": {
+          "kind": "disk_segment",
+          "center": [
+            25.5,
+            25.5
+          ],
+          "radius": 3.25,
+          "chord": 0.7
+        },
+        "sigma": 1.1,
+        "homography": [
+          [
+            1.1,
+            0.1,
+            9
+          ],
+          [
+            -0.1,
+            0.95,
+            10
+          ],
+          [
+            0.002,
+            -0.001,
+            1
+          ]
+        ],
+        "pixels": [
+          [
+            35,
+            30
+          ],
+          [
+            36,
+            31
+          ],
+          [
+            37,
+            32
+          ],
+          [
+            39,
+            31
+          ]
+        ],
+        "oracle": "plane_area"
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "independent_order_agreement": true,
+        "resolved_forward_targets": true,
+        "independent_probability_agreement": true
+      },
+      "result": {
+        "probabilities": [
+          0.47393287295113856,
+          0.7755467289909759,
+          0.7976951651723113,
+          0.4613028934866612
+        ],
+        "statuses": [
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved"
+        ],
+        "estimated_errors": [
+          1.3512483129695271e-14,
+          2.211869161402478e-14,
+          2.2713493561989006e-14,
+          1.4363810411985628e-14
+        ],
+        "tail_bounds": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "evaluations": 7664,
+        "panels": 376,
+        "chart_margin": 0.9885047633880001,
+        "reflected": false,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "reference": {
+        "method": "plane_area",
+        "orders": [
+          24,
+          48
+        ],
+        "values": [
+          0.4739328729511406,
+          0.7755467289909765,
+          0.7976951651723116,
+          0.4613028934866602
+        ],
+        "previous_order_values": [
+          0.4739328729511408,
+          0.7755467289909767,
+          0.7976951651723116,
+          0.46130289348666
+        ],
+        "maximum_order_delta": 2.220446049250313e-16,
+        "targeted_intervals_or_area_nodes": [
+          [
+            18432,
+            18432,
+            18432,
+            18432
+          ],
+          [
+            73728,
+            73728,
+            73728,
+            73728
+          ]
+        ],
+        "certified": false
+      },
+      "absolute_differences": [
+        2.0539125955565396e-15,
+        6.661338147750939e-16,
+        3.3306690738754696e-16,
+        9.992007221626409e-16
+      ],
+      "status": "resolved",
+      "passed": true
+    },
+    {
+      "index": 24,
+      "name": "projective-reflected-D-moderate",
+      "input": {
+        "name": "projective-reflected-D-moderate",
+        "shape": {
+          "kind": "disk_segment",
+          "center": [
+            25.5,
+            25.5
+          ],
+          "radius": 3.25,
+          "chord": -0.7
+        },
+        "covariance": [
+          [
+            1.21,
+            0.15
+          ],
+          [
+            0.15,
+            0.81
+          ]
+        ],
+        "homography": [
+          [
+            -1.1,
+            -0.1,
+            72
+          ],
+          [
+            -0.1,
+            0.95,
+            10
+          ],
+          [
+            0.002,
+            -0.001,
+            1
+          ]
+        ],
+        "pixels": [
+          [
+            40,
+            30
+          ],
+          [
+            41,
+            31
+          ],
+          [
+            42,
+            32
+          ],
+          [
+            43,
+            31
+          ]
+        ],
+        "oracle": "plane_area"
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "independent_order_agreement": true,
+        "resolved_forward_targets": true,
+        "independent_probability_agreement": true
+      },
+      "result": {
+        "probabilities": [
+          0.25991936630677825,
+          0.6040042214722487,
+          0.6868767525311107,
+          0.6421540276746671
+        ],
+        "statuses": [
+          "resolved",
+          "resolved",
+          "resolved",
+          "resolved"
+        ],
+        "estimated_errors": [
+          1.7594159988268294e-14,
+          1.721106792605905e-14,
+          1.9577288945301012e-14,
+          1.8289279100604492e-14
+        ],
+        "tail_bounds": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "evaluations": 7664,
+        "panels": 376,
+        "chart_margin": 0.9911990923494707,
+        "reflected": true,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "reference": {
+        "method": "plane_area",
+        "orders": [
+          24,
+          48
+        ],
+        "values": [
+          0.25991936630677853,
+          0.6040042214722482,
+          0.6868767525311097,
+          0.6421540276746669
+        ],
+        "previous_order_values": [
+          0.2599193663067784,
+          0.6040042214722482,
+          0.6868767525311098,
+          0.6421540276746668
+        ],
+        "maximum_order_delta": 1.1102230246251565e-16,
+        "targeted_intervals_or_area_nodes": [
+          [
+            18432,
+            18432,
+            18432,
+            18432
+          ],
+          [
+            73728,
+            73728,
+            73728,
+            73728
+          ]
+        ],
+        "certified": false
+      },
+      "absolute_differences": [
+        2.7755575615628914e-16,
+        5.551115123125783e-16,
+        9.992007221626409e-16,
+        2.220446049250313e-16
+      ],
+      "status": "resolved",
+      "passed": true
+    },
+    {
+      "index": 25,
+      "name": "work-limit-retains-unresolved",
+      "input": {
+        "name": "work-limit-retains-unresolved",
+        "shape": {
+          "kind": "disk",
+          "center": [
+            -9959.5,
+            40.5
+          ],
+          "radius": 10000
+        },
+        "sigma": 1.0,
+        "pixels": [
+          [
+            40,
+            40
+          ]
+        ],
+        "max_panels": 1,
+        "max_evaluations": 16,
+        "expected": "unresolved"
+      },
+      "execution": "executed",
+      "checks": {
+        "all_queries_retained": true,
+        "evaluation_budget_respected": true,
+        "panel_budget_respected": true,
+        "no_formal_or_topology_claim": true,
+        "budget_keeps_unresolved_query": true
+      },
+      "result": {
+        "probabilities": [
+          null
+        ],
+        "statuses": [
+          "work_limit"
+        ],
+        "estimated_errors": [
+          null
+        ],
+        "tail_bounds": [
+          0.0
+        ],
+        "evaluations": 2,
+        "panels": 1,
+        "chart_margin": 0.9999999999999712,
+        "reflected": false,
+        "topology_validated": false,
+        "quadrature_certified": false
+      },
+      "status": "unresolved",
+      "passed": true
+    },
+    {
+      "index": 26,
+      "name": "source-horizon-refused",
+      "input": {
+        "name": "source-horizon-refused",
+        "shape": {
+          "kind": "disk",
+          "center": [
+            0,
+            0
+          ],
+          "radius": 2
+        },
+        "sigma": 1.0,
+        "pixels": [
+          [
+            40,
+            40
+          ]
+        ],
+        "homography": [
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0.6,
+            0,
+            1
+          ]
+        ],
+        "expected": "refused"
+      },
+      "execution": "executed",
+      "checks": {
+        "invalid_input_refused": true
+      },
+      "status": "refused",
+      "refusal": "ValueError: finite shape crosses or cannot resolve a projective horizon",
+      "passed": true
+    },
+    {
+      "index": 27,
+      "name": "indefinite-PSF-refused",
+      "input": {
+        "name": "indefinite-PSF-refused",
+        "shape": {
+          "kind": "disk",
+          "center": [
+            40.5,
+            40.5
+          ],
+          "radius": 2
+        },
+        "covariance": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "pixels": [
+          [
+            40,
+            40
+          ]
+        ],
+        "expected": "refused"
+      },
+      "execution": "executed",
+      "checks": {
+        "invalid_input_refused": true
+      },
+      "status": "refused",
+      "refusal": "ValueError: PSF covariance must be symmetric positive definite",
+      "passed": true
+    }
+  ],
+  "limits": [
+    "The mathematical model is a supplied finite material, fixed lens-free homography, stationary raw Gaussian PSF and point detector. No camera calibration, optical adequacy or physical CAD acceptance is inferred.",
+    "The reference uses separate conditional-normal slice/area integrals, targeted breakpoints, standard-library erfc and numerical quadrature. Order agreement is not a rigorous integration certificate.",
+    "Nonidentity affine controls pull the Gaussian back exactly; projective controls integrate the RAW Gaussian times the projective area Jacobian instead of assuming a Gaussian plane field.",
+    "Complete geometry, including off-sensor material, contributes before point sampling. No implicit sensor clipping, pixel-aperture averaging, response curve, wall, segmentation or downstream resampling is included.",
+    "Expected work-limit and invalid-input outcomes remain in the report. Finite case agreement is not a convergence guarantee for arbitrary supplied curves."
+  ]
+}

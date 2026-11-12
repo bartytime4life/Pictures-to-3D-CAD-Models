@@ -540,6 +540,23 @@ movement larger than the fit tolerance leaves the constraint unresolved.
 Those are arithmetic/representation checks, not physical uncertainty bounds.
 Roundoff-level parallel directions retain their separate constant-width cap model.
 
+## Finite-shape source prediction
+
+Local half-plane or isolated-circle corrections omit light contributed by a
+nearby chord, corner, opposite boundary or hole. A circle-consistent export can
+therefore remain inconsistent with the source image. The
+[finite-shape developer model](finite-shape-source.md) integrates the entire
+projected region under a supplied Gaussian PSF before point sampling. Its
+boundary-flux quadrature preserves far-boundary winding contributions and
+resolves near-boundary travel before accepting embedded-order agreement.
+
+The conditional circular-segment fitter jointly searches radius and chord
+fraction with fixed pose, raw covariance and source/noise support. Bounded
+brightness is profiled at every geometry; local domain-scaled Gauss–Newton steps
+use actual profiled-cost backtracking. Error estimates and local ranks remain
+numerical diagnostics. Pixel apertures, unknown radiometry, joint camera/PSF
+inference and production source-context capture remain separate work.
+
 ## Circle-consistent joins and minimum-edit cycles
 
 The [canonical-arc candidate](validation/canonical-arcs.md) repairs the separate
