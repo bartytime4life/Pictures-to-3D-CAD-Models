@@ -3,6 +3,18 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Conditional common-response calibration — November 12, 2026
+
+- Add exact rational consistency of one nondecreasing scalar function, supplied
+  output/slope bounds, tight knot/query bands and a shared piecewise-linear witness.
+- Preserve duplicate constraints and exact source-indexed contradictions; refuse
+  invalid inputs and bounded-resource exhaustion without a mathematical verdict.
+- Add a provenance-bound decimal-string CLI, independent graph oracle and complete
+  [edge/calibration controls](validation/response-calibration.md). Unknown response
+  can preserve edge ambiguity, and incorrect calibration can exclude truth.
+- This developer work adds no automatic image correction, inverse, physical
+  likelihood, workbench endpoint or accuracy status.
+
 ## Documentation review through PR #64 — November 12, 2026
 
 - Bring setup and the sample workflow forward in the README; keep mathematical

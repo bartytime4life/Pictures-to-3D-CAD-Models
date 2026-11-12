@@ -53,12 +53,13 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Understand correlated profile samples and compose a known smoothing filter | [Fixed observations and covariance](profile-observations.md), [complete controls](validation/profile-observations.md) |
 | Include known perspective/lens resampling and inspect raw optical assumptions | [Warp-chain model](warp-observations.md), [complete digital and optical controls](validation/warp-observations.md) |
 | Fit a supplied straight raw optical source without inverting weak profile modes | [Source-space variable projection](raw-source-fit.md), [complete controls and limitations](validation/raw-source-fit.md) |
+| Check externally bounded calibration for one common scalar response | [Exact response consistency](response-calibration.md), [edge/calibration controls](validation/response-calibration.md) |
 | Understand the lens inverse domain and independent synthetic camera checks | [Radial inverse and lens mismatch](validation/radial-inverse.md) |
 | Review why the blur diagnostic remains research only | [Directional-spread qualification](validation/directional-spread-qualification.md) |
 | Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |
 | Run a benchmark with measured photos | [Photo benchmark](photo-benchmark.md) |
 | Review completed checks | [Validation overview](validation.md), [design QA](../design-qa.md) |
-| Check current documentation coverage and source consistency | [Current documentation review](validation/documentation-latest.md), [raw-source coverage at PR #64](validation/raw-source-fit.md#documentation-coverage), [earlier complete inventory](validation/documentation-alignment.md), [earlier complete review](validation/documentation-complete-2026-11-12.md), [earlier consolidation](validation/documentation-math-state.md) |
+| Check current documentation coverage and source consistency | [Current coverage](validation/response-calibration.md#documentation-coverage), [documentation review at PR #65](validation/documentation-latest.md), [raw-source coverage at PR #64](validation/raw-source-fit.md#documentation-coverage), [earlier complete inventory](validation/documentation-alignment.md), [earlier complete review](validation/documentation-complete-2026-11-12.md), [earlier consolidation](validation/documentation-math-state.md) |
 | Interpret incomplete hosted runs and the overall job limit | [Runtime-budget evidence](validation/ci-runtime-budget.md), [exact-head CI status](project-status.md#evidence-by-scope) |
 | Review the recent interface changes | [Guided-workbench audit](validation/guided-workbench.md) |
 | Review scope and future work | [Roadmap](roadmap.md), [change log](changelog.md) |

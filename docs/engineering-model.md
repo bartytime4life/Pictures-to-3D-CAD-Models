@@ -256,3 +256,11 @@ or confidence interval. Physical/statistical interpretation of these diagnostics
 still needs independently justified camera response, optics and noise, followed
 by reserved measured captures. Decoding saved values as sRGB supplies no camera
 calibration.
+
+The [exact common-response tool](response-calibration.md) makes supplied response
+constraints testable while retaining one shared function. Its query envelopes
+are marginal possibilities, so choosing separate per-pixel response values does
+not establish a common camera model. The [edge/calibration controls](validation/response-calibration.md)
+show that endpoint normalization alone can leave many edge positions compatible,
+and a wrong tight calibration can reject the true position. Input uncertainty,
+channel/stage dependence and any transformed noise model still need justification.

@@ -19,6 +19,7 @@ an experiment in another worktree is a different implementation.
 | Does the forward model include the known smoothing filter? | `make postblur-operator-study OUTPUT=NEW_JSON` | Declared finite-filter plus Keys composition on fixed fields; rounding and earlier-chain limits retained |
 | Does the known full digital chain match the actual sampler? | `make warp-observation-study OUTPUT=NEW_JSON` | Supplied raw-to-rectified warp, smoothing and profile sampling; stage rounding retained separately |
 | Can a declared raw optical mean explain available prewarp samples? | `make raw-source-fit-study OUTPUT=NEW_JSON` | Bounded source-projection offset/brightness fitting with known geometry, PSF and noise; retains weak-mode, source-mismatch and ambiguity controls |
+| Can one common monotone response satisfy externally supplied calibration? | `scripts/response_calibration.py INPUT.json --output NEW_JSON` | Exact conditional consistency and tight pointwise bands; no automatic camera calibration or inverse |
 | How do my reference-sheet photos compare with reserved measurements? | `make photo-benchmark PHOTOS=FOLDER` | Measured-photo comparison with coverage and failed traces retained; supplied comparison threshold is not an uncertainty budget |
 | Does a selected server trace, build and export the sample? | `make smoke` | API exercise against an already running server, including cleanup; not browser or physical acceptance |
 | Can an installed CAD application import the synthetic exports? | `make freecad` | Native FreeCAD check requiring `FREECADCMD`; not slicer or print qualification |
@@ -50,6 +51,36 @@ Reports retain the parsed submitted input and bind the original input bytes by
 SHA-256, along with implementation hashes and Git state. Whitespace changes can
 therefore change the input hash even when the parsed model is the same.
 Read each version's assumptions before interpreting its radius projection.
+
+## Common-response calibration constraints
+
+```bash
+.venv/bin/python scripts/response_calibration.py INPUT.json --output .local/response-result-new.json
+make response-calibration-study OUTPUT=.local/response-study-new.json
+.venv/bin/python studies/verification/response-calibration-oracle-v1.py --output .local/response-oracle-new.json
+```
+
+The [response guide](response-calibration.md) defines exact decimal-string inputs,
+closed output bands, optional common slope bounds, domain-only query envelopes
+and one shared piecewise-linear witness. All commands require fresh output files.
+The CLI retains incompatible constraints as exact proofs; invalid/resource
+requests are refusals, not mathematical incompatibility. Its reports bind the
+submitted bytes, core/CLI sources and Git state.
+
+The separate fixed experiment retains every finite edge-offset/response candidate,
+including wrong calibration and unidentifiable alternatives. It does not provide
+a continuous offset enclosure, a camera correction or a post-inversion noise model.
+Use [the complete controls](validation/response-calibration.md) before interpreting
+compatibility. Pointwise query bands cannot be combined as independent responses.
+The complete finite-study witnesses and indexed contradictions can be replayed
+without calling the production calibrator:
+
+```bash
+.venv/bin/python studies/verification/response-calibration-study-audit-v1.py --run studies/results/response-calibration-v1.json --output .local/response-study-audit-new.json
+```
+
+The auditor requires a fresh `.json` file, checks every declared candidate and
+retains failed checks. It does not rerun the image pipeline.
 
 ## Local-profile and wall studies
 
