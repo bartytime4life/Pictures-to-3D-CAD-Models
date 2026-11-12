@@ -9,9 +9,9 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-26.04
-    # Installation, native geometry checks and serial browser scenarios share this
-    # budget. Keep room for slower runners; test counts belong in revision-bound reports.
-    timeout-minutes: 30
+    # PR59 exhausted 30 minutes after Python passed and 58/74 browser scenarios.
+    # Keep the serial suite intact; allow the measured workload and runner variation.
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7

@@ -3,6 +3,14 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Hosted verification budget — November 12, 2026
+
+- Allow 45 minutes for the complete hosted workbench job after a 30-minute run
+  ended following successful Python checks and 58 of 74 serial browser scenarios.
+- Retain the source, test set and per-test timeouts. The
+  [runtime-budget record](validation/ci-runtime-budget.md) separates partial-run
+  timing extrapolation from a subsequently observed complete hosted result.
+
 ## Known warp chain and raw optical models — November 12, 2026
 
 - Compose the earlier fixed Keys perspective/radial rectification with smoothing

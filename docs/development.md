@@ -112,6 +112,10 @@ The library's full build requires its PDF dependencies and fonts. The root libra
 
 ## Validate changes
 
+The hosted workbench job has a 45-minute overall budget for setup, Python,
+build and the serial browser suite. The [runtime-budget record](validation/ci-runtime-budget.md)
+explains the observed incomplete 30-minute run and the retained per-test limits.
+
 ```bash
 make test
 make lint
