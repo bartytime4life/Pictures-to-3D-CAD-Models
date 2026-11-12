@@ -101,6 +101,10 @@ and fresh-output CLI contracts have separate checks.
 
 ## Documentation coverage
 
+These are the checks at this PR #61 source. The later
+[documentation alignment](documentation-alignment.md) records repository coverage
+through PR #62 and updated hosted observations separately.
+
 The complete repository audit passed: **81 Markdown documents**, **953 local
 links**, **61 heading fragments** and **130 tables**, plus all **19** companion-
 library Python documentation tests. Historical reports retain their own source

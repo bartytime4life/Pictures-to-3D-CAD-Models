@@ -1,5 +1,9 @@
 # Documentation review — November 12, 2026
 
+For the latest documentation coverage, use the
+[current alignment record](documentation-alignment.md) and [project status](../project-status.md).
+The dated evidence below retains its original source and results.
+
 Reviewed the repository documentation against `main` at
 `eec45d04cf767f2a55e8581a009b8052fe349180`, including merged narrow-wall and
 camera-height changes, then integrated the merged benchmark repair at

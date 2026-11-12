@@ -3,13 +3,23 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Documentation alignment through PR #62 — November 12, 2026
+
+- Update the source/review chain and exact-head hosted observations, preserving
+  earlier validation counts and incomplete runs under their original bindings.
+- Complete the root numerical-command table, correct benchmark coverage and
+  current wall-note guidance, and explain covariance conditioning limits.
+- Link the [current coverage inventory and checks](validation/documentation-alignment.md)
+  from the task index, status, validation overview and contribution guide.
+  Executable source, archived results and generated library outputs are unchanged.
+
 ## Hosted verification budget — November 12, 2026
 
 - Allow 45 minutes for the complete hosted workbench job after a 30-minute run
   ended following successful Python checks and 58 of 74 serial browser scenarios.
 - Retain the source, test set and per-test timeouts. The
   [runtime-budget record](validation/ci-runtime-budget.md) separates partial-run
-  timing extrapolation from a subsequently observed complete hosted result.
+  timing extrapolation from completed results and still-pending exact-head confirmation.
 
 ## Known warp chain and raw optical models — November 12, 2026
 

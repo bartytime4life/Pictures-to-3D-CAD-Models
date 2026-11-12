@@ -70,8 +70,9 @@ need joint estimation or independently justified approximations.
 
 ## A Gaussian lives in a coordinate system
 
-For affine photo mapping `q = B p + b`, plane material `n^T p >= c`, and
-translation-invariant raw Gaussian optical covariance `Sigma_raw`, define
+For affine photo mapping `q = B p + b`, plane material `n^T p >= c` with
+unit plane normal `n`, and translation-invariant raw Gaussian optical covariance
+`Sigma_raw`, define
 
 ```text
 m = B^-T n
@@ -113,6 +114,12 @@ within `1.79e-13`. Their triangle accounting includes a recorded arithmetic
 allowance; it does not supply an unseen-input, vendor-certified or physical bound.
 An independent raw-edge study separately checks the complete operator and the
 source-PSF distinctions above.
+
+The measured float32 discrepancies also matter for inference: small retained
+covariance modes can amplify them even when a residual lies in the retained
+range. See [conditioning and whitening](profile-observations.md#whiten-the-retained-modes-and-check-what-was-omitted).
+This composition tool does not yet supply a validated nonlinear source-field
+fit or a calibrated likelihood for the processed photograph.
 
 ## Repeat and interpret
 

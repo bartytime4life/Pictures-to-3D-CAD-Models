@@ -156,7 +156,7 @@ source files** for DXF, SVG, PDF, and OpenSCAD.
 | Slicer handoff ZIP | Preparing a Bambu Studio or PrusaSlicer import | Geometry, split pieces, recipe, printer/material planning notes, instructions and payload hashes |
 | Save project JSON | Restoring the workbench settings and browser measurement notes | Outline, source measurements, optional endpoint reference and independent-height decision inputs, and design/print settings. The browser saves version 3 for fitted/reference-sheet profiles and version 2 for ordinary polygons; version 1 imports remain supported. Photos are excluded |
 
-To measure the reference-sheet tracer on your own photos, run `make photo-benchmark PHOTOS=folder` on a folder of photos and the dimensions you measured with calipers. It reports each dimension's error and its spread between repeat shots; see [the photo benchmark](docs/photo-benchmark.md). No result from real photos is recorded yet.
+To measure the reference-sheet tracer on your own photos, run `make photo-benchmark PHOTOS=folder` on a folder of photos and the dimensions you measured with calipers. It reports coverage, errors for compared dimensions, and repeat-shot spread where available; unmatched and unavailable dimensions remain visible. See [the photo benchmark](docs/photo-benchmark.md). No result from real photos is recorded yet.
 
 Use the browser's **Save project** or **Save editable project recipe** to retain known-feature endpoints, independent height and height-decision inputs. The backend recipe inside a slicer handoff preserves geometry/build settings and reference-sheet evidence, but does not include those browser-only measurement notes. Save both when you need both. See [export formats and dimensional checks](docs/exports.md) before transferring a part to fabrication software.
 
@@ -177,7 +177,7 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 Start with the [documentation index](docs/README.md) for capture, engineering, export, development and evidence routes.
 
-The [complete documentation review](docs/validation/documentation-complete-2026-11-12.md)
+The [current documentation alignment](docs/validation/documentation-alignment.md)
 identifies the source baseline and coverage of current guides, historical records
 and generated library material. Numerical experiments and analysis commands are
 collected in the [developer-tool catalog](docs/developer-tools.md).

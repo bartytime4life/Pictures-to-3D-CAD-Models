@@ -1,19 +1,22 @@
 # Project status and evidence
 
-Candidate snapshot: **November 12, 2026**. This known-warp branch is based on
-`778c3392c6dfe111d8f422959fbdbc09ad8ba75b`, the published head of
-[draft PR #60](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/60).
-It adds [raw-photo-to-profile composition](warp-observations.md) and separate
-optical-source controls to the developer tools. The [new record](validation/warp-observations.md)
-retains rounding, affine/projective distinctions and a curved-edge counterexample.
-Production behavior remains at PR #59, whose [wall-fit record](validation/wall-localization.md)
-preserves the failed development window and final checks. Start with [setup](development.md), the
+Documentation snapshot: **November 12, 2026**. This documentation branch is based on
+`ca321442bd276c177c31f00bcd62fb0ea27b2e0e`, the published head of
+[draft PR #62](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/62).
+It includes PR #61's [raw-photo-to-profile composition](warp-observations.md),
+separate optical-source controls and PR #62's [45-minute hosted job budget](validation/ci-runtime-budget.md).
+The [warp record](validation/warp-observations.md) retains rounding,
+affine/projective distinctions and a curved-edge counterexample. The production
+tracing code in this branch comes from PR #59, whose [wall-fit record](validation/wall-localization.md)
+preserves the failed development window and final checks. The
+[documentation alignment record](validation/documentation-alignment.md) identifies
+this review's coverage and checks. Start with [setup](development.md), the
 [task index](README.md), [developer tools](developer-tools.md) or [API examples](api-examples.md).
 
 ## Source and review state
 
 At this check, `main` was `5c07d0f70d7df0200bc24227c8ac7e9b630f7f09`.
-PRs #47–#60 were open and unmerged. This candidate branch includes their
+PRs #47–#62 were open and unmerged. This documentation branch includes their
 changes; that checkout of `main` does not contain them. The conditional corner
 analysis remains separate from production tracing; the grid and crossing repairs
 affect the existing production edge-profile search.
@@ -35,6 +38,8 @@ affect the existing production edge-profile search.
 | `0f5f888708b623245854b53458431af495b387fe` | Complete documentation review, numerical-tool catalog and corrected mathematical limits | [PR #58](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/58), open draft; base PR #57's branch |
 | `6d2672710e54e9117048613dec6ef3ea448062b7` | Expanded consistent wall geometry, local observations, explicit numerical withholding and complete positive/negative development evidence | [PR #59](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/59), open draft; base PR #58's branch |
 | `778c3392c6dfe111d8f422959fbdbc09ad8ba75b` | Bounded fixed-observation and finite-filter operators, conditional correlated-noise accounting and false-precision controls | [PR #60](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/60), open draft; base PR #59's branch |
+| `8523862145ef264d265d84b9443b779ea09db072` | Known raw-photo warp, smoothing and profile composition; digital rounding and independent optical-source controls | [PR #61](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/61), open draft; base PR #60's branch |
+| `ca321442bd276c177c31f00bcd62fb0ea27b2e0e` | Hosted workbench job budget from 30 to 45 minutes; source, test set and individual limits retained | [PR #62](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/62), open draft; base PR #61's branch |
 
 The PR links show live review state. A documentation update does not install,
 merge or deploy those changes. Record the checkout used to start a service:
@@ -47,9 +52,9 @@ git status --short --branch
 The health endpoint's `version: "0.1.0"` is shared by multiple revisions and
 cannot identify which implementation a server is running.
 
-The wall-localization, fixed-observation and warp-chain candidates remain separate from integrated `main` and the
+These review branches remain separate from integrated `main` and the
 primary `codex/slicer-integration` checkout at
-`d747e30697a99a8f90d747d23d6ab7c1fa8b95ed`. Its broader search and conditional
+`d747e30697a99a8f90d747d23d6ab7c1fa8b95ed`. The wall candidate's broader search and conditional
 numerical checks do not establish physical edge identity. The matched final-Keys
 prototype and conditional covariance module are developer research and are not applied to tracing. New review
 branches do not change an already running or installed application.
@@ -98,10 +103,11 @@ there is no product endpoint, automatic tracing correction or accuracy label.
 | Earlier documentation follow-up | [PR #49 coverage and checks](validation/documentation-current-state.md) | Documentation parsing, links, commands and API example at its recorded source |
 | PR #52 documentation consolidation | [Coverage and checks](validation/documentation-math-state.md) | Navigation, review chain, source/receipt consistency and complete Markdown checks at its recorded source; no new product regression or physical result |
 | Documentation update through PR #57 | [Complete coverage and checks](validation/documentation-complete-2026-11-12.md) | Current guides, numerical-tool contracts and repository-wide Markdown checks; no new product or physical qualification |
+| Documentation alignment through PR #62 | [Current coverage and checks](validation/documentation-alignment.md) | Source/review state, current commands and repository-wide documentation checks; prior product results retain their source bindings |
 
 Hosted results are bound to exact heads. Earlier rows retain their last recorded
-results; `37eb4d2`, `7dfe0fe`, `0f5f888`, `6d26727` and `778c339` were checked again during this
-documentation update on **November 12**:
+results. The PR #60–#62 rows were checked during this documentation update on
+**November 12, 12:55 UTC**; in-progress entries are observations, not final results:
 
 | Head | Hosted workflow | Result at this observation |
 | --- | --- | --- |
@@ -119,10 +125,13 @@ documentation update on **November 12**:
 | `7dfe0fe` | [Library run 41](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43203755932) | Completed successfully |
 | `0f5f888` | [Workbench run 121](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43209391346) | Completed successfully |
 | `0f5f888` | [Library run 42](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43209391383) | Completed successfully |
-| `6d26727` | [Workbench run 122](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43214844810) | Cancelled at the current observation |
+| `6d26727` | [Workbench run 122](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43214844810) | Exceeded the 30-minute job limit after 1,178 Python passes and 58/74 browser passes; incomplete suite |
 | `6d26727` | [Library run 43](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43214844876) | Completed successfully |
-| `778c339` | [Workbench run 123](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43217681248) | In progress at this observation |
+| `778c339` | [Workbench run 123](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43217681248) | Completed successfully at 12:51 UTC; 1,225 Python tests and 74 browser scenarios passed |
 | `778c339` | [Library run 44](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43217681198) | Completed successfully |
+| `8523862` | [Workbench run 124](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43220874898) | In progress at this observation, under its original 30-minute job limit |
+| `8523862` | [Library run 45](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43220874912) | Completed successfully |
+| `ca32144` | [Workbench run 125](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43221471259) | In progress at this observation, with the new 45-minute job limit |
 
 Follow the exact run links for later results. The candidate's local 1,249-test result is
 separate from hosted CI. Earlier observations remain in their dated validation
@@ -151,6 +160,10 @@ declared finite smoothing and shared-pixel covariance. The [warp-chain extension
 now composes known earlier rectification. Realistic noise/optical-model discrepancy,
 image-derived parameter uncertainty, correlated neighboring profiles and globally
 ambiguous wall interpretations remain open.
+Fit candidate source fields through the declared raw-image operator before
+comparing optical models. Small retained singular modes can amplify deterministic
+rounding or model discrepancy; the covariance factor alone does not validate a
+likelihood or establish physical confidence.
 Keep observation-error bounds separate from model discrepancy, local fit spread
 and endpoint-placement sensitivity. Numerical or work-budget exhaustion must
 remain unresolved rather than becoming a physical claim.

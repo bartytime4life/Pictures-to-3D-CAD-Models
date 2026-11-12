@@ -1,5 +1,9 @@
 # Current-state documentation review — November 12, 2026
 
+For the latest documentation coverage, use the
+[current alignment record](documentation-alignment.md) and [project status](../project-status.md).
+The dated evidence below retains its original source and results.
+
 This is the historical PR #49 review. The later [documentation consolidation](documentation-math-state.md)
 covers the published developer tools and the review chain through PR #51.
 Statements below about unpublished or proposed numerical work describe this

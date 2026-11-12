@@ -6,9 +6,10 @@ CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
 For a concise source/review snapshot, use [project status](project-status.md).
-The [complete documentation update](validation/documentation-complete-2026-11-12.md)
-reviews the published PR #57 baseline, current numerical-tool contracts and all
-Markdown navigation. Its documentation checks are separate from the source-bound
+The [current documentation alignment](validation/documentation-alignment.md)
+reviews the published PR #62 baseline, current numerical-tool contracts and all
+Markdown navigation. The [earlier complete update](validation/documentation-complete-2026-11-12.md)
+retains its PR #57 baseline. Documentation checks are separate from the source-bound
 software and scientific runs below.
 The [earlier dedicated documentation consolidation](validation/documentation-math-state.md)
 records its own checks without rerunning or relabeling the historical suites.
@@ -21,13 +22,21 @@ The [known warp-chain candidate](validation/warp-observations.md) composes the
 earlier perspective/radial sampler with smoothing and final profiles. Its 324
 readouts reuse six synthetic arrays; separate 18-field optical controls retain
 affine exactness, projective discrepancy and a radial curved-edge half-level
-shift. Digital agreement is not optical or physical qualification.
+shift. Its local regression receipt records **1,249 Python tests passed**.
+Digital agreement is not optical or physical qualification.
 
 The [fixed-observation/covariance candidate](validation/profile-observations.md)
-adds a reusable developer operator and known-filter composition. Seven density
+adds a reusable developer operator and known-filter composition; its local
+regression receipt records **1,225 Python tests passed**. Seven density
 and repetition configurations reuse 8,192 input-noise draws; 12 postblur cases
 retain all mismatches and constructed aliases. These checks do not change the
 workbench trace or create a physical confidence estimate.
+
+The [exact-head hosted snapshot](project-status.md#evidence-by-scope) records
+PR #60's completed workbench run separately from these local runs. The
+[CI budget record](validation/ci-runtime-budget.md) preserves PR #59's incomplete
+30-minute hosted suite and PR #62's 45-minute configuration. A running workflow
+does not establish completion at its head.
 
 The [wall-localization development record](validation/wall-localization.md)
 retains the complete paired scene comparison, rejected window/camera regressions,

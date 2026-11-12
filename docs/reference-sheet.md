@@ -42,8 +42,9 @@ photo (full resolution, <= 16 MP)
   -> radial lens coefficient k1 from edge straightness (plumb-line)
   -> homography H: sheet millimetres -> undistorted photo pixels
   -> sheet-proportions check, and camera pose if a thickness is entered
-  -> exact cubic resampling of linear light onto a millimetre grid (analysis), fast resampling (display)
-  -> illumination-flattened part/sheet classification, on saved values
+  -> fast saved-value rectification for display, part/sheet classification and channel selection
+  -> exact Keys resampling of the selected linear-light mix onto a millimetre grid, stored as float32
+  -> Gaussian smoothing (sigma 0.7 rectified pixels)
   -> sub-pixel boundary at the local mid-level (two passes), edge blur sigma
   -> thick parts: two-step wall model on narrow wall bands, then top-face parallax correction
   -> circles / lines / arcs, design-intent snapping, constrained fillets, blur-curvature correction
@@ -64,11 +65,11 @@ Coordinates follow the repository convention: pixel *i* spans [*i*, *i* + 1], so
 
 ## 2. Resampling without positional quantisation
 
-`cv2.remap` quantises interpolation positions to 1/32 pixel. Measured with an intensity ramp, which cubic interpolation must reproduce exactly, it moved rectified content by up to 0.086 photo px (RMS 0.036). That is the same size as the edge noise being measured. The measurement image is therefore resampled in float64 with the Keys cubic kernel (a = −½), which reproduces polynomials up to degree two. Linear and quadratic photo intensity fields are returned to float32 precision at every mapped position (`test_measurement_resampling_reproduces_quadratic_fields_exactly`). An A4 sheet at 11 px/mm takes 0.9 s. The display image still uses `cv2.remap`, which affects nothing measured. Rectification follows the pixel-centre convention: an analytic feature at plane point *c* lands at *c* · ppm within 0.02 px (`test_rectification_follows_the_pixel_centre_convention`).
+`cv2.remap` quantises interpolation positions to 1/32 pixel. Measured with an intensity ramp, which cubic interpolation must reproduce exactly, it moved rectified content by up to 0.086 photo px (RMS 0.036). That is the same size as the edge noise being measured. The measurement image is therefore resampled in float64 with the Keys cubic kernel (a = −½), which reproduces polynomials up to degree two. Linear and quadratic photo intensity fields are returned to float32 precision at every mapped position (`test_measurement_resampling_reproduces_quadratic_fields_exactly`). An A4 sheet at 11 px/mm takes 0.9 s. The saved-value image uses `cv2.remap` for display, segmentation and selection of the measurement channel mix. It is not directly used for precision intensity resampling, but its classification and channel choices influence tracing. Rectification follows the pixel-centre convention: an analytic feature at plane point *c* lands at *c* · ppm within 0.02 px (`test_rectification_follows_the_pixel_centre_convention`).
 
 ## 3. Segmentation and sub-pixel edges
 
-**Classification.** After an initial Otsu split, a robust cubic polynomial surface is fitted to the sheet (pixels at least 4 mm from the part) and a plane to the part. Each pixel is normalised as (sheet − value) / (sheet − part) and classified at 0.5. Gradients, vignetting and soft shadow therefore do not move the threshold. Only the largest region is kept, and a 3 mm sheet margin is excluded.
+**Classification.** After an initial Otsu split, a robust cubic polynomial surface is fitted to the sheet (pixels at least 4 mm from the part) and a plane to the part. Each pixel is normalised as (sheet − value) / (sheet − part) and classified at 0.5. This reduces the effect of gradients, vignetting and soft shadow when those fitted surfaces adequately represent the lighting and the initial split supplies valid samples. It does not guarantee invariance to arbitrary illumination, texture or a wrong initial classification; the denominator is clamped to at least one saved-value level. Only the largest region is kept, and a 3 mm sheet margin is excluded.
 
 **Linear light.** A lens and sensor blur the scene in linear light. The camera then saves each value through a tone curve, close to a 2.2 gamma, which bends a blurred edge's profile. The mid-level property below holds only in linear light.
 
