@@ -2,11 +2,17 @@
 
 ## Current product boundary
 
-The workflow is a single-user photo-to-profile workbench for one connected, constant-thickness source part. It provides visible outline review, scale from either the complete outside width or two points on a known feature, a separate thickness input, an optional independent source-height comparison, explicit design scales, relative-detail choices, approximate color/material preview, editable printer-volume planning, and optional straight-cut parts. CAD/mesh/profile exports preserve geometry; a version 2 recipe also preserves design choices and optional reference/check inputs. Earlier version 1 and version 2 recipes remain importable.
+The workflow is a single-user photo-to-profile workbench for one connected, constant-thickness source part. It provides visible outline review, scale from the complete outside width, two points on a known feature or a reference sheet, a separate thickness input, an optional independent source-height comparison, explicit design scales, relative-detail choices, approximate color/material preview, editable printer-volume planning, and optional straight-cut parts. Browser-saved recipes use version 2 for polygon profiles and version 3 for fitted/reference-sheet profiles, preserving design choices and optional reference/check inputs. Versions 1, 2 and 3 remain importable. Server handoff recipes do not carry the browser-only measurement notes; see [exports](exports.md).
 
-Known-feature endpoints can be selected on the working-image preview or entered numerically. Their measured length defines one uniform scale, and the outside-height comparison does not adjust geometry. These features help review a source photograph; they do not correct perspective or lens distortion, quantify physical accuracy, or certify fabrication suitability. See the [capture guide](capture-guide.md) for the coordinate frame, assumptions, and held-out checks.
+Known-feature endpoints can be selected on the working-image preview or entered numerically. Their measured length defines one uniform scale, and the outside-height comparison does not adjust geometry. This endpoint method does not correct camera distortion. The separate [reference-sheet pipeline](reference-sheet.md) estimates perspective, one radial lens term and thickness parallax under stated assumptions; neither method quantifies general physical accuracy or certifies fabrication suitability. See the [capture guide](capture-guide.md) for the coordinate frame, assumptions, and held-out checks.
 
-An optional local Ollama assistant provides text guidance and reviewable trace/design/print-setting proposals. Its integration is separate from geometric conversion; model downloads and live quality comparisons are still subject to the [recorded verification status](ollama.md#current-cloud-verification-status).
+The deterministic **Next step** guide, workflow navigation and footer distinguish
+missing measurements, invalid settings, processing, stale geometry and current
+CAD without an AI service. Preview updates, direct correction paths and grouped
+export choices keep the existing engineering tools available. The [guided audit](validation/guided-workbench.md)
+records their tested behavior; the [documentation index](README.md) maps the guides.
+
+An optional local Ollama assistant provides text guidance and reviewable trace/design/print-setting proposals. Its integration is separate from geometric conversion; model downloads and live quality comparisons are still subject to the [recorded verification status](ollama.md).
 
 The current implementation and [validation results](validation.md) are the source of truth for what works. Items below are future work, not hidden capabilities or delivery promises.
 

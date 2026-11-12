@@ -1,11 +1,38 @@
 # Validation results
 
-The [guided-workbench review](validation/guided-workbench.md) records the latest
-local interface audit, recovery fixes, reference-unit arithmetic checks, and
-fixture-based AI tests, with before/after screenshots. Geometry and physical
-qualification evidence remain distinct below.
+Use the [documentation index](README.md) to find a guide and the revision-bound
+record below to assess its evidence. This page separates local checks, hosted
+CI, library releases and physical qualification. Older sections retain their
+original counts and environment; they are not later retests.
 
-Latest workbench validation: November 11, 2026, on the local Linux workstation, for continuous-angle bed placement and for the exact-corner fillet fit. The FreeCAD import check, the linear-light edge measurement, the phone-photo decoding, the photo benchmark runner, the SVG and PDF drawings, the fillet-radius correction, the arc-chord fit and the stub fix of November 11 ran in a managed cloud session. The [reference-sensitivity record](validation/reference-sensitivity.md) covers the endpoint-placement explorer. Earlier managed-environment and release results are recorded separately below. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
+## Current workbench evidence — November 11, 2026
+
+The documentation refresh initially reviewed `main` at
+`76f03fce60c2a9193501e73f3e4d4ad85bbcf554` after PR #36, then incorporated
+PR #37's shadow correction at `567b5bdd36cbc2ab6b666b9514c84e7764a07445`.
+It changes guides relative to that integrated baseline, not runtime behavior.
+
+| Evidence | Revision and result | Scope |
+| --- | --- | --- |
+| Recorded shadow-correction checks | `bbd665bec6c0d32b8ed950c69d2c102e5f7b00ce`: **501 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#edge-levels-follow-a-shadows-slope--november-11-2026) | Upstream local result, not rerun for this documentation change; synthetic photos, including the reported near-frontal regression |
+| Earlier guided-workbench checks | Guided code `900999b119eb3688ed75ed4212902c185023454b`: **498 Python tests**, **74 frontend/browser tests**, build and lint passed | Real local CAD backend; synthetic inputs and explicit AI response fixtures; before PR #37 |
+| Hosted guided-workbench CI | PR head `aa556cfc75c3fe23a3b68e12be8973bf88705d7a`: [Validate workbench run 88](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43120297057) completed successfully | That exact revision, separate from later tracing and documentation CI |
+| Interface review | [Guided-workbench audit](validation/guided-workbench.md) | Fresh desktop captures, phone reflow, input/settings/save recovery, reference-unit and AI-staleness regressions |
+| Companion library release | [Revision 7 record](../reference-library/VERIFICATION.md), dated November 9 | Independent library checks and generated synthetic examples; not a new workbench run |
+| Documentation refresh | [Coverage and checks](validation/documentation-refresh.md) | Guide/source consistency, local links and anchors, existing documentation tests and generated-output reproduction |
+
+The local checks do not establish live-model quality, native slicer acceptance,
+physical fit, manufacturing accuracy or complete accessibility conformance.
+See the [engineering model](engineering-model.md) for qualification inputs.
+
+Additional November 11 records below cover continuous-angle bed placement and
+exact-corner fillet fitting on the local Linux workstation, plus the FreeCAD
+import check, linear-light edge measurement, phone-photo decoding, photo
+benchmark runner, SVG/PDF drawings, fillet-radius correction, arc-chord fit and
+stub fix in managed cloud sessions. The [reference-sensitivity record](validation/reference-sensitivity.md)
+covers the endpoint explorer. The original CAD release and optional Ollama
+integration retain separate historical evidence. These records do not establish
+that a newly created or published cloud task has been validated.
 
 ## Edge levels follow a shadow's slope — November 11, 2026
 

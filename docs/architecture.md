@@ -1,6 +1,6 @@
 # Architecture and API
 
-Pictures to CAD separates image interpretation from geometric construction. The photo supplies a planar profile. The user supplies a measured width and thickness, then optional design scales and print-planning settings. CadQuery constructs the resulting solid or split solids, which supply both the displayed mesh and the export artifacts.
+Pictures to CAD separates image interpretation from geometric construction. The photo supplies a planar profile. Scale comes from the entered outside width, a measured feature, or a reference sheet; thickness is entered separately. Optional design scales and print-planning settings then define the requested output. CadQuery constructs the resulting solid or split solids, which supply both the displayed mesh and the export artifacts. Use the [documentation index](README.md) for the user-facing guides.
 
 ```mermaid
 flowchart LR
@@ -9,7 +9,7 @@ flowchart LR
     B --> R[Reference sheet: rectify, sub-pixel edges, fit lines/arcs/circles]
     R --> D
     C --> D[Review outline and holes]
-    D --> E[Enter width and thickness]
+    D --> E[Review source scale and enter thickness]
     E --> J[Review design scales and print plan]
     J --> F[Validate planar profile]
     F --> G[Bounded CadQuery conversion]
@@ -48,7 +48,7 @@ Split mode makes actual solids with straight XY cuts. The default preview and co
 
 3MF Core packages use millimetres and separate indexed mesh objects for split solids. Each mesh is checked for finite coordinates, nondegenerate triangles, closed oriented edges and positive volume. Slicer handoff ZIPs carry this geometry, STL alternatives, the recipe, printer/material planning notes, instructions and payload hashes. They do not contain native slicing presets or machine instructions.
 
-OpenSCAD source serializes the final prepared/split polygons as numeric points and hole paths, then extrudes the effective built thickness. Default source values reproduce the assembly. An additional XY scale and a piece selector support downstream edits; those changes do not feed back into the workbench recipe or bed-fit calculation. OpenSCAD is only needed to render the source, not to produce it. The source contains no user-provided code or project-name interpolation and does not claim recovered constraints or feature history.
+OpenSCAD source serializes the final prepared profile and effective built thickness. Fitted single-piece circles remain `circle()` calls; other fitted boundaries are sampled as polygons. Polygon and split output use their prepared numeric points and hole paths. Sampling targets and caps are described in [exports](exports.md#openscad-editable-profile-extrusion). Default source values reproduce the assembly. An additional XY scale and a piece selector support downstream edits; those changes do not feed back into the workbench recipe or bed-fit calculation. OpenSCAD is only needed to render the source, not to produce it. The source contains no user-provided code or project-name interpolation and does not claim recovered constraints or feature history.
 
 Printer fit checks the selected Z height and searches continuous XY rotations inside the clear rectangular bed after margins. `backend/placement.py` partitions rotation space at convex-hull support events and solves trigonometric bed-limit crossings. Polygon extrusions supply their actual built footprint. Fitted curves first use their solid's enclosing rectangle, then `backend/curve_envelope.py` constructs an outer polygon from analytic supports in 256 directions. Positive outer-bound placements contain the curved solid; inconclusive XY results remain unknown. Each positive per-piece `bed_fit` includes `rotation_deg` (counterclockwise about model Z), `footprint_mm` (`width`, `depth`), and `basis` (`outline`, `bounding_box` or `curve_envelope`); a curve enclosure also records `enclosure_directions`. The legacy `rotated_90` flag remains available. The worker and handoff manifests preserve these suggestions without transforming exports. This is individual geometric containment, not plate packing, slicing, support generation, material simulation, or G-code generation. Color/material choices are approximate preview and recipe/planning metadata; STL carries no color.
 
@@ -155,13 +155,27 @@ Do not increase the web server worker count as a substitute for a job queue: the
 
 Errors use a JSON `detail` string. Invalid inputs commonly return 422, oversized requests 413, busy or full-capacity responses 429, deletion conflicting with an active build 409, and CAD timeouts 504. Missing artifacts return 404; an artifact found at access time but already expired returns 410. A background cleanup may already have removed an expired artifact, so expired links may also appear missing.
 
-The interface saves recipes identifying `format: "pictures-to-cad"` and `version: 2` (`version: 3` when the profile carries fitted `primitives` or a sheet `reference`), with `name`, source `profile`, measured `width_mm` and `thickness_mm`, and `design`. The server's artifact recipe also includes units and provenance text. Version 1 recipes remain importable with default design settings; legacy API build requests omitting `design` still receive a version 1 recipe. The source photograph is not embedded.
+The interface saves recipes identifying `format: "pictures-to-cad"` and `version: 2` (`version: 3` when the profile carries fitted `primitives` or a sheet `reference`), with `name`, source `profile`, measured `width_mm` and `thickness_mm`, and `design`. **Save project** additionally includes optional browser-held `reference_calibration`, `measured_height_mm` and `height_check` inputs. These notes are not sent in the build request and therefore are absent from the server-generated `project.json` and slicer ZIP recipe. Save the browser recipe separately to retain them. The server's recipe includes units and provenance text. Versions 1, 2 and 3 remain importable; version 1 receives default design settings. Legacy API requests omitting `design` receive version 1 for polygon profiles; fitted/reference profiles use version 3 with resolved design settings. Neither recipe embeds the photograph.
 
 ## Revision and failure behavior
+
+`frontend/src/workflow.ts` derives the deterministic next step from busy state,
+source availability, width, thickness, design validation and build revision, in
+that order. Guide, footer and navigation share that result; an open workflow
+dialog overrides the navigation stage. Busy work has no current navigation step.
+The guide requires no AI connection. Its preview action builds without opening
+Export; the existing main action may build and then open Export.
 
 The workbench treats a successful model as a result of a particular set of inputs. Editing those inputs marks the result outdated. A failed or late response must not silently replace the current revision or make an old artifact appear current.
 
 User inputs remain available after recoverable failures. A previous successful model may remain visible for comparison, but export controls must distinguish it from a successful rebuild of the new settings.
+
+Missing-measurement actions focus the relevant field. Invalid-design recovery
+opens and focuses the existing settings panel. Save validation for optional
+height notes closes Export, opens the height check and focuses the field needing
+correction without invalidating geometry. The guide button remains mounted and
+disabled during work so completion can restore meaningful focus. The [guided
+audit](validation/guided-workbench.md) records the tested flows.
 
 The geometry process has bounded execution and concurrency. A timed-out worker is terminated, and failed build directories are removed. See the implementation and [validation results](validation.md) for the exact checks exercised.
 

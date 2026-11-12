@@ -4,7 +4,7 @@ Turn a photograph of a **flat, constant-thickness part** into a scaled CAD solid
 
 The workbench is designed for plates, gaskets, spacers, and templates. It traces what is visible in the photograph; it does not recover hidden geometry or infer physical dimensions.
 
-Photograph the part lying on a sheet of known size (A4, US Letter, or a sheet you have measured) and the sheet does more. It sets the scale and corrects perspective and lens distortion. Together with the thickness you enter, it removes the visible side walls. The outline is then fitted with lines, tangent arcs and circles that export as true geometry. See [reference-sheet tracing](docs/reference-sheet.md) for the method, its mathematics and its evidence.
+For reference-sheet tracing, photograph the whole flat sheet (A4, US Letter, or a sheet you have measured) and explicitly choose it as the **Scale reference**. A successful sheet trace sets scale from its stated size, estimates perspective and one radial lens correction, and fits lines, tangent arcs and circles. Entered thickness supports a side-wall/parallax correction under the method's assumptions. Ordinary tracing and the sample use measured-width scaling instead; they do not perform these corrections. See [reference-sheet tracing](docs/reference-sheet.md) for the mathematics and synthetic evidence, and the [engineering model](docs/engineering-model.md) for independent verification before fabrication.
 
 This repository contains two related tools:
 
@@ -15,7 +15,7 @@ This repository contains two related tools:
 
 ![Pictures to CAD workbench showing the traced sample beside its generated CAD solid](docs/images/workbench.png)
 
-Browser-rendered workbench with the demonstration part. The source photo is generated sample imagery; the displayed solid is constructed from its traced outline.
+Browser-rendered workbench with the demonstration part and its **Next step** guide. The source photo is generated sample imagery; the displayed solid is constructed from its traced outline using demonstration measurements. See the [documentation index](docs/README.md) for task-based navigation.
 
 ## Start the app
 
@@ -44,7 +44,7 @@ See [development and setup](docs/development.md) for prerequisites, commands, an
 
 ## Bambu Studio and PrusaSlicer
 
-After building, open **Review export → Prepare in your slicer**. Choose **Bambu Studio** or **PrusaSlicer** and download a ZIP containing millimeter 3MF geometry, separate split-piece files, the editable recipe, and a hash-verified record of your printer/material plan. Select and review the actual printer, nozzle, filament and process settings in the slicer. Plain 3MF is also available as a regular export.
+After building, open **Choose an export** or **Review export**, then **Prepare in your slicer**. Choose **Bambu Studio** or **PrusaSlicer** and download a ZIP containing millimeter 3MF geometry, separate split-piece files, the editable recipe, and a hash-verified record of your printer/material plan. Select and review the actual printer, nozzle, filament and process settings in the slicer. Plain 3MF is also available as a regular export.
 
 An optional local launcher can open the current geometry in a configured installed slicer. Run `make slicers` to inspect availability. Targets are Bambu Studio 2.9.1 and the requested PrusaSlicer 2.9.7; executable detection does not verify the installed version. See [slicer setup and use](docs/slicers.md). Setup does not install either application, and the workbench does not slice or start prints.
 
@@ -69,21 +69,21 @@ Keep that terminal running. In another terminal, download the initial small mode
 ./scripts/ollama.sh pull qwen3:1.7b
 ```
 
-Refresh the assistant's connection after the download. This is a provisional CPU-friendly starting model, not a measured quality winner. See [local AI setup and controls](docs/ollama.md) and the [model comparison plan](docs/ollama-models.md). The recorded cloud setup has a verified Ollama runtime, but model downloads and live comparisons are pending network access.
+Refresh the assistant's connection after the download. This is a provisional CPU-friendly starting model, not a measured quality winner. Check the service and model availability in your own environment; an installed runtime does not establish answer quality. See [local AI setup and controls](docs/ollama.md) and the [model comparison plan](docs/ollama-models.md).
 
 ## Try the complete workflow
 
 The **Next step** guide explains the current task and takes you to its controls.
 After an edit, **Update preview** rebuilds the model for inspection; **Choose an
 export** opens the downloads once that model matches the settings. Missing
-measurements and invalid design settings have a direct correction path.
+measurements and invalid design settings have a direct correction path. The guide is deterministic application state, not AI advice. It describes input and digital-model readiness, not engineering acceptance. The main **Build model** or **Update model** button also builds, then opens the export review; use the guide's preview action when you want to remain beside the model.
 
-1. **Start with the sample.** The supplied demonstration image is traced and converted by the same pipeline as an uploaded photograph.
+1. **Start with the sample.** The supplied demonstration image uses the ordinary outline-tracing and CAD-building pipeline, with 80 mm width and 4 mm thickness supplied for the demonstration. It does not exercise reference-sheet correction.
 2. **Choose a photo.** Upload a PNG, JPEG, WebP, HEIC, or AVIF containing one flat part against a contrasting background. Phone photos up to 70 megapixels and 32 MiB are accepted as the camera saved them. For the best result, lay the part on a sheet of paper, photograph the whole sheet, and choose that sheet as the **Scale reference** before uploading.
-3. **Review the outline.** Check the boundary and every through-hole. Adjust the tracing controls if the selection is wrong.
-4. **Set the dimensions.** With a reference sheet, the width comes from the sheet; measure the part's width as an independent check. Otherwise enter the measured outside width, or open **Use a known feature**, mark two endpoints, enter their real separation, and apply the scale. Enter measured thickness separately; with a sheet, building re-traces once to correct for the part's visible side walls. Use the optional **Independent height check** to compare another measurement before design resizing. Enter an allowed deviation and a justified measurement error bound for a conditional within/outside/inconclusive decision; [engineering model and verification](docs/engineering-model.md) explains its mathematics and limits.
+3. **Review the outline.** Check the boundary and every through-hole. **Trace** or **Adjust outline** opens tracing controls. Ordinary tracing offers automatic/manual contrast and foreground inversion; sheet tracing measures contrast locally and exposes design-intent snapping instead. Read the trace notes before applying the result.
+4. **Set the dimensions.** With a reference sheet, the width comes from the sheet; measure the part's width as an independent check. Otherwise enter the measured outside width, or open **Use a known feature**, mark two endpoints, enter their real separation, and apply the scale. Enter measured thickness separately; with a sheet and the photo still available, building re-traces when thickness changes to apply the side-wall/parallax correction. Use the optional **Independent height check** to compare another measurement before design resizing. Enter an allowed deviation and a justified measurement error bound for a conditional within/outside/inconclusive decision; [engineering model and verification](docs/engineering-model.md) explains its mathematics and limits.
 5. **Choose design and print settings.** Keep the measured size or set explicit XY and thickness scales, preview a color and material, choose a printer or custom volume, and decide whether to keep one piece or generate straight-cut parts.
-6. **Inspect and export.** Rotate the model, compare it with the photograph, rebuild after edits, review each piece's geometric bed fit, and choose a format.
+6. **Inspect and export.** Rotate the model, compare it with the photograph, and use **Create preview** or **Update preview** in the guide to inspect a fresh build. Review each piece's geometric bed fit, then choose **Choose an export** or **Review export**. A previous model is retained after editable changes, but its geometry cannot be downloaded as though it represented those changes.
 
 The sample's dimensions are demonstration inputs, not measurements recovered from the photograph. Measure your own part before using its output.
 
@@ -91,7 +91,7 @@ Design scales preserve those source measurements: an 80 mm reference width at 12
 
 Printer fit searches all in-plane rotations of each built polygon on a clear rectangular bed. Open a part's fit result to see the suggested counterclockwise turn and rotated footprint. Fitted curves use a conservative enclosing rectangle or an outer enclosure built from exact curve supports; inconclusive checks ask for slicer review. Suggested turns are saved in handoff manifests and are not applied to geometry exports. Review supports, adhesion, machine clearances, and material behavior in your slicer. See [print planning](docs/print-planning.md).
 
-When a built polygon part exceeds the selected bed, **Design & print** can suggest a supported straight-cut grid with the fewest fitting pieces. **Use suggested split** changes the cut settings; **Update model** generates the pieces for inspection and export. Your measured size stays the same. The search considers up to four rows and columns, with at most eight cells and actual pieces; it checks each piece separately and adds no joints or assembly clearance.
+When a built polygon part exceeds the selected bed, **Design & print** can suggest a supported straight-cut grid with the fewest fitting pieces. **Use suggested split** changes the cut settings; **Update preview** generates pieces for inspection, or **Update model** builds and opens export review. Your measured size stays the same. The search considers up to four rows and columns, with at most eight cells and actual pieces; it checks each piece separately and adds no joints or assembly clearance.
 
 The bundled searchable [printer catalog](docs/printer-catalog.md) covers 429 model groups across 70 manufacturer/profile families, with nozzle-specific source profiles and links. It works offline. Hardware capabilities absent from those sources are shown as unknown; custom printer dimensions remain available.
 
@@ -108,16 +108,16 @@ source files** for DXF, SVG, PDF, and OpenSCAD.
 | DXF | A flat profile for a CAD or CAM workflow | The planar boundary and holes; `LINE`, `ARC` and `CIRCLE` entities for a fitted outline |
 | SVG | A laser cutter's software or a vector editor | The same planar boundary and holes at one unit per millimetre; arcs and circles for a fitted outline |
 | PDF | Printing the outline at 1:1 to lay the real part on | The outline and holes at true size on a page that fits A4 and US Letter, a 100 mm ruler along each axis to check the print, and a centre mark in each round hole |
-| OpenSCAD | Editing the built profile in scripted CAD | Final scaled and simplified polygon boundaries, holes, thickness, and selectable split pieces in assembled positions; fitted circles stay `circle()` calls |
+| OpenSCAD | Editing the built profile in scripted CAD | Final scaled profile, holes, thickness, and selectable split pieces in assembled positions; fitted circles stay `circle()` calls and non-circular fitted arcs are sampled into polygons |
 | Parts ZIP | Importing generated pieces separately | A STEP, STL and 3MF per piece, plus a manifest |
 | Slicer handoff ZIP | Preparing a Bambu Studio or PrusaSlicer import | Geometry, split pieces, recipe, printer/material planning notes, instructions and payload hashes |
-| Project JSON | Restoring the workbench settings | Version 2 outline, measurements, optional endpoint reference and height check, design and print plan; version 3 adds fitted geometry and how the sheet scaled and corrected it; version 1 imports remain supported |
+| Save project JSON | Restoring the workbench settings and browser measurement notes | Outline, source measurements, optional endpoint reference and independent-height decision inputs, and design/print settings. The browser saves version 3 for fitted/reference-sheet profiles and version 2 for ordinary polygons; version 1 imports remain supported. Photos are excluded |
 
 To measure the reference-sheet tracer on your own photos, run `make photo-benchmark PHOTOS=folder` on a folder of photos and the dimensions you measured with calipers. It reports each dimension's error and its spread between repeat shots; see [the photo benchmark](docs/photo-benchmark.md). No result from real photos is recorded yet.
 
-See [export formats and dimensional checks](docs/exports.md) before transferring a part to fabrication software.
+Use the browser's **Save project** or **Save editable project recipe** to retain known-feature endpoints, independent height and height-decision inputs. The backend recipe inside a slicer handoff preserves geometry/build settings and reference-sheet evidence, but does not include those browser-only measurement notes. Save both when you need both. See [export formats and dimensional checks](docs/exports.md) before transferring a part to fabrication software.
 
-OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.scad` in OpenSCAD to edit its thickness, apply an additional XY scale, or select a split piece. The source represents traced polygon extrusion; it does not recover constraints, analytic circles, or the part's original feature history. For a new plate with deliberately dimensioned holes, use the companion [OpenSCAD workspace](reference-library/index.html#cad) and its [native build guide](reference-library/OPENSCAD.md).
+OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.scad` in OpenSCAD to edit its thickness, apply an additional XY scale, or select a split piece. Ordinary and split outlines use polygon extrusions; a fitted single-part export retains circle primitives and samples other fitted arcs. Neither route recovers the original CAD constraints or feature history. For a new plate with deliberately dimensioned holes, use the companion [OpenSCAD workspace](reference-library/index.html#cad) and its [native build guide](reference-library/OPENSCAD.md).
 
 ## Honest limits
 
@@ -132,7 +132,10 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 ## Documentation
 
+Start with the [documentation index](docs/README.md) for capture, engineering, export, development and evidence routes.
+
 - [Capture and calibration guide](docs/capture-guide.md)
+- [Engineering model and independent verification](docs/engineering-model.md)
 - [Reference-sheet tracing: method, mathematics and evidence](docs/reference-sheet.md)
 - [Photo benchmark: your photos against your calipers](docs/photo-benchmark.md)
 - [Export formats](docs/exports.md)
@@ -147,7 +150,8 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 - [Research and design decisions](docs/research.md)
 - [Scope and roadmap](docs/roadmap.md)
 - [Validation results](docs/validation.md)
-- [Visual QA report](design-qa.md)
+- [Guided workbench review](docs/validation/guided-workbench.md)
+- [Visual QA history and review index](design-qa.md)
 
 ## Reference library
 

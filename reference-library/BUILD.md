@@ -40,7 +40,7 @@ Run these from `reference-library/`.
 | `make plate` | Render the synthetic plate with OpenSCAD and run its design-rule checks |
 | `make links` | Request every catalog URL and write `tmp/qa/link-check.json` (network) |
 | `make refresh-github` | Update the repository metadata in `sources.json` (network) |
-| `make verify` | Run every automated check and write `verification.json` |
+| `make verify` | Rerun Python/Node tests and the plate pipeline, validate current browser/native receipts, then write `verification.json` |
 | `make dist` | Write `SHA256SUMS` and, in `dist/`, the ZIP named in `library.json` |
 | `make dist-check` | Verify `SHA256SUMS` against the files |
 | `make release` | `build` → `plate` → `test` → `check` → `verify` → `dist` |
@@ -78,11 +78,17 @@ To run a step directly:
 | `assets/data/calculators.json`, `assets/js/*.js`, `assets/css/*.css`, `assets/photo-workspace.html`, `assets/cad-workspace.html` | Toolkit, Photos workspace, and page interface (inlined into `index.html`) | `make html` |
 | `assets/data/openscad-models.json`, `examples/*.scad` | shared OpenSCAD model parameters and source templates | `make html test check` |
 | `cadkit/*.py` | CLI, examples, Python tests | `make test` |
-| `examples/plate-parameters.csv` | plate render and checks | `make openscad-doctor` | Check the installed OpenSCAD executable and version |
-| `make plate` |
+| `examples/plate-parameters.csv` | plate render and checks | `make plate` |
 | `library.json` | revision label, dates, archive name | `make build dist` |
 
 Never edit generated files by hand: `index.html`, `sources.csv`, `REFERENCES.md`, `GITHUB.md`, `assets/figures/*.svg`, the PDF, and `verification.json`. `SHA256SUMS` and `dist/` are also generated and are not committed.
+
+`make verify` consumes existing browser receipts; it does not run `make check`
+for you. After changing reader inputs, run `make build`, then `make check`, then
+`make verify`. Browser receipts must follow the latest HTML build, and the native
+handoff receipt must match the downloaded sources. Keep the dated release record
+separate from a documentation-only link or source review; do not refresh
+`verification.json` merely to make its date look current.
 
 ## Photo workspace
 

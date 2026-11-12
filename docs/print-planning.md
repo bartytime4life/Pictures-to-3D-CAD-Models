@@ -1,8 +1,16 @@
 # Print planning and user control
 
+[Documentation index](README.md) · [Guided workbench review](validation/guided-workbench.md)
+
 Printer presets provide a starting point for checking whether a model fits a
 build volume. They do not replace a slicer or establish that a particular
 material, orientation, or model will print successfully.
+
+Open **Design & print** to choose size changes, output and printer settings.
+The next-step guide opens these controls when a design value needs correction.
+**Ready to review your model** means that a current CAD build exists, even when
+printer fit is unknown or a part exceeds the selected volume. Inspect that
+separate fit result here before moving to your slicer.
 
 ## Printer catalog and checked examples
 
@@ -126,6 +134,11 @@ Four different quantities need different labels:
    nozzle diameter. It is an explanatory ratio, not a slicer simulation: actual
    extrusion widths can differ from the nozzle diameter.
 
+These detail tolerances apply to polygon output. A fitted single-piece outline
+keeps its analytic lines, arcs and circles and reports that detail simplification
+was skipped. Explicitly selecting split output uses the traced polygon, where
+the selected detail mode does apply.
+
 For example, a 0.3 mm measured feature is 0.75 nozzle diameters with a 0.4 mm
 nozzle; a 0.8 mm feature is two nozzle diameters. As a conservative review
 heuristic, flag sub-nozzle details for slicer inspection and ask the user to
@@ -207,18 +220,17 @@ and [validation](validation/split-plans.md).
 
 ## Reviewed changes and undo
 
-The assistant should present a concise explanation and a before/after proposal
+The assistant presents an explanation and a before/after proposal
 for geometry, appearance, material, trace detail, printer selection, or a split
 plan. A proposal is tied to the project state it analyzed. If the user edits the
 project before applying it, require a fresh proposal rather than applying stale
 assumptions.
 
-Applying a proposal should be one deliberate action with an undo snapshot of
+Applying a proposal is one deliberate action with an undo snapshot of
 all settings it changes. Geometry changes invalidate previous builds and
-exports until the model is rebuilt. Appearance or planning metadata should not
-silently alter dimensions. Undo should restore the prior settings and clearly
-indicate whether rebuilding is needed. A failed suggestion must leave the
-normal manual controls usable.
+exports until the model is rebuilt. Appearance or planning metadata does not
+silently alter dimensions. Undo restores the prior settings and reports whether
+rebuilding is needed. A failed suggestion leaves the normal manual controls usable.
 
 [a1]: https://github.com/SoftFever/OrcaSlicer/blob/f55615d7488fe570942f5e25548b8ab9b30778d0/resources/profiles/BBL/machine/Bambu%20Lab%20A1%200.4%20nozzle.json
 [a1-common]: https://github.com/SoftFever/OrcaSlicer/blob/f55615d7488fe570942f5e25548b8ab9b30778d0/resources/profiles/BBL/machine/fdm_bbl_3dp_001_common.json
@@ -231,7 +243,7 @@ normal manual controls usable.
 
 ## Current interface
 
-[Design and print controls](images/design-print.png) keep source measurements separate from design scales and show the selected printer's limits. The [separated-pieces view](images/separated-pieces.png) displays real exported geometry with inspection-only spacing. [Mobile controls](images/design-print-mobile.png) use the same settings and explicit review flow.
+The recorded [design and print controls](images/design-print.png) keep source measurements separate from design scales and show the selected printer's limits. The [separated-pieces view](images/separated-pieces.png) displays real exported geometry with inspection-only spacing. The recorded [mobile controls](images/design-print-mobile.png) show the same settings and explicit review flow. See [guided workbench](validation/guided-workbench.md) for the current next-step guidance and export grouping; these earlier screenshots are not a new browser-verification claim.
 
 ## Continue in Bambu Studio or PrusaSlicer
 

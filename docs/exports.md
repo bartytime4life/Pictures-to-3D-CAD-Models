@@ -1,5 +1,7 @@
 # Export formats and dimensional checks
 
+[Documentation index](README.md) · [Guided workbench review](validation/guided-workbench.md)
+
 Choose the output according to the receiving tool. All generated geometry uses **millimeters internally**. Confirm the receiving program's import settings rather than relying on a file extension to establish units.
 
 Open **Choose an export** or **Review export** for the current build. **CAD & 3D
@@ -7,15 +9,21 @@ printing** contains STEP, STL, 3MF, and Parts ZIP when available. Expand **Drawi
 & source files** for DXF, SVG, PDF, and OpenSCAD. The disclosure works with the
 keyboard as well as a pointer.
 
+When settings change, use **Update preview** in the next-step guide or **Update
+model** in the measurement controls before exporting. An earlier preview may
+remain visible for comparison, but its geometry downloads and printer-fit result
+are withheld until a successful current build. Export readiness describes the
+digital revision, not physical fit or manufacturing acceptance.
+
 ## STEP: CAD solids
 
 Use STEP when continuing in a solid-modeling CAD application. The file contains the generated boundary representation of the extruded part and its through-holes. In split mode, the combined file contains the generated pieces in their assembled positions.
 
-A single-piece build from a reference-sheet trace extrudes its fitted lines, arcs and circles. Holes and rounded corners are then true cylindrical faces with exact radii that downstream CAD can dimension and edit, and the export dialog reports the counts. A fitted radius describes the photograph; it is not recovered design intent. Split output still uses the traced polygon.
+A single-piece build with fitted primitives, including a reference-sheet trace, extrudes its fitted lines, arcs and circles. Holes and rounded corners are then true cylindrical faces with exact radii that downstream CAD can dimension and edit, and the export dialog reports the counts. A fitted radius describes the photograph; it is not recovered design intent. Split output still uses the traced polygon.
 
 STEP does not carry this application's original editable feature history. The receiving tool may support direct edits, but that is different from recovering a named sketch, constraints, or an extrusion feature. Keep the project recipe if you want to change width or thickness in this workbench later.
 
-The traced boundary is a polygonal approximation. A hole that looks circular in the photograph is not automatically fitted to an exact analytic circle, and STEP export does not change that approximation into an exact measured feature.
+For polygon-only profiles, the traced boundary remains a polygonal approximation in STEP. For fitted profiles, accepting an analytic circle changes its digital representation; it does not establish that the photographed feature is perfectly round or that its radius is an exact physical measurement.
 
 After import, check the bounding-box width, height, thickness, number of solids, and hole topology. Single-piece mode produces one valid solid with positive volume. Split mode produces the reported valid piece solids; inspect the pieces separately rather than assuming the assembly view shows a print-bed arrangement.
 
@@ -24,6 +32,13 @@ After import, check the bounding-box width, height, thickness, number of solids,
 The **3MF** export contains millimeter geometry with separate objects for split output. Each object uses welded mesh indices and retains its assembly position. Individual split pieces in the Parts ZIP and slicer packages are normalized to XY zero and Z zero. A neutral 3MF does not contain printer, filament, process, support or multi-material settings.
 
 Choose **Bambu Studio** or **PrusaSlicer** in the export dialog for a tailored ZIP with geometry, editable recipe, part files, instructions and SHA-256 manifest. Choose native presets and review placement in the receiving slicer. See [slicer integration](slicers.md) for optional local opening and version/install boundaries.
+
+Also use **Save project** if you need the endpoint-reference and independent-height
+notes entered in the browser. The handoff ZIP's server-generated `project.json`
+contains the build profile, source dimensions and design settings, including
+fitted/reference-sheet profile data when present. It does not include the
+browser's separate `reference_calibration`, `measured_height_mm` or `height_check`
+fields.
 
 ## STL: a triangle mesh
 
@@ -43,7 +58,7 @@ The [reference library](../reference-library/README.md) in this repository inclu
 python3 -m cadkit meshcheck ~/Downloads/model.stl --expect-mm 80
 ```
 
-It reports extents, volume, boundary and non-manifold edges, non-manifold vertices, orientation, connected components, and genus. For a flat part, genus is the number of through-holes, so compare it with the hole count shown in the workbench. A missing or extra through-hole changes the genus even when the outline looks right. The unit hint flags a likely inch, centimeter, or meter mix-up. Unless `--allow-open` is given, the command exits with status 0 only for a closed, manifold, consistently oriented mesh with no degenerate triangles. Add `--json` for machine-readable output. See the [`cadkit` notes](../reference-library/cadkit/README.md#mesh-check-notes).
+It reports extents, volume, boundary and non-manifold edges, non-manifold vertices, orientation, connected components, and genus. For one connected, closed extrusion of a planar profile, genus is the number of through-holes. A missing or extra through-hole changes it even when the outline looks right. Inspect split pieces individually: a cut can open a hole onto a cut face, and touching assembled meshes need not form one manifold surface. The unit hint flags a likely inch, centimeter, or meter mix-up. Unless `--allow-open` is given, the command exits with status 0 only for a closed, manifold, consistently oriented mesh with no degenerate triangles. Add `--json` for machine-readable output. See the [`cadkit` notes](../reference-library/cadkit/README.md#mesh-check-notes).
 
 The workbench test suite runs this checker on combined exports, on a traced photograph with round holes, and on every piece in a split bundle (`tests/test_mesh_interop.py`). Like the receiving tool's check, a pass is a geometry result, not evidence of strength or fit.
 
@@ -76,13 +91,13 @@ Use the PDF to check the outline against the real part before cutting or printin
 
 The drawing holds lines only, with no fill or thickness. In split mode it shows the pieces in their assembled positions.
 
-## OpenSCAD: editable polygon extrusion
+## OpenSCAD: editable profile extrusion
 
-Choose **OpenSCAD** in the export dialog to download `model.scad`. For a fitted single-piece outline, circular holes stay `circle(r = …, $fn = …)` calls inside a `difference()`, with facet counts chosen for a 0.005 mm chord error; other fitted boundaries are polygons sampled within 0.005 mm. Source generation uses the same final profiles as the CAD worker, after the workbench's design percentages, geometry-detail approximation, and split cuts. The default SCAD values therefore describe the current built dimensions and holes. Generating this source does not require an OpenSCAD installation.
+Choose **OpenSCAD** in the export dialog to download `model.scad`. For a fitted single-piece outline, circular boundaries stay `circle(r = …, $fn = …)` calls inside a `difference()`; other fitted boundaries become sampled polygons. The sampling targets 0.005 mm chord error, with 24–720 facets for a circle and at most 720 subdivisions per arc. The cap can make the actual chord error larger for large radii; it is not a universal approximation bound. Source generation uses the workbench's effective design percentages and final profiles. Polygon output includes geometry-detail approximation and any split cuts; a fitted single-piece outline retains its fitted geometry regardless of the detail setting. Generating this source does not require an OpenSCAD installation.
 
 Open the file in OpenSCAD, then preview and render it. `thickness_mm` is the effective built thickness, `xy_scale = 1` preserves the exported XY dimensions, and `part_index = 0` displays the whole assembly. In split mode, set `part_index` to a numbered piece to inspect or export only that piece. Selected pieces keep their assembled coordinates; place them in your slicer. The combined source unions touching pieces for display/rendering; use the selector or the Parts ZIP when separate pieces are needed.
 
-These are polygonal traced boundaries and an extrusion, with editable source values. They are not recovered sketch constraints, analytic circles, threads, hidden features, or the original CAD feature history. Changes made in OpenSCAD do not update the saved workbench recipe or its printer-fit result. Recheck the new dimensions, holes, closure, and fit after edits; material and preview color are not encoded in SCAD.
+The source retains editable extrusion values and fitted circle radii where available; OpenSCAD renders its circles with facets, and sampled boundaries remain polygons. It does not recover sketch constraints, threads, hidden features, or the original CAD feature history. Changes made in OpenSCAD do not update the saved workbench recipe or its printer-fit result. Recheck the new dimensions, holes, closure, and fit after edits; material and preview color are not encoded in SCAD.
 
 For a new plate with explicit hole diameters and spacing, the companion [OpenSCAD workspace](../reference-library/index.html#cad) provides parameter-driven mounting plates and fit coupons. It opens from the workbench header in a separate tab. Its [native workflow](../reference-library/OPENSCAD.md) records mesh checks and build provenance; synthetic passing geometry does not establish physical fit, strength, or printing success.
 
@@ -100,15 +115,15 @@ The cuts create no alignment pins, joints, glue allowance, clearance, or kerf co
 
 ## Project JSON: the workbench recipe
 
-Use **Save project** to download a version 2 JSON recipe. Restore it through **Photo → Browse files**, using the same chooser as an image. The app rebuilds from the source outline, measured inputs, and saved design/print settings; restoration does not require re-tracing a photograph. Version 1 recipes still import with default design settings.
+Use **Save project** in the header, or **Save editable project recipe** in Export, to download a JSON recipe: version 2 for a polygon-only profile, or version 3 when the profile contains fitted primitives or reference-sheet evidence. Restore it through **Photo → Browse files**, using the same chooser as an image. The app rebuilds from the source outline, measured inputs, and saved design/print settings; restoration does not require re-tracing a photograph. Versions 1, 2 and 3 import; version 1 uses default design settings.
 
 Save before refreshing or leaving the page. The workbench does not provide automatic project persistence; a fresh page starts with the sample.
 
 The project recipe preserves the traced coordinates, source width/thickness, XY/thickness design scales, geometry-detail mode, color/material choices, printer settings, and split plan needed to regenerate the result. Design percentages remain separate from the source measurements. Color/material choices also appear in a split bundle's manifest; STEP, STL, DXF, and SCAD do not encode them. The recipe is not a substitute for the original physical measurement, nor a general-purpose CAD exchange format.
 
-When **Apply reference scale** has been used, version 2 recipes also preserve optional `reference_calibration` data: `known_length_mm`, two `reference_points`, and `image_size` with its working-image width and height. Coordinates refer to the orientation-adjusted working image, whose longest side is at most 1400 pixels; they are not display-pixel coordinates or necessarily original camera-file coordinates. The full outside `width_mm` remains the scale input for geometry generation. Directly editing that width clears the endpoint-calibration record so it no longer appears to explain a manually chosen size.
+When **Apply reference scale** has been used, the browser-saved recipe also preserves optional `reference_calibration` data: `known_length_mm`, two `reference_points`, and `image_size` with its working-image width and height. Coordinates refer to the orientation-adjusted working image, whose longest side is at most 1400 pixels; they are not display-pixel coordinates or necessarily original camera-file coordinates. The full outside `width_mm` remains the scale input for geometry generation. Directly editing that width clears the endpoint-calibration record so it no longer appears to explain a manually chosen size.
 
-The optional `measured_height_mm` preserves the independent outside-height input. Optional `height_check` stores `allowance_mm` (above 0, up to 2000 mm) and `measurement_bound_mm` (0–2000 mm), and requires that height measurement. These are user-entered decision inputs; no assessment status is saved. Import validates both and recomputes the result against the restored source. See [engineering model and verification](engineering-model.md) for the conditional interval rule. Its comparison is against the source profile before XY design scaling and does not change the generated shape. These optional fields extend version 2; existing version 1 and version 2 recipes remain importable. They are workbench measurement notes, not an uncertainty budget, physical inspection certificate, or additional measurement metadata in STEP, STL, DXF, or the parts manifest.
+The optional `measured_height_mm` preserves the independent outside-height input. Optional `height_check` stores `allowance_mm` (above 0, up to 2000 mm) and `measurement_bound_mm` (0–2000 mm), and requires that height measurement. These are user-entered decision inputs; no assessment status is saved. Import validates them and recomputes the result against the restored source. See [engineering model and verification](engineering-model.md) for the conditional interval rule. Its comparison is against the source profile before XY design scaling and does not change the generated shape. Recipes without these optional fields remain importable. They are workbench measurement notes, not an uncertainty budget, physical inspection certificate, or additional measurement metadata in STEP, STL, DXF, or the parts manifest.
 
 If these optional notes are incomplete or invalid, **Save project** returns from
 Export to the measurement controls, opens the height check, and focuses the field

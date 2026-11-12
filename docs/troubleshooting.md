@@ -1,6 +1,6 @@
 # Troubleshooting
 
-Use the visible error message and the stage that failed. Keep the current photograph and dimensions while correcting a recoverable problem; starting over should not be the default recovery strategy.
+Use the visible error message and the **Next step** guide to identify the action that is needed. The guide is deterministic input/build state, not AI advice or manufacturing acceptance. Keep the current photograph and dimensions while correcting a recoverable problem; starting over should not be the default recovery strategy. See the [documentation index](README.md) for other tasks and the [capture guide](capture-guide.md) for source preparation.
 
 ## Image and tracing problems
 
@@ -8,6 +8,8 @@ Use the visible error message and the stage that failed. Keep the current photog
 | --- | --- | --- |
 | Unsupported or unreadable image | The bytes are not a supported image, or the file is damaged. | Export a fresh PNG, JPEG, WebP, HEIC, or AVIF; changing the extension alone does not convert a file. A HEIC that uses a codec other than HEVC is not supported. |
 | Upload rejected as too large | Encoded size or decoded image dimensions exceed the server limit. | Resize the image before uploading, keeping the relevant boundary sharp. |
+| A selected reference sheet was not used | The whole sheet could not be detected or measured, and the initial upload fell back to ordinary tracing with a warning. | Enter a measured width, or retake the whole flat sheet with all four corners visible and choose the matching **Scale reference**. A fallback does not supply sheet correction or fitted geometry. |
+| Contrast threshold is disabled | Reference-sheet tracing measures contrast locally. | Review sheet choice, foreground interpretation, capture and trace notes. To use manual contrast on an ordinary silhouette, choose **None: I will enter a measured width**. |
 | No useful outline | Low contrast, a blank image, or the wrong foreground interpretation. | Check the foreground setting and threshold; retake with a plain contrasting background if necessary. |
 | Background selected as the part | Foreground and background are reversed or merge at the image edge. | Invert the foreground interpretation and leave a clear margin around the whole part. |
 | Multiple substantial regions | Other objects, loose pieces, or a detached part appear in the image. | Use an image of one intended connected part. Review the warning and selected region. |
@@ -25,13 +27,15 @@ Use the visible error message and the stage that failed. Keep the current photog
 | Build is busy | Another geometry conversion is using the bounded worker. | Let it finish, then retry. Repeated rapid submissions will not speed it up. |
 | Temporary model storage is full | The service has reached its model-directory cap. | Download any needed files, then use **Capture guide → Clear temporary exports** and rebuild. This clears all completed exports on this instance. |
 | Build times out | The profile is unusually complex or the kernel cannot complete it in the permitted time. | Try a coarser outline and remove irrelevant visual texture from the source. |
-| Preview is marked outdated | Geometry-affecting settings changed after the last successful build. | Rebuild before exporting. An old preview is not confirmation that the new settings succeeded. |
+| Preview is marked outdated or footer says Rebuild needed | Editable source/design settings changed after the last successful build. | Use **Next step → Update preview** to rebuild and inspect without opening Export; **Update model** builds and opens export review. An old preview is not confirmation that the new settings succeeded. |
+| Build or export is disabled after collapsing settings | A required measurement or design/print value is invalid. | Read the cause in **Next step**. **Enter width**, **Enter thickness** or **Fix design settings** takes you to the existing control/panel. |
 | Old result remains after an error | The app preserved a previous successful result for recovery. | Correct the current input and rebuild; do not assume the visible model reflects the failed change. |
 
 ## Design and print planning
 
 | Symptom | Next action |
 | --- | --- |
+| The sample shows a usable model before I enter measurements | The sample uses demonstration inputs of 80 mm width and 4 mm thickness, labeled above the workbench. Upload your own part and supply its measured scale and thickness before relying on its output. |
 | Resulting size differs from the measured reference | Check the explicit XY and thickness design percentages. At 100%, each keeps the corresponding measured size; a different percentage deliberately changes the design without changing its source measurement. |
 | Small feature changes after choosing relative detail | Compare against the original-detail build. Detail modes can simplify geometry; a larger nozzle or smoother display cannot recover missing photo detail. |
 | A printer says the part is too large | Check the actual usable X/Y/Z volume and margin. Choose another printer or a reviewed split plan. Scaling changes the part's physical size and is a separate decision. |
@@ -43,6 +47,10 @@ Use the visible error message and the stage that failed. Keep the current photog
 
 ## Export problems
 
+**Choose an export** in the guide and **Review export** in the main controls open the same current-model chooser. **CAD & 3D printing** shows the common geometry downloads; expand **Drawings & source files** for DXF, SVG, PDF and OpenSCAD. These formats remain available even though they are collapsed initially.
+
+If **Save editable project recipe** closes Export instead of downloading, read the validation error and the opened **Independent height check**. Invalid measured height receives focus; an incomplete decision pair focuses its missing input. Correct the notes or clear both optional decision inputs, then save again. Geometry downloads and a valid current CAD model are separate from these optional recipe notes. See the [engineering model](engineering-model.md) for the conditional check.
+
 If a download link has expired, rebuild the current settings to create new artifacts. Download files promptly when you need a persistent copy.
 
 If an STL appears 25.4 times too large or too small, check whether the receiving tool interpreted millimeters as inches or vice versa. If a DXF appears as a flat drawing, that is expected: DXF exports the planar profile, not thickness.
@@ -50,6 +58,8 @@ If an STL appears 25.4 times too large or too small, check whether the receiving
 If the printed PDF is the wrong size, print it again at 100 % ("actual size") and not fitted to the page, then measure its two 100 mm rulers. If an SVG imports at the wrong size, the receiving program has ignored the millimetre size the file states; set the document's units to millimetres there, or use the DXF.
 
 If STEP opens without the application's original sketch and extrusion history, that is also expected. Keep the recipe to regenerate the part with new dimensions. See [export formats](exports.md).
+
+If an endpoint reference or independent-height note is absent after restoring a slicer-bundle recipe, use the JSON downloaded through the browser's **Save project** instead. The backend recipe contains build settings and reference-sheet evidence, but omits browser-only endpoint and height-decision notes.
 
 If refreshing the page returns to the sample, restore your downloaded project through **Photo → Browse files**. The application has no automatic project persistence; the saved recipe is the recovery path.
 
@@ -75,8 +85,9 @@ Opening a project replaces the current work only after its CAD build succeeds. I
 | Port 11434 is already in use | Identify the existing Ollama service and its model directory before starting another. The app lists models from the service it actually reaches. |
 | First startup cannot create `~/.ollama` | Allow the current user to create Ollama's identity files through the host's supported permissions mechanism. Do not change the app's source or disable the sandbox to conceal the failure. |
 | A response takes too long | Try a smaller installed model and a shorter question. A first response also loads model weights; inference timeout leaves the CAD inputs unchanged. |
-| A proposal is outdated | Project inputs changed after the question was sent. Ask again with the current settings. |
-| The answer seems wrong | Ignore it or undo an applied trace change. Check the photograph, measured part, and capture guide. A valid response format does not prove the advice is correct. |
+| An answer or proposal is outdated | Project inputs changed after the question was sent. Advice-only answers also carry the stale-project notice. Ask again with the current settings; applying an old proposal is blocked. |
+| AI cannot send with invalid settings | Follow the deterministic **Next step** correction first. Valid settings that request oversized geometry can still ask for a repair suggestion; applying it remains explicit and validated. |
+| The answer seems wrong | Ignore it or undo an applied suggestion. Check the photograph, measured part, and capture guide. A valid response format does not prove the advice is correct. |
 
 ## Report a reproducible problem
 

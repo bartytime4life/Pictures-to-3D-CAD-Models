@@ -2,6 +2,9 @@
 
 Run commands from the repository root unless a command explicitly says otherwise. An existing Codex cloud task already has an isolated checkout; use it directly rather than creating another worktree for normal setup.
 
+See the [documentation index](README.md) for usage and method guides, and
+[Contributing](contributing.md) for change scope, review and evidence practices.
+
 ## Prerequisites
 
 - **Python 3.12** with `venv` and a working package installer, as recorded in `.python-version`. The project intentionally restricts Python to the tested CAD binary dependency combination; do not assume Python 3.13 compatibility. `python3` does not have to be 3.12: setup uses `PICAD_PYTHON` when set, otherwise the first of `python3.12` and `python3` that is 3.12, and prints the interpreter it chose.
@@ -82,6 +85,9 @@ Run `make` for help. Component targets delegate to the existing scripts and libr
 | `make lint` | Workbench Ruff and frontend/browser-source formatting checks |
 | `make smoke` | Check an already running workbench through its real trace/build/export API |
 | `make photo-benchmark PHOTOS=folder` | Trace a folder of your own reference-sheet photos and compare them with your caliper measurements ([guide](photo-benchmark.md)) |
+| `make corner-sweep` | Fit synthetic blurred filleted corners and report radius error; it does not measure a real camera or part |
+| `make freecad` | Check fitted synthetic STEP/DXF imports using a separately installed `FREECADCMD` |
+| `make slicers` | Inspect executable discovery without starting a slicer |
 | `make setup-app` / `make setup-library` | Prepare one component |
 | `make build-app` / `make build-library` | Build one component |
 | `make test-app` / `make test-library` | Validate one component |
@@ -107,9 +113,17 @@ npm run test:e2e
 
 Backend checks should exercise image parsing, geometry validation, dimensional bounds, topology, and exported-file re-imports. Browser checks should exercise the actual conversion path, edits, outdated-result handling, exports, input failures, and responsive navigation.
 
-Design/print checks should also verify that XY and thickness percentages preserve measured inputs, that relative-detail approximation remains valid, and that generated split solids have consistent volumes and per-part exports. Check printer fit in both supported XY orientations, version 2 recipe round-trips, and version 1 import defaults. Color/material preview must not alter mesh coordinates or imply material/strength simulation. Test assistant Apply/Undo and stale proposals separately from live model quality.
+Design/print checks should also verify that XY and thickness percentages preserve measured inputs, that relative-detail approximation remains valid, and that generated split solids have consistent volumes and per-part exports. Check continuous-angle placement witnesses, conservative curve enclosures and unknown-fit cases rather than just 0°/90°. Cover version 2 polygon and version 3 fitted/reference recipe round-trips, version 1 import defaults, and browser-held measurement notes separately from server handoff recipes. Color/material preview must not alter mesh coordinates or imply material/strength simulation. Test assistant Apply/Undo, stale advice-only answers and invalid-setting recovery separately from live model quality.
 
-Treat the recorded results in [validation.md](validation.md) as the test evidence for the current implementation. Do not infer that a test passed merely because its command is listed here.
+For workflow changes, check guide, navigation and footer consistency through
+missing input, invalid design, processing, stale and current states. Keep keyboard
+focus after builds and recipe errors. Specialist export formats must remain
+reachable through **Drawings & source files**. The [guided-workbench audit](validation/guided-workbench.md)
+provides concrete regression examples.
+
+Use the revision-bound records in [validation.md](validation.md) to identify which
+implementation was checked. A historical pass does not establish a later head,
+and listing a command here does not establish that it ran.
 
 Browser tests use `PLAYWRIGHT_CHROMIUM_EXECUTABLE` when supplied, otherwise `/usr/bin/chromium` when available, otherwise Playwright's installed Chromium, otherwise an installed Google Chrome (`/usr/bin/google-chrome`, `google-chrome-stable`, or the macOS application). If none of these is present, install the browser after `npm ci`:
 
