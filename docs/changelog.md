@@ -3,6 +3,16 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Documentation review through PR #66 — November 12, 2026
+
+- Align the source/review table with published PR #66 and refresh exact-head
+  hosted observations, preserving the scope of earlier results.
+- Add a callable response example, source-index interpretation, report-handling
+  guidance and recovery steps for numerical-tool requests.
+- Check every Markdown document, current commands and API contracts; retain
+  the [complete inventory and verification scope](validation/documentation-response-state.md).
+  Executable source, archived studies and generated library outputs are unchanged.
+
 ## Conditional common-response calibration — November 12, 2026
 
 - Add exact rational consistency of one nondecreasing scalar function, supplied

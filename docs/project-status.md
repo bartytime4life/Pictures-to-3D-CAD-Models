@@ -1,8 +1,8 @@
 # Project status and evidence
 
-Candidate snapshot: **November 12, 2026**. This common-response calibration
-candidate is based on published [draft PR #65](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/65)
-at `8b9c6a803b89d05daee38b7f48c079f70c76de3a`. It adds exact conditional
+Documentation snapshot: **November 12, 2026**. This documentation branch is based
+on published [draft PR #66](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/66)
+at `81dd0871aab390b1613bedc0d2b7c7f0578cf280`. That candidate adds exact conditional
 consistency of one shared nondecreasing response, supplied output/slope bounds,
 tight marginals and a shared witness. The [guide](response-calibration.md) and
 [complete controls](validation/response-calibration.md) retain calibration/edge
@@ -15,8 +15,8 @@ the [task index](README.md), [developer tools](developer-tools.md) or
 ## Source and review state
 
 At this check, `main` was `5c07d0f70d7df0200bc24227c8ac7e9b630f7f09`.
-PRs #47–#65 were open and unmerged at the latest recorded source readback.
-This candidate branch includes their changes; that checkout of `main` does
+PRs #47–#66 were open and unmerged at the **14:27 UTC** source readback.
+This documentation branch includes their changes; that checkout of `main` does
 not contain them. The conditional corner
 analysis remains separate from production tracing; the grid and crossing repairs
 affect the existing production edge-profile search.
@@ -43,6 +43,7 @@ affect the existing production edge-profile search.
 | `ad7cc00fed4b2e7006aae957758a12b2f9f15528` | Complete documentation alignment, current source/CI snapshot, engineering wording and source-preserving verification | [PR #63](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/63), open draft; base PR #62's branch |
 | `701aa91af7a0b1c62e5527eed35e0227bdf0e9f3` | Raw-source edge fitting in fixed retained modes, bounded brightness, numerical ambiguity and standardized raw/complement diagnostics | [PR #64](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/64), open draft; base PR #63's branch |
 | `8b9c6a803b89d05daee38b7f48c079f70c76de3a` | Documentation review, setup/navigation and raw-source API/diagnostic guidance; complete 86-document audit | [PR #65](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/65), open draft; base PR #64's branch |
+| `81dd0871aab390b1613bedc0d2b7c7f0578cf280` | Exact common-response consistency, strict CLI, finite edge/calibration controls and independent certificate audits | [PR #66](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/66), open draft; base PR #65's branch |
 
 The PR links show live review state. A documentation update does not install,
 merge or deploy those changes. Record the checkout used to start a service:
@@ -110,11 +111,13 @@ there is no product endpoint, automatic tracing correction or accuracy label.
 | Documentation update through PR #57 | [Complete coverage and checks](validation/documentation-complete-2026-11-12.md) | Current guides, numerical-tool contracts and repository-wide Markdown checks; no new product or physical qualification |
 | Documentation alignment through PR #62 | [Coverage and checks](validation/documentation-alignment.md) | Source/review state, current commands and repository-wide documentation checks; prior product results retain their source bindings |
 | Documentation review through PR #64 | [Complete inventory and checks](validation/documentation-latest.md) | Current source/navigation, API/diagnostic wording and documentation checks; no fresh full software or physical qualification |
+| Documentation review through PR #66 | [Complete inventory and checks](validation/documentation-response-state.md) | Current source/review state, executable response examples, command/API contracts and repository-wide documentation checks |
 
 Hosted results are bound to exact heads. Earlier rows retain their last recorded
 results. The PR #61–#63 workbench rows retain the **November 12, 13:27 UTC**
-observation. PR #64 and #65 were checked on **November 12, 14:08 UTC**; each result
-remains bound to its own head:
+observation. PR #64 retains its **14:08 UTC** check. PR #65 and PR #66 workbench
+runs were checked on **November 12, 14:27 UTC**, and PR #66's library result at
+**14:30 UTC**; each result remains bound to its own head:
 
 | Head | Hosted workflow | Result at this observation |
 | --- | --- | --- |
@@ -142,7 +145,9 @@ remains bound to its own head:
 | `ad7cc00` | [Workbench run 126](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43223199839) | Completed successfully at 13:21 UTC |
 | `701aa91` | [Workbench run 127](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43227832662) | Completed successfully at 13:56 UTC |
 | `701aa91` | [Library run 46](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43227832670) | Completed successfully at 13:31 UTC |
-| `8b9c6a8` | [Workbench run 128](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43230540195) | In progress at 14:08 UTC; no terminal result inferred |
+| `8b9c6a8` | [Workbench run 128](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43230540195) | Completed successfully at the 14:27 UTC check |
+| `81dd087` | [Workbench run 129](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43234835732) | In progress at 14:27 UTC; no terminal result inferred |
+| `81dd087` | [Library run 47](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43234835472) | Completed successfully at the 14:30 UTC check |
 
 Follow the exact run links for later results. The raw-source candidate's local 1,273-test result is
 separate from hosted CI. The response-calibration candidate records its own local
@@ -177,6 +182,9 @@ Gaussian source with both target and model in the same retained source modes.
 Its explicit raw/complement diagnostics preserve invisible model mismatch.
 Unknown optics/response, radial/curved edges and jointly inferred geometry remain
 open before a production correction or physical likelihood is justified.
+The [response constraints](response-calibration.md) now check one common curve
+at exact supplied inputs. Uncertain inputs, joint calibration/geometry inference
+and justified camera-specific error budgets remain further engineering work.
 Keep observation-error bounds separate from model discrepancy, local fit spread
 and endpoint-placement sensitivity. Numerical or work-budget exhaustion must
 remain unresolved rather than becoming a physical claim.

@@ -6,8 +6,10 @@ CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
 For a concise source/review snapshot, use [project status](project-status.md).
-The [current coverage](validation/response-calibration.md#documentation-coverage)
-includes the common-response guide and its source-bound controls. The
+The [current documentation review](validation/documentation-response-state.md)
+audits the published PR #66 baseline, executable calibration examples, command
+help and API contracts. The [response implementation coverage](validation/response-calibration.md#documentation-coverage)
+retains the checks recorded with that candidate. The
 [documentation review at PR #65](validation/documentation-latest.md) retains
 its complete inventory and published PR #64 baseline. The
 [raw-source coverage record](validation/raw-source-fit.md#documentation-coverage)

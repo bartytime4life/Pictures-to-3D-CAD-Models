@@ -24,6 +24,13 @@ exact value. Exact arithmetic preserves these declarations without establishing
 that the measurements or their bounds are physically correct. Unit labels are
 text metadata, not dimensional validation or evidence of radiometric calibration.
 
+An input interval cannot be supplied through this version-1 schema. Replacing
+it by its midpoint changes the question and can reverse compatibility. Likewise,
+converting a rounded Gaussian evaluation to an exact rational preserves that
+computed number; it does not certify an enclosure of the mathematical Gaussian
+value. Keep those input-model limitations separate from exact propagation of
+the supplied values.
+
 For every pair `x1 < x2`, the declared model requires
 
 ```text
@@ -203,6 +210,33 @@ and `Fraction` inputs; floats and booleans are refused. Invalid types and
 invalid/resource values raise errors rather than returning a partial
 compatibility conclusion. The CLI keeps the narrower decimal-string contract.
 
+For example, run this Python code from the repository root using `.venv/bin/python`:
+
+```python
+from fractions import Fraction
+
+from backend.response_calibration import calibrate_response
+
+result = calibrate_response(
+    [
+        {"input": "0", "output": ["0", "0"]},
+        {"input": "1", "output": ["1", "1"]},
+    ],
+    slope_bounds=("0", "2"),
+)
+assert result.status == "compatible"
+band = result.query("0.4")
+assert (band.lower, band.upper) == (Fraction(0), Fraction(4, 5))
+```
+
+Check `status` before querying a result. `query` raises `ValueError` for an
+incompatible calibration or an input outside its domain; the CLI's
+`unavailable` object is wrapper behavior. Source indices are zero-based positions
+in the original `nodes` list, before sorting or duplicate intersection. Preserve
+that list with a contradiction so its two source bounds can be reconstructed.
+The reported contradiction proves a conflict; it does not enumerate every
+conflict or claim a smallest inconsistent subset.
+
 ## What external evidence still has to supply
 
 One response assumption may fail across channels, spatially varying processing,
@@ -230,12 +264,16 @@ an inverse response, a physical likelihood or manufacturing acceptance.
 ```bash
 make response-calibration-study OUTPUT=.local/response-study-new.json
 .venv/bin/python studies/verification/response-calibration-oracle-v1.py --output .local/response-oracle-new.json
+.venv/bin/python studies/verification/response-calibration-study-audit-v1.py --run studies/results/response-calibration-v1.json --output .local/response-study-audit-new.json
 ```
 
-Both destinations must be fresh. The fixed study retains every finite candidate,
+All output destinations must be fresh. The fixed study retains every finite candidate,
 shared witness or contradiction, alternative edge/response gauges, wrong
 calibration, quantization, spatial-response and processing-stage controls.
 Its Gaussian-derived float64 coordinates are frozen as exact rational inputs
 for a declared synthetic experiment; they are not certified optical probabilities.
 The [complete record](validation/response-calibration.md) separates exact model
 consistency, finite candidate scans and remaining physical calibration work.
+The certificate auditor reads the archived study and checks every witness or
+contradiction without calling the production calibrator. A successful replay
+checks that archive's declarations; it does not generate new camera evidence.
