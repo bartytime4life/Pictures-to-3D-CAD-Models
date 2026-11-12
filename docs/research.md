@@ -154,6 +154,17 @@ summaries, valid local support and explicit unknown states, specified before a
 fresh cohort. The 30 examined cases are now development evidence. An unflagged
 diagnostic cannot establish accurate geometry or a Gaussian optical cause.
 
+### Directional blur in the tracer — November 12, 2026
+
+The tracer measures a blur that differs by direction as a covariance S from its edges' widths (σₙ² = nᵀSn in the rectified image) and, above a principal-spread ratio of 1.15, traces each edge with its own σₙ; [reference-sheet tracing](reference-sheet.md), §3, has the method and results. It is not the research diagnostic above, and it answers that qualification's findings with rules of its own:
+
+- **Orientation support.** The qualification's long rectangle gave 90 profiles one way and 11 the other. The fit counts a direction only with 15 clean profiles in a 30° bin and needs three such bins, so a sharp-cornered rectangle is never fitted; its isotropic rendering, which the diagnostic's tensor read 2.1 times wider one way, keeps one width. Counted bins weigh the same.
+- **Minority disagreement.** Each bin's median residual is judged alone, against 10 % and three of its own standard errors, so a dominant direction cannot hide a minority one; an inadequate fit keeps one width.
+- **Unclean profiles.** Corners and thin holes whose profiles reach another edge are left out, which the qualification noted sampled corner directions need.
+- **Non-Gaussian and spatial blur.** Motion streaks of 6 and 10 px passed and traced better; defocus disks are isotropic. Spatially varying blur and sharpening were not tested.
+
+Its curvature term is the experiment's leading displacement: Σ_tt − Σ_tn²/Σ_nn = det S / nᵀSn, which averages √det S round a circle, so circles are corrected with (det S)^¼. Correcting curvature alone did not help (a curvature-only σ made a 1 × 3 px render's outline worse, 0.106 against 0.038 mm); the level search across each edge is what needs σₙ, which is consistent with the experiment's radius-only correction worsening its rotated case. The cases come from this repository's renderer, including ones built for this check, so they are not the independent evaluation the qualification asked for; real shaken captures are needed next.
+
 ## Outline to solid and exchange files
 
 [CadQuery examples](https://github.com/CadQuery/cadquery/blob/master/doc/examples.rst) demonstrate profile extrusion and holes. This provides a direct, inspectable path from a valid planar boundary to a solid with a supplied thickness.

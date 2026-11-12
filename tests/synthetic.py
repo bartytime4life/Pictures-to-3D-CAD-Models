@@ -262,6 +262,18 @@ def undistort_grid(u, v, k1, size, k2=0.0):
     return cx + xd * factor * s, cy + yd * factor * s
 
 
+def rotated_gaussian(major, minor, degrees):
+    """A normalised Gaussian kernel with spreads `major` and `minor` px, its major axis
+    turned `degrees` from x, sampled out to 4 times the major spread."""
+    a = math.radians(degrees)
+    rot = np.array([[math.cos(a), -math.sin(a)], [math.sin(a), math.cos(a)]])
+    inverse = np.linalg.inv(rot @ np.diag([major**2, minor**2]) @ rot.T)
+    half = math.ceil(4 * major)
+    yy, xx = np.mgrid[-half : half + 1, -half : half + 1].astype(np.float64)
+    kernel = np.exp(-0.5 * (inverse[0, 0] * xx * xx + 2 * inverse[0, 1] * xx * yy + inverse[1, 1] * yy * yy))
+    return (kernel / kernel.sum()).astype(np.float32)
+
+
 def render(
     *,
     tilt=(22.0, -9.0, 4.0),
@@ -298,6 +310,9 @@ def render(
     `k2` is a second radial term for intentional camera-model mismatch. The
     production tracer estimates only k1. Coefficients use radius normalised by
     the image half-diagonal, not OpenCV's focal-length normalisation.
+    `blur` is the sensor's Gaussian blur in photo pixels, or (x, y) for one that differs
+    by direction, as a shaken camera's does, or (major, minor, degrees) for such a blur
+    whose major axis is turned that far from x.
     """
     if gamma is None:
         to_linear, to_saved = srgb_to_linear, linear_to_srgb
@@ -378,7 +393,11 @@ def render(
         cv2.INTER_LINEAR,
         borderMode=cv2.BORDER_REFLECT,
     )
-    image = cv2.GaussianBlur(image, (0, 0), blur)
+    if np.isscalar(blur) or len(blur) == 2:
+        blur_x, blur_y = (blur, blur) if np.isscalar(blur) else blur
+        image = cv2.GaussianBlur(image, (0, 0), blur_x, sigmaY=blur_y)
+    else:
+        image = cv2.filter2D(image, -1, rotated_gaussian(*blur), borderType=cv2.BORDER_REFLECT)
     # The camera saves through its tone curve; noise is added on the saved scale, where
     # a processed photo's noise is roughly even across tones.
     grey = np.clip(to_saved(image) + rng.normal(0, noise, image.shape), 0, 255)

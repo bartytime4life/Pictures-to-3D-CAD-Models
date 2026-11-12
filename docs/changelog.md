@@ -3,6 +3,21 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+
+## Slot end caps and directional blur — November 12, 2026
+
+- Slot end caps are placed along the slot with their radius fixed at half the
+  side spacing. A free circle fit coupled the cap's place with its radius, and
+  the 24 × 8 slot read 0.018–0.022 mm long on thick-part photos at 5° and 9°.
+- A blur that differs by direction is measured as a 2 × 2 covariance from the
+  edges' widths, with orientation-support and per-direction adequacy rules, and
+  traced by direction. Curves are corrected with det(S)^¼, from the blur's
+  tangential variance given its normal part. On a 1 × 3 px render Ø6 went from
+  0.067 to 0.012 mm. This supersedes the qualification record's "no production
+  correction", with the evidence in [reference-sheet tracing](reference-sheet.md).
+- The blur is measured in a window widened to 5 σ, and a degenerate fitted arc
+  no longer stops a trace.
+
 ## Radial inverse and model-mismatch research — November 12, 2026
 
 - Radial inversion stays on the central camera branch, refuses radii without an

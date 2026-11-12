@@ -853,7 +853,7 @@ def place_fillets(prims):
             p.data["mid"] = tuple(centre + p.data["r"] * direction / np.linalg.norm(direction))
 
 
-def fit_fillets(points, prims, tol, sigma=0.0):
+def fit_fillets(points, prims, tol, sigma=0.0, covariance=None):
     """Constrain each arc between two lines to be tangent to both.
 
     Between non-parallel lines the arc becomes a fillet: its centre lies on the corner
@@ -880,6 +880,9 @@ def fit_fillets(points, prims, tol, sigma=0.0):
     the photo cannot tell from a sharp corner's is removed, so its two edges meet, and
     the following edge records the largest fillet radius the photo leaves possible there
     (sharp_bound).
+
+    `covariance` is a directional blur's (edges.edge_covariance), when it was traced by
+    direction; slot end caps then take each point's own blur shrink.
     """
     m = len(prims)
     for k, p in enumerate(prims):
@@ -898,7 +901,10 @@ def fit_fillets(points, prims, tol, sigma=0.0):
             o1, o2 = float(c1 @ n1), float(c2 @ n1)
             mid = n1 * (o1 + o2) / 2
             r = abs(o1 - o2) / 2
-            p.data["c"] = tuple(mid + d1 * _end_cap_axial(span_points(points, *p.span), mid, d1, n1, o1, o2, r, float((old_c - mid) @ d1), tol, sigma))
+            axial = _end_cap_axial(
+                span_points(points, *p.span), mid, d1, n1, o1, o2, r, float((old_c - mid) @ d1), tol, sigma, covariance
+            )
+            p.data["c"] = tuple(mid + d1 * axial)
             p.data["r"] = r
             p.data["end_cap"] = True
             continue
@@ -977,7 +983,7 @@ def fit_fillets(points, prims, tol, sigma=0.0):
     prims[:] = [p for p in prims if not p.data.get("sharp")]
 
 
-def _end_cap_axial(seg, mid, d, n, o1, o2, r, start, tol, sigma):
+def _end_cap_axial(seg, mid, d, n, o1, o2, r, start, tol, sigma, covariance=None):
     """Where a slot end cap's centre lies along the slot's mid-line (mid + d x).
 
     The radius is fixed: half the spacing of the two side lines, which blur does not
@@ -987,6 +993,11 @@ def _end_cap_axial(seg, mid, d, n, o1, o2, r, start, tol, sigma):
     axis. With the radius fixed, the cap's tip places it. As for a fillet, the points
     are fitted with the blurred radius r - s(r), leaving out those within 2.5 sigma
     along the arc of the tangent points, which lie (2.5 sigma)^2 / (2r) off the lines.
+
+    Under a directional blur of covariance S the shrink depends on the direction n
+    from the centre: det(S) / (2r n' S n) to first order (edges.subpixel_rings), and a
+    cap's place is set mostly at its tip, whose direction is the slot's. Each point then
+    takes its own first-order shrink, with the isotropic second-order term.
     """
     clear = max(tol, 3.125 * sigma**2 / r) if sigma > 0 else tol
     offsets = seg @ n
@@ -999,6 +1010,10 @@ def _end_cap_axial(seg, mid, d, n, o1, o2, r, start, tol, sigma):
     for _ in range(20):
         delta = seg - (mid + d * x)
         rho = np.maximum(np.linalg.norm(delta, axis=1), 1e-12)
+        if covariance is not None:
+            u = delta / rho[:, None]
+            shrink = np.linalg.det(covariance) / (2 * r * np.einsum("ij,jk,ik->i", u, covariance, u))
+            shrink = shrink + 5 * sigma**4 / (24 * r**3)
         jac = -(delta @ d) / rho
         step = -float(jac @ (rho - (r - shrink))) / max(float(jac @ jac), 1e-12)
         x += step
