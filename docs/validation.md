@@ -6,8 +6,10 @@ CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
 For a concise source/review snapshot, use [project status](project-status.md).
-The [current coverage record](validation/raw-source-fit.md#documentation-coverage)
-includes the raw-source guides. The [earlier documentation alignment](validation/documentation-alignment.md)
+The [current documentation review](validation/documentation-latest.md) covers
+all current Markdown, commands and the published PR #64 baseline. The
+[raw-source coverage record](validation/raw-source-fit.md#documentation-coverage)
+retains the checks run with that scientific candidate. The [earlier documentation alignment](validation/documentation-alignment.md)
 reviews the published PR #62 baseline, current numerical-tool contracts and all
 Markdown navigation. The [earlier complete update](validation/documentation-complete-2026-11-12.md)
 retains its PR #57 baseline. Documentation checks are separate from the source-bound
@@ -42,7 +44,7 @@ retain all mismatches and constructed aliases. These checks do not change the
 workbench trace or create a physical confidence estimate.
 
 The [exact-head hosted snapshot](project-status.md#evidence-by-scope) records
-PR #60's completed workbench run separately from these local runs. The
+completed hosted results separately from these local runs. The
 [CI budget record](validation/ci-runtime-budget.md) preserves PR #59's incomplete
 30-minute hosted suite and PR #62's 45-minute configuration. A running workflow
 does not establish completion at its head.

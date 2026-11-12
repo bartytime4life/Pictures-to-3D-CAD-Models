@@ -113,9 +113,13 @@ the actual camera's noise and optics.
 `KeysProfile.after_filter(kernel,border=...)` and `PixelNoise.factor(matrix,input_std)`.
 Coordinates are image index coordinates; geometric pixel centres are
 `pixels_xy + 0.5`. Sampling is bound to the declared image shape.
-`fit_source` fits an unconstrained linear input-pixel design with supplied noise,
-reports numerical design/noise rank and residual degrees of freedom, and makes
-no physical-fit, bounded-tone or global-uniqueness claim.
+`PixelNoise.fit_source(source_design, observed)` fits an unconstrained linear
+input-pixel design to a **processed profile** `observed`, using `whiten(observed)`
+and `whiten_source(source_design)`. It reports numerical design/noise rank and
+residual degrees of freedom, with no physical-fit, bounded-tone or global-uniqueness
+claim. This differs from the [raw-source fitter](raw-source-fit.md#developer-api),
+which projects both available prewarp observations and the model with
+`whiten_source`, avoiding the processed-profile division by weak retained modes.
 
 Limits are checked before dense allocation or factorization: 512 profile samples,
 2,048 source pixels, 500,000 matrix cells, 100 million factor work units
@@ -129,7 +133,7 @@ make postblur-operator-study OUTPUT=.local/postblur-operator-new.json
 .venv/bin/python studies/verification/profile-observations-oracle-v1.py --output .local/profile-oracle-new.json
 ```
 
-Both commands require a fresh JSON path and retain complete controls, sources
+All three commands require a fresh JSON path and retain complete controls, sources
 and runtime versions. They use the workbench environment and require no server.
 The finite-search prototype is pinned by source hash. The supplied optical/noise
 parameters are experimental inputs, not values inferred from a user's photograph.

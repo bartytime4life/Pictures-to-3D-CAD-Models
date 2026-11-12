@@ -3,6 +3,18 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Documentation review through PR #64 — November 12, 2026
+
+- Bring setup and the sample workflow forward in the README; keep mathematical
+  methods and study commands reachable through the task index.
+- Update the source/review snapshot through published PR #64. Document raw-source
+  API units, diagnostics and limits, including standardized residuals and the
+  distinction between brightness rank and edge identifiability.
+- Clarify processed-profile versus source-space fitting and known versus
+  image-estimated warp parameters. Preserve dated validation and library artifacts.
+- Record the [complete documentation audit](validation/documentation-latest.md)
+  separately from prior software, hosted, browser and physical evidence.
+
 ## Conditional raw-source edge fitting — November 12, 2026
 
 - Fit a declared lens-free Gaussian half-plane in fixed retained source modes,
@@ -29,7 +41,8 @@ library maintains its own [revision history](../reference-library/CHANGELOG.md).
   ended following successful Python checks and 58 of 74 serial browser scenarios.
 - Retain the source, test set and per-test timeouts. The
   [runtime-budget record](validation/ci-runtime-budget.md) separates partial-run
-  timing extrapolation from completed results and still-pending exact-head confirmation.
+  timing extrapolation from subsequent exact-head results in the
+  [status snapshot](project-status.md#evidence-by-scope).
 
 ## Known warp chain and raw optical models — November 12, 2026
 
