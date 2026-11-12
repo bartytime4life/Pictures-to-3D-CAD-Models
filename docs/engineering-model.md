@@ -264,3 +264,10 @@ not establish a common camera model. The [edge/calibration controls](validation/
 show that endpoint normalization alone can leave many edge positions compatible,
 and a wrong tight calibration can reject the true position. Input uncertainty,
 channel/stage dependence and any transformed noise model still need justification.
+The separate [rectangle extension](response-rectangles.md) now preserves declared
+input intervals. Its two quantifiers distinguish choosing one point per box from
+requiring one response for every input. Outward Gaussian covers address numerical
+evaluation error under a supplied optical formula; they do not justify that
+formula or its physical error budget. Shared offset/blur relationships still need
+a coupled model, unless the stronger every-input result already supplies a common
+response for the entire covering box.

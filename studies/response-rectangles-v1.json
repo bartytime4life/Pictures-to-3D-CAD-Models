@@ -1,0 +1,16 @@
+{
+  "format": "pictures-to-cad-response-rectangles-study-plan",
+  "version": 1,
+  "positions": ["-2", "-1.5", "-1", "-0.5", "0", "0.5", "1", "1.5", "2"],
+  "candidate_offsets": ["-0.25", "-0.1875", "-0.125", "-0.0625", "0", "0.0625", "0.125", "0.1875", "0.25"],
+  "cdf_places": [6, 12, 24, 30],
+  "observation_halfwidths": ["0", "0.0009765625"],
+  "patch_inputs": ["0", "0.25", "0.5", "0.75", "1"],
+  "bounded_patch_halfwidth": "0.0078125",
+  "true_offset": "0",
+  "supplied_sigma": "1",
+  "response": "h(u)=u+(3/20)*u*(1-u)",
+  "true_output_generation_cdf_places": 30,
+  "regimes": ["normalized_endpoints", "five_exact_patches_slopes", "five_bounded_patches_slopes", "incorrect_identity_patches_slopes"],
+  "scope": "Finite affine 1D Gaussian model with outward mathematical CDF covers. Some-mode compatibility alone does not establish correlated analytic-input feasibility. No physical camera calibration or continuous offset certificate."
+}

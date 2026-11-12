@@ -60,6 +60,13 @@ The [common-response primitive](response-calibration.md) separately checks exact
 supplied calibration constraints by rational interval propagation. Its CLI and
 study do not import into the production upload/build path or infer a response
 from a photograph. A compatible witness is not an image-correction function.
+The separate [rectangle extension](response-rectangles.md) supports bounded
+inputs with existential or every-input constraints on that same response.
+Its Gaussian helper encloses a supplied mathematical CDF before calibration.
+Neither module is imported by production tracing. The finite study distinguishes
+outer-box exclusion, a response valid for all covered inputs and undetermined
+boxes; it does not silently turn Cartesian feasibility into a correlated optical
+or physical-camera conclusion.
 
 ## Geometry conventions
 

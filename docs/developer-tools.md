@@ -20,6 +20,7 @@ an experiment in another worktree is a different implementation.
 | Does the known full digital chain match the actual sampler? | `make warp-observation-study OUTPUT=NEW_JSON` | Supplied raw-to-rectified warp, smoothing and profile sampling; stage rounding retained separately |
 | Can a declared raw optical mean explain available prewarp samples? | `make raw-source-fit-study OUTPUT=NEW_JSON` | Bounded source-projection offset/brightness fitting with known geometry, PSF and noise; retains weak-mode, source-mismatch and ambiguity controls |
 | Can one common monotone response satisfy externally supplied calibration? | `scripts/response_calibration.py INPUT.json --output NEW_JSON` | Exact conditional consistency and tight pointwise bands; no automatic camera calibration or inverse |
+| Can one response fit bounded inputs as well as outputs? | `scripts/response_rectangles.py INPUT.json --output NEW_JSON` | Choose some or every allowed input; genuine unbounded envelopes and finite shared witnesses; no input-correlation inference |
 | How do my reference-sheet photos compare with reserved measurements? | `make photo-benchmark PHOTOS=FOLDER` | Measured-photo comparison with coverage and failed traces retained; supplied comparison threshold is not an uncertainty budget |
 | Does a selected server trace, build and export the sample? | `make smoke` | API exercise against an already running server, including cleanup; not browser or physical acceptance |
 | Can an installed CAD application import the synthetic exports? | `make freecad` | Native FreeCAD check requiring `FREECADCMD`; not slicer or print qualification |
@@ -85,6 +86,27 @@ without calling the production calibrator:
 
 The auditor requires a fresh `.json` file, checks every declared candidate and
 retains failed checks. It does not rerun the image pipeline.
+
+## Response constraints with uncertain inputs
+
+```bash
+.venv/bin/python scripts/response_rectangles.py INPUT.json --output .local/rectangle-result-new.json
+make response-rectangles-study OUTPUT=.local/rectangle-study-new.json
+.venv/bin/python studies/verification/response-rectangles-oracle-v1.py --output .local/rectangle-oracle-new.json
+.venv/bin/python studies/verification/normal-cdf-bounds-oracle-v1.py --output .local/cdf-oracle-new.json
+.venv/bin/python studies/verification/response-rectangles-study-audit-v1.py --run studies/results/response-rectangles-v1.json --output .local/rectangle-study-audit-new.json
+```
+
+Use fresh destinations. The [guide](response-rectangles.md) defines closed
+input/output rectangles, both quantifiers, exact source proofs and nullable
+unbounded query directions. It also describes the separate bounded Gaussian CDF
+helper. The CLI does not convert optical models to inputs automatically.
+
+The [finite study](validation/response-rectangles.md) keeps excluded, certified
+every-input and box-undetermined candidates distinct. CDF input boxes can relax
+shared analytic relationships: some-box compatibility alone cannot establish
+compatibility of a correlated optical model. Read the independent audit and
+supplied-model limits before interpreting a candidate.
 
 ## Local-profile and wall studies
 

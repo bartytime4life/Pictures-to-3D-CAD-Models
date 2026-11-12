@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 REFERENCE_PYTHON ?= $(CURDIR)/reference-library/.venv/bin/python
 
-.PHONY: help setup setup-app setup-library start dev build build-app build-library test test-app test-library lint smoke slicers freecad photo-benchmark corner-sweep material-gradient-study wall-gradient-study wall-localization-study profile-noise-study postblur-operator-study warp-observation-study raw-source-fit-study response-calibration-study
+.PHONY: help setup setup-app setup-library start dev build build-app build-library test test-app test-library lint smoke slicers freecad photo-benchmark corner-sweep material-gradient-study wall-gradient-study wall-localization-study profile-noise-study postblur-operator-study warp-observation-study raw-source-fit-study response-calibration-study response-rectangles-study
 
 help:
 	@echo "make setup          install app and reference-library dependencies; build the app"
@@ -23,6 +23,7 @@ help:
 	@echo "make warp-observation-study OUTPUT=new.json   check the raw-photo to profile operator"
 	@echo "make raw-source-fit-study OUTPUT=new.json   fit declared raw source in retained noise modes"
 	@echo "make response-calibration-study OUTPUT=new.json   check common-response and calibration limits"
+	@echo "make response-rectangles-study OUTPUT=new.json   retain uncertain-input response and Gaussian covers"
 	@echo "Append -app or -library to setup, build, or test to select one component."
 	@echo "Library browser checks use local HTTP; its own make check defaults to file URLs."
 
@@ -108,3 +109,7 @@ raw-source-fit-study:
 response-calibration-study:
 	@test -n "$(OUTPUT)" || { echo "Usage: make response-calibration-study OUTPUT=new.json (see docs/response-calibration.md)"; exit 2; }
 	.venv/bin/python scripts/response_calibration_study.py --output "$(OUTPUT)"
+
+response-rectangles-study:
+	@test -n "$(OUTPUT)" || { echo "Usage: make response-rectangles-study OUTPUT=new.json (see docs/response-rectangles.md)"; exit 2; }
+	.venv/bin/python scripts/response_rectangles_study.py --output "$(OUTPUT)"
