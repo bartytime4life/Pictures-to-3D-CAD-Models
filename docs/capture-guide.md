@@ -39,19 +39,22 @@ This is the recommended capture. Lay the part flat on a sheet of known size, wit
 
 - **Measure your sheet.** Its stated size sets every dimension. ISO 216 allows ±2 mm on A4's 297 mm side, about 0.7 %; most sheets are much closer. The workbench checks the sheet's *proportions* against the photo and warns when they differ from your choice by more than 1 %, but it cannot see a uniformly wrong size.
 - **Keep the sheet flat.** A curled or creased sheet breaks the straight edges used to correct the lens and the plane used for scale.
-- **Enter the thickness.** For a thick part, the camera sees some of its side walls. Building re-traces the available photo when the entered thickness differs from the trace's thickness record, applying the side-wall/parallax model. A restored recipe contains no photo, so re-upload it to recompute that correction for a different thickness. A photo tilted about 10–20° gives the most reliable correction. Straight overhead, the walls are too narrow to measure one by one. Their tone is then estimated jointly from all of them, and the trace says so. Where even that is not determined, an edge facing the camera may read up to 0.2 × the edge blur into the part, and the trace says that instead. Overhead, the thickness correction also needs the camera's height, which the sheet does not give in a straight-down view. Without the focal length in the photo's metadata, it is estimated from the holes' roundness, which needs round holes away from the middle of the photo; failing that a typical phone lens is assumed, which can leave the outline about 0.1 mm off.
+- **Enter the thickness.** For a thick part, the camera sees some of its side walls. Building re-traces the available photo when thickness differs from the trace's thickness record. A restored recipe contains no photo, so re-upload it to recompute that correction for a different thickness.
+- **Read the wall-correction notes.** A modest tilt exposes wider walls. Narrow walls can share a tone estimate when sufficient bands and an accepted minimum support it; the trace reports the result or its fallback. The stated 0.2 × blur inward-bias bound assumes the wall step is at most 16 % of the sheet-to-top contrast in linear light. Brighter walls can exceed it; see [the wall model and limits](reference-sheet.md#5-camera-pose-and-thickness-parallax).
+- **Review the camera-height source.** A straight-down sheet does not determine height. Without suitable EXIF, qualifying off-center holes assumed round can supply it if the search accepts an identifiable minimum. Otherwise a typical phone lens is assumed. One earlier rendered example was about 0.1 mm off under that assumption; this is not an error bound for your capture. Reserve physical dimensions to check either result.
 - **Contrast.** A dark part on white paper is typical. For a light part, use a dark sheet on a lighter surface and tick **Light part on a dark background**.
 - **Soften the light.** Use diffuse light from above. The tracer compensates a locally linear paper-side shadow slope, but a hard or curved shadow inside the sampled edge band is corrected only in part. The [method and rendered results](reference-sheet.md#3-segmentation-and-sub-pixel-edges) describe the tested cases; they do not bound every shadow or camera's sharpening.
 - **Use the photo as the camera saved it.** Edges are measured after undoing the standard sRGB tone curve. Filters and edited brightness or contrast change that curve and move the edges.
 
 With a sheet the width field is filled from the sheet. Measure the part's real width anyway, and compare: it is now an independent check, not the scale. A successful sheet trace reports the fitted geometry (circles, arcs, lines), design-intent snaps, measured edge blur, lens correction and proportions check. These are model evidence, not a real-photo accuracy guarantee. See [reference-sheet tracing](reference-sheet.md) for the method and its evidence.
 
-Compare every fitted boundary with the photograph. A thin curved segment can
-currently be mistaken for a whole circle, and directional blur can bias accepted
-geometry without a dedicated warning. These [known limits](validation/scientific-model-review.md)
-are not resolved by changing the design-intent snapping setting. For an incorrect
-fit, use ordinary silhouette tracing with a measured scale or reconstruct the
-critical features in CAD, then check the dimensions independently.
+Compare every fitted boundary with the photograph. An [initial-fit support
+check](validation/fit-support.md) now prevents the reproduced thin-segment
+extrapolation and retains an outline when the analytic fit lacks support.
+Directional blur can still bias accepted geometry without a dedicated warning;
+the [camera-model limits](validation/scientific-model-review.md) remain.
+For an incorrect fit, use ordinary silhouette tracing with a measured scale or
+reconstruct the critical features in CAD, then check dimensions independently.
 
 ## Set the scale
 

@@ -213,13 +213,15 @@ def subpixel_rings(mask, g, ppm):
         if keep.sum() < 8:
             tiny += 1
             continue
-        first.append((i == outer_index, moved[keep]))
-    outer = next(points for is_outer, points in first if is_outer)
+        # Keep the complete classified boundary as coverage evidence. Rejected
+        # sub-pixel profiles are missing measurements, not observed straight chords.
+        first.append((i == outer_index, moved[keep], ring, np.flatnonzero(keep)))
+    outer = next(points for is_outer, points, _, _ in first if is_outer)
     _, normals = ring_normals(outer)
     sigma = edge_sigma(g, outer[::4], normals[::4])
     half = max(4.0, 3.5 * sigma)
     rings = []
-    for is_outer, points in first:
+    for is_outer, points, support, indices in first:
         _, normals = ring_normals(points)
         # Which side of each point the paper is on, from the classified mask 3 sigma out.
         probe = np.rint(points + 3 * sigma * normals - 0.5).astype(int)
@@ -233,7 +235,10 @@ def subpixel_rings(mask, g, ppm):
                 raise EdgeError("The part's outline is not clear enough to trace. Improve the contrast.")
             tiny += 1
             continue
-        rings.append({"outer": is_outer, "points": moved[keep]})
+        rings.append({
+            "outer": is_outer, "points": moved[keep], "support": support,
+            "support_indices": indices[keep],
+        })
     return rings, sigma, tiny
 
 

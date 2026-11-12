@@ -241,6 +241,13 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
                 points / ppm, normals, camera["nadir_mm"], camera["height_mm"], thickness_mm
             )
             ring["points"] = corrected * ppm
+            if "support" in ring:
+                support = ring["support"] / ppm
+                support_normals = edges.material_normals(support, ring["outer"])
+                ring["support"], _ = edges.correct_thickness(
+                    support, support_normals, camera["nadir_mm"], camera["height_mm"], thickness_mm
+                )
+                ring["support"] *= ppm
         if camera["focal_source"] == "assumed":
             notes.append(
                 "The camera's focal length could not be found from the sheet, the photo's metadata or the holes' shape, so a typical phone lens was assumed for the thickness correction."
@@ -254,7 +261,17 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
     extent_mm = float(np.ptp(outer_points, axis=0).max()) / ppm
     tolerance_px = max(0.03, 0.15 * sigma / ppm) * ppm
     min_line_px = min(max(0.025 * extent_mm, 1.0), 3.0) * ppm
-    fitted = [(ring, fitting.fit_ring(ring["points"], tolerance_px, min_line_px)) for ring in rings]
+    fitted = []
+    for ring in rings:
+        support_error = 0.0
+        if "support_indices" in ring:
+            paired = ring["support"][ring["support_indices"]]
+            support_error = float(np.max(np.linalg.norm(ring["points"] - paired, axis=1)))
+        prims = fitting.fit_ring(
+            ring["points"], tolerance_px, min_line_px,
+            support_points=ring.get("support"), support_error=support_error,
+        )
+        fitted.append((ring, prims))
     rings_prims = [p for _, p in fitted if p]
     axis = None
     if snap:

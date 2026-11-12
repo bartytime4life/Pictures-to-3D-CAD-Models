@@ -1,6 +1,10 @@
 # Verification record
 
-Checked November 9, 2026 (Revision 7). The machine-readable record is [`verification.json`](verification.json), written by `make verify` (`scripts/record-verification.py`), which refuses to write unless every required check passes.
+Checked November 9, 2026 (Revision 7). The machine-readable record is [`verification.json`](verification.json), written by `make verify` (`scripts/record-verification.py`). The command checks required inputs before writing, then runs a final documentation-agreement check. That final check can fail after the JSON is written; file existence alone is not a successful verification. See the [build and verification instructions](BUILD.md).
+
+Documentation correction, November 12: the browser file count below now matches
+the existing dated receipt. The receipt, check date and release status were not
+regenerated for this correction.
 
 ## What was checked automatically
 
@@ -36,7 +40,7 @@ The checks fall into the three tiers described in handbook section 18. Tiers 1 a
   - **Navigation:** tabs by mouse and keyboard, deep links to tabs, chapters, and calculators, and a contents list with all 23 chapters.
   - **Toolkit:** all 14 calculators with correct default results, reset, and warnings. Empty, negative, and malformed inputs are reported as errors rather than computed as zero. The route finder's answers and calculator links are checked too.
   - **Catalog:** search, topic, review-depth, and sort filters. The filter state is written to the URL and restored after a reload, including topics containing "&" and searches containing "+".
-  - **Files and figures:** 28 local files resolve, every in-page link has a target, and all figures load.
+  - **Files and figures:** 33 local files resolve in the recorded browser check, every in-page link has a target, and all figures load.
   - **Theme, keyboard, and safety:** the theme persists across reloads, and dark mode applies. `/` focuses the search, while Ctrl+/ does not. Script-like text and malformed escapes in the URL hash are treated as data.
   - **Layout:** no horizontal page overflow at 390 × 844 on any tab, and no JavaScript or console errors at 1440 × 1050.
 - **Test suites:** 180 Python tests. OpenSCAD tests are skipped automatically where it is not installed. 58 Node test groups cover calculator parity, photo validation, portable transfer, and CSV evidence handling. Exact current counts appear in `verification.json`.

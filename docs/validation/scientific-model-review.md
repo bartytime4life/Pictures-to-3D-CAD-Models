@@ -5,6 +5,15 @@ Reviewed baseline: `main` at
 documentation only. The findings below remain unresolved at that revision.
 Existing source worktrees, previews and private inputs were preserved.
 
+Later implementation: the [initial-fit support repair](fit-support.md) addresses
+the reproduced circle/piece extrapolation. This record retains the original
+baseline findings and checks; it is not rewritten as a passing result for the
+later code or for unresolved camera and benchmark issues.
+
+Subsequently, PR #43 merged the [benchmark correspondence and coverage repair](benchmark-correspondence.md)
+at `d6a657f`. The matching/denominator examples below remain observations of the
+original `5588a52` baseline, rather than descriptions of that repaired runner.
+
 ## Evidence classes
 
 | Finding | Evidence obtained | What it does not establish |

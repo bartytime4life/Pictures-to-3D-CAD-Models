@@ -165,10 +165,12 @@ experiment, held-out functional dimensions and prototype inspection before
 expanding reconstruction scope or making an accuracy claim.
 
 The [scientific model review](validation/scientific-model-review.md) records
-additional unresolved limits: whole-circle extrapolation from a thin contour,
+the original whole-circle extrapolation and remaining limits:
 directional blur outside the scalar Gaussian model, shared renderer/inverse
 code, and conditional benchmark statistics. Residuals describe the selected
 model's agreement with sampled points; they do not alone establish source
 coverage, identifiable radius, physical uncertainty or complete benchmark
-coverage. The optional bounded-height decision above retains its separate,
+coverage. The [initial-fit support repair](validation/fit-support.md) addresses
+the reproduced extrapolation before Gaussian/design reconstruction; it does not
+establish final model adequacy. The optional bounded-height decision above retains its separate,
 user-supplied assumptions.

@@ -998,17 +998,30 @@ def test_a_blurred_sharp_corner_is_fitted_alike_wherever_the_ring_starts():
 
 
 def test_two_points_between_two_lines_are_a_corner():
-    """Property: exact recovery. Where a corner is cut by one step from a point to the
+    """Property: supported corner or preserved source. Where a corner is cut by one step from a point to the
     next, those two points are all that lies between its edges. Two points define no
     circle, and they were fitted with one of radius 60 that swept out from the middle of
-    both edges. The edges meet at the corner instead."""
+    both edges. The edges may meet at their supported intersection, or the observed
+    tiny chamfer is retained as a polyline rather than extrapolated into an arc."""
     cut = 0.1  # shorter than the spacing of the points, so none falls on it
     corners = [(0, 0), (100, 0), (100, 60), (0, 60)]
     ring = outline_points(Polygon([(0, 0), (100, 0), (100, 60 - cut), (100 - cut, 60), (0, 60)]), 10)
     prims = fitting.fit_ring(ring, 0.03, 3.0)
-    assert [p.kind for p in prims] == ["line"] * 4
-    ends = [segment[1] for segment in fitting.segments(prims)]
-    assert max(min(math.dist(end, corner) for corner in turned(corners, 10)) for end in ends) < 1e-9
+    if prims:
+        assert [p.kind for p in prims] == ["line"] * 4
+        ends = [segment[1] for segment in fitting.segments(prims)]
+        assert max(min(math.dist(end, corner) for corner in turned(corners, 10)) for end in ends) < 1e-9
+    else:
+        # Joining the true edges extrapolates over the tiny observed chamfer. The
+        # source-support gate may instead retain it, rather than inventing an arc.
+        from backend.reference import _segments_for
+
+        segs, analytic = _segments_for(ring, prims, 0.01)
+        assert not analytic and all(seg[0] == "line" for seg in segs)
+        retained = Polygon(fitting.sample_segments(segs, 0.01))
+        assert retained.area == pytest.approx(Polygon(ring).area, abs=1e-9)
+        assert retained.bounds == pytest.approx(Polygon(ring).bounds, abs=1e-9)
+        assert retained.boundary.hausdorff_distance(Polygon(ring).boundary) <= 0.01
 
 
 def segment_area(ring):

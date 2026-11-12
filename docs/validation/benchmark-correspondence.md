@@ -1,5 +1,10 @@
 # Benchmark correspondence and coverage repair
 
+Merged in PR #43 at `d6a657f93f13b818a8e44e2ace219b2d4598b4ef`. This record
+retains the candidate's own checks below. The [validation overview](../validation.md)
+and [November 12 documentation review](documentation-review-2026-11-12.md)
+record subsequent integration separately.
+
 Current integration baseline: `eec45d04cf767f2a55e8581a009b8052fe349180`,
 freshly verified as `origin/main` before integrating the published benchmark
 candidate `f01c23de468e6a371ffb173f0e3c41c8c956bf4e`. The integration uses a

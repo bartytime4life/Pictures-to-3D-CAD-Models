@@ -3,6 +3,48 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Documentation review — November 12, 2026
+
+Reviewed the full workbench and companion-library documentation against `main`
+at `eec45d0`, then integrated PR #43 at `d6a657f` and the initial-fit support
+candidate below. Updated current guides
+for narrow-wall refinement, hole-derived camera height, source-support checks
+and their remaining assumptions. The [review record](validation/documentation-review-2026-11-12.md)
+lists coverage and completed checks. Historical validation and catalog snapshots
+retain their original revisions and dates.
+
+## Benchmark correspondence and coverage — November 12, 2026
+
+Merged in PR #43. Matching now maximizes admitted feature count before minimizing
+total size error, with deterministic traversal and explicit work bounds. Reports
+account for requested, compared, unmatched and unavailable dimensions, including
+failed photos. Error percentiles remain conditional on comparisons; optimal size
+matching does not identify equal-size physical features. [Guide](photo-benchmark.md)
+and [separate validation record](validation/benchmark-correspondence.md).
+
+## Initial-fit support — November 11–12, 2026
+
+- Whole-circle candidates require an enclosed center, and assembled initial
+  boundaries must stay within a source-support tube with bounded curve sampling.
+- Complete classified contours and retained point indices supply coverage when
+  subpixel profiles are rejected. Coarse/fine displacement is measured separately
+  from candidate residual; coarse points do not enter the precision fit.
+- Unsupported fits retain the traced outline. Gaussian reconstruction and design
+  snapping retain their separate assumptions. [Method and evidence](validation/fit-support.md).
+
+## Camera height and narrow-wall refinement — November 11, 2026
+
+Merged in PRs #41 and #42; these changes precede the support candidate above.
+
+- Cubic sampling is used consistently for blur measurement and wall profiles.
+  Narrow wall bands can share an estimated tone when the fit is identifiable;
+  flat or boundary minima retain the earlier bound and a note.
+- Suitable off-center holes assumed round can constrain camera height when a
+  frontal sheet alone cannot. Wall refinement is repeated with that estimate;
+  without suitable holes the assumed-lens limit remains.
+- With an unmeasured blur, wall refinement leaves points as traced instead of
+  dividing by zero. [Method](reference-sheet.md) and [revision-bound checks](validation.md).
+
 ## Scientific documentation follow-up — November 11, 2026
 
 Reviewed `main` at `5588a523c70e1797341329e54d056c161d0361ad`, after PR #39.
