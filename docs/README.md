@@ -36,6 +36,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Find the commands available in this checkout | [Developer tools and output behavior](developer-tools.md) |
 | Understand components, API and data flow | [Architecture](architecture.md) |
 | Read mathematical methods and their limits | [Research and algorithms](research.md), [engineering model](engineering-model.md) |
+| Investigate conditional finite-material intensity fitting | [Developer model and numerical limits](finite-shape-inverse.md) |
 | Review original scientific findings and remaining model limits | [Scientific model review](validation/scientific-model-review.md) |
 | Understand initial fitted-boundary coverage | [Fit-support repair and evidence](validation/fit-support.md) |
 | Understand weak-edge refusal and recovery | [Contrast-recovery validation](validation/contrast-recovery.md) |

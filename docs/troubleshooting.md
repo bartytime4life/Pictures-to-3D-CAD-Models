@@ -22,6 +22,13 @@ The [weak-edge recovery check](validation/contrast-recovery.md) records this
 specific reference-sheet failure and subsequent successful tracing. Its guidance
 does not make an unclear capture measurable or establish dimensional accuracy.
 
+If a very small part is missed on a large reference sheet, use a smaller flat
+reference with accurately measured sides and choose **Custom sheet, measured**.
+Keep the whole sheet and contrasting margins visible. The
+[synthetic capture study](validation/finite-moment-photo.md) retains both the
+A4 detection failures and the smaller-sheet outcomes; a successful trace still
+needs comparison with independent dimensions.
+
 ## Scale and geometry problems
 
 For a directional-blur note, use a steadier, sharper capture and reserve independent
