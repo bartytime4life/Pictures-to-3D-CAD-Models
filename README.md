@@ -35,11 +35,15 @@ subject to independent measurement. See
 [blur frames and support rules](docs/blur-frames.md).
 
 Developers can also evaluate the [finite-material intensity fitter](docs/finite-shape-inverse.md)
-in draft PR #88. It fits a circular segment's centre, radius and chord position
+introduced in PR #88. It fits a circular segment's centre, radius and chord position
 under supplied optics. It is a Python research API; uploading a photo or building
 a model still uses the tracing path described above. Its
 [validation record](docs/validation/finite-free-centre.md) retains numerical
 successes, model mismatches and initialization failures.
+The subsequent [measured-ring bridge](docs/finite-shape-inverse.md#prepare-a-measured-ring-observation-set)
+prepares a fixed crop, samples and coordinate mapping for that developer API;
+its [paired replay](docs/validation/finite-photo-intensity-v2.md) preserves the
+earlier failures. It also remains outside automatic tracing.
 
 Final fitted arcs also need [circle-consistent joins](docs/curved-joins.md).
 An unavailable join keeps an affected outline for review when valid, with a

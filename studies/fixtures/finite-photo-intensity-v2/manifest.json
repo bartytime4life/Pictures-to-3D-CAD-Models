@@ -1,0 +1,218 @@
+{
+  "format": "pictures-to-cad-finite-photo-intensity-v2-evidence-manifest",
+  "version": 1,
+  "scope": "Byte-identical promotion of final frozen-source receipts. Conditional archived synthetic measurement-field experiment; no new render/trace, automatic CAD promotion, optical calibration, global certificate or physical accuracy claim.",
+  "scientific_plan": {
+    "path": "studies/finite-photo-intensity-v2.json",
+    "sha256": "6563b63d283ad984cba38d2275cb20163c28da4b270c6d2a5d419548a15024ae"
+  },
+  "scientific_runner": {
+    "path": "studies/verification/finite-photo-intensity-v2.py",
+    "sha256": "74c76c9961bb7e8488c99af2c4db0227022a5bde06d26f306962e5d265d694c5"
+  },
+  "canonical_result": {
+    "path": "studies/results/finite-photo-intensity-v2.json",
+    "sha256": "967251c4458e7c06f88c6f5d4b01ab77654a0a744e1a181dd79c86df99d39127",
+    "observed_exit_code": 1,
+    "exit_scope": "All12-target study criterion missed; all rows retained. This exit is not converted into a passing accuracy claim.",
+    "summary": {
+      "declared_lanes": 12,
+      "retained_lanes": 12,
+      "fit_attempts": 10,
+      "statuses": {
+        "fit_completed": 10,
+        "upstream_ineligible": 2
+      },
+      "completed": 10,
+      "targets_passed": 3,
+      "observation_controls_all_passed": true,
+      "paired_observations_all_identical": true,
+      "v1_rows_compared": 12,
+      "v1_targets_passed": 1
+    },
+    "runtime_seconds": 141.8699696259573
+  },
+  "governing_source_input_sha256": {
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+    "backend/edges.py": "c02bcf6f15958ea5c82444de3ea3af37f20031e6df463846dc8082e37abae9ee",
+    "backend/finite_centre_fit.py": "e2019bcc8b5813c0957967b469baf44bbdd784f50855418852c2686cc48b9ab4",
+    "backend/finite_observations.py": "09fa843f72b2fc265ba8d4a7111267bf10433eb4f3f2a0600a89cc7871cb3969",
+    "backend/finite_shape.py": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+    "backend/fitting.py": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+    "backend/reference.py": "23a94e699d5499d8a4621902193e3a70214062108a5d0d10abb04df9efb8b69d",
+    "backend/sheet.py": "e18cbe44c476894f1655d6ce66a5e1b11cefe9ca4f95e7e17eb7f52efc236531",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "studies/finite-free-centre-v1.json": "f8db267fd848363ba91b56cd5a01086f3123ad699f6c0c404166734f3bc582fd",
+    "studies/finite-photo-intensity-v1.json": "083fb18d5b42479282fcae7214646a396bd8bba8936633ea02ec090235ec2e95",
+    "studies/finite-photo-intensity-v2.json": "6563b63d283ad984cba38d2275cb20163c28da4b270c6d2a5d419548a15024ae",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v1-plan.json": "5ddf980ba75623cc1294e1f5863e44567c4752dda51889ec9c78fbd24c7ba73b",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v1-probe.py.txt": "62da6790f50e9861cfbbe90240c726a3ec58c8e4cbf2d9cd40f6326a35f07724",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v1-result.json": "3900c65b314057a110d02d9235b809afa24f5af1f017965717a45d089be5c6ac",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v2-plan.json": "2db3148f3be75ea7f9750aeae7115dd23762a581c1f3f879b484c7e1b3c9d687",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v2-probe.py.txt": "b3733f8fa037b9fa1c4401991c7a5ac23438dc8040232124ff1df63a7be3323a",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v2-result.json": "e8a07de6297f1c5f9b71d1cd13a3a70e14664242475ae34446e1fe9ffc7183da",
+    "studies/fixtures/finite-moment-photo-v1/large-directional-measurement.npz": "de00f76fcfd2c3f3ad7a3c7920b9716c45d93cebb55175ce04d17f0ed2455b9c",
+    "studies/fixtures/finite-moment-photo-v1/manifest.json": "dcb8803fdb99895a14ae86899536985604d134d02bd65117f8028d97fc050855",
+    "studies/fixtures/finite-moment-photo-v1/medium-directional-measurement.npz": "e5b903ac4e82191ad87e4ce50274bf25a502ba99f3003cbe810f38e769d403bf",
+    "studies/fixtures/finite-moment-photo-v1/original-moment-probe.py.txt": "2a63e9903e273d4ad18d30a84ab4a9d32db7e1bc5220f198bafdafeb22874861",
+    "studies/fixtures/finite-moment-photo-v1/original-moment-result.json": "23e8eff8c84ec50adc2c4f82815399ed15f20694717fcd0d02a2a4af16fd8fc6",
+    "studies/fixtures/finite-moment-photo-v1/rotated-major-directional-measurement.npz": "037e7d493ee9b6c612a70f0721af81a790ee543d975696996a7f928e99e2cbbc",
+    "studies/fixtures/finite-moment-photo-v1/small-directional-measurement.npz": "dc66ddb52ae895b9bed4ad28ef69bf548f07732ecf4a6f1a91844963ed642ab4",
+    "studies/fixtures/finite-moment-photo-v1/small-isotropic-measurement.npz": "9982be1be11d8d5a8ec27026984e13f3df0c0d42cf7cd16360e6e9ede7a862d9",
+    "studies/fixtures/finite-photo-intensity-v1/README.md": "de74dd2f1cae62c9e3f95a23aa9dd803288bb0ba5b2e4b357994360560a51340",
+    "studies/fixtures/finite-photo-intensity-v1/cli-contracts.json": "5c76703db5e083152130d519452a689375bb676c7bdab6cc8dc8d4a631d97351",
+    "studies/fixtures/finite-photo-intensity-v1/input-aliases.json": "7e6679af3ac2ca33c684a3b2759cc9fad97cc9374a9c38e756f47bfaf79d830e",
+    "studies/fixtures/finite-photo-intensity-v1/manifest.json": "ea6f3400327d35bfbc223b7e13118ed97976f93e64c123c5f4b0ce066216ca5c",
+    "studies/fixtures/finite-photo-intensity-v1/original-freeze.json": "0438ce3a449231b5f7ff1483a1729eae864fb66f228dcfdc69e2bd0840c3db5f",
+    "studies/fixtures/finite-photo-intensity-v1/provenance.py.txt": "6544722335604516e4f27c86c02635bd22cb600503f556625bdc4ebed861ae55",
+    "studies/results/finite-moment-photo-v1.json": "b0d4f56c0815a11c7c9a1b7a40f0b385b346ad16e11e604edcde7ef1c61f3c50",
+    "studies/results/finite-photo-intensity-v1.json": "27380cfa0db6e0f057527e398673cd7fa9c611677c395e73aa896734d7d5e6c9",
+    "studies/verification/finite-free-centre-v1.py": "0537540cbfddad2e6209b7b1483977e118c70b64f0d7938e810f942765e579f8",
+    "studies/verification/finite-photo-intensity-v2.py": "74c76c9961bb7e8488c99af2c4db0227022a5bde06d26f306962e5d265d694c5",
+    "uv.lock": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f"
+  },
+  "source_input_unchanged_across_canonical_and_actual_continuation": true,
+  "files": {
+    "studies/verification/finite-photo-intensity-v2-contracts-v1.py": {
+      "sha256": "83240d379b2617e7d1d4ea08fae478710fdd58ae323094d3e9f8625c4a07537c",
+      "bytes": 15043,
+      "purpose": "Portable final no-fit contracts; zero actual optimizers, actual observation/mean controls plus labeled routing stubs.",
+      "original_local_path": ".local/verification/finite-photo-intensity-v2-preflight-v3.py",
+      "byte_identical_promotion": true
+    },
+    "studies/verification/finite-photo-intensity-v2-continuation-v1.py": {
+      "sha256": "546a3692f5da34e68c6d9ee8f88a8e473438a119e70c98f57fd492e509296843",
+      "bytes": 7455,
+      "purpose": "Portable actual first-entry failure harness; nine later real optimizers and eleven parsed-row comparisons.",
+      "original_local_path": ".local/verification/finite-photo-intensity-v2-first-fit-failure-v1.py",
+      "byte_identical_promotion": true
+    },
+    "studies/fixtures/finite-photo-intensity-v2/no-fit-contracts-v1.json": {
+      "sha256": "aca026591801562fa0730dc24d07210d9f2e4c3c9060afbf37c9334597ffc99b",
+      "bytes": 80716,
+      "purpose": "Complete final no-fit receipt on frozen74c runner;30actual observations and18contracts.",
+      "original_local_path": ".local/verification/finite-photo-intensity-v2-preflight-v3.json",
+      "byte_identical_promotion": true
+    },
+    "studies/fixtures/finite-photo-intensity-v2/first-fit-failure-result-v1.json": {
+      "sha256": "8bb6d605f2b03ceee83a54a32f02c0030d34aa809380c470ad179d1640295d18",
+      "bytes": 1276386,
+      "purpose": "Complete12-row actual optimizer-continuation result; first fit entry alone fails.",
+      "original_local_path": ".local/verification/finite-photo-intensity-v2-first-fit-failure-v1.json",
+      "byte_identical_promotion": true
+    },
+    "studies/fixtures/finite-photo-intensity-v2/first-fit-failure-audit-v1.json": {
+      "sha256": "0a3f48d802b437aca42883e8f0be7b5811aea318e35ec3329cd425dbe0bc774c",
+      "bytes": 7378,
+      "purpose": "Complete10-check actual-continuation audit including all11later-row canonical hashes.",
+      "original_local_path": ".local/verification/finite-photo-intensity-v2-first-fit-failure-audit-v1.json",
+      "byte_identical_promotion": true
+    },
+    "studies/fixtures/finite-photo-intensity-v2/canonical-progress-v1.jsonl": {
+      "sha256": "daf2104fe7079e553aad6129318b0c1f74e8b0a43124f914f34a5f10082123b9",
+      "bytes": 1675,
+      "purpose": "Canonical run complete12-row stderr progress stream.",
+      "original_local_path": ".local/verification/finite-photo-intensity-v2-canonical.stderr",
+      "byte_identical_promotion": true
+    },
+    "studies/fixtures/finite-photo-intensity-v2/first-fit-failure-progress-v1.jsonl": {
+      "sha256": "25b9a456d39c7400c2c934b98bf507f63d7278c3c1100102006ffd1b7e384c3e",
+      "bytes": 1807,
+      "purpose": "Actual continuation complete12-row stderr stream plus final audit summary.",
+      "original_local_path": ".local/verification/finite-photo-intensity-v2-first-fit-failure-v1.stderr",
+      "byte_identical_promotion": true
+    },
+    "studies/fixtures/finite-photo-intensity-v2/canonical-independent-audit-v1.json": {
+      "sha256": "9751676f545e4b193e0d88d6aa381c362e3fad2bd8750575f7bed4dccef5e5d2",
+      "bytes": 5390,
+      "purpose": "Independent read-only recalculation or explicitly nonoptimizer contracts; no new recovery run.",
+      "original_local_path": ".local/verification/finite-photo-intensity-v2-canonical-independent-audit-v1.json",
+      "byte_identical_promotion": true
+    },
+    "studies/fixtures/finite-photo-intensity-v2/continuation-independent-audit-v1.json": {
+      "sha256": "8218ec8b2885fc9dcf49670453f5d00201849d18accb201ae1b1c0b4cd464df7",
+      "bytes": 1145,
+      "purpose": "Independent read-only recalculation or explicitly nonoptimizer contracts; no new recovery run.",
+      "original_local_path": ".local/verification/finite-photo-intensity-v2-continuation-independent-audit-v1.json",
+      "byte_identical_promotion": true
+    },
+    "studies/fixtures/finite-photo-intensity-v2/independent-contracts-v2.json": {
+      "sha256": "c3d0cf436fdd64e171a0200432f27d4034bcf8953dca532a2fd703e8bbdfcc1c",
+      "bytes": 2632,
+      "purpose": "Independent read-only recalculation or explicitly nonoptimizer contracts; no new recovery run.",
+      "original_local_path": ".local/verification/finite-photo-intensity-v2-independent-contracts-v2.json",
+      "byte_identical_promotion": true
+    }
+  },
+  "stdout_serialization_bindings": [
+    {
+      "stored_json": "studies/results/finite-photo-intensity-v2.json",
+      "stdout_original_local_path": ".local/verification/finite-photo-intensity-v2-canonical.stdout",
+      "sha256": "967251c4458e7c06f88c6f5d4b01ab77654a0a744e1a181dd79c86df99d39127",
+      "verified_byte_identical": true,
+      "storage": "One full JSON body stored; identical stdout body not duplicated."
+    },
+    {
+      "stored_json": "studies/fixtures/finite-photo-intensity-v2/no-fit-contracts-v1.json",
+      "stdout_original_local_path": ".local/verification/finite-photo-intensity-v2-preflight-v3.stdout",
+      "sha256": "aca026591801562fa0730dc24d07210d9f2e4c3c9060afbf37c9334597ffc99b",
+      "verified_byte_identical": true,
+      "storage": "One full JSON body stored; identical stdout body not duplicated."
+    },
+    {
+      "stored_json": "studies/fixtures/finite-photo-intensity-v2/first-fit-failure-result-v1.json",
+      "stdout_original_local_path": ".local/verification/finite-photo-intensity-v2-first-fit-failure-v1.stdout",
+      "sha256": "8bb6d605f2b03ceee83a54a32f02c0030d34aa809380c470ad179d1640295d18",
+      "verified_byte_identical": true,
+      "storage": "One full JSON body stored; identical stdout body not duplicated."
+    }
+  ],
+  "evidence_lanes": {
+    "no_fit": {
+      "inverse_optimizers_executed": 0,
+      "summary": {
+        "inverse_optimizers_executed": 0,
+        "prepared_cases": 5,
+        "retained_cases": 6,
+        "contract_checks": 18,
+        "contract_passes": 18,
+        "actual_observation_checks": 30,
+        "actual_observation_passes": 30,
+        "all_passed": true
+      },
+      "receipt": "studies/fixtures/finite-photo-intensity-v2/no-fit-contracts-v1.json",
+      "scope": "Actual observed-only preparation and forward means. CLI serialization uses a report stub; routing/payload failures use clearly labeled dataclass/sentinel stubs."
+    },
+    "actual_continuation": {
+      "actual_optimizers_executed": 9,
+      "harness_exit_code": 0,
+      "embedded_study_exit_code": 1,
+      "summary": {
+        "checks": 10,
+        "passes": 10,
+        "actual_optimizers_executed": 9,
+        "retained_rows": 12,
+        "all_passed": true
+      },
+      "receipt": "studies/fixtures/finite-photo-intensity-v2/first-fit-failure-result-v1.json",
+      "audit": "studies/fixtures/finite-photo-intensity-v2/first-fit-failure-audit-v1.json",
+      "scope": "Only first fit entry throws. All nine later real optimizers return; all eleven later parsed rows match canonical after removing only runtime_seconds fields. Audit original paths retain original-local provenance; byte-identical archived paths are mapped in files."
+    },
+    "independent_read_only_audits": {
+      "scope": "Independent inspection/recalculation from saved canonical/continuation data and nonoptimizer contract sentinels; no new fitting, rendering or physical qualification",
+      "files": [
+        "studies/fixtures/finite-photo-intensity-v2/canonical-independent-audit-v1.json",
+        "studies/fixtures/finite-photo-intensity-v2/continuation-independent-audit-v1.json",
+        "studies/fixtures/finite-photo-intensity-v2/independent-contracts-v2.json"
+      ]
+    }
+  },
+  "replay_commands": [
+    ".venv/bin/python studies/verification/finite-photo-intensity-v2-contracts-v1.py --output /tmp/NEW-no-fit-contracts.json",
+    ".venv/bin/python studies/verification/finite-photo-intensity-v2.py --output /tmp/NEW-canonical.json",
+    ".venv/bin/python studies/verification/finite-photo-intensity-v2-continuation-v1.py --canonical studies/results/finite-photo-intensity-v2.json --output /tmp/NEW-first-fit-failure.json --audit /tmp/NEW-first-fit-failure-audit.json"
+  ],
+  "replay_notes": "All output paths must be NEW and have existing parents. Help and invalid output refusal run no analysis. Canonical main exit1 is the retained scientific target failure. No-fit/continuation harness exit0 means their declared contracts passed, not that all scientific fits met targets.",
+  "development_history": "Earlier no-fit scripts/receipts v1 and v2 remain preserved under ignored local verification storage. They are not substituted for this final74c source-bound no-fit qualification. No old v1 photo study was rerun or changed."
+}

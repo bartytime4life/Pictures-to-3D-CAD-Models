@@ -9,6 +9,9 @@ The finite-material operators in `backend.finite_shape` and
 `backend.finite_centre_fit` are available Python research APIs. They have no
 HTTP route and are not called by the automatic trace/build flow below. See
 [their observation and result contracts](finite-shape-inverse.md).
+`backend.finite_observations` adds an immutable measured-ring crop, explicit
+global-to-crop transform and fixed sample/bounds preparation. It is a separate
+developer operator, with typed refusals; the automatic flow below is unchanged.
 
 ```mermaid
 flowchart LR

@@ -1,6 +1,14 @@
 # Source scope and verification status
 
-This documentation follow-up reviews published draft
+This candidate adds a [measured-ring observation bridge](finite-shape-inverse.md#prepare-a-measured-ring-observation-set)
+and a [paired captured-field replay](validation/finite-photo-intensity-v2.md),
+based on the reviewed main-integration [PR #90](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/90)
+at `bfc53880f0e13caa8e8be5c14d3c9e9e78097d6a`. Its inherited tree is exactly
+documentation [PR #89](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/89)
+at `8cd6e93875ffbc02f81587e0d3aac908f9affab1`. The new Python preparation
+operator does not select or alter automatic trace/build geometry.
+
+The preceding documentation follow-up reviews published draft
 [PR #88](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/88)
 at `ed39d2c71c99636debc1a282a2d6ef738bdfce84`, tree
 `30f967ab21bc18cf94101fb8df39d836cde869a5`. That research candidate adds a
@@ -44,11 +52,13 @@ numerical controls from historical tests and physical qualification.
 
 | Source lane | What it contains | Evidence boundary |
 | --- | --- | --- |
+| Measured-ring preparation candidate based on PR #90 | Immutable crop/coordinate/selection contract and paired covariance replay | [New source-bound record](validation/finite-photo-intensity-v2.md); observed-data preparation and conditional recovery, no automatic trace integration |
+| Reviewed main-integration draft, PR #90 (`bfc5388`) | Published PR #89 tree with current main as an additional parent | Content-identical history integration; inherited source-bound results retain their scope |
 | Finite-material research candidate, PR #88 (`ed39d2c`), based on PR #87 | Unknown-centre intensity inverse and separate observed-field moment proposals | [Current numerical record](validation/finite-free-centre.md); conditional model recovery and retained failures, no automatic trace integration |
 | Preceding workbench join candidate, PR #86 (`dcb14e5`), based on PR #84 | Canonical fitted-circle joins, per-boundary recovery and separately retained directional model comparison | [Workbench integration and science record](validation/directional-free-arcs.md); selected circle representation and conditional model comparisons, not physical accuracy |
 | Preceding frame-transport candidate, PR #84, based on PR #83 | Point-bound scale transport for free curves, caps and line windows; explicit mixed-frame approximation policy | [Independent and regression record](validation/curve-blur-frames.md); stored-geometry equivariance, not physical-model adequacy |
 | Preceding corner candidate, PR #83, based on PR #81 | Full-covariance nonparallel fillets, uniform-scale transport and bounded per-ring outline recovery | [Independent and regression record](validation/anisotropic-corners.md); exact supplied mathematical inputs, no camera qualification |
-| Main at `cad695f` | PRs #76/#77, merged rank repair #78 with documentation #81, and PR #82's 45-minute CI budget | Existing revision-bound records; no general real-camera qualification |
+| Main at `82017b9`, read November 12 at 23:17 UTC | Frame upgrade PR #84 on the preceding `cad695f` baseline | Join/finite-material descendants are still absent at this main revision; no general real-camera qualification |
 | Rank-repair evidence source `185d682`, PR #78 | Numerical rank rejection in the directional covariance fit, now also on main | [633 local Python tests](validation/directional-blur-rank.md), build and focused rank controls at that evidence source; no new browser run in that record |
 | [PR #79](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/79), merged into `codex/source-observation-context` at `98862f8` | Source-space Gaussian width/covariance research including documentation #80; source based on `0c35777` | A separate lineage and its own conditional studies; those developer APIs are absent from this checkout |
 
@@ -77,6 +87,16 @@ does not claim a new geometry or browser run.
 Local tests, hosted CI, branch inclusion, installation, deployment and physical
 acceptance remain separate evidence. The larger research suite is not the main
 branch's test result.
+
+A later **23:17 UTC** readback shows PRs #84, #86, #88 and #89 merged into
+their respective bases. Main is `82017b9`; comparison of its actual tree still
+shows the join and finite-material descendants absent. Their dependency branches
+were updated after earlier parent PRs closed. Draft PR #90 therefore integrates
+the reviewed PR #89 source onto that main. Git's computed merge tree is exactly
+the published `c34ea15099480335cdf9263a1e6e5e48068a465e` tree, with no inherited
+file-content changes. This preparation candidate is stacked on that integration;
+its software/science hashes remain unchanged. The earlier snapshots above retain
+their original timestamps, and no merge or deployment is inferred here.
 
 ## Available here
 
@@ -114,6 +134,13 @@ for an arbitrary photograph, a global optimum or a physical error bound.
 The moment experiment retains background-sensitive results and incompatible
 covariance proposals. Trace/export integration remains further work; the
 existing 16-case directional study does not qualify the new algorithm.
+
+`backend.finite_observations` now supplies a measured-ring crop and fixed
+observations in an explicit global/crop frame. Its saved-field experiment
+preserves version 1 and tests both supplied covariance hypotheses on identical
+prepared data. The held-out samples are excluded from fitting cost but still
+influence data-derived initialization and moments; they are not independent
+captures or a calibrated noise likelihood.
 
 ## Read evidence in its own scope
 

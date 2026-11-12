@@ -22,6 +22,9 @@ scripts from a separate branch are not implied by this list.
 | Finite-material centre/radius inverse | `.venv/bin/python studies/verification/finite-free-centre-v1.py --output NEW.json` | Twenty-four fixed supplied-optics cases, observation-derived domains and independent positive-area means; all outcomes retained; fresh JSON destination in an existing directory; [model](finite-shape-inverse.md) |
 | Supplemental same-pixel aperture audit | `.venv/bin/python studies/verification/finite-free-centre-aperture-audit-v1.py --output NEW.json` | Rechecks the saved 56 aperture observations at 8×8 and 16×16 order without refitting; fresh JSON destination in an existing directory; preserves the original failed 4×4/8×8 comparison |
 | Image-moment proposal replay | `.venv/bin/python studies/verification/finite-moment-photo-v1.py --output NEW.json` | Archived synthetic measurement fields, all 76 numerical/ineligible outcomes and background/crop sensitivity; fresh JSON destination; [limits](validation/finite-moment-photo.md) |
+| Paired measured-ring intensity replay | `.venv/bin/python studies/verification/finite-photo-intensity-v2.py --output NEW.json` | Twelve fixed case/lane records from preserved measurement fields; one shared crop/seed/40+16 samples per case, supplied covariance hypotheses and unchanged targets; fresh JSON destination in an existing directory; [scope and results](validation/finite-photo-intensity-v2.md) |
+| Measured-ring no-fit contracts | `.venv/bin/python studies/verification/finite-photo-intensity-v2-contracts-v1.py --output NEW.json` | Actual preparation/forward controls and explicitly labeled parser/routing sentinels; no inverse optimizer; fresh JSON destination in an existing directory |
+| Actual first-fit failure continuation | `.venv/bin/python studies/verification/finite-photo-intensity-v2-continuation-v1.py --canonical studies/results/finite-photo-intensity-v2.json --output NEW.json --audit NEW_AUDIT.json` | Injects the first fit-entry failure and runs nine later optimizers; writes full result and separate comparison audit to fresh paths; [portable evidence and scopes](../studies/fixtures/finite-photo-intensity-v2/README.md) |
 | Corner sweep | `.venv/bin/python scripts/corner_sweep.py --help` | Synthetic fitting cases, optional `--quick`, `--backend PATH` and `--json FILE`; not a real-camera test |
 | Native FreeCAD import check | `make freecad` | Requires `FREECADCMD`; builds synthetic fixtures and launches FreeCAD. `freecad_check.py` and its `freecad_import.py` helper have no argparse help mode |
 | Printer-data import | `.venv/bin/python scripts/import_printers.py --help` | Reads the supplied pinned-source checkout and writes catalog JSON; [procedure](printer-catalog.md) |
@@ -47,6 +50,9 @@ aperture-order comparison misses the unchanged tolerance, even though all 12
 matched recovery targets pass. Keep its full report. A separate supplemental
 8×8/16×16 pass does not replace that failure. Exit **2** reports parser/input or
 output-path refusal; see the [complete study record](validation/finite-free-centre.md).
+The paired measured-ring replay also retains all upstream refusals. Its exit
+**1** means the full declared population does not meet every target or a control
+fails; do not drop the two upstream rows to turn that into an all-case pass.
 The moment replay's exit **0** means exact reproduction of its retained rows,
 including failed targets and refused proposals; it is not an all-target pass.
 

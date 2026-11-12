@@ -1,0 +1,111 @@
+{
+  "scope": "Read-only independent contracts; actual preparation and archived inputs, dataclass inverse sentinel, observation controls stubbed. No inverse optimizer or forward evaluator called.",
+  "runner_before": "74c76c9961bb7e8488c99af2c4db0227022a5bde06d26f306962e5d265d694c5",
+  "runner_after": "74c76c9961bb7e8488c99af2c4db0227022a5bde06d26f306962e5d265d694c5",
+  "source_unchanged": true,
+  "passed": true,
+  "checks": [
+    {
+      "name": "unsafe-whole-field-withheld",
+      "payload_type": "float",
+      "passed": true
+    },
+    {
+      "name": "unsafe-whole-field-withheld",
+      "payload_type": "float",
+      "passed": true
+    },
+    {
+      "name": "unsafe-whole-field-withheld",
+      "payload_type": "float",
+      "passed": true
+    },
+    {
+      "name": "unsafe-whole-field-withheld",
+      "payload_type": "dict",
+      "passed": true
+    },
+    {
+      "name": "unsafe-whole-field-withheld",
+      "payload_type": "object",
+      "passed": true
+    },
+    {
+      "name": "first-nan-fit-dataclass-retains-all12",
+      "passed": true,
+      "rows": 12,
+      "stub_fit_calls": 10,
+      "later_fit_completed": 9,
+      "upstream": 2,
+      "source_unchanged": true
+    },
+    {
+      "name": "strict-input-rejection",
+      "input": "{\"x\":1e9999}",
+      "passed": true
+    },
+    {
+      "name": "strict-input-rejection",
+      "input": "{\"x\":NaN}",
+      "passed": true
+    },
+    {
+      "name": "strict-input-rejection",
+      "input": "{\"x\":Infinity}",
+      "passed": true
+    },
+    {
+      "name": "strict-input-rejection",
+      "input": "{\"x\":1,\"x\":2}",
+      "passed": true
+    },
+    {
+      "name": "strict-input-rejection",
+      "input": "{\"x\":{\"a\":1,\"a\":2}}",
+      "passed": true
+    },
+    {
+      "name": "stdlib-early-cli",
+      "args_kind": "--help",
+      "exit": 0,
+      "passed": true
+    },
+    {
+      "name": "stdlib-early-cli",
+      "args_kind": "missing",
+      "exit": 2,
+      "passed": true
+    },
+    {
+      "name": "stdlib-early-cli",
+      "args_kind": "--output",
+      "exit": 2,
+      "passed": true
+    },
+    {
+      "name": "stdlib-early-cli",
+      "args_kind": "--output",
+      "exit": 2,
+      "passed": true
+    },
+    {
+      "name": "stdlib-early-cli",
+      "args_kind": "--output",
+      "exit": 2,
+      "passed": true
+    },
+    {
+      "name": "stdlib-early-cli",
+      "args_kind": "--output",
+      "exit": 2,
+      "passed": true
+    },
+    {
+      "name": "cli-preserves-output-and-zero-analysis-import-attempts",
+      "passed": true
+    }
+  ],
+  "check_count": 18,
+  "actual_optimizer_calls": 0,
+  "actual_forward_calls": 0
+}
