@@ -95,17 +95,33 @@ This is checked at 16 phases by `test_half_level_crossing_on_symmetric_blur_is_u
 
 **Edge blur.** σ is the 25–75 % rise distance divided by 1.349 (the Gaussian value), taken as the median over the outer boundary.
 
-**Shadows (not corrected).** A soft shadow makes the paper brighter away from an edge, with slope b per pixel. The blurred profile at the edge is (a + b₀)/2 + b σ/√(2π) for part light a and paper light b₀ at the edge. The level taken from the profile's ends, whose medians lie at 85 % of the half-window H, is (a + b₀ + 0.85 b H)/2. The crossing therefore moves out of the part by b (0.425 H − σ/√(2π)) divided by the edge's slope, about 2.7 σ² b / (b₀ − a) for H = 3.5 σ (`test_a_sloped_plateau_shifts_the_half_level_by_the_predicted_amount`).
+**Shadows.** A soft shadow makes the paper brighter away from an edge, with slope b per pixel. The blurred profile at the edge is (a + b₀)/2 + b σ/√(2π) for part light a and paper light b₀ at the edge. The level taken from the profile's ends, whose medians lie at 85 % of the half-window H, is (a + b₀ + 0.85 b H)/2. The crossing therefore moves out of the part by b (0.425 H − σ/√(2π)) divided by the edge's slope, about 2.7 σ² b / (b₀ − a) for H = 3.5 σ (`test_a_sloped_plateau_shifts_the_half_level_by_the_predicted_amount`).
 
-In the tilted rendered photo the error grows with the shadow's depth, and almost all of that photo's error is its shadow:
+The second edge pass therefore takes the paper's slope into the level (`sheet.half_level_search` with σ). A Gaussian-blurred step between two linear plateaus A(t) and B(t), with slopes a₁ and b₁, has the value (A(e) + B(e))/2 + (b₁ − a₁) σ/√(2π) at its edge e. The crossing of the profile with that level, as a function of t, is the edge itself. The steps:
+
+- **Sampling:** each profile is sampled out to 5 σ, and the step's own blurred tail, (B − A) Q(|t|/σ), is removed from it.
+- **Paper side:** a line is fitted to the profile beyond 2.5 σ. A shadow is cast on the paper, not on the part.
+- **Material side:** a flat level is taken there, its median. A thick part's narrow side wall would read as a slope on that side.
+- **Smoothing:** a line extrapolated from one profile is noisier than a median, while a shadow's slope changes slowly along an edge. So the correction from the median crossing to the sloped one is smoothed along each ring with a Gaussian of 20 points before it is applied.
+
+On exact sloped profiles the crossing lands within 0.002 px of the edge, flat plateaus included, where the end medians moved it by up to 0.18 px. On blurred discs of 7.5–55 σ radius, the traced radius is within 0.005 px of the blur-curvature series the radius correction assumes (`test_sloped_plateau_levels_put_the_crossing_on_the_edge`).
+
+In the tilted rendered photo the shadow's effect is now small:
 
 | Light the shadow removes | Ø6 | Ø22 | Slot | Outer |
 | --- | --- | --- | --- | --- |
-| None | 0.001 | 0.004 | 0.008 | 0.004 |
-| 25 % (the test photos) | 0.012 | 0.026 | 0.027 | 0.025 |
-| 47 % (25 % darker in the saved photo) | 0.024 | 0.054 | 0.066 | 0.055 |
+| None | 0.0002 (0.001 before) | 0.005 (0.004) | 0.006 (0.005) | 0.005 (0.004) |
+| 25 % (the test photos) | 0.002 (0.012) | 0.008 (0.025) | 0.008 (0.025) | 0.009 (0.026) |
+| 47 % (25 % darker in the saved photo) | 0.002 (0.024) | 0.009 (0.054) | 0.016 (0.061) | 0.010 (0.054) |
 
-`test_without_a_shadow_the_tilted_trace_is_several_times_tighter` and `test_a_deep_shadow_biases_edges_by_a_bounded_amount` hold these figures. Fitting each plateau's slope, instead of taking its end median, would remove the effect; that is not implemented.
+Over six noise seeds of the tilted photo with a 25 % shadow, the mean errors fell:
+
+| | Ø6 | Ø22 | Slot | Hole position | Outer |
+| --- | --- | --- | --- | --- | --- |
+| Before | 0.0103 | 0.0244 | 0.0290 | 0.0044 | 0.0234 |
+| After | 0.0026 | 0.0055 | 0.0126 | 0.0054 | 0.0046 |
+
+Without a shadow they are unchanged within 0.002 mm. `test_a_soft_shadow_no_longer_pushes_edges_out` holds the 25 % and 47 % photos within 0.0125 mm on the holes and the outline. The model assumes the paper's light is linear over 2.5–5 σ; a shadow edge that falls inside that band is a curved trend, and is corrected only in part.
 
 ## 4. Blur–curvature correction
 
@@ -217,7 +233,7 @@ On the 9° photo of the 4 mm plate (2400 × 1800, linear light), the model's eff
 | 25 % shadow, wall model | 0.0073 | 0.0184 | 0.0212 | 0.0058 | 0.0234 |
 | 25 % shadow, without it | 0.0029 | 0.0051 | 0.0303 | 0.0066 | 0.0233 |
 
-Without a shadow the model cuts the hole errors about eightfold. With the shadow, the uncorrected trace reads these holes better only because two biases cancel: the dark wall pulls the edge into the material and the shadow pushes it out. With a lighter wall (saved tone 110) the model wins in both cases; with the shadow it takes Ø6 from 0.040 to 0.006 mm.
+Without a shadow the model cuts the hole errors about eightfold. With the shadow, the uncorrected trace read these holes better only because two biases cancelled: the dark wall pulls the edge into the material and the shadow pushed it out. That table was recorded before the sloped paper levels of §3. With them the shadow's push is gone, and the wall-model trace of the same photo reads 0.0001 (Ø6), 0.0057 (Ø22), 0.0167 (slot), 0.0096 (position) and 0.0084 mm (outer) with the shadow, and 0.0017, 0.0028, 0.0219, 0.0049 and 0.0061 mm without it. With a lighter wall (saved tone 110) the model wins in both cases; with the shadow it takes Ø6 from 0.040 to 0.006 mm.
 
 In a near-frontal photo the walls are too narrow to measure their tone. No refinement is attempted, and the trace notes a bound instead: edges facing the camera may read up to 0.2 σ into the part. That figure is the table's maximum, so it assumes a wall share of at most 16 %; a brighter wall can exceed it. A slightly tilted photo shows wider walls and avoids it.
 
@@ -258,17 +274,17 @@ The fitted CAD face area equals both the Green's-theorem area of its segments an
 
 ## Results on rendered photographs
 
-The plate is 120 × 70 mm with R8 corners, 4 × Ø6 holes, a Ø22 bore and a 24 × 8 slot. Figures are maximum absolute errors in mm, measured on the fitted geometry after a rigid fit of the six hole centres; no scale is fitted. Runs recorded on 2026-11-11 with exact pixel coverage (`synthetic.coverage`), light mixed in linear light, saved through the sRGB curve, and a shadow that removes 25 % of the light. Rendered with the earlier sub-row coverage, every figure was within 0.002 mm of these:
+The plate is 120 × 70 mm with R8 corners, 4 × Ø6 holes, a Ø22 bore and a 24 × 8 slot. Figures are maximum absolute errors in mm, measured on the fitted geometry after a rigid fit of the six hole centres; no scale is fitted. Runs recorded on 2026-11-11 with sloped paper levels (§3) and exact pixel coverage (`synthetic.coverage`), light mixed in linear light, saved through the sRGB curve, and a shadow that removes 25 % of the light. The 5° row got worse with the sloped levels: before, the shadow's outward push happened to cancel the inward pull of walls too narrow to model (§5), and now only that pull is left:
 
 | Photo | Ø6 | Ø22 | Slot | Hole position | Outer |
 | --- | --- | --- | --- | --- | --- |
-| 2400 × 1800, overhead, ideal light | 0.0001 | 0.0016 | 0.0033 | 0.0017 | 0.0029 |
-| 2400 × 1800, 22° tilt, lens, shadow | 0.0123 | 0.0253 | 0.0254 | 0.0089 | 0.0255 |
-| 2400 × 1800, 22° tilt, 4 mm thick | 0.0171 | 0.0249 | 0.0228 | 0.0063 | 0.0173 |
-| 2400 × 1800, 9° tilt, 4 mm thick | 0.0067 | 0.0181 | 0.0203 | 0.0059 | 0.0239 |
-| 2400 × 1800, 5° tilt, 4 mm thick (walls too narrow, bound noted) | 0.0078 | 0.0052 | 0.0250 | 0.0129 | 0.0233 |
-| 4000 × 3000, overhead, ideal light | 0.0007 | 0.0002 | 0.0015 | 0.0022 | 0.0021 |
-| 4000 × 3000, 22° tilt, lens, shadow | 0.0061 | 0.0103 | 0.0132 | 0.0043 | 0.0108 |
+| 2400 × 1800, overhead, ideal light | 0.0006 | 0.0033 | 0.0042 | 0.0017 | 0.0023 |
+| 2400 × 1800, 22° tilt, lens, shadow | 0.0021 | 0.0084 | 0.0084 | 0.0092 | 0.0085 |
+| 2400 × 1800, 22° tilt, 4 mm thick | 0.0028 | 0.0058 | 0.0041 | 0.0076 | 0.0067 |
+| 2400 × 1800, 9° tilt, 4 mm thick | 0.0001 | 0.0057 | 0.0167 | 0.0096 | 0.0084 |
+| 2400 × 1800, 5° tilt, 4 mm thick (walls too narrow, bound noted) | 0.0205 | 0.0130 | 0.0466 | 0.0125 | 0.0072 |
+| 4000 × 3000, overhead, ideal light | 0.0000 | 0.0006 | 0.0034 | 0.0028 | 0.0019 |
+| 4000 × 3000, 22° tilt, lens, shadow | 0.0001 | 0.0012 | 0.0031 | 0.0028 | 0.0008 |
 
 The 2400 × 1800 rows other than 5° are the cases in `tests/test_sheet_reference.py`. The 5° row is `render(tilt=(5.0, -2.0, 4.0), thickness=4.0)`, and the 4000 × 3000 rows add `size=(4000, 3000)`, which shows the same field of view in more pixels.
 
@@ -289,7 +305,7 @@ The same full-frame photos cannot be traced without a reference at all ("The out
 - The sheet must be flat, fully visible, and contrast with the surface under it. The part must sit wholly on the sheet with a margin, and its brightness must differ from the sheet's.
 - The photo is decoded as sRGB. A camera's own tone mapping is not undone; §3 gives the cost of a plain-gamma camera (0.02 mm at 2.2, 0.11 mm at 1.8).
 - An edge carried by colour and not by brightness is measured on the colour channels. A JPEG stores colour at lower resolution than brightness, and that case is tested only on lossless renders.
-- A soft shadow beside an edge moves it outward in proportion to the shadow's depth: 0.026 mm on Ø22 for a shadow removing a quarter of the light in the rendered photo, and about twice that for one removing about half. Use diffuse light.
+- A soft shadow beside an edge is corrected where the paper's light is close to linear over 2.5–5 σ (§3): on the rendered photo, Ø22 reads 0.008 mm off under a shadow removing a quarter of the light, where it read 0.026 mm. A sharper shadow, or one whose edge falls within a few σ of the part, is corrected only in part. Diffuse light is still best.
 - One radial coefficient about the image centre; no tangential distortion or k₂. Cropped photos and screenshots break the principal-point assumption, which leaves the focal estimate inconsistent and falls back to EXIF or an assumed lens.
 - Vertical walls of constant thickness. Chamfers, draft, countersinks and shiny edges are not modelled. With walls too narrow to measure, an edge may read up to 0.2 σ into the part.
 - Fitted lines, arcs and circles are descriptions of the photograph, not recovered design intent; review the snap list. Split output uses the traced polygon.

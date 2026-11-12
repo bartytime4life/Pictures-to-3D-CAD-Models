@@ -7,6 +7,26 @@ qualification evidence remain distinct below.
 
 Latest workbench validation: November 11, 2026, on the local Linux workstation, for continuous-angle bed placement and for the exact-corner fillet fit. The FreeCAD import check, the linear-light edge measurement, the phone-photo decoding, the photo benchmark runner, the SVG and PDF drawings, the fillet-radius correction, the arc-chord fit and the stub fix of November 11 ran in a managed cloud session. The [reference-sensitivity record](validation/reference-sensitivity.md) covers the endpoint-placement explorer. Earlier managed-environment and release results are recorded separately below. The original CAD release and subsequent optional Ollama integration have separate evidence below. A freshly published cloud task has not been validated.
 
+## Edge levels follow a shadow's slope — November 11, 2026
+
+Branch `claude/sloped-levels`, on `main` at `76f03fc`. The figures below were taken on `47e3352`; the changes since touch no tracing code. It implements the roadmap item "edge levels that follow a shadow's slope". See [reference-sheet tracing](reference-sheet.md), §3, for the mathematics.
+
+- **The defect.** A soft shadow brightens the paper away from an edge. The edge's mid-level, the mean of the medians at the profile's two ends, then sat too far out, about 2.7 σ² b / (b₀ − a). On the tilted rendered photo a shadow removing 25 % of the light put Ø22 0.026 mm off, and one removing 47 % 0.054 mm.
+- **The fix** (`sheet.half_level_search` with σ, used in the second edge pass):
+  - The paper side's light is fitted as a line beyond 2.5 σ, after removing the step's own blurred tail, and the material side keeps a flat median.
+  - The level, (A(e) + B(e))/2 + (b₁ − a₁) σ/√(2π), is exact at the edge for a Gaussian-blurred step between linear plateaus.
+  - The correction from the median crossing is smoothed along each ring over 20 points.
+- **How it was settled.**
+  - Fitting both sides read a thick part's narrow wall as a slope, so the material side keeps its median. Which side is paper comes from the classified mask 3 σ out.
+  - Fitting one side alone read the step's own tail as a slope (0.011 px on a blurred hole), so the tail is removed first.
+  - Without smoothing, small features got noisier. A slope-significance shrinkage gave back much of the correction (Ø22 0.0078 mm under the shadow), and 20-point smoothing did best.
+- **Exact profiles.** On sloped profiles the crossing is within 0.002 px of the edge, flat plateaus included (the end medians: 0.003 px off flat, up to 0.18 px on the slopes). On blurred discs of 7.5–55 σ the radius is within 0.005 px of the blur-curvature series, and closer to it than the medians.
+- **Rendered photos.**
+  - Over six noise seeds of the tilted photo with the 25 % shadow, the mean errors went from 0.0103, 0.0244, 0.0290, 0.0044 and 0.0234 mm (Ø6, Ø22, slot, position, outer) to 0.0026, 0.0055, 0.0126, 0.0054 and 0.0046 mm. Without a shadow, and overhead, they are unchanged within 0.002 mm.
+  - On the documented photos, the 22° photo of the 4 mm plate went from 0.0249 to 0.0058 mm on Ø22 and from 0.0173 to 0.0067 mm on the outline; the 4000 × 3000 tilted photo from 0.0103 to 0.0012 mm on Ø22.
+- **What got worse.** The 5° photo of the 4 mm plate, whose walls are too narrow to model: Ø6 from 0.0078 to 0.0205 mm and the slot from 0.025 to 0.047 mm. There the shadow's outward push had cancelled the walls' inward pull; without a shadow the old trace already read Ø6 0.013 mm and the slot 0.042 mm. The photo benchmark's overhead example (4 mm thick) reads its outline 0.10 mm short, where it read 0.09 mm. That trace's notes already give the walls' bound.
+- **Checks run.** `pytest`: **501 passed**. New: `test_sloped_plateau_levels_put_the_crossing_on_the_edge`, `test_ring_smoothing_averages_the_slope_correction_round_a_closed_ring` and `test_a_soft_shadow_no_longer_pushes_edges_out`, which replaces the deep-shadow test that bounded the old bias (its "tighten the bounds when this is improved"). The new shadow test fails with `main`'s edge tracer. Ruff passed. All 74 browser scenarios passed with the system Chrome. A trace of the rendered tilted photo takes 0.59 s, against 0.62 s on `main`.
+
 ## Rounded polygons are not taken for circles — November 11, 2026
 
 Branch `claude/circle-gate`, on `main` at `363f295` (after the renderer fix below). It resolves the second item found and not fixed in the exact-corner entry below.

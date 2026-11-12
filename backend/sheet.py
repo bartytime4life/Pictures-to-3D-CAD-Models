@@ -77,7 +77,9 @@ def sample_bilinear(image, x, y):
     return top * (1 - fy) + bottom * fy
 
 
-def half_level_search(gray, points, normals, half, step=0.125, min_contrast=12.0):
+def half_level_search(
+    gray, points, normals, half, step=0.125, min_contrast=12.0, sigma=None, ring_smoothing=0.0, paper_side=None
+):
     """Move each point along its normal to the crossing of its local mid-level.
 
     `gray` holds linear light (backend.tone). The level is the mean of the median
@@ -87,30 +89,115 @@ def half_level_search(gray, points, normals, half, step=0.125, min_contrast=12.0
     Profiles whose ends differ by less than `min_contrast` saved grey levels are
     dropped: the limit is stated on the saved scale, where a photo's noise is roughly
     even across tones. Returns the moved points and a keep mask.
+
+    With the edge blur `sigma` given, each end is instead a sloped plateau: a soft
+    shadow brightens the paper away from an edge, and the end medians then put the
+    level too far out. The profile is sampled out to 5 sigma, the step's own Gaussian
+    tail is removed, and a line is fitted to each end beyond 2.5 sigma from the centre,
+    A(t) and B(t). A Gaussian-blurred step between two linear plateaus, with slopes a1
+    and b1 at its edge e, has the value (A(e) + B(e)) / 2 + (b1 - a1) sigma / sqrt(2 pi)
+    there, so the crossing of the profile with that level, as a function of t, is the
+    edge itself, flat ends included. Extrapolated lines are
+    noisier than medians, while a shadow's slope changes slowly along an edge: with
+    `ring_smoothing` (points in order round a closed ring), the correction from the
+    median level's crossing to the sloped level's is smoothed along the ring with a
+    Gaussian of that many points before it is applied. `paper_side` (+1 or -1 per point:
+    the side of t the paper lies on) confines the slope to the paper: a shadow is cast
+    there, while the material side can hold a thick part's narrow side wall, whose own
+    blurred step would read as a slope; that side keeps its end median.
     """
-    t = np.arange(-half, half + step / 2, step)
+    sloped = sigma is not None
+    reach = max(half, 5 * sigma) if sloped else half
+    t = np.arange(-reach, reach + step / 2, step)
     sx = points[:, None, 0] + t[None, :] * normals[:, None, 0] - 0.5
     sy = points[:, None, 1] + t[None, :] * normals[:, None, 1] - 0.5
     profile = sample_bilinear(gray, sx, sy)
-    k = max(2, round(0.15 * len(t)))
-    low = np.median(profile[:, :k], axis=1)
-    high = np.median(profile[:, -k:], axis=1)
-    level = (low + high) / 2
+    inner = np.abs(t) <= half + step / 2
+    k = max(2, round(0.15 * inner.sum()))
+    low = np.median(profile[:, inner][:, :k], axis=1)
+    high = np.median(profile[:, inner][:, -k:], axis=1)
+    if not sloped:
+        level_t = np.repeat(((low + high) / 2)[:, None], len(t), axis=1)
+    else:
+        # Beyond 2.5 sigma, with the step's own blurred tail (high - low) Q(|t| / sigma)
+        # removed first: it is under 0.6 % of the contrast there, but a line fitted to
+        # one side alone would read it as a slope.
+        lo_end, hi_end = t <= -2.5 * sigma, t >= 2.5 * sigma
+        tail = (high - low)[:, None] * _upper_tail(np.abs(t) / sigma)[None, :]
+        flattened = np.where(t[None, :] < 0, profile - tail, profile + tail)
+
+        def line(mask):
+            x = t[mask]
+            xm = x.mean()
+            y = flattened[:, mask]
+            slope = ((y - y.mean(axis=1, keepdims=True)) * (x - xm)).sum(axis=1) / ((x - xm) ** 2).sum()
+            return y.mean(axis=1) - slope * xm, slope
+
+        a0, a1 = line(lo_end)
+        b0, b1 = line(hi_end)
+        if paper_side is not None:
+            # The material side keeps a flat level, the median of its end.
+            material_low = np.asarray(paper_side) > 0
+            a_flat, b_flat = np.median(flattened[:, lo_end], axis=1), np.median(flattened[:, hi_end], axis=1)
+            a0, a1 = np.where(material_low, a_flat, a0), np.where(material_low, 0.0, a1)
+            b0, b1 = np.where(material_low, b0, b_flat), np.where(material_low, b1, 0.0)
+        level_t = (a0 + b0)[:, None] / 2 + ((a1 + b1)[:, None] / 2) * t[None, :]
+        level_t += ((b1 - a1) * sigma / math.sqrt(2 * math.pi))[:, None]
     sign = np.sign(high - low)[:, None]
-    above = (profile - level[:, None]) * sign > 0
     keep = np.abs(encoded_from_linear(high) - encoded_from_linear(low)) >= min_contrast
-    moved = points.astype(np.float64).copy()
+    searched = inner[1:] & inner[:-1]
     centre = len(t) // 2
-    for i in np.nonzero(keep)[0]:
-        crossings = np.nonzero(above[i, 1:] != above[i, :-1])[0]
-        if len(crossings) == 0:
-            keep[i] = False
-            continue
-        j = crossings[np.argmin(np.abs(crossings - centre))]
-        p0, p1 = profile[i, j] - level[i], profile[i, j + 1] - level[i]
-        fraction = p0 / (p0 - p1) if p0 != p1 else 0.5
-        moved[i] = points[i] + (t[j] + fraction * step) * normals[i]
+
+    def crossing(level):
+        """Offset along each normal of the profile's crossing with `level` (per sample)."""
+        above = (profile - level) * sign > 0
+        offset = np.full(len(points), np.nan)
+        for i in np.nonzero(keep)[0]:
+            crossings = np.nonzero((above[i, 1:] != above[i, :-1]) & searched)[0]
+            if len(crossings) == 0:
+                continue
+            j = crossings[np.argmin(np.abs(crossings - centre))]
+            p0, p1 = profile[i, j] - level[i, j], profile[i, j + 1] - level[i, j + 1]
+            offset[i] = t[j] + (p0 / (p0 - p1) if p0 != p1 else 0.5) * step
+        return offset
+
+    offset = crossing(np.repeat(((low + high) / 2)[:, None], len(t), axis=1))
+    if sloped:
+        correction = crossing(level_t) - offset
+        if ring_smoothing > 0:
+            correction = _smooth_along_ring(correction, ring_smoothing)
+        offset = offset + correction
+    keep &= np.isfinite(offset)
+    moved = points.astype(np.float64).copy()
+    moved[keep] += offset[keep, None] * normals[keep]
     return moved, keep
+
+
+def _upper_tail(z):
+    """Upper standard normal tail Q(z), vectorised (Abramowitz & Stegun 7.1.26, absolute
+    error below 1e-7)."""
+    x = np.asarray(z, dtype=np.float64) / math.sqrt(2.0)
+    t = 1.0 / (1.0 + 0.3275911 * np.abs(x))
+    erfc = t * (0.254829592 + t * (-0.284496736 + t * (1.421413741 + t * (-1.453152027 + t * 1.061405429)))) * np.exp(-x * x)
+    return np.where(x >= 0, 0.5 * erfc, 1.0 - 0.5 * erfc)
+
+
+def _smooth_along_ring(values, scale):
+    """Gaussian smoothing (standard deviation `scale` samples) of values in order round a
+    closed ring, over the finite ones; non-finite values stay non-finite."""
+    ok = np.isfinite(values)
+    v = values[ok]
+    if len(v) < 6 * scale:
+        out = values.copy()
+        out[ok] = v.mean() if len(v) else v
+        return out
+    radius = int(3 * scale)
+    kernel = np.exp(-0.5 * (np.arange(-radius, radius + 1) / scale) ** 2)
+    kernel /= kernel.sum()
+    padded = np.concatenate([v[-radius:], v, v[:radius]])
+    out = values.copy()
+    out[ok] = np.convolve(padded, kernel, mode="valid")
+    return out
 
 
 def _quad(gray_small, polarity):
