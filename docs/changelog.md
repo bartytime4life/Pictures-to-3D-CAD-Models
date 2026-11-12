@@ -3,6 +3,20 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Reference-sheet weak-edge recovery — November 12, 2026
+
+Initially based on `main` at `d6a657f93f13b818a8e44e2ace219b2d4598b4ef`, then
+integrated with PR #44 at `03f71e0e4095ee873051b71264b45fde83f84891`.
+
+- A missing outer boundary after the first sub-pixel edge pass now raises an
+  explicit recoverable error with focus and part-to-sheet contrast guidance.
+  Previously an internal `StopIteration` reached the generic sheet-error path;
+  the API already returned 422.
+- Preserved the contrast and retained-point thresholds, the zero-blur median-level
+  fallback, and successful-capture measurement behavior. Added rendered-capture,
+  retained-hole and same-client API recovery regressions. See the
+  [bounded validation record](validation/contrast-recovery.md).
+
 ## Documentation review — November 12, 2026
 
 Reviewed the full workbench and companion-library documentation against `main`
