@@ -1,0 +1,70 @@
+{
+  "format": "pictures-to-cad-curve-blur-frames-plan",
+  "version": 1,
+  "scope": "Conditional finite Gaussian source observations and actual thickness homotheties. This tests blur-frame transport and retains finite-model error separately; it is not physical calibration, exact finite-shape inference or a whole-photo accuracy claim.",
+  "uniform_matrix": {
+    "shapes": ["circle", "wrapping_free_arc", "capsule"],
+    "blur_models": ["scalar", "anisotropic"],
+    "rotations_degrees": [0, 37],
+    "alphas": [1, 0.8, 0.6],
+    "expected_rows": 36
+  },
+  "geometry": {
+    "radius": 12,
+    "capsule_core_half_length": 60,
+    "translation": [24.3, 19.2],
+    "height": 100,
+    "circle_points": 96,
+    "wrapping_free_arc_span": [80, 16],
+    "capsule_line_points": 25,
+    "capsule_arc_points": 49
+  },
+  "blur": {
+    "scalar": [[3, 0], [0, 3]],
+    "anisotropic": [[1, 0], [0, 9]],
+    "sigma": "det(Sigma)**0.25 in the original measurement frame"
+  },
+  "oracle": {
+    "method": "Independent finite area slices with standard-library erfc, targeted circle/conditional-normal breakpoints and cosine endpoint substitution. A finite capsule is a rectangle plus two disjoint half-disks.",
+    "method_lineage_sha256": "912c7cd63c30e0b26b0dabdbc65c0cf2152966897b30fc44de26ca18448b2b3a",
+    "orders": [32, 64],
+    "gaussian_breakpoints": [-12, -8, -4, -2, -1, 0, 1, 2, 4, 8, 12],
+    "bisection_iterations": 44,
+    "self_controls": ["isotropic_disk_center", "isotropic_small_disk_center", "zero_core_capsule_is_disk", "capsule_reflection"]
+  },
+  "criteria": {
+    "oracle_order_delta": 1e-8,
+    "oracle_halflevel_error": 1e-8,
+    "frame_commutation_pixels": 1e-6,
+    "point_map_pixels": 1e-10,
+    "mixed_policy": "Retain existing explicitly marked legacy approximations; do not require a physical truth recovery or invent a common covariance.",
+    "finite_bias_policy": "Report actual radius/centre error against the supplied finite shape without imposing recovery/improvement criteria; transport consistency is distinct from approximation accuracy."
+  },
+  "separate_controls": {
+    "rotation_degrees": 37,
+    "alpha": 0.8,
+    "blur_models": ["scalar", "anisotropic"],
+    "cases": ["mixed_circle_actual", "mixed_free_arc_actual", "uniform_wrapping_arc_mixed_outside", "mixed_cap_neighbor_support"],
+    "expected_rows": 8,
+    "circle_external_nadir": [30, 0],
+    "mixed_free_arc_span": [72, 24],
+    "capsule_external_nadir": [48, 13.2],
+    "trimmed_right_arc_span": [32, 64]
+  },
+  "adverse_no_halflevel": {
+    "radius": 1,
+    "blur_models": ["scalar", "anisotropic"],
+    "expected_rows": 2,
+    "policy": "Record centre mass below one half and no half-level contour; never manufacture source observations."
+  },
+  "limitations": [
+    "Pose, Gaussian covariance, source shape and brightness normalization are supplied, not estimated.",
+    "Uniform rotations reuse the same independently integrated source via exact orthogonal change of coordinates.",
+    "Circles use uniformly spaced radial directions, not a claim of uniform arc-length sampling.",
+    "Capsule fits use independently known side directions and point-bound spans, followed by actual line refitting and cap fitting.",
+    "Free-arc controls test stored radius/centre transport on a known disk sector; they do not claim canonical join/export consistency.",
+    "Mixed controls use actual piecewise thickness maps and test explicit diagnostic behavior, not a stationary Gaussian inference.",
+    "Quadrature-order agreement is numerical evidence, not a certified probability enclosure.",
+    "No segmentation, camera response/noise estimation, source image processing, real capture or physical fit is qualified."
+  ]
+}

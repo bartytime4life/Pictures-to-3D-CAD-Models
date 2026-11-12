@@ -131,8 +131,8 @@ Use the revision-bound records in [validation.md](validation.md) to identify whi
 implementation was checked. A historical pass does not establish a later head,
 and listing a command here does not establish that it ran.
 
-The main-based workflow file has a 30-minute workbench job budget. It does not
-contain the larger research branch's timeout changes or test population. A
+The current main-based workflow preserves PR #82's 45-minute workbench job
+budget. It does not contain the larger research branch's test population. A
 cancelled or running job is not a completed pass; use the revision-bound
 [status and evidence](project-status.md) when reporting CI.
 

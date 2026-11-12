@@ -14,8 +14,20 @@ independent dimensions. The [radial-domain and independent-renderer record](docs
 documents numerical safeguards and higher-order lens counterexamples. The
 [directional-blur research](docs/validation/directional-spread-qualification.md)
 also records missed cases; it does not supply a product accuracy status. The
-tracer traces a uniform directional blur by direction on synthetic photos
-([method](docs/reference-sheet.md)).
+tracer estimates a uniform directional blur from edge spreads and uses its
+covariance for supported nonparallel corner fits
+([method and recovery limits](docs/anisotropic-corners.md)). This empirical
+rectified-image model is not a physical camera calibration.
+An unresolved supplied-covariance corner normally keeps its traced boundary.
+If thickness correction made that boundary invalid, a nearby line-only outline
+may be retained under bounded whole-boundary checks; otherwise the trace is refused. Neither recovery
+determines the corner radius. Review the notice and measure important radii.
+
+Known uniform thickness scales also transport blur widths for free curves and
+slot-cap fitting. Mixed-frame free curves, slot caps and scalar corner fits
+retain explicitly approximate geometry with a warning; important radii remain
+subject to independent measurement. See
+[blur frames and support rules](docs/blur-frames.md).
 
 This repository contains two related tools:
 
@@ -143,7 +155,7 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 ## Documentation
 
-Start with the [documentation index](docs/README.md) for capture, engineering, export, development and evidence routes. [Source scope and status](docs/project-status.md) distinguishes merged main-line changes, the draft covariance-rank repair in this checkout and the separate source-space calibration research branch.
+Start with the [documentation index](docs/README.md) for capture, engineering, export, development and evidence routes. [Source scope and status](docs/project-status.md) distinguishes this main-based tracing, corner and blur-frame line from the separate source-space calibration research branch and records their review states.
 
 - [Capture and calibration guide](docs/capture-guide.md)
 - [Engineering model and independent verification](docs/engineering-model.md)

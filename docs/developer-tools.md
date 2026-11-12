@@ -14,6 +14,8 @@ scripts from a separate branch are not implied by this list.
 | Running-service smoke check | `make smoke` | Traces the sample, builds CAD, downloads STEP and deletes its own model; needs a server and has no argparse help mode |
 | Slicer discovery | `.venv/bin/python scripts/slicer_status.py --json` | Reports fixed-program discovery without starting a slicer; does not verify installed versions |
 | Measured-photo benchmark | `.venv/bin/python scripts/photo_benchmark.py --help` | `FOLDER` reads the photo/measurement manifest; `--example FOLDER` writes synthetic examples; `--json FILE` and `--markdown FILE` write reports |
+| Independent covariance-corner study | `.venv/bin/python studies/verification/corner-anisotropy-v1.py --model both --output NEW.json` | All 16 fixed cases retained; requires a fresh JSON file in an existing directory; [evidence and limits](validation/anisotropic-corners.md) |
+| Independent blur-frame study | `.venv/bin/python studies/verification/curve-blur-frames-v1.py --output NEW.json` | All 46 fixed rows retained, including mixed/no-half-level controls; fresh JSON destination in an existing directory; [evidence and limits](validation/curve-blur-frames.md) |
 | Corner sweep | `.venv/bin/python scripts/corner_sweep.py --help` | Synthetic fitting cases, optional `--quick`, `--backend PATH` and `--json FILE`; not a real-camera test |
 | Native FreeCAD import check | `make freecad` | Requires `FREECADCMD`; builds synthetic fixtures and launches FreeCAD. `freecad_check.py` and its `freecad_import.py` helper have no argparse help mode |
 | Printer-data import | `.venv/bin/python scripts/import_printers.py --help` | Reads the supplied pinned-source checkout and writes catalog JSON; [procedure](printer-catalog.md) |
@@ -22,15 +24,16 @@ scripts from a separate branch are not implied by this list.
 
 ## Output and side effects
 
-Use a new scratch destination for generated benchmark/example reports. These
-main-line scripts are not exclusive-output research runners: report paths can
-be overwritten, and `--example` writes into its chosen folder. The Ollama
+Use a new scratch destination for generated benchmark/example reports. The
+photo-benchmark script can overwrite report paths, and `--example` writes into
+its chosen folder. Both independent study runners instead refuse an existing
+destination, including a dangling symbolic link. The Ollama
 benchmark creates its output parent and writes both JSON and a `.md` sibling.
 Printer import defaults to the tracked `data/printers.json`. Review a generated
 diff before replacing committed data.
 
-`--help` is a read-only parser check only for the five Python scripts listed
-with an argparse help mode. Do not append it to smoke or FreeCAD helpers and
+`--help` is a read-only parser check only for the listed Python scripts
+with an argparse help mode. Both independent study runners also provide `--help`. Do not append it to smoke or FreeCAD helpers and
 assume that work will be suppressed. Help output does not execute a study,
 validate an installed model, exercise the network or qualify an export.
 

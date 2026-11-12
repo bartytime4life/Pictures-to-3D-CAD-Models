@@ -22,7 +22,8 @@ import cv2
 import numpy as np
 from PIL import Image
 from pydantic import ValidationError
-from shapely.geometry import Polygon
+from shapely.errors import GEOSException
+from shapely.geometry import LineString, Polygon
 
 from . import edges, fitting, sheet, tone
 from .models import Profile
@@ -62,6 +63,70 @@ def _segments_for(points, prims, tolerance_px):
     if len(vertices) < 3:
         vertices = points
     return [("line", vertices[k], vertices[(k + 1) % len(vertices)]) for k in range(len(vertices))], False
+
+
+def _geometric_source_polyline(points, prims, tolerance_px):
+    """Freeze a bounded geometric approximation before snapping or deblurring.
+
+    A piecewise thickness map can make the corrected measured ring cross itself.
+    An already accepted geometric fit can still provide a simple nearby outline.
+    It is sampled into lines, with no inferred radius. Require both entire closed
+    boundaries inside each other's existing geometric-fit tolerance tube; this is
+    not an increased polyline-detail tolerance or a physical uncertainty bound.
+    GEOS's polygonal buffers under-approximate round caps, so containment adds no
+    outward padding. Failure preserves normal refusal; no generic topology-repair
+    operator is used. Proximity does not establish the source's intended topology.
+    """
+    if not prims or not math.isfinite(tolerance_px) or tolerance_px <= 0:
+        return None
+    try:
+        sampled = []
+        error = tolerance_px / 16
+        for segment in fitting.segments(prims):
+            if segment[0] == "line":
+                piece = np.asarray(segment[1:], dtype=np.float64)
+            else:
+                if segment[0] == "circle":
+                    _, centre, radius = segment
+                    start, sweep = 0.0, 2 * math.pi
+                else:
+                    centre, radius, start, sweep = fitting.arc_geometry(*segment[1:])
+                if not all(math.isfinite(v) for v in (radius, start, sweep)) or radius <= 0:
+                    return None
+                step = 4 * math.asin(math.sqrt(min(1.0, error / (2 * radius))))
+                if step <= 0 or not math.isfinite(step):
+                    return None
+                count = max(24 if segment[0] == "circle" else 2, math.ceil(abs(sweep) / step))
+                if count > MAX_TOTAL_VERTICES:
+                    return None
+                angles = np.linspace(start, start + sweep, count + 1)
+                piece = np.asarray(centre) + radius * np.column_stack([np.cos(angles), np.sin(angles)])
+                if segment[0] == "arc":
+                    piece[0], piece[-1] = segment[1], segment[-1]
+                else:
+                    piece[-1] = piece[0]
+            if sampled and np.array_equal(sampled[-1], piece[0]):
+                piece = piece[1:]
+            if len(sampled) + len(piece) > MAX_TOTAL_VERTICES + 1:
+                return None
+            sampled.extend(piece)
+        if sampled and np.array_equal(sampled[0], sampled[-1]):
+            sampled.pop()
+        vertices = np.asarray(sampled, dtype=np.float64)
+        if not 3 <= len(vertices) <= MAX_TOTAL_VERTICES or not np.isfinite(vertices).all():
+            return None
+        candidate = Polygon(vertices)
+        source = LineString(np.vstack([points, points[:1]]))
+        if (
+            not candidate.is_valid
+            or candidate.area <= 0
+            or not source.buffer(tolerance_px).covers(candidate.boundary)
+            or not candidate.boundary.buffer(tolerance_px).covers(source)
+        ):
+            return None
+        return vertices.copy()
+    except (ValueError, OverflowError, ZeroDivisionError, GEOSException):
+        return None
 
 
 def _to_model(segs, transform):
@@ -247,10 +312,15 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
                 refined, wall_notes = _refine_walls(g, rings, camera, thickness_mm, sigma, ppm)
         notes.extend(wall_notes)
         for ring, (points, normals) in zip(rings, refined):
-            corrected, _ = edges.correct_thickness(
+            corrected, top = edges.correct_thickness(
                 points / ppm, normals, camera["nadir_mm"], camera["height_mm"], thickness_mm
             )
             ring["points"] = corrected * ppm
+            # The blur was measured before the piecewise thickness map. A corner
+            # wholly formed by the top edge has its covariance scaled by alpha²;
+            # mixed top/bottom support cannot use one stationary Gaussian model.
+            alpha = (camera["height_mm"] - thickness_mm) / camera["height_mm"]
+            ring["blur_scales"] = np.where(top, alpha, 1.0)
             if "support" in ring:
                 support = ring["support"] / ppm
                 support_normals = edges.material_normals(support, ring["outer"])
@@ -272,6 +342,7 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
     tolerance_px = max(0.03, 0.15 * sigma / ppm) * ppm
     min_line_px = min(max(0.025 * extent_mm, 1.0), 3.0) * ppm
     fitted = []
+    source_fits = {}
     for ring in rings:
         support_error = 0.0
         if "support_indices" in ring:
@@ -281,6 +352,10 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
             ring["points"], tolerance_px, min_line_px,
             support_points=ring.get("support"), support_error=support_error,
         )
+        if prims and ring.get("covariance") is not None and not Polygon(ring["points"]).is_valid:
+            source_fit = _geometric_source_polyline(ring["points"], prims, tolerance_px)
+            if source_fit is not None:
+                source_fits[id(ring)] = source_fit
         fitted.append((ring, prims))
     rings_prims = [p for _, p in fitted if p]
     axis = None
@@ -289,19 +364,70 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
         notes.extend(snap_notes)
         for ring, prims in fitted:
             if prims and any(p.kind == "line" for p in prims):
-                fitting.refit_lines(ring["points"], prims, margin=3 * sigma)
-                fitting.fit_fillets(ring["points"], prims, tolerance_px, sigma, ring.get("covariance"))
-    for prims in rings_prims:
-        fitting.correct_blur(prims, sigma)
+                covariance = ring.get("covariance")
+                spread = (
+                    math.sqrt(float(np.linalg.eigvalsh(covariance)[-1]))
+                    if covariance is not None
+                    else sigma
+                )
+                fitting.refit_lines(
+                    ring["points"], prims, margin=3 * spread, blur_scales=ring.get("blur_scales")
+                )
+                fitting.fit_fillets(
+                    ring["points"],
+                    prims,
+                    tolerance_px,
+                    sigma,
+                    covariance,
+                    blur_scales=ring.get("blur_scales"),
+                )
+    unresolved = 0
+    geometric_recoveries = {}
+    for index, (ring, prims) in enumerate(fitted):
+        if prims and any(p.data.get("blur_unresolved") for p in prims):
+            # Unsupported piecewise frames or an unresolved directional model must
+            # not pass through scalar blur correction or radius equalisation.
+            fitted[index] = (ring, None)
+            unresolved += 1
+            if id(ring) in source_fits:
+                geometric_recoveries[id(ring)] = source_fits[id(ring)]
+    blur_notes = []
+    if unresolved:
+        parts = ["A corner radius could not be determined."]
+        traced_count = unresolved - len(geometric_recoveries)
+        if traced_count:
+            parts.append(
+                "One boundary was kept as a traced outline."
+                if traced_count == 1
+                else f"{traced_count} boundaries were kept as traced outlines."
+            )
+        if geometric_recoveries:
+            parts.append(
+                "One corrected trace crossed itself and was kept as a nearby polygonal approximation."
+                if len(geometric_recoveries) == 1
+                else f"{len(geometric_recoveries)} corrected traces crossed themselves "
+                "and were kept as nearby polygonal approximations."
+            )
+        parts.append("Measure important corner radii.")
+        blur_notes.append(" ".join(parts))
+    rings_prims = [p for _, p in fitted if p]
+    for ring, prims in fitted:
+        if prims:
+            fitting.correct_blur(prims, sigma, blur_scales=ring.get("blur_scales"))
     if snap:
         notes.extend(fitting.equalise_radii(rings_prims, scale=1 / ppm, unit="mm"))
     # First among the notes (after the fit summary), so the 16-note limit keeps them.
     radius_notes = fitting.undetermined_radii(rings_prims, sigma, scale=1 / ppm, unit="mm")
-    notes[0:0] = radius_notes
+    notes[0:0] = blur_notes + radius_notes
     polyline_px = POLYLINE_TOLERANCE_MM.get(detail, 0.05) * ppm
     described = []
     for ring, prims in fitted:
-        segs, analytic = _segments_for(ring["points"], prims, polyline_px)
+        if id(ring) in geometric_recoveries:
+            vertices = geometric_recoveries[id(ring)]
+            segs = [("line", p, vertices[(i + 1) % len(vertices)]) for i, p in enumerate(vertices)]
+            analytic = False
+        else:
+            segs, analytic = _segments_for(ring["points"], prims, polyline_px)
         try:
             polygon = Polygon(fitting.sample_segments(segs, 0.01 * ppm))
         except ValueError:
@@ -311,6 +437,16 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
         if analytic and (polygon is None or not polygon.is_valid or polygon.area <= 0):
             segs, analytic = _segments_for(ring["points"], None, polyline_px)
         described.append({"outer": ring["outer"], "segments": segs, "analytic": analytic})
+    mixed_blur_notes = []
+    if any(
+        description["analytic"] and prims and any(p.data.get("blur_frame_mixed") for p in prims)
+        for (_, prims), description in zip(fitted, described)
+    ):
+        mixed_blur_notes.append(
+            "Some curved edges use measurements from both the top and bottom of the part. "
+            "Their blur correction is approximate; measure important radii."
+        )
+        notes[0:0] = mixed_blur_notes
 
     # Display view: the part plus a margin, rotated (when snapping found straight edges)
     # so those edges run along the X and Y axes, at most DISPLAY_SIDE pixels long. One
@@ -408,6 +544,8 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
     )
     mismatch = [n for n in notes if n.startswith("The sheet's proportions in the photo differ")]
     warnings_out.extend(mismatch)
+    warnings_out.extend(blur_notes)
+    warnings_out.extend(mixed_blur_notes)
     warnings_out.extend(radius_notes)
     if not camera:
         warnings_out.append(

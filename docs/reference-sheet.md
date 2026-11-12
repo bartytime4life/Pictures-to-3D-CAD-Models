@@ -119,7 +119,8 @@ This is checked at 16 phases by `test_half_level_crossing_on_symmetric_blur_is_u
 Working by direction:
 
 - Each point's second-pass level search (its windows, the step's tail and the paper's slope) uses its own σₙ, and so does the wall model of §5.
-- Curves need another width. A curved edge of radius R is drawn in by the median of w_n + w_t²/(2R), where w_n and w_t are the blur's components across and along it. To first order that is the variance of w_t given w_n = 0, Σ_tt − Σ_tn²/Σ_nn = det S / nᵀSn, so the shrink at direction n is det S / (2R nᵀSn), not S_tt / (2R); the [directional-blur experiment](research.md#directional-blur-experiment-status--november-12-2026) derived the same leading term. Round a circle it averages √det S / (2R), because the mean of 1/(nᵀSn) over all directions is 1/√det S. The curvature corrections of §4 therefore take σ = (det S)^¼, the geometric mean of the principal spreads. On exactly blurred holes of 34 and 68 px under a 1.7 × 3.77 px blur the exact mid-level contour's mean shrink agrees with √det S / (2R) within 5 %, where tr S / (4R) is 30 % too large; the fit recovers S within 5 %, and the traced hole, corrected, is within 0.01 px of its radius (`test_a_directional_blur_shrinks_a_circle_by_its_geometric_mean_variance`).
+- Free arcs and circles need another width. A curved edge of radius R is drawn in by the median of w_n + w_t²/(2R), where w_n and w_t are the blur's components across and along it. To first order that is the variance of w_t given w_n = 0, Σ_tt − Σ_tn²/Σ_nn = det S / nᵀSn, so the shrink at direction n is det S / (2R nᵀSn), not S_tt / (2R); the [directional-blur experiment](research.md#directional-blur-experiment-status--november-12-2026) derived the same leading term. Round a circle it averages √det S / (2R), because the mean of 1/(nᵀSn) over all directions is 1/√det S. The existing free-curve corrections of §4 take σ = (det S)^¼, the geometric mean of the principal spreads. This scalar approximation is not the nonparallel-corner model below. On exactly blurred holes of 34 and 68 px under a 1.7 × 3.77 px blur the exact mid-level contour's mean shrink agrees with √det S / (2R) within 5 %, where tr S / (4R) is 30 % too large; the fit recovers S within 5 %, and the traced hole, corrected, is within 0.01 px of its radius (`test_a_directional_blur_shrinks_a_circle_by_its_geometric_mean_variance`).
+- Nonparallel fillets use the full covariance in the rounded-corner forward model (§4), preserving its orientation instead of replacing it by the scalar summary. The [anisotropic-corner guide](anisotropic-corners.md) describes the geometry, numerical refusal and traced-boundary recovery.
 - A slot end cap is placed mostly by its tip (§7), so its points take their own first-order shrink, det S / (2r nᵀSn).
 - The trace notes the blur's range across directions.
 
@@ -131,16 +132,38 @@ variation. `sigma_n` is used for each second-pass edge search and wall profile.
 `subpixel_rings` also returns the scalar `(det S)^¼` for later fitting and
 `reference.edge_blur_mm` when a directional fit is accepted.
 
-The nonparallel fillet path in `fitting.fit_fillets` and `_exact_fillet` still
-passes only that scalar to the isotropic `corner_level` model. The covariance
-argument is used by the slot-end axial fit, whose first-order shrink varies
-with direction and whose higher-order term remains isotropic. Likewise, using
-the circle-average scalar in a partial free arc is an approximation. Directional
-edge tracing therefore does not imply that every corner uses a full anisotropic
-forward model. These are implementation/model limits, not newly measured errors
-or new physical uncertainty bounds from this documentation review.
+Supported nonparallel fillets now pass the full covariance into the whitened
+`corner_level` forward model. A known uniform thickness scale transports it by
+its square; mixed scales or unresolved numerical inference retain the affected
+source outline when valid. If that corrected ring is invalid, the narrow
+[line-only recovery](anisotropic-corners.md#when-the-corrected-source-ring-is-invalid)
+requires a frozen accepted initial fit, a valid bounded polygon and
+bidirectional whole-boundary tolerance checks; otherwise the profile is refused.
+Neither recovery determines the corner radius. The slot-end axial fit still uses directional first-order shrink
+with an isotropic higher-order term, and a partial free arc still uses the
+circle-average scalar approximation. These distinct models do not supply physical
+uncertainty bounds; see the [complete corner evidence](validation/anisotropic-corners.md).
+
+**Blur frames after thickness correction.** The point map carries its known
+scale into free-curve correction, slot-cap fitting and line-refit windows.
+Uniform support scale k requires σ′ = kσ and S′ = k²S, including scalar paths;
+free arcs use their own cyclic support spans, circles the whole ring and caps
+the adjacent lines' context. Mixed free curves, caps and scalar-only corner
+fits retain the older geometry approximation with a visible warning on emitted
+geometry. Mixed scalar corners remain radius-undetermined without a sharp-bound
+or sharp-deletion claim. An unusable scalar-model radius keeps an eligible
+positive initial geometric arc without another generic blur correction, or is
+marked unresolved if no such arc exists. Mixed supplied-covariance nonparallel corners remain
+withheld under the existing recovery policy. No average Gaussian frame or
+confidence bound is inferred. See [blur frames](blur-frames.md) for
+the equations, window tie guard and remaining model limits. Existing tables
+below are not new evaluations of this frame-transport change.
 
 Correcting curvature alone does not work: with every edge still traced with one width, a curvature-only σ made a 1 × 3 px render's outline worse, 0.106 mm against 0.038 mm. The level search across each edge needs its own σₙ.
+
+The following table and directional-photo observations retain the original
+slot-cap/scalar-corner implementation and its capture conditions. They are not
+a fresh qualification of the covariance-aware nonparallel-corner model.
 
 | Synthetic case (worst errors in mm; before in brackets) | Ø6 | Ø22 | Slot | Hole position | Outer |
 | --- | --- | --- | --- | --- | --- |
@@ -236,11 +259,34 @@ with Q the upper normal tail. The integral runs over the directions within 9 σ 
 
 The model is checked against a separate computation that shares no code with it. For a convex shape each vertical line meets the shape in one interval [bot(x), top(x)], so u(p) = ∫ φ(x − pₓ)[Φ((top − p_y)/σ) − Φ((bot − p_y)/σ)] dx. Around every corner of two filleted pentagons (corners of 60°, 90°, 120° and 150°; r from one to twelve σ), the two agree to 10⁻⁶ at the points the fit uses. A sharp right angle gives exactly Φ(x/σ)Φ(y/σ) (`test_blurred_corner_matches_closed_forms_and_an_independent_integral`).
 
+**A supplied directional covariance.** The formula above describes the scalar
+Gaussian branch. With an empirical rectified covariance S = LLᵀ,
+`corner_level(..., covariance=S)` instead whitens the Gaussian and transforms the
+geometry: a whitened unit ray e has reach R(arg Le)/|Le|. It compares successive
+angular quadratures within bounded work, and an unresolved result is refused;
+this is numerical convergence, not a certified error enclosure. A uniform
+thickness-map scale k transports the matrix to k²S. A corner support containing
+different such scales, or a failed covariance refinement, retains its whole
+boundary as a traced outline when valid, rather than accepting a scalar
+replacement. If the corrected trace is invalid, only a frozen accepted initial
+fit sampled into lines may be used, after valid-ring, point-cap and
+bidirectional whole-boundary checks within the existing geometric-fit
+tolerance. This does not enlarge the standard `0.05 mm` polyline-detail
+tolerance or use a generic topology-repair operator or component deletion.
+Tube proximity cannot certify the invalid source's intended topology, and final
+profile validation still applies; failure preserves normal profile refusal. A
+notice identifies the nearby polygon and its undetermined radius. Other
+supported rings can still be fitted. See the
+[anisotropic-corner model](anisotropic-corners.md) for its frame, recovery and
+finite-shape limits. The scalar results below retain their original conditions.
+
 Each fillet's radius is then found by Gauss–Newton. The fit uses the arc's points and the edges' points out to 5 σ beyond the tangent points. Each point's residual is (u − ½)/|∇u|, its distance from the model's edge to first order. The fit's own derivatives carry four uncertainties into the radius's standard deviation r_sd:
 
 - the residual noise;
 - that noise's correlation along the edge, estimated on neighbouring straight edges by the heuristic 1 + 2Σρₖ, stopping at the first nonpositive lag or the smaller of 25 lags and one quarter of the residual count;
-- a 5 % uncertainty in the measured blur;
+- a 5 % common blur-scale heuristic; in the covariance branch it scales all
+  principal spreads together, rather than estimating covariance-entry or
+  orientation uncertainty;
 - a 0.03 px systematic error in each edge's position.
 
 The correlation rule is bounded and heuristic. It differs from
@@ -251,7 +297,7 @@ that experiment; it does not validate general covariance coverage on photos.
 
 A wide corner magnifies the last of these most. On exactly rendered edges the tracer is within 0.004 px at any angle and sub-pixel phase; the 0.03 px is an allowance for what rendering leaves out (demosaicing, JPEG, a lens blur that is not Gaussian) and has not been measured on real photos. A rendered octagon's 135° fillets read 0.022 mm small, within their reported ± 0.078 mm.
 
-**Sharp corners.** Blur rounds a sharp corner too, and the same model at r = 0 describes it. A fitted fillet is kept only if its outline differs somewhere from the sharp corner's by twice the edge uncertainty. Otherwise the corner is traced as sharp. The trace then gives the radius at which a fillet would first show (found by bisection), as a bound on any fillet there. Before, a sharp 120 × 70 mm plate at a 0.32 mm blur was fitted with fillets of R0.4 to R0.6 mm. Now it is sharp, with any fillet bounded under R0.23 mm (`test_sharp_corners_are_traced_sharp`).
+**Sharp corners.** Blur rounds a sharp corner too, and the same model at r = 0 describes it. A fitted fillet is kept only if its outline differs somewhere from the sharp corner's by twice the edge uncertainty. Otherwise the corner is traced as sharp. Its reported radius-resolution estimate is conditional on that model and heuristic noise floor, not a physical upper bound on rounding. The covariance branch must find an actual residual crossing before bisection; reaching a search cap alone establishes no bound and leaves the fit unresolved. In the earlier scalar regression, a sharp 120 × 70 mm plate at a 0.32 mm blur changed from fitted R0.4–R0.6 mm fillets to sharp corners with a conditional estimate below R0.23 mm (`test_sharp_corners_are_traced_sharp`).
 
 **What the photo cannot resolve.** At the corner's midpoint a radius error moves the outline only (1/sin(θ/2) − 1) times as far: 1.0 at 60°, 0.41 at 90°, 0.15 at 120°, 0.035 at 150°. A radius whose r_sd exceeds 10 % of it is named in the trace's notes and warnings, with the outline's own uncertainty. The note says "or more", because once r_sd is a large share of r the fit is no longer linear and the spread is larger still.
 
@@ -382,7 +428,7 @@ Continue to compare important boundaries and independent dimensions.
 - **Lines on their straight parts.** Douglas–Peucker hands a line the start of the next arc, up to where the arc leaves it by 1.5 tolerances; for a large radius that stretch is long. Fitted with it, the edges beside R80 px corners were tilted by 0.24°. Snapping then kept the tilt, and the fillets built tangent to those edges were up to 0.9 % off in radius. Each line is therefore refit before snapping on its points short of the neighbouring arcs' tangent points (less 3 σ in the trace): by total least squares, or for a snapped line by offset only.
 - **Design intent** (optional, reported):
   - Lines within 0.6° of the dominant axis are made exact. The axis is the circular mean of 4θ, invariant to line direction and to quarter turns (`test_dominant_axis_ignores_line_direction_and_quarter_turns`).
-  - An arc between non-parallel lines becomes a fillet whose centre lies on the corner bisector, c(r) = c₀ + r v. Only r is fitted, against the exact blurred corner (§4), with a standard deviation; a fillet the photo cannot tell from a sharp corner is traced sharp. c(r) stays at distance exactly r from both lines for every r, which is verified in rational arithmetic (`test_exact_fillet_centre_is_tangent_to_both_lines_for_every_radius`). Over 300 noisy trials this constrained fit has less than half the spread of a free three-parameter arc (`test_tangent_constrained_fillet_fit_is_more_precise_than_a_free_arc`).
+  - An arc between non-parallel lines becomes a fillet whose centre lies on the corner bisector, c(r) = c₀ + r v. Only r is fitted against the blurred corner (§4), using the full supplied covariance when available and retaining conditional heuristic radius diagnostics. A supported fillet indistinguishable from the sharp model is traced sharp. An unresolved covariance fit normally retains the affected traced boundary; an invalid corrected ring may use only the bounded line-only recovery described above, without determining a radius. c(r) stays at distance exactly r from both lines for every r, which is verified in rational arithmetic (`test_exact_fillet_centre_is_tangent_to_both_lines_for_every_radius`). Over 300 noisy scalar-model trials this constrained fit has less than half the spread of a free three-parameter arc (`test_tangent_constrained_fillet_fit_is_more_precise_than_a_free_arc`).
   - When a changed radius moves a constrained arc's centre, its angular sweep witness moves with it. This prevents an unintended switch to the complementary sector while preserving genuine major arcs; [the regression record](validation/fillet-sweep.md) separates this representation repair from remaining blur-model mismatch.
   - Between parallel lines the arc becomes a slot end cap: radius half the spacing, which blur does not bias, and centre on the mid-line. The centre's place along the slot is then fitted with that radius fixed, to the blurred radius r − s(r) and without the points within 2.5 σ of the tangent points (`fitting._end_cap_axial`). It used to come from the arc's free three-parameter fit. Over a half turn the free fit couples the centre's axial place with its own radius: the Fisher information gives the axial centre a variance of 1/(½ − (2/π)²) = 10.6 noise units, against 2 with the radius fixed, 2.3 times the standard deviation. On blurred slot outlines with correlated noise the slot length's spread fell from 0.032 to 0.017 px, and with one whole side moved out by 0.1 px the length is 0.064 px off, where it was 0.104 px (`test_slot_end_caps_are_placed_with_their_radius_fixed`). On a thick part the two flanks of a cap differ, one traced on the top edge and one beside a visible wall, which had moved the free fit's centres apart: the 24 × 8 slot read 0.018–0.022 mm long at 5° and 9° tilt.
   - Radii within 3 % become equal.
@@ -429,9 +475,9 @@ The same full-frame photos cannot be traced without a reference at all ("The out
 - Vertical walls of constant thickness. Chamfers, draft, countersinks and shiny edges are not modelled. Where even one tone shared by the narrow walls is not determined (§5), an edge may read up to 0.2 σ into the part. Overhead with no known focal length, qualifying off-center holes assumed round can determine camera height if the search accepts a sufficiently identifiable minimum (§5). Otherwise a typical lens is assumed. One earlier rendered example was 0.10 mm off with that assumption; this is not a general error bound.
 - Fitted lines, arcs and circles are descriptions of the photograph, not recovered design intent; review the snap list. Split output uses the traced polygon.
 - A run of short straight facets that stays within about 1.5 × tolerance of one circle is fitted as an arc, and so is a flat shorter than an arc's longest chord that runs tangentially off its end: neither can be told from that arc's own chords (§7). A large-radius corner whose traced edge wanders from its circle by more than half the tolerance over one chord is not recognised as one arc, and its outline stays a polyline.
-- With snapping on, a sharp corner between two fitted edges is traced sharp by the exact corner model (§4). Otherwise it is fitted as an arc of about 1.8 times the edge blur, 0.5 mm at a 0.3 mm blur. That arc is the blur's rounding, not the part's. Where it is not accepted as a tangent fillet, the radius correction of §4 enlarges it about its centre, it stands proud of its two edges, and the outline reads 0.04 to 0.1 mm large across it.
+- With snapping on and a supported common Gaussian frame, a sharp corner between two fitted edges can be traced sharp by the corner model (§4). Mixed scalar corners retain only a warned, radius-undetermined approximation; mixed supplied-covariance corners are withheld. An unconstrained fit to a blurred sharp corner can instead produce an arc about 1.8 times the edge blur, 0.5 mm at a 0.3 mm blur in an earlier example. That arc is the blur's rounding, not the part's. The generic radius correction of §4 can enlarge it about its centre and leave it proud of the neighboring edges; the earlier outline error was 0.04–0.1 mm across that corner.
 - A straight edge shorter than `min_line` is a line only as part of a longer one. A chamfer under `min_line`, or a short flat between two arcs that a breakpoint cuts in two, is fitted as an arc of a radius far larger than anything in the part (§7).
-- A fillet at a wide corner is barely constrained by its outline (at 150° the outline moves 0.035 times a change of radius). The trace names radii it cannot determine and corners it traced sharp, with a bound; measure those if they matter. With snapping off, short free arcs at such corners are not corrected, only named.
+- A fillet at a wide corner is barely constrained by its outline (at 150° the outline moves 0.035 times a change of radius). The trace names radii it cannot determine and corners it traced sharp, with a conditional model-resolution estimate; measure those if they matter. With snapping off, short free arcs at such corners do not use the full corner forward fit. The generic circular-edge series is still applied and those arcs are named in the notes; that approximation does not remove the corner-model mismatch.
 - The fillet uncertainty assumes a Gaussian blur and a 0.03 px systematic edge error; a real lens's blur is not exactly Gaussian.
 - A blur whose principal spreads differ by more than 15 % is measured as a covariance and traced by direction when edges face at least three ways and the covariance explains each (§3). A part whose edges face two ways keeps one width, and under a blur turned from its edges it is not corrected (a sharp-cornered rectangle under 3 × 1 px turned 30° reads 0.079 mm off). Under a soft shadow and a blur wider than about 0.35 mm the shadow's slope is fitted where its light is curved, and hole positions can read 0.02–0.03 mm off. A blur that varies across the photo and sharpening are not modelled; every case here comes from this repository's renderer.
 - Initial circle/piece fits require [source support](#7-lines-arcs-and-circles). Sparse, unsupported or over-budget fits retain the polyline. Later design-intent and Gaussian corrections remain model-dependent; the support test does not certify their physical accuracy.

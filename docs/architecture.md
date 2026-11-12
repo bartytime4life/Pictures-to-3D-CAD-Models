@@ -56,11 +56,11 @@ describes the separate synthetic inverse and higher-order mismatch inputs.
 Reference-sheet analysis mixes decoded sRGB channels in linear light, rectifies
 with Keys sampling into float32, then smooths by Gaussian sigma 0.7 px. The
 directional rise-width covariance belongs to this rectified field. Normal-specific
-widths drive edge/wall localization; the scalar `(det S)^¼` drives general
-blur/fillet fitting, while slot-end placement also consumes the covariance.
-The nonparallel corner forward model remains isotropic. Neither the rank-three
-guard nor positive definiteness converts these empirical widths into a calibrated
-camera PSF; [the tracing guide](reference-sheet.md#3-segmentation-and-sub-pixel-edges)
+widths drive edge/wall localization. Supported nonparallel fillets now use the
+full covariance, transported into their corrected frame; free arcs/circles keep
+the scalar `(det S)^¼` correction, and slot ends keep a directional approximation.
+Neither numerical rank, model convergence nor positive definiteness converts
+these empirical widths into a calibrated camera PSF; [the tracing guide](reference-sheet.md#3-segmentation-and-sub-pixel-edges)
 defines the boundaries.
 
 Geometry detail is a geometric approximation applied to the scaled profile. `original` retains it; `draft`, `balanced`, and `fine` use simplification tolerances of 0.5, 0.25, and 0.1 times the selected nozzle diameter in millimeters, respectively. The simplification preserves topology and checks that every hole remains. The modes can still change small features and must be inspected; they do not recover image information, measure minimum wall thickness, or prove printability. The original trace remains the recipe's source profile.
@@ -87,10 +87,13 @@ Returns API health information. A successful health response establishes service
 
 ### `GET /api/printers`
 
-Returns the bundled pinned printer catalog. The frontend loads it when the
-design/print panel needs it; this route does not refresh upstream profiles or
-identify the connected printer. Hardware facts absent from the source stay
-unknown. See the [catalog and importer contract](printer-catalog.md).
+Returns the bundled pinned printer catalog with source metadata, grouped
+models, nozzle-specific profiles and known/unknown feature facts. The frontend
+loads it when the design/print panel needs it. The endpoint reads local data;
+it does not refresh upstream profiles or identify the connected printer.
+Hardware facts absent from the source stay unknown. See the
+[catalog and importer contract](printer-catalog.md) for profile inheritance,
+bed shapes, exclusions and provenance.
 
 ### `POST /api/trace`
 
@@ -122,6 +125,60 @@ coverage points and indices are not new API fields. The build API's separate
 not recover agreement with source observations that were already discarded.
 With thickness correction, `reference.focal_source` can be `sheet`, `exif`,
 `assumed` or `holes`; the last records an accepted hole-roundness inference.
+
+### Directional covariance at nonparallel corners
+
+`edges.edge_covariance` supplies an empirical covariance in rectified measurement
+pixels squared. For supported nonparallel fillets, `fitting.corner_level` whitens
+that Gaussian and transforms the corner's ray geometry with it. The numerical
+fit has bounded convergence checks; it does not certify the physical blur model.
+The scalar path remains when no covariance is supplied, while failure of a
+supplied-covariance corner fit has no scalar replacement.
+
+`reference.trace_on_sheet` carries the thickness map's per-point scale into the
+fit. A uniform scale `k` transforms covariance to `k² S`; mixed support in a
+supplied-covariance corner or an unresolved covariance fit marks that boundary
+for traced-outline recovery before generic blur correction and radius equalization. If that
+corrected source ring is invalid, `_geometric_source_polyline` may instead use
+an already supported initial fit, frozen before those modifications and sampled
+as lines. It requires one valid positive-area ring, the existing vertex cap and
+bidirectional whole-boundary containment within the existing geometric-fit
+tolerance `max(0.03 * ppm, 0.15 * sigma)` in rectified pixels. It does not add
+outward padding, increase the standard `0.05 mm` polyline-detail tolerance,
+run a generic topology-repair operator, delete components or infer a radius.
+The invalid source has no accepted polygon topology; tube proximity does not
+certify the intended one. Final profile validation still applies, and an absent
+or rejected candidate preserves normal profile refusal.
+
+Other supported rings can still be fitted. Reference notes and warnings name
+the nearby polygonal recovery and undetermined radius. The covariance is not a
+new client-supplied trace option or a camera-calibration status. See the
+[corner model and recovery limits](anisotropic-corners.md#when-the-corrected-source-ring-is-invalid),
+including the separate free-arc and slot-cap approximations.
+
+### Blur frames for free curves and slot caps
+
+`reference.trace_on_sheet` also passes point-bound thickness scales to
+`correct_blur`, `fit_fillets` and `refit_lines`. A uniform support scale `k`
+transports scalar spread by `k` and covariance by `k²`, including the existing
+free-curve radius series and scalar/directional slot-cap placement. Free arcs
+use their own cyclic support spans, circles use the whole ring, and constrained
+caps include the neighboring lines' context. The line-refit exclusion margin
+uses the maximum scale over that line's support, with a small arithmetic tie
+guard at window boundaries.
+
+Mixed free curves, caps and scalar-only nonparallel corners retain the legacy
+geometry approximation, marked internally by `blur_frame_mixed`. Mixed scalar
+corners carry infinite `r_sd` and no sharp-bound/deletion claim; mixed
+supplied-covariance nonparallel corners remain withheld under the existing
+recovery policy. An unusable mixed scalar radius retains the initial positive
+finite geometric arc with `blur_correction_withheld`, skipping another generic
+blur correction; without an eligible initial arc it remains unresolved.
+A visible note is added only when marked geometry survives
+into the described fitted boundary. This is not an averaged Gaussian frame or
+an uncertainty estimate. No new polygon-cleanup policy is introduced. The
+[blur-frame guide](blur-frames.md) records the homogeneity equations, support
+rules and numerical limitations.
 
 ### `POST /api/build`
 
@@ -158,10 +215,6 @@ Proposals may contain supported trace controls and design/print settings, includ
 There is no image, outline, or mesh payload, model-download endpoint, generated-code execution, or cloud fallback. Ollama must already have the selected local model installed. See [local AI setup and controls](ollama.md).
 
 The status endpoint returns HTTP 200 with `running: false` when Ollama is unavailable. Chat failures use 503 for an unavailable service, 409 for an unavailable or unsupported model, 429 for a busy assistant, 504 for a timeout, and 502 for an unusable upstream response. Cloud names and remote-model metadata are rejected; a model is checked again before inference. Generated prose still requires human review.
-
-### `GET /api/printers`
-
-Returns the bundled, versioned printer catalog with source metadata, grouped models, nozzle-specific profiles, and known/unknown feature facts. The endpoint reads local data rather than querying a hosted printer service. See [catalog provenance and contract](printer-catalog.md) for how profile inheritance, bed shape, exclusions, and unknown hardware capabilities are represented.
 
 ### Published companion library
 
