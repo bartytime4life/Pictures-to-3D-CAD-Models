@@ -19,6 +19,13 @@ Use the visible error message and the **Next step** guide to identify the action
 
 ## Scale and geometry problems
 
+An unexpectedly large circular fit can be a known fitting limitation rather
+than a units error. A thin circular segment can be accepted as a whole circle;
+small fit residuals and a valid exported solid do not rule it out. Compare the
+source and fitted boundary, and use ordinary tracing with measured scale or
+rebuild the critical features in CAD if they disagree. Turning off design-intent
+snapping does not disable whole-circle fitting. See the [reproduction and scope](validation/scientific-model-review.md#whole-circle-extrapolation).
+
 | Symptom | Likely cause | Next action |
 | --- | --- | --- |
 | Width is correct but height is wrong | Perspective, image distortion, or a reference width that does not match the full horizontal span. | Review [calibration](capture-guide.md), retake front-on, and compare a second physical measurement. |

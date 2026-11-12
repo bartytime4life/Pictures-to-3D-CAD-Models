@@ -7,7 +7,13 @@ original counts and environment; they are not later retests.
 
 ## Current workbench evidence — November 11, 2026
 
-The documentation refresh initially reviewed `main` at
+The latest documentation follow-up reviews `main` at
+`5588a523c70e1797341329e54d056c161d0361ad`, after PR #39. Its
+[scientific model review](validation/scientific-model-review.md) records new
+counterexamples and documentation checks, without changing runtime behavior or
+claiming the proposed fixes are implemented.
+
+The earlier documentation refresh initially reviewed `main` at
 `76f03fce60c2a9193501e73f3e4d4ad85bbcf554` after PR #36, then incorporated
 PR #37's shadow correction at `567b5bdd36cbc2ab6b666b9514c84e7764a07445`.
 It changes guides relative to that integrated baseline, not runtime behavior.
@@ -16,6 +22,8 @@ It changes guides relative to that integrated baseline, not runtime behavior.
 | --- | --- | --- |
 | Recorded camera-height checks | Branch `claude/camera-height`, on the narrow-wall commit: **508 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#camera-height-from-the-holes-roundness--november-11-2026) | Local result; synthetic photos and exact silhouettes |
 | Recorded narrow-wall and blur-sampling checks | Branch `claude/narrow-walls` on `5588a52`: **505 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#near-frontal-wall-tone-and-cubic-blur-measurement--november-11-2026) | Local result; synthetic photos and exact profiles, including what got worse |
+| Scientific documentation follow-up | [Findings and checks](validation/scientific-model-review.md), baseline `5588a52` | Circle fitting-stage and full-tracer directional-blur counterexamples, benchmark aggregation fixture, current guide corrections; not real-photo or physical qualification |
+| Zero-blur fallback | PR #39, code `d02a593`; the existing targeted regression passed in this follow-up | One test of median-level fallback; not a new full Python/browser suite or measured low-contrast-photo validation |
 | Recorded shadow-correction checks | `bbd665bec6c0d32b8ed950c69d2c102e5f7b00ce`: **501 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#edge-levels-follow-a-shadows-slope--november-11-2026) | Upstream local result, not rerun for this documentation change; synthetic photos, including the reported near-frontal regression |
 | Earlier guided-workbench checks | Guided code `900999b119eb3688ed75ed4212902c185023454b`: **498 Python tests**, **74 frontend/browser tests**, build and lint passed | Real local CAD backend; synthetic inputs and explicit AI response fixtures; before PR #37 |
 | Hosted guided-workbench CI | PR head `aa556cfc75c3fe23a3b68e12be8973bf88705d7a`: [Validate workbench run 88](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43120297057) completed successfully | That exact revision, separate from later tracing and documentation CI |

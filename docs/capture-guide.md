@@ -41,10 +41,17 @@ This is the recommended capture. Lay the part flat on a sheet of known size, wit
 - **Keep the sheet flat.** A curled or creased sheet breaks the straight edges used to correct the lens and the plane used for scale.
 - **Enter the thickness.** For a thick part, the camera sees some of its side walls. Building re-traces the available photo when the entered thickness differs from the trace's thickness record, applying the side-wall/parallax model. A restored recipe contains no photo, so re-upload it to recompute that correction for a different thickness. A photo tilted about 10–20° gives the most reliable correction. Straight overhead, the walls are too narrow to measure one by one. Their tone is then estimated jointly from all of them, and the trace says so. Where even that is not determined, an edge facing the camera may read up to 0.2 × the edge blur into the part, and the trace says that instead. Overhead, the thickness correction also needs the camera's height, which the sheet does not give in a straight-down view. Without the focal length in the photo's metadata, it is estimated from the holes' roundness, which needs round holes away from the middle of the photo; failing that a typical phone lens is assumed, which can leave the outline about 0.1 mm off.
 - **Contrast.** A dark part on white paper is typical. For a light part, use a dark sheet on a lighter surface and tick **Light part on a dark background**.
-- **Soften the light.** A shadow beside the part moves its edges outward, by more as the shadow gets darker. In the rendered tests, a shadow that removes about half the light next to an edge costs up to 0.05 mm on a hole's diameter. The effect grows with the square of the edge blur, so a sharp photo helps too. Use diffuse light from above, not a single lamp to one side.
+- **Soften the light.** Use diffuse light from above. The tracer compensates a locally linear paper-side shadow slope, but a hard or curved shadow inside the sampled edge band is corrected only in part. The [method and rendered results](reference-sheet.md#3-segmentation-and-sub-pixel-edges) describe the tested cases; they do not bound every shadow or camera's sharpening.
 - **Use the photo as the camera saved it.** Edges are measured after undoing the standard sRGB tone curve. Filters and edited brightness or contrast change that curve and move the edges.
 
 With a sheet the width field is filled from the sheet. Measure the part's real width anyway, and compare: it is now an independent check, not the scale. A successful sheet trace reports the fitted geometry (circles, arcs, lines), design-intent snaps, measured edge blur, lens correction and proportions check. These are model evidence, not a real-photo accuracy guarantee. See [reference-sheet tracing](reference-sheet.md) for the method and its evidence.
+
+Compare every fitted boundary with the photograph. A thin curved segment can
+currently be mistaken for a whole circle, and directional blur can bias accepted
+geometry without a dedicated warning. These [known limits](validation/scientific-model-review.md)
+are not resolved by changing the design-intent snapping setting. For an incorrect
+fit, use ordinary silhouette tracing with a measured scale or reconstruct the
+critical features in CAD, then check the dimensions independently.
 
 ## Set the scale
 

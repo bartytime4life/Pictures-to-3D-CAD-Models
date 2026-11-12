@@ -28,8 +28,9 @@ Reference entry also includes an [endpoint-placement sensitivity explorer](refer
 | Manual profile correction | Repair a small tracing error without retaking the photo | Undo/redo, topology validation, accessible editing, consistent export revisions |
 | Lens and perspective correction | Improve suitable off-axis captures | **Implemented for reference-sheet photos** (one radial coefficient, plane homography, top-face parallax; [method](reference-sheet.md)). Still needed: measured accuracy on reference parts and real phones, tangential/k₂ lens terms, edge levels for shadows that are not linear near an edge (linear paper slopes are now followed), a check of real cameras' tone mapping against the sRGB decoding, and a camera height for near-frontal photos of parts without round holes (with round holes it now comes from their roundness, and the narrow walls' tone is estimated jointly) |
 | Parametric CAD recipes | Make more of the construction editable downstream | A defined feature schema, stable regeneration, and version migration |
-| Analytic line and circle fitting | Replace suitable traced approximations with editable geometric features | **Implemented for reference-sheet photos**, with residual gates, a reported and optional snap list, and polyline fallback. Still needed: per-item snap review, fitted geometry for split output and for photos without a sheet, per-dimension uncertainty |
-| Measured-photo benchmark | Quantify error on real parts | **The runner is implemented** (`make photo-benchmark`; [guide](photo-benchmark.md)): per-dimension error, repeat-shot spread, and a split into scale error and edge offset. Still needed: calipered parts photographed with real phones under stated conditions, and their recorded results |
+| Analytic line and circle fitting | Replace suitable traced approximations with editable geometric features | **Implemented for reference-sheet photos**, with residual gates, a reported and optional snap list, and polyline fallback. First address the [whole-circle support gap](validation/scientific-model-review.md#whole-circle-extrapolation). Further work: per-item snap review, fitted geometry for split output and for photos without a sheet, validated per-dimension uncertainty |
+| Measured-photo benchmark | Quantify error on real parts | **The runner is implemented** (`make photo-benchmark`; [guide](photo-benchmark.md)): conditional per-dimension error, observed spread, and a two-term scale/edge diagnostic. First address greedy matching and missing failed-photo denominators. Still needed: independently evaluated, calipered parts photographed with real phones under predeclared crossed conditions and reserved checks |
+| Directional blur and independent simulation | Expose model mismatch before applying unsupported corrections | Exploratory anisotropic renders exceed existing guards. Needed: directional/spatial blur diagnostics, an identifiable model, an independent radial inverse, separate forward rendering and held-out real captures; [research record](validation/scientific-model-review.md) |
 | Measured local-model selection | Choose the smallest assistant that gives useful advice quickly | Installed artifact/license verification, repeatable latency results, and human review of fixed project-specific cases |
 | Opt-in vision guidance | Give capture advice based on the actual photograph | Explicit image-sharing control, a verified local vision model, resource bounds, and evaluation against visible evidence |
 | Assembly-aware splitting | Add useful joints or locating features between pieces | Measured clearance/kerf, topology checks, validated joinery, and explicit assembly assumptions |
@@ -41,6 +42,12 @@ Reference entry also includes an [endpoint-placement sensitivity explorer](refer
 
 Before expanding the scope, keep the current workflow dependable: verify supported imports, hole topology, dimensional conversion, exports, outdated-result handling, failure recovery, keyboard access, and responsive behavior. Update the user guide when behavior changes, and record failures as well as passes.
 
-Prioritize repeatable ground-truth capture and native slicer qualification next. Manual profile correction follows when undo, topology checks, and accessible editing are scoped together. Multiview reconstruction and multi-user hosting require separate designs and resources. These priorities carry no delivery dates or assigned owners.
+Prioritize the reproduced circle-support and benchmark-coverage defects, then
+independent model-mismatch experiments and repeatable ground-truth capture.
+Native slicer qualification remains a separate handoff task. Manual profile
+correction follows when undo, topology checks, and accessible editing are scoped
+together. Multiview reconstruction and multi-user hosting require separate
+designs and resources. These priorities carry no delivery dates or assigned
+owners; proposed guards and algorithms are not current capabilities.
 
 Do not label a release manufacturing-accurate, fully parametric, production-secure, or universally accessible without evidence supporting that specific claim.

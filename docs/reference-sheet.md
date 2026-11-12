@@ -22,6 +22,13 @@ The accuracy figures here come from **synthetic photographs** with exact ground 
 
 Real lenses, paper tolerance, a curled sheet, chamfered or shiny edges introduce model mismatch that these renders do not establish a bound for. These figures report observed errors under the tested rendering conditions, not a universal error floor or a physical accuracy claim. A measured-photo benchmark with calipered parts and real phones remains necessary; [the photo benchmark](photo-benchmark.md) runs one on your own photos, and no result from real photos is recorded yet. Use [independent engineering checks](engineering-model.md) for dimensions reserved from calibration.
 
+The renderer also calls the production radial inverse, `sheet.undistort_radius`.
+Those lens cases check consistency within a shared model, rather than an
+independent camera oracle. The [scientific model review](validation/scientific-model-review.md)
+records this dependency, a fitting-stage extrapolation failure and exploratory
+directional-blur failures. These findings remain unresolved at the reviewed
+revision; the existing tables below retain their original conditions.
+
 ## Pipeline
 
 ```text
@@ -95,7 +102,14 @@ This is checked at 16 phases by `test_half_level_crossing_on_symmetric_blur_is_u
 
 **Two passes.** Pass 1 starts from boundary-pixel centres, about half a pixel inside one side, so its level windows are asymmetric. That grew holes by about 0.09 px at σ = 2 px. Pass 2 re-centres every point, with windows beyond 3.5 σ on both sides.
 
-**Edge blur.** σ is the 25–75 % rise distance divided by 1.349 (the Gaussian value), taken as the median over the outer boundary. Its profiles are read by Keys cubic sampling (`sheet.sample_keys`, the kernel of §2). Bilinear sampling, used here before 2026-11-11, blurs what it reads by a variance of f(1 − f) at sub-pixel phase f, 1/6 px² on average, so it measured about √(σ² + 1/6). On exactly blurred straight edges at 0–45° and four phases it read σ 2.2–4.2 % high at 1.6 px and up to 8.4 % at 1.2 px. Cubic sampling measures the blur, a pixel's own box included, within 0.6 % and 2.3 % (`test_edge_blur_is_measured_without_the_samplers_own_blur`). Every model that takes σ, from the exact corner of §4 to the wall model of §5, had been given the larger blur.
+**Edge blur.** σ is the 25–75 % rise distance divided by 1.349 (the Gaussian value), taken as the median over the outer boundary. Its profiles are read by Keys cubic sampling (`sheet.sample_keys`, the kernel of §2). Bilinear sampling, used here before 2026-11-11, blurs what it reads by a variance of f(1 − f) at sub-pixel phase f, 1/6 px² on average, so it measured about √(σ² + 1/6). On exactly blurred straight edges at 0–45° and four phases it read σ 2.2–4.2 % high at 1.6 px and up to 8.4 % at 1.2 px. Cubic sampling measures the blur, a pixel's own box included, within 0.6 % and 2.3 % (`test_edge_blur_is_measured_without_the_samplers_own_blur`). Every model that takes σ, from the exact corner of §4 to the wall model of §5, had been given the larger blur. The reported `edge_blur_mm` is a Gaussian-equivalent edge spread, not a complete measurement of the point-spread function. It does not describe directional or spatial variation. Even isotropic blur in the camera image can become anisotropic and vary across the rectified plane.
+
+If no sampled profile meets the blur estimator's contrast requirement, it returns
+zero. The edge search then keeps the median-level method instead of attempting
+the sloped Gaussian calculation with a zero divisor
+(`test_a_zero_blur_estimate_keeps_the_median_level_search`, added in PR #39).
+Zero here means the blur was not estimated; it does not prove a perfectly sharp
+edge or establish that the Gaussian corrections are physically supported.
 
 **Shadows.** A soft shadow makes the paper brighter away from an edge, with slope b per pixel. The blurred profile at the edge is (a + b₀)/2 + b σ/√(2π) for part light a and paper light b₀ at the edge. The level taken from the profile's ends, whose medians lie at 85 % of the half-window H, is (a + b₀ + 0.85 b H)/2. The crossing therefore moves out of the part by b (0.425 H − σ/√(2π)) divided by the edge's slope, about 2.7 σ² b / (b₀ − a) for H = 3.5 σ (`test_a_sloped_plateau_shifts_the_half_level_by_the_predicted_amount`).
 
@@ -272,6 +286,15 @@ Over 200 random cameras, the focal length is invariant and the ratio equals a/b 
 
 ## 7. Lines, arcs and circles
 
+**Known whole-circle support gap.** A small residual alone does not establish
+that a closed contour covers a whole circle. At the reviewed revision, a thin
+circular segment can pass the circle gate and be replaced by a much larger full
+circle, without a radius warning. The [stage-level reproduction](validation/scientific-model-review.md#whole-circle-extrapolation)
+records the input, result and limits of that evidence. Compare the fitted
+boundary with the original photograph, including long straight closing edges;
+the later validity check of a fitted solid does not test this lost source
+agreement. The support guard proposed in that record is not implemented.
+
 - **Circles.** A Kåsa algebraic fit, then Gauss–Newton on geometric distance. A circle is accepted when its RMS residual is below max(tol, 1 % r) and its largest residual below four times that. The 1 % allowance keeps a slightly out-of-round hole a circle, but a rounded polygon can pass it too: a 12-gon on a 45 mm circle with R12 corners lies 0.39 mm RMS from one circle, eight times the line tolerance. A ring that passes only by that allowance is therefore also described as lines and arcs, and that description wins when it has straight edges and its worst residual is under a third of the circle's (`test_a_rounded_polygon_close_to_a_circle_is_not_taken_for_one`). A disc, and a hole 2 % out of round, stay circles. Noise-free arcs of 20–360° are recovered exactly, and the fit is equivariant under rotation, translation and scale (`test_circle_fit_is_exact_and_similarity_equivariant`). Its radius bias over 2000 noisy circles is within σ²/R + 4 standard errors (`test_geometric_circle_fit_bias_is_second_order_in_noise`).
 - **Lines and arcs.** Douglas–Peucker breakpoints at 1.5 × tolerance split each ring. Breakpoint edges of at least `min_line` (2.5 % of the part, clamped to 1–3 mm) with a total-least-squares RMS below tolerance are taken as lines, unless they turn out to be chords of an arc (next item). Consecutive line edges that still fit one line are merged, and runs between lines become arcs. An "arc" between two lines running the same way is a noise bump and is merged into one line. Points within tolerance of a neighbouring line are trimmed before an arc's fit, because tangent-region points pull its centre. An arc too small to trim that way gives the straight run at each end back to its line (the item after next). Rings that cannot be described within tolerance stay as traced polylines.
 - **Chords that pass for lines.** A chord of length c on an arc of radius R bows c²/(8R) from the arc, and a breakpoint is placed only where that exceeds 1.5 × tolerance. Breakpoints therefore leave chords of up to √(12 R tol), and those chords are straight enough to pass the line test. Once √(12 R tol) reaches `min_line`, an arc would be cut into short straight pieces. With `min_line` at 3 mm that is from R25 at the 0.03 mm tolerance floor and from about R15 at a 0.34 mm blur. On a part under 40 mm across, where `min_line` is 1 mm, it is from about R3.
@@ -341,3 +364,5 @@ The same full-frame photos cannot be traced without a reference at all ("The out
 - A straight edge shorter than `min_line` is a line only as part of a longer one. A chamfer under `min_line`, or a short flat between two arcs that a breakpoint cuts in two, is fitted as an arc of a radius far larger than anything in the part (§7).
 - A fillet at a wide corner is barely constrained by its outline (at 150° the outline moves 0.035 times a change of radius). The trace names radii it cannot determine and corners it traced sharp, with a bound; measure those if they matter. With snapping off, short free arcs at such corners are not corrected, only named.
 - The fillet uncertainty assumes a Gaussian blur and a 0.03 px systematic edge error; a real lens's blur is not exactly Gaussian.
+- A single median blur width does not characterize directional blur. Exploratory anisotropic renders exceed some of the existing regression guards while producing accepted profiles; [conditions and results](validation/scientific-model-review.md#directional-blur) are recorded separately from the original synthetic tables.
+- Whole-ring circle acceptance currently lacks a source-coverage check. A fitted circle can extrapolate far beyond a thin closed contour, and the radius notes need not flag it. See the [known support gap](#7-lines-arcs-and-circles).

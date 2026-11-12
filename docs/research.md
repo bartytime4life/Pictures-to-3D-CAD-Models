@@ -40,6 +40,34 @@ The reference-sheet stages are documented with their derivations and checks in [
 
 The blur–curvature series, its third-order coefficient (5/24), the two-step wall model and its degeneracy, the sheet-proportions check, the size of the tone-curve bias and the shift a sloped shadow causes were derived for this workbench and checked numerically; they are not taken from a cited source.
 
+### New findings and research candidates
+
+The [November 11 scientific model review](validation/scientific-model-review.md)
+records reproducible limitations at `5588a52`, their evidence level and acceptance
+checks for future changes. A thin circular segment can become a whole circle;
+directional blur can bias accepted geometry; and greedy benchmark matching can
+hide valid comparisons. These are unresolved findings, not new algorithms
+delivered by the documentation update.
+
+[Al-Sharadqah and Chernov's circle-fit analysis](https://arxiv.org/abs/0907.0421)
+compares geometric and algebraic fits with coordinate errors. It motivates
+examining estimator assumptions; it does not establish that a low-residual
+circle covers the photographed boundary. A source-support guard needs its own
+geometric counterexamples and regression tests.
+
+The synthetic lens renderer shares the production inverse. This is useful for
+model-consistency tests, but independent validation also needs separately
+implemented forward/inverse calculations and mismatched cameras. [Wirgin's
+discussion of inverse crimes](https://arxiv.org/abs/math-ph/0401050) explains the
+problem of reusing the same model to generate and invert test data.
+
+Automatic tone recovery is a research candidate, not a reliable default for an
+arbitrary part photo. [Lin, Gu, Yamazaki and Shum's single-image method](https://www.gujinwei.org/research/radiocalib/index.html)
+uses selected RGB-edge distributions and a response prior; its project record
+requires enough edges spanning the intensity range. A scene dominated by one
+part color and one paper color need not supply that evidence. The current
+pipeline continues to decode sRGB under its stated assumption.
+
 ## Outline to solid and exchange files
 
 [CadQuery examples](https://github.com/CadQuery/cadquery/blob/master/doc/examples.rst) demonstrate profile extrusion and holes. This provides a direct, inspectable path from a valid planar boundary to a solid with a supplied thickness.

@@ -6,6 +6,12 @@ Every accuracy figure in this repository so far comes from rendered photographs.
 
 Everything runs on your computer. Each photo goes through the same function as an upload to the workbench, so the report describes what the workbench would give you.
 
+The current report's error statistics cover matched dimensions from successful
+traces. Failed photos are listed separately, but their expected dimensions do
+not enter the dimension totals. Size matching is greedy and can miss a valid
+assignment. Read the [coverage and matching limits](#coverage-and-matching-limits)
+before interpreting a small reported error as overall performance.
+
 ## What you need
 
 - One or more flat parts of constant thickness, each with a few dimensions you can measure well.
@@ -37,7 +43,16 @@ Enter a repeated feature once per feature: four 6 mm holes are `[6.0, 6.0, 6.0, 
 
 Follow [the capture guide](capture-guide.md#photograph-the-part-on-a-reference-sheet): the whole sheet in view, a contrasting surface around it, diffuse light, the photo as the camera saved it.
 
-Take at least three shots of each part, and pick the part up and put it down between shots. The spread between repeat shots is half of what this benchmark measures. To learn what a condition costs, change one thing at a time between sets (tilt, light, distance, phone) and give each set its own entry in the file.
+Take at least three shots of each part, and pick the part up and put it down between shots. Record tilt, light, distance, phone and processing settings outside the manifest; the runner has no fields for these conditions. Keep each condition in a separately named part entry.
+
+Changing one factor at a time can help diagnose an obvious problem, but it does
+not test interactions. For a small planned study, cross two modest tilts with
+two lighting conditions and repeat each combination, keeping part, distance and
+phone fixed. Choose the settings and evaluation dimensions before adjusting the
+algorithm, vary capture order, and reserve fresh views and dimensions for a
+final check. This is a proposed study, not a completed experiment or a powered
+accuracy qualification. [NIST's experimental-design guidance](https://www.itl.nist.gov/div898/handbook/pri/section2/pri212.htm)
+explains why one-factor studies miss interactions.
 
 ## 4. Write `benchmark.json`
 
@@ -67,7 +82,7 @@ Put the photos in one folder with a `benchmark.json` beside them:
 | Setting | Meaning |
 | --- | --- |
 | `sheet` | `"a4"` (the default), `"letter"`, or the sheet's measured `[width, height]`. A part may carry its own `sheet`. |
-| `caliper_uncertainty_mm` | Your calipers' stated accuracy; 0.03 if left out. Mean errors beyond it are printed in bold. |
+| `caliper_uncertainty_mm` | A numeric comparison threshold in mm; 0.03 if left out. Mean errors beyond it are printed in bold. Record separately whether your entered specification is an accuracy limit, absolute bound or standard uncertainty. The runner does not distinguish them or propagate a measurement uncertainty budget. |
 | `name` | A label for the report. Parts need different names. |
 | `photos` | File names or patterns, relative to the folder. |
 | `thickness_mm` | The part's thickness. With it, the trace removes the visible side walls, as **Build** does in the workbench. Leave it out for a part thin enough to ignore. |
@@ -75,6 +90,13 @@ Put the photos in one folder with a `benchmark.json` beside them:
 | `measured` | The measurements of step 2. |
 
 A misspelt setting is refused by name, so a typing error cannot silently drop a measurement.
+
+The generated report currently calls this threshold the calipers' uncertainty
+and says smaller errors cannot be distinguished from it. That sentence is not
+a statistical decision rule: no coverage factor, calibration contribution or
+reference-measurement model is evaluated. Keep the instrument specification and
+measurement procedure with your study. [NIST's terminology](https://www.nist.gov/pml/nist-technical-note-1297/nist-tn-1297-appendix-d1-terminology)
+distinguishes accuracy, uncertainty and repeatability.
 
 ## 5. Run it
 
@@ -125,28 +147,71 @@ This report is the `--example` folder: three **rendered** photos of the test pla
 
 **The dimension table.** An error is the traced value minus your caliper value.
 
-- **Mean error** is the bias: what stays wrong however often you shoot.
-- **Spread** is the sample standard deviation of the row's errors. For one feature it is the repeat-shot spread. For a row of several equal features (×4) it also holds the differences between them.
+- **Mean error** is the observed mean signed error for the matched samples. A small study does not establish the population bias or show which physical effect caused it.
+- **Spread** is the sample standard deviation of the row's errors. For one identifiable feature it describes the observed repeat-shot spread. For a row of several equal features (×4) it also includes differences between them; snapping and common calibration can correlate the readings. Twelve readings of four holes in three photos are not twelve independent captures.
 - **Worst** is the largest single error, with its sign.
-- **Not found** counts caliper values for which a photo's trace held no feature of that kind within 1 mm or 15 %, whichever is larger. A hole that did not trace, or traced as an outline and not a circle, lands here. It is never dropped silently.
+- **Not found** counts unmatched expected dimensions within successful traces. The size gate is 1 mm or 15 %, whichever is larger. A missing circle, or a hole described as a non-circular opening, can land here. Greedy assignment can also leave a dimension unmatched even when a full assignment exists. Dimensions from completely failed traces are absent from this count.
 
-**Scale error and edge offset.** Each photo's errors are split into two causes by least squares:
+**Scale error and edge offset.** Least squares fits a two-term diagnostic to each photo's matched errors:
 
-- A **scale error** changes every dimension in proportion to its size. It points at the sheet's entered size or the perspective correction.
-- An **edge offset** is a boundary found off the true edge. It grows outside dimensions and shrinks holes by twice the offset, and leaves centre distances alone. It points at blur, shadow, the camera's tone curve, or an edge that is not a sharp vertical wall.
+- The **scale term** changes every dimension in proportion to its size. A wrong sheet size or perspective error could produce this pattern, but the fit does not identify the cause.
+- The **edge term** grows outside dimensions and shrinks holes by twice the offset, and leaves centre distances alone. Blur, shadow, tone mapping or non-vertical walls could contribute to this pattern.
 
 The line gives their mean over the part's photos and their spread between photos. Radii take no part. The split is made only when a photo holds at least four dimensions that can separate the two: a mix of sizes, or of outside dimensions, holes and centre distances.
 
-**The photo table** shows which shot is the odd one out. In the example none is: every photo's worst error is about 0.015 mm. The trace notes, in the JSON report, still say what each photo relied on. In the overhead photo neither the sheet nor the metadata gave the focal length, so it was estimated from the holes' roundness; without round holes a typical phone lens is assumed, and a wrong camera height scales the top face's edges by the wrong amount (it left this photo's outline 0.10 mm short). **Sheet proportions** is the trace's own check of the sheet's shape against the entered size; a value above 1 % means the wrong sheet was chosen or a side was mistyped.
+The unexplained RMS is evaluated on the same samples used to fit these terms.
+It is an in-sample residual, not an independent prediction error or proof that
+the two terms capture all physical causes.
+
+**The photo table** shows which shot is the odd one out. In the example none is: every photo's worst error is about 0.015 mm. The trace notes, in the JSON report, still say what each photo relied on. In the overhead photo neither the sheet nor the metadata gave the focal length, so it was estimated from the holes' roundness; without round holes a typical phone lens is assumed, and a wrong camera height scales the top face's edges by the wrong amount (it left this photo's outline 0.10 mm short). **Sheet proportions** is the trace's own check of the sheet's shape against the entered size; a discrepancy whose magnitude exceeds 1 % calls for review. Sheet choice, entered size, camera-model or capture error may contribute; the sign can be negative and the check does not identify the cause.
 
 ## Limits
 
-- **Your measurements are the reference.** The benchmark cannot show an error smaller than your calipers' own, and a mistyped value looks like a tracing error.
-- **Features are matched by size.** A caliper value takes the nearest traced feature of its kind. Two different features of nearly the same size cannot be told apart, and a wrong match shows as a large error.
+- **Your measurements are the reference.** Instrument error, alignment, contact force and a mistyped value affect the comparison. A displayed difference below the entered threshold is not proof of agreement within a known uncertainty.
+- **Features are matched by size.** The runner sorts admissible pairs by absolute size error and greedily takes unused pairs. It does not solve a global assignment or establish physical feature identity. See the counterexample below.
 - **Calipers and the trace do not measure the same edge on every part.** Calipers close on the widest section. The trace follows the part's silhouette, formed by its top edge on some sides and its bottom edge on others, and assumes a vertical wall between them. A chamfer, draft, burr or a printed part's flared first layer therefore shows up as an edge offset.
 - **The outline is the smallest enclosing rectangle.** That equals a caliper reading only across parallel sides.
-- **Scale error and edge offset are a two-cause model.** A lens the single distortion coefficient does not describe, a curled sheet or a part that does not lie flat all end up in what the two leave unexplained.
-- **A few photos give a rough spread.** A standard deviation from three shots is uncertain by about half its value.
+- **Scale error and edge offset form a two-term model.** A lens the single distortion coefficient does not describe, a curled sheet or a part that does not lie flat can affect both fitted terms and the residual.
+- **A few photos give a rough spread.** Three shots do not establish stable tail errors or a confidence interval, particularly with pooled or correlated features.
+
+## Coverage and matching limits
+
+The median, 95th percentile and worst absolute error describe **only matched
+dimensions**. A bad reconstruction outside the size gate is unscored, and a
+failed photo contributes no dimension samples. Always retain the per-photo
+failures and unmatched counts beside these statistics.
+
+Count requested scalar dimensions from the manifest: two for `outline`, one per
+`diameters`, two per `openings` pair, one per `radii` and one per
+`centre_distances`. Multiply each part's count by its photo count and add across
+parts. Until the runner reports all denominators, record this conservation
+check separately:
+
+```text
+requested = compared + unmatched in successful traces
+                     + unavailable in failed traces
+```
+
+For example, two requested diameters across two photos create four comparison
+opportunities. If one photo fails and the other compares one diameter, the
+current summary can show `samples: 1, missing: 1`; it does not include the failed
+photo's two dimensions in `missing`.
+
+The matching defect is reproducible without photos:
+
+```python
+from scripts import photo_benchmark as pb
+assert pb.match([6, 7], [6.4, 5], pb._scalar_cost) == [0, None]
+```
+
+The greedy first choice is 6 → 6.4. It blocks 7, although 6 → 5 and 7 → 6.4
+both satisfy the unchanged gates. A future matcher should first maximize the
+number of admitted matches, then minimize total admitted error. Even that
+objective cannot prove physical identity for equal-size features. The gate is a
+correspondence heuristic, never a manufacturing or accuracy tolerance. The
+[scientific review](validation/scientific-model-review.md#benchmark-correspondence-and-coverage)
+records the proposed independent tests; this documentation update does not
+change the runner.
 
 ## What a report holds
 

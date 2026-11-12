@@ -3,6 +3,22 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Scientific documentation follow-up — November 11, 2026
+
+Reviewed `main` at `5588a523c70e1797341329e54d056c161d0361ad`, after PR #39.
+This follow-up changes documentation only.
+
+- Documented the median-level fallback when blur cannot be estimated. A zero
+  estimate does not establish a sharp edge.
+- Added a [scientific model review](validation/scientific-model-review.md) with
+  reproduced whole-circle extrapolation, directional-blur model mismatch and
+  benchmark correspondence/coverage limits. Proposed fixes remain future work.
+- Corrected benchmark interpretation: percentiles are conditional on matches;
+  failed photos omit dimension opportunities; pooled spread, the highlighting
+  threshold and fitted scale/edge terms do not establish physical uncertainty.
+- Updated capture, troubleshooting, engineering, research, contribution and
+  roadmap guidance; retained historical results at their original revisions.
+
 ## Documentation refresh — November 11, 2026
 
 Initially based on `main` at `76f03fce60c2a9193501e73f3e4d4ad85bbcf554`, then

@@ -55,6 +55,11 @@ test count is not a fresh result.
 - Separate source tests, browser behavior, hosted CI, installed-tool imports and
   physical measurements. AI fixture tests establish integration behavior rather
   than model quality. A valid CAD solid or bed footprint does not qualify a print.
+- For scientific changes, identify any shared production code or assumptions in
+  the synthetic generator. Reserve independent geometry, dimensions and capture
+  conditions for evaluation; retain failed traces and unmatched features beside
+  conditional error statistics. The [scientific review](validation/scientific-model-review.md)
+  gives current counterexamples and proposed acceptance checks.
 
 ## Submit a reviewable result
 
