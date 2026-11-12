@@ -33,6 +33,13 @@ retains its source, executable API example and completed checks.
 
 ## Current workbench evidence — November 12, 2026
 
+The opt-in [source-context record](validation/source-context.md) binds actual
+prewarp fields, fixed operators, profile/request identities and the explicit
+conditional fitting bridge. Its digital replay preserves rounding discrepancies
+and unsupported-model refusals. It does not qualify a camera or automatically
+replace geometry.
+
+
 The separate [finite-shape source record](validation/finite-shape-source.md)
 documents the new developer evaluator and conditional radius/chord fitter.
 It retains independent forward/inverse controls, model mismatch, ambiguity,

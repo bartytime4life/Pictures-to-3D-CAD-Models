@@ -1,5 +1,13 @@
 # Research and design decisions
 
+The [real-trace source context](source-context.md) connects the actual prewarp
+working field to fixed source observations and an explicit conditional finite-
+shape fit. Its [integration replay](validation/source-context.md) compares the
+composed float64 operator with the rounded image pipeline and preserves lens,
+reduction, thickness and request-identity guards. This supplies data binding,
+not optical calibration, automatic geometry acceptance or physical accuracy.
+
+
 The [known warp-chain study](warp-observations.md) extends the fixed observation
 operator to `S G R`, including nonidentity projective/radial maps, explicit border
 order and rounding-stage accounting. An independent raw-edge study separates

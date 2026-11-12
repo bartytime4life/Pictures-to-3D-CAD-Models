@@ -285,6 +285,24 @@ The [inverse record](validation/finite-shape-source.md) retains every declared
 case, including work-limited matched and adverse results. A successful target
 check does not imply that every represented basin converged.
 
+## Real-trace source context
+
+Use [trace_with_source](source-context.md) to retain the actual prewarp working
+field and request/profile-bound source observations in private Python memory.
+The explicit fitting bridge preserves supplied optical/noise assumptions and
+refuses unsupported recorded lens distortion, reduction and thickness.
+
+```bash
+.venv/bin/python studies/verification/source-context-v1.py --output .local/source-context-new.json
+```
+
+The destination must be a new file in an existing local directory. The fixed
+[plan](../studies/source-context-v1.json) covers real trace capture, digital
+operator replay and a quantized finite-shape fixture. Every case is retained,
+including failures. The [record](validation/source-context.md) distinguishes
+exact source binding, arithmetic discrepancy and conditional recovery from
+physical-camera qualification. No source images or pixel arrays are saved.
+
 ## Figures
 
 Matplotlib is optional and is not installed by the workbench setup. The published

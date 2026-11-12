@@ -1,0 +1,14 @@
+{
+  "format": "pictures-to-cad-source-context-plan",
+  "version": 1,
+  "purpose": "Exercise actual decode/trace capture, independent digital replay, request binding and explicit conditional finite-shape fitting; not physical qualification.",
+  "replay_max_level_error": 0.0001,
+  "cases": [
+    {"name": "pinhole", "kind": "camera", "render": {"tilt": [0, 0, 4], "k1": 0, "shadow": 0, "gradient": 0}},
+    {"name": "radial", "kind": "camera", "render": {}},
+    {"name": "thick", "kind": "camera", "render": {"thickness": 4}, "trace": {"thickness_mm": 4}},
+    {"name": "reduced", "kind": "camera", "render": {"tilt": [0, 0, 4], "k1": 0, "shadow": 0, "gradient": 0}, "working_pixels": 480000},
+    {"name": "colour", "kind": "colour"},
+    {"name": "finite-circular-segment", "kind": "fit", "radius": 20.13, "fraction": 0.267, "centre": [105, 148.5], "radius_error_max_mm": 0.1, "fraction_error_max": 0.005, "heldout_max_level_error": 2}
+  ]
+}

@@ -56,6 +56,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Understand correlated profile samples and compose a known smoothing filter | [Fixed observations and covariance](profile-observations.md), [complete controls](validation/profile-observations.md) |
 | Include known perspective/lens resampling and inspect raw optical assumptions | [Warp-chain model](warp-observations.md), [complete digital and optical controls](validation/warp-observations.md) |
 | Fit a supplied straight raw optical source without inverting weak profile modes | [Source-space variable projection](raw-source-fit.md), [complete controls and limitations](validation/raw-source-fit.md) |
+| Keep real trace pixels, processing and geometry bound to one private request | [Source context and explicit fitting bridge](source-context.md), [digital integration checks](validation/source-context.md) |
 | Predict a complete finite boundary and conditionally fit radius/chord from source intensities | [Source model and integration contract](finite-shape-source.md), [independent controls and limitations](validation/finite-shape-source.md) |
 | Check externally bounded calibration for one common scalar response | [Exact response consistency](response-calibration.md), [edge/calibration controls](validation/response-calibration.md) |
 | Carry input intervals through one common response and bound supplied Gaussian inputs | [Rectangle quantifiers and outward CDF bounds](response-rectangles.md), [finite experiment and independent checks](validation/response-rectangles.md) |
