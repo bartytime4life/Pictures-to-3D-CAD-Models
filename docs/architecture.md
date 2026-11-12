@@ -225,4 +225,11 @@ signed combinations cannot reuse composite endpoint monotonicity. Exact gain/L1
 accounting, raw-term work caps and bounded caching retain their
 [separate observation contract](signed-stencils.md).
 
+The [material-gradient runner](material-gradients.md) exercises actual edge/tone
+functions against independent bounded light fields. Its normal-reversal census
+motivates a production sampling repair: `sheet.half_level_search` now builds a
+zero-centred, mirrored integer-step profile grid. The paper-only slope guard is
+retained; the two-affine study branch remains an ablation. This runner does not
+add an API, assistant action or product accuracy status.
+
 The included runtime is a single-user application. It does not implement account authentication, per-user authorization, shared project storage, collaborative editing, a durable job queue, or a billing service. Those capabilities require an explicit design and implementation before a public multi-user deployment.

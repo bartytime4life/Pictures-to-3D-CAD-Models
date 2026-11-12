@@ -25,6 +25,10 @@ observations, including [known signed sampling stencils](docs/signed-stencils.md
 It preserves unresolved regions and can reject an incompatible model;
 it does not alter the workbench's trace or qualify a physical radius.
 
+The [material-gradient study](docs/material-gradients.md) tests actual edge-profile
+functions against independent bounded light fields, preserving rejected profiles
+and comparing the paper-side guard with an explicit research ablation.
+
 This repository contains two related tools:
 
 | Component | Use it for | Entry point |

@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 REFERENCE_PYTHON ?= $(CURDIR)/reference-library/.venv/bin/python
 
-.PHONY: help setup setup-app setup-library start dev build build-app build-library test test-app test-library lint smoke slicers freecad photo-benchmark corner-sweep
+.PHONY: help setup setup-app setup-library start dev build build-app build-library test test-app test-library lint smoke slicers freecad photo-benchmark corner-sweep material-gradient-study
 
 help:
 	@echo "make setup          install app and reference-library dependencies; build the app"
@@ -15,6 +15,7 @@ help:
 	@echo "make freecad        open a fitted build in FreeCAD (set FREECADCMD) and check it"
 	@echo "make photo-benchmark PHOTOS=folder   compare traces of your photos with your calipers"
 	@echo "make corner-sweep   fit exactly blurred filleted corners (60-150 degrees) and report radius errors"
+	@echo "make material-gradient-study OUTPUT=new-folder   run the local-profile development census"
 	@echo "Append -app or -library to setup, build, or test to select one component."
 	@echo "Library browser checks use local HTTP; its own make check defaults to file URLs."
 
@@ -68,3 +69,7 @@ photo-benchmark:
 
 corner-sweep:
 	.venv/bin/python scripts/corner_sweep.py
+
+material-gradient-study:
+	@test -n "$(OUTPUT)" || { echo "Usage: make material-gradient-study OUTPUT=new-folder (see docs/material-gradients.md)"; exit 2; }
+	.venv/bin/python scripts/material_gradient_study.py --output "$(OUTPUT)"

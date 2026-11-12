@@ -61,6 +61,10 @@ reserved real-capture validation remain part of forward-model adequacy work.
 Before expanding the scope, keep the current workflow dependable: verify supported imports, hole topology, dimensional conversion, exports, outdated-result handling, failure recovery, keyboard access, and responsive behavior. Update the user guide when behavior changes, and record failures as well as passes.
 
 Initial circle/piece fits now have a source-support check. Benchmark correspondence and complete coverage accounting are now implemented.
+The [material-gradient census](material-gradients.md) now tests actual profile
+functions, including the production paper-side guard, with independent bounded
+affine light and wall controls. It does not establish a safe material-slope
+correction; joint lighting/wall adequacy and real captures remain needed.
 Prioritize final forward-model adequacy, then
 independently specified model-mismatch experiments and repeatable ground-truth
 capture. The lens renderer is now separately implemented, but the shared

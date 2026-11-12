@@ -209,3 +209,11 @@ from the workbench's processed edge spread.
 stencils. It accounts for negative coefficients, DC/error gain and whole-radius
 nonmonotonicity without clamping a response to `[0,1]`. This still does not infer
 the production kernel, source-error bounds or photometric baseline calibration.
+
+The [material-gradient study](material-gradients.md) exercises actual local-profile
+functions against independent bounded light fields. Its production sampling-grid
+repair removes an orientation-dependent numerical artifact in single-crossing
+fixtures. Kept crossings can still shift under material-side illumination slopes,
+and wall tone/width can be confounded with edge position. Global affine intensity
+normalization does not remove those spatial effects. The [record](validation/material-gradients.md)
+keeps that model mismatch separate from sampling symmetry and physical accuracy.

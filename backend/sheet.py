@@ -110,7 +110,12 @@ def half_level_search(
     # the median-level search then stands.
     sloped = sigma is not None and sigma > 0
     reach = max(half, 5 * sigma) if sloped else half
-    t = np.arange(-reach, reach + step / 2, step)
+    # Centre the grid exactly on the supplied point. Starting arange at -reach
+    # gives asymmetric positions when reach/step is noninteger: reversing the
+    # same normal then samples a different physical profile. Cover the requested
+    # reach with paired integer steps and an exact zero at the centre.
+    count = math.ceil(reach / step)
+    t = np.arange(-count, count + 1) * step
     sx = points[:, None, 0] + t[None, :] * normals[:, None, 0] - 0.5
     sy = points[:, None, 1] + t[None, :] * normals[:, None, 1] - 0.5
     profile = sample_bilinear(gray, sx, sy)

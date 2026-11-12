@@ -3,6 +3,20 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Symmetric edge sampling and material-gradient study — November 12, 2026
+
+- Centre local profile samples on the supplied point with paired integer steps.
+  Noninteger windows previously sampled different physical positions when the
+  same normal was reversed. Independent regressions reproduce that defect.
+- Add `make material-gradient-study OUTPUT=new-folder`, an independent bounded
+  light-field oracle, a fixed 576-scene plan and complete before/after summaries.
+  All 9,216 rows per run and 768 low-contrast rejections are accounted for.
+- Preserve the paper-only slope guard and document retained material-gradient
+  bias, wall/edge confounding and multiple-crossing ambiguity. The two-affine
+  branch remains an ablation. [Method](material-gradients.md) and
+  [evidence](validation/material-gradients.md) record the model boundaries.
+- The complete Python suite passed 1,075 tests; physical calibration remains open.
+
 ## Signed sampling observations — November 12, 2026
 
 - Version 4 of the developer CLI encloses fixed signed aperture combinations

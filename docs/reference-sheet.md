@@ -132,7 +132,15 @@ The second edge pass therefore takes the paper's slope into the level (`sheet.ha
 - **Material side:** a flat level is taken there, its median. A thick part's narrow side wall would read as a slope on that side.
 - **Smoothing:** a line extrapolated from one profile is noisier than a median, while a shadow's slope changes slowly along an edge. So the correction from the median crossing to the sloped one is smoothed along each ring with a Gaussian of 20 points before it is applied.
 
-On exact sloped profiles the crossing lands within 0.002 px of the edge, flat plateaus included, where the end medians moved it by up to 0.18 px. On blurred discs of 7.5–55 σ radius, the traced radius is within 0.005 px of the blur-curvature series the radius correction assumes (`test_sloped_plateau_levels_put_the_crossing_on_the_edge`).
+On the matched paper-gradient profiles in `test_sloped_plateau_levels_put_the_crossing_on_the_edge`, the crossing lands within 0.002 px of the edge, flat plateaus included, where the end medians moved it by up to 0.18 px. That direct test does not pass the production `paper_side` argument or vary material slope. On its blurred discs of 7.5–55 σ radius, the traced radius is within 0.005 px of the blur-curvature series the radius correction assumes.
+
+The separate [material-gradient study](material-gradients.md) exercises the actual
+paper-side guard. A spatial material gradient can shift a kept crossing; global
+brightness/contrast normalization does not remove that effect. Its two-slope
+ablation also measures wall controls and is not an automatic tracing correction.
+The [complete development record](validation/material-gradients.md) separates
+sampled profiles, aperture means, resampling, encoded inputs and final physical
+qualification.
 
 In the tilted rendered photo the shadow's effect is now small:
 
