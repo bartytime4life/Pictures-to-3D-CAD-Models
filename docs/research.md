@@ -1,5 +1,19 @@
 # Research and design decisions
 
+The [fixed-observation/covariance investigation](profile-observations.md) now
+composes the known finite smoothing filter and final Keys sampler, rather than
+assuming one effective continuous Gaussian. A compact SVD accounts for shared
+input-pixel noise, retaining support violations and numerical rank decisions.
+Its [complete controls](validation/profile-observations.md) show false precision
+from independence assumptions and preserve global wall aliases. Earlier warping,
+camera response and real-noise calibration remain separate work.
+
+Related [known-PSF interpolation research](https://scispace.com/papers/optimal-linear-interpolation-of-images-with-known-point-xuwgxkheoe)
+considers autocorrelation and aliasing when choosing a linear interpolant.
+That literature lead was reviewed at abstract level; this implementation uses
+the existing fixed Keys weights and the explicit linear covariance identities,
+rather than claiming to implement its optimal interpolant.
+
 The [conditional corner-radius developer tool](corner-feasibility.md) adds a
 bounded-error investigation alongside the production methods below. Rectangular
 Gaussian probability covers and monotone radius boxes give inner/outer sets

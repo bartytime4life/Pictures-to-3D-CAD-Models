@@ -1,0 +1,40 @@
+{
+  "format": "independent-profile-observations-review",
+  "version": 1,
+  "source_sha256": {
+    "backend/profile_observations.py": "14bebe3008d4e3c2482d82355e85c05013680cd968eddbbd78fae91c0dc6be05",
+    "backend/sheet.py": "a086d7216256726a0e392bd98cbdb1274f5cb5eb096802c17c805349a7747e31",
+    "scripts/profile_noise_study.py": "726184a48640243447c3bb9bae08a488996d52d8979fc5c65aa6f34c0b252f0d"
+  },
+  "random_seed": 599131,
+  "heterogeneous_cases": 24,
+  "filter_composition_cases": 24,
+  "maximum_absolute_errors": {
+    "covariance": 1.0497734916701812e-14,
+    "heterogeneous_identity": 1.3322676295501878e-14,
+    "fitted_coefficients": 2.220446049250313e-15,
+    "residual_cost": 4.085620730620576e-14,
+    "duplicate_information": 3.552713678800501e-14,
+    "filter_composition": 4.440892098500626e-16
+  },
+  "heterogeneous_gaussian_linear_estimator": {
+    "draws": 100000,
+    "predicted_variance": 1.352060982963927,
+    "empirical_variance_ddof_1": 1.3534619740132818,
+    "maximum_direct_vs_source_trial_delta": 4.6629367034256575e-15
+  },
+  "outside_support_control": {
+    "squared_whitened_residual": 2.4651903288156613e-32,
+    "outside_support_l2": 1.4142135623730951,
+    "outside_support_maximum": 1.0000000000000002,
+    "support_arithmetic_tolerance": 1.6077746776921858e-13,
+    "within_retained_support_tolerance": false
+  },
+  "runtime_seconds": 0.038095323950983584,
+  "limits": [
+    "Algebraic and synthetic operator controls only.",
+    "No physical noise calibration, nonlinear-estimator coverage, production integration or full suite.",
+    "Gaussian raw pixels are a supplied hypothesis."
+  ],
+  "runner_sha256": "06e0878bf8bd4f2c5e43daf8743b0b6694001b7c53a234ef48ba7df235ec384e"
+}

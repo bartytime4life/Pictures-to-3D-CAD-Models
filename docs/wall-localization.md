@@ -123,6 +123,12 @@ Calibrating that chain, estimating its effective PSF, handling curved boundaries
 and validating joint wall/camera inference remain necessary before promoting
 this prototype into tracing. It is not currently used by the workbench.
 
+The follow-up [fixed-observation module](profile-observations.md) now composes a
+declared finite smoothing filter with Keys and accounts for correlated samples
+under supplied input-pixel noise. Its controls expose missing aliases when only
+an effective scalar Gaussian is used. Earlier rectification, rounding, real optics
+and joint wall/camera identification still prevent a physical accuracy claim.
+
 ## Repeat
 
 ```bash

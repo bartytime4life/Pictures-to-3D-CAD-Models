@@ -41,6 +41,11 @@ withholding. Its crossed comparison retains failures and unchanged seeds; a
 separate Keys-aware forward prototype remains developer research. Neither gives
 a physical accuracy guarantee.
 
+The [fixed-observation developer tools](docs/profile-observations.md) now compose
+declared smoothing and signed interpolation, and account for correlated profile
+samples under supplied input-pixel noise. Their reproducible controls distinguish
+local precision from global ambiguity; they do not add a photo accuracy label.
+
 This repository contains two related tools:
 
 | Component | Use it for | Entry point |

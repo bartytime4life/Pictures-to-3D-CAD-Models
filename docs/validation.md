@@ -17,6 +17,12 @@ retains its source, executable API example and completed checks.
 
 ## Current workbench evidence — November 12, 2026
 
+The [fixed-observation/covariance candidate](validation/profile-observations.md)
+adds a reusable developer operator and known-filter composition. Seven density
+and repetition configurations reuse 8,192 input-noise draws; 12 postblur cases
+retain all mismatches and constructed aliases. These checks do not change the
+workbench trace or create a physical confidence estimate.
+
 The [wall-localization development record](validation/wall-localization.md)
 retains the complete paired scene comparison, rejected window/camera regressions,
 final source-bound regression receipt and matched-sampling prototype. Its fresh
