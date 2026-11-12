@@ -171,6 +171,13 @@ needs real calipered parts and recorded capture conditions. Prioritize that
 experiment, held-out functional dimensions and prototype inspection before
 expanding reconstruction scope or making an accuracy claim.
 
+A mathematically valid solid can still contain the wrong fitted curve. The
+[tapered-cap repair](validation/tapered-caps.md) fixes an exact noiseless case
+where treating slightly tapered sides as parallel changed the boundary while
+Profile validation and native solid import still passed. Tangency, source
+agreement, analytic area and exported arc identity are distinct checks. This
+repair does not establish the adequacy of a Gaussian camera model.
+
 The [scientific model review](validation/scientific-model-review.md) records
 the original whole-circle extrapolation and camera-model limits.
 The [radial-domain repair](validation/radial-inverse.md) removes the renderer's

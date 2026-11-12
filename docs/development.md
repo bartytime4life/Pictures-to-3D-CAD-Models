@@ -158,6 +158,13 @@ also supplies the finite study and its separate certificate auditor:
 These checks require no CAD server. They establish the supplied mathematical
 contract; they do not replace affected product tests or measured-camera evidence.
 
+For tangent-circle and cap changes, begin with
+`tests/test_tapered_caps.py`, `tests/test_fillet_sweep.py` and
+`tests/test_fidelity_math.py`. The [tapered-cap record](validation/tapered-caps.md)
+supplies independent geometry and actual CAD/DXF/STEP replay commands. Check
+line-anchor invariance and the exported three-point arc, not only the stored
+radius or solid validity.
+
 For the continuous response-domain solver, run the two focused test files and
 its independent oracle, then replay the retained study as described in
 [the developer catalog](developer-tools.md#continuous-shared-gaussian-edge-and-response-domains).

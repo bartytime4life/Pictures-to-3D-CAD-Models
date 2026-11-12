@@ -360,6 +360,13 @@ Continue to compare important boundaries and independent dimensions.
   - An arc between non-parallel lines becomes a fillet whose centre lies on the corner bisector, c(r) = c₀ + r v. Only r is fitted, against the exact blurred corner (§4), with a standard deviation; a fillet the photo cannot tell from a sharp corner is traced sharp. c(r) stays at distance exactly r from both lines for every r, which is verified in rational arithmetic (`test_exact_fillet_centre_is_tangent_to_both_lines_for_every_radius`). Over 300 noisy trials this constrained fit has less than half the spread of a free three-parameter arc (`test_tangent_constrained_fillet_fit_is_more_precise_than_a_free_arc`).
   - When a changed radius moves a constrained arc's centre, its angular sweep witness moves with it. This prevents an unintended switch to the complementary sector while preserving genuine major arcs; [the regression record](validation/fillet-sweep.md) separates this representation repair from remaining blur-model mismatch.
   - Between parallel lines the arc becomes a slot end cap: radius half the spacing, centre on the mid-line.
+    Constant spacing is used only for roundoff-level parallel directions, rather
+    than a five-degree angular shortcut. Actual tapered sides use their two
+    tangent-circle constraints, with a stable nearby centre/radius reference and
+    stopping based on geometric movement. The [tapered-cap record](validation/tapered-caps.md)
+    checks source agreement and real CAD/DXF/STEP exports. This applies to the
+    lines after the explicitly selected axis snapping above; that design action
+    can intentionally make sufficiently aligned sides parallel.
   - Radii within 3 % become equal.
   - The model is rotated so its straight edges lie along X and Y.
 - **Sampling.** Polygon rings target a stated sagitta. When the required sample count is below the implementation's segment cap, each chord stays within that tolerance and the area error is bounded by perimeter × tolerance. `test_sampled_arcs_stay_within_the_requested_sagitta` checks the plate fixture at 0.1, 0.01 and 0.001 units; it does not establish a universal bound for every imported radius. Trace sampling, CAD validation sampling and OpenSCAD use finite sample caps. [Export limits](exports.md#openscad-editable-profile-extrusion) explain the OpenSCAD target separately from the analytic STEP/DXF representation.

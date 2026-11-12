@@ -3,6 +3,17 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Preserve tapered rounded-end geometry — November 12, 2026
+
+- Restrict constant-width slot geometry to genuinely parallel tangent lines.
+  Nonparallel sides retain their actual tangent-circle constraints.
+- Anchor the centre near the observed circle and check centre movement when
+  stopping radius refinement; unresolved arithmetic retains the free arc with
+  the existing warning.
+- Add [independent exact profiles and real native-export checks](validation/tapered-caps.md),
+  including line-anchor, rigid-transform, genuine-parallel and conditioning
+  controls. The interface, scale inputs and file schemas are unchanged.
+
 ## Continuous shared Gaussian response domains and documentation — November 12, 2026
 
 - Enclose one shared offset/positive-blur domain under externally supplied

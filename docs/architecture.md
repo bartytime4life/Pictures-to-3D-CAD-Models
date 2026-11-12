@@ -75,6 +75,14 @@ unions, source-indexed certificates and a complete split tree. It permits a
 different common response for each alternative parameter pair. No new endpoint,
 production import, image correction or UI state follows from this developer API.
 
+The production tangent-circle fitter distinguishes roundoff-level parallelism
+from a real taper. A true slot cap derives its radius from constant spacing;
+nonparallel neighbours use their actual signed-distance constraints. Its centre
+is stored relative to a nearby reference radius, and iteration stopping accounts
+for centre movement. The [tapered-cap record](validation/tapered-caps.md) checks
+this internal representation through the emitted arc and native exports.
+This corrects digital geometry; it does not supply missing optical calibration.
+
 ## Geometry conventions
 
 Traced points use image pixel coordinates, with the image's vertical coordinate increasing downward. Pixel *i* spans *i* to *i* + 1, so the image spans 0 to its pixel width. Outlines follow the outer edges of boundary pixels: a part covering pixel columns 50–450 spans 50 to 451, and a hole follows the edges of the material around it. Conversion translates and scales the profile into a centered XY model plane, then extrudes along Z. The measured scale is the entered reference width divided by the traced profile's horizontal span. An explicit XY design percentage multiplies that scale; a separate thickness percentage multiplies the entered thickness. Design choices do not overwrite the source measurements.

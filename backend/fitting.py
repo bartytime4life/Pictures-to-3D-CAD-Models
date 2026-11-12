@@ -854,12 +854,15 @@ def place_fillets(prims):
     observed world position while moving the centre can switch a minor arc to its
     major complement. Preserve its direction about the old centre, including for
     genuinely major arcs; it is a sweep witness, not a new observation.
+    New constraints anchor the centre at ``fillet_radius_origin`` to avoid a
+    distant virtual apex; older constraints use radius zero as their origin.
     """
     for p in prims:
         if "fillet" in p.data:
-            c0, v = p.data["fillet"]
+            anchor, v = p.data["fillet"]
             direction = np.asarray(p.data["mid"]) - np.asarray(p.data["c"])
-            centre = np.asarray(c0) + p.data["r"] * np.asarray(v)
+            radius_origin = p.data.get("fillet_radius_origin", 0.0)
+            centre = np.asarray(anchor) + (p.data["r"] - radius_origin) * np.asarray(v)
             p.data["c"] = tuple(centre)
             p.data["mid"] = tuple(centre + p.data["r"] * direction / np.linalg.norm(direction))
 
@@ -903,7 +906,11 @@ def fit_fillets(points, prims, tol, sigma=0.0):
         d1, d2 = np.asarray(l1.data["d"]), np.asarray(l2.data["d"])
         n1, n2 = np.array([-d1[1], d1[0]]), np.array([-d2[1], d2[0]])
         c1, c2 = np.asarray(l1.data["c"]), np.asarray(l2.data["c"])
-        if abs(d1[0] * d2[1] - d1[1] * d2[0]) < math.sin(math.radians(5)):
+        # These are unit directions. Constant line spacing defines a slot radius
+        # only for parallel sides; a small real taper still needs the two-line
+        # tangent-circle constraint below. Treat only floating-point contact as
+        # parallel, including opposite directions produced by axis snapping.
+        if abs(d1[0] * d2[1] - d1[1] * d2[0]) <= 64 * np.finfo(float).eps:
             if d1 @ d2 > 0:
                 continue  # same-direction neighbours: not an end cap
             o1, o2 = float(c1 @ n1), float(c2 @ n1)
@@ -913,19 +920,32 @@ def fit_fillets(points, prims, tol, sigma=0.0):
             p.data["end_cap"] = True
             continue
         best = None
+        normals = np.array([n1, n2])
+        distances = np.array([n1 @ (old_c - c1), n2 @ (old_c - c2)])
         for s1 in (-1, 1):
             for s2 in (-1, 1):
                 try:
-                    c0 = intersect(c1, d1, c2, d2)
-                    v = intersect(c1 + n1 * s1, d1, c2 + n2 * s2, d2) - c0
+                    signs = np.array([s1, s2])
+                    shift = np.linalg.solve(normals, old_r * signs - distances)
+                    v = np.linalg.solve(normals, signs)
                 except np.linalg.LinAlgError:
                     continue
-                distance = np.linalg.norm(c0 + old_r * v - old_c)
+                distance = np.linalg.norm(shift)
                 if best is None or distance < best[0]:
-                    best = (distance, c0, v)
+                    best = (distance, old_c + shift, v)
         if best is None or best[0] > max(2.0, 0.25 * old_r):
             continue
-        _, c0, v = best
+        _, anchor, v = best
+        # C(r) = anchor + (r - old_r) v avoids subtracting a distant virtual
+        # apex from r*v for almost parallel lines. The radius coordinate still
+        # cannot resolve a centre movement smaller than one radius ulp times |v|.
+        if not np.isfinite(v).all() or math.ulp(old_r) * np.linalg.norm(v) > tol:
+            p.data["r_sd"] = math.inf
+            continue
+
+        def centre_at(radius, anchor=anchor, old_r=old_r, v=v):
+            return anchor + (radius - old_r) * v
+
         seg = span_points(points, *p.span)
         # An arc point 2.5 sigma along the arc from an edge lies (2.5 sigma)^2 / (2r)
         # off that edge.
@@ -936,14 +956,18 @@ def fit_fillets(points, prims, tol, sigma=0.0):
         seg = seg[keep] if keep.sum() >= 5 else seg
         r = old_r
         for _ in range(20):
-            delta = seg - (c0 + r * v)
+            delta = seg - centre_at(r)
             rho = np.maximum(np.linalg.norm(delta, axis=1), 1e-12)
             shrink, slope = blur_shrink(r, sigma) if sigma > 0 else (0.0, 0.0)
             residual = rho - (r - shrink)
             jac = -(delta @ v) / rho - 1 + slope
             step = -float(jac @ residual) / float(jac @ jac)
+            previous_r = r
             r += step
-            if abs(step) < 1e-10:
+            # A small radius increment can move an almost parallel fillet's
+            # centre substantially. Stop on the represented geometric update,
+            # including a radius increment that rounds to zero.
+            if abs(r - previous_r) * max(1.0, float(np.linalg.norm(v))) < 1e-10:
                 break
         approximate = 0.5 * old_r < r < 2 * old_r
         if not approximate:
@@ -951,9 +975,9 @@ def fit_fillets(points, prims, tol, sigma=0.0):
                 continue
             r = old_r  # a start for the exact fit only
         shrink = blur_shrink(r, sigma)[0] if sigma > 0 else 0.0
-        residual = np.linalg.norm(seg - (c0 + r * v), axis=1) - (r - shrink)
+        residual = np.linalg.norm(seg - centre_at(r), axis=1) - (r - shrink)
         rms, max_abs = float(np.sqrt(np.mean(residual**2))), float(np.abs(residual).max())
-        centre = c0 + r * v
+        centre = centre_at(r)
         inward = [n * math.copysign(1.0, float((centre - c) @ n)) for n, c in ((n1, c1), (n2, c2))]
         # Keep the corner angle available even if the exact fit cannot settle and
         # the original observed arc is retained with an unresolved-radius note.
@@ -976,7 +1000,8 @@ def fit_fillets(points, prims, tol, sigma=0.0):
         if exact is None and not approximate:
             continue
         p.data["r"] = float(r)
-        p.data["fillet"] = (tuple(c0), tuple(v))
+        p.data["fillet"] = (tuple(anchor), tuple(v))
+        p.data["fillet_radius_origin"] = old_r
         p.data["blur_modelled"] = sigma > 0
         place_fillets([p])
         p.rms, p.max_abs = rms, max_abs

@@ -103,7 +103,7 @@ actions.
    tests for the affected behavior. Documentation parsing does not establish
    a fresh Python/browser regression suite. Update navigation and the change log.
 
-Use the [current coverage](validation/gaussian-response-domains.md#documentation-coverage)
+Use the [current coverage](validation/tapered-caps.md#documentation-coverage)
 and [baseline inventory](validation/documentation-response-state.md#coverage-inventory)
 to include guides, worksheets and generated/historical records in a review.
 The [developer-tool catalog](developer-tools.md) centralizes numerical commands
