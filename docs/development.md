@@ -67,6 +67,7 @@ backend/             API, image tracing, validation, CAD conversion and exports
 frontend/src/        React workbench and interactive Three.js model viewer
 frontend/public/     demonstration image and static assets
 scripts/             repeatable setup and startup entry points
+studies/             declared experiments, source-bound results and independent checks
 tests/               backend and browser validation
 docs/                user guides, architecture, limitations and evidence
 data/                pinned printer catalog and source attribution
@@ -98,6 +99,9 @@ successful developer study is separate from a successful workbench build.
 | `make material-gradient-study OUTPUT=new-folder` | Run the crossed local-profile study, retaining all measurements/rejections; [method and limits](material-gradients.md) |
 | `make wall-gradient-study OUTPUT=new-folder` | Run bounded source fits, constructive wall/edge ambiguity and actual local wall-fit comparisons; [method and limits](wall-gradients.md) |
 | `make wall-localization-study OUTPUT=new-folder` | Compare actual segmentation/subpixel/wall correction against the plan's pinned local Git baseline; [method and limits](wall-localization.md) |
+| `make profile-noise-study OUTPUT=new.json` | Check supplied correlated noise, sample density, repetition and local information; [method](profile-observations.md) |
+| `make postblur-operator-study OUTPUT=new.json` | Compare a declared finite filter plus final signed sampling with scalar approximations; [method](profile-observations.md) |
+| `make warp-observation-study OUTPUT=new.json` | Compare known raw-image rectification, smoothing and final sampling, retaining stage rounding; [method](warp-observations.md) |
 | `.venv/bin/python -m pytest -q tests/test_edge_crossings.py` | Check nearest-crossing decisions, exact ranking, unresolved contacts and rejected-point preservation; [method](edge-crossings.md) |
 | `.venv/bin/python scripts/corner_feasibility.py --demo` | Run a bounded synthetic radius-set analysis; [input contract and limits](corner-feasibility.md) |
 | `.venv/bin/python scripts/corner_feasibility.py pixel-input.json --output pixel-result.json` | Analyze supplied known uniform pixel means; [version-3 example](pixel-apertures.md) |
@@ -168,7 +172,12 @@ The browser suite includes automated accessibility checks with `@axe-core/playwr
 
 [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) validates the workbench using Python 3.12 and Node.js 24. It installs Chromium, runs Ruff and Prettier checks (`make lint`), executes the workbench test sequence, and retains browser reports and failure traces for seven days. [The reference-library workflow](../.github/workflows/reference-library.yml) separately regenerates its committed outputs, runs its tests, renders its OpenSCAD plate, and checks its browser interface.
 
-Both workflows completed successfully for merge commit `5d6a446d6175e4ad1bd0c01c0166b05e0d1e393a`: [workbench run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42528803054) and [reference-library run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42528803055). These links identify that exact revision; check the workflows for the revision under review. See [validation results](validation.md) for the separate local and remote evidence.
+Use [project status](project-status.md#evidence-by-scope) for the latest recorded
+exact-head workflow observations and [validation results](validation.md) for
+separate local and remote evidence. The earlier [workbench run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42528803054)
+and [reference-library run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/42528803055)
+both passed at merge commit `5d6a446d6175e4ad1bd0c01c0166b05e0d1e393a`;
+those historical passes do not validate a later revision.
 
 ## Dependency changes
 

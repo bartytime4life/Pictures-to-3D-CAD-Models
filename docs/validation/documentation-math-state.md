@@ -1,5 +1,9 @@
 # Documentation consolidation through PR #51 — November 12, 2026
 
+For the latest documentation coverage, use the
+[current alignment record](documentation-alignment.md) and [project status](../project-status.md).
+The dated evidence below retains its original source and results.
+
 This documentation-only follow-up starts from
 `b366b3f2cda4ca33a34b2b2aa109a9b1718acb0c`, the published head of
 [draft PR #51](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/51).

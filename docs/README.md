@@ -57,7 +57,8 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |
 | Run a benchmark with measured photos | [Photo benchmark](photo-benchmark.md) |
 | Review completed checks | [Validation overview](validation.md), [design QA](../design-qa.md) |
-| Check current documentation coverage and source consistency | [Current coverage and checks](validation/warp-observations.md#documentation-coverage), [earlier complete review](validation/documentation-complete-2026-11-12.md), [earlier consolidation](validation/documentation-math-state.md) |
+| Check current documentation coverage and source consistency | [Current alignment and complete inventory](validation/documentation-alignment.md), [earlier complete review](validation/documentation-complete-2026-11-12.md), [earlier consolidation](validation/documentation-math-state.md) |
+| Interpret incomplete hosted runs and the overall job limit | [Runtime-budget evidence](validation/ci-runtime-budget.md), [exact-head CI status](project-status.md#evidence-by-scope) |
 | Review the recent interface changes | [Guided-workbench audit](validation/guided-workbench.md) |
 | Review scope and future work | [Roadmap](roadmap.md), [change log](changelog.md) |
 | Reproduce bundled printer data | [Printer source record](../data/PRINTER_SOURCES.md) |

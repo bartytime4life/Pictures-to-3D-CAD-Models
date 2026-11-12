@@ -1,5 +1,9 @@
 # Complete documentation update — November 12, 2026
 
+For the latest documentation coverage, use the
+[current alignment record](documentation-alignment.md) and [project status](../project-status.md).
+The dated evidence below retains its original source and results.
+
 This review starts from published source
 `7dfe0fe698c8831e9c02ae960f03bcdc533701dc`,
 [draft PR #57](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/57),

@@ -1,5 +1,9 @@
 # Documentation refresh — November 11, 2026
 
+For the latest documentation coverage, use the
+[current alignment record](documentation-alignment.md) and [project status](../project-status.md).
+The dated evidence below retains its original source and results.
+
 Initial baseline: `main` at `76f03fce60c2a9193501e73f3e4d4ad85bbcf554`, after
 the guided-workbench PR merged. During review, PR #37 merged; its shadow-level
 correction and updated synthetic figures were incorporated from

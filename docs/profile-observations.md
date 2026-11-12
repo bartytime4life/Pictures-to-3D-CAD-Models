@@ -59,6 +59,15 @@ numerical row space. The cutoff is `eps * max(rows, columns) * largest_singular_
 rank, cutoff and largest omitted singular value remain inspectable. Truncation
 can change a row space and break an otherwise exact repetition identity.
 
+Passing the range check does not control amplification within retained modes.
+For a deterministic discrepancy `delta`, the Euclidean norms obey
+`||W delta|| <= ||delta|| / d_min`, where `d_min` is the smallest retained
+singular value. Tiny retained values can therefore amplify float32 rounding or an imperfect optical model. The stable
+source identity improves evaluation of a declared source field; it does not
+remove discrepancies in the actual observed chain. Inspect conditioning and
+model adequacy before interpreting a whitened residual as a likelihood. A
+numerical rank threshold is not a calibrated physical discrepancy threshold.
+
 Duplicate measurements add no information when covariance and retained raw row
 space are unchanged. Sampling a previously unseen input combination can add
 information, so arbitrary density changes are not universally invariant.

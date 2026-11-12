@@ -47,7 +47,10 @@ The [known warp-chain extension](warp-observations.md) now composes the fixed
 raw-to-rectified digital path. Optical adequacy remains separate: raw PSF and
 detector calibration, spatially varying/projective and curved-edge response,
 image-derived parameter uncertainty and full-photo reconstruction need their
-own evidence before a production correction or uncertainty result.
+own evidence before a production correction or uncertainty result. Next, fit
+candidate raw source fields through the declared digital operator and evaluate
+conditioning together with measured rounding/model discrepancy. Retained-mode
+whitening alone cannot establish a calibrated likelihood.
 
 The [fixed-observation/covariance module](profile-observations.md) now represents
 known final sampling and finite smoothing operators. Conditional noise controls
