@@ -1,0 +1,168 @@
+{
+  "format": "pictures-to-cad-photo-intensity-input-aliases",
+  "version": 1,
+  "policy": "Original plan/result/provenance bytes remain unchanged, including local paths. These SHA-verified aliases permit inspection against existing portable inputs; this archive is NOT a standalone replay CLI. A future portable caller must explicitly resolve aliases and retain the original fixed policy. No re-execution or retuning occurred during preservation.",
+  "aliases": [
+    {
+      "original_path": ".local/verification/d-photo-baseline-v2/plan.json",
+      "portable_path": "studies/fixtures/finite-moment-photo-v1/baseline-v2-plan.json",
+      "sha256": "2db3148f3be75ea7f9750aeae7115dd23762a581c1f3f879b484c7e1b3c9d687",
+      "byte_identical": true
+    },
+    {
+      "original_path": ".local/verification/d-photo-baseline-v2/result.json",
+      "portable_path": "studies/fixtures/finite-moment-photo-v1/baseline-v2-result.json",
+      "sha256": "e8a07de6297f1c5f9b71d1cd13a3a70e14664242475ae34446e1fe9ffc7183da",
+      "byte_identical": true
+    },
+    {
+      "original_path": ".local/verification/d-moment-photo-v1/result.json",
+      "portable_path": "studies/fixtures/finite-moment-photo-v1/original-moment-result.json",
+      "sha256": "23e8eff8c84ec50adc2c4f82815399ed15f20694717fcd0d02a2a4af16fd8fc6",
+      "byte_identical": true
+    },
+    {
+      "original_path": ".local/verification/d-photo-baseline-v2/small-isotropic-measurement.npz",
+      "portable_path": "studies/fixtures/finite-moment-photo-v1/small-isotropic-measurement.npz",
+      "sha256": "9982be1be11d8d5a8ec27026984e13f3df0c0d42cf7cd16360e6e9ede7a862d9",
+      "byte_identical": true
+    },
+    {
+      "original_path": ".local/verification/d-photo-baseline-v2/small-directional-measurement.npz",
+      "portable_path": "studies/fixtures/finite-moment-photo-v1/small-directional-measurement.npz",
+      "sha256": "dc66ddb52ae895b9bed4ad28ef69bf548f07732ecf4a6f1a91844963ed642ab4",
+      "byte_identical": true
+    },
+    {
+      "original_path": ".local/verification/d-photo-baseline-v2/medium-directional-measurement.npz",
+      "portable_path": "studies/fixtures/finite-moment-photo-v1/medium-directional-measurement.npz",
+      "sha256": "e5b903ac4e82191ad87e4ce50274bf25a502ba99f3003cbe810f38e769d403bf",
+      "byte_identical": true
+    },
+    {
+      "original_path": ".local/verification/d-photo-baseline-v2/large-directional-measurement.npz",
+      "portable_path": "studies/fixtures/finite-moment-photo-v1/large-directional-measurement.npz",
+      "sha256": "de00f76fcfd2c3f3ad7a3c7920b9716c45d93cebb55175ce04d17f0ed2455b9c",
+      "byte_identical": true
+    },
+    {
+      "original_path": ".local/verification/d-photo-baseline-v2/rotated-major-directional-measurement.npz",
+      "portable_path": "studies/fixtures/finite-moment-photo-v1/rotated-major-directional-measurement.npz",
+      "sha256": "037e7d493ee9b6c612a70f0721af81a790ee543d975696996a7f928e99e2cbbc",
+      "byte_identical": true
+    },
+    {
+      "original_path": ".local/verification/d-photo-intensity-v1/plan.json",
+      "portable_path": "studies/finite-photo-intensity-v1.json",
+      "sha256": "083fb18d5b42479282fcae7214646a396bd8bba8936633ea02ec090235ec2e95",
+      "byte_identical": true
+    },
+    {
+      "original_path": ".local/verification/d-photo-intensity-v1/result.json",
+      "portable_path": "studies/results/finite-photo-intensity-v1.json",
+      "sha256": "27380cfa0db6e0f057527e398673cd7fa9c611677c395e73aa896734d7d5e6c9",
+      "byte_identical": true
+    },
+    {
+      "original_path": ".local/verification/d-photo-intensity-v1/runner.py",
+      "portable_path": "studies/fixtures/finite-photo-intensity-v1/provenance.py.txt",
+      "sha256": "6544722335604516e4f27c86c02635bd22cb600503f556625bdc4ebed861ae55",
+      "byte_identical": true
+    },
+    {
+      "original_path": ".local/verification/d-photo-intensity-v1/freeze.json",
+      "portable_path": "studies/fixtures/finite-photo-intensity-v1/original-freeze.json",
+      "sha256": "0438ce3a449231b5f7ff1483a1729eae864fb66f228dcfdc69e2bd0840c3db5f",
+      "byte_identical": true
+    },
+    {
+      "original_path": ".local/verification/d-photo-intensity-v1/cli-contracts.json",
+      "portable_path": "studies/fixtures/finite-photo-intensity-v1/cli-contracts.json",
+      "sha256": "5c76703db5e083152130d519452a689375bb676c7bdab6cc8dc8d4a631d97351",
+      "byte_identical": true
+    },
+    {
+      "original_path": "backend/__init__.py",
+      "portable_path": "backend/__init__.py",
+      "sha256": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+      "byte_identical": true
+    },
+    {
+      "original_path": "backend/finite_centre_fit.py",
+      "portable_path": "backend/finite_centre_fit.py",
+      "sha256": "e2019bcc8b5813c0957967b469baf44bbdd784f50855418852c2686cc48b9ab4",
+      "byte_identical": true
+    },
+    {
+      "original_path": "backend/finite_shape.py",
+      "portable_path": "backend/finite_shape.py",
+      "sha256": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+      "byte_identical": true
+    },
+    {
+      "original_path": "backend/fitting.py",
+      "portable_path": "backend/fitting.py",
+      "sha256": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+      "byte_identical": true
+    },
+    {
+      "original_path": "backend/circular_joins.py",
+      "portable_path": "backend/circular_joins.py",
+      "sha256": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+      "byte_identical": true
+    },
+    {
+      "original_path": "backend/sheet.py",
+      "portable_path": "backend/sheet.py",
+      "sha256": "e18cbe44c476894f1655d6ce66a5e1b11cefe9ca4f95e7e17eb7f52efc236531",
+      "byte_identical": true
+    },
+    {
+      "original_path": "backend/tone.py",
+      "portable_path": "backend/tone.py",
+      "sha256": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+      "byte_identical": true
+    },
+    {
+      "original_path": "backend/edges.py",
+      "portable_path": "backend/edges.py",
+      "sha256": "c02bcf6f15958ea5c82444de3ea3af37f20031e6df463846dc8082e37abae9ee",
+      "byte_identical": true
+    },
+    {
+      "original_path": "uv.lock",
+      "portable_path": "uv.lock",
+      "sha256": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f",
+      "byte_identical": true
+    },
+    {
+      "original_path": "studies/verification/finite-free-centre-v1.py",
+      "portable_path": "studies/verification/finite-free-centre-v1.py",
+      "sha256": "0537540cbfddad2e6209b7b1483977e118c70b64f0d7938e810f942765e579f8",
+      "byte_identical": true
+    },
+    {
+      "original_path": "studies/finite-free-centre-v1.json",
+      "portable_path": "studies/finite-free-centre-v1.json",
+      "sha256": "f8db267fd848363ba91b56cd5a01086f3123ad699f6c0c404166734f3bc582fd",
+      "byte_identical": true
+    }
+  ],
+  "existing_moment_fixture_files_before": {
+    "studies/fixtures/finite-moment-photo-v1/rotated-major-directional-measurement.npz": "037e7d493ee9b6c612a70f0721af81a790ee543d975696996a7f928e99e2cbbc",
+    "studies/fixtures/finite-moment-photo-v1/small-isotropic-measurement.npz": "9982be1be11d8d5a8ec27026984e13f3df0c0d42cf7cd16360e6e9ede7a862d9",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v2-result.json": "e8a07de6297f1c5f9b71d1cd13a3a70e14664242475ae34446e1fe9ffc7183da",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v1-probe.py.txt": "62da6790f50e9861cfbbe90240c726a3ec58c8e4cbf2d9cd40f6326a35f07724",
+    "studies/fixtures/finite-moment-photo-v1/original-moment-result.json": "23e8eff8c84ec50adc2c4f82815399ed15f20694717fcd0d02a2a4af16fd8fc6",
+    "studies/fixtures/finite-moment-photo-v1/small-directional-measurement.npz": "dc66ddb52ae895b9bed4ad28ef69bf548f07732ecf4a6f1a91844963ed642ab4",
+    "studies/fixtures/finite-moment-photo-v1/manifest.json": "dcb8803fdb99895a14ae86899536985604d134d02bd65117f8028d97fc050855",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v2-plan.json": "2db3148f3be75ea7f9750aeae7115dd23762a581c1f3f879b484c7e1b3c9d687",
+    "studies/fixtures/finite-moment-photo-v1/large-directional-measurement.npz": "de00f76fcfd2c3f3ad7a3c7920b9716c45d93cebb55175ce04d17f0ed2455b9c",
+    "studies/fixtures/finite-moment-photo-v1/replay-contracts.py": "41c14c824355017486f3f65f4452ba266b4c70fc656c75a753d0d13ed6c7d291",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v2-probe.py.txt": "b3733f8fa037b9fa1c4401991c7a5ac23438dc8040232124ff1df63a7be3323a",
+    "studies/fixtures/finite-moment-photo-v1/medium-directional-measurement.npz": "e5b903ac4e82191ad87e4ce50274bf25a502ba99f3003cbe810f38e769d403bf",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v1-plan.json": "5ddf980ba75623cc1294e1f5863e44567c4752dda51889ec9c78fbd24c7ba73b",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v1-result.json": "3900c65b314057a110d02d9235b809afa24f5af1f017965717a45d089be5c6ac",
+    "studies/fixtures/finite-moment-photo-v1/original-moment-probe.py.txt": "2a63e9903e273d4ad18d30a84ab4a9d32db7e1bc5220f198bafdafeb22874861"
+  }
+}

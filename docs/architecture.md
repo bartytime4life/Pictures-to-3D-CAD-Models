@@ -63,6 +63,24 @@ Neither numerical rank, model convergence nor positive definiteness converts
 these empirical widths into a calibrated camera PSF; [the tracing guide](reference-sheet.md#3-segmentation-and-sub-pixel-edges)
 defines the boundaries.
 
+### Circle-consistent final assembly
+
+Final reference-sheet arc assembly retains each accepted fitted circle's centre
+and radius. `backend.circular_joins` constructs line/circle roots and compares
+ordered cyclic choices using frozen source endpoints, line traversal and signed
+arc-sector witnesses. A unique separated minimum is a construction decision;
+it does not identify the physical boundary. Numerical guards, provenance and
+work limits can leave a join unavailable.
+
+Initial support may use a legacy geometric proxy when canonical construction
+cannot yet reach the correction stage; final analytic export must construct
+separately. An unavailable final join normally retains the affected traced ring
+with a targeted notice, while other accepted rings remain analytic. Invalid
+retained geometry produces actionable refusal rather than a missing-sheet
+fallback. Final circle checks, whole-profile validity and camera/model adequacy
+remain separate. See [curved joins](curved-joins.md) and
+[critical export checks](exports.md#verify-critical-arc-geometry).
+
 Geometry detail is a geometric approximation applied to the scaled profile. `original` retains it; `draft`, `balanced`, and `fine` use simplification tolerances of 0.5, 0.25, and 0.1 times the selected nozzle diameter in millimeters, respectively. The simplification preserves topology and checks that every hole remains. The modes can still change small features and must be inspected; they do not recover image information, measure minimum wall thickness, or prove printability. The original trace remains the recipe's source profile.
 
 Split mode makes actual solids with straight XY cuts. The default preview and combined STEP/STL/3MF keep those solids in their assembled positions. A separated inspection view displays the actual per-part meshes with temporary offsets; it does not change exported coordinates or claim a print-bed layout. Per-part exports translate each piece to a local XY origin and record the assembly offset in the bundle manifest. The program does not introduce alignment pins, joints, kerf compensation, or assembly tolerances.
@@ -113,7 +131,7 @@ A multipart request includes:
 
 The response contains a normalized display image, its dimensions, the traced outer boundary and holes, the bounding box, the chosen threshold, and any relevant warnings.
 
-With a reference sheet, the display image is the rectified, perspective- and lens-corrected view of the part, rotated to its own axes when snapping found straight edges. The profile also carries `primitives`: exact `line`, `arc` (start, mid, end) and `circle` segments for the outer boundary and every hole, in the same display-pixel frame. It also carries `reference`, the evidence for that trace: sheet kind and size, `mm_per_px`, the lens coefficient, edge blur, any thickness correction with camera height and focal-length source, and notes such as the snap list and the sheet-proportions check. The outside width is the outline's span × `mm_per_px`. See [reference-sheet tracing](reference-sheet.md).
+With a reference sheet, the display image is the rectified, perspective- and lens-corrected view of the part. A detected straight-edge direction can set a rigid display/profile rotation even when an affected ring is retained as line geometry. This coordinate alignment is separate from accepting analytic geometry or claiming exact snapping. The profile also carries `primitives`: exact `line`, `arc` (start, mid, end) and `circle` segments for the outer boundary and every hole, in the same display-pixel frame. It also carries `reference`, the evidence for that trace: sheet kind and size, `mm_per_px`, the lens coefficient, edge blur, any thickness correction with camera height and focal-length source, and notes such as the snap list and the sheet-proportions check. The outside width is the outline's span in that frame × `mm_per_px`. See [reference-sheet tracing](reference-sheet.md) and [display alignment](curved-joins.md#display-alignment-is-a-coordinate-choice).
 
 The normalized image and trace share the same coordinate system. This avoids using uncorrected EXIF orientation for one while displaying the other differently.
 

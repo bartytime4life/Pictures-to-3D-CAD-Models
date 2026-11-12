@@ -87,6 +87,17 @@ not satisfy the original independent size limit. Mixed scalar corners retain
 an explicit geometry hypothesis with unresolved radius uncertainty, rather than
 claiming one stationary PSF across both maps.
 
+The [partial-arc follow-up](validation/directional-free-arcs.md) tests both the
+represented final circle and alternative directional forward fits. A complete
+closed-outline witness shows that the historical line-foot/midpoint assembly can
+serialize a different circle from the stored fit, even with valid topology. The
+canonical join repair is a prerequisite for interpreting a fitted radius as the
+radius in CAD; it does not remove the optical model's bias. Separate prospective
+finite-Gaussian comparisons retain threshold/material mismatch and short-support
+conditioning. A derived angular `R^-3` shrink term is exploratory, and the exact
+whole-disk level-set model is conditional research rather than an automatically
+selected model for an arbitrary circular boundary span.
+
 [Al-Sharadqah and Chernov's circle-fit analysis](https://arxiv.org/abs/0907.0421)
 compares geometric and algebraic fits with coordinate errors. It motivates
 examining estimator assumptions; it does not establish that a low-residual

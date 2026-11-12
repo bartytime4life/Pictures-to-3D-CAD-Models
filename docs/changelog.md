@@ -3,6 +3,58 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Finite-material intensity inverse and moment study — November 12, 2026
+
+- Added a conditional developer inverse for unknown circular-segment centre,
+  radius and chord fraction with two bounded brightness levels. A supplied
+  homography, chord normal, covariance, observation set and residual metric
+  retain explicit numerical and model limits; automatic tracing is unchanged.
+- Boundary-shape derivatives and the complete fixed-face variable-projection
+  Jacobian keep optimization separate from geometric mean-information rank.
+  Direct local curves preserve requested geometry at large coordinates; rank,
+  transform snapshots, numerical failures and work limits have regressions.
+- The independent 24-case study retains all matched and adverse outcomes,
+  including its failed planned aperture-order comparison. The separate portable
+  moment study retains background sensitivity, a missed nominal target and
+  incompatible covariance proposals. Added small-part reference-sheet guidance.
+  [Model](finite-shape-inverse.md) · [inverse evidence](validation/finite-free-centre.md)
+  · [moment evidence](validation/finite-moment-photo.md).
+
+## Documentation publication and navigation — November 12, 2026
+
+- Identified published draft PR #86 and its dependency on draft PR #84 in the
+  source-scope guide. Linked the latest complete documentation review from the
+  README, documentation index and validation overview.
+- Kept the unknown-centre finite-material prototype and its unreviewed plan
+  separate from available software and the completed conditional study.
+  Runtime, generated library files and previous evidence remain unchanged;
+  [coverage and checks](validation/documentation-pr86-state.md).
+
+## Circle-consistent final arc joins — November 12, 2026
+
+- Final fitted arcs now preserve their stored center and radius. Line/circle
+  roots are selected as an ordered cycle with source-endpoint evidence, rather
+  than joining line feet to a radius-dependent midpoint that can define another
+  circle. Minor, half and major arc/chord profiles can reach analytic assembly.
+- Unavailable or ambiguous joins retain only the affected traced boundary and
+  explain the reason; invalid unsupported profiles remain refused. Radius,
+  equalization and snapping notes describe accepted final fitted geometry.
+  Initial eligibility and bounded line-only source recovery remain separate.
+- Local circle reconstruction avoids squared world-coordinate cancellation;
+  moved fillet/cap centers carry their angular witnesses. Direct unit-normal
+  solving preserves prescribed contacts. Source-derived rigid display alignment
+  remains available when a ring is retained as lines, without claiming snapping.
+- Covariance-corner optimization now checks its existing unhalved projected-step
+  criterion before requiring more descent, retaining the current iterate when
+  resolved. A large proposal shortened by backtracking cannot establish
+  convergence; non-finite and unresolved arithmetic remain refused.
+- Reused the reviewed canonical geometry implementation on this main-based
+  source while preserving covariance and thickness-frame behavior. Separate
+  prospective directional free-arc comparisons retain conditioning, finite
+  material and threshold counterexamples. No disk forward fit or new blur series
+  is automatically applied to photographs.
+  [Guide](curved-joins.md) · [evidence](validation/directional-free-arcs.md).
+
 ## Blur transport through known thickness scales — November 12, 2026
 
 - Uniform top-face maps now transport standard deviations by `k` and supplied

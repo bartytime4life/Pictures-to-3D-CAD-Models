@@ -1,0 +1,198 @@
+{
+  "scope": "Ten original FAKE-analyzer CLI controls and four original ACTUAL24-row continuation checks; saved strict JSON re-audit corrects ONLY tuple/list representation in the initial in-memory comparator. No fit rerun, source edit, case/criterion change or numeric relaxation.",
+  "runner_sha256": "0537540cbfddad2e6209b7b1483977e118c70b64f0d7938e810f942765e579f8",
+  "canonical_sha256": "eb5e85ca199999915ffbc8b283fc98ba749d2460f9e44839af5ccb7f740e7087",
+  "failure_receipt_sha256": "ba0c8032e585f462aca27036833df3d6ca6dc997639817f530d0436fd4192212",
+  "checks": [
+    {
+      "name": "help",
+      "passed": true,
+      "exit": 0,
+      "analysis_calls": 0
+    },
+    {
+      "name": "missing-output",
+      "passed": true,
+      "exit": 2,
+      "analysis_calls": 0
+    },
+    {
+      "name": "existing",
+      "passed": true,
+      "exit": 2,
+      "analysis_calls": 0
+    },
+    {
+      "name": "dangling",
+      "passed": true,
+      "exit": 2,
+      "analysis_calls": 0
+    },
+    {
+      "name": "directory",
+      "passed": true,
+      "exit": 2,
+      "analysis_calls": 0
+    },
+    {
+      "name": "missing-parent",
+      "passed": true,
+      "exit": 2,
+      "analysis_calls": 0
+    },
+    {
+      "name": "wrong-suffix",
+      "passed": true,
+      "exit": 2,
+      "analysis_calls": 0
+    },
+    {
+      "name": "existing-bytes-retained",
+      "passed": true
+    },
+    {
+      "name": "dangling-link-retained",
+      "passed": true
+    },
+    {
+      "name": "fresh-exclusive-json-stdout",
+      "passed": true,
+      "analysis_calls": 1
+    },
+    {
+      "name": "all24-unique-rows-retained",
+      "passed": true
+    },
+    {
+      "name": "first-execution-failure-explicit",
+      "passed": true
+    },
+    {
+      "name": "actual-later23-executed-and-identical",
+      "passed": true,
+      "row_calls": 24,
+      "actual_fit_calls": 22,
+      "later_row_comparisons": 23
+    },
+    {
+      "name": "failure-source-unchanged-and-bound",
+      "passed": true
+    }
+  ],
+  "all_passed": true,
+  "initial_report_sha256": "e90573d56444028aae160650d05f193e766d9ee778f72ac479e9752aca91f275",
+  "initial_script_sha256": "77fb698290a2aa2b321fd72652dd2e61c5d39bae02df1320c8048399db986ea9",
+  "corrected_script_sha256": "78c212b990d68f38b6e7c38898b8f29b8a1a332bdbb472bd0d5176a3d0a4e0bb",
+  "json_review_script_sha256": "38444d23b39fc88564b14fe5a04aa3b03a6f2fc6067e90bec9f675ab188c7207",
+  "later23_parsed_row_comparisons": [
+    {
+      "name": "complement",
+      "passed": true
+    },
+    {
+      "name": "rotated-anisotropic",
+      "passed": true
+    },
+    {
+      "name": "correlated-quarterturn",
+      "passed": true
+    },
+    {
+      "name": "near-chord",
+      "passed": true
+    },
+    {
+      "name": "far-chord",
+      "passed": true
+    },
+    {
+      "name": "threshold-051",
+      "passed": true
+    },
+    {
+      "name": "threshold-051-anisotropic",
+      "passed": true
+    },
+    {
+      "name": "affine",
+      "passed": true
+    },
+    {
+      "name": "projective",
+      "passed": true
+    },
+    {
+      "name": "rotated-central-chord",
+      "passed": true
+    },
+    {
+      "name": "affine-correlated-moderate-contrast",
+      "passed": true
+    },
+    {
+      "name": "cropped-chord",
+      "passed": true
+    },
+    {
+      "name": "contour-only-support",
+      "passed": true
+    },
+    {
+      "name": "constant-field",
+      "passed": true
+    },
+    {
+      "name": "low-contrast",
+      "passed": true
+    },
+    {
+      "name": "active-level-bounds",
+      "passed": true
+    },
+    {
+      "name": "material-gradient",
+      "passed": true
+    },
+    {
+      "name": "nonlinear-response",
+      "passed": true
+    },
+    {
+      "name": "wrong-covariance",
+      "passed": true
+    },
+    {
+      "name": "neighbor-hole",
+      "passed": true
+    },
+    {
+      "name": "uniform-pixel-aperture",
+      "passed": true
+    },
+    {
+      "name": "coarse-work-budget",
+      "passed": true
+    },
+    {
+      "name": "numerical-query-failure",
+      "passed": true
+    }
+  ],
+  "excluded_comparison_fields": [
+    "runtime_seconds recursively"
+  ],
+  "source_after_json_review": {
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/finite_shape.py": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+    "backend/finite_centre_fit.py": "e2019bcc8b5813c0957967b469baf44bbdd784f50855418852c2686cc48b9ab4",
+    "backend/fitting.py": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+    "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+    "backend/reference.py": "23a94e699d5499d8a4621902193e3a70214062108a5d0d10abb04df9efb8b69d",
+    "backend/edges.py": "c02bcf6f15958ea5c82444de3ea3af37f20031e6df463846dc8082e37abae9ee",
+    "backend/sheet.py": "e18cbe44c476894f1655d6ce66a5e1b11cefe9ca4f95e7e17eb7f52efc236531",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "uv.lock": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f",
+    "studies/finite-free-centre-v1.json": "f8db267fd848363ba91b56cd5a01086f3123ad699f6c0c404166734f3bc582fd",
+    "studies/verification/finite-free-centre-v1.py": "0537540cbfddad2e6209b7b1483977e118c70b64f0d7938e810f942765e579f8"
+  }
+}

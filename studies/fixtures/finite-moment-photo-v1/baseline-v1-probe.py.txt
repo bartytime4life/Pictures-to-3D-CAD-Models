@@ -1,0 +1,122 @@
+"""Existing PR86 photo pipeline, fixed six-case D-shape baseline (no new inverse)."""
+import copy
+import hashlib
+import io
+import json
+import math
+from pathlib import Path
+import subprocess
+import sys
+import time
+
+SOURCE = Path('/home/bartytime/.codex/worktrees/picad-directional-free-arc')
+sys.path.insert(0, str(SOURCE))
+import cv2
+import numpy as np
+from PIL import Image
+from shapely.geometry import Polygon
+from backend import edges, fitting, reference, sheet
+from tests import synthetic as S
+
+OUTPUT = Path(__file__).parent / 'd-photo-baseline-v1'
+OUTPUT.mkdir(exist_ok=True)
+CASES = [
+    dict(name='small-isotropic', radius=3., fraction=.25, normal=0., blur=1.2),
+    dict(name='small-directional', radius=3., fraction=.25, normal=0., blur=[3., 1., 30.]),
+    dict(name='medium-directional', radius=6., fraction=.25, normal=0., blur=[3., 1., 30.]),
+    dict(name='large-directional', radius=12., fraction=.25, normal=0., blur=[3., 1., 30.]),
+    dict(name='minor-directional', radius=6., fraction=-.4, normal=0., blur=[3., 1., 30.]),
+    dict(name='rotated-major-directional', radius=6., fraction=.6, normal=37., blur=[3., 1., 30.]),
+]
+PLAN = dict(version=1, cases=CASES, centre_mm=[105.,148.5], ppm=4.,
+            sheet_mm=[210.,297.], colors=dict(table=80,paper=230,material=40),
+            thickness=0, snapping=False, arc_vertices=2049,
+            contract='Existing source only; all six outcomes retained; no new fitter imported.')
+plan_bytes=(json.dumps(PLAN,sort_keys=True,indent=2)+'\n').encode()
+(OUTPUT/'plan.json').write_bytes(plan_bytes)
+print('FROZEN_PLAN '+hashlib.sha256(plan_bytes).hexdigest(),flush=True)
+paths=['backend/reference.py','backend/fitting.py','backend/edges.py','backend/sheet.py',
+       'backend/circular_joins.py','tests/synthetic.py']
+hashes={p:hashlib.sha256((SOURCE/p).read_bytes()).hexdigest() for p in paths}
+assert subprocess.check_output(['git','rev-parse','HEAD'],cwd=SOURCE).decode().strip() == 'dcb14e5c62ed6f4b3de4426e863aa48b007eb819'
+
+def clean(x):
+    if isinstance(x,np.ndarray): return clean(x.tolist())
+    if isinstance(x,np.generic): return clean(x.item())
+    if isinstance(x,dict): return {str(k):clean(v) for k,v in x.items()}
+    if isinstance(x,(list,tuple)): return [clean(v) for v in x]
+    if isinstance(x,float) and not math.isfinite(x): return str(x)
+    return x
+
+def prims(ps):
+    return None if ps is None else [dict(kind=p.kind,data=copy.deepcopy(p.data),span=p.span,
+                                      rms=p.rms,max_abs=p.max_abs) for p in ps]
+
+rows=[]
+for case in CASES:
+    began=time.monotonic(); cap={}; row=dict(case=case)
+    a=math.acos(case['fraction']); angle=np.linspace(a,2*math.pi-a,PLAN['arc_vertices'])
+    phase=math.radians(case['normal']); n=np.array([math.cos(phase),math.sin(phase)])
+    t=np.array([-n[1],n[0]])
+    contour=np.array(PLAN['centre_mm'])+case['radius']*(np.cos(angle)[:,None]*n+np.sin(angle)[:,None]*t)
+    shape=Polygon(contour)
+    gaussian=cv2.GaussianBlur
+    try:
+        if isinstance(case['blur'],list):
+            kernel=S.rotated_gaussian(*case['blur'])
+            cv2.GaussianBlur=lambda image,*args,**kwargs: cv2.filter2D(image,-1,kernel,borderType=cv2.BORDER_REFLECT_101)
+        photo=S._flat_photo((80,)*3,(230,)*3,[(shape,(40,)*3)],PLAN['ppm'],1.2 if isinstance(case['blur'],list) else case['blur'])
+    finally: cv2.GaussianBlur=gaussian
+    (OUTPUT/(case['name']+'.png')).write_bytes(photo)
+    rgb=np.asarray(Image.open(io.BytesIO(photo)))
+    original_rings=edges.subpixel_rings; original_ppm=sheet.choose_ppm
+    original_fit=fitting.fit_ring; original_blur=fitting.correct_blur
+    def get_rings(mask,g,ppm):
+        result=original_rings(mask,g,ppm)
+        cap['g']=g.copy(); cap['rings']=copy.deepcopy(result[0]); cap['sigma']=result[1]
+        return result
+    def get_ppm(*args,**kwargs):
+        result=original_ppm(*args,**kwargs); cap['ppm']=result[0]; return result
+    def get_fit(points,*args,**kwargs):
+        result=original_fit(points,*args,**kwargs)
+        cap.setdefault('initial_fits',[]).append(prims(result)); return result
+    def get_blur(ps,*args,**kwargs):
+        cap.setdefault('before_blur',[]).append(prims(ps))
+        result=original_blur(ps,*args,**kwargs)
+        cap.setdefault('after_blur',[]).append(prims(ps)); return result
+    edges.subpixel_rings=get_rings; sheet.choose_ppm=get_ppm
+    fitting.fit_ring=get_fit; fitting.correct_blur=get_blur
+    try:
+        result=reference.trace_on_sheet(rgb,reference='a4',sheet_mm=None,inverted=False,
+             detail='standard',thickness_mm=None,focal_35mm=None,snap=False,notices=[])
+        row['result']=result
+    except Exception as exc: row['error']=dict(type=type(exc).__name__,message=str(exc))
+    finally:
+        edges.subpixel_rings=original_rings; sheet.choose_ppm=original_ppm
+        fitting.fit_ring=original_fit; fitting.correct_blur=original_blur
+    if 'g' in cap:
+        np.savez_compressed(OUTPUT/(case['name']+'-measurement.npz'),g=cap.pop('g'),
+                            points=cap['rings'][0]['points'],covariance=cap['rings'][0].get('covariance'))
+    row['measurements']=cap
+    for lane in ['initial_fits','after_blur']:
+        summaries=[]
+        for fit in cap.get(lane,[]):
+            for p in fit or []:
+                if p['kind'] in ('arc','circle'):
+                    d=p['data']; c=np.array(d['c'])/cap['ppm']; radius=d['r']/cap['ppm']
+                    summaries.append(dict(centre_mm=c,radius_mm=radius,
+                        centre_error_mm=float(np.linalg.norm(c-np.array(PLAN['centre_mm']))),
+                        radius_error_mm=radius-case['radius']))
+        row[lane+'_summary']=summaries
+    row['seconds']=time.monotonic()-began; rows.append(clean(row))
+    (OUTPUT/'partial.json').write_text(json.dumps(rows,indent=2,allow_nan=False)+'\n')
+    print(json.dumps(dict(name=case['name'],error=row.get('error'),
+        kinds=[[p['kind'] for p in ps or []] for ps in cap.get('initial_fits',[])],
+        initial=clean(row['initial_fits_summary']),after=clean(row['after_blur_summary']),
+        seconds=row['seconds'])),flush=True)
+after={p:hashlib.sha256((SOURCE/p).read_bytes()).hexdigest() for p in paths}
+assert after==hashes
+result=dict(plan_sha256=hashlib.sha256(plan_bytes).hexdigest(),source=str(SOURCE),
+            source_head='dcb14e5c62ed6f4b3de4426e863aa48b007eb819',
+            source_hashes_before=hashes,source_hashes_after=after,rows=rows)
+(OUTPUT/'result.json').write_text(json.dumps(result,indent=2,allow_nan=False)+'\n')
