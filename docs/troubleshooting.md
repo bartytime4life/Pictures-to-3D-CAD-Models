@@ -24,6 +24,22 @@ does not make an unclear capture measurable or establish dimensional accuracy.
 
 ## Scale and geometry problems
 
+For a directional-blur note, use a steadier, sharper capture and reserve independent
+feature checks. The estimator concerns rectified edge spreads. Normal-specific
+edge localization alone does not validate a radius. Supported nonparallel
+fillets use the full covariance, while free curves and caps retain separate
+approximations; a rank/SPD check does not establish physical measurement accuracy. A missing
+directional note can mean insufficient independent direction support; it does
+not prove isotropic optics. See [model boundaries](reference-sheet.md#3-segmentation-and-sub-pixel-edges).
+
+A note that curved edges use measurements from both the top and bottom means
+the thickness correction applies different maps within their support. Their
+retained blur correction is approximate; measure important radii independently.
+Mixed scalar corners have unresolved radius uncertainty and cannot justify a
+sharp-corner bound. Mixed supplied-covariance nonparallel corners retain the
+supported source outline or the existing separately checked geometric fallback;
+an invalid unsupported profile is still refused. See [blur frames](blur-frames.md).
+
 An expected circle or arc may remain a traced outline when its initial fit lacks
 source support or exceeds the bounded sampling work. This preserves the source
 instead of extrapolating unsupported geometry; see the [fit-support check](validation/fit-support.md).

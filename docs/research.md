@@ -6,6 +6,10 @@ This product starts with a deliberately constrained geometry problem: a photogra
 
 The research below informed the implementation and its acceptance criteria. It is a review of technical and accessibility sources, not a claim that user interviews, a physical metrology study, or a production security assessment have been completed.
 
+The [source-scope guide](project-status.md) identifies which algorithms are in
+this main-based checkout. Source-space PSF research on a separate lineage
+does not replace the production rectified-width estimator or add new HTTP modes.
+
 The [original selected design reference](images/design-reference.png) is a generated concept. The [recorded workbench screenshot](images/workbench.png) is browser-rendered implementation evidence; the [guided-workbench review](validation/guided-workbench.md) records the reviewed interaction, screenshots and evidence date. The sample photograph is generated demonstration input and is traced by the real conversion pipeline; it is not a measured reference specimen.
 
 ## Image to outline
@@ -59,8 +63,29 @@ The merged [fillet-sector repair](validation/fillet-sweep.md) preserves an arc's
 angular witness when its constrained center moves. Its independent anisotropic
 sharp-corner example still fits nonzero fillets after the representation defect
 is repaired. Topological validity, consistent arc sectors and forward-model
-adequacy are separate checks; the scalar Gaussian interpretation remains a
-research limit.
+adequacy are separate checks. That scalar-model counterexample is historical;
+the covariance-aware replacement below addresses its nonparallel-corner model
+without establishing general physical-camera adequacy.
+
+The main-line directional path now supplies normal-specific edge/wall widths and
+directional slot-end shrink, with [numerical rank rejection](validation/directional-blur-rank.md)
+in the preceding rank-repair candidate. The [new nonparallel-corner model](anisotropic-corners.md)
+now uses the full covariance and transports the corner geometry into a whitened
+Gaussian frame. Its [independent fixed experiment](validation/anisotropic-corners.md)
+reproduces scalar-model bias and retains numerical refusals, weak-radius controls
+and the remaining physical-model limits. General free curves and slot caps retain
+their separate approximations; this does not import the source-space research stack.
+
+The [blur-frame follow-up](blur-frames.md) distinguishes a coordinate error from
+those model errors. A known uniform map transports `sigma` by `k` and covariance
+by `k²`; the radius series is homogeneous only when both radius and spread move
+to the same frame. A predeclared independent finite-disk/capsule experiment
+tests stored-geometry transport, while reporting the remaining short directional
+free-arc bias separately. Its [complete record](validation/curve-blur-frames.md)
+also retains a rejected topology-cleanup probe: close source coverage alone did
+not satisfy the original independent size limit. Mixed scalar corners retain
+an explicit geometry hypothesis with unresolved radius uncertainty, rather than
+claiming one stationary PSF across both maps.
 
 [Al-Sharadqah and Chernov's circle-fit analysis](https://arxiv.org/abs/0907.0421)
 compares geometric and algebraic fits with coordinate errors. It motivates

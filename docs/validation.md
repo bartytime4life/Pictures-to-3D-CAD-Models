@@ -7,6 +7,46 @@ original counts and environment; they are not later retests.
 
 ## Current workbench evidence — November 12, 2026
 
+The current [blur-frame transport candidate](validation/curve-blur-frames.md)
+builds on PR #83. Its predeclared experiment separates known uniform coordinate
+transport from finite-shape approximation error and mixed support. It retains
+the failed integration and cleanup probes; no proximity result is treated as a
+physical size guarantee. The canonical study passes **46 rows and 200 checks**;
+the full local regression passes **725 Python tests** with runtime warnings
+treated as errors. Source bindings and the separately checked CI-only main
+integration are recorded in that candidate's own evidence record. Both focused
+sheet-reference browser scenarios pass after that integration; this is a new
+two-scenario result, separate from earlier 74-scenario suites.
+
+### Preceding covariance-corner evidence
+
+The preceding [covariance-corner implementation](validation/anisotropic-corners.md)
+uses the full rectified covariance for supported nonparallel fillets, transports
+known uniform thickness scales and retains an outline when inference remains
+unresolved, with a separately checked geometric approximation for an invalid
+corrected source ring. Its 16-case fixed study and 54 new tests retain
+separate mathematical and integration scopes. The final run passes **687 Python
+tests** and **two focused sheet-reference browser scenarios** with frozen source
+and built bytes unchanged; the source-bound record also retains the first failed
+integration run. None is a physical-camera qualification.
+
+### Preceding rank and documentation evidence
+
+The preceding documentation review covers source `185d682`, the open draft
+[rank repair PR #78](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/78)
+based exactly on `main` at `f1679bb` after PRs #76/#77. Its
+[separate record](validation/directional-blur-rank.md) reports **633 local Python
+tests**, zero failures/errors/skips, a successful build, 76 focused checks and
+unchanged frozen source/bundle bytes. It adds no new browser or physical-camera
+result. The [source-scope guide](project-status.md) distinguishes that candidate
+from the separate research lineage and its larger suite.
+
+The [preceding documentation review](validation/documentation-main77-state.md)
+checks commands, navigation and model-stage wording without changing executable
+source or rerunning those geometry/browser studies.
+
+### Earlier revision-bound summaries
+
 The [radial inverse and independent-renderer candidate](validation/radial-inverse.md)
 after integration of `main` at `5c07d0f` passed **623 Python tests**, including 30
 new lens checks, and **74 browser scenarios** against its local CAD service.
@@ -15,7 +55,8 @@ adds separately implemented synthetic lens calculations. Higher-order lens
 stress cases retain nonzero reserved-dimension errors. The separate
 [30-case directional-spread study](validation/directional-spread-qualification.md)
 found missed directional cases and unknown outcomes; no production warning or
-anisotropic correction was added. The [documentation follow-up](validation/documentation-review-2026-11-12.md#model-checks-follow-up)
+anisotropic correction was added in that earlier phase. Main later gained the
+PR #77 path, and the reviewed draft adds its rank guard. The [documentation follow-up](validation/documentation-review-2026-11-12.md#model-checks-follow-up)
 records its browser and documentation checks separately.
 
 The [initial-fit support repair](validation/fit-support.md) adds enclosed-center
@@ -46,6 +87,9 @@ It changes guides relative to that integrated baseline, not runtime behavior.
 
 | Evidence | Revision and result | Scope |
 | --- | --- | --- |
+| Blur-frame transport | Candidate based on PR #83 (`48e4bb5`), integrating main `cad695f`; [725 Python tests, two focused browser scenarios and complete fixed experiment](validation/curve-blur-frames.md) | Stored radius/center and point-map equivariance; retained finite-source biases and negative controls; no calibrated uncertainty or physical-camera qualification |
+| Covariance-aware nonparallel corners | Candidate based on PR #81 (`60732a7`); [687 Python tests, two focused browser scenarios and complete study](validation/anisotropic-corners.md) | Fixed 16-case conditional experiment, thickness-frame controls and bounded line-only recovery; first failed integration retained; no physical-camera qualification |
+| Directional covariance rank guard | Draft PR #78, source `185d682`: [633 local Python tests](validation/directional-blur-rank.md), build and 76 focused checks | Actual sampled Gaussian-step rank counterexample; no new whole-photo, browser or physical-accuracy claim |
 | Recorded directional-blur checks | Branch `claude/directional-blur`, on the slot end-cap commit and `main` at `485da7e` (after #47): **627 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#a-blur-that-differs-by-direction--november-12-2026) | Local result; synthetic photos including the directional-spread qualification's kinds of case, and exact blurred holes; supersedes that record's "no production correction" |
 | Recorded shadow-harmonic checks | Branch `claude/shadow-blur`, on `main` at `f1679bb` (after #77): **629 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#a-shadows-push-on-a-holes-centre--november-12-2026) | Local result; synthetic photos with a soft shadow and wide or directional blur, with noise seeds; slot and outline under those photos not corrected |
 | Recorded slot end-cap checks | Branch `claude/slot-caps`, on `main` at `5c07d0f` (after #46): **594 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#slot-end-caps-placed-with-their-radius-fixed--november-11-2026) | Local result; synthetic photos and outlines; one tone-curve finding not adopted |
