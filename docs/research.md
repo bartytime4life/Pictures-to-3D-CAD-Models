@@ -473,3 +473,17 @@ Following these principles is not a certification of conformance. Keyboard, assi
 The linked upstream documents are maintained sources and may change. The application's lockfiles pin the installed dependency versions; a documentation example on an upstream branch is not proof that every API or behavior matches the installed version.
 
 Generated demonstration imagery is clearly an example. It is useful for checking the workflow, but neither it nor a synthetic shape establishes a physical error bound. A measured-photo benchmark would need known reference parts, capture protocols, independent dimensions, and reported uncertainty.
+
+## Conditional source-space edge fitting
+
+The [raw-source tool](raw-source-fit.md) separates one nonlinear plane-edge offset
+from two bounded linear brightness levels. A known lens-free homography transforms
+the candidate line into raw coordinates; a supplied raw Gaussian covariance
+sets its optical probability. Both the available source samples and predicted
+means use `V^T D^-1` from the same retained sampling/noise factor. This avoids
+inverting weak processed modes while preserving the declared information choice.
+The [complete controls](validation/raw-source-fit.md) keep rounding, encoding,
+wrong-PSF/nonlinear response, flat/tied searches and invisible raw-source mismatch.
+This remains conditional developer inference, not production correction or
+physical uncertainty. Unknown optics, radial/curved edges, data-derived geometry
+and global wall identity need further evidence.

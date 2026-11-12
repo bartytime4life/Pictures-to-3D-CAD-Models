@@ -49,6 +49,12 @@ The [known warp-chain extension](docs/warp-observations.md) also follows the
 earlier perspective/lens resampling and distinguishes those digital operations
 from assumptions about blur in the raw photograph.
 
+The [raw-source fitting tool](docs/raw-source-fit.md) fits available prewarp samples
+in a declared source projection, avoiding amplification from weak processed-profile
+modes. Its bounded brightness fit and finite search retain ambiguity and raw-model
+mismatch diagnostics. It is developer research with supplied optics and geometry;
+it does not change the workbench trace or infer camera accuracy.
+
 This repository contains two related tools:
 
 | Component | Use it for | Entry point |
@@ -177,7 +183,7 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 Start with the [documentation index](docs/README.md) for capture, engineering, export, development and evidence routes.
 
-The [current documentation alignment](docs/validation/documentation-alignment.md)
+The [current coverage record](docs/validation/raw-source-fit.md#documentation-coverage)
 identifies the source baseline and coverage of current guides, historical records
 and generated library material. Numerical experiments and analysis commands are
 collected in the [developer-tool catalog](docs/developer-tools.md).

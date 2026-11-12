@@ -58,3 +58,17 @@ was still in progress at that observation. The [PR #61 workbench run](https://gi
 was also in progress; its separate [library run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43220874912)
 had passed. Follow [project status](../project-status.md#evidence-by-scope) and
 these exact run links for subsequent observations.
+
+## Terminal follow-up — November 12, 13:20 UTC
+
+The [PR #62 workbench run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43221471259)
+completed successfully at exact head `ca321442bd276c177c31f00bcd62fb0ea27b2e0e`.
+Its log records **1,249 Python tests passed in 394.53 seconds**, followed by
+**74 browser scenarios passed in 19.2 minutes**. The workflow completed at
+13:16:44 UTC. This verifies complete execution at the changed head; it does not
+establish that every runner needs 45 minutes. The earlier partial-rate estimate
+remains an extrapolation and runner performance varies.
+
+PR #61's separate workbench run completed cancelled. It retains its original
+configuration and outcome. The new raw-source fitter has separate local and
+future exact-head evidence; these parent runs do not validate that new code.

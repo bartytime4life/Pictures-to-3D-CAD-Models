@@ -118,8 +118,10 @@ source-PSF distinctions above.
 The measured float32 discrepancies also matter for inference: small retained
 covariance modes can amplify them even when a residual lies in the retained
 range. See [conditioning and whitening](profile-observations.md#whiten-the-retained-modes-and-check-what-was-omitted).
-This composition tool does not yet supply a validated nonlinear source-field
-fit or a calibrated likelihood for the processed photograph.
+The separate [source-space fitter](raw-source-fit.md) now supplies a bounded
+finite offset search under a declared lens-free Gaussian source. It uses available
+prewarp observations rather than inverting weak processed-profile modes; it does
+not calibrate a likelihood for a real photograph.
 
 ## Repeat and interpret
 

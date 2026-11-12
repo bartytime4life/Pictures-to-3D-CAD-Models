@@ -3,6 +3,16 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Conditional raw-source edge fitting — November 12, 2026
+
+- Fit a declared lens-free Gaussian half-plane in fixed retained source modes,
+  profiling bounded brightness levels at each finite offset candidate.
+- Keep represented minima, endpoint/flat/tie/rank/work diagnostics and the raw
+  residual components omitted by the chosen source projection.
+- Add [repeatable controls](validation/raw-source-fit.md) for processing arithmetic,
+  source rounding/quantization, wrong optics/response, noise and nonidentification.
+  This developer tool changes no production trace, UI or physical accuracy status.
+
 ## Documentation alignment through PR #62 — November 12, 2026
 
 - Update the source/review chain and exact-head hosted observations, preserving

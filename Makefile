@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 REFERENCE_PYTHON ?= $(CURDIR)/reference-library/.venv/bin/python
 
-.PHONY: help setup setup-app setup-library start dev build build-app build-library test test-app test-library lint smoke slicers freecad photo-benchmark corner-sweep material-gradient-study wall-gradient-study wall-localization-study profile-noise-study postblur-operator-study warp-observation-study
+.PHONY: help setup setup-app setup-library start dev build build-app build-library test test-app test-library lint smoke slicers freecad photo-benchmark corner-sweep material-gradient-study wall-gradient-study wall-localization-study profile-noise-study postblur-operator-study warp-observation-study raw-source-fit-study
 
 help:
 	@echo "make setup          install app and reference-library dependencies; build the app"
@@ -21,6 +21,7 @@ help:
 	@echo "make profile-noise-study OUTPUT=new.json   examine correlated samples and false precision"
 	@echo "make postblur-operator-study OUTPUT=new.json   check known Gaussian plus Keys composition"
 	@echo "make warp-observation-study OUTPUT=new.json   check the raw-photo to profile operator"
+	@echo "make raw-source-fit-study OUTPUT=new.json   fit declared raw source in retained noise modes"
 	@echo "Append -app or -library to setup, build, or test to select one component."
 	@echo "Library browser checks use local HTTP; its own make check defaults to file URLs."
 
@@ -98,3 +99,7 @@ postblur-operator-study:
 warp-observation-study:
 	@test -n "$(OUTPUT)" || { echo "Usage: make warp-observation-study OUTPUT=new.json (see docs/warp-observations.md)"; exit 2; }
 	.venv/bin/python scripts/warp_observation_study.py --output "$(OUTPUT)"
+
+raw-source-fit-study:
+	@test -n "$(OUTPUT)" || { echo "Usage: make raw-source-fit-study OUTPUT=new.json (see docs/raw-source-fit.md)"; exit 2; }
+	.venv/bin/python scripts/raw_source_fit_study.py --output "$(OUTPUT)"
