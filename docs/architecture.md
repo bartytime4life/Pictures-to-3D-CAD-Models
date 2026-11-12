@@ -125,22 +125,52 @@ Known catalog printers resolve their bed geometry from the selected nozzle's sou
 
 `backend.printing.suggest_split_plan` enumerates eleven supported straight-cut grids only after a polygon build exceeds the checked envelope. It validates clipping, connected pieces, area preservation and each piece's placement, then ranks by actual piece count, cut lines, rows and columns. An optional `split_plan` in the build result carries `status` (`suggested` or `no_fit`), `grids_considered`, `grids_failed`, a reason, and, for a suggestion, `columns`, `rows`, `piece_count` and per-piece dimensions, area and bed-fit witnesses. Numerical intersection failures qualify a partial search and do not invalidate the intact build. Fitted single-piece curves are excluded. The frontend displays proposals only for the current model revision; applying one changes only cut settings and requires a fresh build. Unapplied proposals are not serialized as generated parts in recipes or handoffs.
 
-### Remaining free-arc representation limit
+### Circle-consistent final assembly
 
-The tapered-cap repair constrains circles tangent to neighboring lines. A free
-arc can still have its internal radius changed by `correct_blur` or
-`equalise_radii` while `segments` takes its endpoints from the feet of its
-centre on the neighboring lines. Those endpoints need not lie on the changed
-circle. The emitted start/mid/end arc can therefore describe a different centre
-and radius from the fitter's internal values. The
-[retained limitation](validation/tapered-caps.md#regression-scope-and-remaining-work)
-is not repaired by the parallelism or iteration safeguards.
+`fitting.segments` delegates final construction to `backend.circular_joins`.
+Line/circle intersections supply shared endpoint candidates, and each emitted
+three-point arc is checked against its current fitted centre and radius within
+an arithmetic guard. This replaces the earlier free-arc construction whose
+line-foot endpoints and corrected-radius midpoint could describe another
+circle. The [canonical-assembly record](validation/canonical-arcs.md) separates
+this repair from the earlier [tapered-cap repair](validation/tapered-caps.md).
 
-The initial `supported_fit` check precedes these corrections. Later polygon
-validity and the build API's primitive/polygon area check do not enforce
-agreement between an emitted arc and the fitter's earlier centre/radius. The
-API carries three-point arcs, rather than that internal fit state. This source
-stage distinction remains relevant even when a CAD solid is valid.
+After source spans have been trimmed and lines refitted, the fitter freezes
+ordered source endpoints and each arc's signed source sweep. These are fitting
+provenance, not measured physical joins or new API fields. A bounded cyclic
+dynamic program chooses among complete join assignments, checking line
+traversal, arc winding and the transported interior angular witness. It minimizes
+squared endpoint displacement from the frozen source endpoints; the reduced
+cost drops terms common to every choice. This is an explicit fitting rule,
+not a likelihood or evidence that a physical join is unique. The source sweep
+fixes winding; no hard containment in the original angular span is imposed.
+
+Floating-point score and position guards keep numerically unresolved choices
+as competitors. Overlapping objective bounds, an unresolved selected traversal,
+missing intersections, inadequate provenance or the construction work limit
+produce a typed `JoinConstructionError`. Near-contact handling does not silently
+snap an arbitrary free circle to a line. Explicit tangent design constraints
+can normalize roundoff-level contact residuals. An unresolved-radius design
+attempt can also retain an original circle already meeting the contact guard,
+while preserving its unresolved-radius note. These engineering guards are
+not formal interval certificates or an exact-predicate guarantee. Local cycle
+compatibility also does not prove global simplicity; the caller retains its
+whole-boundary validity check.
+
+Initial support and final assembly are separate stages. Before blur correction,
+independently fitted noisy or blurred circles can miss their neighboring lines.
+`supported_fit` first tries canonical assembly, then the historical line-foot
+and midpoint proxy solely for candidate eligibility against the source contour.
+Passing that proxy permits later fitting/correction to run; the proxy is never
+used as final export geometry and does not supply a canonical join association.
+
+Final construction is checked independently after correction. If a ring cannot
+be assembled, `reference._segments_for` retains that ring as a simplified traced
+polyline and reports the join reason; other resolvable boundaries can retain
+their fitted geometry. Discarded candidates do not contribute fitted-radius or
+design-snap claims. If the recovery outline cannot form a valid profile, tracing
+returns a user-facing refusal. Neither recovery nor a valid CAD solid qualifies
+the optical model or physical dimensions.
 
 ## API overview
 
@@ -180,9 +210,11 @@ API callers get the default refusal unless they opt in. Inspect the returned
 reference evidence and warnings before treating a result as sheet-corrected.
 
 Before Gaussian reconstruction or design snapping, the [initial-fit support check](validation/fit-support.md)
-compares assembled candidates with the complete classified contour, while
-retaining only accepted subpixel points for precision fitting. These internal
-coverage points and indices are not new API fields. The build API's separate
+compares canonical candidates, or the explicitly limited eligibility proxy,
+with the complete classified contour, while retaining only accepted subpixel
+points for precision fitting. Final circle-consistent assembly is a separate
+check after correction. These internal coverage points, source endpoints and
+indices are not new API fields. The build API's separate
 3 % primitive/polygon area check below validates the supplied profile; it does
 not recover agreement with source observations that were already discarded.
 With thickness correction, `reference.focal_source` can be `sheet`, `exif`,

@@ -94,7 +94,10 @@ preset can still be valid CAD; choosing another printer or changing the print
 plan preserves the measured size unless you explicitly change design scale.
 Containment does not establish local feature accuracy. For fit-critical arcs
 and holes, complete the [fitted-curve checks](exports.md#verify-critical-arc-geometry)
-before relying on the printer-fit result.
+before fabrication. A boundary retained as a traced outline after unresolved
+arc joins is part of the generated geometry being checked for bed fit; that
+containment result does not establish its physical contour or assign it an
+analytic radius. Other accepted fitted boundaries remain available.
 
 ## Materials and appearance
 

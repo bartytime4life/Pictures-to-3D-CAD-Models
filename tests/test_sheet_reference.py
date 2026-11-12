@@ -877,13 +877,19 @@ def test_a_stub_cut_off_a_straight_edge_is_fitted_as_part_of_it(flat_mm, turn_de
     breakpoint falls on a straight edge 1.8 to 2.4 mm from a sharp corner, within
     min_line, and the stub it cuts off is too short to be a line. Fitted as one arc with
     the corner's blur-rounded join, the stub left the whole outline a polyline. As part
-    of its edge it leaves five lines and five arcs. The R30 arc reads within 0.03 mm.
+    of its edge it leaves five lines and five arcs. The fitted R30 candidate reads
+    within 0.03 mm; that radius is not an exported analytic claim after recovery.
     Each right-angle corner is rounded by the blur alone, to under 0.6 mm, where the
     stub and the corner together had been an arc of 1.3 to 3.2 mm; with snapping, the
     exact corner model traces it sharp, with a model resolution estimate below 0.6 mm.
-    The outline encloses the plate's area within 0.03 %."""
+    Final assembly either keeps circle-consistent analytic geometry or explicitly
+    retains the source outline within the standard 0.05 mm simplification tube.
+    Both enclose the plate's area within the original 0.03 % bound."""
     from shapely import affinity
-    from shapely.geometry import Polygon
+    from shapely.geometry import LineString, Polygon
+
+    from backend import reference
+    from backend.circular_joins import JoinConstructionError
 
     ppm, radius = 5.0, 30.0
     angles = np.linspace(math.pi / 2, math.pi / 6, 600)
@@ -917,8 +923,31 @@ def test_a_stub_cut_off_a_straight_edge_is_fitted_as_part_of_it(flat_mm, turn_de
         assert len(square) == 3 and max(square) < 0.6
         if snap:
             assert [p.kind for p in prims].count("arc") < 5
-        outline = Polygon(fitting.sample_segments(fitting.segments(prims), 0.01))
+        notices = []
+        recovery_tolerance = 0.05 * ppm  # standard production polyline tolerance
+        segments, analytic = reference._segments_for(points, prims, recovery_tolerance, notices, "outer boundary")
+        expected_recovery = not snap and (flat_mm, turn_deg) in {(6.0, 0), (4.0, 0), (10.0, 0), (6.0, 2)}
+        assert analytic is not expected_recovery
+        outline = Polygon(fitting.sample_segments(segments, 0.01))
         assert outline.is_valid and abs(outline.area / ppm**2 / plate.area - 1) < 3e-4
+        if expected_recovery:
+            with pytest.raises(JoinConstructionError, match="no_intersection"):
+                fitting.segments(prims)
+            assert len(notices) == 1 and "outer boundary was kept as a traced outline" in notices[0]
+            assert "fitted curves that do not intersect" in notices[0]
+            assert all(segment[0] == "line" for segment in segments)
+            source = LineString(np.vstack([points, points[0]]))
+            assert source.buffer(recovery_tolerance).covers(outline.boundary)
+            assert outline.boundary.buffer(recovery_tolerance).covers(source)
+        else:
+            assert not notices and len(segments) == len(prims)
+            for primitive, segment in zip(prims, segments):
+                if primitive.kind == "arc":
+                    start, middle, end = map(np.asarray, segment[1:])
+                    a, b = middle - start, end - start
+                    offset = np.linalg.solve(2 * np.vstack([a, b]), [a @ a, b @ b])
+                    assert np.linalg.norm(start + offset - primitive.data["c"]) < 1e-7
+                    assert abs(np.linalg.norm(offset) - primitive.data["r"]) < 1e-7
 
 
 def test_camera_pose_recovers_a_known_camera():

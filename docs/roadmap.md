@@ -31,7 +31,7 @@ Reference entry also includes an [endpoint-placement sensitivity explorer](refer
 | Manual profile correction | Repair a small tracing error without retaking the photo | Undo/redo, topology validation, accessible editing, consistent export revisions |
 | Lens and perspective correction | Improve suitable off-axis captures | **Implemented for reference-sheet photos** (one radial coefficient, plane homography, top-face parallax; [method](reference-sheet.md)). Still needed: measured accuracy on reference parts and real phones, tangential/k₂ lens terms, edge levels for shadows that are not linear near an edge (linear paper slopes are now followed), a check of real cameras' tone mapping against the sRGB decoding, and a camera height for near-frontal photos of parts without round holes (qualifying off-center holes assumed round can now provide it when the search accepts an identifiable minimum; narrow walls can share a tone estimate when sufficient bands and the fit's acceptance checks support it) |
 | Parametric CAD recipes | Make more of the construction editable downstream | A defined feature schema, stable regeneration, and version migration |
-| Analytic line and circle fitting | Replace suitable traced approximations with editable geometric features | **Implemented for reference-sheet photos**, with residual gates, an [initial-fit support check](validation/fit-support.md), [stable tapered tangent constraints](validation/tapered-caps.md), [conditional corner-resolution estimates](validation/sharp-corner-resolution.md), a reported and optional snap list, and polyline fallback. Further work: consistent free-arc joins after radius correction, forward-model adequacy after Gaussian/design reconstruction, per-item snap review, fitted geometry for split output and for photos without a sheet, validated per-dimension uncertainty |
+| Analytic line and circle fitting | Replace suitable traced approximations with editable geometric features | **Implemented for reference-sheet photos**, with residual gates, an [initial-fit support check](validation/fit-support.md), [stable tapered tangent constraints](validation/tapered-caps.md), [conditional corner-resolution estimates](validation/sharp-corner-resolution.md), a reported and optional snap list, and polyline fallback. The [canonical-arc candidate](validation/canonical-arcs.md) adds circle-consistent final joins and explicit per-ring recovery. Further work: physical branch identification and forward-model adequacy after Gaussian/design reconstruction, per-item snap review, fitted geometry for split output and for photos without a sheet, validated per-dimension uncertainty |
 | Measured-photo benchmark | Quantify error on real parts | **The runner is implemented** (`make photo-benchmark`; [guide](photo-benchmark.md)): bounded global size correspondence, complete dimension-coverage totals, conditional per-dimension error, observed spread, and a two-term scale/edge diagnostic. Still needed: independently evaluated, calipered parts photographed with real phones under predeclared crossed conditions and reserved checks |
 | Directional blur and independent simulation | Expose model mismatch before applying unsupported corrections | **Implemented:** a separate synthetic radial inverse, production inverse-domain safeguards and test-only higher-order lens stress inputs; [record](validation/radial-inverse.md). The [30-case blur qualification](validation/directional-spread-qualification.md) found missed directional cases and unknown outcomes, so no production warning or anisotropic correction is justified. Needed: balanced valid orientation support, forward-model adequacy checks, independently specified new evaluations and reserved real captures |
 | Measured local-model selection | Choose the smallest assistant that gives useful advice quickly | Installed artifact/license verification, repeatable latency results, and human review of fixed project-specific cases |
@@ -115,14 +115,13 @@ and refuses unresolved local contacts. Choosing the correct physical feature
 from a possibly wrong seed and qualifying noisy or under-sampled profiles remain
 part of model adequacy, rather than consequences of exact arithmetic.
 The [tapered-cap repair](validation/tapered-caps.md) preserves tangent-circle
-geometry for actual nonparallel sides. A separate free-arc path can still emit
-a three-point circle differing from its stored circle after radius correction;
-[curve assembly limits](reference-sheet.md#7-lines-arcs-and-circles) describe
-that remaining issue. A repair must preserve connected joins and the observed
-arc's traversal/sector, with explicit handling of absent or ambiguous joins.
-Neither relabeling the exported radius nor a blanket distance test against the
-blurred outline establishes the corrected boundary.
-Prioritize this representation consistency and final forward-model adequacy, then
+geometry for actual nonparallel sides. The [canonical-arc candidate](validation/canonical-arcs.md)
+now constructs circle-consistent joins, retains source traversal and handles
+unavailable or ambiguous constructions per ring. Its endpoint-displacement rule
+selects geometry under a declared fitting objective; it does not identify the
+physical join or eliminate finite-shape/model error. Formal exact constructions,
+joint finite-shape inference and qualification of image-derived parameters remain open.
+Prioritize final forward-model adequacy, then
 independently specified model-mismatch experiments and repeatable ground-truth
 capture. The lens renderer is now separately implemented, but the shared
 physical assumptions and observed higher-order mismatch remain. Keep the

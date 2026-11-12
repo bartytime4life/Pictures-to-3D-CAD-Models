@@ -62,9 +62,14 @@ extrapolation and retains an outline when the analytic fit lacks support.
 Directional blur can still bias accepted geometry without a dedicated warning;
 the [camera-model limits](validation/scientific-model-review.md) remain.
 Turning off **Recover design intent** leaves analytic fitting and blur correction
-active. A remaining limitation can make a free arc joined to lines export as a
-different circle after blur correction; see [fitted-curve checks](exports.md#verify-critical-arc-geometry).
-Measure fit-critical exported radii and joins in CAD against the real part.
+active. Final arc assembly preserves the fitted circle when its joins can be
+resolved. Otherwise the affected outer boundary or hole is kept as a traced
+outline, with a reason in the warnings and trace notes. Other accepted fitted
+boundaries and the reference-sheet scale remain available. Fitted counts and
+radius/design notes describe accepted final geometry, rather than discarded
+candidates; a retained outline has no accepted analytic radius.
+See [fitted-curve checks](exports.md#verify-critical-arc-geometry), and measure
+fit-critical exported radii and joins in CAD against the real part.
 For an incorrect fit, use ordinary silhouette tracing from a suitable front-on
 capture with a measured scale, or reconstruct the critical features in CAD,
 then check dimensions independently.

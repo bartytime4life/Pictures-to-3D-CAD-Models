@@ -6,9 +6,10 @@ CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
 For a concise source/review snapshot, use [project status](project-status.md).
-The [current documentation review](validation/documentation-pr70.md)
-covers published PR #70, current commands and API contracts, and the remaining
-free-arc export limitation. The [PR #70 coverage](validation/tapered-caps.md#documentation-coverage)
+The [current geometry and documentation record](validation/canonical-arcs.md)
+covers circle-consistent final assembly and explicit source-outline recovery.
+The [preceding documentation review](validation/documentation-pr70.md) retains
+its published PR #70 baseline, command/API checks and then-observed arc limitation. The [PR #70 coverage](validation/tapered-caps.md#documentation-coverage)
 retains the documentation checks performed with that geometry repair.
 The [documentation review through PR #66](validation/documentation-response-state.md)
 audits the published PR #66 baseline, executable calibration examples, command
@@ -29,16 +30,26 @@ retains its source, executable API example and completed checks.
 
 ## Current workbench evidence — November 12, 2026
 
-The [tapered-cap repair](validation/tapered-caps.md) preserves the actual tangent
+The [circle-consistent assembly candidate](validation/canonical-arcs.md) preserves
+stored circles in emitted arcs and retains an affected source outline when joins
+are missing, ambiguous or numerically unresolved. Independent exact, actual-fit
+and finite-blur controls distinguish representation correctness from physical
+shape recovery. Its final local regression passes **1,609 Python tests**, with
+no errors or skips; the record preserves the earlier four failures and explains
+the unchanged-tolerance recovery-contract update. All **74 browser scenarios**
+pass in the isolated comparison; two earlier build-busy failures remain recorded
+with their competing requester unidentified.
+
+The preceding [tapered-cap repair](validation/tapered-caps.md) preserves the actual tangent
 lines of a rounded end. A small real taper no longer becomes a constant-width
 slot. Stable local coordinates and geometry-aware iteration stopping keep
 line-anchor choices and tiny radius increments from silently moving its centre.
 Independent exact profiles, actual CAD/DXF/STEP exports and retained numerical
 refusals separate digital geometry correctness from photo accuracy.
 Its source-bound record reports **1,556 Python tests and 74 browser scenarios**
-passing. This documentation pass does not rerun those suites. Free arcs can
-still emit a circle different from their stored centre/radius after correction;
-follow the [critical-arc checks](exports.md#verify-critical-arc-geometry).
+passing at its own source. That record predates the current join repair;
+follow the [critical-arc checks](exports.md#verify-critical-arc-geometry) for
+independent CAD review and retained-outline limits.
 
 The [continuous Gaussian-domain developer extension](validation/gaussian-response-domains.md)
 retains every region of one supplied offset/sigma prior in accepted, excluded

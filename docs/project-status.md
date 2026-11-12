@@ -1,57 +1,60 @@
 # Project status and evidence
 
-Documentation snapshot: **November 12, 2026**. These guides describe published
-[draft PR #70](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/70)
-at `df53bc495a83ebf72c38f0f14a778e153d35b8db`, tree
-`cabe975b6f2eb229072182e9a53ba45f6e7dc1cc`. That candidate repairs production fitting of
-rounded ends whose sides have a small real taper. The
-[exact-geometry and native-export record](validation/tapered-caps.md) checks
-tangency, line-anchor invariance, radius/centre consistency and numerical limits.
-The interface, scale inputs and API/file schemas are unchanged. This is a
-digital geometry repair, not physical camera calibration. Start with
-[setup](development.md), the [task index](README.md),
-[developer tools](developer-tools.md) or [API examples](api-examples.md).
-The [current documentation review](validation/documentation-pr70.md) changes
-guides only and preserves the implementation and its original test evidence.
+Documentation snapshot: **November 12, 2026**. The current candidate repairs
+circle-consistent line/arc joins in production tracing, retaining an affected
+source outline with an explicit notice when analytic construction is unavailable.
+The [geometry and recovery record](validation/canonical-arcs.md) distinguishes
+this digital repair from physical-camera accuracy. Interface controls, scale
+inputs and API/file schemas remain unchanged. Start with [setup](development.md),
+the [task index](README.md), [developer tools](developer-tools.md) or
+[API examples](api-examples.md).
+
+The reviewed baseline is PR #71 at
+`861de04baa0e55775e7a90faba9288ea2205abf6`, tree
+`ab586e3b1df58713461b869aa86c4ed9ed7e8416`. Its later merge into
+`codex/tapered-cap-geometry` at `cecb8b69f7dbeb275b553220ddc4660f43a7d38b`
+has the identical tree. The [preceding documentation review](validation/documentation-pr70.md)
+retains its original checks and historical review states.
 
 ## Source and review state
 
-At this check, `main` was `5c07d0f70d7df0200bc24227c8ac7e9b630f7f09`.
-PRs #47–#68 retain their open/unmerged **15:20 UTC** observation. PR #69
-retains its open/draft/unmerged **15:50 UTC** observation. PR #70 was verified
-open, draft and unmerged at **16:01 UTC**. These are review-state observations, separate from CI results.
-This candidate branch includes their changes; that checkout of `main` does
-not contain them. The conditional corner
-analysis remains separate from production tracing; the grid and crossing repairs
-affect the existing production edge-profile search.
+At the **16:46 UTC** readback, `main` was
+`485da7e01c6447177aae6e54e71ad2177544bdd6`, integrating PR #47.
+PRs **#47–#71 are closed and merged into their listed base branches**. Those
+individual merges do not propagate the whole stack into `main`: PRs #48–#71
+were merged into successive review branches. The current candidate includes
+those changes; the observed `main` does not. The conditional corner and response
+analyses remain developer tools; production changes have their own records.
 
 | Source | Included changes | Review state at this snapshot |
 | --- | --- | --- |
-| `main` at `5c07d0f` | Initial-fit support, benchmark correspondence/coverage, weak-edge recovery and fillet-sector preservation | Integrated through PRs #43–#46 |
-| `ba94ef8e55bbc39b8074840052244f92c72be661` | Central radial-inverse branch safeguards and an independently implemented synthetic lens inverse | [PR #47](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/47), open; base `main` |
-| `a3a2397cde2b1afbeda133ac86218eaae5a22edc` | Verified corner-resolution crossing and conditional radius messages | [PR #48](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/48), open draft; base PR #47's branch |
-| `77b7f6f74ea411e336ff3cf613b33e406ee98d72` | Current-state guides, API example, mathematical wording and library maintenance instructions | [PR #49](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/49), open draft; base PR #48's branch |
-| `be2a58cedb7a69702a57c9953a0e0d1e965feae8` | Version-1 conditional corner-radius analysis with fixed blur and provenance-bound CLI reports | [PR #50](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/50), open draft; base PR #49's branch |
-| `b366b3f2cda4ca33a34b2b2aa109a9b1718acb0c` | Version-2 joint radius/blur domains, common-blur consistency and conservative radius projections | [PR #51](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/51), open draft; base PR #50's branch |
-| `b800edbcf0a20ac2d30b82a9a135cfc46aa76a55` | Documentation consolidation, complete review chain and source-bound validation navigation | [PR #52](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/52), open draft; base PR #51's branch |
-| `e22ff3d6608896c945bd3bc6ad338ff6a780e889` | Version-3 known normalized uniform pixel-aperture means | [PR #53](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/53), open draft; base PR #52's branch |
-| `620d5c717e21fd7d7a797b114972fd2b09e9ece9` | Version-4 known fixed signed sampling stencils with whole-radius bounds and exact gain accounting | [PR #54](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/54), open draft; base PR #53's branch |
-| `a5f99e5a4180ec2437c08215faa12058b6b490a9` | Symmetric production profile sampling and an independent material-gradient study | [PR #55](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/55), open draft; base PR #54's branch |
-| `37eb4d2086c61dda983fe4e39391d9693dc82331` | Actual-distance crossing ranking and explicit unresolved contacts | [PR #56](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/56), open draft; base PR #55's branch |
-| `7dfe0fe698c8831e9c02ae960f03bcdc533701dc` | Bounded five-node wall/lighting study, complete CSVs and constructive local ambiguity | [PR #57](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/57), open draft; base PR #56's branch |
-| `0f5f888708b623245854b53458431af495b387fe` | Complete documentation review, numerical-tool catalog and corrected mathematical limits | [PR #58](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/58), open draft; base PR #57's branch |
-| `6d2672710e54e9117048613dec6ef3ea448062b7` | Expanded consistent wall geometry, local observations, explicit numerical withholding and complete positive/negative development evidence | [PR #59](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/59), open draft; base PR #58's branch |
-| `778c3392c6dfe111d8f422959fbdbc09ad8ba75b` | Bounded fixed-observation and finite-filter operators, conditional correlated-noise accounting and false-precision controls | [PR #60](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/60), open draft; base PR #59's branch |
-| `8523862145ef264d265d84b9443b779ea09db072` | Known raw-photo warp, smoothing and profile composition; digital rounding and independent optical-source controls | [PR #61](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/61), open draft; base PR #60's branch |
-| `ca321442bd276c177c31f00bcd62fb0ea27b2e0e` | Hosted workbench job budget from 30 to 45 minutes; source, test set and individual limits retained | [PR #62](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/62), open draft; base PR #61's branch |
-| `ad7cc00fed4b2e7006aae957758a12b2f9f15528` | Complete documentation alignment, current source/CI snapshot, engineering wording and source-preserving verification | [PR #63](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/63), open draft; base PR #62's branch |
-| `701aa91af7a0b1c62e5527eed35e0227bdf0e9f3` | Raw-source edge fitting in fixed retained modes, bounded brightness, numerical ambiguity and standardized raw/complement diagnostics | [PR #64](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/64), open draft; base PR #63's branch |
-| `8b9c6a803b89d05daee38b7f48c079f70c76de3a` | Documentation review, setup/navigation and raw-source API/diagnostic guidance; complete 86-document audit | [PR #65](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/65), open draft; base PR #64's branch |
-| `81dd0871aab390b1613bedc0d2b7c7f0578cf280` | Exact common-response consistency, strict CLI, finite edge/calibration controls and independent certificate audits | [PR #66](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/66), open draft; base PR #65's branch |
-| `b27e48e09079b497d85dea766233db266e13cc90` | Complete documentation review, executable calibration examples, recovery and report-handling guidance | [PR #67](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/67), open draft; base PR #66's branch |
-| `0b359ecb38a4cbe8df5fd6e0a2cd9fd88fb42e4d` | Exact input/output-rectangle response constraints, outward Gaussian CDF covers and complete finite refinement controls | [PR #68](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/68), open draft; base PR #67's branch |
-| `0d8bd37633900f4f88200be13bd5309d28ca58f2` | Continuous shared Gaussian offset/blur domains, strict CLI, independent proof replay and complete documentation review | [PR #69](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/69), open draft; base PR #68's branch |
-| `df53bc495a83ebf72c38f0f14a778e153d35b8db` | Tangent geometry for tapered rounded ends, stable local radius/centre updates and independent native-export controls | [PR #70](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/70), open draft; base PR #69's branch |
+| `main` at `485da7e` | Initial-fit support, correspondence/coverage, weak-edge recovery, fillet-sector preservation and radial-inverse safeguards | Integrated through PR #47 |
+| `ba94ef8e55bbc39b8074840052244f92c72be661` | Central radial-inverse branch safeguards and an independently implemented synthetic lens inverse | [PR #47](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/47), merged into `main` |
+| `a3a2397cde2b1afbeda133ac86218eaae5a22edc` | Verified corner-resolution crossing and conditional radius messages | [PR #48](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/48), merged into PR #47's branch |
+| `77b7f6f74ea411e336ff3cf613b33e406ee98d72` | Current-state guides, API example, mathematical wording and library maintenance instructions | [PR #49](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/49), merged into PR #48's branch |
+| `be2a58cedb7a69702a57c9953a0e0d1e965feae8` | Version-1 conditional corner-radius analysis with fixed blur and provenance-bound CLI reports | [PR #50](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/50), merged into PR #49's branch |
+| `b366b3f2cda4ca33a34b2b2aa109a9b1718acb0c` | Version-2 joint radius/blur domains, common-blur consistency and conservative radius projections | [PR #51](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/51), merged into PR #50's branch |
+| `b800edbcf0a20ac2d30b82a9a135cfc46aa76a55` | Documentation consolidation, complete review chain and source-bound validation navigation | [PR #52](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/52), merged into PR #51's branch |
+| `e22ff3d6608896c945bd3bc6ad338ff6a780e889` | Version-3 known normalized uniform pixel-aperture means | [PR #53](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/53), merged into PR #52's branch |
+| `620d5c717e21fd7d7a797b114972fd2b09e9ece9` | Version-4 known fixed signed sampling stencils with whole-radius bounds and exact gain accounting | [PR #54](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/54), merged into PR #53's branch |
+| `a5f99e5a4180ec2437c08215faa12058b6b490a9` | Symmetric production profile sampling and an independent material-gradient study | [PR #55](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/55), merged into PR #54's branch |
+| `37eb4d2086c61dda983fe4e39391d9693dc82331` | Actual-distance crossing ranking and explicit unresolved contacts | [PR #56](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/56), merged into PR #55's branch |
+| `7dfe0fe698c8831e9c02ae960f03bcdc533701dc` | Bounded five-node wall/lighting study, complete CSVs and constructive local ambiguity | [PR #57](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/57), merged into PR #56's branch |
+| `0f5f888708b623245854b53458431af495b387fe` | Complete documentation review, numerical-tool catalog and corrected mathematical limits | [PR #58](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/58), merged into PR #57's branch |
+| `6d2672710e54e9117048613dec6ef3ea448062b7` | Expanded consistent wall geometry, local observations, explicit numerical withholding and complete positive/negative development evidence | [PR #59](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/59), merged into PR #58's branch |
+| `778c3392c6dfe111d8f422959fbdbc09ad8ba75b` | Bounded fixed-observation and finite-filter operators, conditional correlated-noise accounting and false-precision controls | [PR #60](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/60), merged into PR #59's branch |
+| `8523862145ef264d265d84b9443b779ea09db072` | Known raw-photo warp, smoothing and profile composition; digital rounding and independent optical-source controls | [PR #61](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/61), merged into PR #60's branch |
+| `ca321442bd276c177c31f00bcd62fb0ea27b2e0e` | Hosted workbench job budget from 30 to 45 minutes; source, test set and individual limits retained | [PR #62](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/62), merged into PR #61's branch |
+| `ad7cc00fed4b2e7006aae957758a12b2f9f15528` | Complete documentation alignment, current source/CI snapshot, engineering wording and source-preserving verification | [PR #63](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/63), merged into PR #62's branch |
+| `701aa91af7a0b1c62e5527eed35e0227bdf0e9f3` | Raw-source edge fitting in fixed retained modes, bounded brightness, numerical ambiguity and standardized raw/complement diagnostics | [PR #64](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/64), merged into PR #63's branch |
+| `8b9c6a803b89d05daee38b7f48c079f70c76de3a` | Documentation review, setup/navigation and raw-source API/diagnostic guidance; complete 86-document audit | [PR #65](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/65), merged into PR #64's branch |
+| `81dd0871aab390b1613bedc0d2b7c7f0578cf280` | Exact common-response consistency, strict CLI, finite edge/calibration controls and independent certificate audits | [PR #66](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/66), merged into PR #65's branch |
+| `b27e48e09079b497d85dea766233db266e13cc90` | Complete documentation review, executable calibration examples, recovery and report-handling guidance | [PR #67](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/67), merged into PR #66's branch |
+| `0b359ecb38a4cbe8df5fd6e0a2cd9fd88fb42e4d` | Exact input/output-rectangle response constraints, outward Gaussian CDF covers and complete finite refinement controls | [PR #68](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/68), merged into PR #67's branch |
+| `0d8bd37633900f4f88200be13bd5309d28ca58f2` | Continuous shared Gaussian offset/blur domains, strict CLI, independent proof replay and complete documentation review | [PR #69](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/69), merged into PR #68's branch |
+| `df53bc495a83ebf72c38f0f14a778e153d35b8db` | Tangent geometry for tapered rounded ends, stable local radius/centre updates and independent native-export controls | [PR #70](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/70), merged into PR #69's branch |
+| `861de04baa0e55775e7a90faba9288ea2205abf6` | Documentation review through PR #70, critical-arc checks and source-preserving command/API verification | [PR #71](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/71), merged into PR #70's branch |
+| Current candidate | Circle-consistent joins, explicit per-boundary recovery and independent circle/arc controls | Proposed on `codex/tapered-cap-geometry`; source-bound [local evidence](validation/canonical-arcs.md) |
 
 The PR links show live review state. A documentation update does not install,
 merge or deploy those changes. Record the checkout used to start a service:
@@ -64,7 +67,7 @@ git status --short --branch
 The health endpoint's `version: "0.1.0"` is shared by multiple revisions and
 cannot identify which implementation a server is running.
 
-These review branches remain separate from integrated `main` and the
+The later review-branch changes remain separate from the observed `main` and the
 primary `codex/slicer-integration` checkout at
 `d747e30697a99a8f90d747d23d6ab7c1fa8b95ed`. The wall candidate's broader search and conditional
 numerical checks do not establish physical edge identity. The matched final-Keys
@@ -77,7 +80,7 @@ branches do not change an already running or installed application.
 | --- | --- | --- |
 | Flat-part reconstruction | Reviewed 2D outer boundary and through-holes, uniform scale and entered thickness | No hidden geometry, varying thickness or original feature-history recovery |
 | Reference-sheet correction | One radial coefficient, plane homography, subpixel edges and conditional wall/parallax correction | Assumed optics, tone response and wall geometry; no measured-phone accuracy result |
-| Fitted circles, lines and arcs | Residual gates, complete initial-boundary support check and constrained tapered-cap repair | Later reconstruction can disagree with observations; a free arc's exported circle can disagree with its stored centre/radius after correction. [Check critical arcs](exports.md#verify-critical-arc-geometry) |
+| Fitted circles, lines and arcs | Residual gates, initial-boundary support, tapered-cap constraints and circle-consistent final joins | Disjoint/ambiguous joins retain a notified source outline; consistency does not establish physical accuracy. [Check critical arcs](exports.md#verify-critical-arc-geometry) |
 | Corner-radius resolution | Checked numerical crossing under a scalar Gaussian model | A model-resolution estimate is not a physical upper-radius bound |
 | Bed placement and split suggestions | Continuous-angle polygon placement or conservative curve enclosure; bounded straight-cut grid search | Individual geometric containment; native slicing, joints and physical fit need separate checks |
 | Optional AI assistance | Text-only local inference, bounded proposals, explicit Apply and Undo | Fixture tests establish integration; no live-model quality winner is recorded |
@@ -98,6 +101,7 @@ there is no product endpoint, automatic tracing correction or accuracy label.
 
 | Evidence | Recorded result | Interpretation |
 | --- | --- | --- |
+| Circle-consistent final-assembly candidate | [Construction and recovery](validation/canonical-arcs.md): 1,609 Python tests, 74 isolated browser scenarios, 132 independent rows/394 checks and all six actual-fit controls pass | Digital circle consistency and explicit source recovery; original 72/74 browser run retains two unattributed build-busy failures; no physical qualification |
 | Tapered rounded-end geometry candidate | [Source-bound repair and native exports](validation/tapered-caps.md): 1,556 Python tests, 74 browser scenarios, 20 new focused cases and all 11 native-export rows pass | Exact synthetic geometry, line-anchor invariance and retained arithmetic limits; no physical camera or manufacturing qualification |
 | Continuous Gaussian-response domain candidate | [Joint-domain controls](validation/gaussian-response-domains.md): 1,536 Python tests passed; all 27 analyses independently replayed, including 319 tree nodes and 396 CDF certificates | Supplied straight-edge/response model, complete retained unknowns and no general convergence or physical qualification |
 | Bounded-input response developer candidate | [Rectangle/CDF experiment](validation/response-rectangles.md): 1,446 Python tests passed; all 288 finite cases retained, with 200 outer-box exclusions, 82 every-input certificates and six box-undetermined cases | Supplied mathematical Gaussian/response model; Cartesian compatibility alone is insufficient for correlated input feasibility |
@@ -134,7 +138,7 @@ workbench run at **15:17 UTC**, when it had completed successfully. PR #68's
 workbench and library runs were checked at **15:17 UTC**; its workbench
 result was refreshed at **15:39 UTC**. PR #69's two runs were checked at
 **15:39 UTC**; PR #69's workbench run was refreshed at **16:02 UTC**. PR #70's
-workbench run was checked at **16:00 UTC**. Each result remains
+workbench run and PR #71's run were refreshed at **16:46 UTC**. Each result remains
 bound to its own head:
 
 | Head | Hosted workflow | Result at this observation |
@@ -171,7 +175,8 @@ bound to its own head:
 | `0b359ec` | [Library run 48](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43241865188) | Completed successfully at the 15:17 UTC check |
 | `0d8bd37` | [Workbench run 132](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43247853904) | Completed successfully at the 16:02 UTC check |
 | `0d8bd37` | [Library run 49](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43247853602) | Completed successfully at the 15:39 UTC check |
-| `df53bc4` | [Workbench run 133](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43252921196) | In progress at 16:00 UTC; no terminal result inferred |
+| `df53bc4` | [Workbench run 133](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43252921196) | Completed successfully at the 16:46 UTC check |
+| `861de04b` | [Workbench run 134](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43255349019) | Completed successfully at the 16:46 UTC check |
 
 Follow the exact run links for later results. The raw-source candidate's local 1,273-test result is
 separate from hosted CI. The response-calibration candidate records its own local
@@ -183,12 +188,13 @@ documentation tests and the historical Revision 7 release checks.
 
 ## Next engineering work
 
-First preserve one consistent circle and ordered line/arc joins through every
-free-arc radius change and export. The constrained tapered-cap repair does not
-resolve this separate path. Disabling **Recover design intent** still permits
-blur correction and is not an unprocessed-outline mode. The
-[export checks](exports.md#verify-critical-arc-geometry) give the current manual
-verification route; no general circle-consistency gate is implemented yet.
+The current candidate constructs circle-consistent final joins or retains the
+affected source outline with a notice. Its minimum-displacement rule does not
+identify a unique physical join or qualify the corrected circle. Prioritize
+finite-shape model adequacy and independent measurements that distinguish
+competing boundaries. Disabling **Recover design intent** still permits blur
+correction; use the [export checks](exports.md#verify-critical-arc-geometry)
+to review critical curves and joins independently.
 
 Prioritize absolute forward-model adequacy, then independently specified
 model-mismatch evaluations and reserved real captures with measured dimensions.
