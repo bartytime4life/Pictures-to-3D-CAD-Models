@@ -13,7 +13,9 @@ trace or valid CAD solid still needs comparison with the original outline and
 independent dimensions. The [radial-domain and independent-renderer record](docs/validation/radial-inverse.md)
 documents numerical safeguards and higher-order lens counterexamples. The
 [directional-blur research](docs/validation/directional-spread-qualification.md)
-also records missed cases; it does not supply a product accuracy status.
+also records missed cases; it does not supply a product accuracy status. The
+tracer traces a uniform directional blur by direction on synthetic photos
+([method](docs/reference-sheet.md)).
 
 This repository contains two related tools:
 

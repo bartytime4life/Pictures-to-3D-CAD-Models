@@ -264,6 +264,42 @@ def test_a_soft_shadow_no_longer_pushes_edges_out(client, shadow):
     assert max(errors["small"], errors["bore"], errors["outer"]) < 0.0125
 
 
+def test_a_directional_blur_is_measured_by_direction_and_stays_within_limits(client):
+    """The scientific model review's directional-blur case: the sensor blur is 1 px
+    across and 3 px along the photo (a shaken camera). One median blur width for every
+    edge put Ø6 0.067 mm off and the slot 0.034 mm. Each edge is now traced with its own
+    spread across it (edges.edge_covariance) and curves are corrected with det(S)^(1/4),
+    so every feature is inside the limits, and the trace says the blur differs."""
+    data, _ = S.render(blur=(1.0, 3.0), **{**CASES["overhead"], "noise": 0.0, "quality": 100})
+    response = trace(client, data, reference="a4")
+    assert response.status_code == 200, response.text
+    profile = response.json()["profile"]
+    assert within_limits(S.feature_errors(profile)) == {}
+    assert any("edge blur differs by direction" in note for note in profile["reference"]["notes"])
+    # Blurred along the slot, its end caps' tips are drawn in by det(S) / (2r n' S n) for
+    # their own direction, not by the circle's average: 0.026 mm long, now 0.007 mm.
+    data, _ = S.render(blur=(3.0, 1.0), **{**CASES["overhead"], "noise": 0.0, "quality": 100})
+    assert S.feature_errors(trace(client, data, reference="a4").json()["profile"])["slot"] < 0.015
+    # Turned 30 degrees from the photo's axes the blur has a cross term; with one median
+    # width Ø6 read 0.138 mm off and the outline 0.337 mm.
+    data, _ = S.render(blur=(3.0, 1.0, 30.0), **{**CASES["overhead"], "noise": 0.0, "quality": 100})
+    assert within_limits(S.feature_errors(trace(client, data, reference="a4").json()["profile"])) == {}
+    # The same blur turned 45 degrees, on a tilted photo with noise, JPEG, lens, uneven
+    # light and shadow. The outline's long edges give two directions most profiles; an
+    # unweighted covariance fit followed them, left one other direction 11.5 % off and
+    # was rejected, and one median width put Ø6 0.057 mm off.
+    data, _ = S.render(blur=(3.0, 1.0, 45.0))
+    profile = trace(client, data, reference="a4").json()["profile"]
+    assert any("edge blur differs by direction" in note for note in profile["reference"]["notes"])
+    assert within_limits(S.feature_errors(profile)) == {}
+    # A thick part, tilted, under that blur distorts its small holes enough that one was
+    # fitted as an arc closing on itself after a zero-length line, which stopped the
+    # trace. That ring now keeps its traced outline.
+    data, _ = S.render(blur=(1.0, 3.0), thickness=4.0)
+    response = trace(client, data, reference="a4", thickness_mm=4)
+    assert response.status_code == 200, response.text
+
+
 def test_a_camera_saving_with_a_plain_gamma_stays_within_limits(client):
     """The tracer decodes photos as sRGB. A camera that saves with a plain 2.2 gamma
     differs slightly from that curve and costs about 0.01-0.02 mm."""

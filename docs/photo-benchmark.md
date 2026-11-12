@@ -128,28 +128,28 @@ This report is the `--example` folder: three **rendered** photos of the test pla
 
 > 3 of 3 photos traced.
 > Dimensions: 48 of 48 requested compared; 0 unmatched in successful traces; 0 unavailable in failed traces.
-> Matched dimensions only: absolute error median 0.004 mm, 95th percentile 0.014 mm, worst 0.015 mm.
+> Matched dimensions only: absolute error median 0.004 mm, 95th percentile 0.015 mm, worst 0.015 mm.
 
 | Dimension | Reference (mm) | Readings | Mean error (mm) | Spread, SD (mm) | Worst (mm) | Unmatched |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Outline length | 120.00 | 3 | +0.006 | 0.007 | +0.014 |  |
+| Outline length | 120.00 | 3 | +0.007 | 0.007 | +0.015 |  |
 | Outline width | 70.00 | 3 | +0.003 | 0.009 | +0.011 |  |
-| Ø22 | 22.00 | 3 | -0.002 | 0.004 | -0.005 |  |
-| Ø6 (×4) | 6.00 | 12 | -0.004 | 0.001 | -0.004 |  |
-| Opening 24 × 8 length | 24.00 | 3 | -0.005 | 0.009 | -0.015 |  |
+| Ø22 | 22.00 | 3 | -0.002 | 0.005 | -0.005 |  |
+| Ø6 (×4) | 6.00 | 12 | -0.003 | 0.001 | -0.004 |  |
+| Opening 24 × 8 length | 24.00 | 3 | -0.004 | 0.009 | -0.015 |  |
 | Opening 24 × 8 width | 8.00 | 3 | -0.005 | 0.009 | -0.015 |  |
-| R8 (×4) | 8.00 | 12 | -0.002 | 0.008 | -0.014 |  |
+| R8 (×4) | 8.00 | 12 | -0.003 | 0.009 | -0.015 |  |
 | Centres 96 | 96.00 | 3 | +0.003 | 0.006 | +0.007 |  |
-| Centres 50 | 50.00 | 3 | +0.001 | 0.003 | +0.004 |  |
-| Centres 108.24 | 108.24 | 3 | +0.003 | 0.007 | +0.010 |  |
+| Centres 50 | 50.00 | 3 | +0.001 | 0.003 | +0.005 |  |
+| Centres 108.24 | 108.24 | 3 | +0.003 | 0.008 | +0.011 |  |
 
 > Fitted scale term +0.002 % (SD 0.007 between photos); edge term +0.002 mm (SD 0.001 between photos), positive when boundaries are found outside the material. In-sample residual: 0.003 mm RMS. These diagnostic terms do not identify physical causes or predict held-out error.
 
 | Photo | Edge blur (mm) | Sheet proportions (%) | Worst error (mm) | Result |
 | --- | ---: | ---: | ---: | --- |
-| plate-1.jpg | 0.317 | 0.00 | -0.014 | Traced |
-| plate-2.jpg | 0.302 | 0.00 | -0.015 | Traced |
-| plate-3.jpg | 0.294 | 0.00 | +0.014 | Traced |
+| plate-1.jpg | 0.320 | 0.00 | -0.015 | Traced |
+| plate-2.jpg | 0.303 | 0.00 | -0.015 | Traced |
+| plate-3.jpg | 0.294 | 0.00 | +0.015 | Traced |
 
 **The dimension table.** An error is the traced value minus your caliper value.
 

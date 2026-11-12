@@ -75,7 +75,9 @@ def test_support_uses_final_camera_once_and_final_refined_pairs(monkeypatch, sig
     wall_calls = []
 
     def wall_fit(image, points, normals, band, blur, wall_tone=None):
-        assert blur > 0  # The zero-blur branch must never fit a wall profile.
+        # The zero-blur branch must never fit a wall profile. The blur may be one per
+        # point (each edge's own spread under a directional blur).
+        assert np.all(np.asarray(blur) > 0)
         wall_calls.append(wall_tone)
         return points + 0.4 * normals, np.full(len(points), 27.0)
 

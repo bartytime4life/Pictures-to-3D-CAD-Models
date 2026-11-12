@@ -30,7 +30,7 @@ Reference entry also includes an [endpoint-placement sensitivity explorer](refer
 | Parametric CAD recipes | Make more of the construction editable downstream | A defined feature schema, stable regeneration, and version migration |
 | Analytic line and circle fitting | Replace suitable traced approximations with editable geometric features | **Implemented for reference-sheet photos**, with residual gates, an [initial-fit support check](validation/fit-support.md), a reported and optional snap list, and polyline fallback. Further work: forward-model adequacy after Gaussian/design reconstruction, per-item snap review, fitted geometry for split output and for photos without a sheet, validated per-dimension uncertainty |
 | Measured-photo benchmark | Quantify error on real parts | **The runner is implemented** (`make photo-benchmark`; [guide](photo-benchmark.md)): bounded global size correspondence, complete dimension-coverage totals, conditional per-dimension error, observed spread, and a two-term scale/edge diagnostic. Still needed: independently evaluated, calipered parts photographed with real phones under predeclared crossed conditions and reserved checks |
-| Directional blur and independent simulation | Expose model mismatch before applying unsupported corrections | **Implemented:** a separate synthetic radial inverse, production inverse-domain safeguards and test-only higher-order lens stress inputs; [record](validation/radial-inverse.md). The [30-case blur qualification](validation/directional-spread-qualification.md) found missed directional cases and unknown outcomes, so no production warning or anisotropic correction is justified. Needed: balanced valid orientation support, forward-model adequacy checks, independently specified new evaluations and reserved real captures |
+| Directional blur and independent simulation | Expose model mismatch before applying unsupported corrections | **Implemented:** a separate synthetic radial inverse, production inverse-domain safeguards and test-only higher-order lens stress inputs; [record](validation/radial-inverse.md). The [30-case blur qualification](validation/directional-spread-qualification.md) found missed cases for its research diagnostic; the tracer now fits a uniform directional blur with balanced orientation support and per-direction adequacy rules and traces by direction ([method](reference-sheet.md)). Needed: a blur that varies across the photo, sharpening, soft shadows under a wide blur, independently specified new evaluations and reserved real captures |
 | Measured local-model selection | Choose the smallest assistant that gives useful advice quickly | Installed artifact/license verification, repeatable latency results, and human review of fixed project-specific cases |
 | Opt-in vision guidance | Give capture advice based on the actual photograph | Explicit image-sharing control, a verified local vision model, resource bounds, and evaluation against visible evidence |
 | Assembly-aware splitting | Add useful joints or locating features between pieces | Measured clearance/kerf, topology checks, validated joinery, and explicit assembly assumptions |
@@ -47,8 +47,8 @@ Prioritize final forward-model adequacy, then
 independently specified model-mismatch experiments and repeatable ground-truth
 capture. The lens renderer is now separately implemented, but the shared
 physical assumptions and observed higher-order mismatch remain. Keep the
-directional-spread prototype out of product reporting until fresh evidence
-supports its decisions.
+directional-spread prototype out of product reporting; the tracer's own
+directional fit (reference-sheet §3) needs real shaken captures next.
 Native slicer qualification remains a separate handoff task. Manual profile
 correction follows when undo, topology checks, and accessible editing are scoped
 together. Multiview reconstruction and multi-user hosting require separate

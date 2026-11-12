@@ -105,11 +105,16 @@ def half_level_search(
     the side of t the paper lies on) confines the slope to the paper: a shadow is cast
     there, while the material side can hold a thick part's narrow side wall, whose own
     blurred step would read as a slope; that side keeps its end median.
+
+    `sigma` may be one value or one per point: under a directional blur each edge has
+    its own spread across it (edges.edge_covariance).
     """
     # edges.edge_sigma returns 0 when no profile has the contrast to measure the blur;
     # the median-level search then stands.
-    sloped = sigma is not None and sigma > 0
-    reach = max(half, 5 * sigma) if sloped else half
+    if sigma is not None:
+        sigma = np.broadcast_to(np.asarray(sigma, float), (len(points),))
+    sloped = sigma is not None and bool(np.all(sigma > 0))
+    reach = max(half, 5 * float(sigma.max())) if sloped else half
     t = np.arange(-reach, reach + step / 2, step)
     sx = points[:, None, 0] + t[None, :] * normals[:, None, 0] - 0.5
     sy = points[:, None, 1] + t[None, :] * normals[:, None, 1] - 0.5
@@ -124,23 +129,28 @@ def half_level_search(
         # Beyond 2.5 sigma, with the step's own blurred tail (high - low) Q(|t| / sigma)
         # removed first: it is under 0.6 % of the contrast there, but a line fitted to
         # one side alone would read it as a slope.
-        lo_end, hi_end = t <= -2.5 * sigma, t >= 2.5 * sigma
-        tail = (high - low)[:, None] * _upper_tail(np.abs(t) / sigma)[None, :]
+        within = np.abs(t)[None, :] <= reach + step / 2
+        lo_end = (t[None, :] <= -2.5 * sigma[:, None]) & within
+        hi_end = (t[None, :] >= 2.5 * sigma[:, None]) & within
+        tail = (high - low)[:, None] * _upper_tail(np.abs(t)[None, :] / sigma[:, None])
         flattened = np.where(t[None, :] < 0, profile - tail, profile + tail)
 
         def line(mask):
-            x = t[mask]
-            xm = x.mean()
-            y = flattened[:, mask]
-            slope = ((y - y.mean(axis=1, keepdims=True)) * (x - xm)).sum(axis=1) / ((x - xm) ** 2).sum()
-            return y.mean(axis=1) - slope * xm, slope
+            weight = mask.astype(float)
+            count = weight.sum(axis=1)
+            xm = (weight * t[None, :]).sum(axis=1) / count
+            ym = (weight * flattened).sum(axis=1) / count
+            dx = (t[None, :] - xm[:, None]) * weight
+            slope = (dx * (flattened - ym[:, None])).sum(axis=1) / (dx * dx).sum(axis=1)
+            return ym - slope * xm, slope
 
         a0, a1 = line(lo_end)
         b0, b1 = line(hi_end)
         if paper_side is not None:
             # The material side keeps a flat level, the median of its end.
             material_low = np.asarray(paper_side) > 0
-            a_flat, b_flat = np.median(flattened[:, lo_end], axis=1), np.median(flattened[:, hi_end], axis=1)
+            a_flat = np.nanmedian(np.where(lo_end, flattened, np.nan), axis=1)
+            b_flat = np.nanmedian(np.where(hi_end, flattened, np.nan), axis=1)
             a0, a1 = np.where(material_low, a_flat, a0), np.where(material_low, 0.0, a1)
             b0, b1 = np.where(material_low, b0, b_flat), np.where(material_low, b1, 0.0)
         level_t = (a0 + b0)[:, None] / 2 + ((a1 + b1)[:, None] / 2) * t[None, :]

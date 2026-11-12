@@ -598,6 +598,87 @@ def test_slot_end_caps_are_placed_with_their_radius_fixed():
     assert len(errors) >= 35 and errors.std() < 0.024 and abs(errors.mean()) < 0.01
 
 
+def directionally_blurred_hole(radius, sigma_x, sigma_y, size=240, up=6):
+    """A plate with one hole, blurred by a Gaussian of sigma_x, sigma_y px (on a grid
+    `up` times finer, then averaged into pixels, which adds a pixel's box). Returns the
+    image, the hole's centre and the blur's covariance in px^2."""
+    from shapely.geometry import Point, box
+
+    centre = (size / 2 + 0.3, size / 2 - 0.4)
+    material = box(20, 20, size - 20, size - 20).difference(Point(centre).buffer(radius, 4096))
+    fine = (230 - 200 * synthetic.coverage(material, up, 0.0, 0.0, (size * up, size * up))).astype(np.float32)
+    fine = cv2.GaussianBlur(fine, (0, 0), sigma_x * up, sigmaY=sigma_y * up)
+    image = fine.reshape(size, up, size, up).mean(axis=(1, 3))
+    return image, np.array(centre), np.diag([sigma_x**2 + 1 / 12, sigma_y**2 + 1 / 12])
+
+
+def test_a_directional_blur_shrinks_a_circle_by_its_geometric_mean_variance():
+    """Analysis of edges.edge_covariance and the curvature correction under a blur that
+    differs by direction. At a point of a curved edge with normal n the blur draws the
+    edge in by the median of w_n + w_t^2 / (2R): to first order the variance of the
+    tangential part given the normal one, det S / (n' S n), over 2R, not the tangential
+    variance S_tt. Round a circle that averages sqrt(det S) / (2R). On exactly blurred
+    holes of 34 and 68 px under a 1.7 x 3.77 px blur, the exact mid-level contour's mean
+    shrink agrees with sqrt(det S) / (2R) within 5 %, where S_tt's average, tr S / (4R),
+    is 30 % too large. edge_covariance recovers S within 5 % from the traced rings, and
+    the traced hole, corrected with det(S)^(1/4), is within 0.01 px of its radius."""
+    for radius in (34.0, 68.0):
+        image, centre, cov = directionally_blurred_hole(radius, 1.7, 3.77)
+        angles = np.linspace(0, 2 * math.pi, 360, endpoint=False)
+        reach = np.arange(radius - 6, radius + 6, 0.005)
+        xs = centre[0] + np.outer(np.cos(angles), reach) - 0.5
+        ys = centre[1] + np.outer(np.sin(angles), reach) - 0.5
+        profiles = sheet.sample_keys(image, xs, ys)
+        shrink = radius - np.mean([np.interp(130.0, row[::-1], reach[::-1]) for row in profiles])
+        geometric = math.sqrt(np.linalg.det(cov)) / (2 * radius)
+        assert abs(shrink / geometric - 1) < 0.05 and np.trace(cov) / (4 * radius) > 1.25 * shrink
+
+        rings, sigma, _ = edges.subpixel_rings((image < 130).astype(np.uint8), image.astype(np.float32), 8.0)
+        hole = next(r for r in rings if not r["outer"])["points"]
+        points = np.vstack([r["points"][::4] for r in rings])
+        normals = np.vstack([edges.ring_normals(r["points"])[1][::4] for r in rings])
+        found = edges.edge_covariance(image, points, normals, sigma)
+        assert np.abs(found - cov).max() < 0.05 * cov.max()
+        _, _, r, _, _ = fitting.fit_circle(hole)
+        assert abs(fitting.blur_corrected_radius(r, sigma) - radius) < 0.01
+        assert abs(sigma / np.linalg.det(found) ** 0.25 - 1) < 0.01
+
+    straight = np.column_stack([np.full(60, 100.3), np.arange(60) * 2.0 + 20])
+    across = np.tile([1.0, 0.0], (60, 1))
+    assert edges.edge_covariance(image, straight, across, 2.0) is None
+
+
+def test_the_blur_covariance_needs_three_supported_directions_and_must_fit_each(monkeypatch):
+    """Properties of edges.edge_covariance's support and adequacy rules, with the edge
+    widths given directly. Widths that follow n' S n in six directions return S; the
+    same edges in only two directions (a rectangle's), with a few corner profiles,
+    return None, since the cross term is not determined; and widths that jump with
+    direction, 2 px across normals in one quarter turn and 4 px in the other, which no
+    covariance's (a sinusoid in twice the angle) can follow, return None however many
+    there are. The rule judges bins of 30 degrees, so a variation that repeats within one
+    bin is not seen."""
+    rng = np.random.default_rng(3)
+    cov = np.array([[2.9, 0.8], [0.8, 14.2]])
+    widths = {}
+    monkeypatch.setattr(edges, "_edge_widths", lambda g, points, normals, *a, **k: widths["w"])
+
+    def run(angles, law):
+        normals = np.column_stack([np.cos(angles), np.sin(angles)])
+        widths["w"] = law(normals) * (1 + rng.normal(0, 0.02, len(angles)))
+        return edges.edge_covariance(np.zeros((4, 4)), np.zeros((len(angles), 2)), normals, 2.0)
+
+    exact = lambda n: np.sqrt(np.einsum("ij,jk,ik->i", n, cov, n))
+    every = rng.uniform(0, np.pi, 600)
+    found = run(every, exact)
+    assert found is not None and np.abs(found - cov).max() < 0.03 * cov.max()
+    skewed = np.concatenate([np.zeros(500), rng.uniform(0, np.pi, 90)])
+    found = run(skewed, exact)
+    assert found is not None and np.abs(found - cov).max() < 0.05 * cov.max()
+    two = np.concatenate([np.zeros(300), np.full(300, np.pi / 2), rng.uniform(0, np.pi, 20)])
+    assert run(two, exact) is None
+    assert run(every, lambda n: np.where(np.arctan2(n[:, 1], n[:, 0]) % np.pi < np.pi / 2, 2.0, 4.0)) is None
+
+
 def test_srgb_decoding_matches_the_standard_and_inverts_its_encoding():
     """Property: tone.linear_from_encoded is the IEC 61966-2-1 decoding. It agrees with
     the renderer's separately written copy and with the standard's own values (a saved

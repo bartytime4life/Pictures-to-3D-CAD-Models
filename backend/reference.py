@@ -108,36 +108,39 @@ def _refine_walls(g, rings, camera, thickness_mm, sigma, ppm):
     # Bottom-edge silhouette points have the visible wall on their material side, a
     # band (ratio - 1) |(p - N) . n| wide. A single mid-level crossing is biased into
     # the material by up to 0.2 sigma for bands of 1-3 sigma (edges.two_step_refine).
+    # Under a directional blur each edge is modelled with its own spread across it
+    # (edges.subpixel_rings' sigma_n); otherwise every point has the one sigma.
     prepared = []
     for ring in rings:
         mm = ring["points"] / ppm
         normals = edges.material_normals(mm, ring["outer"])
         facing = np.einsum("ij,ij->i", normals, mm - camera["nadir_mm"])
         band = (ratio - 1) * np.maximum(-facing, 0) * ppm
-        prepared.append((ring, normals, band))
+        spread = np.asarray(ring.get("sigma_n", np.full(len(mm), sigma)), float)
+        prepared.append((ring, normals, band, spread))
     # The wall tone is identifiable only where the band is wide (>= 2.5 sigma); there
     # a free two-step fit measures it. Narrower bands are then fitted with it fixed.
-    wide = [(r["points"][b >= 2.5 * sigma], n[b >= 2.5 * sigma], b[b >= 2.5 * sigma]) for r, n, b in prepared]
+    wide = [(r["points"][b >= 2.5 * s], n[b >= 2.5 * s], b[b >= 2.5 * s], s[b >= 2.5 * s]) for r, n, b, s in prepared]
     wide_points = np.vstack([w[0] for w in wide]) if wide else np.empty((0, 2))
     # Refine mainly bands of 1-3 sigma, where a single crossing is biased by 0.14-0.20
     # sigma. Below that the wall tone and edge offset are nearly confounded; above it
     # the local levels already see the wall. In synthetic tests, refining the whole
     # 0.25-4 sigma range made results worse (see docs/validation.md).
-    narrow_count = sum(int(((b >= sigma) & (b <= 3 * sigma)).sum()) for _, _, b in prepared)
+    narrow_count = sum(int(((b >= s) & (b <= 3 * s)).sum()) for _, _, b, s in prepared)
     wall_tone = None
     if len(wide_points) >= 30:
         _, tones = edges.two_step_refine(
-            g, wide_points, np.vstack([w[1] for w in wide]), np.concatenate([w[2] for w in wide]), sigma
+            g, wide_points, np.vstack([w[1] for w in wide]), np.concatenate([w[2] for w in wide]), np.concatenate([w[3] for w in wide])
         )
         wall_tone = float(np.median(tones))
     else:
         # Too few wide bands: one tone shared by all bands of 1-3.5 sigma
         # (edges.pooled_wall_tone), where a near-frontal photo still has hundreds.
-        pool = [(r["points"][(b >= sigma) & (b <= 3.5 * sigma)], n[(b >= sigma) & (b <= 3.5 * sigma)], b[(b >= sigma) & (b <= 3.5 * sigma)]) for r, n, b in prepared]
+        pool = [(r["points"][m], n[m], b[m], s[m]) for r, n, b, s in prepared for m in [(b >= s) & (b <= 3.5 * s)]]
         pooled = sum(len(p[0]) for p in pool)
         if pooled >= 30:
             wall_tone = edges.pooled_wall_tone(
-                g, np.vstack([p[0] for p in pool]), np.vstack([p[1] for p in pool]), np.concatenate([p[2] for p in pool]), sigma
+                g, np.vstack([p[0] for p in pool]), np.vstack([p[1] for p in pool]), np.concatenate([p[2] for p in pool]), np.concatenate([p[3] for p in pool])
             )
         if wall_tone is not None:
             notes.append(
@@ -148,14 +151,16 @@ def _refine_walls(g, rings, camera, thickness_mm, sigma, ppm):
             f"Side walls are visible but narrower than about 2.5 times the edge blur, so their tone cannot be measured; edges facing the camera may read up to {0.2 * sigma / ppm:.3f} mm into the part. A slightly tilted photo shows wider walls."
         )
     refined = []
-    for ring, normals, band in prepared:
+    for ring, normals, band, spread in prepared:
         # Full weight for 1.5-2.5 sigma, tapering linearly to zero at 0.5 and 3.5
         # sigma, so the boundary stays continuous where refinement starts and stops.
-        weight = np.clip((band - 0.5 * sigma) / sigma, 0, 1) * np.clip((3.5 * sigma - band) / sigma, 0, 1)
+        weight = np.clip((band - 0.5 * spread) / spread, 0, 1) * np.clip((3.5 * spread - band) / spread, 0, 1)
         narrow = weight > 0
         points = ring["points"].copy()
         if wall_tone is not None and narrow.any():
-            moved, _ = edges.two_step_refine(g, points[narrow], normals[narrow], band[narrow], sigma, wall_tone=wall_tone)
+            moved, _ = edges.two_step_refine(
+                g, points[narrow], normals[narrow], band[narrow], spread[narrow], wall_tone=wall_tone
+            )
             points[narrow] += weight[narrow, None] * (moved - points[narrow])
         refined.append((points, normals))
     return refined, notes
@@ -198,6 +203,11 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
     except edges.EdgeError as exc:
         raise ReferenceError_(str(exc), sheet_missing=True) from exc
     notes = list(seg_notes)
+    spreads = np.concatenate([ring.get("sigma_n", np.full(len(ring["points"]), sigma)) for ring in rings])
+    if spreads.max() > edges.DIRECTIONAL_RATIO * spreads.min():
+        notes.append(
+            f"The edge blur differs by direction, from {spreads.min() / ppm:.3f} mm across the sharpest edges to {spreads.max() / ppm:.3f} mm across the softest, as a shaken camera's does; each edge was measured with its own. A steadier photo is sharper."
+        )
     if weights != tone.LUMINANCE:
         notes.append(
             "The part and the sheet differ in colour more than in brightness, so edges were measured on a colour mix"
@@ -280,7 +290,7 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
         for ring, prims in fitted:
             if prims and any(p.kind == "line" for p in prims):
                 fitting.refit_lines(ring["points"], prims, margin=3 * sigma)
-                fitting.fit_fillets(ring["points"], prims, tolerance_px, sigma)
+                fitting.fit_fillets(ring["points"], prims, tolerance_px, sigma, ring.get("covariance"))
     for prims in rings_prims:
         fitting.correct_blur(prims, sigma)
     if snap:
@@ -292,8 +302,13 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
     described = []
     for ring, prims in fitted:
         segs, analytic = _segments_for(ring["points"], prims, polyline_px)
-        polygon = Polygon(fitting.sample_segments(segs, 0.01 * ppm))
-        if analytic and (not polygon.is_valid or polygon.area <= 0):
+        try:
+            polygon = Polygon(fitting.sample_segments(segs, 0.01 * ppm))
+        except ValueError:
+            # An arc whose three points are collinear (one that closes on itself after a
+            # zero-length line, seen on a badly blurred hole) describes nothing.
+            polygon = None
+        if analytic and (polygon is None or not polygon.is_valid or polygon.area <= 0):
             segs, analytic = _segments_for(ring["points"], None, polyline_px)
         described.append({"outer": ring["outer"], "segments": segs, "analytic": analytic})
 

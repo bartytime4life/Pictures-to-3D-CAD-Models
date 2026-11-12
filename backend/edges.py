@@ -13,6 +13,8 @@ in linear light (backend.tone), where blur and partial coverage mix tones linear
 
 from __future__ import annotations
 
+import math
+
 import cv2
 import numpy as np
 from shapely.geometry import Point, Polygon
@@ -155,30 +157,154 @@ def ring_normals(ring, sigma=2.0):
     return smooth, np.column_stack([-tangent[:, 1], tangent[:, 0]])
 
 
-def edge_sigma(g, points, normals, half=8.0, step=0.125):
-    """Gaussian-equivalent edge blur from the 25-75 % rise distance (1.349 sigma), on a
-    linear-light image; profiles under 20 saved grey levels of contrast are skipped.
+DIRECTIONAL_RATIO = 1.15  # principal blur spreads further apart are traced by direction
+
+
+def _edge_widths(g, points, normals, half=8.0, step=0.125, single_step=False):
+    """Each profile's Gaussian-equivalent blur, its 25-75 % rise distance over 1.349, on
+    a linear-light image; NaN where the profile has under 20 saved grey levels of
+    contrast. `half` may be one value or one per point. With `single_step`, also NaN
+    where the profile is not one clean step: where, normalised to rise from its low end
+    to its high one, it falls back by more than 10 % of the step after its peak or
+    before its trough, or overshoots either end by 15 %. Such a profile reaches another
+    edge (across a thin hole or at a sharp corner), and its width is not this edge's.
 
     Profiles are read by Keys cubic sampling. Bilinear sampling blurs what it reads by
     a variance of f (1 - f) at sub-pixel phase f, 1/6 px^2 on average: on exactly
     blurred straight edges it measured sigma 2.2-4.2 % high at 1.6 px and up to 8.4 % at
     1.2 px, where cubic sampling is within 0.6 % and 2.3 %."""
-    t = np.arange(-half, half + step / 2, step)
+    half = np.broadcast_to(np.asarray(half, float), (len(points),))
+    reach = float(half.max())
+    t = np.arange(-reach, reach + step / 2, step)
     sx = points[:, None, 0] + t[None, :] * normals[:, None, 0] - 0.5
     sy = points[:, None, 1] + t[None, :] * normals[:, None, 1] - 0.5
     profile = sample_keys(g, sx, sy)
-    k = int(0.15 * len(t))
-    low, high = np.median(profile[:, :k], axis=1), np.median(profile[:, -k:], axis=1)
-    widths = []
-    for row, lo, hi in zip(profile, low, high):
+    widths = np.full(len(points), np.nan)
+    for i, (row, h) in enumerate(zip(profile, half)):
+        inside = np.abs(t) <= h + step / 2
+        row, ti = row[inside], t[inside]
+        k = int(0.15 * len(ti))
+        lo, hi = np.median(row[:k]), np.median(row[-k:])
         if abs(encoded_from_linear(hi) - encoded_from_linear(lo)) < 20:
             continue
         f = (row - lo) / (hi - lo)
         if f[-1] < f[0]:
             f = f[::-1]
+        if single_step and (f.max() - f[-1] > 0.1 or f[0] - f.min() > 0.1 or f.max() > 1.15 or f.min() < -0.15):
+            continue
         rising = np.maximum.accumulate(f)
-        widths.append(np.interp(0.75, rising, t) - np.interp(0.25, rising, t))
-    return float(np.median(widths) / 1.349) if widths else 0.0
+        widths[i] = (np.interp(0.75, rising, ti) - np.interp(0.25, rising, ti)) / 1.349
+    return widths
+
+
+def edge_sigma(g, points, normals, half=8.0, step=0.125):
+    """Gaussian-equivalent edge blur: the median of the profiles' (_edge_widths).
+
+    Each profile's plateaus are read at the ends of its window, which must reach well
+    beyond the blur: a 3 px blur read 11 % narrow in a +-8 px window (2.2 sigma), and
+    1.7 % at 2 px. The window is therefore widened to 5 sigma and the blur measured
+    again, twice; up to 1.6 px the first window already reaches that far.
+    """
+    sigma = 0.0
+    for _ in range(3):
+        widths = _edge_widths(g, points, normals, max(half, 5 * sigma), step)
+        widths = widths[np.isfinite(widths)]
+        if not len(widths):
+            return 0.0
+        previous, sigma = sigma, float(np.median(widths))
+        if 5 * sigma <= half or abs(sigma - previous) < 1e-3 * sigma:
+            break
+    return sigma
+
+
+DIRECTION_BINS = 6  # of 30 degrees, modulo 180, for the blur covariance's support
+MIN_PER_BIN = 15  # clean profiles a direction bin needs to count
+ADEQUATE_FIT = 0.1  # largest systematic relative variance residual of a direction bin
+
+
+def edge_covariance(g, points, normals, sigma, step=0.125, min_ratio=None):
+    """The blur's 2 x 2 covariance, from edge widths across many directions, or None.
+
+    A Gaussian blur of covariance S spreads an edge with unit normal n by sigma_n^2 =
+    n' S n, so each profile's width (_edge_widths) gives one linear equation in
+    (S_xx, S_xy, S_yy). Each profile's window reaches 5 times its expected sigma_n (at
+    least 8 px); a fixed window cuts a wide blur's plateaus short and reads it narrow.
+    Only clean single steps take part: a thin hole whose far side fell inside the
+    windows read as a blur 2.5 times wider one way on an evenly blurred photo.
+
+    The fit must be supported in several directions, not just numerically possible.
+    The profiles are grouped by normal direction into DIRECTION_BINS bins (modulo 180
+    degrees), and a bin counts with MIN_PER_BIN clean profiles. Three unknowns need three
+    such bins: a part with edges in two directions (a rectangle, whose corners add only a
+    few, often unclean profiles) cannot separate the cross term from the rest. Each
+    counted bin weighs the same in the least squares: a part's long straight edges
+    give two bins most of the profiles, and an unweighted fit follows them and pushes
+    its misfit into the others (one read 11.5 % off on a rendered photo, 7 % weighted).
+    Profiles more than 3 robust standard deviations off are trimmed twice. The model
+    must explain every counted bin, judged one by one, so that a dominant edge direction
+    cannot hide a minority one's disagreement in a pooled statistic. One profile's width is
+    only good to a few per cent, so a bin's median absolute residual is mostly noise;
+    a wrong model instead shifts the whole bin. A bin whose median relative variance
+    residual (signed) is beyond both ADEQUATE_FIT and three standard errors of that
+    median means the blur is not one Gaussian covariance (a disk, a motion streak, a blur
+    that varies across the photo), and None is returned, as it is without three bins, 30
+    profiles or a positive-definite result.
+
+    With `min_ratio`, the fit stops after its first pass when that pass's principal
+    spreads are under 0.95 min_ratio apart: its windows suit the isotropic guess and
+    read a wide direction narrow, so the final pass would not reach min_ratio either.
+    """
+    if len(points) < 30 or sigma <= 0:
+        return None
+    c, s = normals[:, 0], normals[:, 1]
+    design = np.column_stack([c * c, 2 * c * s, s * s])
+    direction = np.floor((np.degrees(np.arctan2(s, c)) % 180.0) / (180.0 / DIRECTION_BINS)).astype(int) % DIRECTION_BINS
+    cov = np.array([[sigma**2, 0.0], [0.0, sigma**2]])
+    for final in (False, True):
+        expected = np.sqrt(np.maximum(np.einsum("ij,jk,ik->i", normals, cov, normals), 1e-6))
+        widths = _edge_widths(g, points, normals, np.maximum(8.0, 5 * expected), step, single_step=True)
+        ok = np.isfinite(widths)
+        counts = np.bincount(direction[ok], minlength=DIRECTION_BINS)
+        counted = counts >= MIN_PER_BIN
+        if ok.sum() < 30 or counted.sum() < 3:
+            return None
+        ok &= counted[direction]
+        for _ in range(3):
+            weight = 1.0 / np.sqrt(np.maximum(np.bincount(direction[ok], minlength=DIRECTION_BINS), 1))[direction]
+            fit, *_ = np.linalg.lstsq(design[ok] * weight[ok, None], widths[ok] ** 2 * weight[ok], rcond=None)
+            residual = np.where(ok, design @ fit - widths**2, np.inf)
+            # A robust spread, floored at 1 % of the squared widths, so that exact data
+            # are not trimmed to nothing.
+            spread = max(
+                1.4826 * float(np.median(np.abs(residual[ok] - np.median(residual[ok])))),
+                0.01 * float(np.median(widths[ok] ** 2)),
+            )
+            trimmed = ok & (np.abs(residual) <= 3 * spread)
+            if trimmed.sum() < 30 or (np.bincount(direction[trimmed], minlength=DIRECTION_BINS) >= MIN_PER_BIN).sum() < 3:
+                break
+            ok = trimmed
+        cov = np.array([[fit[0], fit[1]], [fit[1], fit[2]]])
+        if np.linalg.eigvalsh(cov).min() <= 0:
+            return None
+        if not final:
+            # The first pass's windows suit the isotropic guess and cut a wide
+            # direction short; only the final pass, with windows sized by its fit, is
+            # judged.
+            low, high = np.linalg.eigvalsh(cov)
+            if min_ratio is not None and high < (0.95 * min_ratio) ** 2 * low:
+                return None
+            continue
+        model = np.einsum("ij,jk,ik->i", normals, cov, normals)
+        relative = (widths**2 - model) / model
+        for b in np.flatnonzero(counted):
+            r = relative[np.isfinite(widths) & (direction == b)]
+            middle = float(np.median(r))
+            # The standard error of a median: 1.253 standard deviations over sqrt(n),
+            # the deviation taken robustly as 1.4826 median absolute deviations.
+            error = 1.253 * 1.4826 * float(np.median(np.abs(r - middle))) / math.sqrt(len(r))
+            if abs(middle) > max(ADEQUATE_FIT, 3 * error):
+                return None
+    return cov
 
 
 def subpixel_rings(mask, g, ppm):
@@ -224,16 +350,42 @@ def subpixel_rings(mask, g, ppm):
         )
     _, normals = ring_normals(outer)
     sigma = edge_sigma(g, outer[::4], normals[::4])
-    half = max(4.0, 3.5 * sigma)
+    # A blur that differs by direction spreads each edge by its own sigma_n, measured
+    # over every ring's edges (edge_covariance); the outline alone may face few ways.
+    sampled = [(points[::2], ring_normals(points)[1][::2]) for _, points, _, _ in first]
+    covariance = edge_covariance(
+        g, np.vstack([p for p, _ in sampled]), np.vstack([n for _, n in sampled]), sigma, min_ratio=DIRECTIONAL_RATIO
+    )
+    if covariance is not None:
+        # Rendered photos tilted up to 22 degrees fit principal spreads 1.00-1.05 apart
+        # (foreshortening); a shaken camera's 1.3-2.5. Below DIRECTIONAL_RATIO the one
+        # measured sigma stands, as it was validated.
+        low, high = np.linalg.eigvalsh(covariance)
+        if high < DIRECTIONAL_RATIO**2 * low:
+            covariance = None
+    if covariance is not None:
+        # The returned sigma serves the curvature corrections. Blur draws a curved edge
+        # of radius R in by the median of w_n + w_t^2 / (2R), with w_n, w_t the blur's
+        # components across and along the edge: to first order the variance of w_t
+        # given w_n = 0, det(S) / (n' S n), over 2R. Round a circle that averages
+        # sqrt(det S) / (2R), since the mean of 1 / (n' S n) over directions is
+        # 1 / sqrt(det S). The isotropic equivalent is therefore det(S)^(1/4), the
+        # geometric mean of the principal spreads, not their quadratic mean.
+        sigma = float(np.linalg.det(covariance) ** 0.25)
     rings = []
     for is_outer, points, support, indices in first:
         _, normals = ring_normals(points)
+        spread = (
+            np.sqrt(np.einsum("ij,jk,ik->i", normals, covariance, normals))
+            if covariance is not None
+            else np.full(len(points), sigma)
+        )
         # Which side of each point the paper is on, from the classified mask 3 sigma out.
-        probe = np.rint(points + 3 * sigma * normals - 0.5).astype(int)
+        probe = np.rint(points + 3 * spread[:, None] * normals - 0.5).astype(int)
         probe = np.clip(probe, 0, np.array(mask.shape[::-1]) - 1)
         paper_side = np.where(mask[probe[:, 1], probe[:, 0]] == 0, 1, -1)
         moved, keep = half_level_search(
-            g, points, normals, half=half, sigma=sigma, ring_smoothing=20.0, paper_side=paper_side
+            g, points, normals, half=max(4.0, 3.5 * float(spread.max())), sigma=spread, ring_smoothing=20.0, paper_side=paper_side
         )
         if keep.sum() < 8:
             if is_outer:
@@ -242,7 +394,7 @@ def subpixel_rings(mask, g, ppm):
             continue
         rings.append({
             "outer": is_outer, "points": moved[keep], "support": support,
-            "support_indices": indices[keep],
+            "support_indices": indices[keep], "sigma_n": spread[keep], "covariance": covariance,
         })
     return rings, sigma, tiny
 
@@ -377,13 +529,14 @@ def pooled_wall_tone(g, points, normals, band, sigma, steps=17, sample=160):
     0.4 sigma the 0.3-level error of cubic sampling alone made a false minimum (a tone of
     186 for 15, moving edges by 0.18 sigma), and with any noise the minimum is flat.
     """
+    sigma = np.broadcast_to(np.asarray(sigma, float), (len(points),))
     keep = band >= sigma
-    points, normals, band = points[keep], normals[keep], band[keep]
+    points, normals, band, sigma = points[keep], normals[keep], band[keep], sigma[keep]
     if len(points) < 30:
         return None
     if len(points) > sample:
         pick = np.linspace(0, len(points) - 1, sample).round().astype(int)
-        points, normals, band = points[pick], normals[pick], band[pick]
+        points, normals, band, sigma = points[pick], normals[pick], band[pick], sigma[pick]
     _, c0, c1, c2 = _wall_tone_parabolas(g, points, normals, band, sigma)
 
     def total(tone):
@@ -411,22 +564,26 @@ def _wall_tone_parabolas(g, points, normals, band, sigma, step=0.125):
     the residual sum of squares is exactly c0 + c1 B + c2 B^2. With u = 1 - P1,
     v = P1 - P2, w = P2, profile y, G the Gram matrix of (u, w) and r_a = (u.a, w.a):
         c0 = y.y - r_y' G^-1 r_y,   c1 = -2 (v.y - r_v' G^-1 r_y),   c2 = v.v - r_v' G^-1 r_v,
-    where c2 >= 0 is what is left of v after projecting out u and w. Returns
-    (candidates, c0, c1, c2), each coefficient of shape (points, candidates).
+    where c2 >= 0 is what is left of v after projecting out u and w. `sigma` may be one
+    value or one per point (the edge's own spread across it under a directional blur).
+    Returns (candidates, c0, c1, c2), each of shape (points, candidates); the candidate
+    offsets are the same multiples of each point's sigma.
     """
-    t = np.arange(-(float(band.max()) + 4 * sigma), 4 * sigma + step / 2, step)
+    sigma = np.broadcast_to(np.asarray(sigma, float), (len(points),))
+    t = np.arange(-(float(band.max()) + 4 * float(sigma.max())), 4 * float(sigma.max()) + step / 2, step)
     sx = points[:, None, 0] + t[None, :] * normals[:, None, 0] - 0.5
     sy = points[:, None, 1] + t[None, :] * normals[:, None, 1] - 0.5
     y = sample_keys(g, sx, sy)
     yy = np.einsum("nt,nt->n", y, y)
-    candidates = np.arange(-0.6, 0.8 + 1e-9, 0.02) * sigma
-    c0, c1, c2 = (np.empty((len(points), len(candidates))) for _ in range(3))
-    for k, e in enumerate(candidates):
-        p1 = normal_cdf((t[None, :] + band[:, None] - e) / sigma)
-        p2 = normal_cdf((t - e) / sigma)
-        u, v = 1 - p1, p1 - p2[None, :]
-        gram = ((u * u).sum(1), u @ p2, p2 @ p2)
-        ry, rv = ((u * y).sum(1), y @ p2), ((u * v).sum(1), v @ p2)
+    candidates = np.arange(-0.6, 0.8 + 1e-9, 0.02)[None, :] * sigma[:, None]
+    c0, c1, c2 = (np.empty(candidates.shape) for _ in range(3))
+    for k in range(candidates.shape[1]):
+        e, s = candidates[:, k, None], sigma[:, None]
+        p1 = normal_cdf((t[None, :] + band[:, None] - e) / s)
+        p2 = normal_cdf((t[None, :] - e) / s)
+        u, v = 1 - p1, p1 - p2
+        gram = ((u * u).sum(1), (u * p2).sum(1), (p2 * p2).sum(1))
+        ry, rv = ((u * y).sum(1), (y * p2).sum(1)), ((u * v).sum(1), (v * p2).sum(1))
         c0[:, k] = yy - _inverse_form(gram, ry, ry)
         c1[:, k] = -2 * ((v * y).sum(1) - _inverse_form(gram, rv, ry))
         c2[:, k] = (v * v).sum(1) - _inverse_form(gram, rv, rv)
@@ -491,9 +648,9 @@ def two_step_refine(g, points, normals, band, sigma, wall_tone=None, step=0.125,
         walls = np.full(c0.shape, float(wall_tone))
         residuals = c0 + (c1 + c2 * wall_tone) * wall_tone
     best, shift, least = _refined_minimum(residuals)
-    offset = candidates[best] + shift * (candidates[1] - candidates[0])
-    moved = points + offset[:, None] * normals
     rows = np.arange(len(points))
+    offset = candidates[rows, best] + shift * (candidates[:, 1] - candidates[:, 0])
+    moved = points + offset[:, None] * normals
     if with_residuals:
         return moved, walls[rows, best], least
     return moved, walls[rows, best]

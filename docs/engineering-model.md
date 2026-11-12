@@ -169,8 +169,11 @@ the original whole-circle extrapolation and camera-model limits.
 The [radial-domain repair](validation/radial-inverse.md) removes the renderer's
 production-inverse dependency and supplies higher-order mismatch cases;
 physical camera assumptions remain. The [directional-spread qualification](validation/directional-spread-qualification.md)
-documents missed directional cases and unknown outcomes, with no production
-warning or correction. Benchmark statistics remain conditional on comparisons.
+documents missed directional cases and unknown outcomes for its research
+diagnostic. The tracer's own covariance fit adds orientation-support and
+per-direction adequacy rules and traces a uniform directional blur by direction
+([reference-sheet tracing](reference-sheet.md), §3); synthetic only. Benchmark
+statistics remain conditional on comparisons.
 Residuals describe the selected
 model's agreement with sampled points; they do not alone establish source
 coverage, identifiable radius, physical uncertainty or complete benchmark
