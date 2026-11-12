@@ -187,7 +187,8 @@ def test_frontal_photo_without_exif_assumes_a_phone_lens_and_says_so(client, pho
 
 def test_without_a_shadow_the_tilted_trace_is_several_times_tighter(client):
     """Tone curve, lens, perspective, blur, noise and JPEG together leave under 0.02 mm
-    (0.03 mm on position). The rest of the tilted photo's error is its shadow."""
+    (0.03 mm on position). The rest of the tilted photo's error was its shadow, which the
+    sloped paper levels now correct (test_a_soft_shadow_no_longer_pushes_edges_out)."""
     data, _ = S.render(shadow=0.0)
     response = trace(client, data, reference="a4")
     assert response.status_code == 200, response.text
@@ -196,18 +197,20 @@ def test_without_a_shadow_the_tilted_trace_is_several_times_tighter(client):
     assert {k: v for k, v in errors.items() if v > tight[k]} == {}
 
 
-def test_a_deep_shadow_biases_edges_by_a_bounded_amount(client):
-    """Known sensitivity, not a target. A soft shadow slopes the paper's brightness
-    next to an edge, and the mid-level then sits too far out. The error grows with the
-    shadow's depth: this one removes 47 % of the light (25 % darker in the saved photo)
-    and roughly doubles the errors of the usual 25 % shadow."""
-    data, _ = S.render(shadow=0.47)
+@pytest.mark.parametrize("shadow", [0.25, 0.47])
+def test_a_soft_shadow_no_longer_pushes_edges_out(client, shadow):
+    """A soft shadow slopes the paper's brightness next to an edge. With levels taken
+    from each side's end medians the mid-level sat too far out, and the errors grew with
+    the shadow's depth: 0.026 mm on the bore for one removing 25 % of the light, 0.054
+    mm for 47 % (25 % darker in the saved photo). Pass 2 now fits each side's slope
+    (sheet.half_level_search with sigma), and both photos are within a quarter of the
+    usual limits on the holes and the outline."""
+    data, _ = S.render(shadow=shadow)
     response = trace(client, data, reference="a4")
     assert response.status_code == 200, response.text
-    bound = {"small": 0.04, "bore": 0.07, "slot": 0.08, "position": 0.05, "outer": 0.07}
     errors = S.feature_errors(response.json()["profile"])
-    assert {k: v for k, v in errors.items() if v > bound[k]} == {}
-    assert errors["bore"] > LIMITS["bore"]  # tighten the bounds when this is improved
+    assert within_limits(errors) == {}
+    assert max(errors["small"], errors["bore"], errors["outer"]) < 0.0125
 
 
 def test_a_camera_saving_with_a_plain_gamma_stays_within_limits(client):

@@ -100,28 +100,28 @@ A trace takes a few seconds per photo. The command exits with an error only when
 This report is the `--example` folder: three **rendered** photos of the test plate at 22°, 9° and 0° tilt, 4 mm thick, with its design dimensions as the caliper values.
 
 > 3 of 3 photos traced; 48 dimensions compared.
-> Absolute error: median 0.013 mm, 95th percentile 0.035 mm, worst 0.088 mm.
+> Absolute error: median 0.005 mm, 95th percentile 0.043 mm, worst 0.104 mm.
 
 | Dimension | Calipers (mm) | Readings | Mean error (mm) | Spread, SD (mm) | Worst (mm) | Not found |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Outline length | 120.00 | 3 | -0.018 | 0.061 | -0.088 |  |
-| Outline width | 70.00 | 3 | -0.002 | 0.034 | -0.041 |  |
-| Ø22 | 22.00 | 3 | -0.016 | 0.010 | -0.025 |  |
-| Ø6 (×4) | 6.00 | 12 | +0.002 | 0.025 | +0.035 |  |
-| Opening 24 × 8 length | 24.00 | 3 | -0.007 | 0.020 | -0.019 |  |
-| Opening 24 × 8 width | 8.00 | 3 | -0.021 | 0.007 | -0.028 |  |
-| R8 (×4) | 8.00 | 12 | +0.005 | 0.006 | +0.012 |  |
-| Centres 96 | 96.00 | 3 | -0.002 | 0.009 | -0.011 |  |
-| Centres 50 | 50.00 | 3 | -0.002 | 0.004 | -0.007 |  |
-| Centres 108.24 | 108.24 | 3 | -0.005 | 0.009 | -0.015 |  |
+| Outline length | 120.00 | 3 | **-0.033** | 0.062 | -0.104 |  |
+| Outline width | 70.00 | 3 | -0.020 | 0.033 | -0.058 |  |
+| Ø22 | 22.00 | 3 | +0.000 | 0.010 | +0.012 |  |
+| Ø6 (×4) | 6.00 | 12 | +0.012 | 0.023 | +0.043 |  |
+| Opening 24 × 8 length | 24.00 | 3 | +0.008 | 0.018 | +0.029 |  |
+| Opening 24 × 8 width | 8.00 | 3 | -0.006 | 0.009 | -0.016 |  |
+| R8 (×4) | 8.00 | 12 | -0.006 | 0.008 | -0.014 |  |
+| Centres 96 | 96.00 | 3 | -0.004 | 0.008 | -0.012 |  |
+| Centres 50 | 50.00 | 3 | -0.002 | 0.004 | -0.006 |  |
+| Centres 108.24 | 108.24 | 3 | -0.006 | 0.009 | -0.015 |  |
 
-> Scale error -0.009 % (SD 0.017 between photos); edge offset +0.002 mm (SD 0.013 between photos), positive when boundaries are found outside the material. What the two leave unexplained: 0.008 mm RMS.
+> Scale error -0.011 % (SD 0.017 between photos); edge offset -0.005 mm (SD 0.012 between photos), positive when boundaries are found outside the material. What the two leave unexplained: 0.008 mm RMS.
 
 | Photo | Edge blur (mm) | Sheet proportions (%) | Worst error (mm) | Result |
 | --- | ---: | ---: | ---: | --- |
-| plate-1.jpg | 0.326 | 0.00 | -0.025 | Traced |
-| plate-2.jpg | 0.310 | 0.00 | -0.028 | Traced |
-| plate-3.jpg | 0.302 | 0.00 | -0.088 | Traced |
+| plate-1.jpg | 0.326 | 0.00 | -0.014 | Traced |
+| plate-2.jpg | 0.310 | 0.00 | -0.016 | Traced |
+| plate-3.jpg | 0.302 | 0.00 | -0.104 | Traced |
 
 **The dimension table.** An error is the traced value minus your caliper value.
 
@@ -137,7 +137,7 @@ This report is the `--example` folder: three **rendered** photos of the test pla
 
 The line gives their mean over the part's photos and their spread between photos. Radii take no part. The split is made only when a photo holds at least four dimensions that can separate the two: a mix of sizes, or of outside dimensions, holes and centre distances.
 
-**The photo table** shows which shot is the odd one out. In the example it is the overhead photo, which reads the outline 0.09 mm short. Its trace notes, in the JSON report, say what to suspect: seen from straight above, the 4 mm walls are too narrow to measure, and an edge may read up to 0.06 mm into the part. **Sheet proportions** is the trace's own check of the sheet's shape against the entered size; a value above 1 % means the wrong sheet was chosen or a side was mistyped.
+**The photo table** shows which shot is the odd one out. In the example it is the overhead photo, which reads the outline 0.10 mm short. Its trace notes, in the JSON report, say what to suspect: seen from straight above, the 4 mm walls are too narrow to measure, and an edge may read up to 0.06 mm into the part. **Sheet proportions** is the trace's own check of the sheet's shape against the entered size; a value above 1 % means the wrong sheet was chosen or a side was mistyped.
 
 ## Limits
 

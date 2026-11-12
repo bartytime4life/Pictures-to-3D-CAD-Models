@@ -359,6 +359,60 @@ def test_half_level_crossing_on_symmetric_blur_is_unbiased_on_average(kernel):
         assert abs(errors.mean()) < 1e-3
 
 
+def test_sloped_plateau_levels_put_the_crossing_on_the_edge():
+    """Numerical analysis of sheet.half_level_search with sigma. The exact profile of a
+    Gaussian-blurred step between two linear plateaus (the one above: light a on the
+    part, b0 + b (t - e) beyond) crosses (A(e) + B(e)) / 2 + (b1 - a1) sigma / sqrt(2 pi)
+    at its edge e, and the search finds that crossing within 0.002 px for every slope,
+    flat included (the end medians are 0.003 px off even there, and moved it by up to
+    0.18 px on the slopes). On blurred discs of 7.5 to 55 sigma radius the traced radius
+    is within 0.005 px of the blur-curvature series R - s^2/2R - 5 s^4/24 R^3 that the
+    radius correction assumes, and closer to it than the end-median level's."""
+    sigma, a, b0, edge = 2.0, 20.0, 200.0, 200.3
+    t = np.arange(400) + 0.5 - edge
+    points = np.column_stack([np.full(4, edge + 0.1), [3.0, 5.0, 7.0, 9.0]])
+    normals = np.tile([1.0, 0.0], (4, 1))
+    for b in (0.0, 0.5, 1.0, 2.0):
+        cdf = edges.normal_cdf(t / sigma)
+        density = np.exp(-0.5 * (t / sigma) ** 2) / math.sqrt(2 * math.pi)
+        row = a * (1 - cdf) + b0 * cdf + b * (t * cdf + sigma * density)
+        image = np.tile(row, (12, 1))
+        moved, keep = sheet.half_level_search(image, points, normals, half=3.5 * sigma, step=0.0625, sigma=sigma)
+        assert keep.all() and np.abs(moved[:, 0] - edge).max() < 0.002
+
+    from shapely.geometry import Point
+
+    sigma = 1.6
+    for radius in (12.0, 24.0, 88.0):
+        size = int(2 * radius + 80)
+        centre = np.array([size / 2 + 0.3, size / 2 - 0.2])
+        image = synthetic.coverage(Point(*centre).buffer(radius, 2048), 1.0, 0.0, 0.0, (size, size))
+        image = cv2.GaussianBlur((236 - 188 * image).astype(np.float32), (0, 0), sigma)
+        angle = np.linspace(0, 2 * np.pi, 360, endpoint=False)
+        normals = np.column_stack([np.cos(angle), np.sin(angle)])
+        start = centre + 0.5 + radius * normals
+        sloped, _ = sheet.half_level_search(image, start, normals, half=3.5 * sigma, sigma=sigma)
+        median, _ = sheet.half_level_search(image, start, normals, half=3.5 * sigma)
+        series = radius - sigma**2 / (2 * radius) - 5 * sigma**4 / (24 * radius**3)
+        sloped_error = abs(np.linalg.norm(sloped - centre - 0.5, axis=1).mean() - series)
+        median_error = abs(np.linalg.norm(median - centre - 0.5, axis=1).mean() - series)
+        assert sloped_error < 0.005 and sloped_error <= median_error
+
+
+def test_ring_smoothing_averages_the_slope_correction_round_a_closed_ring():
+    """Properties of the smoothing applied to the slope correction: it keeps a constant,
+    wraps round the ring's ends, and skips missing values."""
+    values = np.full(200, 0.07)
+    values[[5, 150]] = np.nan
+    smoothed = sheet._smooth_along_ring(values, 20.0)
+    assert np.isnan(smoothed[[5, 150]]).all() and np.allclose(np.delete(smoothed, [5, 150]), 0.07)
+    wave = np.cos(np.linspace(0, 2 * np.pi, 400, endpoint=False))
+    smoothed = sheet._smooth_along_ring(wave, 20.0)
+    # A slow wave keeps its shape (attenuated by the Gaussian's transfer exp(-k^2 s^2 / 2)).
+    expected = wave * math.exp(-0.5 * (2 * math.pi / 400 * 20.0) ** 2)
+    assert np.abs(smoothed - expected).max() < 2e-3
+
+
 def test_srgb_decoding_matches_the_standard_and_inverts_its_encoding():
     """Property: tone.linear_from_encoded is the IEC 61966-2-1 decoding. It agrees with
     the renderer's separately written copy and with the standard's own values (a saved

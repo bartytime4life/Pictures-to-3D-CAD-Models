@@ -182,7 +182,9 @@ def subpixel_rings(mask, g, ppm):
     Returns (rings, sigma_px, tiny) where rings is a list of {"outer": bool, "points"}.
     Pass 1 starts from boundary-pixel centres, about half a pixel inside one side, so its
     level windows are asymmetric; pass 2 re-centres each point with windows beyond
-    3.5 sigma on both sides of the measured edge blur.
+    3.5 sigma on both sides of the measured edge blur. Pass 2 also takes the paper side's
+    brightness slope into the level (sheet.half_level_search with sigma), smoothed along
+    the ring over 20 points, so a soft shadow beside an edge does not push it outward.
     """
     contours, hierarchy = cv2.findContours(mask, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
     hierarchy = hierarchy[0]
@@ -213,7 +215,13 @@ def subpixel_rings(mask, g, ppm):
     rings = []
     for is_outer, points in first:
         _, normals = ring_normals(points)
-        moved, keep = half_level_search(g, points, normals, half=half)
+        # Which side of each point the paper is on, from the classified mask 3 sigma out.
+        probe = np.rint(points + 3 * sigma * normals - 0.5).astype(int)
+        probe = np.clip(probe, 0, np.array(mask.shape[::-1]) - 1)
+        paper_side = np.where(mask[probe[:, 1], probe[:, 0]] == 0, 1, -1)
+        moved, keep = half_level_search(
+            g, points, normals, half=half, sigma=sigma, ring_smoothing=20.0, paper_side=paper_side
+        )
         if keep.sum() < 8:
             if is_outer:
                 raise EdgeError("The part's outline is not clear enough to trace. Improve the contrast.")
