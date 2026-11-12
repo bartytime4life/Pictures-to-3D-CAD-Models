@@ -104,6 +104,7 @@ successful developer study is separate from a successful workbench build.
 | `make warp-observation-study OUTPUT=new.json` | Compare known raw-image rectification, smoothing and final sampling, retaining stage rounding; [method](warp-observations.md) |
 | `make raw-source-fit-study OUTPUT=new.json` | Fit a supplied raw Gaussian edge in fixed retained source modes, with bounded brightness and explicit numerical diagnostics; [method](raw-source-fit.md) |
 | `make response-calibration-study OUTPUT=new.json` | Check exact common-response consistency and finite edge/calibration ambiguity; [method](response-calibration.md) |
+| `make response-rectangles-study OUTPUT=new.json` | Compare both input quantifiers with outward Gaussian input covers and retain undetermined cases; [method](response-rectangles.md) |
 | `.venv/bin/python scripts/response_calibration.py INPUT.json --output new.json` | Check exact calibration constraints without a server; [complete input example](response-calibration.md#run-an-exact-example) |
 | `.venv/bin/python -m pytest -q tests/test_edge_crossings.py` | Check nearest-crossing decisions, exact ranking, unresolved contacts and rejected-point preservation; [method](edge-crossings.md) |
 | `.venv/bin/python scripts/corner_feasibility.py --demo` | Run a bounded synthetic radius-set analysis; [input contract and limits](corner-feasibility.md) |

@@ -3,6 +3,17 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## Common response with bounded inputs — November 12, 2026
+
+- Add exact rectangle feasibility with explicit some/every-input quantifiers,
+  original-source contradictions, finite shared witnesses and genuinely
+  unbounded query directions.
+- Add a strict decimal-string CLI and outward rational Gaussian CDF covers with
+  directed rounding and explicit series/normalization certificates.
+- Retain the [complete finite experiment and independent checks](validation/response-rectangles.md),
+  including midpoint failures, correlated-input limits and unresolved coarse
+  boxes. Production tracing and physical qualification retain their prior scope.
+
 ## Documentation review through PR #66 — November 12, 2026
 
 - Align the source/review table with published PR #66 and refresh exact-head

@@ -58,7 +58,7 @@ Browser downloads are governed by the browser and host environment. Deleting an 
 ## Numerical reports
 
 The [developer tools](developer-tools.md) have their own local report files.
-Response calibration retains the full submitted numeric request and unit labels,
+The exact-response and rectangle CLIs retain the full submitted numeric request and unit labels,
 its input-byte hash, implementation hashes, Python version, Git revision and
 dirty-file names. Its output is both saved and printed to the terminal. It does
 not accept a photograph or contact the CAD API, Ollama or a hosted model.

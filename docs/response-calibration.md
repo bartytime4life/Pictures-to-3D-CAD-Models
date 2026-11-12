@@ -30,6 +30,10 @@ converting a rounded Gaussian evaluation to an exact rational preserves that
 computed number; it does not certify an enclosure of the mathematical Gaussian
 value. Keep those input-model limitations separate from exact propagation of
 the supplied values.
+Use the separate [rectangle solver](response-rectangles.md) when inputs have
+declared closed intervals. Its existential and every-input modes answer distinct
+questions, and its optional upstream Gaussian helper provides outward mathematical
+bounds without inferring a camera model.
 
 For every pair `x1 < x2`, the declared model requires
 

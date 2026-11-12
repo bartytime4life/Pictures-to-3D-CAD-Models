@@ -6,7 +6,9 @@ CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
 For a concise source/review snapshot, use [project status](project-status.md).
-The [current documentation review](validation/documentation-response-state.md)
+The [current coverage](validation/response-rectangles.md#documentation-coverage)
+includes the bounded-input response extension and its independent checks.
+The [documentation review through PR #66](validation/documentation-response-state.md)
 audits the published PR #66 baseline, executable calibration examples, command
 help and API contracts. The [response implementation coverage](validation/response-calibration.md#documentation-coverage)
 retains the checks recorded with that candidate. The
@@ -24,6 +26,15 @@ The [earlier PR #49 documentation follow-up](validation/documentation-current-st
 retains its source, executable API example and completed checks.
 
 ## Current workbench evidence — November 12, 2026
+
+The [rectangle-response developer extension](validation/response-rectangles.md)
+preserves closed input intervals with explicit existential and every-input
+constraints. Its supplied-Gaussian experiment keeps all 288 finite candidate
+rows: 200 excluded by outer boxes, 82 with one response for every covered input,
+and six box-undetermined cases. Refinement resolves the coarse-bound cases,
+while wrong calibration and shared-offset counterexamples remain visible.
+Mathematical Gaussian bounds do not qualify physical camera optics, and
+Cartesian compatibility alone does not establish correlated-model feasibility.
 
 The [common-response candidate](validation/response-calibration.md) checks exact
 supplied calibration knots, output bands and common slope constraints. A shared

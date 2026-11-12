@@ -53,7 +53,12 @@ edge in fixed source modes, with bounded brightness, finite-search flags and
 retained/complement raw residuals. An [exact common-response tool](response-calibration.md) now tests externally
 supplied exact calibration knots and output/slope bounds. It preserves a shared
 response and contradiction evidence; it does not infer those physical bounds or
-undo source encoding. Unknown PSF/response and joint geometry remain open. Retained-mode whitening alone cannot establish a calibrated likelihood.
+undo source encoding. A [rectangle extension](response-rectangles.md) now handles
+declared input intervals and carries outward mathematical Gaussian bounds into
+both quantifiers. Its finite refinement experiment preserves box-undetermined
+cases rather than substituting midpoints. Unknown PSF/response, correlated
+calibration parameters and joint geometry remain open. Retained-mode whitening
+alone cannot establish a calibrated likelihood.
 
 The [fixed-observation/covariance module](profile-observations.md) now represents
 known final sampling and finite smoothing operators. Conditional noise controls
