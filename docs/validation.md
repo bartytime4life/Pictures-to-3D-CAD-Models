@@ -46,6 +46,7 @@ It changes guides relative to that integrated baseline, not runtime behavior.
 
 | Evidence | Revision and result | Scope |
 | --- | --- | --- |
+| Recorded slot end-cap checks | Branch `claude/slot-caps`, on `main` at `5c07d0f` (after #46): **594 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#slot-end-caps-placed-with-their-radius-fixed--november-11-2026) | Local result; synthetic photos and outlines; one tone-curve finding not adopted |
 | Weak-edge error recovery | PR #45, merged in `4e607d9`; [record](validation/contrast-recovery.md): **583 Python tests** at its PR #44 integration | Four original failures now recover or give actionable 422 guidance; thresholds and fallback policy retained |
 | Constrained fillet sectors | PR #46, merged in `5c07d0f`; [record](validation/fillet-sweep.md): **589 Python tests** at its PR #44 integration | Six failing original controls, genuine major arcs and exact STEP/DXF checks; scalar blur-model mismatch remains |
 | Radial inverse and independent simulation | [Domain and checks](validation/radial-inverse.md), candidate integrated with main `5c07d0f`: **623 Python tests**, **74 browser scenarios**; the separate earlier phase passed 609/74 | Decimal numerical oracles, independent lens code and source-bound higher-order mismatch examples; no physical camera qualification |
@@ -76,6 +77,29 @@ stub fix in managed cloud sessions. The [reference-sensitivity record](validatio
 covers the endpoint explorer. The original CAD release and optional Ollama
 integration retain separate historical evidence. These records do not establish
 that a newly created or published cloud task has been validated.
+
+## Slot end caps placed with their radius fixed — November 11, 2026
+
+Branch `claude/slot-caps`, on `main` at `5c07d0f` (after #46; the figures below were taken on `eec45d0` and are unchanged on `5c07d0f`). See [reference-sheet tracing](reference-sheet.md), §7, for the method.
+
+- **The defect.** The 24 × 8 slot read 0.018–0.022 mm long in the 5° and 9° photos of the 4 mm plate, with its radii right to 0.003 mm: the end caps' centres were too far apart. Each cap is part top edge (rescaled by the parallax correction) and part bottom edge (beside the refined wall). Mapped against the true slot on a clean render, the top-edge points read 4–6 µm into the hole and the bottom-edge points 4–8 µm into the material, beyond the caps' 10 µm blur shrink. The cap's centre along the slot came from the arc's free three-parameter fit, which couples it with the radius, so that uneven pattern moved it.
+- **The fix** (`fitting._end_cap_axial`). The radius stays half the spacing of the sides, and only the centre's place along the slot is fitted, to the blurred radius r − s(r), without the points within 2.5 σ of the tangent points.
+- **Why it is better.** Over a half turn the free fit's axial centre has a variance of 1/(½ − (2/π)²) = 10.6 noise units, against 2 with the radius fixed: 2.3 times the standard deviation. On blurred slot outlines with noise of 0.05 px correlated over 4 points, the slot length's spread fell from 0.032 to 0.017 px. With one whole side moved out by 0.1 px, as a wall or a shadow on one side does, the length is 0.064 px off, where it was 0.104 px. With only one flank of each cap moved by 0.1 px and the side line left exact, the free fit does better (the length 0.002 px off, against 0.126 px); a real photo moves the side with its flank.
+- **Rendered photos.** Slot error (the larger of length and width) and hole position, in mm, before → after:
+
+  | Photo | Slot | Hole position |
+  | --- | --- | --- |
+  | 9° tilt, 4 mm, shadow | 0.0175 → 0.0074 | 0.0097 → 0.0069 |
+  | 9° tilt, 4 mm, no shadow | 0.0223 → 0.0056 | 0.0057 → 0.0032 |
+  | 5° tilt, 4 mm, shadow | 0.0184 → 0.0021 | 0.0062 → 0.0054 |
+  | Overhead, 4 mm, height from the holes | 0.0135 → 0.0086 | 0.0078 → 0.0084 |
+  | 22° tilt, lens, shadow (thin) | 0.0073 → 0.0073 | 0.0093 → 0.0044 |
+  | 4000 × 3000 overhead, ideal light | 0.0025 → 0.0053 | 0.0029 → 0.0031 |
+
+  The slot's centre is one of the six position points, hence the position changes. The 9° slot's remaining 0.0074 mm is its width, from the side lines. The 4000 × 3000 overhead slot is within the length's spread between noise seeds: over seeds 3, 11 and 19 it read 0.0015, 0.0004 and 0.0042 mm, against 0.0020, 0.0028 and 0.0080 mm; on the 2400 × 1800 overhead photo, 0.0005, 0.0054 and 0.0005 mm, against 0.0074, 0.0062 and 0.0051 mm.
+- **Photo benchmark example.** The slot length's worst went from −0.007 to −0.015 mm, in the 9° photo, whose slot width reads −0.015 mm with either fit: that photo's slot edges lie about 7.5 µm inside the true edge all round, which shortens a slot by twice that. The free fit's −0.004 mm there came from errors that cancelled. Median, 95th percentile and worst are unchanged (0.004, 0.014 and 0.015 mm).
+- **A tone-curve finding, not adopted.** A camera saving with a plain 1.8 gamma leaves the overhead photo 0.114 mm off (§3). A blurred edge is point-symmetric in linear light, so the decoding curve could in principle be fitted to make edge profiles symmetric (radiometric calibration from edges, after Lin and others, 2004). A power correction xᵏ applied after the sRGB decoding brings the errors under 0.01 mm at κ = 0.79 (gamma 1.8) and 0.96 (gamma 2.2), and the exact mid-level needs 0.785 and 0.967. The most symmetric power is a different one, 0.731 and 0.849, because an sRGB-decoded gamma curve is not a power; it would leave edges 0.05–0.09 σ off. Saved-domain noise and JPEG also bias a symmetry statistic. Within one pair of tones any monotone curve can be matched by moving the edge, so a two-tone scene cannot determine the curve without a model of real camera curves, which needs many tone pairs (Grossberg and Nayar's empirical response model). Nothing was changed.
+- **Checks run.** `pytest`: **594 passed** on `5c07d0f` (509 on `eec45d0`). New: `test_slot_end_caps_are_placed_with_their_radius_fixed`, which fails with the free fit's centre. Ruff passed. All 74 browser scenarios passed with the system Chrome.
 
 ## Camera height from the holes' roundness — November 11, 2026
 
