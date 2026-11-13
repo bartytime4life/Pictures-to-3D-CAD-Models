@@ -32,7 +32,7 @@ make start
 
 `make start` runs the Python workbench service, which serves the compiled frontend, API, and published reference library on the same origin. The app header opens `/reference-library/index.html#cad` separately. The library route only serves an explicit set of reader files; personal native builds, temporary outputs, scripts, and environments remain outside it. `make setup-app` and the existing `./scripts/setup.sh` prepare only that workbench; `./scripts/start.sh` remains the direct startup command. A library-only contributor can use `make setup-library`.
 
-The normal server uses port 8000. Do not assume a background process will survive a new cloud task or an environment snapshot restore; run the start script again in the restored environment.
+Keep the terminal running after startup and open [Pictures to CAD](http://127.0.0.1:8000) in your browser on the same machine. For a managed remote host, use its supported browser or port forwarding. The normal server uses port 8000. Do not assume a background process will survive a new cloud task or an environment snapshot restore; run the start script again in the restored environment.
 
 The default bind address is `127.0.0.1`. The supported startup settings are:
 
@@ -185,13 +185,15 @@ miss, first failures and 28 historical precision unknowns. Candidate code and
 complete local ZIPs remain separate from this main runtime and workbench UI.
 
 The [protected-source-bin design](finite-acquisition-protected.md) retains its
-eight failed first controls. The later
-[exact active-face implementation](finite-acquisition-protected-active.md) records
-**820 passes, one failed test expectation and 33 passing subtests**, exit 1.
-Its fixture supplies 16 constraint rows, while the assertion expects 15.
-The [first outcome and evidence](validation/finite-acquisition-protected-active.md)
-remain unchanged; a separate control-only correction is pending. Neither
-protected full recovery study has run. This adds no application integration.
+eight failed first controls. The [exact active-face follow-up](finite-acquisition-protected-active.md)
+preserves its first test-expectation failure; a separately frozen corrected
+selection passes **821 tests and 33 subtests**. Its complete original 24-case
+study still fails at **11/12 matched passes**. The later saved-only
+[physical-rounding diagnostic](finite-acquisition-physical-rounding.md) verifies
+one rational local optimum but finds **zero accepted candidates among 128
+adjacent physical corners**, with no arithmetic unknowns. See the
+[complete results and source bindings](validation/finite-acquisition-physical-rounding.md).
+These separate local studies add no main runtime or workbench integration.
 
 The [affine evaluation upgrade](finite-affine-evaluation.md) has an earlier
 [943-test local Python result, production build and lint](validation/finite-affine-batch.md#software-regression),

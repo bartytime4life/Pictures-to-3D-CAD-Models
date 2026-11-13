@@ -1,0 +1,68 @@
+{
+  "format": "physical-rounding-first-saved-census-terminal-receipt",
+  "recorded_at": "2026-11-13T22:48:36.359348+00:00",
+  "head": "b649ea3e09c5c6e1b772d1bc3f0f5a378f764b33",
+  "tree": "e408b9dbcef0ecd273c31d08f929defae3948736",
+  "native_session_id": 51773,
+  "exit_code": 1,
+  "controls": {
+    "exit_code": 0,
+    "passed": 49,
+    "seconds": 0.06
+  },
+  "inventory": {
+    "rows": 24,
+    "fit_files": 17,
+    "no_certificate_fits": 16,
+    "qualified_certificates": 1
+  },
+  "source_inputs_unchanged": 104,
+  "saved_artifacts_unchanged": true,
+  "errors": [],
+  "certificate": {
+    "qualified": true,
+    "raw_halfspaces": 352,
+    "primal_feasible": true,
+    "dual_feasible": true,
+    "complementarity": true,
+    "stationarity": true
+  },
+  "census": {
+    "complete": true,
+    "candidates": 128,
+    "feasible": 0,
+    "arithmetic_unknowns": 0,
+    "physical_bounds_passes": 128,
+    "arithmetic_floor_passes": 128,
+    "exact_physical_passes": 0,
+    "exact_computed_delta_passes": 0,
+    "computed_band_passes": 0
+  },
+  "files": {
+    ".local/verification/finite-acquisition-physical-rounding-v1-first.json": {
+      "sha256": "fcf64aa7549f35b6edd27fc38104aef69ead6053469980486b4b0edcdd1c5443",
+      "bytes": 9669740
+    },
+    ".local/verification/finite-acquisition-physical-rounding-v1-first.log": {
+      "sha256": "c890e3b13fdfaf7165f41ec262e682eff83ba0ddaca056f5e07ae45380d2247c",
+      "bytes": 140
+    },
+    ".local/verification/finite-acquisition-physical-rounding-v1-first-run-handle.json": {
+      "sha256": "9ff8166a996eb401a32e7ffd25e69abbcdca8844a6f004ab56e4d48843fe3df8",
+      "bytes": 429
+    },
+    ".local/verification/finite-acquisition-physical-rounding-v1-first-tests.log": {
+      "sha256": "a4d26c4451072c7fc4015ee77de830b90039fa384cd2eb589d01cdadbf72585f",
+      "bytes": 99
+    },
+    ".local/verification/finite-acquisition-physical-rounding-v1-first-tests-handle.json": {
+      "sha256": "056b10fb59da767cb6c3ffad639e6eaa24ea7143ecdff70484a5d296dfc07011",
+      "bytes": 518
+    },
+    ".local/verification/finite-acquisition-physical-rounding-v1-first-tests-terminal-receipt.json": {
+      "sha256": "2bf0ab75a9c7cc95d42267bdf4287f3d2d275137cc86f6c71a9964ecd7ba2c05",
+      "bytes": 839
+    }
+  },
+  "scope": "Complete adjacent physical corner box has no accepted candidate under the unchanged gates. No global float-nonexistence, original recovery improvement, nonlinear/physical claim or new fitter/forward/QP/PNG call. Original24case recovery remains11matchedpasses/exit1. Preserve first outcomes; any inward-point method needs separate admission and freeze."
+}

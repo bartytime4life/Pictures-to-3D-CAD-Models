@@ -31,7 +31,7 @@ Setup prepares the workbench and reference-library dependencies in separate loca
 
 For workbench-only setup, use `make setup-app`. The existing `./scripts/setup.sh` and `./scripts/start.sh` commands remain supported and apply only to the workbench.
 
-The server listens on the local machine at port **8000**. In a managed cloud environment, use the environment's supported browser or forwarding mechanism. A server running on a remote machine is not your device's localhost.
+Keep the terminal running after startup and open [Pictures to CAD](http://127.0.0.1:8000) in your browser. The server listens on the local machine at port **8000**. In a managed cloud environment, use the environment's supported browser or forwarding mechanism. A server running on a remote machine is not your device's localhost.
 
 The app's **OpenSCAD** link opens the companion workspace in a separate tab and keeps the current traced part available. The same server serves the published library at `/reference-library/index.html#cad`; its handbook and browser tools also open offline from `reference-library/index.html`.
 
@@ -135,7 +135,7 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 For the reviewed source revision and available research APIs, read
 [source scope and status](docs/project-status.md) and the
-[current documentation review](docs/validation/documentation-protected-active.md).
+[current documentation review](docs/validation/documentation-physical-rounding.md).
 Main includes the source-cell mean, five unrounded area sensitivities and
 separate signed linear propagation as developer APIs. Five-parameter recovery
 with unknown brightness is absent from this main-based runtime. A
@@ -143,11 +143,14 @@ with unknown brightness is absent from this main-based runtime. A
 4/12 matched passes originally, 9/12 with a smooth proposal, then **11/12**
 with [coupled search](docs/finite-acquisition-coupled.md). A later
 [source-event strategy](docs/finite-acquisition-events.md) stays at 11/12.
-All four complete 24-case protocols fail. The later
-[protected-source-bin design](docs/finite-acquisition-protected.md) retains eight
-failed first controls. Its [exact active-face follow-up](docs/finite-acquisition-protected-active.md)
-records 820 passes, one failed test expectation and 33 passing subtests; the
-full recovery study has not run. The
+The [exact active-face follow-up](docs/finite-acquisition-protected-active.md)
+also reaches 11/12 after a separately frozen corrected selection passes 821
+tests and 33 subtests. **All five complete 24-case recovery protocols fail.**
+The original [protected-source-bin design](docs/finite-acquisition-protected.md)
+retains its eight failed controls, and the active method's first test-expectation
+failure is preserved. A later [saved-only rounding diagnostic](docs/finite-acquisition-physical-rounding.md)
+verifies a rational local optimum but accepts none of 128 adjacent physical
+candidates. The [latest results](docs/validation/finite-acquisition-physical-rounding.md) and
 [results and remaining limits](docs/validation/finite-acquisition-continuations.md)
 keep software tests and [saved-record audits](docs/finite-acquisition-saved-audit.md)
 separate from camera accuracy and physical acceptance. The

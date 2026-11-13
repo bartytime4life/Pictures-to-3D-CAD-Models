@@ -1,0 +1,28 @@
+{
+  "format": "protected-active-controls-v2-first-software-terminal-receipt",
+  "recorded_at": "2026-11-13T22:20:52.449206+00:00",
+  "head": "c1a933099d34475bb1bbfb04de17fa41b61b4d42",
+  "tree": "1e4e078975f0bca26e99fa8c03ac236fcd4f8bc5",
+  "governing_inputs_unchanged": 100,
+  "tests": {
+    "native_session_id": 99257,
+    "exit_code": 0,
+    "passed": 821,
+    "failed": 0,
+    "subtests_passed": 33,
+    "seconds": 16.06,
+    "log": {
+      "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first-tests.log",
+      "sha256": "fcd1ebbb583f5f298b59efc80707033908fdfec6d6d88c583be7ba6e8aa0e144",
+      "bytes": 968
+    }
+  },
+  "first_handle": {
+    "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first-tests-handle.json",
+    "sha256": "2926c7010edb297e8caabbfcd975c1be93e141a3444f06051e2eadebdc1f454b",
+    "bytes": 1772
+  },
+  "scope": "Selected corrected command replaces frozen active core file with sole15\u219216 copy. Not an unrestricted full-suite pass. Original first failure retained.",
+  "recovery_study_executed": false,
+  "full_protocol_gate": "Three static reviews clear,100input freeze preserved and821selected controls pass. Original24case study is now eligible once."
+}

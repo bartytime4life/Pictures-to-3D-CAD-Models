@@ -1,0 +1,133 @@
+{
+  "format": "documentation-saved-evidence-inventory-v1",
+  "recorded_at": "2026-11-13T22:55:04.437301+00:00",
+  "research_heads": {
+    "corrected_controls_and_full24": "c1a933099d34475bb1bbfb04de17fa41b61b4d42",
+    "physical_census": "b649ea3e09c5c6e1b772d1bc3f0f5a378f764b33"
+  },
+  "scope": "Verbatim saved records plus explicitly derived census field extract. Full arrays, runtime/tests/runners and complete ZIPs remain local, outside this documentation publication.",
+  "verbatim_copies": {
+    "controls-v2-admission.json": {
+      "source": "studies/finite-acquisition-recovery-protected-active-controls-v2.json",
+      "sha256": "79ef0515252c3869281d1b0bede4e1fb0eb226eb371c58293f6ed7ae1810dfeb",
+      "bytes": 28161
+    },
+    "controls-v2-freeze.json": {
+      "source": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-freeze.json",
+      "sha256": "3c88581ba38e0310e5f67be11e4bffa58f027b4008d3ce30a91ad130d1037bcb",
+      "bytes": 15955
+    },
+    "controls-v2-first-tests.log": {
+      "source": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first-tests.log",
+      "sha256": "fcd1ebbb583f5f298b59efc80707033908fdfec6d6d88c583be7ba6e8aa0e144",
+      "bytes": 968
+    },
+    "controls-v2-first-tests-handle.json": {
+      "source": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first-tests-handle.json",
+      "sha256": "2926c7010edb297e8caabbfcd975c1be93e141a3444f06051e2eadebdc1f454b",
+      "bytes": 1772
+    },
+    "controls-v2-first-tests-receipt.json": {
+      "source": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first-terminal-receipt.json",
+      "sha256": "42b0663e1678d46aeddb6b29997b933c9bfdb7ceef1bfbf102b91fcc023d05ab",
+      "bytes": 1264
+    },
+    "recovery-report.json": {
+      "source": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/report.json",
+      "sha256": "fe72dfe41cb961adc635390398714e377c97d384e7a3ed41fa5b98b7267fc056",
+      "bytes": 140994
+    },
+    "recovery-first.log": {
+      "source": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first-study.log",
+      "sha256": "05bf726e2c1ee2616e95c947aeaed27433e9604e01572342f562409f3e4bdbc7",
+      "bytes": 2338
+    },
+    "recovery-first-handle.json": {
+      "source": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first-run-handle.json",
+      "sha256": "4c7aaa217e502bd68808a4a727b19f985d3db84f2c0651176b1943e5b02ee8a1",
+      "bytes": 605
+    },
+    "recovery-first-receipt.json": {
+      "source": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first-study-terminal-receipt.json",
+      "sha256": "d4801ab919ca14e35d3cecdce03614711680ac96883509b2504c2e8feed32b52",
+      "bytes": 2650
+    },
+    "recovery-archive-readback.json": {
+      "source": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-portable-archive-readback.json",
+      "sha256": "54d7fd37aeabc03b63ebaa14d399b9d0e43c9b2433051d40a7275e5d94834e06",
+      "bytes": 1050
+    },
+    "rounding-admission.json": {
+      "source": "studies/finite-acquisition-physical-rounding-v1.json",
+      "sha256": "e40181fe977ef96e003973d2fad90973ca802f0ec6028765fabcdfdff1d227d4",
+      "bytes": 17845
+    },
+    "rounding-freeze.json": {
+      "source": ".local/verification/finite-acquisition-physical-rounding-v1-freeze.json",
+      "sha256": "68ac3b217536f0c9793e6db35916b42b6fb5deea70761cf0cab00d3b7a56dbce",
+      "bytes": 15401
+    },
+    "rounding-prospective-method.txt": {
+      "source": "docs/finite-acquisition-physical-rounding.md",
+      "sha256": "cf90652e9f668787a71302c04dbd8690c2c24377a5aa15223aebac82a9f8f078",
+      "bytes": 6913
+    },
+    "rounding-first-tests.log": {
+      "source": ".local/verification/finite-acquisition-physical-rounding-v1-first-tests.log",
+      "sha256": "a4d26c4451072c7fc4015ee77de830b90039fa384cd2eb589d01cdadbf72585f",
+      "bytes": 99
+    },
+    "rounding-first-tests-handle.json": {
+      "source": ".local/verification/finite-acquisition-physical-rounding-v1-first-tests-handle.json",
+      "sha256": "056b10fb59da767cb6c3ffad639e6eaa24ea7143ecdff70484a5d296dfc07011",
+      "bytes": 518
+    },
+    "rounding-first-tests-receipt.json": {
+      "source": ".local/verification/finite-acquisition-physical-rounding-v1-first-tests-terminal-receipt.json",
+      "sha256": "2bf0ab75a9c7cc95d42267bdf4287f3d2d275137cc86f6c71a9964ecd7ba2c05",
+      "bytes": 839
+    },
+    "rounding-first.log": {
+      "source": ".local/verification/finite-acquisition-physical-rounding-v1-first.log",
+      "sha256": "c890e3b13fdfaf7165f41ec262e682eff83ba0ddaca056f5e07ae45380d2247c",
+      "bytes": 140
+    },
+    "rounding-first-handle.json": {
+      "source": ".local/verification/finite-acquisition-physical-rounding-v1-first-run-handle.json",
+      "sha256": "9ff8166a996eb401a32e7ffd25e69abbcdca8844a6f004ab56e4d48843fe3df8",
+      "bytes": 429
+    },
+    "rounding-first-receipt.json": {
+      "source": ".local/verification/finite-acquisition-physical-rounding-v1-first-terminal-receipt.json",
+      "sha256": "fbeed14491dd2d8959ad7f3570ea5fd6357d77db5d5bfa70255174de6f06794a",
+      "bytes": 2614
+    },
+    "rounding-archive-readback.json": {
+      "source": ".local/verification/finite-acquisition-physical-rounding-v1-portable-archive-readback.json",
+      "sha256": "e6150e1e19e953e0a355095ea2361bf99d815de73a7b95da43e7b600a12bcd66",
+      "bytes": 922
+    }
+  },
+  "derived_extract": {
+    "rounding-saved-extract.json": {
+      "sha256": "f22bc46f71245345d21677c15156b4143e557b19fd340a737082bfbe557579ba",
+      "bytes": 328727
+    }
+  },
+  "local_complete_archives": {
+    "recovery": {
+      "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-complete.zip",
+      "sha256": "18e1fb6459f937ad133c59de0f472090efce6bdaefaf2c88856f074d913837b0",
+      "bytes": 18096291,
+      "members": 121,
+      "payload_members_verified": 120
+    },
+    "rounding": {
+      "path": ".local/verification/finite-acquisition-physical-rounding-v1-complete.zip",
+      "sha256": "398e6c5e3acbdb3f40c4ec93fd6b104889d1124fe63a6c0ef09a05210593622d",
+      "bytes": 19502334,
+      "members": 13,
+      "payload_members_verified": 12
+    }
+  }
+}

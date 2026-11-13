@@ -1,0 +1,10 @@
+{
+  "cmd": "set -o pipefail\n.venv/bin/python studies/verification/finite-acquisition-physical-rounding-v1.py --output .local/verification/finite-acquisition-physical-rounding-v1-first.json 2>&1 | tee .local/verification/finite-acquisition-physical-rounding-v1-first.log",
+  "first": {
+    "chunk_id": "ff1447",
+    "wall_time_seconds": 1.001492741,
+    "session_id": 51773,
+    "original_token_count": 0,
+    "output": ""
+  }
+}

@@ -1,5 +1,19 @@
 # Workbench change log
 
+## Completed active-face study and rounding diagnosis documented — November 13, 2026
+
+- Preserve the first expectation failure and record the separately frozen
+  corrected selected result: 821 tests and 33 subtests pass at `c1a9330`.
+- Record the complete original 24-case recovery study: 11/12 matched passes,
+  exit 1, with the middle-PNG miss, exception and adverse pass retained.
+- Explain the independently verified rational optimum and the saved-only
+  physical census at `b649ea3`: 49 controls pass; all 128 adjacent candidates
+  fail source-membership gates, with no arithmetic unknowns. Inward-point work
+  remains prospective. [Results and evidence](validation/finite-acquisition-physical-rounding.md).
+- Refresh active guidance and source/CI status after PR #116 merged; complete
+  the beginner startup path and clarify report-output behavior. Preserve all
+  runtime and dated evidence. [Documentation review](validation/documentation-physical-rounding.md).
+
 ## Exact active-face first controls documented — November 13, 2026
 
 - Record the additive local implementation at `1dade8a`: 820 passes, one failed

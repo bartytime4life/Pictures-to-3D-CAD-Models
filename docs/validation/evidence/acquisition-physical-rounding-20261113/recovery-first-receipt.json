@@ -1,0 +1,71 @@
+{
+  "format": "protected-active-controls-v2-first-study-terminal-receipt",
+  "recorded_at": "2026-11-13T22:24:27.232137+00:00",
+  "head": "c1a933099d34475bb1bbfb04de17fa41b61b4d42",
+  "tree": "1e4e078975f0bca26e99fa8c03ac236fcd4f8bc5",
+  "native_session_id": 74108,
+  "exit_code": 1,
+  "rows": 24,
+  "matched_passes": 11,
+  "matched_total": 12,
+  "adverse_all_target_passes": 1,
+  "row_statuses": {
+    "completed": 23,
+    "exception": 1
+  },
+  "fit_attempts": 17,
+  "source_unchanged": true,
+  "governing_inputs_unchanged": 100,
+  "saved_artifacts_verified": 106,
+  "saved_records_equal_report_rows": 24,
+  "files": {
+    ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/report.json": {
+      "sha256": "fe72dfe41cb961adc635390398714e377c97d384e7a3ed41fa5b98b7267fc056",
+      "bytes": 140994
+    },
+    ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/source-freeze.json": {
+      "sha256": "f386407f739d06e2336e972f2bfa7a910375e4abf7da43737da7b5885b2a5a6f",
+      "bytes": 51004
+    },
+    ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first-run-handle.json": {
+      "sha256": "4c7aaa217e502bd68808a4a727b19f985d3db84f2c0651176b1943e5b02ee8a1",
+      "bytes": 605
+    },
+    ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first-study.log": {
+      "sha256": "05bf726e2c1ee2616e95c947aeaed27433e9604e01572342f562409f3e4bdbc7",
+      "bytes": 2338
+    }
+  },
+  "middle_png": {
+    "cost": 0.302031169350812,
+    "errors": {
+      "centre_error_pitch": 0.008898488303205117,
+      "radius_error_pitch": 0.0028701620906592673,
+      "fraction_error": 0.003528725623290513,
+      "wrapped_angle_degrees": 0.026602877466485722,
+      "reserved_dimension_error_pitch": 0.009767517635997258,
+      "sampled_bidirectional_boundary_error_pitch": 0.00602831876239085,
+      "conditional_query_max_residual_linear_level": 0.06518173217773438
+    },
+    "work": [
+      990,
+      135031,
+      54520546
+    ],
+    "counters_exact": true,
+    "refinement_status": "no_protected_literal_improvement_then_coordinate_polish",
+    "protected_event_statuses": [
+      "rounded_point_unavailable",
+      "exact_face_unresolved",
+      "exact_face_unresolved"
+    ],
+    "protected_literal_trial_count": 0
+  },
+  "selected_software_gate": {
+    "native_session_id": 99257,
+    "exit_code": 0,
+    "passed": 821,
+    "subtests_passed": 33
+  },
+  "scope": "All original24cases and targets retained, full protocol exit1. Exact local-QP proof/rounded-point gate is not nonlinear/physical qualification. No retry or threshold change."
+}

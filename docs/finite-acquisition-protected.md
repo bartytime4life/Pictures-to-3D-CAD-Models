@@ -8,11 +8,14 @@ source bindings](validation/finite-acquisition-protected.md). This is a local
 research design, outside main's runtime and automatic tracing.
 
 A separately frozen [exact active-face follow-up](finite-acquisition-protected-active.md)
-passes the 53 original controls when rebound to the new implementation, but
-its complete first selected command still fails: 820 passes, one failed test
-expectation and 33 passing subtests. Its
-[new first outcome](validation/finite-acquisition-protected-active.md) preserves
-the original eight failures. Neither protected full recovery study has run.
+passes the 53 original controls when rebound to the new implementation. Its
+[first selected outcome](validation/finite-acquisition-protected-active.md)
+retains 820 passes, one failed test expectation and 33 passing subtests. A
+separately frozen corrected selection passes 821 tests and 33 subtests; the
+subsequent complete original 24-case study still fails at 11/12 matched passes.
+The [new result and saved-only physical census](validation/finite-acquisition-physical-rounding.md)
+preserve every first failure. The original protected-v1 full study remains
+unrun; only the active-face follow-up has completed a full recovery protocol.
 
 It keeps the earlier full-protocol failures:
 4/12 original matched passes, 9/12 after the predictor, and 11/12 after both the

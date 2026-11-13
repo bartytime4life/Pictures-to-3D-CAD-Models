@@ -48,13 +48,15 @@ the research documentation. Their code remains outside this main runtime;
 neither changes the application flow above.
 
 The [protected-source-bin design](finite-acquisition-protected.md) retains its
-eight failed first controls. The later
-[exact active-face implementation](finite-acquisition-protected-active.md) records
-**820 passes, one failed test expectation and 33 passing subtests**, exit 1.
-Its fixture supplies 16 constraint rows, while the assertion expects 15.
-The [first outcome and evidence](validation/finite-acquisition-protected-active.md)
-remain unchanged; a separate control-only correction is pending. Neither
-protected full recovery study has run. This adds no application integration.
+eight failed first controls. The [exact active-face follow-up](finite-acquisition-protected-active.md)
+preserves its first test-expectation failure; a separately frozen corrected
+selection passes **821 tests and 33 subtests**. Its complete original 24-case
+study still fails at **11/12 matched passes**. The later saved-only
+[physical-rounding diagnostic](finite-acquisition-physical-rounding.md) verifies
+one rational local optimum but finds **zero accepted candidates among 128
+adjacent physical corners**, with no arithmetic unknowns. See the
+[complete results and source bindings](validation/finite-acquisition-physical-rounding.md).
+These separate local studies add no main runtime or workbench integration.
 
 ## Components
 
