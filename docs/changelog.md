@@ -1,5 +1,22 @@
 # Workbench change log
 
+## Affine finite-material evaluation and documentation — November 12, 2026
+
+- Shared transformed curve panels accelerate exactly affine finite-material
+  means, with the existing scalar path for perspective and unsupported batches.
+  Work includes discarded evaluations; workspace has an explicit bound. The
+  existing circular-segment result schema and optical model are preserved.
+- The fixed comparison passes 28 numerical/resource controls, preserves all
+  36 archived rows and previous target passes, and records 10.13× faster means
+  and 3.84× faster complete fits. The three fit medians are 2.75–3.91 seconds;
+  interactive latency and physical accuracy remain unqualified.
+- The integrated candidate passes 943 local Python tests, production build
+  and lint. Updated current guides, source/CI snapshots, runnable study modes,
+  evidence navigation and the engineering limits. Dated reports and companion
+  library generated outputs retain their original scope.
+  [Algorithm](finite-affine-evaluation.md) · [complete evidence](validation/finite-affine-batch.md)
+  · [documentation checks](validation/documentation-affine-state.md).
+
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 

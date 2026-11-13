@@ -6,8 +6,8 @@ The workbench is designed for plates, gaskets, spacers, and templates. It traces
 
 For the reviewed source revision, draft PR dependencies and available research
 APIs, read [source scope and status](docs/project-status.md). The latest
-[documentation review](docs/validation/documentation-pr91-state.md) covers the
-integrated main source after PR #91, the workbench and companion library. Older
+[documentation review](docs/validation/documentation-affine-state.md) covers the
+affine-evaluation candidate, the workbench and companion library. Older
 test results retain their original scope.
 
 For reference-sheet tracing, photograph the whole flat sheet (A4, US Letter, or a sheet you have measured) and explicitly choose it as the **Scale reference**. A successful sheet trace sets scale from its stated size, estimates perspective and one radial lens correction, and fits lines, tangent arcs and circles. Entered thickness supports a side-wall/parallax correction under the method's assumptions. Ordinary tracing and the sample use measured-width scaling instead; they do not perform these corrections. See [reference-sheet tracing](docs/reference-sheet.md) for the mathematics and synthetic evidence, and the [engineering model](docs/engineering-model.md) for independent verification before fabrication.
@@ -45,6 +45,13 @@ The subsequent [measured-ring bridge](docs/finite-shape-inverse.md#prepare-a-mea
 prepares a fixed crop, samples and coordinate mapping for that developer API;
 its [paired replay](docs/validation/finite-photo-intensity-v2.md) preserves the
 earlier failures. It also remains outside automatic tracing.
+
+The [affine evaluator](docs/finite-affine-evaluation.md) shares numerical work
+across pixels under exactly affine maps. A fixed, source-bound comparison records
+**3.84× faster complete fits** across three declared datasets, with medians of
+2.75–3.91 seconds and all prior target passes retained. This is developer API
+evidence; it does not change the photo workflow or qualify interactive latency.
+See the [complete results and limits](docs/validation/finite-affine-batch.md).
 
 Final fitted arcs also need [circle-consistent joins](docs/curved-joins.md).
 An unavailable join keeps an affected outline for review when valid, with a

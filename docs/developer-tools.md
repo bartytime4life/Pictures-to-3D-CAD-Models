@@ -33,6 +33,11 @@ reproducing an archived result; a later backend can invalidate that binding.
 | Image-moment proposal replay | `.venv/bin/python studies/verification/finite-moment-photo-v1.py --output NEW.json` | Archived synthetic measurement fields, all 76 numerical/ineligible outcomes and background/crop sensitivity; fresh JSON destination; [limits](validation/finite-moment-photo.md) |
 | Paired measured-ring intensity replay | `.venv/bin/python studies/verification/finite-photo-intensity-v2.py --output NEW.json` | Twelve fixed case/lane records from preserved measurement fields; one shared crop/seed/40+16 samples per case, supplied covariance hypotheses and unchanged targets; fresh JSON destination in an existing directory; [scope and results](validation/finite-photo-intensity-v2.md) |
 | Measured-ring no-fit contracts | `.venv/bin/python studies/verification/finite-photo-intensity-v2-contracts-v1.py --output NEW.json` | Actual preparation/forward controls and explicitly labeled parser/routing sentinels; no inverse optimizer; fresh JSON destination in an existing directory |
+| Affine numerical controls without inverse fits | `.venv/bin/python studies/verification/finite-affine-batch-v1.py --no-timing --output NEW.json` | Sixteen operator, six resource and six derivative controls; no inverse optimizer or benchmark timing; [protocol and archive](validation/finite-affine-batch.md) |
+| Affine complete fit and performance comparison | `.venv/bin/python studies/verification/finite-affine-batch-v1.py --complete --quiet-interval --output NEW.json` | All 36 archived rows, 32 accuracy-fit entries and 24 whole-fit warm/timed entries; also retains all 192 kernel samples; requires the declared quiet interval for timing |
+| Affine complete accuracy replay without timing | `.venv/bin/python studies/verification/finite-affine-batch-v1.py --complete --no-timing --output NEW.json` | Same archived accuracy population; no benchmark repeats or timing qualification |
+| Affine actual first-fit failure continuation | `.venv/bin/python studies/verification/finite-affine-batch-v1.py --complete --no-timing --inject-first-fit-failure --canonical CANONICAL.json --output NEW.json --audit NEW_AUDIT.json` | Injects the first accuracy-fit entry failure, runs 31 later real accuracy fits and compares all 35 later records; decompress the full canonical archive first; [instructions](../studies/fixtures/finite-affine-batch-v1/README.md) |
+| Saved affine report integrity audit | `python3 studies/verification/finite-affine-report-audit-v1.py --help` | Standard-library-only arithmetic, timing-accounting and source checks; no fitter imports or reruns; [full invocation](../studies/fixtures/finite-affine-batch-v1/README.md#verify-the-saved-report-without-fitting) |
 | Actual first-fit failure continuation | `.venv/bin/python studies/verification/finite-photo-intensity-v2-continuation-v1.py --canonical studies/results/finite-photo-intensity-v2.json --output NEW.json --audit NEW_AUDIT.json` | Injects the first fit-entry failure and runs nine later optimizers; writes full result and separate comparison audit to fresh paths; [portable evidence and scopes](../studies/fixtures/finite-photo-intensity-v2/README.md) |
 | Corner sweep | `.venv/bin/python scripts/corner_sweep.py --help` | Synthetic fitting cases, optional `--quick`, `--backend PATH` and `--json FILE`; not a real-camera test |
 | Native FreeCAD import check | `make freecad` | Requires `FREECADCMD`; builds synthetic fixtures and launches FreeCAD. `freecad_check.py` and its `freecad_import.py` helper have no argparse help mode |
@@ -53,6 +58,22 @@ the directional free-arc runner requires its parent to exist. The Ollama
 benchmark creates its output parent and writes both JSON and a `.md` sibling.
 Printer import defaults to the tracked `data/printers.json`. Review a generated
 diff before replacing committed data.
+
+The affine runner also requires fresh `.json` destinations in existing
+directories, with distinct output/audit paths. Timing requires
+`--quiet-interval`; `--no-timing` removes that requirement. `--complete` is the
+only mode that starts inverse fits. Help and parser refusal run before expensive
+numerical imports. Exit **0** means the requested preservation/control protocol
+passes, including retained target misses; it does not mean every case meets its
+scientific target. Exit **1** can mean a requested protocol check fails or an
+uncaught input-loading error. Exit **2** covers explicit argparse/CLI and
+destination checks. A missing or malformed canonical/source JSON can exit 1
+before fitting and without a new report. The continuation's expected first
+failure is a retained failed row, not a successful geometry result.
+The recorded affine continuation exits **1** because its frozen built-in
+comparator mixes tuples and JSON lists. Keep that failed audit; the separate
+[saved-report audit](../studies/fixtures/finite-affine-batch-v1/README.md#retained-continuation-comparator-failure)
+checks both parsed artifacts and passes all 35 later rows without rerunning fits.
 
 The frozen 24-case finite-centre study exits **1** because its planned 4×4/8×8
 aperture-order comparison misses the unchanged tolerance, even though all 12

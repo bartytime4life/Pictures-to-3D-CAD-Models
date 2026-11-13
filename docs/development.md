@@ -131,16 +131,19 @@ Use the revision-bound records in [validation.md](validation.md) to identify whi
 implementation was checked. A historical pass does not establish a later head,
 and listing a command here does not establish that it ran.
 
-This reviewed main checkout includes PR #91 and PR #85 and preserves PR #82's
+This main-based candidate includes PR #91 and PR #85 and preserves PR #82's
 45-minute workbench job budget. It contains the conditional finite-material
 Python operators and the immutable
 measured-ring preparation API; source-space calibration APIs from the separate
-research lineage remain absent. The [899-test local run](validation/finite-photo-intensity-v2.md#software-regression)
-belongs to PR #91's software inputs at `6539905`, before the combined main
-source at `ec41b0c`. The preceding 862-test result belongs to PR #88. Neither is
-a full-suite result for that integrated main or an installed application. A
-cancelled or running job is not a completed pass; use the timestamped
-[source and CI snapshot](project-status.md) when reporting branch status.
+research lineage remain absent. Its [affine evaluation upgrade](finite-affine-evaluation.md)
+passes a new [943-test local Python run, production build and lint](validation/finite-affine-batch.md#software-regression),
+bound to 284 software inputs and 22 built frontend files. This run includes the
+combined main source and 42 affine/integration tests; it adds no browser result.
+The earlier [899-test run](validation/finite-photo-intensity-v2.md#software-regression)
+at PR #91's `6539905` and 862-test result at PR #88 retain their original scope.
+The fixed performance experiment is separate from full-suite wall time.
+Use the timestamped [source and CI snapshot](project-status.md) for hosted runs;
+none establishes the installed application or a physical part.
 
 Browser tests use `PLAYWRIGHT_CHROMIUM_EXECUTABLE` when supplied, otherwise `/usr/bin/chromium` when available, otherwise Playwright's installed Chromium, otherwise an installed Google Chrome (`/usr/bin/google-chrome`, `google-chrome-stable`, or the macOS application). If none of these is present, install the browser after `npm ci`:
 

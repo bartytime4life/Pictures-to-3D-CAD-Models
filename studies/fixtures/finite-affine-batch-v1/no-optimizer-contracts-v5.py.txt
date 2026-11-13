@@ -1,0 +1,571 @@
+#!/usr/bin/env python3
+"""Zero-optimizer metadata/CLI/serialization/routing controls for complete stage."""
+
+import contextlib
+import copy
+import hashlib
+import importlib.util
+import io
+import json
+import os
+import sys
+import tempfile
+from dataclasses import dataclass
+from pathlib import Path
+from types import SimpleNamespace
+
+ROOT = Path(__file__).resolve().parents[2]
+RUNNER = ROOT / "studies/verification/finite-affine-batch-v1.py"
+OUTPUT = ROOT / ".local/verification/finite-affine-complete-contracts-v5.json"
+
+
+def main():
+    if OUTPUT.exists() or OUTPUT.is_symlink():
+        raise ValueError("fresh receipt required")
+    for key in (
+        "OMP_NUM_THREADS",
+        "OPENBLAS_NUM_THREADS",
+        "MKL_NUM_THREADS",
+        "NUMEXPR_NUM_THREADS",
+    ):
+        os.environ[key] = "1"
+    spec = importlib.util.spec_from_file_location("_affine_complete_contracts", RUNNER)
+    study = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = study
+    spec.loader.exec_module(study)
+    plan = study.strict_json(study.PLAN)
+    before = study.closure(plan)
+    checks = []
+    original_run = study.run
+    attempted = []
+
+    def forbidden(*args, **kwargs):
+        attempted.append(1)
+        raise AssertionError("analysis during CLI refusal")
+
+    study.run = forbidden
+    with tempfile.TemporaryDirectory() as temporary:
+        d = Path(temporary)
+        occupied = d / "existing.json"
+        occupied.write_text("preserved")
+        dangling = d / "dangling.json"
+        dangling.symlink_to(d / "absent")
+        for label, args, expected in [
+            ("help", ["--help"], 0),
+            ("missing", [], 2),
+            ("existing", ["--no-timing", "--output", str(occupied)], 2),
+            ("dangling", ["--no-timing", "--output", str(dangling)], 2),
+            ("no-quiet", ["--output", str(d / "new.json")], 2),
+            (
+                "missing-continuation-fields",
+                [
+                    "--no-timing",
+                    "--complete",
+                    "--inject-first-fit-failure",
+                    "--output",
+                    str(d / "new.json"),
+                ],
+                2,
+            ),
+            (
+                "unexpected-canonical",
+                ["--no-timing", "--canonical", str(occupied), "--output", str(d / "new.json")],
+                2,
+            ),
+            (
+                "occupied-audit",
+                [
+                    "--no-timing",
+                    "--complete",
+                    "--inject-first-fit-failure",
+                    "--canonical",
+                    str(occupied),
+                    "--audit",
+                    str(occupied),
+                    "--output",
+                    str(d / "new.json"),
+                ],
+                2,
+            ),
+        ]:
+            with (
+                contextlib.redirect_stdout(io.StringIO()),
+                contextlib.redirect_stderr(io.StringIO()),
+            ):
+                try:
+                    code = study.main(args)
+                except SystemExit as error:
+                    code = error.code
+            checks.append({"name": label, "passed": code == expected and not attempted})
+        checks.append(
+            {
+                "name": "occupied-and-symlink-unchanged",
+                "passed": occupied.read_text() == "preserved" and dangling.is_symlink(),
+            }
+        )
+    study.run = original_run
+    import numpy as np
+
+    datasets, source_plan, photo_plan = study.archived_datasets(plan, np)
+    checks.append(
+        {
+            "name": "exact36-datasets32-eligible",
+            "passed": len(datasets) == 36 and sum(d["eligible"] for d in datasets) == 32,
+        }
+    )
+    _np2, old, current, _batch, oracle, _environment = study.setup(plan)
+    isolated_sheet = sys.modules[old.__package__ + ".sheet"]
+    checks.append(
+        {
+            "name": "original-sheet-preloaded-isolated",
+            "passed": Path(isolated_sheet.__file__).name == "original-sheet.py.txt"
+            and old.finite.arc_geometry.__globals__["intersect"] is isolated_sheet.intersect
+            and old.finite is not current.finite,
+        }
+    )
+
+    @dataclass
+    class StubFit:
+        best: None = None
+        flat: bool = False
+        tied: bool = False
+        endpoint: bool = False
+        rank_deficient: bool = False
+        geometry_rank: int = 0
+        work_exhausted: bool = False
+        refinement_limited: bool = False
+        unrefined_basins: int = 0
+        numerically_unsupported: bool = False
+        evaluations: int = 0
+        forward_evaluations: int = 0
+        diagnostic: float = 0.0
+
+    calls = []
+
+    def unreachable(*args, **kwargs):
+        raise AssertionError("numerical method reached by routing stub")
+
+    def stubfit(*args, **kwargs):
+        calls.append(1)
+        if len(calls) == 1:
+            raise ValueError("FIRST_STUB_ENTRY")
+        return StubFit()
+
+    core = SimpleNamespace(
+        fit_circular_segment=stubfit,
+        circular_segment_probabilities=unreachable,
+        circular_segment_jacobian=unreachable,
+        _segment_geometry=unreachable,
+        _box_fit=unreachable,
+        _projected_jacobians=unreachable,
+    )
+    rows = [study.replay_dataset(d, core, None, source_plan, photo_plan, np) for d in datasets]
+    checks.append(
+        {
+            "name": "first-stub-entry-retains36-later31-stubs",
+            "passed": len(rows) == 36
+            and len(calls) == 32
+            and rows[0]["status"] == "execution_failure"
+            and sum(r["status"] == "fit_returned" for r in rows) == 31
+            and sum(not r["fit_attempted"] for r in rows) == 4
+            and bool(json.dumps(rows, allow_nan=False)),
+        }
+    )
+    calls.clear()
+
+    def unsafe(*args, **kwargs):
+        calls.append(1)
+        return StubFit(diagnostic=float("nan") if len(calls) == 1 else 0.0)
+
+    core.fit_circular_segment = unsafe
+    bad = [study.replay_dataset(d, core, None, source_plan, photo_plan, np) for d in datasets]
+    checks.append(
+        {
+            "name": "unsafe-fit-payload-withheld-all-rows-retained",
+            "passed": len(calls) == 32
+            and bad[0]["status"] == "execution_failure"
+            and "fit" in bad[0]["withheld_non_json_fields"]
+            and "fit" not in bad[0]
+            and not bad[0]["targets_passed"]
+            and not bad[0]["completion_passed"]
+            and bool(json.dumps(bad, allow_nan=False)),
+        }
+    )
+    failed = study.safe_failure(
+        {
+            "name": "stale",
+            "targets_passed": True,
+            "completion_passed": True,
+            "passed": True,
+            "fit": {"bad": float("inf")},
+        },
+        ValueError("after-pass"),
+        "scoring",
+    )
+    checks.append(
+        {
+            "name": "after-pass-exception-clears-all-flags",
+            "passed": not failed["targets_passed"]
+            and not failed["completion_passed"]
+            and not failed["passed"]
+            and "fit" not in failed,
+        }
+    )
+    paired_calls = []
+
+    def paired(label):
+        paired_calls.append(label)
+        if len(paired_calls) == 1:
+            raise ValueError("FIRST_PAIRED_STUB")
+        return StubFit()
+
+    paired_result = study.paired_times(
+        {"original": lambda: paired("original"), "candidate": lambda: paired("candidate")}, 1, 3
+    )
+    checks.append(
+        {
+            "name": "paired-first-failure-retains8-withholds-speedup",
+            "passed": len(paired_calls) == 8
+            and len(paired_result["measurements"]) == 8
+            and not paired_result["all_calls_returned"]
+            and paired_result["median_speedup"] is None
+            and bool(json.dumps(paired_result, allow_nan=False)),
+        }
+    )
+    canonical = {
+        "optimizer_replay": copy.deepcopy(rows),
+        "source_before": before,
+        "source_after": before,
+    }
+    continuation = copy.deepcopy(canonical)
+    continuation["first_fit_injection"] = {"injections": 1}
+    continuation["optimizer_replay"][0].update(
+        status="execution_failure", targets_passed=False, completion_passed=False
+    )
+    for r in continuation["optimizer_replay"]:
+        r["runtime_seconds"] = 999.0
+    audit = study.continuation_audit(canonical, continuation)
+    checks.append(
+        {
+            "name": "continuation-removes-clocks-only",
+            "passed": audit["checks"]["all35_later_rows_identical_except_clocks"]
+            and len(audit["later_row_comparisons"]) == 35,
+        }
+    )
+    changed = copy.deepcopy(continuation)
+    changed["optimizer_replay"][1]["fit"]["forward_evaluations"] += 1
+    altered = study.continuation_audit(canonical, changed)
+    checks.append(
+        {"name": "continuation-detects-nonclock-work-change", "passed": not altered["all_passed"]}
+    )
+
+    incomplete = study.paired_times(
+        {"original": lambda: StubFit(), "candidate": lambda: StubFit()}, 1, 3
+    )
+    checks.append(
+        {
+            "name": "returned-incomplete-fits-withhold-qualified-speed",
+            "passed": incomplete["all_calls_returned"]
+            and incomplete["raw_median_speedup"] is not None
+            and incomplete["median_speedup"] is None,
+        }
+    )
+    orders = [(m["repeat"], m["method"]) for m in incomplete["measurements"] if not m["warmup"]]
+    checks.append(
+        {
+            "name": "timed-even-repeat-original-first",
+            "passed": orders
+            == [
+                (0, "original"),
+                (0, "candidate"),
+                (1, "candidate"),
+                (1, "original"),
+                (2, "original"),
+                (2, "candidate"),
+            ],
+        }
+    )
+    complete = StubFit(best={"marker": 1}, geometry_rank=4)
+    selected = next(
+        d
+        for d in datasets
+        if d["family"] == "photo_v2"
+        and d["name"] == "small-isotropic"
+        and d["lane"] == "legacy_sigma_squared_identity"
+    )
+    reference = {
+        "family": "photo_v2",
+        "name": selected["name"],
+        "lane": selected["lane"],
+        "fit": study.asdict(complete),
+        "completion_passed": True,
+    }
+    candidate_calls = []
+
+    def changing(*args, **kwargs):
+        candidate_calls.append(1)
+        return StubFit(
+            best={"marker": 1},
+            geometry_rank=4,
+            diagnostic=0.0 if len(candidate_calls) == 1 else 1.0,
+        )
+
+    constantcore = copy.copy(core)
+    constantcore.fit_circular_segment = lambda *args, **kwargs: complete
+    changingcore = copy.copy(core)
+    changingcore.fit_circular_segment = changing
+    small_plan = copy.deepcopy(plan)
+    small_plan["timing"]["representative_cases"] = [
+        {"case": selected["name"], "lane": selected["lane"]}
+    ]
+    inconsistent = study.fit_timings(
+        small_plan, [selected], constantcore, changingcore, [reference]
+    )
+    checks.append(
+        {
+            "name": "different-complete-fit-retains-raw-withholds-qualified-speed",
+            "passed": len(inconsistent) == 1
+            and inconsistent[0]["raw_median_speedup"] is not None
+            and not inconsistent[0]["all_fit_outputs_consistent"]
+            and inconsistent[0]["qualified_median_speedup"] is None,
+        }
+    )
+    entries = []
+    study.invoke_fit(constantcore, selected, entry_log=entries)
+    checks.append(
+        {
+            "name": "stub-call-entry-distinct-from-real-fitter-entry",
+            "passed": len(entries) == 1
+            and entries[0]["actual_callable_entered"]
+            and not entries[0]["actual_real_fitter_entered"],
+        }
+    )
+    missing = copy.copy(constantcore)
+    del missing._box_fit
+    previous = missing.circular_segment_probabilities
+    entries = []
+    try:
+        study.profiled_fit(missing, selected, entry_log=entries)
+    except AttributeError:
+        pass
+    checks.append(
+        {
+            "name": "profile-preparation-failure-no-core-entry-restores-wrappers",
+            "passed": not entries and missing.circular_segment_probabilities is previous,
+        }
+    )
+    entries = []
+    policy = {"requested": True, "candidate_fit_entries": 0, "injections": 0}
+    try:
+        study.invoke_fit(constantcore, selected, entry_log=entries, injection=policy)
+    except ValueError:
+        pass
+    checks.append(
+        {
+            "name": "synthetic-entry-failure-never-counts-real-function",
+            "passed": len(entries) == 1
+            and not entries[0]["actual_callable_entered"]
+            and not entries[0]["actual_real_fitter_entered"]
+            and policy["injections"] == 1,
+        }
+    )
+
+    @dataclass
+    class Diagnostic:
+        workspace_peak_bytes: int = 0
+        memory_limit_bytes: int = 1
+        unsafe: float = 0.0
+
+    @dataclass
+    class Mean:
+        probabilities: tuple = ()
+        statuses: tuple = ()
+        evaluations: int = 0
+        panels: int = 0
+        diagnostics: Diagnostic | None = None
+
+    def public_mean(pixels, *args, **kwargs):
+        if len(pixels) > 2048:
+            raise ValueError("count cap")
+        return Mean(
+            tuple(0.5 for _ in pixels), tuple("resolved" for _ in pixels), diagnostics=Diagnostic()
+        )
+
+    def unsafe_mean(pixels, *args, **kwargs):
+        result = public_mean(pixels)
+        result.diagnostics.unsafe = float("inf")
+        return result
+
+    fake_old = SimpleNamespace(
+        finite=SimpleNamespace(MAX_POINTS=2048, finite_shape_probabilities=public_mean),
+        circular_segment_ring=lambda *args, **kwargs: [],
+    )
+    fake_batch = SimpleNamespace(finite_shape_probabilities=unsafe_mean)
+    resource_rows = study.resources(plan, fake_old, fake_batch, oracle, np)
+    checks.append(
+        {
+            "name": "unsafe-resource-payloads-retained-safely",
+            "passed": len(resource_rows) == 6
+            and sum(r["status"] == "execution_failure" for r in resource_rows) == 5
+            and bool(json.dumps(resource_rows, allow_nan=False)),
+        }
+    )
+
+    @dataclass
+    class Jac:
+        jacobian: tuple = ()
+        statuses: tuple = ()
+        evaluations: int = 0
+        unsafe: float = 0.0
+
+    def fake_jac(pixels, *args, **kwargs):
+        return Jac(tuple((0.0, 0.0, 0.0, 0.0) for _ in pixels), tuple("resolved" for _ in pixels))
+
+    def unsafe_jac(pixels, *args, **kwargs):
+        result = fake_jac(pixels)
+        result.unsafe = float("nan")
+        return result
+
+    fake_oracle = SimpleNamespace(
+        normal=oracle.normal,
+        mapped=oracle.mapped,
+        independent_means=lambda points, *args, **kwargs: np.zeros(len(points)),
+    )
+    derivative_rows = study.derivative_checks(
+        plan,
+        SimpleNamespace(circular_segment_jacobian=fake_jac),
+        SimpleNamespace(circular_segment_jacobian=unsafe_jac),
+        fake_oracle,
+        {},
+        np,
+    )
+    checks.append(
+        {
+            "name": "unsafe-derivative-payloads-retained-safely",
+            "passed": len(derivative_rows) == 6
+            and all(r["status"] == "execution_failure" for r in derivative_rows)
+            and bool(json.dumps(derivative_rows, allow_nan=False)),
+        }
+    )
+
+    checks.append(
+        {
+            "name": "continuation-withholds-without-real-entry-evidence",
+            "passed": not audit["all_passed"]
+            and not audit["checks"]["31_later_real_accuracy_function_entries"],
+        }
+    )
+
+    original_get = study.os.sched_getaffinity
+    original_set = study.os.sched_setaffinity
+
+    def denied(*args, **kwargs):
+        raise OSError("DECLARED_DENIED_AFFINITY_SENTINEL")
+
+    try:
+        study.os.sched_getaffinity = denied
+        unavailable = study.timing_environment(plan)
+        checks.append(
+            {
+                "name": "getaffinity-denial-retains-correctness-withholds-timing",
+                "passed": not unavailable["fixed_cpu_timing_qualified"]
+                and unavailable["affinity_errors"][0]["stage"] == "get_before",
+            }
+        )
+        study.os.sched_getaffinity = lambda pid: {0, 1}
+        study.os.sched_setaffinity = denied
+        refused = study.timing_environment(plan)
+        checks.append(
+            {
+                "name": "setaffinity-denial-retains-correctness-withholds-timing",
+                "passed": not refused["fixed_cpu_timing_qualified"]
+                and any(e["stage"] == "set" for e in refused["affinity_errors"]),
+            }
+        )
+        calls_affinity = []
+
+        def get_wrong(pid):
+            calls_affinity.append(1)
+            return {0, 1} if len(calls_affinity) == 1 else {1}
+
+        study.os.sched_getaffinity = get_wrong
+        study.os.sched_setaffinity = lambda *args: None
+        wrong = study.timing_environment(plan)
+        checks.append(
+            {
+                "name": "wrong-single-cpu-does-not-qualify",
+                "passed": wrong["affinity_after"] == [1]
+                and not wrong["fixed_cpu_timing_qualified"],
+            }
+        )
+        calls_affinity.clear()
+
+        def get_right(pid):
+            calls_affinity.append(1)
+            return {0, 1} if len(calls_affinity) == 1 else {0}
+
+        study.os.sched_getaffinity = get_right
+        right = study.timing_environment(plan)
+        checks.append(
+            {
+                "name": "exact-minimum-cpu-and-one-thread-qualify",
+                "passed": right["fixed_cpu_timing_qualified"],
+            }
+        )
+        calls_affinity.clear()
+        not_single = copy.deepcopy(plan)
+        not_single["timing"]["environment_before_numpy"]["OMP_NUM_THREADS"] = "2"
+        threaded = study.timing_environment(not_single)
+        checks.append(
+            {
+                "name": "thread-setting-two-withholds-qualification",
+                "passed": not threaded["fixed_cpu_timing_qualified"],
+            }
+        )
+    finally:
+        study.os.sched_getaffinity = original_get
+        study.os.sched_setaffinity = original_set
+        for key, value in plan["timing"]["environment_before_numpy"].items():
+            study.os.environ[key] = value
+
+    full_timed_canonical = copy.deepcopy(canonical)
+    full_timed_canonical["summary"] = {"timing_requested": True}
+    no_timing_continuation = copy.deepcopy(continuation)
+    no_timing_continuation["summary"] = {"timing_requested": False}
+    no_timing_continuation["optimizer_entry_log"] = [
+        {"purpose": "accuracy", "actual_real_fitter_entered": i != 0} for i in range(32)
+    ]
+    requested_audit = study.continuation_audit(full_timed_canonical, no_timing_continuation)
+    checks.append(
+        {
+            "name": "timed-canonical-no-timing-continuation-requires-only31-real-later-entries",
+            "passed": requested_audit["all_passed"]
+            and requested_audit["canonical_timing_ignored"]
+            and requested_audit["expected_real_timed_entries_in_requested_continuation"] == 0,
+        }
+    )
+
+    after = study.closure(plan)
+    checks.append({"name": "source-input-closure-unchanged", "passed": before == after})
+    result = {
+        "scope": "No actual optimizer, forward or derivative evaluation. Saved-input metadata, module loading, dataclass/sentinel routing and CLI validation only. perf_counter values belong stubs and are not performance evidence.",
+        "source_before": before,
+        "source_after": after,
+        "script_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        "checks": checks,
+        "summary": {
+            "checks": len(checks),
+            "passes": sum(c["passed"] for c in checks),
+            "actual_optimizers_executed": 0,
+            "all_passed": all(c["passed"] for c in checks),
+        },
+    }
+    with OUTPUT.open("x") as out:
+        json.dump(result, out, indent=2, allow_nan=False)
+        out.write("\n")
+    print(json.dumps(result["summary"]))
+    return 0 if result["summary"]["all_passed"] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -13,6 +13,17 @@ HTTP route and are not called by the automatic trace/build flow below. See
 global-to-crop transform and fixed sample/bounds preparation. It is a separate
 developer operator, with typed refusals; the automatic flow below is unchanged.
 
+`backend.finite_affine.finite_shape_probabilities` exposes shared-panel affine
+evaluation for complete rings and holes, with batch diagnostics. The established
+`circular_segment_probabilities` entry point dispatches exactly affine maps to
+that evaluator and returns its original `FiniteShapeResult` schema. Nonzero raw
+perspective terms retain the scalar evaluator, including terms that would
+underflow during normalization. Direct Jacobians reuse curve samples but keep
+their existing arithmetic guards and derivative model. Work charges include
+discarded batch evaluations before fallback; workspace has a separate declared
+bound. See the [mathematics and resource contracts](finite-affine-evaluation.md)
+and [source-bound comparison](validation/finite-affine-batch.md).
+
 ```mermaid
 flowchart LR
     A[Photo upload] --> B[Validate and normalize image]

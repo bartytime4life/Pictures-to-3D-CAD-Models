@@ -117,7 +117,14 @@ meet every original target and two retain their upstream refusal. Both the crop
 and the shared-width preparation policy differ from version 1, so this is not a
 crop-only ablation. Held-out samples are excluded from fitting cost but influence
 initialization and moments. The remaining intensity mismatches and 8–19 second
-fit times leave optical adequacy and interactive latency unresolved.
+fit times belong to that original source. The subsequent
+[affine batch experiment](validation/finite-affine-batch.md) uses the same
+archived observations, targets and full-fit settings: mean evaluation improves
+10.13× and complete fits 3.84× across the declared timing workloads. All 36
+original/paired rows and completion flags remain present; acceleration does
+not resolve the retained optical mismatches or qualify interactive use.
+The [derivation](finite-affine-evaluation.md) explains shared transformed
+panels, exact perspective fallback, numerical guards and charged work.
 
 [Al-Sharadqah and Chernov's circle-fit analysis](https://arxiv.org/abs/0907.0421)
 compares geometric and algebraic fits with coordinate errors. It motivates

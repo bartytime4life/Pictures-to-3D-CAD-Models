@@ -236,7 +236,11 @@ Their error estimates and finite-work statuses remain explicit.
 The parameterized operator constructs its arc and chord in local coordinates
 about `C`. It does not round three world-coordinate witnesses and reconstruct
 a different circle. The general ring API retains its existing contract; both
-paths share the finite-Gaussian evaluator. Extreme coordinates and requested
+paths use the same finite-Gaussian Green kernel. Exactly affine probability
+queries can [share transformed curve panels](finite-affine-evaluation.md);
+nonzero perspective terms retain the original scalar evaluator. The direct
+shape Jacobian keeps its boundary integral and reuses existing curve samples
+without dropping mapped-velocity finite checks. Extreme coordinates and requested
 derivative tolerances can still be numerically unresolved.
 
 ## Developer contract and interpretation
@@ -274,8 +278,12 @@ uses that shared cap and is counted separately from objective attempts. More
 basins can remain represented and unrefined. These caps are resource limits,
 not completion guarantees; callers can
 set them explicitly. The independent study uses its own frozen settings. A
-normal study fit takes roughly 20 seconds on its recorded runtime, so this API
-has no qualified interactive latency claim.
+fit's latency depends on its observations, optics and search settings. The
+original study's roughly 20-second fits remain historical results. The
+[affine comparison](validation/finite-affine-batch.md) records 3.84× faster
+complete fits across three fixed 40-training-pixel datasets, with candidate
+medians of 2.75–3.91 seconds. It does not qualify interactive latency or all
+supported transforms; projective evaluation retains the scalar path.
 
 Measurements only along one level contour are insufficient when the two levels
 are free: for constant observed value `c`, choosing `a=b=c` gives zero residual
