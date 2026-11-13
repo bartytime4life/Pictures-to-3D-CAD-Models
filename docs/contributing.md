@@ -56,11 +56,24 @@ Choose checks by what the documentation exercises:
 | Current source or CI statement | Read back the exact branch/head, dependency base and run conclusion; timestamp the snapshot and link the older immutable record |
 | Proposed research | Label it prospective; separate derivations, preflight contracts, numerical replay, independent audit and physical qualification |
 
+Run the companion library's documentation-accuracy tests from the repository
+root without rebuilding or rewriting its verification record:
+
+```bash
+python3 -m unittest discover -s reference-library/tests/python -p test_docs.py
+```
+
+These tests check documented counts, local links and worked examples using the
+standard library. They do not exercise the workbench, browser or native CAD tools.
+A handbook text change also needs its generated HTML and PDF rebuilt; follow the
+[library generation map](../reference-library/BUILD.md#what-is-generated-from-what).
+
 For a documentation-only pass, compare every tracked non-document blob with
 the declared base before and after verification. Preserve accurate historical
-reports and generated library outputs. Library source edits still follow its
+reports. Keep generated library outputs unchanged unless their source changed;
+then regenerate them and list those outputs explicitly in the review. Library source edits still follow its
 generation rules; a workbench-only navigation change needs no library rebuild.
-The [current documentation review](validation/documentation-cell-state.md)
+The [current documentation review](validation/documentation-main109-state.md)
 shows one scoped verification record.
 
 ## Keep documentation and evidence aligned

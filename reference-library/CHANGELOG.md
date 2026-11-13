@@ -10,6 +10,14 @@ All dates are 2026. Revisions are numbered in `library.json`, which feeds the HT
 - Record complete source, parameter, schema and output hashes, OpenSCAD versions, logs and actual-mesh checks. Include real default-model renders and editable starter files.
 - Exercise browser downloads through actual OpenSCAD renders, with isolated desktop/mobile checks and preservation regression tests. Rebuild the handbook, verification record and portable archive. No slicing or physical print qualification.
 
+### Documentation maintenance — November 13, 2026
+
+Correct chapter 15's build-volume guidance: a diagonal placement can fit when
+its complete footprint and height, required supports and clearances fit within
+the usable volume at that orientation. Rebuild the reader and PDF from the
+handbook source. This correction does not change the revision label or refresh
+the dated release-verification record, catalog snapshot or archive.
+
 ## Revision 6 — November 9, 2026
 
 - Keep catalog search and filters in easy reach, with an expandable coverage chart, a clear empty-state reset, and larger touch targets. Preserve filter links when moving between tabs.

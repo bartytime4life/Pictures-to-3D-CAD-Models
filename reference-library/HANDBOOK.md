@@ -449,7 +449,7 @@ These are general tendencies to test, not specifications. Mixed-process assembli
 
 Hollow resin parts need drain and vent holes so that uncured resin can escape and suction does not form inside them. Formlabs' [hollowing guide](https://formlabs.com/blog/how-to-hollow-out-3d-models/) advises adding at least one more drain hole after the first. Wall thickness trades strength against material and time.
 
-Check build-volume fit in the chosen orientation, including supports, raft or brim, and the printer's exclusion zones. A part that fits only diagonally, or only without its supports, does not fit.
+Check build-volume fit in the chosen orientation, including supports, raft or brim, and the printer's exclusion zones. A diagonal placement can fit if its complete footprint and height stay within the usable volume in that orientation. A placement that fits only after omitting required supports or clearances is unsuitable.
 
 ### Walls, details, and orientation
 

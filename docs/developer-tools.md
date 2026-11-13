@@ -41,6 +41,15 @@ Full replay and continuation commands below perform real fitting and are
 separate, slower scientific checks. Follow each receipt's source hashes when
 reproducing an archived result; a later backend can invalidate that binding.
 
+The photo-v2 first-fit-failure continuation specifically requires its recorded
+source closure for equality with the old canonical report. Current main's
+`backend/fitting.py` and `backend/sheet.py` differ from those recorded hashes.
+The harness is designed to run nine later optimizers before checking source
+equality; that comparison cannot pass against the old canonical report on
+current main. Use the [saved continuation receipts](../studies/fixtures/finite-photo-intensity-v2/README.md)
+to review that historical result. A new replay on current source is a new
+experiment and needs its own source binding and comparison criteria.
+
 | Tool | Entry point | Execution and output |
 | --- | --- | --- |
 | Unrounded cell sensitivities and fixed linear acquisition | `backend.finite_aperture_sensitivity.segment_cell_sensitivity`, `backend.finite_acquisition_linear.acquisition_linear` | Five geometry columns, signed fields and computed constant response; explicit unknowns and resource contracts; [method](finite-cell-sensitivity.md) |
@@ -74,12 +83,39 @@ reproducing an archived result; a later backend can invalidate that binding.
 | Residual-information actual diagnostic | `.venv/bin/python studies/verification/finite-residual-information-v1.py --output NEW.json` | The 12-row source-bound replay performs means, derivatives and eligible single steps without an inverse optimizer; [original exit 1 and retained unknowns](validation/finite-residual-information.md) |
 | Residual saved-data audit | `python3 studies/verification/finite-residual-report-audit-v1.py --help` | Standard-library Jacobi SVD, QR and arithmetic on the complete decoded report; [exact hash-bound invocation](../studies/fixtures/finite-residual-information-v1/README.md#verify-and-audit-without-model-calls) |
 | Post-hoc saved rotation identity | `python3 studies/verification/finite-normal-rotation-saved-v1.py --help` | Combines saved arrays only; no new forward evaluation, independent optical validation or replacement of unknown normal columns |
-| Actual first-fit failure continuation | `.venv/bin/python studies/verification/finite-photo-intensity-v2-continuation-v1.py --canonical studies/results/finite-photo-intensity-v2.json --output NEW.json --audit NEW_AUDIT.json` | Injects the first fit-entry failure and runs nine later optimizers; writes full result and separate comparison audit to fresh paths; [portable evidence and scopes](../studies/fixtures/finite-photo-intensity-v2/README.md) |
+| Actual first-fit failure continuation | `.venv/bin/python studies/verification/finite-photo-intensity-v2-continuation-v1.py --canonical studies/results/finite-photo-intensity-v2.json --output NEW.json --audit NEW_AUDIT.json` | Injects the first fit-entry failure and runs nine later optimizers; the archived equality contract requires its original source closure (see warning above); writes full result and separate comparison audit to fresh paths; [portable evidence and scopes](../studies/fixtures/finite-photo-intensity-v2/README.md) |
 | Corner sweep | `.venv/bin/python scripts/corner_sweep.py --help` | Synthetic fitting cases, optional `--quick`, `--backend PATH` and `--json FILE`; not a real-camera test |
 | Native FreeCAD import check | `make freecad` | Requires `FREECADCMD`; builds synthetic fixtures and launches FreeCAD. `freecad_check.py` and its `freecad_import.py` helper have no argparse help mode |
 | Printer-data import | `.venv/bin/python scripts/import_printers.py --help` | Reads the supplied pinned-source checkout and writes catalog JSON; [procedure](printer-catalog.md) |
 | Local-model comparison | `.venv/bin/python scripts/benchmark_ollama.py --help` | Actual execution calls already installed Ollama models and writes JSON plus a Markdown summary; [limits](ollama-models.md) |
 | Optional runtime helper | `./scripts/ollama.sh` | Prints usage. Its explicit actions are `install`, `serve`, `pull`, `list`, `ps` and `rm`; benchmarking uses the separate Python script above; [setup](ollama.md) |
+
+## Historical source checks in saved-data audits
+
+A saved-only audit can still require the source files in its checkout to match
+the original report. The normal-derivative and residual-information auditors
+compare every recorded source hash with the current repository files. Current
+main differs from both recorded closures, so those checks report a source
+mismatch here even though they run no model or optimizer.
+
+Use the exact recorded source and hashes when reproducing a source-binding audit.
+The matching recorded revisions are:
+
+| Source-binding audit | Matching checkout |
+| --- | --- |
+| Normal derivative, 33 recorded source pins | [`d40502fed3de93989c73d4c8cf614f6f6b6d7e45`](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/commit/d40502fed3de93989c73d4c8cf614f6f6b6d7e45) |
+| Residual information, 38 recorded source pins | [`1f51bae35eb862dca4a259016cc31bf1504207f9`](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/commit/1f51bae35eb862dca4a259016cc31bf1504207f9) |
+
+Both revisions contain their public auditors. These two fixture archives do not
+include complete source ZIPs, so recover the matching source separately and then
+follow its recorded README with fresh destinations. The table is verified by
+comparing recorded pins with Git blobs; no audit or numerical replay is rerun.
+
+Review manifests, reports and saved audit receipts directly when examining the
+historical result from current main. Keep the guards intact: a source mismatch
+is an unresolved provenance check, not evidence that a new numerical experiment
+failed. The newer acquisition artifact auditors explicitly support recorded
+source snapshots as data; follow each tool's own contract.
 
 ## Output and side effects
 
@@ -91,7 +127,9 @@ including a dangling symbolic link, and require its parent directory to exist.
 The canonical join runners
 also refuse existing destinations, but can create their output parent directories;
 the directional free-arc runner requires its parent to exist. The Ollama
-benchmark creates its output parent and writes both JSON and a `.md` sibling.
+benchmark creates its output parent and overwrites both the JSON destination
+and its `.md` sibling if they already exist. Choose a fresh report basename to
+preserve earlier results.
 Printer import defaults to the tracked `data/printers.json`. Review a generated
 diff before replacing committed data.
 

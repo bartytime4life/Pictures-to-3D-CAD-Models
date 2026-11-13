@@ -1,5 +1,19 @@
 # Workbench change log
 
+## Documentation audit after the merged refresh — November 13, 2026
+
+- Audit the full documentation inventory against main `a6990c9`, including
+  merged PR #109, and update head-specific hosted-check states.
+- Put available capabilities and remaining integration work before historical
+  source snapshots; keep earlier results, frozen studies and library releases
+  tied to their original revisions.
+- Correct the handbook's diagonal-fit guidance and regenerate its reader/PDF;
+  describe the corner optimizer's actual stopping and cost allowance, and make
+  both local-model report overwrite paths explicit. Warn before the historical
+  continuation command whose source-equality check fails on current main.
+- Link the [current review](validation/documentation-main109-state.md) from the
+  README, documentation index and contributor guidance.
+
 ## Documentation aligned with current main — November 13, 2026
 
 - Put installation and the first workflow ahead of detailed research in the
