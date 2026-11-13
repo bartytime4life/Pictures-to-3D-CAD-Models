@@ -7,6 +7,14 @@ original counts and environment; they are not later retests.
 
 ## Current candidate evidence — November 12, 2026
 
+The separate [projective-node arithmetic diagnostic](validation/finite-normal-oracle-conditioning.md)
+passes all **26 declared controls**, with both original baseline totals reproduced
+exactly at orders 96 and 192. On this restricted population, exact endpoint
+interpolation reduces the largest observed error from `4.09099e-6` to
+`7.94156e-10`; the two original controls additionally meet their absolute
+`1e-10` request. Every original record remains intact. This is a reference-path
+investigation, not a new application, inverse or physical-camera qualification.
+
 The [finite-normal error-control correction](validation/finite-normal-error-control.md)
 passes **1,081 final-source Python tests**, build and lint. Its single complete
 canonical comparison passes all **417 scenes, 4,832 queries and 72 positive-area

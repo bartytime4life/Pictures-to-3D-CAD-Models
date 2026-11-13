@@ -1,5 +1,11 @@
 # Source scope and verification status
 
+This follow-up adds a separately frozen
+[projective-node arithmetic diagnostic](validation/finite-normal-oracle-conditioning.md)
+over the published PR #99 source below. It retains 26 passing controls and
+source-bound evidence, with no inherited production-code changes. The original
+V2 protocol and its recorded reference-error limitation remain unchanged.
+
 This error-control candidate is published as draft
 [PR #99](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/99),
 based on published draft

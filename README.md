@@ -17,6 +17,9 @@ retain their original scope.
 The current [normal-derivative correction and verification](docs/validation/finite-normal-error-control.md)
 records exact represented determinants and global numerical error control,
 with its complete result and remaining reference-oracle limitation.
+The separate [projective-node diagnostic](docs/validation/finite-normal-oracle-conditioning.md)
+isolates a source-rounding contribution and tests stable endpoint interpolation
+on 26 declared controls; it does not change automatic fitting.
 
 For reference-sheet tracing, photograph the whole flat sheet (A4, US Letter, or a sheet you have measured) and explicitly choose it as the **Scale reference**. A successful sheet trace sets scale from its stated size, estimates perspective and one radial lens correction, and fits lines, tangent arcs and circles. Entered thickness supports a side-wall/parallax correction under the method's assumptions. Ordinary tracing and the sample use measured-width scaling instead; they do not perform these corrections. See [reference-sheet tracing](docs/reference-sheet.md) for the mathematics and synthetic evidence, and the [engineering model](docs/engineering-model.md) for independent verification before fabrication.
 

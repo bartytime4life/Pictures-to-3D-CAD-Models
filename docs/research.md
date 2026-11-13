@@ -25,6 +25,11 @@ The later [error-control mathematics](finite-normal-error-control.md) addresses
 both candidate issues and has a separate [417-scene qualification](validation/finite-normal-error-control.md).
 An elementary high-precision reference corroborates the two original controls
 and exposes an optimistic oracle allowance. Neither study adds automatic correction.
+The subsequent [projective-node diagnostic](finite-normal-oracle-conditioning.md)
+separates source-node rounding from later arithmetic and retains a
+[26-scene comparison](validation/finite-normal-oracle-conditioning.md). Exact
+endpoint interpolation reduces the largest observed reference error on that
+restricted population while preserving the general oracle's unresolved limits.
 
 The [original selected design reference](images/design-reference.png) is a generated concept. The [recorded workbench screenshot](images/workbench.png) is browser-rendered implementation evidence; the [guided-workbench review](validation/guided-workbench.md) records the reviewed interaction, screenshots and evidence date. The sample photograph is generated demonstration input and is traced by the real conversion pipeline; it is not a measured reference specimen.
 

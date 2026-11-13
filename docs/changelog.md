@@ -1,5 +1,18 @@
 # Workbench change log
 
+## Projective reference-node arithmetic — November 12, 2026
+
+- Freeze a separate 26-scene diagnostic, retaining both known controls and 24
+  new reflected/compressed cases. Compare original arithmetic, rounded-source
+  and exact-source Decimal paths, and exact-endpoint binary64 interpolation.
+- Retain the first complete passing execution, every fixed panel, rule array,
+  precision comparison and work count. Source-node rounding explains much of
+  the first original error; higher precision applied afterward does not remove it.
+- Document the improved reference errors and nonuniform comparisons without
+  changing the production derivative, original V2 result or app integration.
+  [Mathematics](finite-normal-oracle-conditioning.md) ·
+  [Complete evidence and limits](validation/finite-normal-oracle-conditioning.md).
+
 ## Finite-normal determinant and error control — November 12, 2026
 
 - Compute exact determinants of the actual represented homography and whitening

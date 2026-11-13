@@ -147,3 +147,19 @@ Follow the [V2 archive workflow](../studies/fixtures/finite-normal-error-control
 for complete arguments and compressed/decoded verification. It performs saved
 arithmetic only. The earlier V1 auditor needs its original source checkout;
 its report must not be rebound to the changed operator in this source.
+
+The separate projective-node arithmetic diagnostic has its own declared
+26-scene population and recorded reference values:
+
+```bash
+.venv/bin/python studies/verification/finite-normal-oracle-conditioning-v1.py --help
+python3 studies/verification/finite-normal-oracle-conditioning-report-audit-v1.py --help
+```
+
+Help is read-only. An explicit `--output NEW.json` on the first command runs a
+new numerical diagnostic; it never replaces the original V2 study or calls the
+production derivative. The second command audits saved arithmetic only, using
+`--input`, `--input-sha256` and a fresh `--output`. Both require an existing
+output parent and refuse existing files or symlinks. The
+[conditioning archive workflow](../studies/fixtures/finite-normal-oracle-conditioning-v1/README.md)
+provides exact arguments and separates archive review from a new execution.

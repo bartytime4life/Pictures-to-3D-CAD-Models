@@ -41,8 +41,10 @@ now retain one work-limited query and a compressed-map error-estimation
 limitation. A subsequent [exact-determinant and global-error correction](finite-normal-error-control.md)
 passes its [417-scene comparison](validation/finite-normal-error-control.md) and
 independent high-precision controls for both original cases. Both failed studies
-remain intact. Next, strengthen mapped-node/denominator error accounting in the
-independent oracle and qualify a separate normal-aware residual diagnostic;
+remain intact. A separate [26-scene arithmetic diagnostic](validation/finite-normal-oracle-conditioning.md)
+now isolates source-node rounding and compares exact endpoint interpolation.
+Next, extend reference error accounting beyond that restricted family and
+qualify a separate normal-aware residual diagnostic;
 these results do not automatically fill the old unknown columns or establish optics.
 Before optical inference, preserve acquisition samples, transforms, finite
 kernels and intermediate stage bytes in a new experiment; the current portable
