@@ -24,6 +24,16 @@ discarded batch evaluations before fallback; workspace has a separate declared
 bound. See the [mathematics and resource contracts](finite-affine-evaluation.md)
 and [source-bound comparison](validation/finite-affine-batch.md).
 
+`backend.finite_normal.circular_segment_normal_derivative` is a separate
+experimental Python API for signed probability sensitivity per source-normal
+radian. It uses a finite-chord first moment with a charged quadrature fallback;
+its immutable `NormalDerivative` result retains each query's status, estimated
+error and work. It does not extend the existing four-column Jacobian or fit an
+angle. Its [contract](finite-normal-derivative.md) and
+[failed qualification](validation/finite-normal-derivative.md) retain a
+panel-budget unknown and compressed-map error underestimation. It is not called
+by the automatic flow, inverse fitter or HTTP routes below.
+
 ```mermaid
 flowchart LR
     A[Photo upload] --> B[Validate and normalize image]

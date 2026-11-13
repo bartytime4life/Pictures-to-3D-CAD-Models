@@ -4,10 +4,12 @@ Turn a photograph of a **flat, constant-thickness part** into a scaled CAD solid
 
 The workbench is designed for plates, gaskets, spacers, and templates. It traces what is visible in the photograph; it does not recover hidden geometry or infer physical dimensions.
 
+[Start the app](#start-the-app) · [Try the workflow](#try-the-complete-workflow) · [Documentation](docs/README.md)
+
 For the reviewed source revision, draft PR dependencies and available research
 APIs, read [source scope and status](docs/project-status.md). The current
-[documentation review](docs/validation/documentation-pr95-state.md) covers
-published draft PR #95, the workbench and companion library. The
+[documentation review](docs/validation/documentation-pr97-state.md) covers
+published draft PR #97, the workbench and companion library. The
 [residual-study record](docs/validation/finite-residual-information.md) retains
 the completed diagnostic and failed normal-angle control. Older test results
 retain their original scope.
@@ -58,15 +60,13 @@ The [residual-information study](docs/finite-residual-information.md) now retain
 a failed normal-angle control and conditional covariance-only steps. Its
 [complete record](docs/validation/finite-residual-information.md) preserves all
 unknowns and motivates a separately labeled analytic rotation identity. The
-[finite-chord derivative proposal](docs/finite-residual-information.md#finite-chord-shape-derivative-a-derived-proposal)
-also covers perspective maps mathematically; its implementation and numerical
-validation remain pending. Neither changes automatic tracing or optical correction.
-
-The [experimental normal-angle derivative](docs/finite-normal-derivative.md)
-adds a direct finite-chord sensitivity under supplied Gaussian optics. Its
-[337-scene qualification](docs/validation/finite-normal-derivative.md) retains
-one work-limited query and an error-estimation limitation on compressed
-perspective maps. It remains outside automatic tracing and fitting.
+[finite-chord derivation](docs/finite-residual-information.md#finite-chord-shape-derivative-a-derived-proposal)
+covers affine and valid perspective maps and underlies the separate
+[experimental normal-angle derivative](docs/finite-normal-derivative.md).
+Its complete [337-scene qualification](docs/validation/finite-normal-derivative.md)
+exited 1: one query reached its panel limit, and a resolved compressed-map
+result exceeded its reported error estimate. These findings remain open.
+The operator remains outside automatic tracing and fitting.
 
 Final fitted arcs also need [circle-consistent joins](docs/curved-joins.md).
 An unavailable join keeps an affected outline for review when valid, with a

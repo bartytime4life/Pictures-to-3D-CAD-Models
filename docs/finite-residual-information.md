@@ -12,8 +12,9 @@ all ten eligible normal columns fail their stability guard. The covariance-only
 calculations remain conditional on the supplied normal. Read the
 [full results, retained unknowns and limits](validation/finite-residual-information.md)
 and [lossless archive/review commands](../studies/fixtures/finite-residual-information-v1/README.md).
-A separate post-hoc rotation identity below motivates the next independent
-experiment; it does not replace the failed control or unknown normal columns.
+A separate post-hoc rotation identity below motivated the independently frozen
+[finite-chord study](validation/finite-normal-derivative.md). That study retains
+its own failed outcome; neither replaces the original control or unknown columns.
 
 ## Project nuisance directions before interpreting blur
 
@@ -237,9 +238,11 @@ also records moment cancellation. These are numerical background, not validation
 of this derivative.
 
 Independent quadrature in the original `s` coordinate and positive-area angular
-differences at new synthetic scenes remain prospective checks. A separate [experimental operator](finite-normal-derivative.md) and
-[complete failed qualification](validation/finite-normal-derivative.md) now
-retain their own source, work and error-estimation limits. This derivation
+differences were proposed here and have since been run for the separate
+[experimental operator](finite-normal-derivative.md). Its
+[complete failed qualification](validation/finite-normal-derivative.md) retains
+all 337 scenes, one panel-budget unknown and a compressed-map error-estimation
+limitation. Those results have their own source and work binding. This derivation
 does not establish production correction, and the
 [original failed protocol](validation/finite-residual-information.md) remains
 unchanged. Real acquisition, illumination, thickness and calibration assumptions

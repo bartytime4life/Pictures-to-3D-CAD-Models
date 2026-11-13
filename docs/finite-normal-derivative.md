@@ -61,6 +61,36 @@ represented unsupported arithmetic. Unexpected internal programming errors
 propagate. A resolved result establishes neither angle identifiability nor
 physical adequacy of the supplied optics.
 
+## Small supplied-model example
+
+Run from the repository root after [workbench setup](development.md). These
+four fixed pixel indices and supplied geometry illustrate the API; they are
+synthetic values, not measurements or a new qualification dataset.
+
+```python
+from backend.finite_normal import circular_segment_normal_derivative
+
+pixels = [(12, 12), (18, 12), (12, 18), (20, 20)]
+result = circular_segment_normal_derivative(
+    pixels, 6.5, 0.25,
+    centre=(16.0, 16.0),
+    normal=(1.0, 0.0),
+    sensor_shape=(32, 32),
+    homography=((1, 0, 0), (0, 1, 0), (0, 0, 1)),
+    psf_covariance=((1.0, 0.2), (0.2, 2.0)),
+)
+for pixel, status, value, error in zip(
+    pixels, result.statuses, result.derivatives, result.estimated_errors
+):
+    print(pixel, status, value, error)
+```
+
+Read each status before using its value. An unknown retains `None`; it must not
+be treated as zero or dropped from the query population. Even `resolved` uses
+an engineering error estimate that the compressed-map control has shown can
+underestimate actual numerical error. The example does not estimate a normal,
+change covariance or run the inverse fitter.
+
 ## Mathematics and numerical resolution
 
 The circular boundary contributes zero normal velocity. With `t=J*n`,

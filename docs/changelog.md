@@ -1,5 +1,18 @@
 # Workbench change log
 
+## Documentation alignment with published PR #97 — November 12, 2026
+
+- Reconcile the README, source status, architecture, development, validation
+  overview and residual-method guide with the available experimental normal
+  derivative and its complete failed qualification. Keep both known numerical
+  limits and all original scientific records unchanged.
+- Add quick-start navigation, a small supplied-model Python example and
+  interpreter-prefixed help commands. Refresh the timestamped draft dependency
+  and CI snapshot while retaining the earlier readback as historical evidence.
+- Review workbench and companion-library documentation together. The
+  [review record](validation/documentation-pr97-state.md) separates current
+  documentation checks from inherited software, browser and scientific results.
+
 ## Experimental finite-chord normal derivative — November 12, 2026
 
 - Add a signed source-angle sensitivity with affine/projective Gaussian first

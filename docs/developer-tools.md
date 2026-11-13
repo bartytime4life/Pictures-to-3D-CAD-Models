@@ -117,8 +117,13 @@ retains one panel-budget unknown and a compressed-map error-estimation limitatio
 It has no HTTP mode or fitter integration. The saved rotation command above
 remains saved-array arithmetic; it does not validate this new operator.
 
-For the new study, `studies/verification/finite-normal-derivative-v1.py --help`
-and `studies/verification/finite-normal-report-audit-v1.py --help` are read-only.
+For the new study, these parser checks are read-only:
+
+```bash
+.venv/bin/python studies/verification/finite-normal-derivative-v1.py --help
+python3 studies/verification/finite-normal-report-audit-v1.py --help
+```
+
 The first script's explicit `--output NEW.json` performs the complete 337-scene
 numerical qualification; the second reads an already decoded report with
 `--report FILE --output NEW.json` and makes no model calls. Both refuse an
