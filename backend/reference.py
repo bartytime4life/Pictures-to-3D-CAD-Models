@@ -304,6 +304,15 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
         notes.append(
             f"The edge blur differs by direction, from {spreads.min() / ppm:.3f} mm across the sharpest edges to {spreads.max() / ppm:.3f} mm across the softest, as a shaken camera's does; each edge was measured with its own. A steadier photo is sharper."
         )
+    light = next((ring.get("paper_light") for ring in rings if ring.get("paper_light")), {})
+    if light.get("used") and light.get("depth", 0) >= 0.03:
+        notes.append(
+            f"A soft shadow beside the part takes up to {100 * light['depth']:.0f} % of the paper's light; it was fitted from the paper all round, and each edge was placed against the shadowed light."
+        )
+    elif "excess" in light and not light.get("used") and light.get("depth", 0) >= 0.03:
+        notes.append(
+            "A shadow beside the part has an edge sharper than its fitted model can follow, so edges were placed against a straight-line paper level there and may read a little outward. Soft, even light is better."
+        )
     if weights != tone.LUMINANCE:
         notes.append(
             "The part and the sheet differ in colour more than in brightness, so edges were measured on a colour mix"

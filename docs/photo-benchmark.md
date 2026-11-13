@@ -128,26 +128,26 @@ This report is the `--example` folder: three **rendered** photos of the test pla
 
 > 3 of 3 photos traced.
 > Dimensions: 48 of 48 requested compared; 0 unmatched in successful traces; 0 unavailable in failed traces.
-> Matched dimensions only: absolute error median 0.004 mm, 95th percentile 0.015 mm, worst 0.015 mm.
+> Matched dimensions only: absolute error median 0.003 mm, 95th percentile 0.017 mm, worst 0.017 mm.
 
 | Dimension | Reference (mm) | Readings | Mean error (mm) | Spread, SD (mm) | Worst (mm) | Unmatched |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | Outline length | 120.00 | 3 | +0.006 | 0.006 | +0.013 |  |
-| Outline width | 70.00 | 3 | +0.002 | 0.009 | +0.010 |  |
+| Outline width | 70.00 | 3 | +0.001 | 0.011 | -0.011 |  |
 | Ø22 | 22.00 | 3 | -0.002 | 0.005 | -0.005 |  |
-| Ø6 (×4) | 6.00 | 12 | -0.003 | 0.001 | -0.004 |  |
-| Opening 24 × 8 length | 24.00 | 3 | -0.004 | 0.009 | -0.015 |  |
-| Opening 24 × 8 width | 8.00 | 3 | -0.005 | 0.009 | -0.015 |  |
-| R8 (×4) | 8.00 | 12 | -0.003 | 0.009 | -0.015 |  |
-| Centres 96 | 96.00 | 3 | +0.003 | 0.007 | +0.009 |  |
+| Ø6 (×4) | 6.00 | 12 | -0.002 | 0.001 | -0.003 |  |
+| Opening 24 × 8 length | 24.00 | 3 | -0.004 | 0.010 | -0.015 |  |
+| Opening 24 × 8 width | 8.00 | 3 | -0.004 | 0.010 | -0.015 |  |
+| R8 (×4) | 8.00 | 12 | -0.004 | 0.010 | -0.017 |  |
+| Centres 96 | 96.00 | 3 | +0.003 | 0.006 | +0.006 |  |
 | Centres 50 | 50.00 | 3 | +0.001 | 0.003 | +0.004 |  |
 | Centres 108.24 | 108.24 | 3 | +0.003 | 0.007 | +0.010 |  |
 
-> Fitted scale term +0.002 % (SD 0.006 between photos); edge term +0.002 mm (SD 0.001 between photos), positive when boundaries are found outside the material. In-sample residual: 0.003 mm RMS. These diagnostic terms do not identify physical causes or predict held-out error.
+> Fitted scale term +0.002 % (SD 0.006 between photos); edge term +0.001 mm (SD 0.001 between photos), positive when boundaries are found outside the material. In-sample residual: 0.004 mm RMS. These diagnostic terms do not identify physical causes or predict held-out error.
 
 | Photo | Edge blur (mm) | Sheet proportions (%) | Worst error (mm) | Result |
 | --- | ---: | ---: | ---: | --- |
-| plate-1.jpg | 0.320 | 0.00 | -0.015 | Traced |
+| plate-1.jpg | 0.320 | 0.00 | -0.017 | Traced |
 | plate-2.jpg | 0.303 | 0.00 | -0.015 | Traced |
 | plate-3.jpg | 0.294 | 0.00 | +0.013 | Traced |
 
@@ -169,7 +169,7 @@ The unexplained RMS is evaluated on the same samples used to fit these terms.
 It is an in-sample residual, not an independent prediction error or proof that
 the two terms capture all physical causes.
 
-**The photo table** shows which shot is the odd one out. In the example none is: every photo's worst error is 0.013–0.015 mm. The trace notes, in the JSON report, still say what each photo relied on. In the overhead photo neither the sheet nor the metadata gave the focal length, so it was estimated from the holes' roundness. Without suitable round holes a typical phone lens is assumed, and a wrong camera height scales the top face's edges by the wrong amount. Before hole-derived height was implemented, the assumed height left this example's outline 0.10 mm short; that is a historical result, not the current example's error. **Sheet proportions** is the trace's own check of the sheet's shape against the entered size; a discrepancy whose magnitude exceeds 1 % calls for review. Sheet choice, entered size, camera-model or capture error may contribute; the sign can be negative and the check does not identify the cause.
+**The photo table** shows which shot is the odd one out. In the example none is: every photo's worst error is 0.013–0.017 mm. The trace notes, in the JSON report, still say what each photo relied on. In the overhead photo neither the sheet nor the metadata gave the focal length, so it was estimated from the holes' roundness. Without suitable round holes a typical phone lens is assumed, and a wrong camera height scales the top face's edges by the wrong amount. Before hole-derived height was implemented, the assumed height left this example's outline 0.10 mm short; that is a historical result, not the current example's error. **Sheet proportions** is the trace's own check of the sheet's shape against the entered size; a discrepancy whose magnitude exceeds 1 % calls for review. Sheet choice, entered size, camera-model or capture error may contribute; the sign can be negative and the check does not identify the cause.
 
 ## Limits
 

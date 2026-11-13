@@ -282,6 +282,30 @@ def test_a_soft_shadow_under_a_wide_blur_keeps_the_holes_in_place(client):
     assert S.feature_errors(trace(client, data, reference="a4").json()["profile"])["position"] < 0.014
 
 
+def test_a_shadow_fitted_round_the_part_keeps_its_sizes_under_a_wide_blur(client):
+    """Under a 3 px blur the line fitted to each profile's paper beyond 2.5 sigma
+    reaches into the shadow's curve, and the tilted photo with the 25 % shadow, without
+    noise, read Ø6, Ø22 and the slot 0.014, 0.016 and 0.024 mm off. The shadow fitted
+    to all the paper round the part (shadow.fit_paper_light) gives 0.002, 0.007 and
+    0.006 mm, and the trace says a shadow was fitted. A contact shadow, the footprint
+    blurred 1.5 mm without moving, which diffuse light casts, read Ø22 and the slot
+    0.074 mm off; it is corrected in part, to 0.04 mm. A shadow with a sharp edge is
+    beyond the model: it is not used, and the trace says so."""
+    clean = {"k1": 0.0, "gradient": 0.0, "noise": 0.0, "quality": 100}
+    response = trace(client, S.render(blur=3.0, shadow=0.25, **clean)[0], reference="a4")
+    assert response.status_code == 200, response.text
+    profile = response.json()["profile"]
+    errors = S.feature_errors(profile)
+    assert errors["small"] < 0.006 and errors["bore"] < 0.011 and errors["slot"] < 0.011
+    assert any("soft shadow beside the part takes up to" in note for note in profile["reference"]["notes"])
+    contact = [("gauss", 0.0, 0.0, 1.5, 1.0)]
+    errors = S.feature_errors(trace(client, S.render(blur=3.0, shadow_kernel=contact, **clean)[0], reference="a4").json()["profile"])
+    assert errors["bore"] < 0.055 and errors["slot"] < 0.055
+    sharp = [("bar", 0.0, 2.0, 6.0, 1.0)]
+    profile = trace(client, S.render(shadow_kernel=sharp)[0], reference="a4").json()["profile"]
+    assert any("sharper than its fitted model" in note for note in profile["reference"]["notes"])
+
+
 def test_a_directional_blur_is_measured_by_direction_and_stays_within_limits(client):
     """The scientific model review's directional-blur case: the sensor blur is 1 px
     across and 3 px along the photo (a shaken camera). One median blur width for every

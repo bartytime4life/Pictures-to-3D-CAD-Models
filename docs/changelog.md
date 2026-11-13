@@ -68,6 +68,15 @@
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
+## The paper's light as a fitted shadow — November 13, 2026
+
+- A soft shadow is fitted once from the paper all round the part, as the footprint
+  convolved with a kernel of no fixed shape (`backend/shadow.py`), and each edge's
+  level follows its curve, with the per-profile line kept as a residual. Under a
+  3 px blur the slot went from 0.024 to 0.006 mm; a contact shadow is corrected in
+  part, and a sharp-edged shadow is left to the line. The trace says which.
+- The test renderer takes other shapes of shadow (`shadow_kernel`).
+
 ## Documentation alignment with published PR #91 — November 12, 2026
 
 - Updated current source, dependency, main and hosted-CI snapshots. The latest

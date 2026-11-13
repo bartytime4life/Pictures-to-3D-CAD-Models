@@ -81,6 +81,14 @@ Neither numerical rank, model convergence nor positive definiteness converts
 these empirical widths into a calibrated camera PSF; [the tracing guide](reference-sheet.md#3-segmentation-and-sub-pixel-edges)
 defines the boundaries.
 
+Reference-sheet edges are placed against the paper's own light beside them.
+`backend/shadow.py` fits a soft shadow once from the paper round the part, as the
+footprint convolved with a non-negative kernel of no fixed shape, and
+`backend/sheet.py` places each edge against that light where the fit predicts the
+paper nearest the edges within 2 % of its light; elsewhere a straight-line paper
+level fitted to each profile stands. The [method and results](reference-sheet.md#3-segmentation-and-sub-pixel-edges)
+come from rendered photographs.
+
 ### Circle-consistent final assembly
 
 Final reference-sheet arc assembly retains each accepted fitted circle's centre

@@ -19,7 +19,7 @@ import cv2
 import numpy as np
 from shapely.geometry import Point, Polygon
 
-from . import tone
+from . import shadow, tone
 from .fitting import fit_circle
 from .sheet import half_level_search, sample_keys
 from .tone import encoded_from_linear
@@ -320,7 +320,9 @@ def subpixel_rings(mask, g, ppm):
     level windows are asymmetric; pass 2 re-centres each point with windows beyond
     3.5 sigma on both sides of the measured edge blur. Pass 2 also takes the paper side's
     brightness slope into the level (sheet.half_level_search with sigma), smoothed along
-    the ring over 20 points, so a soft shadow beside an edge does not push it outward.
+    the ring over 20 points, so a soft shadow beside an edge does not push it outward;
+    where a shadow model fitted to all the paper round the part is adequate
+    (shadow.fit_paper_light), the paper's light follows that model's curvature too.
     """
     contours, hierarchy = cv2.findContours(mask, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
     hierarchy = hierarchy[0]
@@ -376,6 +378,10 @@ def subpixel_rings(mask, g, ppm):
         # 1 / sqrt(det S). The isotropic equivalent is therefore det(S)^(1/4), the
         # geometric mean of the principal spreads, not their quadratic mean.
         sigma = float(np.linalg.det(covariance) ** 0.25)
+    # The paper's light round the part, fitted once as a soft shadow (shadow.py): the
+    # second pass places each edge against it where it is adequate.
+    light = shadow.fit_paper_light(g, mask, ppm, sigma, covariance)
+    paper_light = light if light.info["used"] else None
     rings = []
     for is_outer, points, support, indices in first:
         _, normals = ring_normals(points)
@@ -389,7 +395,8 @@ def subpixel_rings(mask, g, ppm):
         probe = np.clip(probe, 0, np.array(mask.shape[::-1]) - 1)
         paper_side = np.where(mask[probe[:, 1], probe[:, 0]] == 0, 1, -1)
         moved, keep = half_level_search(
-            g, points, normals, half=max(4.0, 3.5 * float(spread.max())), sigma=spread, ring_smoothing=20.0, paper_side=paper_side
+            g, points, normals, half=max(4.0, 3.5 * float(spread.max())), sigma=spread, ring_smoothing=20.0,
+            paper_side=paper_side, paper_light=paper_light,
         )
         if keep.sum() < 8:
             if is_outer:
@@ -399,6 +406,7 @@ def subpixel_rings(mask, g, ppm):
         rings.append({
             "outer": is_outer, "points": moved[keep], "support": support,
             "support_indices": indices[keep], "sigma_n": spread[keep], "covariance": covariance,
+            "paper_light": light.info,
         })
     return rings, sigma, tiny
 

@@ -294,6 +294,7 @@ def render(
     gamma=None,
     focal=None,
     distance=440.0,
+    shadow_kernel=None,
 ):
     """Returns (jpeg bytes, truth dict).
 
@@ -310,6 +311,9 @@ def render(
     `k2` is a second radial term for intentional camera-model mismatch. The
     production tracer estimates only k1. Coefficients use radius normalised by
     the image half-diagonal, not OpenCV's focal-length normalisation.
+    `shadow_kernel` replaces the shadow's default shape, the footprint moved (1.6, 1.9)
+    mm and blurred 2.2 mm, with another (`shadow_kernel_mm`); the tracer's own model of
+    the shadow is fitted, so tests need shapes it was not written for.
     `blur` is the sensor's Gaussian blur in photo pixels, or (x, y) for one that differs
     by direction, as a shaken camera's does, or (major, minor, degrees) for such a blur
     whose major axis is turned that far from x.
@@ -362,11 +366,16 @@ def render(
     paper = paper_tone + cv2.GaussianBlur(rng.normal(0, 3, shape).astype(np.float32), (0, 0), 2)
     metal = top_tone + cv2.GaussianBlur(rng.normal(0, 8, shape).astype(np.float32), (0, 0), 1.5)
     wall_tone = side_tone + cv2.GaussianBlur(rng.normal(0, 6, shape).astype(np.float32), (0, 0), 1.5)
-    cast = cv2.GaussianBlur(
-        cv2.warpAffine(bottom, np.float32([[1, 0, 1.6 * ppm], [0, 1, 1.9 * ppm]]), shape[::-1]),
-        (0, 0),
-        2.2 * ppm,
-    )
+    if shadow_kernel is None:
+        cast = cv2.GaussianBlur(
+            cv2.warpAffine(bottom, np.float32([[1, 0, 1.6 * ppm], [0, 1, 1.9 * ppm]]), shape[::-1]),
+            (0, 0),
+            2.2 * ppm,
+        )
+    else:
+        kernel = shadow_kernel_mm(shadow_kernel, ppm)
+        cast = cv2.filter2D(bottom.astype(np.float32), -1, kernel[::-1, ::-1], borderType=cv2.BORDER_CONSTANT)
+        cast /= max(float(cast.max()), 1e-9)
     # From here on everything is linear light. The shadow dims the paper. A pixel is
     # linear in its coverages (top is inside material, so material >= top): background
     # where neither covers it, wall where only the walls do, top face elsewhere. Uneven
@@ -513,6 +522,30 @@ def measure(profile):
         other.append(entry)
     circles.sort(key=lambda c: c["diameter"])
     return circles, other
+
+
+def shadow_kernel_mm(spec, ppm):
+    """A normalised shadow kernel on the scene grid (`ppm` per mm): the light reaching a
+    point of paper is reduced by the part's footprint convolved with it. `spec` is a
+    list of (kind, dx, dy, size, weight) terms in mm: "disc" (a lamp's uniform penumbra
+    of that radius), "gauss" (that standard deviation) and "bar" (a long light: a
+    segment of that length along x, 0.5 mm wide), each centred at (dx, dy)."""
+    reach = max(abs(dx) + abs(dy) + 3 * size for _, dx, dy, size, _ in spec) + 1
+    r = int(np.ceil(reach * ppm))
+    yy, xx = (np.mgrid[-r : r + 1, -r : r + 1] + 0.0) / ppm
+    kernel = np.zeros_like(xx)
+    for kind, dx, dy, size, weight in spec:
+        u, v = xx - dx, yy - dy
+        if kind == "disc":
+            part = np.clip(size - np.hypot(u, v) + 0.5 / ppm, 0, 1.0 / ppm) * ppm
+        elif kind == "gauss":
+            part = np.exp(-0.5 * (u * u + v * v) / size**2)
+        elif kind == "bar":
+            part = ((np.abs(u) <= size / 2) & (np.abs(v) <= 0.25)).astype(float)
+        else:
+            raise ValueError(kind)
+        kernel += weight * part / part.sum()
+    return (kernel / kernel.sum()).astype(np.float32)
 
 
 def feature_errors(profile):

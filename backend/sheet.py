@@ -78,7 +78,16 @@ def sample_bilinear(image, x, y):
 
 
 def half_level_search(
-    gray, points, normals, half, step=0.125, min_contrast=12.0, sigma=None, ring_smoothing=0.0, paper_side=None
+    gray,
+    points,
+    normals,
+    half,
+    step=0.125,
+    min_contrast=12.0,
+    sigma=None,
+    ring_smoothing=0.0,
+    paper_side=None,
+    paper_light=None,
 ):
     """Move each point along its normal to the crossing of its local mid-level.
 
@@ -110,6 +119,13 @@ def half_level_search(
 
     `sigma` may be one value or one per point: under a directional blur each edge has
     its own spread across it (edges.edge_covariance).
+
+    `paper_light` (shadow.PaperLight, with `paper_side`) replaces the paper's line by
+    the fitted shadow model plus a line: B(t) = L(p + t n) + r0 + r1 t, with r0 and r1
+    fitted to the profile minus the model's blurred light over the same window, so a
+    model without a shadow leaves the line method as it was. The level is then the
+    blurred step's exact value at its edge, A / 2 + int_0^inf B(t +- u) phi_sigma(u) du
+    (_modelled_level), for any curvature of B.
     """
     # edges.edge_sigma returns 0 when no profile has the contrast to measure the blur;
     # the median-level search then stands.
@@ -157,6 +173,13 @@ def half_level_search(
             b0, b1 = np.where(material_low, b0, b_flat), np.where(material_low, b1, 0.0)
         level_t = (a0 + b0)[:, None] / 2 + ((a1 + b1)[:, None] / 2) * t[None, :]
         level_t += ((b1 - a1) * sigma / math.sqrt(2 * math.pi))[:, None]
+        if paper_light is not None and paper_side is not None:
+            material_low = np.asarray(paper_side) > 0
+            level_t = _modelled_level(
+                paper_light, points, normals, t, step, sigma, flattened,
+                material_low, np.where(material_low, a0, b0), np.where(material_low[:, None], hi_end, lo_end),
+                inner, level_t,
+            )
     sign = np.sign(high - low)[:, None]
     keep = np.abs(encoded_from_linear(high) - encoded_from_linear(low)) >= min_contrast
     searched = inner[1:] & inner[:-1]
@@ -185,6 +208,53 @@ def half_level_search(
     moved = points.astype(np.float64).copy()
     moved[keep] += offset[keep, None] * normals[keep]
     return moved, keep
+
+
+def _modelled_level(light, points, normals, t, step, sigma, flattened, paper_high, material, window, inner, level_t):
+    """The level with the paper's light from the shadow model (shadow.PaperLight).
+
+    B(t) = L(p + t n) + r0 + r1 t on the paper side, with L the model's light before the
+    blur and r0 + r1 t the line through the profile minus the model's blurred light over
+    the paper window. The blurred step from the material's flat level A to B has, at its
+    edge, A / 2 + int_0^inf B(t + u) phi(u) du (paper on the high side; t - u on the low):
+    that is the level, computed by Simpson's rule on u = sigma z, z in [0, 5]. Only the
+    searched samples (`inner`) are replaced."""
+    m = math.ceil((5 * float(sigma.max()) + 2 * step) / step)
+    ext = t[0] + (np.arange(len(t) + 2 * m) - m) * step
+    ex = points[:, None, 0] + ext[None, :] * normals[:, None, 0] - 0.5
+    ey = points[:, None, 1] + ext[None, :] * normals[:, None, 1] - 0.5
+    sharp = sample_bilinear(light.sharp, ex, ey)
+    blurred = sample_bilinear(light.blurred, ex[:, m : m + len(t)], ey[:, m : m + len(t)])
+    residual = flattened - blurred
+    weight = window.astype(float)
+    count = weight.sum(axis=1)
+    tm = (weight * t[None, :]).sum(axis=1) / count
+    rm = (weight * residual).sum(axis=1) / count
+    dx = (t[None, :] - tm[:, None]) * weight
+    r1 = (dx * (residual - rm[:, None])).sum(axis=1) / (dx * dx).sum(axis=1)
+    r0 = rm - r1 * tm
+    z = np.linspace(0.0, 5.0, 21)
+    simpson = np.full(21, 2.0)
+    simpson[1::2] = 4.0
+    simpson[[0, -1]] = 1.0
+    wz = simpson * (z[1] - z[0]) / 3 * np.exp(-0.5 * z * z) / math.sqrt(2 * math.pi)
+    columns = np.flatnonzero(inner)
+    direction = np.where(paper_high, 1.0, -1.0)
+    rows = np.arange(len(points))[:, None]
+    integral = np.zeros((len(points), len(columns)))
+    for zk, wk in zip(z, wz):
+        position = m + columns[None, :] + (direction * sigma * zk / step)[:, None]
+        i0 = np.clip(np.floor(position).astype(int), 0, sharp.shape[1] - 2)
+        frac = position - i0
+        integral += wk * (sharp[rows, i0] * (1 - frac) + sharp[rows, i0 + 1] * frac)
+    out = level_t.copy()
+    out[:, columns] = (
+        material[:, None] / 2
+        + integral
+        + (r0[:, None] + r1[:, None] * t[None, columns]) / 2
+        + (direction * r1 * sigma / math.sqrt(2 * math.pi))[:, None]
+    )
+    return out
 
 
 def _upper_tail(z):
