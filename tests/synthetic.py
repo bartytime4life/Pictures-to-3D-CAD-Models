@@ -288,6 +288,7 @@ def render(
     gradient=0.3,
     blur=1.0,
     noise=2.5,
+    dither=1.0,
     quality=90,
     tones=(106.0, 236.0, 48.0, 78.0),
     exif_focal_35mm=None,
@@ -317,6 +318,14 @@ def render(
     `blur` is the sensor's Gaussian blur in photo pixels, or (x, y) for one that differs
     by direction, as a shaken camera's does, or (major, minor, degrees) for such a blur
     whose major axis is turned that far from x.
+    `noise` is the standard deviation, in saved levels, of the noise added to each colour
+    channel independently, and `dither` the width in saved levels of a uniform dither
+    added to each before the saved values are rounded. The channels are the saved grey
+    times (1, 0.97, 0.92). Built from one grey image and one noise draw, they had kept
+    those exact proportions, and JPEG's colour conversion rounded their small differences
+    alike at every edge: a 3.9 px edge read 0.02-0.03 px towards the paper, on noisy
+    photos too. Sensor noise is independent in each channel, and a sensor always has at
+    least the dither's.
     """
     if gamma is None:
         to_linear, to_saved = srgb_to_linear, linear_to_srgb
@@ -408,9 +417,14 @@ def render(
     else:
         image = cv2.filter2D(image, -1, rotated_gaussian(*blur), borderType=cv2.BORDER_REFLECT)
     # The camera saves through its tone curve; noise is added on the saved scale, where
-    # a processed photo's noise is roughly even across tones.
-    grey = np.clip(to_saved(image) + rng.normal(0, noise, image.shape), 0, 255)
-    rgb = np.dstack([grey, grey * 0.97, grey * 0.92]).astype(np.uint8)
+    # a processed photo's noise is roughly even across tones, independently in each
+    # colour channel as a sensor's is, and the saved values are rounded (they had been
+    # truncated, half a level low on average).
+    saved = to_saved(image)
+    rgb = np.dstack([
+        np.clip(np.rint(saved * tint + rng.normal(0, noise, image.shape) + dither * rng.uniform(-0.5, 0.5, image.shape)), 0, 255)
+        for tint in (1.0, 0.97, 0.92)
+    ]).astype(np.uint8)
     from PIL import Image
 
     picture = Image.fromarray(rgb)

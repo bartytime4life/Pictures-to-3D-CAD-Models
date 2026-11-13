@@ -14,6 +14,18 @@
   the beginner startup path and clarify report-output behavior. Preserve all
   runtime and dated evidence. [Documentation review](validation/documentation-physical-rounding.md).
 
+## Independent colour noise in the test renderer — November 13, 2026
+
+- The test renderer drew one noise image for all three colour channels, which kept
+  them in exact proportion; JPEG's colour conversion then rounded their small
+  differences alike at every edge and shifted rendered edges 0.02–0.03 px towards
+  the paper under a 3.9 px blur. Each channel now has its own noise, a one-level
+  dither and rounding. That had partly hidden the tracer's own start bias: summed
+  over the documented tables the errors rise from 1480 to 1851 µm, mostly on
+  noise-free wide blurs, while shadowed photos improve (the 47 % shadow 25 → 15 µm).
+  Three regression limits were re-set between their new and planted-fault figures
+  ([reference-sheet tracing](reference-sheet.md), §3).
+
 ## Exact active-face first controls documented — November 13, 2026
 
 - Record the additive local implementation at `1dade8a`: 820 passes, one failed

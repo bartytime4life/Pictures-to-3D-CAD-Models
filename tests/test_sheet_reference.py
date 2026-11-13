@@ -271,15 +271,19 @@ def test_a_soft_shadow_under_a_wide_blur_keeps_the_holes_in_place(client):
     given each 6 mm hole (99 points) its mean correction alone: on the tilted photo with
     a 3 px blur and the 25 % shadow, without noise, the holes read 0.027 mm out of
     position against 0.005 mm without the shadow. The harmonic is now kept where it is
-    significant (sheet._smooth_along_ring): 0.009 mm. Under a 1 x 3 px blur with
-    noise, JPEG, lens and uneven light, 0.021 mm became 0.007 mm."""
+    significant (sheet._smooth_along_ring): 0.009 mm. With each colour channel's noise
+    independent in the renderer (synthetic.render), 0.0081 mm, and 0.0197 mm with the
+    harmonic dropped. Under a 1 x 3 px blur with noise, JPEG, lens and uneven light,
+    0.021 mm had become 0.007 mm; with the renderer's channels independent it reads
+    0.0162 mm, with or without the harmonic (0.0155 mm), so that photo is kept as a
+    regression guard only."""
     clean = {"k1": 0.0, "gradient": 0.0, "noise": 0.0, "quality": 100}
     data, _ = S.render(blur=3.0, shadow=0.25, **clean)
     response = trace(client, data, reference="a4")
     assert response.status_code == 200, response.text
     assert S.feature_errors(response.json()["profile"])["position"] < 0.014
     data, _ = S.render(blur=(1.0, 3.0))
-    assert S.feature_errors(trace(client, data, reference="a4").json()["profile"])["position"] < 0.014
+    assert S.feature_errors(trace(client, data, reference="a4").json()["profile"])["position"] < 0.02
 
 
 def test_a_shadow_fitted_round_the_part_keeps_its_sizes_under_a_wide_blur(client):
@@ -287,16 +291,19 @@ def test_a_shadow_fitted_round_the_part_keeps_its_sizes_under_a_wide_blur(client
     reaches into the shadow's curve, and the tilted photo with the 25 % shadow, without
     noise, read Ø6, Ø22 and the slot 0.014, 0.016 and 0.024 mm off. The shadow fitted
     to all the paper round the part (shadow.fit_paper_light) gives 0.002, 0.007 and
-    0.006 mm, and the trace says a shadow was fitted. A contact shadow, the footprint
-    blurred 1.5 mm without moving, which diffuse light casts, read Ø22 and the slot
-    0.074 mm off; it is corrected in part, to 0.04 mm. A shadow with a sharp edge is
-    beyond the model: it is not used, and the trace says so."""
+    0.006 mm, and the trace says a shadow was fitted. With each colour channel's noise
+    independent in the renderer (synthetic.render) they read 0.0034, 0.0054 and
+    0.0146 mm, and 0.0112, 0.0108 and 0.0174 mm without the model. A contact shadow,
+    the footprint blurred 1.5 mm without moving, which diffuse light casts, read Ø22
+    and the slot 0.074 mm off; it is corrected in part, to 0.04 mm (0.027 and 0.029 mm
+    now). A shadow with a sharp edge is beyond the model: it is not used, and the
+    trace says so."""
     clean = {"k1": 0.0, "gradient": 0.0, "noise": 0.0, "quality": 100}
     response = trace(client, S.render(blur=3.0, shadow=0.25, **clean)[0], reference="a4")
     assert response.status_code == 200, response.text
     profile = response.json()["profile"]
     errors = S.feature_errors(profile)
-    assert errors["small"] < 0.006 and errors["bore"] < 0.011 and errors["slot"] < 0.011
+    assert errors["small"] < 0.006 and errors["bore"] < 0.009 and errors["slot"] < 0.016
     assert any("soft shadow beside the part takes up to" in note for note in profile["reference"]["notes"])
     contact = [("gauss", 0.0, 0.0, 1.5, 1.0)]
     errors = S.feature_errors(trace(client, S.render(blur=3.0, shadow_kernel=contact, **clean)[0], reference="a4").json()["profile"])
@@ -366,8 +373,10 @@ def test_a_directional_blur_is_measured_by_direction_and_stays_within_limits(cli
     assert any("edge blur differs by direction" in note for note in profile["reference"]["notes"])
     # Blurred along the slot, its end caps' tips are drawn in by det(S) / (2r n' S n) for
     # their own direction, not by the circle's average: 0.026 mm long, now 0.007 mm.
+    # With the renderer's colour channels independent, 0.0158 mm, and 0.0352 mm with
+    # the circle's average.
     data, _ = S.render(blur=(3.0, 1.0), **{**CASES["overhead"], "noise": 0.0, "quality": 100})
-    assert S.feature_errors(trace(client, data, reference="a4").json()["profile"])["slot"] < 0.015
+    assert S.feature_errors(trace(client, data, reference="a4").json()["profile"])["slot"] < 0.02
     # Turned 30 degrees from the photo's axes the blur has a cross term; with one median
     # width Ø6 read 0.138 mm off and the outline 0.337 mm.
     data, _ = S.render(blur=(3.0, 1.0, 30.0), **{**CASES["overhead"], "noise": 0.0, "quality": 100})
