@@ -5,7 +5,32 @@ record below to assess its evidence. This page separates local checks, hosted
 CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
-## Current candidate evidence — November 12, 2026
+## Acquisition evidence and documentation refresh — November 13, 2026
+
+The publication base is main `68a67e766956ac41a3b73ae73d4ac553ef47db26`,
+including PR #103's soft-shadow model. The new
+[acquisition-operator record](validation/finite-acquisition-operator.md)
+preserves a separate earlier source-bound experiment: 16 scenes, 32 output-scale
+records and 128 Gaussian/stage comparisons. Moment matching leaves 9/32
+unquantized and 16/32 PNG cells incompatible, with one PNG inconclusive.
+The complete 123-artifact archive includes all 87 recorded source/input files.
+
+The original bootstrap exit 1 and continuation's 320 raw serialization failures
+remain explicit. Independent math checks pass 148,471 comparisons; the UX audit
+retains 320 raw-contract failures among 33,100 checks. The portable artifact audit
+passes 1,294 binding checks and deliberately exits 1 for the raw scalar contract.
+Saved-only normalization changes none of the 128 categories. Neither this study
+nor its saved review retests the newer shadow-lighting pipeline or establishes
+geometry recovery, camera accuracy or physical print acceptance.
+
+See [source scope](project-status.md) and the
+[portable archive workflow](../studies/fixtures/finite-acquisition-operator-v1/README.md).
+The [documentation review](validation/documentation-acquisition-state.md)
+records coverage and saved-only verification.
+The documentation refresh preserves earlier dated software/browser/CI results
+as historical records; those are not new runs on this candidate.
+
+## Earlier candidate evidence — November 12, 2026
 
 The [experimental normal-angle derivative](validation/finite-normal-derivative.md)
 passes the application build and 1,037 Python tests. Its complete 337-scene
@@ -41,7 +66,7 @@ retains a missed nominal target and background-sensitive or incompatible
 covariance proposals. These developer models do not change automatic tracing
 or establish physical-camera accuracy.
 
-The [current documentation review](validation/documentation-pr95-state.md)
+The [PR #95 documentation review](validation/documentation-pr95-state.md)
 covers published draft PR #95, source/CI status, user guides, API contracts,
 saved-review commands and the companion library. It includes the derived
 finite-chord proposal with numerical qualification still pending. The

@@ -232,6 +232,19 @@ complete-fit medians are 2.75–3.91 seconds, and all archived target passes and
 completion flags are preserved. Numerical parity and faster evaluation leave
 the observation-model and independent dimensional checks above necessary.
 
+The [completed acquisition-operator study](validation/finite-acquisition-operator.md)
+tests that model at supplied true geometry and brightness, before any fitting.
+Its 16 new synthetic source scenes give 32 scale records and 128 paired
+stage/covariance comparisons. Even matching formal Gaussian second moments
+leaves 9/32 unquantized comparisons incompatible with the one-level criterion;
+the decoded-PNG lane has 16/32 incompatible and one inconclusive. These are
+intensity-model outcomes, not centre/radius recovery or physical accuracy.
+The complete 123-artifact package includes an 87-file source snapshot at
+`0714aad`, with the original bootstrap failure and separate scalar-normalization
+history retained. This evidence does not validate current main: the study uses
+flat illumination and its pinned acquisition source, while current main also
+fits the paper's soft-shadow light. See the [method and scope](finite-acquisition-operator.md).
+
 A source-derived straight-edge direction may still align the display and
 profile when a ring is retained as line geometry. The rigid rotation preserves
 distances and radii; axis-aligned width and height depend on that frame. This

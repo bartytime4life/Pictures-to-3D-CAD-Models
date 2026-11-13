@@ -6,6 +6,14 @@ Run these from the repository root after setup. `make` prints the supported
 targets. These are the tools present in the reviewed main-based source; research
 scripts from a separate branch are not implied by this list.
 
+The [acquisition evidence workflow](../studies/fixtures/finite-acquisition-operator-v1/README.md)
+verifies 123 stored artifacts, extracts the complete saved run and checks the
+87-file recorded source snapshot as data. Use that workflow on current main:
+the study's older source is not the current shadow-lighting pipeline. Its
+artifact auditor deliberately exits 1 after passing 1,294 artifact checks,
+because the archived raw report has 320 scalar-serialization failures. The
+separate normalizer retains those failures and performs no scientific calls.
+
 The [residual-information diagnostic](finite-residual-information.md) has a
 complete retained failed replay and separate saved-only audit. Its [portable
 instructions](../studies/fixtures/finite-residual-information-v1/README.md) distinguish
@@ -23,6 +31,8 @@ reproducing an archived result; a later backend can invalidate that binding.
 
 | Tool | Entry point | Execution and output |
 | --- | --- | --- |
+| Acquisition saved-data artifact audit | `.venv/bin/python studies/verification/finite-acquisition-artifact-audit-v1.py --help` | Standard-library NPY parsing and Pillow PNG decoding; no backend, generator or model imports; use the extracted recorded-source root and saved run in the [complete workflow](../studies/fixtures/finite-acquisition-operator-v1/README.md#verify-and-reconstruct-saved-data) |
+| Acquisition native-scalar derivation | `python3 studies/verification/finite-acquisition-normalize-v1.py --help` | Standard-library-only, exact raw-report hash and whitelisted 320 fields; fresh output; no new scientific qualification |
 | Workbench setup/start/development | `make setup-app`, `make start`, `make dev` | Setup installs locked dependencies and builds; start/dev launch services |
 | Component verification | `make test-app`, `make lint` | Python, frontend build and browser workflow; lint checks Python and frontend/browser-source formatting |
 | Both components | `make setup`, `make build`, `make test` | Also operates on the separately declared reference-library environment and generated outputs |
@@ -110,6 +120,13 @@ validate an installed model, exercise the network or qualify an export.
 The reference library has its own [build and generation map](../reference-library/BUILD.md).
 Reading its committed HTML/PDF differs from rebuilding it, checking a browser,
 running native OpenSCAD or refreshing external links.
+
+The acquisition capture/continuation scripts and frozen plans are provenance
+entry points, not saved-only audits. Explicit capture execution generates
+synthetic scenes and calls forward models. The main-based publication does not
+qualify fresh execution against its changed backend; a new experiment must bind
+its own source and environment. Do not import the recorded source merely to
+inspect the archive. The documented portable workflow reads its bytes only.
 
 The [finite-chord normal derivative](finite-normal-derivative.md) is now an
 experimental Python operator. Its [complete qualification](validation/finite-normal-derivative.md)

@@ -23,6 +23,25 @@ model and a valid whole-shape projective chart. The
 panel-budget unknown and a compressed-map error-estimation limitation remain.
 It adds no automatic correction.
 
+Later [analytic-normal results](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/blob/0f1adbd391f7fa015f458cca60dcfe2a0e2dad9e/docs/validation/finite-analytic-normal-information.md)
+belong to their pinned research branch. They do not replace this checkout's
+failed qualification or establish that smaller residuals improve geometry.
+
+The [known acquisition-operator audit](finite-acquisition-operator.md) now
+packages completed evidence from source `0714aad`: 16 new synthetic scenes,
+32 output-scale records and 128 stage/Gaussian comparison cells. At supplied
+true geometry and levels, moment matching leaves 9/32 unquantized comparisons
+incompatible; the PNG lane has 15 compatible, 16 incompatible and one
+inconclusive comparison. The nominal PNG comparator has 27 incompatible and
+five compatible comparisons. The [full record](validation/finite-acquisition-operator.md)
+preserves both the pre-capture bootstrap failure and the raw report's 320
+scalar-serialization failures; a saved-only native conversion changes no category.
+The [archive](../studies/fixtures/finite-acquisition-operator-v1/README.md)
+includes the 87-file recorded source, separately from current main's newer
+shadow-lighting model. These forward-only findings support an acquisition-aware
+mean before fitting more parameters. They neither recover geometry, explain
+historical fit errors nor qualify current-main automatic tracing.
+
 The [original selected design reference](images/design-reference.png) is a generated concept. The [recorded workbench screenshot](images/workbench.png) is browser-rendered implementation evidence; the [guided-workbench review](validation/guided-workbench.md) records the reviewed interaction, screenshots and evidence date. The sample photograph is generated demonstration input and is traced by the real conversion pipeline; it is not a measured reference specimen.
 
 ## Image to outline

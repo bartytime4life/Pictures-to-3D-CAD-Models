@@ -1,0 +1,39 @@
+diff --git a/studies/verification/finite-acquisition-stages-v1.py b/studies/verification/finite-acquisition-stages-v1.py
+index 2b737a0..1be93a5 100755
+--- a/studies/verification/finite-acquisition-stages-v1.py
++++ b/studies/verification/finite-acquisition-stages-v1.py
+@@ -11,6 +11,7 @@ from __future__ import annotations
+ 
+ import argparse
+ import hashlib
++import importlib.util
+ import io
+ import json
+ import math
+@@ -28,7 +29,6 @@ Q_VALUES = (1.0, 1.25)
+ CONFIG_KEYS = {"name", "radius", "fraction", "normal_degrees", "centre", "blur"}
+ SOURCE_PATHS = (
+     "studies/verification/finite-acquisition-stages-v1.py",
+-    "tests/__init__.py",
+     "tests/synthetic.py",
+     "backend/__init__.py",
+     "backend/sheet.py",
+@@ -238,7 +238,17 @@ def run_scene(config, output_dir):
+         if str(ROOT) not in sys.path:
+             sys.path.insert(0, str(ROOT))
+         from backend import sheet, tone
+-        from tests import synthetic
++
++        # tests is a namespace directory, so an installed regular `tests`
++        # package can shadow it. Bind the declared generator file directly.
++        spec = importlib.util.spec_from_file_location(
++            "finite_acquisition_source_synthetic_v1", ROOT / "tests/synthetic.py"
++        )
++        if spec is None or spec.loader is None:
++            raise ImportError("cannot load the declared tests/synthetic.py source")
++        synthetic = importlib.util.module_from_spec(spec)
++        sys.modules[spec.name] = synthetic
++        spec.loader.exec_module(synthetic)
+ 
+         for module, name in (
+             (sheet, "backend/sheet.py"),
