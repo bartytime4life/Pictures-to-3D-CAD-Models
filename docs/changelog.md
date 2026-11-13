@@ -1,5 +1,20 @@
 # Workbench change log
 
+## Experimental source-cell acquisition mean — November 13, 2026
+
+- Add independent analytic disk/chord cell coverage and explicit finite-kernel,
+  grayscale-encoding and signed-Keys stages. Preserve supplied coefficients,
+  pixel frames, immutable outputs, work refusals and input hashes. No automatic
+  tracing or inverse-fit adoption is added.
+- Retain all 128 forward comparisons and their complete arrays. Maximum analytic
+  query differences are `7.6294e-5` unquantized and `3.0518e-5` encoded levels.
+  Keep the original failed controls, root-precision admission, arithmetic audit
+  distinction and separately qualified workspace-accounting repair.
+- Record 1,173 full-suite tests at numerical source and 145 focused tests after
+  the metadata-only repair, with complete saved-data audits.
+  [Method](finite-acquisition-mean.md) · [evidence](validation/finite-acquisition-mean.md)
+  · [archive](../studies/fixtures/finite-acquisition-mean-v1/README.md).
+
 ## Acquisition evidence and documentation refresh — November 13, 2026
 
 - Retain 16 synthetic source scenes, 32 paired output-scale records and all 128

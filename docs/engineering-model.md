@@ -245,6 +245,14 @@ history retained. This evidence does not validate current main: the study uses
 flat illumination and its pinned acquisition source, while current main also
 fits the paper's soft-shadow light. See the [method and scope](finite-acquisition-operator.md).
 
+The subsequent [independent source-cell mean](finite-acquisition-mean.md) now
+reproduces those supplied discrete stages within its frozen engineering checks.
+Its [128-comparison record](validation/finite-acquisition-mean.md) is a forward
+qualification, not an inverse-recovery result. Analytic pixel-area integration
+and explicit sampling replace a Gaussian point approximation; unknown camera
+calibration, source response and illumination are not inferred. Quantization
+requires separate derivative and recovery treatment before automatic adoption.
+
 A source-derived straight-edge direction may still align the display and
 profile when a ring is retained as line geometry. The rigid rotation preserves
 distances and radii; axis-aligned width and height depend on that frame. This

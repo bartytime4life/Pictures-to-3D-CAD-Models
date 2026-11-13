@@ -58,6 +58,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Evaluate signed finite-material normal-angle sensitivities | [Experimental API and units](finite-normal-derivative.md), [complete failed qualification](validation/finite-normal-derivative.md), [portable archive](../studies/fixtures/finite-normal-derivative-v1/README.md) |
 | Review later analytic-normal research on its recorded branch | [Pinned result and geometric counterexamples](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/blob/0f1adbd391f7fa015f458cca60dcfe2a0e2dad9e/docs/validation/finite-analytic-normal-information.md); this is separate from current-main qualification |
 | Test a Gaussian hypothesis against known acquisition stages | [Method and completed outcomes](finite-acquisition-operator.md), [recorded-source validation](validation/finite-acquisition-operator.md), [123-artifact archive and saved-only workflow](../studies/fixtures/finite-acquisition-operator-v1/README.md) |
+| Inspect the independent source-cell acquisition mean | [Experimental area/stage operators](finite-acquisition-mean.md), [complete qualification](validation/finite-acquisition-mean.md), [frozen plan](../studies/finite-acquisition-mean-v1.json), [portable archive](../studies/fixtures/finite-acquisition-mean-v1/README.md); no automatic trace or inverse integration |
 | Reproduce bundled printer data | [Printer source record](../data/PRINTER_SOURCES.md) |
 
 Historical validation reports retain their original revision, environment and
