@@ -10,8 +10,8 @@ original counts and environment; they are not later retests.
 The separate [projective-node arithmetic diagnostic](validation/finite-normal-oracle-conditioning.md)
 passes all **26 declared controls**, with both original baseline totals reproduced
 exactly at orders 96 and 192. On this restricted population, exact endpoint
-interpolation reduces the largest observed error from `4.09099e-6` to
-`7.94156e-10`; the two original controls additionally meet their absolute
+construction with binary64 interpolation reduces the largest observed error
+from `4.09099e-6` to `7.94156e-10`; the two original controls additionally meet their absolute
 `1e-10` request. Every original record remains intact. This is a reference-path
 investigation, not a new application, inverse or physical-camera qualification.
 
@@ -59,10 +59,12 @@ retains a missed nominal target and background-sensitive or incompatible
 covariance proposals. These developer models do not change automatic tracing
 or establish physical-camera accuracy.
 
-The [current documentation review](validation/documentation-pr97-state.md)
-covers published draft PR #97, source/CI status, user guides, API contracts,
-saved-review commands and the companion library. It reconciles the implemented
-normal derivative with its retained failed numerical qualification. The
+The [current documentation review](validation/documentation-pr100-state.md)
+covers published draft PR #100, source/CI status, user guides, API contracts,
+saved-review commands and the companion library. It distinguishes the original
+V1 failures, V2 correction and restricted reference-node diagnostic. The
+[preceding PR #97 review](validation/documentation-pr97-state.md) retains its
+original source and checks. The
 [preceding PR #95 review](validation/documentation-pr95-state.md) records the
 earlier derivation-only state before that operator was published. The
 [preceding review](validation/documentation-pr93-state.md) covers PR #93 and

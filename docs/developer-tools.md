@@ -62,10 +62,11 @@ photo-benchmark script can overwrite report paths, and `--example` writes into
 its chosen folder. The independent corner, frame, directional, finite-centre,
 moment and supplemental-aperture runners refuse an existing destination,
 including a dangling symbolic link, and require its parent directory to exist.
-The canonical join runners
+`corner_sweep.py --json FILE` also overwrites its destination and requires an
+existing parent directory. The canonical join runners
 also refuse existing destinations, but can create their output parent directories;
 the directional free-arc runner requires its parent to exist. The Ollama
-benchmark creates its output parent and writes both JSON and a `.md` sibling.
+benchmark creates its output parent and overwrites both JSON and a `.md` sibling.
 Printer import defaults to the tracked `data/printers.json`. Review a generated
 diff before replacing committed data.
 
@@ -119,7 +120,7 @@ passes 417 scenes while retaining the original failure and a reference-oracle
 limitation. It has no HTTP mode or fitter integration. The saved rotation command above
 remains saved-array arithmetic; it does not validate this new operator.
 
-For the new study, these parser checks are read-only:
+For the original V1 normal-derivative study, these parser checks are read-only:
 
 ```bash
 .venv/bin/python studies/verification/finite-normal-derivative-v1.py --help

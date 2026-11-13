@@ -42,7 +42,8 @@ limitation. A subsequent [exact-determinant and global-error correction](finite-
 passes its [417-scene comparison](validation/finite-normal-error-control.md) and
 independent high-precision controls for both original cases. Both failed studies
 remain intact. A separate [26-scene arithmetic diagnostic](validation/finite-normal-oracle-conditioning.md)
-now isolates source-node rounding and compares exact endpoint interpolation.
+now isolates source-node rounding and compares exact endpoint construction
+with binary64 interpolation.
 Next, extend reference error accounting beyond that restricted family and
 qualify a separate normal-aware residual diagnostic;
 these results do not automatically fill the old unknown columns or establish optics.

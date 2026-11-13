@@ -34,7 +34,10 @@ angle. Its [contract](finite-normal-derivative.md) and initial
 panel-budget unknown and compressed-map error underestimation. The current
 [error-control correction](finite-normal-error-control.md) passes a separate
 [417-scene qualification](validation/finite-normal-error-control.md), with a
-remaining oracle-error limitation. It is not called
+remaining oracle-error limitation. The separate
+[projective-node diagnostic](finite-normal-oracle-conditioning.md) evaluates
+reference arithmetic on 26 restricted controls without changing production
+code or the original V2 result. The normal operator is not called
 by the automatic flow, inverse fitter or HTTP routes below.
 
 ```mermaid

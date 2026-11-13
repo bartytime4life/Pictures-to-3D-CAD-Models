@@ -9,6 +9,12 @@ small. The corner model now uses the supplied two-dimensional Gaussian
 covariance directly. This changes the existing reference-sheet fitting path;
 there is no additional workbench control or camera-calibration step.
 
+The automatic classifier treats neighboring lines as near-parallel when
+`abs(cross(d1,d2)) < sin(5 degrees)`; opposite traversal then selects the inherited
+slot-cap path. The full covariance-aware fillet model described here applies
+outside that heuristic. Truly parallel tangency and half-spacing geometry are
+a narrower case; a small taper does not establish exact cap geometry.
+
 This guide describes the model, refusal paths and a source-bound independent
 conditional study. The study does not establish camera accuracy or a physical
 radius bound. The [validation record](validation/anisotropic-corners.md)
@@ -91,9 +97,12 @@ that the local unbounded corner describes a finite part with nearby edges,
 holes, walls, shadow or a different response curve.
 
 The radius fit keeps the centre constrained by its two tangent lines and uses
-the covariance-aware half-level model. It requires a represented cost decrease
-and a local stopping condition; exhausting its iteration or line-search budget
-does not count as convergence. Accepted modelled fillets are excluded from the
+the covariance-aware half-level model. It stops when the unhalved projected
+radius proposal moves less than `1e-6 * max(radius, sigma)`, retaining the current
+iterate. Larger proposals use a bounded backtracking check against the represented
+cost, with a `1e-16 * max(1, cost)` allowance. A small movement produced only by
+backtracking is not convergence; exhausting either budget remains unresolved.
+Accepted modelled fillets are excluded from the
 later generic curvature correction, so that correction is not applied twice.
 
 The reported radius spread still combines sampled residual noise with assumed

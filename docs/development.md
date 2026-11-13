@@ -142,6 +142,11 @@ passes **1,081 final-source Python tests**, build and lint, with 432 bound
 non-Markdown files and 22 built frontend files unchanged during the run. Its
 separate 417-scene numerical result passes the frozen comparisons; estimated
 oracle allowances still need strengthening. These are developer API results.
+The subsequent [reference-node diagnostic](finite-normal-oracle-conditioning.md)
+retains 26 controls and improves a restricted reference path without changing
+production code or replacing the original V2 result. The
+[current documentation review](validation/documentation-pr100-state.md) checks
+this published PR #100 scope separately from the inherited software runs.
 Its preceding [affine evaluation upgrade](finite-affine-evaluation.md)
 retains the earlier [943-test local Python run, production build and lint](validation/finite-affine-batch.md#software-regression),
 bound to 284 software inputs and 22 built frontend files. This run includes the

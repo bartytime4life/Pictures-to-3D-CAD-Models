@@ -51,7 +51,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |
 | Run a benchmark with measured photos | [Photo benchmark](photo-benchmark.md) |
 | Review completed checks | [Validation overview](validation.md), [design QA](../design-qa.md) |
-| Check documentation coverage and source consistency | [Current correction verification](validation/finite-normal-error-control.md), [PR #98 documentation review](validation/documentation-pr97-state.md), [preceding PR #95 review](validation/documentation-pr95-state.md) |
+| Check documentation coverage and source consistency | [Current PR #100 review](validation/documentation-pr100-state.md), [preceding PR #97 review](validation/documentation-pr97-state.md), [source and CI snapshot](project-status.md) |
 | Review the recent interface changes | [Guided-workbench audit](validation/guided-workbench.md) |
 | Review scope and future work | [Roadmap](roadmap.md), [change log](changelog.md) |
 | Diagnose fixed-normal residual information and the original failed normal control | [Method and rotation identity](finite-residual-information.md), [finite-chord derivation](finite-residual-information.md#finite-chord-shape-derivative-a-derived-proposal), [retained failed protocol](validation/finite-residual-information.md), [portable saved-data audit](../studies/fixtures/finite-residual-information-v1/README.md) |
