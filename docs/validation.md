@@ -129,6 +129,7 @@ It changes guides relative to that integrated baseline, not runtime behavior.
 | Directional covariance rank guard | Draft PR #78, source `185d682`: [633 local Python tests](validation/directional-blur-rank.md), build and 76 focused checks | Actual sampled Gaussian-step rank counterexample; no new whole-photo, browser or physical-accuracy claim |
 | Recorded directional-blur checks | Branch `claude/directional-blur`, on the slot end-cap commit and `main` at `485da7e` (after #47): **627 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#a-blur-that-differs-by-direction--november-12-2026) | Local result; synthetic photos including the directional-spread qualification's kinds of case, and exact blurred holes; supersedes that record's "no production correction" |
 | Recorded shadow-harmonic checks | Branch `claude/shadow-blur`, on `main` at `f1679bb` (after #77): **629 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#a-shadows-push-on-a-holes-centre--november-12-2026) | Local result; synthetic photos with a soft shadow and wide or directional blur, with noise seeds; slot and outline under those photos not corrected |
+| Recorded paper-light checks | Branch `claude/shadow-light`, on `main` at `1d32c43` (after #92): **903 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#the-papers-light-as-a-fitted-shadow--november-13-2026) | Local result; synthetic photos and exactly rendered scenes with five shapes of shadow, six noise seeds; contact shadows corrected in part, sharp-edged shadows left to the line |
 | Recorded slot end-cap checks | Branch `claude/slot-caps`, on `main` at `5c07d0f` (after #46): **594 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#slot-end-caps-placed-with-their-radius-fixed--november-11-2026) | Local result; synthetic photos and outlines; one tone-curve finding not adopted |
 | Weak-edge error recovery | PR #45, merged in `4e607d9`; [record](validation/contrast-recovery.md): **583 Python tests** at its PR #44 integration | Four original failures now recover or give actionable 422 guidance; thresholds and fallback policy retained |
 | Constrained fillet sectors | PR #46, merged in `5c07d0f`; [record](validation/fillet-sweep.md): **589 Python tests** at its PR #44 integration | Six failing original controls, genuine major arcs and exact STEP/DXF checks; scalar blur-model mismatch remains |
@@ -160,6 +161,38 @@ stub fix in managed cloud sessions. The [reference-sensitivity record](validatio
 covers the endpoint explorer. The original CAD release and optional Ollama
 integration retain separate historical evidence. These records do not establish
 that a newly created or published cloud task has been validated.
+
+## The paper's light as a fitted shadow — November 13, 2026
+
+Branch `claude/shadow-light`, on `main` at `1d32c43` (after #92), which includes the shadow-harmonic change below (#85). It takes up the shadow-harmonic record's "not corrected": under a soft shadow and a wide blur the slot read up to 0.051 mm off and the outline 0.029 mm, because the paper's light curves where each profile's line is fitted. See [reference-sheet tracing](reference-sheet.md), §3 (**Shadows**), for the method and tables.
+
+- **The model** (`shadow.fit_paper_light`). For a part thin beside its distance to the light, the light a point of paper loses is the footprint convolved with a kernel set by the light: L = P − K ∗ F. P is a quadratic; K ≥ 0 is fitted on nodes 1.1 mm apart out to 9 mm with no assumed shape, from the photo's linear light from 2.5 σ to 15 mm round the part, with the photo's blur applied and the step's own tail subtracted. Its smoothness weight is the one that best predicts the 1.5 mm of paper nearest the edges from the rest.
+- **The level** (`sheet._modelled_level`). Each profile's paper is the model's light plus a line fitted to the residual, and the level is the blurred step's exact value at the edge, A/2 + ∫₀^∞ B φ. Without a shadow it is the line method.
+- **Adequacy.** The model is used only if it predicts the held-out band within 2 % of the paper's light beyond the fit's residual. Over 19 rendered cases every shadow it improved stayed under 1.5 %; the long light's sharp-edged shadow gave 2.7–5.4 % and is left to the line, and the trace says so.
+- **Not adopted, and why:**
+  - A quadratic per profile: Ø6 0.078 mm off without a shadow.
+  - Choosing, ring by ring, whichever paper model better predicted the window's inner half from its outer half: it kept the model on the long light, where the failure is inside 2.5 σ.
+  - A per-profile switch by window residual: no gain.
+  - A 2-D half-plane correction for the blur along an edge: round a hole the tangent line runs into the material, and Ø6 got worse.
+- **Shadows the model was not written for.** The renderer gained `shadow_kernel` (test-only): a contact shadow, a disc lamp, two lights and a long light. Mean worst errors over seeds 201–206, Ø6, Ø22, slot, position, outline in µm:
+  - Contact shadow, 3 px: 77.5, 77.4, 75.0, 13.3, 89.5 → 33.3, 46.6, 45.3, 14.3, 55.8.
+  - Two lights, 1 × 3 px: 31.5, 31.6, 73.9, 15.5, 68.6 → 9.8, 17.6, 37.7, 16.0, 36.8.
+  - Disc lamp, 1 px: 4.2, 5.6, 9.1, 6.6, 7.1 → 3.3, 6.6, 10.2, 4.4, 8.1.
+  - Long light: unchanged. No shadow: unchanged within 0.0001 mm.
+- **The renderer's shadow.** 3 px blur, noise-free: Ø6, Ø22, slot 0.0141, 0.0158, 0.0244 → 0.0020, 0.0068, 0.0055 mm, outline 0.0277 → 0.0188 mm. Over seeds 201–206: 1 × 3 px slot 44.1 → 21.0 µm and outline 31.5 → 19.6 µm; the 1 px test photo 22.7 → 20.3 µm summed over the five features.
+- **What got worse:**
+  - **The 22° 4 mm plate's outline,** 7.1 → 10.3 µm over six seeds (0.0071 → 0.0107 mm in the table). The uncorrected shadow had offset the walls' error: without a shadow it reads 0.0119 mm either way.
+  - **The small holes under a directional blur:** the diameter's error changes sign. Under 3 × 1 px turned 30° over seeds 101–112, Ø6 went from −0.005 to +0.006 mm and hole positions from 11.4 to 13.5 µm, while Ø22, the slot and the outline improved.
+  - **Without a shadow,** a small fitted kernel moved noise-free directional renders by up to 0.0025 mm.
+  - **The disc lamp's** Ø22 and slot, by 1 µm.
+  - **The benchmark example's** worst error, 0.015 → 0.017 mm (the 22° plate's R8 corner); its median went 0.004 → 0.003 mm ([photo benchmark](photo-benchmark.md)).
+  - **Time:** a trace takes 0.96 s, against 0.71 s.
+- **Found on `main`, not this change.** A sharp-cornered rectangle under 3 × 1 px turned 30°, without a shadow, reads its outline 0.317 mm off on `main` at `1d32c43`; it read 0.079 mm at every merge up to #85 and 0.317 mm from #91 (`bf592fa`) on, its outline 28 vertices against 22.
+- **Checks run.** `pytest` with runtime warnings as errors: **903 passed**. New tests:
+  - `test_a_fitted_shadow_puts_edges_back_where_a_line_cannot`: exactly rendered scenes; the line 0.09–0.10 px outward, the model within 0.003 and 0.049 px; the contact shadow 0.22–0.25 → 0.15–0.17 px; no shadow under 0.002 px of change; a sharp shadow rejected.
+  - `test_a_shadow_fitted_round_the_part_keeps_its_sizes_under_a_wide_blur`: rendered photos and the trace's notes.
+  - Planted faults caught: the model off, no adequacy gate, no blur in the model, a fixed smoothness weight.
+  - Ruff passed. **74 browser scenarios** passed with the system Chrome.
 
 ## A shadow's push on a hole's centre — November 12, 2026
 

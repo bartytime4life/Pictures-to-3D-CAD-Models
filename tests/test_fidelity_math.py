@@ -1720,3 +1720,78 @@ def test_rendered_coverage_is_exact_and_edges_keep_their_place_at_any_phase():
                     along, dist = points @ np.array([-n[1], n[0]]), points @ n - 40.0
                     offsets.append(dist[(np.abs(along) < 30) & (np.abs(dist) < 1.5)].mean() * ppm)
                 assert abs(sum(offsets) / 2) < 0.006
+
+
+def _shadowed_scene(shift_mm, shadow_blur_mm, depth=0.3, ppm=5.4, sigma=4.0):
+    """A rectangle with a round hole on paper (plane mm, pixel i centred on i / ppm),
+    shaded by its footprint moved `shift_mm` and blurred `shadow_blur_mm`, taking
+    `depth` of the light at most, under uneven light, then blurred `sigma` px:
+    (image, mask, ppm, sigma)."""
+    from shapely.geometry import Point, box
+
+    part = box(30, 30, 100, 100).difference(Point(65, 65).buffer(9, 256))
+    shape = (int(130 * ppm), int(130 * ppm))
+    cover = synthetic.coverage(part, ppm, 0.0, 0.0, shape).astype(np.float32)
+    moved = cv2.warpAffine(cover, np.float32([[1, 0, shift_mm[0] * ppm], [0, 1, shift_mm[1] * ppm]]), shape[::-1])
+    cast = cv2.GaussianBlur(moved, (0, 0), shadow_blur_mm * ppm)
+    yy, xx = np.mgrid[0 : shape[0], 0 : shape[1]] / shape[0]
+    paper = 200 + 12 * xx - 8 * yy + 6 * (xx - 0.5) ** 2
+    scene = 10 * cover + paper * (1 - depth * cast) * (1 - cover)
+    image = cv2.GaussianBlur(scene.astype(np.float32), (0, 0), sigma)
+    return image, (cover > 0.5).astype(np.uint8), ppm, sigma
+
+
+def _side_errors(image, ppm, sigma, light):
+    """Mean outward error (px) of the outline's right (x = 100 mm, the side the shadow
+    falls on) and left sides, by the line level and by the fitted shadow's."""
+    out = []
+    for x_mm, side in ((100.0, 1), (30.0, -1)):
+        ys = np.linspace(45, 85, 60) * ppm + 0.5
+        points = np.column_stack([np.full(len(ys), x_mm * ppm + 0.8), ys])
+        normals = np.tile([1.0, 0.0], (len(ys), 1))
+        kwargs = {"half": 3.5 * sigma, "sigma": sigma, "paper_side": np.full(len(ys), side)}
+        line, keep = sheet.half_level_search(image, points, normals, **kwargs)
+        model, keep_model = sheet.half_level_search(image, points, normals, paper_light=light, **kwargs)
+        assert keep.all() and keep_model.all()
+        edge = x_mm * ppm + 0.5
+        out.append((float(((line[:, 0] - edge) * side).mean()), float(((model[:, 0] - edge) * side).mean())))
+    return out
+
+
+def test_a_fitted_shadow_puts_edges_back_where_a_line_cannot():
+    """shadow.fit_paper_light and the modelled level on exactly rendered scenes under a
+    4 px blur. Beyond 2.5 sigma, where each profile's line is fitted, a soft shadow is
+    curved, and the line's level puts the edge outward.
+
+    - A shadow like the test renderer's (the footprint moved (1.6, 1.9) mm, blurred
+      2.2 mm, taking 30 % of the light): the line put both sides 0.09-0.10 px outward.
+      The fitted shadow, which has no shape of its own, puts the side facing away from
+      the light within 0.003 px and halves the error on the side it falls on (0.049
+      px), where its light curves most within the blur.
+    - A contact shadow (not moved, blurred 1.5 mm): 0.22-0.25 px became 0.15-0.17 px. Most of it
+      lies within the blur, where the profile cannot tell it from a moved edge.
+    - Without a shadow the model changes an edge by under 0.002 px, and a shadow too
+      sharp for its node grid (blurred 0.1 mm) is not used."""
+    from backend import shadow
+
+    image, mask, ppm, sigma = _shadowed_scene((1.6, 1.9), 2.2)
+    light = shadow.fit_paper_light(image, mask, ppm, sigma)
+    assert light.info["used"] and 0.22 < light.info["depth"] < 0.3
+    (right_line, right_model), (left_line, left_model) = _side_errors(image, ppm, sigma, light)
+    assert right_line > 0.08 and left_line > 0.08
+    assert abs(left_model) < 0.01 and 0 < right_model < 0.6 * right_line
+
+    image, mask, ppm, sigma = _shadowed_scene((0.0, 0.0), 1.5, depth=0.25)
+    light = shadow.fit_paper_light(image, mask, ppm, sigma)
+    for line, model in _side_errors(image, ppm, sigma, light):
+        assert line > 0.2 and model < 0.75 * line
+
+    image, mask, ppm, sigma = _shadowed_scene((1.6, 1.9), 2.2, depth=0.0)
+    light = shadow.fit_paper_light(image, mask, ppm, sigma)
+    assert light.info["used"] and light.info["depth"] < 0.01
+    for line, model in _side_errors(image, ppm, sigma, light):
+        assert abs(model - line) < 0.002
+
+    image, mask, ppm, sigma = _shadowed_scene((1.6, 1.9), 0.1)
+    sharp = shadow.fit_paper_light(image, mask, ppm, sigma)
+    assert not sharp.info["used"] and sharp.info["excess"] > shadow.ADEQUATE_FRACTION
