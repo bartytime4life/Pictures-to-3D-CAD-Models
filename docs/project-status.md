@@ -1,13 +1,24 @@
 # Source scope and verification status
 
-This documentation reviews published draft
-[PR #100](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/100),
-head `f1f0bba313f68d5dc48fdb6e329b0e0535b1903e`, tree
-`4613a42449cecd0f54277e7006e0788ead1406a2`.
-The [documentation review](validation/documentation-pr100-state.md) covers the
-workbench, numerical research and companion library. The next analytic-normal
-residual replay is local work in progress; it has no completed numerical result
-or available command in this reviewed revision.
+This candidate builds on published documentation draft
+[PR #101](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/101),
+head `9db5f3f506020d8673ffa78fb55b7a1b8ee5dbb5`, tree
+`84c9f0fb3930b76fb96d33424cb5fde56a01f9b2`.
+The [preceding documentation review](validation/documentation-pr100-state.md)
+covers its PR #100 base. This candidate adds the separately frozen
+[analytic-normal experiment](validation/finite-analytic-normal-information.md),
+which passes all 578 derivative comparisons and ten bounded joint-trial checks.
+It retains residual/geometry counterexamples and adds no automatic tracing or
+inverse-fitter integration. Its source freeze and full evidence are bound in
+that record; the repository snapshot below retains its earlier timestamp.
+
+At the separate **November 13, 2026, 05:18 UTC** readback, PR #101 remained
+open, draft and unmerged at the head above. Its
+[workbench run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43367933355)
+and [reference-library run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43367933387)
+both completed successfully. Main still had the head listed below. These runs
+qualify the published documentation base, not this subsequent analytic-normal
+candidate.
 
 ## Repository and CI snapshot — November 13, 2026, 04:40 UTC
 
@@ -72,6 +83,7 @@ its HTTP API.
 | [Normal derivative V1](validation/finite-normal-derivative.md) | Original exit 1, one panel-budget unknown and a resolved compressed-map error miss retained | Historical result; later code does not rewrite it |
 | [Normal error control V2](validation/finite-normal-error-control.md) | 417 scenes, 4,832 queries and 72 area checks pass frozen criteria; both original candidate controls pass separate high-precision checks; 1,081 final-source Python tests | General reference-oracle error allowance, certified numerical bounds and model adequacy |
 | [Reference-node arithmetic](validation/finite-normal-oracle-conditioning.md) | All 26 controls pass; exact endpoint construction with binary64 interpolation reduces the largest observed reference error from `4.09099e-6` to `7.94156e-10` | Restricted family and represented quadrature rules; neither a general oracle replacement nor universal `1e-10` accuracy |
+| [Analytic-normal residual diagnostic](validation/finite-analytic-normal-information.md) | All 578 comparisons, five normal controls, ten algebra controls and ten single joint trials pass; all original rows/flags retained | Three covariance directions persist; only 3/10 trials beat saved BGS held-out RMS; three worsen all synthetic geometry errors relative to archived baseline fits |
 
 The larger software test count does not replace a scientific failure. None of
 these conditional Gaussian studies identifies a physical camera PSF. Covariance
@@ -81,10 +93,11 @@ background-sensitive and incompatible proposals.
 
 ## Remaining integration work
 
-Next numerical work needs a separately frozen normal-aware residual diagnostic
-with its own derivative qualification, errors and work counts, while preserving
-the original finite-difference failure. General reference error accounting also
-remains open. These are research dependencies, not available automatic features.
+The separate normal-aware residual diagnostic is now complete. It preserves
+the original finite-difference failure and qualifies its new analytic normal
+column independently. General projective reference error accounting remains
+open. A qualified normal-aware inverse and acquisition/model adequacy are still
+research dependencies; the one-step diagnostic is not an automatic feature.
 
 Automatic adoption needs supported acquisition and thickness models,
 independent recovery checks, bounded latency and one chosen boundary preserved

@@ -7,6 +7,16 @@ original counts and environment; they are not later retests.
 
 ## Current candidate evidence — November 12, 2026
 
+The [analytic-normal residual replay](validation/finite-analytic-normal-information.md)
+passes all **578 comparisons**, ten algebra controls, five normal-control batches
+and ten single joint-trial linearity checks. All 12 records and old flags remain.
+All 20 matched analyses retain three covariance directions after adding normal
+motion. Conditional residuals improve over baseline, but only 3/10 joint trials
+beat the saved BGS comparator on held-out RMS, and three worsen all three
+synthetic geometry errors relative to the archived baseline fits. This is
+numerical qualification of a local diagnostic,
+with explicit counterexamples to automatic geometric improvement.
+
 The separate [projective-node arithmetic diagnostic](validation/finite-normal-oracle-conditioning.md)
 passes all **26 declared controls**, with both original baseline totals reproduced
 exactly at orders 96 and 192. On this restricted population, exact endpoint
@@ -59,7 +69,7 @@ retains a missed nominal target and background-sensitive or incompatible
 covariance proposals. These developer models do not change automatic tracing
 or establish physical-camera accuracy.
 
-The [current documentation review](validation/documentation-pr100-state.md)
+The [preceding documentation review](validation/documentation-pr100-state.md)
 covers published draft PR #100, source/CI status, user guides, API contracts,
 saved-review commands and the companion library. It distinguishes the original
 V1 failures, V2 correction and restricted reference-node diagnostic. The

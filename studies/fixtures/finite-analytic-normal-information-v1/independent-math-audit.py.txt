@@ -1,0 +1,895 @@
+#!/usr/bin/env python3
+"""Audit saved analytic-normal arithmetic only; never evaluate a model/reference.
+
+NumPy is loaded only after an existing report's explicitly supplied hash has
+been checked. Its only numerical work is linear algebra on saved arrays.
+"""
+
+# Broad catches retain audit failures without discarding later saved records.
+# ruff: noqa: BLE001
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import math
+import os
+from decimal import Context, Decimal, localcontext
+from fractions import Fraction
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[3]
+NP = None
+EPS = Fraction(1, 1 << 52)
+PLAN_SHA = "28efd2aa241b662bdd2f771be48b37d99283c67033980dafc4e2dae23ff68dfd"
+
+
+def sha(path):
+    h = hashlib.sha256()
+    with path.open("rb") as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b""):
+            h.update(block)
+    return h.hexdigest()
+
+
+def canonical(value):
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+
+
+def exact(value):
+    if isinstance(value, bool):
+        raise TypeError("bool is not an exact numeric component")
+    return Fraction(value)
+
+
+def up(value):
+    value = exact(value)
+    if value < 0:
+        raise ValueError("negative error")
+    result = float(value)
+    if not math.isfinite(result):
+        raise ArithmeticError("unrepresentable upward error")
+    if Fraction(result) < value:
+        result = math.nextafter(result, math.inf)
+    return result
+
+
+def decimal_sum(values, precision):
+    with localcontext(Context(prec=precision, Emin=-999999, Emax=999999, clamp=0)):
+        return str(sum((Decimal(x) for x in values), Decimal(0)))
+
+
+def stable(a, b):
+    a, b = exact(a), exact(b)
+    return abs(a - b) <= Fraction(1, 10**65) * max(Fraction(1), abs(b))
+
+
+class Audit:
+    def __init__(self):
+        self.checks = 0
+        self.failures = []
+        self.failure_count = 0
+        self.maxima = {}
+        self.unknowns = []
+        self.sections = {}
+
+    def check(self, condition, label, details=None):
+        self.checks += 1
+        if not condition:
+            self.failure_count += 1
+            if len(self.failures) < 100:
+                self.failures.append({"label": label, "details": details})
+
+    def equal(self, actual, expected, label):
+        self.check(actual == expected, label, {"actual": actual, "expected": expected})
+
+    def close(self, actual, expected, label, *, rtol=2e-10, atol=1e-10):
+        a, b = NP.asarray(actual, dtype=float), NP.asarray(expected, dtype=float)
+        same = a.shape == b.shape and NP.isfinite(a).all() and NP.isfinite(b).all()
+        delta = float(NP.max(NP.abs(a - b))) if same and a.size else 0.0
+        self.maxima["saved_array_absolute_delta"] = max(
+            self.maxima.get("saved_array_absolute_delta", 0.0), delta
+        )
+        self.check(
+            bool(same and NP.allclose(a, b, rtol=rtol, atol=atol)),
+            label,
+            {
+                "shape_saved": list(a.shape),
+                "shape_recomputed": list(b.shape),
+                "max_abs_delta": delta,
+                "audit_rtol": rtol,
+                "audit_atol": atol,
+            },
+        )
+
+    def section(self, label, function):
+        first, failed = self.checks, self.failure_count
+        try:
+            function()
+        except Exception as error:
+            self.check(
+                False,
+                label + "/audit_exception",
+                {"type": type(error).__name__, "message": str(error)},
+            )
+        self.sections[label] = {
+            "checks": self.checks - first,
+            "failures": self.failure_count - failed,
+        }
+
+
+def oracle_query(audit, query, label):
+    panels = query["panels"]
+    audit.equal(len(panels), 128, label + "/all_panels")
+    complete = True
+    counts = {
+        "omitted_panels": 0,
+        "guard_failures": 0,
+        "attempted_density_nodes": 0,
+        "completed_density_nodes": 0,
+    }
+    for index, panel in enumerate(panels):
+        at = f"{label}/panel{index}"
+        audit.equal(panel["index"], index, at + "/identity")
+        audit.equal(
+            exact(panel["u_start_fraction"]), Fraction(-1) + Fraction(index, 64), at + "/left"
+        )
+        audit.equal(
+            exact(panel["u_end_fraction"]), Fraction(-1) + Fraction(index + 1, 64), at + "/right"
+        )
+        complete &= panel["status"] in ("direct", "bounded_tail")
+        counts["omitted_panels"] += panel["status"] == "bounded_tail"
+        counts["guard_failures"] += panel["status"] == "guard_failure"
+        for precision, record in panel.get("precision", {}).items():
+            guard = (
+                exact(record["whitened_travel_upper_estimate"]) <= 2
+                and exact(record["exponent_variation_upper_estimate"]) <= 16
+            )
+            tail = exact(record["tail_upper_estimate"]) <= Fraction(1, 10**13 * 128)
+            audit.equal(record["guard_passed"], guard, at + "/" + precision + "/guard")
+            audit.equal(record["tail_eligible"], tail, at + "/" + precision + "/tail")
+        if panel["status"] == "bounded_tail":
+            audit.check(
+                all(panel["precision"][str(p)]["tail_eligible"] for p in (80, 120)),
+                at + "/both_precision_tail",
+            )
+        if panel["status"] == "direct":
+            audit.check(
+                all(panel["precision"][str(p)]["guard_passed"] for p in (80, 120)),
+                at + "/both_precision_guard",
+            )
+        for precision, records in panel.get("rules", {}).items():
+            for order, record in records.items():
+                audit.check(
+                    exact(record["absolute_sum"]) >= abs(exact(record["value"])),
+                    at + "/" + precision + "/" + order + "/absolute_contribution",
+                )
+                counts["completed_density_nodes"] += int(order)
+                counts["attempted_density_nodes"] += int(order)
+    for key in ("omitted_panels", "guard_failures"):
+        audit.equal(query["work"][key], counts[key], label + "/work/" + key)
+    audit.check(query["work"]["attempted_density_nodes"] <= 40960, label + "/node_cap")
+    if complete:
+        for key in ("attempted_density_nodes", "completed_density_nodes"):
+            audit.equal(query["work"][key], counts[key], label + "/work/" + key)
+        for precision in (80, 120):
+            ps = str(precision)
+            tails = [
+                p["precision"][ps]["tail_upper_estimate"]
+                for p in panels
+                if p["status"] == "bounded_tail"
+            ]
+            tail = sum(map(exact, tails), Fraction())
+            audit.equal(
+                exact(query["tail_sum_fractions"][ps]), tail, label + "/" + ps + "/tail_sum"
+            )
+            audit.check(exact(query["tail_sums"][ps]) >= tail, label + "/" + ps + "/tail_upward")
+            for order in (64, 96):
+                os_ = str(order)
+                active = [p["rules"][ps][os_] for p in panels if p["status"] == "direct"]
+                audit.equal(
+                    exact(query["values"][ps][os_]),
+                    exact(decimal_sum([p["value"] for p in active], precision)),
+                    label + "/" + ps + "/" + os_ + "/sum_values",
+                )
+                audit.equal(
+                    exact(query["absolute_contribution_sums"][ps][os_]),
+                    exact(decimal_sum([p["absolute_sum"] for p in active], precision)),
+                    label + "/" + ps + "/" + os_ + "/sum_absolute",
+                )
+        value = exact(query["values"]["120"]["96"])
+        coarse = exact(query["values"]["120"]["64"])
+        value80 = exact(query["values"]["80"]["96"])
+        absolute = exact(query["absolute_contribution_sums"]["120"]["96"])
+        rounded = float(value)
+        delta = abs(value - coarse)
+        limit = Fraction(1, 10**12) + 128 * EPS * absolute
+        components = {
+            "twice_order_delta": 2 * delta,
+            "precision96_delta": abs(value - value80),
+            "tail80": exact(query["tail_sum_fractions"]["80"]),
+            "tail120": exact(query["tail_sum_fractions"]["120"]),
+            "absolute_node_arithmetic": 128 * EPS * absolute,
+            "decimal120_to_float_conversion": abs(Fraction(rounded) - value),
+        }
+        for name, item in components.items():
+            audit.equal(
+                exact(query["error_components_fraction"][name]), item, label + "/error/" + name
+            )
+        combined = sum(components.values(), Fraction())
+        audit.equal(exact(query["estimated_error_fraction"]), combined, label + "/error_sum_exact")
+        audit.equal(query["estimated_error"], up(combined), label + "/error_upward")
+        audit.equal(query["oracle_value"], rounded, label + "/rounded_oracle")
+        audit.equal(query["order_converged"], delta <= limit, label + "/order_guard")
+        for order in ("64", "96"):
+            audit.equal(
+                query["precision_checks"][order],
+                stable(query["values"]["80"][order], query["values"]["120"][order]),
+                label + "/precision/" + order,
+            )
+    else:
+        audit.check(not query["qualified"], label + "/incomplete_withheld")
+        audit.unknowns.append({"scope": label, "status": query["status"]})
+
+
+def normal_context(audit, context, levels, label):
+    audit.check(
+        not context.get("protocol_failure") or not context["qualified"], label + "/protocol_gate"
+    )
+    if "oracle" not in context or "forward" not in context:
+        audit.check(not context["qualified"], label + "/missing_payload_withheld")
+        audit.unknowns.append({"scope": label, "status": "missing_payload"})
+        return
+    oracle, forward = context["oracle"], context["forward"]
+    if oracle.get("geometry"):
+        geometries = oracle["geometry"]
+        for field in ("ell", "normal_0", "normal_1"):
+            key = "ell" if field == "ell" else "normalized_normal"
+            low, high = geometries["80"][key], geometries["120"][key]
+            if field != "ell":
+                index = int(field[-1])
+                low, high = low[index], high[index]
+            audit.equal(
+                oracle["geometry_stability"][field],
+                stable(low, high),
+                label + "/geometry_stability/" + field,
+            )
+        for query in oracle["queries"]:
+            if "precision_checks" in query:
+                audit.equal(
+                    query["precision_stable"],
+                    all(query["precision_checks"].values())
+                    and all(oracle["geometry_stability"].values()),
+                    label + "/combined_precision/" + str(query["index"]),
+                )
+    n = len(forward["statuses"])
+    audit.equal(len(oracle["queries"]), n, label + "/query_census")
+    for i, query in enumerate(oracle["queries"]):
+        audit.section(
+            f"{label}/oracle{i}", lambda q=query, i=i: oracle_query(audit, q, f"{label}/q{i}")
+        )
+    for name, value in oracle["work"].items():
+        audit.equal(value, sum(q["work"][name] for q in oracle["queries"]), label + "/work/" + name)
+    records = context.get("qualification", {}).get("queries", [])
+    audit.equal(len(records), n, label + "/qualification_census")
+    for i, record in enumerate(records):
+        at = f"{label}/N{i}"
+        ref = oracle["queries"][i]
+        if forward["statuses"][i] != "resolved" or not ref["qualified"]:
+            audit.check(not record["qualified"], at + "/unknown_withheld")
+            continue
+        api = exact(forward["derivatives"][i])
+        api_error = exact(forward["estimated_errors"][i])
+        oracle_value = exact(ref["oracle_value"])
+        oracle_error = exact(ref["estimated_error"])
+        delta = abs(api - oracle_value)
+        final = 64 * EPS * abs(api)
+        estimate_limit = api_error + oracle_error + final
+        target_limit = Fraction(1e-10) + oracle_error + final
+        passed = api_error <= Fraction(1e-10) and delta <= estimate_limit and delta <= target_limit
+        audit.equal(record["qualified"], passed, at + "/two_comparisons")
+        audit.equal(record["delta_upward"], up(delta), at + "/delta")
+        audit.equal(
+            record["estimate_comparison_allowance_upward"], up(estimate_limit), at + "/estimate"
+        )
+        audit.equal(
+            record["tolerance_comparison_allowance_upward"], up(target_limit), at + "/tolerance"
+        )
+        a, b = map(float, levels)
+        contrast = b - a
+        scaled = contrast * float(api)
+        residual = abs(Fraction(scaled) - (Fraction(b) - Fraction(a)) * api)
+        source = abs(Fraction(contrast)) * (api_error + oracle_error + delta)
+        error = up(source + residual)
+        audit.equal(record["level_value"], scaled, at + "/signed_level")
+        audit.equal(record["level_error"], error, at + "/level_error_upward")
+        components = record["error_components"]
+        audit.equal(
+            exact(components["exact_level_multiplication_residual"]),
+            residual,
+            at + "/level_residual",
+        )
+        audit.equal(
+            exact(components["error_combination_exact"]), source + residual, at + "/E_N_exact"
+        )
+        audit.equal(exact(components["api_oracle_delta_exact"]), delta, at + "/delta_exact")
+        block = context["qualification"]["block"]
+        if block["values"] is not None:
+            audit.equal(block["values"][i], [scaled], at + "/block_value_once")
+            audit.equal(block["errors"][i], [error], at + "/block_error_once")
+    if "elementary" in context:
+        elementary = context["elementary"]
+        for i, direct in enumerate(elementary["queries"]):
+            at = f"{label}/elementary{i}"
+            if not direct.get("qualified"):
+                audit.check(not context["qualified"], at + "/unknown_withheld")
+                continue
+            for precision in (80, 120):
+                ps = str(precision)
+                saved = direct["records"][ps]
+                audit.equal(
+                    exact(direct["values"][ps]),
+                    exact(decimal_sum(saved["terms"], precision)),
+                    at + "/" + ps + "/signed_terms",
+                )
+                audit.equal(
+                    exact(direct["absolute_terms"][ps]),
+                    exact(
+                        decimal_sum([str(Decimal(x).copy_abs()) for x in saved["terms"]], precision)
+                    ),
+                    at + "/" + ps + "/absolute_terms",
+                )
+                for endpoint in ("cdf_lower", "cdf_upper"):
+                    cdf = saved[endpoint]
+                    audit.check(
+                        1 <= cdf["terms"] <= 10000,
+                        at + "/" + ps + "/" + endpoint + "/bounded_terms",
+                    )
+                    audit.check(
+                        exact(cdf["first_omitted_magnitude"]) < Fraction(1, 10 ** (precision + 15)),
+                        at + "/" + ps + "/" + endpoint + "/tail_cutoff",
+                    )
+            value = exact(direct["values"]["120"])
+            difference = abs(value - exact(direct["values"]["80"]))
+            arithmetic = 128 * EPS * exact(direct["absolute_sum_120"]) + difference
+            delta = abs(exact(oracle["queries"][i]["oracle_value"]) - value)
+            passed = (
+                stable(direct["values"]["80"], direct["values"]["120"])
+                and delta <= exact(oracle["queries"][i]["estimated_error"]) + arithmetic
+                and delta <= Fraction(1, 10**11) + arithmetic
+            )
+            audit.equal(context["elementary_comparisons"][i]["passed"], passed, at + "/comparison")
+
+
+def norm(matrix):
+    matrix = NP.asarray(matrix, dtype=float)
+    return float(NP.linalg.norm(matrix, 2)) if matrix.size else 0.0
+
+
+def decomposition(matrix, errors, policy, reference=None, cutoff=None):
+    matrix, errors = NP.asarray(matrix, float), NP.asarray(errors, float)
+    ref, ref_error = (matrix, errors) if reference is None else reference
+    arithmetic = policy["roundoff_multiplier"] * float(EPS) * max(1, *ref.shape) * norm(ref)
+    threshold = (
+        max(arithmetic, policy["derivative_discrepancy_multiplier"] * norm(ref_error))
+        if cutoff is None
+        else cutoff
+    )
+    if matrix.shape[1]:
+        u, singular, vh = NP.linalg.svd(matrix, full_matrices=False)
+    else:
+        u, singular, vh = NP.empty((len(matrix), 0)), NP.empty(0), NP.empty((0, 0))
+    rank = int(NP.count_nonzero(singular > threshold))
+    interval = [
+        int(NP.count_nonzero(singular > 2 * threshold)),
+        int(NP.count_nonzero(singular > threshold / 2)),
+    ]
+    return {
+        "u": u,
+        "singular": singular,
+        "vh": vh,
+        "basis": u[:, :rank],
+        "rank": rank,
+        "interval": interval,
+        "cutoff": threshold,
+        "stable": interval[0] == interval[1],
+        "full": interval[0] == interval[1] == matrix.shape[1],
+    }
+
+
+def report_spectrum(audit, saved, recomputed, label, *, gated=None, ceiling=None):
+    audit.close(saved["singular_values"], recomputed["singular"], label + "/singular_values")
+    audit.close(saved["cutoff"], recomputed["cutoff"], label + "/cutoff", rtol=5e-12, atol=1e-300)
+    raw_interval = saved.get("raw_rank_interval", saved["rank_interval"])
+    raw_rank = saved.get("raw_retained_rank", saved["retained_rank"])
+    audit.equal(raw_interval, recomputed["interval"], label + "/raw_interval")
+    audit.equal(raw_rank, recomputed["rank"], label + "/raw_retained")
+    if gated is None:
+        gated = True
+    consistent = ceiling is None or max(recomputed["rank"], recomputed["interval"][1]) <= ceiling
+    resolved = recomputed["stable"] and gated and consistent
+    audit.equal(saved["rank_resolved"], resolved, label + "/qualified_rank")
+    if ceiling is not None:
+        audit.equal(saved["ceiling_consistent"], consistent, label + "/ceiling_consistency")
+        audit.equal(
+            saved["retained_rank"],
+            min(ceiling, recomputed["rank"]),
+            label + "/retained_with_ceiling",
+        )
+        audit.equal(
+            saved["basis_columns_used"],
+            min(ceiling, recomputed["rank"]),
+            label + "/same_basis_count",
+        )
+
+
+def matrices(blocks, names, length):
+    return (
+        NP.concatenate(
+            [NP.asarray(blocks[name]["values"], float)[:length] for name in names], axis=1
+        ),
+        NP.concatenate(
+            [NP.asarray(blocks[name]["errors"], float)[:length] for name in names], axis=1
+        ),
+    )
+
+
+def matched(audit, saved, blocks, residual, policy, length, qualified, label):
+    joined, errors = matrices(blocks, ("B", "G", "N", "S"), length)
+    covariance, covariance_errors = matrices(blocks, ("S",), length)
+    reference = decomposition(joined, errors, policy)
+    report_spectrum(audit, saved["full_BGNS_reference"], reference, label + "/full_reference")
+    factor = policy["roundoff_multiplier"] * float(EPS) * max(1, *joined.shape)
+    eta_s = norm(covariance_errors) + factor * norm(covariance)
+    states = []
+    for names in (("B", "G"), ("B", "G", "N")):
+        nuisance, nuisance_errors = matrices(blocks, names, length)
+        info = decomposition(
+            nuisance, nuisance_errors, policy, (joined, errors), reference["cutoff"]
+        )
+        eta_t = norm(nuisance_errors) + factor * norm(nuisance)
+        smin = float(info["singular"][-1]) if nuisance.shape[1] and info["full"] else None
+        known_gap = nuisance.shape[1] == 0 or smin is not None and smin > eta_t
+        eta_p = (
+            0.0
+            if nuisance.shape[1] == 0
+            else min(1.0, 2 * eta_t / (smin - eta_t))
+            if known_gap
+            else None
+        )
+        known = bool(known_gap and eta_p < 1)
+        projection_arithmetic = factor * (norm(covariance) + eta_s)
+        eta_c = (
+            eta_s + eta_p * (norm(covariance) + eta_s) + projection_arithmetic if known else None
+        )
+        states.append((names, info, eta_t, smin, eta_p, known, eta_c, projection_arithmetic))
+    both = all(item[5] for item in states)
+    cutoff = (
+        max(
+            reference["cutoff"],
+            *(policy["derivative_discrepancy_multiplier"] * item[6] for item in states),
+        )
+        if both
+        else None
+    )
+    audit.equal(saved["both_nuisance_projectors_qualified"], both, label + "/both_projectors")
+    if cutoff is None:
+        audit.equal(saved["common_matched_cutoff"], None, label + "/unknown_common_cutoff")
+    else:
+        audit.close(
+            saved["common_matched_cutoff"],
+            cutoff,
+            label + "/common_cutoff",
+            rtol=5e-12,
+            atol=1e-300,
+        )
+    residual = NP.asarray(residual, float)[:length]
+    for names, info, eta_t, smin, eta_p, known, eta_c, projection_arithmetic in states:
+        name = "".join(names)
+        item = saved["nuisances"][name]
+        at = label + "/" + name
+        report_spectrum(audit, item["nuisance"], info, at + "/full_nuisance")
+        for field, expected in (
+            ("nuisance_error_estimate", eta_t),
+            ("nuisance_smallest_singular_value", smin),
+            ("projector_error_estimate", eta_p),
+            ("covariance_unprojected_error_estimate", eta_s),
+            ("covariance_error_estimate", eta_c),
+            ("projection_arithmetic_estimate", projection_arithmetic),
+        ):
+            if expected is None:
+                audit.equal(item[field], None, at + "/" + field)
+            else:
+                audit.close(item[field], expected, at + "/" + field)
+        basis = info["basis"]
+        audit.equal(
+            info["rank"], len(item["column_labels"]), at + "/nuisance_full_column_span"
+        ) if known else None
+        unique = covariance - basis @ (basis.T @ covariance)
+        projected = residual - basis @ (basis.T @ residual)
+        audit.close(item["projected_covariance"], unique, at + "/projected_S")
+        audit.close(item["nuisance_projected_residual"], projected, at + "/projected_residual")
+        spec = decomposition(
+            unique,
+            NP.zeros_like(unique),
+            policy,
+            (joined, errors),
+            cutoff if both else reference["cutoff"],
+        )
+        ceiling = max(0, length - info["rank"])
+        report_spectrum(
+            audit,
+            item["projected_covariance_spectrum"],
+            spec,
+            at + "/unique_spectrum",
+            gated=both and qualified and info["stable"],
+            ceiling=ceiling,
+        )
+        rank = min(ceiling, spec["rank"])
+        used = spec["basis"][:, :rank]
+        resolved = (
+            both
+            and qualified
+            and info["stable"]
+            and spec["stable"]
+            and spec["interval"][1] <= ceiling
+            and spec["rank"] <= ceiling
+        )
+        if resolved:
+            coordinates = used.T @ projected
+            audit.close(
+                item["qualified_unique_covariance_residual_energy"],
+                float(coordinates @ coordinates),
+                at + "/same_basis_energy",
+            )
+            audit.close(
+                item["qualified_unique_covariance_residual_projection"],
+                used @ coordinates,
+                at + "/same_basis_projection",
+            )
+            audit.equal(item["qualified_unique_covariance_rank"], rank, at + "/same_basis_rank")
+        else:
+            for field in (
+                "qualified_unique_covariance_residual_energy",
+                "qualified_unique_covariance_residual_projection",
+                "qualified_unique_covariance_rank",
+            ):
+                audit.equal(item[field], None, at + "/" + field + "/withheld")
+
+
+def step_check(audit, step, row, plan, label):
+    blocks = row["blocks"]
+    baseline = row["baseline"]
+    observations = row["observations"]
+    matrix, error = matrices(blocks, ("B", "G", "N", "S"), 56)
+    training = matrix[:40]
+    training_error = error[:40]
+    spec = decomposition(training, training_error, plan["rank_policy"])
+    if "training_matrix" not in step:
+        audit.check(
+            not step.get("local_linearization_qualified"), label + "/unattempted_not_success"
+        )
+        return
+    report_spectrum(audit, step["training_matrix"], spec, label + "/training_SVD")
+    rank = spec["rank"]
+    residual = NP.asarray(observations["values"], float) - NP.asarray(baseline["mean"], float)
+    coefficients = spec["vh"][:rank].T @ (
+        (spec["u"][:, :rank].T @ residual[:40]) / spec["singular"][:rank]
+    )
+    audit.close(
+        step["training_only_coefficients"], coefficients, label + "/training_only_coefficients"
+    )
+    if step["status"] not in ("evaluated_once", "zero_step"):
+        audit.check(not step.get("local_linearization_qualified"), label + "/withheld_not_success")
+        return
+    labels = [tag for name in ("B", "G", "N", "S") for tag in blocks[name]["labels"]]
+    coefficients = dict(zip(labels, coefficients, strict=True))
+    geometry = NP.array([coefficients[x] for x in blocks["G"]["labels"]])
+    covariance = NP.array([coefficients[x] for x in blocks["S"]["labels"]])
+    angle = float(coefficients.get("normal_angle", 0.0))
+    settings = plan["steps"]
+    factors = [1.0]
+    for cap, value in (
+        (settings["geometry_normalized_max_cap"], float(NP.max(NP.abs(geometry)))),
+        (settings["covariance_norm_cap"], norm(covariance)),
+        (settings["normal_angle_cap_radians"], abs(angle)),
+    ):
+        if value:
+            factors.append(cap / value)
+    widths = NP.asarray(baseline["domain_widths"], float)
+    delta = geometry * widths
+    levels_delta = NP.array([coefficients.get(f"level_{i}", 0.0) for i in range(2)])
+    parameters = baseline["parameters"]
+    original = NP.array([*parameters["centre"], parameters["radius"], parameters["fraction"]])
+    bounds = NP.asarray(baseline["bounds"], float)
+    for value, movement, limits in zip(
+        NP.r_[original, baseline["levels"]],
+        NP.r_[delta, levels_delta],
+        NP.vstack((bounds, [[0, 255], [0, 255]])),
+        strict=True,
+    ):
+        if movement:
+            distance = limits[1] - value if movement > 0 else value - limits[0]
+            factors.append(settings["domain_distance_fraction"] * distance / abs(movement))
+    alpha = max(0.0, min(factors))
+    audit.close(step["common_alpha"], alpha, label + "/one_training_alpha")
+    audit.close(
+        step["trial_parameters"]["centre"], (original + alpha * delta)[:2], label + "/centre_update"
+    )
+    audit.close(
+        step["trial_parameters"]["radius"], (original + alpha * delta)[2], label + "/radius_update"
+    )
+    audit.close(
+        step["trial_parameters"]["fraction"],
+        (original + alpha * delta)[3],
+        label + "/fraction_update",
+    )
+    trial_levels = NP.asarray(baseline["levels"], float) + alpha * levels_delta
+    audit.close(step["trial_levels"], trial_levels, label + "/fixed_face_levels")
+    linear_delta = alpha * (matrix @ NP.array([coefficients[x] for x in labels]))
+    linear = NP.asarray(baseline["mean"], float) + linear_delta
+    audit.close(step["linear_delta"], linear_delta, label + "/linear_delta")
+    chart = step["covariance_chart"]
+    audit.close(chart["coefficients"], alpha * covariance, label + "/covariance_chart_coordinates")
+    raw_cov = NP.asarray(chart["raw"], float)
+    audit.close(
+        chart["canonical"],
+        (raw_cov + raw_cov.T) / 2,
+        label + "/generated_covariance_only_canonicalized",
+    )
+    audit.check(
+        bool(NP.linalg.eigvalsh(NP.asarray(chart["canonical"], float))[0] > 0),
+        label + "/saved_trial_SPD",
+    )
+    audit.close(step["linear_prediction"], linear, label + "/linear_prediction")
+    if step["status"] == "evaluated_once":
+        forward = step["actual_forward"]
+        audit.check(
+            all(s == "resolved" for s in forward["statuses"]), label + "/trial_all_resolved"
+        )
+        actual = trial_levels[0] + (trial_levels[1] - trial_levels[0]) * NP.asarray(
+            forward["probabilities"], float
+        )
+    else:
+        actual = NP.asarray(baseline["mean"], float)
+    audit.close(step["actual_prediction"], actual, label + "/actual_from_saved_probability")
+    discrepancy = actual - NP.asarray(baseline["mean"], float) - linear_delta
+    denominator = float(NP.max(NP.abs(linear_delta)))
+    allowance = (
+        settings["actual_vs_linear_absolute_level_allowance"]
+        + settings["actual_vs_linear_relative_allowance"] * denominator
+    )
+    audit.close(step["actual_minus_linear"], discrepancy, label + "/actual_minus_linear")
+    audit.close(step["linearity_allowance"], allowance, label + "/linearity_allowance")
+    audit.equal(
+        step["local_linearization_qualified"],
+        bool(NP.max(NP.abs(discrepancy)) <= allowance),
+        label + "/actual_vs_linear_flag",
+    )
+    audit.check(
+        all(i < 40 for i in plan["reuse"]["training_indices"]), label + "/training_indices_only"
+    )
+
+
+def review(report, audit):
+    plan = report["plan"]
+    rows = report["rows"]
+    audit.equal(report["plan_sha256"], PLAN_SHA, "frozen_plan")
+    constants = report.get("constants", {})
+    if constants:
+        audit.equal(
+            constants["precision_stable"],
+            stable(constants["80"]["pi"], constants["120"]["pi"]),
+            "saved_pi_precision_guard",
+        )
+    audit.equal(len(rows), 12, "rows_retained")
+    audit.equal(report["source_before"], report["source_after"], "source_closure_interval")
+    audit.check(report["source_unchanged"], "source_unchanged_flag")
+    for path, expected in plan["inputs_sha256"].items():
+        audit.equal(report["source_before"][path]["sha256"], expected, "frozen_input/" + path)
+    for path, before in report["source_before"].items():
+        target = ROOT / path
+        audit.check(
+            not Path(path).is_absolute() and ".." not in Path(path).parts,
+            "safe_source_path/" + path,
+        )
+        audit.equal(sha(target), before.get("sha256"), "current_source/" + path)
+    controls = report.get("normal_controls", [])
+    audit.equal(len(controls), 5, "normal_control_census")
+    for control in controls:
+        audit.section(
+            "control/" + control["id"],
+            lambda c=control: normal_context(
+                audit, c["new_analytic"], c["definition"]["levels"], "control/" + c["id"]
+            ),
+        )
+    for row, expected in zip(rows, plan["population"], strict=True):
+        label = f"row{row['index']}"
+        audit.equal(
+            {k: row[k] for k in ("index", "name", "lane")},
+            {k: expected[k] for k in ("index", "name", "lane")},
+            label + "/identity",
+        )
+        old = row["original_residual_row"]
+        audit.equal(
+            hashlib.sha256(canonical(old)).hexdigest(),
+            expected["original_row_sha256"],
+            label + "/complete_old_row_unchanged",
+        )
+        audit.equal(
+            row["old_targets_passed"], old["old_targets_passed"], label + "/old_target_flag"
+        )
+        audit.equal(
+            row["old_completion_passed"],
+            old["old_completion_passed"],
+            label + "/old_completion_flag",
+        )
+        if not expected["eligible"]:
+            audit.equal(row["status"], "upstream_ineligible", label + "/upstream_retained")
+            continue
+        audit.section(
+            label + "/normal",
+            lambda r=row, label=label: normal_context(
+                audit, r["normal"], r["baseline"]["levels"], label + "/normal"
+            ),
+        )
+        for name in ("B", "G", "S"):
+            audit.equal(
+                row["blocks"][name],
+                old["blocks"][name],
+                label + "/" + name + "/not_recomputed_or_rescaled",
+            )
+        qualified = row.get("qualification", {}).get("derivative_qualified", False)
+        audit.check(
+            not row["normal"].get("protocol_failure") or not qualified,
+            label + "/protocol_derivative_gate",
+        )
+        if any(row["blocks"][name]["values"] is None for name in ("B", "G", "N", "S")):
+            audit.check(not qualified, label + "/missing_block_withheld")
+            continue
+        for scope, length in (("all56", 56), ("training40", 40)):
+            info = row["analysis"]["information"][scope]
+            matrix, error = matrices(row["blocks"], ("B", "G", "N", "S"), length)
+            full = decomposition(matrix, error, plan["rank_policy"])
+            audit.section(
+                label + "/" + scope + "/full",
+                lambda i=info, f=full, label=label, scope=scope, qualified=qualified: (
+                    report_spectrum(
+                        audit, i["full_BGNS"], f, label + "/" + scope + "/full", gated=qualified
+                    )
+                ),
+            )
+            audit.section(
+                label + "/" + scope + "/matched",
+                lambda i=info, l=length, row=row, qualified=qualified, label=label, scope=scope: (
+                    matched(
+                        audit,
+                        i["matched_BG_and_BGN_versus_S"],
+                        row["blocks"],
+                        row["baseline"]["residual"],
+                        plan["rank_policy"],
+                        l,
+                        qualified,
+                        label + "/" + scope + "/matched",
+                    )
+                ),
+            )
+        audit.section(
+            label + "/step",
+            lambda r=row, label=label: step_check(
+                audit, r["analysis"]["step"], r, plan, label + "/step"
+            ),
+        )
+    contexts = [c["new_analytic"] for c in controls] + [r["normal"] for r in rows if "normal" in r]
+    comparisons = [q for c in contexts for q in c.get("qualification", {}).get("queries", [])]
+    audit.equal(len(contexts), 15, "all_normal_contexts")
+    audit.equal(len(comparisons), 578, "all_normal_query_comparisons")
+    summary = report["summary"]
+    audit.equal(
+        summary["normal_query_comparisons_passed"],
+        sum(q["qualified"] for q in comparisons),
+        "summary/normal_comparisons",
+    )
+    audit.equal(
+        summary["old_targets_passed"],
+        sum(r["old_targets_passed"] for r in rows),
+        "summary/old_targets",
+    )
+    audit.equal(
+        summary["old_completions_passed"],
+        sum(r["old_completion_passed"] for r in rows),
+        "summary/old_completions",
+    )
+    audit.equal(summary["new_fit_pass_count"], None, "no_new_fit_passes")
+    work = report["work"]
+    log = work["calls"]
+    audit.equal(
+        work["normal_calls_attempted"], sum(c["kind"] == "normal" for c in log), "work/normal_calls"
+    )
+    audit.equal(
+        work["trial_mean_calls_attempted"],
+        sum(c["kind"] == "mean" for c in log),
+        "work/trial_calls",
+    )
+    audit.check(
+        work["normal_calls_attempted"] <= 15 and work["trial_mean_calls_attempted"] <= 10,
+        "work/frozen_call_caps",
+    )
+    for field in (
+        "optimizer_calls",
+        "optimizer_attempts",
+        "renderer_calls",
+        "preparation_calls",
+        "FD_calls",
+        "geometry_jacobian_calls",
+        "baseline_mean_calls",
+    ):
+        audit.equal(work[field], 0, "work/zero/" + field)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--input", required=True, type=Path)
+    parser.add_argument("--input-sha256", required=True)
+    parser.add_argument("--output", required=True, type=Path)
+    args = parser.parse_args()
+    source = args.input.absolute()
+    output = args.output.absolute()
+    if len(args.input_sha256) != 64 or any(c not in "0123456789abcdef" for c in args.input_sha256):
+        parser.error("input-sha256 must be a lowercase SHA256")
+    if os.path.lexists(output) or not output.parent.is_dir():
+        parser.error("output must be fresh in an existing parent, including no dangling symlink")
+    if not source.is_file():
+        parser.error("input must be an existing saved JSON report")
+    if sha(source) != args.input_sha256:
+        parser.error("saved report hash mismatch")
+    fd = os.open(output, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    script_sha = sha(Path(__file__))
+    audit = Audit()
+    try:
+        with source.open() as stream:
+            report = json.load(
+                stream, parse_constant=lambda x: (_ for _ in ()).throw(ValueError(x))
+            )
+        global NP
+        import numpy
+
+        NP = numpy
+        audit.section("saved_report_review", lambda: review(report, audit))
+    except Exception as error:
+        audit.check(False, "audit_bootstrap", {"type": type(error).__name__, "message": str(error)})
+    audit.equal(sha(source), args.input_sha256, "saved_input_unchanged")
+    audit.equal(sha(Path(__file__)), script_sha, "audit_source_unchanged")
+    receipt = {
+        "scope": "Post-hoc saved-data consistency only: exact rational error arithmetic, saved Decimal panel reductions and NumPy linear algebra on saved arrays (same NumPy SVD kernel, independently applied). No production, driver, oracle, reference, density or forward-function imports/calls. No physical-cause or certified-error inference.",
+        "input": str(source),
+        "input_sha256": args.input_sha256,
+        "audit_source_sha256": script_sha,
+        "checks": audit.checks,
+        "failure_count": audit.failure_count,
+        "first_failures": audit.failures,
+        "sections": audit.sections,
+        "audit_maxima": audit.maxima,
+        "retained_unknowns": audit.unknowns,
+        "passed": audit.failure_count == 0,
+    }
+    with os.fdopen(fd, "w") as stream:
+        json.dump(receipt, stream, indent=2, sort_keys=True, allow_nan=False)
+        stream.write("\n")
+    print(
+        json.dumps(
+            {
+                "output": str(output),
+                "checks": audit.checks,
+                "failures": audit.failure_count,
+                "passed": receipt["passed"],
+            },
+            sort_keys=True,
+        )
+    )
+    return 0 if receipt["passed"] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
