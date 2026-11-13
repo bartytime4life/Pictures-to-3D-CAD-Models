@@ -1,0 +1,363 @@
+{
+  "format": "finite-acquisition-recovery-prospective-plan",
+  "version": 1,
+  "objective": "Recover Cx,Cy,R,f,theta and unknown bounded background/material levels from independently generated observed fields, retaining smooth, float32 staged and PNG objectives, all initialization refusals and failures. Not physical or global qualification.",
+  "base": "88a6d78f2807ae3eef3f6bf4bc229849321717ce",
+  "population": [
+    {
+      "name": "minor-smooth",
+      "family": "matched",
+      "mode": "smooth",
+      "geometry": "minor",
+      "adverse": null
+    },
+    {
+      "name": "minor-staged",
+      "family": "matched",
+      "mode": "staged",
+      "geometry": "minor",
+      "adverse": null
+    },
+    {
+      "name": "minor-png",
+      "family": "matched",
+      "mode": "png",
+      "geometry": "minor",
+      "adverse": null
+    },
+    {
+      "name": "middle-smooth",
+      "family": "matched",
+      "mode": "smooth",
+      "geometry": "middle",
+      "adverse": null
+    },
+    {
+      "name": "middle-staged",
+      "family": "matched",
+      "mode": "staged",
+      "geometry": "middle",
+      "adverse": null
+    },
+    {
+      "name": "middle-png",
+      "family": "matched",
+      "mode": "png",
+      "geometry": "middle",
+      "adverse": null
+    },
+    {
+      "name": "major-smooth",
+      "family": "matched",
+      "mode": "smooth",
+      "geometry": "major",
+      "adverse": null
+    },
+    {
+      "name": "major-staged",
+      "family": "matched",
+      "mode": "staged",
+      "geometry": "major",
+      "adverse": null
+    },
+    {
+      "name": "major-png",
+      "family": "matched",
+      "mode": "png",
+      "geometry": "major",
+      "adverse": null
+    },
+    {
+      "name": "wrapped-major-smooth",
+      "family": "matched",
+      "mode": "smooth",
+      "geometry": "wrapped-major",
+      "adverse": null
+    },
+    {
+      "name": "wrapped-major-staged",
+      "family": "matched",
+      "mode": "staged",
+      "geometry": "wrapped-major",
+      "adverse": null
+    },
+    {
+      "name": "wrapped-major-png",
+      "family": "matched",
+      "mode": "png",
+      "geometry": "wrapped-major",
+      "adverse": null
+    },
+    {
+      "name": "zero-smooth",
+      "family": "adverse",
+      "mode": "smooth",
+      "geometry": "minor",
+      "adverse": "zero"
+    },
+    {
+      "name": "zero-png",
+      "family": "adverse",
+      "mode": "png",
+      "geometry": "minor",
+      "adverse": "zero"
+    },
+    {
+      "name": "low-staged",
+      "family": "adverse",
+      "mode": "staged",
+      "geometry": "middle",
+      "adverse": "low"
+    },
+    {
+      "name": "cropped-smooth",
+      "family": "adverse",
+      "mode": "smooth",
+      "geometry": "major",
+      "adverse": "cropped"
+    },
+    {
+      "name": "thin-png",
+      "family": "adverse",
+      "mode": "png",
+      "geometry": "minor",
+      "adverse": "thin"
+    },
+    {
+      "name": "almost-circle-smooth",
+      "family": "adverse",
+      "mode": "smooth",
+      "geometry": "major",
+      "adverse": "almost"
+    },
+    {
+      "name": "wrong-optics-smooth",
+      "family": "adverse",
+      "mode": "smooth",
+      "geometry": "middle",
+      "adverse": "wrong"
+    },
+    {
+      "name": "gradient-staged",
+      "family": "adverse",
+      "mode": "staged",
+      "geometry": "major",
+      "adverse": "gradient"
+    },
+    {
+      "name": "singular-map-png",
+      "family": "adverse",
+      "mode": "png",
+      "geometry": "middle",
+      "adverse": "singular"
+    },
+    {
+      "name": "five-queries-smooth",
+      "family": "adverse",
+      "mode": "smooth",
+      "geometry": "minor",
+      "adverse": "five"
+    },
+    {
+      "name": "coincident-smooth",
+      "family": "adverse",
+      "mode": "smooth",
+      "geometry": "major",
+      "adverse": "coincident"
+    },
+    {
+      "name": "budget-png",
+      "family": "adverse",
+      "mode": "png",
+      "geometry": "middle",
+      "adverse": "budget"
+    }
+  ],
+  "geometries": [
+    {
+      "name": "minor",
+      "parameters": [
+        6.13,
+        6.21,
+        3.63,
+        -0.55,
+        0.31
+      ],
+      "levels": [
+        235.0,
+        27.0
+      ],
+      "polarity": "dark"
+    },
+    {
+      "name": "middle",
+      "parameters": [
+        5.87,
+        6.11,
+        3.41,
+        0.17,
+        1.13
+      ],
+      "levels": [
+        22.0,
+        218.0
+      ],
+      "polarity": "light"
+    },
+    {
+      "name": "major",
+      "parameters": [
+        6.26,
+        5.84,
+        3.82,
+        0.61,
+        2.43
+      ],
+      "levels": [
+        255.0,
+        0.0
+      ],
+      "polarity": "dark"
+    },
+    {
+      "name": "wrapped-major",
+      "parameters": [
+        6.09,
+        6.17,
+        3.52,
+        0.83,
+        6.22
+      ],
+      "levels": [
+        231.0,
+        35.0
+      ],
+      "polarity": "dark"
+    }
+  ],
+  "settings": {
+    "source_shape": [
+      13,
+      13
+    ],
+    "origin": [
+      0.0,
+      0.0
+    ],
+    "pitch": 1.0,
+    "output_shape": [
+      13,
+      13
+    ],
+    "output_to_source_index": [
+      [
+        1.0,
+        0.0,
+        -0.3
+      ],
+      [
+        0.0,
+        1.0,
+        -0.65
+      ]
+    ],
+    "optical_kernel": [
+      [
+        0.0,
+        0.125,
+        0.0
+      ],
+      [
+        0.25,
+        0.5,
+        0.0
+      ],
+      [
+        0.0,
+        0.125,
+        0.0
+      ]
+    ],
+    "post_kernel": [
+      [
+        1.0
+      ]
+    ]
+  },
+  "parameter_order": [
+    "centre_x",
+    "centre_y",
+    "radius",
+    "fraction",
+    "normal_angle"
+  ],
+  "reference": {
+    "area_orders": [
+      64,
+      96
+    ],
+    "area_max_delta": 1e-09,
+    "source": "positive vertical slice area from separately frozen sensitivity reference; no candidate area/Green functions",
+    "stages": "scalar reflected correlations and unfactored Keys cubics summed with math.fsum; explicit float32 casts and grayscale sRGB8 sequence in corresponding modes",
+    "code_agreement_required_between_orders": true,
+    "error_estimates": "Order agreement is a diagnostic, not a certified area/physical bound. Arithmetic differences from factored/tap evaluation are retained."
+  },
+  "initialization": {
+    "source": "prepare_acquisition_segment observed full field only; no geometry/evaluation dimensions",
+    "max_seeds": 4,
+    "polarity": "declared per scene",
+    "rules": "fixed immutable full field and acquisition map/stages; no truth-based seed ranking, expansion, exclusion or retry",
+    "bounds": "observed-only operational search limits; no guaranteed truth containment",
+    "levels": "observed output-level hints supplied as rounded-mode seeds, not calibrated source levels"
+  },
+  "optimizer": {
+    "max_evaluations": 2048,
+    "max_cell_work": 1000000,
+    "max_stage_work": 100000000,
+    "max_iterations": 60,
+    "level_bounds": [
+      [
+        0.0,
+        255.0
+      ],
+      [
+        0.0,
+        255.0
+      ]
+    ],
+    "normal_angle": "ideal continuous unit-angle family approximated by trig and public normal canonicalization; bit-level exact derivative not asserted",
+    "smooth": "bounded two-level SVD variable projection with full fixed-face residual Jacobian, mean-based nuisance-projected rank, dimensionless damped LM/backtracking and actual-cost polling fallback",
+    "staged_png": "actual rounded chain, bounded local geometry/brightness polls; no exact variable projection/globality or smooth-rank claim"
+  },
+  "sampling": {
+    "train": "all initializer queries except (x+2*y)%5==0; five-query adverse retains first5 deterministic training rows",
+    "reserved": "remaining queries, omitted from cost but used in full-field initialization: conditional residual checks, not independent predictions",
+    "reserved_dimensions": "truth chord_length and normal_depth opened only after initializer and optimizer result files are saved; not initializer/optimizer inputs"
+  },
+  "targets": {
+    "centre_error_pitch": 0.02,
+    "radius_error_pitch": 0.02,
+    "fraction_error": 0.002,
+    "wrapped_angle_degrees": 0.2,
+    "reserved_dimension_error_pitch": 0.03,
+    "sampled_bidirectional_boundary_error_pitch": 0.03,
+    "conditional_query_max_residual_linear_level": 0.01,
+    "geometry_rank_conservative_when_smooth": 5,
+    "scope": "Per-row predeclared synthetic targets; PNG/staged plateaus may fail. Adverse rows retain target flags but are not claimed successes merely for executing/refusing.",
+    "bounded_local_search_completion": "best candidate belongs to at least one projected-gradient/poll-resolution search; no exhausted work or protocol failure. Local resolution does not establish globality or physical adequacy."
+  },
+  "adverse_definitions": {
+    "zero": "both source levels127",
+    "low": "source levels132,130; keep declared polarity even if contradicted",
+    "cropped": "centre_x1.1",
+    "thin": "fraction-.94",
+    "almost": "fraction.999",
+    "wrong": "fit optical kernel[[1]] while capture retains declared asymmetric kernel",
+    "gradient": "add .75*(output_x-6) to observed final field",
+    "singular": "fit map[[0,0,6],[0,0,6]]; capture map unchanged",
+    "five": "fit only first5 deterministic training queries",
+    "coincident": "centre_x6.5,fraction0,theta0",
+    "budget": "max_evaluations1,max_cell_work169,max_stage_work100000"
+  },
+  "failure_policy": "Freeze complete implementation/tests/plan/runner/reference before first numerical call. Retain every row, raw exception and upstream refusal; continue remaining rows; do not tune thresholds, truth-derived bounds or population after outcomes. Corrections require a separately admitted continuation. Exit1 if any matched row misses any target or reference gate; adverse outcomes summarized without acceptance promotion. Fresh output directory required."
+}

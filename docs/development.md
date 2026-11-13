@@ -152,9 +152,23 @@ passes 259 focused tests at `c47214d`, including the preceding 145 controls,
 five-parameter area derivatives and signed fixed-linear propagation. It adds
 no full application/browser run or inverse-recovery result.
 These operators are separate from the existing four-geometry-parameter Gaussian
-fitter. A five-geometry-parameter acquisition-aware fitter with unknown brightness
-has not been implemented. Use [developer tools](developer-tools.md) to distinguish
-forward evaluation, saved-data auditing and study replay before running a command.
+fitter. This main runtime has no five-geometry-parameter acquisition-aware fitter
+with unknown brightness. The separately frozen
+[local recovery candidate](finite-acquisition-recovery.md) at `e6e2c2` includes
+that fitter, observed-only initialization, bounded brightness elimination and a
+smooth-proposal/literal-objective strategy; its modules and runners are absent
+from this checkout.
+
+Each candidate protocol retains 24 rows: 12 matched and 12 adverse. The first
+protocol passes 4/12 matched targets, all smooth. The continuation passes 9/12:
+four smooth, four staged and one PNG. **Both protocols exit 1.** The candidate's
+459 passing focused tests establish software controls, not completion of the
+recovery criteria or a full application/browser regression. The first protocol's
+saved-data auditor also reports 14 unverifiable pre-cast order-delta comparisons;
+it is not an independent audit success. Preserve those failures and source
+bindings. Use [developer tools](developer-tools.md) to distinguish the APIs and
+commands available here from candidate experiments and historical saved-data
+review.
 
 The [affine evaluation upgrade](finite-affine-evaluation.md) has an earlier
 [943-test local Python result, production build and lint](validation/finite-affine-batch.md#software-regression),

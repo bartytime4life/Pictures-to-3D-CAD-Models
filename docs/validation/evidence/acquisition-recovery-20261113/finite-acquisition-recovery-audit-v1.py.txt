@@ -1,0 +1,1322 @@
+#!/usr/bin/env python3
+"""Audit frozen acquisition-recovery files using saved data and the standard library.
+
+No evaluator, optimizer, source module, NumPy, reference generator or Git command
+is imported or executed. Fits are read and released separately. An audit pass
+means saved-data consistency, not successful recovery, optical adequacy,
+independent holdout validation, certified rank or physical accuracy.
+"""
+
+from __future__ import annotations
+
+import argparse
+import ast
+import hashlib
+import json
+import math
+import os
+import stat
+import struct
+import sys
+import zipfile
+from collections import Counter, OrderedDict
+from pathlib import Path, PurePosixPath
+
+PLAN_PATH = "studies/finite-acquisition-recovery-v1.json"
+PLAN_SHA256 = "737bb8badf15a6bd1438ece67b9ad03f96e65440989bbc8bc2110edc8a497ad0"
+FROZEN_HEAD = "7ec680386f75e44415aeb4c83552aa723399c0bc"
+SOURCE_ZIP_SHA256 = "c9779ed9326dea5f2887f3e72b1e25851044e3fe567aa12b225e845795529567"
+EPS = 2.0**-52
+MAX_JSON_BYTES = 512 * 1024 * 1024
+MAX_ZIP_BYTES = 128 * 1024 * 1024
+MAX_NPY_BYTES = 16 * 1024 * 1024
+PARAMETERS = ["centre_x", "centre_y", "radius", "fraction", "normal_angle"]
+SOURCE_NAMES = {
+    "finite_acquisition_fit.py",
+    "finite_aperture.py",
+    "finite_aperture_sensitivity.py",
+    "finite_acquisition.py",
+    "finite_acquisition_linear.py",
+    "finite_photometry.py",
+}
+SCOPE = {
+    "independent_saved_data_checks": [
+        "complete population, retained exceptions/refusals, file hashes and recorded-source ZIP",
+        "saved capture-order differences and encoded-array equality; no new reference",
+        "observed-only initializer hashes, common queries, seeds and train/reserved split",
+        "every candidate residual/cost arithmetic against saved predictions and observed targets",
+        "objective/source-cell LRU histories and attempted/cumulative resource accounting",
+        "best candidate, local completion gate, geometry errors and independent dimension formulas",
+        "all target flags and matched/adverse denominators without requiring study success",
+    ],
+    "not_independently_recomputed": [
+        "any forward prediction, capture, operator output or reserved-query prediction",
+        "sampled boundary discrepancy, true supremum distance, topology or coverage accuracy",
+        "Jacobians, SVD/rank, brightness optimality, proposals and stopping calculations",
+        "reference certification or causal attribution of recovery failures",
+    ],
+    "conditional_limits": [
+        "reserved pixels entered full-field preprocessing; they are not independent holdout",
+        "observed bounds are operational caps, not proved truth enclosures",
+        "PNG ties and local stopping do not establish accurate or unique geometry",
+        "rank/residual diagnostics are conditional numerical quantities, not physical accuracy",
+    ],
+}
+
+
+def sha256(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def file_sha256(path):
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def unique_object(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f"duplicate JSON key: {key}")
+        result[key] = value
+    return result
+
+
+def invalid_constant(value):
+    raise ValueError(f"nonfinite JSON constant: {value}")
+
+
+def check_native(value):
+    if value is None or type(value) in (str, bool, int):
+        return
+    if type(value) is float and math.isfinite(value):
+        return
+    if type(value) is list:
+        for item in value:
+            check_native(item)
+        return
+    if type(value) is dict and all(type(key) is str for key in value):
+        for item in value.values():
+            check_native(item)
+        return
+    raise ValueError("nonfinite or non-native JSON value")
+
+
+def parse_json(data):
+    if len(data) > MAX_JSON_BYTES:
+        raise ValueError("JSON file exceeds saved-data audit limit")
+    value = json.loads(data, object_pairs_hook=unique_object, parse_constant=invalid_constant)
+    check_native(value)
+    return value
+
+
+def relative_name(name):
+    if not isinstance(name, str) or not name or "\\" in name or "\x00" in name:
+        raise ValueError("unsafe member name")
+    path = PurePosixPath(name)
+    if (
+        path.is_absolute()
+        or path.as_posix() != name
+        or any(p in ("", ".", "..") for p in path.parts)
+    ):
+        raise ValueError(f"unsafe member name: {name!r}")
+    if ":" in path.parts[0]:
+        raise ValueError("drive-qualified member name")
+    return name
+
+
+def local_file(directory, name):
+    relative_name(name)
+    path = directory
+    for component in PurePosixPath(name).parts:
+        path /= component
+        if path.is_symlink():
+            raise ValueError(f"symlink in saved input: {name}")
+    if not path.is_file():
+        raise ValueError(f"missing regular saved file: {name}")
+    return path
+
+
+def read_json(directory, name):
+    path = local_file(directory, name)
+    if path.stat().st_size > MAX_JSON_BYTES:
+        raise ValueError(f"oversize JSON: {name}")
+    return parse_json(path.read_bytes())
+
+
+def array_shape(value):
+    if not isinstance(value, list):
+        if type(value) not in (int, float):
+            raise ValueError("array contains a nonnumeric value")
+        return ()
+    if not value:
+        return (0,)
+    child = array_shape(value[0])
+    if any(array_shape(item) != child for item in value[1:]):
+        raise ValueError("ragged saved array")
+    return (len(value),) + child
+
+
+def flatten(value):
+    if isinstance(value, list):
+        for child in value:
+            yield from flatten(child)
+    else:
+        yield value
+
+
+def array_bytes(value, dtype="<f8"):
+    formats = {"<f8": "d", "<f4": "f", "<i8": "q", "|u1": "B"}
+    if dtype not in formats:
+        raise ValueError(f"unsupported saved numeric dtype: {dtype}")
+    values = list(flatten(value))
+    if dtype == "<i8" and any(type(v) is not int for v in values):
+        raise ValueError("integer query array contains nonintegers")
+    return struct.pack("<" + formats[dtype] * len(values), *values)
+
+
+def array_digest(value, dtype="<f8"):
+    digest = hashlib.sha256(f"{dtype}:{array_shape(value)}:".encode())
+    digest.update(array_bytes(value, dtype))
+    return digest.hexdigest()
+
+
+class Audit:
+    def __init__(self):
+        self.checks = 0
+        self.failure_count = 0
+        self.failures = []
+        self.sections = []
+        self.maximum_rounding_ratio = 0.0
+
+    def require(self, condition, where, detail):
+        self.checks += 1
+        if not condition:
+            self.failure_count += 1
+            if len(self.failures) < 256:
+                self.failures.append({"path": where, "detail": detail})
+        return bool(condition)
+
+    def equal(self, actual, expected, where):
+        if isinstance(actual, bool) or isinstance(expected, bool):
+            same = type(actual) is type(expected) and actual == expected
+        else:
+            same = actual == expected
+        return self.require(same, where, "saved identity differs from independently derived value")
+
+    def close(self, actual, expected, where, *, ulps=128, scale=None):
+        valid = type(actual) in (int, float) and math.isfinite(actual) and math.isfinite(expected)
+        if not valid:
+            return self.require(False, where, "expected finite arithmetic result")
+        magnitude = max(abs(actual), abs(expected), abs(scale or 0.0))
+        allowance = ulps * math.ulp(magnitude)
+        difference = abs(actual - expected)
+        if allowance:
+            self.maximum_rounding_ratio = max(self.maximum_rounding_ratio, difference / allowance)
+        return self.require(
+            difference <= allowance,
+            where,
+            f"arithmetic mismatch: actual={actual!r}, expected={expected!r}, allowance={allowance!r}",
+        )
+
+    def section(self, name, function):
+        before = self.failure_count
+        try:
+            result = function()
+        except Exception as error:  # noqa: BLE001 -- retain errors and continue later rows
+            self.require(False, name, f"{type(error).__name__}: {error}")
+            result = None
+        self.sections.append({"section": name, "failures": self.failure_count - before})
+        return result
+
+
+def source_archive(path, audit):
+    if path.is_symlink() or not path.is_file():
+        raise ValueError("source ZIP must be a regular nonsymlink file")
+    if path.stat().st_size > MAX_ZIP_BYTES:
+        raise ValueError("source ZIP exceeds audit limit")
+    audit.equal(file_sha256(path), SOURCE_ZIP_SHA256, "source_zip/frozen_sha256")
+    files, total = {}, 0
+    with zipfile.ZipFile(path) as archive:
+        infos = archive.infolist()
+        if len(infos) > 4096 or len({item.filename for item in infos}) != len(infos):
+            raise ValueError("excessive or duplicate source ZIP members")
+        for info in infos:
+            name = info.filename.rstrip("/") if info.is_dir() else info.filename
+            relative_name(name)
+            mode = info.external_attr >> 16
+            if info.flag_bits & 1 or stat.S_ISLNK(mode):
+                raise ValueError("encrypted/symlink source ZIP member")
+            if info.is_dir():
+                continue
+            if stat.S_IFMT(mode) not in (0, stat.S_IFREG):
+                raise ValueError("nonregular source ZIP member")
+            total += info.file_size
+            if info.file_size > MAX_ZIP_BYTES or total > MAX_ZIP_BYTES:
+                raise ValueError("excessive source ZIP decoded size")
+            data = archive.read(info)
+            if len(data) != info.file_size:
+                raise ValueError("source ZIP member size mismatch")
+            files[name] = data
+    manifest = parse_json(files.pop("recorded-source-manifest.json"))
+    audit.equal(manifest["head"], FROZEN_HEAD, "source_zip/head")
+    entries = manifest["files"]
+    if not isinstance(entries, dict):
+        raise TypeError("recorded-source manifest files must be an object")
+    audit.equal(set(files), set(entries), "source_zip/member_census")
+    for name, entry in entries.items():
+        relative_name(name)
+        data = files[name]
+        audit.equal(len(data), entry["bytes"], f"source_zip/{name}/bytes")
+        audit.equal(sha256(data), entry["sha256"], f"source_zip/{name}/sha256")
+    audit.equal(sha256(files[PLAN_PATH]), PLAN_SHA256, "source_zip/plan_sha256")
+    return files, manifest
+
+
+def npy_array(data):
+    """Decode bounded C-order primitive NPY arrays, never object arrays or pickle."""
+    if len(data) > MAX_NPY_BYTES or data[:6] != b"\x93NUMPY":
+        raise ValueError("invalid/oversize NPY")
+    version = tuple(data[6:8])
+    if version == (1, 0):
+        offset, length = 10, struct.unpack("<H", data[8:10])[0]
+    elif version in ((2, 0), (3, 0)):
+        offset, length = 12, struct.unpack("<I", data[8:12])[0]
+    else:
+        raise ValueError("unsupported NPY version")
+    if length > 16384:
+        raise ValueError("oversize NPY header")
+    header = ast.literal_eval(data[offset : offset + length].decode("utf-8"))
+    if set(header) != {"descr", "fortran_order", "shape"} or header["fortran_order"] is not False:
+        raise ValueError("unsupported NPY header")
+    shape, dtype = header["shape"], header["descr"]
+    if (
+        type(shape) is not tuple
+        or not 1 <= len(shape) <= 3
+        or any(type(v) is not int or not 0 <= v <= 4096 for v in shape)
+        or math.prod(shape) > 1_000_000
+    ):
+        raise ValueError("unsupported NPY shape")
+    formats = {"<f8": ("d", 8), "<f4": ("f", 4), "|u1": ("B", 1)}
+    if dtype not in formats:
+        raise ValueError(f"unsupported/object NPY dtype: {dtype}")
+    fmt, size = formats[dtype]
+    body = data[offset + length :]
+    if len(body) != math.prod(shape) * size:
+        raise ValueError("NPY body size differs from header")
+    values = list(struct.unpack("<" + fmt * math.prod(shape), body))
+    if not all(math.isfinite(value) for value in values):
+        raise ValueError("nonfinite captured array")
+    return {"shape": shape, "dtype": dtype, "values": values}
+
+
+def capture_arrays(path):
+    result = {}
+    with zipfile.ZipFile(path) as archive:
+        infos = archive.infolist()
+        if len(infos) > 64 or len({i.filename for i in infos}) != len(infos):
+            raise ValueError("invalid capture archive member census")
+        total = 0
+        for info in infos:
+            relative_name(info.filename)
+            if not info.filename.endswith(".npy") or "/" in info.filename:
+                raise ValueError("unexpected capture member")
+            total += info.file_size
+            if (
+                info.flag_bits & 1
+                or stat.S_ISLNK(info.external_attr >> 16)
+                or info.file_size > MAX_NPY_BYTES
+                or total > 64 * 1024 * 1024
+            ):
+                raise ValueError("unsafe capture archive")
+            result[info.filename[:-4]] = npy_array(archive.read(info))
+    return result
+
+
+def verify_artifacts(directory, report, audit):
+    artifacts = report["artifacts"]
+    audit.require(type(artifacts) is dict and len(artifacts) <= 4096, "artifacts", "invalid census")
+    for name, entry in artifacts.items():
+        path = local_file(directory, name)
+        audit.equal(path.stat().st_size, entry["bytes"], f"artifacts/{name}/bytes")
+        audit.equal(file_sha256(path), entry["sha256"], f"artifacts/{name}/sha256")
+    actual = set()
+    for path in directory.rglob("*"):
+        if path.is_symlink():
+            raise ValueError(f"saved run contains symlink: {path.name}")
+        if path.is_file():
+            actual.add(path.relative_to(directory).as_posix())
+    audit.equal(actual, set(artifacts) | {"report.json"}, "artifacts/complete_file_census")
+
+
+def scene(plan, case):
+    geometry = next(g for g in plan["geometries"] if g["name"] == case["geometry"])
+    truth = list(geometry["parameters"])
+    settings = json.loads(json.dumps(plan["settings"]))
+    kind = case["adverse"]
+    if kind == "cropped":
+        truth[0] = 1.1
+    elif kind == "thin":
+        truth[3] = -0.94
+    elif kind == "almost":
+        truth[3] = 0.999
+    elif kind == "coincident":
+        truth[0], truth[3], truth[4] = 6.5, 0.0, 0.0
+    elif kind == "wrong":
+        settings["optical_kernel"] = [[1.0]]
+    elif kind == "singular":
+        settings["output_to_source_index"] = [[0.0, 0.0, 6.0], [0.0, 0.0, 6.0]]
+    return truth, settings, geometry["polarity"]
+
+
+def reference_checks(arrays, row, plan, audit, where):
+    first, second = plan["reference"]["area_orders"]
+    stages = ["coverage", "source", "optical", "rectified", "final"]
+    if row["case"]["mode"] == "png":
+        stages.extend(("encoded", "decoded"))
+    expected = {f"order{order}_{stage}" for order in (first, second) for stage in stages}
+    audit.equal(set(arrays), expected, where + "/capture/stages")
+    for name, item in arrays.items():
+        audit.equal(item["shape"], tuple(plan["settings"]["output_shape"]), where + "/" + name)
+    area0, area1 = (arrays[f"order{order}_coverage"]["values"] for order in (first, second))
+    final0, final1 = (arrays[f"order{order}_final"]["values"] for order in (first, second))
+    delta_area = max(abs(a - b) for a, b in zip(area0, area1, strict=True))
+    delta_final = max(abs(a - b) for a, b in zip(final0, final1, strict=True))
+    reference = row["reference"]
+    audit.equal(reference["max_area_order_delta"], delta_area, where + "/reference/area_delta")
+    audit.equal(reference["max_final_order_delta"], delta_final, where + "/reference/final_delta")
+    codes_equal = None
+    if row["case"]["mode"] == "png":
+        codes_equal = (
+            arrays[f"order{first}_encoded"]["values"] == arrays[f"order{second}_encoded"]["values"]
+        )
+    audit.equal(reference["encoded_order_codes_equal"], codes_equal, where + "/reference/codes")
+    passed = delta_area <= plan["reference"]["area_max_delta"] and codes_equal is not False
+    audit.equal(reference["passed"], passed, where + "/reference/passed")
+
+
+def initializer_checks(prepared, arrays, case, settings, polarity, audit, where):
+    metadata = prepared["metadata"]
+    queries = prepared["queries"]
+    height, width = settings["output_shape"]
+    expected_queries = [[x, y] for y in range(height) for x in range(width)]
+    audit.equal(queries, expected_queries, where + "/initializer/common_queries")
+    audit.equal(prepared["parameter_order"], PARAMETERS, where + "/initializer/order")
+    audit.require(prepared["status"] in ("seeded", "ambiguous", "refused"), where, "invalid status")
+    field = arrays["order96_final"]
+    values, dtype = list(field["values"]), field["dtype"]
+    if case["adverse"] == "gradient":
+        values = [v + 0.75 * (i % width - 6) for i, v in enumerate(values)]
+        dtype = "<f8"
+    audit.equal(prepared["observations"], values, where + "/initializer/observed_field")
+    expected_settings = {
+        **settings,
+        "polarity": polarity,
+        "coordinate_units": "supplied_source_plane",
+        "angle_units": "radians",
+        "residual_units": "supplied_source_plane",
+        "max_seeds": 4,
+    }
+    audit.equal(metadata["source_settings"], expected_settings, where + "/initializer/settings")
+    hashes = {
+        "field": array_digest([values[y * width : (y + 1) * width] for y in range(height)], dtype),
+        "observations": array_digest(values),
+        "queries": array_digest(queries, "<i8"),
+        "source_settings": sha256(json.dumps(metadata["source_settings"], sort_keys=True).encode()),
+    }
+    for name in ("output_to_source_index", "optical_kernel", "post_kernel"):
+        hashes[name] = array_digest(settings[name])
+    aggregate = sha256(
+        json.dumps(
+            {"policy": "observed-acquisition-segment-v1", "hashes": hashes}, sort_keys=True
+        ).encode()
+    )
+    audit.equal(prepared["input_hashes"], hashes, where + "/initializer/hashes")
+    audit.equal(metadata["input_hashes"], hashes, where + "/initializer/metadata_hashes")
+    audit.equal(prepared["input_sha256"], aggregate, where + "/initializer/input_sha256")
+    audit.equal(metadata["input_sha256"], aggregate, where + "/initializer/metadata_sha256")
+    for key, value in (
+        ("preparation_uses_full_field", True),
+        ("independent_holdout", False),
+        ("physical_qualification", False),
+        ("acquisition_adequacy", "not_evaluated"),
+        ("level_hints_stage", "observed_output_not_calibrated_source_levels"),
+        ("bounds_scope", "observed_extent_operational_caps_not_truth_enclosures"),
+    ):
+        audit.equal(metadata[key], value, where + "/initializer/" + key)
+    hypotheses = metadata["hypotheses"]
+    audit.require(len(hypotheses) <= 32, where, "too many retained hypotheses")
+    selected = []
+    for index, hypothesis in enumerate(hypotheses):
+        tag = where + f"/hypothesis/{index}"
+        audit.equal(hypothesis["index"], index, tag + "/index")
+        audit.equal(array_shape(hypothesis["parameters"]), (5,), tag + "/shape")
+        audit.require(hypothesis["boundary_rms"] >= 0, tag, "negative boundary RMS")
+        audit.require(hypothesis["boundary_max"] >= 0, tag, "negative boundary maximum")
+        if hypothesis["selected"]:
+            selected.append(hypothesis["parameters"])
+            audit.equal(hypothesis["viable"], True, tag + "/selected_viable")
+            audit.equal(hypothesis["omission_reason"], None, tag + "/selected_omission")
+        else:
+            audit.require(
+                bool(hypothesis["omission_reason"]), tag, "omitted hypothesis lacks reason"
+            )
+    audit.equal(selected, prepared["seeds"], where + "/initializer/selected_seeds")
+    audit.require(len(selected) <= 4, where, "too many seeds")
+    audit.equal(
+        metadata["qualifying_hypothesis_count"],
+        len(hypotheses),
+        where + "/initializer/hypothesis_count",
+    )
+    bounds = prepared["bounds"]
+    if bounds is None:
+        audit.equal(prepared["seeds"], [], where + "/initializer/no_bounds_no_seeds")
+    else:
+        audit.equal(array_shape(bounds), (5, 2), where + "/initializer/bounds_shape")
+        audit.require(all(lo < hi for lo, hi in bounds), where, "unordered bounds")
+        for seed in prepared["seeds"]:
+            audit.require(
+                all(lo <= value <= hi for value, (lo, hi) in zip(seed, bounds, strict=True)),
+                where,
+                "initializer seed outside operational bounds",
+            )
+
+
+def observed_input_checks(prepared, observed, case, settings, plan, audit, where):
+    queries, values = prepared["queries"], prepared["observations"]
+    training_indices = [i for i, (x, y) in enumerate(queries) if (x + 2 * y) % 5 != 0]
+    if case["adverse"] == "five":
+        training_indices = training_indices[:5]
+    indices = set(training_indices)
+    audit.equal(
+        observed["queries"],
+        [queries[i] for i in training_indices],
+        where + "/input/training_queries",
+    )
+    audit.equal(
+        observed["observations"], [values[i] for i in training_indices], where + "/input/data"
+    )
+    audit.equal(
+        observed["reserved_queries"],
+        [q for i, q in enumerate(queries) if i not in indices],
+        where + "/input/reserved_queries",
+    )
+    hints = prepared["level_hints"]
+    clipped = [min(255.0, max(0.0, value)) for value in hints]
+    audit.equal(observed["original_output_level_hints"], hints, where + "/input/original_hints")
+    audit.equal(
+        observed["level_seed_after_declared_bounds"], clipped, where + "/input/clipped_hints"
+    )
+    audit.equal(
+        observed["seeds"], [seed + clipped for seed in prepared["seeds"]], where + "/input/seeds"
+    )
+    audit.equal(observed["bounds"], prepared["bounds"], where + "/input/bounds")
+    audit.equal(
+        observed["preparation_input_sha256"], prepared["input_sha256"], where + "/input/binding"
+    )
+    audit.equal(observed["settings"], settings, where + "/input/settings")
+    audit.equal(observed["mode"], case["mode"], where + "/input/mode")
+    controls = {
+        key: plan["optimizer"][key]
+        for key in (
+            "max_evaluations",
+            "max_cell_work",
+            "max_stage_work",
+            "max_iterations",
+            "level_bounds",
+        )
+    }
+    if case["adverse"] == "budget":
+        controls.update(max_evaluations=1, max_cell_work=169, max_stage_work=100000)
+    audit.equal(observed["controls"], controls, where + "/input/controls")
+
+
+def fit_input_checks(fit, observed, source_files, audit, where):
+    snapshot = fit["input_snapshot"]
+    expected = {
+        **observed["settings"],
+        "queries": observed["queries"],
+        "target": observed["observations"],
+        "weights": [1.0] * len(observed["queries"]),
+        "bounds": observed["bounds"],
+        "level_bounds": observed["controls"]["level_bounds"],
+        "seeds": observed["seeds"],
+    }
+    audit.equal(snapshot, expected, where + "/fit/input_snapshot")
+    operator = hashlib.sha256()
+    for name in ("optical_kernel", "post_kernel", "output_to_source_index", "queries"):
+        dtype = "<i8" if name == "queries" else "<f8"
+        operator.update(repr((name, array_shape(snapshot[name]), dtype)).encode())
+        operator.update(array_bytes(snapshot[name], dtype))
+    operator.update(
+        repr(
+            (
+                tuple(snapshot["source_shape"]),
+                tuple(snapshot["output_shape"]),
+                tuple(float(v) for v in snapshot["origin"]),
+                float(snapshot["pitch"]),
+                fit["mode"],
+            )
+        ).encode()
+    )
+    operator_sha = operator.hexdigest()
+    audit.equal(fit["operator_sha256"], operator_sha, where + "/fit/operator_sha256")
+    digest = hashlib.sha256(operator_sha.encode())
+    for name in ("target", "weights", "bounds", "level_bounds", "seeds"):
+        digest.update(repr((name, array_shape(snapshot[name]), "<f8")).encode())
+        digest.update(array_bytes(snapshot[name]))
+    controls = observed["controls"]
+    limits = tuple(controls[k] for k in ("max_evaluations", "max_cell_work", "max_stage_work"))
+    digest.update(repr((limits, controls["max_iterations"], 1e-6, 1e-7)).encode())
+    audit.equal(fit["input_sha256"], digest.hexdigest(), where + "/fit/input_sha256")
+    audit.equal(fit["source_before"], fit["source_after"], where + "/fit/source_unchanged_pairs")
+    audit.equal(fit["source_unchanged"], True, where + "/fit/source_unchanged")
+    audit.equal(fit["source_errors"], [], where + "/fit/source_errors")
+    audit.equal(
+        {name for name, _ in fit["source_before"]}, SOURCE_NAMES, where + "/fit/source_census"
+    )
+    for name, digest in fit["source_before"]:
+        audit.equal(digest, sha256(source_files["backend/" + name]), where + "/fit/source/" + name)
+    audit.equal(fit["mode"], observed["mode"], where + "/fit/mode")
+    audit.equal(fit["parameter_order"], PARAMETERS, where + "/fit/order")
+    for key in (
+        "global_search_certified",
+        "physical_qualification",
+        "residual_metric_is_calibrated_noise",
+        "cost_error_includes_area_error",
+        "rank_error_includes_coverage_error",
+    ):
+        audit.equal(fit[key], False, where + "/fit/" + key)
+    audit.equal(fit["adequacy"], "not_evaluated", where + "/fit/adequacy")
+
+
+def candidate_checks(fit, observed, audit, where):
+    target = fit["input_snapshot"]["target"]
+    weights = fit["input_snapshot"]["weights"]
+    bounds, level_bounds = observed["bounds"], observed["controls"]["level_bounds"]
+    for index, candidate in enumerate(fit["candidates"]):
+        tag = where + f"/candidate/{index}"
+        audit.equal(candidate["index"], index, tag + "/index")
+        audit.equal(array_shape(candidate["parameters"]), (5,), tag + "/parameter_shape")
+        audit.equal(array_shape(candidate["levels"]), (2,), tag + "/level_shape")
+        for values, limits, label in (
+            (candidate["parameters"], bounds, "geometry"),
+            (candidate["levels"], level_bounds, "levels"),
+        ):
+            audit.require(
+                all(lo <= v <= hi for v, (lo, hi) in zip(values, limits, strict=True)),
+                tag,
+                label + " outside declared bounds",
+            )
+        for name in ("prediction", "residual", "raw_residual"):
+            audit.equal(len(candidate[name]), len(target), tag + "/" + name + "/length")
+        for j, (actual, prediction, weight, raw, weighted) in enumerate(
+            zip(
+                target,
+                candidate["prediction"],
+                weights,
+                candidate["raw_residual"],
+                candidate["residual"],
+                strict=True,
+            )
+        ):
+            audit.equal(raw, actual - prediction, tag + f"/raw_residual/{j}")
+            audit.equal(weighted, weight * raw, tag + f"/weighted_residual/{j}")
+        norm = math.hypot(*candidate["residual"])
+        audit.close(candidate["cost"], norm * norm, tag + "/cost", ulps=16)
+        audit.close(candidate["weighted_residual_l2"], math.sqrt(candidate["cost"]), tag + "/norm")
+        if candidate["raw_residual_l2"] is not None:
+            audit.close(
+                candidate["raw_residual_l2"],
+                math.hypot(*candidate["raw_residual"]),
+                tag + "/raw_norm",
+            )
+        audit.equal(candidate["mode"], fit["mode"], tag + "/mode")
+        smooth = fit["mode"] == "smooth"
+        audit.equal(candidate["brightness_profile_exact"], smooth, tag + "/profile_mode")
+        if not smooth:
+            audit.equal(
+                candidate["derivative_status"],
+                "not_defined_for_rounded_objective",
+                tag + "/derivative",
+            )
+        for field, values, limits in (
+            ("endpoint", candidate["parameters"], bounds),
+            ("brightness_endpoint", candidate["levels"], level_bounds),
+        ):
+            endpoint = any(v in limit for v, limit in zip(values, limits, strict=True))
+            audit.equal(candidate[field], endpoint, tag + "/" + field)
+        rank, interval = candidate["geometry_rank_conservative"], candidate["rank_interval"]
+        if rank is not None:
+            audit.require(
+                type(rank) is int and 0 <= rank <= min(5, max(0, len(target) - 2)),
+                tag,
+                "rank exceeds nuisance ceiling",
+            )
+            audit.equal(interval, [rank, rank], tag + "/rank_interval")
+        if interval is not None:
+            audit.require(
+                len(interval) == 2 and 0 <= interval[0] <= interval[1] <= 5,
+                tag,
+                "invalid rank interval",
+            )
+        guard = candidate["cost_error_estimate"]
+        audit.require(guard is None or guard >= 0, tag, "negative cost error estimate")
+    expected_best = min(
+        fit["candidates"], key=lambda item: (item["cost"], item["index"]), default=None
+    )
+    audit.equal(fit["best"], expected_best, where + "/fit/best_minimum")
+    best = expected_best
+    audit.equal(
+        fit["endpoint"], False if best is None else best["endpoint"], where + "/fit/endpoint"
+    )
+    rank = None if best is None else best["geometry_rank_conservative"]
+    audit.equal(fit["geometry_rank_conservative"], rank, where + "/fit/best_rank")
+    audit.equal(
+        fit["rank_deficient"], None if rank is None else rank < 5, where + "/fit/rank_deficient"
+    )
+    tied = best is not None and best["brightness_tied"] is True
+    flat = (
+        best is not None
+        and fit["mode"] == "smooth"
+        and best["geometry_rank_conservative"] == 0
+        and not best["contrast_resolved"]
+    )
+    if best is not None:
+        tied |= any(
+            (c["parameters"] != best["parameters"] or c["levels"] != best["levels"])
+            and abs(c["cost"] - best["cost"])
+            <= (c["cost_error_estimate"] or 0)
+            + (best["cost_error_estimate"] or 0)
+            + 64 * EPS * max(c["cost"], best["cost"])
+            for c in fit["candidates"]
+        )
+        costs = [c["cost"] for c in fit["candidates"]]
+        allowance = max(c["cost_error_estimate"] or 0 for c in fit["candidates"])
+        flat |= (
+            max(costs) - min(costs) <= allowance + 64 * EPS * max(costs)
+            and len({tuple(c["parameters"]) for c in fit["candidates"]}) > 1
+        )
+    audit.equal(fit["flat"], flat, where + "/fit/flat_recorded_rule")
+    audit.equal(fit["tied"], tied, where + "/fit/ties_are_not_accuracy")
+
+
+def ledger_checks(fit, observed, audit, where):
+    candidates = fit["candidates"]
+    controls, snapshot = observed["controls"], fit["input_snapshot"]
+    n, m = math.prod(snapshot["source_shape"]), math.prod(snapshot["output_shape"])
+    base = n * (1 + len(list(flatten(snapshot["optical_kernel"])))) + m * (
+        16 + len(list(flatten(snapshot["post_kernel"])))
+    )
+    objective, cells = OrderedDict(), OrderedDict()
+    totals, statuses = Counter(), Counter()
+    resolved_indices = []
+    unknown_failed_work = False
+    for index, item in enumerate(fit["ledger"]):
+        tag = where + f"/ledger/{index}"
+        audit.equal(item["index"], index, tag + "/index")
+        status, geometry = item["status"], tuple(item["parameters"])
+        levels = item["requested_levels"]
+        key = geometry if fit["mode"] == "smooth" else geometry + tuple(levels)
+        statuses[status] += 1
+        audit.require(
+            status in ("resolved", "cache_hit", "work_limit", "numerical", "protocol_failure"),
+            tag,
+            "unexpected status",
+        )
+        audit.equal(array_shape(item["parameters"]), (5,), tag + "/parameters")
+        audit.require(
+            all(
+                lo <= value <= hi
+                for value, (lo, hi) in zip(geometry, snapshot["bounds"], strict=True)
+            ),
+            tag,
+            "attempt outside geometry bounds",
+        )
+        if fit["mode"] == "smooth":
+            audit.equal(levels, None, tag + "/profiled_levels_not_search_input")
+        else:
+            audit.equal(array_shape(levels), (2,), tag + "/levels")
+            audit.require(
+                all(
+                    lo <= value <= hi
+                    for value, (lo, hi) in zip(levels, snapshot["level_bounds"], strict=True)
+                ),
+                tag,
+                "attempt outside level bounds",
+            )
+        if key in objective:
+            expected_index, origin = objective.pop(key)
+            objective[key] = expected_index, origin
+            audit.equal(status, "cache_hit", tag + "/objective_lru_hit")
+            audit.equal(item["candidate_index"], expected_index, tag + "/cached_candidate")
+            audit.equal(item["cache_of"], origin, tag + "/cache_origin")
+            audit.equal(item["cell_cache_hit"], False, tag + "/cache_skips_cells")
+            for lane in ("cell", "stage"):
+                for suffix in ("reserved", "charged", "reported"):
+                    audit.equal(item[f"{lane}_work_{suffix}"], 0, tag + "/cache_zero_work")
+            audit.equal(item["cell_statuses"], [], tag + "/cache_cell_statuses")
+            audit.equal(item["stage_statuses"], [], tag + "/cache_stage_statuses")
+            audit.equal(item["error"], None, tag + "/cache_no_error")
+            totals["cache_hits"] += 1
+            continue
+        audit.require(status != "cache_hit", tag, "cache hit absent from bounded LRU history")
+        audit.equal(item["cache_of"], None, tag + "/not_cached")
+        eval_denied = totals["evaluations"] >= controls["max_evaluations"]
+        cached, cell_denied = None, False
+        if not eval_denied:
+            cached = cells.pop(geometry, None)
+            if cached is not None:
+                cells[geometry] = cached
+            cell_denied = cached is None and totals["cell_work"] + n > controls["max_cell_work"]
+        audit.equal(item["cell_cache_hit"], cached is not None, tag + "/cell_lru_hit")
+        if eval_denied or cell_denied:
+            audit.equal(status, "work_limit", tag + "/pre_evaluation_gate")
+            audit.equal(
+                item["error"],
+                "evaluation budget" if eval_denied else "source-cell budget",
+                tag + "/denial_reason",
+            )
+            for lane in ("cell", "stage"):
+                for suffix in ("reserved", "charged", "reported"):
+                    audit.equal(item[f"{lane}_work_{suffix}"], 0, tag + "/denial_zero_work")
+            audit.equal(item["candidate_index"], None, tag + "/denial_no_candidate")
+            continue
+        totals["evaluations"] += 1
+        prior_stage_work = totals["stage_work"]
+        for lane in ("cell", "stage"):
+            reserved, charged, reported = (
+                item[f"{lane}_work_{suffix}"] for suffix in ("reserved", "charged", "reported")
+            )
+            audit.require(
+                type(reserved) is int
+                and reserved >= 0
+                and type(charged) is int
+                and 0 <= charged <= reserved,
+                tag,
+                "invalid reserved/charged work",
+            )
+            audit.require(
+                reported is None or type(reported) is int and 0 <= reported <= reserved,
+                tag,
+                "invalid reported work",
+            )
+            audit.equal(
+                charged, reserved if reported is None else reported, tag + "/" + lane + "/charge"
+            )
+            totals[lane + "_work"] += charged
+            totals[lane + "_work_reported"] += reported or 0
+            if status in ("numerical", "protocol_failure") and reported is None:
+                unknown_failed_work = True
+        if cached is not None:
+            audit.equal(item["cell_work_reserved"], 0, tag + "/cached_cell_zero_reserve")
+            audit.equal(item["cell_statuses"], cached, tag + "/cached_cell_status_identity")
+        else:
+            audit.equal(item["cell_work_reserved"], n, tag + "/cell_reserve")
+            if item["cell_work_reported"] is not None:
+                audit.equal(len(item["cell_statuses"]), n, tag + "/cell_status_census")
+                cells[geometry] = item["cell_statuses"]
+                if len(cells) > 2:
+                    cells.popitem(last=False)
+        audit.require(
+            all(
+                s
+                in (
+                    "resolved",
+                    "nondifferentiable",
+                    "parameter_endpoint",
+                    "unresolved",
+                    "work_limit",
+                )
+                for s in item["cell_statuses"]
+            ),
+            tag,
+            "invalid source-cell status",
+        )
+        reserved_stage = item["stage_work_reserved"]
+        if fit["mode"] == "smooth":
+            possible_stage = (2 * base, 7 * base)
+            if any(s != "resolved" for s in item["cell_statuses"]):
+                possible_stage = (2 * base,)
+        else:
+            possible_stage = (base + (4 * n if fit["mode"] == "png" else 0),)
+        if reserved_stage:
+            audit.require(reserved_stage in possible_stage, tag, "wrong stage reservation")
+            audit.require(
+                prior_stage_work + reserved_stage <= controls["max_stage_work"]
+                and reserved_stage <= 100_000_000,
+                tag,
+                "stage reservation exceeds budget",
+            )
+        if item["stage_work_reported"] is not None and reserved_stage:
+            audit.equal(
+                len(item["stage_statuses"]), len(snapshot["queries"]), tag + "/stage_status_census"
+            )
+        audit.require(
+            all(s in ("resolved", "numerical", "work_limit") for s in item["stage_statuses"]),
+            tag,
+            "invalid stage status",
+        )
+        if status == "resolved":
+            candidate_index = item["candidate_index"]
+            audit.equal(candidate_index, len(resolved_indices), tag + "/resolved_candidate_order")
+            candidate = candidates[candidate_index]
+            audit.equal(candidate["parameters"], item["parameters"], tag + "/candidate_geometry")
+            if fit["mode"] != "smooth":
+                audit.equal(candidate["levels"], levels, tag + "/candidate_levels")
+            audit.equal(item["error"], None, tag + "/resolved_no_error")
+            audit.require(
+                reserved_stage > 0 and all(s == "resolved" for s in item["stage_statuses"]),
+                tag,
+                "resolved candidate without resolved stage",
+            )
+            resolved_indices.append(candidate_index)
+            objective[key] = candidate_index, index
+            if len(objective) > 8:
+                objective.popitem(last=False)
+        else:
+            audit.equal(item["candidate_index"], None, tag + "/failed_no_candidate")
+            audit.require(bool(item["error"]), tag, "failed attempt lacks error")
+            if status == "work_limit":
+                audit.equal(item["error"], "stage-product budget", tag + "/stage_denial_reason")
+                audit.equal(reserved_stage, 0, tag + "/stage_denial_no_stage_charge")
+                audit.require(
+                    any(
+                        required > 100_000_000
+                        or prior_stage_work + required > controls["max_stage_work"]
+                        for required in possible_stage
+                    ),
+                    tag,
+                    "stage denial without a possible exhausted reservation",
+                )
+    audit.equal(
+        resolved_indices, list(range(len(candidates))), where + "/ledger/all_candidates_accounted"
+    )
+    for key in (
+        "evaluations",
+        "cache_hits",
+        "cell_work",
+        "cell_work_reported",
+        "stage_work",
+        "stage_work_reported",
+    ):
+        audit.equal(fit[key], totals[key], where + "/fit/total/" + key)
+    for key, bound in (
+        ("evaluations", "max_evaluations"),
+        ("cell_work", "max_cell_work"),
+        ("stage_work", "max_stage_work"),
+    ):
+        audit.require(totals[key] <= controls[bound], where, key + " budget exceeded")
+    audit.equal(
+        fit["actual_failed_work_unknown"], unknown_failed_work, where + "/fit/unknown_failed_work"
+    )
+    audit.equal(fit["work_exhausted"], statuses["work_limit"] > 0, where + "/fit/work_exhausted")
+    audit.equal(
+        fit["protocol_failure"],
+        statuses["protocol_failure"] > 0 or not fit["source_unchanged"],
+        where + "/fit/protocol_failure",
+    )
+    audit.require(
+        not statuses["numerical"] or fit["numerically_unsupported"],
+        where,
+        "numerical failure lost in top-level flag",
+    )
+    return dict(statuses)
+
+
+def search_checks(fit, observed, audit, where):
+    searches, seeds = fit["searches"], observed["seeds"]
+    audit.require(len(searches) <= len(seeds), where, "too many seed searches")
+    for index, search in enumerate(searches):
+        tag = where + f"/search/{index}"
+        audit.equal(search["seed_index"], index, tag + "/index")
+        audit.equal(search["initial_parameters"], seeds[index][:5], tag + "/observed_seed_geometry")
+        audit.equal(search["initial_levels"], seeds[index][5:], tag + "/observed_seed_levels")
+        starts = [item for item in fit["ledger"] if item["purpose"] == f"seed:{index}"]
+        audit.equal(len(starts), 1, tag + "/seed_attempt_retained")
+        if starts:
+            audit.equal(starts[0]["parameters"], seeds[index][:5], tag + "/seed_ledger_geometry")
+            if fit["mode"] != "smooth":
+                audit.equal(
+                    starts[0]["requested_levels"], seeds[index][5:], tag + "/seed_ledger_levels"
+                )
+        best = search["best_candidate_index"]
+        audit.require(
+            best is None or type(best) is int and 0 <= best < len(fit["candidates"]),
+            tag,
+            "invalid search best index",
+        )
+        audit.require(
+            type(search["iterations"]) is int
+            and 0 <= search["iterations"] <= observed["controls"]["max_iterations"],
+            tag,
+            "invalid iteration count",
+        )
+        audit.require(
+            type(search["unknown_evaluations"]) is int and search["unknown_evaluations"] >= 0,
+            tag,
+            "invalid unknown count",
+        )
+        for point in search["pending_points"]:
+            audit.equal(array_shape(point), (7,), tag + "/pending_point_shape")
+        if search["status"] in ("projected_gradient_resolution", "poll_resolution"):
+            audit.require(best is not None, tag, "local completion without candidate")
+            audit.equal(search["pending_points"], [], tag + "/complete_has_no_pending_points")
+    audit.equal(
+        fit["unstarted_seeds"],
+        list(range(len(searches), len(seeds))),
+        where + "/fit/unstarted_seeds",
+    )
+    audit.equal(
+        fit["iteration_limited"],
+        any(s["status"] == "iteration_limit" for s in searches),
+        where + "/fit/iteration_limited",
+    )
+
+
+def dimensions(parameters):
+    radius, fraction = parameters[2:4]
+    return {
+        "chord_length": 2 * radius * math.sqrt(max(0.0, 1 - fraction * fraction)),
+        "normal_depth": radius * (1 + fraction),
+    }
+
+
+def evaluation_checks(row, fit, observed, truth, plan, audit, where):
+    evaluation, best = row["evaluation"], None if fit is None else fit["best"]
+    if best is None:
+        audit.equal(
+            evaluation,
+            {"status": "no_candidate", "all_targets": False},
+            where + "/evaluation/no_candidate",
+        )
+        return
+    audit.equal(evaluation["status"], "evaluated", where + "/evaluation/status")
+    got, pitch = best["parameters"], observed["settings"]["pitch"]
+    audit.equal(evaluation["parameters"], got, where + "/evaluation/best_geometry")
+    audit.equal(evaluation["levels"], best["levels"], where + "/evaluation/best_levels")
+    truth_dims, got_dims = dimensions(truth), dimensions(got)
+    for name, expected in truth_dims.items():
+        audit.close(
+            evaluation["truth_dimensions_opened_after_fit_saved"][name],
+            expected,
+            where + "/evaluation/truth_dimension/" + name,
+        )
+    for name, expected in got_dims.items():
+        audit.close(
+            evaluation["candidate_dimensions"][name],
+            expected,
+            where + "/evaluation/candidate_dimension/" + name,
+        )
+    residuals = evaluation["conditional_reserved_residuals"]
+    audit.equal(
+        len(residuals), len(observed["reserved_queries"]), where + "/evaluation/reserved_census"
+    )
+    independent_errors = {
+        "centre_error_pitch": math.hypot(got[0] - truth[0], got[1] - truth[1]) / pitch,
+        "radius_error_pitch": abs(got[2] - truth[2]) / pitch,
+        "fraction_error": abs(got[3] - truth[3]),
+        "wrapped_angle_degrees": abs(math.remainder(got[4] - truth[4], math.tau)) * 180 / math.pi,
+        "reserved_dimension_error_pitch": max(
+            abs(got_dims[k] - value) for k, value in truth_dims.items()
+        )
+        / pitch,
+        "conditional_query_max_residual_linear_level": max(map(abs, residuals))
+        if residuals
+        else None,
+    }
+    for key, value in independent_errors.items():
+        if value is None:
+            audit.equal(evaluation["errors"][key], None, where + "/evaluation/error/" + key)
+        else:
+            audit.close(evaluation["errors"][key], value, where + "/evaluation/error/" + key)
+    audit.equal(
+        set(evaluation["errors"]),
+        set(independent_errors) | {"sampled_bidirectional_boundary_error_pitch"},
+        where + "/evaluation/error_census",
+    )
+    audit.require(
+        evaluation["errors"]["sampled_bidirectional_boundary_error_pitch"] >= 0,
+        where,
+        "negative recorded boundary discrepancy",
+    )
+    expected_flags = {
+        key: value is not None and value <= plan["targets"][key]
+        for key, value in evaluation["errors"].items()
+    }
+    expected_flags["bounded_local_search_completion"] = (
+        not fit["work_exhausted"]
+        and not fit["protocol_failure"]
+        and any(
+            s["best_candidate_index"] == best["index"]
+            and s["status"] in ("projected_gradient_resolution", "poll_resolution")
+            for s in fit["searches"]
+        )
+    )
+    if row["case"]["mode"] == "smooth":
+        expected_flags["geometry_rank_conservative_when_smooth"] = (
+            best["geometry_rank_conservative"]
+            == plan["targets"]["geometry_rank_conservative_when_smooth"]
+        )
+    audit.equal(evaluation["targets"], expected_flags, where + "/evaluation/target_flags")
+    audit.equal(
+        evaluation["all_targets"], all(expected_flags.values()), where + "/evaluation/all_targets"
+    )
+    audit.equal(
+        evaluation["search_stopping_statuses"],
+        [s["status"] for s in fit["searches"]],
+        where + "/evaluation/search_statuses",
+    )
+    audit.equal(
+        evaluation["work_exhausted"], fit["work_exhausted"], where + "/evaluation/work_exhausted"
+    )
+    audit.equal(evaluation["candidate_tie_retained"], fit["tied"], where + "/evaluation/tied")
+    audit.equal(
+        evaluation["physical_qualification"], False, where + "/evaluation/physical_qualification"
+    )
+    audit.equal(
+        evaluation["optical_adequacy"], "not_evaluated", where + "/evaluation/optical_adequacy"
+    )
+    audit.equal(
+        evaluation["boundary_metric"],
+        "sampled bidirectional lower approximation; not a certified supremum",
+        where + "/evaluation/boundary_scope",
+    )
+
+
+def row_checks(directory, row, plan, source_files, audit):
+    case, name = row["case"], row["case"]["name"]
+    where = "rows/" + name
+    audit.equal(read_json(directory, name + "/record.json"), row, where + "/record_identity")
+    audit.require(row["status"] in ("completed", "exception"), where, "unterminated row")
+    audit.require(row["elapsed_seconds"] >= 0, where, "invalid recorded elapsed time")
+    truth, settings, polarity = scene(plan, case)
+    arrays = capture_arrays(local_file(directory, name + "/capture.npz"))
+    audit.section(where + "/reference", lambda: reference_checks(arrays, row, plan, audit, where))
+    paths = {p.name for p in (directory / name).iterdir() if p.is_file()}
+    prepared = observed = fit = None
+    if "initialization.json" in paths:
+        prepared = read_json(directory, name + "/initialization.json")
+        audit.section(
+            where + "/initializer",
+            lambda: initializer_checks(prepared, arrays, case, settings, polarity, audit, where),
+        )
+        if "preparation_status" in row:
+            audit.equal(
+                row["preparation_status"], prepared["status"], where + "/preparation_status"
+            )
+    if "observed-fit-input.json" in paths:
+        observed = read_json(directory, name + "/observed-fit-input.json")
+        audit.require(prepared is not None, where, "observed input without preparation")
+        audit.section(
+            where + "/observed_input",
+            lambda: observed_input_checks(prepared, observed, case, settings, plan, audit, where),
+        )
+    if "fit.json" in paths:
+        fit = read_json(directory, name + "/fit.json")
+        audit.require(observed is not None, where, "fit without saved observed input")
+        audit.section(
+            where + "/fit_input",
+            lambda: fit_input_checks(fit, observed, source_files, audit, where),
+        )
+        audit.section(where + "/candidates", lambda: candidate_checks(fit, observed, audit, where))
+        ledger_census = audit.section(
+            where + "/ledger", lambda: ledger_checks(fit, observed, audit, where)
+        )
+        audit.section(where + "/searches", lambda: search_checks(fit, observed, audit, where))
+    else:
+        ledger_census = None
+    audit.equal(row["fit_attempted"], "observed-fit-input.json" in paths, where + "/fit_attempted")
+    if row["status"] == "exception":
+        audit.equal(row["all_targets"], False, where + "/exception_not_success")
+        audit.require(
+            bool(row.get("exception")) and bool(row.get("traceback")),
+            where,
+            "exception details not retained",
+        )
+    else:
+        audit.require(prepared is not None, where, "completed row missing preparation")
+        if prepared["bounds"] is None or not prepared["seeds"]:
+            audit.require(
+                observed is None and fit is None, where, "refusal replaced by invented fit"
+            )
+        else:
+            audit.require(
+                observed is not None and fit is not None, where, "eligible row missing fit"
+            )
+        audit.section(
+            where + "/evaluation",
+            lambda: evaluation_checks(row, fit, observed, truth, plan, audit, where),
+        )
+        audit.equal(
+            row["all_targets"],
+            row["reference"]["passed"] and row["evaluation"]["all_targets"],
+            where + "/all_targets",
+        )
+        bounds = prepared["bounds"]
+        inside = (
+            None
+            if bounds is None
+            else all(lo <= value <= hi for value, (lo, hi) in zip(truth, bounds, strict=True))
+        )
+        audit.equal(
+            row["raw_truth_inside_observed_bounds_after_outputs_saved"],
+            inside,
+            where + "/truth_bounds_afterward_only",
+        )
+        if bounds is not None:
+            equivalent = list(truth)
+            middle = (bounds[4][0] + bounds[4][1]) / 2
+            equivalent[4] = middle + math.remainder(equivalent[4] - middle, math.tau)
+            equivalent_inside = all(
+                lo <= v <= hi for v, (lo, hi) in zip(equivalent, bounds, strict=True)
+            )
+            audit.equal(
+                row["equivalent_angle_truth_inside_observed_bounds_after_outputs_saved"],
+                equivalent_inside,
+                where + "/periodic_truth_bounds_afterward_only",
+            )
+    evaluation = row.get("evaluation") or {}
+    return {
+        "name": name,
+        "family": case["family"],
+        "mode": case["mode"],
+        "status": row["status"],
+        "preparation_status": None if prepared is None else prepared["status"],
+        "hypotheses": 0 if prepared is None else len(prepared["metadata"]["hypotheses"]),
+        "seeds": 0 if prepared is None else len(prepared["seeds"]),
+        "candidates": 0 if fit is None else len(fit["candidates"]),
+        "ledger_statuses": ledger_census,
+        "search_statuses": [] if fit is None else [s["status"] for s in fit["searches"]],
+        "work_exhausted": None if fit is None else fit["work_exhausted"],
+        "tied": None if fit is None else fit["tied"],
+        "rank_recorded": None if fit is None else fit["geometry_rank_conservative"],
+        "all_targets_recorded": row["all_targets"],
+        "failed_targets": [
+            key for key, value in evaluation.get("targets", {}).items() if not value
+        ],
+    }
+
+
+def run_audit(directory, source_zip, audit):
+    files, source_manifest = source_archive(source_zip, audit)
+    plan = parse_json(files[PLAN_PATH])
+    report = read_json(directory, "report.json")
+    freeze = read_json(directory, "source-freeze.json")
+    audit.equal(report["format"], "finite-acquisition-recovery-complete-report", "report/format")
+    audit.equal(report["source_head"], FROZEN_HEAD, "report/source_head")
+    audit.equal(freeze["head"], FROZEN_HEAD, "source_freeze/head")
+    audit.equal(freeze["plan"], plan, "source_freeze/plan_identity")
+    frozen_hashes = {name: sha256(data) for name, data in files.items()}
+    audit.equal(freeze["sha256"], frozen_hashes, "source_freeze/all_source_members")
+    audit.equal(report["source_sha256_before"], frozen_hashes, "report/source_before")
+    audit.equal(report["source_sha256_after"], frozen_hashes, "report/source_after")
+    audit.equal(report["source_unchanged"], True, "report/source_unchanged")
+    audit.section("artifacts", lambda: verify_artifacts(directory, report, audit))
+    audit.equal(len(plan["population"]), 24, "plan/population_count")
+    audit.equal(
+        Counter(c["family"] for c in plan["population"]),
+        Counter(matched=12, adverse=12),
+        "plan/family_census",
+    )
+    audit.equal(
+        [row["case"] for row in report["rows"]],
+        plan["population"],
+        "report/complete_ordered_population",
+    )
+    rows = []
+    for row in report["rows"]:
+        result = audit.section(
+            "rows/" + row["case"]["name"],
+            lambda row=row: row_checks(directory, row, plan, files, audit),
+        )
+        rows.append(result or {"name": row["case"]["name"], "audit_section_failed": True})
+    matched = [row for row in report["rows"] if row["case"]["family"] == "matched"]
+    adverse = [row for row in report["rows"] if row["case"]["family"] == "adverse"]
+    matched_passes = sum(row["all_targets"] for row in matched)
+    adverse_passes = sum(row["all_targets"] for row in adverse)
+    audit.equal(report["matched_passes"], matched_passes, "report/matched_passes")
+    audit.equal(
+        report["adverse_all_target_passes"], adverse_passes, "report/adverse_passes_separate"
+    )
+    expected_passed = report["source_unchanged"] and matched_passes == len(matched)
+    audit.equal(report["passed"], expected_passed, "report/protocol_exit_criterion")
+    return {
+        "report_sha256": file_sha256(local_file(directory, "report.json")),
+        "report_bytes": local_file(directory, "report.json").stat().st_size,
+        "source_zip_sha256": file_sha256(source_zip),
+        "source_manifest_head": source_manifest["head"],
+        "recorded_source_files": len(files),
+        "plan_sha256": sha256(files[PLAN_PATH]),
+        "population": len(report["rows"]),
+        "matched": {"requested": len(matched), "passed": matched_passes},
+        "adverse": {"requested": len(adverse), "all_targets_recorded": adverse_passes},
+        "row_statuses": dict(Counter(r["status"] for r in report["rows"])),
+        "matched_passes_by_mode": dict(
+            Counter(r["case"]["mode"] for r in matched if r["all_targets"])
+        ),
+        "original_report_passed": report["passed"],
+        "original_expected_exit_code": 0 if expected_passed else 1,
+        "rows": rows,
+    }
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--run-dir", required=True, type=Path)
+    parser.add_argument("--source-zip", required=True, type=Path)
+    parser.add_argument("--output", required=True, type=Path)
+    args = parser.parse_args()
+    destination = args.output.absolute()
+    if destination.exists() or destination.is_symlink() or not destination.parent.is_dir():
+        parser.error("--output requires a fresh path with an existing parent; symlinks are refused")
+    directory = args.run_dir.absolute()
+    if directory.is_symlink() or not directory.is_dir():
+        parser.error("--run-dir requires a nonsymlink saved-run directory")
+    try:
+        if destination.resolve().is_relative_to(directory.resolve()):
+            parser.error("audit output must be outside the immutable saved-run directory")
+    except OSError as error:
+        parser.error(str(error))
+    audit = Audit()
+    result = audit.section(
+        "saved_run", lambda: run_audit(directory, args.source_zip.absolute(), audit)
+    )
+    output = {
+        "format": "finite-acquisition-recovery-saved-data-audit",
+        "version": 1,
+        "auditor_sha256": file_sha256(Path(__file__)),
+        "python": sys.version,
+        "model_calls": 0,
+        "optimizer_calls": 0,
+        "reference_calls": 0,
+        "current_checkout_source_used": False,
+        "scope": SCOPE,
+        "result": result,
+        "checks": audit.checks,
+        "failure_count": audit.failure_count,
+        "first_failure": audit.failures[0] if audit.failures else None,
+        "failures": audit.failures,
+        "failures_truncated": audit.failure_count > len(audit.failures),
+        "sections": audit.sections,
+        "maximum_arithmetic_allowance_ratio": audit.maximum_rounding_ratio,
+        "passed": audit.failure_count == 0,
+    }
+    payload = (json.dumps(output, indent=2, allow_nan=False) + "\n").encode()
+    try:
+        flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0)
+        descriptor = os.open(destination, flags, 0o600)
+        with os.fdopen(descriptor, "wb") as stream:
+            stream.write(payload)
+    except OSError as error:
+        print(f"audit output refused: {error}", file=sys.stderr)
+        return 2
+    print(payload.decode(), end="")
+    return 0 if output["passed"] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

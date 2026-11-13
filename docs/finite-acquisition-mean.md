@@ -5,7 +5,10 @@ Gaussian second moments did not reproduce the supplied acquisition chain, even
 at the true geometry. This candidate replaces that approximation with two
 explicit developer operators: analytic finite-material cell coverage, followed
 by declared discrete acquisition stages. It has no tracing, fitting or HTTP
-integration. Numerical qualification follows the
+integration in the main-based runtime documented here. The
+[separate local recovery prototype](finite-acquisition-recovery.md) calls these
+operators, but is not included in this source or exposed through the workbench.
+Numerical qualification follows the
 [prospective plan](../studies/finite-acquisition-mean-v1.json). The
 [complete result](validation/finite-acquisition-mean.md) retains all 128
 comparisons, failed first controls and subsequent resource-accounting repair.
@@ -175,3 +178,6 @@ The subsequent [area sensitivities and fixed linear operator](finite-cell-sensit
 qualify a separately declared unrounded model. They do not differentiate this
 rounded chain. Independent recovery, treatment of rounding/encoding, source
 calibration and final boundary preservation remain requirements before adoption.
+The separately frozen [local recovery study](validation/finite-acquisition-recovery.md)
+preserves both failed protocols and does not extend this forward qualification
+to a general inverse or physical camera.

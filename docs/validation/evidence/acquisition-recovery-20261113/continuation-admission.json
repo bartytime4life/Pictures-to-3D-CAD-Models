@@ -1,0 +1,69 @@
+{
+  "format": "finite-acquisition-recovery-separate-continuation-admission",
+  "version": 1,
+  "original_source": "7ec680386f75e44415aeb4c83552aa723399c0bc",
+  "original_plan": {
+    "path": "studies/finite-acquisition-recovery-v1.json",
+    "sha256": "737bb8badf15a6bd1438ece67b9ad03f96e65440989bbc8bc2110edc8a497ad0"
+  },
+  "original_runner": {
+    "path": "studies/verification/finite-acquisition-recovery-v1.py",
+    "sha256": "073cc432134c5258add3e9d3addd24fdcabead97451424c3303720f878d58d29"
+  },
+  "original_reference": {
+    "path": "studies/verification/finite-acquisition-recovery-reference-v1.py",
+    "sha256": "5d8f3ec4b0283a688338e3981288fc38214e99bf5af50dad07c33cba2777ab0d"
+  },
+  "original_result": {
+    "rows": 24,
+    "matched_passes": 4,
+    "matched_total": 12,
+    "exit_code": 1,
+    "report_sha256": "30a3e30f26150124da22d76cc3b7c36aaf2212d094a1a5601253722442edad28",
+    "complete_archive_sha256": "e25fe8a0ca8675daafed1b0b577de1d68f4d42e21bf91ee3ba72d43fcb98e724"
+  },
+  "original_first_tests": {
+    "passed": 404,
+    "failed": 1,
+    "exit_code": 1,
+    "log_sha256": "d83e97463d54779ffcc9af8c77e8fa4ed2a7a28404e98e5871289bcbe4d3bee7"
+  },
+  "reason": "All four smooth matched rows passed; eight literal rounded rows failed, including local poll plateaus and work/iteration limits. First budget test incorrectly required the first seed to lose its valid local stopping status when a later seed hit the global cap. Originals are preserved before corrections.",
+  "strategy": {
+    "entrypoint": "backend.finite_acquisition_predictor.fit_acquisition_segment_predictor",
+    "smooth": "Pass through the original local fitter without a proposal phase.",
+    "rounded": "Use up to floor(one quarter) of each total evaluation, source-cell and stage-product cap for a smooth observed-data proposal phase using all original seeds. Select the represented minimum-cost candidate (index breaks ties), then use only its geometry and profiled levels as one literal rounded starting point. Preserve all alternatives and selection provenance.",
+    "fallback": "When no valid proposal or insufficient proposal quota is available, use original seeds with the remaining actual total resources. Refuse/withhold unsafe or unknown work; never erase failures.",
+    "scheduling_scope": "New local strategy with observed-cost proposal selection, not an exhaustive rounded multistart or global search.",
+    "global_budget": "Charge both phases against the same original total caps; proposal quota exhaustion remains separately visible and is not automatically total-cap exhaustion.",
+    "literal_objective": "Original actual float32 staged or PNG acquisition objective; no exact rounded variable projection, smooth rounded derivative, rank or convergence theorem is asserted.",
+    "completion_gate": "Original completion target plus explicit completion_withheld=False for unknown work or invalid source/protocol provenance. Individual phase/search statuses remain unchanged.",
+    "late_exception_gate": "The original runner can set row all_targets before later diagnostic errors. This continuation retains the previous flag and complete exception but forces any non-completed row to all_targets=False before it is counted; report counts/pass are reconciled. The frozen original runner/report remain untouched."
+  },
+  "unchanged": {
+    "population": "All24originalrows,12matched+12adverse; no removal or reclassification.",
+    "targets": "Every original geometry, boundary, dimension, conditional-residual, rank and local-completion criterion retains its numeric threshold.",
+    "initialization": "Same observed-only initializer, max4seeds, operational bounds, level hints and clipping.",
+    "reference": "Same independent positive-slice GL64/96 captures and independent candidate evaluation; original reference gate unchanged.",
+    "sampling": "Same training/reserved deterministic split, including first5trainingindices for adverse row; reserved checks remain conditional due full-field initialization.",
+    "budgets": "Same total2048evaluations,1000000cellunits and100000000stageproducts across both phases. The existing max60iterations applies per seed within each original-fitter phase, not to aggregate iterations or wall time.",
+    "no_truth_inputs": "Truth/evaluation dimensions opened only after complete fit outputs are saved."
+  },
+  "test_correction": {
+    "path": "tests/test_finite_acquisition_fit.py",
+    "old_assertion": "searches[0].status == work_limit for all caps",
+    "replacement": "Retain valid first-seed local resolution under max_evaluations=1; require a later denied search/ledger, exact started-or-unstarted seed census, same caps and global incomplete status.",
+    "does_not_change": "No optimizer source, tolerance, step, budget, scientific population, original study result or target is changed by this unit-contract correction."
+  },
+  "prospective_checks": [
+    "New wrapper routing, deterministic observed-cost selection, resource sums/quotas, no-hidden-calls, fixed/zero brightness, malformed/opaque/source failures, immutable input/result contracts and smooth pass-through.",
+    "Independent short-chord sampling-alias, stored-normal q-corrected angle-flux bound, signed-Keys propagation and conservative brightness-rank ceiling controls.",
+    "All focused original tests plus new tests run only after complete implementation/tests/admission/continuation are committed and hashed.",
+    "Complete24-row continuation; retain every refusal, exception, first failure and unchanged-target result. No after-result threshold or population adjustment.",
+    "Independent saved-only original-run auditor uses recorded source ZIP, never compares archived source binding to unrelated current code.",
+    "A late row exception cannot retain an overall pass even when its earlier evaluation targets were True; original diagnostics remain in the saved row and aggregate counters match gated rows."
+  ],
+  "freeze_policy": "All backend modules, all test_finite modules, original plan/runner/reference/helper, this admission, new continuation and saved-data auditor are committed and hashed before first new model/test call. No imports/tests/models during authoring. Corrections after results require another admission.",
+  "failure_policy": "Exit1 unless all12matchedrows pass every unchanged target, reference gate and source/provenance requirement. All24rows and complete phase ledgers retained. Adverse execution/refusal never promoted to recovery success.",
+  "limits": "Public synthetic model qualification only; no real-camera, noise, globality, native slicer or physical-print claim."
+}

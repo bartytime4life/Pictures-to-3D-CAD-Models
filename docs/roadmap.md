@@ -64,8 +64,17 @@ Its [archive](../studies/fixtures/finite-acquisition-mean-v1/README.md) retains
 first failed controls, audit arithmetic discrepancies and the later workspace
 repair. The subsequent [area and fixed-linear operators](finite-cell-sensitivity.md)
 now have [independent derivative checks](validation/finite-cell-sensitivity.md).
-Next: prospective geometry recovery with reserved dimensions and separate
-objectives for the smooth model and actual rounded stages. Supplied-stage agreement does not qualify
+Main still has no acquisition-aware five-parameter inverse. A separately frozen
+[local prototype](finite-acquisition-recovery.md) now has two complete 24-row
+protocols, each retaining 12 adverse rows: the original at `7ec6803` passes 4/12
+matched cases; the continuation at `e6e2c2` passes 9/12 (four smooth, four
+float32-staged and one PNG). Both exit **1**. Its **459 focused tests** are
+separate from recovery qualification. Next: resolve the retained PNG misses and
+identifiability limits before proposing integration, while preserving separate
+smooth and literal rounded objectives. The [record](validation/finite-acquisition-recovery.md)
+also retains the original study's first audit and its 14 unverifiable pre-cast
+area-delta checks.
+Neither prototype has a GUI/HTTP mode. Supplied-stage agreement does not qualify
 an unknown camera, current-main shadow fitting or automatic correction.
 
 The [engineering model and verification plan](engineering-model.md) defines the 2.5D scope, camera-model assumptions, dimension equations and evidence needed through prototype qualification. The independent source-height check optionally compares a user-bounded measurement with a user-defined allowance; it reports within, outside or inconclusive without assigning a physical accuracy or confidence level.
@@ -84,7 +93,7 @@ Reference entry also includes an [endpoint-placement sensitivity explorer](refer
 | Measured-photo benchmark | Quantify error on real parts | **The runner is implemented** (`make photo-benchmark`; [guide](photo-benchmark.md)): bounded global size correspondence, complete dimension-coverage totals, conditional per-dimension error, observed spread, and a two-term scale/edge diagnostic. Still needed: independently evaluated, calipered parts photographed with real phones under predeclared crossed conditions and reserved checks |
 | Directional blur and independent simulation | Expose model mismatch before applying unsupported corrections | **Implemented:** a separate synthetic radial inverse, production inverse-domain safeguards and test-only higher-order lens stress inputs; [record](validation/radial-inverse.md). The [30-case blur qualification](validation/directional-spread-qualification.md) found missed cases for its research diagnostic; the tracer fits a uniform directional blur with orientation-support and adequacy rules ([method](reference-sheet.md)). Supported nonparallel fillets use its covariance. Unresolved fits normally retain the traced boundary; invalid corrected rings may use a frozen initial fit as a line-only polygon after validity and whole-boundary tolerance checks, with an undetermined-radius notice and refusal otherwise ([recovery limits](anisotropic-corners.md#when-the-corrected-source-ring-is-invalid)). Needed: finite-shape adequacy, general free-arc and slot-cap models beyond their existing approximations, covariance uncertainty, spatially varying blur, sharpening, contact shadows and sharp-edged shadows under a wide blur (a soft shadow is fitted round the part; [method](reference-sheet.md)) and reserved real captures |
 | Blur frames after thickness correction | Keep known coordinate changes consistent with blur units | **Implemented:** uniform point scales transport scalar spread, covariance, free-curve correction, cap placement and line windows ([frame and support rules](blur-frames.md)). Mixed free curves, caps and scalar corners retain warned geometry approximations; mixed supplied-covariance nonparallel corners remain withheld. Needed: adequate mixed-frame and finite-shape models, independently checked critical radii and real-capture evidence |
-| Finite-material intensity fitting | Use the whole material region when an isolated arc model is inadequate | **Developer APIs only:** supplied-optics inverse and immutable measured-ring preparation ([contract](finite-shape-inverse.md)); the [paired replay](validation/finite-photo-intensity-v2.md) retains three all-target passes among twelve records. The [recorded-source acquisition audit](finite-acquisition-operator.md) finds second-moment Gaussian closure insufficient; the subsequent [source-cell mean](finite-acquisition-mean.md) passes its [saved-stage comparisons](validation/finite-acquisition-mean.md), and [unrounded derivatives](finite-cell-sensitivity.md) have separate checks. Needed next: a bounded acquisition-aware inverse, adequate optics/illumination and thickness frames, prospective recovery with reserved dimensions, broader latency qualification after the [fixed affine performance pass](validation/finite-affine-batch.md), preserved refusals, and one accepted boundary through preview and exports |
+| Finite-material intensity fitting | Use the whole material region when an isolated arc model is inadequate | **Developer APIs in main:** supplied-optics inverse and immutable measured-ring preparation ([contract](finite-shape-inverse.md)); the [paired replay](validation/finite-photo-intensity-v2.md) retains three all-target passes among twelve records. The [recorded-source acquisition audit](finite-acquisition-operator.md) finds second-moment Gaussian closure insufficient; the subsequent [source-cell mean](finite-acquisition-mean.md) passes its [saved-stage comparisons](validation/finite-acquisition-mean.md), and [unrounded derivatives](finite-cell-sensitivity.md) have separate checks. The [separate local five-parameter prototype](finite-acquisition-recovery.md) still fails its complete protocol and is not integrated. Needed before adoption: adequate optics/illumination and thickness frames, independent reserved dimensions, broader latency qualification after the [fixed affine performance pass](validation/finite-affine-batch.md), preserved failures/refusals, and one accepted boundary through preview and exports |
 | Measured local-model selection | Choose the smallest assistant that gives useful advice quickly | Installed artifact/license verification, repeatable latency results, and human review of fixed project-specific cases |
 | Opt-in vision guidance | Give capture advice based on the actual photograph | Explicit image-sharing control, a verified local vision model, resource bounds, and evaluation against visible evidence |
 | Assembly-aware splitting | Add useful joints or locating features between pieces | Measured clearance/kerf, topology checks, validated joinery, and explicit assembly assumptions |
@@ -100,10 +109,9 @@ Initial circle/piece fits now have a source-support check. Benchmark corresponde
 Supported nonparallel corners now use the empirical directional covariance;
 known uniform thickness maps also transport blur for the existing free-curve
 and cap approximations ([blur frames](blur-frames.md)). Prioritize
-prospective five-parameter recovery using the
-[checked area sensitivities and fixed linear operator](finite-cell-sensitivity.md),
+the separate [five-parameter prototype's remaining recovery failures](validation/finite-acquisition-recovery.md),
 with rank/contrast, undefined derivatives, rounding and encoding treated
-explicitly, then repeatable ground-truth capture. Finite-shape interactions
+explicitly before main integration, then repeatable ground-truth capture. Finite-shape interactions
 and mixed-frame policies remain. The lens renderer is now separately implemented, but the shared
 physical assumptions and observed higher-order mismatch remain. Keep the
 directional-spread prototype out of product reporting; the tracer's own

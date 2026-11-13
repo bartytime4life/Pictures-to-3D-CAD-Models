@@ -18,6 +18,16 @@ the usable volume at that orientation. Rebuild the reader and PDF from the
 handbook source. This correction does not change the revision label or refresh
 the dated release-verification record, catalog snapshot or archive.
 
+### Workbench research navigation — November 13, 2026
+
+Link the [local acquisition-recovery snapshot](../docs/finite-acquisition-recovery.md)
+and [documentation review](../docs/validation/documentation-recovery-state.md)
+from the repository-facing library guides. The snapshot retains both failed
+full protocols, their partial target passes, candidate-only tests and the
+unresolved saved-audit comparisons. This is a documentation update, not a library
+release or an addition to main's runtime or the Photos tab. The handbook text,
+generated HTML/PDF, catalog, release counts and dated verification stay unchanged.
+
 ## Revision 6 — November 9, 2026
 
 - Keep catalog search and filters in easy reach, with an expandable coverage chart, a clear empty-state reset, and larger touch targets. Preserve filter links when moving between tabs.

@@ -261,6 +261,18 @@ are declared separately and have their own qualification. They do not
 differentiate those rounded stages or recover geometry; small intensity
 residuals alone do not establish dimensional accuracy.
 
+A separately frozen [local recovery prototype](finite-acquisition-recovery.md)
+uses these operators to fit five geometry parameters and two bounded brightness
+levels; its modules are absent from this main-based source. The first protocol
+at `7ec6803` passes 4/12 matched cases. The continuation at `e6e2c2` passes 9/12:
+four smooth, four float32-staged and one PNG case. Both complete 24-row protocols,
+including 12 adverse rows, exit **1**. The continuation's **459 focused test
+passes** are separate software evidence, not a full application or camera result.
+Reserved pixels entered initialization, so their residuals are conditional checks.
+The [retained results and audit limits](validation/finite-acquisition-recovery.md)
+do not establish unique geometry, automatic tracing, a GUI/HTTP mode or physical
+accuracy.
+
 A source-derived straight-edge direction may still align the display and
 profile when a ring is retained as line geometry. The rigid rotation preserves
 distances and radii; axis-aligned width and height depend on that frame. This

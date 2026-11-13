@@ -1,0 +1,184 @@
+#!/usr/bin/env python3
+"""Independent positive-area and scalar-stencil recovery observations.
+
+No candidate forward, derivative, initializer or optimizer is imported. The
+vertical-slice reference is reused from its separately frozen sensitivity study;
+this module does not execute that study or regenerate its artifacts.
+"""
+
+from __future__ import annotations
+
+import importlib.util
+import math
+from functools import lru_cache
+from pathlib import Path
+
+import numpy as np
+
+
+@lru_cache(maxsize=1)
+def area_reference():
+    path = Path(__file__).with_name("finite-cell-sensitivity-v1.py")
+    spec = importlib.util.spec_from_file_location("recovery_positive_area_reference", path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def coverage(parameters, settings, order):
+    cx, cy, radius, fraction, theta = map(float, parameters)
+    nx, ny = math.cos(theta), math.sin(theta)
+    norm = math.hypot(nx, ny)
+    normal = (nx / norm, ny / norm)
+    result = np.empty(settings["source_shape"], dtype=float)
+    for row, col in np.ndindex(result.shape):
+        x = settings["origin"][0] + col * settings["pitch"]
+        y = settings["origin"][1] + row * settings["pitch"]
+        half = settings["pitch"] / 2
+        result[row, col] = (
+            area_reference().positive_slice_area(
+                (x - half, y - half, x + half, y + half),
+                centre=(cx, cy),
+                radius=radius,
+                fraction=fraction,
+                stored_normal=normal,
+                order=order,
+            )
+            / settings["pitch"] ** 2
+        )
+    return result
+
+
+def reflect(index, size):
+    if size == 1:
+        return 0
+    value = index % (2 * size - 2)
+    return value if value < size else 2 * size - 2 - value
+
+
+def correlate(field, kernel, rounded):
+    kernel = np.asarray(kernel, dtype=float)
+    result = np.empty(field.shape, dtype=float)
+    h, w = field.shape
+    for y, x in np.ndindex(field.shape):
+        result[y, x] = math.fsum(
+            float(kernel[j, i])
+            * float(
+                field[
+                    reflect(y + j - kernel.shape[0] // 2, h),
+                    reflect(x + i - kernel.shape[1] // 2, w),
+                ]
+            )
+            for j, i in np.ndindex(kernel.shape)
+        )
+    return result.astype(np.float32) if rounded else result
+
+
+def cubic(distance):
+    x = abs(distance)
+    if x <= 1:
+        return 1.5 * x**3 - 2.5 * x**2 + 1
+    if x < 2:
+        return -0.5 * x**3 + 2.5 * x**2 - 4 * x + 2
+    return 0.0
+
+
+def resample(field, settings, rounded):
+    h, w = field.shape
+    matrix = settings["output_to_source_index"]
+    result = np.empty(settings["output_shape"], dtype=float)
+    for y, x in np.ndindex(result.shape):
+        u = math.fsum((matrix[0][0] * (x + 0.5), matrix[0][1] * (y + 0.5), matrix[0][2]))
+        v = math.fsum((matrix[1][0] * (x + 0.5), matrix[1][1] * (y + 0.5), matrix[1][2]))
+        u, v = min(w + 1, max(-2, u)), min(h + 1, max(-2, v))
+        result[y, x] = math.fsum(
+            cubic(u - i)
+            * cubic(v - j)
+            * float(
+                field[
+                    min(h - 1, max(0, j)),
+                    min(w - 1, max(0, i)),
+                ]
+            )
+            for j in range(math.floor(v) - 1, math.floor(v) + 3)
+            for i in range(math.floor(u) - 1, math.floor(u) + 3)
+        )
+    return result.astype(np.float32) if rounded else result
+
+
+def forward(cell_coverage, levels, settings, mode):
+    rounded = mode != "smooth"
+    cov = cell_coverage.astype(np.float32) if rounded else cell_coverage
+    source = levels[0] * (1 - cov.astype(float)) + levels[1] * cov.astype(float)
+    if rounded:
+        source = source.astype(np.float32)
+    optical = correlate(source, settings["optical_kernel"], rounded)
+    measured = optical
+    stages = {"coverage": cov, "source": source, "optical": optical}
+    if mode == "png":
+        raw = np.maximum(optical.astype(float), 0) / 255
+        nonlinear = np.where(raw <= 0.0031308, 12.92 * raw, 1.055 * raw ** (1 / 2.4) - 0.055)
+        codes = np.rint(np.clip(255 * nonlinear, 0, 255)).astype(np.uint8)
+        encoded = np.arange(256, dtype=float) / 255
+        lut = (
+            255 * np.where(encoded <= 0.04045, encoded / 12.92, ((encoded + 0.055) / 1.055) ** 2.4)
+        ).astype(np.float32)
+        measured = np.zeros(optical.shape, dtype=np.float32)
+        # This explicitly includes grayscale decoding through all Rec.709 terms.
+        for weight in (0.2126, 0.7152, 0.0722):
+            measured += np.float32(weight) * lut[codes]
+        stages.update(encoded=codes, decoded=measured)
+    rectified = resample(measured, settings, rounded)
+    final = correlate(rectified, settings["post_kernel"], rounded)
+    stages.update(rectified=rectified, final=final)
+    return stages
+
+
+def dimensions(parameters):
+    _, _, radius, fraction, _ = map(float, parameters)
+    return {
+        "chord_length": 2 * radius * math.sqrt(max(0, 1 - fraction**2)),
+        "normal_depth": radius * (1 + fraction),
+    }
+
+
+def boundary(parameters):
+    cx, cy, radius, fraction, theta = parameters
+    n = np.array([math.cos(theta), math.sin(theta)])
+    t = np.array([-n[1], n[0]])
+    half = math.sqrt(max(0, 1 - fraction**2))
+    first = math.acos(min(1, max(-1, fraction)))
+    arc = np.linspace(first, 2 * math.pi - first, 257)
+    circle = np.column_stack((np.cos(arc), np.sin(arc)))
+    arc_points = np.array([cx, cy]) + radius * (circle[:, :1] * n + circle[:, 1:] * t)
+    chord_points = (
+        np.array([cx, cy])
+        + radius * fraction * n
+        + radius * np.linspace(-half, half, 65)[:, None] * t
+    )
+    return np.vstack((arc_points, chord_points))
+
+
+def point_boundary_distance(points, parameters):
+    cx, cy, radius, fraction, theta = parameters
+    n = np.array([math.cos(theta), math.sin(theta)])
+    t = np.array([-n[1], n[0]])
+    local = points - [cx, cy]
+    distance = np.linalg.norm(local, axis=1)
+    unit = np.divide(
+        local, distance[:, None], out=np.zeros_like(local), where=distance[:, None] != 0
+    )
+    # The nearest circle point is valid only on the exposed arc.
+    arc_distance = np.where(unit @ n <= fraction, np.abs(distance - radius), np.inf)
+    half = radius * math.sqrt(max(0, 1 - fraction**2))
+    along = np.clip(local @ t, -half, half)
+    chord = radius * fraction * n + along[:, None] * t
+    return np.minimum(arc_distance, np.linalg.norm(local - chord, axis=1))
+
+
+def sampled_boundary_discrepancy(a, b):
+    return max(
+        float(np.max(point_boundary_distance(boundary(a), b))),
+        float(np.max(point_boundary_distance(boundary(b), a))),
+    )

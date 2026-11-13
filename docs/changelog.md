@@ -1,5 +1,17 @@
 # Workbench change log
 
+## Documentation of separate local recovery research — November 13, 2026
+
+- Audit current documentation against main `e0b16e0`, after PR #110 merged.
+- Connect the local five-geometry/unknown-brightness research snapshot to the
+  index, architecture, engineering, development and roadmap guides while keeping
+  its APIs outside the merged runtime and workbench interface.
+- Retain the original 4/12 and continuation 9/12 matched results, both failed
+  protocols, 459 focused test passes, three remaining PNG failures and the
+  first saved-data audit's 14 unreconstructible pre-cast area deltas.
+- Include verbatim report/log/plan extracts and source bindings; preserve
+  historical records, runtime source, frozen studies and generated library products.
+
 ## Documentation audit after the merged refresh — November 13, 2026
 
 - Audit the full documentation inventory against main `a6990c9`, including

@@ -5,6 +5,11 @@ older screenshots, test totals or runtime observations validate the current
 checkout. No browser, geometry or accessibility tests were rerun for this
 documentation refresh.
 
+The [current documentation review](docs/validation/documentation-recovery-state.md)
+also links a [separate local recovery prototype](docs/finite-acquisition-recovery.md).
+Its focused tests and synthetic study do not change the reviewed interface below
+or add acquisition-fitting controls to the workbench.
+
 ## Latest recorded workbench review — November 11, 2026
 
 The [guided workbench review](docs/validation/guided-workbench.md) records the

@@ -16,7 +16,16 @@ verifies the independent mean without running a model.
 For five unrounded area columns and signed propagation, read the
 [cell-sensitivity contract](finite-cell-sensitivity.md) and its
 [14-artifact saved-only workflow](../studies/fixtures/finite-cell-sensitivity-v1/README.md).
-There is no acquisition-aware five-parameter fit command or HTTP mode yet.
+There is no acquisition-aware five-parameter fit command or HTTP mode in this
+main checkout. The [separately frozen recovery candidate](finite-acquisition-recovery.md)
+at `e6e2c2` includes local fitting and smooth-proposal/literal-objective study
+runners, but their modules and entry points are absent here. Its 459 passing
+focused tests are separate from both failed numerical protocols: 4/12 matched
+targets in the first and 9/12 in the continuation, each with all 24 matched/adverse
+rows retained and exit 1. The first saved-data audit has 14 unverifiable pre-cast
+order-delta comparisons; do not treat it as an independent success. Follow the
+candidate's source-specific guide rather than borrowing an unavailable command
+or treating a documentation check as a new fit, audit pass or app regression.
 
 The [acquisition evidence workflow](../studies/fixtures/finite-acquisition-operator-v1/README.md)
 verifies 123 stored artifacts, extracts the complete saved run and checks the

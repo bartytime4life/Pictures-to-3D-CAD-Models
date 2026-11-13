@@ -1,0 +1,50 @@
+{
+  "recorded_at": "2026-11-13T19:11:29.504936+00:00",
+  "head": "e6e2c2881add2cc594f4a59d713edf8a9ddde665",
+  "governing_files": 60,
+  "source_unchanged_after_all_processes": true,
+  "focused_tests": {
+    "exit_code": 0,
+    "passed": 459,
+    "failed": 0,
+    "seconds": 16.33
+  },
+  "continuation": {
+    "session_id": 64395,
+    "exit_code": 1,
+    "matched_passes": 9,
+    "matched_total": 12,
+    "population": 24,
+    "adverse_all_targets": 1,
+    "passed": false
+  },
+  "original_saved_audit": {
+    "exit_code": 1,
+    "checks": 5740807,
+    "failures": 14,
+    "passed": false,
+    "model_calls": 0
+  },
+  "artifacts": {
+    "finite-acquisition-recovery-predictor-v1-first-tests.log": {
+      "sha256": "01797e8824b248a68523e053db126e89a5d85a66284a3510437842622293fdbe",
+      "bytes": 581
+    },
+    "finite-acquisition-recovery-predictor-v1-first.log": {
+      "sha256": "ee0923c5332ab0658f8d00400c9fdae71e6f769768eab35e1a4776b93153f670",
+      "bytes": 2339
+    },
+    "finite-acquisition-recovery-predictor-v1-first/report.json": {
+      "sha256": "f73120151fb709521417f07ff7bc3ac82f3039e5170fc912bd692429bd4f949e",
+      "bytes": 108453
+    },
+    "finite-acquisition-recovery-v1-first-audit.json": {
+      "sha256": "dc2b0b454c2be8cb9025d5f444deba23dbd15563fb7a786871f63b7ceea90533",
+      "bytes": 36900
+    },
+    "finite-acquisition-recovery-v1-first-audit.log": {
+      "sha256": "dc2b0b454c2be8cb9025d5f444deba23dbd15563fb7a786871f63b7ceea90533",
+      "bytes": 36900
+    }
+  }
+}

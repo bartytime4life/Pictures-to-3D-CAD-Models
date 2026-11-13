@@ -1,0 +1,1461 @@
+{
+  "format": "finite-acquisition-recovery-saved-data-audit",
+  "version": 1,
+  "auditor_sha256": "749cb6b9a158b81891cb58109b114b2a18bf4aca1933c8268beca2bfa00a0373",
+  "python": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+  "model_calls": 0,
+  "optimizer_calls": 0,
+  "reference_calls": 0,
+  "current_checkout_source_used": false,
+  "scope": {
+    "independent_saved_data_checks": [
+      "complete population, retained exceptions/refusals, file hashes and recorded-source ZIP",
+      "saved capture-order differences and encoded-array equality; no new reference",
+      "observed-only initializer hashes, common queries, seeds and train/reserved split",
+      "every candidate residual/cost arithmetic against saved predictions and observed targets",
+      "objective/source-cell LRU histories and attempted/cumulative resource accounting",
+      "best candidate, local completion gate, geometry errors and independent dimension formulas",
+      "all target flags and matched/adverse denominators without requiring study success"
+    ],
+    "not_independently_recomputed": [
+      "any forward prediction, capture, operator output or reserved-query prediction",
+      "sampled boundary discrepancy, true supremum distance, topology or coverage accuracy",
+      "Jacobians, SVD/rank, brightness optimality, proposals and stopping calculations",
+      "reference certification or causal attribution of recovery failures"
+    ],
+    "conditional_limits": [
+      "reserved pixels entered full-field preprocessing; they are not independent holdout",
+      "observed bounds are operational caps, not proved truth enclosures",
+      "PNG ties and local stopping do not establish accurate or unique geometry",
+      "rank/residual diagnostics are conditional numerical quantities, not physical accuracy"
+    ]
+  },
+  "result": {
+    "report_sha256": "30a3e30f26150124da22d76cc3b7c36aaf2212d094a1a5601253722442edad28",
+    "report_bytes": 100107,
+    "source_zip_sha256": "c9779ed9326dea5f2887f3e72b1e25851044e3fe567aa12b225e845795529567",
+    "source_manifest_head": "7ec680386f75e44415aeb4c83552aa723399c0bc",
+    "recorded_source_files": 53,
+    "plan_sha256": "737bb8badf15a6bd1438ece67b9ad03f96e65440989bbc8bc2110edc8a497ad0",
+    "population": 24,
+    "matched": {
+      "requested": 12,
+      "passed": 4
+    },
+    "adverse": {
+      "requested": 12,
+      "all_targets_recorded": 1
+    },
+    "row_statuses": {
+      "completed": 23,
+      "exception": 1
+    },
+    "matched_passes_by_mode": {
+      "smooth": 4
+    },
+    "original_report_passed": false,
+    "original_expected_exit_code": 1,
+    "rows": [
+      {
+        "name": "minor-smooth",
+        "family": "matched",
+        "mode": "smooth",
+        "status": "completed",
+        "preparation_status": "ambiguous",
+        "hypotheses": 32,
+        "seeds": 4,
+        "candidates": 28,
+        "ledger_statuses": {
+          "resolved": 28
+        },
+        "search_statuses": [
+          "projected_gradient_resolution",
+          "projected_gradient_resolution",
+          "projected_gradient_resolution",
+          "projected_gradient_resolution"
+        ],
+        "work_exhausted": false,
+        "tied": false,
+        "rank_recorded": 5,
+        "all_targets_recorded": true,
+        "failed_targets": []
+      },
+      {
+        "name": "minor-staged",
+        "family": "matched",
+        "mode": "staged",
+        "status": "completed",
+        "preparation_status": "ambiguous",
+        "hypotheses": 32,
+        "seeds": 4,
+        "candidates": 2048,
+        "ledger_statuses": {
+          "resolved": 2048,
+          "work_limit": 1
+        },
+        "search_statuses": [
+          "iteration_limit",
+          "iteration_limit",
+          "work_limit"
+        ],
+        "work_exhausted": true,
+        "tied": false,
+        "rank_recorded": null,
+        "all_targets_recorded": false,
+        "failed_targets": [
+          "centre_error_pitch",
+          "radius_error_pitch",
+          "fraction_error",
+          "wrapped_angle_degrees",
+          "reserved_dimension_error_pitch",
+          "sampled_bidirectional_boundary_error_pitch",
+          "conditional_query_max_residual_linear_level",
+          "bounded_local_search_completion"
+        ]
+      },
+      {
+        "name": "minor-png",
+        "family": "matched",
+        "mode": "png",
+        "status": "completed",
+        "preparation_status": "ambiguous",
+        "hypotheses": 32,
+        "seeds": 4,
+        "candidates": 1670,
+        "ledger_statuses": {
+          "resolved": 1670
+        },
+        "search_statuses": [
+          "poll_resolution",
+          "poll_resolution",
+          "poll_resolution",
+          "poll_resolution"
+        ],
+        "work_exhausted": false,
+        "tied": true,
+        "rank_recorded": null,
+        "all_targets_recorded": false,
+        "failed_targets": [
+          "centre_error_pitch",
+          "radius_error_pitch",
+          "fraction_error",
+          "wrapped_angle_degrees",
+          "reserved_dimension_error_pitch",
+          "sampled_bidirectional_boundary_error_pitch",
+          "conditional_query_max_residual_linear_level"
+        ]
+      },
+      {
+        "name": "middle-smooth",
+        "family": "matched",
+        "mode": "smooth",
+        "status": "completed",
+        "preparation_status": "ambiguous",
+        "hypotheses": 32,
+        "seeds": 4,
+        "candidates": 17,
+        "ledger_statuses": {
+          "resolved": 17
+        },
+        "search_statuses": [
+          "projected_gradient_resolution",
+          "projected_gradient_resolution",
+          "projected_gradient_resolution",
+          "projected_gradient_resolution"
+        ],
+        "work_exhausted": false,
+        "tied": false,
+        "rank_recorded": 5,
+        "all_targets_recorded": true,
+        "failed_targets": []
+      },
+      {
+        "name": "middle-staged",
+        "family": "matched",
+        "mode": "staged",
+        "status": "completed",
+        "preparation_status": "ambiguous",
+        "hypotheses": 32,
+        "seeds": 4,
+        "candidates": 2048,
+        "ledger_statuses": {
+          "resolved": 2048,
+          "work_limit": 1
+        },
+        "search_statuses": [
+          "iteration_limit",
+          "iteration_limit",
+          "work_limit"
+        ],
+        "work_exhausted": true,
+        "tied": false,
+        "rank_recorded": null,
+        "all_targets_recorded": false,
+        "failed_targets": [
+          "centre_error_pitch",
+          "radius_error_pitch",
+          "fraction_error",
+          "reserved_dimension_error_pitch",
+          "sampled_bidirectional_boundary_error_pitch",
+          "conditional_query_max_residual_linear_level",
+          "bounded_local_search_completion"
+        ]
+      },
+      {
+        "name": "middle-png",
+        "family": "matched",
+        "mode": "png",
+        "status": "completed",
+        "preparation_status": "ambiguous",
+        "hypotheses": 32,
+        "seeds": 4,
+        "candidates": 1978,
+        "ledger_statuses": {
+          "resolved": 1978
+        },
+        "search_statuses": [
+          "poll_resolution",
+          "poll_resolution",
+          "poll_resolution",
+          "poll_resolution"
+        ],
+        "work_exhausted": false,
+        "tied": true,
+        "rank_recorded": null,
+        "all_targets_recorded": false,
+        "failed_targets": [
+          "centre_error_pitch",
+          "radius_error_pitch",
+          "fraction_error",
+          "wrapped_angle_degrees",
+          "reserved_dimension_error_pitch",
+          "sampled_bidirectional_boundary_error_pitch",
+          "conditional_query_max_residual_linear_level"
+        ]
+      },
+      {
+        "name": "major-smooth",
+        "family": "matched",
+        "mode": "smooth",
+        "status": "completed",
+        "preparation_status": "ambiguous",
+        "hypotheses": 32,
+        "seeds": 4,
+        "candidates": 16,
+        "ledger_statuses": {
+          "resolved": 16
+        },
+        "search_statuses": [
+          "projected_gradient_resolution",
+          "projected_gradient_resolution",
+          "projected_gradient_resolution",
+          "projected_gradient_resolution"
+        ],
+        "work_exhausted": false,
+        "tied": false,
+        "rank_recorded": 5,
+        "all_targets_recorded": true,
+        "failed_targets": []
+      },
+      {
+        "name": "major-staged",
+        "family": "matched",
+        "mode": "staged",
+        "status": "completed",
+        "preparation_status": "ambiguous",
+        "hypotheses": 32,
+        "seeds": 4,
+        "candidates": 2048,
+        "ledger_statuses": {
+          "resolved": 2048,
+          "work_limit": 1
+        },
+        "search_statuses": [
+          "iteration_limit",
+          "iteration_limit",
+          "work_limit"
+        ],
+        "work_exhausted": true,
+        "tied": false,
+        "rank_recorded": null,
+        "all_targets_recorded": false,
+        "failed_targets": [
+          "conditional_query_max_residual_linear_level",
+          "bounded_local_search_completion"
+        ]
+      },
+      {
+        "name": "major-png",
+        "family": "matched",
+        "mode": "png",
+        "status": "completed",
+        "preparation_status": "ambiguous",
+        "hypotheses": 32,
+        "seeds": 4,
+        "candidates": 2048,
+        "ledger_statuses": {
+          "resolved": 2048,
+          "work_limit": 1
+        },
+        "search_statuses": [
+          "poll_resolution",
+          "poll_resolution",
+          "poll_resolution",
+          "work_limit"
+        ],
+        "work_exhausted": true,
+        "tied": true,
+        "rank_recorded": null,
+        "all_targets_recorded": false,
+        "failed_targets": [
+          "conditional_query_max_residual_linear_level",
+          "bounded_local_search_completion"
+        ]
+      },
+      {
+        "name": "wrapped-major-smooth",
+        "family": "matched",
+        "mode": "smooth",
+        "status": "completed",
+        "preparation_status": "ambiguous",
+        "hypotheses": 32,
+        "seeds": 4,
+        "candidates": 16,
+        "ledger_statuses": {
+          "resolved": 16
+        },
+        "search_statuses": [
+          "projected_gradient_resolution",
+          "projected_gradient_resolution",
+          "projected_gradient_resolution",
+          "projected_gradient_resolution"
+        ],
+        "work_exhausted": false,
+        "tied": false,
+        "rank_recorded": 5,
+        "all_targets_recorded": true,
+        "failed_targets": []
+      },
+      {
+        "name": "wrapped-major-staged",
+        "family": "matched",
+        "mode": "staged",
+        "status": "completed",
+        "preparation_status": "ambiguous",
+        "hypotheses": 32,
+        "seeds": 4,
+        "candidates": 2048,
+        "ledger_statuses": {
+          "resolved": 2048,
+          "work_limit": 1
+        },
+        "search_statuses": [
+          "iteration_limit",
+          "iteration_limit",
+          "work_limit"
+        ],
+        "work_exhausted": true,
+        "tied": false,
+        "rank_recorded": null,
+        "all_targets_recorded": false,
+        "failed_targets": [
+          "conditional_query_max_residual_linear_level",
+          "bounded_local_search_completion"
+        ]
+      },
+      {
+        "name": "wrapped-major-png",
+        "family": "matched",
+        "mode": "png",
+        "status": "completed",
+        "preparation_status": "ambiguous",
+        "hypotheses": 32,
+        "seeds": 4,
+        "candidates": 2048,
+        "ledger_statuses": {
+          "resolved": 2048,
+          "work_limit": 1
+        },
+        "search_statuses": [
+          "poll_resolution",
+          "iteration_limit",
+          "work_limit"
+        ],
+        "work_exhausted": true,
+        "tied": true,
+        "rank_recorded": null,
+        "all_targets_recorded": false,
+        "failed_targets": [
+          "fraction_error",
+          "wrapped_angle_degrees",
+          "reserved_dimension_error_pitch",
+          "conditional_query_max_residual_linear_level",
+          "bounded_local_search_completion"
+        ]
+      },
+      {
+        "name": "zero-smooth",
+        "family": "adverse",
+        "mode": "smooth",
+        "status": "completed",
+        "preparation_status": "refused",
+        "hypotheses": 0,
+        "seeds": 0,
+        "candidates": 0,
+        "ledger_statuses": null,
+        "search_statuses": [],
+        "work_exhausted": null,
+        "tied": null,
+        "rank_recorded": null,
+        "all_targets_recorded": false,
+        "failed_targets": []
+      },
+      {
+        "name": "zero-png",
+        "family": "adverse",
+        "mode": "png",
+        "status": "completed",
+        "preparation_status": "refused",
+        "hypotheses": 0,
+        "seeds": 0,
+        "candidates": 0,
+        "ledger_statuses": null,
+        "search_statuses": [],
+        "work_exhausted": null,
+        "tied": null,
+        "rank_recorded": null,
+        "all_targets_recorded": false,
+        "failed_targets": []
+      },
+      {
+        "name": "low-staged",
+        "family": "adverse",
+        "mode": "staged",
+        "status": "completed",
+        "preparation_status": "refused",
+        "hypotheses": 0,
+        "seeds": 0,
+        "candidates": 0,
+        "ledger_statuses": null,
+        "search_statuses": [],
+        "work_exhausted": null,
+        "tied": null,
+        "rank_recorded": null,
+        "all_targets_recorded": false,
+        "failed_targets": []
+      },
+      {
+        "name": "cropped-smooth",
+        "family": "adverse",
+        "mode": "smooth",
+        "status": "completed",
+        "preparation_status": "refused",
+        "hypotheses": 0,
+        "seeds": 0,
+        "candidates": 0,
+        "ledger_statuses": null,
+        "search_statuses": [],
+        "work_exhausted": null,
+        "tied": null,
+        "rank_recorded": null,
+        "all_targets_recorded": false,
+        "failed_targets": []
+      },
+      {
+        "name": "thin-png",
+        "family": "adverse",
+        "mode": "png",
+        "status": "completed",
+        "preparation_status": "refused",
+        "hypotheses": 0,
+        "seeds": 0,
+        "candidates": 0,
+        "ledger_statuses": null,
+        "search_statuses": [],
+        "work_exhausted": null,
+        "tied": null,
+        "rank_recorded": null,
+        "all_targets_recorded": false,
+        "failed_targets": []
+      },
+      {
+        "name": "almost-circle-smooth",
+        "family": "adverse",
+        "mode": "smooth",
+        "status": "completed",
+        "preparation_status": "ambiguous",
+        "hypotheses": 32,
+        "seeds": 0,
+        "candidates": 0,
+        "ledger_statuses": null,
+        "search_statuses": [],
+        "work_exhausted": null,
+        "tied": null,
+        "rank_recorded": null,
+        "all_targets_recorded": false,
+        "failed_targets": []
+      },
+      {
+        "name": "wrong-optics-smooth",
+        "family": "adverse",
+        "mode": "smooth",
+        "status": "completed",
+        "preparation_status": "ambiguous",
+        "hypotheses": 32,
+        "seeds": 4,
+        "candidates": 40,
+        "ledger_statuses": {
+          "resolved": 40
+        },
+        "search_statuses": [
+          "projected_gradient_resolution",
+          "projected_gradient_resolution",
+          "projected_gradient_resolution",
+          "projected_gradient_resolution"
+        ],
+        "work_exhausted": false,
+        "tied": false,
+        "rank_recorded": 5,
+        "all_targets_recorded": false,
+        "failed_targets": [
+          "centre_error_pitch",
+          "radius_error_pitch",
+          "fraction_error",
+          "wrapped_angle_degrees",
+          "reserved_dimension_error_pitch",
+          "sampled_bidirectional_boundary_error_pitch",
+          "conditional_query_max_residual_linear_level"
+        ]
+      },
+      {
+        "name": "gradient-staged",
+        "family": "adverse",
+        "mode": "staged",
+        "status": "completed",
+        "preparation_status": "ambiguous",
+        "hypotheses": 32,
+        "seeds": 4,
+        "candidates": 2048,
+        "ledger_statuses": {
+          "resolved": 2048,
+          "work_limit": 1
+        },
+        "search_statuses": [
+          "iteration_limit",
+          "iteration_limit",
+          "work_limit"
+        ],
+        "work_exhausted": true,
+        "tied": false,
+        "rank_recorded": null,
+        "all_targets_recorded": false,
+        "failed_targets": [
+          "centre_error_pitch",
+          "fraction_error",
+          "wrapped_angle_degrees",
+          "conditional_query_max_residual_linear_level",
+          "bounded_local_search_completion"
+        ]
+      },
+      {
+        "name": "singular-map-png",
+        "family": "adverse",
+        "mode": "png",
+        "status": "exception",
+        "preparation_status": null,
+        "hypotheses": 0,
+        "seeds": 0,
+        "candidates": 0,
+        "ledger_statuses": null,
+        "search_statuses": [],
+        "work_exhausted": null,
+        "tied": null,
+        "rank_recorded": null,
+        "all_targets_recorded": false,
+        "failed_targets": []
+      },
+      {
+        "name": "five-queries-smooth",
+        "family": "adverse",
+        "mode": "smooth",
+        "status": "completed",
+        "preparation_status": "ambiguous",
+        "hypotheses": 32,
+        "seeds": 4,
+        "candidates": 859,
+        "ledger_statuses": {
+          "resolved": 859
+        },
+        "search_statuses": [
+          "poll_resolution",
+          "poll_resolution",
+          "poll_resolution",
+          "poll_resolution"
+        ],
+        "work_exhausted": false,
+        "tied": true,
+        "rank_recorded": null,
+        "all_targets_recorded": false,
+        "failed_targets": [
+          "centre_error_pitch",
+          "radius_error_pitch",
+          "fraction_error",
+          "wrapped_angle_degrees",
+          "reserved_dimension_error_pitch",
+          "sampled_bidirectional_boundary_error_pitch",
+          "conditional_query_max_residual_linear_level",
+          "bounded_local_search_completion",
+          "geometry_rank_conservative_when_smooth"
+        ]
+      },
+      {
+        "name": "coincident-smooth",
+        "family": "adverse",
+        "mode": "smooth",
+        "status": "completed",
+        "preparation_status": "ambiguous",
+        "hypotheses": 32,
+        "seeds": 4,
+        "candidates": 20,
+        "ledger_statuses": {
+          "resolved": 20
+        },
+        "search_statuses": [
+          "projected_gradient_resolution",
+          "projected_gradient_resolution",
+          "projected_gradient_resolution",
+          "projected_gradient_resolution"
+        ],
+        "work_exhausted": false,
+        "tied": false,
+        "rank_recorded": 5,
+        "all_targets_recorded": true,
+        "failed_targets": []
+      },
+      {
+        "name": "budget-png",
+        "family": "adverse",
+        "mode": "png",
+        "status": "completed",
+        "preparation_status": "ambiguous",
+        "hypotheses": 32,
+        "seeds": 4,
+        "candidates": 1,
+        "ledger_statuses": {
+          "resolved": 1,
+          "work_limit": 1
+        },
+        "search_statuses": [
+          "work_limit"
+        ],
+        "work_exhausted": true,
+        "tied": false,
+        "rank_recorded": null,
+        "all_targets_recorded": false,
+        "failed_targets": [
+          "centre_error_pitch",
+          "radius_error_pitch",
+          "fraction_error",
+          "wrapped_angle_degrees",
+          "reserved_dimension_error_pitch",
+          "sampled_bidirectional_boundary_error_pitch",
+          "conditional_query_max_residual_linear_level",
+          "bounded_local_search_completion"
+        ]
+      }
+    ]
+  },
+  "checks": 5740807,
+  "failure_count": 14,
+  "first_failure": {
+    "path": "rows/minor-staged/reference/area_delta",
+    "detail": "saved identity differs from independently derived value"
+  },
+  "failures": [
+    {
+      "path": "rows/minor-staged/reference/area_delta",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/minor-png/reference/area_delta",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/middle-staged/reference/area_delta",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/middle-png/reference/area_delta",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/major-staged/reference/area_delta",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/major-png/reference/area_delta",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/wrapped-major-staged/reference/area_delta",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/wrapped-major-png/reference/area_delta",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/zero-png/reference/area_delta",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/low-staged/reference/area_delta",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/thin-png/reference/area_delta",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/gradient-staged/reference/area_delta",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/singular-map-png/reference/area_delta",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/budget-png/reference/area_delta",
+      "detail": "saved identity differs from independently derived value"
+    }
+  ],
+  "failures_truncated": false,
+  "sections": [
+    {
+      "section": "artifacts",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-smooth/reference",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-smooth/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-smooth/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-smooth/fit_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-smooth/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-smooth/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-smooth/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-smooth/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-smooth",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-staged/reference",
+      "failures": 1
+    },
+    {
+      "section": "rows/minor-staged/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-staged/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-staged/fit_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-staged/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-staged/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-staged/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-staged/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-staged",
+      "failures": 1
+    },
+    {
+      "section": "rows/minor-png/reference",
+      "failures": 1
+    },
+    {
+      "section": "rows/minor-png/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-png/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-png/fit_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-png/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-png/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-png/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-png/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-png",
+      "failures": 1
+    },
+    {
+      "section": "rows/middle-smooth/reference",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-smooth/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-smooth/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-smooth/fit_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-smooth/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-smooth/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-smooth/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-smooth/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-smooth",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-staged/reference",
+      "failures": 1
+    },
+    {
+      "section": "rows/middle-staged/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-staged/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-staged/fit_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-staged/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-staged/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-staged/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-staged/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-staged",
+      "failures": 1
+    },
+    {
+      "section": "rows/middle-png/reference",
+      "failures": 1
+    },
+    {
+      "section": "rows/middle-png/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-png/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-png/fit_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-png/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-png/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-png/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-png/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-png",
+      "failures": 1
+    },
+    {
+      "section": "rows/major-smooth/reference",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-smooth/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-smooth/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-smooth/fit_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-smooth/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-smooth/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-smooth/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-smooth/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-smooth",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-staged/reference",
+      "failures": 1
+    },
+    {
+      "section": "rows/major-staged/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-staged/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-staged/fit_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-staged/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-staged/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-staged/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-staged/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-staged",
+      "failures": 1
+    },
+    {
+      "section": "rows/major-png/reference",
+      "failures": 1
+    },
+    {
+      "section": "rows/major-png/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-png/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-png/fit_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-png/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-png/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-png/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-png/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-png",
+      "failures": 1
+    },
+    {
+      "section": "rows/wrapped-major-smooth/reference",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-smooth/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-smooth/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-smooth/fit_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-smooth/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-smooth/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-smooth/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-smooth/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-smooth",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-staged/reference",
+      "failures": 1
+    },
+    {
+      "section": "rows/wrapped-major-staged/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-staged/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-staged/fit_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-staged/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-staged/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-staged/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-staged/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-staged",
+      "failures": 1
+    },
+    {
+      "section": "rows/wrapped-major-png/reference",
+      "failures": 1
+    },
+    {
+      "section": "rows/wrapped-major-png/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-png/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-png/fit_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-png/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-png/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-png/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-png/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-png",
+      "failures": 1
+    },
+    {
+      "section": "rows/zero-smooth/reference",
+      "failures": 0
+    },
+    {
+      "section": "rows/zero-smooth/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/zero-smooth/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "rows/zero-smooth",
+      "failures": 0
+    },
+    {
+      "section": "rows/zero-png/reference",
+      "failures": 1
+    },
+    {
+      "section": "rows/zero-png/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/zero-png/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "rows/zero-png",
+      "failures": 1
+    },
+    {
+      "section": "rows/low-staged/reference",
+      "failures": 1
+    },
+    {
+      "section": "rows/low-staged/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/low-staged/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "rows/low-staged",
+      "failures": 1
+    },
+    {
+      "section": "rows/cropped-smooth/reference",
+      "failures": 0
+    },
+    {
+      "section": "rows/cropped-smooth/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/cropped-smooth/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "rows/cropped-smooth",
+      "failures": 0
+    },
+    {
+      "section": "rows/thin-png/reference",
+      "failures": 1
+    },
+    {
+      "section": "rows/thin-png/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/thin-png/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "rows/thin-png",
+      "failures": 1
+    },
+    {
+      "section": "rows/almost-circle-smooth/reference",
+      "failures": 0
+    },
+    {
+      "section": "rows/almost-circle-smooth/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/almost-circle-smooth/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "rows/almost-circle-smooth",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrong-optics-smooth/reference",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrong-optics-smooth/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrong-optics-smooth/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrong-optics-smooth/fit_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrong-optics-smooth/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrong-optics-smooth/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrong-optics-smooth/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrong-optics-smooth/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrong-optics-smooth",
+      "failures": 0
+    },
+    {
+      "section": "rows/gradient-staged/reference",
+      "failures": 1
+    },
+    {
+      "section": "rows/gradient-staged/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/gradient-staged/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/gradient-staged/fit_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/gradient-staged/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/gradient-staged/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/gradient-staged/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/gradient-staged/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "rows/gradient-staged",
+      "failures": 1
+    },
+    {
+      "section": "rows/singular-map-png/reference",
+      "failures": 1
+    },
+    {
+      "section": "rows/singular-map-png",
+      "failures": 1
+    },
+    {
+      "section": "rows/five-queries-smooth/reference",
+      "failures": 0
+    },
+    {
+      "section": "rows/five-queries-smooth/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/five-queries-smooth/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/five-queries-smooth/fit_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/five-queries-smooth/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/five-queries-smooth/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/five-queries-smooth/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/five-queries-smooth/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "rows/five-queries-smooth",
+      "failures": 0
+    },
+    {
+      "section": "rows/coincident-smooth/reference",
+      "failures": 0
+    },
+    {
+      "section": "rows/coincident-smooth/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/coincident-smooth/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/coincident-smooth/fit_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/coincident-smooth/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/coincident-smooth/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/coincident-smooth/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/coincident-smooth/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "rows/coincident-smooth",
+      "failures": 0
+    },
+    {
+      "section": "rows/budget-png/reference",
+      "failures": 1
+    },
+    {
+      "section": "rows/budget-png/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/budget-png/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/budget-png/fit_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/budget-png/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/budget-png/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/budget-png/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/budget-png/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "rows/budget-png",
+      "failures": 1
+    },
+    {
+      "section": "saved_run",
+      "failures": 14
+    }
+  ],
+  "maximum_arithmetic_allowance_ratio": 0.0078125,
+  "passed": false
+}
