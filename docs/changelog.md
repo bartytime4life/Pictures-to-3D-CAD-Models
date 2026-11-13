@@ -1,5 +1,14 @@
 # Workbench change log
 
+## Contact shadows beside an edge — November 13, 2026
+
+- Documents why a shadow deepest at the part's edge moves edges outward under a
+  wide blur. The paper beyond the fit's start cannot show the shadow within about
+  1.5–2.5 blur widths of the edge, and the edge profile's shape tells it apart only
+  with the blur's width known to well under 1 %. The capture guide now says to
+  focus sharply and to light from well above
+  ([reference-sheet tracing](reference-sheet.md), §3).
+
 ## Completed active-face study and rounding diagnosis documented — November 13, 2026
 
 - Preserve the first expectation failure and record the separately frozen
