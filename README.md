@@ -5,12 +5,12 @@ Turn a photograph of a **flat, constant-thickness part** into a scaled CAD solid
 The workbench is designed for plates, gaskets, spacers, and templates. It traces what is visible in the photograph; it does not recover hidden geometry or infer physical dimensions.
 
 For the reviewed source revision, draft PR dependencies and available research
-APIs, read [source scope and status](docs/project-status.md). The preceding
-[documentation review](docs/validation/documentation-pr93-state.md) covers
-published draft PR #93, the workbench and companion library. The subsequent
-[residual-study record](docs/validation/finite-residual-information.md) includes
-its completed diagnostic, retained failure and fresh documentation checks. Older
-test results retain their original scope.
+APIs, read [source scope and status](docs/project-status.md). The current
+[documentation review](docs/validation/documentation-pr95-state.md) covers
+published draft PR #95, the workbench and companion library. The
+[residual-study record](docs/validation/finite-residual-information.md) retains
+the completed diagnostic and failed normal-angle control. Older test results
+retain their original scope.
 
 For reference-sheet tracing, photograph the whole flat sheet (A4, US Letter, or a sheet you have measured) and explicitly choose it as the **Scale reference**. A successful sheet trace sets scale from its stated size, estimates perspective and one radial lens correction, and fits lines, tangent arcs and circles. Entered thickness supports a side-wall/parallax correction under the method's assumptions. Ordinary tracing and the sample use measured-width scaling instead; they do not perform these corrections. See [reference-sheet tracing](docs/reference-sheet.md) for the mathematics and synthetic evidence, and the [engineering model](docs/engineering-model.md) for independent verification before fabrication.
 
@@ -57,8 +57,10 @@ See the [complete results and limits](docs/validation/finite-affine-batch.md).
 The [residual-information study](docs/finite-residual-information.md) now retains
 a failed normal-angle control and conditional covariance-only steps. Its
 [complete record](docs/validation/finite-residual-information.md) preserves all
-unknowns and motivates a separately labeled analytic rotation identity. It
-changes no automatic tracing or optical correction.
+unknowns and motivates a separately labeled analytic rotation identity. The
+[finite-chord derivative proposal](docs/finite-residual-information.md#finite-chord-shape-derivative-a-derived-proposal)
+also covers perspective maps mathematically; its implementation and numerical
+validation remain pending. Neither changes automatic tracing or optical correction.
 
 Final fitted arcs also need [circle-consistent joins](docs/curved-joins.md).
 An unavailable join keeps an affected outline for review when valid, with a

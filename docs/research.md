@@ -13,9 +13,13 @@ does not replace the production rectified-width estimator or add new HTTP modes.
 The [residual-information study](finite-residual-information.md) tests local
 blur/geometry confounding at saved fits. Its [complete failed protocol](validation/finite-residual-information.md)
 retains stable covariance sensitivities and unknown normal columns. A separate
-post-hoc rotation identity explains the observed finite-difference step scaling
-and motivates an independent chord-derivative experiment; it does not replace
-the original failed normal control or identify a physical PSF.
+post-hoc rotation identity is consistent with the observed finite-difference step
+scaling; it does not replace the original failed normal control or identify a
+physical PSF. A further [finite-chord derivation](finite-residual-information.md#finite-chord-shape-derivative-a-derived-proposal)
+covers affine and projective maps under a fixed, supplied Gaussian observation
+model and a valid whole-shape projective chart. Its first-moment formula still
+needs independent numerical checks, cancellation guards and bounded fallback
+qualification. It adds no qualified API, numerical result or automatic correction.
 
 The [original selected design reference](images/design-reference.png) is a generated concept. The [recorded workbench screenshot](images/workbench.png) is browser-rendered implementation evidence; the [guided-workbench review](validation/guided-workbench.md) records the reviewed interaction, screenshots and evidence date. The sample photograph is generated demonstration input and is traced by the real conversion pipeline; it is not a measured reference specimen.
 

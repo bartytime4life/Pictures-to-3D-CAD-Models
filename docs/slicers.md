@@ -37,7 +37,7 @@ Set only the program paths you use. Each variable must contain one absolute exec
 
 Run `make slicers` for a read-only availability check. `GET /api/slicers` performs the same check without starting either program. **Executable found** does not mean its installed version has been verified. The interface labels that distinction explicitly.
 
-When an installed program and the launcher are available, choose **Open in Bambu Studio** or **Open in PrusaSlicer**. This explicit action requests GUI opening with the current 3MF. The server accepts it only from a same-origin JSON request on loopback. A remote browser connected to a hosted workbench should download the ZIP and open its own installed slicer.
+When an installed program and the launcher are available, choose **Open in Bambu Studio** or **Open in PrusaSlicer**. This explicit action requests GUI opening with the current 3MF. The server accepts it only from a same-origin JSON request over HTTP on loopback. HTTPS loopback and remote workbenches use the ZIP download workflow; open the extracted geometry in the intended installed slicer.
 
 The launcher keeps a local copy under `.local/slicer-handoffs/<id>/`, so closing the workbench or clearing temporary model exports cannot remove the file while the slicer imports it. These copies remain until you remove them yourself. `PICAD_SLICER_HANDOFF_DIR` selects another server-side folder. Launch failures retain a prepared copy when one was created. A successful request means a process was started; check the slicer's window to verify import. The workbench does not automate slicing or contact a printer.
 

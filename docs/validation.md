@@ -32,8 +32,12 @@ retains a missed nominal target and background-sensitive or incompatible
 covariance proposals. These developer models do not change automatic tracing
 or establish physical-camera accuracy.
 
-The [preceding documentation review](validation/documentation-pr93-state.md)
-covers published draft PR #93 and its then-proposed next diagnostic. The later
+The [current documentation review](validation/documentation-pr95-state.md)
+covers published draft PR #95, source/CI status, user guides, API contracts,
+saved-review commands and the companion library. It includes the derived
+finite-chord proposal with numerical qualification still pending. The
+[preceding review](validation/documentation-pr93-state.md) covers PR #93 and
+its then-proposed next diagnostic. The later
 [residual-study record](validation/finite-residual-information.md) adds the
 completed failed replay and its own documentation checks.
 The [preceding affine review](validation/documentation-affine-state.md)

@@ -110,3 +110,9 @@ validate an installed model, exercise the network or qualify an export.
 The reference library has its own [build and generation map](../reference-library/BUILD.md).
 Reading its committed HTML/PDF differs from rebuilding it, checking a browser,
 running native OpenSCAD or refreshing external links.
+
+The [finite-chord normal derivative](finite-residual-information.md#finite-chord-shape-derivative-a-derived-proposal)
+is an analytic proposal, with implementation and numerical qualification pending.
+This source exposes no corresponding normal-angle operator or CLI. The saved
+rotation command above combines existing report arrays; it does not implement
+or validate the proposed operator.

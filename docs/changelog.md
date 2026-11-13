@@ -1,5 +1,17 @@
 # Workbench change log
 
+## Documentation alignment with published PR #95 — November 12, 2026
+
+- Refresh the source, dependency and hosted-CI snapshot after publication of
+  the complete residual-information study. Preserve its failed normal control,
+  unknowns, original target flags and independently audited saved results.
+- Document the finite-chord normal derivative's affine/projective derivation,
+  sign, units and whole-shape chart assumptions. Numerical qualification and
+  integration remain pending; no available operator or accuracy result is added.
+- Review the complete workbench and companion-library documentation, update
+  entry points and retain historical evidence and generated-library outputs.
+  [Coverage and verification](validation/documentation-pr95-state.md).
+
 ## Residual information and rotation sensitivity — November 12, 2026
 
 - Retain the complete failed normal-angle protocol, all 12 records, unchanged
