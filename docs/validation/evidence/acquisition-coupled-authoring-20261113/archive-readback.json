@@ -1,0 +1,20 @@
+{
+  "format": "complete-recovery-archives-readback",
+  "archives": [
+    {
+      "archive": ".local/verification/finite-acquisition-recovery-v1-complete.zip",
+      "sha256": "e25fe8a0ca8675daafed1b0b577de1d68f4d42e21bf91ee3ba72d43fcb98e724",
+      "bytes": 27710505,
+      "members": 114,
+      "all_decoded_member_hashes_and_sizes_match": true
+    },
+    {
+      "archive": ".local/verification/finite-acquisition-recovery-predictor-v1-complete.zip",
+      "sha256": "7372f87859538dc675dba6f35b4c8e9e141893c312f32ccb0e9fd9473f886119",
+      "bytes": 8428126,
+      "members": 113,
+      "all_decoded_member_hashes_and_sizes_match": true
+    }
+  ],
+  "scientific_model_optimizer_reference_calls": 0
+}

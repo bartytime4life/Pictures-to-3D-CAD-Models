@@ -1,0 +1,97 @@
+{
+  "format": "acquisition-coupled-authoring-documentation-snapshot",
+  "recorded_at": "2026-11-13T19:59:29.943652+00:00",
+  "documentation_base": "6bb959c70b60ee8bbd15c4599249b21dbe25e077",
+  "research_base": "e6e2c2881add2cc594f4a59d713edf8a9ddde665",
+  "status": "uncommitted authoring snapshot; new tests/model/study/audit not executed; not an execution freeze",
+  "scope": "Documentation copies and hashes only. Candidate source, complete recovery ZIPs and new auditor are not published here. Referenced .local/studies/backend/tests paths belong to the separate research checkout.",
+  "files": {
+    "coupled-admission.json": {
+      "sha256": "df2abb75b64f86c31c8c267188bcd54096e143b2f81758a725ba698d6fbb5fda",
+      "bytes": 8604,
+      "source": "studies/finite-acquisition-recovery-coupled-v1.json"
+    },
+    "paired-audit-admission.json": {
+      "sha256": "dd51104ab08d5ff674b732c3f784009caae545a774f36d8046c529c2e28c5d99",
+      "bytes": 4835,
+      "source": "studies/finite-acquisition-recovery-audit-v2.json"
+    },
+    "archive-readback.json": {
+      "sha256": "7b5518c94813f2c84e547474a4b673d2f1b9fb6f4f09a88780a264a6b79d5721",
+      "bytes": 702,
+      "source": ".local/verification/recovery-complete-archives-readback-v1.json"
+    }
+  },
+  "local_authoring_files": {
+    "backend/finite_acquisition_coupled.py": {
+      "sha256": "e299fe03879824c388e88ef2a490dc9019ecb5e966c92615342251e3b1a299a8",
+      "bytes": 44040
+    },
+    "docs/finite-acquisition-coupled.md": {
+      "sha256": "499d76cd670f50b36d52b539ec0dbac50563079725a2cbbbc5e3177b68d1df14",
+      "bytes": 7429
+    },
+    "studies/finite-acquisition-recovery-audit-v2.json": {
+      "sha256": "dd51104ab08d5ff674b732c3f784009caae545a774f36d8046c529c2e28c5d99",
+      "bytes": 4835
+    },
+    "studies/finite-acquisition-recovery-coupled-v1.json": {
+      "sha256": "df2abb75b64f86c31c8c267188bcd54096e143b2f81758a725ba698d6fbb5fda",
+      "bytes": 8604
+    },
+    "studies/fixtures/finite-acquisition-recovery-predictor-v1/README.md": {
+      "sha256": "c08f735b989c8d1d52952650abcc124121f745c1611c255ce7788f8e8a8de8ff",
+      "bytes": 3116
+    },
+    "studies/fixtures/finite-acquisition-recovery-predictor-v1/complete-predictor.zip": {
+      "sha256": "7372f87859538dc675dba6f35b4c8e9e141893c312f32ccb0e9fd9473f886119",
+      "bytes": 8428126
+    },
+    "studies/fixtures/finite-acquisition-recovery-predictor-v1/first-terminal-receipt.json": {
+      "sha256": "6c6232899fb569904a0be0b0a9d6335f8548bfdd2146d636bb047a2480785d23",
+      "bytes": 1502
+    },
+    "studies/fixtures/finite-acquisition-recovery-predictor-v1/first-tests.log": {
+      "sha256": "01797e8824b248a68523e053db126e89a5d85a66284a3510437842622293fdbe",
+      "bytes": 581
+    },
+    "studies/fixtures/finite-acquisition-recovery-predictor-v1/manifest.json": {
+      "sha256": "fd5e4359b9a0f5446a139474dd0b50e8e37211e379a73912b1f7ffec37f01e53",
+      "bytes": 910
+    },
+    "studies/fixtures/finite-acquisition-recovery-predictor-v1/recorded-source.zip": {
+      "sha256": "45323a26f2820cb7919c7f51b85bc744e747096f4fbf21eac504b15d9eec7053",
+      "bytes": 359686
+    },
+    "studies/results/finite-acquisition-recovery-predictor-v1-summary.json": {
+      "sha256": "0dbb31034ea903b0e6a37359523c92366cf88ff6d0c4723dd8bbbb9131985772",
+      "bytes": 28053
+    },
+    "studies/verification/finite-acquisition-recovery-audit-v2.py": {
+      "sha256": "8fcc982c2e14bdbb8cf343c4703cb2d4c61b800d4eb858ab147bd44dc7952b04",
+      "bytes": 43741
+    },
+    "studies/verification/finite-acquisition-recovery-coupled-v1.py": {
+      "sha256": "0b85e6dcb424e909c656eeab8799821a2dae8742024cc39eb27f1ac6cbcf115d",
+      "bytes": 8746
+    },
+    "tests/test_finite_acquisition_coupled.py": {
+      "sha256": "07efdf4b6b4dd62dd3c2496afe56f58ae4fd30e4712a8fdc4e39136347fcf8d5",
+      "bytes": 21765
+    },
+    "tests/test_finite_acquisition_coupled_math.py": {
+      "sha256": "8b68efdfc0c5843738f070738d27c56c13d5451b63f6a27ac122ba6e96a12815",
+      "bytes": 8666
+    },
+    "tests/test_finite_acquisition_coupled_protocol.py": {
+      "sha256": "f15201495ddd7b885100eed6a7dfa3fa0cf6264b88bb0c3e23d67171ca45580c",
+      "bytes": 2640
+    },
+    "tests/test_finite_acquisition_saved_audit.py": {
+      "sha256": "61a835034b418e5baeba3908b85ae036ff2751456c33f87af0a1f481391270aa",
+      "bytes": 30303
+    }
+  },
+  "previous_predictor_governing_files_verified_unchanged": 60,
+  "new_scientific_calls_in_documentation_pass": 0
+}

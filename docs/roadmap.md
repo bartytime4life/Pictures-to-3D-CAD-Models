@@ -77,6 +77,13 @@ area-delta checks.
 Neither prototype has a GUI/HTTP mode. Supplied-stage agreement does not qualify
 an unknown camera, current-main shadow fitting or automatic correction.
 
+The [coupled seven-parameter proposal](finite-acquisition-coupled.md) and
+[paired saved-data auditor](finite-acquisition-saved-audit.md) are newer local
+authoring work, with no executed tests, study or audit yet. Their plans preserve
+the original population, targets and global work caps. Complete local archive
+member checks establish packaging integrity only; neither candidate is added
+to this main runtime or the workbench interface.
+
 The [engineering model and verification plan](engineering-model.md) defines the 2.5D scope, camera-model assumptions, dimension equations and evidence needed through prototype qualification. The independent source-height check optionally compares a user-bounded measurement with a user-defined allowance; it reports within, outside or inconclusive without assigning a physical accuracy or confidence level.
 
 Reference entry also includes an [endpoint-placement sensitivity explorer](reference-sensitivity.md). It illustrates a user-selected pixel-shift scenario without applying scale or claiming an accuracy range.

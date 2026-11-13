@@ -218,6 +218,13 @@ four float32-staged and one PNG). Both complete 24-row protocols retain 12 adver
 rows and exit **1**. Its **459 focused test passes** are separate software evidence;
 they do not make this a qualified general inverse or add a GUI/HTTP mode.
 
+The [coupled seven-parameter proposal](finite-acquisition-coupled.md) and
+[paired saved-data auditor](finite-acquisition-saved-audit.md) are newer local
+authoring work, with no executed tests, study or audit yet. Their plans preserve
+the original population, targets and global work caps. Complete local archive
+member checks establish packaging integrity only; neither candidate is added
+to this main runtime or the workbench interface.
+
 The following remain requirements before main integration. The local prototype
 exercises them with [retained recovery failures and audit limits](validation/finite-acquisition-recovery.md);
 the derivative study alone does not qualify the solver. In particular, full-field

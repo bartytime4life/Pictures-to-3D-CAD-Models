@@ -7,7 +7,7 @@ the existing dated receipt. The receipt, check date and release status were not
 regenerated for this correction.
 
 Repository documentation update, November 13: the
-[current review](../docs/validation/documentation-recovery-state.md) links the
+[current review](../docs/validation/documentation-coupled-state.md) links the
 [local acquisition-recovery snapshot](../docs/finite-acquisition-recovery.md).
 That separate synthetic research retains 4/12 original matched target passes
 and 9/12 continuation passes; both full protocols exited 1. The 459 focused tests
@@ -17,6 +17,11 @@ rounded capture arrays do not preserve. No other inconsistency was reported by
 that audit, within its stated exclusions. These are separate evidence records,
 not a refreshed library verification. The dated release counts, catalog,
 verification.json, generated reader and PDF remain unchanged by this update.
+
+The newer [coupled proposal](../docs/finite-acquisition-coupled.md) and
+[paired-audit plan](../docs/finite-acquisition-saved-audit.md) remain local,
+unexecuted authoring work. Archive member checks concern packaging integrity.
+They do not refresh this library's release verification or add a Photos tool.
 
 ## What was checked automatically
 

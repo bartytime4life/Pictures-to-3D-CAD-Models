@@ -170,6 +170,13 @@ bindings. Use [developer tools](developer-tools.md) to distinguish the APIs and
 commands available here from candidate experiments and historical saved-data
 review.
 
+The [coupled seven-parameter proposal](finite-acquisition-coupled.md) and
+[paired saved-data auditor](finite-acquisition-saved-audit.md) are newer local
+authoring work, with no executed tests, study or audit yet. Their plans preserve
+the original population, targets and global work caps. Complete local archive
+member checks establish packaging integrity only; neither candidate is added
+to this main runtime or the workbench interface.
+
 The [affine evaluation upgrade](finite-affine-evaluation.md) has an earlier
 [943-test local Python result, production build and lint](validation/finite-affine-batch.md#software-regression),
 bound to its 284 software inputs and 22 built frontend files. That result includes

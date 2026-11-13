@@ -1,5 +1,16 @@
 # Workbench change log
 
+## Documentation of unexecuted coupled research — November 13, 2026
+
+- Refresh main/CI status after PR #111 merged; retain its results on their own head.
+- Document source-stage encoding, seven simultaneous geometry/brightness
+  proposals, strict literal-cost acceptance and shared resource caps.
+- Distinguish verified local archive packaging from an unexecuted paired audit,
+  including the expected missing-precision records and explicit exclusions.
+- Add authoring/admission hashes and navigation across workbench and library
+  guides; preserve historical evidence, source, frozen studies and generated products.
+  [Review scope](validation/documentation-coupled-state.md).
+
 ## Documentation of separate local recovery research — November 13, 2026
 
 - Audit current documentation against main `e0b16e0`, after PR #110 merged.
