@@ -74,6 +74,13 @@ workspace formula. Its unquantized path still stores float32 values. Any
 smooth derivative or separable brightness model must distinguish its unrounded
 operator from this executable chain, preserving the computed constant response.
 
+The [coupled seven-parameter proposal](finite-acquisition-coupled.md) and
+[paired saved-data auditor](finite-acquisition-saved-audit.md) are newer local
+authoring work, with no executed tests, study or audit yet. Their plans preserve
+the original population, targets and global work caps. Complete local archive
+member checks establish packaging integrity only; neither candidate is added
+to this main runtime or the workbench interface.
+
 The [original selected design reference](images/design-reference.png) is a generated concept. The [recorded workbench screenshot](images/workbench.png) is browser-rendered implementation evidence; the [guided-workbench review](validation/guided-workbench.md) records the reviewed interaction, screenshots and evidence date. The sample photograph is generated demonstration input and is traced by the real conversion pipeline; it is not a measured reference specimen.
 
 ## Image to outline

@@ -135,7 +135,7 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 For the reviewed source revision and available research APIs, read
 [source scope and status](docs/project-status.md) and the
-[current documentation review](docs/validation/documentation-recovery-state.md).
+[current documentation review](docs/validation/documentation-coupled-state.md).
 Main includes the source-cell mean, five unrounded area sensitivities and
 separate signed linear propagation as developer APIs. Five-parameter recovery
 with unknown brightness is absent from this main-based runtime. A
@@ -143,6 +143,9 @@ with unknown brightness is absent from this main-based runtime. A
 4/12 matched passes in its original study and 9/12 with a smooth proposal before
 literal rounded fitting; both complete protocols fail. Its 459 focused tests
 do not establish automatic tracing, camera accuracy or physical acceptance. The
+[new coupled proposal](docs/finite-acquisition-coupled.md) and
+[paired-audit plan](docs/finite-acquisition-saved-audit.md) remain unexecuted;
+local archive integrity checks do not establish recovery. The
 [preceding documentation review](docs/validation/documentation-mean-state.md),
 [acquisition-evidence review](docs/validation/documentation-acquisition-state.md)
 and [PR #95 review](docs/validation/documentation-pr95-state.md) retain their

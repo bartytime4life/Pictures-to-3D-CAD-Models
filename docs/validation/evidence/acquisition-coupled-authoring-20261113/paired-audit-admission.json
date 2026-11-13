@@ -1,0 +1,66 @@
+{
+  "format": "finite-acquisition-recovery-paired-saved-audit-admission",
+  "version": 2,
+  "purpose": "Independently inspect complete original and predictor saved runs and source snapshots as data, retaining the first failed audit and irrecoverable reference precision gaps; no new forward/optimizer/reference calls.",
+  "original_head": "7ec680386f75e44415aeb4c83552aa723399c0bc",
+  "predictor_head": "e6e2c2881add2cc594f4a59d713edf8a9ddde665",
+  "inputs": {
+    "original_report": {
+      "path": ".local/verification/finite-acquisition-recovery-v1-first/report.json",
+      "sha256": "30a3e30f26150124da22d76cc3b7c36aaf2212d094a1a5601253722442edad28",
+      "bytes": 100107
+    },
+    "predictor_report": {
+      "path": ".local/verification/finite-acquisition-recovery-predictor-v1-first/report.json",
+      "sha256": "f73120151fb709521417f07ff7bc3ac82f3039e5170fc912bd692429bd4f949e",
+      "bytes": 108453
+    },
+    "original_source_zip": {
+      "path": ".local/verification/finite-acquisition-recovery-v1-recorded-source.zip",
+      "sha256": "c9779ed9326dea5f2887f3e72b1e25851044e3fe567aa12b225e845795529567",
+      "bytes": 321851
+    },
+    "predictor_source_zip": {
+      "path": ".local/verification/finite-acquisition-recovery-predictor-v1-recorded-source.zip",
+      "sha256": "45323a26f2820cb7919c7f51b85bc744e747096f4fbf21eac504b15d9eec7053",
+      "bytes": 359686
+    },
+    "first_audit": {
+      "path": ".local/verification/finite-acquisition-recovery-v1-first-audit.json",
+      "sha256": "dc2b0b454c2be8cb9025d5f444deba23dbd15563fb7a786871f63b7ceea90533",
+      "bytes": 36900
+    },
+    "first_auditor_source": {
+      "path": "studies/verification/finite-acquisition-recovery-audit-v1.py",
+      "sha256": "749cb6b9a158b81891cb58109b114b2a18bf4aca1933c8268beca2bfa00a0373",
+      "bytes": 58824
+    }
+  },
+  "required_scopes": [
+    "Strict finite, duplicate-free JSON and safe regular files; no symlink, overwrite, ZIP traversal or oversized member exposure.",
+    "All 24 rows per run and the 12 matched / 12 adverse split; every artifact hash and source-ZIP manifest, original refusals/exceptions and paired capture identity.",
+    "Independent observed input, settings, query, training/reserved split, seed, bounds and level-hint hashes; no current backend-source imports.",
+    "Every phase candidate prediction/residual/cost identity and objective/source-cache histories, resources and local-status consistency.",
+    "Predictor quarter quotas, skips, selection, fallback, full seven-coordinate start and phase hashes; selected literal index space, top ledgers, charged/reported work and protocol/source/unknown-work completion.",
+    "Geometry, wrapped-angle and dimension errors, saved reserved-residual maxima, target arithmetic and reported flag counts, with explicit forward/boundary/rank/stopping exclusions."
+  ],
+  "precision_policy": {
+    "old_v1": "Preserve source,5740807checks14failures andexit1, never rewrite normalized success.",
+    "per_run": "Request all 24 pre-cast GL order comparisons: 10 smooth comparisons reconstructible, 14 rounded comparisons explicitly unverified. Verify rounded stored-array differences separately; do not infer discarded float64 deltas or count unverified records as passed.",
+    "original_reference_gate": "Preserve original reportedpassed/failed claims andtargetflags asreported; qualification verification requiresmissingrawprecision and remainsincomplete.",
+    "overall": "Any inconsistency gives status inconsistent and exit 1. No inconsistency but required unverified checks gives status consistent_with_unverified_records and exit 1. Verified-subscope counts are not scientific acceptance."
+  },
+  "prospective_controls": [
+    "Malformed/nonfinite/duplicate JSON, unsafeZIP, missing/changedartifactand source hashes.",
+    "Forged phasechoice/inputhashes,seed/indexcollisions,cacheresets,quotas/budgetcharges,opaqueunknownwork/swallowedexceptionsandwithheldcompletion.",
+    "Recorded reference delta gap remains unverified; fully observed smooth deltas checked.",
+    "Outputrefusesexisting/danglingsymlink and allfirst outcomesretained."
+  ],
+  "freeze_policy": "The complete auditor/tests/admission are committed and hashed with the coupled continuation before any new imports/tests/audit execution. Later fixes require a separate admission.",
+  "excluded": [
+    "No independent forward/reserved prediction/reference generation, boundary discrepancy/supremum, Jacobian/SVD/rank, brightness optimum or stopping calculus.",
+    "No physical camera/noise/latency/native tool/print qualification.",
+    "Old reserved pixels influenced initialization; reported residuals remainconditional."
+  ],
+  "not_a_new_success_target": "Derive and retain 4/12 and 9/12 from saved flags. These partial counts are record identities, not success criteria."
+}

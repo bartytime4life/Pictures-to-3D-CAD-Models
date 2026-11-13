@@ -5,9 +5,19 @@ record below to assess its evidence. This page separates local checks, hosted
 CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
+## Coupled-research authoring documentation — November 13, 2026
+
+The [current review](validation/documentation-coupled-state.md) starts from main
+`6bb959c`, after PR #111 merged. The [coupled proposal](finite-acquisition-coupled.md)
+and [paired saved-audit plan](finite-acquisition-saved-audit.md) are authored but
+unexecuted. No prospective test count or expected audit status is an observed
+result. Local archive member hashes/sizes have been read back successfully;
+these packaging checks do not extend the earlier 4/12 or 9/12 recovery results.
+The main runtime, complete historical studies and first failures remain unchanged.
+
 ## Local acquisition recovery and documentation snapshot — November 13, 2026
 
-The [current documentation review](validation/documentation-recovery-state.md)
+The [preceding documentation review](validation/documentation-recovery-state.md)
 uses merged main `e0b16e0`, including documentation PR #110. It distinguishes
 that runtime from a separately frozen local research candidate. The
 [complete reported recovery outcome](validation/finite-acquisition-recovery.md)

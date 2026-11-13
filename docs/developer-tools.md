@@ -27,6 +27,13 @@ order-delta comparisons; do not treat it as an independent success. Follow the
 candidate's source-specific guide rather than borrowing an unavailable command
 or treating a documentation check as a new fit, audit pass or app regression.
 
+The [coupled seven-parameter proposal](finite-acquisition-coupled.md) and
+[paired saved-data auditor](finite-acquisition-saved-audit.md) are newer local
+authoring work, with no executed tests, study or audit yet. Their plans preserve
+the original population, targets and global work caps. Complete local archive
+member checks establish packaging integrity only; neither candidate is added
+to this main runtime or the workbench interface.
+
 The [acquisition evidence workflow](../studies/fixtures/finite-acquisition-operator-v1/README.md)
 verifies 123 stored artifacts, extracts the complete saved run and checks the
 87-file recorded source snapshot as data. Use that workflow on current main:

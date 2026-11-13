@@ -40,6 +40,11 @@ flowchart LR
     I --> K[Bambu Studio or PrusaSlicer handoff]
 ```
 
+The [local coupled-search proposal](finite-acquisition-coupled.md) and
+[paired-audit design](finite-acquisition-saved-audit.md) extend the research
+documentation only. Their code is outside this main runtime and has not run
+its new tests, study or audit; neither changes the application flow above.
+
 ## Components
 
 | Component | Responsibility |

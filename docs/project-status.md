@@ -1,9 +1,9 @@
 # Source scope and verification status
 
-## Current source snapshot — November 13, 2026, 19:11 UTC
+## Current source snapshot — November 13, 2026, 19:59 UTC
 
-Main is `e0b16e0a0a0d9e16477442b622c32ad0868c062e`, tree
-`5f94fdcc41456bc8015428e55802760eb8db5408`. It includes the source-cell mean
+Main is `6bb959c70b60ee8bbd15c4599249b21dbe25e077`, tree
+`104e1b1bce8bb84dc3b3df5e7c737cc9f03cca32`. It includes the source-cell mean
 from [PR #105](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/105),
 the two-direction edge-width repair from
 [PR #107](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/107),
@@ -14,7 +14,10 @@ Those three PRs and documentation
 are merged at this readback. PR #109 merged at 18:23 UTC and changed only
 documentation. The subsequent documentation
 [PR #110](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/110)
-merged at 18:59 UTC; its tree matches this main revision. PR #106 merged into its research
+merged at 18:59 UTC. Documentation
+[PR #111](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/111)
+merged at 19:25:32 UTC and added the local recovery snapshot; its tree matches
+this main revision. PR #106 merged into its research
 base after PR #105 closed; its documentation reached main through PR #108.
 
 | Capability in this source | Scope and evidence |
@@ -31,13 +34,14 @@ Hosted checks are tied to their published heads:
 | --- | --- | --- |
 | PR #108, `f54e47a443015c2e4701a143c4ac1c469595b731` | [43475029242](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43475029242): completed, success | [43475029376](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43475029376): completed, success |
 | PR #109, `88a6d78f2807ae3eef3f6bf4bc229849321717ce` | [43478504807](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43478504807): completed, success | [43478504825](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43478504825): completed, success |
-| PR #110, `8c72d873ae7871584f5c2ca9d12ac5d4bbdfab96` | [43484991562](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43484991562): in progress, no conclusion | [43484991878](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43484991878): completed, success |
+| PR #110, `8c72d873ae7871584f5c2ca9d12ac5d4bbdfab96` | [43484991562](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43484991562): completed, success | [43484991878](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43484991878): completed, success |
+| PR #111, `b6ba24992260d49fd0a88a53057799c4f7c85e67` | [43491926326](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43491926326): completed, success | [43491926158](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43491926158): completed, success |
 
 These readbacks do not extend a run to the combined main commit or this later
 documentation change. Merge, hosted checks, installed runtime, real-camera
 accuracy and physical acceptance remain separate.
 
-The [documentation review](validation/documentation-recovery-state.md) audits this
+The [documentation review](validation/documentation-coupled-state.md) audits this
 main-based source. Use [available tools](#available-here) and [remaining integration work](#remaining-integration-work)
 for current capabilities. Earlier snapshots below are historical records; their open
 PR states and absent-module statements describe their own source and time.
@@ -58,6 +62,13 @@ checks that rounded saved coverage cannot reproduce. The
 that failure, conditional reserved-pixel use, tied PNG candidates and the lack of
 independent forward/rank/physical qualification. This documentation change
 includes reports and static excerpts, not the candidate runtime or full raw archive.
+
+The [coupled seven-parameter continuation](finite-acquisition-coupled.md) and
+[paired-auditor design](finite-acquisition-saved-audit.md) are newer, uncommitted
+authoring snapshots. No new tests, model/study execution or paired audit has
+run. Both complete recovery archives now have verified local member hashes
+and sizes; these ZIPs and candidate modules remain outside this publication.
+All prior target failures and reference-precision limits remain in force.
 
 ## Available here
 

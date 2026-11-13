@@ -181,3 +181,11 @@ calibration and final boundary preservation remain requirements before adoption.
 The separately frozen [local recovery study](validation/finite-acquisition-recovery.md)
 preserves both failed protocols and does not extend this forward qualification
 to a general inverse or physical camera.
+
+
+The [coupled seven-parameter proposal](finite-acquisition-coupled.md) and
+[paired saved-data auditor](finite-acquisition-saved-audit.md) are newer local
+authoring work, with no executed tests, study or audit yet. Their plans preserve
+the original population, targets and global work caps. Complete local archive
+member checks establish packaging integrity only; neither candidate is added
+to this main runtime or the workbench interface.

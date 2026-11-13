@@ -28,6 +28,13 @@ unresolved saved-audit comparisons. This is a documentation update, not a librar
 release or an addition to main's runtime or the Photos tab. The handbook text,
 generated HTML/PDF, catalog, release counts and dated verification stay unchanged.
 
+### Unexecuted research navigation — November 13, 2026
+
+Link the [coupled proposal](../docs/finite-acquisition-coupled.md) and
+[archive/audit guide](../docs/finite-acquisition-saved-audit.md). These authoring
+snapshots add no library runtime, release or verification result. Generated
+HTML/PDF and dated release records remain unchanged.
+
 ## Revision 6 — November 9, 2026
 
 - Keep catalog search and filters in easy reach, with an expandable coverage chart, a clear empty-state reset, and larger touch targets. Preserve filter links when moving between tabs.

@@ -51,7 +51,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |
 | Run a benchmark with measured photos | [Photo benchmark](photo-benchmark.md) |
 | Review completed checks | [Validation overview](validation.md), [design QA](../design-qa.md) |
-| Check documentation coverage and source consistency | [Current documentation audit](validation/documentation-recovery-state.md), [source and CI snapshot](project-status.md), [preceding merged review](validation/documentation-main109-state.md) |
+| Check documentation coverage and source consistency | [Current documentation audit](validation/documentation-coupled-state.md), [source and CI snapshot](project-status.md), [preceding merged review](validation/documentation-recovery-state.md) |
 | Review the recent interface changes | [Guided-workbench audit](validation/guided-workbench.md) |
 | Review scope and future work | [Roadmap](roadmap.md), [change log](changelog.md) |
 | Diagnose fixed-normal residual information and its original failed normal control | [Method and rotation identity](finite-residual-information.md), [derived finite-chord proposal](finite-residual-information.md#finite-chord-shape-derivative-a-derived-proposal), [retained failed protocol](validation/finite-residual-information.md), [portable saved-data audit](../studies/fixtures/finite-residual-information-v1/README.md) |
@@ -61,6 +61,8 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Inspect the independent source-cell acquisition mean | [Executable example](finite-acquisition-mean.md#small-executable-example), [API limits and resource accounting](finite-acquisition-mean.md#refusals-provenance-and-work), [complete qualification](validation/finite-acquisition-mean.md), [frozen plan](../studies/finite-acquisition-mean-v1.json), [portable archive](../studies/fixtures/finite-acquisition-mean-v1/README.md); no automatic trace or inverse integration |
 | Evaluate five unrounded cell-area sensitivities and propagate signed fields | [Boundary flux and fixed linear acquisition](finite-cell-sensitivity.md), [small executable example](finite-cell-sensitivity.md#small-executable-example), [first frozen qualification and limits](validation/finite-cell-sensitivity.md), [portable saved-data archive](../studies/fixtures/finite-cell-sensitivity-v1/README.md); no geometry recovery or rounded-pipeline derivative claim |
 | Review the separate local five-geometry/unknown-brightness prototype | [Model, search and rank limits](finite-acquisition-recovery.md), [two failed protocols, all 24 rows and saved-data audit limitation](validation/finite-acquisition-recovery.md); research snapshot only, without its runtime in main or workbench controls |
+| Review the unexecuted coupled search proposal | [Seven-parameter surrogate, encoding order and literal acceptance](finite-acquisition-coupled.md); authoring snapshot, with no new test or study result |
+| Review local recovery archive packaging and proposed paired audit | [Archive inventory, precision gaps and prospective audit statuses](finite-acquisition-saved-audit.md); the new auditor has not executed |
 | Reproduce bundled printer data | [Printer source record](../data/PRINTER_SOURCES.md) |
 
 Before running an archived audit, check its
