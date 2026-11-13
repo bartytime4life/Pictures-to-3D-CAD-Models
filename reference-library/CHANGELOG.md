@@ -10,6 +10,14 @@ All dates are 2026. Revisions are numbered in `library.json`, which feeds the HT
 - Record complete source, parameter, schema and output hashes, OpenSCAD versions, logs and actual-mesh checks. Include real default-model renders and editable starter files.
 - Exercise browser downloads through actual OpenSCAD renders, with isolated desktop/mobile checks and preservation regression tests. Rebuild the handbook, verification record and portable archive. No slicing or physical print qualification.
 
+### Workbench active-face result navigation — November 13, 2026
+
+Link the [completed active-face study and saved-only physical census](../docs/validation/finite-acquisition-physical-rounding.md):
+corrected selected 821 tests/33 subtests pass, full recovery remains 11/12 and
+exit 1, and none of 128 adjacent physical candidates pass the unchanged gates.
+The 49 diagnostic controls pass. Preserve all prior first outcomes and release
+records; these documentation links add no library tool or qualification.
+
 ### Documentation maintenance — November 13, 2026
 
 Correct chapter 15's build-volume guidance: a diagonal placement can fit when

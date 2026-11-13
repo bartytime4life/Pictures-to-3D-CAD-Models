@@ -1,0 +1,124 @@
+# A represented physical trial from a rational local optimum
+
+This is an **unrun saved-data mathematical diagnostic**. It does not change the
+fitter, widen a source-code band or relax a recovery target. Its
+[admission](../studies/finite-acquisition-physical-rounding-v1.json) must be
+reviewed, committed and hashed with all new source and tests before first
+execution. All 100 preceding governing inputs remain unchanged.
+
+## The observed bottleneck
+
+At `c1a9330`, the corrected selected command passes 821 tests and 33 subtests.
+The subsequent complete original recovery protocol still exits 1: 11/12
+matched passes, all 24 matched/adverse rows retained. Middle PNG retains
+fraction error `0.003528725623290513` and conditional reserved-query maximum
+residual `0.06518173217773438`. No protected trial reaches literal evaluation.
+
+The strongest saved event, source 62 code 93 to 92, has a qualified rational
+local-QP certificate after twelve faces. Its rational point satisfies all
+352 raw constraints. Five source sides are tight. Nearest binary64 rounding
+violates three of those sides by approximately `2e-18` to `2e-17`, although
+the computed optical-band check passes. The implementation therefore withholds
+the trial. This says nothing about whether another nearby represented point
+is feasible. Other events retain their separate unknown or contradictory local
+patterns; no global or nonlinear impossibility follows.
+
+The saved full report contains seventeen fit files and one qualified exact
+certificate. This diagnostic visits every saved qualified certificate in the
+original report order, independently checks its KKT conditions and retains
+no-certificate counts. It does not select a point using truth dimensions or
+reserved residuals. Original results and source bindings stay immutable.
+
+## Enumerate in physical coordinates
+
+Let `d*` be the rational local optimum, `p0` the incumbent physical parameter
+vector and `s` its represented domain spans. Form the rational physical target
+
+```text
+p*_j = F(p0_j) + F(s_j) d*_j,
+```
+
+where `F` is the exact value of a finite binary64 number. For each coordinate,
+retain the nearest represented value and its adjacent neighbor on the other
+side of `p*`. An exactly represented target has just one value. A fixed span
+keeps the incumbent coordinate and requires zero normalized displacement.
+
+Seven coordinates produce at most `2^7 = 128` combinations. Nearest physical
+coordinates come first; then enumerate the remaining corner masks. Adjacent
+binary64 values have no other represented numerical value between them, so
+this exhausts that small physical box. It does not exhaust a larger
+neighborhood, the feasible polyhedron or every binary64 point.
+
+Physical enumeration avoids silently applying a second reconstruction to an
+already rounded normalized displacement. Even then, several distinct checks
+are necessary for every physical candidate `p`:
+
+1. Check original physical parameter bounds.
+2. Form exact `d_phys = (F(p)-F(p0))/F(s)` and check every original rational
+   source and displacement-box halfspace, using zero for fixed coordinates.
+3. Separately compute binary64 `d_comp = (p-p0)/s`. Interpret that computed
+   vector as exact dyadic values and check every original raw halfspace again.
+4. Retain the existing computed optical-band and displacement-box gate, with
+   finite products and `math.fsum`.
+5. For the saved selected source, retain the original arithmetic-resolution
+   guard: `128*eps*max(1,abs(z0_selected),sum(abs(G_selected*d_comp)))` must be
+   strictly less than half the unchanged target interval width. A pure helper
+   call without a selected source labels this gate unchecked; the actual saved
+   diagnostic always supplies the selected source and requires it checked.
+
+No tolerance can turn an outside point into exact feasibility. Retain each
+gate, candidate bits, delta representations and violated row identities.
+Failing all 128 candidates establishes only that this adjacent-box census
+found no candidate passing all its gates. Arithmetic/bit/candidate caps stay
+explicit unknowns. A selected feasible point need not be the rational
+minimum-norm optimum.
+
+## A margin bound for a later fallback
+
+If a future construction supplies an exact point with physical rounding error
+bounds `|p_j-p*_j| <= h_j`, its exact normalized error satisfies
+`|d_phys_j-d*_j| <= h_j/|s_j|` for nonzero spans. Thus row `i` remains feasible
+when its original slack is at least
+
+```text
+m_i = sum_j |A_ij| h_j / |s_j|.
+```
+
+This triangle-inequality bound concerns exact physical normalization. Computed
+subtraction/division has its own error and still requires its separate gate.
+Fixed coordinates and equalities need affine-hull preservation; adding a
+positive margin indiscriminately can destroy feasibility. The incumbent is
+not a generally valid interiorization target: the chosen target bin excludes
+it. No interiorization solve is implemented or promised by this first census.
+
+## Evidence and engineering limits
+
+The runner reads saved JSON and archive hashes as data. It independently
+checks rational primal feasibility, dual signs, complementarity and
+stationarity before the census. It imports no backend, evaluates no forward
+model, runs no QP solver and makes no literal PNG trial. Exact arithmetic and
+nontrivial comparisons use an explicit 32,768-bit pre-operation cap; no global
+precision setting changes. Fresh-output and combined source-hash gates retain
+the first outcome.
+
+A successful census would establish a represented feasible local proposal.
+Integrating it into the fitter still requires a separate admission, work
+reservations within the unchanged global caps, software controls and a new
+complete original recovery protocol. The unchanged literal image-cost check
+must determine acceptance. Neither this diagnostic nor an exact certificate
+proves nonlinear code preservation, unique geometry, full recovery, camera
+adequacy, production UI integration or physical CAD/print acceptance.
+
+## Primary background
+
+The official [CGAL certificate reference](https://doc.cgal.org/latest/QP_solver/classCGAL_1_1Quadratic__program__solution.html)
+separates a proposed solution from verified feasibility and optimality. The
+specialized KKT check here is independent saved arithmetic; CGAL is not used.
+Python documents [binary float representation](https://docs.python.org/3.12/tutorial/floatingpoint.html)
+and [adjacent values through nextafter](https://docs.python.org/3.12/library/math.html#math.nextafter).
+The finite physical-neighbor census and margin bound above are our own
+construction, not a completeness or nonlinear convergence theorem.
+[Weber, Sager and Gleixner](https://arxiv.org/html/1803.07178v2) motivate keeping
+exact rational verification separate from floating approximations. Their
+scaled-refinement algorithm and convergence assumptions are not implemented
+or transferred to this bounded census.

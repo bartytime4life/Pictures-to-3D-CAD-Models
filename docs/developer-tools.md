@@ -136,17 +136,23 @@ failed. The newer acquisition artifact auditors explicitly support recorded
 source snapshots as data; follow each tool's own contract.
 
 The separate [exact active-face follow-up](finite-acquisition-protected-active.md)
-has a [first selected software record](validation/finite-acquisition-protected-active.md)
-of 820 passes, one failed test expectation and 33 passing subtests, exit 1.
-Its runtime, test files and study runner are absent here. The recorded command
-is provenance for that frozen research checkout, not a runnable main command.
-No full protected recovery study or control-only corrected run is recorded.
+retains its [first expectation failure](validation/finite-acquisition-protected-active.md).
+Its separately frozen corrected selection passes 821 tests and 33 subtests,
+then the original complete 24-case study exits 1 at 11/12 matched passes.
+The later [saved-data physical-rounding diagnostic](finite-acquisition-physical-rounding.md)
+passes 49 controls but finds no accepted point among 128 adjacent physical
+corners. It makes no fitter, QP-solver, forward-model or literal PNG call.
+See [commands as provenance and exact source bindings](validation/finite-acquisition-physical-rounding.md).
+Those runtime, test and runner files remain absent here; their recorded
+commands require the frozen research checkout and are not main-branch commands.
 
 ## Output and side effects
 
 Use a new scratch destination for generated benchmark/example reports. The
-photo-benchmark script can overwrite report paths, and `--example` writes into
-its chosen folder. The independent corner, frame, directional, finite-centre,
+photo-benchmark script can overwrite report paths; `--example` creates the
+destination and its parents but refuses a nonempty folder. The original
+`scripts/corner_sweep.py --json PATH` overwrites PATH and requires its parent
+to exist. The independent corner, frame, directional, finite-centre,
 moment and supplemental-aperture runners refuse an existing destination,
 including a dangling symbolic link, and require its parent directory to exist.
 The canonical join runners

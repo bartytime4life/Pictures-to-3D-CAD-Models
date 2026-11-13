@@ -5,9 +5,26 @@ record below to assess its evidence. This page separates local checks, hosted
 CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
+## Active-face recovery and physical-rounding diagnosis — November 13, 2026
+
+The [current documentation review](validation/documentation-physical-rounding.md)
+starts from main `e56c478`, after PR #116 merged. The separate research source
+`c1a9330` passes its corrected selection of **821 tests and 33 subtests**, then
+completes the unchanged original 24-case recovery protocol at **11/12 matched
+passes, exit 1**. The first expectation failure remains preserved below.
+
+The saved-only diagnostic at `b649ea3` passes **49 controls**, independently
+verifies one rational local optimum and checks **128 adjacent physical
+candidates: zero accepted, zero arithmetic unknowns**, exit 1. Every corner
+passes physical bounds and the arithmetic floor but fails source membership.
+See the [method and future obligations](finite-acquisition-physical-rounding.md)
+and [complete results, all 24 rows and evidence bindings](validation/finite-acquisition-physical-rounding.md).
+No new model or literal PNG evaluation follows from that census, and it does
+not establish global floating-point infeasibility or physical acceptance.
+
 ## First exact active-face software controls — November 13, 2026
 
-The [current documentation review](validation/documentation-protected-active.md)
+The [then-current documentation review](validation/documentation-protected-active.md)
 starts from main `bb21f95`, after PR #115 merged. Separate local source
 `1dade8a` records **820 passes, one failure and 33 passing subtests**, exit 1.
 The [method](finite-acquisition-protected-active.md) and

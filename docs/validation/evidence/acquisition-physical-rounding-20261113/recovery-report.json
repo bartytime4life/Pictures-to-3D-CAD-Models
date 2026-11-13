@@ -1,0 +1,3184 @@
+{
+  "format": "finite-acquisition-recovery-protected-active-controls-v2-complete-report",
+  "source_head": "c1a933099d34475bb1bbfb04de17fa41b61b4d42",
+  "source_sha256_before": {
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/app.py": "345c7dc8bbc7bfbe616eb2934d2a58cd0b4fa1216dbdaa5272ab3a36b06d96bc",
+    "backend/assistant.py": "45f05aa8d0738a1da0e3b5040a2c4df8a01a35e9a835e1c06fd47ee3e81758c5",
+    "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+    "backend/curve_envelope.py": "d37525b42c920a770b783e0c94ff97cf3d5214272d85dcdceae9d23eb184ca27",
+    "backend/drawing.py": "560f087e28d369a2e0f3b733197c18c5a7aa87c390fe56de7516caf9a08a5e6d",
+    "backend/edges.py": "96d3640e202c0d5eb830ed552bae9906235b0ef459476b0c91b3dc68fe75be51",
+    "backend/finite_acquisition.py": "c61b9def98132a10bbfe6df2bddbc50f9e9338eded0177a74dc25dff90220921",
+    "backend/finite_acquisition_coupled.py": "e299fe03879824c388e88ef2a490dc9019ecb5e966c92615342251e3b1a299a8",
+    "backend/finite_acquisition_events.py": "3e1f88517a8912afea4bc19e8ea513d48a178f5a5a408c032f69e996f11cdedc",
+    "backend/finite_acquisition_fit.py": "ff34013696ecd2cc8e82ff7492933de1bdda752805dec0b37da1d32a75b22575",
+    "backend/finite_acquisition_linear.py": "bae7b48f4bc6d950551d3f463f5d0dfc53d0d499ff0812547738fcf43154f703",
+    "backend/finite_acquisition_observations.py": "ac0556326b1b4e043bd1b04223db0c4cadc2f990fbd7258a64fa84a8460d4d23",
+    "backend/finite_acquisition_predictor.py": "871897e335d04a79319544cfa4ba84d19c579ea9e43bf98372baa94e92051f4a",
+    "backend/finite_acquisition_protected.py": "53ab90633b03b52b8c98290016f12df89af6c582e13c505320b705b6bc6d1b57",
+    "backend/finite_acquisition_protected_active.py": "a0537e4b34187ba1ca242ee98da10589a1ad1dd9065d786e9542066306b2663a",
+    "backend/finite_affine.py": "d4eb540f6a654178fca41b4be416bd4ad6ebb6b3f645bc78b5383b18b8caa653",
+    "backend/finite_aperture.py": "75f29a04133ffd142144607a7c7153e12de159ba7c632e01fd46751fa14cd7b5",
+    "backend/finite_aperture_sensitivity.py": "d481acf746d92568dc317f9dbe9f4741ce863ee241fe84be91264e0ef97d0e51",
+    "backend/finite_centre_fit.py": "df8a057abefe983ee951c894a9ae44e0c6b0f472d3419578be505973ea3a8bfb",
+    "backend/finite_normal.py": "e1e548b58c26d98f28475e647594f5273f34734f1284df27a06324cdf022a443",
+    "backend/finite_observations.py": "09fa843f72b2fc265ba8d4a7111267bf10433eb4f3f2a0600a89cc7871cb3969",
+    "backend/finite_photometry.py": "41e1add0bcb4d226934a969d763f8dd95d9beba425d92c83c1627e3a9534abd3",
+    "backend/finite_shape.py": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+    "backend/fitting.py": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+    "backend/heic.py": "5e34870379991f8813bacfc4badc8fe7fcf5dbe8aa053156fa352456b208de33",
+    "backend/models.py": "21e7467766f4a086f52b3756f6b1fa8e4ec96a7b76cf0b4d1131c5f45709e6e1",
+    "backend/placement.py": "e1745597ca2930d1260659e9f2dc4405f2b7239beb0c12c45fa92b6d3f5c03df",
+    "backend/printing.py": "58d121ad45f0176b02094f3446dcd020c254ccd78860e5a269b8b6a8d6479915",
+    "backend/reference.py": "109ccac49f011e8411286ca2e3682caa201e578df39fee7a52425bb507f7d6e0",
+    "backend/scad.py": "d5cf18312ba10b7e3830d059952c3d078edc1e21813eb2fb03a4fd1ebaf2d534",
+    "backend/shadow.py": "5b156e36aaa3d4592d658875d22241853dd82682c4a691c610a514af07682dbf",
+    "backend/sheet.py": "9735ea176217c273fa63d4e7f412210089d7112fb415d9b921322525aedb950f",
+    "backend/slicer_handoff.py": "774e78fa93dacc348c204d89a0ec4192a01701fb3fa3304ee09960e816101a50",
+    "backend/slicers.py": "03442055d64c37d46e5806bafdd0bd497b54dacf78bc409addf1ff8400c25bb9",
+    "backend/three_mf.py": "435afd61c90bb21c305876f681f845a3bfb193a64fa96589e649fb40fd821cf1",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "backend/tracing.py": "b822716050b285152bcbefe07a0b7da1e02716ecb5d990cbf29af86598a14d2e",
+    "backend/worker.py": "9c869ffae551485b473aeb54ddc9a0116e8c8df22f92f2c08e2f3e97f24ca846",
+    "docs/finite-acquisition-protected-active-controls.md": "96eba5e3674513c2c77e3e39f7552f90f3df7860f531701ae0db35a616bc1e71",
+    "docs/finite-acquisition-protected-active.md": "cb9073e047762f98694e65ab2c210d8fd11bda8ecfbb1eb5958007f821db5d70",
+    "docs/finite-acquisition-protected.md": "760959cc5a899a5a9daecaba7c4a88ea055c170d467c107858bc07ff51a14a68",
+    "pyproject.toml": "89db6bd352114ad6ed7c979c070e66d47551ef7cca7062778f832bb8934507ab",
+    "studies/finite-acquisition-recovery-audit-v2.json": "dd51104ab08d5ff674b732c3f784009caae545a774f36d8046c529c2e28c5d99",
+    "studies/finite-acquisition-recovery-coupled-audit-v1.json": "8b23aed0eb7886bd39538c28377b948bd93dd8d654dc85bd6357a04841842943",
+    "studies/finite-acquisition-recovery-coupled-audit-v2.json": "6a2b016e0996a939f8531b95faa7d1efe3960db51f62e96809d6de69a968ae10",
+    "studies/finite-acquisition-recovery-coupled-v1.json": "df2abb75b64f86c31c8c267188bcd54096e143b2f81758a725ba698d6fbb5fda",
+    "studies/finite-acquisition-recovery-events-v1.json": "fe09dd90df39094885d8f890db579d2cc9da59d8c8f5ae60f2f7d9b05b42567f",
+    "studies/finite-acquisition-recovery-predictor-v1.json": "8533f5503798aef2c3eb275a97c88db91d82d6b3ba27327a0aee3d013f75580e",
+    "studies/finite-acquisition-recovery-protected-active-controls-v2.json": "79ef0515252c3869281d1b0bede4e1fb0eb226eb371c58293f6ed7ae1810dfeb",
+    "studies/finite-acquisition-recovery-protected-active-v1.json": "462b5c2e11d484998424b95349827d5e0766b63cd01e306295e10099947d1258",
+    "studies/finite-acquisition-recovery-protected-v1.json": "c52b461e3dc4758bc10a15b761899f2b797a5c0cb91f31196b79ce2441a5aeae",
+    "studies/finite-acquisition-recovery-v1.json": "737bb8badf15a6bd1438ece67b9ad03f96e65440989bbc8bc2110edc8a497ad0",
+    "studies/verification/finite-acquisition-recovery-audit-v1.py": "749cb6b9a158b81891cb58109b114b2a18bf4aca1933c8268beca2bfa00a0373",
+    "studies/verification/finite-acquisition-recovery-audit-v2.py": "8fcc982c2e14bdbb8cf343c4703cb2d4c61b800d4eb858ab147bd44dc7952b04",
+    "studies/verification/finite-acquisition-recovery-coupled-audit-v1.py": "8dfd4bfdda5005f7caef29d3ef5eabe25d3fabc592402a8b2f27723e4e186cd4",
+    "studies/verification/finite-acquisition-recovery-coupled-audit-v2.py": "73e5b96e1b854144d58a850ebc245a232ac5898c24bf080047f2ef05d3394104",
+    "studies/verification/finite-acquisition-recovery-coupled-v1.py": "0b85e6dcb424e909c656eeab8799821a2dae8742024cc39eb27f1ac6cbcf115d",
+    "studies/verification/finite-acquisition-recovery-events-v1.py": "9dc3734db777b7be901772fe419802869905adba7573b8b116cf3967dcaf1d13",
+    "studies/verification/finite-acquisition-recovery-predictor-v1.py": "4368ee287118b8c4553967750d8483f14db23b39364c6f513ab5a5454836548c",
+    "studies/verification/finite-acquisition-recovery-protected-active-controls-v2.py": "5002de3438ef1a948c18d74cf4e29a55983b4e63e19b18f373200264b61b3779",
+    "studies/verification/finite-acquisition-recovery-protected-active-v1.py": "46cd3a07669f2072becdec183d5e7531a664bf80650161a1d0dff5f388794e30",
+    "studies/verification/finite-acquisition-recovery-protected-v1.py": "b8f38ca6986565174df65581353fa75e450a654a2ba821f276dad7ac2b69e9d4",
+    "studies/verification/finite-acquisition-recovery-reference-v1.py": "5d8f3ec4b0283a688338e3981288fc38214e99bf5af50dad07c33cba2777ab0d",
+    "studies/verification/finite-acquisition-recovery-v1.py": "073cc432134c5258add3e9d3addd24fdcabead97451424c3303720f878d58d29",
+    "studies/verification/finite-cell-sensitivity-v1.py": "d94b930df57d2b9858631bfa8164c9618f7ff8b45d25c584f7808fea0226a19a",
+    "tests/test_finite_acquisition.py": "cf605a5cb94edd16bd0572afd15a83671ec61b8f40a263fcbe3ae9be8e46d475",
+    "tests/test_finite_acquisition_continuation.py": "4e5731c0fd8e2c927ccd6eb5999acdfdc794212a4f14fad32aa4e7e001590090",
+    "tests/test_finite_acquisition_coupled.py": "07efdf4b6b4dd62dd3c2496afe56f58ae4fd30e4712a8fdc4e39136347fcf8d5",
+    "tests/test_finite_acquisition_coupled_math.py": "8b68efdfc0c5843738f070738d27c56c13d5451b63f6a27ac122ba6e96a12815",
+    "tests/test_finite_acquisition_coupled_protocol.py": "f15201495ddd7b885100eed6a7dfa3fa0cf6264b88bb0c3e23d67171ca45580c",
+    "tests/test_finite_acquisition_coupled_saved_audit.py": "18d96bfebcddf12fdb45718064ad82415f9b377c0af53c57a7ee0168ea4ff9b9",
+    "tests/test_finite_acquisition_coupled_saved_audit_v2.py": "ba6b8f856d705ce61fa6ac182ae5de2d5ae2b148772fc56933135a360512c5ee",
+    "tests/test_finite_acquisition_events.py": "8d93674f2ebb974182fd9183af534d57097b55f1d027c554925129b7332e2269",
+    "tests/test_finite_acquisition_events_math.py": "dd83b4280d6425c332798bb95f0fafeb301e66d1f2ef5126927d6a39f4b28932",
+    "tests/test_finite_acquisition_events_protocol.py": "3bb597fefc5ffa66fed189c5c8ddb4da2eab25b11eca46de3e62fbadc3c9f01a",
+    "tests/test_finite_acquisition_fit.py": "e4e10b81e0a48eb293a6cab281eb2eb11d6adbda17f6dbce74d20513d4916821",
+    "tests/test_finite_acquisition_identifiability.py": "38d53e0c763fc0f2d39fbb5fd360a7cf418033edc185e6e906641a0c9a16402f",
+    "tests/test_finite_acquisition_linear.py": "a6875c0c571c3f67b5e291827f860335ffffd894844afaab05901947ff2f63e9",
+    "tests/test_finite_acquisition_observations.py": "32fcd3b28b2e4acae44be6d53a3083b10fa965f454c8a4de087d0b65930853f4",
+    "tests/test_finite_acquisition_predictor.py": "eb825a26f1aa13fe65cabfd7e5186f9c9e42859884490417e3cafb84cb5ca981",
+    "tests/test_finite_acquisition_protected.py": "64229f3e14023c7b3ae071ce72ffc79bb51fddfbfdf7c3b93ac46823ca9091c0",
+    "tests/test_finite_acquisition_protected_active.py": "64e0a4bd74831bfcbe300f6cbc05be82a83826de9d331b3e287f8e49659e2c77",
+    "tests/test_finite_acquisition_protected_active_controls_v2.py": "ed113c16d3e289518aef2ba1b994f14f6ab18af1ada9f10776eb9410870854ec",
+    "tests/test_finite_acquisition_protected_active_math.py": "907bdda3cf42faa3450ebe52abba9869fd95387e3af0463954869b789eb132de",
+    "tests/test_finite_acquisition_protected_active_protocol.py": "73f02f1a32f7e97aa2f3acb98dc9957a4fc50490aadb9b080511a0be1c19452e",
+    "tests/test_finite_acquisition_protected_active_rebound.py": "0dafb26af741806603fa9d477177b32ab6f9754af2a5ed13429d7bd0a98bc4db",
+    "tests/test_finite_acquisition_protected_math.py": "3642904d8bcc3443fe03c9d234327b7f855393d750065917cf31be5dd79613ab",
+    "tests/test_finite_acquisition_protected_protocol.py": "e20ec0a0ad1151d3a0842ad4910845f0012dee60f0ea9efb6c94ddf204b6e3aa",
+    "tests/test_finite_acquisition_saved_audit.py": "61a835034b418e5baeba3908b85ae036ff2751456c33f87af0a1f481391270aa",
+    "tests/test_finite_acquisition_sensitivity.py": "a12fa1864a409bc8c125f44ce31bdbed3e239b73eea7ee251dad536a123a3d76",
+    "tests/test_finite_acquisition_workspace.py": "2d2ba6e12a7d43f92402b8e20229fa64f607c2f77ce283476e708617b610fd3e",
+    "tests/test_finite_affine.py": "58661c00edc78de9f316a61998c3c74f7c562be3e0bf32919edb994eb7cac30e",
+    "tests/test_finite_aperture.py": "e2ec4013126986a80c0e1fea2b6546d3e8bd62dbfb73462cf60f1f8ef5548766",
+    "tests/test_finite_aperture_sensitivity.py": "3f67748549e8e39475e3b53e2395a966ed6700709a241d0ac080d2704f037bd9",
+    "tests/test_finite_centre_fit.py": "f94255dc8aab9c3db8196c3379ee2f025a1e7d83fca12a086084152c7eddceb4",
+    "tests/test_finite_normal.py": "2e3991fcae912266d1a504d7333b22292b65c712faa39ba26ca47b8ca8d83416",
+    "tests/test_finite_observations.py": "fd0a2196b1a93e37128334088e5faa6989c0d2ad53d49cd5945db7b34d7680ca",
+    "tests/test_finite_photometry.py": "693e6b67d3cd1e3cf1a157fe3d4ceae656c21b3510f8c7d0280092b958dd3b5d",
+    "uv.lock": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f"
+  },
+  "numpy_version": "2.5.4",
+  "opencv_version": "4.14.0",
+  "platform": "Linux-7.0.0-43-generic-x86_64-with-glibc2.43",
+  "thread_environment": {
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1"
+  },
+  "rows": [
+    {
+      "case": {
+        "name": "minor-smooth",
+        "family": "matched",
+        "mode": "smooth",
+        "geometry": "minor",
+        "adverse": null
+      },
+      "status": "completed",
+      "all_targets": true,
+      "reference": {
+        "max_area_order_delta": 1.1102230246251565e-16,
+        "max_final_order_delta": 2.842170943040401e-14,
+        "encoded_order_codes_equal": null,
+        "passed": true
+      },
+      "preparation_status": "ambiguous",
+      "fit_attempted": true,
+      "evaluation": {
+        "status": "evaluated",
+        "parameters": [
+          6.129995787359309,
+          6.209999136168776,
+          3.6299967299071505,
+          -0.5499992071212441,
+          0.31000017736674623
+        ],
+        "levels": [
+          235.00000025236798,
+          27.00013936788281
+        ],
+        "errors": {
+          "centre_error_pitch": 4.300296032997827e-06,
+          "radius_error_pitch": 3.2700928493945014e-06,
+          "fraction_error": 7.928787559841055e-07,
+          "wrapped_angle_degrees": 1.0162365985209678e-05,
+          "reserved_dimension_error_pitch": 1.671312079842835e-06,
+          "sampled_bidirectional_boundary_error_pitch": 1.3048671352322572e-06,
+          "conditional_query_max_residual_linear_level": 4.857900233901091e-05
+        },
+        "targets": {
+          "centre_error_pitch": true,
+          "radius_error_pitch": true,
+          "fraction_error": true,
+          "wrapped_angle_degrees": true,
+          "reserved_dimension_error_pitch": true,
+          "sampled_bidirectional_boundary_error_pitch": true,
+          "conditional_query_max_residual_linear_level": true,
+          "bounded_local_search_completion": true,
+          "geometry_rank_conservative_when_smooth": true
+        },
+        "all_targets": true,
+        "search_stopping_statuses": [
+          "projected_gradient_resolution",
+          "projected_gradient_resolution",
+          "projected_gradient_resolution",
+          "projected_gradient_resolution"
+        ],
+        "work_exhausted": false,
+        "candidate_tie_retained": false,
+        "truth_dimensions_opened_after_fit_saved": {
+          "chord_length": 6.063295391121893,
+          "normal_depth": 1.6334999999999997
+        },
+        "candidate_dimensions": {
+          "chord_length": 6.063293719809813,
+          "normal_depth": 1.633501406605509
+        },
+        "conditional_reserved_residuals": [
+          -2.523679825117142e-07,
+          -2.523679825117142e-07,
+          -2.523679825117142e-07,
+          -1.75749391928548e-07,
+          -2.523679825117142e-07,
+          -2.4199499648602796e-07,
+          4.133048037147091e-07,
+          -2.523679825117142e-07,
+          -4.6309066249250463e-05,
+          -2.523679825117142e-07,
+          9.907816490795085e-06,
+          -1.966727126045953e-06,
+          -2.523679825117142e-07,
+          -2.533691372264002e-07,
+          2.201028885906453e-05,
+          -2.5236801093342365e-07,
+          4.857900233901091e-05,
+          -2.5236801093342365e-07,
+          -3.8796471812929667e-07,
+          -1.9050946775678312e-07,
+          -2.5236801093342365e-07,
+          -1.883701568772267e-05,
+          -2.5236801093342365e-07,
+          -2.7589128137606167e-06,
+          -2.523679825117142e-07,
+          -2.5236801093342365e-07,
+          -2.523679825117142e-07,
+          -2.604370763492625e-07,
+          -2.5236801093342365e-07,
+          -1.5704918610026652e-07,
+          -2.5236801093342365e-07,
+          -2.523679825117142e-07,
+          -2.523679825117142e-07,
+          -2.5236801093342365e-07
+        ],
+        "boundary_metric": "sampled bidirectional lower approximation; not a certified supremum",
+        "optical_adequacy": "not_evaluated",
+        "physical_qualification": false,
+        "continuation_completion_withheld": false,
+        "continuation_completion_reasons": []
+      },
+      "raw_truth_inside_observed_bounds_after_outputs_saved": true,
+      "equivalent_angle_truth_inside_observed_bounds_after_outputs_saved": true,
+      "elapsed_seconds": 1.3025177540002915
+    },
+    {
+      "case": {
+        "name": "minor-staged",
+        "family": "matched",
+        "mode": "staged",
+        "geometry": "minor",
+        "adverse": null
+      },
+      "status": "completed",
+      "all_targets": true,
+      "reference": {
+        "max_area_order_delta": 1.1102230246251565e-16,
+        "max_final_order_delta": 0.0,
+        "encoded_order_codes_equal": null,
+        "passed": true
+      },
+      "preparation_status": "ambiguous",
+      "fit_attempted": true,
+      "evaluation": {
+        "status": "evaluated",
+        "parameters": [
+          6.129995561990949,
+          6.209999066842533,
+          3.6299965433358636,
+          -0.5499991585061943,
+          0.3100001735689646
+        ],
+        "levels": [
+          235.00000014266095,
+          27.0001467527295
+        ],
+        "errors": {
+          "centre_error_pitch": 4.535053163306009e-06,
+          "radius_error_pitch": 3.4566641362587802e-06,
+          "fraction_error": 8.414938057477173e-07,
+          "wrapped_angle_degrees": 9.944769125454912e-06,
+          "reserved_dimension_error_pitch": 1.7505153993013778e-06,
+          "sampled_bidirectional_boundary_error_pitch": 1.3640417479976463e-06,
+          "conditional_query_max_residual_linear_level": 6.103515625e-05
+        },
+        "targets": {
+          "centre_error_pitch": true,
+          "radius_error_pitch": true,
+          "fraction_error": true,
+          "wrapped_angle_degrees": true,
+          "reserved_dimension_error_pitch": true,
+          "sampled_bidirectional_boundary_error_pitch": true,
+          "conditional_query_max_residual_linear_level": true,
+          "bounded_local_search_completion": true
+        },
+        "all_targets": true,
+        "search_stopping_statuses": [
+          "poll_resolution"
+        ],
+        "work_exhausted": false,
+        "candidate_tie_retained": false,
+        "truth_dimensions_opened_after_fit_saved": {
+          "chord_length": 6.063295391121893,
+          "normal_depth": 1.6334999999999997
+        },
+        "candidate_dimensions": {
+          "chord_length": 6.063293640606494,
+          "normal_depth": 1.6335014991207446
+        },
+        "conditional_reserved_residuals": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -6.103515625e-05,
+          0.0,
+          1.52587890625e-05,
+          0.0,
+          0.0,
+          0.0,
+          3.0517578125e-05,
+          0.0,
+          4.57763671875e-05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -1.52587890625e-05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.52587890625e-05,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "boundary_metric": "sampled bidirectional lower approximation; not a certified supremum",
+        "optical_adequacy": "not_evaluated",
+        "physical_qualification": false,
+        "continuation_completion_withheld": false,
+        "continuation_completion_reasons": []
+      },
+      "raw_truth_inside_observed_bounds_after_outputs_saved": true,
+      "equivalent_angle_truth_inside_observed_bounds_after_outputs_saved": true,
+      "elapsed_seconds": 2.720337696999195
+    },
+    {
+      "case": {
+        "name": "minor-png",
+        "family": "matched",
+        "mode": "png",
+        "geometry": "minor",
+        "adverse": null
+      },
+      "status": "completed",
+      "all_targets": true,
+      "reference": {
+        "max_area_order_delta": 1.1102230246251565e-16,
+        "max_final_order_delta": 0.0,
+        "encoded_order_codes_equal": true,
+        "passed": true
+      },
+      "preparation_status": "ambiguous",
+      "fit_attempted": true,
+      "evaluation": {
+        "status": "evaluated",
+        "parameters": [
+          6.126408479191348,
+          6.206685576623858,
+          3.630205827561892,
+          -0.548247514347239,
+          0.3087206833016447
+        ],
+        "levels": [
+          235.01749359849322,
+          28.181577632285304
+        ],
+        "errors": {
+          "centre_error_pitch": 0.004887169327463237,
+          "radius_error_pitch": 0.0002058275618921357,
+          "fraction_error": 0.0017524856527610932,
+          "wrapped_angle_degrees": 0.07329944747636931,
+          "reserved_dimension_error_pitch": 0.008703959211974421,
+          "sampled_bidirectional_boundary_error_pitch": 0.0074765427985809775,
+          "conditional_query_max_residual_linear_level": 0.0
+        },
+        "targets": {
+          "centre_error_pitch": true,
+          "radius_error_pitch": true,
+          "fraction_error": true,
+          "wrapped_angle_degrees": true,
+          "reserved_dimension_error_pitch": true,
+          "sampled_bidirectional_boundary_error_pitch": true,
+          "conditional_query_max_residual_linear_level": true,
+          "bounded_local_search_completion": true
+        },
+        "all_targets": true,
+        "search_stopping_statuses": [
+          "poll_resolution"
+        ],
+        "work_exhausted": false,
+        "candidate_tie_retained": true,
+        "truth_dimensions_opened_after_fit_saved": {
+          "chord_length": 6.063295391121893,
+          "normal_depth": 1.6334999999999997
+        },
+        "candidate_dimensions": {
+          "chord_length": 6.071999350333868,
+          "normal_depth": 1.6399545060322231
+        },
+        "conditional_reserved_residuals": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "boundary_metric": "sampled bidirectional lower approximation; not a certified supremum",
+        "optical_adequacy": "not_evaluated",
+        "physical_qualification": false,
+        "continuation_completion_withheld": false,
+        "continuation_completion_reasons": []
+      },
+      "raw_truth_inside_observed_bounds_after_outputs_saved": true,
+      "equivalent_angle_truth_inside_observed_bounds_after_outputs_saved": true,
+      "elapsed_seconds": 4.103316751999955
+    },
+    {
+      "case": {
+        "name": "middle-smooth",
+        "family": "matched",
+        "mode": "smooth",
+        "geometry": "middle",
+        "adverse": null
+      },
+      "status": "completed",
+      "all_targets": true,
+      "reference": {
+        "max_area_order_delta": 3.3306690738754696e-16,
+        "max_final_order_delta": 8.526512829121202e-14,
+        "encoded_order_codes_equal": null,
+        "passed": true
+      },
+      "preparation_status": "ambiguous",
+      "fit_attempted": true,
+      "evaluation": {
+        "status": "evaluated",
+        "parameters": [
+          5.869997515988633,
+          6.109994924137585,
+          3.409996590226782,
+          0.17000260402740552,
+          1.1300000812498894
+        ],
+        "levels": [
+          21.99999669976699,
+          217.99991545462905
+        ],
+        "errors": {
+          "centre_error_pitch": 5.651078811693906e-06,
+          "radius_error_pitch": 3.409773217999401e-06,
+          "fraction_error": 2.6040274055116885e-06,
+          "wrapped_angle_degrees": 4.655275753286218e-06,
+          "reserved_dimension_error_pitch": 9.784007107604964e-06,
+          "sampled_bidirectional_boundary_error_pitch": 4.4500887299570024e-06,
+          "conditional_query_max_residual_linear_level": 0.0003577478766345621
+        },
+        "targets": {
+          "centre_error_pitch": true,
+          "radius_error_pitch": true,
+          "fraction_error": true,
+          "wrapped_angle_degrees": true,
+          "reserved_dimension_error_pitch": true,
+          "sampled_bidirectional_boundary_error_pitch": true,
+          "conditional_query_max_residual_linear_level": true,
+          "bounded_local_search_completion": true,
+          "geometry_rank_conservative_when_smooth": true
+        },
+        "all_targets": true,
+        "search_stopping_statuses": [
+          "projected_gradient_resolution",
+          "projected_gradient_resolution",
+          "projected_gradient_resolution",
+          "projected_gradient_resolution"
+        ],
+        "work_exhausted": false,
+        "candidate_tie_retained": false,
+        "truth_dimensions_opened_after_fit_saved": {
+          "chord_length": 6.72072850515478,
+          "normal_depth": 3.9897
+        },
+        "candidate_dimensions": {
+          "chord_length": 6.720718721147672,
+          "normal_depth": 3.989704890289909
+        },
+        "conditional_reserved_residuals": [
+          3.300233007763609e-06,
+          3.300233007763609e-06,
+          3.300233007763609e-06,
+          3.7144731912519546e-06,
+          2.7000069415805683e-06,
+          3.2665787621510844e-06,
+          -1.1389141327811103e-05,
+          3.3002330113163225e-06,
+          -0.0002104332889274474,
+          4.459420770430711e-05,
+          -2.1446417690640374e-05,
+          7.390759120085022e-05,
+          3.3002330113163225e-06,
+          3.082511124574694e-06,
+          8.721471689909777e-05,
+          4.525982681968799e-05,
+          0.0001072492611058351,
+          -0.0003577478766345621,
+          6.34084963735404e-06,
+          -0.0003366526800476777,
+          3.3568297226338473e-06,
+          -0.00014818961618345838,
+          4.536587745462839e-06,
+          1.3720097886249505e-05,
+          5.320509753659053e-06,
+          3.300233014869036e-06,
+          3.3010392073151706e-06,
+          5.112441392896017e-06,
+          3.300233014869036e-06,
+          3.069572919400798e-06,
+          3.300233014869036e-06,
+          3.3002330113163225e-06,
+          3.300233014869036e-06,
+          3.300233014869036e-06
+        ],
+        "boundary_metric": "sampled bidirectional lower approximation; not a certified supremum",
+        "optical_adequacy": "not_evaluated",
+        "physical_qualification": false,
+        "continuation_completion_withheld": false,
+        "continuation_completion_reasons": []
+      },
+      "raw_truth_inside_observed_bounds_after_outputs_saved": true,
+      "equivalent_angle_truth_inside_observed_bounds_after_outputs_saved": true,
+      "elapsed_seconds": 0.8380364850017941
+    },
+    {
+      "case": {
+        "name": "middle-staged",
+        "family": "matched",
+        "mode": "staged",
+        "geometry": "middle",
+        "adverse": null
+      },
+      "status": "completed",
+      "all_targets": true,
+      "reference": {
+        "max_area_order_delta": 3.3306690738754696e-16,
+        "max_final_order_delta": 0.0,
+        "encoded_order_codes_equal": null,
+        "passed": true
+      },
+      "preparation_status": "ambiguous",
+      "fit_attempted": true,
+      "evaluation": {
+        "status": "evaluated",
+        "parameters": [
+          5.8699974975233715,
+          6.1099949563739475,
+          3.409996621196024,
+          0.1700026022859603,
+          1.130000072400506
+        ],
+        "levels": [
+          21.99999664031928,
+          217.99991216358052
+        ],
+        "errors": {
+          "centre_error_pitch": 5.63032441668589e-06,
+          "radius_error_pitch": 3.3788039761617483e-06,
+          "fraction_error": 2.6022859603014314e-06,
+          "wrapped_angle_degrees": 4.148243430408532e-06,
+          "reserved_dimension_error_pitch": 9.720921339884114e-06,
+          "sampled_bidirectional_boundary_error_pitch": 4.445513307249627e-06,
+          "conditional_query_max_residual_linear_level": 0.00035858154296875
+        },
+        "targets": {
+          "centre_error_pitch": true,
+          "radius_error_pitch": true,
+          "fraction_error": true,
+          "wrapped_angle_degrees": true,
+          "reserved_dimension_error_pitch": true,
+          "sampled_bidirectional_boundary_error_pitch": true,
+          "conditional_query_max_residual_linear_level": true,
+          "bounded_local_search_completion": true
+        },
+        "all_targets": true,
+        "search_stopping_statuses": [
+          "poll_resolution"
+        ],
+        "work_exhausted": false,
+        "candidate_tie_retained": false,
+        "truth_dimensions_opened_after_fit_saved": {
+          "chord_length": 6.72072850515478,
+          "normal_depth": 3.9897
+        },
+        "candidate_dimensions": {
+          "chord_length": 6.72071878423344,
+          "normal_depth": 3.9897049205856803
+        },
+        "conditional_reserved_residuals": [
+          3.814697265625e-06,
+          3.814697265625e-06,
+          3.814697265625e-06,
+          3.814697265625e-06,
+          1.9073486328125e-06,
+          3.814697265625e-06,
+          -1.1444091796875e-05,
+          3.814697265625e-06,
+          -0.00022125244140625,
+          4.76837158203125e-05,
+          -2.09808349609375e-05,
+          7.62939453125e-05,
+          3.814697265625e-06,
+          3.814697265625e-06,
+          9.1552734375e-05,
+          4.57763671875e-05,
+          0.0001068115234375,
+          -0.00035858154296875,
+          7.62939453125e-06,
+          -0.00034332275390625,
+          3.814697265625e-06,
+          -0.00014495849609375,
+          3.814697265625e-06,
+          1.33514404296875e-05,
+          5.7220458984375e-06,
+          3.814697265625e-06,
+          3.814697265625e-06,
+          5.7220458984375e-06,
+          3.814697265625e-06,
+          3.814697265625e-06,
+          3.814697265625e-06,
+          3.814697265625e-06,
+          3.814697265625e-06,
+          3.814697265625e-06
+        ],
+        "boundary_metric": "sampled bidirectional lower approximation; not a certified supremum",
+        "optical_adequacy": "not_evaluated",
+        "physical_qualification": false,
+        "continuation_completion_withheld": false,
+        "continuation_completion_reasons": []
+      },
+      "raw_truth_inside_observed_bounds_after_outputs_saved": true,
+      "equivalent_angle_truth_inside_observed_bounds_after_outputs_saved": true,
+      "elapsed_seconds": 2.7328179060023103
+    },
+    {
+      "case": {
+        "name": "middle-png",
+        "family": "matched",
+        "mode": "png",
+        "geometry": "middle",
+        "adverse": null
+      },
+      "status": "completed",
+      "all_targets": false,
+      "reference": {
+        "max_area_order_delta": 3.3306690738754696e-16,
+        "max_final_order_delta": 0.0,
+        "encoded_order_codes_equal": true,
+        "passed": true
+      },
+      "preparation_status": "ambiguous",
+      "fit_attempted": true,
+      "evaluation": {
+        "status": "evaluated",
+        "parameters": [
+          5.874218654733053,
+          6.117834924781105,
+          3.4128701620906594,
+          0.1664712743767095,
+          1.129535692197705
+        ],
+        "levels": [
+          22.115085058432857,
+          218.2438442787882
+        ],
+        "errors": {
+          "centre_error_pitch": 0.008898488303205117,
+          "radius_error_pitch": 0.0028701620906592673,
+          "fraction_error": 0.003528725623290513,
+          "wrapped_angle_degrees": 0.026602877466485722,
+          "reserved_dimension_error_pitch": 0.009767517635997258,
+          "sampled_bidirectional_boundary_error_pitch": 0.00602831876239085,
+          "conditional_query_max_residual_linear_level": 0.06518173217773438
+        },
+        "targets": {
+          "centre_error_pitch": true,
+          "radius_error_pitch": true,
+          "fraction_error": false,
+          "wrapped_angle_degrees": true,
+          "reserved_dimension_error_pitch": true,
+          "sampled_bidirectional_boundary_error_pitch": true,
+          "conditional_query_max_residual_linear_level": false,
+          "bounded_local_search_completion": true
+        },
+        "all_targets": false,
+        "search_stopping_statuses": [
+          "poll_resolution"
+        ],
+        "work_exhausted": false,
+        "candidate_tie_retained": true,
+        "truth_dimensions_opened_after_fit_saved": {
+          "chord_length": 6.72072850515478,
+          "normal_depth": 3.9897
+        },
+        "candidate_dimensions": {
+          "chord_length": 6.730496022790777,
+          "normal_depth": 3.981015007256138
+        },
+        "conditional_reserved_residuals": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0056610107421875,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.06518173217773438,
+          0.0,
+          -9.1552734375e-05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "boundary_metric": "sampled bidirectional lower approximation; not a certified supremum",
+        "optical_adequacy": "not_evaluated",
+        "physical_qualification": false,
+        "continuation_completion_withheld": false,
+        "continuation_completion_reasons": []
+      },
+      "raw_truth_inside_observed_bounds_after_outputs_saved": true,
+      "equivalent_angle_truth_inside_observed_bounds_after_outputs_saved": true,
+      "elapsed_seconds": 9.890427240999998
+    },
+    {
+      "case": {
+        "name": "major-smooth",
+        "family": "matched",
+        "mode": "smooth",
+        "geometry": "major",
+        "adverse": null
+      },
+      "status": "completed",
+      "all_targets": true,
+      "reference": {
+        "max_area_order_delta": 2.220446049250313e-16,
+        "max_final_order_delta": 5.062616992290714e-14,
+        "encoded_order_codes_equal": null,
+        "passed": true
+      },
+      "preparation_status": "ambiguous",
+      "fit_attempted": true,
+      "evaluation": {
+        "status": "evaluated",
+        "parameters": [
+          6.259997124515149,
+          5.840002105340229,
+          3.820001776724139,
+          0.6099981582123318,
+          2.430001027395524
+        ],
+        "levels": [
+          254.99999894903837,
+          0.0
+        ],
+        "errors": {
+          "centre_error_pitch": 3.5638280836706112e-06,
+          "radius_error_pitch": 1.7767241393684685e-06,
+          "fraction_error": 1.841787668155348e-06,
+          "wrapped_angle_degrees": 5.8865427402492236e-05,
+          "reserved_dimension_error_pitch": 1.364795745573133e-05,
+          "sampled_bidirectional_boundary_error_pitch": 5.509184724742845e-06,
+          "conditional_query_max_residual_linear_level": 0.000567573582912928
+        },
+        "targets": {
+          "centre_error_pitch": true,
+          "radius_error_pitch": true,
+          "fraction_error": true,
+          "wrapped_angle_degrees": true,
+          "reserved_dimension_error_pitch": true,
+          "sampled_bidirectional_boundary_error_pitch": true,
+          "conditional_query_max_residual_linear_level": true,
+          "bounded_local_search_completion": true,
+          "geometry_rank_conservative_when_smooth": true
+        },
+        "all_targets": true,
+        "search_stopping_statuses": [
+          "projected_gradient_resolution",
+          "projected_gradient_resolution",
+          "projected_gradient_resolution",
+          "projected_gradient_resolution"
+        ],
+        "work_exhausted": false,
+        "candidate_tie_retained": false,
+        "truth_dimensions_opened_after_fit_saved": {
+          "chord_length": 6.053946798576941,
+          "normal_depth": 6.150199999999999
+        },
+        "candidate_dimensions": {
+          "chord_length": 6.053960446534397,
+          "normal_depth": 6.150195824893699
+        },
+        "conditional_reserved_residuals": [
+          1.050961628834557e-06,
+          -1.8182049643655773e-07,
+          1.0509616004128475e-06,
+          -9.411459416241996e-07,
+          -1.1582415197608498e-05,
+          7.714801597558107e-07,
+          8.692092734463586e-06,
+          4.899796692825475e-07,
+          0.00030532323492593605,
+          -0.00028414112767904953,
+          7.939325453776291e-05,
+          -4.593788318851821e-06,
+          5.821300845809674e-06,
+          1.050961628834557e-06,
+          5.039070314794003e-06,
+          -0.00026295518387087213,
+          -0.000567573582912928,
+          3.043480792719322e-06,
+          4.057090166043054e-06,
+          4.441005471811366e-06,
+          -1.7543394278618507e-05,
+          -0.00018505623583564557,
+          8.855735706703172e-05,
+          1.3900449573611695e-06,
+          0.0001542446770130823,
+          9.845433623922872e-07,
+          1.050961628834557e-06,
+          -7.532112761055032e-06,
+          3.4702880782333523e-06,
+          1.0422393188491696e-06,
+          1.7694004213808512e-05,
+          1.050961628834557e-06,
+          2.8019278488500277e-06,
+          1.0509616004128475e-06
+        ],
+        "boundary_metric": "sampled bidirectional lower approximation; not a certified supremum",
+        "optical_adequacy": "not_evaluated",
+        "physical_qualification": false,
+        "continuation_completion_withheld": false,
+        "continuation_completion_reasons": []
+      },
+      "raw_truth_inside_observed_bounds_after_outputs_saved": true,
+      "equivalent_angle_truth_inside_observed_bounds_after_outputs_saved": true,
+      "elapsed_seconds": 0.9975032260008447
+    },
+    {
+      "case": {
+        "name": "major-staged",
+        "family": "matched",
+        "mode": "staged",
+        "geometry": "major",
+        "adverse": null
+      },
+      "status": "completed",
+      "all_targets": true,
+      "reference": {
+        "max_area_order_delta": 2.220446049250313e-16,
+        "max_final_order_delta": 0.0,
+        "encoded_order_codes_equal": null,
+        "passed": true
+      },
+      "preparation_status": "ambiguous",
+      "fit_attempted": true,
+      "evaluation": {
+        "status": "evaluated",
+        "parameters": [
+          6.259997101804943,
+          5.8400021454373885,
+          3.8200017871339735,
+          0.6099981409637506,
+          2.4300010444031717
+        ],
+        "levels": [
+          254.99999906079955,
+          0.0
+        ],
+        "errors": {
+          "centre_error_pitch": 3.6058890961074757e-06,
+          "radius_error_pitch": 1.787133973696342e-06,
+          "fraction_error": 1.8590362493853263e-06,
+          "wrapped_angle_degrees": 5.983989383713014e-05,
+          "reserved_dimension_error_pitch": 1.3765899736561948e-05,
+          "sampled_bidirectional_boundary_error_pitch": 5.576821988841027e-06,
+          "conditional_query_max_residual_linear_level": 0.0005645751953125
+        },
+        "targets": {
+          "centre_error_pitch": true,
+          "radius_error_pitch": true,
+          "fraction_error": true,
+          "wrapped_angle_degrees": true,
+          "reserved_dimension_error_pitch": true,
+          "sampled_bidirectional_boundary_error_pitch": true,
+          "conditional_query_max_residual_linear_level": true,
+          "bounded_local_search_completion": true
+        },
+        "all_targets": true,
+        "search_stopping_statuses": [
+          "poll_resolution"
+        ],
+        "work_exhausted": false,
+        "candidate_tie_retained": false,
+        "truth_dimensions_opened_after_fit_saved": {
+          "chord_length": 6.053946798576941,
+          "normal_depth": 6.150199999999999
+        },
+        "candidate_dimensions": {
+          "chord_length": 6.053960564476678,
+          "normal_depth": 6.150195775763902
+        },
+        "conditional_reserved_residuals": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -3.0517578125e-05,
+          0.0,
+          0.0,
+          0.0,
+          0.00031280517578125,
+          -0.00030517578125,
+          7.62939453125e-05,
+          -4.589557647705078e-06,
+          0.0,
+          0.0,
+          4.887580871582031e-06,
+          -0.0002593994140625,
+          -0.0005645751953125,
+          2.9802322387695312e-06,
+          0.0,
+          3.814697265625e-06,
+          -1.52587890625e-05,
+          -0.00018310546875,
+          8.7738037109375e-05,
+          0.0,
+          0.000148773193359375,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.52587890625e-05,
+          0.0,
+          1.52587890625e-05,
+          0.0
+        ],
+        "boundary_metric": "sampled bidirectional lower approximation; not a certified supremum",
+        "optical_adequacy": "not_evaluated",
+        "physical_qualification": false,
+        "continuation_completion_withheld": false,
+        "continuation_completion_reasons": []
+      },
+      "raw_truth_inside_observed_bounds_after_outputs_saved": true,
+      "equivalent_angle_truth_inside_observed_bounds_after_outputs_saved": true,
+      "elapsed_seconds": 3.2269499489993905
+    },
+    {
+      "case": {
+        "name": "major-png",
+        "family": "matched",
+        "mode": "png",
+        "geometry": "major",
+        "adverse": null
+      },
+      "status": "completed",
+      "all_targets": true,
+      "reference": {
+        "max_area_order_delta": 2.220446049250313e-16,
+        "max_final_order_delta": 0.0,
+        "encoded_order_codes_equal": true,
+        "passed": true
+      },
+      "preparation_status": "ambiguous",
+      "fit_attempted": true,
+      "evaluation": {
+        "status": "evaluated",
+        "parameters": [
+          6.258824176732029,
+          5.840309791348551,
+          3.819739358033077,
+          0.6094210929277416,
+          2.429898277872285
+        ],
+        "levels": [
+          254.95266337625088,
+          0.0
+        ],
+        "errors": {
+          "centre_error_pitch": 0.001215948616159028,
+          "radius_error_pitch": 0.00026064196692265895,
+          "fraction_error": 0.0005789070722583833,
+          "wrapped_angle_degrees": 0.00582824860117795,
+          "reserved_dimension_error_pitch": 0.002988892528859921,
+          "sampled_bidirectional_boundary_error_pitch": 0.0015854339871249495,
+          "conditional_query_max_residual_linear_level": 0.0
+        },
+        "targets": {
+          "centre_error_pitch": true,
+          "radius_error_pitch": true,
+          "fraction_error": true,
+          "wrapped_angle_degrees": true,
+          "reserved_dimension_error_pitch": true,
+          "sampled_bidirectional_boundary_error_pitch": true,
+          "conditional_query_max_residual_linear_level": true,
+          "bounded_local_search_completion": true
+        },
+        "all_targets": true,
+        "search_stopping_statuses": [
+          "poll_resolution"
+        ],
+        "work_exhausted": false,
+        "candidate_tie_retained": true,
+        "truth_dimensions_opened_after_fit_saved": {
+          "chord_length": 6.053946798576941,
+          "normal_depth": 6.150199999999999
+        },
+        "candidate_dimensions": {
+          "chord_length": 6.056935691105801,
+          "normal_depth": 6.147569092304706
+        },
+        "conditional_reserved_residuals": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "boundary_metric": "sampled bidirectional lower approximation; not a certified supremum",
+        "optical_adequacy": "not_evaluated",
+        "physical_qualification": false,
+        "continuation_completion_withheld": false,
+        "continuation_completion_reasons": []
+      },
+      "raw_truth_inside_observed_bounds_after_outputs_saved": true,
+      "equivalent_angle_truth_inside_observed_bounds_after_outputs_saved": true,
+      "elapsed_seconds": 8.057698294000147
+    },
+    {
+      "case": {
+        "name": "wrapped-major-smooth",
+        "family": "matched",
+        "mode": "smooth",
+        "geometry": "wrapped-major",
+        "adverse": null
+      },
+      "status": "completed",
+      "all_targets": true,
+      "reference": {
+        "max_area_order_delta": 2.220446049250313e-16,
+        "max_final_order_delta": 5.684341886080802e-14,
+        "encoded_order_codes_equal": null,
+        "passed": true
+      },
+      "preparation_status": "ambiguous",
+      "fit_attempted": true,
+      "evaluation": {
+        "status": "evaluated",
+        "parameters": [
+          6.090000497018307,
+          6.17000024993202,
+          3.5200001854945606,
+          0.8299994785197361,
+          -0.06318101020415723
+        ],
+        "levels": [
+          230.9999997615436,
+          34.999990669605566
+        ],
+        "errors": {
+          "centre_error_pitch": 5.563211415143731e-07,
+          "radius_error_pitch": 1.8549456060057423e-07,
+          "fraction_error": 5.21480263859786e-07,
+          "wrapped_angle_degrees": 0.00024619855679300584,
+          "reserved_dimension_error_pitch": 5.670012285463599e-06,
+          "sampled_bidirectional_boundary_error_pitch": 9.63774545450264e-06,
+          "conditional_query_max_residual_linear_level": 0.0004928996562796328
+        },
+        "targets": {
+          "centre_error_pitch": true,
+          "radius_error_pitch": true,
+          "fraction_error": true,
+          "wrapped_angle_degrees": true,
+          "reserved_dimension_error_pitch": true,
+          "sampled_bidirectional_boundary_error_pitch": true,
+          "conditional_query_max_residual_linear_level": true,
+          "bounded_local_search_completion": true,
+          "geometry_rank_conservative_when_smooth": true
+        },
+        "all_targets": true,
+        "search_stopping_statuses": [
+          "projected_gradient_resolution",
+          "projected_gradient_resolution",
+          "projected_gradient_resolution",
+          "projected_gradient_resolution"
+        ],
+        "work_exhausted": false,
+        "candidate_tie_retained": false,
+        "truth_dimensions_opened_after_fit_saved": {
+          "chord_length": 3.92665427049543,
+          "normal_depth": 6.4416
+        },
+        "candidate_dimensions": {
+          "chord_length": 3.9266599405077156,
+          "normal_depth": 6.44159850384442
+        },
+        "conditional_reserved_residuals": [
+          2.3845640839681437e-07,
+          2.3845640839681437e-07,
+          2.3845640839681437e-07,
+          2.888946539769677e-07,
+          -6.941135666238551e-08,
+          2.3187766373666818e-07,
+          4.6654020025016507e-07,
+          2.3845640839681437e-07,
+          -2.5836725058070442e-05,
+          5.603486161476212e-05,
+          -5.204316664730868e-06,
+          7.5777119619147015e-06,
+          2.3845640839681437e-07,
+          2.3845640839681437e-07,
+          9.939191045305051e-06,
+          0.00012496596443156704,
+          -4.025587442413325e-05,
+          -8.23415563644403e-06,
+          7.431135031765734e-07,
+          9.317854662072023e-06,
+          1.673620295150613e-05,
+          5.291018808861736e-06,
+          -0.0004928996562796328,
+          -6.472571101312496e-07,
+          4.311054349415144e-05,
+          2.3845640839681437e-07,
+          2.3845640839681437e-07,
+          2.8149931665666372e-05,
+          2.3834028581859457e-06,
+          1.983489710255526e-07,
+          2.7187896876057494e-06,
+          2.384522304055281e-07,
+          9.663723403718905e-07,
+          2.3845640839681437e-07
+        ],
+        "boundary_metric": "sampled bidirectional lower approximation; not a certified supremum",
+        "optical_adequacy": "not_evaluated",
+        "physical_qualification": false,
+        "continuation_completion_withheld": false,
+        "continuation_completion_reasons": []
+      },
+      "raw_truth_inside_observed_bounds_after_outputs_saved": false,
+      "equivalent_angle_truth_inside_observed_bounds_after_outputs_saved": true,
+      "elapsed_seconds": 0.8648915170015243
+    },
+    {
+      "case": {
+        "name": "wrapped-major-staged",
+        "family": "matched",
+        "mode": "staged",
+        "geometry": "wrapped-major",
+        "adverse": null
+      },
+      "status": "completed",
+      "all_targets": true,
+      "reference": {
+        "max_area_order_delta": 2.220446049250313e-16,
+        "max_final_order_delta": 0.0,
+        "encoded_order_codes_equal": null,
+        "passed": true
+      },
+      "preparation_status": "ambiguous",
+      "fit_attempted": true,
+      "evaluation": {
+        "status": "evaluated",
+        "parameters": [
+          6.090000506604316,
+          6.170000232342465,
+          3.520000166676361,
+          0.8299994875080409,
+          -0.06318099320875925
+        ],
+        "levels": [
+          231.0000004340113,
+          34.99999002315051
+        ],
+        "errors": {
+          "centre_error_pitch": 5.573427616690571e-07,
+          "radius_error_pitch": 1.6667636115741402e-07,
+          "fraction_error": 5.124919590926424e-07,
+          "wrapped_angle_degrees": 0.0002471723213173922,
+          "reserved_dimension_error_pitch": 5.5548576138875205e-06,
+          "sampled_bidirectional_boundary_error_pitch": 9.644415554969793e-06,
+          "conditional_query_max_residual_linear_level": 0.00048828125
+        },
+        "targets": {
+          "centre_error_pitch": true,
+          "radius_error_pitch": true,
+          "fraction_error": true,
+          "wrapped_angle_degrees": true,
+          "reserved_dimension_error_pitch": true,
+          "sampled_bidirectional_boundary_error_pitch": true,
+          "conditional_query_max_residual_linear_level": true,
+          "bounded_local_search_completion": true
+        },
+        "all_targets": true,
+        "search_stopping_statuses": [
+          "poll_resolution"
+        ],
+        "work_exhausted": false,
+        "candidate_tie_retained": false,
+        "truth_dimensions_opened_after_fit_saved": {
+          "chord_length": 3.92665427049543,
+          "normal_depth": 6.4416
+        },
+        "candidate_dimensions": {
+          "chord_length": 3.926659825353044,
+          "normal_depth": 6.44159850104596
+        },
+        "conditional_reserved_residuals": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -3.0517578125e-05,
+          4.57763671875e-05,
+          0.0,
+          7.62939453125e-06,
+          0.0,
+          0.0,
+          1.52587890625e-05,
+          0.0001373291015625,
+          -3.814697265625e-05,
+          -7.62939453125e-06,
+          0.0,
+          1.1444091796875e-05,
+          1.52587890625e-05,
+          7.62939453125e-06,
+          -0.00048828125,
+          0.0,
+          4.57763671875e-05,
+          0.0,
+          0.0,
+          1.52587890625e-05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "boundary_metric": "sampled bidirectional lower approximation; not a certified supremum",
+        "optical_adequacy": "not_evaluated",
+        "physical_qualification": false,
+        "continuation_completion_withheld": false,
+        "continuation_completion_reasons": []
+      },
+      "raw_truth_inside_observed_bounds_after_outputs_saved": false,
+      "equivalent_angle_truth_inside_observed_bounds_after_outputs_saved": true,
+      "elapsed_seconds": 2.957071802000428
+    },
+    {
+      "case": {
+        "name": "wrapped-major-png",
+        "family": "matched",
+        "mode": "png",
+        "geometry": "wrapped-major",
+        "adverse": null
+      },
+      "status": "completed",
+      "all_targets": true,
+      "reference": {
+        "max_area_order_delta": 2.220446049250313e-16,
+        "max_final_order_delta": 0.0,
+        "encoded_order_codes_equal": true,
+        "passed": true
+      },
+      "preparation_status": "ambiguous",
+      "fit_attempted": true,
+      "evaluation": {
+        "status": "evaluated",
+        "parameters": [
+          6.089777845291927,
+          6.168760286473537,
+          3.520177322293736,
+          0.8293879114012787,
+          -0.06020106504773626
+        ],
+        "levels": [
+          230.98884192527558,
+          35.127053296670404
+        ],
+        "errors": {
+          "centre_error_pitch": 0.0012594611316010505,
+          "radius_error_pitch": 0.00017732229373601527,
+          "fraction_error": 0.0006120885987213054,
+          "wrapped_angle_degrees": 0.17098447920014115,
+          "reserved_dimension_error_pitch": 0.006602860427283641,
+          "sampled_bidirectional_boundary_error_pitch": 0.008000673584943333,
+          "conditional_query_max_residual_linear_level": 0.0
+        },
+        "targets": {
+          "centre_error_pitch": true,
+          "radius_error_pitch": true,
+          "fraction_error": true,
+          "wrapped_angle_degrees": true,
+          "reserved_dimension_error_pitch": true,
+          "sampled_bidirectional_boundary_error_pitch": true,
+          "conditional_query_max_residual_linear_level": true,
+          "bounded_local_search_completion": true
+        },
+        "all_targets": true,
+        "search_stopping_statuses": [
+          "poll_resolution"
+        ],
+        "work_exhausted": false,
+        "candidate_tie_retained": true,
+        "truth_dimensions_opened_after_fit_saved": {
+          "chord_length": 3.92665427049543,
+          "normal_depth": 6.4416
+        },
+        "candidate_dimensions": {
+          "chord_length": 3.933257130922714,
+          "normal_depth": 6.439769839393083
+        },
+        "conditional_reserved_residuals": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "boundary_metric": "sampled bidirectional lower approximation; not a certified supremum",
+        "optical_adequacy": "not_evaluated",
+        "physical_qualification": false,
+        "continuation_completion_withheld": false,
+        "continuation_completion_reasons": []
+      },
+      "raw_truth_inside_observed_bounds_after_outputs_saved": false,
+      "equivalent_angle_truth_inside_observed_bounds_after_outputs_saved": true,
+      "elapsed_seconds": 3.1046115300014208
+    },
+    {
+      "case": {
+        "name": "zero-smooth",
+        "family": "adverse",
+        "mode": "smooth",
+        "geometry": "minor",
+        "adverse": "zero"
+      },
+      "status": "completed",
+      "all_targets": false,
+      "reference": {
+        "max_area_order_delta": 1.1102230246251565e-16,
+        "max_final_order_delta": 0.0,
+        "encoded_order_codes_equal": null,
+        "passed": true
+      },
+      "preparation_status": "refused",
+      "fit_attempted": false,
+      "evaluation": {
+        "status": "no_candidate",
+        "all_targets": false
+      },
+      "raw_truth_inside_observed_bounds_after_outputs_saved": null,
+      "elapsed_seconds": 0.031996013000025414
+    },
+    {
+      "case": {
+        "name": "zero-png",
+        "family": "adverse",
+        "mode": "png",
+        "geometry": "minor",
+        "adverse": "zero"
+      },
+      "status": "completed",
+      "all_targets": false,
+      "reference": {
+        "max_area_order_delta": 1.1102230246251565e-16,
+        "max_final_order_delta": 0.0,
+        "encoded_order_codes_equal": true,
+        "passed": true
+      },
+      "preparation_status": "refused",
+      "fit_attempted": false,
+      "evaluation": {
+        "status": "no_candidate",
+        "all_targets": false
+      },
+      "raw_truth_inside_observed_bounds_after_outputs_saved": null,
+      "elapsed_seconds": 0.031535693000478204
+    },
+    {
+      "case": {
+        "name": "low-staged",
+        "family": "adverse",
+        "mode": "staged",
+        "geometry": "middle",
+        "adverse": "low"
+      },
+      "status": "completed",
+      "all_targets": false,
+      "reference": {
+        "max_area_order_delta": 3.3306690738754696e-16,
+        "max_final_order_delta": 0.0,
+        "encoded_order_codes_equal": null,
+        "passed": true
+      },
+      "preparation_status": "refused",
+      "fit_attempted": false,
+      "evaluation": {
+        "status": "no_candidate",
+        "all_targets": false
+      },
+      "raw_truth_inside_observed_bounds_after_outputs_saved": null,
+      "elapsed_seconds": 0.03264626099917223
+    },
+    {
+      "case": {
+        "name": "cropped-smooth",
+        "family": "adverse",
+        "mode": "smooth",
+        "geometry": "major",
+        "adverse": "cropped"
+      },
+      "status": "completed",
+      "all_targets": false,
+      "reference": {
+        "max_area_order_delta": 4.440892098500626e-16,
+        "max_final_order_delta": 9.625633623500107e-14,
+        "encoded_order_codes_equal": null,
+        "passed": true
+      },
+      "preparation_status": "refused",
+      "fit_attempted": false,
+      "evaluation": {
+        "status": "no_candidate",
+        "all_targets": false
+      },
+      "raw_truth_inside_observed_bounds_after_outputs_saved": null,
+      "elapsed_seconds": 0.024011680001422064
+    },
+    {
+      "case": {
+        "name": "thin-png",
+        "family": "adverse",
+        "mode": "png",
+        "geometry": "minor",
+        "adverse": "thin"
+      },
+      "status": "completed",
+      "all_targets": false,
+      "reference": {
+        "max_area_order_delta": 5.551115123125783e-17,
+        "max_final_order_delta": 0.0,
+        "encoded_order_codes_equal": true,
+        "passed": true
+      },
+      "preparation_status": "refused",
+      "fit_attempted": false,
+      "evaluation": {
+        "status": "no_candidate",
+        "all_targets": false
+      },
+      "raw_truth_inside_observed_bounds_after_outputs_saved": null,
+      "elapsed_seconds": 0.03224545100238174
+    },
+    {
+      "case": {
+        "name": "almost-circle-smooth",
+        "family": "adverse",
+        "mode": "smooth",
+        "geometry": "major",
+        "adverse": "almost"
+      },
+      "status": "completed",
+      "all_targets": false,
+      "reference": {
+        "max_area_order_delta": 2.220446049250313e-16,
+        "max_final_order_delta": 4.707345624410664e-14,
+        "encoded_order_codes_equal": null,
+        "passed": true
+      },
+      "preparation_status": "ambiguous",
+      "fit_attempted": false,
+      "evaluation": {
+        "status": "no_candidate",
+        "all_targets": false
+      },
+      "raw_truth_inside_observed_bounds_after_outputs_saved": null,
+      "elapsed_seconds": 0.1004165100021055
+    },
+    {
+      "case": {
+        "name": "wrong-optics-smooth",
+        "family": "adverse",
+        "mode": "smooth",
+        "geometry": "middle",
+        "adverse": "wrong"
+      },
+      "status": "completed",
+      "all_targets": false,
+      "reference": {
+        "max_area_order_delta": 3.3306690738754696e-16,
+        "max_final_order_delta": 8.526512829121202e-14,
+        "encoded_order_codes_equal": null,
+        "passed": true
+      },
+      "preparation_status": "ambiguous",
+      "fit_attempted": true,
+      "evaluation": {
+        "status": "evaluated",
+        "parameters": [
+          6.163006679656615,
+          6.164766804597722,
+          3.467329867494317,
+          0.14205880659472403,
+          1.0712882952234875
+        ],
+        "levels": [
+          23.44661265918228,
+          203.55619830202082
+        ],
+        "errors": {
+          "centre_error_pitch": 0.2980810581188262,
+          "radius_error_pitch": 0.05732986749431701,
+          "fraction_error": 0.027941193405275982,
+          "wrapped_angle_degrees": 3.3639328917122393,
+          "reserved_dimension_error_pitch": 0.1436014356116777,
+          "sampled_bidirectional_boundary_error_pitch": 0.3158998841854488,
+          "conditional_query_max_residual_linear_level": 38.48910530683135
+        },
+        "targets": {
+          "centre_error_pitch": false,
+          "radius_error_pitch": false,
+          "fraction_error": false,
+          "wrapped_angle_degrees": false,
+          "reserved_dimension_error_pitch": false,
+          "sampled_bidirectional_boundary_error_pitch": false,
+          "conditional_query_max_residual_linear_level": false,
+          "bounded_local_search_completion": true,
+          "geometry_rank_conservative_when_smooth": true
+        },
+        "all_targets": false,
+        "search_stopping_statuses": [
+          "projected_gradient_resolution",
+          "projected_gradient_resolution",
+          "projected_gradient_resolution",
+          "projected_gradient_resolution"
+        ],
+        "work_exhausted": false,
+        "candidate_tie_retained": false,
+        "truth_dimensions_opened_after_fit_saved": {
+          "chord_length": 6.72072850515478,
+          "normal_depth": 3.9897
+        },
+        "candidate_dimensions": {
+          "chord_length": 6.864329940766457,
+          "normal_depth": 3.959894610540802
+        },
+        "conditional_reserved_residuals": [
+          -1.446612659182282,
+          -1.446612659182282,
+          -1.446612659182282,
+          -1.4844670248556042,
+          -1.5373731013901057,
+          -1.4403126747161714,
+          16.851089150534822,
+          -1.4466126591822785,
+          22.889675032203492,
+          4.632604892183647,
+          3.5618940138479473,
+          0.40073291516441145,
+          -1.4466126591822785,
+          -1.454219935705602,
+          15.119030734278027,
+          19.834268051095577,
+          1.805290065573189,
+          38.48910530683135,
+          -1.216179789724503,
+          19.219523498393357,
+          -1.4324462598865182,
+          -17.883109553495487,
+          -1.6707893454757894,
+          -0.1966990210762951,
+          -1.7121402195266668,
+          -1.4466126591822785,
+          -1.4466081290498458,
+          -1.6699987941441599,
+          -1.4466126591822785,
+          -1.5155191751559691,
+          -1.4466126591822785,
+          -1.446612659182282,
+          -1.4466126591822785,
+          -1.4466126591822785
+        ],
+        "boundary_metric": "sampled bidirectional lower approximation; not a certified supremum",
+        "optical_adequacy": "not_evaluated",
+        "physical_qualification": false,
+        "continuation_completion_withheld": false,
+        "continuation_completion_reasons": []
+      },
+      "raw_truth_inside_observed_bounds_after_outputs_saved": true,
+      "equivalent_angle_truth_inside_observed_bounds_after_outputs_saved": true,
+      "elapsed_seconds": 1.821658798999124
+    },
+    {
+      "case": {
+        "name": "gradient-staged",
+        "family": "adverse",
+        "mode": "staged",
+        "geometry": "major",
+        "adverse": "gradient"
+      },
+      "status": "completed",
+      "all_targets": false,
+      "reference": {
+        "max_area_order_delta": 2.220446049250313e-16,
+        "max_final_order_delta": 0.0,
+        "encoded_order_codes_equal": null,
+        "passed": true
+      },
+      "preparation_status": "ambiguous",
+      "fit_attempted": true,
+      "evaluation": {
+        "status": "evaluated",
+        "parameters": [
+          6.238026719553956,
+          5.840086767713764,
+          3.817335709316098,
+          0.6084461838550047,
+          2.426054066737824
+        ],
+        "levels": [
+          254.72883645646579,
+          0.42845081846726474
+        ],
+        "errors": {
+          "centre_error_pitch": 0.021973451758807935,
+          "radius_error_pitch": 0.0026642906839020597,
+          "fraction_error": 0.0015538161449952792,
+          "wrapped_angle_degrees": 0.22608532216299057,
+          "reserved_dimension_error_pitch": 0.010220945857083663,
+          "sampled_bidirectional_boundary_error_pitch": 0.02463772972830469,
+          "conditional_query_max_residual_linear_level": 4.830718994140625
+        },
+        "targets": {
+          "centre_error_pitch": false,
+          "radius_error_pitch": true,
+          "fraction_error": true,
+          "wrapped_angle_degrees": false,
+          "reserved_dimension_error_pitch": true,
+          "sampled_bidirectional_boundary_error_pitch": true,
+          "conditional_query_max_residual_linear_level": false,
+          "bounded_local_search_completion": true
+        },
+        "all_targets": false,
+        "search_stopping_statuses": [
+          "poll_resolution"
+        ],
+        "work_exhausted": false,
+        "candidate_tie_retained": false,
+        "truth_dimensions_opened_after_fit_saved": {
+          "chord_length": 6.053946798576941,
+          "normal_depth": 6.150199999999999
+        },
+        "candidate_dimensions": {
+          "chord_length": 6.058838109852921,
+          "normal_depth": 6.139979054142915
+        },
+        "conditional_reserved_residuals": [
+          -4.2288360595703125,
+          -0.484619140625,
+          3.2711639404296875,
+          -1.9886627197265625,
+          1.665863037109375,
+          -3.480438232421875,
+          -0.0476531982421875,
+          4.014862060546875,
+          0.1436309814453125,
+          -0.6777496337890625,
+          -2.274444580078125,
+          0.28569483757019043,
+          4.830718994140625,
+          -4.2288665771484375,
+          -1.3075963854789734,
+          -1.2454833984375,
+          0.867919921875,
+          1.1470277309417725,
+          -3.490570068359375,
+          -0.46340227127075195,
+          2.769317626953125,
+          -0.599151611328125,
+          -0.5648994445800781,
+          -2.7301025390625,
+          -0.1081085205078125,
+          4.77423095703125,
+          -4.2288360595703125,
+          -0.4662017822265625,
+          3.2376251220703125,
+          -1.9788055419921875,
+          1.714691162109375,
+          -3.4788360595703125,
+          0.2678375244140625,
+          4.0211639404296875
+        ],
+        "boundary_metric": "sampled bidirectional lower approximation; not a certified supremum",
+        "optical_adequacy": "not_evaluated",
+        "physical_qualification": false,
+        "continuation_completion_withheld": false,
+        "continuation_completion_reasons": []
+      },
+      "raw_truth_inside_observed_bounds_after_outputs_saved": true,
+      "equivalent_angle_truth_inside_observed_bounds_after_outputs_saved": true,
+      "elapsed_seconds": 3.64099292100218
+    },
+    {
+      "case": {
+        "name": "singular-map-png",
+        "family": "adverse",
+        "mode": "png",
+        "geometry": "middle",
+        "adverse": "singular"
+      },
+      "status": "exception",
+      "all_targets": false,
+      "reference": {
+        "max_area_order_delta": 3.3306690738754696e-16,
+        "max_final_order_delta": 0.0,
+        "encoded_order_codes_equal": true,
+        "passed": true
+      },
+      "fit_attempted": false,
+      "exception": "ValueError: output_to_source_index must be numerically nonsingular affine sampling",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/bartytime/.codex/worktrees/acquisition-recovery/3D & CAD/studies/verification/finite-acquisition-recovery-v1.py\", line 321, in main\n    summary, prepared, fitted, reserved = fit_observed(\n                                          ^^^^^^^^^^^^^\n  File \"/home/bartytime/.codex/worktrees/acquisition-recovery/3D & CAD/studies/verification/finite-acquisition-recovery-protected-active-controls-v2.py\", line 132, in fit_controls_only\n    return fit_observed(field, settings, polarity, controls, options, directory)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/bartytime/.codex/worktrees/acquisition-recovery/3D & CAD/studies/verification/finite-acquisition-recovery-protected-active-controls-v2.py\", line 62, in fit_observed\n    prepared = prepare_acquisition_segment(\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/bartytime/.codex/worktrees/acquisition-recovery/3D & CAD/backend/finite_acquisition_observations.py\", line 391, in prepare_acquisition_segment\n    raise ValueError(\"output_to_source_index must be numerically nonsingular affine sampling\")\nValueError: output_to_source_index must be numerically nonsingular affine sampling\n",
+      "elapsed_seconds": 0.03247491000001901,
+      "continuation_all_targets_before_status_gate": false
+    },
+    {
+      "case": {
+        "name": "five-queries-smooth",
+        "family": "adverse",
+        "mode": "smooth",
+        "geometry": "minor",
+        "adverse": "five"
+      },
+      "status": "completed",
+      "all_targets": false,
+      "reference": {
+        "max_area_order_delta": 1.1102230246251565e-16,
+        "max_final_order_delta": 2.842170943040401e-14,
+        "encoded_order_codes_equal": null,
+        "passed": true
+      },
+      "preparation_status": "ambiguous",
+      "fit_attempted": true,
+      "evaluation": {
+        "status": "evaluated",
+        "parameters": [
+          3.4603250874130556,
+          4.071081847987125,
+          2.5821503328998254,
+          -0.20833642400342745,
+          0.6989973144885808
+        ],
+        "levels": [
+          234.9999999999999,
+          235.00000000000423
+        ],
+        "errors": {
+          "centre_error_pitch": 3.4208383475262725,
+          "radius_error_pitch": 1.0478496671001745,
+          "fraction_error": 0.3416635759965726,
+          "wrapped_angle_degrees": 22.287904362118873,
+          "reserved_dimension_error_pitch": 1.0123138153491746,
+          "sampled_bidirectional_boundary_error_pitch": 3.3976669032961366,
+          "conditional_query_max_residual_linear_level": 163.3573929151139
+        },
+        "targets": {
+          "centre_error_pitch": false,
+          "radius_error_pitch": false,
+          "fraction_error": false,
+          "wrapped_angle_degrees": false,
+          "reserved_dimension_error_pitch": false,
+          "sampled_bidirectional_boundary_error_pitch": false,
+          "conditional_query_max_residual_linear_level": false,
+          "bounded_local_search_completion": false,
+          "geometry_rank_conservative_when_smooth": false
+        },
+        "all_targets": false,
+        "search_stopping_statuses": [
+          "poll_resolution",
+          "poll_resolution",
+          "poll_resolution",
+          "poll_resolution"
+        ],
+        "work_exhausted": false,
+        "candidate_tie_retained": true,
+        "truth_dimensions_opened_after_fit_saved": {
+          "chord_length": 6.063295391121893,
+          "normal_depth": 1.6334999999999997
+        },
+        "candidate_dimensions": {
+          "chord_length": 5.050981575772719,
+          "normal_depth": 2.044194366304216
+        },
+        "conditional_reserved_residuals": [
+          1.1368683772161603e-13,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          1.4210854715202004e-13,
+          1.4210854715202004e-13,
+          1.4210854715202004e-13,
+          1.4210854715202004e-13,
+          1.4210854715202004e-13,
+          1.1368683772161603e-13,
+          8.526512829121202e-14,
+          -0.005165444119739959,
+          0.04657031314593496,
+          0.3749322409746867,
+          0.41634867979385604,
+          -0.030667400440080428,
+          8.526512829121202e-14,
+          1.4210854715202004e-13,
+          1.4210854715202004e-13,
+          1.4210854715202004e-13,
+          1.4210854715202004e-13,
+          1.4210854715202004e-13,
+          1.1368683772161603e-13,
+          -0.005591208016824112,
+          0.10643973463396605,
+          -0.09468468815546771,
+          -3.680356748505062,
+          -4.652838076705677,
+          1.2252328515525335,
+          -0.0613348008802177,
+          1.4210854715202004e-13,
+          1.4210854715202004e-13,
+          1.4210854715202004e-13,
+          1.4210854715202004e-13,
+          1.4210854715202004e-13,
+          -3.126388037344441e-13,
+          0.05798429227201041,
+          0.024944352506992118,
+          -9.204113896224612,
+          -43.57047152501022,
+          -43.243166263457795,
+          -11.660646419818818,
+          1.030410187451423,
+          1.4210854715202004e-13,
+          1.4210854715202004e-13,
+          1.4210854715202004e-13,
+          1.4210854715202004e-13,
+          1.4210854715202004e-13,
+          -6.821210263296962e-13,
+          0.6128498278511643,
+          -4.307789211867771,
+          -55.92577746441586,
+          -132.65901995609255,
+          -70.29925128400316,
+          -7.327484021423487,
+          0.8907903227550946,
+          1.4210854715202004e-13,
+          1.4210854715202004e-13,
+          1.4210854715202004e-13,
+          1.4210854715202004e-13,
+          1.4210854715202004e-13,
+          -5.115907697472721e-13,
+          1.6722081928737111,
+          -14.749717830410646,
+          -123.85315667163884,
+          -163.3573929151139,
+          -43.30848204512151,
+          2.1798238395521707,
+          0.11415309686128694,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          0.0,
+          2.30101444924469,
+          -21.74417611524393,
+          -155.97747511701925,
+          -134.3460797358273,
+          -21.864802402263564,
+          2.2666062221139214,
+          -0.003735928802257149,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          1.1368683772161603e-13,
+          2.1766565571297747,
+          -21.244703230425273,
+          -140.70642585059855,
+          -85.90931502799825,
+          -8.948341365799564,
+          1.0846798914626845,
+          -0.0003285790812128653,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          1.1368683772161603e-13,
+          1.2710479202467297,
+          -12.698958955923075,
+          -79.20384543965298,
+          -32.215755035325316,
+          0.31671631532614697,
+          0.1594007376381228,
+          1.1368683772161603e-13,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          1.1368683772161603e-13,
+          0.2855649645722167,
+          -2.943037811024851,
+          -16.858913139406695,
+          -2.014482989615857,
+          0.22555760550440596,
+          -0.0002793219350110121,
+          1.1368683772161603e-13,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          1.1368683772161603e-13,
+          0.010710211798254932,
+          -0.11641633656256545,
+          -0.5690912556596004,
+          0.27039886654844736,
+          -0.005584069916068302,
+          -0.0007194653200883749,
+          1.1368683772161603e-13,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          1.1368683772161603e-13,
+          -0.0017822323900134052,
+          0.018623506931618294,
+          0.10253154447119073,
+          -0.002002739153994071,
+          -0.0003597326599731332,
+          1.1368683772161603e-13,
+          1.1368683772161603e-13,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          1.1368683772161603e-13,
+          1.1368683772161603e-13,
+          1.1368683772161603e-13,
+          1.1368683772161603e-13,
+          1.1368683772161603e-13,
+          1.1368683772161603e-13,
+          1.1368683772161603e-13,
+          1.1368683772161603e-13,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          8.526512829121202e-14,
+          8.526512829121202e-14
+        ],
+        "boundary_metric": "sampled bidirectional lower approximation; not a certified supremum",
+        "optical_adequacy": "not_evaluated",
+        "physical_qualification": false,
+        "continuation_completion_withheld": false,
+        "continuation_completion_reasons": []
+      },
+      "raw_truth_inside_observed_bounds_after_outputs_saved": true,
+      "equivalent_angle_truth_inside_observed_bounds_after_outputs_saved": true,
+      "elapsed_seconds": 20.61060285700296
+    },
+    {
+      "case": {
+        "name": "coincident-smooth",
+        "family": "adverse",
+        "mode": "smooth",
+        "geometry": "major",
+        "adverse": "coincident"
+      },
+      "status": "completed",
+      "all_targets": true,
+      "reference": {
+        "max_area_order_delta": 2.220446049250313e-16,
+        "max_final_order_delta": 6.128431095930864e-14,
+        "encoded_order_codes_equal": null,
+        "passed": true
+      },
+      "preparation_status": "ambiguous",
+      "fit_attempted": true,
+      "evaluation": {
+        "status": "evaluated",
+        "parameters": [
+          6.499984770023913,
+          5.840001382675457,
+          3.8199890505364635,
+          4.37828061483625e-06,
+          2.9295521120076273e-08
+        ],
+        "levels": [
+          254.99999830589613,
+          0.0
+        ],
+        "errors": {
+          "centre_error_pitch": 1.529261138723815e-05,
+          "radius_error_pitch": 1.0949463536302773e-05,
+          "fraction_error": 4.37828061483625e-06,
+          "wrapped_angle_degrees": 1.6785097188167367e-06,
+          "reserved_dimension_error_pitch": 2.1899000299363536e-05,
+          "sampled_bidirectional_boundary_error_pitch": 1.2332169353257427e-05,
+          "conditional_query_max_residual_linear_level": 0.0015348349423334184
+        },
+        "targets": {
+          "centre_error_pitch": true,
+          "radius_error_pitch": true,
+          "fraction_error": true,
+          "wrapped_angle_degrees": true,
+          "reserved_dimension_error_pitch": true,
+          "sampled_bidirectional_boundary_error_pitch": true,
+          "conditional_query_max_residual_linear_level": true,
+          "bounded_local_search_completion": true,
+          "geometry_rank_conservative_when_smooth": true
+        },
+        "all_targets": true,
+        "search_stopping_statuses": [
+          "projected_gradient_resolution",
+          "projected_gradient_resolution",
+          "projected_gradient_resolution",
+          "projected_gradient_resolution"
+        ],
+        "work_exhausted": false,
+        "candidate_tie_retained": false,
+        "truth_dimensions_opened_after_fit_saved": {
+          "chord_length": 7.64,
+          "normal_depth": 3.82
+        },
+        "candidate_dimensions": {
+          "chord_length": 7.6399781009997,
+          "normal_depth": 3.820005775520473
+        },
+        "conditional_reserved_residuals": [
+          1.6941038438744727e-06,
+          1.4219590383390823e-05,
+          1.694103872296182e-06,
+          4.654172585105698e-06,
+          -4.004673371582612e-06,
+          1.7434757353385066e-06,
+          -0.0015348349423334184,
+          1.694103872296182e-06,
+          -0.00037220567193685383,
+          -4.433054584751517e-06,
+          5.366439108911436e-05,
+          0.00029519825298507385,
+          1.694103872296182e-06,
+          1.6941038438744727e-06,
+          -1.633851052496027e-05,
+          1.694103872296182e-06,
+          0.0007650333566999734,
+          7.032862794176253e-05,
+          -1.0456385723500716e-05,
+          4.55148065086064e-05,
+          1.694103872296182e-06,
+          0.00016517916078129247,
+          -4.165281865198267e-06,
+          1.9918780395755675e-05,
+          0.0002890418155061525,
+          1.694103872296182e-06,
+          1.6941038438744727e-06,
+          -0.00036320322388405657,
+          1.694103872296182e-06,
+          1.4137744699382893e-06,
+          5.16708266218302e-06,
+          1.694103872296182e-06,
+          -1.4280083263429333e-05,
+          1.694103872296182e-06
+        ],
+        "boundary_metric": "sampled bidirectional lower approximation; not a certified supremum",
+        "optical_adequacy": "not_evaluated",
+        "physical_qualification": false,
+        "continuation_completion_withheld": false,
+        "continuation_completion_reasons": []
+      },
+      "raw_truth_inside_observed_bounds_after_outputs_saved": true,
+      "equivalent_angle_truth_inside_observed_bounds_after_outputs_saved": true,
+      "elapsed_seconds": 1.0748115520000283
+    },
+    {
+      "case": {
+        "name": "budget-png",
+        "family": "adverse",
+        "mode": "png",
+        "geometry": "middle",
+        "adverse": "budget"
+      },
+      "status": "completed",
+      "all_targets": false,
+      "reference": {
+        "max_area_order_delta": 3.3306690738754696e-16,
+        "max_final_order_delta": 0.0,
+        "encoded_order_codes_equal": true,
+        "passed": true
+      },
+      "preparation_status": "ambiguous",
+      "fit_attempted": true,
+      "evaluation": {
+        "status": "evaluated",
+        "parameters": [
+          6.09048035091264,
+          5.993931788957522,
+          3.25988449104352,
+          0.1911178212232727,
+          1.1090457447334927
+        ],
+        "levels": [
+          22.0576171875,
+          219.42654418945312
+        ],
+        "errors": {
+          "centre_error_pitch": 0.2491654365138992,
+          "radius_error_pitch": 0.15011550895648007,
+          "fraction_error": 0.021117821223272687,
+          "wrapped_angle_degrees": 1.2005903896106396,
+          "reserved_dimension_error_pitch": 0.3211377507902844,
+          "sampled_bidirectional_boundary_error_pitch": 0.39927857607016515,
+          "conditional_query_max_residual_linear_level": 50.94593811035156
+        },
+        "targets": {
+          "centre_error_pitch": false,
+          "radius_error_pitch": false,
+          "fraction_error": false,
+          "wrapped_angle_degrees": false,
+          "reserved_dimension_error_pitch": false,
+          "sampled_bidirectional_boundary_error_pitch": false,
+          "conditional_query_max_residual_linear_level": false,
+          "bounded_local_search_completion": false
+        },
+        "all_targets": false,
+        "search_stopping_statuses": [
+          "work_limit"
+        ],
+        "work_exhausted": true,
+        "candidate_tie_retained": false,
+        "truth_dimensions_opened_after_fit_saved": {
+          "chord_length": 6.72072850515478,
+          "normal_depth": 3.9897
+        },
+        "candidate_dimensions": {
+          "chord_length": 6.399590754364495,
+          "normal_depth": 3.882906512411295
+        },
+        "conditional_reserved_residuals": [
+          0.0,
+          0.0,
+          0.0,
+          -0.030935287475585938,
+          0.05608940124511719,
+          0.004726409912109375,
+          0.19140625,
+          0.0,
+          15.335872650146484,
+          -3.0517826080322266,
+          3.9359664916992188,
+          -2.8062896728515625,
+          0.0,
+          -0.0058917999267578125,
+          -2.7266387939453125,
+          -2.0650672912597656,
+          50.94593811035156,
+          -1.5032958984375,
+          -0.7424697875976562,
+          -8.152549743652344,
+          -0.0015506744384765625,
+          -0.6264801025390625,
+          0.013814926147460938,
+          1.4172115325927734,
+          0.026411056518554688,
+          0.0,
+          0.0,
+          0.07323265075683594,
+          0.0,
+          -0.043621063232421875,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "boundary_metric": "sampled bidirectional lower approximation; not a certified supremum",
+        "optical_adequacy": "not_evaluated",
+        "physical_qualification": false,
+        "continuation_completion_withheld": false,
+        "continuation_completion_reasons": []
+      },
+      "raw_truth_inside_observed_bounds_after_outputs_saved": true,
+      "equivalent_angle_truth_inside_observed_bounds_after_outputs_saved": true,
+      "elapsed_seconds": 0.13773716499781585
+    }
+  ],
+  "source_sha256_after": {
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/app.py": "345c7dc8bbc7bfbe616eb2934d2a58cd0b4fa1216dbdaa5272ab3a36b06d96bc",
+    "backend/assistant.py": "45f05aa8d0738a1da0e3b5040a2c4df8a01a35e9a835e1c06fd47ee3e81758c5",
+    "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+    "backend/curve_envelope.py": "d37525b42c920a770b783e0c94ff97cf3d5214272d85dcdceae9d23eb184ca27",
+    "backend/drawing.py": "560f087e28d369a2e0f3b733197c18c5a7aa87c390fe56de7516caf9a08a5e6d",
+    "backend/edges.py": "96d3640e202c0d5eb830ed552bae9906235b0ef459476b0c91b3dc68fe75be51",
+    "backend/finite_acquisition.py": "c61b9def98132a10bbfe6df2bddbc50f9e9338eded0177a74dc25dff90220921",
+    "backend/finite_acquisition_coupled.py": "e299fe03879824c388e88ef2a490dc9019ecb5e966c92615342251e3b1a299a8",
+    "backend/finite_acquisition_events.py": "3e1f88517a8912afea4bc19e8ea513d48a178f5a5a408c032f69e996f11cdedc",
+    "backend/finite_acquisition_fit.py": "ff34013696ecd2cc8e82ff7492933de1bdda752805dec0b37da1d32a75b22575",
+    "backend/finite_acquisition_linear.py": "bae7b48f4bc6d950551d3f463f5d0dfc53d0d499ff0812547738fcf43154f703",
+    "backend/finite_acquisition_observations.py": "ac0556326b1b4e043bd1b04223db0c4cadc2f990fbd7258a64fa84a8460d4d23",
+    "backend/finite_acquisition_predictor.py": "871897e335d04a79319544cfa4ba84d19c579ea9e43bf98372baa94e92051f4a",
+    "backend/finite_acquisition_protected.py": "53ab90633b03b52b8c98290016f12df89af6c582e13c505320b705b6bc6d1b57",
+    "backend/finite_acquisition_protected_active.py": "a0537e4b34187ba1ca242ee98da10589a1ad1dd9065d786e9542066306b2663a",
+    "backend/finite_affine.py": "d4eb540f6a654178fca41b4be416bd4ad6ebb6b3f645bc78b5383b18b8caa653",
+    "backend/finite_aperture.py": "75f29a04133ffd142144607a7c7153e12de159ba7c632e01fd46751fa14cd7b5",
+    "backend/finite_aperture_sensitivity.py": "d481acf746d92568dc317f9dbe9f4741ce863ee241fe84be91264e0ef97d0e51",
+    "backend/finite_centre_fit.py": "df8a057abefe983ee951c894a9ae44e0c6b0f472d3419578be505973ea3a8bfb",
+    "backend/finite_normal.py": "e1e548b58c26d98f28475e647594f5273f34734f1284df27a06324cdf022a443",
+    "backend/finite_observations.py": "09fa843f72b2fc265ba8d4a7111267bf10433eb4f3f2a0600a89cc7871cb3969",
+    "backend/finite_photometry.py": "41e1add0bcb4d226934a969d763f8dd95d9beba425d92c83c1627e3a9534abd3",
+    "backend/finite_shape.py": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+    "backend/fitting.py": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+    "backend/heic.py": "5e34870379991f8813bacfc4badc8fe7fcf5dbe8aa053156fa352456b208de33",
+    "backend/models.py": "21e7467766f4a086f52b3756f6b1fa8e4ec96a7b76cf0b4d1131c5f45709e6e1",
+    "backend/placement.py": "e1745597ca2930d1260659e9f2dc4405f2b7239beb0c12c45fa92b6d3f5c03df",
+    "backend/printing.py": "58d121ad45f0176b02094f3446dcd020c254ccd78860e5a269b8b6a8d6479915",
+    "backend/reference.py": "109ccac49f011e8411286ca2e3682caa201e578df39fee7a52425bb507f7d6e0",
+    "backend/scad.py": "d5cf18312ba10b7e3830d059952c3d078edc1e21813eb2fb03a4fd1ebaf2d534",
+    "backend/shadow.py": "5b156e36aaa3d4592d658875d22241853dd82682c4a691c610a514af07682dbf",
+    "backend/sheet.py": "9735ea176217c273fa63d4e7f412210089d7112fb415d9b921322525aedb950f",
+    "backend/slicer_handoff.py": "774e78fa93dacc348c204d89a0ec4192a01701fb3fa3304ee09960e816101a50",
+    "backend/slicers.py": "03442055d64c37d46e5806bafdd0bd497b54dacf78bc409addf1ff8400c25bb9",
+    "backend/three_mf.py": "435afd61c90bb21c305876f681f845a3bfb193a64fa96589e649fb40fd821cf1",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "backend/tracing.py": "b822716050b285152bcbefe07a0b7da1e02716ecb5d990cbf29af86598a14d2e",
+    "backend/worker.py": "9c869ffae551485b473aeb54ddc9a0116e8c8df22f92f2c08e2f3e97f24ca846",
+    "docs/finite-acquisition-protected-active-controls.md": "96eba5e3674513c2c77e3e39f7552f90f3df7860f531701ae0db35a616bc1e71",
+    "docs/finite-acquisition-protected-active.md": "cb9073e047762f98694e65ab2c210d8fd11bda8ecfbb1eb5958007f821db5d70",
+    "docs/finite-acquisition-protected.md": "760959cc5a899a5a9daecaba7c4a88ea055c170d467c107858bc07ff51a14a68",
+    "pyproject.toml": "89db6bd352114ad6ed7c979c070e66d47551ef7cca7062778f832bb8934507ab",
+    "studies/finite-acquisition-recovery-audit-v2.json": "dd51104ab08d5ff674b732c3f784009caae545a774f36d8046c529c2e28c5d99",
+    "studies/finite-acquisition-recovery-coupled-audit-v1.json": "8b23aed0eb7886bd39538c28377b948bd93dd8d654dc85bd6357a04841842943",
+    "studies/finite-acquisition-recovery-coupled-audit-v2.json": "6a2b016e0996a939f8531b95faa7d1efe3960db51f62e96809d6de69a968ae10",
+    "studies/finite-acquisition-recovery-coupled-v1.json": "df2abb75b64f86c31c8c267188bcd54096e143b2f81758a725ba698d6fbb5fda",
+    "studies/finite-acquisition-recovery-events-v1.json": "fe09dd90df39094885d8f890db579d2cc9da59d8c8f5ae60f2f7d9b05b42567f",
+    "studies/finite-acquisition-recovery-predictor-v1.json": "8533f5503798aef2c3eb275a97c88db91d82d6b3ba27327a0aee3d013f75580e",
+    "studies/finite-acquisition-recovery-protected-active-controls-v2.json": "79ef0515252c3869281d1b0bede4e1fb0eb226eb371c58293f6ed7ae1810dfeb",
+    "studies/finite-acquisition-recovery-protected-active-v1.json": "462b5c2e11d484998424b95349827d5e0766b63cd01e306295e10099947d1258",
+    "studies/finite-acquisition-recovery-protected-v1.json": "c52b461e3dc4758bc10a15b761899f2b797a5c0cb91f31196b79ce2441a5aeae",
+    "studies/finite-acquisition-recovery-v1.json": "737bb8badf15a6bd1438ece67b9ad03f96e65440989bbc8bc2110edc8a497ad0",
+    "studies/verification/finite-acquisition-recovery-audit-v1.py": "749cb6b9a158b81891cb58109b114b2a18bf4aca1933c8268beca2bfa00a0373",
+    "studies/verification/finite-acquisition-recovery-audit-v2.py": "8fcc982c2e14bdbb8cf343c4703cb2d4c61b800d4eb858ab147bd44dc7952b04",
+    "studies/verification/finite-acquisition-recovery-coupled-audit-v1.py": "8dfd4bfdda5005f7caef29d3ef5eabe25d3fabc592402a8b2f27723e4e186cd4",
+    "studies/verification/finite-acquisition-recovery-coupled-audit-v2.py": "73e5b96e1b854144d58a850ebc245a232ac5898c24bf080047f2ef05d3394104",
+    "studies/verification/finite-acquisition-recovery-coupled-v1.py": "0b85e6dcb424e909c656eeab8799821a2dae8742024cc39eb27f1ac6cbcf115d",
+    "studies/verification/finite-acquisition-recovery-events-v1.py": "9dc3734db777b7be901772fe419802869905adba7573b8b116cf3967dcaf1d13",
+    "studies/verification/finite-acquisition-recovery-predictor-v1.py": "4368ee287118b8c4553967750d8483f14db23b39364c6f513ab5a5454836548c",
+    "studies/verification/finite-acquisition-recovery-protected-active-controls-v2.py": "5002de3438ef1a948c18d74cf4e29a55983b4e63e19b18f373200264b61b3779",
+    "studies/verification/finite-acquisition-recovery-protected-active-v1.py": "46cd3a07669f2072becdec183d5e7531a664bf80650161a1d0dff5f388794e30",
+    "studies/verification/finite-acquisition-recovery-protected-v1.py": "b8f38ca6986565174df65581353fa75e450a654a2ba821f276dad7ac2b69e9d4",
+    "studies/verification/finite-acquisition-recovery-reference-v1.py": "5d8f3ec4b0283a688338e3981288fc38214e99bf5af50dad07c33cba2777ab0d",
+    "studies/verification/finite-acquisition-recovery-v1.py": "073cc432134c5258add3e9d3addd24fdcabead97451424c3303720f878d58d29",
+    "studies/verification/finite-cell-sensitivity-v1.py": "d94b930df57d2b9858631bfa8164c9618f7ff8b45d25c584f7808fea0226a19a",
+    "tests/test_finite_acquisition.py": "cf605a5cb94edd16bd0572afd15a83671ec61b8f40a263fcbe3ae9be8e46d475",
+    "tests/test_finite_acquisition_continuation.py": "4e5731c0fd8e2c927ccd6eb5999acdfdc794212a4f14fad32aa4e7e001590090",
+    "tests/test_finite_acquisition_coupled.py": "07efdf4b6b4dd62dd3c2496afe56f58ae4fd30e4712a8fdc4e39136347fcf8d5",
+    "tests/test_finite_acquisition_coupled_math.py": "8b68efdfc0c5843738f070738d27c56c13d5451b63f6a27ac122ba6e96a12815",
+    "tests/test_finite_acquisition_coupled_protocol.py": "f15201495ddd7b885100eed6a7dfa3fa0cf6264b88bb0c3e23d67171ca45580c",
+    "tests/test_finite_acquisition_coupled_saved_audit.py": "18d96bfebcddf12fdb45718064ad82415f9b377c0af53c57a7ee0168ea4ff9b9",
+    "tests/test_finite_acquisition_coupled_saved_audit_v2.py": "ba6b8f856d705ce61fa6ac182ae5de2d5ae2b148772fc56933135a360512c5ee",
+    "tests/test_finite_acquisition_events.py": "8d93674f2ebb974182fd9183af534d57097b55f1d027c554925129b7332e2269",
+    "tests/test_finite_acquisition_events_math.py": "dd83b4280d6425c332798bb95f0fafeb301e66d1f2ef5126927d6a39f4b28932",
+    "tests/test_finite_acquisition_events_protocol.py": "3bb597fefc5ffa66fed189c5c8ddb4da2eab25b11eca46de3e62fbadc3c9f01a",
+    "tests/test_finite_acquisition_fit.py": "e4e10b81e0a48eb293a6cab281eb2eb11d6adbda17f6dbce74d20513d4916821",
+    "tests/test_finite_acquisition_identifiability.py": "38d53e0c763fc0f2d39fbb5fd360a7cf418033edc185e6e906641a0c9a16402f",
+    "tests/test_finite_acquisition_linear.py": "a6875c0c571c3f67b5e291827f860335ffffd894844afaab05901947ff2f63e9",
+    "tests/test_finite_acquisition_observations.py": "32fcd3b28b2e4acae44be6d53a3083b10fa965f454c8a4de087d0b65930853f4",
+    "tests/test_finite_acquisition_predictor.py": "eb825a26f1aa13fe65cabfd7e5186f9c9e42859884490417e3cafb84cb5ca981",
+    "tests/test_finite_acquisition_protected.py": "64229f3e14023c7b3ae071ce72ffc79bb51fddfbfdf7c3b93ac46823ca9091c0",
+    "tests/test_finite_acquisition_protected_active.py": "64e0a4bd74831bfcbe300f6cbc05be82a83826de9d331b3e287f8e49659e2c77",
+    "tests/test_finite_acquisition_protected_active_controls_v2.py": "ed113c16d3e289518aef2ba1b994f14f6ab18af1ada9f10776eb9410870854ec",
+    "tests/test_finite_acquisition_protected_active_math.py": "907bdda3cf42faa3450ebe52abba9869fd95387e3af0463954869b789eb132de",
+    "tests/test_finite_acquisition_protected_active_protocol.py": "73f02f1a32f7e97aa2f3acb98dc9957a4fc50490aadb9b080511a0be1c19452e",
+    "tests/test_finite_acquisition_protected_active_rebound.py": "0dafb26af741806603fa9d477177b32ab6f9754af2a5ed13429d7bd0a98bc4db",
+    "tests/test_finite_acquisition_protected_math.py": "3642904d8bcc3443fe03c9d234327b7f855393d750065917cf31be5dd79613ab",
+    "tests/test_finite_acquisition_protected_protocol.py": "e20ec0a0ad1151d3a0842ad4910845f0012dee60f0ea9efb6c94ddf204b6e3aa",
+    "tests/test_finite_acquisition_saved_audit.py": "61a835034b418e5baeba3908b85ae036ff2751456c33f87af0a1f481391270aa",
+    "tests/test_finite_acquisition_sensitivity.py": "a12fa1864a409bc8c125f44ce31bdbed3e239b73eea7ee251dad536a123a3d76",
+    "tests/test_finite_acquisition_workspace.py": "2d2ba6e12a7d43f92402b8e20229fa64f607c2f77ce283476e708617b610fd3e",
+    "tests/test_finite_affine.py": "58661c00edc78de9f316a61998c3c74f7c562be3e0bf32919edb994eb7cac30e",
+    "tests/test_finite_aperture.py": "e2ec4013126986a80c0e1fea2b6546d3e8bd62dbfb73462cf60f1f8ef5548766",
+    "tests/test_finite_aperture_sensitivity.py": "3f67748549e8e39475e3b53e2395a966ed6700709a241d0ac080d2704f037bd9",
+    "tests/test_finite_centre_fit.py": "f94255dc8aab9c3db8196c3379ee2f025a1e7d83fca12a086084152c7eddceb4",
+    "tests/test_finite_normal.py": "2e3991fcae912266d1a504d7333b22292b65c712faa39ba26ca47b8ca8d83416",
+    "tests/test_finite_observations.py": "fd0a2196b1a93e37128334088e5faa6989c0d2ad53d49cd5945db7b34d7680ca",
+    "tests/test_finite_photometry.py": "693e6b67d3cd1e3cf1a157fe3d4ceae656c21b3510f8c7d0280092b958dd3b5d",
+    "uv.lock": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f"
+  },
+  "source_unchanged": true,
+  "matched_passes": 11,
+  "adverse_all_target_passes": 1,
+  "passed": false,
+  "artifacts": {
+    "almost-circle-smooth/capture.npz": {
+      "sha256": "4160551adc653249de71e4c7054f49e077ffb0adf5f594c2779a2732052ccbc7",
+      "bytes": 10670
+    },
+    "almost-circle-smooth/initialization.json": {
+      "sha256": "141d06e6e54ec53dd795725c5ac0cda676c592dbc4f0e8ae064c2f6606c886d7",
+      "bytes": 27808
+    },
+    "almost-circle-smooth/record.json": {
+      "sha256": "0bcf3b99be84bab027ec30f789b13f0c3f9abb326d2a3d77cc0e528d26c42bcd",
+      "bytes": 630
+    },
+    "budget-png/capture.npz": {
+      "sha256": "f24bc640d8cbda96b6254ebb879df0f3b91654310f670812d484ac586c08138b",
+      "bytes": 7259
+    },
+    "budget-png/fit.json": {
+      "sha256": "5a9156ea2d21e83209269b99872730cc041a826d4052b6cce606a9464683129e",
+      "bytes": 229730
+    },
+    "budget-png/initialization.json": {
+      "sha256": "b05fd25735250236b71f20e2ed785e49ecee54a3189bbc0b6f9935174de28f0d",
+      "bytes": 27874
+    },
+    "budget-png/observed-fit-input.json": {
+      "sha256": "378a27579e4de24dbcf20a420f3573f7a51fe7d26ab2c6867477cd698141235b",
+      "bytes": 10381
+    },
+    "budget-png/record.json": {
+      "sha256": "f7e3d643ea5910974d9d15fa60866a6fcd49d4fe5c1290e28ca4219bf70a6509",
+      "bytes": 3089
+    },
+    "coincident-smooth/capture.npz": {
+      "sha256": "5b1f849edfee3561be1d97cc84d2ccf86d4e2b8ec436f1715788e7d117356254",
+      "bytes": 7461
+    },
+    "coincident-smooth/fit.json": {
+      "sha256": "c1ec7f3ec418c1eab70da88d74b24222c51563ce95616a94e1bebeac9edfbf24",
+      "bytes": 2293720
+    },
+    "coincident-smooth/initialization.json": {
+      "sha256": "d645df65b2198ac949b38d2fbf85eb5635e39c448ee05aa3918904cf09b29330",
+      "bytes": 28246
+    },
+    "coincident-smooth/observed-fit-input.json": {
+      "sha256": "71f59c5703461a8d76e7c0d8718996e5d343114955227581f1b237a1ec9b355c",
+      "bytes": 10463
+    },
+    "coincident-smooth/record.json": {
+      "sha256": "1126de86b8a9ec8dc1a252ba8f31b975062b502217eaeca1019c275e7b99b4fd",
+      "bytes": 3588
+    },
+    "cropped-smooth/capture.npz": {
+      "sha256": "90588a367b2a56339354317d016ad64ed484f4155f6586640425f74200c55323",
+      "bytes": 7972
+    },
+    "cropped-smooth/initialization.json": {
+      "sha256": "1661a6a5b04ee46588e093284173f3a016339476f3180468d009320c34b2822d",
+      "bytes": 12597
+    },
+    "cropped-smooth/record.json": {
+      "sha256": "2d97c55b83fadc3be0f94ce6bd24899897f52a74bf96ce8a458f83a92e1e4182",
+      "bytes": 625
+    },
+    "five-queries-smooth/capture.npz": {
+      "sha256": "1aba7375ee1b1197d43fc30d4ae35c0d720778323253e1ddda6f92a4057e70cd",
+      "bytes": 6310
+    },
+    "five-queries-smooth/fit.json": {
+      "sha256": "8a1a739077bb439cc650a7b02d94224f74d8a64e6bb48c503219044c30127129",
+      "bytes": 37082998
+    },
+    "five-queries-smooth/initialization.json": {
+      "sha256": "efcbcc6a28291f0a76896d6b42934b94a42d2ab68057155db7712d1a0f395407",
+      "bytes": 27781
+    },
+    "five-queries-smooth/observed-fit-input.json": {
+      "sha256": "3648c30b00fc4fb5b2d89c1c84f776fd3d5178de9a270d60619494910e948b1b",
+      "bytes": 7556
+    },
+    "five-queries-smooth/record.json": {
+      "sha256": "13be932c500ac771feacb78f71bc34dd6d74ca6a287929ed49c4202fee96e94f",
+      "bytes": 7192
+    },
+    "gradient-staged/capture.npz": {
+      "sha256": "5f5456192d2735844a09b1685e005ccc6bb22958df6351eb0da53f7a47ac6fb6",
+      "bytes": 6686
+    },
+    "gradient-staged/fit.json": {
+      "sha256": "9207bf228837eeab1124417f6d2d45edb48da32b14b3b7c3083355be904f149b",
+      "bytes": 23950246
+    },
+    "gradient-staged/initialization.json": {
+      "sha256": "4cd993cbe87f3df91cd2061bc8ce8ea9426bba1d7d326fdc8d26d3531cda8fda",
+      "bytes": 28302
+    },
+    "gradient-staged/observed-fit-input.json": {
+      "sha256": "fa1f56d3792bc379680a68bcba063ad3d276771e266e7cde7189e676405ecd3c",
+      "bytes": 10222
+    },
+    "gradient-staged/record.json": {
+      "sha256": "eb704a304c1d971f9e8221d32a2f9f97d41fa9cb06e2d3d33e9c479be0ef9052",
+      "bytes": 3282
+    },
+    "low-staged/capture.npz": {
+      "sha256": "7a3efbfc6f422cdcbff18bdefa93d81fac7abd1658599d717b0ced6a05ab7475",
+      "bytes": 5447
+    },
+    "low-staged/initialization.json": {
+      "sha256": "a5b3e77db912c2fe409b9d8a058204a8ac5c86c8d55a161e8d4b6335b9396e48",
+      "bytes": 11787
+    },
+    "low-staged/record.json": {
+      "sha256": "f4487a7732822c3ccb68eaadf97396da7133423eea158b344fb2a0126dbcdc6a",
+      "bytes": 600
+    },
+    "major-png/capture.npz": {
+      "sha256": "72a20f85ffeda6f1fcd0ecc4688be79447783d02a0bf8caf5d79f42074cfe972",
+      "bytes": 8190
+    },
+    "major-png/fit.json": {
+      "sha256": "1386e8334d90ec50926f1b431ba87821ff0ffac433d78c7c3e826656822719b7",
+      "bytes": 39909853
+    },
+    "major-png/initialization.json": {
+      "sha256": "1449ec7a66efa9b484d06b9b8a85b631bebc6873af7d75ffb8b92b675356449e",
+      "bytes": 28199
+    },
+    "major-png/observed-fit-input.json": {
+      "sha256": "362be9ab82e4e7f0aff86118ee887839e72700fbb9a243e43ce87e04d1a8a66c",
+      "bytes": 10174
+    },
+    "major-png/record.json": {
+      "sha256": "1546c575f67500bd92bf456cd34023ded00749d7afa5c26f72e1a52a7c122ed6",
+      "bytes": 2728
+    },
+    "major-smooth/capture.npz": {
+      "sha256": "4b409918add535cc78b7c5ff61b06fca7b54bc8907c5bbe77dd567c77e60292b",
+      "bytes": 10161
+    },
+    "major-smooth/fit.json": {
+      "sha256": "67fed68c5a260466544a64911e56d58d9efd2cb9980e0736ef69efecdb94e893",
+      "bytes": 1870861
+    },
+    "major-smooth/initialization.json": {
+      "sha256": "076f5a74c5546f33bde65b2baf65b97fda3ca07e9c5384a2e89de07ad777766c",
+      "bytes": 28585
+    },
+    "major-smooth/observed-fit-input.json": {
+      "sha256": "bb0ac94a96cbc027826e2b100ab8a1cf00b63ebbed17cb810f1ae546bc5a0381",
+      "bytes": 10468
+    },
+    "major-smooth/record.json": {
+      "sha256": "45d3918098cd3f35c40a039bed1d13c4a2c683b9eeed503c1ce03771fc0fbb84",
+      "bytes": 3597
+    },
+    "major-staged/capture.npz": {
+      "sha256": "5f5456192d2735844a09b1685e005ccc6bb22958df6351eb0da53f7a47ac6fb6",
+      "bytes": 6686
+    },
+    "major-staged/fit.json": {
+      "sha256": "5bd3db4d5846c6acd6511e01d34976bf3dea79b88319468d96791331f1613e38",
+      "bytes": 19816759
+    },
+    "major-staged/initialization.json": {
+      "sha256": "3c50a99762080ab15eb113636b50942cc89eb3d1cb0a82c02e311a17ede67daa",
+      "bytes": 28220
+    },
+    "major-staged/observed-fit-input.json": {
+      "sha256": "80c2e5eb68678faf92fa63814f3d79a2a6e71dcf1409aaac0b85380f82de7935",
+      "bytes": 10201
+    },
+    "major-staged/record.json": {
+      "sha256": "e9005d8ea16cbbad43cfc703efb1e070393cf5791620d707339086dad890670a",
+      "bytes": 3011
+    },
+    "middle-png/capture.npz": {
+      "sha256": "f24bc640d8cbda96b6254ebb879df0f3b91654310f670812d484ac586c08138b",
+      "bytes": 7259
+    },
+    "middle-png/fit.json": {
+      "sha256": "c41f9a7261749779c1448fe01ecb26db0b45d43f9d20634bf910f26218edfd8d",
+      "bytes": 57258843
+    },
+    "middle-png/initialization.json": {
+      "sha256": "b05fd25735250236b71f20e2ed785e49ecee54a3189bbc0b6f9935174de28f0d",
+      "bytes": 27874
+    },
+    "middle-png/observed-fit-input.json": {
+      "sha256": "052bf1e4af14180c6a29db63e5cd31eb781c183681fc36aef49011f2e1e7b24d",
+      "bytes": 10391
+    },
+    "middle-png/record.json": {
+      "sha256": "e13a20612f5ace92f87e15183bc145f55a4e7829d95d56e15995b3655777f759",
+      "bytes": 2797
+    },
+    "middle-smooth/capture.npz": {
+      "sha256": "195df4d0b6e7a2f5474efd5cf3eeb5c7839afb73863b6e8f8505b477e6591694",
+      "bytes": 8750
+    },
+    "middle-smooth/fit.json": {
+      "sha256": "a5db538ecedf2ce12dbed0a99ca31b74de612baa71775a3297e7867dca64f8de",
+      "bytes": 1989140
+    },
+    "middle-smooth/initialization.json": {
+      "sha256": "e947eb582e741987ac798a12cf00df8cd532bfa9ffcdbade5ca35c2de86d6eb6",
+      "bytes": 28118
+    },
+    "middle-smooth/observed-fit-input.json": {
+      "sha256": "9832820728bf1ce4349eac9deb958a338f0e031b691fa6d05890b3885915cb77",
+      "bytes": 10565
+    },
+    "middle-smooth/record.json": {
+      "sha256": "da340747b3fca563867fb309eaf51dde5ea51d9621feb07e4e4b1cad85af86b5",
+      "bytes": 3598
+    },
+    "middle-staged/capture.npz": {
+      "sha256": "4c2c095d85ecf073ca2fbdf0828bedc4e72f602dffb6d6fac7c7eaf357194543",
+      "bytes": 5929
+    },
+    "middle-staged/fit.json": {
+      "sha256": "46d63fe9732428317c3798330443d7c9b7b396367fec4a2319cd9fbb50c90c13",
+      "bytes": 22799578
+    },
+    "middle-staged/initialization.json": {
+      "sha256": "3a826b42b46c066a1710909b3ddb3ba0004f1e805fc85d658ec1775ec5fe19e8",
+      "bytes": 27389
+    },
+    "middle-staged/observed-fit-input.json": {
+      "sha256": "e779131b85882641b66d69e7f5687fe137df1346226f5463e975d069072e7226",
+      "bytes": 9946
+    },
+    "middle-staged/record.json": {
+      "sha256": "2247f79a87e4ca6a713433fc7d0b8b9078b71e5b3e4340358e2808f96b00f7d9",
+      "bytes": 3288
+    },
+    "minor-png/capture.npz": {
+      "sha256": "f55097f4adfafc866532dd554eb2743f2640fd61ad043fbf696ff397f64d852b",
+      "bytes": 5671
+    },
+    "minor-png/fit.json": {
+      "sha256": "044d272e89e71a7560be7a3baf395a0a139fff828c2933e14611269765c16ad4",
+      "bytes": 30782581
+    },
+    "minor-png/initialization.json": {
+      "sha256": "738632463ed1b4c358245b5895b0a36d38bdc7cf257a59a63385daac64aea6c0",
+      "bytes": 27737
+    },
+    "minor-png/observed-fit-input.json": {
+      "sha256": "fe0938288ce49acfcb23a32cad6f65d9be96e436ffb48e5098859fcaa845ba7c",
+      "bytes": 10565
+    },
+    "minor-png/record.json": {
+      "sha256": "552c92e2a8d7e9aed73a2a937ba07050576ccda6d666d5923109e1d970d56a0b",
+      "bytes": 2746
+    },
+    "minor-smooth/capture.npz": {
+      "sha256": "1aba7375ee1b1197d43fc30d4ae35c0d720778323253e1ddda6f92a4057e70cd",
+      "bytes": 6310
+    },
+    "minor-smooth/fit.json": {
+      "sha256": "e62f81c69ad1631b80c0791271b8ecc3f1bab259e17ef886487c36eaa33642e8",
+      "bytes": 3172607
+    },
+    "minor-smooth/initialization.json": {
+      "sha256": "efcbcc6a28291f0a76896d6b42934b94a42d2ab68057155db7712d1a0f395407",
+      "bytes": 27781
+    },
+    "minor-smooth/observed-fit-input.json": {
+      "sha256": "6bce725a874fd1a0eb719e890d9cff66b208f6b3d9345dd68cbaef2719f2821d",
+      "bytes": 10575
+    },
+    "minor-smooth/record.json": {
+      "sha256": "45ec4673921d464b6b48afbe336f87392c9fcad076b1a35a4f9a54459b53a4b5",
+      "bytes": 3638
+    },
+    "minor-staged/capture.npz": {
+      "sha256": "2646e9f7cd5ab2b1febb4dd9537fca2dac71bc5b3c5835ccaa2fb02779188e07",
+      "bytes": 4567
+    },
+    "minor-staged/fit.json": {
+      "sha256": "3e9323cfa4037abee6312344e010dfed4e6357c110c15924d410a538afc92c9e",
+      "bytes": 20169118
+    },
+    "minor-staged/initialization.json": {
+      "sha256": "efe9db0eaf7de6781610f492eaa13cbb1bdfb9b64f5af635cbfb07ad7c7b3830",
+      "bytes": 26548
+    },
+    "minor-staged/observed-fit-input.json": {
+      "sha256": "dccf4eb1ea54855daf442005aa3d19e375dd61033d146753a6d8651d04e69e9a",
+      "bytes": 9548
+    },
+    "minor-staged/record.json": {
+      "sha256": "ecb0d3444f132b694a48e73bb2125c19197efe2576fdcf0ea0d5aefe30abc8fc",
+      "bytes": 2855
+    },
+    "singular-map-png/capture.npz": {
+      "sha256": "f24bc640d8cbda96b6254ebb879df0f3b91654310f670812d484ac586c08138b",
+      "bytes": 7259
+    },
+    "singular-map-png/record.json": {
+      "sha256": "ea16754ee5997dec4ecef2ffafb068934955c01c6977e71a4df582f10aebfcbb",
+      "bytes": 1872
+    },
+    "source-freeze.json": {
+      "sha256": "f386407f739d06e2336e972f2bfa7a910375e4abf7da43737da7b5885b2a5a6f",
+      "bytes": 51004
+    },
+    "thin-png/capture.npz": {
+      "sha256": "3346ced818f464b804a13a12b62465b99138c68896629a09925e3628f2244eb0",
+      "bytes": 4422
+    },
+    "thin-png/initialization.json": {
+      "sha256": "f7dfe9a94c240b5d6497d5b6f030b8b623d4bc50a04f5866571790611595725b",
+      "bytes": 12491
+    },
+    "thin-png/record.json": {
+      "sha256": "d8521d8b71b129b6ab6f80a7aaa6ff269bc383e21c5b583964716e5b22670a06",
+      "bytes": 594
+    },
+    "wrapped-major-png/capture.npz": {
+      "sha256": "855bf9aeff769fe4a7d0e891e02ff25157b68d35cc1f0fb1a5d9c25a200bc3ee",
+      "bytes": 7596
+    },
+    "wrapped-major-png/fit.json": {
+      "sha256": "dfdb91591f6da6feacdefb200a85082d7bf95322bfde91c8493aaa54001fd788",
+      "bytes": 21250130
+    },
+    "wrapped-major-png/initialization.json": {
+      "sha256": "a5942656c4e47f870c5538ace94eba7b92a0d9ac7c1103f307dddb6e50d8ae1d",
+      "bytes": 28538
+    },
+    "wrapped-major-png/observed-fit-input.json": {
+      "sha256": "26d38e117bc5ead5faae10a856f79dcb7eb35b5b12edfb7b163d833f937603d7",
+      "bytes": 10655
+    },
+    "wrapped-major-png/record.json": {
+      "sha256": "43439c109e442c1b50d634c8689b19d2c30b0555bdc7fab2a5931e258e2682f3",
+      "bytes": 2752
+    },
+    "wrapped-major-smooth/capture.npz": {
+      "sha256": "f98e0b539c00cd14113d5031d75d6f760b161cedac438979532342a190f9d1b9",
+      "bytes": 9355
+    },
+    "wrapped-major-smooth/fit.json": {
+      "sha256": "aea31b9b8ce6c87c6cf2aa92dc7b925c5faa2e4a18585f3ac939cd8f8762aa34",
+      "bytes": 1879402
+    },
+    "wrapped-major-smooth/initialization.json": {
+      "sha256": "594b22dee1857d8f4e7b89374bb01a4c132cd7e50196704edd44135633b5aeae",
+      "bytes": 28475
+    },
+    "wrapped-major-smooth/observed-fit-input.json": {
+      "sha256": "542338afe8d3fc5068ea92b6ded50d296e88372c89252266d0c7bb28749bcedb",
+      "bytes": 10504
+    },
+    "wrapped-major-smooth/record.json": {
+      "sha256": "41780bef3f971df64831625d187f79812aeebc2624517ff7631395041d6aa05d",
+      "bytes": 3617
+    },
+    "wrapped-major-staged/capture.npz": {
+      "sha256": "42843f4291da5fb81eabed073d32d05e2b30c521837e5307021d3fcd3450a4e9",
+      "bytes": 6220
+    },
+    "wrapped-major-staged/fit.json": {
+      "sha256": "b36141d3ab24d57f61c829dcd1fe1cce0416618ceac7cfecfaae4511144259be",
+      "bytes": 20947852
+    },
+    "wrapped-major-staged/initialization.json": {
+      "sha256": "7a6f9e0872c3ed7a2565ca65d6607359fd971190bb96d66b00681999a7ecd613",
+      "bytes": 27970
+    },
+    "wrapped-major-staged/observed-fit-input.json": {
+      "sha256": "634193753489b7eefad2822b7b5729219529790989966b67925f0aa234c9ac87",
+      "bytes": 10141
+    },
+    "wrapped-major-staged/record.json": {
+      "sha256": "8c57fadfff854eaa72aac550f163bfb92e677704970aa0dab8db15ecb8fc35ad",
+      "bytes": 2955
+    },
+    "wrong-optics-smooth/capture.npz": {
+      "sha256": "195df4d0b6e7a2f5474efd5cf3eeb5c7839afb73863b6e8f8505b477e6591694",
+      "bytes": 8750
+    },
+    "wrong-optics-smooth/fit.json": {
+      "sha256": "1258508c1a50a256fe4ed701c8053d50066795a1bfdb7c50b059c72ea80ff0c5",
+      "bytes": 4377909
+    },
+    "wrong-optics-smooth/initialization.json": {
+      "sha256": "53d1d0a310be2882690e675a81b9be6a06e8859496f7fe390eba85526eab5f69",
+      "bytes": 27952
+    },
+    "wrong-optics-smooth/observed-fit-input.json": {
+      "sha256": "95bc78a87e12f091dc6b870bded17baaa1be858328ac6715871b6af95c2e7e83",
+      "bytes": 10424
+    },
+    "wrong-optics-smooth/record.json": {
+      "sha256": "0e229d85ea86bca8785a51166e4109bc9eadb3ff6def66bedf995ffd6a58115c",
+      "bytes": 3491
+    },
+    "zero-png/capture.npz": {
+      "sha256": "cbb755361c34d585d9e338031f2c4d18221a3d9331a099f7e8acdb68900b3942",
+      "bytes": 3937
+    },
+    "zero-png/initialization.json": {
+      "sha256": "8c7f4c9636cf3b163dc9b90f12284f16f96c2eb6e74cd84303f240a4636ac468",
+      "bytes": 12618
+    },
+    "zero-png/record.json": {
+      "sha256": "4592c419dbc27c9561fdcda02d357c4b0968ea80487f1e76ab8040f1e7b80d95",
+      "bytes": 596
+    },
+    "zero-smooth/capture.npz": {
+      "sha256": "9ba075fd8511b1624775f2542225c5bd53b28c4e853d635849e8d8891c05ddc0",
+      "bytes": 3391
+    },
+    "zero-smooth/initialization.json": {
+      "sha256": "56d3bc38f635b0c2b87d3a456263c52b67e2c8f7fc331ddd06441767fc9e97d0",
+      "bytes": 12590
+    },
+    "zero-smooth/record.json": {
+      "sha256": "8ebd2ccd68a72c6555d07321ec1935ae88baadfd1174799dcd0ed91d86277244",
+      "bytes": 602
+    }
+  },
+  "continuation_admission": {
+    "format": "finite-acquisition-recovery-protected-active-controls-correction-admission",
+    "version": 2,
+    "purpose": "Correct only the invented two-sided physical-roundtrip test expectation from15 to16 raw halfspaces; preserve the exact active implementation and run the original full24case recovery objective only after the selected software gate passes.",
+    "previous_frozen_head": "1dade8af7d4c068e6cdd599f7af87aa168e14068",
+    "previous_frozen_tree": "daa91d943d89a7546ba3de8da0779d7fe83a84d0",
+    "previous_frozen_governing": {
+      "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+      "backend/app.py": "345c7dc8bbc7bfbe616eb2934d2a58cd0b4fa1216dbdaa5272ab3a36b06d96bc",
+      "backend/assistant.py": "45f05aa8d0738a1da0e3b5040a2c4df8a01a35e9a835e1c06fd47ee3e81758c5",
+      "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+      "backend/curve_envelope.py": "d37525b42c920a770b783e0c94ff97cf3d5214272d85dcdceae9d23eb184ca27",
+      "backend/drawing.py": "560f087e28d369a2e0f3b733197c18c5a7aa87c390fe56de7516caf9a08a5e6d",
+      "backend/edges.py": "96d3640e202c0d5eb830ed552bae9906235b0ef459476b0c91b3dc68fe75be51",
+      "backend/finite_acquisition.py": "c61b9def98132a10bbfe6df2bddbc50f9e9338eded0177a74dc25dff90220921",
+      "backend/finite_acquisition_coupled.py": "e299fe03879824c388e88ef2a490dc9019ecb5e966c92615342251e3b1a299a8",
+      "backend/finite_acquisition_events.py": "3e1f88517a8912afea4bc19e8ea513d48a178f5a5a408c032f69e996f11cdedc",
+      "backend/finite_acquisition_fit.py": "ff34013696ecd2cc8e82ff7492933de1bdda752805dec0b37da1d32a75b22575",
+      "backend/finite_acquisition_linear.py": "bae7b48f4bc6d950551d3f463f5d0dfc53d0d499ff0812547738fcf43154f703",
+      "backend/finite_acquisition_observations.py": "ac0556326b1b4e043bd1b04223db0c4cadc2f990fbd7258a64fa84a8460d4d23",
+      "backend/finite_acquisition_predictor.py": "871897e335d04a79319544cfa4ba84d19c579ea9e43bf98372baa94e92051f4a",
+      "backend/finite_affine.py": "d4eb540f6a654178fca41b4be416bd4ad6ebb6b3f645bc78b5383b18b8caa653",
+      "backend/finite_aperture.py": "75f29a04133ffd142144607a7c7153e12de159ba7c632e01fd46751fa14cd7b5",
+      "backend/finite_aperture_sensitivity.py": "d481acf746d92568dc317f9dbe9f4741ce863ee241fe84be91264e0ef97d0e51",
+      "backend/finite_centre_fit.py": "df8a057abefe983ee951c894a9ae44e0c6b0f472d3419578be505973ea3a8bfb",
+      "backend/finite_normal.py": "e1e548b58c26d98f28475e647594f5273f34734f1284df27a06324cdf022a443",
+      "backend/finite_observations.py": "09fa843f72b2fc265ba8d4a7111267bf10433eb4f3f2a0600a89cc7871cb3969",
+      "backend/finite_photometry.py": "41e1add0bcb4d226934a969d763f8dd95d9beba425d92c83c1627e3a9534abd3",
+      "backend/finite_shape.py": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+      "backend/fitting.py": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+      "backend/heic.py": "5e34870379991f8813bacfc4badc8fe7fcf5dbe8aa053156fa352456b208de33",
+      "backend/models.py": "21e7467766f4a086f52b3756f6b1fa8e4ec96a7b76cf0b4d1131c5f45709e6e1",
+      "backend/placement.py": "e1745597ca2930d1260659e9f2dc4405f2b7239beb0c12c45fa92b6d3f5c03df",
+      "backend/printing.py": "58d121ad45f0176b02094f3446dcd020c254ccd78860e5a269b8b6a8d6479915",
+      "backend/reference.py": "109ccac49f011e8411286ca2e3682caa201e578df39fee7a52425bb507f7d6e0",
+      "backend/scad.py": "d5cf18312ba10b7e3830d059952c3d078edc1e21813eb2fb03a4fd1ebaf2d534",
+      "backend/shadow.py": "5b156e36aaa3d4592d658875d22241853dd82682c4a691c610a514af07682dbf",
+      "backend/sheet.py": "9735ea176217c273fa63d4e7f412210089d7112fb415d9b921322525aedb950f",
+      "backend/slicer_handoff.py": "774e78fa93dacc348c204d89a0ec4192a01701fb3fa3304ee09960e816101a50",
+      "backend/slicers.py": "03442055d64c37d46e5806bafdd0bd497b54dacf78bc409addf1ff8400c25bb9",
+      "backend/three_mf.py": "435afd61c90bb21c305876f681f845a3bfb193a64fa96589e649fb40fd821cf1",
+      "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+      "backend/tracing.py": "b822716050b285152bcbefe07a0b7da1e02716ecb5d990cbf29af86598a14d2e",
+      "backend/worker.py": "9c869ffae551485b473aeb54ddc9a0116e8c8df22f92f2c08e2f3e97f24ca846",
+      "pyproject.toml": "89db6bd352114ad6ed7c979c070e66d47551ef7cca7062778f832bb8934507ab",
+      "studies/finite-acquisition-recovery-audit-v2.json": "dd51104ab08d5ff674b732c3f784009caae545a774f36d8046c529c2e28c5d99",
+      "studies/finite-acquisition-recovery-coupled-audit-v1.json": "8b23aed0eb7886bd39538c28377b948bd93dd8d654dc85bd6357a04841842943",
+      "studies/finite-acquisition-recovery-coupled-audit-v2.json": "6a2b016e0996a939f8531b95faa7d1efe3960db51f62e96809d6de69a968ae10",
+      "studies/finite-acquisition-recovery-coupled-v1.json": "df2abb75b64f86c31c8c267188bcd54096e143b2f81758a725ba698d6fbb5fda",
+      "studies/finite-acquisition-recovery-events-v1.json": "fe09dd90df39094885d8f890db579d2cc9da59d8c8f5ae60f2f7d9b05b42567f",
+      "studies/finite-acquisition-recovery-predictor-v1.json": "8533f5503798aef2c3eb275a97c88db91d82d6b3ba27327a0aee3d013f75580e",
+      "studies/finite-acquisition-recovery-v1.json": "737bb8badf15a6bd1438ece67b9ad03f96e65440989bbc8bc2110edc8a497ad0",
+      "studies/verification/finite-acquisition-recovery-audit-v1.py": "749cb6b9a158b81891cb58109b114b2a18bf4aca1933c8268beca2bfa00a0373",
+      "studies/verification/finite-acquisition-recovery-audit-v2.py": "8fcc982c2e14bdbb8cf343c4703cb2d4c61b800d4eb858ab147bd44dc7952b04",
+      "studies/verification/finite-acquisition-recovery-coupled-audit-v1.py": "8dfd4bfdda5005f7caef29d3ef5eabe25d3fabc592402a8b2f27723e4e186cd4",
+      "studies/verification/finite-acquisition-recovery-coupled-audit-v2.py": "73e5b96e1b854144d58a850ebc245a232ac5898c24bf080047f2ef05d3394104",
+      "studies/verification/finite-acquisition-recovery-coupled-v1.py": "0b85e6dcb424e909c656eeab8799821a2dae8742024cc39eb27f1ac6cbcf115d",
+      "studies/verification/finite-acquisition-recovery-events-v1.py": "9dc3734db777b7be901772fe419802869905adba7573b8b116cf3967dcaf1d13",
+      "studies/verification/finite-acquisition-recovery-predictor-v1.py": "4368ee287118b8c4553967750d8483f14db23b39364c6f513ab5a5454836548c",
+      "studies/verification/finite-acquisition-recovery-reference-v1.py": "5d8f3ec4b0283a688338e3981288fc38214e99bf5af50dad07c33cba2777ab0d",
+      "studies/verification/finite-acquisition-recovery-v1.py": "073cc432134c5258add3e9d3addd24fdcabead97451424c3303720f878d58d29",
+      "studies/verification/finite-cell-sensitivity-v1.py": "d94b930df57d2b9858631bfa8164c9618f7ff8b45d25c584f7808fea0226a19a",
+      "tests/test_finite_acquisition.py": "cf605a5cb94edd16bd0572afd15a83671ec61b8f40a263fcbe3ae9be8e46d475",
+      "tests/test_finite_acquisition_continuation.py": "4e5731c0fd8e2c927ccd6eb5999acdfdc794212a4f14fad32aa4e7e001590090",
+      "tests/test_finite_acquisition_coupled.py": "07efdf4b6b4dd62dd3c2496afe56f58ae4fd30e4712a8fdc4e39136347fcf8d5",
+      "tests/test_finite_acquisition_coupled_math.py": "8b68efdfc0c5843738f070738d27c56c13d5451b63f6a27ac122ba6e96a12815",
+      "tests/test_finite_acquisition_coupled_protocol.py": "f15201495ddd7b885100eed6a7dfa3fa0cf6264b88bb0c3e23d67171ca45580c",
+      "tests/test_finite_acquisition_coupled_saved_audit.py": "18d96bfebcddf12fdb45718064ad82415f9b377c0af53c57a7ee0168ea4ff9b9",
+      "tests/test_finite_acquisition_coupled_saved_audit_v2.py": "ba6b8f856d705ce61fa6ac182ae5de2d5ae2b148772fc56933135a360512c5ee",
+      "tests/test_finite_acquisition_events.py": "8d93674f2ebb974182fd9183af534d57097b55f1d027c554925129b7332e2269",
+      "tests/test_finite_acquisition_events_math.py": "dd83b4280d6425c332798bb95f0fafeb301e66d1f2ef5126927d6a39f4b28932",
+      "tests/test_finite_acquisition_events_protocol.py": "3bb597fefc5ffa66fed189c5c8ddb4da2eab25b11eca46de3e62fbadc3c9f01a",
+      "tests/test_finite_acquisition_fit.py": "e4e10b81e0a48eb293a6cab281eb2eb11d6adbda17f6dbce74d20513d4916821",
+      "tests/test_finite_acquisition_identifiability.py": "38d53e0c763fc0f2d39fbb5fd360a7cf418033edc185e6e906641a0c9a16402f",
+      "tests/test_finite_acquisition_linear.py": "a6875c0c571c3f67b5e291827f860335ffffd894844afaab05901947ff2f63e9",
+      "tests/test_finite_acquisition_observations.py": "32fcd3b28b2e4acae44be6d53a3083b10fa965f454c8a4de087d0b65930853f4",
+      "tests/test_finite_acquisition_predictor.py": "eb825a26f1aa13fe65cabfd7e5186f9c9e42859884490417e3cafb84cb5ca981",
+      "tests/test_finite_acquisition_saved_audit.py": "61a835034b418e5baeba3908b85ae036ff2751456c33f87af0a1f481391270aa",
+      "tests/test_finite_acquisition_sensitivity.py": "a12fa1864a409bc8c125f44ce31bdbed3e239b73eea7ee251dad536a123a3d76",
+      "tests/test_finite_acquisition_workspace.py": "2d2ba6e12a7d43f92402b8e20229fa64f607c2f77ce283476e708617b610fd3e",
+      "tests/test_finite_affine.py": "58661c00edc78de9f316a61998c3c74f7c562be3e0bf32919edb994eb7cac30e",
+      "tests/test_finite_aperture.py": "e2ec4013126986a80c0e1fea2b6546d3e8bd62dbfb73462cf60f1f8ef5548766",
+      "tests/test_finite_aperture_sensitivity.py": "3f67748549e8e39475e3b53e2395a966ed6700709a241d0ac080d2704f037bd9",
+      "tests/test_finite_centre_fit.py": "f94255dc8aab9c3db8196c3379ee2f025a1e7d83fca12a086084152c7eddceb4",
+      "tests/test_finite_normal.py": "2e3991fcae912266d1a504d7333b22292b65c712faa39ba26ca47b8ca8d83416",
+      "tests/test_finite_observations.py": "fd0a2196b1a93e37128334088e5faa6989c0d2ad53d49cd5945db7b34d7680ca",
+      "tests/test_finite_photometry.py": "693e6b67d3cd1e3cf1a157fe3d4ceae656c21b3510f8c7d0280092b958dd3b5d",
+      "uv.lock": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f",
+      "backend/finite_acquisition_protected.py": "53ab90633b03b52b8c98290016f12df89af6c582e13c505320b705b6bc6d1b57",
+      "tests/test_finite_acquisition_protected.py": "64229f3e14023c7b3ae071ce72ffc79bb51fddfbfdf7c3b93ac46823ca9091c0",
+      "tests/test_finite_acquisition_protected_math.py": "3642904d8bcc3443fe03c9d234327b7f855393d750065917cf31be5dd79613ab",
+      "tests/test_finite_acquisition_protected_protocol.py": "e20ec0a0ad1151d3a0842ad4910845f0012dee60f0ea9efb6c94ddf204b6e3aa",
+      "docs/finite-acquisition-protected.md": "760959cc5a899a5a9daecaba7c4a88ea055c170d467c107858bc07ff51a14a68",
+      "studies/finite-acquisition-recovery-protected-v1.json": "c52b461e3dc4758bc10a15b761899f2b797a5c0cb91f31196b79ce2441a5aeae",
+      "studies/verification/finite-acquisition-recovery-protected-v1.py": "b8f38ca6986565174df65581353fa75e450a654a2ba821f276dad7ac2b69e9d4",
+      "backend/finite_acquisition_protected_active.py": "a0537e4b34187ba1ca242ee98da10589a1ad1dd9065d786e9542066306b2663a",
+      "tests/test_finite_acquisition_protected_active.py": "64e0a4bd74831bfcbe300f6cbc05be82a83826de9d331b3e287f8e49659e2c77",
+      "tests/test_finite_acquisition_protected_active_math.py": "907bdda3cf42faa3450ebe52abba9869fd95387e3af0463954869b789eb132de",
+      "tests/test_finite_acquisition_protected_active_protocol.py": "73f02f1a32f7e97aa2f3acb98dc9957a4fc50490aadb9b080511a0be1c19452e",
+      "tests/test_finite_acquisition_protected_active_rebound.py": "0dafb26af741806603fa9d477177b32ab6f9754af2a5ed13429d7bd0a98bc4db",
+      "docs/finite-acquisition-protected-active.md": "cb9073e047762f98694e65ab2c210d8fd11bda8ecfbb1eb5958007f821db5d70",
+      "studies/finite-acquisition-recovery-protected-active-v1.json": "462b5c2e11d484998424b95349827d5e0766b63cd01e306295e10099947d1258",
+      "studies/verification/finite-acquisition-recovery-protected-active-v1.py": "46cd3a07669f2072becdec183d5e7531a664bf80650161a1d0dff5f388794e30"
+    },
+    "prior_results": [
+      {
+        "source": "7ec6803",
+        "matched_passes": 4,
+        "matched_total": 12,
+        "rows": 24,
+        "exit_code": 1
+      },
+      {
+        "source": "e6e2c2",
+        "matched_passes": 9,
+        "matched_total": 12,
+        "rows": 24,
+        "exit_code": 1
+      },
+      {
+        "source": "b9fe285",
+        "matched_passes": 11,
+        "matched_total": 12,
+        "rows": 24,
+        "exit_code": 1
+      },
+      {
+        "source": "cd85ef9",
+        "matched_passes": 11,
+        "matched_total": 12,
+        "rows": 24,
+        "exit_code": 1
+      }
+    ],
+    "prior_event_report": {
+      "path": ".local/verification/finite-acquisition-recovery-events-v1-first/report.json",
+      "sha256": "9773319dcfdf17473d07fc4aa948c8f4ba90696f801120015653900c0fab3159",
+      "bytes": 117842
+    },
+    "prior_coupled_report": {
+      "path": ".local/verification/finite-acquisition-recovery-coupled-v1-first/report.json",
+      "sha256": "a1394780cf73b99a321741cd9f56d0c36d55cd094587f7bb355b88df9a414bb6",
+      "bytes": 112868
+    },
+    "corrected_coupled_audit": {
+      "path": ".local/verification/finite-acquisition-recovery-coupled-audit-v2-first.json",
+      "sha256": "57609809d772a458291ee810a4e0f77cf5a83c3040bed94071055e4f4aca3fa5",
+      "bytes": 47428
+    },
+    "audit_scope": "Corrected coupled-only audit is verified_within_declared_scope,1191323checks,0currentunknowns,24currentprecastcomparisons;28historicalunknowns remain. It does not cover source-event/protected ledgers or independent model/Jacobian/reference accuracy.",
+    "strategy": {
+      "initial": "Exact coupled-v1 initial search, unchanged. Protected-v1/event-v1 phases are not run as predecessors.",
+      "proposal": "Same observed-only source-code scoring, represented bins, selected central-half target, seven original normalized coordinates, original box and literal strict-cost acceptance.",
+      "correction": "Force scalar arithmetic operands to Python float; reject unsupported arithmetic as explicit numerical unknown. After an unresolved full256-sweep Hildreth phase, attempt bounded rational active-face KKT polishing. Shortened max_sweeps withholds polishing.",
+      "exact_problem": "Every finite raw source inequality uses Fraction of its represented binary64 coefficients; bounds are subtracted exactly as Fraction(upper)-Fraction(z0) or Fraction(z0)-Fraction(lower), before rounding. Include all fourteen normalized box halfspaces.",
+      "candidate_search": "Deterministic warm active support followed by bounded exact dual active-set face exchanges from zero. Numerical support is a proposal only; every certificate must pass the complete independent-form exact KKT identities over all raw halfspaces.",
+      "certificate_scope": "A feasible rational point with nonnegative multipliers, zero complementarity and stationarity certifies only the represented convex local min.5||delta||\u00b2 problem. Strict convexity gives a unique local-QP point. It does not certify rounded float-point feasibility, nonlinear source-code preservation, global geometry or physical recovery.",
+      "rounding": "Retain rational optimum separately from exact feasibility of its binary64 rounded point and computed raw-band membership. A point admitted from polishing must pass both. For active-polished proposals, physical reconstruction/clipping is followed by separately charged exact raw membership of represented_delta and the unchanged computed-band gate. Hildreth fast-path proposals keep their preceding engineering-only qualification and do not borrow an unperformed exact certificate.",
+      "unchanged": "No interval widening, target changes, truth/reserved/reference-based selection, external solver dependency, extra geometry evaluations in the QP, or altered strict actual-cost acceptance."
+    },
+    "limits": {
+      "max_protected_iterations": 12,
+      "top_events_per_iteration": 12,
+      "max_qp_sweeps": 256,
+      "qp_relative_kkt_tolerance": 1e-09,
+      "stage_units_per_finite_halfspace_setup": 128,
+      "stage_units_per_active_finite_halfspace_per_sweep": 128,
+      "solver_reservation": "Reserve whole setup/sweep before corresponding arithmetic, one ledger record per setup/sweep; retain actual attempted prefix and pending suffix. These engineering units are not hardware cycles.",
+      "score_stage_work": "E*(8*Q+8), where E is valid adjacent-code event count across actual source cells and Q is training query count; reserve before ranking,0geometry evaluation units. Sorting/serialization are bounded metadata.",
+      "max_archived_trial_code_entries": 1048576,
+      "max_live_source_stage_captures": 2,
+      "max_downstream_matrix_entries": 1048576,
+      "max_scalar_encoder_probes_per_boundary": 40,
+      "stage_units_per_scalar_encoder_probe": 4,
+      "decoder_table_stage_work": 1024,
+      "total_caps": {
+        "evaluations": 2048,
+        "cell_work": 1000000,
+        "stage_work": 100000000
+      },
+      "exact_active_polish": {
+        "max_face_or_pivot_attempts": 64,
+        "max_active_rank": 7,
+        "max_rational_integer_bits": 32768,
+        "stage_setup_per_raw_halfspace": 512,
+        "stage_verification_per_raw_halfspace": 512,
+        "stage_per_face_or_pivot": 65536,
+        "physical_roundtrip_setup_per_raw_halfspace": 512,
+        "physical_roundtrip_verification_per_raw_halfspace": 512,
+        "reservation_policy": "Reserve each setup, face/pivot and verification phase before corresponding rational construction/arithmetic. Conservatively bound intermediate integer growth before arithmetic and nontrivial rational comparisons, including ratio selection and raw membership. Retain partial work/cap/singular/rounding outcomes; no completed-phase report for incomplete arithmetic. These are engineering work units, not cycles, walltime or process-memory qualification.",
+        "unresolved_policy": "Unknown on incomplete face search, work/bit/face limits, unavailable support, failed certificate or unavailable rounded feasible point; such outcomes do not prove global or nonlinear infeasibility."
+      }
+    },
+    "unchanged": {
+      "population": "All24 original rows:12 matched and12 adverse, no removal or reclassification.",
+      "targets": "Every original numeric geometry, dimension, sampled boundary, conditional residual, reference, rank and local-completion threshold.",
+      "observed_inputs": "Same full-field initializer, max4 observed-only seeds, operational bounds, level hints and declared seed clipping. Full-field initialization uses eventual reserved pixels; their residuals remain conditional.",
+      "sampling": "Same135 training/34 reserved matched split and declared adverse exceptions. No held-out residual or geometry truth may rank source-code events.",
+      "reference": "Same independent GL64/96 reference and values. Retain float64 pre-cast coverage as in coupled-v1; old captures stay immutable.",
+      "total_caps": {
+        "evaluations": 2048,
+        "cell_work": 1000000,
+        "stage_work": 100000000
+      },
+      "iterations": "Original per-seed/phase60 iteration allowance is not an aggregate iteration or wall-time bound.",
+      "truth_boundary": "Only mode/adverse control labels cross fit_observed; save complete fit before opening evaluation geometry/dimensions."
+    },
+    "prospective_controls": {
+      "inherited": "Keep all prior selected controls and expectations unchanged except the separately copied single15\u219216 assertion. The frozen original active core filename is excluded from this selected command; both historical failed subjects/outcomes remain unchanged.",
+      "new": "Independent exact-KKT, exact-bound-subtraction, rank/dependent/fixed-face, rational-vs-float, overflow, phase-reservation, bit/face/cap/partial-ledger and wrapper-isolation controls. No subject-generated expected numerical answers.",
+      "full_protocol": "Only after controls and static reviews, run all24 original cases once with the same original targets, truth boundary, independent reference and pre-cast retention. Save all rows, exceptions, unknowns and multi-phase ledgers.",
+      "audit": "No new protected/event ledger saved-only audit is claimed."
+    },
+    "freeze_policy": "Commit and hash all96 preceding governing inputs plus the fourNEW expectation-copy/admission/runner/guide files before first new import, collection, test, projection, model, reference or diagnostic execution. Preserve every first outcome. Any later correction needs a separate admission; no retry erases a failure.",
+    "failure_policy": "Exit1 unless all12 matched rows satisfy every original target/reference/provenance gate. Retain all24 rows, refusals/exceptions and complete multi-phase ledgers. Adverse execution is not recovery success.",
+    "qualification_limits": [
+      "All source bin/QP statements are local supplied-model proposal claims, not convexity/global recovery of nonlinear quantized geometry.",
+      "Accepted literal costs strictly decrease, but zero training residual need not satisfy geometry or uniquely identify it.",
+      "Reserved queries influenced full-field initialization and remain conditional checks.",
+      "No unknown-camera/noise adequacy, independent derivative/reference accuracy, interactive latency, GUI/HTTP integration, native slicer or physical fit qualification."
+    ],
+    "primary_sources": [
+      "https://arxiv.org/html/1705.04768v1",
+      "https://arxiv.org/html/2001.06747v1",
+      "https://arxiv.org/abs/1809.09639",
+      "https://arxiv.org/abs/1207.0577",
+      "https://web.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf",
+      "https://doc.cgal.org/latest/QP_solver/classCGAL_1_1Quadratic__program__solution.html",
+      "https://people.inf.ethz.ch/gaertner/subdir/texts/own_work/qp-solver.pdf",
+      "https://arxiv.org/html/1803.07178v2"
+    ],
+    "original_plan": {
+      "path": "studies/finite-acquisition-recovery-v1.json",
+      "sha256": "737bb8badf15a6bd1438ece67b9ad03f96e65440989bbc8bc2110edc8a497ad0"
+    },
+    "original_runner": {
+      "path": "studies/verification/finite-acquisition-recovery-v1.py",
+      "sha256": "073cc432134c5258add3e9d3addd24fdcabead97451424c3303720f878d58d29"
+    },
+    "original_reference": {
+      "path": "studies/verification/finite-acquisition-recovery-reference-v1.py",
+      "sha256": "5d8f3ec4b0283a688338e3981288fc38214e99bf5af50dad07c33cba2777ab0d"
+    },
+    "previous_predictor_runner": {
+      "path": "studies/verification/finite-acquisition-recovery-predictor-v1.py",
+      "sha256": "4368ee287118b8c4553967750d8483f14db23b39364c6f513ab5a5454836548c"
+    },
+    "previous_predictor_module": {
+      "path": "backend/finite_acquisition_predictor.py",
+      "sha256": "871897e335d04a79319544cfa4ba84d19c579ea9e43bf98372baa94e92051f4a"
+    },
+    "previous_predictor_plan": {
+      "path": "studies/finite-acquisition-recovery-predictor-v1.json",
+      "sha256": "8533f5503798aef2c3eb275a97c88db91d82d6b3ba27327a0aee3d013f75580e"
+    },
+    "previous_coupled_plan": {
+      "path": "studies/finite-acquisition-recovery-coupled-v1.json",
+      "sha256": "df2abb75b64f86c31c8c267188bcd54096e143b2f81758a725ba698d6fbb5fda",
+      "bytes": 8604
+    },
+    "previous_coupled_runner": {
+      "path": "studies/verification/finite-acquisition-recovery-coupled-v1.py",
+      "sha256": "0b85e6dcb424e909c656eeab8799821a2dae8742024cc39eb27f1ac6cbcf115d",
+      "bytes": 8746
+    },
+    "previous_coupled_module": {
+      "path": "backend/finite_acquisition_coupled.py",
+      "sha256": "e299fe03879824c388e88ef2a490dc9019ecb5e966c92615342251e3b1a299a8",
+      "bytes": 44040
+    },
+    "prior_protected_controls": {
+      "head": "79522b5ad47ea747d644a55e3c0fe468e7d30bde",
+      "tree": "9e3eee8936ea6f6d880c9a7287bb2f085f6908e9",
+      "exit_code": 1,
+      "failed": 8,
+      "passed": 752,
+      "subtests_passed": 33,
+      "full_recovery_study_executed": false,
+      "source_archive": "studies/fixtures/finite-acquisition-recovery-protected-v1/recorded-source.zip",
+      "source_archive_sha256": "f946b1dbc6168a39d9af5312cbaf766838943eb6ae40c90bf4944cc7b68a8e11",
+      "first_log_sha256": "0617515b0a22ee4102f6448a5b164787f23c6d6fd16597a9d5d81d6d72f96798",
+      "first_terminal_receipt_sha256": "6182b99e25e854b61ca3781b5464bf0cddc008db0a2716d123b597fba8d004d9",
+      "reason": "Seven known-feasible analytical projections reached iteration_limit and one RuntimeWarning overflow escaped numerical handling. No full protected-v1 study was attempted."
+    },
+    "control_correction": {
+      "kind": "expectation-only",
+      "original_test": {
+        "path": "tests/test_finite_acquisition_protected_active.py",
+        "sha256": "64e0a4bd74831bfcbe300f6cbc05be82a83826de9d331b3e287f8e49659e2c77"
+      },
+      "selected_test_copy": "tests/test_finite_acquisition_protected_active_controls_v2.py",
+      "sole_test_text_change": {
+        "old": "assert event[\"physical_roundtrip_exact\"][\"stage_units_reserved\"] == 15 * (",
+        "new": "assert event[\"physical_roundtrip_exact\"][\"stage_units_reserved\"] == 16 * ("
+      },
+      "derivation": "One source cell has target central-half[129.5,130.5], hence2finite source sides plus14box sides=16raw halfspaces. Setup+verification=16*(512+512)=16384. Other one-sided15-row expectations remain unchanged.",
+      "unchanged_algorithm": {
+        "path": "backend/finite_acquisition_protected_active.py",
+        "sha256": "a0537e4b34187ba1ca242ee98da10589a1ad1dd9065d786e9542066306b2663a"
+      },
+      "selected_scope": "Same821 selected cases as the first active command:707previous+53unchanged rebound+3isolation guards+26math+22protocol+10core. Replace only the frozen active core filename with the corrected copy. Do not collect both copies or call the result unrestricted full-suite success.",
+      "unrestricted_scope_caveat": "The immutable original active core expectation15 remains incorrect and would still fail if unrestricted collection includes it; this separate correction never erases that outcome.",
+      "runner_changes": "Admission path, output format label and guide source-closure path only. Original truth boundary, fit body, status gate, reference retention and evaluation behavior remain AST-identical."
+    },
+    "prior_active_controls": {
+      "head": "1dade8af7d4c068e6cdd599f7af87aa168e14068",
+      "tree": "daa91d943d89a7546ba3de8da0779d7fe83a84d0",
+      "exit_code": 1,
+      "failed": 1,
+      "passed": 820,
+      "subtests_passed": 33,
+      "seconds": 16.08,
+      "native_session_id": 35429,
+      "full_recovery_study_executed": false,
+      "post_failure_assertions_executed": false,
+      "records": {
+        "finite-acquisition-recovery-protected-active-v1-freeze.json": {
+          "sha256": "de9cdca32d53ad5bf66f09b0a2acff089e86f83f10868ad1d6fdeb8e3fe1ba26",
+          "bytes": 13367
+        },
+        "finite-acquisition-recovery-protected-active-v1-first-tests.log": {
+          "sha256": "252462ddab3f1a4c30667b496093ea479068eedce48ea0fe78d9bfe7a9dcdb91",
+          "bytes": 7367
+        },
+        "finite-acquisition-recovery-protected-active-v1-first-tests-handle.json": {
+          "sha256": "f86119dc03ebb30f8c3ed17f12e24b1a079491042a28079f57059a6ac1aa240f",
+          "bytes": 1751
+        },
+        "finite-acquisition-recovery-protected-active-v1-first-terminal-receipt.json": {
+          "sha256": "a15a424c2cebd835a13688c5733e6cca9a3820e28962effefb38b138ca6e379c",
+          "bytes": 1387
+        }
+      },
+      "diagnosis": "Test expected15360; actual16384 is the correct16-row charge. Assertions after that failure were not reached. All53rebound,26math and22protocol controls passed within the overall failed821-case command."
+    },
+    "first_selected_command": "set -o pipefail\nOPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python -W error::RuntimeWarning -m pytest -q tests/test_finite_aperture.py tests/test_finite_acquisition.py tests/test_finite_acquisition_workspace.py tests/test_finite_aperture_sensitivity.py tests/test_finite_acquisition_linear.py tests/test_finite_acquisition_sensitivity.py tests/test_finite_photometry.py tests/test_finite_acquisition_observations.py tests/test_finite_acquisition_fit.py tests/test_finite_acquisition_predictor.py tests/test_finite_acquisition_identifiability.py tests/test_finite_acquisition_continuation.py tests/test_finite_acquisition_coupled.py tests/test_finite_acquisition_coupled_math.py tests/test_finite_acquisition_coupled_protocol.py tests/test_finite_acquisition_saved_audit.py tests/test_finite_acquisition_events.py tests/test_finite_acquisition_events_math.py tests/test_finite_acquisition_events_protocol.py tests/test_finite_acquisition_coupled_saved_audit.py tests/test_finite_acquisition_coupled_saved_audit_v2.py tests/test_finite_acquisition_protected_active_controls_v2.py tests/test_finite_acquisition_protected_active_math.py tests/test_finite_acquisition_protected_active_protocol.py tests/test_finite_acquisition_protected_active_rebound.py 2>&1 | tee .local/verification/finite-acquisition-recovery-protected-active-controls-v2-first-tests.log"
+  }
+}

@@ -36,7 +36,7 @@ the research candidate, not main or this library. The
 [original audit record](../docs/validation/finite-acquisition-recovery.md)
 retains 14 unresolved comparisons where pre-cast area differences cannot be
 reconstructed from rounded capture arrays. The
-[current documentation review](../docs/validation/documentation-protected-active.md)
+[current documentation review](../docs/validation/documentation-physical-rounding.md)
 connects the later results and both first projection-control outcomes. This
 documentation does not add a fitter to main, the workbench or the Photos tab.
 
@@ -49,12 +49,14 @@ failures and 28 historical precision unknowns. They do not refresh this
 library's release verification or add a Photos tool.
 
 The [protected-source-bin design](../docs/finite-acquisition-protected.md)
-retains eight failed first controls. Its later
-[exact active-face follow-up](../docs/finite-acquisition-protected-active.md)
-records 820 passes, one failed test expectation and 33 passing subtests, exit 1.
-Neither full protected recovery study has run. The
-[new first outcome](../docs/validation/finite-acquisition-protected-active.md)
-adds no library feature, release verification or physical acceptance.
+retains its eight failed first controls. The
+[active-face follow-up](../docs/finite-acquisition-protected-active.md) preserves
+its first expectation failure, passes a separately frozen selected 821 tests
+and 33 subtests, then completes the original 24-case study at 11/12 matched
+passes, exit 1. The later [saved-only physical-rounding diagnostic](../docs/finite-acquisition-physical-rounding.md)
+accepts none of 128 adjacent physical candidates. These
+[source-bound results](../docs/validation/finite-acquisition-physical-rounding.md)
+add no library feature, release verification or physical acceptance.
 
 A practical, source-backed library for turning photographs into printable CAD: recover shape, establish dimensions, rebuild editable geometry, and check the part you print. **Revision 7, November 9, 2026.**
 

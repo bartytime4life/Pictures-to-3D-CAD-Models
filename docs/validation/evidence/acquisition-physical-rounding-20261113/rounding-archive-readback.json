@@ -1,0 +1,22 @@
+{
+  "format": "physical-rounding-portable-archive-readback",
+  "recorded_at": "2026-11-13T22:55:04.421888+00:00",
+  "head": "b649ea3e09c5c6e1b772d1bc3f0f5a378f764b33",
+  "tree": "e408b9dbcef0ecd273c31d08f929defae3948736",
+  "source": {
+    "path": ".local/verification/finite-acquisition-physical-rounding-v1-recorded-source.zip",
+    "sha256": "4c488c1d0c24dddc0811bbd9adc648f34228511e92a97b59c1c2409101599ff3",
+    "bytes": 620455,
+    "members": 105,
+    "payload_members_verified": 104
+  },
+  "complete": {
+    "path": ".local/verification/finite-acquisition-physical-rounding-v1-complete.zip",
+    "sha256": "398e6c5e3acbdb3f40c4ec93fd6b104889d1124fe63a6c0ef09a05210593622d",
+    "bytes": 19502334,
+    "members": 13,
+    "payload_members_verified": 12
+  },
+  "governing_inputs_unchanged": 104,
+  "scope": "Local archives, verified member bytes/hashes/sizes; no new scientific execution or physical qualification."
+}

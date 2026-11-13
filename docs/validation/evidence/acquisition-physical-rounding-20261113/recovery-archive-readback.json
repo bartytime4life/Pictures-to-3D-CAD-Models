@@ -1,0 +1,22 @@
+{
+  "format": "protected-active-controls-v2-portable-archive-readback",
+  "recorded_at": "2026-11-13T22:27:12.967076+00:00",
+  "head": "c1a933099d34475bb1bbfb04de17fa41b61b4d42",
+  "tree": "1e4e078975f0bca26e99fa8c03ac236fcd4f8bc5",
+  "recorded_source": {
+    "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-recorded-source.zip",
+    "sha256": "b92c47015ffce4e7fa98e821708147eb86c5bf4cc77ec2802751f1f6e996be5e",
+    "bytes": 597369,
+    "members": 101,
+    "governing_members_verified": 100
+  },
+  "complete": {
+    "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-complete.zip",
+    "sha256": "18e1fb6459f937ad133c59de0f472090efce6bdaefaf2c88856f074d913837b0",
+    "bytes": 18096291,
+    "members": 121,
+    "payload_members_verified": 120
+  },
+  "first_outcomes_unchanged": true,
+  "scope": "Byte/member consistency and preserved first results only. No independent full-ledger, exact-certificate, forward-model, camera or physical audit. Manifest excludes its own hash."
+}
