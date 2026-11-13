@@ -1,0 +1,177 @@
+{
+  "format": "pictures-to-cad-residual-auditor-algebra-sentinels",
+  "version": 1,
+  "scope": "Invented stdlib-only arrays; no study numerical data, model imports, forward calls, fitting or timing.",
+  "checks": [
+    {
+      "name": "three_orthogonal_covariance_directions",
+      "passed": true
+    },
+    {
+      "name": "orthogonal_projection_energy",
+      "passed": true
+    },
+    {
+      "name": "projection_pythagoras",
+      "passed": true
+    },
+    {
+      "name": "nuisance_orthogonality",
+      "passed": true
+    },
+    {
+      "name": "covariance_in_nuisance_span_rank_zero",
+      "passed": true
+    },
+    {
+      "name": "covariance_in_nuisance_span_energy_zero",
+      "passed": true
+    },
+    {
+      "name": "nuisance_only_residual_no_covariance_signal",
+      "passed": true
+    },
+    {
+      "name": "projected_roundoff_not_renormalized",
+      "passed": true
+    },
+    {
+      "name": "rank_remaining_dimension_ceiling",
+      "passed": true
+    },
+    {
+      "name": "fixed_brightness_face_excluded",
+      "passed": true
+    },
+    {
+      "name": "training_only_unique_coefficients",
+      "passed": true
+    },
+    {
+      "name": "training_only_normal_equations",
+      "passed": true
+    },
+    {
+      "name": "heldout_changes_do_not_enter_coefficients",
+      "passed": true
+    },
+    {
+      "name": "rankdeficient_coefficients_not_falsely_compared",
+      "passed": true
+    },
+    {
+      "name": "near_cutoff_kept_interval",
+      "passed": true
+    },
+    {
+      "name": "finite_difference_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "common_bound_alpha",
+      "passed": true
+    },
+    {
+      "name": "all56_strata_retained",
+      "passed": true
+    },
+    {
+      "name": "jacobi_diagonal_spectrum",
+      "passed": true
+    },
+    {
+      "name": "jacobi_closed_form_spectrum",
+      "passed": true
+    },
+    {
+      "name": "jacobi_reconstructs_original_matrix",
+      "passed": true
+    },
+    {
+      "name": "jacobi_wide_rank_ceiling",
+      "passed": true
+    },
+    {
+      "name": "jacobi_empty_brightness_block",
+      "passed": true
+    },
+    {
+      "name": "analytic_chart_zero_identity",
+      "passed": true
+    },
+    {
+      "name": "analytic_chart_isotropic_closed_form",
+      "passed": true
+    },
+    {
+      "name": "rank_ceiling_does_not_resolve_raw_interval",
+      "passed": true
+    },
+    {
+      "name": "capped_unstable_rank_stays_unknown",
+      "passed": true
+    },
+    {
+      "name": "raw_count_above_ceiling_stays_unknown",
+      "passed": true
+    },
+    {
+      "name": "FD_guard_withholds_unique_rank",
+      "passed": true
+    },
+    {
+      "name": "projector_guard_withholds_unique_rank",
+      "passed": true
+    },
+    {
+      "name": "qualified_full_rank_kept",
+      "passed": true
+    },
+    {
+      "name": "FD_classifies_ArithmeticError",
+      "passed": true
+    },
+    {
+      "name": "FD_classifies_TypeError",
+      "passed": true
+    },
+    {
+      "name": "FD_detects_hidden_protocol_TypeError",
+      "passed": true
+    },
+    {
+      "name": "FD_classifies_ValueError",
+      "passed": true
+    },
+    {
+      "name": "FD_detects_hidden_protocol_ValueError",
+      "passed": true
+    },
+    {
+      "name": "strict_json_duplicate_key",
+      "passed": true
+    },
+    {
+      "name": "strict_json_nan",
+      "passed": true
+    },
+    {
+      "name": "strict_json_infinity",
+      "passed": true
+    },
+    {
+      "name": "strict_json_overflow",
+      "passed": true
+    },
+    {
+      "name": "array_refuses_boolean",
+      "passed": true
+    },
+    {
+      "name": "array_refuses_nonfinite",
+      "passed": true
+    }
+  ],
+  "all_passed": true,
+  "auditor_sha256": "10c87e05f330d110f56a0740580af644b6117981d2eaea02ee31f820995d1e02"
+}

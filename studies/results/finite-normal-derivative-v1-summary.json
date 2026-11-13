@@ -1,0 +1,320 @@
+{
+  "format": "pictures-to-cad-finite-normal-derivative-index",
+  "version": 1,
+  "scope": "Complete original failed qualification, full arrays retained losslessly; no replay or threshold relaxation",
+  "report_sha256": "d31fcb0436daee9e91bd21d78c1650901916a8c2c77bf6c7e351da61c04e113f",
+  "report_bytes": 91924054,
+  "canonical_exit_code": 1,
+  "protocol_passed": false,
+  "summary": {
+    "all_area_queries_retained": true,
+    "all_scenes_and_queries_retained": true,
+    "old_archived_data_analyses": 0,
+    "optimizer_calls": 0,
+    "oracle_converged_queries": 3886,
+    "planned_queries": 3886,
+    "planned_scenes": 337,
+    "positive_area_passes": 36,
+    "positive_area_queries": 36,
+    "positive_area_scenes": 12,
+    "query_passes": 3885,
+    "renderer_calls": 0,
+    "retained_queries": 3886,
+    "retained_scenes": 337,
+    "scene_passes": 336,
+    "unit_private_branch_controls_executed_here": false
+  },
+  "candidate_methods": {
+    "affine_closed_form": 2861,
+    "projective_closed_form": 963,
+    "affine_closed_form_then_chord_quadrature": 41,
+    "projective_closed_form_then_chord_quadrature": 21
+  },
+  "candidate_statuses": {
+    "resolved": 3885,
+    "work_limit": 1
+  },
+  "candidate_evaluations": 437304,
+  "candidate_panels": 17214,
+  "failed_records": [
+    {
+      "scene_id": "compressed-chart-e16-d0.0001",
+      "queries": [
+        0
+      ],
+      "candidate": {
+        "chart_margin": 7.629452710933187e-06,
+        "derivatives": [
+          null
+        ],
+        "estimated_errors": [
+          null
+        ],
+        "evaluations": 154388,
+        "method": "finite_chord_shape",
+        "panels": 4096,
+        "quadrature_certified": false,
+        "query_evaluations": [
+          154388
+        ],
+        "query_methods": [
+          "projective_closed_form_then_chord_quadrature"
+        ],
+        "query_panels": [
+          4096
+        ],
+        "reflected": false,
+        "statuses": [
+          "work_limit"
+        ]
+      }
+    }
+  ],
+  "plan_sha256": "d31b8ad03b5fe1af8b69dc47be5445b2ebf7034e951254814a57010f3b43de9f",
+  "supplement_sha256": "f0bc2095ba23cceb2ffb13d7f915051620cd2496f71a43ebfd0d2f951037e234",
+  "api_file_sha256": "e1e548b58c26d98f28475e647594f5273f34734f1284df27a06324cdf022a443",
+  "runner_sha256": "8cd752ccf8fef6391d51dc10761f073c3d3f0fb6c45deb977ea346553ee5dd74",
+  "artifacts": [
+    {
+      "path": "studies/results/finite-normal-derivative-v1.json.gz",
+      "bytes": 11515718,
+      "sha256": "c6f7928a0c04899db03c45ba3c4b729ca30a2e1caff6499ddb46460741ffbd8c",
+      "encoding": "gzip",
+      "decoded_bytes": 91924054,
+      "decoded_sha256": "d31fcb0436daee9e91bd21d78c1650901916a8c2c77bf6c7e351da61c04e113f"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/build-v1.log",
+      "bytes": 2080,
+      "sha256": "8523ef9bb6fcb1e1aa84a3770ebbd780ff718abac532c4a6c262c6002372cca4",
+      "encoding": "identity",
+      "decoded_bytes": 2080,
+      "decoded_sha256": "8523ef9bb6fcb1e1aa84a3770ebbd780ff718abac532c4a6c262c6002372cca4"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/canonical-preflight-freeze-v1.json",
+      "bytes": 5377,
+      "sha256": "08802f42732a951f907a061b48f74ea55cdfb6e2e8e611a26c94e8bc47d56765",
+      "encoding": "identity",
+      "decoded_bytes": 5377,
+      "decoded_sha256": "08802f42732a951f907a061b48f74ea55cdfb6e2e8e611a26c94e8bc47d56765"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/canonical-terminal-v1.json",
+      "bytes": 10068,
+      "sha256": "322b44814758ff10e6470f9c9a873130b3a1a7a65ed36d9dbdcb5898dc2e449d",
+      "encoding": "identity",
+      "decoded_bytes": 10068,
+      "decoded_sha256": "322b44814758ff10e6470f9c9a873130b3a1a7a65ed36d9dbdcb5898dc2e449d"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/canonical-v1.stderr.log",
+      "bytes": 11445,
+      "sha256": "f6fa471f03cd4d94bebeb6116a0cd561c1da1e13ba70cb0c669797f4292c1478",
+      "encoding": "identity",
+      "decoded_bytes": 11445,
+      "decoded_sha256": "f6fa471f03cd4d94bebeb6116a0cd561c1da1e13ba70cb0c669797f4292c1478"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/canonical-v1.stdout.log",
+      "bytes": 631,
+      "sha256": "074bc17e71acc8f6c662fcafbea8668cd92e47e6674e86e5c73753bb147620b6",
+      "encoding": "identity",
+      "decoded_bytes": 631,
+      "decoded_sha256": "074bc17e71acc8f6c662fcafbea8668cd92e47e6674e86e5c73753bb147620b6"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/determinant-posthoc-v1.json",
+      "bytes": 17807,
+      "sha256": "1511e02fc1d3e777ed8d860b602c45b34f9fa97969a3043bd7c39351e789728f",
+      "encoding": "identity",
+      "decoded_bytes": 17807,
+      "decoded_sha256": "1511e02fc1d3e777ed8d860b602c45b34f9fa97969a3043bd7c39351e789728f"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/determinant-posthoc-v1.py.txt",
+      "bytes": 6857,
+      "sha256": "440fb5f067b786ddaccc788eb81a462d15c07229aa39d79d824956386a14b79b",
+      "encoding": "identity",
+      "decoded_bytes": 6857,
+      "decoded_sha256": "440fb5f067b786ddaccc788eb81a462d15c07229aa39d79d824956386a14b79b"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/focused-preflight-freeze-v1.json",
+      "bytes": 854,
+      "sha256": "62ddc75e548dca0b76e56eee439e73463dfa2d913885c9c78cf1cc47f5954631",
+      "encoding": "identity",
+      "decoded_bytes": 854,
+      "decoded_sha256": "62ddc75e548dca0b76e56eee439e73463dfa2d913885c9c78cf1cc47f5954631"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/focused-tests-v1.xml",
+      "bytes": 14419,
+      "sha256": "66a0500c011b41263aecbd7bd74a509dbdf6ef1e5af21a1bb15aa3456b206cd8",
+      "encoding": "identity",
+      "decoded_bytes": 14419,
+      "decoded_sha256": "66a0500c011b41263aecbd7bd74a509dbdf6ef1e5af21a1bb15aa3456b206cd8"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/full-python-tests-v1.log",
+      "bytes": 1233,
+      "sha256": "703d6ff60814d3aa2bfea172779d3d055d2fa2412ef0ee65439b4b8b4e5643f4",
+      "encoding": "identity",
+      "decoded_bytes": 1233,
+      "decoded_sha256": "703d6ff60814d3aa2bfea172779d3d055d2fa2412ef0ee65439b4b8b4e5643f4"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/full-python-tests-v1.xml",
+      "bytes": 145685,
+      "sha256": "7e1ceea4dcdfa4fafd55d84368801ea19fad8a124a3835dcb425744d843432f4",
+      "encoding": "identity",
+      "decoded_bytes": 145685,
+      "decoded_sha256": "7e1ceea4dcdfa4fafd55d84368801ea19fad8a124a3835dcb425744d843432f4"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/independent-audit-provenance-v1.py.txt",
+      "bytes": 17204,
+      "sha256": "4cb0cc4d0c65907a4ff8a50f04879f8012202e1ac729ff185066b703db488b20",
+      "encoding": "identity",
+      "decoded_bytes": 17204,
+      "decoded_sha256": "4cb0cc4d0c65907a4ff8a50f04879f8012202e1ac729ff185066b703db488b20"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/independent-math-audit-v1.json",
+      "bytes": 42251,
+      "sha256": "51dcb308ce23625df166f5cc43c1eb3a31a66f5037eb9d2d4c45c3a146019e38",
+      "encoding": "identity",
+      "decoded_bytes": 42251,
+      "decoded_sha256": "51dcb308ce23625df166f5cc43c1eb3a31a66f5037eb9d2d4c45c3a146019e38"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/independent-math-audit-v1.py.txt",
+      "bytes": 17739,
+      "sha256": "2ce7845ee7e8e35b9e8136b500dda33aef2e0c4a87b1fb73286248f5d1673fff",
+      "encoding": "identity",
+      "decoded_bytes": 17739,
+      "decoded_sha256": "2ce7845ee7e8e35b9e8136b500dda33aef2e0c4a87b1fb73286248f5d1673fff"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/independent-saved-audit-v1.json",
+      "bytes": 5070,
+      "sha256": "652721b1a948f83b36e9ebc41dab9c899936a64e024081c3674363fd865d99a1",
+      "encoding": "identity",
+      "decoded_bytes": 5070,
+      "decoded_sha256": "652721b1a948f83b36e9ebc41dab9c899936a64e024081c3674363fd865d99a1"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/operator-source-v1.py.txt",
+      "bytes": 18226,
+      "sha256": "e1e548b58c26d98f28475e647594f5273f34734f1284df27a06324cdf022a443",
+      "encoding": "identity",
+      "decoded_bytes": 18226,
+      "decoded_sha256": "e1e548b58c26d98f28475e647594f5273f34734f1284df27a06324cdf022a443"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/original-independent-saved-audit-v1.json",
+      "bytes": 5070,
+      "sha256": "5d486f13926ef1fa3351862c01ea8444f251ddb855a9c914a9f43d98551bd7ff",
+      "encoding": "identity",
+      "decoded_bytes": 5070,
+      "decoded_sha256": "5d486f13926ef1fa3351862c01ea8444f251ddb855a9c914a9f43d98551bd7ff"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/runner-contracts-v1.json",
+      "bytes": 1454,
+      "sha256": "b653d859899f29d1f658418d0fa98359673b3aac82ff0db29efc47dc6e2916b1",
+      "encoding": "identity",
+      "decoded_bytes": 1454,
+      "decoded_sha256": "b653d859899f29d1f658418d0fa98359673b3aac82ff0db29efc47dc6e2916b1"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/runner-contracts-v1.py.txt",
+      "bytes": 6184,
+      "sha256": "49711f65b09db0cd2b97a85c669128cf4c6361adc1e60ba5022ed1531578dea9",
+      "encoding": "identity",
+      "decoded_bytes": 6184,
+      "decoded_sha256": "49711f65b09db0cd2b97a85c669128cf4c6361adc1e60ba5022ed1531578dea9"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/software-regression-v1.json.gz",
+      "bytes": 7269,
+      "sha256": "0151449e3c1009fc8e675e62ebda134a0dcf55aa493ebf187fd7dfa81ee540f3",
+      "encoding": "gzip",
+      "decoded_bytes": 26316,
+      "decoded_sha256": "90a1311f95a290f0e4b05c35038da2673599abfb8e72abfda1112eba35e0db83"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/ux-artifact-audit.py.txt",
+      "bytes": 2760,
+      "sha256": "eb6d5e7f92b398ecb893111d58c46c38cf97f533ae5898caa2c957601e5b73de",
+      "encoding": "identity",
+      "decoded_bytes": 2760,
+      "decoded_sha256": "eb6d5e7f92b398ecb893111d58c46c38cf97f533ae5898caa2c957601e5b73de"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/ux-artifact-receipt-v1.json",
+      "bytes": 4015,
+      "sha256": "18f4759680fbcf7182c51b13015ddba87c42f560a04b0af5dc9f854c08603daf",
+      "encoding": "identity",
+      "decoded_bytes": 4015,
+      "decoded_sha256": "18f4759680fbcf7182c51b13015ddba87c42f560a04b0af5dc9f854c08603daf"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/ux-audit-before-import-tidy-v2.py.txt",
+      "bytes": 24548,
+      "sha256": "a67273d38425e9380a783eca986e4b0dc326809e96657f152ac155c27a95076a",
+      "encoding": "identity",
+      "decoded_bytes": 24548,
+      "decoded_sha256": "a67273d38425e9380a783eca986e4b0dc326809e96657f152ac155c27a95076a"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/ux-audit-draft-v1.py.txt",
+      "bytes": 23400,
+      "sha256": "0bcfde92b4d8d43ebcdc0ddb15ebc0151c743a500a9d782e7c372ec1734a6fa6",
+      "encoding": "identity",
+      "decoded_bytes": 23400,
+      "decoded_sha256": "0bcfde92b4d8d43ebcdc0ddb15ebc0151c743a500a9d782e7c372ec1734a6fa6"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/ux-audit.py.txt",
+      "bytes": 24547,
+      "sha256": "afdb59f56be9907579b262d3d8dd629278300b20702ccab6b253893d7b7a88db",
+      "encoding": "identity",
+      "decoded_bytes": 24547,
+      "decoded_sha256": "afdb59f56be9907579b262d3d8dd629278300b20702ccab6b253893d7b7a88db"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/ux-receipt-final-v3.json",
+      "bytes": 3772,
+      "sha256": "eb148ffd51dfc766f783525a092e8ef439f9efe7a7b3eea571b89f09ad4ebc1b",
+      "encoding": "identity",
+      "decoded_bytes": 3772,
+      "decoded_sha256": "eb148ffd51dfc766f783525a092e8ef439f9efe7a7b3eea571b89f09ad4ebc1b"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/ux-receipt-v1.json",
+      "bytes": 4407,
+      "sha256": "9ee6a9c76492c33339e2f7b4f22009ee409af0f1f0c0bae33432f596cd842f20",
+      "encoding": "identity",
+      "decoded_bytes": 4407,
+      "decoded_sha256": "9ee6a9c76492c33339e2f7b4f22009ee409af0f1f0c0bae33432f596cd842f20"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-derivative-v1/ux-receipt-v2.json",
+      "bytes": 3772,
+      "sha256": "d9e06a70cde50ff7102686f7ae3417017b19ebdc4c10ccce2efdb8d8a8c3dcf4",
+      "encoding": "identity",
+      "decoded_bytes": 3772,
+      "decoded_sha256": "d9e06a70cde50ff7102686f7ae3417017b19ebdc4c10ccce2efdb8d8a8c3dcf4"
+    }
+  ],
+  "posthoc_determinant_diagnosis": {
+    "scope": "saved-H determinant algebra only, no model rerun",
+    "relative_lu_determinant_error": 4.988600542987674e-11,
+    "predicted_derivative_discrepancy": 1.7031876139869e-08,
+    "observed_discrepancy": 1.7004538221954135e-08,
+    "resolved_estimated_error_undercoverage": true,
+    "canonical_protocol_unchanged": true,
+    "canonical_protocol_passed": false
+  }
+}
