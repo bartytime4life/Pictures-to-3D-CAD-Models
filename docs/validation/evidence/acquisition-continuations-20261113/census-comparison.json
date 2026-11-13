@@ -1,0 +1,155 @@
+{
+  "format": "documentation-derived-two-report-census",
+  "inputs": {
+    "coupled": "a1394780cf73b99a321741cd9f56d0c36d55cd094587f7bb355b88df9a414bb6",
+    "events": "9773319dcfdf17473d07fc4aa948c8f4ba90696f801120015653900c0fab3159"
+  },
+  "all_24_population_status_target_outcomes_equal": true,
+  "rows": [
+    {
+      "case": "minor-smooth",
+      "population": "matched",
+      "status": "completed",
+      "all_targets": true
+    },
+    {
+      "case": "minor-staged",
+      "population": "matched",
+      "status": "completed",
+      "all_targets": true
+    },
+    {
+      "case": "minor-png",
+      "population": "matched",
+      "status": "completed",
+      "all_targets": true
+    },
+    {
+      "case": "middle-smooth",
+      "population": "matched",
+      "status": "completed",
+      "all_targets": true
+    },
+    {
+      "case": "middle-staged",
+      "population": "matched",
+      "status": "completed",
+      "all_targets": true
+    },
+    {
+      "case": "middle-png",
+      "population": "matched",
+      "status": "completed",
+      "all_targets": false
+    },
+    {
+      "case": "major-smooth",
+      "population": "matched",
+      "status": "completed",
+      "all_targets": true
+    },
+    {
+      "case": "major-staged",
+      "population": "matched",
+      "status": "completed",
+      "all_targets": true
+    },
+    {
+      "case": "major-png",
+      "population": "matched",
+      "status": "completed",
+      "all_targets": true
+    },
+    {
+      "case": "wrapped-major-smooth",
+      "population": "matched",
+      "status": "completed",
+      "all_targets": true
+    },
+    {
+      "case": "wrapped-major-staged",
+      "population": "matched",
+      "status": "completed",
+      "all_targets": true
+    },
+    {
+      "case": "wrapped-major-png",
+      "population": "matched",
+      "status": "completed",
+      "all_targets": true
+    },
+    {
+      "case": "zero-smooth",
+      "population": "adverse",
+      "status": "completed",
+      "all_targets": false
+    },
+    {
+      "case": "zero-png",
+      "population": "adverse",
+      "status": "completed",
+      "all_targets": false
+    },
+    {
+      "case": "low-staged",
+      "population": "adverse",
+      "status": "completed",
+      "all_targets": false
+    },
+    {
+      "case": "cropped-smooth",
+      "population": "adverse",
+      "status": "completed",
+      "all_targets": false
+    },
+    {
+      "case": "thin-png",
+      "population": "adverse",
+      "status": "completed",
+      "all_targets": false
+    },
+    {
+      "case": "almost-circle-smooth",
+      "population": "adverse",
+      "status": "completed",
+      "all_targets": false
+    },
+    {
+      "case": "wrong-optics-smooth",
+      "population": "adverse",
+      "status": "completed",
+      "all_targets": false
+    },
+    {
+      "case": "gradient-staged",
+      "population": "adverse",
+      "status": "completed",
+      "all_targets": false
+    },
+    {
+      "case": "singular-map-png",
+      "population": "adverse",
+      "status": "exception",
+      "all_targets": false
+    },
+    {
+      "case": "five-queries-smooth",
+      "population": "adverse",
+      "status": "completed",
+      "all_targets": false
+    },
+    {
+      "case": "coincident-smooth",
+      "population": "adverse",
+      "status": "completed",
+      "all_targets": true
+    },
+    {
+      "case": "budget-png",
+      "population": "adverse",
+      "status": "completed",
+      "all_targets": false
+    }
+  ],
+  "scope": "Compared saved report fields only; not an audit of full event ledgers, arrays, predictions or model accuracy."
+}

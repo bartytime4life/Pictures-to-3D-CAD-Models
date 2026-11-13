@@ -1,0 +1,137 @@
+{
+  "format": "finite-acquisition-recovery-source-events-separate-admission",
+  "version": 1,
+  "purpose": "Improve the unresolved source-quantized recovery case using residual-matched latent source-code events, preserving every original target and population.",
+  "previous_coupled_head": "b9fe285f7c634d050a735489aafcf161d1a98295",
+  "previous_coupled_result": {
+    "report": {
+      "path": ".local/verification/finite-acquisition-recovery-coupled-v1-first/report.json",
+      "sha256": "a1394780cf73b99a321741cd9f56d0c36d55cd094587f7bb355b88df9a414bb6",
+      "bytes": 112868
+    },
+    "matched_passes": 11,
+    "matched_total": 12,
+    "rows": 24,
+    "study_exit_code": 1,
+    "tests_passed": 548,
+    "subtests_passed": 9,
+    "complete_archive": {
+      "path": ".local/verification/finite-acquisition-recovery-coupled-v1-complete.zip",
+      "sha256": "8d2c8901f4f9d01e40ade32d25f4e926786cfa60a01cc23301df9e283eb41d40",
+      "bytes": 12725460,
+      "members": 115,
+      "all_decoded_member_hashes_and_sizes_match": true
+    },
+    "recorded_source": {
+      "sha256": "aea8500b86744585192c0a3461baa017d0f1c05c0ff6554748650c7e217fe98b",
+      "bytes": 406275,
+      "governing_files": 69
+    }
+  },
+  "retained_previous_failures": {
+    "original": "4/12 matched, complete24case protocol exit1, first tests404passed1failed.",
+    "predictor": "9/12 matched, complete24case protocol exit1;459 focused tests pass.",
+    "coupled": "11/12 matched, complete24case protocol exit1. Middle PNG unchanged after24 unaccepted coupled directions, fraction error0.003528725623290513>0.002 and conditional reserved residual0.06518173217773438>0.01. This is not proof of irreducible aliasing.",
+    "first_saved_audit": "v1 exit1,14 failed pre-cast area comparisons preserved.",
+    "paired_historical_audit": "6,595,622 implemented checks,0 inconsistencies,28 required UNVERIFIED comparisons, exit1; neither missing precision nor old failed protocols becomes a pass."
+  },
+  "strategy": {
+    "entrypoint": "backend.finite_acquisition_events.fit_acquisition_segment_events",
+    "initial_phase": "Call the exact existing coupled-v1 strategy under the original global caps. Retain its full result. Only safe, positive-cost PNG incumbents with known work and remaining global resources may enter event refinement. Smooth/staged/zero-cost/unsafe/exhausted/no-candidate cases explicitly pass through without extra numerical work.",
+    "source_snapshot": "Obtain actual incumbent optical_linear, encoded and decoded_linear source arrays from an explicitly reserved, charged literal acquisition evaluation. No truth, reference code or reserved-query array may enter this phase.",
+    "downstream_scores": "For each source cell j and available adjacent code k\u00b11, compute actual decoded float32 ordered-Rec709 level deltaD. Fixed float64 downstream Keys/post response B_j gives score ||W deltaD B_j||\u00b2\u22122 r^T W deltaD B_j using current TRAINING residual r. The score ranks proposals only: casts make it an approximation, not a literal derivative/cost or feasibility certificate. Build B in <=6-field acquisition_linear batches with identity optical kernel; charge every supplied field plus returned constant response. Keep bindings and complete fixed-operator reuse accounting.",
+    "source_optical_surrogate": "Use separately charged source-cell coverage/five sensitivities and fixed optical linear propagation. Seven normalized columns are [(b-a) Kopt Jcell, Kopt(1-c), Kopt c] times original parameter spans; never reprofile/project away brightness or force Kopt1 to1. Unknown derivatives stay unknown.",
+    "crossing_witness": "For an adjacent source code, bounded actual encoder probes seek two consecutive represented float32 optical values straddling that transition. This is an operational crossing witness, not a certified global inverse bin or first event along nonlinear geometry: global libm power monotonicity is not interval-certified. Saturation, nearest-even endpoints, invalid/nonfinite inputs and exhausted probe caps remain explicit.",
+    "trial_points": "For source optical gradient g in all7 normalized coordinates and target optical gap h, propose d=h*g/||g||\u00b2 when defined. Zero/fixed-span/unavailable gradients do not become invented directions. Clip to the original7D box and try overshoot factors1.001,1.1,1.5 with deterministic deduplication.",
+    "selection": "At most12 event iterations, bounded also by caller limit; at most12 strictly negative-score events per iteration, deterministic score/source-cell/target-code ordering. Accept the first STRICT decrease in actual literal PNG training cost; retain rejected and equal-cost alternatives, attempted prefixes and pending suffixes. Recompute event proposals only under charged work.",
+    "completion": "Original coordinate search polishes the retained incumbent; only best-linked literal local resolution plus sound global/protocol/source/work state can satisfy unchanged local-completion target. A source-code witness, surrogate direction, score or event-cycle limit is not stationarity, rank, uniqueness, globality or recovery proof."
+  },
+  "limits": {
+    "max_event_iterations": 12,
+    "top_events_per_iteration": 12,
+    "overshoot_factors": [
+      1.001,
+      1.1,
+      1.5
+    ],
+    "max_downstream_matrix_entries": 1048576,
+    "matrix_payload_bytes_at_cap": 8388608,
+    "max_linear_supplied_fields_per_batch": 6,
+    "max_scalar_encoder_probes_per_boundary": 40,
+    "stage_work_per_scalar_encoder_probe": 4,
+    "geometry_evaluation_units_per_scalar_encoder_probe": 0,
+    "work_accounting": "All initial/coupled/event coverage, literal, linear and downstream-response calls consume evaluation/cell/stage units under original total caps. Scalar encoder probes reserve FOUR stage-work units each, with a separately exposed probe count; this conservative extended engineering work metric is not a hardware timing/cycle equality. Reserve before calls; opaque failures consume declared reservation and withhold completion. Workspace/preflight refusal stays explicit; no hidden calls or ignored stage fields.",
+    "max_retained_literal_source_captures": 2,
+    "decoder_table_stage_work": 1024,
+    "decoder_table_geometry_evaluation_units": 0,
+    "source_capture_policy": "Pin current incumbent within two retained source snapshots through rejected literal trials. Do not silently reset objective/source LRUs or replay an uncharged acquisition.",
+    "decoder_table_policy": "One actual ordered float32 256-code grayscale decode table, conservatively charged4*256 stage units before construction; retain values/hash and failures. No geometry evaluation unit. Reuse only under fixed source/operator bindings."
+  },
+  "unchanged": {
+    "population": "All24 original rows:12 matched and12 adverse, no removal or reclassification.",
+    "targets": "Every original numeric geometry, dimension, sampled boundary, conditional residual, reference, rank and local-completion threshold.",
+    "observed_inputs": "Same full-field initializer, max4 observed-only seeds, operational bounds, level hints and declared seed clipping. Full-field initialization uses eventual reserved pixels; their residuals remain conditional.",
+    "sampling": "Same135 training/34 reserved matched split and declared adverse exceptions. No held-out residual or geometry truth may rank source-code events.",
+    "reference": "Same independent GL64/96 reference and values. Retain float64 pre-cast coverage as in coupled-v1; old captures stay immutable.",
+    "total_caps": {
+      "evaluations": 2048,
+      "cell_work": 1000000,
+      "stage_work": 100000000
+    },
+    "iterations": "Original per-seed/phase60 iteration allowance is not an aggregate iteration or wall-time bound.",
+    "truth_boundary": "Only mode/adverse control labels cross fit_observed; save complete fit before opening evaluation geometry/dimensions."
+  },
+  "freeze_policy": "Commit/hash ALL backend modules, ALL test_finite files, old/new plans/runners/reference/helpers and both audit admissions before first new import/test/model/reference/audit execution. Retain first outcomes. Later corrections require another separately admitted continuation.",
+  "failure_policy": "Exit1 unless all12 matched rows satisfy every original target/reference/provenance gate. Retain all24 rows, refusals/exceptions and complete multi-phase ledgers. Adverse execution is not recovery success.",
+  "qualification_limits": [
+    "No guaranteed convergence or completeness of latent-code events; source code patterns may be unidentifiable or unrealizable.",
+    "No guarantee that reaching zero training cost meets geometry targets; preserve ties and finite feasible-candidate limitations.",
+    "No physical camera/noise adequacy, global optimum, interactive latency, native tool or physical print claim."
+  ],
+  "prospective_controls": [
+    "All548 prior controls and9 subtests remain retained, alongside new independently authored event/threshold/math/protocol controls.",
+    "Source vs output quantization order, nearest-even/saturation float32 crossing witnesses, probe bounds and invalid/unknown handling.",
+    "Full7D sign/scales/A1/minimum-norm crossing and signed downstream score; literal rounding may reverse predicted improvement.",
+    "Shared global budgets, exact/opaque charges, source bindings, phase indexes, cache reuse, skips and completion withholding.",
+    "Complete24case first study and separately admitted saved-only audit of coupled-v1; no target relaxation."
+  ],
+  "original_plan": {
+    "path": "studies/finite-acquisition-recovery-v1.json",
+    "sha256": "737bb8badf15a6bd1438ece67b9ad03f96e65440989bbc8bc2110edc8a497ad0"
+  },
+  "original_runner": {
+    "path": "studies/verification/finite-acquisition-recovery-v1.py",
+    "sha256": "073cc432134c5258add3e9d3addd24fdcabead97451424c3303720f878d58d29"
+  },
+  "original_reference": {
+    "path": "studies/verification/finite-acquisition-recovery-reference-v1.py",
+    "sha256": "5d8f3ec4b0283a688338e3981288fc38214e99bf5af50dad07c33cba2777ab0d"
+  },
+  "previous_predictor_runner": {
+    "path": "studies/verification/finite-acquisition-recovery-predictor-v1.py",
+    "sha256": "4368ee287118b8c4553967750d8483f14db23b39364c6f513ab5a5454836548c"
+  },
+  "previous_predictor_module": {
+    "path": "backend/finite_acquisition_predictor.py",
+    "sha256": "871897e335d04a79319544cfa4ba84d19c579ea9e43bf98372baa94e92051f4a"
+  },
+  "previous_predictor_plan": {
+    "path": "studies/finite-acquisition-recovery-predictor-v1.json",
+    "sha256": "8533f5503798aef2c3eb275a97c88db91d82d6b3ba27327a0aee3d013f75580e"
+  },
+  "previous_coupled_plan": {
+    "path": "studies/finite-acquisition-recovery-coupled-v1.json",
+    "sha256": "df2abb75b64f86c31c8c267188bcd54096e143b2f81758a725ba698d6fbb5fda",
+    "bytes": 8604
+  },
+  "previous_coupled_runner": {
+    "path": "studies/verification/finite-acquisition-recovery-coupled-v1.py",
+    "sha256": "0b85e6dcb424e909c656eeab8799821a2dae8742024cc39eb27f1ac6cbcf115d",
+    "bytes": 8746
+  },
+  "previous_coupled_module": {
+    "path": "backend/finite_acquisition_coupled.py",
+    "sha256": "e299fe03879824c388e88ef2a490dc9019ecb5e966c92615342251e3b1a299a8",
+    "bytes": 44040
+  }
+}

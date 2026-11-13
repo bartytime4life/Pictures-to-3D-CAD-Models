@@ -1,17 +1,17 @@
 # Coupled proposals for rounded acquisition
 
-This page records an uncommitted local research strategy under authoring on
-base `e6e2c2`. Its [prospective admission draft](validation/evidence/acquisition-coupled-authoring-20261113/coupled-admission.json)
-and [source-file inventory](validation/evidence/acquisition-coupled-authoring-20261113/manifest.json)
-are documentation snapshots, not a completed execution freeze. The candidate
-module and runner are absent from the documented main runtime `6bb959c`.
-No new tests, model calls or study have executed for this strategy; no recovery
-qualification or automatic tracing feature is claimed. The preceding
-[smooth-proposal/literal-search experiment](finite-acquisition-recovery.md)
-retains its failed full protocols: 4/12 original matched passes and 9/12 after
-the separately frozen predictor. The three remaining PNG cases have positive
-training cost. Their local stopping and reported candidate ties do not establish
-that the misses are unavoidable quantization aliases.
+The first separately frozen coupled study at `b9fe285` reaches **11/12 matched
+passes**, retaining all 24 original cases and targets. Its complete protocol
+still exits 1: middle PNG misses fraction and conditional reserved-residual
+targets. The first software run passes 548 tests and nine subtests. See the
+[result, full census and evidence](validation/finite-acquisition-continuations.md)
+and [frozen admission](validation/evidence/acquisition-continuations-20261113/coupled-admission.json).
+
+This candidate remains local research outside the documented main runtime
+`20cc57c`, HTTP routes and workbench UI. Its unrounded mean is a proposal
+surrogate, not a derivative or convergence certificate for PNG acquisition.
+The preceding 4/12 original and 9/12 predictor protocols remain unchanged.
+The later [source-event method](finite-acquisition-events.md) also stays at 11/12.
 
 ## Encoding occurs before output sampling
 
@@ -25,7 +25,7 @@ cell coverage -> float32 coverage -> two-level source mix -> float32
 ```
 
 Staged mode bypasses sRGB8 encoding and decoding while retaining its float32
-storage stages. The proposed extra coupled refinement applies only to PNG.
+storage stages. The extra coupled refinement applies only to PNG.
 
 The transfer branches follow the [ICC sRGB definition](https://registry.color.org/rgb-registry/srgb).
 For the computed finite encoded scalar `t` before clipping, the final
@@ -132,14 +132,12 @@ can retain several geometries. A finite collection of such candidates is not
 an exhaustive feasible set, and current engineering arithmetic estimates do not
 certify excluded geometry boxes or dimensional uncertainty.
 
-The authored, unexecuted mathematical controls cover nearest-even endpoints,
-saturation, source/output ordering and an invented coordinate-flat sensor with an improving
-coupled ray. That toy illustrates a possible mechanism, not recovery of seven
-identifiable parameters or a prediction of the study's outcome. Before first
-execution, the complete governing source, tests and plans must be committed and
-hashed. The next full qualification must retain all original 24 cases and
-unchanged targets, including the three PNG misses, without claiming camera calibration, GUI/HTTP integration,
-or physical CAD/print accuracy.
+The executed mathematical controls include nearest-even endpoints, saturation,
+source/output ordering and an invented coordinate-flat sensor with an improving
+coupled ray. That toy illustrates a possible mechanism; it does not establish
+seven identifiable parameters. The complete source, tests and admission were
+committed and hashed before first execution. All original cases, targets and
+work caps remain in the [first result](validation/finite-acquisition-continuations.md).
 
-For local packaging, missing historical reference precision and the unexecuted
-paired auditor, see [saved recovery archives and audit scope](finite-acquisition-saved-audit.md).
+For complete local packaging, the corrected coupled audit and the historical
+precision unknowns, see [saved recovery archives and audit scope](finite-acquisition-saved-audit.md).

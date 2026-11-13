@@ -1,0 +1,18 @@
+{
+  "format": "source-event-complete-archive-readback",
+  "archive": {
+    "path": ".local/verification/finite-acquisition-recovery-events-v1-complete.zip",
+    "sha256": "5216d95624298618843dbd52c0f08880c5238d1ab5a78dd9bd95275a2a9f082d",
+    "bytes": 16706627,
+    "members": 115,
+    "all_decoded_member_hashes_and_sizes_match": true
+  },
+  "recorded_source": {
+    "sha256": "dd0217bf127fe740238bdb2f6c425bad692d2ba75000d3ce78256af6c5b2da5f",
+    "bytes": 463578,
+    "governing_files": 78
+  },
+  "report_sha256": "9773319dcfdf17473d07fc4aa948c8f4ba90696f801120015653900c0fab3159",
+  "terminal_receipt_sha256": "d16575aa4618a554aee54e9c300511138880ba5e238ca322da07ce325e034cf4",
+  "scientific_calls_in_packaging": 0
+}

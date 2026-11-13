@@ -1,0 +1,42 @@
+{
+  "format": "coupled-saved-audit-framing-first-terminal-receipt",
+  "recorded_at": "2026-11-13T20:42:11.901854+00:00",
+  "source_head": "8507525e29a3de833b4d3548a9c7fe0ecfa5ebcb",
+  "source_tree": "97eb2aa41493f6d305400ed08e81d7653609fb41",
+  "governing_inputs_verified_unchanged": 81,
+  "tests": {
+    "exit_code": 0,
+    "passed": 54,
+    "subtests_passed": 12,
+    "log": {
+      "path": ".local/verification/finite-acquisition-recovery-coupled-audit-v2-first-tests.log",
+      "sha256": "d77821633dfa2121275cc20a84dc93d4597cc99cad184bccfaf55db01e417869",
+      "bytes": 107
+    }
+  },
+  "audit": {
+    "exit_code": 0,
+    "output": {
+      "path": ".local/verification/finite-acquisition-recovery-coupled-audit-v2-first.json",
+      "sha256": "57609809d772a458291ee810a4e0f77cf5a83c3040bed94071055e4f4aca3fa5",
+      "bytes": 47428
+    },
+    "log": {
+      "path": ".local/verification/finite-acquisition-recovery-coupled-audit-v2-first.log",
+      "sha256": "57609809d772a458291ee810a4e0f77cf5a83c3040bed94071055e4f4aca3fa5",
+      "bytes": 47428
+    }
+  },
+  "previous_failed_audit_preserved": {
+    "path": ".local/verification/finite-acquisition-recovery-coupled-audit-v1-first.json",
+    "sha256": "dca5933274cafa5a748221b73424d3d5f58b0a6e82f95df1373011a7a8719517",
+    "bytes": 49954
+  },
+  "first_execution_handles": {
+    "path": ".local/verification/finite-acquisition-recovery-coupled-audit-v2-first-handles.json",
+    "sha256": "2a86b6121a66531cdac3abd5e4901b7d74e8eb5c41afe4b1e2ab83facd217124",
+    "bytes": 1433
+  },
+  "new_model_reference_optimizer_calls": 0,
+  "limits": "Saved consistency only, no physical/scientific qualification. Historical28 precision unknowns retained."
+}

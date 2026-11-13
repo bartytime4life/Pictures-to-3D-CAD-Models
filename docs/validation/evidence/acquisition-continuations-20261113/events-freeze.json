@@ -1,0 +1,181 @@
+{
+  "format": "source-event-recovery-first-execution-freeze",
+  "recorded_at": "2026-11-13T20:30:23.516755+00:00",
+  "head": "cd85ef937e3d3a49aace45217c902e484f3ac615",
+  "tree": "e067594cad63ecec30a6c264e7f046592f7f7bab",
+  "governing_inputs": {
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/app.py": "345c7dc8bbc7bfbe616eb2934d2a58cd0b4fa1216dbdaa5272ab3a36b06d96bc",
+    "backend/assistant.py": "45f05aa8d0738a1da0e3b5040a2c4df8a01a35e9a835e1c06fd47ee3e81758c5",
+    "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+    "backend/curve_envelope.py": "d37525b42c920a770b783e0c94ff97cf3d5214272d85dcdceae9d23eb184ca27",
+    "backend/drawing.py": "560f087e28d369a2e0f3b733197c18c5a7aa87c390fe56de7516caf9a08a5e6d",
+    "backend/edges.py": "96d3640e202c0d5eb830ed552bae9906235b0ef459476b0c91b3dc68fe75be51",
+    "backend/finite_acquisition.py": "c61b9def98132a10bbfe6df2bddbc50f9e9338eded0177a74dc25dff90220921",
+    "backend/finite_acquisition_coupled.py": "e299fe03879824c388e88ef2a490dc9019ecb5e966c92615342251e3b1a299a8",
+    "backend/finite_acquisition_events.py": "3e1f88517a8912afea4bc19e8ea513d48a178f5a5a408c032f69e996f11cdedc",
+    "backend/finite_acquisition_fit.py": "ff34013696ecd2cc8e82ff7492933de1bdda752805dec0b37da1d32a75b22575",
+    "backend/finite_acquisition_linear.py": "bae7b48f4bc6d950551d3f463f5d0dfc53d0d499ff0812547738fcf43154f703",
+    "backend/finite_acquisition_observations.py": "ac0556326b1b4e043bd1b04223db0c4cadc2f990fbd7258a64fa84a8460d4d23",
+    "backend/finite_acquisition_predictor.py": "871897e335d04a79319544cfa4ba84d19c579ea9e43bf98372baa94e92051f4a",
+    "backend/finite_affine.py": "d4eb540f6a654178fca41b4be416bd4ad6ebb6b3f645bc78b5383b18b8caa653",
+    "backend/finite_aperture.py": "75f29a04133ffd142144607a7c7153e12de159ba7c632e01fd46751fa14cd7b5",
+    "backend/finite_aperture_sensitivity.py": "d481acf746d92568dc317f9dbe9f4741ce863ee241fe84be91264e0ef97d0e51",
+    "backend/finite_centre_fit.py": "df8a057abefe983ee951c894a9ae44e0c6b0f472d3419578be505973ea3a8bfb",
+    "backend/finite_normal.py": "e1e548b58c26d98f28475e647594f5273f34734f1284df27a06324cdf022a443",
+    "backend/finite_observations.py": "09fa843f72b2fc265ba8d4a7111267bf10433eb4f3f2a0600a89cc7871cb3969",
+    "backend/finite_photometry.py": "41e1add0bcb4d226934a969d763f8dd95d9beba425d92c83c1627e3a9534abd3",
+    "backend/finite_shape.py": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+    "backend/fitting.py": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+    "backend/heic.py": "5e34870379991f8813bacfc4badc8fe7fcf5dbe8aa053156fa352456b208de33",
+    "backend/models.py": "21e7467766f4a086f52b3756f6b1fa8e4ec96a7b76cf0b4d1131c5f45709e6e1",
+    "backend/placement.py": "e1745597ca2930d1260659e9f2dc4405f2b7239beb0c12c45fa92b6d3f5c03df",
+    "backend/printing.py": "58d121ad45f0176b02094f3446dcd020c254ccd78860e5a269b8b6a8d6479915",
+    "backend/reference.py": "109ccac49f011e8411286ca2e3682caa201e578df39fee7a52425bb507f7d6e0",
+    "backend/scad.py": "d5cf18312ba10b7e3830d059952c3d078edc1e21813eb2fb03a4fd1ebaf2d534",
+    "backend/shadow.py": "5b156e36aaa3d4592d658875d22241853dd82682c4a691c610a514af07682dbf",
+    "backend/sheet.py": "9735ea176217c273fa63d4e7f412210089d7112fb415d9b921322525aedb950f",
+    "backend/slicer_handoff.py": "774e78fa93dacc348c204d89a0ec4192a01701fb3fa3304ee09960e816101a50",
+    "backend/slicers.py": "03442055d64c37d46e5806bafdd0bd497b54dacf78bc409addf1ff8400c25bb9",
+    "backend/three_mf.py": "435afd61c90bb21c305876f681f845a3bfb193a64fa96589e649fb40fd821cf1",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "backend/tracing.py": "b822716050b285152bcbefe07a0b7da1e02716ecb5d990cbf29af86598a14d2e",
+    "backend/worker.py": "9c869ffae551485b473aeb54ddc9a0116e8c8df22f92f2c08e2f3e97f24ca846",
+    "pyproject.toml": "89db6bd352114ad6ed7c979c070e66d47551ef7cca7062778f832bb8934507ab",
+    "studies/finite-acquisition-recovery-audit-v2.json": "dd51104ab08d5ff674b732c3f784009caae545a774f36d8046c529c2e28c5d99",
+    "studies/finite-acquisition-recovery-coupled-audit-v1.json": "8b23aed0eb7886bd39538c28377b948bd93dd8d654dc85bd6357a04841842943",
+    "studies/finite-acquisition-recovery-coupled-v1.json": "df2abb75b64f86c31c8c267188bcd54096e143b2f81758a725ba698d6fbb5fda",
+    "studies/finite-acquisition-recovery-events-v1.json": "fe09dd90df39094885d8f890db579d2cc9da59d8c8f5ae60f2f7d9b05b42567f",
+    "studies/finite-acquisition-recovery-predictor-v1.json": "8533f5503798aef2c3eb275a97c88db91d82d6b3ba27327a0aee3d013f75580e",
+    "studies/finite-acquisition-recovery-v1.json": "737bb8badf15a6bd1438ece67b9ad03f96e65440989bbc8bc2110edc8a497ad0",
+    "studies/verification/finite-acquisition-recovery-audit-v1.py": "749cb6b9a158b81891cb58109b114b2a18bf4aca1933c8268beca2bfa00a0373",
+    "studies/verification/finite-acquisition-recovery-audit-v2.py": "8fcc982c2e14bdbb8cf343c4703cb2d4c61b800d4eb858ab147bd44dc7952b04",
+    "studies/verification/finite-acquisition-recovery-coupled-audit-v1.py": "8dfd4bfdda5005f7caef29d3ef5eabe25d3fabc592402a8b2f27723e4e186cd4",
+    "studies/verification/finite-acquisition-recovery-coupled-v1.py": "0b85e6dcb424e909c656eeab8799821a2dae8742024cc39eb27f1ac6cbcf115d",
+    "studies/verification/finite-acquisition-recovery-events-v1.py": "9dc3734db777b7be901772fe419802869905adba7573b8b116cf3967dcaf1d13",
+    "studies/verification/finite-acquisition-recovery-predictor-v1.py": "4368ee287118b8c4553967750d8483f14db23b39364c6f513ab5a5454836548c",
+    "studies/verification/finite-acquisition-recovery-reference-v1.py": "5d8f3ec4b0283a688338e3981288fc38214e99bf5af50dad07c33cba2777ab0d",
+    "studies/verification/finite-acquisition-recovery-v1.py": "073cc432134c5258add3e9d3addd24fdcabead97451424c3303720f878d58d29",
+    "studies/verification/finite-cell-sensitivity-v1.py": "d94b930df57d2b9858631bfa8164c9618f7ff8b45d25c584f7808fea0226a19a",
+    "tests/test_finite_acquisition.py": "cf605a5cb94edd16bd0572afd15a83671ec61b8f40a263fcbe3ae9be8e46d475",
+    "tests/test_finite_acquisition_continuation.py": "4e5731c0fd8e2c927ccd6eb5999acdfdc794212a4f14fad32aa4e7e001590090",
+    "tests/test_finite_acquisition_coupled.py": "07efdf4b6b4dd62dd3c2496afe56f58ae4fd30e4712a8fdc4e39136347fcf8d5",
+    "tests/test_finite_acquisition_coupled_math.py": "8b68efdfc0c5843738f070738d27c56c13d5451b63f6a27ac122ba6e96a12815",
+    "tests/test_finite_acquisition_coupled_protocol.py": "f15201495ddd7b885100eed6a7dfa3fa0cf6264b88bb0c3e23d67171ca45580c",
+    "tests/test_finite_acquisition_coupled_saved_audit.py": "18d96bfebcddf12fdb45718064ad82415f9b377c0af53c57a7ee0168ea4ff9b9",
+    "tests/test_finite_acquisition_events.py": "8d93674f2ebb974182fd9183af534d57097b55f1d027c554925129b7332e2269",
+    "tests/test_finite_acquisition_events_math.py": "dd83b4280d6425c332798bb95f0fafeb301e66d1f2ef5126927d6a39f4b28932",
+    "tests/test_finite_acquisition_events_protocol.py": "3bb597fefc5ffa66fed189c5c8ddb4da2eab25b11eca46de3e62fbadc3c9f01a",
+    "tests/test_finite_acquisition_fit.py": "e4e10b81e0a48eb293a6cab281eb2eb11d6adbda17f6dbce74d20513d4916821",
+    "tests/test_finite_acquisition_identifiability.py": "38d53e0c763fc0f2d39fbb5fd360a7cf418033edc185e6e906641a0c9a16402f",
+    "tests/test_finite_acquisition_linear.py": "a6875c0c571c3f67b5e291827f860335ffffd894844afaab05901947ff2f63e9",
+    "tests/test_finite_acquisition_observations.py": "32fcd3b28b2e4acae44be6d53a3083b10fa965f454c8a4de087d0b65930853f4",
+    "tests/test_finite_acquisition_predictor.py": "eb825a26f1aa13fe65cabfd7e5186f9c9e42859884490417e3cafb84cb5ca981",
+    "tests/test_finite_acquisition_saved_audit.py": "61a835034b418e5baeba3908b85ae036ff2751456c33f87af0a1f481391270aa",
+    "tests/test_finite_acquisition_sensitivity.py": "a12fa1864a409bc8c125f44ce31bdbed3e239b73eea7ee251dad536a123a3d76",
+    "tests/test_finite_acquisition_workspace.py": "2d2ba6e12a7d43f92402b8e20229fa64f607c2f77ce283476e708617b610fd3e",
+    "tests/test_finite_affine.py": "58661c00edc78de9f316a61998c3c74f7c562be3e0bf32919edb994eb7cac30e",
+    "tests/test_finite_aperture.py": "e2ec4013126986a80c0e1fea2b6546d3e8bd62dbfb73462cf60f1f8ef5548766",
+    "tests/test_finite_aperture_sensitivity.py": "3f67748549e8e39475e3b53e2395a966ed6700709a241d0ac080d2704f037bd9",
+    "tests/test_finite_centre_fit.py": "f94255dc8aab9c3db8196c3379ee2f025a1e7d83fca12a086084152c7eddceb4",
+    "tests/test_finite_normal.py": "2e3991fcae912266d1a504d7333b22292b65c712faa39ba26ca47b8ca8d83416",
+    "tests/test_finite_observations.py": "fd0a2196b1a93e37128334088e5faa6989c0d2ad53d49cd5945db7b34d7680ca",
+    "tests/test_finite_photometry.py": "693e6b67d3cd1e3cf1a157fe3d4ceae656c21b3510f8c7d0280092b958dd3b5d",
+    "uv.lock": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f"
+  },
+  "new_files": {
+    "backend/finite_acquisition_events.py": {
+      "sha256": "3e1f88517a8912afea4bc19e8ea513d48a178f5a5a408c032f69e996f11cdedc",
+      "bytes": 57965
+    },
+    "docs/finite-acquisition-events.md": {
+      "sha256": "b2d17316805c6063b6184a467fe1fac30d16b8f46d7f36bb0808528ea279977d",
+      "bytes": 8534
+    },
+    "docs/validation/finite-acquisition-coupled.md": {
+      "sha256": "f42922bf8a196081d618e6c98ca9cf95d2742dd26cb5c2c936139cff0e2346d8",
+      "bytes": 6818
+    },
+    "studies/finite-acquisition-recovery-coupled-audit-v1.json": {
+      "sha256": "8b23aed0eb7886bd39538c28377b948bd93dd8d654dc85bd6357a04841842943",
+      "bytes": 6538
+    },
+    "studies/finite-acquisition-recovery-events-v1.json": {
+      "sha256": "fe09dd90df39094885d8f890db579d2cc9da59d8c8f5ae60f2f7d9b05b42567f",
+      "bytes": 11237
+    },
+    "studies/fixtures/finite-acquisition-recovery-coupled-v1/README.md": {
+      "sha256": "01877516ce7901db13734d09907e4065b6823fcb64c1ec2b35f97d6a8e4de998",
+      "bytes": 3669
+    },
+    "studies/fixtures/finite-acquisition-recovery-coupled-v1/complete-coupled.zip": {
+      "sha256": "8d2c8901f4f9d01e40ade32d25f4e926786cfa60a01cc23301df9e283eb41d40",
+      "bytes": 12725460
+    },
+    "studies/fixtures/finite-acquisition-recovery-coupled-v1/first-terminal-receipt.json": {
+      "sha256": "8d6cc72a133f84f7a91b2a9e4ee546f06a073122fce7ebabf023c5289e6c19a3",
+      "bytes": 8886
+    },
+    "studies/fixtures/finite-acquisition-recovery-coupled-v1/first-tests.log": {
+      "sha256": "e0dc033df5a4b2c2b81e6a6779a2281820bd3cf89c63a3015c10a1bf76d39480",
+      "bytes": 671
+    },
+    "studies/fixtures/finite-acquisition-recovery-coupled-v1/manifest.json": {
+      "sha256": "a908de837fe4a0dc2a82b75a72c3a8793b03c496be6876f3643dfad3f8f27f83",
+      "bytes": 1118
+    },
+    "studies/fixtures/finite-acquisition-recovery-coupled-v1/paired-historical-audit.json": {
+      "sha256": "5fb643e9f29ef6a20976055177d426bcc09533a9dd9b830e9d92c4b654839a5c",
+      "bytes": 67815
+    },
+    "studies/fixtures/finite-acquisition-recovery-coupled-v1/recorded-source.zip": {
+      "sha256": "aea8500b86744585192c0a3461baa017d0f1c05c0ff6554748650c7e217fe98b",
+      "bytes": 406275
+    },
+    "studies/results/finite-acquisition-recovery-coupled-v1-summary.json": {
+      "sha256": "f57da7e934c9bb6377c86b6529e402faad57479e6d2dbea72683c6e5a0f63cf0",
+      "bytes": 24352
+    },
+    "studies/verification/finite-acquisition-recovery-coupled-audit-v1.py": {
+      "sha256": "8dfd4bfdda5005f7caef29d3ef5eabe25d3fabc592402a8b2f27723e4e186cd4",
+      "bytes": 65164
+    },
+    "studies/verification/finite-acquisition-recovery-events-v1.py": {
+      "sha256": "9dc3734db777b7be901772fe419802869905adba7573b8b116cf3967dcaf1d13",
+      "bytes": 9156
+    },
+    "tests/test_finite_acquisition_coupled_saved_audit.py": {
+      "sha256": "18d96bfebcddf12fdb45718064ad82415f9b377c0af53c57a7ee0168ea4ff9b9",
+      "bytes": 28483
+    },
+    "tests/test_finite_acquisition_events.py": {
+      "sha256": "8d93674f2ebb974182fd9183af534d57097b55f1d027c554925129b7332e2269",
+      "bytes": 18159
+    },
+    "tests/test_finite_acquisition_events_math.py": {
+      "sha256": "dd83b4280d6425c332798bb95f0fafeb301e66d1f2ef5126927d6a39f4b28932",
+      "bytes": 10689
+    },
+    "tests/test_finite_acquisition_events_protocol.py": {
+      "sha256": "3bb597fefc5ffa66fed189c5c8ddb4da2eab25b11eca46de3e62fbadc3c9f01a",
+      "bytes": 2638
+    }
+  },
+  "previous69_governing_files_unchanged": true,
+  "held_agent_hashes_verified": {
+    "backend/finite_acquisition_events.py": "3e1f88517a8912afea4bc19e8ea513d48a178f5a5a408c032f69e996f11cdedc",
+    "tests/test_finite_acquisition_events.py": "8d93674f2ebb974182fd9183af534d57097b55f1d027c554925129b7332e2269",
+    "tests/test_finite_acquisition_events_math.py": "dd83b4280d6425c332798bb95f0fafeb301e66d1f2ef5126927d6a39f4b28932",
+    "docs/finite-acquisition-events.md": "b2d17316805c6063b6184a467fe1fac30d16b8f46d7f36bb0808528ea279977d",
+    "studies/verification/finite-acquisition-recovery-coupled-audit-v1.py": "8dfd4bfdda5005f7caef29d3ef5eabe25d3fabc592402a8b2f27723e4e186cd4",
+    "tests/test_finite_acquisition_coupled_saved_audit.py": "18d96bfebcddf12fdb45718064ad82415f9b377c0af53c57a7ee0168ea4ff9b9"
+  },
+  "scientific_calls_or_test_execution_before_freeze": false,
+  "previous_tests": {
+    "passed": 548,
+    "subtests_passed": 9
+  },
+  "scientific_target": "All12 matched rows pass every original target; all24 original cases preserved. No success defined by partial pass count.",
+  "scope": "Source-event study plus separately admitted saved-only audit of coupled-v1. Old coupled11/12 failed study and paired historical28 unknowns remain immutable.",
+  "first_outcome_policy": "Retain every first output and exit; later corrections require a separate admission."
+}

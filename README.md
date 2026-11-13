@@ -135,17 +135,18 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 For the reviewed source revision and available research APIs, read
 [source scope and status](docs/project-status.md) and the
-[current documentation review](docs/validation/documentation-coupled-state.md).
+[current documentation review](docs/validation/documentation-executed-recovery.md).
 Main includes the source-cell mean, five unrounded area sensitivities and
 separate signed linear propagation as developer APIs. Five-parameter recovery
 with unknown brightness is absent from this main-based runtime. A
 [separate local research prototype](docs/finite-acquisition-recovery.md) records
-4/12 matched passes in its original study and 9/12 with a smooth proposal before
-literal rounded fitting; both complete protocols fail. Its 459 focused tests
-do not establish automatic tracing, camera accuracy or physical acceptance. The
-[new coupled proposal](docs/finite-acquisition-coupled.md) and
-[paired-audit plan](docs/finite-acquisition-saved-audit.md) remain unexecuted;
-local archive integrity checks do not establish recovery. The
+4/12 matched passes originally, 9/12 with a smooth proposal, then **11/12**
+with [coupled search](docs/finite-acquisition-coupled.md). A later
+[source-event strategy](docs/finite-acquisition-events.md) stays at 11/12.
+All four complete 24-case protocols fail. The
+[results and remaining limits](docs/validation/finite-acquisition-continuations.md)
+keep software tests and [saved-record audits](docs/finite-acquisition-saved-audit.md)
+separate from camera accuracy and physical acceptance. The
 [preceding documentation review](docs/validation/documentation-mean-state.md),
 [acquisition-evidence review](docs/validation/documentation-acquisition-state.md)
 and [PR #95 review](docs/validation/documentation-pr95-state.md) retain their

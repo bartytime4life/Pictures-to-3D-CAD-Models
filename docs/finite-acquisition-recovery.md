@@ -1,7 +1,7 @@
 # Acquisition-aware geometry recovery
 
 This page records a separately frozen local research candidate, not an API
-installed or merged into the documented main revision `6bb959c`. The candidate
+installed or merged into the documented main revision `20cc57c`. The candidate
 source is retained locally; this documentation change does not publish its
 runtime, full raw captures or candidate ledgers. See the
 [result, source bindings and audit limits](validation/finite-acquisition-recovery.md).
@@ -26,11 +26,14 @@ scientific protocol. The failed first result remains evidence for that version.
 The original saved-data auditor also exits **1**, with 14 pre-cast area-order
 deltas not reconstructible from rounded saved arrays; it is not an all-green audit.
 
-A [new coupled proposal](finite-acquisition-coupled.md) and
-[paired saved-data auditor](finite-acquisition-saved-audit.md) are now authored
-locally but unexecuted. They do not change these completed results. Both complete
-local archives have passed member hash/size readback; this documentation still
-publishes extracts and plans rather than the candidate runtime or full ZIPs.
+The later [coupled search](finite-acquisition-coupled.md) reaches **11/12**
+matched target passes; the [source-event continuation](finite-acquisition-events.md)
+stays at **11/12**. Both complete 24-case protocols still exit 1. Their first
+focused suites pass 548 tests/nine subtests and 653 tests/21 subtests, respectively.
+The [completed results](validation/finite-acquisition-continuations.md) and
+[saved-only audits](finite-acquisition-saved-audit.md) retain the remaining PNG
+miss, first failures and 28 historical precision unknowns. Candidate code and
+complete local ZIPs remain separate from this main runtime and workbench UI.
 
 ## Model and brightness elimination
 

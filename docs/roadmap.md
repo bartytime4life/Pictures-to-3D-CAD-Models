@@ -77,12 +77,14 @@ area-delta checks.
 Neither prototype has a GUI/HTTP mode. Supplied-stage agreement does not qualify
 an unknown camera, current-main shadow fitting or automatic correction.
 
-The [coupled seven-parameter proposal](finite-acquisition-coupled.md) and
-[paired saved-data auditor](finite-acquisition-saved-audit.md) are newer local
-authoring work, with no executed tests, study or audit yet. Their plans preserve
-the original population, targets and global work caps. Complete local archive
-member checks establish packaging integrity only; neither candidate is added
-to this main runtime or the workbench interface.
+The later [coupled search](finite-acquisition-coupled.md) reaches **11/12**
+matched target passes; the [source-event continuation](finite-acquisition-events.md)
+stays at **11/12**. Both complete 24-case protocols still exit 1. Their first
+focused suites pass 548 tests/nine subtests and 653 tests/21 subtests, respectively.
+The [completed results](validation/finite-acquisition-continuations.md) and
+[saved-only audits](finite-acquisition-saved-audit.md) retain the remaining PNG
+miss, first failures and 28 historical precision unknowns. Candidate code and
+complete local ZIPs remain separate from this main runtime and workbench UI.
 
 The [engineering model and verification plan](engineering-model.md) defines the 2.5D scope, camera-model assumptions, dimension equations and evidence needed through prototype qualification. The independent source-height check optionally compares a user-bounded measurement with a user-defined allowance; it reports within, outside or inconclusive without assigning a physical accuracy or confidence level.
 

@@ -1,0 +1,18 @@
+{
+  "format": "coupled-complete-archive-readback",
+  "archive": {
+    "path": ".local/verification/finite-acquisition-recovery-coupled-v1-complete.zip",
+    "sha256": "8d2c8901f4f9d01e40ade32d25f4e926786cfa60a01cc23301df9e283eb41d40",
+    "bytes": 12725460,
+    "members": 115,
+    "all_decoded_member_hashes_and_sizes_match": true
+  },
+  "recorded_source": {
+    "sha256": "aea8500b86744585192c0a3461baa017d0f1c05c0ff6554748650c7e217fe98b",
+    "bytes": 406275,
+    "governing_files": 69
+  },
+  "report_sha256": "a1394780cf73b99a321741cd9f56d0c36d55cd094587f7bb355b88df9a414bb6",
+  "terminal_receipt_sha256": "8d6cc72a133f84f7a91b2a9e4ee546f06a073122fce7ebabf023c5289e6c19a3",
+  "scientific_calls_in_packaging": 0
+}

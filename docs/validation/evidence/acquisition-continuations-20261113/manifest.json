@@ -1,0 +1,159 @@
+{
+  "format": "acquisition-continuations-documentation-evidence",
+  "recorded_at": "2026-11-13T20:44:45.900719+00:00",
+  "documentation_base": "20cc57ced925097d7b0a60d13415423b200af75c",
+  "research_head": "8507525e29a3de833b4d3548a9c7fe0ecfa5ebcb",
+  "research_tree": "97eb2aa41493f6d305400ed08e81d7653609fb41",
+  "governing_files_verified_unchanged": 81,
+  "files": {
+    "coupled-report.json": {
+      "source": ".local/verification/finite-acquisition-recovery-coupled-v1-first/report.json",
+      "sha256": "a1394780cf73b99a321741cd9f56d0c36d55cd094587f7bb355b88df9a414bb6",
+      "bytes": 112868
+    },
+    "events-report.json": {
+      "source": ".local/verification/finite-acquisition-recovery-events-v1-first/report.json",
+      "sha256": "9773319dcfdf17473d07fc4aa948c8f4ba90696f801120015653900c0fab3159",
+      "bytes": 117842
+    },
+    "coupled-admission.json": {
+      "source": "studies/finite-acquisition-recovery-coupled-v1.json",
+      "sha256": "df2abb75b64f86c31c8c267188bcd54096e143b2f81758a725ba698d6fbb5fda",
+      "bytes": 8604
+    },
+    "events-admission.json": {
+      "source": "studies/finite-acquisition-recovery-events-v1.json",
+      "sha256": "fe09dd90df39094885d8f890db579d2cc9da59d8c8f5ae60f2f7d9b05b42567f",
+      "bytes": 11237
+    },
+    "audit-correction-admission.json": {
+      "source": "studies/finite-acquisition-recovery-coupled-audit-v2.json",
+      "sha256": "6a2b016e0996a939f8531b95faa7d1efe3960db51f62e96809d6de69a968ae10",
+      "bytes": 6524
+    },
+    "coupled-freeze.json": {
+      "source": ".local/verification/finite-acquisition-recovery-coupled-v1-freeze.json",
+      "sha256": "5fb223d911dfb5e39142f08ff72fcc8321186e2345d94e40fd06244f7bd905fe",
+      "bytes": 11427
+    },
+    "events-freeze.json": {
+      "source": ".local/verification/finite-acquisition-recovery-events-v1-freeze.json",
+      "sha256": "acfdcce5bd7e783d61acec1d74aabad4e4bea41cac8d40bf7bf58357a1c8bd10",
+      "bytes": 13712
+    },
+    "audit-correction-freeze.json": {
+      "source": ".local/verification/finite-acquisition-recovery-coupled-audit-v2-freeze.json",
+      "sha256": "6af908b20a773cc976d860648c6d773932f8f3e76d7ecba5dbda95fad40b00ed",
+      "bytes": 10269
+    },
+    "coupled-terminal.json": {
+      "source": ".local/verification/finite-acquisition-recovery-coupled-v1-first-terminal-receipt.json",
+      "sha256": "8d6cc72a133f84f7a91b2a9e4ee546f06a073122fce7ebabf023c5289e6c19a3",
+      "bytes": 8886
+    },
+    "events-terminal.json": {
+      "source": ".local/verification/finite-acquisition-recovery-events-v1-first-terminal-receipt.json",
+      "sha256": "d16575aa4618a554aee54e9c300511138880ba5e238ca322da07ce325e034cf4",
+      "bytes": 10188
+    },
+    "audit-correction-terminal.json": {
+      "source": ".local/verification/finite-acquisition-recovery-coupled-audit-v2-first-terminal-receipt.json",
+      "sha256": "f536e4d87e8d80b40d13241552f6c1daa06111f1d56f916057a931b363db82c9",
+      "bytes": 1701
+    },
+    "historical-paired-audit.json": {
+      "source": ".local/verification/finite-acquisition-recovery-paired-v2-first.json",
+      "sha256": "5fb643e9f29ef6a20976055177d426bcc09533a9dd9b830e9d92c4b654839a5c",
+      "bytes": 67815
+    },
+    "coupled-audit-first-failure.json": {
+      "source": ".local/verification/finite-acquisition-recovery-coupled-audit-v1-first.json",
+      "sha256": "dca5933274cafa5a748221b73424d3d5f58b0a6e82f95df1373011a7a8719517",
+      "bytes": 49954
+    },
+    "coupled-audit-corrected.json": {
+      "source": ".local/verification/finite-acquisition-recovery-coupled-audit-v2-first.json",
+      "sha256": "57609809d772a458291ee810a4e0f77cf5a83c3040bed94071055e4f4aca3fa5",
+      "bytes": 47428
+    },
+    "coupled-archive.json": {
+      "source": ".local/verification/finite-acquisition-recovery-coupled-v1-complete-archive.json",
+      "sha256": "60f13bbf739ac301330b788cb25247a28ac30b04717a4e44f9d4e36cdad24571",
+      "bytes": 717
+    },
+    "events-archive.json": {
+      "source": ".local/verification/finite-acquisition-recovery-events-v1-complete-archive.json",
+      "sha256": "b1837454c2eca054db3e4fce4932868cc3435e0e950f2c735a2456e2ac7d1a96",
+      "bytes": 721
+    },
+    "coupled-first-tests.log": {
+      "source": ".local/verification/finite-acquisition-recovery-coupled-v1-first-tests.log",
+      "sha256": "e0dc033df5a4b2c2b81e6a6779a2281820bd3cf89c63a3015c10a1bf76d39480",
+      "bytes": 671
+    },
+    "events-first-tests.log": {
+      "source": ".local/verification/finite-acquisition-recovery-events-v1-first-tests.log",
+      "sha256": "4e393efeb5f329f640a540ba12884c913545fe61575e15100e19236d6d695454",
+      "bytes": 820
+    },
+    "audit-correction-first-tests.log": {
+      "source": ".local/verification/finite-acquisition-recovery-coupled-audit-v2-first-tests.log",
+      "sha256": "d77821633dfa2121275cc20a84dc93d4597cc99cad184bccfaf55db01e417869",
+      "bytes": 107
+    },
+    "coupled-read-only-ledger-review.json": {
+      "source": ".local/verification/acquisition-coupled-ai/saved-ledger-review-v1.json",
+      "sha256": "1f0ff25fb5dc6ec79266ea3937ea1c4bbc4e9622570348a4c80c44ffddd3d0a6",
+      "bytes": 19555
+    }
+  },
+  "scope": "Verbatim reports, admissions, freezes, first receipts/logs and archive metadata. This publication does not include candidate runtime, saved auditor source, full ledgers/arrays or complete ZIPs. Paths within copied records refer to the separate local research checkout.",
+  "protocols": [
+    {
+      "source": "7ec6803",
+      "matched_passes": 4,
+      "matched_total": 12,
+      "rows": 24,
+      "exit_code": 1
+    },
+    {
+      "source": "e6e2c2",
+      "matched_passes": 9,
+      "matched_total": 12,
+      "rows": 24,
+      "exit_code": 1
+    },
+    {
+      "source": "b9fe285",
+      "matched_passes": 11,
+      "matched_total": 12,
+      "rows": 24,
+      "exit_code": 1
+    },
+    {
+      "source": "cd85ef9",
+      "matched_passes": 11,
+      "matched_total": 12,
+      "rows": 24,
+      "exit_code": 1
+    }
+  ],
+  "new_scientific_execution_in_documentation_pass": "Only the already frozen saved-only audit correction and its controls; no model, optimizer or reference-generator run.",
+  "derived_files": {
+    "census-comparison.json": {
+      "sha256": "1a142f5d2cdebf370ccf511ffece5ef5a98ccaf8ca2c2ea57e4f7f926531ea16",
+      "bytes": 3585,
+      "method": "Read both copied reports and compare all24 ordered case names, population, completion/exception status and all-target outcome. No scientific model imports."
+    },
+    "middle-png-event-extract.json": {
+      "source": ".local/verification/finite-acquisition-recovery-events-v1-first/middle-png/fit.json",
+      "source_binding": {
+        "sha256": "25353d6443fcee95f713cc50128d37f38ea39bff85faa26d2e7737f314723059",
+        "bytes": 48947563
+      },
+      "sha256": "e3c447bf33677187ab0d94d185ad32205c55b3823bc2bb86e58633916125eeb2",
+      "bytes": 35322,
+      "method": "Select exact saved best/work/iteration JSON fields and four source Jacobian rows; verify full source fit hash/size against copied report before reading. No scientific imports."
+    }
+  }
+}

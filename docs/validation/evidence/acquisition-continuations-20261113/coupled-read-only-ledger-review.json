@@ -1,0 +1,593 @@
+{
+  "kind": "saved_json_ledger_inspection_not_qualified_independent_auditor",
+  "first_inspection_outcome": {
+    "read_only_saved_json_checks": 28396,
+    "issues": [],
+    "completed_records": 24,
+    "fit_count": 17,
+    "initial_equal_to_old_predictor": 17,
+    "ledger_entries": 4536,
+    "surrogates": 42
+  },
+  "scope": [
+    "saved complete row and fit JSON",
+    "represented literal candidate/ledger linkage",
+    "phase and global charged-work totals and caps",
+    "surrogate status/iteration linkage and strict accepted cost decrease",
+    "selected phase index space",
+    "retained equal-cost alternatives",
+    "source-before/after and current file hashes",
+    "embedded initial result equality to previous predictor run"
+  ],
+  "exclusions": [
+    "no admitted control matrix for this inspection script",
+    "no governing scientific imports, model, reference, optimizer or test calls",
+    "no independent model/Jacobian/capture correctness proof",
+    "no proof of optimum or physical geometry",
+    "no full target or full provenance recomputation",
+    "no archive member or raw NPZ audit",
+    "no semantic equivalence proof for all generic API inputs"
+  ],
+  "frozen_first_study_outcome": {
+    "format": "finite-acquisition-recovery-coupled-complete-report",
+    "matched_passes": 11,
+    "adverse_all_target_passes": 1,
+    "passed": false,
+    "source_unchanged": true
+  },
+  "read_only_saved_json_checks": 28396,
+  "issues": [],
+  "issue_count": 0,
+  "completed_records": 24,
+  "fit_count": 17,
+  "initial_equal_to_old_predictor": 17,
+  "ledger_entries": 4536,
+  "surrogates": 42,
+  "checked_file_sha256": [
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/almost-circle-smooth/record.json",
+      "a610eadb25e63979ce9dabdb4d54bcff20cd72ed92ff55869b297883e85621e7"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/budget-png/record.json",
+      "76c2fe3a7c5ccad55b0fa30ee805f332f2758df3aac47c3d558f19fbb34b9a2d"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/budget-png/fit.json",
+      "f16444d4ab605a7727806f6400f52a9ee331a130f479bd8e3da67a976d3f475c"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-predictor-v1-first/budget-png/fit.json",
+      "8cb3d1eec1a49650db10e5689b287e0da26d591b5e6881126aa09dd9be2bc0a9"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/coincident-smooth/record.json",
+      "d6f1bb3b6458167892f112ffdb5a0dea2b1768d734847069b8615fbe2b0e138f"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/coincident-smooth/fit.json",
+      "135c551c5f86443649e0d91728982ddc9c828d6ccbd41e1d3203c484be2643fa"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-predictor-v1-first/coincident-smooth/fit.json",
+      "cde14b4d41ac34a21741724476f40082d5f299ae174a72f5bf96013bc1c09f49"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/cropped-smooth/record.json",
+      "8702169c70485ac624170264715a8b875163793b058fbf3584f03bdcc30c2403"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/five-queries-smooth/record.json",
+      "96f9d2e2bd7848d2328d722a72fb50ae41a72427e82aac558bf42224479c9ff4"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/five-queries-smooth/fit.json",
+      "22f7131380e0c37cad0995b74831c1268f1a88ad4faa2a1adc17e44e069fce85"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-predictor-v1-first/five-queries-smooth/fit.json",
+      "c7c3cf9a2a59b2b11781e0957edbf0da8f4650dd6279c7d3657cbf3eaac9de31"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/gradient-staged/record.json",
+      "f91be91811a467d2db87bd9e8acf80cf1c99d7179c8ce680590ab84f9c92abfe"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/gradient-staged/fit.json",
+      "c74d6063b570bdf9606a658000fc56d8a05d771376002552d893bf3a8bda6712"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-predictor-v1-first/gradient-staged/fit.json",
+      "d3210e82b3a7bd367940dd237f668ac32243c5d390a4c0fd4c87e13f0b1f8cf0"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/low-staged/record.json",
+      "babacb30cf85fcf0062e008c3c1325b1393ede22447bea7fb4bed4c5def52efc"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/major-png/record.json",
+      "d23357d13765e1c46b51fef44676f03f8395b30397d6dd52a015fb299191aeb0"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/major-png/fit.json",
+      "5466fc88a0117caaf0770728bd1f4d53bee6fdaf12a2f6eb23158cffdb7704a4"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-predictor-v1-first/major-png/fit.json",
+      "34918d6a1ea86c393d770e3cd5084c37b1fb51b389189c198c3f9d83d1a0648d"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/major-smooth/record.json",
+      "d537b28eae31e9525149434a184a10f2185020e9d9cb6363292aa82bc1dffadf"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/major-smooth/fit.json",
+      "5d95a29bb26ceb54ccecf04afeb8fe81305d90eaf608f0f9c1c76554552f8c4c"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-predictor-v1-first/major-smooth/fit.json",
+      "a0059d1a7e7e416d496ba972920a0b97767fb47da27f5db8d635a25098e6d070"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/major-staged/record.json",
+      "e779ed76df0f8a5dc823315664f4886241d2b639dd36dab05aa0b03e4ad75ea5"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/major-staged/fit.json",
+      "5c4fdcc145686869d41eebf5e8adf928b2436958f13892c876bdb951fb16859f"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-predictor-v1-first/major-staged/fit.json",
+      "7b4d787eaf940af773fc25a58f31d5b241f249f154c7c4c3eef2552fa30bba3a"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/middle-png/record.json",
+      "b10b9e46e793e799c04f919b18354943bcdd7ec110c1b93eb876daefa60b58c6"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/middle-png/fit.json",
+      "3bb9e0e5b0c329bf38161d186af3308aaf3711408df86db6a167c087013ac29d"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-predictor-v1-first/middle-png/fit.json",
+      "7fa00338647cfdd34bd147568dc9652c15384d364a22a7f33019a68ba0966a1c"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/middle-smooth/record.json",
+      "71a43028e837fc7eab18be173cd091bc00825fd7ee8cda018cd08e8f96180bb4"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/middle-smooth/fit.json",
+      "187818daf77b0581825166a25597e9fd142104430571a03579ac6ae2e9683287"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-predictor-v1-first/middle-smooth/fit.json",
+      "9f1e76e74f51afa59563c703b19d82e01f91c3fa6eba40d1665667f3cb6ba2dd"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/middle-staged/record.json",
+      "b960d61ee25717a6bbeacafadf90f417b81270476cc8c4a7806a22f06eac2657"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/middle-staged/fit.json",
+      "816176cd0df81a0cd48571cbf113c3cfad59c78f0fe96e958fcf7cc36fc8f275"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-predictor-v1-first/middle-staged/fit.json",
+      "6ed7c158dc169ed685c7474afbe1f6fff2f6254591a4eed397545466d2fe5c31"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/minor-png/record.json",
+      "9bef19ec20e1e80694343ad3387aa90cc210da437f8790acde3558b72ffb9af9"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/minor-png/fit.json",
+      "11777373790df309a9c161e21c15598a77055240434884aca7bbddf2483700c0"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-predictor-v1-first/minor-png/fit.json",
+      "fc63561363048bdca0f767ee773fe5f0ebd918a4fae2f955eef9a9e96b0dafa3"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/minor-smooth/record.json",
+      "893d2a6a7a8504094f5550591ebc8443ef6c27a95f0de92bcfa749edd39c6e49"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/minor-smooth/fit.json",
+      "b5ee66bf1b09ce7da274f54c552d859aba4dc89716e46d9814fbde39b310384f"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-predictor-v1-first/minor-smooth/fit.json",
+      "a4bec91d71205149e87c0ce4d0ea524e1ebd523396365c45c3d9a36d156e7fd8"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/minor-staged/record.json",
+      "626d92dbe3b2489584df2108528f9b4ece4580e99d8b9e12ead941d22d7d030a"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/minor-staged/fit.json",
+      "02ff7b0793c51c1a4c6b263aa3722230f4aaac1c11db0b0d8b6f6705a75f7b2b"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-predictor-v1-first/minor-staged/fit.json",
+      "8ca8d9b27e1b42edeeabe5ed31eab5728cf0566b5305ce291457b8f72453014d"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/singular-map-png/record.json",
+      "08c0117b8053f801a459c1d0dc607e3c66b13487f648d6f7d4fb2cb5db78caa7"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/thin-png/record.json",
+      "dba05dcb040ceb88224d1e218524ab24cf8145d1c7a5b77fe2fdb8413f45b4fc"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/wrapped-major-png/record.json",
+      "4471741e72b2fad2f8a7c5c9e552bbc00caf1cdd39d0999d1add7a6157e5933b"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/wrapped-major-png/fit.json",
+      "afcc0cd28b7666deac44992586f6d0597367f3b4604750f7b053adb7cb5f9a76"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-predictor-v1-first/wrapped-major-png/fit.json",
+      "d487ce7050df820e1e5ebc968dd8cfa0b97c70d083cbbe94a64f933eda46adff"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/wrapped-major-smooth/record.json",
+      "daafb0df4fc5f2e87fafe7cfd59fcc89b117273c7296b8a5523aceafd4553e8a"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/wrapped-major-smooth/fit.json",
+      "700906c7c05af94c5f631e8416ed6c4148c6ca1f71062cdbe4e3104cea33f120"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-predictor-v1-first/wrapped-major-smooth/fit.json",
+      "f293742d7c9a6a0d816f97bad6b2b8b8048f6dcf7d0aee31d8bbe8452d24f20a"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/wrapped-major-staged/record.json",
+      "ffc20158974bc77002cdd1c87924f9dce5517cb5eacb66b65cf3b761686c86a3"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/wrapped-major-staged/fit.json",
+      "25b51ae0f54ae0251b2ed5b5f0e03ed532a9080305c47deee08ce2a422f5f3ac"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-predictor-v1-first/wrapped-major-staged/fit.json",
+      "d3d471aef14adeef9e5b8beee7ecc9838c09acffbdc9c025e40a24aa0bdfcb10"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/wrong-optics-smooth/record.json",
+      "a49f0f9362ae01f107de1a883d16dfbace16512770ce111c37298d0b3a9f0f47"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/wrong-optics-smooth/fit.json",
+      "676e8e1dd5a7cfc234db15ea4a81bf73d1b4d2146214e0d39c81ea0289238edf"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-predictor-v1-first/wrong-optics-smooth/fit.json",
+      "da52e27110b34835ed0f50cbb587b0af368af4c7e98493317efddc5e295745d8"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/zero-png/record.json",
+      "bdedd37cdbb44ef30a6208626dd2723436a325d4f7e3d7418ef882e1936ffb22"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/zero-smooth/record.json",
+      "e5e900bccc0ae44bbeec9e2479c1675495dedcd8554bf643ca7a97521e0cc320"
+    ],
+    [
+      ".local/verification/finite-acquisition-recovery-coupled-v1-first/report.json",
+      "a1394780cf73b99a321741cd9f56d0c36d55cd094587f7bb355b88df9a414bb6"
+    ]
+  ],
+  "rows": [
+    {
+      "case": "budget-png",
+      "passed": false,
+      "phase": "initial",
+      "cost": 8543.495705853818,
+      "calls": 1,
+      "cell_work": 169,
+      "stage_work": 5239,
+      "refinement_iterations": 0,
+      "refinement_charged": [
+        0,
+        0,
+        0
+      ],
+      "tie_alternatives": 0,
+      "completion_withheld": false,
+      "work_exhausted": true
+    },
+    {
+      "case": "coincident-smooth",
+      "passed": true,
+      "phase": "initial",
+      "cost": 4.8110691938300795e-06,
+      "calls": 20,
+      "cell_work": 3380,
+      "stage_work": 638820,
+      "refinement_iterations": 0,
+      "refinement_charged": [
+        0,
+        0,
+        0
+      ],
+      "tie_alternatives": 0,
+      "completion_withheld": false,
+      "work_exhausted": false
+    },
+    {
+      "case": "five-queries-smooth",
+      "passed": false,
+      "phase": "initial",
+      "cost": 2.423380700838948e-27,
+      "calls": 859,
+      "cell_work": 145171,
+      "stage_work": 27437319,
+      "refinement_iterations": 0,
+      "refinement_charged": [
+        0,
+        0,
+        0
+      ],
+      "tie_alternatives": 842,
+      "completion_withheld": false,
+      "work_exhausted": false
+    },
+    {
+      "case": "gradient-staged",
+      "passed": false,
+      "phase": "initial",
+      "cost": 919.7765387540036,
+      "calls": 272,
+      "cell_work": 36842,
+      "stage_work": 1761318,
+      "refinement_iterations": 0,
+      "refinement_charged": [
+        0,
+        0,
+        0
+      ],
+      "tie_alternatives": 0,
+      "completion_withheld": false,
+      "work_exhausted": false
+    },
+    {
+      "case": "major-png",
+      "passed": true,
+      "phase": "refinement",
+      "cost": 0.0,
+      "calls": 692,
+      "cell_work": 104104,
+      "stage_work": 4506554,
+      "refinement_iterations": 17,
+      "refinement_charged": [
+        415,
+        64051,
+        2628119
+      ],
+      "tie_alternatives": 57,
+      "completion_withheld": false,
+      "work_exhausted": false
+    },
+    {
+      "case": "major-smooth",
+      "passed": true,
+      "phase": "initial",
+      "cost": 1.8422445415495556e-06,
+      "calls": 16,
+      "cell_work": 2704,
+      "stage_work": 511056,
+      "refinement_iterations": 0,
+      "refinement_charged": [
+        0,
+        0,
+        0
+      ],
+      "tie_alternatives": 0,
+      "completion_withheld": false,
+      "work_exhausted": false
+    },
+    {
+      "case": "major-staged",
+      "passed": true,
+      "phase": "initial",
+      "cost": 1.8391924172906585e-06,
+      "calls": 238,
+      "cell_work": 34476,
+      "stage_work": 1524042,
+      "refinement_iterations": 0,
+      "refinement_charged": [
+        0,
+        0,
+        0
+      ],
+      "tie_alternatives": 0,
+      "completion_withheld": false,
+      "work_exhausted": false
+    },
+    {
+      "case": "middle-png",
+      "passed": false,
+      "phase": "refinement",
+      "cost": 0.302031169350812,
+      "calls": 720,
+      "cell_work": 103090,
+      "stage_work": 4866862,
+      "refinement_iterations": 24,
+      "refinement_charged": [
+        436,
+        65065,
+        2925052
+      ],
+      "tie_alternatives": 290,
+      "completion_withheld": false,
+      "work_exhausted": false
+    },
+    {
+      "case": "middle-smooth",
+      "passed": true,
+      "phase": "initial",
+      "cost": 6.941742066729151e-07,
+      "calls": 17,
+      "cell_work": 2873,
+      "stage_work": 542997,
+      "refinement_iterations": 0,
+      "refinement_charged": [
+        0,
+        0,
+        0
+      ],
+      "tie_alternatives": 0,
+      "completion_withheld": false,
+      "work_exhausted": false
+    },
+    {
+      "case": "middle-staged",
+      "passed": true,
+      "phase": "initial",
+      "cost": 7.068520062603055e-07,
+      "calls": 256,
+      "cell_work": 34645,
+      "stage_work": 1633554,
+      "refinement_iterations": 0,
+      "refinement_charged": [
+        0,
+        0,
+        0
+      ],
+      "tie_alternatives": 0,
+      "completion_withheld": false,
+      "work_exhausted": false
+    },
+    {
+      "case": "minor-png",
+      "passed": true,
+      "phase": "refinement",
+      "cost": 0.0,
+      "calls": 536,
+      "cell_work": 72332,
+      "stage_work": 3582462,
+      "refinement_iterations": 1,
+      "refinement_charged": [
+        241,
+        32110,
+        1289301
+      ],
+      "tie_alternatives": 99,
+      "completion_withheld": false,
+      "work_exhausted": false
+    },
+    {
+      "case": "minor-smooth",
+      "passed": true,
+      "phase": "initial",
+      "cost": 1.2625311769207077e-08,
+      "calls": 28,
+      "cell_work": 4732,
+      "stage_work": 894348,
+      "refinement_iterations": 0,
+      "refinement_charged": [
+        0,
+        0,
+        0
+      ],
+      "tie_alternatives": 0,
+      "completion_withheld": false,
+      "work_exhausted": false
+    },
+    {
+      "case": "minor-staged",
+      "passed": true,
+      "phase": "initial",
+      "cost": 1.4435499906539917e-08,
+      "calls": 267,
+      "cell_work": 36504,
+      "stage_work": 1984905,
+      "refinement_iterations": 0,
+      "refinement_charged": [
+        0,
+        0,
+        0
+      ],
+      "tie_alternatives": 0,
+      "completion_withheld": false,
+      "work_exhausted": false
+    },
+    {
+      "case": "wrapped-major-png",
+      "passed": true,
+      "phase": "initial",
+      "cost": 0.0,
+      "calls": 269,
+      "cell_work": 36335,
+      "stage_work": 1836523,
+      "refinement_iterations": 0,
+      "refinement_charged": [
+        0,
+        0,
+        0
+      ],
+      "tie_alternatives": 77,
+      "completion_withheld": false,
+      "work_exhausted": false
+    },
+    {
+      "case": "wrapped-major-smooth",
+      "passed": true,
+      "phase": "initial",
+      "cost": 7.720476952515999e-07,
+      "calls": 16,
+      "cell_work": 2704,
+      "stage_work": 511056,
+      "refinement_iterations": 0,
+      "refinement_charged": [
+        0,
+        0,
+        0
+      ],
+      "tie_alternatives": 0,
+      "completion_withheld": false,
+      "work_exhausted": false
+    },
+    {
+      "case": "wrapped-major-staged",
+      "passed": true,
+      "phase": "initial",
+      "cost": 7.767557690385728e-07,
+      "calls": 255,
+      "cell_work": 34476,
+      "stage_work": 1601613,
+      "refinement_iterations": 0,
+      "refinement_charged": [
+        0,
+        0,
+        0
+      ],
+      "tie_alternatives": 0,
+      "completion_withheld": false,
+      "work_exhausted": false
+    },
+    {
+      "case": "wrong-optics-smooth",
+      "passed": false,
+      "phase": "initial",
+      "cost": 4266.825435956874,
+      "calls": 40,
+      "cell_work": 6760,
+      "stage_work": 899080,
+      "refinement_iterations": 0,
+      "refinement_charged": [
+        0,
+        0,
+        0
+      ],
+      "tie_alternatives": 0,
+      "completion_withheld": false,
+      "work_exhausted": false
+    }
+  ],
+  "inspection_source_sha256": "1f5e67d315cacaae59330dcd8c1f9f6b1ed74e0e3cf1634d9c4c537e36c68cc6"
+}

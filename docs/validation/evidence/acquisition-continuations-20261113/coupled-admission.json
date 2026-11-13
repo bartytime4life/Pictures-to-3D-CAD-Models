@@ -1,0 +1,101 @@
+{
+  "format": "finite-acquisition-recovery-coupled-separate-admission",
+  "version": 1,
+  "original_source": "7ec680386f75e44415aeb4c83552aa723399c0bc",
+  "original_plan": {
+    "path": "studies/finite-acquisition-recovery-v1.json",
+    "sha256": "737bb8badf15a6bd1438ece67b9ad03f96e65440989bbc8bc2110edc8a497ad0"
+  },
+  "original_runner": {
+    "path": "studies/verification/finite-acquisition-recovery-v1.py",
+    "sha256": "073cc432134c5258add3e9d3addd24fdcabead97451424c3303720f878d58d29"
+  },
+  "original_reference": {
+    "path": "studies/verification/finite-acquisition-recovery-reference-v1.py",
+    "sha256": "5d8f3ec4b0283a688338e3981288fc38214e99bf5af50dad07c33cba2777ab0d"
+  },
+  "original_result": {
+    "rows": 24,
+    "matched_passes": 4,
+    "matched_total": 12,
+    "exit_code": 1,
+    "report_sha256": "30a3e30f26150124da22d76cc3b7c36aaf2212d094a1a5601253722442edad28",
+    "complete_archive_sha256": "e25fe8a0ca8675daafed1b0b577de1d68f4d42e21bf91ee3ba72d43fcb98e724"
+  },
+  "original_first_tests": {
+    "passed": 404,
+    "failed": 1,
+    "exit_code": 1,
+    "log_sha256": "d83e97463d54779ffcc9af8c77e8fa4ed2a7a28404e98e5871289bcbe4d3bee7"
+  },
+  "previous_predictor_source": "e6e2c2881add2cc594f4a59d713edf8a9ddde665",
+  "previous_predictor_result": {
+    "report_sha256": "f73120151fb709521417f07ff7bc3ac82f3039e5170fc912bd692429bd4f949e",
+    "matched_passes": 9,
+    "matched_total": 12,
+    "rows": 24,
+    "exit_code": 1,
+    "focused_tests_passed": 459,
+    "complete_archive": {
+      "path": ".local/verification/finite-acquisition-recovery-predictor-v1-complete.zip",
+      "sha256": "7372f87859538dc675dba6f35b4c8e9e141893c312f32ccb0e9fd9473f886119",
+      "bytes": 8428126,
+      "members": 113,
+      "uncompressed_member_bytes": 119137253
+    },
+    "recorded_source": {
+      "path": ".local/verification/finite-acquisition-recovery-predictor-v1-recorded-source.zip",
+      "sha256": "45323a26f2820cb7919c7f51b85bc744e747096f4fbf21eac504b15d9eec7053",
+      "bytes": 359686,
+      "governing_files": 60
+    }
+  },
+  "reason": "The three remaining PNG misses have positive literal training costs and coordinate-poll resolution with ample unused operator budgets. This does not establish an unavoidable alias. Quantization precedes Keys/post, so an observed-output-bin inverse would constrain the wrong stage.",
+  "strategy": {
+    "entrypoint": "backend.finite_acquisition_coupled.fit_acquisition_segment_coupled",
+    "initial_phase": "Retain existing predictor as an exact phase under original global caps. Smooth, staged, zero-cost or unsafe/no-candidate results pass through without coupled numerical work.",
+    "coupled_phase": "Only safe positive-cost PNG results may refine. At current literal geometry and current explicit levels compute separately charged source coverage/5 sensitivities plus fixed6-field+constant linear propagation; Js=[(b-a)AD5,A1-Ac,Ac], weighted by training multipliers and original domain spans. Fit the actual literal residual by augmented-SVD damping; do not profile or project out levels.",
+    "directions": "Js is an unrounded mean proposal map, NOT a derivative, rank, KKT mapping or stationarity certificate for rounded acquisition. Undefined derivatives remain explicit and trigger cost-only fallback.",
+    "trials": "Deterministic bounded rays at factors1,2,4,8,1/2 through1/256, clipped/deduplicated to original7D bounds. Accept strict actual literal-cost decrease only; retain all candidates and ties. No source-code crossing helper is implemented in this admission.",
+    "limits": "At most24 coupled iterations, also bounded by caller max_iterations; initial damping1e-3. Original coordinate search polishes the retained incumbent for best-linked literal local completion. Iteration limits remain per seed/phase, not aggregate. No wall-time equality claim.",
+    "work": "All initial predictor, surrogate coverage/linear calls, literal trials and final polish share original total evaluation/cell/stage caps. Deduct charged work, reserve before calls, preserve failures/unknown work and final unstarted work. No hidden derivative reuse or model calls.",
+    "completion": "Unchanged original target plus completion_withheld=False, sound source/protocol/work and selected-phase best-linked actual local resolution. Surrogate smallness/stalling does not prove rounded stationarity. Selected top best/candidates/searches use one explicit phase index space; all phases/alternatives retained."
+  },
+  "unchanged": {
+    "population": "All24originalrows,12matched+12adverse; no removal or reclassification.",
+    "targets": "Every original geometry, boundary, dimension, conditional-residual, rank and local-completion criterion retains its numeric threshold.",
+    "initialization": "Same observed-only initializer, max4seeds, operational bounds, level hints and clipping.",
+    "reference": "Same independent positive-slice GL64/96 captures and independent candidate evaluation; original reference gate unchanged.",
+    "sampling": "Same training/reserved deterministic split, including first5trainingindices for adverse row; reserved checks remain conditional due full-field initialization.",
+    "budgets": "Same total2048evaluations,1000000cellunits and100000000stageproducts across both phases. The existing max60iterations applies per seed within each original-fitter phase, not to aggregate iterations or wall time.",
+    "no_truth_inputs": "Truth/evaluation dimensions opened only after complete fit outputs are saved."
+  },
+  "reference_precision_retention": {
+    "change": "The new runner wraps only reference output storage: retain a float64 copy of each original coverage array as reference_coverage_precast before mode-dependent float32 storage. Original GL64/96 means and candidate evaluation values/criteria unchanged; no reference data enters fitting.",
+    "reason": "The previous capture omitted pre-cast coverage in14rounded rows; future runs must retain it. Original runner/reference/captures/reports and firstfailedauditor are immutable.",
+    "old_audit": "First v1 auditor exit1,5740807checks14failures retained. Paired saved-only v2 audits old captures with14/run unverified pre-cast delta checks, never treats them as passes; no independent forward/J/rank/stopping certification."
+  },
+  "freeze_policy": "Commit/hash all backend modules, all test_finite files, original and preceding plans/runners/reference, new admission/runner, both auditors and new audit admission before first new test/model/reference/import. Preserve first failures. Later corrections need a separate admission.",
+  "failure_policy": "Exit1 unless all12matchedrows pass every unchanged target, reference gate and source/provenance requirement. All24rows and complete phase ledgers retained. Adverse execution/refusal never promoted to recovery success.",
+  "limits": "Public synthetic model qualification only; no real-camera, noise, globality, native slicer or physical-print claim.",
+  "prospective_checks": [
+    "All prior459focused controls plus separately authored coupled resource/protocol/phase/strict literalcost/immutableJSON controls and independent quantization/math/protocol controls.",
+    "Full24case original population,12matched12adverse, alloriginalnumeric targets, observed-only starts/bounds/levelhints, same135train/34conditionalreserved matchedsplit.",
+    "No truth/evaluation dimensions or reference encoded arrays enter preparation, direction selection or acceptance.",
+    "Complete source hash check before/after and complete per-phase ledger for every fit, with retained refusal/exception records.",
+    "First separately frozen paired saved-only audit of original and predictor archives, plus invented malformed/adversarial controls; audit incompleteness remains exit1."
+  ],
+  "previous_predictor_runner": {
+    "path": "studies/verification/finite-acquisition-recovery-predictor-v1.py",
+    "sha256": "4368ee287118b8c4553967750d8483f14db23b39364c6f513ab5a5454836548c"
+  },
+  "previous_predictor_module": {
+    "path": "backend/finite_acquisition_predictor.py",
+    "sha256": "871897e335d04a79319544cfa4ba84d19c579ea9e43bf98372baa94e92051f4a"
+  },
+  "previous_predictor_plan": {
+    "path": "studies/finite-acquisition-recovery-predictor-v1.json",
+    "sha256": "8533f5503798aef2c3eb275a97c88db91d82d6b3ba27327a0aee3d013f75580e"
+  },
+  "observed_boundary_hardening": "The new protocol adapter passes only mode/adverse control labels from the full scene into fit_observed, not its ground-truth geometry. Old observed sampling/initialization remain unchanged; no new truth-derived bound or start."
+}
