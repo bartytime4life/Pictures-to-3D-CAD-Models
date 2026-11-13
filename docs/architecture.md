@@ -47,6 +47,11 @@ and [saved-only consistency audits](finite-acquisition-saved-audit.md) extend
 the research documentation. Their code remains outside this main runtime;
 neither changes the application flow above.
 
+The newer [protected-source-bin design](finite-acquisition-protected.md) fails
+eight first software controls. Its full recovery study has not run. See the
+[first outcome and evidence](validation/finite-acquisition-protected.md) before
+considering further recovery experiments or integration.
+
 ## Components
 
 | Component | Responsibility |

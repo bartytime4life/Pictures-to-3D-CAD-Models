@@ -8,10 +8,14 @@ conditional reserved-residual misses as the coupled study. See the
 [result and evidence](validation/finite-acquisition-continuations.md) and
 [frozen admission](validation/evidence/acquisition-continuations-20261113/events-admission.json).
 
-This is local research outside main `20cc57c`, HTTP routes and workbench UI.
+This is local research outside the documented main revision `81248a7`, HTTP routes and workbench UI.
 The original 4/12, predictor 9/12 and coupled 11/12 failed protocols are retained.
 The [coupled saved-only audit](finite-acquisition-saved-audit.md) does not cover
 the new event-phase ledger. No physical camera/CAD qualification follows.
+
+A later [protected-source-bin design](finite-acquisition-protected.md) attempts
+to retain other incumbent bins. Its [first software checks fail eight cases](validation/finite-acquisition-protected.md);
+no full recovery study has run for that strategy.
 
 ## The event belongs to a source code
 

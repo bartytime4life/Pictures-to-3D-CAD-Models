@@ -1,0 +1,38 @@
+{
+  "format": "documentation-verbatim-evidence-inventory",
+  "source_head": "79522b5ad47ea747d644a55e3c0fe468e7d30bde",
+  "source_tree": "9e3eee8936ea6f6d880c9a7287bb2f085f6908e9",
+  "scope": "First software controls failed; no protected recovery/model/reference study executed. Runtime, tests and study runner remain separate local research.",
+  "verbatim_copies": {
+    "first-tests.log": {
+      "source": ".local/verification/finite-acquisition-recovery-protected-v1-first-tests.log",
+      "sha256": "0617515b0a22ee4102f6448a5b164787f23c6d6fd16597a9d5d81d6d72f96798",
+      "bytes": 9877
+    },
+    "first-tests-handle.json": {
+      "source": ".local/verification/finite-acquisition-recovery-protected-v1-first-tests-handle.json",
+      "sha256": "5af4eab6f9ec6013369f8c447e26399a12d2be5b26cc1609030a592018e7cf90",
+      "bytes": 1664
+    },
+    "first-terminal-receipt.json": {
+      "source": ".local/verification/finite-acquisition-recovery-protected-v1-first-terminal-receipt.json",
+      "sha256": "6182b99e25e854b61ca3781b5464bf0cddc008db0a2716d123b597fba8d004d9",
+      "bytes": 1231
+    },
+    "source-freeze.json": {
+      "source": ".local/verification/finite-acquisition-recovery-protected-v1-freeze.json",
+      "sha256": "c42b4628b92b888c447642b5a663bfd34a184e9e770a24596aa5a1ce026e72ef",
+      "bytes": 11730
+    },
+    "admission.json": {
+      "source": "studies/finite-acquisition-recovery-protected-v1.json",
+      "sha256": "c52b461e3dc4758bc10a15b761899f2b797a5c0cb91f31196b79ce2441a5aeae",
+      "bytes": 20324
+    },
+    "prospective-method.txt": {
+      "source": "docs/finite-acquisition-protected.md",
+      "sha256": "760959cc5a899a5a9daecaba7c4a88ea055c170d467c107858bc07ff51a14a68",
+      "bytes": 9903
+    }
+  }
+}

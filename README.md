@@ -135,7 +135,7 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 For the reviewed source revision and available research APIs, read
 [source scope and status](docs/project-status.md) and the
-[current documentation review](docs/validation/documentation-executed-recovery.md).
+[current documentation review](docs/validation/documentation-protected-controls.md).
 Main includes the source-cell mean, five unrounded area sensitivities and
 separate signed linear propagation as developer APIs. Five-parameter recovery
 with unknown brightness is absent from this main-based runtime. A
@@ -143,7 +143,9 @@ with unknown brightness is absent from this main-based runtime. A
 4/12 matched passes originally, 9/12 with a smooth proposal, then **11/12**
 with [coupled search](docs/finite-acquisition-coupled.md). A later
 [source-event strategy](docs/finite-acquisition-events.md) stays at 11/12.
-All four complete 24-case protocols fail. The
+All four complete 24-case protocols fail. The newest
+[protected-source-bin design](docs/finite-acquisition-protected.md) fails eight
+first software checks; its full recovery study has not run. The
 [results and remaining limits](docs/validation/finite-acquisition-continuations.md)
 keep software tests and [saved-record audits](docs/finite-acquisition-saved-audit.md)
 separate from camera accuracy and physical acceptance. The

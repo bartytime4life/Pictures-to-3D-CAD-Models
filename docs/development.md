@@ -179,6 +179,11 @@ The [completed results](validation/finite-acquisition-continuations.md) and
 miss, first failures and 28 historical precision unknowns. Candidate code and
 complete local ZIPs remain separate from this main runtime and workbench UI.
 
+The newer [protected-source-bin design](finite-acquisition-protected.md) fails
+eight first software controls. Its full recovery study has not run. See the
+[first outcome and evidence](validation/finite-acquisition-protected.md) before
+considering further recovery experiments or integration.
+
 The [affine evaluation upgrade](finite-affine-evaluation.md) has an earlier
 [943-test local Python result, production build and lint](validation/finite-affine-batch.md#software-regression),
 bound to its 284 software inputs and 22 built frontend files. That result includes

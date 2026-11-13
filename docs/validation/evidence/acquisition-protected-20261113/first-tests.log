@@ -1,0 +1,201 @@
+........................................................................ [  9%]
+........................................................................ [ 18%]
+........................................................................ [ 28%]
+........................................................................ [ 37%]
+........................................................................ [ 47%]
+........................................................................ [ 56%]
+........................................................................ [ 66%]
+............................................................... [ 74%]
+................................................................... [ 83%]
+..................................................... [ 90%]
+................................F..........F.FFFFF......F............... [ 99%]
+.                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_unrepresentable_predicted_optical_is_retained_as_numerical_unknown_native_json _
+
+    def test_unrepresentable_predicted_optical_is_retained_as_numerical_unknown_native_json():
+        # A source row without finite walls still belongs to the saved prediction.
+        # The first row enforces x=2; the second represented dot product overflows.
+        G = np.zeros((2, 7))
+        G[0, 0], G[1, 0] = 1.0, 1e308
+>       result = protected._protected_projection(
+            G, [0.0, 0.0], [2.0, -np.inf], [np.inf, np.inf], [-3.0] * 7, [3.0] * 7
+        )
+
+tests/test_finite_acquisition_protected.py:211: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+backend/finite_acquisition_protected.py:230: in _protected_projection
+    predicted = tuple(
+backend/finite_acquisition_protected.py:231: in <genexpr>
+    math.fsum([float(z), *(float(a) * v for a, v in zip(row, x, strict=True))])
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <zip object at 0x78dc9c5927c0>
+
+>       math.fsum([float(z), *(float(a) * v for a, v in zip(row, x, strict=True))])
+                               ^^^^^^^^^^^^
+        for z, row in zip(z0, G, strict=True)
+    )
+E   RuntimeWarning: overflow encountered in scalar multiply
+
+backend/finite_acquisition_protected.py:231: RuntimeWarning
+___________ test_protective_motion_uses_the_selected_rows_nullspace ____________
+
+    def test_protective_motion_uses_the_selected_rows_nullspace():
+        # x>=1 and x+y=0 have the unique minimum-norm point (1,-1).
+        # A single-row crossing (1,0) is feasible only for the selected row.
+        expected = _row(1, -1)
+        _exact_kkt([_row(-1), _row(1, 1)], [-1, 0], expected, [2, 1])
+        result = _solve([_row(1), _row(1, 1)], [1, 0], [2, 0])
+>       assert result.status == "resolved"
+E       AssertionError: assert 'iteration_limit' == 'resolved'
+E         
+E         - resolved
+E         + iteration_limit
+
+tests/test_finite_acquisition_protected_math.py:64: AssertionError
+_ test_positive_constraint_weights_and_sign_convention_preserve_the_set[1.0-False] _
+
+scale = 1.0, reverse = False
+
+    @pytest.mark.parametrize(
+        "scale,reverse", [(1.0, False), (2**-20, False), (2**20, False), (2**-10, True)]
+    )
+    def test_positive_constraint_weights_and_sign_convention_preserve_the_set(scale, reverse):
+        # Scaling a constraint and BOTH its bounds cannot change the projection.
+        # Negating a slab also swaps/negates its two bounds.
+        rows = np.array([_row(1), _row(1, 1)], dtype=float)
+        lower, upper = np.array([1.0, 0]), np.array([2.0, 0])
+        rows[0] *= scale
+        lower[0] *= scale
+        upper[0] *= scale
+        rows[1] *= 0.5
+        if reverse:
+            rows[0] *= -1
+            lower[0], upper[0] = -upper[0], -lower[0]
+        result = _solve(rows, lower, upper)
+>       assert result.status == "resolved"
+E       AssertionError: assert 'iteration_limit' == 'resolved'
+E         
+E         - resolved
+E         + iteration_limit
+
+tests/test_finite_acquisition_protected_math.py:97: AssertionError
+_ test_positive_constraint_weights_and_sign_convention_preserve_the_set[9.5367431640625e-07-False] _
+
+scale = 9.5367431640625e-07, reverse = False
+
+    @pytest.mark.parametrize(
+        "scale,reverse", [(1.0, False), (2**-20, False), (2**20, False), (2**-10, True)]
+    )
+    def test_positive_constraint_weights_and_sign_convention_preserve_the_set(scale, reverse):
+        # Scaling a constraint and BOTH its bounds cannot change the projection.
+        # Negating a slab also swaps/negates its two bounds.
+        rows = np.array([_row(1), _row(1, 1)], dtype=float)
+        lower, upper = np.array([1.0, 0]), np.array([2.0, 0])
+        rows[0] *= scale
+        lower[0] *= scale
+        upper[0] *= scale
+        rows[1] *= 0.5
+        if reverse:
+            rows[0] *= -1
+            lower[0], upper[0] = -upper[0], -lower[0]
+        result = _solve(rows, lower, upper)
+>       assert result.status == "resolved"
+E       AssertionError: assert 'iteration_limit' == 'resolved'
+E         
+E         - resolved
+E         + iteration_limit
+
+tests/test_finite_acquisition_protected_math.py:97: AssertionError
+_ test_positive_constraint_weights_and_sign_convention_preserve_the_set[1048576-False] _
+
+scale = 1048576, reverse = False
+
+    @pytest.mark.parametrize(
+        "scale,reverse", [(1.0, False), (2**-20, False), (2**20, False), (2**-10, True)]
+    )
+    def test_positive_constraint_weights_and_sign_convention_preserve_the_set(scale, reverse):
+        # Scaling a constraint and BOTH its bounds cannot change the projection.
+        # Negating a slab also swaps/negates its two bounds.
+        rows = np.array([_row(1), _row(1, 1)], dtype=float)
+        lower, upper = np.array([1.0, 0]), np.array([2.0, 0])
+        rows[0] *= scale
+        lower[0] *= scale
+        upper[0] *= scale
+        rows[1] *= 0.5
+        if reverse:
+            rows[0] *= -1
+            lower[0], upper[0] = -upper[0], -lower[0]
+        result = _solve(rows, lower, upper)
+>       assert result.status == "resolved"
+E       AssertionError: assert 'iteration_limit' == 'resolved'
+E         
+E         - resolved
+E         + iteration_limit
+
+tests/test_finite_acquisition_protected_math.py:97: AssertionError
+_ test_positive_constraint_weights_and_sign_convention_preserve_the_set[0.0009765625-True] _
+
+scale = 0.0009765625, reverse = True
+
+    @pytest.mark.parametrize(
+        "scale,reverse", [(1.0, False), (2**-20, False), (2**20, False), (2**-10, True)]
+    )
+    def test_positive_constraint_weights_and_sign_convention_preserve_the_set(scale, reverse):
+        # Scaling a constraint and BOTH its bounds cannot change the projection.
+        # Negating a slab also swaps/negates its two bounds.
+        rows = np.array([_row(1), _row(1, 1)], dtype=float)
+        lower, upper = np.array([1.0, 0]), np.array([2.0, 0])
+        rows[0] *= scale
+        lower[0] *= scale
+        upper[0] *= scale
+        rows[1] *= 0.5
+        if reverse:
+            rows[0] *= -1
+            lower[0], upper[0] = -upper[0], -lower[0]
+        result = _solve(rows, lower, upper)
+>       assert result.status == "resolved"
+E       AssertionError: assert 'iteration_limit' == 'resolved'
+E         
+E         - resolved
+E         + iteration_limit
+
+tests/test_finite_acquisition_protected_math.py:97: AssertionError
+________ test_fixed_coordinates_are_constrained_in_the_full_projection _________
+
+    def test_fixed_coordinates_are_constrained_in_the_full_projection():
+        lower, upper = np.full(7, -2.0), np.full(7, 2.0)
+        lower[1:] = upper[1:] = 0
+        result = _solve([_row(1, 2)], [1], [2], box_lower=lower, box_upper=upper)
+>       assert result.status == "resolved"
+E       AssertionError: assert 'iteration_limit' == 'resolved'
+E         
+E         - resolved
+E         + iteration_limit
+
+tests/test_finite_acquisition_protected_math.py:105: AssertionError
+___ test_correlated_active_rows_still_find_the_analytically_known_projection ___
+
+    def test_correlated_active_rows_still_find_the_analytically_known_projection():
+        # x>=1 and x+.5y<=.5 imply y<=-1 at the nearest point.
+        _exact_kkt([_row(-1), _row(1, F(1, 2))], [-1, F(1, 2)], _row(1, -1), [3, 2])
+        result = _solve([_row(1), _row(1, 0.5)], [1, -np.inf], [2, 0.5])
+>       assert result.status == "resolved"
+E       AssertionError: assert 'iteration_limit' == 'resolved'
+E         
+E         - resolved
+E         + iteration_limit
+
+tests/test_finite_acquisition_protected_math.py:175: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_finite_acquisition_protected.py::test_unrepresentable_predicted_optical_is_retained_as_numerical_unknown_native_json
+FAILED tests/test_finite_acquisition_protected_math.py::test_protective_motion_uses_the_selected_rows_nullspace
+FAILED tests/test_finite_acquisition_protected_math.py::test_positive_constraint_weights_and_sign_convention_preserve_the_set[1.0-False]
+FAILED tests/test_finite_acquisition_protected_math.py::test_positive_constraint_weights_and_sign_convention_preserve_the_set[9.5367431640625e-07-False]
+FAILED tests/test_finite_acquisition_protected_math.py::test_positive_constraint_weights_and_sign_convention_preserve_the_set[1048576-False]
+FAILED tests/test_finite_acquisition_protected_math.py::test_positive_constraint_weights_and_sign_convention_preserve_the_set[0.0009765625-True]
+FAILED tests/test_finite_acquisition_protected_math.py::test_fixed_coordinates_are_constrained_in_the_full_projection
+FAILED tests/test_finite_acquisition_protected_math.py::test_correlated_active_rows_still_find_the_analytically_known_projection
+8 failed, 752 passed, 33 subtests passed in 15.96s

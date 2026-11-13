@@ -1,0 +1,11 @@
+{
+  "head": "79522b5ad47ea747d644a55e3c0fe468e7d30bde",
+  "cmd": "set -o pipefail\nOPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python -W error::RuntimeWarning -m pytest -q tests/test_finite_aperture.py tests/test_finite_acquisition.py tests/test_finite_acquisition_workspace.py tests/test_finite_aperture_sensitivity.py tests/test_finite_acquisition_linear.py tests/test_finite_acquisition_sensitivity.py tests/test_finite_photometry.py tests/test_finite_acquisition_observations.py tests/test_finite_acquisition_fit.py tests/test_finite_acquisition_predictor.py tests/test_finite_acquisition_identifiability.py tests/test_finite_acquisition_continuation.py tests/test_finite_acquisition_coupled.py tests/test_finite_acquisition_coupled_math.py tests/test_finite_acquisition_coupled_protocol.py tests/test_finite_acquisition_saved_audit.py tests/test_finite_acquisition_events.py tests/test_finite_acquisition_events_math.py tests/test_finite_acquisition_events_protocol.py tests/test_finite_acquisition_coupled_saved_audit.py tests/test_finite_acquisition_coupled_saved_audit_v2.py tests/test_finite_acquisition_protected.py tests/test_finite_acquisition_protected_math.py tests/test_finite_acquisition_protected_protocol.py 2>&1 | tee .local/verification/finite-acquisition-recovery-protected-v1-first-tests.log",
+  "first": {
+    "chunk_id": "cef8b9",
+    "wall_time_seconds": 1.001330145,
+    "session_id": 16989,
+    "original_token_count": 46,
+    "output": "........................................................................ [  9%]\n........................................................................ [ 18%]\n......................."
+  }
+}

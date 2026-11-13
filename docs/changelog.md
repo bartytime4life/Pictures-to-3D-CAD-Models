@@ -1,5 +1,14 @@
 # Workbench change log
 
+## First protected-source-bin controls documented — November 13, 2026
+
+- Record eight failed first software controls, 752 passes and 33 passing
+  subtests at frozen source `79522b5`; the protected full recovery study is unrun.
+- Add the local projection design, failure record and six verbatim evidence
+  copies, preserving all preceding cases, targets, failures and input hashes.
+- Refresh active workbench/library navigation and main/CI status after PR #113
+  merged. [Review scope](validation/documentation-protected-controls.md).
+
 ## Completed local recovery research documentation — November 13, 2026
 
 - Record coupled 11/12 and source-event 11/12 results, both complete protocols

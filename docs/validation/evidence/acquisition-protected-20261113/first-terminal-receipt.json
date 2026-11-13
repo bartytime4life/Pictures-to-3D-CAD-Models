@@ -1,0 +1,28 @@
+{
+  "format": "protected-bins-first-control-terminal-receipt",
+  "recorded_at": "2026-11-13T21:23:38.643202+00:00",
+  "head": "79522b5ad47ea747d644a55e3c0fe468e7d30bde",
+  "tree": "9e3eee8936ea6f6d880c9a7287bb2f085f6908e9",
+  "governing_inputs_unchanged": 88,
+  "tests": {
+    "native_session_id": 16989,
+    "exit_code": 1,
+    "failed": 8,
+    "passed": 752,
+    "subtests_passed": 33,
+    "seconds": 15.96,
+    "log": {
+      "path": ".local/verification/finite-acquisition-recovery-protected-v1-first-tests.log",
+      "sha256": "0617515b0a22ee4102f6448a5b164787f23c6d6fd16597a9d5d81d6d72f96798",
+      "bytes": 9877
+    }
+  },
+  "first_handle": {
+    "path": ".local/verification/finite-acquisition-recovery-protected-v1-first-tests-handle.json",
+    "sha256": "5af4eab6f9ec6013369f8c447e26399a12d2be5b26cc1609030a592018e7cf90",
+    "bytes": 1664
+  },
+  "recovery_study_executed": false,
+  "reason": "First controls fail:7known-feasible mathematical projection controls returniteration_limit;1overflow RuntimeWarning escapes solver unknown handling. Do not weaken original targets or tests.",
+  "source_policy": "First source/tests/plan/results remain immutable. Separately admit any correction before first new execution."
+}

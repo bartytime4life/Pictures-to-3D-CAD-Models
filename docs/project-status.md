@@ -1,9 +1,9 @@
 # Source scope and verification status
 
-## Current source snapshot — November 13, 2026, 20:44 UTC
+## Current source snapshot — November 13, 2026, 21:28 UTC
 
-Main is `20cc57ced925097d7b0a60d13415423b200af75c`, tree
-`ec9aa0478556a21e7be890d6d56317904a633435`. It includes the source-cell mean
+Main is `81248a7021cb7502f13062dd18e0c0207d1fa30b`, tree
+`9d43ffc3f18514fc8b0b5f6038cd6314c11125b9`. It includes the source-cell mean
 from [PR #105](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/105),
 the two-direction edge-width repair from
 [PR #107](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/107),
@@ -19,7 +19,11 @@ merged at 18:59 UTC. Documentation
 merged at 19:25:32 UTC and added the local recovery snapshot. Documentation
 [PR #112](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/112)
 merged at 20:23:44 UTC and added the then-unexecuted coupled proposal; its tree
-matches this main revision. PR #106 merged into its research
+was the preceding main revision. Documentation
+[PR #113](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/113)
+merged at 20:54:25 UTC and recorded the executed coupled/source-event studies
+and corrected saved-only audit; its tree matches this main revision.
+PR #106 merged into its research
 base after PR #105 closed; its documentation reached main through PR #108.
 
 | Capability in this source | Scope and evidence |
@@ -39,12 +43,13 @@ Hosted checks are tied to their published heads:
 | PR #110, `8c72d873ae7871584f5c2ca9d12ac5d4bbdfab96` | [43484991562](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43484991562): completed, success | [43484991878](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43484991878): completed, success |
 | PR #111, `b6ba24992260d49fd0a88a53057799c4f7c85e67` | [43491926326](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43491926326): completed, success | [43491926158](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43491926158): completed, success |
 | PR #112, `42f78743d4abeb84d96e100a2aa0849a11e470f6` | [43497998820](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43497998820): completed, success | [43497998949](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43497998949): completed, success |
+| PR #113, `6b6683e7bbcb733c3c7d147b3508d4f08d86efe8` | [43505482613](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43505482613): completed, success | [43505482801](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43505482801): completed, success |
 
 These readbacks do not extend a run to the combined main commit or this later
 documentation change. Merge, hosted checks, installed runtime, real-camera
 accuracy and physical acceptance remain separate.
 
-The [documentation review](validation/documentation-executed-recovery.md) audits this
+The [documentation review](validation/documentation-protected-controls.md) audits this
 main-based source. Use [available tools](#available-here) and [remaining integration work](#remaining-integration-work)
 for current capabilities. Earlier snapshots below are historical records; their open
 PR states and absent-module statements describe their own source and time.
@@ -85,6 +90,14 @@ Neither audit covers the new event-phase ledger or establishes forward-model
 accuracy. Four complete ZIPs have local member hash/size readback; candidate
 runtime, auditor source, complete ZIPs and full candidate ledgers/arrays are
 outside this documentation publication.
+
+The newest [protected-source-bin proposal](finite-acquisition-protected.md) at
+`79522b5` fails its first software controls: **eight failures, 752 passes and
+33 passing subtests**, exit 1. Seven known-feasible projection cases reach the
+iteration limit; an overflow case escapes numerical-error handling. **No full
+protected recovery study ran**, so this method has no new matched-case score.
+The [first outcome and evidence](validation/finite-acquisition-protected.md)
+remain separate from the earlier completed recovery protocols and main runtime.
 
 ## Available here
 

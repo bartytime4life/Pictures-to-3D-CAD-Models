@@ -5,9 +5,20 @@ record below to assess its evidence. This page separates local checks, hosted
 CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
+## First protected-source-bin software controls — November 13, 2026
+
+The [current documentation review](validation/documentation-protected-controls.md)
+starts from main `81248a7`, after PR #113 merged. The separate local
+[protected-source-bin proposal](finite-acquisition-protected.md) fails eight
+first software checks, with 752 passes and 33 passing subtests, exit 1.
+Seven known-feasible projections reach the fixed limit and one overflow warning
+escapes numerical-error handling. Its full recovery study has not run.
+The [unaltered first records](validation/finite-acquisition-protected.md)
+preserve that result without changing earlier targets or outcomes.
+
 ## Completed coupled and source-event research — November 13, 2026
 
-The [current documentation review](validation/documentation-executed-recovery.md)
+The [preceding documentation review](validation/documentation-executed-recovery.md)
 starts from main `20cc57c`, after PR #112 merged. The local
 [coupled and source-event studies](validation/finite-acquisition-continuations.md)
 each finish at 11/12 matched passes; both full 24-case protocols exit 1.
