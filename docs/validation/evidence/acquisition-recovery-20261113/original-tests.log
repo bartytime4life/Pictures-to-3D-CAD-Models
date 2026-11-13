@@ -1,0 +1,30 @@
+........................................................................ [ 17%]
+........................................................................ [ 35%]
+........................................................................ [ 53%]
+........................................................................ [ 71%]
+........................................................................ [ 88%]
+.........F...................................                            [100%]
+=================================== FAILURES ===================================
+_ test_limits_retain_all_seed_identities_and_never_claim_search_completion[max_evaluations] _
+
+limit = 'max_evaluations'
+
+    @pytest.mark.parametrize("limit", ["max_evaluations", "max_cell_work", "max_stage_work"])
+    def test_limits_retain_all_seed_identities_and_never_claim_search_completion(limit):
+        observed, options = fixture()
+        options["seeds"] = np.array(
+            [TRUTH, TRUTH + [0.02, 0.01, 0.03, 0.02, 0.01], TRUTH - [0.02, 0.01, 0.03, 0.02, 0.01]]
+        )
+        result = fit.fit_acquisition_segment(observed, **options, **{limit: 1})
+        assert result.work_exhausted
+        assert result.unstarted_seeds
+>       assert result.searches[0].status == "work_limit"
+E       AssertionError: assert 'projected_gr...nt_resolution' == 'work_limit'
+E         
+E         - work_limit
+E         + projected_gradient_resolution
+
+tests/test_finite_acquisition_fit.py:305: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_finite_acquisition_fit.py::test_limits_retain_all_seed_identities_and_never_claim_search_completion[max_evaluations]
+1 failed, 404 passed in 12.34s

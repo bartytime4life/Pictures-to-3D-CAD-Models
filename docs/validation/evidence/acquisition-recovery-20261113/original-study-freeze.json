@@ -1,0 +1,422 @@
+{
+  "head": "7ec680386f75e44415aeb4c83552aa723399c0bc",
+  "sha256": {
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/app.py": "345c7dc8bbc7bfbe616eb2934d2a58cd0b4fa1216dbdaa5272ab3a36b06d96bc",
+    "backend/assistant.py": "45f05aa8d0738a1da0e3b5040a2c4df8a01a35e9a835e1c06fd47ee3e81758c5",
+    "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+    "backend/curve_envelope.py": "d37525b42c920a770b783e0c94ff97cf3d5214272d85dcdceae9d23eb184ca27",
+    "backend/drawing.py": "560f087e28d369a2e0f3b733197c18c5a7aa87c390fe56de7516caf9a08a5e6d",
+    "backend/edges.py": "96d3640e202c0d5eb830ed552bae9906235b0ef459476b0c91b3dc68fe75be51",
+    "backend/finite_acquisition.py": "c61b9def98132a10bbfe6df2bddbc50f9e9338eded0177a74dc25dff90220921",
+    "backend/finite_acquisition_fit.py": "ff34013696ecd2cc8e82ff7492933de1bdda752805dec0b37da1d32a75b22575",
+    "backend/finite_acquisition_linear.py": "bae7b48f4bc6d950551d3f463f5d0dfc53d0d499ff0812547738fcf43154f703",
+    "backend/finite_acquisition_observations.py": "ac0556326b1b4e043bd1b04223db0c4cadc2f990fbd7258a64fa84a8460d4d23",
+    "backend/finite_affine.py": "d4eb540f6a654178fca41b4be416bd4ad6ebb6b3f645bc78b5383b18b8caa653",
+    "backend/finite_aperture.py": "75f29a04133ffd142144607a7c7153e12de159ba7c632e01fd46751fa14cd7b5",
+    "backend/finite_aperture_sensitivity.py": "d481acf746d92568dc317f9dbe9f4741ce863ee241fe84be91264e0ef97d0e51",
+    "backend/finite_centre_fit.py": "df8a057abefe983ee951c894a9ae44e0c6b0f472d3419578be505973ea3a8bfb",
+    "backend/finite_normal.py": "e1e548b58c26d98f28475e647594f5273f34734f1284df27a06324cdf022a443",
+    "backend/finite_observations.py": "09fa843f72b2fc265ba8d4a7111267bf10433eb4f3f2a0600a89cc7871cb3969",
+    "backend/finite_photometry.py": "41e1add0bcb4d226934a969d763f8dd95d9beba425d92c83c1627e3a9534abd3",
+    "backend/finite_shape.py": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+    "backend/fitting.py": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+    "backend/heic.py": "5e34870379991f8813bacfc4badc8fe7fcf5dbe8aa053156fa352456b208de33",
+    "backend/models.py": "21e7467766f4a086f52b3756f6b1fa8e4ec96a7b76cf0b4d1131c5f45709e6e1",
+    "backend/placement.py": "e1745597ca2930d1260659e9f2dc4405f2b7239beb0c12c45fa92b6d3f5c03df",
+    "backend/printing.py": "58d121ad45f0176b02094f3446dcd020c254ccd78860e5a269b8b6a8d6479915",
+    "backend/reference.py": "109ccac49f011e8411286ca2e3682caa201e578df39fee7a52425bb507f7d6e0",
+    "backend/scad.py": "d5cf18312ba10b7e3830d059952c3d078edc1e21813eb2fb03a4fd1ebaf2d534",
+    "backend/shadow.py": "5b156e36aaa3d4592d658875d22241853dd82682c4a691c610a514af07682dbf",
+    "backend/sheet.py": "9735ea176217c273fa63d4e7f412210089d7112fb415d9b921322525aedb950f",
+    "backend/slicer_handoff.py": "774e78fa93dacc348c204d89a0ec4192a01701fb3fa3304ee09960e816101a50",
+    "backend/slicers.py": "03442055d64c37d46e5806bafdd0bd497b54dacf78bc409addf1ff8400c25bb9",
+    "backend/three_mf.py": "435afd61c90bb21c305876f681f845a3bfb193a64fa96589e649fb40fd821cf1",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "backend/tracing.py": "b822716050b285152bcbefe07a0b7da1e02716ecb5d990cbf29af86598a14d2e",
+    "backend/worker.py": "9c869ffae551485b473aeb54ddc9a0116e8c8df22f92f2c08e2f3e97f24ca846",
+    "pyproject.toml": "89db6bd352114ad6ed7c979c070e66d47551ef7cca7062778f832bb8934507ab",
+    "studies/finite-acquisition-recovery-v1.json": "737bb8badf15a6bd1438ece67b9ad03f96e65440989bbc8bc2110edc8a497ad0",
+    "studies/verification/finite-acquisition-recovery-reference-v1.py": "5d8f3ec4b0283a688338e3981288fc38214e99bf5af50dad07c33cba2777ab0d",
+    "studies/verification/finite-acquisition-recovery-v1.py": "073cc432134c5258add3e9d3addd24fdcabead97451424c3303720f878d58d29",
+    "studies/verification/finite-cell-sensitivity-v1.py": "d94b930df57d2b9858631bfa8164c9618f7ff8b45d25c584f7808fea0226a19a",
+    "tests/test_finite_acquisition.py": "cf605a5cb94edd16bd0572afd15a83671ec61b8f40a263fcbe3ae9be8e46d475",
+    "tests/test_finite_acquisition_fit.py": "751f94f662eb66770667bef9067a333967c1c3c752d5c173fc979338e1f05540",
+    "tests/test_finite_acquisition_linear.py": "a6875c0c571c3f67b5e291827f860335ffffd894844afaab05901947ff2f63e9",
+    "tests/test_finite_acquisition_observations.py": "32fcd3b28b2e4acae44be6d53a3083b10fa965f454c8a4de087d0b65930853f4",
+    "tests/test_finite_acquisition_sensitivity.py": "a12fa1864a409bc8c125f44ce31bdbed3e239b73eea7ee251dad536a123a3d76",
+    "tests/test_finite_acquisition_workspace.py": "2d2ba6e12a7d43f92402b8e20229fa64f607c2f77ce283476e708617b610fd3e",
+    "tests/test_finite_affine.py": "58661c00edc78de9f316a61998c3c74f7c562be3e0bf32919edb994eb7cac30e",
+    "tests/test_finite_aperture.py": "e2ec4013126986a80c0e1fea2b6546d3e8bd62dbfb73462cf60f1f8ef5548766",
+    "tests/test_finite_aperture_sensitivity.py": "3f67748549e8e39475e3b53e2395a966ed6700709a241d0ac080d2704f037bd9",
+    "tests/test_finite_centre_fit.py": "f94255dc8aab9c3db8196c3379ee2f025a1e7d83fca12a086084152c7eddceb4",
+    "tests/test_finite_normal.py": "2e3991fcae912266d1a504d7333b22292b65c712faa39ba26ca47b8ca8d83416",
+    "tests/test_finite_observations.py": "fd0a2196b1a93e37128334088e5faa6989c0d2ad53d49cd5945db7b34d7680ca",
+    "tests/test_finite_photometry.py": "693e6b67d3cd1e3cf1a157fe3d4ceae656c21b3510f8c7d0280092b958dd3b5d",
+    "uv.lock": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f"
+  },
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "plan": {
+    "format": "finite-acquisition-recovery-prospective-plan",
+    "version": 1,
+    "objective": "Recover Cx,Cy,R,f,theta and unknown bounded background/material levels from independently generated observed fields, retaining smooth, float32 staged and PNG objectives, all initialization refusals and failures. Not physical or global qualification.",
+    "base": "88a6d78f2807ae3eef3f6bf4bc229849321717ce",
+    "population": [
+      {
+        "name": "minor-smooth",
+        "family": "matched",
+        "mode": "smooth",
+        "geometry": "minor",
+        "adverse": null
+      },
+      {
+        "name": "minor-staged",
+        "family": "matched",
+        "mode": "staged",
+        "geometry": "minor",
+        "adverse": null
+      },
+      {
+        "name": "minor-png",
+        "family": "matched",
+        "mode": "png",
+        "geometry": "minor",
+        "adverse": null
+      },
+      {
+        "name": "middle-smooth",
+        "family": "matched",
+        "mode": "smooth",
+        "geometry": "middle",
+        "adverse": null
+      },
+      {
+        "name": "middle-staged",
+        "family": "matched",
+        "mode": "staged",
+        "geometry": "middle",
+        "adverse": null
+      },
+      {
+        "name": "middle-png",
+        "family": "matched",
+        "mode": "png",
+        "geometry": "middle",
+        "adverse": null
+      },
+      {
+        "name": "major-smooth",
+        "family": "matched",
+        "mode": "smooth",
+        "geometry": "major",
+        "adverse": null
+      },
+      {
+        "name": "major-staged",
+        "family": "matched",
+        "mode": "staged",
+        "geometry": "major",
+        "adverse": null
+      },
+      {
+        "name": "major-png",
+        "family": "matched",
+        "mode": "png",
+        "geometry": "major",
+        "adverse": null
+      },
+      {
+        "name": "wrapped-major-smooth",
+        "family": "matched",
+        "mode": "smooth",
+        "geometry": "wrapped-major",
+        "adverse": null
+      },
+      {
+        "name": "wrapped-major-staged",
+        "family": "matched",
+        "mode": "staged",
+        "geometry": "wrapped-major",
+        "adverse": null
+      },
+      {
+        "name": "wrapped-major-png",
+        "family": "matched",
+        "mode": "png",
+        "geometry": "wrapped-major",
+        "adverse": null
+      },
+      {
+        "name": "zero-smooth",
+        "family": "adverse",
+        "mode": "smooth",
+        "geometry": "minor",
+        "adverse": "zero"
+      },
+      {
+        "name": "zero-png",
+        "family": "adverse",
+        "mode": "png",
+        "geometry": "minor",
+        "adverse": "zero"
+      },
+      {
+        "name": "low-staged",
+        "family": "adverse",
+        "mode": "staged",
+        "geometry": "middle",
+        "adverse": "low"
+      },
+      {
+        "name": "cropped-smooth",
+        "family": "adverse",
+        "mode": "smooth",
+        "geometry": "major",
+        "adverse": "cropped"
+      },
+      {
+        "name": "thin-png",
+        "family": "adverse",
+        "mode": "png",
+        "geometry": "minor",
+        "adverse": "thin"
+      },
+      {
+        "name": "almost-circle-smooth",
+        "family": "adverse",
+        "mode": "smooth",
+        "geometry": "major",
+        "adverse": "almost"
+      },
+      {
+        "name": "wrong-optics-smooth",
+        "family": "adverse",
+        "mode": "smooth",
+        "geometry": "middle",
+        "adverse": "wrong"
+      },
+      {
+        "name": "gradient-staged",
+        "family": "adverse",
+        "mode": "staged",
+        "geometry": "major",
+        "adverse": "gradient"
+      },
+      {
+        "name": "singular-map-png",
+        "family": "adverse",
+        "mode": "png",
+        "geometry": "middle",
+        "adverse": "singular"
+      },
+      {
+        "name": "five-queries-smooth",
+        "family": "adverse",
+        "mode": "smooth",
+        "geometry": "minor",
+        "adverse": "five"
+      },
+      {
+        "name": "coincident-smooth",
+        "family": "adverse",
+        "mode": "smooth",
+        "geometry": "major",
+        "adverse": "coincident"
+      },
+      {
+        "name": "budget-png",
+        "family": "adverse",
+        "mode": "png",
+        "geometry": "middle",
+        "adverse": "budget"
+      }
+    ],
+    "geometries": [
+      {
+        "name": "minor",
+        "parameters": [
+          6.13,
+          6.21,
+          3.63,
+          -0.55,
+          0.31
+        ],
+        "levels": [
+          235.0,
+          27.0
+        ],
+        "polarity": "dark"
+      },
+      {
+        "name": "middle",
+        "parameters": [
+          5.87,
+          6.11,
+          3.41,
+          0.17,
+          1.13
+        ],
+        "levels": [
+          22.0,
+          218.0
+        ],
+        "polarity": "light"
+      },
+      {
+        "name": "major",
+        "parameters": [
+          6.26,
+          5.84,
+          3.82,
+          0.61,
+          2.43
+        ],
+        "levels": [
+          255.0,
+          0.0
+        ],
+        "polarity": "dark"
+      },
+      {
+        "name": "wrapped-major",
+        "parameters": [
+          6.09,
+          6.17,
+          3.52,
+          0.83,
+          6.22
+        ],
+        "levels": [
+          231.0,
+          35.0
+        ],
+        "polarity": "dark"
+      }
+    ],
+    "settings": {
+      "source_shape": [
+        13,
+        13
+      ],
+      "origin": [
+        0.0,
+        0.0
+      ],
+      "pitch": 1.0,
+      "output_shape": [
+        13,
+        13
+      ],
+      "output_to_source_index": [
+        [
+          1.0,
+          0.0,
+          -0.3
+        ],
+        [
+          0.0,
+          1.0,
+          -0.65
+        ]
+      ],
+      "optical_kernel": [
+        [
+          0.0,
+          0.125,
+          0.0
+        ],
+        [
+          0.25,
+          0.5,
+          0.0
+        ],
+        [
+          0.0,
+          0.125,
+          0.0
+        ]
+      ],
+      "post_kernel": [
+        [
+          1.0
+        ]
+      ]
+    },
+    "parameter_order": [
+      "centre_x",
+      "centre_y",
+      "radius",
+      "fraction",
+      "normal_angle"
+    ],
+    "reference": {
+      "area_orders": [
+        64,
+        96
+      ],
+      "area_max_delta": 1e-09,
+      "source": "positive vertical slice area from separately frozen sensitivity reference; no candidate area/Green functions",
+      "stages": "scalar reflected correlations and unfactored Keys cubics summed with math.fsum; explicit float32 casts and grayscale sRGB8 sequence in corresponding modes",
+      "code_agreement_required_between_orders": true,
+      "error_estimates": "Order agreement is a diagnostic, not a certified area/physical bound. Arithmetic differences from factored/tap evaluation are retained."
+    },
+    "initialization": {
+      "source": "prepare_acquisition_segment observed full field only; no geometry/evaluation dimensions",
+      "max_seeds": 4,
+      "polarity": "declared per scene",
+      "rules": "fixed immutable full field and acquisition map/stages; no truth-based seed ranking, expansion, exclusion or retry",
+      "bounds": "observed-only operational search limits; no guaranteed truth containment",
+      "levels": "observed output-level hints supplied as rounded-mode seeds, not calibrated source levels"
+    },
+    "optimizer": {
+      "max_evaluations": 2048,
+      "max_cell_work": 1000000,
+      "max_stage_work": 100000000,
+      "max_iterations": 60,
+      "level_bounds": [
+        [
+          0.0,
+          255.0
+        ],
+        [
+          0.0,
+          255.0
+        ]
+      ],
+      "normal_angle": "ideal continuous unit-angle family approximated by trig and public normal canonicalization; bit-level exact derivative not asserted",
+      "smooth": "bounded two-level SVD variable projection with full fixed-face residual Jacobian, mean-based nuisance-projected rank, dimensionless damped LM/backtracking and actual-cost polling fallback",
+      "staged_png": "actual rounded chain, bounded local geometry/brightness polls; no exact variable projection/globality or smooth-rank claim"
+    },
+    "sampling": {
+      "train": "all initializer queries except (x+2*y)%5==0; five-query adverse retains first5 deterministic training rows",
+      "reserved": "remaining queries, omitted from cost but used in full-field initialization: conditional residual checks, not independent predictions",
+      "reserved_dimensions": "truth chord_length and normal_depth opened only after initializer and optimizer result files are saved; not initializer/optimizer inputs"
+    },
+    "targets": {
+      "centre_error_pitch": 0.02,
+      "radius_error_pitch": 0.02,
+      "fraction_error": 0.002,
+      "wrapped_angle_degrees": 0.2,
+      "reserved_dimension_error_pitch": 0.03,
+      "sampled_bidirectional_boundary_error_pitch": 0.03,
+      "conditional_query_max_residual_linear_level": 0.01,
+      "geometry_rank_conservative_when_smooth": 5,
+      "scope": "Per-row predeclared synthetic targets; PNG/staged plateaus may fail. Adverse rows retain target flags but are not claimed successes merely for executing/refusing.",
+      "bounded_local_search_completion": "best candidate belongs to at least one projected-gradient/poll-resolution search; no exhausted work or protocol failure. Local resolution does not establish globality or physical adequacy."
+    },
+    "adverse_definitions": {
+      "zero": "both source levels127",
+      "low": "source levels132,130; keep declared polarity even if contradicted",
+      "cropped": "centre_x1.1",
+      "thin": "fraction-.94",
+      "almost": "fraction.999",
+      "wrong": "fit optical kernel[[1]] while capture retains declared asymmetric kernel",
+      "gradient": "add .75*(output_x-6) to observed final field",
+      "singular": "fit map[[0,0,6],[0,0,6]]; capture map unchanged",
+      "five": "fit only first5 deterministic training queries",
+      "coincident": "centre_x6.5,fraction0,theta0",
+      "budget": "max_evaluations1,max_cell_work169,max_stage_work100000"
+    },
+    "failure_policy": "Freeze complete implementation/tests/plan/runner/reference before first numerical call. Retain every row, raw exception and upstream refusal; continue remaining rows; do not tune thresholds, truth-derived bounds or population after outcomes. Corrections require a separately admitted continuation. Exit1 if any matched row misses any target or reference gate; adverse outcomes summarized without acceptance promotion. Fresh output directory required."
+  }
+}

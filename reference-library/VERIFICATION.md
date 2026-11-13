@@ -6,6 +6,18 @@ Documentation correction, November 12: the browser file count below now matches
 the existing dated receipt. The receipt, check date and release status were not
 regenerated for this correction.
 
+Repository documentation update, November 13: the
+[current review](../docs/validation/documentation-recovery-state.md) links the
+[local acquisition-recovery snapshot](../docs/finite-acquisition-recovery.md).
+That separate synthetic research retains 4/12 original matched target passes
+and 9/12 continuation passes; both full protocols exited 1. The 459 focused tests
+belong to the candidate source, not main or this library. Its first saved-data
+audit also exited 1: 14 comparisons require pre-cast area differences that the
+rounded capture arrays do not preserve. No other inconsistency was reported by
+that audit, within its stated exclusions. These are separate evidence records,
+not a refreshed library verification. The dated release counts, catalog,
+verification.json, generated reader and PDF remain unchanged by this update.
+
 ## What was checked automatically
 
 The checks fall into the three tiers described in handbook section 18. Tiers 1 and 2 ran; tier 3 did not.

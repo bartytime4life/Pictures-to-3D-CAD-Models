@@ -5,6 +5,23 @@ record below to assess its evidence. This page separates local checks, hosted
 CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
+## Local acquisition recovery and documentation snapshot — November 13, 2026
+
+The [current documentation review](validation/documentation-recovery-state.md)
+uses merged main `e0b16e0`, including documentation PR #110. It distinguishes
+that runtime from a separately frozen local research candidate. The
+[complete reported recovery outcome](validation/finite-acquisition-recovery.md)
+retains both 24-case protocols: 4/12 matched passes originally, then 9/12
+with a budget-shared smooth proposal before literal rounded fitting. Both exit 1;
+the three remaining failures are PNG cases. All 459 focused candidate tests pass.
+
+The saved-data audit of the original run also exits 1, with 14 reference
+area-order checks not recoverable from rounded saved coverage. The linked record
+includes unmodified report/log extracts and the static source explanation,
+without claiming an independently reproduced forward result or including the
+candidate's runtime/full raw-data archive. No new numerical study or application,
+browser, installed-tool or physical qualification is performed for this docs pass.
+
 ## Documentation audit after PR #109 merged — November 13, 2026
 
 The [current review](validation/documentation-main109-state.md) audits all

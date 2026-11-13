@@ -1,0 +1,15 @@
+{
+  "recorded_at": "2026-11-13T18:31:32.947543+00:00",
+  "source": "7ec680386f75e44415aeb4c83552aa723399c0bc",
+  "session_id": 67286,
+  "exit_code": 1,
+  "passed": 404,
+  "failed": 1,
+  "runtime_seconds": 12.34,
+  "failure": "test_limits_retain_all_seed_identities_and_never_claim_search_completion[max_evaluations]",
+  "expected": "work_limit",
+  "actual": "projected_gradient_resolution",
+  "log_sha256": "d83e97463d54779ffcc9af8c77e8fa4ed2a7a28404e98e5871289bcbe4d3bee7",
+  "study_executed": false,
+  "source_changed": false
+}

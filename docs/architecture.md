@@ -111,6 +111,17 @@ parameter of the existing fixed-normal Gaussian fitter. A future inverse must
 keep the unrounded linear objective separate from the float32/sRGB8 stages and
 qualify its own search, brightness handling and geometry-information rank.
 
+The separate [acquisition-recovery candidate](finite-acquisition-recovery.md),
+frozen at `e6e2c2`, implements that five-geometry search outside this main
+runtime. Its smooth mode profiles two bounded brightness levels; staged/PNG
+modes search the literal rounded objective. A separate predictor strategy can
+allocate `floor(cap/4)` of each evaluation, cell-work and stage-work budget to a
+smooth proposal, then use its lowest-cost candidate as one literal start after
+deducting charged work from the global budgets. Proposal derivatives, rank and
+stopping evidence do not become properties of the rounded objective. The
+candidate modules and study commands are absent
+from this checkout; they add no HTTP or automatic-tracing capability here.
+
 The subsequent developer-only
 [source-cell acquisition mean](finite-acquisition-mean.md) composes independent
 analytic cell coverage with explicit discrete kernels, grayscale encoding and

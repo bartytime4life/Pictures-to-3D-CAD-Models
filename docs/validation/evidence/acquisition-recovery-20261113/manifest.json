@@ -1,0 +1,75 @@
+{
+  "format": "documentation-research-evidence-extract",
+  "version": 1,
+  "original_source": "7ec680386f75e44415aeb4c83552aa723399c0bc",
+  "continuation_source": "e6e2c2881add2cc594f4a59d713edf8a9ddde665",
+  "documentation_base": "e0b16e0a0a0d9e16477442b622c32ad0868c062e",
+  "scope": "Verbatim reports, logs, frozen plans, receipt and static source excerpts. Not the full raw-capture/candidate-ledger/source archive. No model, optimizer or reference was rerun to prepare these extracts.",
+  "full_original_archive": {
+    "sha256": "e25fe8a0ca8675daafed1b0b577de1d68f4d42e21bf91ee3ba72d43fcb98e724",
+    "bytes": 27710505,
+    "publication": "retained locally in the separate research checkout; not included in this documentation change"
+  },
+  "files": {
+    "continuation-admission.json": {
+      "sha256": "8533f5503798aef2c3eb275a97c88db91d82d6b3ba27327a0aee3d013f75580e",
+      "bytes": 6641
+    },
+    "continuation-freeze.json": {
+      "sha256": "ba9cb20116ac3d2ddee240ec302cdd4560c5f3cc673b2370233acbda96e487a5",
+      "bytes": 7101
+    },
+    "continuation-report.json": {
+      "sha256": "f73120151fb709521417f07ff7bc3ac82f3039e5170fc912bd692429bd4f949e",
+      "bytes": 108453
+    },
+    "continuation-study-freeze.json": {
+      "sha256": "06d7ee7e0dc464d6e58eb171a016cc9ad053a6466d847f4ecff5ac4b47a762da",
+      "bytes": 23804
+    },
+    "continuation-terminal-receipt.json": {
+      "sha256": "6c6232899fb569904a0be0b0a9d6335f8548bfdd2146d636bb047a2480785d23",
+      "bytes": 1502
+    },
+    "finite-acquisition-recovery-audit-v1.py.txt": {
+      "sha256": "749cb6b9a158b81891cb58109b114b2a18bf4aca1933c8268beca2bfa00a0373",
+      "bytes": 58824
+    },
+    "finite-acquisition-recovery-reference-v1.py.txt": {
+      "sha256": "5d8f3ec4b0283a688338e3981288fc38214e99bf5af50dad07c33cba2777ab0d",
+      "bytes": 6757
+    },
+    "finite-acquisition-recovery-v1.py.txt": {
+      "sha256": "073cc432134c5258add3e9d3addd24fdcabead97451424c3303720f878d58d29",
+      "bytes": 16187
+    },
+    "focused-tests.log": {
+      "sha256": "01797e8824b248a68523e053db126e89a5d85a66284a3510437842622293fdbe",
+      "bytes": 581
+    },
+    "original-audit.json": {
+      "sha256": "dc2b0b454c2be8cb9025d5f444deba23dbd15563fb7a786871f63b7ceea90533",
+      "bytes": 36900
+    },
+    "original-plan.json": {
+      "sha256": "737bb8badf15a6bd1438ece67b9ad03f96e65440989bbc8bc2110edc8a497ad0",
+      "bytes": 9756
+    },
+    "original-report.json": {
+      "sha256": "30a3e30f26150124da22d76cc3b7c36aaf2212d094a1a5601253722442edad28",
+      "bytes": 100107
+    },
+    "original-study-freeze.json": {
+      "sha256": "17cb3736f824a50959460e92d17723c3c6fd0547f353584fc3a36daab8291f72",
+      "bytes": 16115
+    },
+    "original-tests-result.json": {
+      "sha256": "82619e7528544441d3e57e84177a68db68b20049913c1970b61a9971d36485d4",
+      "bytes": 530
+    },
+    "original-tests.log": {
+      "sha256": "d83e97463d54779ffcc9af8c77e8fa4ed2a7a28404e98e5871289bcbe4d3bee7",
+      "bytes": 1722
+    }
+  }
+}

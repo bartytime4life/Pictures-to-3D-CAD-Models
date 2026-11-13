@@ -1,9 +1,9 @@
 # Source scope and verification status
 
-## Current source snapshot — November 13, 2026, 18:38 UTC
+## Current source snapshot — November 13, 2026, 19:11 UTC
 
-Main is `a6990c957a3a8f0a39425a1074239974d499a805`, tree
-`60344358be445ef89178de8728917b7e195e1767`. It includes the source-cell mean
+Main is `e0b16e0a0a0d9e16477442b622c32ad0868c062e`, tree
+`5f94fdcc41456bc8015428e55802760eb8db5408`. It includes the source-cell mean
 from [PR #105](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/105),
 the two-direction edge-width repair from
 [PR #107](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/107),
@@ -12,7 +12,9 @@ and the area-sensitivity/linear-acquisition operators from
 Those three PRs and documentation
 [PR #109](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/109)
 are merged at this readback. PR #109 merged at 18:23 UTC and changed only
-documentation. PR #106 merged into its research
+documentation. The subsequent documentation
+[PR #110](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/110)
+merged at 18:59 UTC; its tree matches this main revision. PR #106 merged into its research
 base after PR #105 closed; its documentation reached main through PR #108.
 
 | Capability in this source | Scope and evidence |
@@ -21,7 +23,7 @@ base after PR #105 closed; its documentation reached main through PR #108.
 | Gaussian finite-material inverse | Developer Python API; four geometry parameters with supplied chord normal and optics. [Contract](finite-shape-inverse.md) |
 | Source-cell area and staged acquisition mean | Developer Python APIs with supplied geometry, levels, kernels and affine sampling; [128 saved-stage comparisons](validation/finite-acquisition-mean.md) |
 | Five unrounded area sensitivities and signed linear propagation | Developer Python APIs; [259 focused tests and 33 study rows](validation/finite-cell-sensitivity.md), without an inverse-recovery result |
-| Five-geometry-parameter acquisition-aware recovery with unknown brightness | Planned; no implementation, recovery study, HTTP mode or automatic correction in this source |
+| Five-geometry-parameter acquisition-aware recovery with unknown brightness | Absent from this main-based runtime. A [separate local candidate](finite-acquisition-recovery.md) has two completed, failed recovery protocols; it is not an HTTP mode or automatic correction |
 
 Hosted checks are tied to their published heads:
 
@@ -29,16 +31,33 @@ Hosted checks are tied to their published heads:
 | --- | --- | --- |
 | PR #108, `f54e47a443015c2e4701a143c4ac1c469595b731` | [43475029242](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43475029242): completed, success | [43475029376](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43475029376): completed, success |
 | PR #109, `88a6d78f2807ae3eef3f6bf4bc229849321717ce` | [43478504807](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43478504807): completed, success | [43478504825](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43478504825): completed, success |
+| PR #110, `8c72d873ae7871584f5c2ca9d12ac5d4bbdfab96` | [43484991562](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43484991562): in progress, no conclusion | [43484991878](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43484991878): completed, success |
 
 These readbacks do not extend a run to the combined main commit or this later
 documentation change. Merge, hosted checks, installed runtime, real-camera
 accuracy and physical acceptance remain separate.
 
-The [documentation review](validation/documentation-main109-state.md) audits this
+The [documentation review](validation/documentation-recovery-state.md) audits this
 main-based source. Use [available tools](#available-here) and [remaining integration work](#remaining-integration-work)
 for current capabilities. Earlier snapshots below are historical records; their open
 PR states and absent-module statements describe their own source and time.
 The primary `codex/slicer-integration` checkout remains separate and unchanged.
+
+## Separate local recovery research
+
+The [recovery method](finite-acquisition-recovery.md) describes local candidate
+`e6e2c2881add2cc594f4a59d713edf8a9ddde665`, not the runtime above. The original
+source `7ec6803` records 4/12 matched passes; the separately admitted smooth-proposal
+continuation records 9/12: four smooth, four staged and one PNG. Both retain all
+24 cases, including 12 adverse cases, and both protocols exit 1. The candidate's
+459 focused tests pass. Three PNG cases still miss the original targets.
+
+The original saved-data auditor exits 1 with 14 pre-cast reference-area delta
+checks that rounded saved coverage cannot reproduce. The
+[result and evidence extract](validation/finite-acquisition-recovery.md) preserves
+that failure, conditional reserved-pixel use, tied PNG candidates and the lack of
+independent forward/rank/physical qualification. This documentation change
+includes reports and static excerpts, not the candidate runtime or full raw archive.
 
 ## Available here
 
@@ -126,10 +145,12 @@ mismatch rather than identify a physical camera PSF.
 The acquisition study now supplies a controlled counterexample to second-moment
 Gaussian closure. A subsequent source-cell mean now has
 [independent supplied-stage qualification](validation/finite-acquisition-mean.md).
-A future inverse can use the separately
-[checked unrounded derivatives](finite-cell-sensitivity.md), but still needs
-observed-only seeds and bounds, brightness/rank diagnostics, a bounded search
-for undefined derivatives or rounded stages, and prospective recovery checks.
+A main-branch inverse would need the separately
+[checked unrounded derivatives](finite-cell-sensitivity.md), observed-only
+seeds and bounds, brightness/rank diagnostics, a bounded search for undefined
+derivatives or rounded stages, and prospective recovery checks. The separate
+[local prototype](finite-acquisition-recovery.md) implements those research
+mechanisms, but its two failed protocols leave recovery and adoption unresolved.
 The current five-query coupled controls do not prove five-parameter rank after
 two unknown brightness levels. Supplied source assumptions and observed camera calibration remain
 distinct. Neither study automatically corrects CAD.

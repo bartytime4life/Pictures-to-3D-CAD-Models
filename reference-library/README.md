@@ -29,6 +29,15 @@ are also workbench research APIs. Check the
 Those APIs and synthetic results belong to the workbench, with no
 change to this library's revision, calculators or generated handbook.
 
+The [local acquisition-recovery snapshot](../docs/finite-acquisition-recovery.md)
+records 4/12 matched target passes in the original experiment and 9/12 in a
+separate continuation; both full protocols failed. Its 459 focused tests bind
+the research candidate, not main or this library. The
+[current documentation review](../docs/validation/documentation-recovery-state.md)
+also records 14 unresolved saved-audit comparisons where the original pre-cast
+area differences cannot be reconstructed from rounded capture arrays. This
+documentation does not add a fitter to main, the workbench or the Photos tab.
+
 A practical, source-backed library for turning photographs into printable CAD: recover shape, establish dimensions, rebuild editable geometry, and check the part you print. **Revision 7, November 9, 2026.**
 
 It contains a 23-chapter handbook, 88 annotated sources (including 21 GitHub repository records), research notes, reusable worksheets, 10 explanatory figures, 14 calculators with a route finder, a local photo workspace, a Python command-line toolkit, and synthetic worked examples that are rendered and checked automatically.

@@ -1,0 +1,408 @@
+#!/usr/bin/env python3
+"""Frozen observed-only five-geometry recovery experiment; retain every row."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import importlib.util
+import json
+import math
+import os
+import platform
+import subprocess
+import sys
+import time
+import traceback
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+PLAN = "studies/finite-acquisition-recovery-v1.json"
+REFERENCE = "studies/verification/finite-acquisition-recovery-reference-v1.py"
+
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def write_json(path, value):
+    # APIs must provide native finite JSON. Unexpected scalar types are errors.
+    with path.open("x") as stream:
+        json.dump(value, stream, indent=2, allow_nan=False)
+        stream.write("\n")
+
+
+def sources():
+    return sorted(
+        [str(p.relative_to(ROOT)) for p in (ROOT / "backend").glob("*.py")]
+        + [str(p.relative_to(ROOT)) for p in (ROOT / "tests").glob("test_finite*.py")]
+        + [
+            PLAN,
+            REFERENCE,
+            str(Path(__file__).relative_to(ROOT)),
+            "studies/verification/finite-cell-sensitivity-v1.py",
+            "pyproject.toml",
+            "uv.lock",
+        ]
+    )
+
+
+def source_snapshot(paths):
+    return {p: digest(ROOT / p) for p in paths}
+
+
+def load_reference():
+    spec = importlib.util.spec_from_file_location(
+        "independent_acquisition_recovery", ROOT / REFERENCE
+    )
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def scene(plan, case):
+    import copy
+
+    geometry = next(g for g in plan["geometries"] if g["name"] == case["geometry"])
+    truth = list(geometry["parameters"])
+    levels = list(geometry["levels"])
+    capture = copy.deepcopy(plan["settings"])
+    assumed = copy.deepcopy(capture)
+    kind = case["adverse"]
+    if kind == "zero":
+        levels = [127.0, 127.0]
+    elif kind == "low":
+        levels = [132.0, 130.0]
+    elif kind == "cropped":
+        truth[0] = 1.1
+    elif kind == "thin":
+        truth[3] = -0.94
+    elif kind == "almost":
+        truth[3] = 0.999
+    elif kind == "wrong":
+        assumed["optical_kernel"] = [[1.0]]
+    elif kind == "singular":
+        assumed["output_to_source_index"] = [[0.0, 0.0, 6.0], [0.0, 0.0, 6.0]]
+    elif kind == "coincident":
+        truth[0], truth[3], truth[4] = 6.5, 0.0, 0.0
+    return truth, levels, capture, assumed, geometry["polarity"]
+
+
+def fit_observed(field, settings, polarity, case, options, directory):
+    """No geometry truth or reserved dimension argument crosses this boundary."""
+    import numpy as np
+
+    from backend.finite_acquisition_fit import fit_acquisition_segment
+    from backend.finite_acquisition_observations import prepare_acquisition_segment
+
+    prepared = prepare_acquisition_segment(
+        field,
+        source_shape=tuple(settings["source_shape"]),
+        origin=settings["origin"],
+        pitch=settings["pitch"],
+        output_to_source_index=settings["output_to_source_index"],
+        optical_kernel=settings["optical_kernel"],
+        post_kernel=settings["post_kernel"],
+        polarity=polarity,
+        max_seeds=4,
+    )
+    write_json(directory / "initialization.json", prepared.to_dict())
+    result = {"preparation_status": prepared.status, "fit_attempted": False, "evaluation": None}
+    if prepared.bounds is None or len(prepared.seeds) == 0:
+        return result, prepared, None, None
+    # Full-field initialization used reserved intensities already: conditional checks only.
+    queries = np.asarray(prepared.queries)
+    keep = (queries[:, 0] + 2 * queries[:, 1]) % 5 != 0
+    if case["adverse"] == "five":
+        first_training = np.flatnonzero(keep)[:5]
+        keep[:] = False
+        keep[first_training] = True
+    training = queries[keep]
+    observed = np.asarray(prepared.observations)[keep]
+    hints = np.asarray(prepared.level_hints, dtype=float)
+    level_seed = np.clip(hints, 0.0, 255.0)
+    seeds = np.column_stack((prepared.seeds, np.broadcast_to(level_seed, (len(prepared.seeds), 2))))
+    call = {**options}
+    if case["adverse"] == "budget":
+        call.update(max_evaluations=1, max_cell_work=169, max_stage_work=100000)
+    write_json(
+        directory / "observed-fit-input.json",
+        {
+            "preparation_input_sha256": prepared.input_sha256,
+            "bounds": prepared.bounds.tolist(),
+            "seeds": seeds.tolist(),
+            "original_output_level_hints": hints.tolist(),
+            "level_seed_after_declared_bounds": level_seed.tolist(),
+            "queries": training.tolist(),
+            "observations": observed.tolist(),
+            "reserved_queries": queries[~keep].tolist(),
+            "mode": case["mode"],
+            "settings": settings,
+            "controls": call,
+        },
+    )
+    fitted = fit_acquisition_segment(
+        observed,
+        source_shape=tuple(settings["source_shape"]),
+        origin=settings["origin"],
+        pitch=settings["pitch"],
+        optical_kernel=settings["optical_kernel"],
+        output_shape=tuple(settings["output_shape"]),
+        output_to_source_index=settings["output_to_source_index"],
+        post_kernel=settings["post_kernel"],
+        queries=training,
+        bounds=prepared.bounds,
+        seeds=seeds,
+        mode=case["mode"],
+        **call,
+    )
+    # Persist the complete optimizer output BEFORE opening evaluation dimensions.
+    write_json(directory / "fit.json", fitted.to_dict())
+    result["fit_attempted"] = True
+    return result, prepared, fitted, queries[~keep]
+
+
+def evaluate(reference, truth, field, settings, mode, fitted, reserved, targets):
+    import numpy as np
+
+    if fitted is None or fitted.best is None:
+        return {"status": "no_candidate", "all_targets": False}
+    got = np.asarray(fitted.best.parameters, dtype=float)
+    actual = np.asarray(truth, dtype=float)
+    pitch = settings["pitch"]
+    delta_angle = abs(math.remainder(float(got[4] - actual[4]), 2 * math.pi)) * 180 / math.pi
+    truth_dimensions = reference.dimensions(truth)
+    candidate_dimensions = reference.dimensions(got)
+    errors = {
+        "centre_error_pitch": float(np.linalg.norm(got[:2] - actual[:2])) / pitch,
+        "radius_error_pitch": abs(float(got[2] - actual[2])) / pitch,
+        "fraction_error": abs(float(got[3] - actual[3])),
+        "wrapped_angle_degrees": delta_angle,
+        "reserved_dimension_error_pitch": max(
+            abs(candidate_dimensions[k] - v) for k, v in truth_dimensions.items()
+        )
+        / pitch,
+        "sampled_bidirectional_boundary_error_pitch": reference.sampled_boundary_discrepancy(
+            truth, got
+        )
+        / pitch,
+    }
+    # Independently re-evaluate the fitted candidate, never use its own cost as adequacy proof.
+    candidate_coverage = reference.coverage(got, settings, order=96)
+    candidate_field = reference.forward(candidate_coverage, fitted.best.levels, settings, mode)[
+        "final"
+    ]
+    residuals = np.array([float(field[y, x]) - float(candidate_field[y, x]) for x, y in reserved])
+    errors["conditional_query_max_residual_linear_level"] = (
+        float(np.max(np.abs(residuals))) if len(residuals) else None
+    )
+    checks = {key: value is not None and value <= targets[key] for key, value in errors.items()}
+    checks["bounded_local_search_completion"] = (
+        not fitted.work_exhausted
+        and not fitted.protocol_failure
+        and any(
+            search.best_candidate_index == fitted.best.index
+            and search.status in ("projected_gradient_resolution", "poll_resolution")
+            for search in fitted.searches
+        )
+    )
+    if mode == "smooth":
+        checks["geometry_rank_conservative_when_smooth"] = (
+            fitted.best.geometry_rank_conservative
+            == targets["geometry_rank_conservative_when_smooth"]
+        )
+    return {
+        "status": "evaluated",
+        "parameters": got.tolist(),
+        "levels": list(map(float, fitted.best.levels)),
+        "errors": errors,
+        "targets": checks,
+        "all_targets": all(checks.values()),
+        "search_stopping_statuses": [search.status for search in fitted.searches],
+        "work_exhausted": fitted.work_exhausted,
+        "candidate_tie_retained": fitted.tied,
+        "truth_dimensions_opened_after_fit_saved": truth_dimensions,
+        "candidate_dimensions": candidate_dimensions,
+        "conditional_reserved_residuals": residuals.tolist(),
+        "boundary_metric": "sampled bidirectional lower approximation; not a certified supremum",
+        "optical_adequacy": "not_evaluated",
+        "physical_qualification": False,
+    }
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output-dir", required=True, type=Path)
+    args = parser.parse_args()
+    lexical_directory = args.output_dir.absolute()
+    if lexical_directory.is_symlink() or lexical_directory.exists():
+        parser.error("an existing output path or symlink is not a fresh directory")
+    directory = lexical_directory.resolve()
+    if directory.exists() or not directory.parent.is_dir():
+        parser.error("a fresh output directory with an existing parent is required")
+    plan = json.loads((ROOT / PLAN).read_text())
+    if (
+        len(plan["population"]) != 24
+        or sum(c["family"] == "matched" for c in plan["population"]) != 12
+    ):
+        parser.error("population contract changed")
+    paths = sources()
+    before = source_snapshot(paths)
+    head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+    for path in paths:
+        committed = subprocess.check_output(["git", "show", f"{head}:{path}"], cwd=ROOT)
+        if hashlib.sha256(committed).hexdigest() != before[path]:
+            parser.error(f"source is not committed: {path}")
+    directory.mkdir()
+    write_json(
+        directory / "source-freeze.json",
+        {"head": head, "sha256": before, "python": sys.version, "plan": plan},
+    )
+    sys.path.insert(0, str(ROOT))
+    import cv2
+    import numpy as np
+
+    reference = load_reference()
+    controls = {
+        k: plan["optimizer"][k]
+        for k in (
+            "max_evaluations",
+            "max_cell_work",
+            "max_stage_work",
+            "max_iterations",
+            "level_bounds",
+        )
+    }
+    report = {
+        "format": "finite-acquisition-recovery-complete-report",
+        "source_head": head,
+        "source_sha256_before": before,
+        "numpy_version": np.__version__,
+        "opencv_version": cv2.__version__,
+        "platform": platform.platform(),
+        "thread_environment": {
+            key: os.environ.get(key) for key in ("OPENBLAS_NUM_THREADS", "OMP_NUM_THREADS")
+        },
+        "rows": [],
+    }
+    for case in plan["population"]:
+        row_dir = directory / case["name"]
+        row_dir.mkdir()
+        row = {"case": case, "status": "started", "all_targets": False}
+        start = time.monotonic()
+        try:
+            truth, levels, capture, assumed, polarity = scene(plan, case)
+            fields, cells, stages = [], [], {}
+            for order in plan["reference"]["area_orders"]:
+                cell = reference.coverage(truth, capture, order)
+                current = reference.forward(cell, levels, capture, case["mode"])
+                cells.append(cell)
+                fields.append(current["final"].copy())
+                stages.update({f"order{order}_{k}": v for k, v in current.items()})
+            with (row_dir / "capture.npz").open("xb") as stream:
+                np.savez_compressed(stream, **stages)
+            field = fields[-1].copy()
+            if case["adverse"] == "gradient":
+                field = field + 0.75 * (np.arange(field.shape[1]) - 6)
+            row["reference"] = {
+                "max_area_order_delta": float(np.max(np.abs(cells[1] - cells[0]))),
+                "max_final_order_delta": float(np.max(np.abs(fields[1] - fields[0]))),
+                "encoded_order_codes_equal": (
+                    bool(np.array_equal(stages["order64_encoded"], stages["order96_encoded"]))
+                    if case["mode"] == "png"
+                    else None
+                ),
+            }
+            row["reference"]["passed"] = (
+                row["reference"]["max_area_order_delta"] <= plan["reference"]["area_max_delta"]
+                and row["reference"]["encoded_order_codes_equal"] is not False
+            )
+            summary, prepared, fitted, reserved = fit_observed(
+                field,
+                assumed,
+                polarity,
+                case,
+                controls,
+                row_dir,
+            )
+            row.update(summary)
+            row["evaluation"] = evaluate(
+                reference, truth, field, assumed, case["mode"], fitted, reserved, plan["targets"]
+            )
+            row["all_targets"] = row["reference"]["passed"] and row["evaluation"]["all_targets"]
+            row["raw_truth_inside_observed_bounds_after_outputs_saved"] = (
+                bool(
+                    np.all(np.asarray(truth) >= prepared.bounds[:, 0])
+                    and np.all(np.asarray(truth) <= prepared.bounds[:, 1])
+                )
+                if prepared.bounds is not None
+                else None
+            )
+            if prepared.bounds is not None:
+                equivalent = np.asarray(truth).copy()
+                midpoint = float(np.mean(prepared.bounds[4]))
+                equivalent[4] = midpoint + math.remainder(
+                    float(equivalent[4] - midpoint), 2 * math.pi
+                )
+                row["equivalent_angle_truth_inside_observed_bounds_after_outputs_saved"] = bool(
+                    np.all(equivalent >= prepared.bounds[:, 0])
+                    and np.all(equivalent <= prepared.bounds[:, 1])
+                )
+            row["status"] = "completed"
+        except Exception as error:  # noqa: BLE001 -- every failed row must remain in the experiment
+            row.update(
+                status="exception",
+                fit_attempted=(row_dir / "observed-fit-input.json").exists(),
+                exception=f"{type(error).__name__}: {error}",
+                traceback=traceback.format_exc(),
+            )
+        row["elapsed_seconds"] = time.monotonic() - start
+        write_json(row_dir / "record.json", row)
+        report["rows"].append(row)
+        print(
+            json.dumps(
+                {
+                    "name": case["name"],
+                    "status": row["status"],
+                    "fit_attempted": row.get("fit_attempted"),
+                    "all_targets": row["all_targets"],
+                }
+            ),
+            flush=True,
+        )
+    try:
+        report["source_sha256_after"] = source_snapshot(paths)
+        report["source_unchanged"] = report["source_sha256_after"] == before
+    except OSError as error:
+        report["source_sha256_after"] = None
+        report["source_after_error"] = f"{type(error).__name__}: {error}"
+        report["source_unchanged"] = False
+    matched = [r for r in report["rows"] if r["case"]["family"] == "matched"]
+    report["matched_passes"] = sum(r["all_targets"] for r in matched)
+    report["adverse_all_target_passes"] = sum(
+        r["all_targets"] for r in report["rows"] if r["case"]["family"] == "adverse"
+    )
+    report["passed"] = report["source_unchanged"] and report["matched_passes"] == len(matched)
+    report["artifacts"] = {
+        str(p.relative_to(directory)): {"sha256": digest(p), "bytes": p.stat().st_size}
+        for p in sorted(directory.rglob("*"))
+        if p.is_file()
+    }
+    write_json(directory / "report.json", report)
+    print(
+        json.dumps(
+            {
+                "matched_passes": report["matched_passes"],
+                "matched_total": len(matched),
+                "rows": len(report["rows"]),
+                "passed": report["passed"],
+            }
+        ),
+        flush=True,
+    )
+    return 0 if report["passed"] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

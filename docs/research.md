@@ -55,9 +55,19 @@ separate workspace-accounting repair. These are supplied-stage forward checks,
 not new captures, geometry recovery or physical camera qualification.
 The subsequent [cell-sensitivity and fixed-linear qualification](validation/finite-cell-sensitivity.md)
 now checks all five area columns and their signed intensity propagation in a
-separate unrounded model. Prospective recovery, identifiability and explicit
-treatment of undefined derivatives and encoded source pixels remain next;
-no automatic tracing or inverse integration is added.
+separate unrounded model. These operators are available in main; the new
+[acquisition-aware recovery prototype](finite-acquisition-recovery.md) remains
+on separately frozen local source, outside this checkout's runtime.
+Its first 24-row protocol at `7ec6803` passes 4/12 matched cases; the continuation
+at `e6e2c2` passes 9/12, comprising four smooth, four float32-staged and one PNG
+case. Both protocols retain all 12 adverse rows and exit **1**. Three PNG cases
+still miss the unchanged targets despite local stopping, and every matched PNG
+case retains tied represented candidates. The **459 focused tests** qualify
+separate software controls, not general recovery or camera accuracy.
+The [complete record](validation/finite-acquisition-recovery.md) also preserves
+the original study's first saved-audit failure: 14 pre-cast float64 area-order
+differences cannot be reconstructed from the saved rounded float32 coverage.
+No independent audit success, automatic tracing or GUI/HTTP integration follows.
 The [API contract](finite-acquisition-mean.md#refusals-provenance-and-work)
 now states the input ranges, exact hash inputs, failure behavior and corrected
 workspace formula. Its unquantized path still stores float32 values. Any

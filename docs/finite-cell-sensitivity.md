@@ -209,12 +209,20 @@ identify five geometry parameters with two unknown brightness levels.
 The [259-test result and fixed study](validation/finite-cell-sensitivity.md)
 support these supplied-model derivatives. Five-query coupled controls test the
 columns individually; they cannot establish five-parameter rank with two free
-brightness nuisance levels. A bounded inverse still needs observed-only seeds
-and bounds, prospective reserved dimensions, rank/contrast checks and an
-explicit policy for nondifferentiable cells and rounded source encoding.
+brightness nuisance levels. The reviewed main source has no acquisition-aware
+five-parameter inverse. A [separately frozen local prototype](finite-acquisition-recovery.md)
+now uses observed-only seeds/bounds, bounded brightness handling and separate
+smooth and literal rounded objectives. Its original protocol at `7ec6803`
+passes 4/12 matched cases; the continuation at `e6e2c2` passes 9/12 (four smooth,
+four float32-staged and one PNG). Both complete 24-row protocols retain 12 adverse
+rows and exit **1**. Its **459 focused test passes** are separate software evidence;
+they do not make this a qualified general inverse or add a GUI/HTTP mode.
 
-The following are requirements for that future inverse, not an implemented
-solver or a frozen recovery experiment:
+The following remain requirements before main integration. The local prototype
+exercises them with [retained recovery failures and audit limits](validation/finite-acquisition-recovery.md);
+the derivative study alone does not qualify the solver. In particular, full-field
+initialization uses eventual reserved pixels, so their residuals are conditional
+checks rather than independent holdout predictions.
 
 | Concern | Required distinction |
 | --- | --- |

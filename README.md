@@ -135,10 +135,14 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 For the reviewed source revision and available research APIs, read
 [source scope and status](docs/project-status.md) and the
-[current documentation review](docs/validation/documentation-main109-state.md).
+[current documentation review](docs/validation/documentation-recovery-state.md).
 Main includes the source-cell mean, five unrounded area sensitivities and
 separate signed linear propagation as developer APIs. Five-parameter recovery
-with unknown brightness remains planned. The
+with unknown brightness is absent from this main-based runtime. A
+[separate local research prototype](docs/finite-acquisition-recovery.md) records
+4/12 matched passes in its original study and 9/12 with a smooth proposal before
+literal rounded fitting; both complete protocols fail. Its 459 focused tests
+do not establish automatic tracing, camera accuracy or physical acceptance. The
 [preceding documentation review](docs/validation/documentation-mean-state.md),
 [acquisition-evidence review](docs/validation/documentation-acquisition-state.md)
 and [PR #95 review](docs/validation/documentation-pr95-state.md) retain their
@@ -232,6 +236,9 @@ workspace correction. Subsequent
 now have [source-bound derivative checks](docs/validation/finite-cell-sensitivity.md).
 They do not differentiate the rounded stages or establish geometry recovery;
 no automatic correction or camera calibration is added.
+The [later local recovery record](docs/validation/finite-acquisition-recovery.md)
+retains the original failures, three remaining PNG misses and an unresolved
+saved-data audit limitation, separately from the merged forward APIs.
 
 Final fitted arcs also need [circle-consistent joins](docs/curved-joins.md).
 An unavailable join keeps an affected outline for review when valid, with a

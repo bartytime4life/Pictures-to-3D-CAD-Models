@@ -73,8 +73,11 @@ the declared base before and after verification. Preserve accurate historical
 reports. Keep generated library outputs unchanged unless their source changed;
 then regenerate them and list those outputs explicitly in the review. Library source edits still follow its
 generation rules; a workbench-only navigation change needs no library rebuild.
-The [current documentation review](validation/documentation-main109-state.md)
-shows one scoped verification record.
+The [current documentation review](validation/documentation-recovery-state.md)
+separates this documentation-only main update from the
+[local acquisition-recovery snapshot](finite-acquisition-recovery.md).
+The [earlier main documentation review](validation/documentation-main109-state.md)
+retains its original source and verification scope.
 
 ## Keep documentation and evidence aligned
 
@@ -86,6 +89,11 @@ shows one scoped verification record.
   identifies each source and command.
 - Preserve historical validation dates, revisions, counts and limitations. Add a
   separately scoped result for new work rather than rewriting a prior run.
+- Distinguish implemented research on a local candidate from runtime included in
+  main. Retain complete failed protocols beside partial target passes and focused
+  tests. If saved arrays cannot reconstruct a reported quantity, record that audit
+  gap; do not turn a failed audit into a pass or rerun a model as part of a
+  documentation-only update.
 - Separate source tests, browser behavior, hosted CI, installed-tool imports and
   physical measurements. AI fixture tests establish integration behavior rather
   than model quality. A valid CAD solid or bed footprint does not qualify a print.
