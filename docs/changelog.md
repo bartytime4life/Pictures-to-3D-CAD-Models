@@ -6,8 +6,23 @@
   subtests at frozen source `79522b5`; the protected full recovery study is unrun.
 - Add the local projection design, failure record and six verbatim evidence
   copies, preserving all preceding cases, targets, failures and input hashes.
-- Refresh active workbench/library navigation and main/CI status after PR #113
-  merged. [Review scope](validation/documentation-protected-controls.md).
+- Refresh active workbench/library navigation and main/CI status after PRs #113
+  and #114 merged; document shadow-free blur eligibility and its thickness limit. [Review scope](validation/documentation-protected-controls.md).
+
+## The blur beside a soft shadow — November 13, 2026
+
+- A soft shadow beside a part no longer reads as edge blur. Its light still rises
+  where each profile's width is read, so a 3 px blur measured 4.17 px beside the
+  test photos' 25 % shadow. Where the fitted shadow takes at least 3 % of the
+  light, its own light is now taken out of every profile before the width is read
+  (3.90 px; 3.88 px without the shadow). Over six noise seeds the 1 × 3 px photo's
+  summed error fell from 73 to 45 µm and the two-light photo's from 118 to 66 µm;
+  shadow-free and thick-plate photos are unchanged. A sharp 120 × 70 rectangle
+  under a shadow got worse (to 0.09 mm), a corner arc too short to measure
+  standing proud ([reference-sheet tracing](reference-sheet.md), §3).
+- Re-centring the second edge pass was measured and not adopted: on exact images
+  it removes a start bias of up to 0.05 px, but on rendered photos that bias was
+  offsetting JPEG's shift of the edge and the shadow model's remaining push.
 
 ## Completed local recovery research documentation — November 13, 2026
 

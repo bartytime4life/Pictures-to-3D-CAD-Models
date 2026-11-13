@@ -698,7 +698,7 @@ def test_edge_widths_by_direction_reads_each_way_a_two_way_part_faces(monkeypatc
     truth = np.where(np.abs(np.cos(angles - tilt)) > 0.9, 3.5, 1.9) * (1 + rng.normal(0, 0.02, len(angles)))
     windows = []
 
-    def widths(g, points, normals_, half, step, single_step=False):
+    def widths(g, points, normals_, half, step, single_step=False, light=None, paper_side=None):
         windows.append(np.broadcast_to(half, (len(points),)).copy())
         return truth[: len(points)]
 
@@ -1834,3 +1834,43 @@ def test_a_fitted_shadow_puts_edges_back_where_a_line_cannot():
     image, mask, ppm, sigma = _shadowed_scene((1.6, 1.9), 0.1)
     sharp = shadow.fit_paper_light(image, mask, ppm, sigma)
     assert not sharp.info["used"] and sharp.info["excess"] > shadow.ADEQUATE_FRACTION
+
+
+def test_a_soft_shadow_is_not_read_as_edge_blur():
+    """edges._edge_widths with the fitted shadow's light removed, on exactly rendered
+    scenes under a 4 px blur. The 25-75 % rise of a profile is read between its window's
+    end levels; beside a soft shadow the paper's light still rises there, and the rise
+    read as blur.
+
+    - The renderer-like shadow (30 %): the side it falls on read 18.7 % wide and the
+      other 4.3 %; with the model's light removed (_paper_light_variation), 1.6 % and
+      0.1 %. The blur sets the second pass's windows and every curvature correction.
+    - A contact shadow (25 %): 8.2-8.4 % became 2.8-3.1 %. Most of it lies within the
+      blur, as it does for the edge itself.
+    - Without a shadow the width moves by under 0.5 %."""
+    from backend import shadow
+
+    def errors(shift, blur, depth):
+        image, mask, ppm, sigma = _shadowed_scene(shift, blur, depth=depth)
+        light = shadow.fit_paper_light(image, mask, ppm, sigma)
+        assert light.info["used"]
+        exact = math.sqrt(sigma**2 + 1 / 12)  # the coverage's pixel box and the blur
+        out = []
+        for x_mm, side in ((100.0, 1), (30.0, -1)):
+            ys = np.linspace(45, 85, 80) * ppm + 0.5
+            points = np.column_stack([np.full(len(ys), x_mm * ppm + 0.5), ys])
+            normals = np.tile([1.0, 0.0], (len(ys), 1))
+            plain = np.median(edges._edge_widths(image, points, normals, 5 * sigma))
+            removed = np.median(
+                edges._edge_widths(image, points, normals, 5 * sigma, light=light, paper_side=np.full(len(ys), side))
+            )
+            out.append((plain / exact - 1, removed / exact - 1))
+        return out
+
+    (right_plain, right), (left_plain, left) = errors((1.6, 1.9), 2.2, 0.3)
+    assert right_plain > 0.15 and left_plain > 0.035
+    assert abs(right) < 0.025 and abs(left) < 0.006
+    for plain, removed in errors((0.0, 0.0), 1.5, 0.25):
+        assert plain > 0.07 and abs(removed) < 0.4 * plain
+    for plain, removed in errors((1.6, 1.9), 2.2, 0.0):
+        assert abs(plain) < 0.006 and abs(removed - plain) < 0.005

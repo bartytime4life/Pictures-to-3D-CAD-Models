@@ -135,6 +135,11 @@ This main-based source includes PR #103's paper-light/shadow model and preserves
 PR #82's 45-minute workbench job budget. It also contains the conditional
 finite-material Python operators and immutable measured-ring preparation API;
 source-space calibration APIs from the separate research lineage remain absent.
+PR #114 adds shadow-free edge-width remeasurement only when its fitted model
+is used, its depth is at least 3 % and entered thickness is zero. Positive
+thickness keeps the preceding width path. Its
+[recorded 1,302-test result and 74 browser scenarios](validation.md#the-blur-beside-a-shadow--november-13-2026)
+belong to that change, not this documentation follow-up. No new run is implied.
 PR #107 also supplies per-direction edge-search widths where a full covariance
 is unavailable; corner/curve corrections keep their scalar fallback in that
 case. See [reference-sheet tracing](reference-sheet.md) for the current capture stages.

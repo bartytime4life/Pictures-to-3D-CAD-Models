@@ -8,7 +8,7 @@ conditional reserved-residual misses as the coupled study. See the
 [result and evidence](validation/finite-acquisition-continuations.md) and
 [frozen admission](validation/evidence/acquisition-continuations-20261113/events-admission.json).
 
-This is local research outside the documented main revision `81248a7`, HTTP routes and workbench UI.
+This is local research outside the documented main revision `b259774`, HTTP routes and workbench UI.
 The original 4/12, predictor 9/12 and coupled 11/12 failed protocols are retained.
 The [coupled saved-only audit](finite-acquisition-saved-audit.md) does not cover
 the new event-phase ledger. No physical camera/CAD qualification follows.

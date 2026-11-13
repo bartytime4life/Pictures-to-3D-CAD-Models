@@ -45,6 +45,14 @@ needs comparison with independent dimensions.
 
 ## Scale and geometry problems
 
+A soft-shadow note means a fitted light model was used; it does not establish
+that blur or dimensions are accurate. With zero entered thickness, an accepted
+model taking at least 3 % of the light is removed from the profiles before blur
+is measured again. Positive-thickness traces retain the previous width path
+because of known wall/support failures. Keep the real thickness for your part;
+retake with diffuse light and compare critical holes and corners with measured
+features. See [shadow correction and remaining failures](reference-sheet.md#3-segmentation-and-sub-pixel-edges).
+
 For a directional-blur note, use a steadier, sharper capture and reserve independent
 feature checks. The estimator concerns rectified edge spreads. Normal-specific
 edge localization alone does not validate a radius. Supported nonparallel

@@ -100,14 +100,20 @@ these empirical widths into a calibrated camera PSF; [the tracing guide](referen
 defines the boundaries.
 
 Reference-sheet edges are placed against the paper's own light beside them.
-`backend/shadow.py` fits a soft shadow once from the paper round the part, as the
+`backend/shadow.py` fits a soft shadow from the paper round the part, as the
 footprint convolved with a non-negative kernel of no fixed shape, and
 `backend/sheet.py` can place each edge against that fitted light. Paper-data
 availability and a 2 % normalized excess-error criterion control model use;
 otherwise a straight-line paper level fitted to each profile stands. The
 criterion is not a physical bound on the paper's light at an obscured edge.
 The [method and results](reference-sheet.md#3-segmentation-and-sub-pixel-edges)
-come from rendered photographs.
+come from rendered photographs. When the model is accepted with at least 3 %
+light loss and entered thickness is zero, the fitted pre-blur light variation
+is removed from the edge profiles before remeasuring blur, covariance or
+per-direction widths. The shadow is then fitted again. Traces with positive
+thickness keep the preceding width path because the changed width exposed
+wall/support failures. This does not certify a camera PSF or eliminate the
+recorded small-hole and sharp-corner regressions.
 
 ### Source-bound acquisition evidence
 

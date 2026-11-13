@@ -1,7 +1,7 @@
 # Acquisition-aware geometry recovery
 
 This page records a separately frozen local research candidate, not an API
-installed or merged into the documented main revision `81248a7`. The candidate
+installed or merged into the documented main revision `b259774`. The candidate
 source is retained locally; this documentation change does not publish its
 runtime, full raw captures or candidate ledgers. See the
 [result, source bindings and audit limits](validation/finite-acquisition-recovery.md).

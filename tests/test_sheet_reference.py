@@ -306,6 +306,26 @@ def test_a_shadow_fitted_round_the_part_keeps_its_sizes_under_a_wide_blur(client
     assert any("sharper than its fitted model" in note for note in profile["reference"]["notes"])
 
 
+def test_a_soft_shadow_does_not_widen_the_measured_edge_blur(client):
+    """A soft shadow darkens the paper towards the part, and its light still rises
+    where each profile's 25-75 % width is read, so it read as blur. Under a 3 px sensor
+    blur the overhead photo's edges measured 3.88 px without a shadow, 4.17 px beside
+    the renderer's 25 % shadow and 4.18 px beside a contact shadow; the second pass's
+    windows and every curvature correction take that width. Where the shadow model is
+    used the blur is measured again with its light removed from each profile
+    (edges._measure_blur): 3.90 and 3.94 px."""
+    base = {"blur": 3.0, "tilt": (0.0, 0.0, 4.0), "k1": 0.0, "gradient": 0.0, "seed": 201}
+
+    def measured(**changes):
+        response = trace(client, S.render(**{**base, **changes})[0], reference="a4")
+        assert response.status_code == 200, response.text
+        return response.json()["profile"]["reference"]["edge_blur_mm"]
+
+    clear = measured(shadow=0.0)
+    assert abs(measured() / clear - 1) < 0.015
+    assert abs(measured(shadow_kernel=[("gauss", 0.0, 0.0, 1.5, 1.0)]) / clear - 1) < 0.025
+
+
 def test_a_two_way_part_under_a_turned_blur_is_traced_with_each_way_s_width(client, monkeypatch):
     """A sharp-cornered 120 x 70 mm rectangle faces two ways, so its blur cannot be
     fitted as a covariance. Under a 3 x 1 px blur turned 30 degrees every edge was

@@ -1,7 +1,11 @@
 # Documentation review after first projection controls — November 13, 2026
 
-This review starts from main `81248a7021cb7502f13062dd18e0c0207d1fa30b`,
-tree `9d43ffc3f18514fc8b0b5f6038cd6314c11125b9`. Documentation
+This follow-up was first authored against main `81248a7`. While it was being
+published, PR #114 merged at 21:33:06 UTC. The final documentation baseline is
+main `b2597749bdeab040f25b330f77d43cd1657194bc`, tree
+`f1e83e9e8c3045908a37df6f346c00b45f0a49fc`. Its runtime, tests and method/result
+pages are preserved from main. The overlapping change-log entries retain both
+updates. Documentation
 [PR #113](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/113)
 merged at 20:54:25 UTC. Both hosted checks passed on its published head
 `6b6683e7bbcb733c3c7d147b3508d4f08d86efe8`; they do not test this follow-up.
@@ -14,8 +18,13 @@ Review the complete workbench and companion-library Markdown inventory. Update
 the active entry points, research and engineering guidance, architecture,
 development instructions, roadmap, change logs and validation navigation for
 the latest [protected-source-bin result](finite-acquisition-protected.md).
+Also document PR #114's shadow-free blur remeasurement in capture, architecture,
+troubleshooting, development and source guidance. It requires an accepted shadow
+model, at least 3 % fitted light loss and zero entered thickness. Positive
+thickness retains the preceding width path; the inherited result retains its
+small-hole/corner regressions and wall/support failures.
 
-Its first frozen software suite fails eight tests, with 752 passes and 33
+The separate protected-source-bin design's first frozen software suite fails eight tests, with 752 passes and 33
 passing subtests. Seven known-feasible local projections reach the iteration
 limit; an overflow warning escapes numerical-error handling. No protected full
 recovery study executes. Earlier 4/12, 9/12, 11/12 and 11/12 results, their four
@@ -38,20 +47,22 @@ checks cover all inherited non-Markdown files, unchanged Markdown, historical
 validation/fixture pages and all 88 frozen research inputs.
 
 All **111 Markdown documents** parse with `marked 17.0.5`. Checks pass across
-**1,366 local links, 128 heading links and 140 tables**, including the local
+**1,374 local links, 134 heading links and 142 tables**, including the local
 HTML link, with balanced fences and clean diff whitespace. All six evidence
 copies match their source bytes, SHA-256 hashes and sizes; their JSON parses
 and the log/receipt counts agree.
 
-This follow-up updates **16 existing guides**, adds **three Markdown pages**
+This follow-up updates **18 existing guides**, adds **three Markdown pages**
 and adds **seven evidence files**: six verbatim copies and their inventory.
-All **801 inherited non-Markdown files**, **92 unchanged Markdown files**,
+All **801 inherited non-Markdown files**, **90 unchanged Markdown files**,
 **52 historical validation/fixture Markdown records** and **88 frozen research
 inputs** retain their bytes and modes. A separate read-only mathematical review
-finds no blocking misstatement in the method and first-outcome pages. A separate
-read-only documentation review checks all 19 changed/new Markdown pages and the
-six evidence records. Its one navigation finding is corrected: the index now
-links the immediately preceding merged review.
+finds no blocking misstatement in the method and first-outcome pages.
+The initial read-only documentation review checks all 19 then-changed/new
+Markdown pages and the six evidence records. Its one navigation finding is
+corrected: the index links the immediately preceding merged review. A follow-up
+review covers the incoming-main integration and added capture/troubleshooting
+guidance and finds no actionable issues.
 
 No application, library, model, optimizer, reference generator or scientific
 test is rerun for this documentation follow-up. Earlier test results remain
