@@ -96,9 +96,12 @@ that the local unbounded corner describes a finite part with nearby edges,
 holes, walls, shadow or a different response curve.
 
 The radius fit keeps the centre constrained by its two tangent lines and uses
-the covariance-aware half-level model. It requires a represented cost decrease
-and a local stopping condition; exhausting its iteration or line-search budget
-does not count as convergence. Accepted modelled fillets are excluded from the
+the covariance-aware half-level model. It first retains an already-resolved
+current iterate when the unhalved projected proposal meets the parameter-resolution
+criterion. Otherwise its bounded line search accepts a trial cost no greater than
+the current cost plus the inherited `1e-16 * max(1, cost)` allowance. This does
+not require strict decrease. Exhausting its iteration or line-search budget does
+not count as convergence. Accepted modelled fillets are excluded from the
 later generic curvature correction, so that correction is not applied twice.
 
 The reported radius spread still combines sampled residual noise with assumed

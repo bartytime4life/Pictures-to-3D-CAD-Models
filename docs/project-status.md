@@ -1,15 +1,18 @@
 # Source scope and verification status
 
-## Current source snapshot — November 13, 2026, 17:49 UTC
+## Current source snapshot — November 13, 2026, 18:38 UTC
 
-Main is `aa15903c0c3e2415fa5751446c7b871d4d1110cb`, tree
-`1c828c0dd54413e78c6f5788d4d702a6c1158d48`. It includes the source-cell mean
+Main is `a6990c957a3a8f0a39425a1074239974d499a805`, tree
+`60344358be445ef89178de8728917b7e195e1767`. It includes the source-cell mean
 from [PR #105](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/105),
 the two-direction edge-width repair from
 [PR #107](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/107),
 and the area-sensitivity/linear-acquisition operators from
 [PR #108](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/108).
-All three PRs are merged at this readback. PR #106 merged into its research
+Those three PRs and documentation
+[PR #109](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/109)
+are merged at this readback. PR #109 merged at 18:23 UTC and changed only
+documentation. PR #106 merged into its research
 base after PR #105 closed; its documentation reached main through PR #108.
 
 | Capability in this source | Scope and evidence |
@@ -20,18 +23,125 @@ base after PR #105 closed; its documentation reached main through PR #108.
 | Five unrounded area sensitivities and signed linear propagation | Developer Python APIs; [259 focused tests and 33 study rows](validation/finite-cell-sensitivity.md), without an inverse-recovery result |
 | Five-geometry-parameter acquisition-aware recovery with unknown brightness | Planned; no implementation, recovery study, HTTP mode or automatic correction in this source |
 
-PR #108's head is `f54e47a443015c2e4701a143c4ac1c469595b731`.
-Its [reference-library run 43475029376](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43475029376)
-has completed successfully; its
-[workbench run 43475029242](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43475029242)
-is still in progress with no conclusion. Those results belong to that PR head,
-which predates the combined main tree above. Merge, hosted checks, installed
-runtime, real-camera accuracy and physical acceptance remain separate.
+Hosted checks are tied to their published heads:
 
-The [documentation review](validation/documentation-cell-state.md) audits this
-main-based source. Earlier snapshots below are historical records; their open
+| Published source | Workbench | Reference library |
+| --- | --- | --- |
+| PR #108, `f54e47a443015c2e4701a143c4ac1c469595b731` | [43475029242](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43475029242): completed, success | [43475029376](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43475029376): completed, success |
+| PR #109, `88a6d78f2807ae3eef3f6bf4bc229849321717ce` | [43478504807](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43478504807): completed, success | [43478504825](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43478504825): completed, success |
+
+These readbacks do not extend a run to the combined main commit or this later
+documentation change. Merge, hosted checks, installed runtime, real-camera
+accuracy and physical acceptance remain separate.
+
+The [documentation review](validation/documentation-main109-state.md) audits this
+main-based source. Use [available tools](#available-here) and [remaining integration work](#remaining-integration-work)
+for current capabilities. Earlier snapshots below are historical records; their open
 PR states and absent-module statements describe their own source and time.
 The primary `codex/slicer-integration` checkout remains separate and unchanged.
+
+## Available here
+
+The single-user workbench traces one planar, constant-thickness part, uses
+supplied scale and thickness, constructs CAD and exports geometry. Reference
+sheet tracing adds a homography, one radial lens term, subpixel edge
+measurements, optional design-intent fitting and entered-thickness correction
+under the [documented model](reference-sheet.md). The optional Ollama assistant
+receives text context and proposes explicit settings changes; it receives no
+photograph or CAD geometry.
+
+Current main also fits a nonnegative soft-shadow kernel from paper around the
+part and uses a normalized excess-error diagnostic before applying its modelled
+edge level. The near band also selects smoothness, so this is not untouched
+validation. When prior selection lacks enough data, that diagnostic is zero
+by construction. Rejected shadows retain the line method and a trace note. The
+[paper-light record](validation.md#the-papers-light-as-a-fitted-shadow--november-13-2026)
+retains synthetic improvements, regressions and partial contact-shadow recovery;
+this is separate from the known-map acquisition experiment.
+
+Directional covariance is estimated from rise widths in the rectified
+measurement image. It supplies normal-specific edge/wall widths and an
+approximate scalar for other stages; it is not a calibrated sensor PSF.
+When that covariance is unavailable, sufficiently supported directional bins
+can still supply separate edge-search widths. A matching covariance used to
+blur the paper-shadow model is not passed off as an identified covariance for
+corner or curve correction. Those paths retain their scalar fallback.
+Supported nonparallel corners use its full covariance. Uniform thickness scales
+transport blur into supported curve frames. Mixed frames retain their
+approximation/refusal policies. Final accepted arcs use circle-consistent joins,
+with bounded recovery or refusal. See [stage limits](reference-sheet.md#3-segmentation-and-sub-pixel-edges),
+[blur frames](blur-frames.md) and [curved joins](curved-joins.md).
+
+`backend.finite_shape` and `backend.finite_centre_fit` expose the conditional
+[finite-material developer operators](finite-shape-inverse.md).
+`backend.finite_observations` prepares immutable measured-ring observations.
+`backend.finite_affine` adds shared-panel evaluation for exactly affine maps;
+the circular-segment mean API dispatches to it while preserving its result
+schema. Projective maps retain the scalar path. See the
+[derivation and work/memory contracts](finite-affine-evaluation.md).
+None is called by automatic trace/build or exposed through an HTTP mode.
+
+`backend.finite_aperture` and `backend.finite_acquisition` supply independent
+source-cell coverage and the literal rounded acquisition chain.
+`backend.finite_aperture_sensitivity` supplies five unrounded area columns;
+`backend.finite_acquisition_linear` propagates signed float64 fields through a
+separate fixed linear model. These operators are available here, but are not
+called by `fit_circular_segment`, automatic tracing or an HTTP route. Turning
+off sRGB8 in the staged mean does not remove its float32 casts.
+
+Source-context capture, raw-source fitting, response calibration and set-inversion
+APIs from the separate research branch must not be assumed available.
+[Developer tools](developer-tools.md) lists runnable entry points and their
+side effects; `/docs` on this checkout's running backend describes its HTTP API.
+
+## Remaining integration work
+
+The centre/radius/chord inverse still requires a supplied normal, homography and
+covariance. Its studies do not establish adequate optics for arbitrary photos,
+a global optimum or a physical error bound. The moment experiment retains
+background-sensitive and incompatible covariance proposals.
+
+The measured-ring bridge fixes a known whole-sheet initialization problem.
+Its original paired replay completes all ten eligible fits, but only three of
+twelve records meet every target; two upstream refusals remain. Held-out samples
+are excluded from fitting cost but influence initialization and moments, so
+they are conditional residual checks rather than independent predictions.
+
+That replay's original 8–19-second fits remain historical evidence. The
+[affine comparison](validation/finite-affine-batch.md) records **3.84× faster
+complete fits** across three predeclared datasets, with 2.75–3.91-second medians.
+All 36 archived rows retain their prior completion flags and target passes.
+These fixed-workload results leave interactive latency, broader workloads and
+optical-model adequacy unqualified.
+
+The [residual-information diagnostic](validation/finite-residual-information.md)
+separates fixed-normal covariance sensitivity from brightness and geometry, while
+retaining unknown normal sensitivities and an overall failed protocol. A
+post-hoc rotation identity motivated the separate
+[finite-chord derivative test](validation/finite-normal-derivative.md), whose
+complete result retains its failed protocol and numerical limitations.
+Locally distinguishable covariance changes can absorb sampling/resampling
+mismatch rather than identify a physical camera PSF.
+
+The acquisition study now supplies a controlled counterexample to second-moment
+Gaussian closure. A subsequent source-cell mean now has
+[independent supplied-stage qualification](validation/finite-acquisition-mean.md).
+A future inverse can use the separately
+[checked unrounded derivatives](finite-cell-sensitivity.md), but still needs
+observed-only seeds and bounds, brightness/rank diagnostics, a bounded search
+for undefined derivatives or rounded stages, and prospective recovery checks.
+The current five-query coupled controls do not prove five-parameter rank after
+two unknown brightness levels. Supplied source assumptions and observed camera calibration remain
+distinct. Neither study automatically corrects CAD.
+
+Automatic adoption also needs supported acquisition and thickness models,
+independent recovery checks and one chosen boundary preserved through preview,
+native CAD and exports. No real-phone/caliper benchmark, native slicer acceptance
+or physical print qualification follows from the synthetic studies.
+
+## Historical source and publication snapshots
+
+The following records preserve their original branch, date and evidence scope.
 
 ## Historical cell-sensitivity publication context
 
@@ -188,102 +298,3 @@ The [preceding PR #93 documentation review](validation/documentation-pr93-state.
 [earlier status snapshot](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/blob/1f51bae35eb862dca4a259016cc31bf1504207f9/docs/project-status.md)
 preserve their original branch and CI states. Local checks, hosted CI, branch
 inclusion, installation, deployment and physical acceptance remain distinct.
-
-## Available here
-
-The single-user workbench traces one planar, constant-thickness part, uses
-supplied scale and thickness, constructs CAD and exports geometry. Reference
-sheet tracing adds a homography, one radial lens term, subpixel edge
-measurements, optional design-intent fitting and entered-thickness correction
-under the [documented model](reference-sheet.md). The optional Ollama assistant
-receives text context and proposes explicit settings changes; it receives no
-photograph or CAD geometry.
-
-Current main also fits a nonnegative soft-shadow kernel from paper around the
-part and uses a normalized excess-error diagnostic before applying its modelled
-edge level. The near band also selects smoothness, so this is not untouched
-validation. When prior selection lacks enough data, that diagnostic is zero
-by construction. Rejected shadows retain the line method and a trace note. The
-[paper-light record](validation.md#the-papers-light-as-a-fitted-shadow--november-13-2026)
-retains synthetic improvements, regressions and partial contact-shadow recovery;
-this is separate from the known-map acquisition experiment.
-
-Directional covariance is estimated from rise widths in the rectified
-measurement image. It supplies normal-specific edge/wall widths and an
-approximate scalar for other stages; it is not a calibrated sensor PSF.
-When that covariance is unavailable, sufficiently supported directional bins
-can still supply separate edge-search widths. A matching covariance used to
-blur the paper-shadow model is not passed off as an identified covariance for
-corner or curve correction. Those paths retain their scalar fallback.
-Supported nonparallel corners use its full covariance. Uniform thickness scales
-transport blur into supported curve frames. Mixed frames retain their
-approximation/refusal policies. Final accepted arcs use circle-consistent joins,
-with bounded recovery or refusal. See [stage limits](reference-sheet.md#3-segmentation-and-sub-pixel-edges),
-[blur frames](blur-frames.md) and [curved joins](curved-joins.md).
-
-`backend.finite_shape` and `backend.finite_centre_fit` expose the conditional
-[finite-material developer operators](finite-shape-inverse.md).
-`backend.finite_observations` prepares immutable measured-ring observations.
-`backend.finite_affine` adds shared-panel evaluation for exactly affine maps;
-the circular-segment mean API dispatches to it while preserving its result
-schema. Projective maps retain the scalar path. See the
-[derivation and work/memory contracts](finite-affine-evaluation.md).
-None is called by automatic trace/build or exposed through an HTTP mode.
-
-`backend.finite_aperture` and `backend.finite_acquisition` supply independent
-source-cell coverage and the literal rounded acquisition chain.
-`backend.finite_aperture_sensitivity` supplies five unrounded area columns;
-`backend.finite_acquisition_linear` propagates signed float64 fields through a
-separate fixed linear model. These operators are available here, but are not
-called by `fit_circular_segment`, automatic tracing or an HTTP route. Turning
-off sRGB8 in the staged mean does not remove its float32 casts.
-
-Source-context capture, raw-source fitting, response calibration and set-inversion
-APIs from the separate research branch must not be assumed available.
-[Developer tools](developer-tools.md) lists runnable entry points and their
-side effects; `/docs` on this checkout's running backend describes its HTTP API.
-
-## Remaining integration work
-
-The centre/radius/chord inverse still requires a supplied normal, homography and
-covariance. Its studies do not establish adequate optics for arbitrary photos,
-a global optimum or a physical error bound. The moment experiment retains
-background-sensitive and incompatible covariance proposals.
-
-The measured-ring bridge fixes a known whole-sheet initialization problem.
-Its original paired replay completes all ten eligible fits, but only three of
-twelve records meet every target; two upstream refusals remain. Held-out samples
-are excluded from fitting cost but influence initialization and moments, so
-they are conditional residual checks rather than independent predictions.
-
-That replay's original 8–19-second fits remain historical evidence. The
-[affine comparison](validation/finite-affine-batch.md) records **3.84× faster
-complete fits** across three predeclared datasets, with 2.75–3.91-second medians.
-All 36 archived rows retain their prior completion flags and target passes.
-These fixed-workload results leave interactive latency, broader workloads and
-optical-model adequacy unqualified.
-
-The [residual-information diagnostic](validation/finite-residual-information.md)
-separates fixed-normal covariance sensitivity from brightness and geometry, while
-retaining unknown normal sensitivities and an overall failed protocol. A
-post-hoc rotation identity motivated the separate
-[finite-chord derivative test](validation/finite-normal-derivative.md), whose
-complete result retains its failed protocol and numerical limitations.
-Locally distinguishable covariance changes can absorb sampling/resampling
-mismatch rather than identify a physical camera PSF.
-
-The acquisition study now supplies a controlled counterexample to second-moment
-Gaussian closure. A subsequent source-cell mean now has
-[independent supplied-stage qualification](validation/finite-acquisition-mean.md).
-A future inverse can use the separately
-[checked unrounded derivatives](finite-cell-sensitivity.md), but still needs
-observed-only seeds and bounds, brightness/rank diagnostics, a bounded search
-for undefined derivatives or rounded stages, and prospective recovery checks.
-The current five-query coupled controls do not prove five-parameter rank after
-two unknown brightness levels. Supplied source assumptions and observed camera calibration remain
-distinct. Neither study automatically corrects CAD.
-
-Automatic adoption also needs supported acquisition and thickness models,
-independent recovery checks and one chosen boundary preserved through preview,
-native CAD and exports. No real-phone/caliper benchmark, native slicer acceptance
-or physical print qualification follows from the synthetic studies.

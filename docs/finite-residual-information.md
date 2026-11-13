@@ -15,6 +15,11 @@ and [lossless archive/review commands](../studies/fixtures/finite-residual-infor
 A separate post-hoc rotation identity below motivates the next independent
 experiment; it does not replace the failed control or unknown normal columns.
 
+The saved-data auditor also checks the original source closure against its
+checkout. Current main differs from that recorded source; see the
+[historical audit guidance](developer-tools.md#historical-source-checks-in-saved-data-audits)
+before interpreting a source-mismatch result or reproducing the old command.
+
 ## Project nuisance directions before interpreting blur
 
 For a supplied Gaussian covariance and geometry, write the predicted intensity

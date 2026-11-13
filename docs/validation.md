@@ -5,9 +5,21 @@ record below to assess its evidence. This page separates local checks, hosted
 CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
+## Documentation audit after PR #109 merged — November 13, 2026
+
+The [current review](validation/documentation-main109-state.md) audits all
+workbench and companion-library Markdown against main `a6990c9`, which includes
+PR #109. It refreshes the source and hosted-check snapshot and brings current
+capabilities and remaining work ahead of historical snapshots. The preceding
+98-document review below remains a dated result on its original base.
+
+Documentation checks validate navigation, commands and recorded claims. They do
+not rerun historical numerical studies or establish a later application/browser,
+installed-tool or physical result.
+
 ## Documentation alignment with merged PRs #105, #107 and #108 — November 13, 2026
 
-The [current documentation review](validation/documentation-cell-state.md)
+The [preceding documentation review](validation/documentation-cell-state.md)
 uses main `aa15903c0c3e2415fa5751446c7b871d4d1110cb`. It updates branch
 inclusion, two-direction edge-width guidance, developer API shapes/resources,
 and the remaining recovery requirements. The README now puts startup ahead of

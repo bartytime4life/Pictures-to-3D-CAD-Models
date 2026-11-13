@@ -9,6 +9,11 @@ Its [complete qualification](validation/finite-normal-derivative.md) retains one
 panel-budget unknown and an independently observed error-estimation limitation
 on a compressed perspective map. A resolved flag is not an accuracy guarantee.
 
+The saved-data auditor also checks the original source closure against its
+checkout. Current main differs from that recorded source; see the
+[historical audit guidance](developer-tools.md#historical-source-checks-in-saved-data-audits)
+before interpreting a source-mismatch result or reproducing the old command.
+
 ## Quantity and coordinates
 
 The material is `disc(C,R) intersect {n dot (x-C) <= R*f}`. Increasing angle
