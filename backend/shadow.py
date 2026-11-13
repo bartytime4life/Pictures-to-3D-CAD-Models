@@ -39,6 +39,7 @@ RIDGE = 1e-3
 ADEQUATE_FRACTION = 0.02
 BORDER_MM = 3.0  # as edges.BORDER_MM: the sheet's margin, never paper data
 MIN_CELLS = 400
+NOTICEABLE_DEPTH = 0.03  # a fitted shadow this deep is reported and taken out of the blur
 
 
 @dataclass
