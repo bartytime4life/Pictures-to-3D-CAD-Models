@@ -5,6 +5,19 @@ record below to assess its evidence. This page separates local checks, hosted
 CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
+## Completed coupled and source-event research — November 13, 2026
+
+The [current documentation review](validation/documentation-executed-recovery.md)
+starts from main `20cc57c`, after PR #112 merged. The local
+[coupled and source-event studies](validation/finite-acquisition-continuations.md)
+each finish at 11/12 matched passes; both full 24-case protocols exit 1.
+Their software suites pass 548 tests/nine subtests and 653 tests/21 subtests.
+The [saved-only audits](finite-acquisition-saved-audit.md) retain 28 historical
+precision unknowns and the first failed coupled audit. Its separately frozen
+correction passes 54 tests/12 subtests and all 1,191,323 implemented checks.
+That consistency result covers coupled-v1 records, not the event-phase ledger,
+forward-model accuracy, the workbench UI or physical CAD acceptance.
+
 ## Coupled-research authoring documentation — November 13, 2026
 
 The [current review](validation/documentation-coupled-state.md) starts from main

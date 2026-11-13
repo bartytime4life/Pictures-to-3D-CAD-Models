@@ -31,17 +31,20 @@ change to this library's revision, calculators or generated handbook.
 
 The [local acquisition-recovery snapshot](../docs/finite-acquisition-recovery.md)
 records 4/12 matched target passes in the original experiment and 9/12 in a
-separate continuation; both full protocols failed. Its 459 focused tests bind
+separate continuation; both earlier full protocols failed. Its 459 focused tests bind
 the research candidate, not main or this library. The
-[current documentation review](../docs/validation/documentation-coupled-state.md)
+[current documentation review](../docs/validation/documentation-executed-recovery.md)
 also records 14 unresolved saved-audit comparisons where the original pre-cast
 area differences cannot be reconstructed from rounded capture arrays. This
 documentation does not add a fitter to main, the workbench or the Photos tab.
 
-The newer [coupled proposal](../docs/finite-acquisition-coupled.md) and
-[paired-audit plan](../docs/finite-acquisition-saved-audit.md) remain local,
-unexecuted authoring work. Archive member checks concern packaging integrity.
-They do not refresh this library's release verification or add a Photos tool.
+The later local [coupled search](../docs/finite-acquisition-coupled.md) and
+[source-event strategy](../docs/finite-acquisition-events.md) each finish at
+11/12 matched passes, with both full protocols failed. Their
+[results](../docs/validation/finite-acquisition-continuations.md) and
+[saved-only audits](../docs/finite-acquisition-saved-audit.md) retain first
+failures and 28 historical precision unknowns. They do not refresh this
+library's release verification or add a Photos tool.
 
 A practical, source-backed library for turning photographs into printable CAD: recover shape, establish dimensions, rebuild editable geometry, and check the part you print. **Revision 7, November 9, 2026.**
 

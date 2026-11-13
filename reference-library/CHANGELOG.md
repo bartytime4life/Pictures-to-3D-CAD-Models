@@ -28,6 +28,13 @@ unresolved saved-audit comparisons. This is a documentation update, not a librar
 release or an addition to main's runtime or the Photos tab. The handbook text,
 generated HTML/PDF, catalog, release counts and dated verification stay unchanged.
 
+### Executed research navigation — November 13, 2026
+
+Link the [coupled and source-event results](../docs/validation/finite-acquisition-continuations.md)
+and [completed saved-only audits](../docs/finite-acquisition-saved-audit.md).
+All four complete recovery protocols remain failed; these research records do
+not change the library release, generated reader/PDF or physical acceptance.
+
 ### Unexecuted research navigation — November 13, 2026
 
 Link the [coupled proposal](../docs/finite-acquisition-coupled.md) and

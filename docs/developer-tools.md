@@ -27,12 +27,14 @@ order-delta comparisons; do not treat it as an independent success. Follow the
 candidate's source-specific guide rather than borrowing an unavailable command
 or treating a documentation check as a new fit, audit pass or app regression.
 
-The [coupled seven-parameter proposal](finite-acquisition-coupled.md) and
-[paired saved-data auditor](finite-acquisition-saved-audit.md) are newer local
-authoring work, with no executed tests, study or audit yet. Their plans preserve
-the original population, targets and global work caps. Complete local archive
-member checks establish packaging integrity only; neither candidate is added
-to this main runtime or the workbench interface.
+The later [coupled search](finite-acquisition-coupled.md) reaches **11/12**
+matched target passes; the [source-event continuation](finite-acquisition-events.md)
+stays at **11/12**. Both complete 24-case protocols still exit 1. Their first
+focused suites pass 548 tests/nine subtests and 653 tests/21 subtests, respectively.
+The [completed results](validation/finite-acquisition-continuations.md) and
+[saved-only audits](finite-acquisition-saved-audit.md) retain the remaining PNG
+miss, first failures and 28 historical precision unknowns. Candidate code and
+complete local ZIPs remain separate from this main runtime and workbench UI.
 
 The [acquisition evidence workflow](../studies/fixtures/finite-acquisition-operator-v1/README.md)
 verifies 123 stored artifacts, extracts the complete saved run and checks the

@@ -40,10 +40,12 @@ flowchart LR
     I --> K[Bambu Studio or PrusaSlicer handoff]
 ```
 
-The [local coupled-search proposal](finite-acquisition-coupled.md) and
-[paired-audit design](finite-acquisition-saved-audit.md) extend the research
-documentation only. Their code is outside this main runtime and has not run
-its new tests, study or audit; neither changes the application flow above.
+The later local [coupled](finite-acquisition-coupled.md) and
+[source-event](finite-acquisition-events.md) strategies each retain an overall
+failed 11/12 recovery protocol. Their [results](validation/finite-acquisition-continuations.md)
+and [saved-only consistency audits](finite-acquisition-saved-audit.md) extend
+the research documentation. Their code remains outside this main runtime;
+neither changes the application flow above.
 
 ## Components
 

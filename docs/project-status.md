@@ -1,9 +1,9 @@
 # Source scope and verification status
 
-## Current source snapshot — November 13, 2026, 19:59 UTC
+## Current source snapshot — November 13, 2026, 20:44 UTC
 
-Main is `6bb959c70b60ee8bbd15c4599249b21dbe25e077`, tree
-`104e1b1bce8bb84dc3b3df5e7c737cc9f03cca32`. It includes the source-cell mean
+Main is `20cc57ced925097d7b0a60d13415423b200af75c`, tree
+`ec9aa0478556a21e7be890d6d56317904a633435`. It includes the source-cell mean
 from [PR #105](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/105),
 the two-direction edge-width repair from
 [PR #107](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/107),
@@ -16,8 +16,10 @@ documentation. The subsequent documentation
 [PR #110](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/110)
 merged at 18:59 UTC. Documentation
 [PR #111](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/111)
-merged at 19:25:32 UTC and added the local recovery snapshot; its tree matches
-this main revision. PR #106 merged into its research
+merged at 19:25:32 UTC and added the local recovery snapshot. Documentation
+[PR #112](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/112)
+merged at 20:23:44 UTC and added the then-unexecuted coupled proposal; its tree
+matches this main revision. PR #106 merged into its research
 base after PR #105 closed; its documentation reached main through PR #108.
 
 | Capability in this source | Scope and evidence |
@@ -26,7 +28,7 @@ base after PR #105 closed; its documentation reached main through PR #108.
 | Gaussian finite-material inverse | Developer Python API; four geometry parameters with supplied chord normal and optics. [Contract](finite-shape-inverse.md) |
 | Source-cell area and staged acquisition mean | Developer Python APIs with supplied geometry, levels, kernels and affine sampling; [128 saved-stage comparisons](validation/finite-acquisition-mean.md) |
 | Five unrounded area sensitivities and signed linear propagation | Developer Python APIs; [259 focused tests and 33 study rows](validation/finite-cell-sensitivity.md), without an inverse-recovery result |
-| Five-geometry-parameter acquisition-aware recovery with unknown brightness | Absent from this main-based runtime. A [separate local candidate](finite-acquisition-recovery.md) has two completed, failed recovery protocols; it is not an HTTP mode or automatic correction |
+| Five-geometry-parameter acquisition-aware recovery with unknown brightness | Absent from this main-based runtime. A [separate local candidate](finite-acquisition-recovery.md) has four completed, failed recovery protocols; it is not an HTTP mode or automatic correction |
 
 Hosted checks are tied to their published heads:
 
@@ -36,12 +38,13 @@ Hosted checks are tied to their published heads:
 | PR #109, `88a6d78f2807ae3eef3f6bf4bc229849321717ce` | [43478504807](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43478504807): completed, success | [43478504825](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43478504825): completed, success |
 | PR #110, `8c72d873ae7871584f5c2ca9d12ac5d4bbdfab96` | [43484991562](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43484991562): completed, success | [43484991878](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43484991878): completed, success |
 | PR #111, `b6ba24992260d49fd0a88a53057799c4f7c85e67` | [43491926326](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43491926326): completed, success | [43491926158](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43491926158): completed, success |
+| PR #112, `42f78743d4abeb84d96e100a2aa0849a11e470f6` | [43497998820](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43497998820): completed, success | [43497998949](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43497998949): completed, success |
 
 These readbacks do not extend a run to the combined main commit or this later
 documentation change. Merge, hosted checks, installed runtime, real-camera
 accuracy and physical acceptance remain separate.
 
-The [documentation review](validation/documentation-coupled-state.md) audits this
+The [documentation review](validation/documentation-executed-recovery.md) audits this
 main-based source. Use [available tools](#available-here) and [remaining integration work](#remaining-integration-work)
 for current capabilities. Earlier snapshots below are historical records; their open
 PR states and absent-module statements describe their own source and time.
@@ -49,12 +52,13 @@ The primary `codex/slicer-integration` checkout remains separate and unchanged.
 
 ## Separate local recovery research
 
-The [recovery method](finite-acquisition-recovery.md) describes local candidate
+The [recovery method](finite-acquisition-recovery.md) first describes local candidate
 `e6e2c2881add2cc594f4a59d713edf8a9ddde665`, not the runtime above. The original
 source `7ec6803` records 4/12 matched passes; the separately admitted smooth-proposal
 continuation records 9/12: four smooth, four staged and one PNG. Both retain all
 24 cases, including 12 adverse cases, and both protocols exit 1. The candidate's
-459 focused tests pass. Three PNG cases still miss the original targets.
+459 focused tests pass. Three PNG cases miss the original targets in that
+predictor run; the later continuations below retain their own results.
 
 The original saved-data auditor exits 1 with 14 pre-cast reference-area delta
 checks that rounded saved coverage cannot reproduce. The
@@ -63,12 +67,24 @@ that failure, conditional reserved-pixel use, tied PNG candidates and the lack o
 independent forward/rank/physical qualification. This documentation change
 includes reports and static excerpts, not the candidate runtime or full raw archive.
 
-The [coupled seven-parameter continuation](finite-acquisition-coupled.md) and
-[paired-auditor design](finite-acquisition-saved-audit.md) are newer, uncommitted
-authoring snapshots. No new tests, model/study execution or paired audit has
-run. Both complete recovery archives now have verified local member hashes
-and sizes; these ZIPs and candidate modules remain outside this publication.
-All prior target failures and reference-precision limits remain in force.
+The later [coupled search](finite-acquisition-coupled.md) at `b9fe285` reaches
+11/12 matched passes; [source events](finite-acquisition-events.md) at `cd85ef9`
+stay at 11/12. Both full protocols exit 1 with all original 24 cases retained.
+The first focused suites pass 548 tests/nine subtests and 653 tests/21 subtests.
+Middle PNG still misses fraction and conditional reserved-residual targets.
+[Full results and source bindings](validation/finite-acquisition-continuations.md)
+are separate from this main runtime and application/browser evidence.
+
+The historical paired audit records zero inconsistencies but 28 required
+unknowns, exit 1. The coupled audit first fails 17 input-hash framing checks;
+its separately admitted correction at `8507525` verifies all 1,191,323
+implemented current checks, exit 0, with 24/24 current pre-cast comparisons
+and all 28 historical unknowns retained separately. Its 54 tests/12 subtests
+pass. See [audit scope and exclusions](finite-acquisition-saved-audit.md).
+Neither audit covers the new event-phase ledger or establishes forward-model
+accuracy. Four complete ZIPs have local member hash/size readback; candidate
+runtime, auditor source, complete ZIPs and full candidate ledgers/arrays are
+outside this documentation publication.
 
 ## Available here
 
@@ -161,7 +177,7 @@ A main-branch inverse would need the separately
 seeds and bounds, brightness/rank diagnostics, a bounded search for undefined
 derivatives or rounded stages, and prospective recovery checks. The separate
 [local prototype](finite-acquisition-recovery.md) implements those research
-mechanisms, but its two failed protocols leave recovery and adoption unresolved.
+mechanisms, but its four failed protocols leave recovery and adoption unresolved.
 The current five-query coupled controls do not prove five-parameter rank after
 two unknown brightness levels. Supplied source assumptions and observed camera calibration remain
 distinct. Neither study automatically corrects CAD.

@@ -1,90 +1,103 @@
-# Saved recovery archives and proposed paired audit
+# Saved recovery archives and completed consistency audits
 
-The [completed recovery record](validation/finite-acquisition-recovery.md)
-retains the original 4/12 and predictor 9/12 matched results. Both full
-24-case protocols failed. Their complete archives have now been packaged and
-read back locally. A second, paired auditor has been authored, but **has not
-executed**. Packaging integrity and an audit design are separate from an
-independent scientific result.
+The four separately frozen recovery studies retain **4/12, 9/12, 11/12 and
+11/12 matched passes**. All four complete 24-case protocols exit 1. See the
+[original/predictor record](validation/finite-acquisition-recovery.md) and
+[coupled/event results](validation/finite-acquisition-continuations.md).
+Local packaging, saved-record consistency, model accuracy and physical
+acceptance have separate evidence.
 
-This main-based documentation contains the plans, source-file hashes and
-packaging receipt linked below. It does not contain the candidate modules,
-the new auditor, or either complete recovery ZIP. Paths inside those records
-refer to the separate local research checkout, not runnable paths in main.
+This documentation contains [verbatim reports and receipts](validation/evidence/acquisition-continuations-20261113/manifest.json).
+It does not contain candidate runtime, auditor source, full candidate
+ledgers/arrays or complete recovery ZIPs. Paths inside copied records refer to
+the separate local research checkout; they are not runnable paths in main.
 
 ## Complete local archive inventory
 
+Every archive below has been decompressed and compared with its member hash
+and size manifest locally. Those checks establish packaging integrity, not
+forward-model accuracy or recovery of discarded precision.
+
 | Recorded experiment | Complete ZIP bytes | Members | SHA-256 |
 | --- | --- | --- | --- |
-| Original, source `7ec6803` | 27,710,505 | 114 | `e25fe8a0ca8675daafed1b0b577de1d68f4d42e21bf91ee3ba72d43fcb98e724` |
-| Predictor, source `e6e2c2` | 8,428,126 | 113 | `7372f87859538dc675dba6f35b4c8e9e141893c312f32ccb0e9fd9473f886119` |
+| Original, `7ec6803` | 27,710,505 | 114 | `e25fe8a0ca8675daafed1b0b577de1d68f4d42e21bf91ee3ba72d43fcb98e724` |
+| Predictor, `e6e2c2` | 8,428,126 | 113 | `7372f87859538dc675dba6f35b4c8e9e141893c312f32ccb0e9fd9473f886119` |
+| Coupled, `b9fe285` | 12,725,460 | 115 | `8d2c8901f4f9d01e40ade32d25f4e926786cfa60a01cc23301df9e283eb41d40` |
+| Source events, `cd85ef9` | 16,706,627 | 115 | `5216d95624298618843dbd52c0f08880c5238d1ab5a78dd9bd95275a2a9f082d` |
 
-The [readback receipt](validation/evidence/acquisition-coupled-authoring-20261113/archive-readback.json)
-records successful comparison of every decoded member's hash and size. This
-checks the packaged data against its manifests; it does not verify the forward
-model or restore discarded precision. The predictor archive retains all 24
-rows, phase ledgers and arrays, its exact 60-file source snapshot, freeze,
-first test/study logs and terminal receipt. The original archive and first
-failed audit remain unchanged. Publication of these complete archives remains
-separate from this documentation update.
+The [original/predictor readback](validation/evidence/acquisition-coupled-authoring-20261113/archive-readback.json),
+[coupled metadata](validation/evidence/acquisition-continuations-20261113/coupled-archive.json)
+and [event metadata](validation/evidence/acquisition-continuations-20261113/events-archive.json)
+bind those local packages. Their exact source snapshots contain 53, 60, 69
+and 78 governing files, respectively, plus their manifests. First outcomes and
+old source bytes remain preserved. The event package includes the first
+failed coupled audit; the later correction has its own separate receipt.
 
-## First audit and missing precision
+## Completed audits and first failures
 
-The original auditor executed 5,740,807 checks and exited 1 with 14 failures.
-Every failure concerns the pre-cast GL64/96 area-order difference for a
-staged/PNG row. The runner computed that difference before float32 storage;
-the saved arrays cannot recover those discarded bits. Preserve the reported
-reference gate, but mark its missing independent verification explicitly.
-Changing a tolerance or comparing a different rounded quantity cannot supply
-the missing evidence.
+| Audit | Implemented checks | Inconsistencies | Required unknowns | Exit |
+| --- | --- | --- | --- | --- |
+| Original first audit | 5,740,807 | 14 pre-cast comparisons | Not classified by v1 | 1 |
+| Historical paired v2 | 6,595,622 | 0 | 28 historical | 1 |
+| Coupled first audit v1 | 1,191,323 | 17 input-hash framing checks | 0 current; 28 historical retained | 1 |
+| Coupled corrected audit v2 | 1,191,323 | 0 | 0 current; 28 historical retained | 0 |
 
-The first auditor does not understand the predictor's composite phase ledger.
-Its result therefore does not independently audit the predictor continuation.
+The [historical paired output](validation/evidence/acquisition-continuations-20261113/historical-paired-audit.json)
+checks all 48 original/predictor rows. It reports
+`consistent_with_unverified_records`, not a fully verified result. Each run
+requests 24 pre-cast GL64/96 area comparisons: ten smooth rows can be verified,
+while 14 staged/PNG rows lack the discarded float64 bits. The original first
+auditor classified those 14 as failures. Neither a changed tolerance nor a
+rounded-array comparison can recover the missing independent evidence.
+All original reference gates and failed protocols remain unchanged.
 
-## Proposed paired audit
+The [first coupled output](validation/evidence/acquisition-continuations-20261113/coupled-audit-first-failure.json)
+fails all 17 attempted-fit wrapper input hashes. Production hashes a context
+tuple containing a tuple of limits; the auditor's recursive normalization
+stopped at an outer tuple and retained a nested list of limits. Its original
+fixture used the same defective helper to construct expected hashes.
+This was an audit serialization defect; no model, target or tolerance changed.
 
-The [unexecuted audit admission](validation/evidence/acquisition-coupled-authoring-20261113/paired-audit-admission.json)
-pins both reports, both recorded-source ZIPs and the first failed audit. The
-proposed standard-library auditor reads saved data only, without NumPy,
-backend, optimizer or reference-generator imports. Its intended scope includes:
+The [separate correction admission](validation/evidence/acquisition-continuations-20261113/audit-correction-admission.json)
+and [81-file freeze](validation/evidence/acquisition-continuations-20261113/audit-correction-freeze.json)
+precede first execution at `8507525e29a3de833b4d3548a9c7fe0ecfa5ebcb`.
+It changes only tuple/list normalization, explanatory text and receipt version.
+The new controls reuse all 41 original corruption cases and add 13 independent
+byte-level checks whose expected framing is not generated by the auditor helper.
+The first run passes **54 tests and 12 subtests**. V1 source, tests and its
+first failed output remain unchanged.
 
-- All 48 recorded rows, artifact/source hashes, paired capture identity,
-  observed inputs, seeds, bounds and training/reserved-query splits.
-- Candidate prediction/residual/cost arithmetic, cache/work histories,
-  resource charges and local-status consistency within each recorded phase.
-- Predictor quarter quotas, proposal selection, fallback, seven-coordinate
-  warm start, phase hashes, selected index space and completion withholding.
-- Saved geometry/dimension errors, conditional reserved-residual maxima,
-  target arithmetic and population counts.
+The [corrected coupled output](validation/evidence/acquisition-continuations-20261113/coupled-audit-corrected.json)
+reports `verified_within_declared_scope`, exit 0. All **1,191,323 current
+implemented checks** pass; all **24 current pre-cast comparisons** can be
+verified because this later capture retained float64 coverage. It explicitly
+carries the **28 historical unknowns** separately; it does not repair them.
+The [terminal receipt](validation/evidence/acquisition-continuations-20261113/audit-correction-terminal.json)
+records first outcomes and unchanged inputs. It runs with standard-library
+Python 3.14.4, zero backend imports and zero model/reference/optimizer calls.
 
-The proposed precision policy requests 24 pre-cast comparisons per run. Ten
-smooth rows per run retain the needed precision; 14 rounded rows per run do
-not. **28 unverified comparisons are therefore expected**, not an observed
-audit result. Rounded stored-array differences are a separate check.
+## Scope and exclusions
 
-| Proposed audit outcome | Exit | Meaning |
-| --- | --- | --- |
-| `inconsistent` | 1 | At least one implemented saved-record check disagrees |
-| `consistent_with_unverified_records` | 1 | No implemented inconsistency, but required comparisons remain unverified |
-| Fully verified implemented scope | 0 | No implemented inconsistency or required unverified comparison; not expected for these historical captures |
+Within the declared coupled-v1 scope, the corrected auditor checks source and
+artifact bindings, observed inputs, candidate/residual/cost arithmetic,
+mixed-phase/cache/work records, recorded surrogate structure, damping/ray
+selection, strict acceptance, polish selection and final target arithmetic.
+It reads the historical paired summary, not full prior predictor fit payloads;
+exact cross-run predictor-fit identity is not independently reverified by this
+CLI. Its nested initial strategy is checked under pinned historical v2 rules.
 
-Invented controls for malformed JSON/ZIP/NPY inputs, phase and work-accounting
-tampering, precision gaps and output safety are authored but unrun. The
-[authoring inventory](validation/evidence/acquisition-coupled-authoring-20261113/manifest.json)
-identifies their exact snapshot. No test pass or audit count is inferred from
-static inspection.
+Raw source-cell and `Ac/AD/A1` components of the coupled Jacobian were not saved.
+The auditor therefore cannot independently reconstruct that Jacobian; its
+shape/finiteness/linkage checks do not validate the missing raw components.
+It does not independently recompute forward/reserved predictions, reference
+accuracy, sampled boundary discrepancy or a certified supremum, SVD/rank,
+brightness optimality, direction optimality or stopping calculus. The declared
+complete-archive hash is recorded, not opened by this CLI; archive member
+readback is a separate packaging check.
 
-## Limits and next evidence
-
-Even the proposed audit does not independently recompute forward/reserved
-predictions, sampled boundary discrepancy, Jacobians, SVD/rank, brightness
-optimality or stopping calculus. It covers the original and predictor schemas,
-not the newer coupled strategy. Reserved pixels influenced initialization,
-so their residuals remain conditional diagnostics.
-
-The [coupled continuation proposal](finite-acquisition-coupled.md) preserves
-float64 coverage before rounded reference storage in future captures, while
-retaining the original reference values and thresholds. This cannot repair
-old archives. The complete source/test/plan closure must be committed and
-hashed before first execution, and first outcomes must be retained. No camera,
-installed-tool, interactive-latency or physical-print qualification follows.
+The corrected auditor does **not** cover the new source-event ledger.
+Reserved pixels influenced initialization, so their later residuals remain
+conditional. No saved-record pass establishes unique geometry, global
+convergence, unknown-camera adequacy, interactive latency, installed-tool
+acceptance or physical CAD/print accuracy. Future changes require their own
+source/test/plan freeze and retained first outcomes.

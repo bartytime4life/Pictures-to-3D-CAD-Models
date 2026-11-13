@@ -1,5 +1,17 @@
 # Workbench change log
 
+## Completed local recovery research documentation — November 13, 2026
+
+- Record coupled 11/12 and source-event 11/12 results, both complete protocols
+  failed, with all original cases, thresholds and first outcomes retained.
+- Document source-code event scoring, actual-cost acceptance, work accounting
+  and the unresolved middle-PNG case.
+- Record the historical paired audit's 28 unknowns, the coupled audit's first
+  17 framing failures and its separately frozen saved-only correction.
+- Refresh main/CI status after PR #112 merged and connect current guidance
+  across workbench, developer and companion-library documentation.
+  [Review scope](validation/documentation-executed-recovery.md).
+
 ## Documentation of unexecuted coupled research — November 13, 2026
 
 - Refresh main/CI status after PR #111 merged; retain its results on their own head.

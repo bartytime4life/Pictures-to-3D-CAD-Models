@@ -1,0 +1,1309 @@
+{
+  "format": "documentation-selected-saved-event-diagnostics",
+  "source": ".local/verification/finite-acquisition-recovery-events-v1-first/middle-png/fit.json",
+  "source_binding": {
+    "sha256": "25353d6443fcee95f713cc50128d37f38ea39bff85faa26d2e7737f314723059",
+    "bytes": 48947563
+  },
+  "report_sha256": "9773319dcfdf17473d07fc4aa948c8f4ba90696f801120015653900c0fab3159",
+  "scope": "Selected saved JSON fields only, not a full event-ledger audit, model/derivative recomputation or cause certificate. Actual trial source codes were not retained.",
+  "best": {
+    "parameters": [
+      5.874218654733053,
+      6.117834924781105,
+      3.4128701620906594,
+      0.1664712743767095,
+      1.129535692197705
+    ],
+    "levels": [
+      22.115085058432857,
+      218.2438442787882
+    ],
+    "cost": 0.302031169350812
+  },
+  "work": {
+    "evaluations": 1000,
+    "cell_work": 136214,
+    "stage_work": 6840536,
+    "work_exhausted": false
+  },
+  "iteration": {
+    "index": 0,
+    "incumbent_candidate_index": 0,
+    "status": "no_literal_event_improvement",
+    "events": [
+      {
+        "index": 0,
+        "source_index": 62,
+        "source_code": 93,
+        "target_code": 92,
+        "score": -0.3020311693179328,
+        "decoded_delta": -0.6218452453613281,
+        "status": "no_literal_improvement",
+        "trials": [
+          {
+            "factor": 1.001,
+            "point": [
+              5.871569738819133,
+              6.119480576113125,
+              3.412611440289123,
+              0.1664712743767095,
+              1.129535692197705,
+              22.10990858854674,
+              218.24369205213276
+            ],
+            "status": "resolved",
+            "ledger_start": 68,
+            "ledger_index": 68,
+            "candidate_index": 1,
+            "cost": 2.875379777666239
+          },
+          {
+            "factor": 1.1,
+            "point": [
+              5.871307758124349,
+              6.119643332838271,
+              3.412585852418642,
+              0.1664712743767095,
+              1.129535692197705,
+              22.109396629986577,
+              218.2436769967493
+            ],
+            "status": "resolved",
+            "ledger_start": 69,
+            "ledger_index": 69,
+            "candidate_index": 2,
+            "cost": 2.573348608315428
+          },
+          {
+            "factor": 1.5,
+            "point": [
+              5.870249250266639,
+              6.120300935768148,
+              3.4124824670833624,
+              0.1664712743767095,
+              1.129535692197705,
+              22.107328110551563,
+              218.24361616691695
+            ],
+            "status": "resolved",
+            "ledger_start": 70,
+            "ledger_index": 70,
+            "candidate_index": 3,
+            "cost": 8.237648948008427
+          }
+        ],
+        "threshold": {
+          "status": "witness",
+          "source_code": 93,
+          "target_code": 92,
+          "optical": 27.717960357666016,
+          "boundary": 27.600791931152344,
+          "boundary_bits": 1104989804,
+          "neighbor": 27.600793838500977,
+          "neighbor_bits": 1104989805,
+          "probes": [
+            {
+              "index": 0,
+              "bits": 1105051234,
+              "value": 27.717960357666016,
+              "code": 93,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 1,
+              "bits": 0,
+              "value": 0.0,
+              "code": 0,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 2,
+              "bits": 1132462080,
+              "value": 256.0,
+              "code": 255,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 3,
+              "bits": 566231040,
+              "value": 1.3010426069826053e-18,
+              "code": 0,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 4,
+              "bits": 849346560,
+              "value": 1.862645149230957e-08,
+              "code": 0,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 5,
+              "bits": 990904320,
+              "value": 0.002197265625,
+              "code": 0,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 6,
+              "bits": 1061683200,
+              "value": 0.78125,
+              "code": 10,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 7,
+              "bits": 1097072640,
+              "value": 14.25,
+              "code": 67,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 8,
+              "bits": 1114767360,
+              "value": 60.5,
+              "code": 134,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 9,
+              "bits": 1105920000,
+              "value": 29.375,
+              "code": 95,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 10,
+              "bits": 1101496320,
+              "value": 20.9375,
+              "code": 81,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 11,
+              "bits": 1103708160,
+              "value": 25.15625,
+              "code": 88,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 12,
+              "bits": 1104814080,
+              "value": 27.265625,
+              "code": 92,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 13,
+              "bits": 1105367040,
+              "value": 28.3203125,
+              "code": 94,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 14,
+              "bits": 1105090560,
+              "value": 27.79296875,
+              "code": 93,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 15,
+              "bits": 1104952320,
+              "value": 27.529296875,
+              "code": 92,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 16,
+              "bits": 1105021440,
+              "value": 27.6611328125,
+              "code": 93,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 17,
+              "bits": 1104986880,
+              "value": 27.59521484375,
+              "code": 92,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 18,
+              "bits": 1105004160,
+              "value": 27.628173828125,
+              "code": 93,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 19,
+              "bits": 1104995520,
+              "value": 27.6116943359375,
+              "code": 93,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 20,
+              "bits": 1104991200,
+              "value": 27.60345458984375,
+              "code": 93,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 21,
+              "bits": 1104989040,
+              "value": 27.599334716796875,
+              "code": 92,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 22,
+              "bits": 1104990120,
+              "value": 27.601394653320312,
+              "code": 93,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 23,
+              "bits": 1104989580,
+              "value": 27.600364685058594,
+              "code": 92,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 24,
+              "bits": 1104989850,
+              "value": 27.600879669189453,
+              "code": 93,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 25,
+              "bits": 1104989715,
+              "value": 27.600622177124023,
+              "code": 92,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 26,
+              "bits": 1104989782,
+              "value": 27.600749969482422,
+              "code": 92,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 27,
+              "bits": 1104989816,
+              "value": 27.600814819335938,
+              "code": 93,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 28,
+              "bits": 1104989799,
+              "value": 27.60078239440918,
+              "code": 92,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 29,
+              "bits": 1104989807,
+              "value": 27.600797653198242,
+              "code": 93,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 30,
+              "bits": 1104989803,
+              "value": 27.60079002380371,
+              "code": 92,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 31,
+              "bits": 1104989805,
+              "value": 27.600793838500977,
+              "code": 93,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 32,
+              "bits": 1104989804,
+              "value": 27.600791931152344,
+              "code": 92,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 33,
+              "bits": 1104989804,
+              "value": 27.600791931152344,
+              "code": 92,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 34,
+              "bits": 1104989805,
+              "value": 27.600793838500977,
+              "code": 93,
+              "status": "completed",
+              "error": null
+            }
+          ],
+          "error": null,
+          "certified_global_inverse": false
+        },
+        "direction": [
+          -7.728444045786693e-05,
+          5.002834818319924e-05,
+          -2.6548783788283273e-05,
+          -0.0,
+          -0.0,
+          -2.0279602304034853e-05,
+          -5.963709052096107e-07
+        ],
+        "points": [
+          [
+            1.001,
+            [
+              5.871569738819133,
+              6.119480576113125,
+              3.412611440289123,
+              0.1664712743767095,
+              1.129535692197705,
+              22.10990858854674,
+              218.24369205213276
+            ]
+          ],
+          [
+            1.1,
+            [
+              5.871307758124349,
+              6.119643332838271,
+              3.412585852418642,
+              0.1664712743767095,
+              1.129535692197705,
+              22.109396629986577,
+              218.2436769967493
+            ]
+          ],
+          [
+            1.5,
+            [
+              5.870249250266639,
+              6.120300935768148,
+              3.4124824670833624,
+              0.1664712743767095,
+              1.129535692197705,
+              22.107328110551563,
+              218.24361616691695
+            ]
+          ]
+        ],
+        "clipped_crossing_is_not_guaranteed": true
+      },
+      {
+        "index": 1,
+        "source_index": 75,
+        "source_code": 117,
+        "target_code": 118,
+        "score": -0.01320759834838241,
+        "decoded_delta": 0.8353385925292969,
+        "status": "no_literal_improvement",
+        "trials": [
+          {
+            "factor": 1.001,
+            "point": [
+              5.880629951279605,
+              6.120000145953858,
+              3.413320816627254,
+              0.16652417138362063,
+              1.1300003725977916,
+              22.121478164146446,
+              218.2447032245894
+            ],
+            "status": "resolved",
+            "ledger_start": 106,
+            "ledger_index": 106,
+            "candidate_index": 4,
+            "cost": 9.127689087628823
+          },
+          {
+            "factor": 1.1,
+            "point": [
+              5.881264035553439,
+              6.120214288707208,
+              3.4133653868561473,
+              0.1665294029557326,
+              1.1300463299999972,
+              22.122110449326907,
+              218.24478817527302
+            ],
+            "status": "resolved",
+            "ledger_start": 107,
+            "ledger_index": 107,
+            "candidate_index": 5,
+            "cost": 10.087345946751155
+          },
+          {
+            "factor": 1.5,
+            "point": [
+              5.8838259922153995,
+              6.121079511953061,
+              3.4135454685890525,
+              0.16655054062083174,
+              1.130232016473558,
+              22.124665136924747,
+              218.2451314103584
+            ],
+            "status": "resolved",
+            "ledger_start": 108,
+            "ledger_index": 108,
+            "candidate_index": 6,
+            "cost": 14.983733444532845
+          }
+        ],
+        "threshold": {
+          "status": "witness",
+          "source_code": 117,
+          "target_code": 118,
+          "optical": 45.34492111206055,
+          "boundary": 45.77810287475586,
+          "boundary_bits": 1110908103,
+          "neighbor": 45.778099060058594,
+          "neighbor_bits": 1110908102,
+          "probes": [
+            {
+              "index": 0,
+              "bits": 1110794547,
+              "value": 45.34492111206055,
+              "code": 117,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 1,
+              "bits": 0,
+              "value": 0.0,
+              "code": 0,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 2,
+              "bits": 1132462080,
+              "value": 256.0,
+              "code": 255,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 3,
+              "bits": 566231040,
+              "value": 1.3010426069826053e-18,
+              "code": 0,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 4,
+              "bits": 849346560,
+              "value": 1.862645149230957e-08,
+              "code": 0,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 5,
+              "bits": 990904320,
+              "value": 0.002197265625,
+              "code": 0,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 6,
+              "bits": 1061683200,
+              "value": 0.78125,
+              "code": 10,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 7,
+              "bits": 1097072640,
+              "value": 14.25,
+              "code": 67,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 8,
+              "bits": 1114767360,
+              "value": 60.5,
+              "code": 134,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 9,
+              "bits": 1105920000,
+              "value": 29.375,
+              "code": 95,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 10,
+              "bits": 1110343680,
+              "value": 43.625,
+              "code": 115,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 11,
+              "bits": 1112555520,
+              "value": 52.0625,
+              "code": 125,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 12,
+              "bits": 1111449600,
+              "value": 47.84375,
+              "code": 120,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 13,
+              "bits": 1110896640,
+              "value": 45.734375,
+              "code": 117,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 14,
+              "bits": 1111173120,
+              "value": 46.7890625,
+              "code": 119,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 15,
+              "bits": 1111034880,
+              "value": 46.26171875,
+              "code": 118,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 16,
+              "bits": 1110965760,
+              "value": 45.998046875,
+              "code": 118,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 17,
+              "bits": 1110931200,
+              "value": 45.8662109375,
+              "code": 118,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 18,
+              "bits": 1110913920,
+              "value": 45.80029296875,
+              "code": 118,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 19,
+              "bits": 1110905280,
+              "value": 45.767333984375,
+              "code": 117,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 20,
+              "bits": 1110909600,
+              "value": 45.7838134765625,
+              "code": 118,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 21,
+              "bits": 1110907440,
+              "value": 45.77557373046875,
+              "code": 117,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 22,
+              "bits": 1110908520,
+              "value": 45.779693603515625,
+              "code": 118,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 23,
+              "bits": 1110907980,
+              "value": 45.77763366699219,
+              "code": 117,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 24,
+              "bits": 1110908250,
+              "value": 45.778663635253906,
+              "code": 118,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 25,
+              "bits": 1110908115,
+              "value": 45.77814865112305,
+              "code": 118,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 26,
+              "bits": 1110908047,
+              "value": 45.777889251708984,
+              "code": 117,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 27,
+              "bits": 1110908081,
+              "value": 45.778018951416016,
+              "code": 117,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 28,
+              "bits": 1110908098,
+              "value": 45.77808380126953,
+              "code": 117,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 29,
+              "bits": 1110908106,
+              "value": 45.778114318847656,
+              "code": 118,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 30,
+              "bits": 1110908102,
+              "value": 45.778099060058594,
+              "code": 117,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 31,
+              "bits": 1110908104,
+              "value": 45.778106689453125,
+              "code": 118,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 32,
+              "bits": 1110908103,
+              "value": 45.77810287475586,
+              "code": 118,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 33,
+              "bits": 1110908103,
+              "value": 45.77810287475586,
+              "code": 118,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 34,
+              "bits": 1110908102,
+              "value": 45.778099060058594,
+              "code": 117,
+              "status": "completed",
+              "error": null
+            }
+          ],
+          "error": null,
+          "certified_global_inverse": false
+        },
+        "direction": [
+          0.00018705518873058334,
+          6.582344425967403e-05,
+          4.6243995613129847e-05,
+          2.6554855652344412e-05,
+          7.388230033124091e-05,
+          2.5045956841541602e-05,
+          3.365049856791739e-06
+        ],
+        "points": [
+          [
+            1.001,
+            [
+              5.880629951279605,
+              6.120000145953858,
+              3.413320816627254,
+              0.16652417138362063,
+              1.1300003725977916,
+              22.121478164146446,
+              218.2447032245894
+            ]
+          ],
+          [
+            1.1,
+            [
+              5.881264035553439,
+              6.120214288707208,
+              3.4133653868561473,
+              0.1665294029557326,
+              1.1300463299999972,
+              22.122110449326907,
+              218.24478817527302
+            ]
+          ],
+          [
+            1.5,
+            [
+              5.8838259922153995,
+              6.121079511953061,
+              3.4135454685890525,
+              0.16655054062083174,
+              1.130232016473558,
+              22.124665136924747,
+              218.2451314103584
+            ]
+          ]
+        ],
+        "clipped_crossing_is_not_guaranteed": true
+      },
+      {
+        "index": 2,
+        "source_index": 64,
+        "source_code": 83,
+        "target_code": 84,
+        "score": -0.003085510386956066,
+        "decoded_delta": 0.5495586395263672,
+        "status": "no_literal_improvement",
+        "trials": [
+          {
+            "factor": 1.001,
+            "point": [
+              5.874218654733053,
+              6.117834924781105,
+              3.4128701620906594,
+              0.1664712743767095,
+              1.129535692197705,
+              22.33162714408044,
+              218.2438442787882
+            ],
+            "status": "resolved",
+            "ledger_start": 144,
+            "ledger_index": 144,
+            "candidate_index": 7,
+            "cost": 31.759523340944725
+          },
+          {
+            "factor": 1.1,
+            "point": [
+              5.874218654733053,
+              6.117834924781105,
+              3.4128701620906594,
+              0.1664712743767095,
+              1.129535692197705,
+              22.353043394309324,
+              218.2438442787882
+            ],
+            "status": "resolved",
+            "ledger_start": 145,
+            "ledger_index": 145,
+            "candidate_index": 8,
+            "cost": 32.44228159245904
+          },
+          {
+            "factor": 1.5,
+            "point": [
+              5.874218654733053,
+              6.117834924781105,
+              3.4128701620906594,
+              0.1664712743767095,
+              1.129535692197705,
+              22.4395736982644,
+              218.2438442787882
+            ],
+            "status": "resolved",
+            "ledger_start": 146,
+            "ledger_index": 146,
+            "candidate_index": 9,
+            "cost": 36.84616791468943
+          }
+        ],
+        "threshold": {
+          "status": "witness",
+          "source_code": 83,
+          "target_code": 84,
+          "optical": 22.11508560180664,
+          "boundary": 22.331411361694336,
+          "boundary_bits": 1102227131,
+          "neighbor": 22.331409454345703,
+          "neighbor_bits": 1102227130,
+          "probes": [
+            {
+              "index": 0,
+              "bits": 1102113714,
+              "value": 22.11508560180664,
+              "code": 83,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 1,
+              "bits": 0,
+              "value": 0.0,
+              "code": 0,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 2,
+              "bits": 1132462080,
+              "value": 256.0,
+              "code": 255,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 3,
+              "bits": 566231040,
+              "value": 1.3010426069826053e-18,
+              "code": 0,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 4,
+              "bits": 849346560,
+              "value": 1.862645149230957e-08,
+              "code": 0,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 5,
+              "bits": 990904320,
+              "value": 0.002197265625,
+              "code": 0,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 6,
+              "bits": 1061683200,
+              "value": 0.78125,
+              "code": 10,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 7,
+              "bits": 1097072640,
+              "value": 14.25,
+              "code": 67,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 8,
+              "bits": 1114767360,
+              "value": 60.5,
+              "code": 134,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 9,
+              "bits": 1105920000,
+              "value": 29.375,
+              "code": 95,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 10,
+              "bits": 1101496320,
+              "value": 20.9375,
+              "code": 81,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 11,
+              "bits": 1103708160,
+              "value": 25.15625,
+              "code": 88,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 12,
+              "bits": 1102602240,
+              "value": 23.046875,
+              "code": 85,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 13,
+              "bits": 1102049280,
+              "value": 21.9921875,
+              "code": 83,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 14,
+              "bits": 1102325760,
+              "value": 22.51953125,
+              "code": 84,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 15,
+              "bits": 1102187520,
+              "value": 22.255859375,
+              "code": 83,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 16,
+              "bits": 1102256640,
+              "value": 22.3876953125,
+              "code": 84,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 17,
+              "bits": 1102222080,
+              "value": 22.32177734375,
+              "code": 83,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 18,
+              "bits": 1102239360,
+              "value": 22.354736328125,
+              "code": 84,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 19,
+              "bits": 1102230720,
+              "value": 22.3382568359375,
+              "code": 84,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 20,
+              "bits": 1102226400,
+              "value": 22.33001708984375,
+              "code": 83,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 21,
+              "bits": 1102228560,
+              "value": 22.334136962890625,
+              "code": 84,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 22,
+              "bits": 1102227480,
+              "value": 22.332077026367188,
+              "code": 84,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 23,
+              "bits": 1102226940,
+              "value": 22.33104705810547,
+              "code": 83,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 24,
+              "bits": 1102227210,
+              "value": 22.331562042236328,
+              "code": 84,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 25,
+              "bits": 1102227075,
+              "value": 22.3313045501709,
+              "code": 83,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 26,
+              "bits": 1102227142,
+              "value": 22.331432342529297,
+              "code": 84,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 27,
+              "bits": 1102227108,
+              "value": 22.33136749267578,
+              "code": 83,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 28,
+              "bits": 1102227125,
+              "value": 22.33139991760254,
+              "code": 83,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 29,
+              "bits": 1102227133,
+              "value": 22.3314151763916,
+              "code": 84,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 30,
+              "bits": 1102227129,
+              "value": 22.33140754699707,
+              "code": 83,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 31,
+              "bits": 1102227131,
+              "value": 22.331411361694336,
+              "code": 84,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 32,
+              "bits": 1102227130,
+              "value": 22.331409454345703,
+              "code": 83,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 33,
+              "bits": 1102227131,
+              "value": 22.331411361694336,
+              "code": 84,
+              "status": "completed",
+              "error": null
+            },
+            {
+              "index": 34,
+              "bits": 1102227130,
+              "value": 22.331409454345703,
+              "code": 83,
+              "status": "completed",
+              "error": null
+            }
+          ],
+          "error": null,
+          "certified_global_inverse": false
+        },
+        "direction": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0008483363132850796,
+          0.0
+        ],
+        "points": [
+          [
+            1.001,
+            [
+              5.874218654733053,
+              6.117834924781105,
+              3.4128701620906594,
+              0.1664712743767095,
+              1.129535692197705,
+              22.33162714408044,
+              218.2438442787882
+            ]
+          ],
+          [
+            1.1,
+            [
+              5.874218654733053,
+              6.117834924781105,
+              3.4128701620906594,
+              0.1664712743767095,
+              1.129535692197705,
+              22.353043394309324,
+              218.2438442787882
+            ]
+          ],
+          [
+            1.5,
+            [
+              5.874218654733053,
+              6.117834924781105,
+              3.4128701620906594,
+              0.1664712743767095,
+              1.129535692197705,
+              22.4395736982644,
+              218.2438442787882
+            ]
+          ]
+        ],
+        "clipped_crossing_is_not_guaranteed": true
+      }
+    ],
+    "accepted_candidate_index": null,
+    "negative_score_events": [
+      [
+        -0.3020311693179328,
+        62,
+        92,
+        -0.6218452453613281
+      ],
+      [
+        -0.01320759834838241,
+        75,
+        118,
+        0.8353385925292969
+      ],
+      [
+        -0.003085510386956066,
+        64,
+        84,
+        0.5495586395263672
+      ]
+    ],
+    "selected_event_count": 3
+  },
+  "source_surrogate_rows": {
+    "0": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      255.0,
+      0.0
+    ],
+    "62": [
+      944.0293929879647,
+      -611.0962425007592,
+      324.29337775803987,
+      0.0,
+      0.0,
+      247.71532975712444,
+      7.284670242875568
+    ],
+    "64": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      255.0,
+      0.0
+    ],
+    "75": [
+      1678.8941565064956,
+      590.7913951954939,
+      415.0581148551793,
+      238.34031167030267,
+      663.122809568435,
+      224.7973492247907,
+      30.20265077520928
+    ]
+  }
+}

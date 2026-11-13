@@ -1,0 +1,1752 @@
+{
+  "format": "finite-acquisition-recovery-coupled-saved-audit",
+  "version": 1,
+  "status": "inconsistent",
+  "exit_code": 1,
+  "auditor_sha256": "8dfd4bfdda5005f7caef29d3ef5eabe25d3fabc592402a8b2f27723e4e186cd4",
+  "v1_helper_sha256": "749cb6b9a158b81891cb58109b114b2a18bf4aca1933c8268beca2bfa00a0373",
+  "v2_helper_sha256": "8fcc982c2e14bdbb8cf343c4703cb2d4c61b800d4eb858ab147bd44dc7952b04",
+  "python": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+  "backend_imports": 0,
+  "model_calls": 0,
+  "reference_calls": 0,
+  "optimizer_calls": 0,
+  "current_checkout_governing_source_used": false,
+  "complete_archive_sha256_declared_not_opened": "8d2c8901f4f9d01e40ade32d25f4e926786cfa60a01cc23301df9e283eb41d40",
+  "scope": {
+    "independent_saved_data_checks": [
+      "complete population, retained exceptions/refusals, file hashes and recorded-source ZIP",
+      "saved capture-order differences and encoded-array equality; no new reference",
+      "observed-only initializer hashes, common queries, seeds and train/reserved split",
+      "every candidate residual/cost arithmetic against saved predictions and observed targets",
+      "objective/source-cell LRU histories and attempted/cumulative resource accounting",
+      "best candidate, local completion gate, geometry errors and independent dimension formulas",
+      "all target flags and matched/adverse denominators without requiring study success",
+      "all24 pre-cast float64 GL64/96 deltas and separate mode-specific storage casts",
+      "mixed literal/surrogate ledger, fresh surrogate charges and unchanged literal LRUs",
+      "saved-direction clipped rays, attempt prefixes, strict literal acceptance and damping",
+      "polish-linked equal-cost selection, cross-phase ties and completion withholding"
+    ],
+    "not_independently_recomputed": [
+      "any forward prediction, capture, operator output or reserved-query prediction",
+      "sampled boundary discrepancy, true supremum distance, topology or coverage accuracy",
+      "Jacobians, SVD/rank, brightness optimality, proposals and stopping calculations",
+      "reference certification or causal attribution of recovery failures",
+      "surrogate Jacobian/mean from absent raw Ac, AD, A1 and source-cell component arrays",
+      "surrogate operator input digests from absent component arrays; only recorded digest syntax checked",
+      "augmented SVD direction calculation or optimizer stopping calculus",
+      "exact cross-run identity of prior predictor fit payloads: supplied historical receipt contains summaries, not those complete payloads"
+    ],
+    "conditional_limits": [
+      "reserved pixels entered full-field preprocessing; they are not independent holdout",
+      "observed bounds are operational caps, not proved truth enclosures",
+      "PNG ties and local stopping do not establish accurate or unique geometry",
+      "rank/residual diagnostics are conditional numerical quantities, not physical accuracy"
+    ],
+    "precision_policy": "Historical28 required unknowns remain historical; coupled precision uses its own retained pre-cast arrays."
+  },
+  "historical_audit_preserved": {
+    "sha256": "5fb643e9f29ef6a20976055177d426bcc09533a9dd9b830e9d92c4b654839a5c",
+    "status": "consistent_with_unverified_records",
+    "exit_code": 1,
+    "required_unverified_count": 28,
+    "unverified": [
+      {
+        "path": "original/rows/minor-staged/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 1.1102230246251565e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "original/rows/minor-png/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 1.1102230246251565e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "original/rows/middle-staged/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 3.3306690738754696e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "original/rows/middle-png/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 3.3306690738754696e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "original/rows/major-staged/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 2.220446049250313e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "original/rows/major-png/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 2.220446049250313e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "original/rows/wrapped-major-staged/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 2.220446049250313e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "original/rows/wrapped-major-png/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 2.220446049250313e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "original/rows/zero-png/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 1.1102230246251565e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "original/rows/low-staged/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 3.3306690738754696e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "original/rows/thin-png/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 5.551115123125783e-17,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "original/rows/gradient-staged/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 2.220446049250313e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "original/rows/singular-map-png/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 3.3306690738754696e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "original/rows/budget-png/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 3.3306690738754696e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "predictor/rows/minor-staged/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 1.1102230246251565e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "predictor/rows/minor-png/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 1.1102230246251565e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "predictor/rows/middle-staged/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 3.3306690738754696e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "predictor/rows/middle-png/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 3.3306690738754696e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "predictor/rows/major-staged/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 2.220446049250313e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "predictor/rows/major-png/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 2.220446049250313e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "predictor/rows/wrapped-major-staged/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 2.220446049250313e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "predictor/rows/wrapped-major-png/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 2.220446049250313e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "predictor/rows/zero-png/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 1.1102230246251565e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "predictor/rows/low-staged/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 3.3306690738754696e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "predictor/rows/thin-png/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 5.551115123125783e-17,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "predictor/rows/gradient-staged/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 2.220446049250313e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "predictor/rows/singular-map-png/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 3.3306690738754696e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      },
+      {
+        "path": "predictor/rows/budget-png/reference/precast_area_delta",
+        "reason": "GL64/96 pre-cast float64 arrays were not preserved; float32 coverage loses their bits",
+        "reported_delta": 3.3306690738754696e-16,
+        "independently_recomputed_saved_float32_delta": 0.0,
+        "original_gate_unchanged": true
+      }
+    ],
+    "scope": "Historical old captures only; later evidence does not repair them."
+  },
+  "historical_required_unverified_count": 28,
+  "coupled": {
+    "source_head": "b9fe285f7c634d050a735489aafcf161d1a98295",
+    "report_sha256": "a1394780cf73b99a321741cd9f56d0c36d55cd094587f7bb355b88df9a414bb6",
+    "source_zip_sha256": "aea8500b86744585192c0a3461baa017d0f1c05c0ff6554748650c7e217fe98b",
+    "recorded_source_files": 69,
+    "python_from_saved_freeze": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+    "rows": [
+      {
+        "name": "minor-smooth",
+        "family": "matched",
+        "mode": "smooth",
+        "status": "completed",
+        "fit_attempted": true,
+        "reported_all_targets": true,
+        "selected_phase": "initial",
+        "surrogates": 0,
+        "coupled_iterations": 0
+      },
+      {
+        "name": "minor-staged",
+        "family": "matched",
+        "mode": "staged",
+        "status": "completed",
+        "fit_attempted": true,
+        "reported_all_targets": true,
+        "selected_phase": "initial",
+        "surrogates": 0,
+        "coupled_iterations": 0
+      },
+      {
+        "name": "minor-png",
+        "family": "matched",
+        "mode": "png",
+        "status": "completed",
+        "fit_attempted": true,
+        "reported_all_targets": true,
+        "selected_phase": "refinement",
+        "surrogates": 1,
+        "coupled_iterations": 1
+      },
+      {
+        "name": "middle-smooth",
+        "family": "matched",
+        "mode": "smooth",
+        "status": "completed",
+        "fit_attempted": true,
+        "reported_all_targets": true,
+        "selected_phase": "initial",
+        "surrogates": 0,
+        "coupled_iterations": 0
+      },
+      {
+        "name": "middle-staged",
+        "family": "matched",
+        "mode": "staged",
+        "status": "completed",
+        "fit_attempted": true,
+        "reported_all_targets": true,
+        "selected_phase": "initial",
+        "surrogates": 0,
+        "coupled_iterations": 0
+      },
+      {
+        "name": "middle-png",
+        "family": "matched",
+        "mode": "png",
+        "status": "completed",
+        "fit_attempted": true,
+        "reported_all_targets": false,
+        "selected_phase": "refinement",
+        "surrogates": 24,
+        "coupled_iterations": 24
+      },
+      {
+        "name": "major-smooth",
+        "family": "matched",
+        "mode": "smooth",
+        "status": "completed",
+        "fit_attempted": true,
+        "reported_all_targets": true,
+        "selected_phase": "initial",
+        "surrogates": 0,
+        "coupled_iterations": 0
+      },
+      {
+        "name": "major-staged",
+        "family": "matched",
+        "mode": "staged",
+        "status": "completed",
+        "fit_attempted": true,
+        "reported_all_targets": true,
+        "selected_phase": "initial",
+        "surrogates": 0,
+        "coupled_iterations": 0
+      },
+      {
+        "name": "major-png",
+        "family": "matched",
+        "mode": "png",
+        "status": "completed",
+        "fit_attempted": true,
+        "reported_all_targets": true,
+        "selected_phase": "refinement",
+        "surrogates": 17,
+        "coupled_iterations": 17
+      },
+      {
+        "name": "wrapped-major-smooth",
+        "family": "matched",
+        "mode": "smooth",
+        "status": "completed",
+        "fit_attempted": true,
+        "reported_all_targets": true,
+        "selected_phase": "initial",
+        "surrogates": 0,
+        "coupled_iterations": 0
+      },
+      {
+        "name": "wrapped-major-staged",
+        "family": "matched",
+        "mode": "staged",
+        "status": "completed",
+        "fit_attempted": true,
+        "reported_all_targets": true,
+        "selected_phase": "initial",
+        "surrogates": 0,
+        "coupled_iterations": 0
+      },
+      {
+        "name": "wrapped-major-png",
+        "family": "matched",
+        "mode": "png",
+        "status": "completed",
+        "fit_attempted": true,
+        "reported_all_targets": true,
+        "selected_phase": "initial",
+        "surrogates": 0,
+        "coupled_iterations": 0
+      },
+      {
+        "name": "zero-smooth",
+        "family": "adverse",
+        "mode": "smooth",
+        "status": "completed",
+        "fit_attempted": false,
+        "reported_all_targets": false,
+        "selected_phase": null,
+        "surrogates": 0,
+        "coupled_iterations": 0
+      },
+      {
+        "name": "zero-png",
+        "family": "adverse",
+        "mode": "png",
+        "status": "completed",
+        "fit_attempted": false,
+        "reported_all_targets": false,
+        "selected_phase": null,
+        "surrogates": 0,
+        "coupled_iterations": 0
+      },
+      {
+        "name": "low-staged",
+        "family": "adverse",
+        "mode": "staged",
+        "status": "completed",
+        "fit_attempted": false,
+        "reported_all_targets": false,
+        "selected_phase": null,
+        "surrogates": 0,
+        "coupled_iterations": 0
+      },
+      {
+        "name": "cropped-smooth",
+        "family": "adverse",
+        "mode": "smooth",
+        "status": "completed",
+        "fit_attempted": false,
+        "reported_all_targets": false,
+        "selected_phase": null,
+        "surrogates": 0,
+        "coupled_iterations": 0
+      },
+      {
+        "name": "thin-png",
+        "family": "adverse",
+        "mode": "png",
+        "status": "completed",
+        "fit_attempted": false,
+        "reported_all_targets": false,
+        "selected_phase": null,
+        "surrogates": 0,
+        "coupled_iterations": 0
+      },
+      {
+        "name": "almost-circle-smooth",
+        "family": "adverse",
+        "mode": "smooth",
+        "status": "completed",
+        "fit_attempted": false,
+        "reported_all_targets": false,
+        "selected_phase": null,
+        "surrogates": 0,
+        "coupled_iterations": 0
+      },
+      {
+        "name": "wrong-optics-smooth",
+        "family": "adverse",
+        "mode": "smooth",
+        "status": "completed",
+        "fit_attempted": true,
+        "reported_all_targets": false,
+        "selected_phase": "initial",
+        "surrogates": 0,
+        "coupled_iterations": 0
+      },
+      {
+        "name": "gradient-staged",
+        "family": "adverse",
+        "mode": "staged",
+        "status": "completed",
+        "fit_attempted": true,
+        "reported_all_targets": false,
+        "selected_phase": "initial",
+        "surrogates": 0,
+        "coupled_iterations": 0
+      },
+      {
+        "name": "singular-map-png",
+        "family": "adverse",
+        "mode": "png",
+        "status": "exception",
+        "fit_attempted": false,
+        "reported_all_targets": false,
+        "selected_phase": null,
+        "surrogates": 0,
+        "coupled_iterations": 0
+      },
+      {
+        "name": "five-queries-smooth",
+        "family": "adverse",
+        "mode": "smooth",
+        "status": "completed",
+        "fit_attempted": true,
+        "reported_all_targets": false,
+        "selected_phase": "initial",
+        "surrogates": 0,
+        "coupled_iterations": 0
+      },
+      {
+        "name": "coincident-smooth",
+        "family": "adverse",
+        "mode": "smooth",
+        "status": "completed",
+        "fit_attempted": true,
+        "reported_all_targets": true,
+        "selected_phase": "initial",
+        "surrogates": 0,
+        "coupled_iterations": 0
+      },
+      {
+        "name": "budget-png",
+        "family": "adverse",
+        "mode": "png",
+        "status": "completed",
+        "fit_attempted": true,
+        "reported_all_targets": false,
+        "selected_phase": "initial",
+        "surrogates": 0,
+        "coupled_iterations": 0
+      }
+    ],
+    "population": 24,
+    "matched": {
+      "requested": 12,
+      "reported_passes_reconstructed": 11
+    },
+    "adverse": {
+      "requested": 12,
+      "reported_flags_reconstructed": 1
+    },
+    "scientific_protocol_passed": false,
+    "scientific_exit_code": 1
+  },
+  "checks": 1191323,
+  "verified_check_passes": 1191306,
+  "failure_count": 17,
+  "first_failure": {
+    "path": "rows/minor-smooth/coupled/input_sha",
+    "detail": "saved identity differs from independently derived value"
+  },
+  "failures": [
+    {
+      "path": "rows/minor-smooth/coupled/input_sha",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/minor-staged/coupled/input_sha",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/minor-png/coupled/input_sha",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/middle-smooth/coupled/input_sha",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/middle-staged/coupled/input_sha",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/middle-png/coupled/input_sha",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/major-smooth/coupled/input_sha",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/major-staged/coupled/input_sha",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/major-png/coupled/input_sha",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/wrapped-major-smooth/coupled/input_sha",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/wrapped-major-staged/coupled/input_sha",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/wrapped-major-png/coupled/input_sha",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/wrong-optics-smooth/coupled/input_sha",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/gradient-staged/coupled/input_sha",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/five-queries-smooth/coupled/input_sha",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/coincident-smooth/coupled/input_sha",
+      "detail": "saved identity differs from independently derived value"
+    },
+    {
+      "path": "rows/budget-png/coupled/input_sha",
+      "detail": "saved identity differs from independently derived value"
+    }
+  ],
+  "failures_truncated": false,
+  "required_unverified_count": 0,
+  "unverified": [],
+  "area_delta_denominators": {
+    "requested": 24,
+    "compared": 24,
+    "verified": 24,
+    "unverified": 0
+  },
+  "sections": [
+    {
+      "section": "historical_audit",
+      "failures": 0
+    },
+    {
+      "section": "artifacts",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-smooth/precision",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-smooth/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-smooth/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-smooth/coupled/initial/literal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-smooth/coupled/initial/literal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-smooth/coupled/initial/literal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-smooth/coupled/initial/literal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-smooth/coupled/initial",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-smooth/coupled/refinement",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-smooth/coupled",
+      "failures": 1
+    },
+    {
+      "section": "rows/minor-smooth/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "row/minor-smooth",
+      "failures": 1
+    },
+    {
+      "section": "rows/minor-staged/precision",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-staged/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-staged/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-staged/coupled/initial/proposal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-staged/coupled/initial/proposal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-staged/coupled/initial/proposal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-staged/coupled/initial/proposal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-staged/coupled/initial/literal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-staged/coupled/initial/literal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-staged/coupled/initial/literal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-staged/coupled/initial/literal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-staged/coupled/initial",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-staged/coupled/refinement",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-staged/coupled",
+      "failures": 1
+    },
+    {
+      "section": "rows/minor-staged/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "row/minor-staged",
+      "failures": 1
+    },
+    {
+      "section": "rows/minor-png/precision",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-png/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-png/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-png/coupled/initial/proposal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-png/coupled/initial/proposal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-png/coupled/initial/proposal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-png/coupled/initial/proposal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-png/coupled/initial/literal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-png/coupled/initial/literal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-png/coupled/initial/literal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-png/coupled/initial/literal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-png/coupled/initial",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-png/coupled/refinement/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-png/coupled/refinement/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-png/coupled/refinement/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-png/coupled/refinement/iterations",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-png/coupled/refinement",
+      "failures": 0
+    },
+    {
+      "section": "rows/minor-png/coupled",
+      "failures": 1
+    },
+    {
+      "section": "rows/minor-png/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "row/minor-png",
+      "failures": 1
+    },
+    {
+      "section": "rows/middle-smooth/precision",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-smooth/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-smooth/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-smooth/coupled/initial/literal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-smooth/coupled/initial/literal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-smooth/coupled/initial/literal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-smooth/coupled/initial/literal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-smooth/coupled/initial",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-smooth/coupled/refinement",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-smooth/coupled",
+      "failures": 1
+    },
+    {
+      "section": "rows/middle-smooth/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "row/middle-smooth",
+      "failures": 1
+    },
+    {
+      "section": "rows/middle-staged/precision",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-staged/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-staged/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-staged/coupled/initial/proposal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-staged/coupled/initial/proposal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-staged/coupled/initial/proposal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-staged/coupled/initial/proposal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-staged/coupled/initial/literal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-staged/coupled/initial/literal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-staged/coupled/initial/literal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-staged/coupled/initial/literal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-staged/coupled/initial",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-staged/coupled/refinement",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-staged/coupled",
+      "failures": 1
+    },
+    {
+      "section": "rows/middle-staged/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "row/middle-staged",
+      "failures": 1
+    },
+    {
+      "section": "rows/middle-png/precision",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-png/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-png/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-png/coupled/initial/proposal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-png/coupled/initial/proposal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-png/coupled/initial/proposal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-png/coupled/initial/proposal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-png/coupled/initial/literal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-png/coupled/initial/literal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-png/coupled/initial/literal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-png/coupled/initial/literal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-png/coupled/initial",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-png/coupled/refinement/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-png/coupled/refinement/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-png/coupled/refinement/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-png/coupled/refinement/iterations",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-png/coupled/refinement",
+      "failures": 0
+    },
+    {
+      "section": "rows/middle-png/coupled",
+      "failures": 1
+    },
+    {
+      "section": "rows/middle-png/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "row/middle-png",
+      "failures": 1
+    },
+    {
+      "section": "rows/major-smooth/precision",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-smooth/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-smooth/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-smooth/coupled/initial/literal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-smooth/coupled/initial/literal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-smooth/coupled/initial/literal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-smooth/coupled/initial/literal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-smooth/coupled/initial",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-smooth/coupled/refinement",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-smooth/coupled",
+      "failures": 1
+    },
+    {
+      "section": "rows/major-smooth/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "row/major-smooth",
+      "failures": 1
+    },
+    {
+      "section": "rows/major-staged/precision",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-staged/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-staged/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-staged/coupled/initial/proposal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-staged/coupled/initial/proposal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-staged/coupled/initial/proposal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-staged/coupled/initial/proposal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-staged/coupled/initial/literal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-staged/coupled/initial/literal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-staged/coupled/initial/literal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-staged/coupled/initial/literal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-staged/coupled/initial",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-staged/coupled/refinement",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-staged/coupled",
+      "failures": 1
+    },
+    {
+      "section": "rows/major-staged/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "row/major-staged",
+      "failures": 1
+    },
+    {
+      "section": "rows/major-png/precision",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-png/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-png/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-png/coupled/initial/proposal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-png/coupled/initial/proposal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-png/coupled/initial/proposal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-png/coupled/initial/proposal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-png/coupled/initial/literal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-png/coupled/initial/literal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-png/coupled/initial/literal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-png/coupled/initial/literal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-png/coupled/initial",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-png/coupled/refinement/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-png/coupled/refinement/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-png/coupled/refinement/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-png/coupled/refinement/iterations",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-png/coupled/refinement",
+      "failures": 0
+    },
+    {
+      "section": "rows/major-png/coupled",
+      "failures": 1
+    },
+    {
+      "section": "rows/major-png/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "row/major-png",
+      "failures": 1
+    },
+    {
+      "section": "rows/wrapped-major-smooth/precision",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-smooth/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-smooth/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-smooth/coupled/initial/literal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-smooth/coupled/initial/literal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-smooth/coupled/initial/literal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-smooth/coupled/initial/literal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-smooth/coupled/initial",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-smooth/coupled/refinement",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-smooth/coupled",
+      "failures": 1
+    },
+    {
+      "section": "rows/wrapped-major-smooth/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "row/wrapped-major-smooth",
+      "failures": 1
+    },
+    {
+      "section": "rows/wrapped-major-staged/precision",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-staged/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-staged/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-staged/coupled/initial/proposal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-staged/coupled/initial/proposal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-staged/coupled/initial/proposal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-staged/coupled/initial/proposal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-staged/coupled/initial/literal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-staged/coupled/initial/literal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-staged/coupled/initial/literal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-staged/coupled/initial/literal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-staged/coupled/initial",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-staged/coupled/refinement",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-staged/coupled",
+      "failures": 1
+    },
+    {
+      "section": "rows/wrapped-major-staged/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "row/wrapped-major-staged",
+      "failures": 1
+    },
+    {
+      "section": "rows/wrapped-major-png/precision",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-png/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-png/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-png/coupled/initial/proposal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-png/coupled/initial/proposal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-png/coupled/initial/proposal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-png/coupled/initial/proposal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-png/coupled/initial/literal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-png/coupled/initial/literal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-png/coupled/initial/literal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-png/coupled/initial/literal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-png/coupled/initial",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-png/coupled/refinement",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrapped-major-png/coupled",
+      "failures": 1
+    },
+    {
+      "section": "rows/wrapped-major-png/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "row/wrapped-major-png",
+      "failures": 1
+    },
+    {
+      "section": "rows/zero-smooth/precision",
+      "failures": 0
+    },
+    {
+      "section": "rows/zero-smooth/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/zero-smooth/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "row/zero-smooth",
+      "failures": 0
+    },
+    {
+      "section": "rows/zero-png/precision",
+      "failures": 0
+    },
+    {
+      "section": "rows/zero-png/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/zero-png/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "row/zero-png",
+      "failures": 0
+    },
+    {
+      "section": "rows/low-staged/precision",
+      "failures": 0
+    },
+    {
+      "section": "rows/low-staged/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/low-staged/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "row/low-staged",
+      "failures": 0
+    },
+    {
+      "section": "rows/cropped-smooth/precision",
+      "failures": 0
+    },
+    {
+      "section": "rows/cropped-smooth/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/cropped-smooth/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "row/cropped-smooth",
+      "failures": 0
+    },
+    {
+      "section": "rows/thin-png/precision",
+      "failures": 0
+    },
+    {
+      "section": "rows/thin-png/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/thin-png/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "row/thin-png",
+      "failures": 0
+    },
+    {
+      "section": "rows/almost-circle-smooth/precision",
+      "failures": 0
+    },
+    {
+      "section": "rows/almost-circle-smooth/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/almost-circle-smooth/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "row/almost-circle-smooth",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrong-optics-smooth/precision",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrong-optics-smooth/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrong-optics-smooth/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrong-optics-smooth/coupled/initial/literal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrong-optics-smooth/coupled/initial/literal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrong-optics-smooth/coupled/initial/literal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrong-optics-smooth/coupled/initial/literal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrong-optics-smooth/coupled/initial",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrong-optics-smooth/coupled/refinement",
+      "failures": 0
+    },
+    {
+      "section": "rows/wrong-optics-smooth/coupled",
+      "failures": 1
+    },
+    {
+      "section": "rows/wrong-optics-smooth/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "row/wrong-optics-smooth",
+      "failures": 1
+    },
+    {
+      "section": "rows/gradient-staged/precision",
+      "failures": 0
+    },
+    {
+      "section": "rows/gradient-staged/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/gradient-staged/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/gradient-staged/coupled/initial/proposal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/gradient-staged/coupled/initial/proposal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/gradient-staged/coupled/initial/proposal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/gradient-staged/coupled/initial/proposal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/gradient-staged/coupled/initial/literal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/gradient-staged/coupled/initial/literal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/gradient-staged/coupled/initial/literal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/gradient-staged/coupled/initial/literal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/gradient-staged/coupled/initial",
+      "failures": 0
+    },
+    {
+      "section": "rows/gradient-staged/coupled/refinement",
+      "failures": 0
+    },
+    {
+      "section": "rows/gradient-staged/coupled",
+      "failures": 1
+    },
+    {
+      "section": "rows/gradient-staged/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "row/gradient-staged",
+      "failures": 1
+    },
+    {
+      "section": "rows/singular-map-png/precision",
+      "failures": 0
+    },
+    {
+      "section": "row/singular-map-png",
+      "failures": 0
+    },
+    {
+      "section": "rows/five-queries-smooth/precision",
+      "failures": 0
+    },
+    {
+      "section": "rows/five-queries-smooth/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/five-queries-smooth/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/five-queries-smooth/coupled/initial/literal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/five-queries-smooth/coupled/initial/literal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/five-queries-smooth/coupled/initial/literal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/five-queries-smooth/coupled/initial/literal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/five-queries-smooth/coupled/initial",
+      "failures": 0
+    },
+    {
+      "section": "rows/five-queries-smooth/coupled/refinement",
+      "failures": 0
+    },
+    {
+      "section": "rows/five-queries-smooth/coupled",
+      "failures": 1
+    },
+    {
+      "section": "rows/five-queries-smooth/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "row/five-queries-smooth",
+      "failures": 1
+    },
+    {
+      "section": "rows/coincident-smooth/precision",
+      "failures": 0
+    },
+    {
+      "section": "rows/coincident-smooth/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/coincident-smooth/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/coincident-smooth/coupled/initial/literal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/coincident-smooth/coupled/initial/literal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/coincident-smooth/coupled/initial/literal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/coincident-smooth/coupled/initial/literal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/coincident-smooth/coupled/initial",
+      "failures": 0
+    },
+    {
+      "section": "rows/coincident-smooth/coupled/refinement",
+      "failures": 0
+    },
+    {
+      "section": "rows/coincident-smooth/coupled",
+      "failures": 1
+    },
+    {
+      "section": "rows/coincident-smooth/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "row/coincident-smooth",
+      "failures": 1
+    },
+    {
+      "section": "rows/budget-png/precision",
+      "failures": 0
+    },
+    {
+      "section": "rows/budget-png/initializer",
+      "failures": 0
+    },
+    {
+      "section": "rows/budget-png/observed_input",
+      "failures": 0
+    },
+    {
+      "section": "rows/budget-png/coupled/initial/literal/input",
+      "failures": 0
+    },
+    {
+      "section": "rows/budget-png/coupled/initial/literal/candidates",
+      "failures": 0
+    },
+    {
+      "section": "rows/budget-png/coupled/initial/literal/ledger",
+      "failures": 0
+    },
+    {
+      "section": "rows/budget-png/coupled/initial/literal/searches",
+      "failures": 0
+    },
+    {
+      "section": "rows/budget-png/coupled/initial",
+      "failures": 0
+    },
+    {
+      "section": "rows/budget-png/coupled/refinement",
+      "failures": 0
+    },
+    {
+      "section": "rows/budget-png/coupled",
+      "failures": 1
+    },
+    {
+      "section": "rows/budget-png/evaluation",
+      "failures": 0
+    },
+    {
+      "section": "row/budget-png",
+      "failures": 1
+    },
+    {
+      "section": "coupled_run",
+      "failures": 17
+    }
+  ],
+  "maximum_arithmetic_allowance_ratio": 0.0078125,
+  "fully_verified_within_declared_scope": false
+}
