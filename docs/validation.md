@@ -311,6 +311,7 @@ It changes guides relative to that integrated baseline, not runtime behavior.
 | Covariance-aware nonparallel corners | Candidate based on PR #81 (`60732a7`); [687 Python tests, two focused browser scenarios and complete study](validation/anisotropic-corners.md) | Fixed 16-case conditional experiment, thickness-frame controls and bounded line-only recovery; first failed integration retained; no physical-camera qualification |
 | Directional covariance rank guard | Draft PR #78, source `185d682`: [633 local Python tests](validation/directional-blur-rank.md), build and 76 focused checks | Actual sampled Gaussian-step rank counterexample; no new whole-photo, browser or physical-accuracy claim |
 | Recorded directional-blur checks | Branch `claude/directional-blur`, on the slot end-cap commit and `main` at `485da7e` (after #47): **627 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#a-blur-that-differs-by-direction--november-12-2026) | Local result; synthetic photos including the directional-spread qualification's kinds of case, and exact blurred holes; supersedes that record's "no production correction" |
+| Recorded renderer channel-noise checks | Branch `claude/renderer-channel-noise`, on `main` at `e56c478` (after #116): **1302 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#independent-colour-noise-in-the-test-renderer--november-13-2026) | Test renderer only; the documented tables, rectangles, plates and noise seeds re-measured; three regression limits re-set from new and planted-fault figures |
 | Recorded shadow-free blur checks | Branch `claude/shadow-free-blur`, on `main` at `81248a7` (after #113): **1302 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#the-blur-beside-a-shadow--november-13-2026) | Local result; synthetic photos with five shapes of shadow, exactly rendered scenes, the documented tables and noise seeds; parts traced with a thickness keep the shadowed width; second-pass re-centring not adopted |
 | Recorded two-way blur checks | Branch `claude/rect-regression`, on `main` at `f2e0fd6` (after #104): **1041 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#two-way-parts-under-a-directional-blur--november-13-2026) | Local result; synthetic sharp-cornered rectangles, the documented tables and noise seeds; corners and curves of two-way parts keep one width |
 | Recorded shadow-harmonic checks | Branch `claude/shadow-blur`, on `main` at `f1679bb` (after #77): **629 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#a-shadows-push-on-a-holes-centre--november-12-2026) | Local result; synthetic photos with a soft shadow and wide or directional blur, with noise seeds; slot and outline under those photos not corrected |
@@ -346,6 +347,46 @@ stub fix in managed cloud sessions. The [reference-sensitivity record](validatio
 covers the endpoint explorer. The original CAD release and optional Ollama
 integration retain separate historical evidence. These records do not establish
 that a newly created or published cloud task has been validated.
+
+## Independent colour noise in the test renderer — November 13, 2026
+
+Branch `claude/renderer-channel-noise`, on `main` at `e56c478` (after #116). It changes the test renderer, not the tracer. See [reference-sheet tracing](reference-sheet.md), §3 (**The renderer's colour channels**) and **Results on rendered photographs**.
+
+- **What was found.** The renderer saved its colour channels as one grey image times (1, 0.97, 0.92), with one noise draw added before that tint and the saved values truncated. The channels kept exact proportions, noise included, and JPEG's colour conversion rounded their small differences alike at every edge. Against geometry mapped exactly through the renderer's camera and the tracer's own rectification, under a 3.9 px blur, each edge's own half-level crossing lay toward the paper:
+
+  | Photo | Half-level crossing offset |
+  | --- | --- |
+  | Noise-free, as rendered | 0.020–0.031 px |
+  | Noise-free, saved as pure grey (JPEG or PNG) | within 0.006 px |
+  | Noisy, as rendered (three seeds) | 0.022 px on average |
+
+- **The change** (`synthetic.render`). Noise is drawn for each colour channel independently, as a sensor's is. A uniform dither one saved level wide is added (`dither`, default 1), and the saved values are rounded.
+  - **Noisy photos:** the offset is now 0.014 px toward the part (−0.007 to −0.025 px over two seeds, quality-90 JPEG).
+  - **Noise-free photos:** +0.003 to +0.012 px. Without the dither it was still 0.018–0.030 px, because the channels' proportions are exact when there is no noise.
+  - The luminance mix now carries less noise than before (about 0.75 of a channel's, against nearly all of it).
+- **What it shows.** The second edge pass depends on where it starts, and the old renderer had partly hidden that. On the noisy shadow-free 3 px photo it reads straight sides 0.070 px into the material (two seeds), against 0.041 px with the old renderer.
+- **The documented case set** (the tracer of `e56c478`, old renderer → new):
+
+  | Case | Old renderer | New renderer |
+  | --- | --- | --- |
+  | 44 table rows, summed | 1480 µm | 1851 µm (31 rows worse, 11 better) |
+  | Noise-free, shadow-free rows (20) | 680 µm | 982 µm |
+  | Noise-free 3 px, 22° | 68.8 µm | 100.8 µm |
+  | 47 % shadow photo | 25.3 µm | 14.8 µm |
+  | Tilted lens photo | 23.0 µm | 13.3 µm |
+
+  - **Rectangles and capsules,** mean outline error: noise-free 5.0 → 9.1 µm, with all effects but the shadow 7.0 → 15.1 µm, with the shadow 10.2 → 8.4 µm.
+  - **Noise seeds 201–206,** summed: the tilted photo 18.2 → 15.7 µm, overhead 17.7 → 16.5, 1 × 3 px 44.7 → 61.5, contact 3 px 159 → 107, two lights 66 → 55, the 4 mm plate 28.2 → 27.0.
+  - **Motion-streak and defocus plates:** 34 → 25, 62 → 44, 37 → 22 and 47 → 41 µm.
+- **Test limits re-set.** Three regression guards had been set from the old renderer. Each was re-set between the new figure and the figure with its own fault planted:
+  - **The harmonic test,** noise-free 3 px photo with the shadow: 0.0081 mm, and 0.0197 mm with the harmonic dropped; its limit stays at 0.014. Its 1 × 3 px photo reads 0.0162 mm with or without the harmonic (0.0155), so it stays as a regression guard at 0.02.
+  - **The fitted-shadow test:** Ø6, Ø22 and slot 0.0034, 0.0054 and 0.0146 mm, and 0.0112, 0.0108 and 0.0174 mm with the model off. The limits are 0.006, 0.009 (was 0.011) and 0.016 (was 0.011) mm.
+  - **The slot-cap test** under 3 × 1 px: 0.0158 mm, and 0.0352 mm with one cap shrink; its limit was 0.015 mm and is now 0.02 mm.
+- **Studied with the new renderer, not adopted.** The re-centred second pass, with the shadow model's footprint from traced rings, its paper fitted from 1.5 σ and a ridge of 10⁻⁴ (§3, **The shadow model beside an edge it shades**).
+  - **Better:** the tables' summed error, 1851 → 1270 µm; the noise-free 3 px photo, 100.8 → 29.6 µm; rectangles with all effects but the shadow, mean 15.1 → 1.8 µm.
+  - **Worse:** the contact-shadow seeds 107 → 192 µm; the noise-free 3 px photo with the shadow 45 → 70 µm; the motion-streak and defocus plates by 16–28 %.
+  - A contact shadow lies mostly within the radius of the kernel that the paper cannot observe, and the start bias had been offsetting it.
+- **Checks run.** `pytest` with runtime warnings as errors: **1302 passed**. Ruff and Prettier passed. **74 browser scenarios** passed with the system Chrome.
 
 ## The blur beside a shadow — November 13, 2026
 
