@@ -62,10 +62,11 @@ photo-benchmark script can overwrite report paths, and `--example` writes into
 its chosen folder. The independent corner, frame, directional, finite-centre,
 moment and supplemental-aperture runners refuse an existing destination,
 including a dangling symbolic link, and require its parent directory to exist.
-The canonical join runners
+`corner_sweep.py --json FILE` also overwrites its destination and requires an
+existing parent directory. The canonical join runners
 also refuse existing destinations, but can create their output parent directories;
 the directional free-arc runner requires its parent to exist. The Ollama
-benchmark creates its output parent and writes both JSON and a `.md` sibling.
+benchmark creates its output parent and overwrites both JSON and a `.md` sibling.
 Printer import defaults to the tracked `data/printers.json`. Review a generated
 diff before replacing committed data.
 
@@ -112,12 +113,14 @@ Reading its committed HTML/PDF differs from rebuilding it, checking a browser,
 running native OpenSCAD or refreshing external links.
 
 The [finite-chord normal derivative](finite-normal-derivative.md) is now an
-experimental Python operator. Its [complete qualification](validation/finite-normal-derivative.md)
+experimental Python operator. Its [original qualification](validation/finite-normal-derivative.md)
 retains one panel-budget unknown and a compressed-map error-estimation limitation.
-It has no HTTP mode or fitter integration. The saved rotation command above
+The subsequent [error-control qualification](validation/finite-normal-error-control.md)
+passes 417 scenes while retaining the original failure and a reference-oracle
+limitation. It has no HTTP mode or fitter integration. The saved rotation command above
 remains saved-array arithmetic; it does not validate this new operator.
 
-For the new study, these parser checks are read-only:
+For the original V1 normal-derivative study, these parser checks are read-only:
 
 ```bash
 .venv/bin/python studies/verification/finite-normal-derivative-v1.py --help
@@ -130,3 +133,55 @@ numerical qualification; the second reads an already decoded report with
 existing destination and require its parent. The original study exits 1;
 successful saved-data auditing does not change that result. Follow the
 [hash-verified archive instructions](../studies/fixtures/finite-normal-derivative-v1/README.md).
+
+The current error-control source has its own runner and saved-data auditor:
+
+```bash
+.venv/bin/python studies/verification/finite-normal-error-control-v2.py --help
+python3 studies/verification/finite-normal-error-control-report-audit-v2.py --help
+```
+
+Both help modes are read-only. The first runner's `--output NEW.json` explicitly
+reevaluates all 417 scenes and 72 area checks; the second requires a decoded
+`--input`, its exact hash, expected API/test hashes and a fresh `--output`.
+Follow the [V2 archive workflow](../studies/fixtures/finite-normal-error-control-v2/README.md)
+for complete arguments and compressed/decoded verification. It performs saved
+arithmetic only. The earlier V1 auditor needs its original source checkout;
+its report must not be rebound to the changed operator in this source.
+
+The separate projective-node arithmetic diagnostic has its own declared
+26-scene population and recorded reference values:
+
+```bash
+.venv/bin/python studies/verification/finite-normal-oracle-conditioning-v1.py --help
+python3 studies/verification/finite-normal-oracle-conditioning-report-audit-v1.py --help
+```
+
+Help is read-only. An explicit `--output NEW.json` on the first command runs a
+new numerical diagnostic; it never replaces the original V2 study or calls the
+production derivative. The second command audits saved arithmetic only, using
+`--input`, `--input-sha256` and a fresh `--output`. Both require an existing
+output parent and refuse existing files or symlinks. The
+[conditioning archive workflow](../studies/fixtures/finite-normal-oracle-conditioning-v1/README.md)
+provides exact arguments and separates archive review from a new execution.
+
+## Analytic-normal residual replay
+
+Read-only parser checks:
+
+```bash
+.venv/bin/python studies/verification/finite-analytic-normal-information-v1.py --help
+python3 studies/verification/finite-analytic-normal-report-audit-v1.py --help
+```
+
+An explicit `--output NEW.json` on the first command evaluates the frozen 578
+queries, independent references, matched matrix comparisons and up to ten new
+joint trials. It reuses saved baselines and B/G/S arrays, with zero optimizer or
+preparation calls. The second command reads a complete decoded `--input` with
+its exact `--input-sha256`; it performs saved arithmetic only, without NumPy or
+new scientific evaluations. Both require a fresh destination and existing parent.
+The [archive workflow](../studies/fixtures/finite-analytic-normal-information-v1/README.md)
+provides all arguments and separates integrity auditing from an explicit replay.
+The [results](validation/finite-analytic-normal-information.md) retain geometric
+counterexamples and the original failed FD study; a passing protocol is not a
+new fit-pass or physical-accuracy claim.

@@ -1,0 +1,734 @@
+{
+  "algebra_controls": [
+    "commonmatchedcutoffusedforbothprojectedS",
+    "normalinthecovariancespanremovesonlythatresolveddirection",
+    "normalorthogonaltocovariancespanpreservescovrank",
+    "conditionalcovenergyneednotdecreasewhenaddingnuisance",
+    "deliberatelylargeNerrorwithholdsnuisance/fullstepqualification",
+    "uncertainnuisancegapwithholdsmatchedcomparison",
+    "activebrightnessfaceexcludesfixedlevel",
+    "sourcecroppixelcentre/signcontrasttwiceerrorrefusal",
+    "rankceilingcannotpromoteunresolvedrawrank",
+    "legacyFDfalsecounternotnewanalyticNgate"
+  ],
+  "base_published_commit": "f1f0bba313f68d5dc48fdb6e329b0e0535b1903e",
+  "base_tree": "4613a42449cecd0f54277e7006e0788ead1406a2",
+  "controls": [
+    {
+      "elementary_reference": "Vertical finite-chord Gaussian first moment with independent Decimal erf power series. dP/dphi=-normal_x*phi_sigma_x(p_global_x-Cx-R*f*normal_x)*[b*mass+sigma_y^2*(density(-ell-b)-density(ell-b))], b=p_global_y-Cy; exact represented inputs; no production moment/helper.",
+      "id": "diagonal-normal+1-contrast+1",
+      "levels": [
+        5.0,
+        205.0
+      ],
+      "parameters": {
+        "centre": [
+          15.25,
+          15.75
+        ],
+        "covariance": [
+          [
+            1.44,
+            0.0
+          ],
+          [
+            0.0,
+            4.0
+          ]
+        ],
+        "fraction": -0.35,
+        "homography": [
+          [
+            1.0,
+            0.0,
+            -0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "radius": 2.75,
+        "sensor_shape": [
+          32,
+          32
+        ]
+      },
+      "pixels": [
+        [
+          13,
+          12
+        ],
+        [
+          16,
+          19
+        ],
+        [
+          22,
+          15
+        ]
+      ],
+      "population": "prospective_affine_diagonal_control"
+    },
+    {
+      "elementary_reference": "Vertical finite-chord Gaussian first moment with independent Decimal erf power series. dP/dphi=-normal_x*phi_sigma_x(p_global_x-Cx-R*f*normal_x)*[b*mass+sigma_y^2*(density(-ell-b)-density(ell-b))], b=p_global_y-Cy; exact represented inputs; no production moment/helper.",
+      "id": "diagonal-normal+1-contrast-1",
+      "levels": [
+        205.0,
+        5.0
+      ],
+      "parameters": {
+        "centre": [
+          15.25,
+          15.75
+        ],
+        "covariance": [
+          [
+            1.44,
+            0.0
+          ],
+          [
+            0.0,
+            4.0
+          ]
+        ],
+        "fraction": -0.35,
+        "homography": [
+          [
+            1.0,
+            0.0,
+            -0.0
+          ],
+          [
+            0.0,
+            1.0,
+            -0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "radius": 2.75,
+        "sensor_shape": [
+          32,
+          32
+        ]
+      },
+      "pixels": [
+        [
+          13,
+          12
+        ],
+        [
+          16,
+          19
+        ],
+        [
+          22,
+          15
+        ]
+      ],
+      "population": "prospective_affine_diagonal_control"
+    },
+    {
+      "elementary_reference": "Vertical finite-chord Gaussian first moment with independent Decimal erf power series. dP/dphi=-normal_x*phi_sigma_x(p_global_x-Cx-R*f*normal_x)*[b*mass+sigma_y^2*(density(-ell-b)-density(ell-b))], b=p_global_y-Cy; exact represented inputs; no production moment/helper.",
+      "id": "diagonal-normal-1-contrast+1",
+      "levels": [
+        5.0,
+        205.0
+      ],
+      "parameters": {
+        "centre": [
+          15.25,
+          15.75
+        ],
+        "covariance": [
+          [
+            1.44,
+            0.0
+          ],
+          [
+            0.0,
+            4.0
+          ]
+        ],
+        "fraction": 0.62,
+        "homography": [
+          [
+            1.0,
+            0.0,
+            -10.0
+          ],
+          [
+            0.0,
+            1.0,
+            -11.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "normal": [
+          -1.0,
+          0.0
+        ],
+        "radius": 7.5,
+        "sensor_shape": [
+          32,
+          32
+        ]
+      },
+      "pixels": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          8
+        ],
+        [
+          5,
+          4
+        ]
+      ],
+      "population": "prospective_affine_diagonal_control"
+    },
+    {
+      "elementary_reference": "Vertical finite-chord Gaussian first moment with independent Decimal erf power series. dP/dphi=-normal_x*phi_sigma_x(p_global_x-Cx-R*f*normal_x)*[b*mass+sigma_y^2*(density(-ell-b)-density(ell-b))], b=p_global_y-Cy; exact represented inputs; no production moment/helper.",
+      "id": "diagonal-normal-1-contrast-1",
+      "levels": [
+        205.0,
+        5.0
+      ],
+      "parameters": {
+        "centre": [
+          15.25,
+          15.75
+        ],
+        "covariance": [
+          [
+            1.44,
+            0.0
+          ],
+          [
+            0.0,
+            4.0
+          ]
+        ],
+        "fraction": 0.62,
+        "homography": [
+          [
+            1.0,
+            0.0,
+            -10.0
+          ],
+          [
+            0.0,
+            1.0,
+            -11.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "normal": [
+          -1.0,
+          0.0
+        ],
+        "radius": 7.5,
+        "sensor_shape": [
+          32,
+          32
+        ]
+      },
+      "pixels": [
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          8
+        ],
+        [
+          5,
+          4
+        ]
+      ],
+      "population": "prospective_affine_diagonal_control"
+    }
+  ],
+  "covariance_chart": {
+    "basis": [
+      [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      [
+        [
+          0,
+          0.7071067811865476
+        ],
+        [
+          0.7071067811865476,
+          0
+        ]
+      ]
+    ],
+    "chart_units": "dimensionless, Frobenius-orthonormal symmetric directions",
+    "formula": "Sigma(q)=L exp(sum(q_i E_i)) L.T; L=Cholesky(Sigma0)",
+    "generated_arithmetic": "Validate supplied Sigma0 strictly with no symmetry repair. For each GENERATED L exp(S)L.T only, record raw entries/asymmetry, require finite and asymmetry <=64eps*maxabs(raw) (zero scale handled explicitly), canonicalize .5*(raw+raw.T), record maximum entry change, then validate positive definiteness. Refuse any larger or nonfinite discrepancy."
+  },
+  "design_status": "Freeze before any new analytic normal, reference-node/elementary, nuisance SVD/projector or BGNS step evaluation. Saved-source inspection allowed. All12archive rows and oldcontrol are post-hoc; only four additional synthetic controls prospective.",
+  "failure_policy": {
+    "global_protocol": "sourcepreservation+fullcensus+allstructural/algebracontrols+all578newnormalqualificationcomparisons+all4elementarycontrols+allactuallyattemptedBGNSlinearitychecks. Legitimatewithheldrank/stepsretained andcounted; noexecutedtrialmeansnoqualifcationclaimfromvacuouspass.",
+    "retention": "All12identitiesinorder, including2upstreamrefusals, fulloldrows/flags andindependentcontrols retained. Sourcebootstrapfailureknowncensuspreserved beforeNumPy/backend imports. Malformed/unexpectedexceptions protocol_failure; representednumericunknownwithholdsclaims/steps; laterrowsstillattempted.",
+    "scope": "Normal/referencediagnosticandlocalboundedlineartrial only. Original3fitpassesand10completionsunchanged;no newfitpasscount. Optical/thickness/illumination/acquisitionadequacyandfinalCADadoptionremainseparate.",
+    "single_run": "Commitplanbeforeallnewscientific/algebracontrolcalls. Commitfinalrunner/oraclesourcebeforeONEcanonicalrun. Retainfirstterminal/result andallfailures, no threshold/scene/controlretuning. Sourcebugfixafterevalrequiresaddendum/newversion; nooriginaloverwrite."
+  },
+  "format": "pictures-to-cad-finite-analytic-normal-information-plan",
+  "geometry_order": [
+    "centre_x",
+    "centre_y",
+    "radius",
+    "chord_fraction"
+  ],
+  "information": {
+    "interpretation": "Matched exact projection singularvalues cannotincreasewhenaddingknownnuisance, but conditionalcovarianceresidualenergyneednotdecrease. No statistical/noise/significance/confidence/physicalidentifiabilityclaim. Fullstep retainsseparatelyreported fullJcutoff, nottau*.",
+    "matched_pair": "FullunprojectedJ=BGNSandEJdefinecommonreference/dimension/basecutoff. QualifyfullnuisanceT0=BG,T1=BGN spans atbasecutoff, nevertruncatewithenlargedprojectedcutoff. ForbothcomputeetaT/etaP/etaCwithentireNerrorincluded. UseONE tau*=max(basecutoff,4etaC0,4etaC1) for BOTH projectedS spectra/uniqueenergy. Preserve rawspectra,retainedranks,cutoffsensitivityintervals/ceilings. Withholdmatchedconclusions ifeitherfullnuisancespan/gap/etaP unknown.",
+    "native": "PreservelegacyBGS/BGvsSmodelsunchanged. Recompute fullBGNS andBGNvsS inall56andtraining40 withnewN/errors andgeneric derivative_qualified fields. OldV1purehelperscanbeloadedbuthistoricalFDgateonlyappliestoS; nevercalloldrun/analyze_row."
+  },
+  "inputs_sha256": {
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/app.py": "345c7dc8bbc7bfbe616eb2934d2a58cd0b4fa1216dbdaa5272ab3a36b06d96bc",
+    "backend/assistant.py": "45f05aa8d0738a1da0e3b5040a2c4df8a01a35e9a835e1c06fd47ee3e81758c5",
+    "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+    "backend/curve_envelope.py": "d37525b42c920a770b783e0c94ff97cf3d5214272d85dcdceae9d23eb184ca27",
+    "backend/drawing.py": "560f087e28d369a2e0f3b733197c18c5a7aa87c390fe56de7516caf9a08a5e6d",
+    "backend/edges.py": "c02bcf6f15958ea5c82444de3ea3af37f20031e6df463846dc8082e37abae9ee",
+    "backend/finite_affine.py": "d4eb540f6a654178fca41b4be416bd4ad6ebb6b3f645bc78b5383b18b8caa653",
+    "backend/finite_centre_fit.py": "df8a057abefe983ee951c894a9ae44e0c6b0f472d3419578be505973ea3a8bfb",
+    "backend/finite_normal.py": "5038ebe359ae0b3e4e158273ae145a0991feb93258fe723eca942ac49017425f",
+    "backend/finite_observations.py": "09fa843f72b2fc265ba8d4a7111267bf10433eb4f3f2a0600a89cc7871cb3969",
+    "backend/finite_shape.py": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+    "backend/fitting.py": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+    "backend/heic.py": "5e34870379991f8813bacfc4badc8fe7fcf5dbe8aa053156fa352456b208de33",
+    "backend/models.py": "21e7467766f4a086f52b3756f6b1fa8e4ec96a7b76cf0b4d1131c5f45709e6e1",
+    "backend/placement.py": "e1745597ca2930d1260659e9f2dc4405f2b7239beb0c12c45fa92b6d3f5c03df",
+    "backend/printing.py": "58d121ad45f0176b02094f3446dcd020c254ccd78860e5a269b8b6a8d6479915",
+    "backend/reference.py": "23a94e699d5499d8a4621902193e3a70214062108a5d0d10abb04df9efb8b69d",
+    "backend/scad.py": "d5cf18312ba10b7e3830d059952c3d078edc1e21813eb2fb03a4fd1ebaf2d534",
+    "backend/sheet.py": "cbb2f4ae8a47ac88dd98adac02590d55a48b05a83523f2e6d1af12da78186393",
+    "backend/slicer_handoff.py": "774e78fa93dacc348c204d89a0ec4192a01701fb3fa3304ee09960e816101a50",
+    "backend/slicers.py": "03442055d64c37d46e5806bafdd0bd497b54dacf78bc409addf1ff8400c25bb9",
+    "backend/three_mf.py": "435afd61c90bb21c305876f681f845a3bfb193a64fa96589e649fb40fd821cf1",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "backend/tracing.py": "b822716050b285152bcbefe07a0b7da1e02716ecb5d990cbf29af86598a14d2e",
+    "backend/worker.py": "9c869ffae551485b473aeb54ddc9a0116e8c8df22f92f2c08e2f3e97f24ca846",
+    "pyproject.toml": "89db6bd352114ad6ed7c979c070e66d47551ef7cca7062778f832bb8934507ab",
+    "studies/finite-free-centre-v1.json": "f8db267fd848363ba91b56cd5a01086f3123ad699f6c0c404166734f3bc582fd",
+    "studies/finite-photo-intensity-v2.json": "6563b63d283ad984cba38d2275cb20163c28da4b270c6d2a5d419548a15024ae",
+    "studies/finite-residual-information-v1.json": "837c626d7add9ebc6927d60245b85c1ad9bd361adaf8205e4bf62a4efd322532",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v2-probe.py.txt": "b3733f8fa037b9fa1c4401991c7a5ac23438dc8040232124ff1df63a7be3323a",
+    "studies/fixtures/finite-moment-photo-v1/large-directional-measurement.npz": "de00f76fcfd2c3f3ad7a3c7920b9716c45d93cebb55175ce04d17f0ed2455b9c",
+    "studies/fixtures/finite-moment-photo-v1/medium-directional-measurement.npz": "e5b903ac4e82191ad87e4ce50274bf25a502ba99f3003cbe810f38e769d403bf",
+    "studies/fixtures/finite-moment-photo-v1/rotated-major-directional-measurement.npz": "037e7d493ee9b6c612a70f0721af81a790ee543d975696996a7f928e99e2cbbc",
+    "studies/fixtures/finite-moment-photo-v1/small-directional-measurement.npz": "dc66ddb52ae895b9bed4ad28ef69bf548f07732ecf4a6f1a91844963ed642ab4",
+    "studies/fixtures/finite-moment-photo-v1/small-isotropic-measurement.npz": "9982be1be11d8d5a8ec27026984e13f3df0c0d42cf7cd16360e6e9ede7a862d9",
+    "studies/results/finite-normal-error-control-v2.json.gz": "2ebbb4bc34dcaa97695e2f4de6c40774090aef42e8301d45ee3f7e23489207ec",
+    "studies/results/finite-normal-oracle-conditioning-v1.json.gz": "8448f1df3cf96da207884400254fd0484ce63cd637678a46956a32771880df54",
+    "studies/results/finite-photo-intensity-v2.json": "967251c4458e7c06f88c6f5d4b01ab77654a0a744e1a181dd79c86df99d39127",
+    "studies/results/finite-residual-information-v1-summary.json": "4a2873798a4ba30b48b11104bdc8be2c3d3ac54fc96e9c349f951fef236d5dfb",
+    "studies/results/finite-residual-information-v1.json.gz": "eb7c0151f4a5c667e0cb6cf3f5e8dc49adf16965d2efe624a688cc4351182360",
+    "studies/verification/finite-free-centre-v1.py": "0537540cbfddad2e6209b7b1483977e118c70b64f0d7938e810f942765e579f8",
+    "studies/verification/finite-residual-information-v1.py": "c4da819d3bf34bc4183fe55529d87acedc2946bf0fcdcd878ae2fd20eb3e7d69",
+    "studies/verification/finite-residual-report-audit-v1.py": "10c87e05f330d110f56a0740580af644b6117981d2eaea02ee31f820995d1e02",
+    "uv.lock": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f"
+  },
+  "legacy_normal_control": {
+    "id": "original-independent-normal-control-new-analytic-method",
+    "legacy_control_index": 3,
+    "legacy_failed_control_name": "independent_normal_angle",
+    "levels": [
+      0,
+      255
+    ],
+    "parameters": {
+      "centre": [
+        79.37,
+        78.81
+      ],
+      "covariance": [
+        [
+          1.2,
+          0.3
+        ],
+        [
+          0.3,
+          2.1
+        ]
+      ],
+      "fraction": 0.27,
+      "homography": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ],
+      "normal": [
+        0.9205048534524404,
+        0.39073112848927377
+      ],
+      "radius": 8.4,
+      "sensor_shape": [
+        160,
+        160
+      ]
+    },
+    "pixels": [
+      [
+        71,
+        78
+      ],
+      [
+        79,
+        70
+      ],
+      [
+        79,
+        78
+      ],
+      [
+        80,
+        84
+      ],
+      [
+        82,
+        80
+      ],
+      [
+        85,
+        76
+      ]
+    ],
+    "population": "post_hoc_original_failed_FD_control"
+  },
+  "mean_settings": {
+    "max_evaluations": 2000000,
+    "max_panels": 4096,
+    "probability_tolerance": 1e-10
+  },
+  "normal_api": {
+    "calls": "Once per10eligible56pixelbatch; once per4new3pixelcontrols; once perold6pixelcontrol. No extra attempt/retry or reordered queries. Full payload/error/status/method/work arrays retained before decisions.",
+    "maximum_calls": 15,
+    "maximum_queries": 578,
+    "path": "backend/finite_normal.py",
+    "settings": {
+      "max_evaluations": 2000000,
+      "max_panels": 4096,
+      "probability_tolerance": 1e-10
+    },
+    "sha256": "5038ebe359ae0b3e4e158273ae145a0991feb93258fe723eca942ac49017425f",
+    "units": "signed probability/source-plane radian. N=(b-a)*dP/dphi; errors scaled byabs(b-a). ArchivedG/S already level/domain scaled, do not scale twice."
+  },
+  "normal_qualification": {
+    "elementary_controls": "On4newdiagonalcontrols independentlycomparechordoracletotheclosedform firstmoment usingDecimalCDFviaerf entirepower series withdeclaredprecision80/120 andbounded10000terms/tailcutoff1e-(precision+15), no productionCDFhelper. Requireelementary80/120stability1e-65mixed, abs(oracle-elementary)<=eOracle+128eps*sumabs(elementaryterms)+precisiondifference AND <=1e-11+sameelementaryallowance.",
+    "error_array": "N_value=fl(fl(b-a)*APIvalue). N_errors=upward |fl(b-a)|*(APIestimate+eOracle+delta) + exactrational residual abs(Fraction(N_value)-(Fraction(b)-Fraction(a))*Fraction(APIvalue)); retain everycomponent separately. Errors are estimated guards, not confidence intervals.",
+    "legacy_control": "Call newanalyticmethod/directoracle atoriginal6pixelnormalcontrol, preserveoldfailedFDcontrolanditsflagfalse. Newmethodgetsnewresult; nooldretry/relabel.",
+    "perquery": "Finite resolvedAPI value/error<=requested1e-10, resolvedconvergedcompleteindependentoracle, delta=abs(APIvalue-oracle96_120). Require BOTH delta<=APIestimate+eOracle and delta<=requested1e-10+eOracle, plus64eps*abs(APIvalue) final comparison allowance onbothsides. No relative1e-8floor.",
+    "row": "All56pointwisecomparisonsmustpass toqualifyN. UnresolvedNkeepspayload/rawvalues, qualifiedblockswithheldfromclaims/trial. OldFDstablefalse unchanged. SavedSqualificationrequiresoriginal3FDstableandold3covcontrols passed."
+  },
+  "objective": "Independently qualify analytic normal-angle sensitivities on exact archived observations, then test covariance information and at most one bounded joint tangent trial allowing normal motion. No optimizer, baseline regeneration, covariance FD, mean/Jacobian replay, rendering, preparation, automatic tracing or optical-calibration claim.",
+  "original_residual_decoded_sha256": "b1d15d4e006d1f65823cb6bd20810cd127d6d6ac6912973d590f38bd8acc6c74",
+  "original_residual_protocol_passed": false,
+  "population": [
+    {
+      "eligible": true,
+      "index": 0,
+      "lane": "legacy_sigma_squared_identity",
+      "name": "small-isotropic",
+      "original_row_sha256": "2b4eb66c9a87a1816bbf0f1b3768e1472eec9bd8cf434cd11bb3b9487efc774c"
+    },
+    {
+      "eligible": true,
+      "index": 1,
+      "lane": "nominal_observed_moment_covariance",
+      "name": "small-isotropic",
+      "original_row_sha256": "7e4b62f2479d8a8bd0fd61e804ddb8cd03d77c976bb214f5e9285e05883f51c2"
+    },
+    {
+      "eligible": true,
+      "index": 2,
+      "lane": "legacy_sigma_squared_identity",
+      "name": "small-directional",
+      "original_row_sha256": "3204b0b696336f4c7dea642b068c140128bd02372b3549c752ca1997b8020662"
+    },
+    {
+      "eligible": true,
+      "index": 3,
+      "lane": "nominal_observed_moment_covariance",
+      "name": "small-directional",
+      "original_row_sha256": "d8fa15fd3feddee9e73efba69d1620c4b5fe167bd5906ee461357fd1544a4676"
+    },
+    {
+      "eligible": true,
+      "index": 4,
+      "lane": "legacy_sigma_squared_identity",
+      "name": "medium-directional",
+      "original_row_sha256": "47f42cd3e2e9147be9319a17d597be276dd7bca35140f20fba2247a9e86d6635"
+    },
+    {
+      "eligible": true,
+      "index": 5,
+      "lane": "nominal_observed_moment_covariance",
+      "name": "medium-directional",
+      "original_row_sha256": "246d32cda8b3d9e47a1042777fa7f0889a89936547510e22099d6afd6be0cf18"
+    },
+    {
+      "eligible": true,
+      "index": 6,
+      "lane": "legacy_sigma_squared_identity",
+      "name": "large-directional",
+      "original_row_sha256": "35c5f2c78207f800782ded27841e56994e25d2ecba1f8a51462743e2136e6a48"
+    },
+    {
+      "eligible": true,
+      "index": 7,
+      "lane": "nominal_observed_moment_covariance",
+      "name": "large-directional",
+      "original_row_sha256": "beccd5bf507b2e83896e06491e0800629a6a809df75609f80624ab3ae863b7f4"
+    },
+    {
+      "eligible": false,
+      "index": 8,
+      "lane": "legacy_sigma_squared_identity",
+      "name": "minor-directional",
+      "original_row_sha256": "f50c8a5d99a19325bcf6f3db7043d4bc9cad30bbe9815df6bbb3de778d13f8ff"
+    },
+    {
+      "eligible": false,
+      "index": 9,
+      "lane": "nominal_observed_moment_covariance",
+      "name": "minor-directional",
+      "original_row_sha256": "01b80d1917cd3fe90a5364bff193ec4a78b1d49c120625e53ed31cb42edf54f0"
+    },
+    {
+      "eligible": true,
+      "index": 10,
+      "lane": "legacy_sigma_squared_identity",
+      "name": "rotated-major-directional",
+      "original_row_sha256": "814fc717b78ed2d1bcb1a096bc8f77f8d55bcbd6f48787648e07ab72ce72d131"
+    },
+    {
+      "eligible": true,
+      "index": 11,
+      "lane": "nominal_observed_moment_covariance",
+      "name": "rotated-major-directional",
+      "original_row_sha256": "0babd3ab1d0144a80ec88ced7020a3d349ab03fcd950ed4607dcdd0ec9a9997c"
+    }
+  ],
+  "rank_policy": {
+    "comparison_cutoff": "Within each nuisance-versus-augmented comparison use one reference cutoff derived from the UNPROJECTED concatenated blocks and their retained error estimates; report projected C spectrum against that same scale and residual-dimension ceiling.",
+    "covariance_cutoff": "max(64eps*maxdimension*UNPROJECTED concatenated spectral norm,4*etaC) with etaC defined from both FD scales/discrepancy, forward-error propagation, nuisance projector uncertainty and arithmetic. Full-step SVD uses its analogous concatenated estimated-error cutoff.",
+    "derivative_discrepancy_multiplier": 4,
+    "error_combination": "Conservatively ADD elementwise h/half-h discrepancies and propagated forward/analytic derivative-error arrays before a spectral or Frobenius norm; retain the separate arrays. No cancellation of estimated error terms.",
+    "forward_error_propagation": "For each central FD column use (eta_plus+eta_minus)/(2*h) in level units, for both h and h/2; retain elementwise estimates. For G retain analytic per-row error estimates and multiply by |contrast| and each domain width. Include propagated uncertainty and h/half-h discrepancy in block and full-step cutoffs, not discrepancy alone. These are estimated numerical guards, not certified bounds.",
+    "near_cutoff": "Report CUTOFF-SENSITIVITY interval from2*cutoff andcutoff/2; this is not a rigorous true-rank/confidence interval. Rank0 means no directions resolved under this estimated guard, not proof of no physical information. Require stable full-column rank for an actual step; enforce residual-dimension ceiling.",
+    "projector_uncertainty": "For nuisance T with FULL column rank and smin(T)>etaT (retained analytic/FD estimates plus SVD/projector arithmetic), use etaP=min(1,2*etaT/(smin(T)-etaT)); etaC=etaS+etaP*(||S||2+etaS), plus projection arithmetic. Cutoff for projectedS includes4etaC and the original unprojected comparison scale. If the full-rank/gap condition fails or etaP>=1, covariance uniqueness and step qualification are unknown/withheld. Empty exact nuisance span has etaP0; exactly known algebraic fixed-rank controls may use etaT0 without a full-column-rank assumption.",
+    "reference": "Unprojected respective block spectral norm; never renormalize projectedroundoff. Retain singularspectra; covariancecutoff=max(64eps*maxdimension*unprojectednorm,4*FDdiscrepancynorm).",
+    "roundoff_multiplier": 64
+  },
+  "reuse": {
+    "data_scope": "Five paired synthetic datasets/ten supplied covariance hypotheses, not ten independent photographs. Heldout values influenced preprocessing/moments; not independent predictive or physical evidence.",
+    "fields": [
+      "observations",
+      "baseline",
+      "baseline_forward",
+      "active_brightness",
+      "geometry_derivative",
+      "blocks.B",
+      "blocks.G",
+      "blocks.S",
+      "finite_differences",
+      "FD_stable",
+      "models",
+      "covariance_comparisons",
+      "steps",
+      "old_completion_passed",
+      "old_targets_passed",
+      "input_binding",
+      "evaluation_after_predictions"
+    ],
+    "heldout_indices": [
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55
+    ],
+    "old_passing_indices": [
+      0,
+      5,
+      7
+    ],
+    "policy": "Preserve COMPLETE original row under original_residual_row unchanged. Copy baseline/observations/B/G/S/errors/scales/activefaces unchanged. Retain oldN and oldfailedFD/control verbatim as historical comparator, never gate new analyticN by FD_stable or overwrite oldflags. SavedBGS trials remain comparators; do not repeat them. Recheck selected NPZ g/crop/values by oldverify_pixels only; no preparation.",
+    "samples_per_eligible": 56,
+    "strata": "train24edge/8material/8background;held8edge/4material/4background;exactorderingunchanged",
+    "training_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39
+    ],
+    "upstream_refused_indices": [
+      8,
+      9
+    ]
+  },
+  "source_chord_oracle": {
+    "domain": "Strict integer crop translation H=[[1,0,tx],[0,1,ty],[0,0,1]] only; normalize raw unitnormal independently inDecimal, retain raw and both normalized representations; no projective/generaloracle repair.",
+    "estimate": "engineering eOracle=2*abs(O96_120-O64_120)+abs(O96_120-O96_80)+tail80+tail120+128*binary64eps*absolute_contribution_sum96_120+actualDecimal120tofloatconversionerror. Sum nonnegative terms upward. Not a certified interval/rule/truncation/physicalbound.",
+    "formula": "ell=R*sqrt(1-f^2), t=J*n, r0=C+R*f*n-(pixel+.5-translation), I=-ell^2 int[-1,1] u*exp(-q(u)/2)/(2*pi*sqrt(detSigma)) du, q=(r0+ell*u*t)^T invSigma(r0+ell*u*t).",
+    "generator": "numpy.polynomial.legendre.leggauss eachordergeneratedonce,retainfloat.hexarrays/hash, commonallqueries/precisions; approximatecoefficientsnotcertified.",
+    "maximum_density_nodes_per_query": 40960,
+    "maximum_density_nodes_total": 23674880,
+    "normalization": "ExactrepresentedbinaryinputFractions converted toDecimal ineachcontext; independent exact2x2 determinant/inverse\u03a3, Decimal.sqrt forunitnormal/ell/det\u03a3, Machinpi via16atan(1/5)-4atan(1/239) alternatingrationals15digits pastcontext. No productiongeometry/normal/CDF/momenthelper, no angularfinite difference.",
+    "order_convergence": "abs(O96_120-O64_120)<=1e-12+128*binary64eps*absolute_contribution_sum96_120; failurewithholdsnewN.",
+    "orders": [
+      64,
+      96
+    ],
+    "panel_quadratic": "Compute qmin at clampedquadraticvertex or endpoints, qmax at endpoints; non-tail panel requires whitenedtravel<=2 and (qmax-qmin)/2<=16 atbothprecisions. Unknown onguardfailure; no repartition.",
+    "partition": "128fixeduniformnormalizeduintervals[-1+2k/128,-1+2(k+1)/128], k0..127; no adaptive retry.",
+    "precision": [
+      80,
+      120
+    ],
+    "precision_stability": "For eachorder integral andpi/ell/unitnormal,abs(value120-value80)<=1e-65*max(1,abs(value120)); everyqueryallpanelsretained.",
+    "tail_bound": "ell^2*du*max(abs(u_endpoints))*exp(-qmin/2)/(2*pi*sqrt(det\u03a3)); roundpositiveallowance upward withexplicitDecimalmargin. Omit ONLY when120and80upperbounds each<=1e-13/128; preservebothbounds/panelrecord andabsolute fulltailsum.",
+    "work": "Log all128 attemptedpanels/query, tail-envelopeexponential calls separately from attempted/completedGaussianrule nodes, bothorders/precisions, andguardfailures. No discardedworkhidden."
+  },
+  "steps": {
+    "actual_vs_linear_absolute_level_allowance": 0.001,
+    "actual_vs_linear_metric": "max over ALL56 queries of abs(actual_trial_mean - baseline_mean - alpha*J*delta) <= .001 + .05*max over ALL56 abs(alpha*J*delta). Evaluated AFTER training-only coefficients and alpha are fixed; neither heldout values nor this test can select/retune alpha or repeat a step.",
+    "actual_vs_linear_relative_allowance": 0.05,
+    "additional_gate": "savedSqualified AND all56analyticNqualified, fulltrainingJrank/gap andnuisanceprojectorqualification. AtmostonenewBGNSactualforwardtrial; oldBGSverbatimcomparator.",
+    "call_maximum": 10,
+    "covariance_norm_cap": 0.05,
+    "covariance_norm_definition": "Frobenius norm of sum(delta_q_i E_i), equal to Euclidean norm of delta_q. Actual update is Sigma=L exp(alpha*sum(delta_q_i E_i)) L.T.",
+    "damping": "one common alpha=min(1, allcaps/allproposedcomponent sizes, .9 ofdistance to each geometric andlevel bound). No line search or repeatstep.",
+    "domain_distance_fraction": 0.9,
+    "fit_source": "TRAINING ROWS ONLY SVD leastsquares of unprojected complete meanJac; joint LINEARIZED level/geometry/covariance(/normal) update. No nonlinear optimizer or exact box re-profiling of levels at the trial.",
+    "geometry_normalized_max_cap": 0.01,
+    "level_bounds": "Apply the same common alpha to FREE level deltas and verify both actual trial levels remain in [0,255]. Fixed active levels stay fixed on their declared face.",
+    "models": [
+      [
+        "B",
+        "G",
+        "N",
+        "S"
+      ]
+    ],
+    "normal_angle_cap_radians": 0.01,
+    "qualification": "Only local linearization behavior when finite/source/work/FD/rank/domainchecks pass; no fitting or scientific-target success is inferred.",
+    "solve": "Use the SAME stable retained SVD space/cutoff as reported for that complete training matrix; do not call default-lstsq with another tolerance. Withhold the actual step when full column rank or its rank interval is unresolved. No discarded direction is restored by the coefficient solver.",
+    "truth": "Allstepchoices useonlytraining40responses; no oldtruth/target/passflags/heldoutselection inworker. DescriptivegeometrymayreadpinnedtruthONLYAFTERALLrowsteps/predictionsfixed; useoldhelperdescriptive_evaluation, no newfitpass.",
+    "zero_policy": "Skip zero-denominator cap terms. Exactly zero coefficient vector uses alpha1 and retains unchanged predictions as zero_step, not a recovered parameter. A required alpha0 is a withheld bound-limited step, not success."
+  },
+  "version": 1
+}

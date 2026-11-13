@@ -6,73 +6,11 @@ The workbench is designed for plates, gaskets, spacers, and templates. It traces
 
 [Start the app](#start-the-app) · [Try the workflow](#try-the-complete-workflow) · [Documentation](docs/README.md)
 
-For the reviewed source revision, draft PR dependencies and available research
-APIs, read [source scope and status](docs/project-status.md). The current
-[documentation review](docs/validation/documentation-pr97-state.md) covers
-published draft PR #97, the workbench and companion library. The
-[residual-study record](docs/validation/finite-residual-information.md) retains
-the completed diagnostic and failed normal-angle control. Older test results
-retain their original scope.
-
-For reference-sheet tracing, photograph the whole flat sheet (A4, US Letter, or a sheet you have measured) and explicitly choose it as the **Scale reference**. A successful sheet trace sets scale from its stated size, estimates perspective and one radial lens correction, and fits lines, tangent arcs and circles. Entered thickness supports a side-wall/parallax correction under the method's assumptions. Ordinary tracing and the sample use measured-width scaling instead; they do not perform these corrections. See [reference-sheet tracing](docs/reference-sheet.md) for the mathematics and synthetic evidence, and the [engineering model](docs/engineering-model.md) for independent verification before fabrication.
-
-Review the [initial-fit support check](docs/validation/fit-support.md) and
-[known benchmark and camera-model limits](docs/validation/scientific-model-review.md)
-before relying on small residuals or reported error percentiles. A successful
-trace or valid CAD solid still needs comparison with the original outline and
-independent dimensions. The [radial-domain and independent-renderer record](docs/validation/radial-inverse.md)
-documents numerical safeguards and higher-order lens counterexamples. The
-[directional-blur research](docs/validation/directional-spread-qualification.md)
-also records missed cases; it does not supply a product accuracy status. The
-tracer estimates a uniform directional blur from edge spreads and uses its
-covariance for supported nonparallel corner fits
-([method and recovery limits](docs/anisotropic-corners.md)). This empirical
-rectified-image model is not a physical camera calibration.
-An unresolved supplied-covariance corner normally keeps its traced boundary.
-If thickness correction made that boundary invalid, a nearby line-only outline
-may be retained under bounded whole-boundary checks; otherwise the trace is refused. Neither recovery
-determines the corner radius. Review the notice and measure important radii.
-
-Known uniform thickness scales also transport blur widths for free curves and
-slot-cap fitting. Mixed-frame free curves, slot caps and scalar corner fits
-retain explicitly approximate geometry with a warning; important radii remain
-subject to independent measurement. See
-[blur frames and support rules](docs/blur-frames.md).
-
-Developers can also evaluate the [finite-material intensity fitter](docs/finite-shape-inverse.md)
-introduced in PR #88. It fits a circular segment's centre, radius and chord position
-under supplied optics. It is a Python research API; uploading a photo or building
-a model still uses the tracing path described above. Its
-[validation record](docs/validation/finite-free-centre.md) retains numerical
-successes, model mismatches and initialization failures.
-The subsequent [measured-ring bridge](docs/finite-shape-inverse.md#prepare-a-measured-ring-observation-set)
-prepares a fixed crop, samples and coordinate mapping for that developer API;
-its [paired replay](docs/validation/finite-photo-intensity-v2.md) preserves the
-earlier failures. It also remains outside automatic tracing.
-
-The [affine evaluator](docs/finite-affine-evaluation.md) shares numerical work
-across pixels under exactly affine maps. A fixed, source-bound comparison records
-**3.84× faster complete fits** across three declared datasets, with medians of
-2.75–3.91 seconds and all prior target passes retained. This is developer API
-evidence; it does not change the photo workflow or qualify interactive latency.
-See the [complete results and limits](docs/validation/finite-affine-batch.md).
-The [residual-information study](docs/finite-residual-information.md) now retains
-a failed normal-angle control and conditional covariance-only steps. Its
-[complete record](docs/validation/finite-residual-information.md) preserves all
-unknowns and motivates a separately labeled analytic rotation identity. The
-[finite-chord derivation](docs/finite-residual-information.md#finite-chord-shape-derivative-a-derived-proposal)
-covers affine and valid perspective maps and underlies the separate
-[experimental normal-angle derivative](docs/finite-normal-derivative.md).
-Its complete [337-scene qualification](docs/validation/finite-normal-derivative.md)
-exited 1: one query reached its panel limit, and a resolved compressed-map
-result exceeded its reported error estimate. These findings remain open.
-The operator remains outside automatic tracing and fitting.
-
-Final fitted arcs also need [circle-consistent joins](docs/curved-joins.md).
-An unavailable join keeps an affected outline for review when valid, with a
-notice; it does not supply a measured radius. Check
-[critical arc geometry in imported CAD](docs/exports.md#verify-critical-arc-geometry)
-before relying on it for fit.
+For reference-sheet tracing, photograph the whole flat sheet and explicitly
+choose it as the **Scale reference**. Ordinary tracing and the sample use a
+measured width or known feature instead. Enter thickness separately. Follow the
+[capture guide](docs/capture-guide.md) and review the outline and independent
+dimensions before fabrication.
 
 This repository contains two related tools:
 
@@ -197,6 +135,29 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 - Split exports use straight cuts without joinery, kerf, or assembly tolerances. Combined STEP/STL/3MF exports show the assembled geometry, not separated parts arranged on a print bed.
 - The browser sends images to the app's backend. On a cloud host, that means uploading to that host; processing is not browser-only.
 - This release is a single-user workbench, not a hosted account or collaboration service.
+
+## Research and verification
+
+[Source scope and status](docs/project-status.md) identifies the published
+base, dependency chain, source-bound CI and new analytic-normal candidate. The preceding
+[documentation review](docs/validation/documentation-pr100-state.md) covers the
+workbench and companion library; historical results retain their original scope.
+
+- [Reference-sheet mathematics](docs/reference-sheet.md), [directional corners](docs/anisotropic-corners.md), [blur frames](docs/blur-frames.md) and [circle-consistent joins](docs/curved-joins.md) explain the automatic tracing path and its recovery limits. Measure important radii and verify [critical imported CAD geometry](docs/exports.md#verify-critical-arc-geometry).
+- [Finite-material fitting](docs/finite-shape-inverse.md) and [affine evaluation](docs/finite-affine-evaluation.md) are separate Python research APIs. The fixed affine study records 3.84× faster complete fits on three datasets; broader latency and physical adequacy remain unqualified.
+- [Residual-information V1](docs/validation/finite-residual-information.md) and [normal-derivative V1](docs/validation/finite-normal-derivative.md) retain their failed outcomes. The later [V2 correction](docs/validation/finite-normal-error-control.md) passes its 417-scene criteria and separate original-control checks. The [26-scene reference-node diagnostic](docs/validation/finite-normal-oracle-conditioning.md) improves a restricted reference path; general oracle error accounting remains open.
+
+The [analytic-normal replay](docs/validation/finite-analytic-normal-information.md)
+now qualifies all 578 comparisons and ten bounded joint trials. Allowing angle
+motion preserves all three conditional covariance directions; only three trials
+beat the saved fixed-angle comparator on conditional held-out RMS. Three trials
+reduce residuals while worsening all three synthetic geometry errors relative
+to the archived baseline fits. These
+counterexamples remain part of the result.
+
+These developer studies do not change automatic tracing or qualify physical
+camera optics. The [validation overview](docs/validation.md) keeps numerical,
+software, browser and physical evidence distinct.
 
 ## Documentation
 

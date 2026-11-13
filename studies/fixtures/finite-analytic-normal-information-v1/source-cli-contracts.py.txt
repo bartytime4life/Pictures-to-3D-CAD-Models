@@ -1,0 +1,85 @@
+"""Isolated parser/source tests; NumPy/backend/helper imports are fatal traps."""
+import hashlib,json,os,pathlib,shutil,subprocess,sys
+ROOT=pathlib.Path.cwd(); OUT=ROOT/'.local/verification/analytic-normal-ai/cli-v1'
+RUNNER='studies/verification/finite-analytic-normal-information-v1.py'
+ORACLE='studies/verification/finite-analytic-normal-oracle-v1.py'
+PLAN='studies/finite-analytic-normal-information-v1.json'
+SAVED='studies/results/finite-residual-information-v1.json.gz'
+plan=json.loads((ROOT/PLAN).read_text())
+trap=OUT/'trap';trap.mkdir()
+(trap/'sitecustomize.py').write_text("""import builtins,importlib.util,os,pathlib
+_orig_import=builtins.__import__
+_orig_spec=importlib.util.spec_from_file_location
+def refused(name):
+ with open(os.environ['ANALYTIC_IMPORT_TRAP'],'a') as f:f.write(str(name)+'\\n')
+ raise AssertionError('scientific import forbidden in source/CLI contract: '+str(name))
+def checked_import(name,*args,**kwargs):
+ if name=='numpy' or name.startswith('numpy.') or name=='backend' or name.startswith('backend.'):
+  refused(name)
+ return _orig_import(name,*args,**kwargs)
+def checked_spec(name,location,*args,**kwargs):
+ if pathlib.Path(location).name in ('finite-analytic-normal-oracle-v1.py','finite-residual-information-v1.py'):
+  refused(location)
+ return _orig_spec(name,location,*args,**kwargs)
+builtins.__import__=checked_import
+importlib.util.spec_from_file_location=checked_spec
+""")
+def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
+def copybase(name,with_saved=False,full=False):
+ base=OUT/name;base.mkdir()
+ names=set(plan['inputs_sha256']) if full else set()
+ names.update((RUNNER,PLAN))
+ if with_saved:names.add(SAVED)
+ if full:names.add(ORACLE)
+ for item in sorted(names):
+  target=base/item;target.parent.mkdir(parents=True,exist_ok=True)
+  if item in (RUNNER,PLAN) or item=='pyproject.toml':shutil.copyfile(ROOT/item,target)
+  else:target.symlink_to(ROOT/item)
+ return base
+records=[]
+def execute(name,base,arguments,expected_exit,expected_report=False,check=None):
+ marker=OUT/(name+'.imports'); env=dict(os.environ);env['PYTHONPATH']=str(trap);env['ANALYTIC_IMPORT_TRAP']=str(marker);env['PYTHONDONTWRITEBYTECODE']='1'
+ command=[sys.executable,str(base/RUNNER),*arguments]
+ result=subprocess.run(command,cwd=base,env=env,text=True,capture_output=True,check=False)
+ (OUT/(name+'.stdout')).write_text(result.stdout);(OUT/(name+'.stderr')).write_text(result.stderr)
+ record={'name':name,'command':command,'expected_exit':expected_exit,'actual_exit':result.returncode,'blocked_import_attempts':marker.read_text().splitlines() if marker.exists() else [],'passed':result.returncode==expected_exit and not marker.exists()}
+ if expected_report:
+  report_path=pathlib.Path(arguments[arguments.index('--output')+1]);report=json.loads(report_path.read_text())
+  expected_ids=[{k:r[k] for k in ('index','name','lane')} for r in plan['population']]
+  record.update(rows=len(report['rows']),source_closure=len(report['source_before']),protocol_passed=report['protocol_passed'],normal_calls=report['work']['normal_calls_attempted'],trial_calls=report['work']['trial_mean_calls_attempted'])
+  record['passed'] &= [ {k:r[k] for k in ('index','name','lane')} for r in report['rows'] ]==expected_ids and report['protocol_passed'] is False and len(report['source_before'])==48 and report['source_before']==report['source_after'] and report['work']['normal_calls_attempted']==report['work']['trial_mean_calls_attempted']==0
+  if check:record['passed'] &= bool(check(report,record))
+ elif check:record['passed'] &= bool(check(None,record))
+ records.append(record)
+base=copybase('thin')
+execute('help',base,['--help'],0)
+execute('missing-output',base,[],2)
+execute('unknown-option',base,['--output',str(base/'unused.json'),'--unknown'],2,check=lambda _,r:not(base/'unused.json').exists())
+sentinel=base/'existing.json';sentinel.write_text('KEEP-EXISTING-OUTPUT\n');before=sha(sentinel)
+execute('existing-output',base,['--output',str(sentinel)],2,check=lambda _,r:sha(sentinel)==before)
+dangling=base/'dangling.json';dangling.symlink_to(base/'absent-target.json')
+execute('dangling-output',base,['--output',str(dangling)],2,check=lambda _,r:dangling.is_symlink() and not(base/'absent-target.json').exists())
+execute('missing-parent',base,['--output',str(base/'absent-parent'/'out.json')],2,check=lambda _,r:not(base/'absent-parent').exists())
+execute('missing-input-bootstrap',base,['--output',str(base/'bootstrap.json')],1,True)
+base=copybase('saved-but-other-inputs-missing',with_saved=True)
+def originals_preserved(report,record):
+ record['preserved_original_rows']=sum('original_residual_row' in r for r in report['rows'])
+ record['preserved_old_passes']=sum(r.get('old_targets_passed') is True for r in report['rows'])
+ record['preserved_old_completions']=sum(r.get('old_completion_passed') is True for r in report['rows'])
+ return all(hashlib.sha256(json.dumps(r['original_residual_row'],sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest()==e['original_row_sha256'] for r,e in zip(report['rows'],plan['population'],strict=True)) and record['preserved_old_passes']==3 and record['preserved_old_completions']==10
+execute('saved-original-source-bootstrap',base,['--output',str(base/'bootstrap.json')],1,True,originals_preserved)
+base=copybase('full-closure-one-mismatch',full=True)
+with (base/'pyproject.toml').open('a') as f:f.write('\n# isolated source-refusal sentinel\n')
+def one_mismatch(report,record):
+ record['binding_error_paths']=[r['path'] for r in report['binding_errors']]
+ record['readable_sources']=sum('sha256' in r for r in report['source_before'].values())
+ return originals_preserved(report,record) and record['binding_error_paths']==['pyproject.toml'] and record['readable_sources']==48
+execute('full48-one-source-mismatch',base,['--output',str(base/'bootstrap.json')],1,True,one_mismatch)
+base=copybase('changed-plan',with_saved=True)
+changed=json.loads((base/PLAN).read_text());changed['objective']+=' isolated plan-hash sentinel';(base/PLAN).write_text(json.dumps(changed,sort_keys=True))
+def wrong_plan(report,record):return originals_preserved(report,record) and any(r['path']==PLAN for r in report['binding_errors'])
+execute('changed-frozen-plan',base,['--output',str(base/'bootstrap.json')],1,True,wrong_plan)
+receipt={'scope':'Parser/source-refusal contracts in isolated temporary ROOTs with NumPy/backend/oracle/old-helper imports trapped BEFORE execution. No scientific API/oracle/Decimal/SVD/algebra/trial calls. Original sources read-only.','runner_sha256':sha(ROOT/RUNNER),'oracle_sha256':sha(ROOT/ORACLE),'plan_sha256':sha(ROOT/PLAN),'script_sha256':sha(pathlib.Path(__file__)),'records':records,'checks':len(records),'failures':sum(not r['passed'] for r in records)}
+with (OUT/'receipt.json').open('x') as f:json.dump(receipt,f,indent=2,sort_keys=True,allow_nan=False);f.write('\n')
+print(json.dumps({'checks':len(records),'failures':receipt['failures'],'runner_sha256':receipt['runner_sha256'],'oracle_sha256':receipt['oracle_sha256'],'receipt_sha256':sha(OUT/'receipt.json')}))
+raise SystemExit(1 if receipt['failures'] else 0)

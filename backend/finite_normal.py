@@ -15,8 +15,10 @@ conditioning guards are engineering estimates, not certified optical uncertainty
 
 from __future__ import annotations
 
+import heapq
 import math
 from dataclasses import dataclass
+from fractions import Fraction
 
 import numpy as np
 
@@ -27,6 +29,7 @@ _EPS = np.finfo(float).eps
 _ROOT_TAU = math.sqrt(math.tau)
 _ROOT_TWO = math.sqrt(2)
 _SMALLEST = math.nextafter(0.0, 1.0)
+_LOG_TWO = math.log(2.0)
 
 
 @dataclass(frozen=True)
@@ -43,6 +46,95 @@ class NormalDerivative:
     reflected: bool
     method: str = "finite_chord_shape"
     quadrature_certified: bool = False
+
+
+@dataclass(frozen=True)
+class _Normalizer:
+    determinant: Fraction
+    log_flux: float
+    log_moment: float
+    log_error: float
+    reflected: bool
+
+
+def _exact_determinant(matrix):
+    """Six fixed rational terms for the ACTUAL represented operational map."""
+    rows = [[Fraction(float(value)) for value in row] for row in matrix]
+    a, b, c = rows
+    return (
+        a[0] * (b[1] * c[2] - b[2] * c[1])
+        - a[1] * (b[0] * c[2] - b[2] * c[0])
+        + a[2] * (b[0] * c[1] - b[1] * c[0])
+    )
+
+
+def _fraction_log(value):
+    """A binade avoids overflow and log(numerator)-log(denominator) loss.
+
+    Conversion error is measured exactly against the rational mantissa. The
+    four-ULP libm/float allowances remain estimates, not interval certificates.
+    """
+    if value <= 0:
+        raise ArithmeticError("unsupported exact positive normalizer")
+    exponent = value.numerator.bit_length() - value.denominator.bit_length()
+    mantissa = value / (1 << exponent) if exponent >= 0 else value * (1 << -exponent)
+    if mantissa < 1:
+        mantissa *= 2
+        exponent -= 1
+    rounded = float(mantissa)
+    conversion = float(abs(Fraction(rounded) - mantissa) / mantissa)
+    if not math.isfinite(rounded) or not 0 <= conversion < 1:
+        raise ArithmeticError("unrepresentable exact normalizer")
+    log_mantissa, log_power = math.log(rounded), exponent * _LOG_TWO
+    logarithm = _finite_sum((log_mantissa, log_power))
+    error = _finite_sum(
+        (
+            -math.log1p(-conversion),
+            4 * math.ulp(log_mantissa),
+            4 * abs(exponent) * math.ulp(_LOG_TWO),
+            4 * math.ulp(log_power),
+            4 * math.ulp(logarithm),
+        )
+    )
+    return logarithm, error
+
+
+def _normalizer_from_determinant(determinant, inverse):
+    if determinant == 0:
+        raise ArithmeticError("operational map determinant is unresolved")
+    # A general solve of a lower Cholesky factor can leave a tiny nonzero upper
+    # entry. Whitening uses that ACTUAL represented matrix, so its normalizer
+    # must include the same entry instead of discarding it or refusing valid
+    # supplied covariance. This second determinant also has fixed exact size.
+    entries = tuple(float(value) for row in inverse for value in row)
+    if not all(math.isfinite(value) for value in entries):
+        raise ArithmeticError("unsupported represented Gaussian normalizer")
+    first, upper, lower, second = map(Fraction, entries)
+    inverse_determinant = first * second - upper * lower
+    if inverse_determinant <= 0:
+        raise ArithmeticError("unsupported represented whitening determinant")
+    log_det, det_error = _fraction_log(abs(determinant))
+    log_inverse, inverse_error = _fraction_log(inverse_determinant)
+    log_tau, log_root_tau = math.log(math.tau), math.log(_ROOT_TAU)
+    log_flux = _finite_sum((log_det, log_inverse, -log_tau))
+    log_moment = _finite_sum((log_det, log_inverse, -log_root_tau))
+    log_error = _finite_sum(
+        (
+            det_error,
+            inverse_error,
+            4 * _EPS,  # Rounded tau/sqrt(tau) constants.
+            4 * max(math.ulp(log_tau), math.ulp(log_root_tau)),
+            4 * max(math.ulp(log_flux), math.ulp(log_moment)),
+        )
+    )
+    if not math.isfinite(log_error) or log_error >= 1:
+        raise ArithmeticError("unresolved Gaussian/map normalizer")
+    return _Normalizer(determinant, log_flux, log_moment, log_error, determinant < 0)
+
+
+def _normalizer(h, inverse):
+    """Bounded once-per-call setup, separate from endpoint/node work units."""
+    return _normalizer_from_determinant(_exact_determinant(h), inverse)
 
 
 def _finite_sum(values):
@@ -109,7 +201,9 @@ def _scaled(value, log_factor, *, positive_error=False):
     return math.copysign(magnitude, value)
 
 
-def _closed_form(point, h, inverse, normal, radius, fraction, half_chord, tolerance):
+def _closed_form(
+    point, h, inverse, normal, radius, fraction, half_chord, tolerance, *, normalizer=None
+):
     """First moment in z=s/(1+k*s), using LOCAL plane geometry throughout."""
     tangent = np.array([-normal[1], normal[0]])
     chord = radius * fraction * normal
@@ -159,21 +253,14 @@ def _closed_form(point, h, inverse, normal, radius, fraction, half_chord, tolera
             (abs(along) + abs(z_high)) * phi_high * high_error,
         )
     )
-    determinant = abs(float(np.linalg.det(h)))
-    inverse_determinant = abs(float(np.linalg.det(inverse)))
-    log_determinant = _positive_log(determinant)
-    log_inverse_determinant = _positive_log(inverse_determinant)
+    if normalizer is None:
+        normalizer = _normalizer(h, inverse)
     log_speed = _positive_log(speed)
-    log_factor = (
-        log_determinant
-        - 3 * _positive_log(denominator)
-        + log_inverse_determinant
-        - math.log(_ROOT_TAU)
-        - 2 * log_speed
-        - across * across / 2
-    )
+    log_denominator = _positive_log(denominator)
+    log_factor = normalizer.log_moment - 3 * log_denominator - 2 * log_speed - across * across / 2
     relative_error = (
-        64 * _EPS * (1 + abs(log_determinant) + abs(log_inverse_determinant) + abs(log_speed))
+        normalizer.log_error
+        + 64 * _EPS * (1 + 3 * abs(log_denominator) + 2 * abs(log_speed))
         + abs(across) * coordinate_error
     )
     if not math.isfinite(relative_error) or relative_error >= 1:
@@ -186,7 +273,19 @@ def _closed_form(point, h, inverse, normal, radius, fraction, half_chord, tolera
     return value, error
 
 
-def _quadrature(curve, matrix, denominator, inverse, determinant, half_chord, start, end, order):
+def _quadrature(
+    curve,
+    matrix,
+    denominator,
+    inverse,
+    determinant,
+    half_chord,
+    start,
+    end,
+    order,
+    *,
+    normalizer=None,
+):
     nodes, weights = finite._RULES[order]
     half = (end - start) / 2
     ts = (start + end) / 2 + half * nodes
@@ -197,13 +296,9 @@ def _quadrature(curve, matrix, denominator, inverse, determinant, half_chord, st
     whitened = (points @ matrix[:, :2].T + matrix[:, 2]) / w[:, None]
     if not np.isfinite(whitened).all():
         raise ArithmeticError("unsupported transformed chord")
-    log_normalizer = (
-        _positive_log(abs(float(np.linalg.det(inverse))))
-        + _positive_log(determinant)
-        - math.log(math.tau)
-        + _positive_log(2 * half_chord)
-        + _positive_log(half)
-    )
+    if normalizer is None:
+        normalizer = _normalizer_from_determinant(Fraction(determinant), inverse)
+    log_normalizer = normalizer.log_flux + _positive_log(2 * half_chord) + _positive_log(half)
     terms = []
     for t, point, positive_w, weight in zip(ts, whitened, w, weights, strict=True):
         signed_s = half_chord * (2 * float(t) - 1)
@@ -227,21 +322,78 @@ def _quadrature(curve, matrix, denominator, inverse, determinant, half_chord, st
     return _finite_sum(terms), _finite_sum(abs(value) for value in terms)
 
 
-def _quadrature_one(point, curve, h, inverse, half_chord, tolerance, max_panels, evaluations_left):
-    values, errors, evaluations, panels = [], [], 0, 0
+@dataclass(frozen=True)
+class _Leaf:
+    start: float
+    end: float
+    value: float | None
+    error: float | None
+    absolute: float | None
+
+
+class _WorkLimit(ArithmeticError):
+    pass
+
+
+def _frontier_total(leaves):
+    """Upward error sum plus the EXACT dyadic error of the final reduction.
+
+    This certifies only reduction of the represented leaf values/errors. It
+    neither certifies those local estimates nor cancels upstream rule error.
+    Called only for a potentially acceptable complete frontier, bounding the
+    additional exact arithmetic by the existing panel count.
+    """
+    leaves = tuple(leaves)
+    values = tuple(float(leaf.value) for leaf in leaves)
+    errors = tuple(float(leaf.error) for leaf in leaves)
+    value = _finite_sum(values)
+    if not all(math.isfinite(error) and error >= 0 for error in errors):
+        raise ArithmeticError("unsupported local frontier error")
+    exact_values = sum((Fraction(item) for item in values), Fraction())
+    exact_errors = sum((Fraction(item) for item in errors), Fraction())
+    exact_total = exact_errors + abs(Fraction(value) - exact_values)
+    error = float(exact_total)
+    if not math.isfinite(error):
+        raise ArithmeticError("unrepresentable frontier error reduction")
+    if Fraction(error) < exact_total:
+        error = math.nextafter(error, math.inf)
+    if not math.isfinite(error):
+        raise ArithmeticError("unrepresentable upward frontier error")
+    return value, error
+
+
+def _quadrature_one(
+    point,
+    curve,
+    h,
+    inverse,
+    half_chord,
+    tolerance,
+    max_panels,
+    evaluations_left,
+    *,
+    normalizer=None,
+):
+    """Refine a complete frontier against ONE absolute error allowance.
+
+    Embedded-rule differences, local absolute-magnitude roundoff, normalizer
+    allowances, omitted tails and exact final-reduction error are all included.
+    The full estimate is not a certified integration enclosure. A parent stays represented until both
+    children have been inspected; partial replacement cannot report a value.
+    """
+    evaluations, panels = 0, 0
     if max_panels < 1 or evaluations_left < 2:
         return None, "work_limit", None, evaluations, panels
     try:
+        if normalizer is None:
+            normalizer = _normalizer(h, inverse)
         matrix = inverse @ (h[:2] - point[:, None] * h[2])
-        determinant = abs(float(np.linalg.det(h)))
-        log_determinant = _positive_log(determinant)
-        log_density = _positive_log(abs(float(np.linalg.det(inverse)))) - math.log(math.tau)
-        pending = [(0.0, 1.0)]
-        leaf = tolerance / (2 * max(1, max_panels))
-        while pending:
+        normalizer_relative_error = math.expm1(normalizer.log_error)
+
+        def inspect_panel(start, end):
+            nonlocal evaluations, panels
             if panels >= max_panels or evaluations + 2 > evaluations_left:
-                return None, "work_limit", None, evaluations, panels
-            start, end = pending.pop()
+                raise _WorkLimit
             panels += 1
             evaluations += 2  # Full panel endpoint inspection is attempted together.
             distance, length = finite._panel(curve, matrix, h[2], start, end)
@@ -251,8 +403,7 @@ def _quadrature_one(point, curve, h, inverse, half_chord, tolerance, max_panels,
                 raise ArithmeticError("unsupported panel projective chart")
             maximum_motion = half_chord * max(abs(2 * start - 1), abs(2 * end - 1))
             log_bound = (
-                log_density
-                + log_determinant
+                normalizer.log_flux
                 - 3 * _positive_log(w_low)
                 + _positive_log(2 * half_chord)
                 + _positive_log(end - start)
@@ -261,10 +412,13 @@ def _quadrature_one(point, curve, h, inverse, half_chord, tolerance, max_panels,
             )
             if not math.isfinite(log_bound):
                 raise ArithmeticError("unsupported chord tail envelope")
-            if log_bound <= math.log(leaf):
-                values.append(0.0)
-                errors.append(max(_SMALLEST, math.exp(log_bound)))
-                continue
+            # Tail errors participate in the global frontier sum. A tail can be
+            # split again if several individually affordable bounds add to too
+            # much error; no fixed allowance is reserved for unused panels.
+            adjusted_bound = log_bound + normalizer.log_error
+            if adjusted_bound <= math.log(tolerance):
+                bound = max(_SMALLEST, math.exp(adjusted_bound))
+                return _Leaf(start, end, 0.0, bound, 0.0)
 
             # A positive-chart projective line traverses its image segment
             # monotonically. The norm is convex on that segment, so its maximum
@@ -277,29 +431,86 @@ def _quadrature_one(point, curve, h, inverse, half_chord, tolerance, max_panels,
                 raise ArithmeticError("unsupported panel density variation")
             if length <= 0.5 and exponent_variation <= 8 and w_high / w_low <= 2:
                 if evaluations + 36 > evaluations_left:
-                    return None, "work_limit", None, evaluations, panels
+                    raise _WorkLimit
                 evaluations += 12
-                low, _ = _quadrature(
-                    curve, matrix, h[2], inverse, determinant, half_chord, start, end, 12
+                low, low_absolute = _quadrature(
+                    curve,
+                    matrix,
+                    h[2],
+                    inverse,
+                    abs(normalizer.determinant),
+                    half_chord,
+                    start,
+                    end,
+                    12,
+                    normalizer=normalizer,
                 )
                 evaluations += 24
                 high, absolute = _quadrature(
-                    curve, matrix, h[2], inverse, determinant, half_chord, start, end, 24
+                    curve,
+                    matrix,
+                    h[2],
+                    inverse,
+                    abs(normalizer.determinant),
+                    half_chord,
+                    start,
+                    end,
+                    24,
+                    normalizer=normalizer,
                 )
-                error = _finite_sum((abs(high - low), 64 * _EPS * absolute))
-                if error <= leaf:
-                    values.append(high)
-                    errors.append(error)
-                    continue
-            middle = (start + end) / 2
-            if middle in (start, end):
+                if not all(
+                    math.isfinite(value) and value >= 0 for value in (low_absolute, absolute)
+                ):
+                    raise ArithmeticError("unsupported absolute chord contribution")
+                # The embedded difference uses BOTH computed rules. Retain an
+                # estimated 64-eps node/log-exp/weighted-sum allowance for each
+                # rule's absolute contribution, rather than letting signed
+                # cancellation erase either scale. This is not a libm or
+                # floating-point interval certificate. Shared normalizer error
+                # additionally bounds the reported high-rule contribution.
+                error = _finite_sum(
+                    (
+                        abs(high - low),
+                        64 * _EPS * _finite_sum((low_absolute, absolute)),
+                        normalizer_relative_error * absolute,
+                    )
+                )
+                return _Leaf(start, end, high, error, absolute)
+            return _Leaf(start, end, None, None, None)
+
+        frontier, priorities = {}, []
+        serial = 0
+
+        def add(leaf):
+            nonlocal serial
+            serial += 1
+            frontier[serial] = leaf
+            priority = -math.inf if leaf.error is None else -leaf.error
+            heapq.heappush(priorities, (priority, leaf.start, leaf.end, serial))
+
+        add(inspect_panel(0.0, 1.0))
+        while frontier:
+            if (
+                all(leaf.error is not None for leaf in frontier.values())
+                and _finite_sum(leaf.error for leaf in frontier.values()) <= tolerance
+            ):
+                value, error = _frontier_total(frontier.values())
+                if error <= tolerance:
+                    return value, "resolved", error, evaluations, panels
+            _, _, _, key = heapq.heappop(priorities)
+            parent = frontier[key]
+            middle = (parent.start + parent.end) / 2
+            if middle in (parent.start, parent.end):
                 return None, "numerical", None, evaluations, panels
-            pending.extend(((middle, end), (start, middle)))
-        value = _finite_sum(values)
-        error = _finite_sum((_finite_sum(errors), 64 * _EPS * _finite_sum(map(abs, values))))
-        if not math.isfinite(value) or not math.isfinite(error) or error > tolerance:
-            return None, "numerical", None, evaluations, panels
-        return value, "resolved", error, evaluations, panels
+            left = inspect_panel(parent.start, middle)
+            right = inspect_panel(middle, parent.end)
+            # Keep the old complete coverage until BOTH children are present.
+            del frontier[key]
+            add(left)
+            add(right)
+        raise ArithmeticError("missing finite-chord frontier")
+    except _WorkLimit:
+        return None, "work_limit", None, evaluations, panels
     except (ArithmeticError, FloatingPointError):
         # Keep setup, panel, low-rule, high-rule and final-sum failures distinct
         # from unexpected ValueError/TypeError, with all attempted work retained.
@@ -354,6 +565,15 @@ def circular_segment_normal_derivative(
         1.0,
     )
     tolerance, panel_limit, evaluation_limit = controls
+    try:
+        normalizer = _normalizer(h, inverse)
+        reflected = normalizer.reflected
+    except (ArithmeticError, FloatingPointError):
+        # Valid supplied geometry can still have an unsupported represented
+        # operational map. This is neither a physical-singularity assertion nor
+        # a reason to fabricate zero probability sensitivity. Setup has fixed
+        # size and adds no query-node work; affordable attempts retain 2/1 units.
+        normalizer = None
     derivatives, statuses, estimates, methods, query_work, query_panels = [], [], [], [], [], []
     evaluations, panels = 0, 0
     for point in pixels.astype(float) + 0.5:
@@ -361,27 +581,39 @@ def circular_segment_normal_derivative(
         value, status, error, method = None, "work_limit", None, "not_attempted"
         if evaluations + 2 <= evaluation_limit:
             used, count, method = 2, 1, closed_method
-            try:
-                with np.errstate(over="raise", invalid="raise", divide="raise", under="ignore"):
-                    value, error = _closed_form(
-                        point, h, inverse, normal, radius, fraction, half_chord, tolerance
-                    )
-                status = "resolved"
-            except (ArithmeticError, FloatingPointError):
-                method += "_then_chord_quadrature"
-                with np.errstate(over="raise", invalid="raise", divide="raise", under="ignore"):
-                    value, status, error, fallback_work, fallback_panels = _quadrature_one(
-                        point,
-                        curve,
-                        h,
-                        inverse,
-                        half_chord,
-                        tolerance,
-                        panel_limit - count,
-                        evaluation_limit - evaluations - used,
-                    )
-                used += fallback_work
-                count += fallback_panels
+            if normalizer is None:
+                status = "numerical"
+            else:
+                try:
+                    with np.errstate(over="raise", invalid="raise", divide="raise", under="ignore"):
+                        value, error = _closed_form(
+                            point,
+                            h,
+                            inverse,
+                            normal,
+                            radius,
+                            fraction,
+                            half_chord,
+                            tolerance,
+                            normalizer=normalizer,
+                        )
+                    status = "resolved"
+                except (ArithmeticError, FloatingPointError):
+                    method += "_then_chord_quadrature"
+                    with np.errstate(over="raise", invalid="raise", divide="raise", under="ignore"):
+                        value, status, error, fallback_work, fallback_panels = _quadrature_one(
+                            point,
+                            curve,
+                            h,
+                            inverse,
+                            half_chord,
+                            tolerance,
+                            panel_limit - count,
+                            evaluation_limit - evaluations - used,
+                            normalizer=normalizer,
+                        )
+                    used += fallback_work
+                    count += fallback_panels
         derivatives.append(value)
         statuses.append(status)
         estimates.append(error)

@@ -1,5 +1,59 @@
 # Workbench change log
 
+## Analytic-normal residual information — November 12, 2026
+
+- Freeze the plan and final scientific source before one complete execution.
+  Qualify all 578 normal comparisons with an independent affine chord reference,
+  preserve all archived rows/B/G/S data, and pass ten bounded joint-trial checks.
+- Compare fixed- and moving-normal covariance information at a shared cutoff.
+  Retain all three directions, conditional energy increases and the cases where
+  lower residuals worsen synthetic geometry. No new fit-pass count or automatic
+  correction is inferred.
+- Preserve the complete lossless report, first routing-fixture failure and
+  independent saved-data audits. Add portable review commands and link the
+  [mathematics](finite-analytic-normal-information.md) and
+  [complete evidence](validation/finite-analytic-normal-information.md).
+
+## Documentation alignment with published PR #100 — November 12, 2026
+
+- Review all workbench, study, fixture and companion-library documentation.
+  Put startup and the user workflow before research detail in the README;
+  refresh current review links and the exact-head PR/CI dependency snapshot.
+- Distinguish the original V1 derivative failures, corrected V2 operator and
+  restricted reference-node diagnostic without rewriting their retained results.
+  Document the current corner stopping rule, near-parallel cap heuristic and
+  narrow-wall example's assumptions.
+- Clarify report overwrites and library build prerequisites. Preserve every
+  non-Markdown file and historical validation record. The
+  [coverage and verification record](validation/documentation-pr100-state.md)
+  separates this documentation pass from numerical, browser and physical work.
+
+## Projective reference-node arithmetic — November 12, 2026
+
+- Freeze a separate 26-scene diagnostic, retaining both known controls and 24
+  new reflected/compressed cases. Compare original arithmetic, rounded-source
+  and exact-source Decimal paths, and exact-endpoint binary64 interpolation.
+- Retain the first complete passing execution, every fixed panel, rule array,
+  precision comparison and work count. Source-node rounding explains much of
+  the first original error; higher precision applied afterward does not remove it.
+- Document the improved reference errors and nonuniform comparisons without
+  changing the production derivative, original V2 result or app integration.
+  [Mathematics](finite-normal-oracle-conditioning.md) ·
+  [Complete evidence and limits](validation/finite-normal-oracle-conditioning.md).
+
+## Finite-normal determinant and error control — November 12, 2026
+
+- Compute exact determinants of the actual represented homography and whitening
+  inverse once, including numerical solver off-diagonal entries. Reuse the
+  normalizer through analytic, tail and quadrature paths.
+- Replace fixed per-possible-leaf allowances with a complete adaptive frontier,
+  both-rule arithmetic estimates and an exact, upward-rounded final reduction.
+  Preserve all caps, signed values, statuses, attempted work and old API schemas.
+- Preserve the original failed study; the separate
+  [417-scene qualification](validation/finite-normal-error-control.md) passes
+  its frozen comparisons and high-precision original controls, with an explicit
+  oracle-error limitation. Final software checks pass 1,081 tests, build and lint.
+
 ## Documentation alignment with published PR #97 — November 12, 2026
 
 - Reconcile the README, source status, architecture, development, validation

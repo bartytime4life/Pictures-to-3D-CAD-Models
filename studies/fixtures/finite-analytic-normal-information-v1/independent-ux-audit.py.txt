@@ -1,0 +1,623 @@
+#!/usr/bin/env python3
+"""Independent saved-only analytic-normal report audit, using stdlib arithmetic.
+
+No diagnostic, oracle, backend, NumPy, renderer, reference or optimizer imports.
+Checks immutable arrays, work/call census and saved arithmetic. Small independent
+QR uses only saved training matrices when well separated from their cutoff.
+An integrity pass retains failed comparisons and is not optical qualification.
+The terminal report is opened only with its explicit expected byte SHA256.
+"""
+
+from __future__ import annotations
+
+import argparse
+import gzip
+import hashlib
+import json
+import math
+import os
+import sys
+from collections import Counter
+from fractions import Fraction
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[3]
+PLAN = "studies/finite-analytic-normal-information-v1.json"
+PLAN_SHA = "28efd2aa241b662bdd2f771be48b37d99283c67033980dafc4e2dae23ff68dfd"
+OLD = "studies/results/finite-residual-information-v1.json.gz"
+PHOTO = "studies/results/finite-photo-intensity-v2.json"
+DRIVER = "studies/verification/finite-analytic-normal-information-v1.py"
+ORACLE = "studies/verification/finite-analytic-normal-oracle-v1.py"
+EPS = Fraction(sys.float_info.epsilon)
+
+
+def digest(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+
+def canonical(value):
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+
+
+def parsed_sha(value):
+    return digest(canonical(value))
+
+
+def strict_loads(raw):
+    def pairs(items):
+        result = {}
+        for key, value in items:
+            if key in result:
+                raise ValueError(f"duplicate JSON key: {key}")
+            result[key] = value
+        return result
+
+    def floating(text):
+        value = float(text)
+        if not math.isfinite(value):
+            raise ValueError("nonfinite JSON number")
+        return value
+
+    def constant(text):
+        raise ValueError(f"nonfinite JSON constant: {text}")
+
+    return json.loads(raw, object_pairs_hook=pairs, parse_float=floating, parse_constant=constant)
+
+
+def read(path, expected=None, *, compressed=False, limit=1024**3):
+    path = Path(path)
+    if path.stat().st_size > limit:
+        raise ValueError("saved input exceeds auditor byte cap")
+    raw = path.read_bytes()
+    if expected is not None and digest(raw) != expected:
+        raise ValueError(f"expected byte hash differs: {path}")
+    decoded = gzip.decompress(raw) if compressed else raw
+    if len(decoded) > limit:
+        raise ValueError("decoded input exceeds auditor byte cap")
+    return strict_loads(decoded), raw, decoded
+
+
+def upward(value):
+    value = Fraction(value)
+    if value < 0:
+        raise ValueError("negative nonnegative quantity")
+    result = float(value)
+    if Fraction(result) < value:
+        result = math.nextafter(result, math.inf)
+    return result
+
+
+def near(left, right, *, rel=2e-10, absolute=2e-10):
+    return math.isclose(left, right, rel_tol=rel, abs_tol=absolute)
+
+
+def dot(left, right):
+    return math.fsum(x * y for x, y in zip(left, right, strict=True))
+
+
+class Audit:
+    def __init__(self):
+        self.count, self.failures, self.notes, self.census = 0, [], [], {}
+
+    def check(self, name, passed, **details):
+        self.count += 1
+        if not passed:
+            self.failures.append({"check": name, **details})
+
+    def equal(self, name, actual, expected):
+        self.check(name, actual == expected, actual=actual, expected=expected)
+
+    def section(self, name, function, *args):
+        try:
+            function(self, *args)
+        except Exception as error:
+            self.check(name + "/audit_exception", False, type=type(error).__name__, error=str(error))
+
+
+def source_audit(a, report, plan):
+    before, after = report["source_before"], report["source_after"]
+    expected = set(plan["inputs_sha256"]) | {PLAN, DRIVER, ORACLE}
+    expected |= {p.relative_to(ROOT).as_posix() for p in (ROOT / "backend").rglob("*.py")}
+    a.equal("source/paths", set(before), expected)
+    a.equal("source/before_after", before, after)
+    a.equal("source/unchanged", report["source_unchanged"], before == after)
+    a.equal("source/input_pins", len(plan["inputs_sha256"]), 45)
+    a.equal("source/runtime_closure", len(before), 48)
+    for name in sorted(expected):
+        raw = (ROOT / name).read_bytes()
+        a.equal("source/actual/" + name, before[name], {"sha256": digest(raw), "bytes": len(raw)})
+    for name, sha in {**plan["inputs_sha256"], PLAN: PLAN_SHA}.items():
+        a.equal("source/frozen/" + name, before[name]["sha256"], sha)
+    a.equal("source/binding_errors", report.get("binding_errors"), [])
+    a.equal("source/no_trace_adoption", report["production_trace_adoption"], False)
+    a.equal("source/report_plan", report["plan"], plan)
+    a.equal("source/plan_hash", report["plan_sha256"], PLAN_SHA)
+    for order in (64, 96):
+        record = report["rules"][str(order)]
+        saved = {key: record[key] for key in ("nodes_hex", "weights_hex")}
+        a.equal(f"source/rule{order}/hash", record["sha256"], parsed_sha(saved))
+        a.equal(f"source/rule{order}/order", record["order"], order)
+        a.equal(f"source/rule{order}/shape", [len(v) for v in saved.values()], [order, order])
+        a.check(f"source/rule{order}/finite", all(math.isfinite(float.fromhex(x)) for v in saved.values() for x in v))
+
+
+def archive_audit(a, report, plan, old, raw, decoded, photo):
+    record = report["original_residual"]
+    a.equal("archive/compressed_hash", record["compressed_sha256"], digest(raw))
+    a.equal("archive/decoded_hash", record["decoded_sha256"], digest(decoded))
+    a.equal("archive/decoded_pin", digest(decoded), plan["original_residual_decoded_sha256"])
+    a.equal("archive/decoded_bytes", record["decoded_bytes"], len(decoded))
+    a.equal("archive/old_false_protocol", record["protocol_passed"], False)
+    a.equal("archive/not_relabelled", record["original_replaced_or_relabelled"], False)
+    for key in ("summary", "independent_forward_controls", "work", "source_before", "source_after"):
+        a.equal("archive/full/" + key, record[key], old[key])
+    a.equal("archive/all12", len(report["rows"]), 12)
+    passes, completions = [], []
+    for expected, row, historical, photo_row in zip(plan["population"], report["rows"], old["rows"], photo["rows"], strict=True):
+        prefix = f"row{expected['index']}"
+        for key in ("index", "name", "lane"):
+            a.equal(prefix + "/identity/" + key, row[key], expected[key])
+            a.equal(prefix + "/old_identity/" + key, historical[key], expected[key])
+        for name, value in (("old", historical), ("retained", row["original_residual_row"])):
+            a.equal(prefix + "/full_hash/" + name, parsed_sha(value), expected["original_row_sha256"])
+        a.equal(prefix + "/recorded_hash", row["original_row_sha256"], expected["original_row_sha256"])
+        for key in ("old_targets_passed", "old_completion_passed"):
+            a.equal(prefix + "/" + key, row[key], historical[key])
+        a.equal(prefix + "/no_new_fit_pass", row["new_fit_pass"], False)
+        passes += [row["index"]] if row["old_targets_passed"] else []
+        completions += [row["index"]] if row["old_completion_passed"] else []
+        if not expected["eligible"]:
+            a.equal(prefix + "/upstream", row["status"], "upstream_ineligible")
+            a.equal(prefix + "/upstream_no_calls", [row["new_normal_calls"], row["new_trial_calls"]], [0, 0])
+            a.equal(prefix + "/upstream_reason", row.get("reason"), historical.get("reason"))
+            continue
+        for key in ("observations", "baseline", "active_brightness", "input_binding"):
+            a.equal(prefix + "/verbatim/" + key, row[key], historical[key])
+        for key in ("B", "G", "S"):
+            a.equal(prefix + "/verbatim/block" + key, row["blocks"][key], historical["blocks"][key])
+        obs = row["observations"]
+        a.equal(prefix + "/56values", len(obs["values"]), 56)
+        a.equal(prefix + "/56pixels", len(obs["pixels_xy"]), 56)
+        a.equal(prefix + "/split", obs["split"], ["training"] * 40 + ["heldout"] * 16)
+        a.equal(prefix + "/strata", obs["strata"], ["edge"] * 24 + ["material"] * 8 + ["background"] * 8 + ["edge"] * 8 + ["material"] * 4 + ["background"] * 4)
+        a.equal(prefix + "/photo_index", photo_row["index"], row["index"])
+        a.equal(prefix + "/old_N_unstable", historical["finite_differences"][3]["stable"], False)
+        # Complete historical row hash above includes the exact old BGS trial,
+        # full B/G/S errors, all four FD records and original scoring/flags.
+        for i, (observed, mean, residual) in enumerate(zip(obs["values"], row["baseline"]["mean"], row["baseline"]["residual"], strict=True)):
+            a.check(prefix + f"/residual/{i}", near(residual, observed - mean, absolute=1e-12))
+    a.equal("archive/old_target_indices", passes, [0, 5, 7])
+    a.equal("archive/old_completion_count", len(completions), 10)
+    a.census.update(old_target_indices=passes, old_completion_indices=completions)
+
+
+def payload_audit(a, prefix, payload, count, settings):
+    a.equal(prefix + "/method", payload["method"], "finite_chord_shape")
+    a.equal(prefix + "/not_certified", payload["quadrature_certified"], False)
+    a.check(prefix + "/chart", type(payload["reflected"]) is bool and payload["chart_margin"] > 0)
+    for key in ("derivatives", "estimated_errors", "statuses", "query_methods", "query_evaluations", "query_panels"):
+        a.equal(prefix + "/shape/" + key, len(payload[key]), count)
+    for key, total in (("query_evaluations", "evaluations"), ("query_panels", "panels")):
+        a.check(prefix + "/integer/" + key, all(type(v) is int and v >= 0 for v in payload[key]))
+        a.equal(prefix + "/sum/" + key, sum(payload[key]), payload[total])
+    a.check(prefix + "/batch_cap", payload["evaluations"] <= settings["max_evaluations"])
+    a.check(prefix + "/panel_cap", all(v <= settings["max_panels"] for v in payload["query_panels"]))
+    for i, status in enumerate(payload["statuses"]):
+        a.check(prefix + f"/status/{i}", status in ("resolved", "work_limit", "numerical"))
+        value, error = payload["derivatives"][i], payload["estimated_errors"][i]
+        if status == "resolved":
+            a.check(prefix + f"/finite/{i}", type(value) in (int, float) and type(error) in (int, float) and math.isfinite(value) and math.isfinite(error) and error >= 0)
+        else:
+            a.equal(prefix + f"/unknown_no_value/{i}", [value, error], [None, None])
+
+
+def oracle_query_audit(a, prefix, query, index, pixel):
+    a.equal(prefix + "/index", query["index"], index)
+    a.equal(prefix + "/pixel", query["pixel"], pixel)
+    a.equal(prefix + "/retained_panels", len(query["panels"]), 128)
+    work = query["work"]
+    for key, value in work.items():
+        a.check(prefix + "/work_integer/" + key, type(value) is int and value >= 0)
+        if key.startswith("completed_"):
+            a.check(prefix + "/not_unattempted/" + key, value <= work[key.replace("completed_", "attempted_", 1)])
+    a.equal(prefix + "/planned", work["planned_panels"], 128)
+    a.check(prefix + "/density_cap", work["attempted_density_nodes"] <= 40960)
+    counts = Counter()
+    for j, panel in enumerate(query["panels"]):
+        name = prefix + f"/p{j}"
+        a.equal(name + "/index", panel["index"], j)
+        a.equal(name + "/start", Fraction(panel["u_start_fraction"]), -1 + Fraction(j, 64))
+        a.equal(name + "/end", Fraction(panel["u_end_fraction"]), -1 + Fraction(j + 1, 64))
+        status = panel["status"]
+        counts["attempted_panels"] += status != "not_attempted"
+        counts["completed_panels"] += status in ("direct", "bounded_tail", "guard_failure")
+        counts["omitted_panels"] += status == "bounded_tail"
+        counts["guard_failures"] += status == "guard_failure"
+        for precision, attempt in panel.get("precision_attempts", {}).items():
+            a.equal(name + "/precision_id/" + precision, attempt["precision"], int(precision))
+            if attempt["status"] == "completed":
+                a.check(name + "/precision_retained/" + precision, precision in panel["precision"])
+                counts["completed_precision_bounds"] += 1
+        if status in ("direct", "bounded_tail", "guard_failure"):
+            a.equal(name + "/both_precisions", set(panel["precision"]), {"80", "120"})
+        if status == "bounded_tail":
+            a.check(name + "/tail_both", all(v["tail_eligible"] for v in panel["precision"].values()))
+        if status == "direct":
+            a.check(name + "/guards_both", all(v["guard_passed"] for v in panel["precision"].values()))
+        for attempt in panel.get("rule_attempts", []):
+            counts["attempted_rule_batches"] += 1
+            if attempt["status"] == "completed":
+                counts["completed_rule_batches"] += 1
+                counts["fully_completed_density_nodes"] += attempt["order"]
+                a.check(name + "/rule_retained", str(attempt["order"]) in panel["rules"][str(attempt["precision"])])
+        if status == "execution_failure":
+            a.check(name + "/failure_stage", "stage" in panel and "error" in panel)
+    for key in ("attempted_panels", "completed_panels", "omitted_panels", "guard_failures", "attempted_rule_batches", "completed_rule_batches"):
+        a.equal(prefix + "/recount/" + key, work[key], counts[key])
+    a.check(prefix + "/completed_nodes_retained", work["completed_density_nodes"] >= counts["fully_completed_density_nodes"])
+    a.check(prefix + "/tail_attempts_retained", work["tail_exponential_calls"] >= counts["completed_precision_bounds"])
+    if query.get("qualified"):
+        a.check(prefix + "/qualification_guards", query["status"] == "resolved" and query["order_converged"] and query["precision_stable"] and not query.get("protocol_failure", False))
+    if "error_components_fraction" not in query:
+        return
+    values, absolute = query["values"], query["absolute_contribution_sums"]
+    high, low, high80 = (Fraction(values[p][o]) for p, o in (("120", "96"), ("120", "64"), ("80", "96")))
+    delta = abs(high - low)
+    exact = {
+        "twice_order_delta": 2 * delta, "precision96_delta": abs(high - high80),
+        "tail80": Fraction(query["tail_sum_fractions"]["80"]),
+        "tail120": Fraction(query["tail_sum_fractions"]["120"]),
+        "absolute_node_arithmetic": 128 * EPS * Fraction(absolute["120"]["96"]),
+        "decimal120_to_float_conversion": abs(Fraction(float(high)) - high),
+    }
+    for key, value in exact.items():
+        a.equal(prefix + "/error_component/" + key, Fraction(query["error_components_fraction"][key]), value)
+    total = sum(exact.values(), Fraction())
+    a.equal(prefix + "/error_exact", Fraction(query["estimated_error_fraction"]), total)
+    a.equal(prefix + "/error_upward", query["estimated_error"], upward(total))
+    a.equal(prefix + "/value_float", query["oracle_value"], float(high))
+    allowance = Fraction(1, 10**12) + 128 * EPS * Fraction(absolute["120"]["96"])
+    a.equal(prefix + "/order_convergence", query["order_converged"], delta <= allowance)
+    a.equal(prefix + "/order_allowance", Fraction(query["order_allowance_fraction"]), allowance)
+    for order in ("64", "96"):
+        x, y = Fraction(values["80"][order]), Fraction(values["120"][order])
+        a.equal(prefix + "/precision_stability/" + order, query["precision_checks"][order], abs(x - y) <= Fraction(1, 10**65) * max(1, abs(y)))
+
+
+def context_audit(a, prefix, context, pixels, levels, plan):
+    settings = plan["normal_api"]["settings"]
+    if context.get("protocol_failure"):
+        a.equal(prefix + "/protocol_never_qualified", context["qualified"], False)
+    payload = context.get("forward")
+    if payload is not None:
+        payload_audit(a, prefix + "/api", payload, len(pixels), settings)
+    oracle = context.get("oracle")
+    if oracle is None:
+        a.equal(prefix + "/missing_oracle_unqualified", context["qualified"], False)
+        return
+    a.equal(prefix + "/oracle_count", len(oracle["queries"]), len(pixels))
+    for i, (query, pixel) in enumerate(zip(oracle["queries"], pixels, strict=True)):
+        oracle_query_audit(a, prefix + f"/oracle/q{i}", query, i, pixel)
+    for key, value in oracle["work"].items():
+        a.equal(prefix + "/oracle_worksum/" + key, value, sum(q["work"][key] for q in oracle["queries"]))
+    a.equal(prefix + "/oracle_qualified", oracle["qualified"], all(q["qualified"] for q in oracle["queries"]))
+    qual = context.get("qualification")
+    if qual is None or payload is None:
+        a.equal(prefix + "/no_qualification_false", context["qualified"], False)
+        return
+    a.equal(prefix + "/comparisons_retained", len(qual["queries"]), len(pixels))
+    values, errors, all_raw = [], [], True
+    for i, (comparison, reference, status) in enumerate(zip(qual["queries"], oracle["queries"], payload["statuses"], strict=True)):
+        name = prefix + f"/comparison{i}"
+        a.equal(name + "/index", comparison["index"], i)
+        a.equal(name + "/api_status", comparison["api_status"], status)
+        a.equal(name + "/oracle_status", comparison["oracle_status"], reference["status"])
+        if status != "resolved" or not reference.get("qualified"):
+            all_raw = False
+            a.equal(name + "/unknown_false", comparison["qualified"], False)
+            continue
+        v, e = payload["derivatives"][i], payload["estimated_errors"][i]
+        ov, oe = reference["oracle_value"], reference["estimated_error"]
+        delta = abs(Fraction(v) - Fraction(ov))
+        arithmetic = 64 * EPS * abs(Fraction(v))
+        estimate_bound = Fraction(e) + Fraction(oe) + arithmetic
+        tolerance_bound = Fraction(settings["probability_tolerance"]) + Fraction(oe) + arithmetic
+        expected = e <= settings["probability_tolerance"] and delta <= estimate_bound and delta <= tolerance_bound
+        a.equal(name + "/qualified_arithmetic", comparison["qualified"], expected)
+        for key, value in (("delta_upward", delta), ("estimate_comparison_allowance_upward", estimate_bound), ("tolerance_comparison_allowance_upward", tolerance_bound)):
+            a.equal(name + "/" + key, comparison[key], upward(value))
+        contrast = float(levels[1]) - float(levels[0])
+        scaled = contrast * v
+        rounding = abs(Fraction(scaled) - (Fraction(float(levels[1])) - Fraction(float(levels[0]))) * Fraction(v))
+        source = abs(Fraction(contrast)) * (Fraction(e) + Fraction(oe) + delta)
+        error = upward(source + rounding)
+        a.equal(name + "/signed_once_value", comparison["level_value"], scaled)
+        a.equal(name + "/conservative_error", comparison["level_error"], error)
+        a.equal(name + "/exact_combination", Fraction(comparison["error_components"]["error_combination_exact"]), source + rounding)
+        a.equal(name + "/exact_rounding", Fraction(comparison["error_components"]["exact_level_multiplication_residual"]), rounding)
+        values.append([scaled])
+        errors.append([error])
+    block = qual["block"]
+    a.equal(prefix + "/block_values", block["values"], values if all_raw else None)
+    a.equal(prefix + "/block_errors", block["errors"], errors if all_raw else None)
+    a.equal(prefix + "/block_units", block["units"], "source-plane radians")
+    a.equal(prefix + "/qualification_aggregate", qual["qualified"], bool(oracle["qualified"] and all(q["qualified"] for q in qual["queries"])))
+    elementary = context.get("elementary")
+    if elementary is not None:
+        a.equal(prefix + "/elementary_count", len(elementary["queries"]), len(pixels))
+        for i, query in enumerate(elementary["queries"]):
+            for precision, record in query["records"].items():
+                work = record["work"]
+                a.check(prefix + f"/elementary{i}/{precision}/stage", "stage" in record and "status" in record)
+                for kind in ("cdf_calls", "density_exponential_calls"):
+                    a.check(prefix + f"/elementary{i}/{precision}/{kind}", 0 <= work["completed_" + kind] <= work["attempted_" + kind])
+                for side in ("lower", "upper"):
+                    progress = record["cdf_" + side + "_work"]
+                    if progress:
+                        for kind in ("retained_terms", "candidate_terms"):
+                            a.check(prefix + f"/elementary{i}/{precision}/{side}/{kind}", 0 <= progress["completed_" + kind] <= progress["attempted_" + kind] <= 10000)
+                if record["status"] == "completed":
+                    a.equal(prefix + f"/elementary{i}/{precision}/full_work", work, {"attempted_density_exponential_calls": 3, "completed_density_exponential_calls": 3, "attempted_cdf_calls": 2, "completed_cdf_calls": 2})
+    expected_qualified = qual["qualified"] and not context.get("protocol_failure", False)
+    if "elementary_comparisons" in context:
+        expected_qualified &= all(item["passed"] for item in context["elementary_comparisons"])
+    a.equal(prefix + "/final_qualification_gate", context["qualified"], expected_qualified)
+
+
+def qr_coefficients(matrix, response):
+    """Pivoted twice-reorthogonalized MGS on small saved training arrays only."""
+    columns = [list(c) for c in zip(*matrix, strict=True)]
+    count = len(columns)
+    permutation = list(range(count))
+    triangular = [[0.0] * count for _ in range(count)]
+    rhs, basis = [], []
+    for k in range(count):
+        pivot = max(range(k, count), key=lambda j: (math.hypot(*columns[j]), -permutation[j]))
+        columns[k], columns[pivot] = columns[pivot], columns[k]
+        permutation[k], permutation[pivot] = permutation[pivot], permutation[k]
+        for i in range(k):
+            triangular[i][k], triangular[i][pivot] = triangular[i][pivot], triangular[i][k]
+        column = columns[k]
+        for _ in range(2):
+            for i, q in enumerate(basis):
+                amount = dot(q, column)
+                triangular[i][k] += amount
+                column = [x - amount * v for x, v in zip(column, q, strict=True)]
+        length = math.hypot(*column)
+        if length == 0:
+            raise ArithmeticError("QR has no representable independent column")
+        triangular[k][k] = length
+        q = [x / length for x in column]
+        basis.append(q)
+        rhs.append(dot(q, response))
+        for j in range(k + 1, count):
+            amount = dot(q, columns[j])
+            triangular[k][j] += amount
+            columns[j] = [x - amount * v for x, v in zip(columns[j], q, strict=True)]
+    solution = [0.0] * count
+    for i in range(count - 1, -1, -1):
+        solution[i] = (rhs[i] - dot(triangular[i][i + 1 :], solution[i + 1 :])) / triangular[i][i]
+    result = [0.0] * count
+    for i, value in enumerate(solution):
+        result[permutation[i]] = value
+    return result
+
+
+def trial_audit(a, prefix, row, plan, calls):
+    analysis = row.get("analysis")
+    if analysis is None:
+        return
+    step = analysis["step"]
+    if row["normal"].get("protocol_failure") or not row["qualification"]["derivative_qualified"]:
+        a.check(prefix + "/unqualified_no_trial", step["status"] not in ("evaluated_once", "zero_step"))
+    means = [c for c in calls if c["kind"] == "mean"]
+    a.check(prefix + "/at_most_one_trial", len(means) <= 1)
+    coeff = step.get("training_only_coefficients")
+    if coeff is None:
+        return
+    blocks = row["blocks"]
+    labels = [label for b in ("B", "G", "N", "S") for label in blocks[b]["labels"]]
+    matrix = [[v for b in ("B", "G", "N", "S") for v in blocks[b]["values"][i]] for i in range(56)]
+    a.equal(prefix + "/step_labels", step["column_labels"], labels)
+    a.equal(prefix + "/coeff_shape", len(coeff), len(labels))
+    if "information" in analysis:
+        training = analysis["information"]["training40"]["full_BGNS"]
+        for key in ("cutoff", "singular_values"):
+            a.equal(prefix + "/same_training_SVD/" + key, step["training_matrix"][key], training[key])
+    spectrum, cutoff = step["training_matrix"]["singular_values"], step["training_matrix"]["cutoff"]
+    if spectrum and spectrum[-1] > 100 * cutoff and spectrum[0] / spectrum[-1] < 1e8:
+        independent = qr_coefficients(matrix[:40], row["baseline"]["residual"][:40])
+        delta = max(abs(x - y) for x, y in zip(independent, coeff, strict=True))
+        scale = max(1.0, *(abs(x) for x in independent))
+        a.check(prefix + "/independent_training_QR", delta <= 2e-6 * scale, delta=delta, scale=scale)
+    else:
+        a.notes.append(prefix + ": independent QR coefficients withheld near cutoff/conditioning limit")
+    if "common_alpha" not in step:
+        a.equal(prefix + "/no_alpha_no_mean", len(means), 0)
+        return
+    by_label = dict(zip(labels, coeff, strict=True))
+    geometry = [by_label[label] for label in blocks["G"]["labels"]]
+    covariance = [by_label[label] for label in blocks["S"]["labels"]]
+    angle = by_label.get("normal_angle", 0.0)
+    level_delta = [by_label.get("level_0", 0.0), by_label.get("level_1", 0.0)]
+    settings = plan["steps"]
+    factors = [("unit", 1.0)]
+    for name, cap, size in (("geometry_normalized_max", settings["geometry_normalized_max_cap"], max(map(abs, geometry))), ("covariance_Frobenius", settings["covariance_norm_cap"], math.hypot(*covariance)), ("normal_angle", settings["normal_angle_cap_radians"], abs(angle))):
+        if size:
+            factors.append((name, cap / size))
+    base, params = row["baseline"], row["baseline"]["parameters"]
+    geometric_base = [*params["centre"], params["radius"], params["fraction"]]
+    physical_delta = [g * width for g, width in zip(geometry, base["domain_widths"], strict=True)]
+    for label, value, delta, bounds in zip(blocks["G"]["labels"] + ["level_0", "level_1"], geometric_base + base["levels"], physical_delta + level_delta, base["bounds"] + [[0, 255], [0, 255]], strict=True):
+        if delta:
+            distance = bounds[1] - value if delta > 0 else value - bounds[0]
+            factors.append(("domain_" + label, settings["domain_distance_fraction"] * distance / abs(delta)))
+    alpha = max(0.0, min(v for _, v in factors))
+    a.check(prefix + "/alpha_training_bounds_only", near(step["common_alpha"], alpha, absolute=1e-14))
+    a.equal(prefix + "/alpha_constraint_names", [c["constraint"] for c in step["alpha_constraints"]], [name for name, _ in factors])
+    for record, (_, expected) in zip(step["alpha_constraints"], factors, strict=True):
+        a.check(prefix + "/alpha_factor/" + record["constraint"], near(record["factor"], expected, absolute=1e-14))
+    if "linear_delta" not in step:
+        return
+    expected_delta = [alpha * dot(values, coeff) for values in matrix]
+    for i, value in enumerate(expected_delta):
+        a.check(prefix + f"/linear_delta/{i}", near(value, step["linear_delta"][i], absolute=1e-9))
+        a.check(prefix + f"/linear_prediction/{i}", near(base["mean"][i] + value, step["linear_prediction"][i], absolute=1e-9))
+    if step["status"] not in ("evaluated_once", "zero_step"):
+        return
+    a.equal(prefix + "/trial_call_count", len(means), int(step["status"] == "evaluated_once"))
+    a.equal(prefix + "/not_fit_pass", step["new_fit_pass"], False)
+    a.equal(prefix + "/fixed_brightness_face", step["fixed_active_face_only"], True)
+    actual = step["actual_prediction"]
+    if step["status"] == "evaluated_once":
+        a.equal(prefix + "/actual_payload_same_logged", step["actual_forward"], means[0]["payload"])
+        expected_actual = [step["trial_levels"][0] + (step["trial_levels"][1] - step["trial_levels"][0]) * p for p in step["actual_forward"]["probabilities"]]
+        a.equal(prefix + "/actual_level_projection", actual, expected_actual)
+    else:
+        a.equal(prefix + "/zero_actual_unchanged", actual, base["mean"])
+    discrepancy = [v - b - d for v, b, d in zip(actual, base["mean"], step["linear_delta"], strict=True)]
+    maximum, denominator = max(map(abs, discrepancy)), max(map(abs, step["linear_delta"]))
+    allowance = settings["actual_vs_linear_absolute_level_allowance"] + settings["actual_vs_linear_relative_allowance"] * denominator
+    for key, expected in (("actual_minus_linear", discrepancy), ("linearity_denominator", denominator), ("linearity_allowance", allowance), ("maximum_linearity_discrepancy", maximum), ("local_linearization_qualified", maximum <= allowance)):
+        a.equal(prefix + "/" + key, step[key], expected)
+    evaluation = row["evaluation_after_all_predictions"]
+    a.equal(prefix + "/descriptive_flags", [evaluation["old_targets_passed"], evaluation["old_completion_passed"]], [row["old_targets_passed"], row["old_completion_passed"]])
+
+
+def census_audit(a, report, plan, old):
+    calls = report["work"]["calls"]
+    normal_calls, mean_calls = ([c for c in calls if c["kind"] == kind] for kind in ("normal", "mean"))
+    definitions = [*plan["controls"], plan["legacy_normal_control"]]
+    expected_contexts = [{"scope": "normal_control", "id": c["id"]} for c in definitions]
+    expected_contexts += [{"scope": "archived_row", **{k: r[k] for k in ("index", "name", "lane")}} for r in plan["population"] if r["eligible"]]
+    a.equal("calls/normal_order", [c["context"] for c in normal_calls], expected_contexts)
+    a.equal("calls/query_order", [c["queries"] for c in normal_calls], [3] * 4 + [6] + [56] * 10)
+    a.equal("calls/normal_total", len(normal_calls), 15)
+    a.equal("calls/query_total", sum(c["queries"] for c in normal_calls), 578)
+    a.check("calls/mean_cap", len(mean_calls) <= 10)
+    a.equal("calls/no_duplicate", len({(c["kind"], canonical(c["context"])) for c in calls}), len(calls))
+    for key in ("baseline_mean_calls", "geometry_jacobian_calls", "FD_calls", "optimizer_calls", "optimizer_attempts", "renderer_calls", "preparation_calls"):
+        a.equal("calls/forbidden/" + key, report["work"][key], 0)
+    counts = {"normal_calls_attempted": len(normal_calls), "normal_queries_attempted": sum(c["queries"] for c in normal_calls), "trial_mean_calls_attempted": len(mean_calls), "returned_evaluations": sum(c.get("evaluations", 0) for c in calls), "returned_panels": sum(c.get("panels", 0) for c in calls)}
+    for key, value in counts.items():
+        a.equal("calls/recount/" + key, report["work"][key], value)
+    contexts, controls = [], report["normal_controls"]
+    for i, (actual, expected) in enumerate(zip(controls, definitions, strict=True)):
+        a.equal(f"control{i}/definition", actual["definition"], expected)
+        a.equal(f"control{i}/id", actual["id"], expected["id"])
+        context_audit(a, f"control{i}", actual["new_analytic"], expected["pixels"], expected["levels"], plan)
+        contexts.append(actual["new_analytic"])
+        if i == 4:
+            a.equal("control4/full_old_failed_control", actual["original_failed_FD_control"], old["independent_forward_controls"][3])
+            a.equal("control4/six_pixels", len(expected["pixels"]), 6)
+            a.equal("control4/old_failure_retained", actual["original_failed_FD_control"]["passed"], False)
+    global_qualified = all(c["passed"] for c in report["algebra_controls"]) and all(c["new_analytic"]["qualified"] and not c["new_analytic"].get("protocol_failure", False) for c in controls)
+    a.equal("qualification/global", report["independent_controls_qualified"], global_qualified)
+    for row in report["rows"]:
+        if "normal" not in row:
+            continue
+        prefix = f"row{row['index']}"
+        context_audit(a, prefix, row["normal"], row["observations"]["pixels_xy"], row["baseline"]["levels"], plan)
+        contexts.append(row["normal"])
+        relevant = [i for i, c in enumerate(calls) if c["context"].get("scope") == "archived_row" and c["context"].get("index") == row["index"]]
+        a.equal(prefix + "/work_log_indices", row["work_log_indices"], relevant)
+        row_calls = [calls[i] for i in relevant]
+        a.equal(prefix + "/normal_first", row_calls[0]["kind"], "normal")
+        a.equal(prefix + "/logged_normal_payload", row_calls[0].get("payload"), row["normal"].get("forward"))
+        q = row["qualification"]
+        expected_q = all(f["stable"] for f in row["original_residual_row"]["finite_differences"][:3]) and row["normal"]["qualified"] and not row["normal"].get("protocol_failure", False) and global_qualified and all(c["passed"] for c in old["independent_forward_controls"][:3])
+        a.equal(prefix + "/derivative_gate", q["derivative_qualified"], expected_q)
+        a.equal(prefix + "/old_FD_not_gate", q["historical_normal_FD_not_a_new_gate"], True)
+        if "qualification" in row["normal"]:
+            a.equal(prefix + "/N_same_block", row["blocks"]["N"], row["normal"]["qualification"]["block"])
+        trial_audit(a, prefix, row, plan, row_calls)
+    work = Counter()
+    for context in contexts:
+        work.update(context.get("oracle", {}).get("work", {}))
+    a.equal("oracle/global_work", report["source_chord_oracle_work"], dict(work))
+    a.check("oracle/global_cap", work["attempted_density_nodes"] <= 23674880)
+    comparisons = [q for c in contexts for q in c.get("qualification", {}).get("queries", [])]
+    rows = report["rows"]
+    steps = [r["analysis"]["step"] for r in rows if r.get("analysis", {}).get("step")]
+    executed = [s for s in steps if s["status"] == "evaluated_once"]
+    summary = {
+        "rows_retained": len(rows), "upstream_ineligible": sum(r["status"] == "upstream_ineligible" for r in rows),
+        "diagnostic_evaluated": sum(r["status"] == "diagnostic_evaluated" for r in rows),
+        "diagnostic_unknown": sum(r["status"] == "diagnostic_unknown" for r in rows),
+        "protocol_failure_rows": sum(r["status"] not in ("diagnostic_evaluated", "diagnostic_unknown", "upstream_ineligible") for r in rows),
+        "normal_contexts_retained": len(contexts), "normal_queries_compared": len(comparisons),
+        "normal_query_comparisons_passed": sum(q["qualified"] for q in comparisons),
+        "algebra_controls_passed": sum(c["passed"] for c in report["algebra_controls"]),
+        "normal_controls_qualified": sum(c["new_analytic"]["qualified"] for c in controls),
+        "BGNS_trials_executed_once": len(executed), "BGNS_zero_steps": sum(s["status"] == "zero_step" for s in steps),
+        "executed_BGNS_linearity_passes": sum(s.get("local_linearization_qualified", False) for s in executed),
+        "executed_BGNS_linearity_all_passed": all(s.get("local_linearization_qualified", False) for s in executed) if executed else None,
+        "old_targets_passed": sum(r["old_targets_passed"] for r in rows),
+        "old_completions_passed": sum(r["old_completion_passed"] for r in rows), "new_fit_pass_count": None,
+    }
+    a.equal("summary/recomputed", report["summary"], summary)
+    expected_protocol = bool(report["source_unchanged"] and not report.get("startup_failure") and not report.get("binding_errors") and len(rows) == 12 and summary["upstream_ineligible"] == 2 and summary["protocol_failure_rows"] == 0 and len(contexts) == 15 and len(comparisons) == sum(q["qualified"] for q in comparisons) == 578 and summary["algebra_controls_passed"] == 10 and summary["normal_controls_qualified"] == 5 and summary["executed_BGNS_linearity_passes"] == len(executed) and len(normal_calls) == 15 and sum(c["queries"] for c in normal_calls) == 578 and len(mean_calls) <= 10 and report["work"]["optimizer_attempts"] == 0 and work["attempted_density_nodes"] <= 23674880 and all(not c.get("protocol_failure", False) for c in contexts) and all(not s.get("protocol_failure", False) for s in steps))
+    a.equal("protocol/recomputed_not_assumed_true", report["protocol_passed"], expected_protocol)
+    a.census.update(summary)
+    a.census.update(normal_statuses=dict(Counter(s for c in normal_calls for s in c.get("statuses", []))), oracle_statuses=dict(Counter(q["status"] for c in contexts for q in c.get("oracle", {}).get("queries", []))), source_chord_oracle_work=dict(work), report_protocol_passed=report["protocol_passed"], expected_runner_exit=0 if report["protocol_passed"] else 1)
+
+
+def sentinel():
+    a = Audit()
+    for raw in (b'{"x":1,"x":2}', b'{"x":NaN}', b'{"x":1e999}'):
+        try:
+            strict_loads(raw)
+        except ValueError:
+            a.check("parser_refusal", True)
+        else:
+            a.check("parser_refusal", False)
+    a.equal("canonical_order", parsed_sha({"b": 2, "a": 1}), parsed_sha({"a": 1, "b": 2}))
+    value = Fraction(1, 10)
+    a.check("upward_covers", Fraction(upward(value)) >= value)
+    a.check("upward_predecessor_below", Fraction(math.nextafter(upward(value), -math.inf)) < value)
+    a.equal("exact_zero", upward(Fraction()), 0.0)
+    independent = qr_coefficients([[1.0, 0.0], [0.0, 1.0], [1.0, 1.0]], [2.0, 3.0, 5.0])
+    a.check("invented_QR", all(near(x, y, absolute=1e-14) for x, y in zip(independent, [2.0, 3.0], strict=True)))
+    a.equal("signed_contrast", (5.0 - 205.0) * 0.125, -25.0)
+    a.equal("face_bound_factor", 0.9 * (255.0 - 250.0) / 10.0, 0.45)
+    return a
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--report", type=Path)
+    parser.add_argument("--sha256")
+    parser.add_argument("--self-test", action="store_true")
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    if args.self_test == bool(args.report) or bool(args.report) != bool(args.sha256):
+        parser.error("choose --self-test or --report FILE --sha256 EXPECTED")
+    output = args.output.absolute()
+    if os.path.lexists(output) or not output.parent.is_dir():
+        parser.error("output must be a fresh nonsymlink path with existing parent")
+    descriptor = os.open(output, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+    a = Audit()
+    receipt = {"format": "pictures-to-cad-analytic-normal-saved-audit", "version": 1, "mode": "invented_sentinels" if args.self_test else "saved_report_only", "auditor_sha256": digest(Path(__file__).read_bytes()), "science_calls": 0, "model_imports": 0, "scope": "Saved integrity/arithmetic only; neither model nor physical accuracy qualification."}
+    try:
+        if args.self_test:
+            a = sentinel()
+        else:
+            report, raw, _ = read(args.report, args.sha256)
+            plan, _, _ = read(ROOT / PLAN, PLAN_SHA)
+            old, old_raw, decoded = read(ROOT / OLD, plan["inputs_sha256"][OLD], compressed=True, limit=64 * 1024**2)
+            photo, _, _ = read(ROOT / PHOTO, plan["inputs_sha256"][PHOTO])
+            receipt.update(report_path=str(args.report.absolute()), report_sha256=digest(raw), report_bytes=len(raw), plan_sha256=PLAN_SHA)
+            a.section("source", source_audit, report, plan)
+            a.section("archive", archive_audit, report, plan, old, old_raw, decoded, photo)
+            a.section("census", census_audit, report, plan, old)
+    except Exception as error:
+        a.check("audit_setup", False, type=type(error).__name__, error=str(error))
+    receipt.update(checks=a.count, failed_checks=len(a.failures), passed=not a.failures, failures=a.failures, notes=a.notes, census=a.census)
+    with os.fdopen(descriptor, "w") as stream:
+        stream.write(json.dumps(receipt, indent=2, sort_keys=True, allow_nan=False, default=lambda v: sorted(v) if isinstance(v, set) else str(v)) + "\n")
+    print(json.dumps({"output": str(output), "checks": a.count, "failed_checks": len(a.failures), "passed": not a.failures}, sort_keys=True))
+    return 0 if not a.failures else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
