@@ -21,7 +21,7 @@ from shapely.geometry import Point, Polygon
 
 from . import shadow, tone
 from .fitting import fit_circle
-from .sheet import half_level_search, sample_keys
+from .sheet import half_level_search, sample_bilinear, sample_keys
 from .tone import encoded_from_linear
 
 BORDER_MM = 3.0  # sheet margin excluded from the part search
@@ -160,7 +160,44 @@ def ring_normals(ring, sigma=2.0):
 DIRECTIONAL_RATIO = 1.15  # principal blur spreads further apart are traced by direction
 
 
-def _edge_widths(g, points, normals, half=8.0, step=0.125, single_step=False):
+def _paper_light_variation(light, points, normals, t, step, paper_side, spread):
+    """How the paper's own uneven light shows in each profile: the shadow model's light
+    before the blur (shadow.PaperLight.sharp) less its value at the point, kept on the
+    paper side of the point only (`paper_side`, +1 or -1 per point: the side of t the
+    paper lies on) and blurred along t by each point's `spread` (Simpson's rule over
+    5 standard deviations each way).
+
+    Across a straight edge with material level A and paper light L, a Gaussian blur
+    makes A + (L(0) - A) Phi(t / sigma) + int_{x > 0} (L(x) - L(0)) phi_sigma(t - x) dx;
+    the last term is this one, so subtracting it leaves the clean step. A constant
+    offset of the light makes (L(0) - A) Phi(t / sigma) instead and leaves the width as
+    it was, so only the light's variation matters."""
+    spread = np.broadcast_to(np.asarray(spread, float), (len(points),))
+    side = np.broadcast_to(np.asarray(paper_side, float), (len(points),))
+    m = math.ceil(5 * float(spread.max()) / step) + 1
+    ext = t[0] + (np.arange(len(t) + 2 * m) - m) * step
+    ex = points[:, None, 0] + ext[None, :] * normals[:, None, 0] - 0.5
+    ey = points[:, None, 1] + ext[None, :] * normals[:, None, 1] - 0.5
+    sharp = sample_bilinear(light.sharp, ex, ey)
+    at_point = sample_bilinear(light.sharp, points[:, :1] - 0.5, points[:, 1:] - 0.5)
+    delta = np.where(ext[None, :] * side[:, None] > 0, sharp - at_point, 0.0)
+    z = np.linspace(-5.0, 5.0, 21)
+    simpson = np.full(21, 2.0)
+    simpson[1::2] = 4.0
+    simpson[[0, -1]] = 1.0
+    wz = simpson * (z[1] - z[0]) / 3 * np.exp(-0.5 * z * z) / math.sqrt(2 * math.pi)
+    rows = np.arange(len(points))[:, None]
+    columns = m + np.arange(len(t))[None, :]
+    out = np.zeros((len(points), len(t)))
+    for zk, wk in zip(z, wz):
+        position = columns - (spread * zk / step)[:, None]
+        i0 = np.clip(np.floor(position).astype(int), 0, delta.shape[1] - 2)
+        frac = position - i0
+        out += wk * (delta[rows, i0] * (1 - frac) + delta[rows, i0 + 1] * frac)
+    return out
+
+
+def _edge_widths(g, points, normals, half=8.0, step=0.125, single_step=False, light=None, paper_side=None):
     """Each profile's Gaussian-equivalent blur, its 25-75 % rise distance over 1.349, on
     a linear-light image; NaN where the profile has under 20 saved grey levels of
     contrast. `half` may be one value or one per point. With `single_step`, also NaN
@@ -172,13 +209,22 @@ def _edge_widths(g, points, normals, half=8.0, step=0.125, single_step=False):
     Profiles are read by Keys cubic sampling. Bilinear sampling blurs what it reads by
     a variance of f (1 - f) at sub-pixel phase f, 1/6 px^2 on average: on exactly
     blurred straight edges it measured sigma 2.2-4.2 % high at 1.6 px and up to 8.4 % at
-    1.2 px, where cubic sampling is within 0.6 % and 2.3 %."""
+    1.2 px, where cubic sampling is within 0.6 % and 2.3 %.
+
+    With the shadow model's `light` (shadow.PaperLight) and `paper_side` (per point),
+    the paper's own light variation is removed from each profile first
+    (_paper_light_variation, blurred by half / 5, the window's expected width). A soft
+    shadow darkens the paper towards the edge, and its slow rise read as blur: a
+    rendered 3 px blur measured 3.88 px without a shadow and 4.17 px beside a 25 % one.
+    """
     half = np.broadcast_to(np.asarray(half, float), (len(points),))
     reach = float(half.max())
     t = np.arange(-reach, reach + step / 2, step)
     sx = points[:, None, 0] + t[None, :] * normals[:, None, 0] - 0.5
     sy = points[:, None, 1] + t[None, :] * normals[:, None, 1] - 0.5
     profile = sample_keys(g, sx, sy)
+    if light is not None and paper_side is not None:
+        profile = profile - _paper_light_variation(light, points, normals, t, step, paper_side, half / 5)
     widths = np.full(len(points), np.nan)
     for i, (row, h) in enumerate(zip(profile, half)):
         inside = np.abs(t) <= h + step / 2
@@ -197,17 +243,24 @@ def _edge_widths(g, points, normals, half=8.0, step=0.125, single_step=False):
     return widths
 
 
-def edge_sigma(g, points, normals, half=8.0, step=0.125):
-    """Gaussian-equivalent edge blur: the median of the profiles' (_edge_widths).
+def edge_sigma(g, points, normals, half=8.0, step=0.125, light=None, paper_side=None, start=None):
+    """Gaussian-equivalent edge blur: the median of the profiles' (_edge_widths, with the
+    shadow model's `light` and `paper_side` when given).
 
     Each profile's plateaus are read at the ends of its window, which must reach well
     beyond the blur: a 3 px blur read 11 % narrow in a +-8 px window (2.2 sigma), and
     1.7 % at 2 px. The window is therefore widened to 5 sigma and the blur measured
-    again, twice; up to 1.6 px the first window already reaches that far.
+    again, twice; up to 1.6 px the first window already reaches that far. With `start`,
+    a blur at least this one measured before (with the shadow in), one window of 5 times
+    it already reaches far enough.
     """
+    if start:
+        widths = _edge_widths(g, points, normals, max(half, 5 * start), step, light=light, paper_side=paper_side)
+        widths = widths[np.isfinite(widths)]
+        return float(np.median(widths)) if len(widths) else 0.0
     sigma = 0.0
     for _ in range(3):
-        widths = _edge_widths(g, points, normals, max(half, 5 * sigma), step)
+        widths = _edge_widths(g, points, normals, max(half, 5 * sigma), step, light=light, paper_side=paper_side)
         widths = widths[np.isfinite(widths)]
         if not len(widths):
             return 0.0
@@ -222,7 +275,7 @@ MIN_PER_BIN = 15  # clean profiles a direction bin needs to count
 ADEQUATE_FIT = 0.1  # largest systematic relative variance residual of a direction bin
 
 
-def edge_covariance(g, points, normals, sigma, step=0.125, min_ratio=None):
+def edge_covariance(g, points, normals, sigma, step=0.125, min_ratio=None, light=None, paper_side=None, start=None):
     """The blur's 2 x 2 covariance, from edge widths across many directions, or None.
 
     A Gaussian blur of covariance S spreads an edge with unit normal n by sigma_n^2 =
@@ -255,16 +308,22 @@ def edge_covariance(g, points, normals, sigma, step=0.125, min_ratio=None):
     With `min_ratio`, the fit stops after its first pass when that pass's principal
     spreads are under 0.95 min_ratio apart: its windows suit the isotropic guess and
     read a wide direction narrow, so the final pass would not reach min_ratio either.
+
+    `light` and `paper_side` remove a soft shadow's light from the profiles first, as in
+    _edge_widths. With `start`, a covariance measured before with the shadow in, only
+    the final pass runs, its windows sized by `start`.
     """
     if len(points) < 30 or sigma <= 0:
         return None
     c, s = normals[:, 0], normals[:, 1]
     design = np.column_stack([c * c, 2 * c * s, s * s])
     direction = np.floor((np.degrees(np.arctan2(s, c)) % 180.0) / (180.0 / DIRECTION_BINS)).astype(int) % DIRECTION_BINS
-    cov = np.array([[sigma**2, 0.0], [0.0, sigma**2]])
-    for final in (False, True):
+    cov = np.array([[sigma**2, 0.0], [0.0, sigma**2]]) if start is None else np.asarray(start, float)
+    for final in ((False, True) if start is None else (True,)):
         expected = np.sqrt(np.maximum(np.einsum("ij,jk,ik->i", normals, cov, normals), 1e-6))
-        widths = _edge_widths(g, points, normals, np.maximum(8.0, 5 * expected), step, single_step=True)
+        widths = _edge_widths(
+            g, points, normals, np.maximum(8.0, 5 * expected), step, single_step=True, light=light, paper_side=paper_side
+        )
         ok = np.isfinite(widths)
         counts = np.bincount(direction[ok], minlength=DIRECTION_BINS)
         counted = counts >= MIN_PER_BIN
@@ -311,7 +370,7 @@ def edge_covariance(g, points, normals, sigma, step=0.125, min_ratio=None):
     return cov
 
 
-def edge_widths_by_direction(g, points, normals, sigma, step=0.125):
+def edge_widths_by_direction(g, points, normals, sigma, step=0.125, light=None, paper_side=None, start=None):
     """Each direction bin's blur width (px, its clean profiles' median), NaN where a bin
     has fewer than MIN_PER_BIN clean single-step profiles, each bin's count of clean
     profiles and its normals' mean direction (radians, modulo pi); None without two
@@ -321,16 +380,22 @@ def edge_widths_by_direction(g, points, normals, sigma, step=0.125):
     face two ways, or a blur that one Gaussian covariance does not explain), each
     direction's width across its edges is still measured directly. As there, the
     windows reach 5 times the expected width (at least 8 px): a first pass at 5 sigma,
-    then one at 5 times each bin's own width.
+    then one at 5 times each bin's own width. `light` and `paper_side` remove a soft
+    shadow's light from the profiles first, as in _edge_widths. With `start`, bin widths
+    measured before with the shadow in, one pass at 5 times them runs.
     """
     if len(points) < 2 * MIN_PER_BIN or sigma <= 0:
         return None
     angle = np.degrees(np.arctan2(normals[:, 1], normals[:, 0])) % 180.0
     direction = np.floor(angle / (180.0 / DIRECTION_BINS)).astype(int) % DIRECTION_BINS
     expected = np.full(len(points), float(sigma))
+    if start is not None:
+        expected = np.where(np.isfinite(start[direction]), start[direction], expected)
     medians = np.full(DIRECTION_BINS, np.nan)
-    for _ in range(2):
-        widths = _edge_widths(g, points, normals, np.maximum(8.0, 5 * expected), step, single_step=True)
+    for _ in range(2 if start is None else 1):
+        widths = _edge_widths(
+            g, points, normals, np.maximum(8.0, 5 * expected), step, single_step=True, light=light, paper_side=paper_side
+        )
         ok = np.isfinite(widths)
         counts = np.bincount(direction[ok], minlength=DIRECTION_BINS)
         medians = np.array([
@@ -385,7 +450,84 @@ def _covariance_from_directions(medians, counts, means):
     return w1**2 * np.outer(n1, n1) + beta * np.outer(n1p, n1p)
 
 
-def subpixel_rings(mask, g, ppm):
+def _paper_side_of(mask, points, normals, spread):
+    """+1 where the classified mask is paper `3 spread` along each normal, else -1: the
+    side of t the paper lies on."""
+    probe = np.rint(points + 3 * np.asarray(spread, float).reshape(-1, 1) * normals - 0.5).astype(int)
+    probe = np.clip(probe, 0, np.array(mask.shape[::-1]) - 1)
+    return np.where(mask[probe[:, 1], probe[:, 0]] == 0, 1, -1)
+
+
+def _measure_blur(g, outline, outline_normals, sampled, light=None, mask=None, before=None):
+    """The edge blur for subpixel_rings: (sigma, covariance or None, per-direction widths
+    or None, the shadow model's covariance or None, the raw estimates). `outline` and its
+    normals give the one sigma; `sampled`, [(points, normals)] per ring, the directional
+    measurements. With the shadow model's `light` (and the `mask`, whose paper side
+    tells each profile's paper side), every width is read with the paper's light
+    variation removed (_edge_widths), starting from `before`, the raw estimates of the
+    measurement with the shadow in: its wider blur sizes windows that still reach 5
+    times the narrower one, so the passes that widen them are not repeated."""
+    before = before or {}
+    sigma_guess = before.get("sigma")
+    sides = {}
+    if light is not None:
+        sides["outline"] = _paper_side_of(mask, outline, outline_normals, np.full(len(outline), sigma_guess))
+        sides["rings"] = np.concatenate([
+            _paper_side_of(mask, p, n, np.full(len(p), sigma_guess)) for p, n in sampled
+        ])
+    # Without a light the calls stay as they were (tests stand in for edge_sigma).
+    on_outline = {"light": light, "paper_side": sides["outline"]} if sides else {}
+    with_light = {"light": light, "paper_side": sides["rings"]} if sides else {}
+    sigma = edge_sigma(g, outline, outline_normals, **on_outline, **({"start": sigma_guess} if sides else {}))
+    raw = {"sigma": sigma}
+    all_points = np.vstack([p for p, _ in sampled])
+    all_normals = np.vstack([n for _, n in sampled])
+    # A blur that differs by direction spreads each edge by its own sigma_n, measured
+    # over every ring's edges (edge_covariance); the outline alone may face few ways.
+    covariance = edge_covariance(
+        g, all_points, all_normals, sigma, min_ratio=DIRECTIONAL_RATIO, **with_light,
+        **({"start": before["covariance"]} if sides and before.get("covariance") is not None else {}),
+    )
+    raw["covariance"] = covariance
+    if covariance is not None:
+        # Rendered photos tilted up to 22 degrees fit principal spreads 1.00-1.05 apart
+        # (foreshortening); a shaken camera's 1.3-2.5. Below DIRECTIONAL_RATIO the one
+        # measured sigma stands, as it was validated.
+        low, high = np.linalg.eigvalsh(covariance)
+        if high < DIRECTIONAL_RATIO**2 * low:
+            covariance = None
+    if covariance is not None:
+        # The returned sigma serves the curvature corrections. Blur draws a curved edge
+        # of radius R in by the median of w_n + w_t^2 / (2R), with w_n, w_t the blur's
+        # components across and along the edge: to first order the variance of w_t
+        # given w_n = 0, det(S) / (n' S n), over 2R. Round a circle that averages
+        # sqrt(det S) / (2R), since the mean of 1 / (n' S n) over directions is
+        # 1 / sqrt(det S). The isotropic equivalent is therefore det(S)^(1/4), the
+        # geometric mean of the principal spreads, not their quadratic mean.
+        sigma = float(np.linalg.det(covariance) ** 0.25)
+    by_direction = None
+    model_covariance = covariance
+    if covariance is None:
+        # Without a covariance each direction's width is still measured directly; where
+        # the directions differ as a shaken camera's do, each edge is searched with its
+        # own. A sharp-cornered rectangle under 3 x 1 px turned 30 degrees, whose two
+        # edge directions cannot fit a covariance, read its short sides' blur as 3.56 px
+        # and was traced with the median 1.95 px: its paper windows lay inside the
+        # step's own tail, and the outline read 0.45 mm short between its fitted lines.
+        measured = edge_widths_by_direction(
+            g, all_points, all_normals, sigma, **with_light,
+            **({"start": before["medians"]} if sides and before.get("medians") is not None else {}),
+        )
+        raw["medians"] = None if measured is None else measured[0]
+        if measured is not None and np.nanmax(measured[0]) > DIRECTIONAL_RATIO * np.nanmin(measured[0]):
+            by_direction = measured[0]
+            # The shadow model blurs its kernel and the step's own tail as the photo
+            # does; with one width it read the wider edges' tail as shadow beside them.
+            model_covariance = _covariance_from_directions(*measured)
+    return sigma, covariance, by_direction, model_covariance, raw
+
+
+def subpixel_rings(mask, g, ppm, shadow_free_blur=True):
     """Outer boundary and holes of the mask at the local half-level, sub-pixel.
 
     `g` is the lightly smoothed rectified photo in linear light.
@@ -429,49 +571,26 @@ def subpixel_rings(mask, g, ppm):
             "with stronger contrast between the part and the sheet."
         )
     _, normals = ring_normals(outer)
-    sigma = edge_sigma(g, outer[::4], normals[::4])
-    # A blur that differs by direction spreads each edge by its own sigma_n, measured
-    # over every ring's edges (edge_covariance); the outline alone may face few ways.
     sampled = [(points[::2], ring_normals(points)[1][::2]) for _, points, _, _ in first]
-    covariance = edge_covariance(
-        g, np.vstack([p for p, _ in sampled]), np.vstack([n for _, n in sampled]), sigma, min_ratio=DIRECTIONAL_RATIO
-    )
-    if covariance is not None:
-        # Rendered photos tilted up to 22 degrees fit principal spreads 1.00-1.05 apart
-        # (foreshortening); a shaken camera's 1.3-2.5. Below DIRECTIONAL_RATIO the one
-        # measured sigma stands, as it was validated.
-        low, high = np.linalg.eigvalsh(covariance)
-        if high < DIRECTIONAL_RATIO**2 * low:
-            covariance = None
-    if covariance is not None:
-        # The returned sigma serves the curvature corrections. Blur draws a curved edge
-        # of radius R in by the median of w_n + w_t^2 / (2R), with w_n, w_t the blur's
-        # components across and along the edge: to first order the variance of w_t
-        # given w_n = 0, det(S) / (n' S n), over 2R. Round a circle that averages
-        # sqrt(det S) / (2R), since the mean of 1 / (n' S n) over directions is
-        # 1 / sqrt(det S). The isotropic equivalent is therefore det(S)^(1/4), the
-        # geometric mean of the principal spreads, not their quadratic mean.
-        sigma = float(np.linalg.det(covariance) ** 0.25)
-    by_direction = None
-    model_covariance = covariance
-    if covariance is None:
-        # Without a covariance each direction's width is still measured directly; where
-        # the directions differ as a shaken camera's do, each edge is searched with its
-        # own. A sharp-cornered rectangle under 3 x 1 px turned 30 degrees, whose two
-        # edge directions cannot fit a covariance, read its short sides' blur as 3.56 px
-        # and was traced with the median 1.95 px: its paper windows lay inside the
-        # step's own tail, and the outline read 0.45 mm short between its fitted lines.
-        measured = edge_widths_by_direction(
-            g, np.vstack([p for p, _ in sampled]), np.vstack([n for _, n in sampled]), sigma
-        )
-        if measured is not None and np.nanmax(measured[0]) > DIRECTIONAL_RATIO * np.nanmin(measured[0]):
-            by_direction = measured[0]
-            # The shadow model blurs its kernel and the step's own tail as the photo
-            # does; with one width it read the wider edges' tail as shadow beside them.
-            model_covariance = _covariance_from_directions(*measured)
+    sigma, covariance, by_direction, model_covariance, raw = _measure_blur(g, outer[::4], normals[::4], sampled)
     # The paper's light round the part, fitted once as a soft shadow (shadow.py): the
-    # second pass places each edge against it where it is adequate.
+    # second pass places each edge against it where it is adequate. A shadow beside the
+    # edges also widens their measured blur: its light rises slowly away from them, and a
+    # rendered 3 px blur read 3.88 px without a shadow and 4.17 px beside a 25 % one.
+    # Where the model is used and finds a shadow worth reporting (NOTICEABLE_DEPTH), the
+    # blur is therefore measured again with the model's light removed from every profile
+    # (_edge_widths) and the light fitted again with it. A shallower one is mostly the
+    # classified mask's own offset from the edges, read as shadow (up to 2.3 % on exactly
+    # blurred scenes), and taking it out read the blur up to 0.6 % narrow.
     light = shadow.fit_paper_light(g, mask, ppm, sigma, model_covariance)
+    # `shadow_free_blur` False keeps the width with the shadow in: a part traced with a
+    # thickness, whose wall model and piecewise thickness map were validated with it
+    # (docs/reference-sheet.md, Limits).
+    if shadow_free_blur and light.info["used"] and light.info.get("depth", 0.0) >= shadow.NOTICEABLE_DEPTH and sigma > 0:
+        sigma, covariance, by_direction, model_covariance, _ = _measure_blur(
+            g, outer[::4], normals[::4], sampled, light, mask, raw
+        )
+        light = shadow.fit_paper_light(g, mask, ppm, sigma, model_covariance)
     paper_light = light if light.info["used"] else None
     rings = []
     for is_outer, points, support, indices in first:
@@ -483,9 +602,7 @@ def subpixel_rings(mask, g, ppm):
         else:
             spread = np.full(len(points), sigma)
         # Which side of each point the paper is on, from the classified mask 3 sigma out.
-        probe = np.rint(points + 3 * spread[:, None] * normals - 0.5).astype(int)
-        probe = np.clip(probe, 0, np.array(mask.shape[::-1]) - 1)
-        paper_side = np.where(mask[probe[:, 1], probe[:, 0]] == 0, 1, -1)
+        paper_side = _paper_side_of(mask, points, normals, spread)
         moved, keep = half_level_search(
             g, points, normals, half=max(4.0, 3.5 * float(spread.max())), sigma=spread, ring_smoothing=20.0,
             paper_side=paper_side, paper_light=paper_light,

@@ -25,7 +25,7 @@ from pydantic import ValidationError
 from shapely.errors import GEOSException
 from shapely.geometry import LineString, Polygon
 
-from . import edges, fitting, sheet, tone
+from . import edges, fitting, shadow, sheet, tone
 from .circular_joins import JoinConstructionError
 from .models import Profile
 
@@ -295,7 +295,8 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
         g = cv2.GaussianBlur(
             sheet.rectify_gray(tone.linear_mix(rgb, weights), matrix, k1, plane, ppm), (0, 0), 0.7
         )
-        rings, sigma, tiny = edges.subpixel_rings(mask, g, ppm)
+        # The fourth argument, shadow_free_blur, is positional: tests stand in for this call.
+        rings, sigma, tiny = edges.subpixel_rings(mask, g, ppm, not thickness_mm)
     except edges.EdgeError as exc:
         raise ReferenceError_(str(exc), sheet_missing=True) from exc
     notes = list(seg_notes)
@@ -305,11 +306,11 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
             f"The edge blur differs by direction, from {spreads.min() / ppm:.3f} mm across the sharpest edges to {spreads.max() / ppm:.3f} mm across the softest, as a shaken camera's does; each edge was measured with its own. A steadier photo is sharper."
         )
     light = next((ring.get("paper_light") for ring in rings if ring.get("paper_light")), {})
-    if light.get("used") and light.get("depth", 0) >= 0.03:
+    if light.get("used") and light.get("depth", 0) >= shadow.NOTICEABLE_DEPTH:
         notes.append(
             f"A soft shadow beside the part takes up to {100 * light['depth']:.0f} % of the paper's light; it was fitted from the paper all round, and each edge was placed against the shadowed light."
         )
-    elif "excess" in light and not light.get("used") and light.get("depth", 0) >= 0.03:
+    elif "excess" in light and not light.get("used") and light.get("depth", 0) >= shadow.NOTICEABLE_DEPTH:
         notes.append(
             "A shadow beside the part has an edge sharper than its fitted model can follow, so edges were placed against a straight-line paper level there and may read a little outward. Soft, even light is better."
         )
