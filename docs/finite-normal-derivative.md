@@ -5,9 +5,18 @@ a fixed homography and Gaussian observation model. It does not fit an angle,
 infer camera optics, change a traced boundary or run through the HTTP workflow.
 Its numerical qualification is separate from the original
 [failed residual-information study](validation/finite-residual-information.md).
-Its [complete qualification](validation/finite-normal-derivative.md) retains one
+Its [original V1 qualification](validation/finite-normal-derivative.md) retains one
 panel-budget unknown and an independently observed error-estimation limitation
 on a compressed perspective map. A resolved flag is not an accuracy guarantee.
+
+The later [determinant and global-error correction](finite-normal-error-control.md)
+is implemented in this source. Its [417-scene study](validation/finite-normal-error-control.md)
+passes both frozen comparisons and retains the original V1 failure. High-precision
+checks confirm the two original candidate controls, while exposing a limit in
+the independent oracle's error estimate. The subsequent
+[26-scene arithmetic diagnostic](finite-normal-oracle-conditioning.md) isolates
+source-node rounding in that restricted reference path; it does not replace a
+general oracle. The API and statuses below are unchanged.
 
 ## Quantity and coordinates
 
@@ -60,6 +69,38 @@ tolerance. `work_limit` retains exhausted-work queries; `numerical` retains
 represented unsupported arithmetic. Unexpected internal programming errors
 propagate. A resolved result establishes neither angle identifiability nor
 physical adequacy of the supplied optics.
+
+## Small supplied-model example
+
+Run from the repository root after [workbench setup](development.md). These
+four fixed pixel indices and supplied geometry illustrate the API; they are
+synthetic values, not measurements or a new qualification dataset.
+
+```python
+from backend.finite_normal import circular_segment_normal_derivative
+
+pixels = [(12, 12), (18, 12), (12, 18), (20, 20)]
+result = circular_segment_normal_derivative(
+    pixels, 6.5, 0.25,
+    centre=(16.0, 16.0),
+    normal=(1.0, 0.0),
+    sensor_shape=(32, 32),
+    homography=((1, 0, 0), (0, 1, 0), (0, 0, 1)),
+    psf_covariance=((1.0, 0.2), (0.2, 2.0)),
+)
+for pixel, status, value, error in zip(
+    pixels, result.statuses, result.derivatives, result.estimated_errors
+):
+    print(pixel, status, value, error)
+```
+
+Read each status before using its value. An unknown retains `None`; it must not
+be treated as zero or dropped from the query population. A `resolved` result
+uses an engineering error estimate, not a guarantee. The original V1
+compressed-map failure and the later V2 reference-oracle undercoverage have
+separate [V1](validation/finite-normal-derivative.md) and
+[V2](validation/finite-normal-error-control.md) records. The example does not
+estimate a normal, change covariance or run the inverse fitter.
 
 ## Mathematics and numerical resolution
 

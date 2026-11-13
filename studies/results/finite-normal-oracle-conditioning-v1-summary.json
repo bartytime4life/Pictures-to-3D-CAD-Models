@@ -1,0 +1,712 @@
+{
+  "artifacts": [
+    {
+      "bytes": 665049,
+      "decoded_bytes": 4970145,
+      "decoded_sha256": "cd0c2eac7b7062d4cda480c995094293fc9b5991fb55b4c2a86e735aa92bca93",
+      "encoding": "gzip",
+      "kind": "complete_original_canonical_diagnostic",
+      "path": "studies/results/finite-normal-oracle-conditioning-v1.json.gz",
+      "sha256": "8448f1df3cf96da207884400254fd0484ce63cd637678a46956a32771880df54"
+    },
+    {
+      "bytes": 1292,
+      "decoded_bytes": 2670,
+      "decoded_sha256": "1632711f41c00c03e08201b5425997450fc75055e348b20a6c478c5c64c6d59c",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/check-conditioning-bootstrap-v1.py.txt.gz",
+      "sha256": "5c94758f88a01b6c6cdfcfe17c18c02d28a1aa942f6191f3c97c1a4bed649794"
+    },
+    {
+      "bytes": 1294,
+      "decoded_bytes": 2896,
+      "decoded_sha256": "8dd5fc1d6e8e21c09427145760371f8becab1d38b746a0d838a697adf463c618",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/check-conditioning-cli-v1.py.txt.gz",
+      "sha256": "327141f263c934af28c4fb2610bdbd44c30d73d1b9b76ba63fbf87bcffc16244"
+    },
+    {
+      "bytes": 3328,
+      "decoded_bytes": 10131,
+      "decoded_sha256": "fa6b495ffe1435f23e972d5f818287f2b5801228cbfb079656c8d54b81753a7b",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/conditioning-ai/audit-saved-outcome-v1.py.txt.gz",
+      "sha256": "227b2dcf5d49e1a9d449c2e1de7616c590cace88920c33a9a62c06ed3d7bf53e"
+    },
+    {
+      "bytes": 27910,
+      "decoded_bytes": 107706,
+      "decoded_sha256": "27e911e37c9ea49639c6cfe0a0dfe1600596eec5a7acebe8298e1b4f75f4e90d",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/conditioning-ai/full-source-current-v1.json.gz",
+      "sha256": "f7e0096f423df5857eba87227b25ce974f32de0ff581d931491efc15d22cbd63"
+    },
+    {
+      "bytes": 8868,
+      "decoded_bytes": 32045,
+      "decoded_sha256": "827d2ca01a6abbc9ccb6dd372964732a3e650565cad60c5cc142f8e4d66c2129",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/conditioning-ai/runner-before-source-closure.py.txt.gz",
+      "sha256": "acfe3d9d30ac5eb79d56d6410813dea551a1798086b555daf717259b83255dd8"
+    },
+    {
+      "bytes": 25102,
+      "decoded_bytes": 829393,
+      "decoded_sha256": "c332df6a1ea1f5e377fd30adb8e69e0afbee438679438ec313849cf3ac320334",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/conditioning-ai/saved-outcome-v1.json.gz",
+      "sha256": "e4d1cb157b946c8a14ecc7ba73b0f4f2fff2ca4280597735adffa332ee5ce119"
+    },
+    {
+      "bytes": 20,
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/conditioning-ai/static-1.stderr.gz",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "bytes": 39,
+      "decoded_bytes": 19,
+      "decoded_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/conditioning-ai/static-1.stdout.gz",
+      "sha256": "f3af4d142827f5aad2eb0c72d556d325488a57fb6219aac10afeb51085667d53"
+    },
+    {
+      "bytes": 20,
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/conditioning-ai/static-2.stderr.gz",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "bytes": 45,
+      "decoded_bytes": 25,
+      "decoded_sha256": "fd2299c9f1c6dc869070883e281051bfe93aacf66c1a3b0069f45b4aa410ca50",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/conditioning-ai/static-2.stdout.gz",
+      "sha256": "afdae4b86058000c02acc699088589b28fbfe2ead39a424c4435b13464b2f494"
+    },
+    {
+      "bytes": 20,
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/conditioning-ai/static-3.stderr.gz",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "bytes": 20,
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/conditioning-ai/static-3.stdout.gz",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "bytes": 20,
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/conditioning-ai/static-4.stderr.gz",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "bytes": 406,
+      "decoded_bytes": 623,
+      "decoded_sha256": "77b285f51f9f67c7df41a87ae1d281e7b4c5d9f6ed7fbcb617de5f3de3b01197",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/conditioning-ai/static-4.stdout.gz",
+      "sha256": "bb1cbb7ce224888165a8806906a42a3c26e6a5df839a977609a658cc50a9c3f7"
+    },
+    {
+      "bytes": 1983,
+      "decoded_bytes": 7569,
+      "decoded_sha256": "5f0644a0ed05802f8505169afd3dff009ac1eedac624141f80aa547282a83dbe",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/conditioning-ai/static-final.json.gz",
+      "sha256": "1750e0b00aeec307e80d98e3adc328c4f02637588318748d94c19578b0c2be1a"
+    },
+    {
+      "bytes": 3221,
+      "decoded_bytes": 48167,
+      "decoded_sha256": "a3cd499e83826418e9098e0a17a42971ffa7b5f68266de4da48ea50117647d2b",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/conditioning-bootstrap-v1.json.gz",
+      "sha256": "5c2fa5c04568940e2f7cc80499ed72ac53f51c171af808f39445d474196af0bb"
+    },
+    {
+      "bytes": 27627,
+      "decoded_bytes": 89172,
+      "decoded_sha256": "94346921f985603a4138da016c9bbb5cefaf6dd8e473376c47d66d0e4bef526e",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/conditioning-canonical-preflight-v1.json.gz",
+      "sha256": "e8efbaacd564f957656c153396ee8dcbefad058f235285d4fc3cef2049e1a79e"
+    },
+    {
+      "bytes": 950,
+      "decoded_bytes": 4402,
+      "decoded_sha256": "ae624debcf3b798418fd09004ba737792ce722d1e04bbb4de2e376fada0d4703",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/conditioning-cli-initial-v1.json.gz",
+      "sha256": "8b63623febc516e8daecccb10a11981bf6d46a87f7c73e3e1b2ff625baca0005"
+    },
+    {
+      "bytes": 949,
+      "decoded_bytes": 4402,
+      "decoded_sha256": "960ad4778c61e497ddaf350dc2e6e739ffffee9058829f60293aecfda44e7331",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/conditioning-cli-v1.json.gz",
+      "sha256": "cd05b011532360bcc7b50d8103452d82539e474c9dee0517275a821dd86fb760"
+    },
+    {
+      "bytes": 358,
+      "decoded_bytes": 533,
+      "decoded_sha256": "c73f2b050f4d9074af0defe7b62e6c25c20a7c8e39fa48fb576a9ec99b64912e",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/conditioning-plan-root-preflight-v1.json.gz",
+      "sha256": "7673dcae4a3642300a41d9eb3a950030ab07ed88b24515c5b982fbb224657874"
+    },
+    {
+      "bytes": 3531,
+      "decoded_bytes": 15200,
+      "decoded_sha256": "dbe2dd4481acefd019176436f4afbd65e7806deb56e46cbe9acb1fc3ebab7914",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/conditioning-root-saved-summary-v1.json.gz",
+      "sha256": "0a8a7e9eccc6d14dd332789670b9b37b2dd75d1a32782bce9ad26ee7e379c10c"
+    },
+    {
+      "bytes": 19500,
+      "decoded_bytes": 173799,
+      "decoded_sha256": "3095bf139d621458ec6525dca745e251753bf1739a2f0f21c6adfa7784ea49f1",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/conditioning-ux-saved-review-v1.json.gz",
+      "sha256": "e8c2af4bbcf2d3230584aa08d0306e569f3ae972225666ba4056a5faf0c16985"
+    },
+    {
+      "bytes": 308,
+      "decoded_bytes": 2268,
+      "decoded_sha256": "b718a0aaf4365a09e281ca7ecad5f35e9f43721c5b75e62d3ca011995cd45a61",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/normal-oracle-conditioning-v1-canonical.stderr.gz",
+      "sha256": "7b1496197737d56e94d06d8578492704e3e76e94d3021d3be9824d2b0ed0026f"
+    },
+    {
+      "bytes": 205,
+      "decoded_bytes": 316,
+      "decoded_sha256": "73f99ae749f4e40ec3bea1763d62b89c63429b792304e304a409b7ddea979249",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/normal-oracle-conditioning-v1-canonical.stdout.gz",
+      "sha256": "ffb22f6a0bde84ee6f8d0a2dd4b270bbe62a93c5b358a3708ba6a375a4b1835c"
+    },
+    {
+      "bytes": 54817,
+      "decoded_bytes": 178291,
+      "decoded_sha256": "4b7474ee3aceb4313738b39a64b71dbf44b844c2cdd2891c91fe915d77ecd6eb",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/normal-oracle-conditioning-v1-canonical.terminal.json.gz",
+      "sha256": "5ca8c2cef842d8e64ea54cd09a387c6f4a52924f68cdda21a4d69f9eb0d41e9b"
+    },
+    {
+      "bytes": 490,
+      "decoded_bytes": 988,
+      "decoded_sha256": "9e5bc7faf834154195b5b6154bab7b600b560ec32077bcfd0e0a6c818ea6c2a9",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/oracle-conditioning-audit-v1.invocation.json.gz",
+      "sha256": "40d1c9f0995bd2e1282ec45f4395e7095dcee68accbe85993cb9d37ce305a484"
+    },
+    {
+      "bytes": 20,
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/oracle-conditioning-audit-v1.stderr.txt.gz",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "bytes": 120,
+      "decoded_bytes": 122,
+      "decoded_sha256": "f102dbd1f5837a6430663b2df67d18e12fd5b7b3a27e9ba542477136fc6845e9",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/oracle-conditioning-audit-v1.stdout.txt.gz",
+      "sha256": "9e8d2e416128636b3a5778a072efb9689ba8df57d4ec3d4bd95f0aa82f85008f"
+    },
+    {
+      "bytes": 1379,
+      "decoded_bytes": 4996,
+      "decoded_sha256": "551472e4e5501df6d9b206aeabfca97f92da05fca509188ba38387fab4ad0679",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/oracle-conditioning-auditor-contracts-v1.json.gz",
+      "sha256": "611f36b2bdaddf8c2f2e27f112b3ef23eaca2289d132b3aad8dab0e437da788c"
+    },
+    {
+      "bytes": 1776,
+      "decoded_bytes": 4440,
+      "decoded_sha256": "94c3ed19cd27cadc8a80d92802f4e5781269efb3ec0c40ba6f5aefebe524ed51",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/oracle-conditioning-auditor-contracts-v1.py.txt.gz",
+      "sha256": "c9419695918fd84190af1f6a49477383c13de2856ec5005b420aee52aa39cd77"
+    },
+    {
+      "bytes": 2369,
+      "decoded_bytes": 4972,
+      "decoded_sha256": "e64d267de7dfeba53db169011afce22215997bc66a74fa66ea0ea7ea1bf6ae45",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/oracle-conditioning-plan-math-review-v1.md.txt.gz",
+      "sha256": "7a3a842609343ac72c60dd248961e0f6bcdce6fb6de18140fc35677da80478e2"
+    },
+    {
+      "bytes": 2057,
+      "decoded_bytes": 8470,
+      "decoded_sha256": "6bceded72340d4e52b747c66513fb31d5d17474daec7dedd8e69e5b1ab8e9faa",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/oracle-conditioning-saved-audit-v1.json.gz",
+      "sha256": "9f29334e4d09cfe97dc5d08dfbf4dc7b961d70b4b2c451b6846a80d5a996db11"
+    },
+    {
+      "bytes": 1193,
+      "decoded_bytes": 2564,
+      "decoded_sha256": "e91a12034370e5e8c669d2744481efa02403e922565db8300a56ed707e1346ea",
+      "encoding": "gzip",
+      "kind": "retained_local_verification_or_provenance",
+      "path": "studies/fixtures/finite-normal-oracle-conditioning-v1/run-conditioning-canonical-v1.py.txt.gz",
+      "sha256": "99e203f97ba3b8db47cf2dda86499e5f36613fa1b2a0cda0449a1e371dc83681"
+    },
+    {
+      "bytes": 29257,
+      "decoded_bytes": 29257,
+      "decoded_sha256": "114e43a780fcdd5b70ecbca5c1deceb8ea7f588a0026c127399693c6275f1c5b",
+      "encoding": "identity",
+      "kind": "public_saved_report_auditor",
+      "path": "studies/verification/finite-normal-oracle-conditioning-report-audit-v1.py",
+      "sha256": "114e43a780fcdd5b70ecbca5c1deceb8ea7f588a0026c127399693c6275f1c5b"
+    }
+  ],
+  "baseline_exceeds_declared_endpoint_allowance": 13,
+  "canonical_source_commit": "6adf21120b3bd066b5f5504850d4c5de2939cfb4",
+  "canonical_source_tree": "00adc6bd7cb017afcfbd7cf49d1e94868c7dc681",
+  "format": "pictures-to-cad-finite-normal-oracle-conditioning-archive-index",
+  "independent_saved_audits": {
+    "actual_model_or_reference_evaluations": 0,
+    "mathematics_checks": 41534,
+    "software_source_checks": 8028,
+    "ux_saved_checks": 13170
+  },
+  "max_errors": {
+    "baseline": {
+      "error": "0.000004090990775680251830538886288175082768565825986918869086240690523128256881850965499094548149896153165704054551",
+      "order": 96,
+      "scene": "conditioning-e24-c-1-d-3e-07"
+    },
+    "endpoint_binary64": {
+      "error": "7.94156476435950273496736610777028485110747501969125336152447258792254996063898862676716006965132947950151E-10",
+      "order": 192,
+      "scene": "conditioning-e24-c-1-d+3e-07"
+    },
+    "exact_source_decimal": {
+      "error": "4.20531034178459895912858084609477835554568561074897196097952153823641607658519087140262439441844712317427E-10",
+      "order": 192,
+      "scene": "conditioning-e24-c+1-d+3e-07"
+    },
+    "rounded_source_decimal": {
+      "error": "0.000003466389629561216630937229356524390211156875506254851995295942839213381213565095029684945040529856580371335764",
+      "order": 192,
+      "scene": "conditioning-e24-c-1-d-3e-07"
+    }
+  },
+  "method_total_work": {
+    "baseline": {
+      "attempted_density_nodes": 415296,
+      "attempted_rule_batches": 2884,
+      "completed_density_nodes": 415296,
+      "completed_rule_batches": 2884,
+      "exact_endpoint_evaluations": 0,
+      "preserved_omitted_panels": 0
+    },
+    "endpoint_binary64": {
+      "attempted_density_nodes": 415296,
+      "attempted_rule_batches": 2884,
+      "completed_density_nodes": 415296,
+      "completed_rule_batches": 2884,
+      "exact_endpoint_evaluations": 5768,
+      "preserved_omitted_panels": 0
+    },
+    "exact_source_decimal": {
+      "attempted_density_nodes": 830592,
+      "attempted_rule_batches": 5768,
+      "completed_density_nodes": 830592,
+      "completed_rule_batches": 5768,
+      "exact_endpoint_evaluations": 0,
+      "preserved_omitted_panels": 0
+    },
+    "rounded_source_decimal": {
+      "attempted_density_nodes": 830592,
+      "attempted_rule_batches": 5768,
+      "completed_density_nodes": 830592,
+      "completed_rule_batches": 5768,
+      "exact_endpoint_evaluations": 0,
+      "preserved_omitted_panels": 0
+    }
+  },
+  "old": [
+    {
+      "baseline_reproduction": {
+        "192": {
+          "absolute_delta": 0.0,
+          "allowance": 2.827159711989669e-12,
+          "exact_hex_equal": true,
+          "new_baseline": 1591.549428179194,
+          "new_baseline_hex": "0x1.8de329d4cf48ep+10",
+          "saved_original": 1591.549428179194,
+          "saved_original_hex": "0x1.8de329d4cf48ep+10",
+          "tolerance_passed": true
+        },
+        "96": {
+          "absolute_delta": 0.0,
+          "allowance": 2.8271597119896684e-12,
+          "exact_hex_equal": true,
+          "new_baseline": 1591.5494281791937,
+          "new_baseline_hex": "0x1.8de329d4cf48dp+10",
+          "saved_original": 1591.5494281791937,
+          "saved_original_hex": "0x1.8de329d4cf48dp+10",
+          "tolerance_passed": true
+        }
+      },
+      "by_order": {
+        "192": {
+          "baseline": {
+            "absolute_error": "1.4725661483177649123721944377821575906618599338134444985126372976779641578037611604033957161512902701052732E-10",
+            "absolute_error_over_baseline": "1",
+            "signed_error": "1.4725661483177649123721944377821575906618599338134444985126372976779641578037611604033957161512902701052732E-10"
+          },
+          "endpoint_binary64": {
+            "absolute_error": "8.2796784633504493289815471571575906618599338134444985126372976779641578037611604033957161512902701052732E-13",
+            "absolute_error_over_baseline": "0.0056226190401083281471708069310502460179314410962376849383611495827402520470191674320928047512415727297358113115236459611825958002737178164976",
+            "signed_error": "8.2796784633504493289815471571575906618599338134444985126372976779641578037611604033957161512902701052732E-13"
+          },
+          "exact_source_decimal": {
+            "absolute_error": "1.98834378591117900286014865103682251876549096363894898284841447135835896881244068057103045794402944433418E-12",
+            "absolute_error_over_baseline": "0.013502577036574077770919748073193378118264211519725547837213788198646567131374128190593773044328705769435209476032412077933483059787835451659",
+            "signed_error": "1.98834378591117900286014865103682251876549096363894898284841447135835896881244068057103045794402944433418E-12"
+          },
+          "rounded_source_decimal": {
+            "absolute_error": "1.2746291634491829194953071458422309854596966754430038580932115350798604826207354258069349484136112424343676E-10",
+            "absolute_error_over_baseline": "0.86558363772337024462369693447555667524627423297960509629238518569024010668734982768546870416459662500574862703903012368526518034838085976470",
+            "signed_error": "1.2746291634491829194953071458422309854596966754430038580932115350798604826207354258069349484136112424343676E-10"
+          }
+        },
+        "96": {
+          "baseline": {
+            "absolute_error": "1.4702924115633325917774068401259075906618599338134444985126372976779641578037611604033957161512902701052732E-10",
+            "absolute_error_over_baseline": "1",
+            "signed_error": "1.4702924115633325917774068401259075906618599338134444985126372976779641578037611604033957161512902701052732E-10"
+          },
+          "endpoint_binary64": {
+            "absolute_error": "1.44576890809727566188944294053424093381400661865555014873627023220358421962388395966042838487097298947268E-12",
+            "absolute_error_over_baseline": "0.0098332066242525078542158772167625941073583527667290012610812239568124092118672365946312857704766805479702595586437408202940740393803740405925",
+            "signed_error": "-1.44576890809727566188944294053424093381400661865555014873627023220358421962388395966042838487097298947268E-12"
+          },
+          "exact_source_decimal": {
+            "absolute_error": "8.4884897727998370482471854567316720194485695578391742248971282094631298575272748575548544472383122607757E-13",
+            "absolute_error_over_baseline": "0.0057733344102444187965862461435933754230909609966587677462101938404080967414583710995937967779892638343395984838780540997508016429268600799107",
+            "signed_error": "-8.4884897727998370482471854567316720194485695578391742248971282094631298575272748575548544472383122607757E-13"
+          },
+          "rounded_source_decimal": {
+            "absolute_error": "1.1613962211086038888189926732102991735612693733500888423654882936512718308278187804883353256442386761610346E-10",
+            "absolute_error_over_baseline": "0.78990832842136106414469432204119794941373608030207497986490461370926289077669451702531780374182110512404422291095754650036835935547387826533",
+            "signed_error": "1.1613962211086038888189926732102991735612693733500888423654882936512718308278187804883353256442386761610346E-10"
+          }
+        }
+      },
+      "comparison_allowance": "2.8093822156732206321605520825238386515172129909853240565173776480493742568230939054776850115149041589897761593567673488450964214280247688293E-10",
+      "id": "compressed-chart-e16-d0.0001",
+      "reference120": "1591.54942817904665356738908482449001444294053424093381400661865555014873627023220358421962388395966042838487097298947268",
+      "work": {
+        "baseline": {
+          "attempted_density_nodes": 9216,
+          "attempted_rule_batches": 64,
+          "completed_density_nodes": 9216,
+          "completed_rule_batches": 64,
+          "exact_endpoint_evaluations": 0,
+          "preserved_omitted_panels": 0
+        },
+        "endpoint_binary64": {
+          "attempted_density_nodes": 9216,
+          "attempted_rule_batches": 64,
+          "completed_density_nodes": 9216,
+          "completed_rule_batches": 64,
+          "exact_endpoint_evaluations": 128,
+          "preserved_omitted_panels": 0
+        },
+        "exact_source_decimal": {
+          "attempted_density_nodes": 18432,
+          "attempted_rule_batches": 128,
+          "completed_density_nodes": 18432,
+          "completed_rule_batches": 128,
+          "exact_endpoint_evaluations": 0,
+          "preserved_omitted_panels": 0
+        },
+        "rounded_source_decimal": {
+          "attempted_density_nodes": 18432,
+          "attempted_rule_batches": 128,
+          "completed_density_nodes": 18432,
+          "completed_rule_batches": 128,
+          "exact_endpoint_evaluations": 0,
+          "preserved_omitted_panels": 0
+        }
+      }
+    },
+    {
+      "baseline_reproduction": {
+        "192": {
+          "absolute_delta": 0.0,
+          "allowance": 6.06476493921774e-13,
+          "exact_hex_equal": true,
+          "new_baseline": 341.4159140043833,
+          "new_baseline_hex": "0x1.556a795716c65p+8",
+          "saved_original": 341.4159140043833,
+          "saved_original_hex": "0x1.556a795716c65p+8",
+          "tolerance_passed": true
+        },
+        "96": {
+          "absolute_delta": 0.0,
+          "allowance": 6.064764939214472e-13,
+          "exact_hex_equal": true,
+          "new_baseline": 341.4159140041993,
+          "new_baseline_hex": "0x1.556a795715fc0p+8",
+          "saved_original": 341.4159140041993,
+          "saved_original_hex": "0x1.556a795715fc0p+8",
+          "tolerance_passed": true
+        }
+      },
+      "by_order": {
+        "192": {
+          "baseline": {
+            "absolute_error": "2.7142144972018796344984757748530218304321239091864925655512579162274432540309029079440485310736978761132064E-11",
+            "absolute_error_over_baseline": "1",
+            "signed_error": "2.7142144972018796344984757748530218304321239091864925655512579162274432540309029079440485310736978761132064E-11"
+          },
+          "endpoint_binary64": {
+            "absolute_error": "2.187884092124077817190873471186468304321239091864925655512579162274432540309029079440485310736978761132064E-12",
+            "absolute_error_over_baseline": "0.080608371017824754194617124271791662409908620925077551462104497085156343673712469443299743394317108928782947444910293016030800336648543823353",
+            "signed_error": "2.187884092124077817190873471186468304321239091864925655512579162274432540309029079440485310736978761132064E-12"
+          },
+          "exact_source_decimal": {
+            "absolute_error": "1.565411502121684341257304351940710750857755749507351615511095865161645492533127609695202740755839256204307E-12",
+            "absolute_error_over_baseline": "0.057674568599330973692400932713874704921216226908963519044257111764646946488354527799662694559747911106209012916955163720285064783079793157672",
+            "signed_error": "1.565411502121684341257304351940710750857755749507351615511095865161645492533127609695202740755839256204307E-12"
+          },
+          "rounded_source_decimal": {
+            "absolute_error": "8.8772231715608332005668201292611691321006549912432717278438990367155769844263250064808202786605961418720995E-11",
+            "absolute_error_over_baseline": "3.2706417199939365166388977832588284087768672513557851432360426533422929084713948437389753729264463372489208754062288791563656580960392575901",
+            "signed_error": "8.8772231715608332005668201292611691321006549912432717278438990367155769844263250064808202786605961418720995E-11"
+          }
+        },
+        "96": {
+          "baseline": {
+            "absolute_error": "1.56860001880416747788201582583501031695678760908135074344487420837725567459690970920559514689263021238867936E-10",
+            "absolute_error_over_baseline": "1",
+            "signed_error": "-1.56860001880416747788201582583501031695678760908135074344487420837725567459690970920559514689263021238867936E-10"
+          },
+          "endpoint_binary64": {
+            "absolute_error": "2.9009243447434762727034243657281695678760908135074344487420837725567459690970920559514689263021238867936E-14",
+            "absolute_error_over_baseline": "0.00018493716116075371408866019021489973934228264141344340407871991548592212722897561801402689468168867672698864468064983146430850816008084246243",
+            "signed_error": "-2.9009243447434762727034243657281695678760908135074344487420837725567459690970920559514689263021238867936E-14"
+          },
+          "exact_source_decimal": {
+            "absolute_error": "5.49169886517623346747363636065586275418453517634013357780701447150832447113579705041912274392941292189698E-13",
+            "absolute_error_over_baseline": "0.0035010192524177490129548593436922948351898784788965614749308781262044237424388267217410108309917658481327937440888860052494412626709640120318",
+            "signed_error": "-5.49169886517623346747363636065586275418453517634013357780701447150832447113579705041912274392941292189698E-13"
+          },
+          "rounded_source_decimal": {
+            "absolute_error": "1.0534575416649124208495639055224699001057268498168864431970597322295546890995050141367435644098103586552825E-11",
+            "absolute_error_over_baseline": "0.067159092760181317199982992715864277991744699626701197509609447385534633693143415863747558309185603175871915056641461200668456604103333068457",
+            "signed_error": "-1.0534575416649124208495639055224699001057268498168864431970597322295546890995050141367435644098103586552825E-11"
+          }
+        }
+      },
+      "comparison_allowance": "1.3881449561099045173960380814955602106992199663087554640252484831243515229980831981805064185333782910614550735559065150664537213742733001709E-10",
+      "id": "compressed-chart-e16-d1e-06",
+      "reference120": "341.415914004356154142442831870774041426333501031695678760908135074344487420837725567459690970920559514689263021238867936",
+      "work": {
+        "baseline": {
+          "attempted_density_nodes": 5184,
+          "attempted_rule_batches": 36,
+          "completed_density_nodes": 5184,
+          "completed_rule_batches": 36,
+          "exact_endpoint_evaluations": 0,
+          "preserved_omitted_panels": 0
+        },
+        "endpoint_binary64": {
+          "attempted_density_nodes": 5184,
+          "attempted_rule_batches": 36,
+          "completed_density_nodes": 5184,
+          "completed_rule_batches": 36,
+          "exact_endpoint_evaluations": 72,
+          "preserved_omitted_panels": 0
+        },
+        "exact_source_decimal": {
+          "attempted_density_nodes": 10368,
+          "attempted_rule_batches": 72,
+          "completed_density_nodes": 10368,
+          "completed_rule_batches": 72,
+          "exact_endpoint_evaluations": 0,
+          "preserved_omitted_panels": 0
+        },
+        "rounded_source_decimal": {
+          "attempted_density_nodes": 10368,
+          "attempted_rule_batches": 72,
+          "completed_density_nodes": 10368,
+          "completed_rule_batches": 72,
+          "exact_endpoint_evaluations": 0,
+          "preserved_omitted_panels": 0
+        }
+      }
+    }
+  ],
+  "panel_count": 1442,
+  "report_bytes": 4970145,
+  "report_sha256": "cd0c2eac7b7062d4cda480c995094293fc9b5991fb55b4c2a86e735aa92bca93",
+  "scope": "Separate arithmetic diagnostic, not replacement or new qualification of V2 canonical protocol, candidate, full oracle domain, physical optics, residual information or inverse. No production API calls, no optimizer/area/renderer/photo analysis. All failures retained.",
+  "source_closure": {
+    "backend/finite_affine.py": {
+      "bytes": 15299,
+      "expected_sha256": "d4eb540f6a654178fca41b4be416bd4ad6ebb6b3f645bc78b5383b18b8caa653",
+      "sha256": "d4eb540f6a654178fca41b4be416bd4ad6ebb6b3f645bc78b5383b18b8caa653"
+    },
+    "backend/finite_centre_fit.py": {
+      "bytes": 34732,
+      "expected_sha256": "df8a057abefe983ee951c894a9ae44e0c6b0f472d3419578be505973ea3a8bfb",
+      "sha256": "df8a057abefe983ee951c894a9ae44e0c6b0f472d3419578be505973ea3a8bfb"
+    },
+    "backend/finite_normal.py": {
+      "bytes": 26979,
+      "expected_sha256": "5038ebe359ae0b3e4e158273ae145a0991feb93258fe723eca942ac49017425f",
+      "sha256": "5038ebe359ae0b3e4e158273ae145a0991feb93258fe723eca942ac49017425f"
+    },
+    "backend/finite_shape.py": {
+      "bytes": 18056,
+      "expected_sha256": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+      "sha256": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380"
+    },
+    "pyproject.toml": {
+      "bytes": 596,
+      "expected_sha256": "89db6bd352114ad6ed7c979c070e66d47551ef7cca7062778f832bb8934507ab",
+      "sha256": "89db6bd352114ad6ed7c979c070e66d47551ef7cca7062778f832bb8934507ab"
+    },
+    "studies/finite-free-centre-v1.json": {
+      "bytes": 12041,
+      "expected_sha256": "f8db267fd848363ba91b56cd5a01086f3123ad699f6c0c404166734f3bc582fd",
+      "sha256": "f8db267fd848363ba91b56cd5a01086f3123ad699f6c0c404166734f3bc582fd"
+    },
+    "studies/finite-normal-derivative-compressed-chart-v1.json": {
+      "bytes": 7273,
+      "expected_sha256": "f0bc2095ba23cceb2ffb13d7f915051620cd2496f71a43ebfd0d2f951037e234",
+      "sha256": "f0bc2095ba23cceb2ffb13d7f915051620cd2496f71a43ebfd0d2f951037e234"
+    },
+    "studies/finite-normal-derivative-v1.json": {
+      "bytes": 1974415,
+      "expected_sha256": "d31b8ad03b5fe1af8b69dc47be5445b2ebf7034e951254814a57010f3b43de9f",
+      "sha256": "d31b8ad03b5fe1af8b69dc47be5445b2ebf7034e951254814a57010f3b43de9f"
+    },
+    "studies/finite-normal-error-control-inverse-addendum-v2.json": {
+      "bytes": 3131,
+      "expected_sha256": "5703d6fa480ba2801291865b2b9921ba7c8b875ef96adc1beb3d3d4b3bcfb8bd",
+      "sha256": "5703d6fa480ba2801291865b2b9921ba7c8b875ef96adc1beb3d3d4b3bcfb8bd"
+    },
+    "studies/finite-normal-error-control-v2.json": {
+      "bytes": 480151,
+      "expected_sha256": "b59d38b3ca92449c4233b947dd061f7a6591ce1944946b6c10e868afaad3adbb",
+      "sha256": "b59d38b3ca92449c4233b947dd061f7a6591ce1944946b6c10e868afaad3adbb"
+    },
+    "studies/finite-normal-oracle-conditioning-v1.json": {
+      "bytes": 35614,
+      "expected_sha256": "33fd9504167978f1a22522122e7899b0c4bf64ab56905bbf9fa670070a1f8fe2",
+      "sha256": "33fd9504167978f1a22522122e7899b0c4bf64ab56905bbf9fa670070a1f8fe2"
+    },
+    "studies/results/finite-normal-error-control-v2-summary.json": {
+      "bytes": 45246,
+      "expected_sha256": "bfdb923bf45d77ef20f18efcdbd365872adf520569b166c58f5bde09678c8db3",
+      "sha256": "bfdb923bf45d77ef20f18efcdbd365872adf520569b166c58f5bde09678c8db3"
+    },
+    "studies/results/finite-normal-error-control-v2.json.gz": {
+      "bytes": 16344733,
+      "expected_sha256": "2ebbb4bc34dcaa97695e2f4de6c40774090aef42e8301d45ee3f7e23489207ec",
+      "sha256": "2ebbb4bc34dcaa97695e2f4de6c40774090aef42e8301d45ee3f7e23489207ec"
+    },
+    "studies/verification/finite-free-centre-v1.py": {
+      "bytes": 37305,
+      "expected_sha256": "0537540cbfddad2e6209b7b1483977e118c70b64f0d7938e810f942765e579f8",
+      "sha256": "0537540cbfddad2e6209b7b1483977e118c70b64f0d7938e810f942765e579f8"
+    },
+    "studies/verification/finite-normal-derivative-v1.py": {
+      "bytes": 42288,
+      "expected_sha256": "8cd752ccf8fef6391d51dc10761f073c3d3f0fb6c45deb977ea346553ee5dd74",
+      "sha256": "8cd752ccf8fef6391d51dc10761f073c3d3f0fb6c45deb977ea346553ee5dd74"
+    },
+    "studies/verification/finite-normal-error-control-v2.py": {
+      "bytes": 31339,
+      "expected_sha256": "835814c5c9bf23d1f8945474ca9b9412ae5a12ff0f358d0e09b6e8bea9d5cdc6",
+      "sha256": "835814c5c9bf23d1f8945474ca9b9412ae5a12ff0f358d0e09b6e8bea9d5cdc6"
+    },
+    "studies/verification/finite-normal-oracle-conditioning-v1.py": {
+      "bytes": 33992,
+      "expected_sha256": null,
+      "sha256": "ab69492b6eadaac7a6b76b191b7c7d00b1faf5d74cd43fab02af394ebcca39b1"
+    },
+    "tests/test_finite_normal.py": {
+      "bytes": 20163,
+      "expected_sha256": "2e3991fcae912266d1a504d7333b22292b65c712faa39ba26ca47b8ca8d83416",
+      "sha256": "2e3991fcae912266d1a504d7333b22292b65c712faa39ba26ca47b8ca8d83416"
+    },
+    "uv.lock": {
+      "bytes": 131410,
+      "expected_sha256": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f",
+      "sha256": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f"
+    }
+  },
+  "source_unchanged": true,
+  "summary": {
+    "all_rows_retained": true,
+    "planned_scenes": 26,
+    "post_hoc_scenes": 2,
+    "prospective_scenes": 24,
+    "retained_scenes": 26,
+    "scene_passes": 26
+  },
+  "version": 1
+}

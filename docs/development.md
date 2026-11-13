@@ -131,14 +131,29 @@ Use the revision-bound records in [validation.md](validation.md) to identify whi
 implementation was checked. A historical pass does not establish a later head,
 and listing a command here does not establish that it ran.
 
-This main-based candidate includes PR #91 and PR #85 and preserves PR #82's
+This main-based source includes PR #91 and PR #85 and preserves PR #82's
 45-minute workbench job budget. It contains the conditional finite-material
 Python operators and the immutable
 measured-ring preparation API; source-space calibration APIs from the separate
-research lineage remain absent. Its [affine evaluation upgrade](finite-affine-evaluation.md)
-passes a new [943-test local Python run, production build and lint](validation/finite-affine-batch.md#software-regression),
+research lineage remain absent. The [experimental normal-angle derivative](finite-normal-derivative.md)
+retains its initial [1,037-test local Python run and failed numerical study](validation/finite-normal-derivative.md#software-and-evidence-checks).
+The subsequent [error-control correction](validation/finite-normal-error-control.md)
+passes **1,081 final-source Python tests**, build and lint, with 432 bound
+non-Markdown files and 22 built frontend files unchanged during the run. Its
+separate 417-scene numerical result passes the frozen comparisons; estimated
+oracle allowances still need strengthening. These are developer API results.
+The subsequent [reference-node diagnostic](finite-normal-oracle-conditioning.md)
+retains 26 controls and improves a restricted reference path without changing
+production code or replacing the original V2 result. The
+[preceding documentation review](validation/documentation-pr100-state.md) checks
+the published PR #100 scope separately from the inherited software runs. The
+later [analytic-normal diagnostic](validation/finite-analytic-normal-information.md)
+adds study/review commands and its own numerical evidence; it changes no
+application or fixed-normal inverse behavior.
+Its preceding [affine evaluation upgrade](finite-affine-evaluation.md)
+retains the earlier [943-test local Python run, production build and lint](validation/finite-affine-batch.md#software-regression),
 bound to 284 software inputs and 22 built frontend files. This run includes the
-combined main source and 42 affine/integration tests; it adds no browser result.
+then-combined main source and 42 affine/integration tests; it adds no browser result.
 The earlier [899-test run](validation/finite-photo-intensity-v2.md#software-regression)
 at PR #91's `6539905` and 862-test result at PR #88 retain their original scope.
 The fixed performance experiment is separate from full-suite wall time.

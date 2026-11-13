@@ -1,0 +1,1090 @@
+{
+  "report_bytes": 128302342,
+  "report_sha256": "603a39888033cb6db21eb164fbc517ca3cafba942d30fe09321d0028aafecf6e",
+  "summary": {
+    "all_area_queries_retained": true,
+    "all_scenes_and_queries_retained": true,
+    "by_population": {
+      "post_hoc_synthetic_regression": {
+        "estimate_coverage_passes": 3886,
+        "queries": 3886,
+        "query_passes": 3886,
+        "requested_tolerance_passes": 3886,
+        "scene_passes": 337,
+        "scenes": 337,
+        "unknown_or_failed_queries": 0
+      },
+      "prospective_new_synthetic": {
+        "estimate_coverage_passes": 946,
+        "queries": 946,
+        "query_passes": 946,
+        "requested_tolerance_passes": 946,
+        "scene_passes": 80,
+        "scenes": 80,
+        "unknown_or_failed_queries": 0
+      }
+    },
+    "estimate_coverage_passes": 4832,
+    "optimizer_calls": 0,
+    "oracle_converged_queries": 4832,
+    "planned_queries": 4832,
+    "planned_scenes": 417,
+    "positive_area_by_population": {
+      "new_prospective_passes": 36,
+      "new_prospective_queries": 36,
+      "old_regression_passes": 36,
+      "old_regression_queries": 36
+    },
+    "positive_area_passes": 72,
+    "positive_area_queries": 72,
+    "positive_area_scenes": 24,
+    "query_passes": 4832,
+    "renderer_calls": 0,
+    "requested_tolerance_passes": 4832,
+    "residual_or_photo_archive_analyses": 0,
+    "retained_queries": 4832,
+    "retained_scenes": 417,
+    "scene_passes": 417,
+    "unit_private_branch_controls_executed_here": false
+  },
+  "candidate_work": {
+    "evaluations": 80728,
+    "panels": 8864
+  },
+  "methods": {
+    "affine_closed_form": 3477,
+    "projective_closed_form": 1289,
+    "affine_closed_form_then_chord_quadrature": 41,
+    "projective_closed_form_then_chord_quadrature": 25
+  },
+  "statuses": {
+    "resolved": 4832
+  },
+  "maximum_delta": 1.2027157936245203e-08,
+  "maximum_error_estimate": 9.813861951814891e-09,
+  "maximum_estimate_coverage_ratio": 0.8329586343943415,
+  "source_files": 38,
+  "source_unchanged": true,
+  "known_regressions": {
+    "compressed-chart-e16-d0.0001": {
+      "candidate": {
+        "chart_margin": 7.629452710933187e-06,
+        "derivatives": [
+          1591.5494281790511
+        ],
+        "estimated_errors": [
+          9.98429002173148e-11
+        ],
+        "evaluations": 12232,
+        "method": "finite_chord_shape",
+        "panels": 356,
+        "quadrature_certified": false,
+        "query_evaluations": [
+          12232
+        ],
+        "query_methods": [
+          "projective_closed_form_then_chord_quadrature"
+        ],
+        "query_panels": [
+          356
+        ],
+        "reflected": false,
+        "statuses": [
+          "resolved"
+        ]
+      },
+      "queries": [
+        {
+          "query_index": 0,
+          "pixel": [
+            0,
+            0
+          ],
+          "candidate": {
+            "estimated_error": 9.98429002173148e-11,
+            "method": "projective_closed_form_then_chord_quadrature",
+            "status": "resolved",
+            "value": 1591.5494281790511
+          },
+          "comparison_delta": 1.4279066817834973e-10,
+          "oracle_allowance": 9.954165588919343e-11,
+          "estimate_coverage_allowance": 1.9938455610650825e-10,
+          "requested_tolerance_allowance": 1.9954165588919343e-10,
+          "estimate_coverage_passed": true,
+          "requested_tolerance_passed": true
+        }
+      ]
+    },
+    "compressed-chart-e16-d1e-06": {
+      "candidate": {
+        "chart_margin": 7.629452710933187e-06,
+        "derivatives": [
+          341.4159140043821
+        ],
+        "estimated_errors": [
+          7.785940227648465e-11
+        ],
+        "evaluations": 1100,
+        "method": "finite_chord_shape",
+        "panels": 46,
+        "quadrature_certified": false,
+        "query_evaluations": [
+          1100
+        ],
+        "query_methods": [
+          "projective_closed_form_then_chord_quadrature"
+        ],
+        "query_panels": [
+          46
+        ],
+        "reflected": false,
+        "statuses": [
+          "resolved"
+        ]
+      },
+      "queries": [
+        {
+          "query_index": 0,
+          "pixel": [
+            0,
+            0
+          ],
+          "candidate": {
+            "estimated_error": 7.785940227648465e-11,
+            "method": "projective_closed_form_then_chord_quadrature",
+            "status": "resolved",
+            "value": 341.4159140043821
+          },
+          "comparison_delta": 1.1937117960769683e-12,
+          "oracle_allowance": 3.920531412059586e-10,
+          "estimate_coverage_allowance": 4.699125434824432e-10,
+          "requested_tolerance_allowance": 4.920531412059586e-10,
+          "estimate_coverage_passed": true,
+          "requested_tolerance_passed": true
+        }
+      ]
+    }
+  },
+  "format": "pictures-to-cad-finite-normal-error-control-archive-index",
+  "version": 2,
+  "canonical_source_revision": "4ac158c1c1d9ac219f0b21c8829385f29efc5090",
+  "canonical_source_tree": "a5513cfa98ba5d6c2d7ab937db2a55727c67803e",
+  "plan_sha256": "b59d38b3ca92449c4233b947dd061f7a6591ce1944946b6c10e868afaad3adbb",
+  "addendum_sha256": "5703d6fa480ba2801291865b2b9921ba7c8b875ef96adc1beb3d3d4b3bcfb8bd",
+  "source_closure": {
+    "backend/__init__.py": {
+      "sha256": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+      "bytes": 51
+    },
+    "backend/app.py": {
+      "sha256": "345c7dc8bbc7bfbe616eb2934d2a58cd0b4fa1216dbdaa5272ab3a36b06d96bc",
+      "bytes": 19418
+    },
+    "backend/assistant.py": {
+      "sha256": "45f05aa8d0738a1da0e3b5040a2c4df8a01a35e9a835e1c06fd47ee3e81758c5",
+      "bytes": 29846
+    },
+    "backend/circular_joins.py": {
+      "sha256": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+      "bytes": 14459
+    },
+    "backend/curve_envelope.py": {
+      "sha256": "d37525b42c920a770b783e0c94ff97cf3d5214272d85dcdceae9d23eb184ca27",
+      "bytes": 2960
+    },
+    "backend/drawing.py": {
+      "sha256": "560f087e28d369a2e0f3b733197c18c5a7aa87c390fe56de7516caf9a08a5e6d",
+      "bytes": 12908
+    },
+    "backend/edges.py": {
+      "sha256": "c02bcf6f15958ea5c82444de3ea3af37f20031e6df463846dc8082e37abae9ee",
+      "bytes": 34453
+    },
+    "backend/finite_affine.py": {
+      "sha256": "d4eb540f6a654178fca41b4be416bd4ad6ebb6b3f645bc78b5383b18b8caa653",
+      "bytes": 15299
+    },
+    "backend/finite_centre_fit.py": {
+      "sha256": "df8a057abefe983ee951c894a9ae44e0c6b0f472d3419578be505973ea3a8bfb",
+      "bytes": 34732
+    },
+    "backend/finite_normal.py": {
+      "sha256": "5038ebe359ae0b3e4e158273ae145a0991feb93258fe723eca942ac49017425f",
+      "bytes": 26979
+    },
+    "backend/finite_observations.py": {
+      "sha256": "09fa843f72b2fc265ba8d4a7111267bf10433eb4f3f2a0600a89cc7871cb3969",
+      "bytes": 17430
+    },
+    "backend/finite_shape.py": {
+      "sha256": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+      "bytes": 18056
+    },
+    "backend/fitting.py": {
+      "sha256": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+      "bytes": 68991
+    },
+    "backend/heic.py": {
+      "sha256": "5e34870379991f8813bacfc4badc8fe7fcf5dbe8aa053156fa352456b208de33",
+      "bytes": 4820
+    },
+    "backend/models.py": {
+      "sha256": "21e7467766f4a086f52b3756f6b1fa8e4ec96a7b76cf0b4d1131c5f45709e6e1",
+      "bytes": 10732
+    },
+    "backend/placement.py": {
+      "sha256": "e1745597ca2930d1260659e9f2dc4405f2b7239beb0c12c45fa92b6d3f5c03df",
+      "bytes": 4258
+    },
+    "backend/printing.py": {
+      "sha256": "58d121ad45f0176b02094f3446dcd020c254ccd78860e5a269b8b6a8d6479915",
+      "bytes": 13386
+    },
+    "backend/reference.py": {
+      "sha256": "23a94e699d5499d8a4621902193e3a70214062108a5d0d10abb04df9efb8b69d",
+      "bytes": 32576
+    },
+    "backend/scad.py": {
+      "sha256": "d5cf18312ba10b7e3830d059952c3d078edc1e21813eb2fb03a4fd1ebaf2d534",
+      "bytes": 4806
+    },
+    "backend/sheet.py": {
+      "sha256": "cbb2f4ae8a47ac88dd98adac02590d55a48b05a83523f2e6d1af12da78186393",
+      "bytes": 31065
+    },
+    "backend/slicer_handoff.py": {
+      "sha256": "774e78fa93dacc348c204d89a0ec4192a01701fb3fa3304ee09960e816101a50",
+      "bytes": 6441
+    },
+    "backend/slicers.py": {
+      "sha256": "03442055d64c37d46e5806bafdd0bd497b54dacf78bc409addf1ff8400c25bb9",
+      "bytes": 7848
+    },
+    "backend/three_mf.py": {
+      "sha256": "435afd61c90bb21c305876f681f845a3bfb193a64fa96589e649fb40fd821cf1",
+      "bytes": 6544
+    },
+    "backend/tone.py": {
+      "sha256": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+      "bytes": 6309
+    },
+    "backend/tracing.py": {
+      "sha256": "b822716050b285152bcbefe07a0b7da1e02716ecb5d990cbf29af86598a14d2e",
+      "bytes": 14522
+    },
+    "backend/worker.py": {
+      "sha256": "9c869ffae551485b473aeb54ddc9a0116e8c8df22f92f2c08e2f3e97f24ca846",
+      "bytes": 19014
+    },
+    "pyproject.toml": {
+      "sha256": "89db6bd352114ad6ed7c979c070e66d47551ef7cca7062778f832bb8934507ab",
+      "bytes": 596
+    },
+    "studies/finite-free-centre-v1.json": {
+      "sha256": "f8db267fd848363ba91b56cd5a01086f3123ad699f6c0c404166734f3bc582fd",
+      "bytes": 12041
+    },
+    "studies/finite-normal-derivative-compressed-chart-v1.json": {
+      "sha256": "f0bc2095ba23cceb2ffb13d7f915051620cd2496f71a43ebfd0d2f951037e234",
+      "bytes": 7273
+    },
+    "studies/finite-normal-derivative-v1.json": {
+      "sha256": "d31b8ad03b5fe1af8b69dc47be5445b2ebf7034e951254814a57010f3b43de9f",
+      "bytes": 1974415
+    },
+    "studies/finite-normal-error-control-inverse-addendum-v2.json": {
+      "sha256": "5703d6fa480ba2801291865b2b9921ba7c8b875ef96adc1beb3d3d4b3bcfb8bd",
+      "bytes": 3131
+    },
+    "studies/finite-normal-error-control-v2.json": {
+      "sha256": "b59d38b3ca92449c4233b947dd061f7a6591ce1944946b6c10e868afaad3adbb",
+      "bytes": 480151
+    },
+    "studies/verification/finite-free-centre-v1.py": {
+      "sha256": "0537540cbfddad2e6209b7b1483977e118c70b64f0d7938e810f942765e579f8",
+      "bytes": 37305
+    },
+    "studies/verification/finite-normal-derivative-v1.py": {
+      "sha256": "8cd752ccf8fef6391d51dc10761f073c3d3f0fb6c45deb977ea346553ee5dd74",
+      "bytes": 42288
+    },
+    "studies/verification/finite-normal-error-control-v2.py": {
+      "sha256": "835814c5c9bf23d1f8945474ca9b9412ae5a12ff0f358d0e09b6e8bea9d5cdc6",
+      "bytes": 31339
+    },
+    "tests/test_finite_normal.py": {
+      "sha256": "2e3991fcae912266d1a504d7333b22292b65c712faa39ba26ca47b8ca8d83416",
+      "bytes": 20163
+    },
+    "tests/test_finite_normal_error_control.py": {
+      "sha256": "e4e278ae3077eb1bb6096bb25e557168f1f4baf8b590ee7a679717c6621c6c16",
+      "bytes": 18741
+    },
+    "uv.lock": {
+      "sha256": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f",
+      "bytes": 131410
+    }
+  },
+  "artifacts": [
+    {
+      "path": "studies/results/finite-normal-error-control-v2.json.gz",
+      "kind": "complete_original_canonical_report",
+      "encoding": "gzip",
+      "bytes": 16344733,
+      "sha256": "2ebbb4bc34dcaa97695e2f4de6c40774090aef42e8301d45ee3f7e23489207ec",
+      "decoded_bytes": 128302342,
+      "decoded_sha256": "603a39888033cb6db21eb164fbc517ca3cafba942d30fe09321d0028aafecf6e"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-plan-input-audit.json.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 291,
+      "sha256": "8319bf4585b7d1aa49a822494e5c4ed8c56c3fa5b42521e02404b119a788fd67",
+      "decoded_bytes": 506,
+      "decoded_sha256": "53a5827f25fd64fea9b23d541b781226181b04fd580b962ef7256c4a49a6bb82"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-triangular-solve-preflight-v1.json.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 1618,
+      "sha256": "1b2fcb583eee1df975c5a3c013252722b98ce3f8301577dd1846c296f585b0ff",
+      "decoded_bytes": 18524,
+      "decoded_sha256": "62d7e8eb6a050af70108eb7d4eb44422927fa1d53dcf2b44944aa872805721b6"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-compressed-identity-posthoc.py.txt.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 1667,
+      "sha256": "1691262c1a3842dfb068354111de6851e1ec74c6446dd9724a4f87fe4ce1c56b",
+      "decoded_bytes": 3656,
+      "decoded_sha256": "3fe5fef577e4d1d48fb454a32097952161457e91c8c463f1abe3575bb1a7aa96"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-compressed-identity-posthoc.json.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 2617,
+      "sha256": "d068b7ce5eca618f340f27cc76b3d7a9e0980ed885712f13ee76f8b7174840b1",
+      "decoded_bytes": 11229,
+      "decoded_sha256": "da41042ca7007557afd85ab4d354a8b8a4c58de951f2a6afa8a2901f1ebb9931"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-compressed-identity-stability-v1.json.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 665,
+      "sha256": "3d6a8d242df2eefc08e3b57ab7fd98a91b489c9075a9a0fae5506cd10166cda6",
+      "decoded_bytes": 1741,
+      "decoded_sha256": "9c084aa2c0143376680f4bf7cc75404a27b3f07bb11c2cb8c725f50c7051dc2e"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-compressed-identity-review.json.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 3041,
+      "sha256": "83c3b4b722cbdceac017de1533c7c7a0f9d421a6248d266cee78dab57eb4ee87",
+      "decoded_bytes": 8501,
+      "decoded_sha256": "19352a6b52b64b605b7a3733ab1f96901601d714e1eb6409d7eb7db1f0292eac"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-canonical-preflight-v1.json.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 2566,
+      "sha256": "1aee195f6dab6dc816c82bc662c29afcc776755c8d5068fd60be65a8bd2df9a4",
+      "decoded_bytes": 6916,
+      "decoded_sha256": "155e9900f5a43a325298f9912991e04c365fee2a4e088a7dfacf3253275f98b1"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/normal-error-control-v2-canonical.terminal.json.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 789,
+      "sha256": "8e728a4bafea4e017274229c2affdd53d72be2327ef14bf00cf35cf004dc1a9b",
+      "decoded_bytes": 2189,
+      "decoded_sha256": "8a2cf966d3e096e2f248a6c49e463b8919a98505cbf6314d4a5fdb033f1ce459"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/normal-error-control-v2-canonical.stdout.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 486,
+      "sha256": "a0d5291df851642c40d50a5ef6061a1635eddbfc1b7e9b484090efc64218f0b7",
+      "decoded_bytes": 1307,
+      "decoded_sha256": "ef8030479550503a084ba37958fc33758798f323e7eb78fb69fc66ac54ddb10a"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/normal-error-control-v2-canonical.stderr.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 2119,
+      "sha256": "39776070bcb7bbf0dc47bef8f8508a3e9072b5e5e4c4690ed6817cf4d0a56808",
+      "decoded_bytes": 14714,
+      "decoded_sha256": "b2ef0b12d520dddbd92f635f3ba270a5f0626c28ff21d6eb9fff4baa35f85565"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-root-saved-summary-v1.json.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 1205,
+      "sha256": "ff9ad18d6bb74ebe0f647bf1c6ff97a660fad6320cb16199cd7f5339c9bf9b34",
+      "decoded_bytes": 4809,
+      "decoded_sha256": "b48db4e8979826b0370f638144a5518dce964d5260c96fd80613d2205ae62a3c"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-saved-audit-v1.json.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 1228,
+      "sha256": "39f0ac244277253b2c1977a783b697b8df8938f6fefda8ba679d18630c42ad5f",
+      "decoded_bytes": 3152,
+      "decoded_sha256": "9b3abb36747bbc50e52780e06477c63931efe2e3033f700f9b8fd420caf22c3d"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-build-v1.json.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 2852,
+      "sha256": "a5b3f4ac10b5f28a2f1d446f2e578b8c5a5630ea1acbac96b7b5a10903826950",
+      "decoded_bytes": 9174,
+      "decoded_sha256": "ee261ccb17e0f1d9bf008a0cd2208d37a7f21e400c8a284c13fb09258efa82e4"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-build-v1.stdout.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 676,
+      "sha256": "cd8a68771e6c84fe48ae59a801037db129b6bed8c745afcf2af1fd9d8ce113c3",
+      "decoded_bytes": 2080,
+      "decoded_sha256": "fc38056ee4032cd73d2d7cc08c1ca0aeaeb9271e49a1dbde5ffa78a8a219f531"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-build-v1.stderr.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 20,
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-python-final-v1.json.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 9184,
+      "sha256": "22247bc8620d77ce44f572d61364c157c077a87c139deb4f1a2795d2a73e0013",
+      "decoded_bytes": 38033,
+      "decoded_sha256": "17df23f59581353bec88e5f58084aff14e677d0f87fed95c9b43bb3fd5e870c7"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-python-final-v1.stdout.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 122,
+      "sha256": "7fae4c24548a0e634507d17757822dc72fdb1753a87256c505472520f92c74e0",
+      "decoded_bytes": 1313,
+      "decoded_sha256": "1ba980dcd5caf5b320ef5585e35d3f70ce1dc636c0d2fff8e956bed6fe413501"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-python-final-v1.stderr.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 20,
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-python-final-v1.xml.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 19339,
+      "sha256": "7eff7e381dff9cba16847355f76bb6f10bcbfc1df011ea984a9c9102f51f4dd5",
+      "decoded_bytes": 153048,
+      "decoded_sha256": "53a40250f14ea5a6a7359b0eab61f37ae73233462592b208e975268435909fce"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-python-final-v2.json.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 44018,
+      "sha256": "3600a413e783385be5bfaf40d7c7d500b1a41f776755e6f1d91640373267fa2c",
+      "decoded_bytes": 109505,
+      "decoded_sha256": "398134c692a012c79d54fd9d15ff6865af2f3bd0c6cc2d5ab82fe60d0148e49f"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-python-final-v2.stdout.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 122,
+      "sha256": "53b69aed7292381a7af0a9992c0b837b9d31890bb4b382baaa857342c0044145",
+      "decoded_bytes": 1313,
+      "decoded_sha256": "7701319e879a135187e900d671a8249025df1b892327f7fa44e81c36ef54ad5f"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-python-final-v2.stderr.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 20,
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-python-final-v2.xml.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 19344,
+      "sha256": "9ba444656f68e30699a2225a798f09d69cc604296b9b2de7cd95af9d86d6c9e6",
+      "decoded_bytes": 153048,
+      "decoded_sha256": "a26a71ce99693d4302c2bbd17b6ac29daadf77b173e5cc1d72a29515472089fe"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-lint-final-v1.json.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 471,
+      "sha256": "9321f5c97e65420dde502aec85e3be4c517a6bfafcb533c3c63ec87b349b8944",
+      "decoded_bytes": 1161,
+      "decoded_sha256": "60990f356f7bc77949a326f6ffc778d1f6298e8807539d265deede61d27d2500"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-lint-final-v2.json.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 429,
+      "sha256": "0adeb72e539e49286a7a87c967f21e107772a5e77e0770962f777d5ab47ca2f2",
+      "decoded_bytes": 1161,
+      "decoded_sha256": "94927e05b1b21e05e6affaf99d531816b9924a9cc26c85c3797e7ab14cd96369"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/run-v2-software.py.txt.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 842,
+      "sha256": "49217cb527d0857e06c8a0c30bd0c70f858c13e152a1c1e48699a2e001e0154c",
+      "decoded_bytes": 1804,
+      "decoded_sha256": "c08b9cd7b345427d7c34c190362f98df14b6f8921d5139e4ef13b75935a12aec"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/run-v2-software-final-v2.py.txt.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 767,
+      "sha256": "9f9cbe95bf5e39314cf2df9ee160375e012a9120f8123f4e503ec42a5fb9607e",
+      "decoded_bytes": 1646,
+      "decoded_sha256": "67ff743ba57a66ce9beda5a871b2eed23fbe842d4af1cb9cfa9edefdb9af518a"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/run-v2-canonical.py.txt.gz",
+      "kind": "retained_local_execution_artifact",
+      "encoding": "gzip",
+      "bytes": 725,
+      "sha256": "f89d64fb2bc12b639eed9beee79dd734c62411b98c01f6df34852c5bdcc6f572",
+      "decoded_bytes": 1589,
+      "decoded_sha256": "5d7b83fa6e6ed8b1c48d4e43d29e17696a8a715221a1efe67186839f3b1b664e"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-lint-final-v1-0.stderr.gz",
+      "kind": "retained_lint_attempt",
+      "encoding": "gzip",
+      "bytes": 56,
+      "sha256": "af262394e7d1f5858aeefd613b57a59de9e716ec5e446a0d9bac0e55c4dfb5c7",
+      "decoded_bytes": 38,
+      "decoded_sha256": "f4b000846f026d20c18b20d0c38d4cf5aaf74be86064e2f8c51d8ecf257ba93d"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-lint-final-v1-0.stdout.gz",
+      "kind": "retained_lint_attempt",
+      "encoding": "gzip",
+      "bytes": 337,
+      "sha256": "6ca87439261113c30ec005ed39879437650787ccbb143e02ae258b390f534535",
+      "decoded_bytes": 699,
+      "decoded_sha256": "f633a92ea455f07429bd5eebe1153bb633ab751ed1d6b2c66af2c3951ad442ec"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-lint-final-v1-1.stderr.gz",
+      "kind": "retained_lint_attempt",
+      "encoding": "gzip",
+      "bytes": 20,
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-lint-final-v1-1.stdout.gz",
+      "kind": "retained_lint_attempt",
+      "encoding": "gzip",
+      "bytes": 39,
+      "sha256": "f3af4d142827f5aad2eb0c72d556d325488a57fb6219aac10afeb51085667d53",
+      "decoded_bytes": 19,
+      "decoded_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-lint-final-v1-2.stderr.gz",
+      "kind": "retained_lint_attempt",
+      "encoding": "gzip",
+      "bytes": 20,
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-lint-final-v1-2.stdout.gz",
+      "kind": "retained_lint_attempt",
+      "encoding": "gzip",
+      "bytes": 46,
+      "sha256": "f140afd39e06ad8a0462e6690dc99d04e26f90c8c3ded45d10199f0ca35805f6",
+      "decoded_bytes": 26,
+      "decoded_sha256": "eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-lint-final-v2-0.stderr.gz",
+      "kind": "retained_lint_attempt",
+      "encoding": "gzip",
+      "bytes": 20,
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-lint-final-v2-0.stdout.gz",
+      "kind": "retained_lint_attempt",
+      "encoding": "gzip",
+      "bytes": 166,
+      "sha256": "709c1494bbe413aca7a092b5221e06cafa79488c58d13d49982c3f46563c7e3f",
+      "decoded_bytes": 206,
+      "decoded_sha256": "9958247e403a74fac7d655ebf27eb1b08e6895dd9520da30e70cc3da4d40411d"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-lint-final-v2-1.stderr.gz",
+      "kind": "retained_lint_attempt",
+      "encoding": "gzip",
+      "bytes": 20,
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-lint-final-v2-1.stdout.gz",
+      "kind": "retained_lint_attempt",
+      "encoding": "gzip",
+      "bytes": 39,
+      "sha256": "f3af4d142827f5aad2eb0c72d556d325488a57fb6219aac10afeb51085667d53",
+      "decoded_bytes": 19,
+      "decoded_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-lint-final-v2-2.stderr.gz",
+      "kind": "retained_lint_attempt",
+      "encoding": "gzip",
+      "bytes": 20,
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-lint-final-v2-2.stdout.gz",
+      "kind": "retained_lint_attempt",
+      "encoding": "gzip",
+      "bytes": 46,
+      "sha256": "f140afd39e06ad8a0462e6690dc99d04e26f90c8c3ded45d10199f0ca35805f6",
+      "decoded_bytes": 26,
+      "decoded_sha256": "eee76f865de5a9f2456950f710ae5d5f9b5bd0ea02aa54f614c5eed6642a0bfd"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ai/candidate-binding-v3.json.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 660,
+      "sha256": "f688560b4b6556f8313c53b3a32e26678d6859d315f748fa33c7a76111872acf",
+      "decoded_bytes": 1145,
+      "decoded_sha256": "0ca95102f9efea1de73db63f15a3783b80c32ae6e77a2babfbb2352d775c1b06"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ai/finite_normal-a58-before-inverse-correction.py.txt.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 7531,
+      "sha256": "163e69ff4de8810eae05a17d2cef7ed771ba19760a5b49061bff45f1dd0bf637",
+      "decoded_bytes": 26640,
+      "decoded_sha256": "a58d0b8f9c9d4290b6ecf6403b5c657efa60f4410bab345063b4367b67ce6cac"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ai/finite_normal-v1-e1e548b5.py.txt.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 5244,
+      "sha256": "99ae4d7c579e8c8f2443bb2db5e98c082a85f1f931856eaf9167a8a8fd37fa6a",
+      "decoded_bytes": 18226,
+      "decoded_sha256": "e1e548b58c26d98f28475e647594f5273f34734f1284df27a06324cdf022a443"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ai/first-static-metadata-correction-v1.json.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 352,
+      "sha256": "06d9a9c67aaab61b05aa2f6346b5c5920f24a337af299be94ba4cea5417b5184",
+      "decoded_bytes": 528,
+      "decoded_sha256": "02f91ca879c37a279ac999f255fc915287e123b6b9e8ba1e9ce21d0926099345"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ai/first-static-v1.json.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 329,
+      "sha256": "a016a306f444f6d84a9025a7134c602075f2a9c2dcacad94858ff2f643e3d8d3",
+      "decoded_bytes": 656,
+      "decoded_sha256": "c18fe8f0ca9be6f7c6df1a453c6d8982a4091019b763bb92f2bc56dd6dde3f3f"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ai/old94-both-rules-v2.json.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 428,
+      "sha256": "0b8815c1ec866cba953095622bfe9f12828e57f915aad7daddf9931d90a863c4",
+      "decoded_bytes": 703,
+      "decoded_sha256": "7aefd66359ac559679e6323ed9304491953643dcc02fb39e9656090873502680"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ai/old94-both-rules-v2.stderr.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 20,
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ai/old94-both-rules-v2.stdout.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 61,
+      "sha256": "ae091e1732f2debab7dcb323ab5d77d28b8552792d5ec8a76db471261176e3dd",
+      "decoded_bytes": 179,
+      "decoded_sha256": "fe0f6ae9fd6529c381e05392b80b947e6d1461584999a38e50ae3359bc442ecf"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ai/old94-both-rules-v2.xml.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 1382,
+      "sha256": "c2863734bee23e13511452d4e1d047cd036ec3e6902001060e4b6e9df4f6ca0b",
+      "decoded_bytes": 14419,
+      "decoded_sha256": "6e57babcff925689d45732c9325acb9b8c6a01febedba70ad5d2579830c68134"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ai/old94-first-v1.json.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 438,
+      "sha256": "cbea634cfcb4ae4c4e427a5ad2188345a1e81011f4201ca77708d04c29b03159",
+      "decoded_bytes": 717,
+      "decoded_sha256": "d2ec99573a3c134090c6c9be441cadc33f6aafb9e2668dd7027934d8e9d9e27a"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ai/old94-first-v1.stderr.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 20,
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ai/old94-first-v1.stdout.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 61,
+      "sha256": "aab1486fd7640684e6671888ffeac373aa78d7f3c52c82bcbdbecec5e6ef1f37",
+      "decoded_bytes": 179,
+      "decoded_sha256": "12d41db6e318ce5d2d8a2c6c6286a40b6dd73be7cf5431123e209f3d8dbf9fb3"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ai/old94-first-v1.xml.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 1383,
+      "sha256": "67c4d664a0bd38513e90a1dbc8c5e96104f2aa54cac50cba5c59c54f934db166",
+      "decoded_bytes": 14419,
+      "decoded_sha256": "18e2e8406aa54186060e6e0e5d7ab745751d56758dc5f4543c3af315babfc796"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ai/static-actual-inverse-v4.stderr.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 20,
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ai/static-actual-inverse-v4.stdout.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 324,
+      "sha256": "846f2b1590ff1a96b6327e592e7ebb6b74027c3192b536adcd7bb8f0fee2870c",
+      "decoded_bytes": 678,
+      "decoded_sha256": "7e80686a4c2b0082bbf51750498f22d9a5bf6bdce0baf19d98e6dcec3fcb7246"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ai/static-both-rules-v1.stderr.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 20,
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ai/static-both-rules-v1.stdout.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 61,
+      "sha256": "98c15bdf1fa40f7e251eaff9d06f2e777d06e04fae04aa4e056070bfb7cef59b",
+      "decoded_bytes": 41,
+      "decoded_sha256": "2d96300a61e53a429275b1066806440a2d89215e596353ca42c5798765821aaa"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ai/static-exact-reduction-v3.stderr.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 20,
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ai/static-exact-reduction-v3.stdout.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 324,
+      "sha256": "1fc7f5ba400181b28b44bac79cfdbcb3b36baaff01d727bc6be7a29279cf90b2",
+      "decoded_bytes": 678,
+      "decoded_sha256": "edd308f934b1d5de225b8ea0f86526a287ce40d09fe0fe38f66ff2f57c2ebdea"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ai/static-final-v1.stderr.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 20,
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ai/static-final-v1.stdout.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 39,
+      "sha256": "f3af4d142827f5aad2eb0c72d556d325488a57fb6219aac10afeb51085667d53",
+      "decoded_bytes": 19,
+      "decoded_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ux/attempt-v1.json.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 1275,
+      "sha256": "3af61a43957e14606a904764bfbfd5901c00863659beeb9d67e80434b0eb070a",
+      "decoded_bytes": 4708,
+      "decoded_sha256": "12b02ba607fcbbc336109905fb59efd8087ac617d8971a6a2418be521f1f7282"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ux/attempt-v1.stderr.log.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 20,
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ux/attempt-v1.stdout.log.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 62,
+      "sha256": "dde38a9b454e01a353239ec84f18ade9762b0a616a8541f74d9ea94857eb7e52",
+      "decoded_bytes": 180,
+      "decoded_sha256": "17d14ef32578feb157380f0991ab042cebcf76a92bcd3cd5b13ab7262862a23f"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ux/attempt-v1.xml.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 2029,
+      "sha256": "637f5b8fbb662f8eac728a582ea013450f719b9f84ede9de863787689ad92978",
+      "decoded_bytes": 20782,
+      "decoded_sha256": "d825028ce9adf599c8f9e4468ce2ae1dc2ddd86caeb2c14c39d7ad63821a894e"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ux/attempt-v2.json.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 1344,
+      "sha256": "5b5a92351c27ed838dd9cfd3ed408ad113622d3167b2fa241bd7ccdee3d75435",
+      "decoded_bytes": 5074,
+      "decoded_sha256": "2448929cde40b7ea3c386078470763998449350d9c232bd4c7bbc90ec30de470"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ux/attempt-v2.stderr.log.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 20,
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ux/attempt-v2.stdout.log.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 62,
+      "sha256": "4851ec6852bc038168f291c80398e66ad581dc4a5851446220f230ee522c4d3b",
+      "decoded_bytes": 180,
+      "decoded_sha256": "467b47ae31a885e43e1fa337287c870cdb4b8b1d922652b6f356772ffb7a8b3e"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ux/attempt-v2.xml.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 2157,
+      "sha256": "64dace6c85639834bc8352da5a2710002344678d884bd7464cd6a0bad7588bc2",
+      "decoded_bytes": 21783,
+      "decoded_sha256": "ed41f8b098c3a420c8d3b87676c055fa0be97e4e7181a6d32f9d786a69aa7829"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ux/preflight-v1.py.txt.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 1385,
+      "sha256": "f4b1351e5ef006ccc1d99624dc8bab3283196920c558ccacd2ae775b6f8f6229",
+      "decoded_bytes": 3237,
+      "decoded_sha256": "0f26ebcdcc476cfe19561b8da898f68730711fa9d568b47650adc5b9d73e1163"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ux/preflight-v2.py.txt.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 1451,
+      "sha256": "2f4eda238116756be6cfe40acdfc598e6403682c93ea48ce7b6b9010f10b4c83",
+      "decoded_bytes": 3475,
+      "decoded_sha256": "8a98df7faa6a8d4aa8ab368bfcfe70647f60b907acaf133c2580cf8958617b1c"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ux/test-before-inverse-addendum.py.txt.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 4399,
+      "sha256": "e043811bd9cc09cac11720092859b01b9e6592bd8ea13604c199314827ccf424",
+      "decoded_bytes": 15481,
+      "decoded_sha256": "fa5db9a4ce3beced9e74647cc84c8c48148ad2e2aac294f15edafe2087cbb87b"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/normal-v2-runner-contracts/receipt-v1.json.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 2397,
+      "sha256": "d0cd4f6f0ef5b44ee4803255f20baa0c66d33515ea6178a0e231c7efa211d5a8",
+      "decoded_bytes": 9611,
+      "decoded_sha256": "fd091e2a6639dd2077c1199f18bb9b913b0a4134da4d6f7060991853237f5784"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/normal-v2-runner-contracts/receipt-v2.json.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 2546,
+      "sha256": "3047b7764e829b2991342e6d0807c7339a940479e4230c6daa7695ebce7f13c5",
+      "decoded_bytes": 10204,
+      "decoded_sha256": "ec7052787e44d8d0d8cfd61d135ad0d19d2790a651d9e69938fa2174db8cfe70"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/normal-v2-runner-contracts/structural-v1.py.txt.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 3554,
+      "sha256": "614cf6834de5399111eddf2b7fc97b912eea7978c59b2ce9db5f916eaaccdbda",
+      "decoded_bytes": 10426,
+      "decoded_sha256": "4d387a70e1623fdfcc0708f9d65d64dfb36c18d89fd3c9734d4295a2dab9a508"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/normal-v2-runner-contracts/structural-v2.py.txt.gz",
+      "kind": "retained_preflight_attempt",
+      "encoding": "gzip",
+      "bytes": 3699,
+      "sha256": "db51f5b2b5e6607d54b57fde76b4395ab2ccb0156d1a1239add7b13b0edd312c",
+      "decoded_bytes": 10915,
+      "decoded_sha256": "23a108e4e2699bc54255d35e279684b7ad093140644b029d8ea89d324e98231f"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/operator-before-style-v2.py.txt.gz",
+      "kind": "pre_style_software_source",
+      "encoding": "gzip",
+      "bytes": 7608,
+      "sha256": "6510622fb907e1a8b40ba8d0861de0500540c19a31c008f470d88f19d2369603",
+      "decoded_bytes": 26959,
+      "decoded_sha256": "b3ba0eecdeacab4f243608a01b59b1023d4460e28b8f03b1cecdd8cc018db0b6"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/operator-source-v2.py.txt.gz",
+      "kind": "frozen_canonical_operator_source",
+      "encoding": "gzip",
+      "bytes": 7611,
+      "sha256": "549371691c01f17370b25ed739dc15c83e19160135710a684469fbf29f2a5a93",
+      "decoded_bytes": 26979,
+      "decoded_sha256": "5038ebe359ae0b3e4e158273ae145a0991feb93258fe723eca942ac49017425f"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ux-saved-audit.py.txt.gz",
+      "kind": "independent_saved_data_review",
+      "encoding": "gzip",
+      "bytes": 9047,
+      "sha256": "193feaa0d1f9c7839972c8f6c1f8eba205505a44e84a4b21452934e539528a21",
+      "decoded_bytes": 35247,
+      "decoded_sha256": "978493409aabdc5e32146a0d56b30d61c4df38c72da3fa26a5f3be010cfe9064"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ux-saved-audit-first-v1.json.gz",
+      "kind": "independent_saved_data_review",
+      "encoding": "gzip",
+      "bytes": 2006,
+      "sha256": "bfe6a42ab368e5eea86cb46fafee5a9e928c673a5fea5d6cbbed518ef7d2774c",
+      "decoded_bytes": 6113,
+      "decoded_sha256": "e4fab44d4cc13059d8b5706eda5641e676774852f7068f92ea999b3cd8ae9ca0"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-ux-saved-audit-final-v1.json.gz",
+      "kind": "independent_saved_data_review",
+      "encoding": "gzip",
+      "bytes": 2007,
+      "sha256": "74bfc55e0a4d4a69d8581c470ba83424f95d6f9ea489cc0c8d4e8a8dd8a13af1",
+      "decoded_bytes": 6113,
+      "decoded_sha256": "2f5948c97ddb6a6529ae76cdf245201b8ee82dd9bcdfe98b6427554dca6a78fa"
+    },
+    {
+      "path": "studies/fixtures/finite-normal-error-control-v2/v2-compressed-identity-review.py.txt.gz",
+      "kind": "independent_saved_data_review",
+      "encoding": "gzip",
+      "bytes": 1840,
+      "sha256": "f611cf2069f2d3045c1c6c23b59d7e0a65fc4c3cf6f2f82dfc08ab57f07720b1",
+      "decoded_bytes": 5501,
+      "decoded_sha256": "a72322cfff0c6e08aba15c3e2bf3932b3af9184f086b3d43f77a5494395eb3c4"
+    }
+  ],
+  "scope": "One immutable canonical417-scene run; old337post-hoc/new80prospective. Complete lossless report and every selected first attempt/provenance retained. Posthoc4Decimalidentityevaluations separate. Saved-data auditing does not certify density/roundoff or physical optics.",
+  "independent_saved_audits": [
+    {
+      "checks": 1662242,
+      "failures": 0,
+      "auditor_sha256": "c4e894c6e4450682b544de35670e13bc7c7c78a8782b7607aa3ea681c244c13c"
+    },
+    {
+      "checks": 811482,
+      "failures": 0,
+      "auditor_sha256": "978493409aabdc5e32146a0d56b30d61c4df38c72da3fa26a5f3be010cfe9064"
+    }
+  ]
+}

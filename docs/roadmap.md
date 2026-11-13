@@ -38,8 +38,20 @@ covariance sensitivities and ten bounded training-only steps; normal-aware steps
 remain withheld. The [finite-chord normal derivative](finite-residual-information.md#finite-chord-shape-derivative-a-derived-proposal)
 now has an analytic derivation for valid affine and projective maps. An [experimental implementation and independent study](validation/finite-normal-derivative.md)
 now retain one work-limited query and a compressed-map error-estimation
-limitation. Next, investigate determinant conditioning and global adaptive error
-allocation with separately bound evidence; preserve both original failed studies.
+limitation. A subsequent [exact-determinant and global-error correction](finite-normal-error-control.md)
+passes its [417-scene comparison](validation/finite-normal-error-control.md) and
+independent high-precision controls for both original cases. Both failed studies
+remain intact. A separate [26-scene arithmetic diagnostic](validation/finite-normal-oracle-conditioning.md)
+now isolates source-node rounding and compares exact endpoint construction
+with binary64 interpolation.
+The subsequent [analytic-normal diagnostic](validation/finite-analytic-normal-information.md)
+qualifies all 578 comparisons and ten bounded trials. Three covariance
+directions persist after normal motion; lower residuals worsen all three
+synthetic geometry errors relative to the archived baseline fits in three
+records. Next, extend general reference
+error accounting and test acquisition/model adequacy before a separately
+qualified inverse or automatic refinement. These results do not fill the old
+unknown FD columns or establish optics.
 Before optical inference, preserve acquisition samples, transforms, finite
 kernels and intermediate stage bytes in a new experiment; the current portable
 fields do not reconstruct their original acquisition chain completely.

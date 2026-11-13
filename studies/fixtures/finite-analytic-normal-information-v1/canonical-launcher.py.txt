@@ -1,0 +1,39 @@
+"""Durable ONE first analytic-normal information execution; no science in harness."""
+from pathlib import Path
+import hashlib
+import json
+import os
+import subprocess
+import time
+
+ROOT=Path.cwd();OUT=ROOT/'.local/verification';PREFIX=OUT/'analytic-normal-information-v1-canonical'
+TARGET=Path(str(PREFIX)+'.json')
+TERMINAL=Path(str(PREFIX)+'.terminal.json')
+STDOUT=Path(str(PREFIX)+'.stdout');STDERR=Path(str(PREFIX)+'.stderr')
+PREFLIGHT=OUT/'analytic-normal-canonical-preflight-v1.json'
+assert all(not os.path.lexists(p) for p in (TARGET,TERMINAL,STDOUT,STDERR,PREFLIGHT))
+
+def manifest():
+    paths=subprocess.check_output(['git','ls-files','-z']).decode().split('\0')
+    return {p:{'sha256':hashlib.sha256((ROOT/p).read_bytes()).hexdigest(),'bytes':(ROOT/p).stat().st_size}
+            for p in sorted(filter(None,paths)) if not p.endswith('.md')}
+
+assert not subprocess.check_output(['git','diff','--name-only','HEAD']), 'Commit final sources first'
+assert not subprocess.check_output(['git','ls-files','--others','--exclude-standard']), 'Review all new tracked inputs first'
+before=manifest();head=subprocess.check_output(['git','rev-parse','HEAD']).decode().strip()
+argv=['.venv/bin/python','-W','error::RuntimeWarning','studies/verification/finite-analytic-normal-information-v1.py','--output',str(TARGET)]
+record={'command':argv,'source_commit':head,'source_before':before,'scope':'First single canonical execution; no retries, dropped outcomes or changed frozen thresholds.'}
+with PREFLIGHT.open('x') as f:json.dump(record,f,indent=2);f.write('\n')
+print(json.dumps({'state':'starting','source':head,'output':str(TARGET),'source_files':len(before)}),flush=True)
+start=time.monotonic()
+with STDOUT.open('xb') as stdout,STDERR.open('xb') as stderr:
+    process=subprocess.run(argv,cwd=ROOT,stdout=stdout,stderr=stderr,check=False)
+after=manifest();record.update(exit_code=process.returncode,source_after=after,source_unchanged=before==after,incidental_elapsed_seconds=time.monotonic()-start)
+if TARGET.is_file():
+    raw=TARGET.read_bytes();record.update(report_bytes=len(raw),report_sha256=hashlib.sha256(raw).hexdigest())
+    try:
+        saved=json.loads(raw);record.update(protocol_passed=saved.get('protocol_passed'),summary=saved.get('summary'))
+    except (ValueError,TypeError) as error:record['report_parse_error']=str(error)
+with TERMINAL.open('x') as f:json.dump(record,f,indent=2);f.write('\n')
+print(json.dumps({k:v for k,v in record.items() if k not in ('source_before','source_after')}),flush=True)
+raise SystemExit(process.returncode if before==after else 3)

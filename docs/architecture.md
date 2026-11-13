@@ -24,6 +24,29 @@ discarded batch evaluations before fallback; workspace has a separate declared
 bound. See the [mathematics and resource contracts](finite-affine-evaluation.md)
 and [source-bound comparison](validation/finite-affine-batch.md).
 
+`backend.finite_normal.circular_segment_normal_derivative` is a separate
+experimental Python API for signed probability sensitivity per source-normal
+radian. It uses a finite-chord first moment with a charged quadrature fallback;
+its immutable `NormalDerivative` result retains each query's status, estimated
+error and work. It does not extend the existing four-column Jacobian or fit an
+angle. Its [contract](finite-normal-derivative.md) and initial
+[failed qualification](validation/finite-normal-derivative.md) retain the original
+panel-budget unknown and compressed-map error underestimation. The current
+[error-control correction](finite-normal-error-control.md) passes a separate
+[417-scene qualification](validation/finite-normal-error-control.md), with a
+remaining oracle-error limitation. The separate
+[projective-node diagnostic](finite-normal-oracle-conditioning.md) evaluates
+reference arithmetic on 26 restricted controls without changing production
+code or the original V2 result. The normal operator is not called
+by the automatic flow, inverse fitter or HTTP routes below.
+
+The [analytic-normal residual runner](finite-analytic-normal-information.md)
+uses these operators only in a separately frozen research diagnostic. It reuses
+archived `B/G/S` data, qualifies `N` with an independent translation reference,
+and evaluates at most one bounded joint trial per eligible record. Its
+[complete result](validation/finite-analytic-normal-information.md) does not
+change the service flow or the fixed-normal inverse schema.
+
 ```mermaid
 flowchart LR
     A[Photo upload] --> B[Validate and normalize image]

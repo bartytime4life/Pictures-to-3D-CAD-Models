@@ -7,7 +7,35 @@ original counts and environment; they are not later retests.
 
 ## Current candidate evidence — November 12, 2026
 
-The [experimental normal-angle derivative](validation/finite-normal-derivative.md)
+The [analytic-normal residual replay](validation/finite-analytic-normal-information.md)
+passes all **578 comparisons**, ten algebra controls, five normal-control batches
+and ten single joint-trial linearity checks. All 12 records and old flags remain.
+All 20 matched analyses retain three covariance directions after adding normal
+motion. Conditional residuals improve over baseline, but only 3/10 joint trials
+beat the saved BGS comparator on held-out RMS, and three worsen all three
+synthetic geometry errors relative to the archived baseline fits. This is
+numerical qualification of a local diagnostic,
+with explicit counterexamples to automatic geometric improvement.
+
+The separate [projective-node arithmetic diagnostic](validation/finite-normal-oracle-conditioning.md)
+passes all **26 declared controls**, with both original baseline totals reproduced
+exactly at orders 96 and 192. On this restricted population, exact endpoint
+construction with binary64 interpolation reduces the largest observed error
+from `4.09099e-6` to `7.94156e-10`; the two original controls additionally meet their absolute
+`1e-10` request. Every original record remains intact. This is a reference-path
+investigation, not a new application, inverse or physical-camera qualification.
+
+The [finite-normal error-control correction](validation/finite-normal-error-control.md)
+passes **1,081 final-source Python tests**, build and lint. Its single complete
+canonical comparison passes all **417 scenes, 4,832 queries and 72 positive-area
+checks** under the frozen criteria. Independent high-precision arithmetic confirms
+both original compressed candidate controls below the requested `1e-10`, while
+exposing an optimistic reference-oracle allowance. This is conditional numerical
+evidence, not a certified absolute bound or automatic photo correction. Both
+earlier failed studies remain intact; the new record separates regression,
+prospective cases, unit checks and saved-data auditing.
+
+The preceding [experimental normal-angle derivative](validation/finite-normal-derivative.md)
 passes the application build and 1,037 Python tests. Its complete 337-scene
 qualification retains **exit 1**: 3,885 resolved comparisons, one panel-budget
 unknown, 3,886 converged independent oracles and 36 passing positive-area checks.
@@ -41,10 +69,14 @@ retains a missed nominal target and background-sensitive or incompatible
 covariance proposals. These developer models do not change automatic tracing
 or establish physical-camera accuracy.
 
-The [current documentation review](validation/documentation-pr95-state.md)
-covers published draft PR #95, source/CI status, user guides, API contracts,
-saved-review commands and the companion library. It includes the derived
-finite-chord proposal with numerical qualification still pending. The
+The [preceding documentation review](validation/documentation-pr100-state.md)
+covers published draft PR #100, source/CI status, user guides, API contracts,
+saved-review commands and the companion library. It distinguishes the original
+V1 failures, V2 correction and restricted reference-node diagnostic. The
+[preceding PR #97 review](validation/documentation-pr97-state.md) retains its
+original source and checks. The
+[preceding PR #95 review](validation/documentation-pr95-state.md) records the
+earlier derivation-only state before that operator was published. The
 [preceding review](validation/documentation-pr93-state.md) covers PR #93 and
 its then-proposed next diagnostic. The later
 [residual-study record](validation/finite-residual-information.md) adds the
@@ -53,11 +85,11 @@ The [preceding affine review](validation/documentation-affine-state.md)
 retains its original checks. The preceding
 [PR #91 review](validation/documentation-pr91-state.md) covers integrated main
 `ec41b0c`, including PR #85's shadow-harmonic change. The 899-test result above
-predates that combined source; the new 943-test candidate interval includes it.
+predates that combined source; the historical 943-test affine interval includes it.
 Documentation checks cover executable examples, command help and navigation.
 The
 [PR #88 review](validation/documentation-pr88-state.md) retains its earlier
-scope. Neither documentation review reruns or replaces the geometry/browser
+scope. These documentation reviews do not rerun or replace the geometry/browser
 results below; [current main and dependency states](project-status.md) have a
 separate timestamped snapshot.
 
@@ -65,14 +97,16 @@ The [residual-information replay](validation/finite-residual-information.md)
 retains its **failed protocol**: 12 rows, ten unknown normal columns, two upstream
 refusals and unchanged old flags. Ten fixed-normal bounded steps satisfy local
 linearity; the independent saved-data audit passes 9,683 checks. Separate
-post-hoc rotation arithmetic motivates the next independent derivative test.
+post-hoc rotation arithmetic motivated the separately bound
+[finite-chord derivative study](validation/finite-normal-derivative.md), whose
+complete failed result is retained above.
 No original target miss is relabeled, and no inverse fit or performance benchmark
 is repeated.
 
 The preceding [circle-consistent join candidate](validation/directional-free-arcs.md)
 builds on PR #84. It tests the circle represented by actual emitted geometry,
 retains the six failed analytic baseline cases and replays independent geometric,
-search and finite-source controls. Its separate prospective directional free-arc
+search and finite-source controls. Its separately frozen directional free-arc
 comparison keeps matched-model recovery, weak-support alternatives and adverse
 material/threshold/point perturbations distinct. The new conditional disk fit
 and higher-order series remain study-only.

@@ -1,5 +1,12 @@
 # Finite-normal derivative: complete original qualification
 
+Source-binding notice: the later
+[V2 correction](../../../docs/finite-normal-error-control.md) changes the operator.
+Run the original audit commands below from a checkout at
+`d40502fed3de93989c73d4c8cf614f6f6b6d7e45`, rather than rebinding this report to
+the changed source. The [current V2 archive workflow](../finite-normal-error-control-v2/README.md)
+has its own report, hashes and auditor. All original V1 artifact bytes remain intact.
+
 The original study **exited 1**. It retains all 337 planned scenes and 3,886
 queries, including one panel-budget unknown. All independent chord oracles
 converge; 3,885 candidate comparisons and 36 positive-area checks pass their
