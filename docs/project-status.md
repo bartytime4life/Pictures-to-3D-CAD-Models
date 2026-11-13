@@ -9,8 +9,10 @@ The candidate's code was committed at `f3bcd98`; its integration checkpoint is
 `faf9b5a600ed64a226307da93615b086a6c38669`. The
 [source-bound qualification record](validation/finite-affine-batch.md) identifies
 its exact software, frozen plan, runner and preserved original comparator.
-The [latest documentation review](validation/documentation-pr93-state.md) covers
-current guides, pending research and the companion library. The
+The [preceding documentation review](validation/documentation-pr93-state.md) covers
+the guides and prospective research before this study. The subsequent
+[residual-study record](validation/finite-residual-information.md) includes its
+fresh documentation checks. The
 [preceding affine review](validation/documentation-affine-state.md) retains its
 original evidence. This checkout is separate from the
 preserved primary `codex/slicer-integration` worktree.

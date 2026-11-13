@@ -145,7 +145,7 @@ The three new scripts pass Ruff, formatting and compilation checks. This study
 changes no production backend, frontend, tests, old study or generated-library
 bytes. The inherited 943-test software result belongs to PR #93's unchanged
 software interval; this is not a newly repeated full software/browser suite.
-All **82 Markdown files** parse with locked `marked` 17.0.5; **904 local
+All **82 Markdown files** parse with locked `marked` 17.0.5; **907 local
 references**, **87 heading fragments** and **110 tables** pass. The documented
 portable archive block verifies all 17 compressed/decoded artifacts, reproduces
 all 9,683 saved-data checks and reproduces the complete rotation JSON exactly.

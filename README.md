@@ -5,9 +5,11 @@ Turn a photograph of a **flat, constant-thickness part** into a scaled CAD solid
 The workbench is designed for plates, gaskets, spacers, and templates. It traces what is visible in the photograph; it does not recover hidden geometry or infer physical dimensions.
 
 For the reviewed source revision, draft PR dependencies and available research
-APIs, read [source scope and status](docs/project-status.md). The latest
+APIs, read [source scope and status](docs/project-status.md). The preceding
 [documentation review](docs/validation/documentation-pr93-state.md) covers
-published draft PR #93, the workbench, companion library and proposed research. Older
+published draft PR #93, the workbench and companion library. The subsequent
+[residual-study record](docs/validation/finite-residual-information.md) includes
+its completed diagnostic, retained failure and fresh documentation checks. Older
 test results retain their original scope.
 
 For reference-sheet tracing, photograph the whole flat sheet (A4, US Letter, or a sheet you have measured) and explicitly choose it as the **Scale reference**. A successful sheet trace sets scale from its stated size, estimates perspective and one radial lens correction, and fits lines, tangent arcs and circles. Entered thickness supports a side-wall/parallax correction under the method's assumptions. Ordinary tracing and the sample use measured-width scaling instead; they do not perform these corrections. See [reference-sheet tracing](docs/reference-sheet.md) for the mathematics and synthetic evidence, and the [engineering model](docs/engineering-model.md) for independent verification before fabrication.
