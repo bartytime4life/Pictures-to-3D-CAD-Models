@@ -1,5 +1,16 @@
 # Workbench change log
 
+## Residual information and rotation sensitivity — November 12, 2026
+
+- Retain the complete failed normal-angle protocol, all 12 records, unchanged
+  old flags and fixed-normal conditional steps. Add guarded raw-rank/status
+  handling and a portable independent saved-data auditor.
+- Derive a rotation-sensitivity identity and preserve a separately labeled
+  post-hoc saved-array analysis, with no new model call or normal qualification.
+- Archive every array losslessly, update method/command/evidence navigation,
+  and keep production tracing unchanged.
+  [Complete results and limits](validation/finite-residual-information.md).
+
 ## Documentation alignment with draft PR #93 — November 12, 2026
 
 - Identify the published affine candidate, exact tree, dependency base and

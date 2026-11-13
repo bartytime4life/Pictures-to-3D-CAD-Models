@@ -46,10 +46,13 @@ scope. Neither documentation review reruns or replaces the geometry/browser
 results below; [current main and dependency states](project-status.md) have a
 separate timestamped snapshot.
 
-The [residual-information proposal](finite-residual-information.md) is future
-work. This documentation pass runs no archived-photo sensitivity calculation,
-tangent step, inverse fit or new performance benchmark. It supplies no further
-scientific pass count and does not change any of the retained target misses.
+The [residual-information replay](validation/finite-residual-information.md)
+retains its **failed protocol**: 12 rows, ten unknown normal columns, two upstream
+refusals and unchanged old flags. Ten fixed-normal bounded steps satisfy local
+linearity; the independent saved-data audit passes 9,683 checks. Separate
+post-hoc rotation arithmetic motivates the next independent derivative test.
+No original target miss is relabeled, and no inverse fit or performance benchmark
+is repeated.
 
 The preceding [circle-consistent join candidate](validation/directional-free-arcs.md)
 builds on PR #84. It tests the circle represented by actual emitted geometry,

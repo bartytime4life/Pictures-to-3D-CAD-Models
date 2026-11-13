@@ -1,0 +1,11 @@
+{
+  "plan_sha256": "837c626d7add9ebc6927d60245b85c1ad9bd361adaf8205e4bf62a4efd322532",
+  "plan_commit": "370bd32fb1cc6727a878b82ebc5fc3fca6964d2f",
+  "before_new_derivatives_or_trials": true,
+  "input_count": 10,
+  "production_source_count": 25,
+  "all_bound_inputs_match": true,
+  "inverse_optimizer_calls": 0,
+  "new_archive_forward_calls": 0,
+  "scope": "Prospective plan/source freeze; saved-source/residual inspection and invented algebra/parser controls only so far."
+}

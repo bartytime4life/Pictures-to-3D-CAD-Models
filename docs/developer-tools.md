@@ -6,10 +6,11 @@ Run these from the repository root after setup. `make` prints the supported
 targets. These are the tools present in the reviewed main-based source; research
 scripts from a separate branch are not implied by this list.
 
-The [proposed residual-information diagnostic](finite-residual-information.md)
-is documented for research review only. Its local work-in-progress plan and
-runner are not included in this source; do not assume a runnable entry point
-or a completed archived-data result from that proposal.
+The [residual-information diagnostic](finite-residual-information.md) has a
+complete retained failed replay and separate saved-only audit. Its [portable
+instructions](../studies/fixtures/finite-residual-information-v1/README.md) distinguish
+contracts, actual forward/derivative/trial calls and post-hoc saved arithmetic;
+none runs a new inverse optimizer or changes automatic tracing.
 
 For lightweight checks of the finite-material documentation, use the
 [supplied-model example](finite-shape-inverse.md#coordinate-example),
@@ -43,6 +44,10 @@ reproducing an archived result; a later backend can invalidate that binding.
 | Affine complete accuracy replay without timing | `.venv/bin/python studies/verification/finite-affine-batch-v1.py --complete --no-timing --output NEW.json` | Same archived accuracy population; no benchmark repeats or timing qualification |
 | Affine actual first-fit failure continuation | `.venv/bin/python studies/verification/finite-affine-batch-v1.py --complete --no-timing --inject-first-fit-failure --canonical CANONICAL.json --output NEW.json --audit NEW_AUDIT.json` | Injects the first accuracy-fit entry failure, runs 31 later real accuracy fits and compares all 35 later records; decompress the full canonical archive first; [instructions](../studies/fixtures/finite-affine-batch-v1/README.md) |
 | Saved affine report integrity audit | `python3 studies/verification/finite-affine-report-audit-v1.py --help` | Standard-library-only arithmetic, timing-accounting and source checks; no fitter imports or reruns; [full invocation](../studies/fixtures/finite-affine-batch-v1/README.md#verify-the-saved-report-without-fitting) |
+| Residual-information safe contracts | `.venv/bin/python studies/verification/finite-residual-information-v1.py --contracts-only --output NEW.json` | Six invented algebra and ten parser/status controls; NumPy, no backend import or archived model calls |
+| Residual-information actual diagnostic | `.venv/bin/python studies/verification/finite-residual-information-v1.py --output NEW.json` | The 12-row source-bound replay performs means, derivatives and eligible single steps without an inverse optimizer; [original exit 1 and retained unknowns](validation/finite-residual-information.md) |
+| Residual saved-data audit | `python3 studies/verification/finite-residual-report-audit-v1.py --help` | Standard-library Jacobi SVD, QR and arithmetic on the complete decoded report; [exact hash-bound invocation](../studies/fixtures/finite-residual-information-v1/README.md#verify-and-audit-without-model-calls) |
+| Post-hoc saved rotation identity | `python3 studies/verification/finite-normal-rotation-saved-v1.py --help` | Combines saved arrays only; no new forward evaluation, independent optical validation or replacement of unknown normal columns |
 | Actual first-fit failure continuation | `.venv/bin/python studies/verification/finite-photo-intensity-v2-continuation-v1.py --canonical studies/results/finite-photo-intensity-v2.json --output NEW.json --audit NEW_AUDIT.json` | Injects the first fit-entry failure and runs nine later optimizers; writes full result and separate comparison audit to fresh paths; [portable evidence and scopes](../studies/fixtures/finite-photo-intensity-v2/README.md) |
 | Corner sweep | `.venv/bin/python scripts/corner_sweep.py --help` | Synthetic fitting cases, optional `--quick`, `--backend PATH` and `--json FILE`; not a real-camera test |
 | Native FreeCAD import check | `make freecad` | Requires `FREECADCMD`; builds synthetic fixtures and launches FreeCAD. `freecad_check.py` and its `freecad_import.py` helper have no argparse help mode |

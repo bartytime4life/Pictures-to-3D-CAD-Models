@@ -52,9 +52,11 @@ across pixels under exactly affine maps. A fixed, source-bound comparison record
 2.75–3.91 seconds and all prior target passes retained. This is developer API
 evidence; it does not change the photo workflow or qualify interactive latency.
 See the [complete results and limits](docs/validation/finite-affine-batch.md).
-The next [proposed sensitivity study](docs/finite-residual-information.md) asks
-which residual patterns distinguish blur from geometry. It has no archived-data
-result or automatic correction in this source.
+The [residual-information study](docs/finite-residual-information.md) now retains
+a failed normal-angle control and conditional covariance-only steps. Its
+[complete record](docs/validation/finite-residual-information.md) preserves all
+unknowns and motivates a separately labeled analytic rotation identity. It
+changes no automatic tracing or optical correction.
 
 Final fitted arcs also need [circle-consistent joins](docs/curved-joins.md).
 An unavailable join keeps an affected outline for review when valid, with a

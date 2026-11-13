@@ -1,0 +1,376 @@
+{
+  "format": "pictures-to-cad-finite-residual-information-plan",
+  "version": 1,
+  "design_status": "prospective before any new covariance/normal derivative or tangent-step computation; saved residual/source inspection allowed",
+  "base_local_commit": "3770486dec5a2faa5529029dc2befeda820defaa",
+  "base_published_commit": "f7d116e74b028beffe2dee797518767d0e5b7222",
+  "base_tree": "aec6ce2f6acedb0c29ad7681a2fdf13662a8a010",
+  "objective": "Diagnose which local residual directions remain distinguishable after brightness, geometry and fixed-normal nuisance projection. No nonlinear inverse fit, rerender, re-preparation, optical calibration or automatic CAD adoption.",
+  "population": [
+    {
+      "index": 0,
+      "name": "small-isotropic",
+      "lane": "legacy_sigma_squared_identity",
+      "expected_eligible": true
+    },
+    {
+      "index": 1,
+      "name": "small-isotropic",
+      "lane": "nominal_observed_moment_covariance",
+      "expected_eligible": true
+    },
+    {
+      "index": 2,
+      "name": "small-directional",
+      "lane": "legacy_sigma_squared_identity",
+      "expected_eligible": true
+    },
+    {
+      "index": 3,
+      "name": "small-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "expected_eligible": true
+    },
+    {
+      "index": 4,
+      "name": "medium-directional",
+      "lane": "legacy_sigma_squared_identity",
+      "expected_eligible": true
+    },
+    {
+      "index": 5,
+      "name": "medium-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "expected_eligible": true
+    },
+    {
+      "index": 6,
+      "name": "large-directional",
+      "lane": "legacy_sigma_squared_identity",
+      "expected_eligible": true
+    },
+    {
+      "index": 7,
+      "name": "large-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "expected_eligible": true
+    },
+    {
+      "index": 8,
+      "name": "minor-directional",
+      "lane": "legacy_sigma_squared_identity",
+      "expected_eligible": false
+    },
+    {
+      "index": 9,
+      "name": "minor-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "expected_eligible": false
+    },
+    {
+      "index": 10,
+      "name": "rotated-major-directional",
+      "lane": "legacy_sigma_squared_identity",
+      "expected_eligible": true
+    },
+    {
+      "index": 11,
+      "name": "rotated-major-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "expected_eligible": true
+    }
+  ],
+  "input_sha256": {
+    "studies/finite-photo-intensity-v2.json": "6563b63d283ad984cba38d2275cb20163c28da4b270c6d2a5d419548a15024ae",
+    "studies/results/finite-photo-intensity-v2.json": "967251c4458e7c06f88c6f5d4b01ab77654a0a744e1a181dd79c86df99d39127",
+    "studies/finite-free-centre-v1.json": "f8db267fd848363ba91b56cd5a01086f3123ad699f6c0c404166734f3bc582fd",
+    "studies/verification/finite-free-centre-v1.py": "0537540cbfddad2e6209b7b1483977e118c70b64f0d7938e810f942765e579f8",
+    "studies/fixtures/finite-moment-photo-v1/large-directional-measurement.npz": "de00f76fcfd2c3f3ad7a3c7920b9716c45d93cebb55175ce04d17f0ed2455b9c",
+    "studies/fixtures/finite-moment-photo-v1/medium-directional-measurement.npz": "e5b903ac4e82191ad87e4ce50274bf25a502ba99f3003cbe810f38e769d403bf",
+    "studies/fixtures/finite-moment-photo-v1/rotated-major-directional-measurement.npz": "037e7d493ee9b6c612a70f0721af81a790ee543d975696996a7f928e99e2cbbc",
+    "studies/fixtures/finite-moment-photo-v1/small-directional-measurement.npz": "dc66ddb52ae895b9bed4ad28ef69bf548f07732ecf4a6f1a91844963ed642ab4",
+    "studies/fixtures/finite-moment-photo-v1/small-isotropic-measurement.npz": "9982be1be11d8d5a8ec27026984e13f3df0c0d42cf7cd16360e6e9ede7a862d9",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v2-probe.py.txt": "b3733f8fa037b9fa1c4401991c7a5ac23438dc8040232124ff1df63a7be3323a"
+  },
+  "source_sha256": {
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/app.py": "345c7dc8bbc7bfbe616eb2934d2a58cd0b4fa1216dbdaa5272ab3a36b06d96bc",
+    "backend/assistant.py": "45f05aa8d0738a1da0e3b5040a2c4df8a01a35e9a835e1c06fd47ee3e81758c5",
+    "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+    "backend/curve_envelope.py": "d37525b42c920a770b783e0c94ff97cf3d5214272d85dcdceae9d23eb184ca27",
+    "backend/drawing.py": "560f087e28d369a2e0f3b733197c18c5a7aa87c390fe56de7516caf9a08a5e6d",
+    "backend/edges.py": "c02bcf6f15958ea5c82444de3ea3af37f20031e6df463846dc8082e37abae9ee",
+    "backend/finite_affine.py": "d4eb540f6a654178fca41b4be416bd4ad6ebb6b3f645bc78b5383b18b8caa653",
+    "backend/finite_centre_fit.py": "df8a057abefe983ee951c894a9ae44e0c6b0f472d3419578be505973ea3a8bfb",
+    "backend/finite_observations.py": "09fa843f72b2fc265ba8d4a7111267bf10433eb4f3f2a0600a89cc7871cb3969",
+    "backend/finite_shape.py": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+    "backend/fitting.py": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+    "backend/heic.py": "5e34870379991f8813bacfc4badc8fe7fcf5dbe8aa053156fa352456b208de33",
+    "backend/models.py": "21e7467766f4a086f52b3756f6b1fa8e4ec96a7b76cf0b4d1131c5f45709e6e1",
+    "backend/placement.py": "e1745597ca2930d1260659e9f2dc4405f2b7239beb0c12c45fa92b6d3f5c03df",
+    "backend/printing.py": "58d121ad45f0176b02094f3446dcd020c254ccd78860e5a269b8b6a8d6479915",
+    "backend/reference.py": "23a94e699d5499d8a4621902193e3a70214062108a5d0d10abb04df9efb8b69d",
+    "backend/scad.py": "d5cf18312ba10b7e3830d059952c3d078edc1e21813eb2fb03a4fd1ebaf2d534",
+    "backend/sheet.py": "cbb2f4ae8a47ac88dd98adac02590d55a48b05a83523f2e6d1af12da78186393",
+    "backend/slicer_handoff.py": "774e78fa93dacc348c204d89a0ec4192a01701fb3fa3304ee09960e816101a50",
+    "backend/slicers.py": "03442055d64c37d46e5806bafdd0bd497b54dacf78bc409addf1ff8400c25bb9",
+    "backend/three_mf.py": "435afd61c90bb21c305876f681f845a3bfb193a64fa96589e649fb40fd821cf1",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "backend/tracing.py": "b822716050b285152bcbefe07a0b7da1e02716ecb5d990cbf29af86598a14d2e",
+    "backend/worker.py": "9c869ffae551485b473aeb54ddc9a0116e8c8df22f92f2c08e2f3e97f24ca846"
+  },
+  "observation_contract": "Reuse archived observed40train/16held positions/values and metadata exactly; geometry/levels fixed at each archivedbest. Each of5 pairedlanes has shared samples. No truth access in diagnostic/step selection; truth read only after predictions for descriptive evaluation. Directly check stored crop/selected values against pinned NPZ g in the archived local/global coordinate frames, without calling preparation.",
+  "sampling_limits": [
+    "Heldoutvalues affected preprocessing/moments and are not independent prediction.",
+    "No IIDnoise, significance, confidence or physical-accuracy claim.",
+    "No sample replacement/subset selection."
+  ],
+  "mean_settings": {
+    "probability_tolerance": 1e-10,
+    "max_panels": 4096,
+    "max_evaluations": 2000000
+  },
+  "geometry_order": [
+    "centre_x",
+    "centre_y",
+    "radius",
+    "chord_fraction"
+  ],
+  "geometry_scaling": "Multiply each geometric meanJac column by its archived observed-domain width; coordinates represent fractions of those domain widths.",
+  "brightness": "Use columns1-P,P for levels strictly interior to [0,255] with64eps*255 activeguard. Fixed-bound columns excluded; retain activefaces. Rank/steps are conditional on this fixed active face, not the full feasible inward tangent cone.",
+  "covariance_chart": {
+    "formula": "Sigma(q)=L exp(sum(q_i E_i)) L.T; L=Cholesky(Sigma0)",
+    "basis": [
+      [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      [
+        [
+          0,
+          0.7071067811865476
+        ],
+        [
+          0.7071067811865476,
+          0
+        ]
+      ]
+    ],
+    "chart_units": "dimensionless, Frobenius-orthonormal symmetric directions",
+    "generated_arithmetic": "Validate supplied Sigma0 strictly with no symmetry repair. For each GENERATED L exp(S)L.T only, record raw entries/asymmetry, require finite and asymmetry <=64eps*maxabs(raw) (zero scale handled explicitly), canonicalize .5*(raw+raw.T), record maximum entry change, then validate positive definiteness. Refuse any larger or nonfinite discrepancy."
+  },
+  "finite_differences": {
+    "central_steps": [
+      0.001,
+      0.0005
+    ],
+    "normal_units": "radians; rotate archivedunitnormal",
+    "absolute_level_derivative_discrepancy": 2e-05,
+    "relative_level_derivative_discrepancy": 1e-05,
+    "status": "unknown if either resolution or h/half-h stability fails"
+  },
+  "models": [
+    [
+      "B"
+    ],
+    [
+      "B",
+      "G"
+    ],
+    [
+      "B",
+      "S"
+    ],
+    [
+      "B",
+      "G",
+      "S"
+    ],
+    [
+      "B",
+      "G",
+      "N",
+      "S"
+    ]
+  ],
+  "rank_policy": {
+    "roundoff_multiplier": 64,
+    "derivative_discrepancy_multiplier": 4,
+    "reference": "Unprojected respective block spectral norm; never renormalize projectedroundoff. Retain singularspectra; covariancecutoff=max(64eps*maxdimension*unprojectednorm,4*FDdiscrepancynorm).",
+    "near_cutoff": "Report CUTOFF-SENSITIVITY interval from2*cutoff andcutoff/2; this is not a rigorous true-rank/confidence interval. Rank0 means no directions resolved under this estimated guard, not proof of no physical information. Require stable full-column rank for an actual step; enforce residual-dimension ceiling.",
+    "forward_error_propagation": "For each central FD column use (eta_plus+eta_minus)/(2*h) in level units, for both h and h/2; retain elementwise estimates. For G retain analytic per-row error estimates and multiply by |contrast| and each domain width. Include propagated uncertainty and h/half-h discrepancy in block and full-step cutoffs, not discrepancy alone. These are estimated numerical guards, not certified bounds.",
+    "comparison_cutoff": "Within each nuisance-versus-augmented comparison use one reference cutoff derived from the UNPROJECTED concatenated blocks and their retained error estimates; report projected C spectrum against that same scale and residual-dimension ceiling.",
+    "error_combination": "Conservatively ADD elementwise h/half-h discrepancies and propagated forward/analytic derivative-error arrays before a spectral or Frobenius norm; retain the separate arrays. No cancellation of estimated error terms.",
+    "projector_uncertainty": "For nuisance T with FULL column rank and smin(T)>etaT (retained analytic/FD estimates plus SVD/projector arithmetic), use etaP=min(1,2*etaT/(smin(T)-etaT)); etaC=etaS+etaP*(||S||2+etaS), plus projection arithmetic. Cutoff for projectedS includes4etaC and the original unprojected comparison scale. If the full-rank/gap condition fails or etaP>=1, covariance uniqueness and step qualification are unknown/withheld. Empty exact nuisance span has etaP0; exactly known algebraic fixed-rank controls may use etaT0 without a full-column-rank assumption.",
+    "covariance_cutoff": "max(64eps*maxdimension*UNPROJECTED concatenated spectral norm,4*etaC) with etaC defined from both FD scales/discrepancy, forward-error propagation, nuisance projector uncertainty and arithmetic. Full-step SVD uses its analogous concatenated estimated-error cutoff."
+  },
+  "steps": {
+    "fit_source": "TRAINING ROWS ONLY SVD leastsquares of unprojected complete meanJac; joint LINEARIZED level/geometry/covariance(/normal) update. No nonlinear optimizer or exact box re-profiling of levels at the trial.",
+    "models": [
+      [
+        "B",
+        "G",
+        "S"
+      ],
+      [
+        "B",
+        "G",
+        "N",
+        "S"
+      ]
+    ],
+    "covariance_norm_cap": 0.05,
+    "geometry_normalized_max_cap": 0.01,
+    "normal_angle_cap_radians": 0.01,
+    "domain_distance_fraction": 0.9,
+    "damping": "one common alpha=min(1, allcaps/allproposedcomponent sizes, .9 ofdistance to each geometric andlevel bound). No line search or repeatstep.",
+    "actual_vs_linear_absolute_level_allowance": 0.001,
+    "actual_vs_linear_relative_allowance": 0.05,
+    "qualification": "Only local linearization behavior when finite/source/work/FD/rank/domainchecks pass; no fitting or scientific-target success is inferred.",
+    "solve": "Use the SAME stable retained SVD space/cutoff as reported for that complete training matrix; do not call default-lstsq with another tolerance. Withhold the actual step when full column rank or its rank interval is unresolved. No discarded direction is restored by the coefficient solver.",
+    "covariance_norm_definition": "Frobenius norm of sum(delta_q_i E_i), equal to Euclidean norm of delta_q. Actual update is Sigma=L exp(alpha*sum(delta_q_i E_i)) L.T.",
+    "zero_policy": "Skip zero-denominator cap terms. Exactly zero coefficient vector uses alpha1 and retains unchanged predictions as zero_step, not a recovered parameter. A required alpha0 is a withheld bound-limited step, not success.",
+    "level_bounds": "Apply the same common alpha to FREE level deltas and verify both actual trial levels remain in [0,255]. Fixed active levels stay fixed on their declared face.",
+    "actual_vs_linear_metric": "max over ALL56 queries of abs(actual_trial_mean - baseline_mean - alpha*J*delta) <= .001 + .05*max over ALL56 abs(alpha*J*delta). Evaluated AFTER training-only coefficients and alpha are fixed; neither heldout values nor this test can select/retune alpha or repeat a step."
+  },
+  "reporting": [
+    "All56 signed observations,meanpredictions,residuals, train/held indices andedge/material/background strata (train24/8/8; held8/4/4).",
+    "All unprojected B/G/S/N columns, h/half-h plusminusmean arrays, covariancechart and activefaces.",
+    "All singularspectra/cutoffs/rankintervals, nuisanceprojected residualenergy, covarianceuniqueinformation, principalangles.",
+    "Training-only coefficients/commonalpha; linearpredicted andactual one-step train/held means; max/RMS perstratum; allrefusals.",
+    "Old targets/passflags copiedunchanged; optional descriptive geometry errors only after allsteps/predictions chosen. No new fitpasslabel.",
+    "Propagated forward/analytic derivative-error arrays, fixed-face interpretation, full-step SVD retention and any withheld coefficient/alpha/trial status."
+  ],
+  "algebra_controls": [
+    "covariancedirections entirely in nuisancespan give zero resolved rankgain",
+    "three orthogonal covariance directions give rankgain3 and exact residual projection",
+    "residual entirely nuisancespan leaves no additional covariance residualenergy",
+    "projected floatingroundoff is not promoted by localrenormalization",
+    "rankgain never exceeds remaining observationdimension",
+    "brightnessfixedface excludes thatcolumn"
+  ],
+  "independent_forward_controls": {
+    "config": {
+      "shape": "D",
+      "sensor_shape": [
+        160,
+        160
+      ],
+      "centre": [
+        79.37,
+        78.81
+      ],
+      "radius": 8.4,
+      "fraction": 0.27,
+      "normal_degrees": 23,
+      "covariance": [
+        [
+          1.2,
+          0.3
+        ],
+        [
+          0.3,
+          2.1
+        ]
+      ],
+      "homography": [
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ]
+      ],
+      "source": "point",
+      "levels": [
+        0,
+        255
+      ]
+    },
+    "pixels": [
+      [
+        71,
+        78
+      ],
+      [
+        79,
+        70
+      ],
+      [
+        79,
+        78
+      ],
+      [
+        80,
+        84
+      ],
+      [
+        82,
+        80
+      ],
+      [
+        85,
+        76
+      ]
+    ],
+    "orders": [
+      64,
+      128
+    ],
+    "central_steps": [
+      0.001,
+      0.0005
+    ],
+    "level_order_allowance": 1e-06,
+    "level_derivative_allowance": 2e-05,
+    "scope": "Independent positive-area erfc/conic means for each covariance direction AND normal-angle perturbation, not differentiation of the productionGreen formula.",
+    "directions": [
+      "SPD_E1",
+      "SPD_E2",
+      "SPD_E3",
+      "normal_angle"
+    ]
+  },
+  "cli_contract": "--output NEW.json inexistingdirectory; --help/refusals before expensiveimports; strictfiniteJSON with per-row stagefailure. Exit0=protocolintegrity only, not repaired optics; exit1=control/source/protocol failure; exit2=explicit parser/destinationrefusal. --contracts-only performs algebra/parser/sentinel controls without importing backend or evaluating archived forward/derivative/tangent steps; never presented as a scientific replay.",
+  "future_decision": "Use allretainedresults to choose between conditionalGaussianPSF extension and known acquisition-chain modelling; no causeclaim from tangentenergy alone.",
+  "references": [
+    {
+      "url": "https://scispace.com/papers/estimation-of-atmospheric-psf-parameters-for-hyperspectral-1fahvmg6oj",
+      "read": "abstractonly; PSFestimationillconditioning motivation"
+    },
+    {
+      "url": "https://scispace.com/papers/scale-factor-point-spread-function-matching-beyond-aliasing-34tse5djgu",
+      "primary_fulltext": "https://arxiv.org/pdf/2101.06440",
+      "read": "abstractandprimarymethods; resamplingseparatefromPSF"
+    },
+    {
+      "url": "https://www.cs.umd.edu/users/oleary/software/varpro.pdf",
+      "read": "primarypaper; separable leastsquares/Jacobian constraints"
+    }
+  ]
+}

@@ -15,6 +15,14 @@ current guides, pending research and the companion library. The
 original evidence. This checkout is separate from the
 preserved primary `codex/slicer-integration` worktree.
 
+This subsequent research candidate adds the frozen residual-information plan,
+runner, complete failed report and independent saved-data tools over the PR #94
+documentation tree. Its [validation record](validation/finite-residual-information.md)
+retains the failed normal control, all unknowns, old flags and source binding.
+It adds no automatic correction. The 01:15 snapshot below predates this study's
+publication; the earlier prospective status remains in immutable
+[PR #94 source](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/blob/2f9abf2a4d2e1b809d2f3115f04fc04470682c4f/docs/project-status.md).
+
 The merged [PR #91](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/91)
 at `65399053b45f3c38a9d6d2084bc2315aac9bd87e` added the
 [immutable measured-ring observation bridge](finite-shape-inverse.md#prepare-a-measured-ring-observation-set).
@@ -33,7 +41,7 @@ This is November 12 in the project's America/Chicago timezone.
 | Main, `1d32c43`, tree `d75d6c76cd5d0529c75e792da7d0fe384d47635c` | Includes merged documentation PR #92 and prior PRs #84, #85, #90 and #91 | Main does not yet include this affine candidate at this snapshot |
 | Affine PR #93, head `f7d116e`, tree `aec6ce2` | Open draft against main `1d32c43`; unmerged | [943 local Python tests, build and lint](validation/finite-affine-batch.md#software-regression) bind the unchanged software; source-bound fixed performance comparison; no new local browser or installed-machine result |
 | Documentation PR #94, initial head `3726be6` | Open draft based on PR #93, not main | [Documentation-only checks](validation/documentation-pr93-state.md); all inherited non-Markdown blobs preserved |
-| Proposed residual-information study | Separate local work in progress, outside the PR #93 source | [Prospective method](finite-residual-information.md); no archived-photo derivative or trial-step results published; no new available command in this checkout |
+| Residual study at the earlier 01:15 readback | Then local work in progress, outside PR #93 | The later [completed failed replay](validation/finite-residual-information.md) is separately bound; this historical row is not a live indicator |
 | PR #92, head `c69d37f` | Merged at 23:58 UTC on November 12 | [Documentation-only review](validation/documentation-pr91-state.md); every inherited non-Markdown byte preserved |
 | PR #91, `6539905`, through PR #90's final `bf592fa` | Included in main at `ec41b0c` | [899 local Python tests](validation/finite-photo-intensity-v2.md#software-regression) belong to the original PR #91 software interval |
 | Shadow-harmonic PR #85, merged at `c166e15` | Included in main before PR #90 | [629-test/74-scenario branch record](validation.md#a-shadows-push-on-a-holes-centre--november-12-2026) remains historical |
@@ -115,11 +123,12 @@ All 36 archived rows retain their prior completion flags and target passes.
 These fixed-workload results leave interactive latency, broader workloads and
 optical-model adequacy unqualified.
 
-The [proposed residual-information diagnostic](finite-residual-information.md)
-would separate covariance sensitivity from brightness, geometry and normal-angle
-sensitivity at saved fits. It is a research plan, not a completed replay or an
-optical correction. Even a locally distinguishable covariance change could absorb
-sampling or resampling mismatch rather than identify a physical camera PSF.
+The [residual-information diagnostic](validation/finite-residual-information.md)
+separates fixed-normal covariance sensitivity from brightness and geometry, while
+retaining unknown normal sensitivities and an overall failed protocol. A
+post-hoc rotation identity motivates the next independent derivative test.
+Locally distinguishable covariance changes can absorb sampling/resampling
+mismatch rather than identify a physical camera PSF.
 
 Automatic adoption also needs supported acquisition and thickness models,
 independent recovery checks and one chosen boundary preserved through preview,

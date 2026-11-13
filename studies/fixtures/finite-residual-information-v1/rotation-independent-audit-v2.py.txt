@@ -1,0 +1,120 @@
+#!/usr/bin/env python3
+"""Independent saved-array arithmetic audit; no model imports or new evaluations."""
+import argparse
+import hashlib
+import json
+import math
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+PINS = {
+    'studies/results/finite-residual-information-v1.json': 'b1d15d4e006d1f65823cb6bd20810cd127d6d6ac6912973d590f38bd8acc6c74',
+    'studies/results/finite-normal-rotation-saved-v1.json': '6e957b1da5df7ffe84ab949cea3e3c527311e9edeffbdbdcb8ffed6167a8bf71',
+    'studies/verification/finite-normal-rotation-saved-v1.py': '35579c70afff504e7af3d9a56ab4177c513090b5561737caa144e0061c7484dc',
+    'studies/results/finite-photo-intensity-v2.json': '967251c4458e7c06f88c6f5d4b01ab77654a0a744e1a181dd79c86df99d39127',
+}
+EPS = sys.float_info.epsilon
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+def reject(value):
+    raise ValueError('nonfinite JSON constant: ' + value)
+
+def number(value):
+    x = float(value)
+    if not math.isfinite(x):
+        raise ValueError('nonfinite JSON number')
+    return x
+
+def load(path):
+    return json.loads(path.read_text(), parse_constant=reject, parse_float=number)
+
+def close(a, b, scale):
+    return math.isfinite(a) and math.isfinite(b) and abs(a-b) <= 256*EPS*max(1.0, scale)
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--output', required=True, type=Path)
+    args = parser.parse_args()
+    if args.output.exists() or args.output.is_symlink() or not args.output.parent.is_dir():
+        parser.error('fresh nonsymlink output in existing directory required')
+    before = {p: sha(ROOT/p) for p in PINS}
+    if before != PINS:
+        raise ValueError('pinned saved inputs changed')
+    original = load(ROOT/'studies/results/finite-residual-information-v1.json')
+    derived = load(ROOT/'studies/results/finite-normal-rotation-saved-v1.json')
+    archive = load(ROOT/'studies/results/finite-photo-intensity-v2.json')
+    checks, details = {}, []
+    checks['all12_records_preserved'] = len(original['rows']) == len(derived['rows']) == len(archive['rows']) == 12
+    checks['original_source_interval_unchanged'] = original['source_before'] == original['source_after']
+    source_now = {p:{'sha256':sha(ROOT/p),'bytes':(ROOT/p).stat().st_size} for p in original['source_before']}
+    checks['all38_current_source_input_files_exact'] = source_now == original['source_before'] and len(source_now) == 38
+    checks['original_failed_protocol_preserved'] = original['protocol_passed'] is False and derived['original_protocol_passed'] is False
+    checks['posthoc_no_evaluation_scope'] = all(derived[k] == 0 for k in ['production_imports','new_forward_calls','new_optimizer_calls','new_trial_steps'])
+    checks['all_input_bindings_exact'] = derived['report_sha256'] == PINS['studies/results/finite-residual-information-v1.json'] and derived['runner_sha256'] == PINS['studies/verification/finite-normal-rotation-saved-v1.py']
+    all_identity, all_error, all_frame, all_fd, all_metadata, all_normalized = [], [], [], [], [], []
+    max_identity_delta = max_error_delta = max_coefficient_delta = 0.0
+    coarse_ratios, richardson_maxima = [], []
+    identity_count = 0
+    for i, (old, new, saved) in enumerate(zip(original['rows'], derived['rows'], archive['rows'], strict=True)):
+        assert all(old[k] == new[k] == saved[k] for k in ('index','name','lane'))
+        if 'blocks' not in old:
+            all_metadata.append(new['status'] == 'upstream_ineligible_preserved' and old['status'] == 'upstream_ineligible')
+            details.append({'index':i,'name':old['name'],'lane':old['lane'],'status':'upstream_ineligible_preserved'})
+            continue
+        observed = saved['observed']; best = saved['fit']['best']
+        cov = saved['covariance_record']['canonical']
+        a, b, d = cov[0][0], cov[0][1], cov[1][1]
+        determinant = a*d-b*b
+        coeff = [2*b/a, -2*b/a, math.sqrt(2)*(d-a-2*b*b/a)/math.sqrt(determinant)]
+        coefficient_delta = max(abs(x-y) for x,y in zip(coeff,new['covariance_chart_coefficients'],strict=True))
+        max_coefficient_delta = max(max_coefficient_delta,coefficient_delta)
+        all_metadata.append(all(close(x,y,max(abs(x),abs(y))) for x,y in zip(coeff,new['covariance_chart_coefficients'],strict=True)))
+        pixels = observed['training_pixels'] + observed['heldout_pixels']
+        contrast = best['levels'][1]-best['levels'][0]
+        raw_jac = old['geometry_derivative']['jacobian']
+        raw_jac_error = old['geometry_derivative']['estimated_errors']
+        sb = old['blocks']['S']; centre = best['centre']; origin = observed['crop_origin']
+        normal = old['finite_differences'][3]
+        coarse, fine = [e['derivative'] for e in normal['entries']]
+        values, estimated_errors, per_delta = [], [], []
+        for j, pixel in enumerate(pixels):
+            q = [pixel[k]+origin[k]+.5 for k in (0,1)]
+            lever = [centre[1]-q[1], q[0]-centre[0]]
+            terms = [contrast*raw_jac[j][k]*lever[k] for k in (0,1)] + [coeff[k]*sb['values'][j][k] for k in range(3)]
+            value = math.fsum(terms)
+            error = abs(contrast)*raw_jac_error[j]*(abs(lever[0])+abs(lever[1]))
+            error += math.fsum(abs(coeff[k])*sb['errors'][j][k] for k in range(3))
+            error += 64*EPS*max(1.0,math.fsum(abs(x) for x in terms))
+            scale = math.fsum(abs(x) for x in terms)
+            delta = abs(value-new['derived_level_normal_column'][j])
+            e_delta = abs(error-new['combined_estimated_error_not_certified'][j])
+            max_identity_delta = max(max_identity_delta,delta);max_error_delta=max(max_error_delta,e_delta)
+            all_identity.append(close(value,new['derived_level_normal_column'][j],scale))
+            all_error.append(close(error,new['combined_estimated_error_not_certified'][j],max(error,scale)))
+            all_frame.append(q == new['global_queries_xy'][j] and observed['homography'][0] == [1.0,0.0,-origin[0]] and observed['homography'][1] == [0.0,1.0,-origin[1]])
+            all_fd.append(close(coarse[j]-value,new['coarse_FD_minus_identity'][j],max(scale,abs(coarse[j]))) and close(fine[j]-value,new['fine_FD_minus_identity'][j],max(scale,abs(fine[j]))) and close((4*fine[j]-coarse[j])/3-value,new['richardson_from_saved_FD_minus_identity'][j],max(scale,abs(fine[j]))))
+            for k in range(4):
+                expected = contrast*raw_jac[j][k]*old['baseline']['domain_widths'][k]
+                all_normalized.append(close(expected,old['blocks']['G']['values'][j][k],abs(expected)))
+            values.append(value);estimated_errors.append(error);per_delta.append(delta);identity_count += 1
+        coarse_delta = max(abs(x-y) for x,y in zip(coarse,values,strict=True))
+        fine_delta = max(abs(x-y) for x,y in zip(fine,values,strict=True))
+        rich_delta = max(abs((4*y-x)/3-z) for x,y,z in zip(coarse,fine,values,strict=True))
+        coarse_ratios.append(coarse_delta/fine_delta if fine_delta else None)
+        richardson_maxima.append(rich_delta)
+        all_metadata.append(new['original_status'] == old['status'] == 'diagnostic_unknown' and new['original_normal_FD_stable'] is normal['stable'] is False and new['original_normal_status_preserved'] is True and new['status'] == 'posthoc_saved_array_identity_unvalidated')
+        details.append({'index':i,'name':old['name'],'lane':old['lane'],'identity_entries':len(values),'alternative_scalar_coefficients':coeff,'maximum_identity_entry_delta':max(per_delta),'independent_identity_column':values,'independent_estimated_errors':estimated_errors,'maximum_coarse_FD_difference':coarse_delta,'maximum_fine_FD_difference':fine_delta,'coarse_fine_max_difference_ratio':coarse_ratios[-1],'maximum_saved_Richardson_difference':rich_delta})
+    checks.update({'all560_identity_values_arithmetic_consistent':identity_count==560 and all(all_identity),'all560_error_weights_arithmetic_consistent':len(all_error)==560 and all(all_error),'all560_global_query_frames_exact':len(all_frame)==560 and all(all_frame),'all560_saved_FD_comparisons_consistent':len(all_fd)==560 and all(all_fd),'all2240_normalizedG_entries_consistent_with_rawJac':len(all_normalized)==2240 and all(all_normalized),'all_original_statuses_and_coefficients_preserved':all(all_metadata)})
+    after={p:sha(ROOT/p) for p in PINS}
+    checks['pinned_inputs_unchanged_during_audit']=before==after==PINS
+    result={'format':'pictures-to-cad-independent-saved-rotation-audit','version':2,'prior_v1_schema_correction':'v1 compared raw SHA strings with structured {sha256,bytes} source manifest entries; preserved original12of13 receipt. Only source-manifest representation comparison changes.','scope':'Post-hoc consistency ONLY. Scalar closed-form chart coefficients and raw geometry-derivative arrays; no Cholesky matrix coefficients, normalizedG usage, production imports, new means/Jacobians/trials, or replacement of original failed protocol/unknownN. Arithmetic comparison guard is256eps*max(1,sumabs five terms), not a physical threshold. Error weights are estimated, not certified.','auditor_sha256':sha(Path(__file__)),'source_before':before,'source_after':after,'source_input_files_verified':len(source_now),'checks':checks,'all_passed':all(checks.values()),'identity_entries':identity_count,'maximum_identity_entry_delta':max_identity_delta,'maximum_error_weight_delta':max_error_delta,'maximum_coefficient_delta':max_coefficient_delta,'coarse_fine_max_difference_ratio_range':[min(coarse_ratios),max(coarse_ratios)],'saved_Richardson_max_difference_range':[min(richardson_maxima),max(richardson_maxima)],'rows':details}
+    text=json.dumps(result,indent=2,allow_nan=False)+'\n'
+    with args.output.open('x') as stream:stream.write(text)
+    print(json.dumps({'output':str(args.output),'all_passed':result['all_passed'],'checks':len(checks),'identity_entries':identity_count,'maximum_identity_entry_delta':max_identity_delta,'maximum_error_weight_delta':max_error_delta,'receipt_sha256':sha(args.output)},indent=2))
+    return 0 if result['all_passed'] else 1
+
+if __name__=='__main__':
+    raise SystemExit(main())

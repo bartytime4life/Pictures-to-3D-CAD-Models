@@ -1,0 +1,41 @@
+"""Root-owned one-shot replay launcher; source-bound and no retry policy."""
+from pathlib import Path
+from datetime import datetime, timezone
+import hashlib
+import json
+import os
+import subprocess
+import sys
+
+root=Path.cwd()
+verification=root/'.local/verification'
+freeze=json.loads((verification/'canonical-preflight-freeze-v1.json').read_text())
+sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+for name, expected in freeze['source_before'].items():
+    assert sha(root/name)==expected,name
+output=root/'studies/results/finite-residual-information-v1.json'
+assert not output.exists() and not output.is_symlink()
+terminal=verification/'canonical-terminal-v1.json'
+assert not terminal.exists()
+command=[str(root/'.venv/bin/python'),'-W','error::RuntimeWarning','studies/verification/finite-residual-information-v1.py','--output',str(output)]
+environment=os.environ.copy()
+threads={key:'1' for key in ('OMP_NUM_THREADS','OPENBLAS_NUM_THREADS','MKL_NUM_THREADS','NUMEXPR_NUM_THREADS','VECLIB_MAXIMUM_THREADS')}
+environment.update(threads)
+stdout=verification/'canonical-v1.stdout'
+stderr=verification/'canonical-v1.stderr'
+record={'command':command,'cwd':str(root),'thread_environment':threads,'started_utc':datetime.now(timezone.utc).isoformat(),'status':'starting','preflight_sha256':sha(verification/'canonical-preflight-freeze-v1.json'),'scope':'One archived-parameter diagnostic replay; no inverse optimizer or timing benchmark; no retries.'}
+with stdout.open('xb') as out, stderr.open('xb') as err:
+    process=subprocess.Popen(command,stdout=out,stderr=err,env=environment)
+    record.update(status='running',pid=process.pid)
+    terminal.write_text(json.dumps(record,indent=2)+'\n')
+    print(json.dumps({'status':'running','pid':process.pid,'output':str(output)}),flush=True)
+    result=process.wait()
+record.update(status='terminal',exit_code=result,finished_utc=datetime.now(timezone.utc).isoformat(),stdout_sha256=sha(stdout),stderr_sha256=sha(stderr),output_sha256=sha(output) if output.is_file() else None,source_after={name:sha(root/name) for name in freeze['source_before']})
+record['source_unchanged']=record['source_after']==freeze['source_before']
+terminal.write_text(json.dumps(record,indent=2)+'\n')
+print(json.dumps({key:record[key] for key in ('status','exit_code','output_sha256','source_unchanged')}),flush=True)
+if stdout.stat().st_size:
+    print(stdout.read_text(),end='')
+if stderr.stat().st_size:
+    print(stderr.read_text(),end='',file=sys.stderr)
+raise SystemExit(result)

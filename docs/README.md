@@ -54,7 +54,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Check documentation coverage and source consistency | [Current PR #93 documentation review](validation/documentation-pr93-state.md), [preceding affine-source review](validation/documentation-affine-state.md), [measured-ring evidence](validation/finite-photo-intensity-v2.md) |
 | Review the recent interface changes | [Guided-workbench audit](validation/guided-workbench.md) |
 | Review scope and future work | [Roadmap](roadmap.md), [change log](changelog.md) |
-| Read a proposed diagnostic without mistaking it for a current capability | [Residual information and acquisition-model limits](finite-residual-information.md); no archived-data replay result yet |
+| Diagnose fixed-normal residual information and the unresolved normal derivative | [Method and rotation identity](finite-residual-information.md), [retained failed protocol](validation/finite-residual-information.md), [portable saved-data audit](../studies/fixtures/finite-residual-information-v1/README.md) |
 | Reproduce bundled printer data | [Printer source record](../data/PRINTER_SOURCES.md) |
 
 Historical validation reports retain their original revision, environment and

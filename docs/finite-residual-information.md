@@ -1,17 +1,19 @@
 # Separate blur sensitivity from geometric sensitivity
 
-This prospective developer study asks what the existing circular-segment
-observations can distinguish locally. It retains every archived case and
-covariance lane from the [measured-ring replay](validation/finite-photo-intensity-v2.md).
-It does not rerun the inverse, reselect samples, calibrate a camera or change
-photo tracing. A separate local plan has been frozen before new archived derivative or trial-step
-calculations. The work-in-progress plan and runner are not included in this source.
+This developer study asks what the existing circular-segment observations can
+distinguish locally. The [frozen plan](../studies/finite-residual-information-v1.json)
+and [runner](../studies/verification/finite-residual-information-v1.py) retain
+all 12 archived case/lane records, using the existing samples and fitted points.
+They run no inverse optimizer, renderer, re-preparation or automatic correction.
 
-**Status: research proposal; no archived-data result or runnable command in this
-source.** The separate implementation remains under review. The sections below
-describe a planned protocol, not a completed 12-row replay or a validated optical
-correction. Read the [source status](project-status.md) and
-[completed affine evidence](validation/finite-affine-batch.md) for current capabilities.
+**Status: the fixed replay is complete and its overall protocol failed.** The
+normal-angle control exceeds the frozen absolute step/half-step criterion, and
+all ten eligible normal columns fail their stability guard. The covariance-only
+calculations remain conditional on the supplied normal. Read the
+[full results, retained unknowns and limits](validation/finite-residual-information.md)
+and [lossless archive/review commands](../studies/fixtures/finite-residual-information-v1/README.md).
+A separate post-hoc rotation identity below motivates the next independent
+experiment; it does not replace the failed control or unknown normal columns.
 
 ## Project nuisance directions before interpreting blur
 
@@ -50,8 +52,8 @@ entries cannot be recovered separately from that one direction.
 The singular values of `C`, its rank relative to the original unprojected
 scale, and its overlap with the geometric space matter more than an automatic
 reduction in residual sum of squares. Renormalizing a nearly zero projected
-column can turn floating-point noise into apparent information. The planned experiment will
-retain the full spectra, finite-difference discrepancies, cutoffs and uncertain
+column can turn floating-point noise into apparent information. The saved experiment retains
+the full spectra, finite-difference discrepancies, cutoffs and uncertain
 rank cutoff-sensitivity intervals. Neither full numerical rank nor a small residual establishes a
 global solution or a physical uncertainty bound.
 
@@ -81,14 +83,14 @@ contain no physical covariance information.
 
 This use of separable structure is motivated by the
 [variable-projection treatment by O'Leary and Rust](https://www.cs.umd.edu/users/oleary/software/varpro.pdf).
-The sample implementation omits constrained linear variables; the proposed
-brightness-face treatment needs its own checks.
+The sample implementation omits constrained linear variables; the fixed-face
+brightness treatment needs its own checks.
 [Berisha, Nagy and Plemmons](https://scispace.com/papers/estimation-of-atmospheric-psf-parameters-for-hyperspectral-1fahvmg6oj)
 also identify ill-conditioned Jacobians in a different PSF-estimation problem.
 Their abstract motivates checking conditioning here; their recovery results do
 not validate this part model.
 
-The proposed covariance-specific residual energy is `||Q_C^T r_perp||²`,
+The reported covariance-specific residual energy is `||Q_C^T r_perp||²`,
 where `Q_C` contains the retained orthonormal directions of the guarded projected
 matrix `C`. It must be withheld if used finite differences, nuisance projection
 or rank sensitivity remain unresolved. A zero retained rank means zero resolved
@@ -111,23 +113,23 @@ E3 = [[0,1/sqrt(2)],[1/sqrt(2),0]].
 The symmetric bases are orthonormal in Frobenius norm. Every finite symmetric
 chart value gives a positive-definite covariance in exact arithmetic; numerical
 finite and conditioning checks remain necessary. Central differences at the
-fixed step and half step will be compared before a direction is interpreted.
+fixed step and half step are compared before a direction is interpreted.
 The protocol requires an independent positive-area conic check of the covariance
 perturbations, separate from the production Green-boundary kernel.
 
 ## A local trial is not a recovered optical model
 
-The proposed one-step coefficient vector would be selected from the 40 training intensities
+Each one-step coefficient vector was selected from the 40 training intensities
 only. A fixed common damping factor limits covariance, geometry, normal and
 brightness changes and keeps the trial inside the original domains. There is
 no line search, repeated correction or new nonlinear fit. Each eligible actual bounded
-trial would be evaluated once, retaining its discrepancy from the linear prediction.
-The original 16 held-out values would be scored without refitting the trial.
+trial was evaluated once, retaining its discrepancy from the linear prediction.
+The original 16 held-out values were scored without refitting the trial.
 
 Those held-out pixels already influence preparation and moment proposals.
 They remain useful conditional diagnostics, with edge/material/background
 residuals reported separately, but are not independent optical calibration or
-external prediction. Truth would be read only after trial predictions are selected,
+external prediction. Truth was read only after trial predictions were selected,
 for descriptive synthetic evaluation; it does not choose the step or domains.
 
 The saved photo fields include detector-area coverage, sampled blur, encoding,
@@ -140,17 +142,60 @@ A future acquisition-matched experiment needs its actual source samples,
 transform, finite kernels and stage bytes preserved; the current portable
 archives do not contain enough information to reconstruct that old chain exactly.
 
-## Evidence needed before using the diagnostic
+## Analytic rotation sensitivity: a post-hoc next hypothesis
 
-| Stage | Required record |
-| --- | --- |
-| Prospective review | Fixed source and input hashes, all 12 identities, original pass flags, sample indices, numerical guards and refusal rules |
-| Archived replay | All ten eligible and two upstream rows; raw means, derivatives, estimated errors, spectra, residual strata, step choices and refusals; no new optimizer |
-| Independent saved-data audit | Recomputed arithmetic and source closure, independent subspace checks away from cutoffs, preserved failures and unknowns |
-| Acquisition-matched experiment | Raw source samples, actual transform, finite kernels, encoding/resampling details and stage bytes; separately declared matched and adverse controls |
-| Product adoption | Supported optics and thickness frames, measured-photo checks, bounded latency, and one accepted boundary preserved through preview and exports |
+For a translation-only image map, let `q` be the global pixel centre, `C` the
+segment centre, and `J = [[0,-1],[1,0]]`. Rotating the material by `phi` around
+`C` is equivalent to rotating the query and covariance back into the original
+shape frame:
 
-Neither a passed parser contract nor this derivation substitutes for the archived
-replay. A successful local diagnostic would still need the acquisition-matched
-and physical checks above. Current replay commands remain in
-[developer tools](developer-tools.md); this proposal adds no command to that list.
+```text
+P_phi(q, Sigma) = P_0(C + R(-phi)*(q-C), R(-phi)*Sigma*R(-phi)^T),
+dP/dphi = dP/dC dot J*(q-C) + D_Sigma P : (Sigma*J-J*Sigma).
+```
+
+The identity follows by a change of variables in the Gaussian area integral.
+At zero rotation, `dR(-phi)/dphi = -J`; translation invariance gives
+`dP/dq = -dP/dC`. The covariance derivative follows the matrix product rule.
+For the supplied chart `Sigma = L L^T`, express
+`L^-1*(Sigma*J-J*Sigma)*L^-T` in the three symmetric bases above to combine the
+saved `S` columns with the centre derivatives. Unscale centre derivatives and
+their error estimates by their domain widths. Both saved blocks already carry
+the brightness contrast; do not multiply it again.
+
+The frame is essential: for the archived crop translation `b`, use
+`q_global = pixel_local + 0.5 - b`, or use `q_local-H(C)` consistently.
+Subtracting a global centre from a local pixel gives a different derivative.
+This expression is restricted here to the archived translation-only maps;
+a general affine map needs covariance/coordinate transport, and a perspective
+map needs a separate derivation.
+
+The [separate saved-array script](../studies/verification/finite-normal-rotation-saved-v1.py)
+retains all 12 records and compares the identity with the saved coarse and fine
+normal differences. Its coarse/fine maximum discrepancies have ratios
+**3.9991–4.0020**, consistent with second-order central-difference truncation.
+This is post-hoc consistency using shared production derivatives, not an
+independent test or a new `N` qualification. The full original failure remains.
+
+An independent next oracle can differentiate only the finite chord. With
+`t=J*n`, `h=R*f`, and `ell=R*sqrt(1-f²)`, the chord's normal velocity is `-s`:
+
+```text
+dP/dphi = -integral(s * Gaussian_Sigma(q-C-h*n-s*t), s=-ell..ell).
+```
+
+The circular boundary contributes zero normal velocity under rotation about
+its centre. A truncated-normal first-moment formula and independent positive-
+density chord quadrature can test this derivative without angular differencing.
+Neither has been implemented or numerically validated in this change. A new
+prospective test should cover normals, covariance correlation, symmetry, crops,
+reflections and tail/long-chord stability before any new archived trial.
+
+## Remaining evidence
+
+The saved-data audit verifies arithmetic and source binding, not physical PSF
+causation. Normal sensitivity still needs independent numerical validation.
+An acquisition-matched experiment needs actual source samples, transforms,
+finite kernels, encoding/resampling details and stage bytes. Product adoption
+also needs supported optics/thickness frames, measured-photo checks, bounded
+latency and one accepted boundary preserved through preview and exports.
