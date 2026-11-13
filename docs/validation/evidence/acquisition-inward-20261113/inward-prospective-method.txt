@@ -1,0 +1,146 @@
+# An exact inward point before physical rounding
+
+This is a **prospective, unrun saved-data construction**. It is a necessary
+bridge toward an actual rounded-image trial, not a replacement for recovery.
+The [admission](../studies/finite-acquisition-inward-v1.json), source, independent
+controls and this guide must be reviewed, committed and hashed with all 104
+preceding inputs unchanged before any new numerical execution. No original
+source band, target, work cap or first outcome changes.
+
+The complete original recovery protocol at `c1a9330` remains **11/12 matched
+passes, exit 1**, after selected 821 tests and 33 subtests passed. The next
+saved-only diagnostic at `b649ea3` verifies one rational optimum but finds
+**zero feasible candidates among 128 adjacent physical corners**, with no
+arithmetic unknowns. Its 49 controls pass. The new construction must preserve
+those first results, not retry or reclassify the old census.
+
+## Keep three source lanes separate
+
+The original recovery report binds 100 inputs at `c1a9330`; the first negative
+physical census binds 104 at `b649ea3`; this new source requires 108. The runner
+reads all original 24 rows and 17 fits, preserving the 16 without a qualified
+certificate. Every qualified saved certificate must verify independently.
+Neither truth dimensions nor conditional reserved residuals may choose a
+direction, point or trial. The new arithmetic makes no fitter, QP-optimizer,
+forward-model or literal PNG call.
+
+## Protect the original feasible region
+
+Let `F(x)` be the exact rational value of a supplied binary64 number. Start
+with every original source and normalized displacement-box halfspace
+`A d <= b`, using separate input conversion before subtraction. Add the
+original physical bounds for construction:
+
+```text
+ F(span_j) d_j <= F(actual_upper_j) - F(anchor_j),
+-F(span_j) d_j <= F(anchor_j) - F(actual_lower_j).
+```
+
+The saved point must satisfy these added rows as well as the original rows.
+Its old KKT certificate still concerns only the original QP. Fixed-span
+coordinates require `d*_j = h_j = 0`; their physical value remains the anchor.
+Structural rows with zero reduced normal receive zero margin and are checked
+exactly. Fixed-coordinate equalities must not be forced into a strict interior.
+
+## A componentwise rounding budget
+
+For a nonzero positive span `s_j`, use exact rational bounds and upward binary64
+ceilings. Let `ulp` mean a full unit in the last place, including the smallest
+subnormal at zero. Define
+
+```text
+u_p = ulp(max(abs(actual_lower), abs(actual_upper), abs(anchor))),
+D = max(abs(F(actual_lower)-F(anchor)), abs(F(actual_upper)-F(anchor))),
+u_s = ulp(ceil_binary64(D)),
+u_d = ulp(ceil_binary64((D+u_s)/F(span))),
+rho = u_p/F(span) + u_s/F(span) + u_d,
+M = (D+u_s)/F(span) + u_d.
+```
+
+The full physical ULP covers either adjacent bracket endpoint while the target
+and endpoint remain within the original physical domain. The subtraction and
+division terms account for computing `(physical-anchor)/span`. These bounds
+assume recorded IEEE binary64 nearest rounding and gradual underflow. Every
+bound and comparison uses guarded rational arithmetic; overflow, nonfinite
+upward ceilings or a bit cap withhold the construction as unknown.
+
+An original normalized-box side receives margin `rho_j`; an added physical
+side receives `u_p_j`. For a source row, begin with `sum |G_ij| rho_j` and add
+full-ULP product allowances using `w_j = |G_ij| M_j`, plus two ULPs of the
+upward bound `|z0_i| + sum_j(w_j + product_allowance_j)`.
+Exact-zero products need zero allowance.
+The final sum allowance is an **engineering proposal margin**, not a global
+theorem about every `math.fsum` implementation. Python documents possible
+double rounding. All five original candidate gates remain independently
+decisive; no tolerance turns an outside point into a pass.
+
+## One direction, one scalar interval
+
+Collect **every** exactly tight nonstructural row after fixed coordinates are
+removed. In original row order form an exact independent basis `B`, with rank
+at most seven. A single rational linear solve proposes
+
+```text
+(B B.T) y = 1,
+h = -B.T y.
+```
+
+Reinsert fixed zeros. Require `A_i h < 0` for every tight nonstructural row,
+including dependent rows outside the basis. Passing the basis equations alone
+is insufficient. This particular direction can fail even when another inward
+direction exists; such a failure remains unknown, not an infeasibility proof.
+
+For slack `q_i = b_i - A_i d*`, directional coefficient `v_i = A_i h` and
+row margin `m_i`, solve the exact scalar restrictions
+
+```text
+q_i - t v_i >= m_i,
+v_i < 0: t >= (m_i-q_i)/(-v_i),
+v_i > 0: t <= (q_i-m_i)/v_i,
+v_i = 0: require q_i >= m_i.
+```
+
+Choose exactly `t = max(0, all lower bounds)` if it does not exceed any upper
+bound. Reverify every strengthened row at `d_new = d* + t h`. Retain all
+restrictions, the selected step and raw/strengthened slacks. An empty interval
+is a failure of this direction and margin, not of the original problem. There
+is no multiplier schedule, alternate direction, arbitrary safety factor or retry.
+
+If the point is unchanged, withhold without rerunning the previous census.
+A moved point does not inherit the old optimality certificate. Its exact
+feasibility and its represented physical feasibility need separate statuses.
+
+## The five original gates still decide
+
+Only a qualified changed point admits the new physical census, at most 128
+adjacent corners. Preserve original physical bounds, exact physical-normalized
+membership, exact membership of computed displacement, the existing computed
+source/box gate and the strict selected-source arithmetic-floor gate. Retain
+all candidate bits, delta representations and violated identities. A complete
+negative census excludes only that newly checked adjacent box.
+
+Limits are 4,096 input source rows and 4,096 finite raw rows including added
+bounds, rank seven, one Gram solve,
+one constructed point, 128 corners and 32,768 bits before rational operations
+and comparisons. Input, rank, direction, interval, arithmetic and census
+completeness have distinct retained outcomes. Missing certificates cannot
+vacuously qualify the protocol.
+
+First independent controls must pass before the saved diagnostic. Fresh-output
+and before/after source/artifact bindings preserve every first outcome. Success
+requires zero protocol failures and unchanged bindings, as well as a nonvacuous
+complete inventory and qualified constructions/censuses. Malformed saved input
+is a protocol failure, distinct from an obstructed valid construction. Even
+a feasible represented result would still need separately admitted fitter
+integration, charged work within unchanged global caps, literal image-cost
+acceptance and another complete original 24-case recovery protocol. No
+nonlinear code-preservation, geometry, camera, GUI or physical-fit claim follows.
+
+## Primary background
+
+Python documents [adjacent floats, ULPs and accurate summation](https://docs.python.org/3.12/library/math.html),
+including the `fsum` double-rounding caveat. The
+[Boyd and Vandenberghe text](https://web.stanford.edu/~boyd/cvxbook/index.html)
+provides background on convex and robust constraints. The finite-error budget,
+specific direction, scalar interval and retained gates above are this project's
+own bounded construction; no optimizer convergence theorem is transferred.

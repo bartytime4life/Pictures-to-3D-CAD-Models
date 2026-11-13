@@ -1,0 +1,95 @@
+{
+  "format": "inward-first-saved-diagnostic-terminal-receipt",
+  "recorded_at": "2026-11-13T23:33:37.450530+00:00",
+  "head": "66df525dc06ad507b4c9b60c3eade969ff0ed677",
+  "tree": "8b27b9bb28850cf41878ab94060b96edc55a0b10",
+  "native_session_id": 94406,
+  "terminal_observation": {
+    "chunk_id": "2e10b6",
+    "wall_time_seconds": 8.236e-06,
+    "exit_code": 0,
+    "original_token_count": 33,
+    "output": "{\"output\": \".local/verification/finite-acquisition-inward-v1-first.json\", \"status\": \"represented_local_feasible\", \"passed\": true}\n"
+  },
+  "exit_code": 0,
+  "controls": {
+    "passed": 103,
+    "exit_code": 0,
+    "seconds": 0.15
+  },
+  "inventory": {
+    "rows": 24,
+    "fit_files": 17,
+    "no_certificate_fits": 16,
+    "qualified_certificates": 1
+  },
+  "protocol_failure_count": 0,
+  "source_inputs_unchanged": 108,
+  "saved_artifacts_unchanged": 106,
+  "original_KKT_qualified": true,
+  "construction": {
+    "rows": 366,
+    "tight_indices": [
+      67,
+      123,
+      124,
+      188,
+      219
+    ],
+    "basis_indices": [
+      67,
+      123,
+      124,
+      188,
+      219
+    ],
+    "gram_solves_completed": 1,
+    "margin_verified": true,
+    "new_point_optimality": false
+  },
+  "new_census": {
+    "total_candidates": 128,
+    "checked_candidates": 128,
+    "feasible_count": 128,
+    "selected_index": 0,
+    "complete": true,
+    "arithmetic_unknown_count": 0
+  },
+  "gate_passes": {
+    "physical_bounds_feasible": 128,
+    "exact_physical_feasible": 128,
+    "exact_represented_feasible": 128,
+    "computed_feasible": 128,
+    "arithmetic_floor_feasible": 128
+  },
+  "model_calls": 0,
+  "literal_png_trials": 0,
+  "old_point_census_calls": 0,
+  "files": {
+    "first.json": {
+      "sha256": "ace89fd3bd8759aee8734ad0e968ec5f6fbde89c0edb085ca990ec02a56c3f65",
+      "bytes": 11179905
+    },
+    "first.log": {
+      "sha256": "a5db5cfef7e2bac53dd67271011afb3e4f078d4773124cb42ab99489bbba4202",
+      "bytes": 130
+    },
+    "first-run-handle.json": {
+      "sha256": "ff3fef9672ed5c5372cedd50252fa71b67a1664c5e57fc71680c7409f080401d",
+      "bytes": 620
+    },
+    "first-tests.log": {
+      "sha256": "d1aa8265a82031894ab87594ad50fddcdafa02bc12305cd7132c4e2b09ff8ebe",
+      "bytes": 180
+    },
+    "first-tests-handle.json": {
+      "sha256": "1333aae15a2909235e65fc5c59d7a75542164bb006350007fbfb52db147020ee",
+      "bytes": 850
+    },
+    "first-tests-terminal-receipt.json": {
+      "sha256": "634483aa0e35dd1798b7206e21bd2d2b5c8c1e25bb660a7db025968306bd965f",
+      "bytes": 935
+    }
+  },
+  "scope": "New represented local feasibility only. One changed inward point and complete128corner census, all original gates unchanged. Original11/12 recovery and old0/128 census remain immutable. No actualcost/image/model/optimizer/physical claim; further probe needs separate admission."
+}

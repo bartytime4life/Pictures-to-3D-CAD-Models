@@ -1,0 +1,37 @@
+{
+  "format": "exact-inward-point-preexecution-static-reviews",
+  "recorded_at": "2026-11-13T23:31:11.385263+00:00",
+  "new_file_sha256": {
+    "studies/verification/finite-acquisition-inward-v1.py": "f9a92745967b0eb309ec7884e00eec41c715dbf395a6b23c90e5363d14b96324",
+    "tests/test_finite_acquisition_inward.py": "43e39ef46785e0c298926257d2f64e6f022788af51935e56ebddffdd7b660476",
+    "studies/finite-acquisition-inward-v1.json": "ba5e76f53f181c095d53f8ea2379d632435ae1b9ff653602f26b3db1e90bd22f",
+    "docs/finite-acquisition-inward.md": "d5d4ae3fcd1be8e523006c97b0a709cf54c9fdd67a948d7710e678f7dc85ff76"
+  },
+  "reviews": {
+    "math": {
+      "reviewer": "math_review",
+      "clear": true,
+      "scope": "Independent exact-error-budget, direction, interval and controls review at all four exact hashes. 54 new cases; no math or collection execution."
+    },
+    "source": {
+      "reviewer": "root independent of AI source author",
+      "clear": true,
+      "scope": "Read complete source, test contracts, source100/104/108 lanes, all original gates, guarded rational operations, one-step selection, fresh output and per-artifact binding/status lifecycle; no subject import."
+    },
+    "scope": {
+      "reviewer": "ux_review",
+      "clear": true,
+      "scope": "Independent protocol, evidence selection, full24/17 inventory, all five gates, outcome distinction and before/after retention review at exact hashes."
+    }
+  },
+  "supplemental_review": {
+    "reviewer": "ai_review source author",
+    "scope": "Static compatibility review of six independently root-authored CLI controls; not represented as an independent review of own source."
+  },
+  "controls": {
+    "new": 54,
+    "previous": 49,
+    "selected": 103
+  },
+  "execution": "No new subject import, collection, control, construction or diagnostic before combined commit/hash freeze."
+}

@@ -1,0 +1,65 @@
+{
+  "format": "independent-inward-saved-math-audit-v2",
+  "passed": false,
+  "prior_audit": "receipt-v1.json retained; its sole failure was the explicit point/original_point reconstruction-key rename, not arithmetic or scientific failure",
+  "report_binding": {
+    "sha256": "ace89fd3bd8759aee8734ad0e968ec5f6fbde89c0edb085ca990ec02a56c3f65",
+    "bytes": 11179905
+  },
+  "source_head": "66df525dc06ad507b4c9b60c3eade969ff0ed677",
+  "source_count": 108,
+  "artifact_count": 106,
+  "inventory": {
+    "rows": 24,
+    "fit_files": 17,
+    "no_certificate_fits": 16,
+    "qualified_certificates": 1
+  },
+  "original_constraints": 352,
+  "augmented_constraints": 366,
+  "tight_indices": [
+    67,
+    123,
+    124,
+    188,
+    219
+  ],
+  "basis_rank_exact": 5,
+  "gram_witness_verified_without_new_solve": true,
+  "saved_step": {
+    "float": 4.663575870208473e-12,
+    "hex": "0x1.482b83a2f2b25p-38"
+  },
+  "max_saved_normalized_displacement": 7.871766933207491e-14,
+  "minimum_new_raw_slack": 4.663575870208473e-12,
+  "minimum_new_strengthened_slack": 0.0,
+  "all_five_gates": {
+    "physical_bounds_feasible": 128,
+    "exact_physical_feasible": 128,
+    "exact_represented_feasible": 128,
+    "computed_feasible": 128,
+    "arithmetic_floor_feasible": 128
+  },
+  "candidate_count": 128,
+  "min_exact_physical_slack": 4.592103535128858e-12,
+  "min_exact_represented_slack": 4.5921203250061915e-12,
+  "min_computed_source_slack": 4.604316927725449e-12,
+  "physical_candidate_0": [
+    5.870163878853502,
+    6.117670775139799,
+    3.411637893346792,
+    0.1667728798695493,
+    1.1306697746506018,
+    21.98924736409556,
+    218.25858521358924
+  ],
+  "scope": "Saved-data consistency and exact local surrogate feasibility only. No subject imports, new proposal/direction/solve/census, model/reference/PNG call, actual-cost, geometry-target, optimum-transfer or nonlinear-code qualification.",
+  "checks": 8030,
+  "failures": [
+    "qualification binding flag artifact_bindings_unchanged_after"
+  ],
+  "audit_source": {
+    "sha256": "0a4b825db674f6e232a32b7a6dd911373493244a5c1c07a8f5d53712cfc0e1e3",
+    "bytes": 23062
+  }
+}

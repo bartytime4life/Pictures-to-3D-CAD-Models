@@ -1,5 +1,19 @@
 # Workbench change log
 
+## Exact inward-point representation step documented — November 13, 2026
+
+- Record the separate 108-input research freeze at `66df525`: 103 focused
+  controls pass; one exact inward construction yields 128/128 new physical
+  corners passing all five original gates, with zero arithmetic unknowns.
+- Link the independent saved-data audit's 8,030 passing checks and retain the
+  original 11/12 failed recovery protocol and earlier 0/128 corner census.
+  No actual PNG cost comparison or recovery improvement is demonstrated.
+  [Method and limits](finite-acquisition-inward-margin.md) ·
+  [Results and evidence](validation/finite-acquisition-inward-margin.md).
+- Refresh source and review navigation after PRs #117, #118 and #119 merged,
+  preserving the renderer/channel-noise regressions and contact-shadow guidance.
+  [Documentation review](validation/documentation-inward-margin.md).
+
 ## Contact shadows beside an edge — November 13, 2026
 
 - Documents why a shadow deepest at the part's edge moves edges outward under a

@@ -1,0 +1,14 @@
+{
+  "format": "inward-first-controls-native-observation",
+  "recorded_at": "2026-11-13T23:31:44.879863+00:00",
+  "head": "66df525dc06ad507b4c9b60c3eade969ff0ed677",
+  "tree": "8b27b9bb28850cf41878ab94060b96edc55a0b10",
+  "command": "set -o pipefail\nOPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python -W error::RuntimeWarning -m pytest -q tests/test_finite_acquisition_inward.py tests/test_finite_acquisition_physical_rounding.py 2>&1 | tee .local/verification/finite-acquisition-inward-v1-first-tests.log",
+  "first": {
+    "chunk_id": "b50701",
+    "wall_time_seconds": 0.153837856,
+    "exit_code": 0,
+    "original_token_count": 45,
+    "output": "........................................................................ [ 69%]\n...............................                                          [100%]\n103 passed in 0.15s\n"
+  }
+}

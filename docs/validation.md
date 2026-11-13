@@ -5,9 +5,25 @@ record below to assess its evidence. This page separates local checks, hosted
 CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
+## Inward-margin representation result — November 13, 2026
+
+The [current documentation review](validation/documentation-inward-margin.md)
+starts from main `47b02ad`, after PRs #117, #118 and #119 merged. Separately frozen
+research `66df525`, with 108 governing inputs, passes **103 selected controls**.
+Its first saved-only construction and new census pass **all five gates at
+all 128 corners**, with zero arithmetic unknowns and zero model, QP or literal
+PNG calls. An independent saved-only audit passes **8,030 checks**, retaining
+two earlier auditor schema failures.
+
+The original 0/128 census and failed 11/12 full recovery remain unchanged.
+This proves represented feasibility for the supplied local surrogate, with
+no actual-cost, nonlinear-code, fitter-integration or physical qualification.
+See [the method](finite-acquisition-inward-margin.md) and
+[complete outcome and evidence inventory](validation/finite-acquisition-inward-margin.md).
+
 ## Active-face recovery and physical-rounding diagnosis — November 13, 2026
 
-The [current documentation review](validation/documentation-physical-rounding.md)
+The [preceding documentation review](validation/documentation-physical-rounding.md)
 starts from main `e56c478`, after PR #116 merged. The separate research source
 `c1a9330` passes its corrected selection of **821 tests and 33 subtests**, then
 completes the unchanged original 24-case recovery protocol at **11/12 matched

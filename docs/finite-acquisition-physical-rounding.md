@@ -84,11 +84,18 @@ no literal PNG evaluation or accepted trial in this diagnostic. A represented
 feasible nearby point, if later found, would also need its own status; it
 would not inherit the rational point's minimum-norm optimality certificate.
 
-## An inward point is future work
+<a id="an-inward-point-is-future-work"></a>
 
-A prospective construction may move slightly into the original feasible
-region before rounding. No such direction, point, solver integration or
-recovery run has been executed or qualified here.
+## From the proposal to a separately verified inward point
+
+The proposal below describes the next step after the original negative
+census. A separately admitted [inward-margin construction](finite-acquisition-inward-margin.md)
+at `66df525` has now executed: 103 selected controls pass, and all five gates
+pass at all 128 new adjacent corners, with zero arithmetic unknowns. An
+independent saved-only audit passes 8,030 checks. The original 0/128 result
+is unchanged because the new census surrounds a different rational point.
+See [its result and evidence](validation/finite-acquisition-inward-margin.md).
+Actual PNG cost, solver integration and full recovery remain untested.
 
 Let `T` contain **every** tight row. A rational direction must satisfy
 `A_T h < 0`. If those normals are independently verified and their Gram
@@ -118,9 +125,10 @@ normalization only; rounded subtraction/division, computed sums and the
 arithmetic-floor gate still require separate checks. Shrinking toward the
 incumbent is not generally valid: the selected target bin excludes it.
 
-Any implementation requires a new admission and combined source freeze,
-independent controls, bounded work reservations and another complete original
-24-case protocol. The unchanged literal image-cost check must still decide
+The saved-only construction has its own admission, 108-input combined freeze
+and independent controls. Runtime integration still requires a separate
+admission, bounded work reservations and another complete original 24-case
+protocol. The unchanged literal image-cost check must still decide
 acceptance by strict training-cost decrease. Neither a local certificate nor
 a represented feasible point establishes nonlinear code preservation,
 unique geometry, camera accuracy or physical CAD/print acceptance.

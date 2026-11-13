@@ -79,6 +79,32 @@ The [terminal receipt](validation/evidence/acquisition-continuations-20261113/au
 records first outcomes and unchanged inputs. It runs with standard-library
 Python 3.14.4, zero backend imports and zero model/reference/optimizer calls.
 
+## Later inward-margin saved-only audit
+
+A separate [inward-margin result](validation/finite-acquisition-inward-margin.md)
+has its own independent audit of saved arithmetic. Final v3 passes **8,030
+checks** over 352 original and 14 physical rows, the retained Gram witness,
+scalar interval and all 128 new corners under all five gates. It verifies
+108 source and 106 artifact bindings. It does not extend the coupled audit
+to the full active/event ledger.
+
+The [v1 receipt](validation/evidence/acquisition-inward-20261113/math-audit-v1-receipt.json)
+and [v2 receipt](validation/evidence/acquisition-inward-20261113/math-audit-v2-receipt.json)
+remain preserved with exit-1 outcomes: the auditor expected `point` where
+the new schema uses `original_point`, then expected a Boolean where artifact
+bindings are per-artifact dictionaries. Separate explicit-schema corrections
+produce [v3](validation/evidence/acquisition-inward-20261113/math-audit-v3-receipt.json);
+no governing subject source, input, result or scientific computation changes.
+Verbatim auditor scripts are published as non-executable text alongside the
+receipts. There are no subject imports, new directions, solves, censuses or
+model calls in this saved-only audit. Actual PNG cost, recovery and physical
+accuracy remain outside its scope.
+
+The [new package readback](validation/evidence/acquisition-inward-20261113/inward-archive-readback.json)
+binds a 109-member recorded-source ZIP and a 13-member complete ZIP. These
+local packages retain the original negative census; they are separate from
+the publication extract and from the later independent audit files.
+
 ## Scope and exclusions
 
 Within the declared coupled-v1 scope, the corrected auditor checks source and

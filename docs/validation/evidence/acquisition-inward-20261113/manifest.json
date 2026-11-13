@@ -1,0 +1,121 @@
+{
+  "format": "documentation-saved-evidence-inventory-v1",
+  "recorded_at": "2026-11-13T23:43:11.556359+00:00",
+  "research_head": "66df525dc06ad507b4c9b60c3eade969ff0ed677",
+  "scope": "Verbatim retained records and independent saved-only auditor source as non-executable text, plus an explicitly derived field extract. No subject code or full raw diagnostic/ZIP is added to main.",
+  "verbatim_copies": {
+    "inward-admission.json": {
+      "source": "studies/finite-acquisition-inward-v1.json",
+      "sha256": "ba5e76f53f181c095d53f8ea2379d632435ae1b9ff653602f26b3db1e90bd22f",
+      "bytes": 46694
+    },
+    "inward-freeze.json": {
+      "source": ".local/verification/finite-acquisition-inward-v1-freeze.json",
+      "sha256": "8a0619216f3be2b450140e370efd3f8ffef0acaa8b1e7a30f908ce57b10afef0",
+      "bytes": 40508
+    },
+    "inward-static-reviews.json": {
+      "source": ".local/verification/finite-acquisition-inward-v1-static-reviews.json",
+      "sha256": "020708820a2a10938b9e564bebe9c7d7fec884df2f0c9c0e9555876c99bb4ed0",
+      "bytes": 1861
+    },
+    "inward-prospective-method.txt": {
+      "source": "docs/finite-acquisition-inward.md",
+      "sha256": "d5d4ae3fcd1be8e523006c97b0a709cf54c9fdd67a948d7710e678f7dc85ff76",
+      "bytes": 7377
+    },
+    "inward-first-tests.log": {
+      "source": ".local/verification/finite-acquisition-inward-v1-first-tests.log",
+      "sha256": "d1aa8265a82031894ab87594ad50fddcdafa02bc12305cd7132c4e2b09ff8ebe",
+      "bytes": 180
+    },
+    "inward-first-tests-handle.json": {
+      "source": ".local/verification/finite-acquisition-inward-v1-first-tests-handle.json",
+      "sha256": "1333aae15a2909235e65fc5c59d7a75542164bb006350007fbfb52db147020ee",
+      "bytes": 850
+    },
+    "inward-first-tests-receipt.json": {
+      "source": ".local/verification/finite-acquisition-inward-v1-first-tests-terminal-receipt.json",
+      "sha256": "634483aa0e35dd1798b7206e21bd2d2b5c8c1e25bb660a7db025968306bd965f",
+      "bytes": 935
+    },
+    "inward-first.log": {
+      "source": ".local/verification/finite-acquisition-inward-v1-first.log",
+      "sha256": "a5db5cfef7e2bac53dd67271011afb3e4f078d4773124cb42ab99489bbba4202",
+      "bytes": 130
+    },
+    "inward-first-handle.json": {
+      "source": ".local/verification/finite-acquisition-inward-v1-first-run-handle.json",
+      "sha256": "ff3fef9672ed5c5372cedd50252fa71b67a1664c5e57fc71680c7409f080401d",
+      "bytes": 620
+    },
+    "inward-first-receipt.json": {
+      "source": ".local/verification/finite-acquisition-inward-v1-first-terminal-receipt.json",
+      "sha256": "4221a10fd02079aed0a86994439e01020e4ba48b0676238fd1242fd0c03cae85",
+      "bytes": 2836
+    },
+    "inward-archive-readback.json": {
+      "source": ".local/verification/finite-acquisition-inward-v1-portable-archive-readback.json",
+      "sha256": "9ba7dcb1bd7487e84add8df5ca87ca304da43fb9fefbfa3ec49b3d10e67ed6de",
+      "bytes": 953
+    },
+    "math-audit-v1.py.txt": {
+      "source": ".local/verification/inward-math-audit/audit-v1.py",
+      "sha256": "198d762a38c78d98acd1b8dcb1abf60c1fe56dccbb6667967c5620ee5d06d64d",
+      "bytes": 21386
+    },
+    "math-audit-v1-receipt.json": {
+      "source": ".local/verification/inward-math-audit/receipt-v1.json",
+      "sha256": "2c03c05366a3b59281f1e8097a04ce547dab743a31d4b2936315a2e186889d70",
+      "bytes": 1939
+    },
+    "math-audit-v2.py.txt": {
+      "source": ".local/verification/inward-math-audit/audit-v2.py",
+      "sha256": "0a4b825db674f6e232a32b7a6dd911373493244a5c1c07a8f5d53712cfc0e1e3",
+      "bytes": 23062
+    },
+    "math-audit-v2-receipt.json": {
+      "source": ".local/verification/inward-math-audit/receipt-v2.json",
+      "sha256": "4c7b738529243467e6aca868a80a2404090e4fb9b9ee3f43e9b7ebd67c2d6f75",
+      "bytes": 2126
+    },
+    "math-audit-v3.py.txt": {
+      "source": ".local/verification/inward-math-audit/audit-v3.py",
+      "sha256": "7f03ef3ace74edac6fbf81d3f624a2a4921b7946760ce2d71324bbd7a304dbd7",
+      "bytes": 23261
+    },
+    "math-audit-v3-receipt.json": {
+      "source": ".local/verification/inward-math-audit/receipt-v3.json",
+      "sha256": "df4a95e97f317c63b5952600fb9e417d7f5cd654d0cc2534e6141c178bd5fbf5",
+      "bytes": 2155
+    }
+  },
+  "derived_extract": {
+    "inward-saved-extract.json": {
+      "sha256": "56f0a22ba752071d9eee76e24154c2c8e462e8d6ae91c87bd27063661ef319a5",
+      "bytes": 606836
+    }
+  },
+  "local_archive_readback": {
+    "format": "inward-first-complete-archive-readback",
+    "recorded_at": "2026-11-13T23:34:08.350295+00:00",
+    "head": "66df525dc06ad507b4c9b60c3eade969ff0ed677",
+    "tree": "8b27b9bb28850cf41878ab94060b96edc55a0b10",
+    "source": {
+      "path": ".local/verification/finite-acquisition-inward-v1-recorded-source.zip",
+      "sha256": "7df83dff057e3d05c921809c13a1f83263b1cac403fcebe9c69348490a25a4d0",
+      "bytes": 650788,
+      "members": 109,
+      "payload_members_verified": 108
+    },
+    "complete": {
+      "path": ".local/verification/finite-acquisition-inward-v1-complete.zip",
+      "sha256": "f96a32262958833b772fd181d4067ed1ebdaeb335ee99fb5a93e0a0ce86ffc98",
+      "bytes": 21935482,
+      "members": 13,
+      "payload_members_verified": 12
+    },
+    "governing_inputs_unchanged": 108,
+    "scope": "Member hash/size/byte/mode consistency only. Independent saved arithmetic audit, actual-cost evaluation, recovery and physical qualification have separate evidence."
+  }
+}

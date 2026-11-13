@@ -1,7 +1,7 @@
 # Acquisition-aware geometry recovery
 
 This page records a separately frozen local research candidate, not an API
-installed or merged into the documented main revision `bb21f95`. The candidate
+installed or merged into the [current main runtime](project-status.md). The candidate
 source is retained locally; this documentation change does not publish its
 runtime, full raw captures or candidate ledgers. See the
 [result, source bindings and audit limits](validation/finite-acquisition-recovery.md).
@@ -44,6 +44,12 @@ study still fails at **11/12 matched passes**. The later saved-only
 one rational local optimum but finds **zero accepted candidates among 128
 adjacent physical corners**, with no arithmetic unknowns. See the
 [complete results and source bindings](validation/finite-acquisition-physical-rounding.md).
+The separately frozen [inward-margin construction](finite-acquisition-inward-margin.md)
+now passes 103 selected controls and all five gates for all 128 new adjacent
+corners; an independent saved-data audit passes 8,030 checks. The old 0/128
+result remains unchanged. This establishes local represented feasibility;
+actual PNG cost, fitter integration and recovery improvement remain untested.
+See [the new result and evidence](validation/finite-acquisition-inward-margin.md).
 These separate local studies add no main runtime or workbench integration.
 
 ## Model and brightness elimination

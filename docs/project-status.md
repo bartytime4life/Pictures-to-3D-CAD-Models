@@ -1,10 +1,10 @@
 # Source scope and verification status
 
-## Current source snapshot — November 13, 2026, 23:00 UTC
+## Current source snapshot — November 13, 2026
 
 The verified publication base is main
-`e56c47830a7bdcbefbdfeafd033493c1c8815571`, tree
-`457ad340c532ad15865fd691a76d47e89e48cb82`. It includes the source-cell mean
+`47b02ad7805d2f90250f9395ef442138f942436b`, tree
+`a4b80f3f0c26f7c8b5c39a928db960c7b63323f6`. It includes the source-cell mean
 from [PR #105](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/105),
 the two-direction edge-width repair from
 [PR #107](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/107),
@@ -29,8 +29,17 @@ merged at 21:33:06 UTC. Documentation
 [PR #115](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/115)
 merged at 21:48:51 UTC. Documentation
 [PR #116](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/116)
-merged at 22:25:09 UTC; its tree is the publication base above. This later
-documentation refresh has its own source and checks. The runtime still matches
+merged at 22:25:09 UTC. Documentation
+[PR #117](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/117)
+merged at 23:14:25 UTC and recorded the failed physical-corner census.
+[PR #118](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/118)
+merged at 23:24:40 UTC. It changes the synthetic renderer's colour-channel
+noise, associated regressions and recorded reference-sheet results. Documentation
+[PR #119](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/119)
+merged at 23:40:24 UTC; its tree is the publication base above. It records
+contact-shadow observability studies and capture guidance, without adopting
+a tracer change. This refresh preserves both changes and does not retest
+the separate frozen research source. The workbench runtime still matches
 PR #114: that correction removes fitted
 paper-light variation before remeasuring supported edge widths on traces with
 zero entered thickness. Positive-thickness traces retain the preceding width
@@ -59,12 +68,14 @@ Hosted checks are tied to their published heads:
 | PR #114, `918410db522c35c3582391a1ad8035195db46f34` | [43510351302](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43510351302): completed, success | No PR-triggered reference-library run listed at readback |
 | PR #115, `897fd0cc6539e17a82344cf216e5a4565462f238` | [43512700142](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43512700142): completed, success | [43512700089](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43512700089): completed, success |
 | PR #116, `f3bbc2bbdd5ae958be33050bf393c32557bc4085` | [43517704845](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43517704845): completed, success | [43517704839](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43517704839): completed, success |
+| PR #117, `740e9483a619346010c3b99bc2ffeb63a5fa3b48` | [43524563678](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43524563678): completed, success | [43524563696](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43524563696): completed, success |
 
 These readbacks do not extend a run to the combined main commit or this later
-documentation change. Merge, hosted checks, installed runtime, real-camera
+documentation change. No PR #118 or #119 hosted-check result is asserted here.
+Merge, hosted checks, installed runtime, real-camera
 accuracy and physical acceptance remain separate.
 
-The [documentation review](validation/documentation-physical-rounding.md) audits this
+The [documentation review](validation/documentation-inward-margin.md) audits this
 main-based source. Use [available tools](#available-here) and [remaining integration work](#remaining-integration-work)
 for current capabilities. Earlier snapshots below are historical records; their open
 PR states and absent-module statements describe their own source and time.
@@ -127,8 +138,19 @@ membership**, with zero arithmetic unknowns; physical bounds and arithmetic
 floor pass for every corner. It makes no fitter, QP-solver, forward-model or
 literal PNG call. This excludes only that adjacent box, not feasible points
 elsewhere. [Complete outcomes and copied evidence](validation/finite-acquisition-physical-rounding.md)
-preserve the 100-input and 104-input freezes. An inward-point construction
-remains prospective. Candidate runtime, tests, runners, full arrays and
+preserve the 100-input and 104-input freezes.
+
+The separately frozen [inward-point construction](finite-acquisition-inward-margin.md)
+at `66df525dc06ad507b4c9b60c3eade969ff0ed677` preserves all 108 governing inputs.
+Its 103 focused controls pass. The first saved diagnostic retains all 24 rows,
+17 fits and the one qualified certificate, constructs one changed rational
+point and checks all **128 new physical corners: every corner passes all five
+original gates, with zero arithmetic unknowns**. The independent saved-data
+audit passes **8,030 checks**. See [completed results and scope](validation/finite-acquisition-inward-margin.md).
+This is represented local feasibility, not an actual PNG cost improvement.
+The original 11/12 full recovery and earlier 0/128 census remain unchanged.
+A literal incumbent/trial cost comparison requires a separate admission and
+freeze; none has run. Candidate runtime, tests, runners, full arrays and
 complete local ZIPs remain outside this documentation publication.
 
 ## Available here

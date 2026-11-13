@@ -10,6 +10,15 @@ All dates are 2026. Revisions are numbered in `library.json`, which feeds the HT
 - Record complete source, parameter, schema and output hashes, OpenSCAD versions, logs and actual-mesh checks. Include real default-model renders and editable starter files.
 - Exercise browser downloads through actual OpenSCAD renders, with isolated desktop/mobile checks and preservation regression tests. Rebuild the handbook, verification record and portable archive. No slicing or physical print qualification.
 
+### Workbench inward-margin result navigation — November 13, 2026
+
+Link the [new saved-only construction and audit](../docs/validation/finite-acquisition-inward-margin.md):
+103 selected controls pass, and all five gates pass for all 128 new adjacent
+corners. The independent audit passes 8,030 checks, retaining its first two
+schema failures. Original 0/128 and failed 11/12 recovery results remain
+unchanged. No actual PNG-cost, runtime integration or physical qualification
+is added. Library catalog, reader, PDF and release records are unchanged.
+
 ### Workbench active-face result navigation — November 13, 2026
 
 Link the [completed active-face study and saved-only physical census](../docs/validation/finite-acquisition-physical-rounding.md):

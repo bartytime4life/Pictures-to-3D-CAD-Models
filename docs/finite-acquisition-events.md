@@ -1,5 +1,13 @@
 # Source-code event proposals for rounded acquisition
 
+The separately frozen [inward-margin construction](finite-acquisition-inward-margin.md)
+now passes 103 selected controls and all five gates for all 128 new adjacent
+corners; an independent saved-data audit passes 8,030 checks. The old 0/128
+result remains unchanged. This establishes local represented feasibility;
+actual PNG cost, fitter integration and recovery improvement remain untested.
+See [the new result and evidence](validation/finite-acquisition-inward-margin.md).
+
+
 The first separately frozen source-event study at `cd85ef9` stays at **11/12
 matched passes**, with all 24 cases and original targets retained. The complete
 protocol exits 1. Its first software suite passes 653 tests and 21 subtests.
@@ -8,7 +16,7 @@ conditional reserved-residual misses as the coupled study. See the
 [result and evidence](validation/finite-acquisition-continuations.md) and
 [frozen admission](validation/evidence/acquisition-continuations-20261113/events-admission.json).
 
-This is local research outside the documented main revision `bb21f95`, HTTP routes and workbench UI.
+This is local research outside the [current main runtime](project-status.md), HTTP routes and workbench UI.
 The original 4/12, predictor 9/12 and coupled 11/12 failed protocols are retained.
 The [coupled saved-only audit](finite-acquisition-saved-audit.md) does not cover
 the new event-phase ledger. No physical camera/CAD qualification follows.
