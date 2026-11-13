@@ -1,6 +1,8 @@
 # Source scope and verification status
 
-This error-control candidate follows published draft
+This error-control candidate is published as draft
+[PR #99](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/99),
+based on published draft
 [PR #98](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/98),
 head `d496a2b03e8bca02b813b7082b44ac1205b6b8ae`, tree
 `c8fafdf430af1dc523696fb49092150badc71c7d`. Its
@@ -11,9 +13,15 @@ bound [417-scene qualification](validation/finite-normal-error-control.md) and
 [archive index](../studies/results/finite-normal-error-control-v2-summary.json).
 The new code has no automatic trace, HTTP or inverse-fitter adoption.
 
-At the latest readback, PR #98 remains an open, unmerged draft and main remains
+At the November 13, 2026, 03:42 UTC readback, PRs #98 and #99 remain open,
+unmerged drafts and main remains
 `1d32c432da633df6bb47db2df7b0e9c23de11c81`. Local numerical/software evidence
 does not establish merge, installation, deployment or physical acceptance.
+PR #99's initial published head `57dddff5b2d9107a7cd0634b8f634f33fdf926d0`,
+tree `ce97d8ca5f610679a7bc31ffcf1511bd637fbb33`, exactly matches the reviewed
+local tree. Its [workbench run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43360735937)
+is in progress at that snapshot; subsequent documentation commits require their
+own CI. This is November 12 in America/Chicago.
 The following dated snapshots retain their original source and CI states.
 
 ## Preceding source background
