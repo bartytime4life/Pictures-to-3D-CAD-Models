@@ -1,5 +1,19 @@
 # Workbench change log
 
+## Analytic-normal residual information — November 12, 2026
+
+- Freeze the plan and final scientific source before one complete execution.
+  Qualify all 578 normal comparisons with an independent affine chord reference,
+  preserve all archived rows/B/G/S data, and pass ten bounded joint-trial checks.
+- Compare fixed- and moving-normal covariance information at a shared cutoff.
+  Retain all three directions, conditional energy increases and the cases where
+  lower residuals worsen synthetic geometry. No new fit-pass count or automatic
+  correction is inferred.
+- Preserve the complete lossless report, first routing-fixture failure and
+  independent saved-data audits. Add portable review commands and link the
+  [mathematics](finite-analytic-normal-information.md) and
+  [complete evidence](validation/finite-analytic-normal-information.md).
+
 ## Documentation alignment with published PR #100 — November 12, 2026
 
 - Review all workbench, study, fixture and companion-library documentation.

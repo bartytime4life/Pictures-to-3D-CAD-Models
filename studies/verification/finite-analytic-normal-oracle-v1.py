@@ -1,0 +1,878 @@
+#!/usr/bin/env python3
+"""Independent study-only affine Gaussian chord oracle and elementary controls.
+
+No backend, NumPy, geometry, normal, CDF or moment helper is imported. This
+module performs no scientific work at import. The governing frozen driver owns
+all evaluations. Decimal agreement and the returned error accounting are
+engineering checks, not certified quadrature or physical uncertainty bounds.
+"""
+
+from __future__ import annotations
+
+import argparse
+import math
+from contextlib import contextmanager
+from decimal import ROUND_HALF_EVEN, Context, Decimal, localcontext
+from fractions import Fraction
+from functools import lru_cache
+
+ORDERS = (64, 96)
+PRECISIONS = (80, 120)
+PANELS = 128
+MAX_NODES_PER_QUERY = 40960
+EPS = Fraction(1, 1 << 52)
+
+
+class OracleUnknown(ArithmeticError):
+    """Explicit numerical/resource unknown; never a qualified partial value."""
+
+
+@contextmanager
+def context(precision):
+    # No dependence on ambient precision, rounding, clamp or exponent settings.
+    with localcontext(
+        Context(
+            prec=precision, rounding=ROUND_HALF_EVEN, Emin=-999999, Emax=999999, capitals=1, clamp=0
+        )
+    ) as value:
+        yield value
+
+
+def fraction(value):
+    if isinstance(value, bool):
+        raise TypeError("booleans are not numerical source inputs")
+    if isinstance(value, int):
+        return Fraction(value)
+    represented = float(value)
+    if not math.isfinite(represented):
+        raise ValueError("source inputs must be finite")
+    return Fraction.from_float(represented)
+
+
+def fraction_text(value):
+    return f"{value.numerator}/{value.denominator}"
+
+
+def text(value):
+    if not value.is_finite():
+        raise OracleUnknown("nonfinite Decimal result")
+    return str(value)
+
+
+def dec(value):
+    return Decimal(value.numerator) / Decimal(value.denominator)
+
+
+def upward_float(value):
+    if value < 0:
+        raise ValueError("error must be nonnegative")
+    rounded = float(value)
+    if not math.isfinite(rounded):
+        raise OracleUnknown("error cannot be represented as finite binary64")
+    if Fraction.from_float(rounded) < value:
+        rounded = math.nextafter(rounded, math.inf)
+    if not math.isfinite(rounded):
+        raise OracleUnknown("upward error cannot be represented")
+    return rounded
+
+
+def mixed_stable(low, high):
+    low, high = Fraction(low), Fraction(high)
+    return abs(high - low) <= Fraction(1, 10**65) * max(Fraction(1), abs(high))
+
+
+def failure(error):
+    return {"type": type(error).__name__, "message": str(error)[:4096]}
+
+
+def make_constants(precisions=PRECISIONS):
+    """Return saved pi values and exact finite Machin-series tail records."""
+    if tuple(precisions) != PRECISIONS:
+        raise ValueError("frozen oracle requires precisions80/120")
+    records = {}
+    for precision in precisions:
+        cutoff = Fraction(1, 10 ** (precision + 15))
+
+        def atan_reciprocal(q, cutoff=cutoff):
+            total, power, sign = Fraction(), q, 1
+            for count in range(1, 10001):
+                total += Fraction(sign, (2 * count - 1) * power)
+                power *= q * q
+                omitted = Fraction(1, (2 * count + 1) * power)
+                if omitted < cutoff:
+                    return total, omitted, count
+                sign = -sign
+            raise OracleUnknown("Machin series exceeded10000terms")
+
+        a, ea, na = atan_reciprocal(5)
+        b, eb, nb = atan_reciprocal(239)
+        with context(precision):
+            pi = dec(16 * a - 4 * b)
+        records[str(precision)] = {
+            "precision": precision,
+            "pi": text(pi),
+            "terms": {"atan_1_5": na, "atan_1_239": nb},
+            "alternating_series_tail_fraction": fraction_text(16 * ea + 4 * eb),
+            "scope": "Exact finite-series tail only; Decimal conversion and later numerical estimates are not certified intervals.",
+        }
+    records["precision_stable"] = mixed_stable(records["80"]["pi"], records["120"]["pi"])
+    return records
+
+
+def _inputs(parameters, pixels):
+    h = [[fraction(v) for v in row] for row in parameters["homography"]]
+    if len(h) != 3 or any(len(row) != 3 for row in h):
+        raise ValueError("homography must be3x3")
+    tx, ty = h[0][2], h[1][2]
+    if h != [[1, 0, tx], [0, 1, ty], [0, 0, 1]] or tx.denominator != 1 or ty.denominator != 1:
+        raise ValueError("oracle supports strict integer crop translations only")
+    centre = tuple(fraction(v) for v in parameters["centre"])
+    normal = tuple(fraction(v) for v in parameters["normal"])
+    if len(centre) != 2 or len(normal) != 2:
+        raise ValueError("centre and normal must have two components")
+    radius, shape_fraction = fraction(parameters["radius"]), fraction(parameters["fraction"])
+    if radius <= 0 or not -1 < shape_fraction < 1:
+        raise ValueError("positive radius and open chord fraction required")
+    norm2 = sum((v * v for v in normal), Fraction())
+    guard = 64 * EPS
+    if not (1 - guard) ** 2 <= norm2 <= (1 + guard) ** 2:
+        raise ValueError("supply the archived near-unit normal")
+    covariance = [[fraction(v) for v in row] for row in parameters["covariance"]]
+    if len(covariance) != 2 or any(len(row) != 2 for row in covariance):
+        raise ValueError("covariance must be2x2")
+    a, b = covariance[0]
+    b2, d = covariance[1]
+    determinant = a * d - b * b
+    if b != b2 or a <= 0 or determinant <= 0:
+        raise ValueError("exact symmetric positive-definite covariance required")
+    sensor = tuple(parameters["sensor_shape"])
+    if len(sensor) != 2 or any(
+        isinstance(v, bool) or not isinstance(v, int) or v <= 0 for v in sensor
+    ):
+        raise ValueError("positive integer sensor dimensions required")
+    saved_pixels = []
+    for pixel in pixels:
+        if len(pixel) != 2 or any(isinstance(v, bool) or int(v) != v for v in pixel):
+            raise ValueError("integer pixel pairs required")
+        x, y = map(int, pixel)
+        if not 0 <= x < sensor[1] or not 0 <= y < sensor[0]:
+            raise ValueError("pixel outside declared sensor")
+        saved_pixels.append((x, y))
+    if not 1 <= len(saved_pixels) <= 56 or len(set(saved_pixels)) != len(saved_pixels):
+        raise ValueError("one through56unique source pixels required")
+    return {
+        "centre": centre,
+        "normal": normal,
+        "norm2": norm2,
+        "radius": radius,
+        "fraction": shape_fraction,
+        "translation": (tx, ty),
+        "covariance": covariance,
+        "determinant": determinant,
+        "inverse": ((d / determinant, -b / determinant), (-b / determinant, a / determinant)),
+        "ell2": radius * radius * (1 - shape_fraction * shape_fraction),
+        "pixels": saved_pixels,
+    }
+
+
+def _geometry(inputs, precision, constant):
+    with context(precision):
+        pi = Decimal(constant["pi"])
+        norm = dec(inputs["norm2"]).sqrt()
+        normal = tuple(dec(v) / norm for v in inputs["normal"])
+        tangent = (-normal[1], normal[0])
+        ell2 = dec(inputs["ell2"])
+        ell = ell2.sqrt()
+        determinant = dec(inputs["determinant"])
+        inverse = tuple(tuple(dec(v) for v in row) for row in inputs["inverse"])
+        normalizer = 1 / (2 * pi * determinant.sqrt())
+        centre = tuple(dec(v) for v in inputs["centre"])
+        offset = dec(inputs["radius"] * inputs["fraction"])
+        chord = tuple(centre[i] + offset * normal[i] for i in range(2))
+        tpt = sum(tangent[i] * inverse[i][j] * tangent[j] for i in range(2) for j in range(2))
+        if tpt <= 0:
+            raise OracleUnknown("positive chord quadratic is unresolved")
+        record = {
+            "precision": precision,
+            "raw_normal_fraction": [fraction_text(v) for v in inputs["normal"]],
+            "normal_length": text(norm),
+            "normalized_normal": [text(v) for v in normal],
+            "tangent": [text(v) for v in tangent],
+            "ell": text(ell),
+            "ell_squared": text(ell2),
+            "covariance_determinant_fraction": fraction_text(inputs["determinant"]),
+            "inverse_covariance_fraction": [
+                [fraction_text(v) for v in row] for row in inputs["inverse"]
+            ],
+            "gaussian_normalizer": text(normalizer),
+        }
+        return {
+            "normal": normal,
+            "tangent": tangent,
+            "ell": ell,
+            "ell2": ell2,
+            "inverse": inverse,
+            "normalizer": normalizer,
+            "chord": chord,
+            "tpt": tpt,
+            "record": record,
+        }
+
+
+def _geometry_stability(geometries, constants):
+    low, high = (geometries[p]["record"] for p in PRECISIONS)
+    checks = {
+        "pi": bool(constants["precision_stable"]),
+        "ell": mixed_stable(low["ell"], high["ell"]),
+    }
+    for i in range(2):
+        checks[f"normal_{i}"] = mixed_stable(
+            low["normalized_normal"][i], high["normalized_normal"][i]
+        )
+    return checks
+
+
+def _rules_key(rules):
+    result = []
+    for order in ORDERS:
+        saved = rules[order] if order in rules else rules[str(order)]
+        if isinstance(saved, dict):
+            nodes = tuple(float.fromhex(v) for v in saved["nodes_hex"])
+            weights = tuple(float.fromhex(v) for v in saved["weights_hex"])
+        else:
+            nodes, weights = (tuple(float(v) for v in values) for values in saved)
+        if (
+            len(nodes) != order
+            or len(weights) != order
+            or any(not math.isfinite(v) or not -1 < v < 1 for v in nodes)
+            or any(not math.isfinite(v) or v <= 0 for v in weights)
+        ):
+            raise ValueError("malformed shared positive Gauss rule")
+        result.append((order, nodes, weights))
+    return tuple(result)
+
+
+@lru_cache(maxsize=1)
+def _node_tables(key):
+    """Only exact dyadic affine node construction; shared bounded cache."""
+    result = {}
+    for precision in PRECISIONS:
+        with context(precision):
+            panels = []
+            for index in range(PANELS):
+                a, b = Fraction(-1) + Fraction(index, 64), Fraction(-1) + Fraction(index + 1, 64)
+                half, middle = (b - a) / 2, (a + b) / 2
+                panel = {}
+                for order, nodes, weights in key:
+                    panel[order] = tuple(
+                        (
+                            dec(middle + half * Fraction.from_float(node)),
+                            dec(half * Fraction.from_float(weight)),
+                        )
+                        for node, weight in zip(nodes, weights, strict=True)
+                    )
+                panels.append(panel)
+            result[precision] = tuple(panels)
+    return result
+
+
+def _quadratic(geometry, inputs, pixel, precision):
+    with context(precision):
+        query = tuple(
+            dec(Fraction(pixel[i]) + Fraction(1, 2) - inputs["translation"][i]) for i in range(2)
+        )
+        r0 = tuple(geometry["chord"][i] - query[i] for i in range(2))
+        inverse, tangent, ell = geometry["inverse"], geometry["tangent"], geometry["ell"]
+        q0 = sum(r0[i] * inverse[i][j] * r0[j] for i in range(2) for j in range(2))
+        q1 = ell * sum(tangent[i] * inverse[i][j] * r0[j] for i in range(2) for j in range(2))
+        q2 = geometry["ell2"] * geometry["tpt"]
+        return {"r0": r0, "q0": q0, "q1": q1, "q2": q2, "global_query": [text(v) for v in query]}
+
+
+def _qvalue(coefficients, u):
+    terms = (coefficients["q2"] * u * u, 2 * coefficients["q1"] * u, coefficients["q0"])
+    return sum(terms), sum(abs(v) for v in terms)
+
+
+def _panel(geometry, coefficients, index, precision, work):
+    with context(precision) as ctx:
+        a, b = dec(Fraction(-1) + Fraction(index, 64)), dec(Fraction(-1) + Fraction(index + 1, 64))
+        vertex = max(a, min(b, -coefficients["q1"] / coefficients["q2"]))
+        endpoints = [_qvalue(coefficients, u) for u in (a, b)]
+        minimum, scale = _qvalue(coefficients, vertex)
+        decimal_margin = 64 * Decimal(10) ** (1 - precision)
+        # These are explicitly rounded, conservative engineering margins, not
+        # a general interval proof of geometry construction or the quadratic.
+        qmin = max(Decimal(0), minimum - decimal_margin * (scale + 1))
+        qmax = max(value + decimal_margin * (absolute + 1) for value, absolute in endpoints)
+        travel = geometry["ell"] * (b - a) * geometry["tpt"].sqrt()
+        travel_upper = (travel * (1 + decimal_margin)).next_plus(context=ctx)
+        variation = max(Decimal(0), (qmax - qmin) / 2)
+        work["tail_exponential_calls"] += 1
+        exponential = (-qmin / 2).exp()
+        exponential_upper = exponential.next_plus(context=ctx)
+        raw = (
+            geometry["ell2"]
+            * (b - a)
+            * max(abs(a), abs(b))
+            * geometry["normalizer"]
+            * exponential_upper
+        )
+        tail_upper = (raw * (1 + decimal_margin)).next_plus(context=ctx)
+        return {
+            "qmin_lower_estimate": text(qmin),
+            "qmax_upper_estimate": text(qmax),
+            "whitened_travel_upper_estimate": text(travel_upper),
+            "exponent_variation_upper_estimate": text(variation),
+            "decimal_relative_margin": text(decimal_margin),
+            "tail_upper_estimate": text(tail_upper),
+            "tail_eligible": Fraction(tail_upper) <= Fraction(1, 10**13 * PANELS),
+            "guard_passed": travel_upper <= 2 and variation <= 16,
+        }
+
+
+def _rule(geometry, coefficients, nodes, precision, work):
+    with context(precision):
+        value, absolute = Decimal(0), Decimal(0)
+        for u, weight in nodes:
+            work["attempted_density_nodes"] += 1
+            q, scale = _qvalue(coefficients, u)
+            margin = 64 * Decimal(10) ** (1 - precision) * (scale + 1)
+            if q < -margin:
+                raise OracleUnknown("negative Gaussian quadratic exceeds arithmetic estimate")
+            q = max(Decimal(0), q)
+            contribution = -geometry["ell2"] * u * weight * geometry["normalizer"] * (-q / 2).exp()
+            if not contribution.is_finite():
+                raise OracleUnknown("nonfinite Decimal density contribution")
+            value += contribution
+            absolute += abs(contribution)
+            work["completed_density_nodes"] += 1
+        return {"value": text(value), "absolute_sum": text(absolute)}
+
+
+def _work():
+    return {
+        "planned_panels": PANELS,
+        "attempted_panels": 0,
+        "completed_panels": 0,
+        "tail_exponential_calls": 0,
+        "attempted_density_nodes": 0,
+        "completed_density_nodes": 0,
+        "attempted_rule_batches": 0,
+        "completed_rule_batches": 0,
+        "omitted_panels": 0,
+        "guard_failures": 0,
+    }
+
+
+def _failed_panels(error):
+    return [
+        {
+            "index": index,
+            "u_start_fraction": fraction_text(Fraction(-1) + Fraction(index, 64)),
+            "u_end_fraction": fraction_text(Fraction(-1) + Fraction(index + 1, 64)),
+            "status": "not_attempted",
+            "error": failure(error),
+        }
+        for index in range(PANELS)
+    ]
+
+
+def _finalize(query, sums, absolutes, tails, geometry_checks):
+    query["values"] = {str(p): {} for p in PRECISIONS}
+    query["absolute_contribution_sums"] = {str(p): {} for p in PRECISIONS}
+    for precision in PRECISIONS:
+        with context(precision):
+            for order in ORDERS:
+                query["values"][str(precision)][str(order)] = text(
+                    sum(sums[precision][order], Decimal(0))
+                )
+                query["absolute_contribution_sums"][str(precision)][str(order)] = text(
+                    sum(absolutes[precision][order], Decimal(0))
+                )
+            exact_tail = sum((Fraction(v) for v in tails[precision]), Fraction())
+            rounded_tail = dec(exact_tail)
+            if Fraction(rounded_tail) < exact_tail:
+                rounded_tail = rounded_tail.next_plus()
+            query.setdefault("tail_sums", {})[str(precision)] = text(rounded_tail)
+            query.setdefault("tail_sum_fractions", {})[str(precision)] = fraction_text(exact_tail)
+    if any(panel["status"] not in {"direct", "bounded_tail"} for panel in query["panels"]):
+        protocol_failure = any(panel.get("protocol_failure", False) for panel in query["panels"])
+        query.update(
+            status="protocol_failure" if protocol_failure else "numerical_unknown",
+            protocol_failure=protocol_failure,
+            qualified=False,
+            reason="incomplete_or_guard_failed_fixed_partition",
+        )
+        return
+    low = Fraction(query["values"]["120"]["64"])
+    high = Fraction(query["values"]["120"]["96"])
+    high80 = Fraction(query["values"]["80"]["96"])
+    absolute = Fraction(query["absolute_contribution_sums"]["120"]["96"])
+    order_delta = abs(high - low)
+    order_limit = Fraction(1, 10**12) + 128 * EPS * absolute
+    precision_checks = {
+        str(o): mixed_stable(query["values"]["80"][str(o)], query["values"]["120"][str(o)])
+        for o in ORDERS
+    }
+    rounded = float(high)
+    if not math.isfinite(rounded):
+        raise OracleUnknown("oracle value does not fit finite binary64")
+    components = {
+        "twice_order_delta": 2 * order_delta,
+        "precision96_delta": abs(high - high80),
+        "tail80": Fraction(query["tail_sum_fractions"]["80"]),
+        "tail120": Fraction(query["tail_sum_fractions"]["120"]),
+        "absolute_node_arithmetic": 128 * EPS * absolute,
+        "decimal120_to_float_conversion": abs(Fraction.from_float(rounded) - high),
+    }
+    error = sum(components.values(), Fraction())
+    with context(160):
+        query["error_components"] = {key: text(dec(value)) for key, value in components.items()}
+    query.update(
+        order_delta_fraction=fraction_text(order_delta),
+        order_allowance_fraction=fraction_text(order_limit),
+        order_converged=order_delta <= order_limit,
+        precision_checks=precision_checks,
+        precision_stable=all(precision_checks.values()) and all(geometry_checks.values()),
+        error_components_fraction={key: fraction_text(value) for key, value in components.items()},
+        estimated_error_fraction=fraction_text(error),
+        oracle_value=rounded,
+        estimated_error=upward_float(error),
+    )
+    query["qualified"] = query["order_converged"] and query["precision_stable"]
+    query["status"] = "resolved" if query["qualified"] else "order_or_precision_unknown"
+
+
+def evaluate_batch(parameters, pixels, rules, settings, *, constants=None):
+    """Evaluate all fixed panels, retaining unknowns and every attempted node."""
+    if (
+        tuple(settings["orders"]) != ORDERS
+        or tuple(settings["precision"]) != PRECISIONS
+        or settings["maximum_density_nodes_per_query"] != MAX_NODES_PER_QUERY
+    ):
+        raise ValueError("settings differ from frozen oracle orders/precisions/work cap")
+    constants = make_constants() if constants is None else constants
+    saved_pixels = [list(pixel) for pixel in pixels]
+    result = {
+        "status": "numerical_unknown",
+        "qualified": False,
+        "queries": [],
+        "geometry": {},
+        "method": "independent_affine_source_chord_decimal",
+        "quadrature_certified": False,
+    }
+    try:
+        inputs = _inputs(parameters, pixels)
+        geometries = {p: _geometry(inputs, p, constants[str(p)]) for p in PRECISIONS}
+        result["geometry"] = {str(p): geometries[p]["record"] for p in PRECISIONS}
+        result["geometry_stability"] = _geometry_stability(geometries, constants)
+        tables = _node_tables(_rules_key(rules))
+    except Exception as error:  # noqa: BLE001 -- retain complete supplied batch identities
+        result["error"] = failure(error)
+        result["protocol_failure"] = not isinstance(error, ArithmeticError)
+        result["status"] = "protocol_failure" if result["protocol_failure"] else "numerical_unknown"
+        for index, pixel in enumerate(saved_pixels):
+            result["queries"].append(
+                {
+                    "index": index,
+                    "pixel": pixel,
+                    "status": "protocol_failure" if result["protocol_failure"] else "setup_unknown",
+                    "qualified": False,
+                    "protocol_failure": result["protocol_failure"],
+                    "order_converged": False,
+                    "precision_stable": False,
+                    "oracle_value": None,
+                    "estimated_error": None,
+                    "panels": _failed_panels(error),
+                    "work": _work(),
+                    "error": failure(error),
+                }
+            )
+        result["work"] = _work_totals(result["queries"])
+        return result
+    for index, pixel in enumerate(inputs["pixels"]):
+        query = {
+            "index": index,
+            "pixel": list(pixel),
+            "status": "running",
+            "qualified": False,
+            "protocol_failure": False,
+            "order_converged": False,
+            "precision_stable": False,
+            "oracle_value": None,
+            "estimated_error": None,
+            "panels": [],
+            "work": _work(),
+        }
+        result["queries"].append(query)
+        work = query["work"]
+        sums = {p: {o: [] for o in ORDERS} for p in PRECISIONS}
+        absolutes = {p: {o: [] for o in ORDERS} for p in PRECISIONS}
+        tails = {p: [] for p in PRECISIONS}
+        try:
+            coefficients = {p: _quadratic(geometries[p], inputs, pixel, p) for p in PRECISIONS}
+            query["global_query"] = {str(p): coefficients[p]["global_query"] for p in PRECISIONS}
+            query["quadratic"] = {
+                str(p): {key: text(coefficients[p][key]) for key in ("q0", "q1", "q2")}
+                for p in PRECISIONS
+            }
+            for panel_index in range(PANELS):
+                panel = {
+                    "index": panel_index,
+                    "u_start_fraction": fraction_text(Fraction(-1) + Fraction(panel_index, 64)),
+                    "u_end_fraction": fraction_text(Fraction(-1) + Fraction(panel_index + 1, 64)),
+                    "status": "running",
+                    "stage": "precision_panel_bounds",
+                    "precision": {},
+                    "precision_attempts": {},
+                    "rules": {},
+                    "rule_attempts": [],
+                }
+                query["panels"].append(panel)
+                work["attempted_panels"] += 1
+                try:
+                    # Commit each completed precision before starting the next.
+                    # A later failure must not erase already evaluated bounds
+                    # or hide which precision consumed the recorded work.
+                    for precision in PRECISIONS:
+                        panel["stage"] = f"precision_panel_bounds/{precision}"
+                        attempt = {"precision": precision, "status": "started"}
+                        panel["precision_attempts"][str(precision)] = attempt
+                        try:
+                            panel["precision"][str(precision)] = _panel(
+                                geometries[precision],
+                                coefficients[precision],
+                                panel_index,
+                                precision,
+                                work,
+                            )
+                        except Exception as error:
+                            attempt.update(
+                                status="execution_failure",
+                                error=failure(error),
+                                protocol_failure=not isinstance(error, ArithmeticError),
+                            )
+                            raise
+                        attempt["status"] = "completed"
+                    panel["stage"] = "shared_tail_and_guard_decision"
+                    if all(panel["precision"][str(p)]["tail_eligible"] for p in PRECISIONS):
+                        for p in PRECISIONS:
+                            tails[p].append(
+                                Decimal(panel["precision"][str(p)]["tail_upper_estimate"])
+                            )
+                        panel["status"] = "bounded_tail"
+                        work["omitted_panels"] += 1
+                    elif not all(panel["precision"][str(p)]["guard_passed"] for p in PRECISIONS):
+                        panel["status"] = "guard_failure"
+                        work["guard_failures"] += 1
+                    else:
+                        for precision in PRECISIONS:
+                            panel["rules"][str(precision)] = {}
+                            for order in ORDERS:
+                                panel["stage"] = f"density_rule/{precision}/{order}"
+                                attempt = {
+                                    "precision": precision,
+                                    "order": order,
+                                    "status": "started",
+                                }
+                                panel["rule_attempts"].append(attempt)
+                                work["attempted_rule_batches"] += 1
+                                record = _rule(
+                                    geometries[precision],
+                                    coefficients[precision],
+                                    tables[precision][panel_index][order],
+                                    precision,
+                                    work,
+                                )
+                                panel["rules"][str(precision)][str(order)] = record
+                                sums[precision][order].append(Decimal(record["value"]))
+                                absolutes[precision][order].append(Decimal(record["absolute_sum"]))
+                                work["completed_rule_batches"] += 1
+                                attempt["status"] = "completed"
+                        panel["status"] = "direct"
+                    panel["stage"] = "complete"
+                    work["completed_panels"] += 1
+                except Exception as error:  # noqa: BLE001 -- later fixed panels still run
+                    if panel["rule_attempts"] and panel["rule_attempts"][-1]["status"] == "started":
+                        panel["rule_attempts"][-1].update(
+                            status="execution_failure",
+                            error=failure(error),
+                            protocol_failure=not isinstance(error, ArithmeticError),
+                        )
+                    panel.update(
+                        status="execution_failure",
+                        error=failure(error),
+                        protocol_failure=not isinstance(error, ArithmeticError),
+                    )
+                if work["attempted_density_nodes"] > MAX_NODES_PER_QUERY:
+                    raise RuntimeError("frozen density work cap exceeded")
+            _finalize(query, sums, absolutes, tails, result["geometry_stability"])
+        except Exception as error:  # noqa: BLE001 -- later supplied queries still run
+            query.update(
+                status="protocol_failure"
+                if not isinstance(error, ArithmeticError)
+                else "execution_failure",
+                qualified=False,
+                protocol_failure=not isinstance(error, ArithmeticError),
+                oracle_value=None,
+                estimated_error=None,
+                error=failure(error),
+            )
+            query["panels"].extend(_failed_panels(error)[len(query["panels"]) :])
+    result["qualified"] = all(query["qualified"] for query in result["queries"])
+    result["protocol_failure"] = any(
+        query.get("protocol_failure", False) for query in result["queries"]
+    )
+    result["status"] = (
+        "resolved"
+        if result["qualified"]
+        else "protocol_failure"
+        if result["protocol_failure"]
+        else "numerical_unknown"
+    )
+    result["work"] = _work_totals(result["queries"])
+    result["scope"] = (
+        "Fixed affine crop/Gaussian point model. Engineering arithmetic/order/precision estimates, not certified intervals, calibrated noise or physical qualification."
+    )
+    return result
+
+
+def _work_totals(queries):
+    return {key: sum(query["work"][key] for query in queries) for key in _work()}
+
+
+def _cdf(z, pi, precision, *, progress=None):
+    """Own erf series; retained terms and omitted candidates count separately.
+
+    At most10000 terms enter the sum. Each loop also evaluates the next
+    (potentially first-omitted) candidate, including the final limit check.
+    A caller-owned progress record survives a failed conversion/range/limit.
+    """
+    progress = {} if progress is None else progress
+    progress.update(
+        status="started",
+        stage="argument",
+        precision=precision,
+        attempted_retained_terms=0,
+        completed_retained_terms=0,
+        attempted_candidate_terms=0,
+        completed_candidate_terms=0,
+    )
+    try:
+        with context(precision):
+            x = z / Decimal(2).sqrt()
+            if x == 0:
+                progress.update(status="completed", stage="zero_argument")
+                return Decimal("0.5"), {
+                    "terms": 0,
+                    "first_omitted_magnitude": "0",
+                    "cdf_tail_estimate": "0",
+                    "absolute_series_sum": "0",
+                    "absolute_conditioning": None,
+                    "work": dict(progress),
+                }
+            progress.update(stage="initial_retained_term", attempted_retained_terms=1)
+            term, total, absolute = x, x, abs(x)
+            progress["completed_retained_terms"] = 1
+            cutoff = Decimal(10) ** (-precision - 15)
+            for count in range(1, 10001):
+                progress.update(stage="next_candidate", candidate_index=count)
+                progress["attempted_candidate_terms"] += 1
+                k = count - 1
+                omitted = -term * x * x * (2 * k + 1) / ((k + 1) * (2 * k + 3))
+                progress["completed_candidate_terms"] += 1
+                if abs(omitted) <= abs(term) and abs(omitted) < cutoff:
+                    progress["stage"] = "cdf_value_and_range"
+                    root_pi = pi.sqrt()
+                    value = (1 + 2 * total / root_pi) / 2
+                    if not 0 <= value <= 1:
+                        raise OracleUnknown("independent CDF series lost its probability range")
+                    record = {
+                        "terms": count,
+                        "first_omitted_magnitude": text(abs(omitted)),
+                        "cdf_tail_estimate": text(abs(omitted) / root_pi),
+                        "absolute_series_sum": text(absolute),
+                        "absolute_conditioning": None
+                        if total == 0
+                        else text(absolute / abs(total)),
+                        "scope": "Alternating tail after decreasing terms; Decimal series arithmetic is not a certified interval.",
+                    }
+                    progress.update(status="completed", stage="complete")
+                    record["work"] = dict(progress)
+                    return value, record
+                if count == 10000:
+                    break
+                progress["stage"] = "retain_candidate"
+                progress["attempted_retained_terms"] += 1
+                term = omitted
+                total += term
+                absolute += abs(term)
+                progress["completed_retained_terms"] += 1
+            progress["stage"] = "retained_term_limit"
+            raise OracleUnknown("independent erf series exceeded10000terms")
+    except Exception as error:
+        progress.update(
+            status="execution_failure",
+            error=failure(error),
+            protocol_failure=not isinstance(error, ArithmeticError),
+        )
+        raise
+
+
+def elementary_reference(control, constants):
+    """Four frozen diagonal controls; own Decimal CDF and three signed terms."""
+    parameters, pixels = control["parameters"], control["pixels"]
+    inputs = _inputs(parameters, pixels)
+    nx, ny = inputs["normal"]
+    if nx not in (1, -1) or ny != 0 or inputs["covariance"][0][1] != 0:
+        raise ValueError(
+            "elementary reference requires exact horizontal unit normal and diagonal covariance"
+        )
+    result = {
+        "id": control["id"],
+        "queries": [],
+        "method": "independent_diagonal_erf_first_moment",
+        "qualified": False,
+        "protocol_failure": False,
+        "scope": "Separate elementary synthetic controls; no production CDF/moment helper or general covariance certificate.",
+    }
+    for index, pixel in enumerate(inputs["pixels"]):
+        query = {
+            "index": index,
+            "pixel": list(pixel),
+            "values": {},
+            "absolute_terms": {},
+            "records": {},
+            "qualified": False,
+            "protocol_failure": False,
+            "status": "running",
+        }
+        result["queries"].append(query)
+        for precision in PRECISIONS:
+            record = {
+                "status": "started",
+                "stage": "geometry",
+                "protocol_failure": False,
+                "work": {
+                    "attempted_density_exponential_calls": 0,
+                    "completed_density_exponential_calls": 0,
+                    "attempted_cdf_calls": 0,
+                    "completed_cdf_calls": 0,
+                },
+                "cdf_lower_work": {},
+                "cdf_upper_work": {},
+            }
+            query["records"][str(precision)] = record
+
+            def density_exp(argument, record=record):
+                record["work"]["attempted_density_exponential_calls"] += 1
+                value = argument.exp()
+                record["work"]["completed_density_exponential_calls"] += 1
+                return value
+
+            try:
+                with context(precision):
+                    pi = Decimal(constants[str(precision)]["pi"])
+                    ell = dec(inputs["ell2"]).sqrt()
+                    variance_x, variance_y = (dec(inputs["covariance"][i][i]) for i in range(2))
+                    sigma_x, sigma_y = variance_x.sqrt(), variance_y.sqrt()
+                    root_tau = (2 * pi).sqrt()
+                    px, py = (
+                        dec(Fraction(pixel[i]) + Fraction(1, 2) - inputs["translation"][i])
+                        for i in range(2)
+                    )
+                    b = py - dec(inputs["centre"][1])
+                    x = px - dec(inputs["centre"][0] + inputs["radius"] * inputs["fraction"] * nx)
+                    record["stage"] = "horizontal_density"
+                    phi_x = density_exp(-(x * x) / (2 * variance_x)) / (root_tau * sigma_x)
+                    low, high = (-ell - b) / sigma_y, (ell - b) / sigma_y
+                    record["stage"] = "lower_cdf"
+                    record["work"]["attempted_cdf_calls"] += 1
+                    cdf_low, record_low = _cdf(
+                        low, pi, precision, progress=record["cdf_lower_work"]
+                    )
+                    record["work"]["completed_cdf_calls"] += 1
+                    record.update(cdf_lower=record_low, cdf_lower_value=text(cdf_low))
+                    record["stage"] = "upper_cdf"
+                    record["work"]["attempted_cdf_calls"] += 1
+                    cdf_high, record_high = _cdf(
+                        high, pi, precision, progress=record["cdf_upper_work"]
+                    )
+                    record["work"]["completed_cdf_calls"] += 1
+                    record.update(cdf_upper=record_high, cdf_upper_value=text(cdf_high))
+                    mass = cdf_high - cdf_low
+                    record["stage"] = "lower_endpoint_density"
+                    density_low = density_exp(-(low * low) / 2) / (root_tau * sigma_y)
+                    record["lower_endpoint_density"] = text(density_low)
+                    record["stage"] = "upper_endpoint_density"
+                    density_high = density_exp(-(high * high) / 2) / (root_tau * sigma_y)
+                    record["upper_endpoint_density"] = text(density_high)
+                    sign = -dec(nx)
+                    terms = (
+                        sign * phi_x * b * mass,
+                        sign * phi_x * variance_y * density_low,
+                        -sign * phi_x * variance_y * density_high,
+                    )
+                    value, absolute = sum(terms), sum(abs(v) for v in terms)
+                    query["values"][str(precision)] = text(value)
+                    query["absolute_terms"][str(precision)] = text(absolute)
+                    record.update(
+                        {
+                            "terms": [text(v) for v in terms],
+                            "cdf_lower": record_low,
+                            "cdf_upper": record_high,
+                            "cdf_values": [text(cdf_low), text(cdf_high)],
+                            "mass": text(mass),
+                            "ell": text(ell),
+                            "global_query": [text(px), text(py)],
+                            "density_exponential_calls": 3,
+                            "series_tail_probability_estimate": text(
+                                abs(phi_x * b)
+                                * (
+                                    Decimal(record_low["cdf_tail_estimate"])
+                                    + Decimal(record_high["cdf_tail_estimate"])
+                                )
+                            ),
+                        }
+                    )
+                    record.update(status="completed", stage="complete")
+            except Exception as error:  # noqa: BLE001 -- retain both precision attempts
+                record.update(
+                    status="execution_failure",
+                    protocol_failure=not isinstance(error, ArithmeticError),
+                    error=failure(error),
+                )
+                query["protocol_failure"] = query["protocol_failure"] or not isinstance(
+                    error, ArithmeticError
+                )
+        if all(
+            str(p) in query["values"] and query["records"][str(p)]["status"] == "completed"
+            for p in PRECISIONS
+        ):
+            query["precision_stable"] = mixed_stable(query["values"]["80"], query["values"]["120"])
+            query["absolute_sum_120"] = query["absolute_terms"]["120"]
+            query["qualified"] = query["precision_stable"]
+            query["status"] = "resolved" if query["qualified"] else "precision_unknown"
+        else:
+            query.update(
+                status="protocol_failure" if query["protocol_failure"] else "execution_failure",
+                precision_stable=False,
+                absolute_sum_120=None,
+            )
+    result["qualified"] = all(query["qualified"] for query in result["queries"])
+    result["protocol_failure"] = any(query["protocol_failure"] for query in result["queries"])
+    result["status"] = (
+        "resolved"
+        if result["qualified"]
+        else "protocol_failure"
+        if result["protocol_failure"]
+        else "unknown"
+    )
+    return result
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.parse_args()
+    parser.error("study-only library: use the frozen driver; no standalone numerical execution")

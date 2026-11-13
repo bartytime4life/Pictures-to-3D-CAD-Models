@@ -232,6 +232,15 @@ complete-fit medians are 2.75–3.91 seconds, and all archived target passes and
 completion flags are preserved. Numerical parity and faster evaluation leave
 the observation-model and independent dimensional checks above necessary.
 
+The [analytic-normal diagnostic](validation/finite-analytic-normal-information.md)
+adds a direct counterexample to interpreting residual improvement as geometry
+improvement. All ten bounded trials reduce conditional residuals, while three
+worsen centre, radius and chord-position errors against synthetic truth relative
+to the archived baseline fits. Normal
+motion does not remove the three locally resolved covariance directions under
+the tested model. These results support checking image formation and reserved
+dimensions before adopting an additional fitted parameter.
+
 A source-derived straight-edge direction may still align the display and
 profile when a ring is retained as line geometry. The rigid rotation preserves
 distances and radii; axis-aligned width and height depend on that frame. This

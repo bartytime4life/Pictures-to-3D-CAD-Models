@@ -1,0 +1,189 @@
+#!/usr/bin/env python3
+"""Post-hoc aggregates of the completed saved report; no model or SVD calls."""
+
+import hashlib
+import json
+import math
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[3]
+SOURCE = ROOT / ".local/verification/analytic-normal-information-v1-canonical.json"
+EXPECTED = "11607377de1a98446c07e53be67c01cf669fd99dca6f1ea0abf8284a1a47d387"
+OUTPUT = Path(__file__).with_suffix(".json")
+if OUTPUT.exists() or OUTPUT.is_symlink():
+    raise SystemExit("fresh output required")
+
+
+def sha(path):
+    h = hashlib.sha256()
+    with path.open("rb") as stream:
+        for data in iter(lambda: stream.read(1024 * 1024), b""):
+            h.update(data)
+    return h.hexdigest()
+
+
+if sha(SOURCE) != EXPECTED:
+    raise SystemExit("canonical input mismatch")
+r = json.loads(SOURCE.read_bytes())
+rows = []
+for row in r["rows"]:
+    base = {
+        "index": row["index"],
+        "name": row["name"],
+        "lane": row["lane"],
+        "status": row["status"],
+        "old_targets_passed": row["old_targets_passed"],
+        "old_completion_passed": row["old_completion_passed"],
+    }
+    if row["status"] == "upstream_ineligible":
+        base["scope"] = "Original upstream refusal retained; no new normal/trial."
+        rows.append(base)
+        continue
+    info = row["analysis"]["information"]["training40"]
+    matched = info["matched_BG_and_BGN_versus_S"]
+    new = row["analysis"]["step"]
+    old = next(s for s in row["original_residual_row"]["steps"] if s["model"] == ["B", "G", "S"])
+    nuisance = {}
+    for key in ("BG", "BGN"):
+        item = matched["nuisances"][key]
+        singular = item["projected_covariance_spectrum"]["singular_values"]
+        residual_energy = math.fsum(x * x for x in item["nuisance_projected_residual"])
+        nuisance[key] = {
+            "covariance_rank": item["qualified_unique_covariance_rank"],
+            "projected_covariance_singular_values": singular,
+            "covariance_spectrum_condition": singular[0] / singular[-1],
+            "smallest_to_shared_cutoff_ratio": singular[-1] / matched["common_matched_cutoff"],
+            "unique_energy": item["qualified_unique_covariance_residual_energy"],
+            "nuisance_residual_energy": residual_energy,
+            "unique_fraction_of_nuisance_residual": item[
+                "qualified_unique_covariance_residual_energy"
+            ]
+            / residual_energy,
+            "nuisance_smallest_singular_value": item["nuisance_smallest_singular_value"],
+            "nuisance_error_estimate": item["nuisance_error_estimate"],
+            "projector_error_estimate": item["projector_error_estimate"],
+        }
+    full = info["full_BGNS"]["singular_values"]
+    old_held = old["actual_residual_summary"]["heldout"]
+    new_held = new["actual_residual_summary"]["heldout"]
+    baseline = new["baseline_residual_summary"]["heldout"]
+    binding = [
+        x["constraint"] for x in new["alpha_constraints"] if x["factor"] == new["common_alpha"]
+    ]
+    base.update(
+        nuisance=nuisance,
+        common_cutoff=matched["common_matched_cutoff"],
+        full_training_rank=info["full_BGNS"]["retained_rank"],
+        full_training_condition=full[0] / full[-1],
+        common_alpha=new["common_alpha"],
+        binding_alpha_constraints=binding,
+        applied_normal_angle=new["common_alpha"] * new["normal_angle_delta"],
+        raw_normal_angle=new["normal_angle_delta"],
+        covariance_energy_BGN_over_BG=nuisance["BGN"]["unique_energy"]
+        / nuisance["BG"]["unique_energy"],
+        spectrum_BGN_over_BG=[
+            a / b
+            for a, b in zip(
+                nuisance["BGN"]["projected_covariance_singular_values"],
+                nuisance["BG"]["projected_covariance_singular_values"],
+                strict=True,
+            )
+        ],
+        baseline_heldout=baseline,
+        old_BGS_heldout=old_held,
+        new_BGNS_heldout=new_held,
+        new_heldout_rms_better_than_BGS=new_held["rms"] < old_held["rms"],
+        new_heldout_max_better_than_BGS=new_held["max_abs"] < old_held["max_abs"],
+        new_heldout_rms_better_than_baseline=new_held["rms"] < baseline["rms"],
+        new_heldout_max_better_than_baseline=new_held["max_abs"] < baseline["max_abs"],
+        actual_linearity_discrepancy=new["maximum_linearity_discrepancy"],
+        actual_linearity_allowance=new["linearity_allowance"],
+        actual_linearity_passed=new["local_linearization_qualified"],
+        old_descriptive_geometry=row["original_residual_row"].get("evaluation_after_predictions"),
+        new_descriptive_geometry=row.get("evaluation_after_all_predictions"),
+    )
+    rows.append(base)
+eligible = [x for x in rows if "nuisance" in x]
+contexts = [c["new_analytic"] for c in r["normal_controls"]] + [
+    x["normal"] for x in r["rows"] if "normal" in x
+]
+comparisons = [q for c in contexts for q in c["qualification"]["queries"]]
+summary = {
+    "rows": len(rows),
+    "eligible_rows": len(eligible),
+    "upstream_refusals": len(rows) - len(eligible),
+    "matched_training_rank_pairs": [
+        [x["nuisance"]["BG"]["covariance_rank"], x["nuisance"]["BGN"]["covariance_rank"]]
+        for x in eligible
+    ],
+    "all_projected_singular_values_nonincreasing": all(
+        max(x["spectrum_BGN_over_BG"]) <= 1 for x in eligible
+    ),
+    "covariance_energy_increases": sum(x["covariance_energy_BGN_over_BG"] > 1 for x in eligible),
+    "covariance_energy_decreases": sum(x["covariance_energy_BGN_over_BG"] < 1 for x in eligible),
+    "covariance_energy_ratio_range": [
+        min(x["covariance_energy_BGN_over_BG"] for x in eligible),
+        max(x["covariance_energy_BGN_over_BG"] for x in eligible),
+    ],
+    "weakest_covariance_singular_ratio_range": [
+        min(x["spectrum_BGN_over_BG"][-1] for x in eligible),
+        max(x["spectrum_BGN_over_BG"][-1] for x in eligible),
+    ],
+    "BG_covariance_fraction_range": [
+        min(x["nuisance"]["BG"]["unique_fraction_of_nuisance_residual"] for x in eligible),
+        max(x["nuisance"]["BG"]["unique_fraction_of_nuisance_residual"] for x in eligible),
+    ],
+    "BGN_covariance_fraction_range": [
+        min(x["nuisance"]["BGN"]["unique_fraction_of_nuisance_residual"] for x in eligible),
+        max(x["nuisance"]["BGN"]["unique_fraction_of_nuisance_residual"] for x in eligible),
+    ],
+    "common_cutoff_range": [
+        min(x["common_cutoff"] for x in eligible),
+        max(x["common_cutoff"] for x in eligible),
+    ],
+    "minimum_weakest_covariance_singular_over_cutoff": min(
+        x["nuisance"][n]["smallest_to_shared_cutoff_ratio"] for x in eligible for n in ("BG", "BGN")
+    ),
+    "full_training_condition_range": [
+        min(x["full_training_condition"] for x in eligible),
+        max(x["full_training_condition"] for x in eligible),
+    ],
+    "BGN_projector_error_range": [
+        min(x["nuisance"]["BGN"]["projector_error_estimate"] for x in eligible),
+        max(x["nuisance"]["BGN"]["projector_error_estimate"] for x in eligible),
+    ],
+    "normal_qualified_comparisons": sum(q["qualified"] for q in comparisons),
+    "maximum_normal_api_oracle_delta": max(q["delta_upward"] for q in comparisons),
+    "maximum_level_normal_error_estimate": max(q["level_error"] for q in comparisons),
+    "common_alpha_range": [
+        min(x["common_alpha"] for x in eligible),
+        max(x["common_alpha"] for x in eligible),
+    ],
+    "applied_angle_range": [
+        min(x["applied_normal_angle"] for x in eligible),
+        max(x["applied_normal_angle"] for x in eligible),
+    ],
+    "all_trial_linearity_passed": all(x["actual_linearity_passed"] for x in eligible),
+    "new_rms_improves_baseline": sum(x["new_heldout_rms_better_than_baseline"] for x in eligible),
+    "new_max_improves_baseline": sum(x["new_heldout_max_better_than_baseline"] for x in eligible),
+    "new_rms_improves_old_BGS": sum(x["new_heldout_rms_better_than_BGS"] for x in eligible),
+    "new_max_improves_old_BGS": sum(x["new_heldout_max_better_than_BGS"] for x in eligible),
+    "all_original_pass_flags_unchanged": all(
+        x["old_targets_passed"] == old["old_targets_passed"]
+        and x["old_completion_passed"] == old["old_completion_passed"]
+        for x, old in zip(rows, r["rows"], strict=True)
+    ),
+    "new_fit_pass_count": None,
+}
+result = {
+    "input_sha256": EXPECTED,
+    "script_sha256": sha(Path(__file__)),
+    "scope": "Post-hoc saved-value aggregates only. No new derivatives, references, means, rules, SVDs, optimizers or validation captures. Fixed normal/Gaussian/brightness assumptions and parameterization remain conditional; no physical PSF or new fit-pass inference.",
+    "summary": summary,
+    "rows": rows,
+    "input_unchanged": sha(SOURCE) == EXPECTED,
+}
+with OUTPUT.open("x") as f:
+    json.dump(result, f, indent=2, sort_keys=True, allow_nan=False)
+    f.write("\n")
+print(json.dumps(summary, indent=2, sort_keys=True, allow_nan=False))

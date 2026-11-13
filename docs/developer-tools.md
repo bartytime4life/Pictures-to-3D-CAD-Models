@@ -164,3 +164,24 @@ production derivative. The second command audits saved arithmetic only, using
 output parent and refuse existing files or symlinks. The
 [conditioning archive workflow](../studies/fixtures/finite-normal-oracle-conditioning-v1/README.md)
 provides exact arguments and separates archive review from a new execution.
+
+## Analytic-normal residual replay
+
+Read-only parser checks:
+
+```bash
+.venv/bin/python studies/verification/finite-analytic-normal-information-v1.py --help
+python3 studies/verification/finite-analytic-normal-report-audit-v1.py --help
+```
+
+An explicit `--output NEW.json` on the first command evaluates the frozen 578
+queries, independent references, matched matrix comparisons and up to ten new
+joint trials. It reuses saved baselines and B/G/S arrays, with zero optimizer or
+preparation calls. The second command reads a complete decoded `--input` with
+its exact `--input-sha256`; it performs saved arithmetic only, without NumPy or
+new scientific evaluations. Both require a fresh destination and existing parent.
+The [archive workflow](../studies/fixtures/finite-analytic-normal-information-v1/README.md)
+provides all arguments and separates integrity auditing from an explicit replay.
+The [results](validation/finite-analytic-normal-information.md) retain geometric
+counterexamples and the original failed FD study; a passing protocol is not a
+new fit-pass or physical-accuracy claim.

@@ -40,6 +40,13 @@ reference arithmetic on 26 restricted controls without changing production
 code or the original V2 result. The normal operator is not called
 by the automatic flow, inverse fitter or HTTP routes below.
 
+The [analytic-normal residual runner](finite-analytic-normal-information.md)
+uses these operators only in a separately frozen research diagnostic. It reuses
+archived `B/G/S` data, qualifies `N` with an independent translation reference,
+and evaluates at most one bounded joint trial per eligible record. Its
+[complete result](validation/finite-analytic-normal-information.md) does not
+change the service flow or the fixed-normal inverse schema.
+
 ```mermaid
 flowchart LR
     A[Photo upload] --> B[Validate and normalize image]

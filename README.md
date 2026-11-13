@@ -138,14 +138,22 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 ## Research and verification
 
-[Source scope and status](docs/project-status.md) identifies the reviewed draft
-PR #100, its dependency chain and completed CI. The
+[Source scope and status](docs/project-status.md) identifies the published
+base, dependency chain, source-bound CI and new analytic-normal candidate. The preceding
 [documentation review](docs/validation/documentation-pr100-state.md) covers the
 workbench and companion library; historical results retain their original scope.
 
 - [Reference-sheet mathematics](docs/reference-sheet.md), [directional corners](docs/anisotropic-corners.md), [blur frames](docs/blur-frames.md) and [circle-consistent joins](docs/curved-joins.md) explain the automatic tracing path and its recovery limits. Measure important radii and verify [critical imported CAD geometry](docs/exports.md#verify-critical-arc-geometry).
 - [Finite-material fitting](docs/finite-shape-inverse.md) and [affine evaluation](docs/finite-affine-evaluation.md) are separate Python research APIs. The fixed affine study records 3.84× faster complete fits on three datasets; broader latency and physical adequacy remain unqualified.
 - [Residual-information V1](docs/validation/finite-residual-information.md) and [normal-derivative V1](docs/validation/finite-normal-derivative.md) retain their failed outcomes. The later [V2 correction](docs/validation/finite-normal-error-control.md) passes its 417-scene criteria and separate original-control checks. The [26-scene reference-node diagnostic](docs/validation/finite-normal-oracle-conditioning.md) improves a restricted reference path; general oracle error accounting remains open.
+
+The [analytic-normal replay](docs/validation/finite-analytic-normal-information.md)
+now qualifies all 578 comparisons and ten bounded joint trials. Allowing angle
+motion preserves all three conditional covariance directions; only three trials
+beat the saved fixed-angle comparator on conditional held-out RMS. Three trials
+reduce residuals while worsening all three synthetic geometry errors relative
+to the archived baseline fits. These
+counterexamples remain part of the result.
 
 These developer studies do not change automatic tracing or qualify physical
 camera optics. The [validation overview](docs/validation.md) keeps numerical,

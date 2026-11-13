@@ -18,7 +18,9 @@ its own failed V1 outcome. The later
 [V2 operator correction](finite-normal-error-control.md) and
 [reference-node diagnostic](finite-normal-oracle-conditioning.md) have separate
 qualifications. None replaces this replay's original finite-difference control
-or unknown normal columns; a normal-aware residual replay remains further work.
+or unknown normal columns. A separate
+[analytic-normal replay](validation/finite-analytic-normal-information.md) now
+qualifies the new method and ten joint trials without replacing this report.
 
 ## Project nuisance directions before interpreting blur
 
@@ -263,7 +265,10 @@ candidate controls under independent high-precision checks and passes its
 [26-scene reference diagnostic](validation/finite-normal-oracle-conditioning.md)
 investigates source-node rounding on a restricted family; general oracle error
 accounting remains unqualified. These later studies do not replace the old
-unknown normal columns or qualify a normal-aware residual step.
+unknown normal columns. The later
+[analytic-normal diagnostic](validation/finite-analytic-normal-information.md)
+qualifies new columns and bounded steps on the exact archived observations;
+its geometric counterexamples and the original FD failure remain separate.
 An acquisition-matched experiment needs actual source samples, transforms,
 finite kernels, encoding/resampling details and stage bytes. Product adoption
 also needs supported optics/thickness frames, measured-photo checks, bounded
