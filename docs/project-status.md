@@ -24,7 +24,7 @@ shadow-harmonic change. PR #92 changes only documentation relative to that
 main. Its [dated review](validation/documentation-pr91-state.md) retains its
 original source, counts and CI snapshot.
 
-## Repository and CI snapshot — November 13, 2026, 01:08 UTC
+## Repository and CI snapshot — November 13, 2026, 01:15 UTC
 
 This is November 12 in the project's America/Chicago timezone.
 
@@ -32,6 +32,7 @@ This is November 12 in the project's America/Chicago timezone.
 | --- | --- | --- |
 | Main, `1d32c43`, tree `d75d6c76cd5d0529c75e792da7d0fe384d47635c` | Includes merged documentation PR #92 and prior PRs #84, #85, #90 and #91 | Main does not yet include this affine candidate at this snapshot |
 | Affine PR #93, head `f7d116e`, tree `aec6ce2` | Open draft against main `1d32c43`; unmerged | [943 local Python tests, build and lint](validation/finite-affine-batch.md#software-regression) bind the unchanged software; source-bound fixed performance comparison; no new local browser or installed-machine result |
+| Documentation PR #94, initial head `3726be6` | Open draft based on PR #93, not main | [Documentation-only checks](validation/documentation-pr93-state.md); all inherited non-Markdown blobs preserved |
 | Proposed residual-information study | Separate local work in progress, outside the PR #93 source | [Prospective method](finite-residual-information.md); no archived-photo derivative or trial-step results published; no new available command in this checkout |
 | PR #92, head `c69d37f` | Merged at 23:58 UTC on November 12 | [Documentation-only review](validation/documentation-pr91-state.md); every inherited non-Markdown byte preserved |
 | PR #91, `6539905`, through PR #90's final `bf592fa` | Included in main at `ec41b0c` | [899 local Python tests](validation/finite-photo-intensity-v2.md#software-regression) belong to the original PR #91 software interval |
@@ -47,8 +48,12 @@ also completed with **success**. These hosted results are separate from the
 candidate's new 943-test local interval and restricted timing experiment.
 PR #93's own
 [Validate workbench run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43338583640)
-is **in progress**, with no conclusion at this readback. A successful earlier
-run does not establish CI for that later head or this documentation follow-up.
+has now completed with **success** at this readback. Documentation
+[PR #94](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/94)'s
+[initial-head run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43343451146)
+is **in progress**, with no conclusion. That run binds `3726be6`; later
+documentation commits require their own CI. Neither successful CI nor an open
+draft establishes merge, installation or physical qualification.
 
 These are timestamped states, not live indicators. The
 [preceding 00:23 source snapshot](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/blob/f7d116e74b028beffe2dee797518767d0e5b7222/docs/project-status.md),

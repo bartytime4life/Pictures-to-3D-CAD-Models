@@ -8,6 +8,13 @@ isolated in a separate worktree; the primary `codex/slicer-integration` checkout
 is preserved. The [source and CI snapshot](../project-status.md) is timestamped,
 not a live release indicator.
 
+Published as draft
+[PR #94](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/94)
+against PR #93. Its initial remote head `3726be6` has tree
+`51132965248b53294489d91371921e488496d3a7`, exactly matching the verified
+local documentation tree. The final status follow-up records PR #93's newly
+successful hosted run and PR #94's initial run separately.
+
 ## Coverage and changes
 
 The complete Markdown inventory covers the workbench README, user workflows,
@@ -42,7 +49,7 @@ does not change, so its generated HTML, figures, catalog and PDF remain intact.
 
 Completed checks on this documentation follow-up:
 
-- **80 Markdown files** parse with locked `marked` 17.0.5. All **862 local
+- **80 Markdown files** parse with locked `marked` 17.0.5. All **863 local
   references**, including **84 heading fragments**, and **109 tables** pass.
   Local image paths, code fences and table columns have no errors.
 - All **19 companion-library documentation tests** pass, including source
