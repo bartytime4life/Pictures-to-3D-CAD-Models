@@ -95,6 +95,12 @@ study still fails at **11/12 matched passes**. The later saved-only
 one rational local optimum but finds **zero accepted candidates among 128
 adjacent physical corners**, with no arithmetic unknowns. See the
 [complete results and source bindings](validation/finite-acquisition-physical-rounding.md).
+The separately frozen [inward-margin construction](finite-acquisition-inward-margin.md)
+now passes 103 selected controls and all five gates for all 128 new adjacent
+corners; an independent saved-data audit passes 8,030 checks. The old 0/128
+result remains unchanged. This establishes local represented feasibility;
+actual PNG cost, fitter integration and recovery improvement remain untested.
+See [the new result and evidence](validation/finite-acquisition-inward-margin.md).
 These separate local studies add no main runtime or workbench integration.
 
 The [engineering model and verification plan](engineering-model.md) defines the 2.5D scope, camera-model assumptions, dimension equations and evidence needed through prototype qualification. The independent source-height check optionally compares a user-bounded measurement with a user-defined allowance; it reports within, outside or inconclusive without assigning a physical accuracy or confidence level.

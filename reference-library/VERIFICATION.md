@@ -7,7 +7,7 @@ the existing dated receipt. The receipt, check date and release status were not
 regenerated for this correction.
 
 Repository documentation update, November 13: the
-[current review](../docs/validation/documentation-physical-rounding.md) links the
+[current review](../docs/validation/documentation-inward-margin.md) links the
 [local acquisition-recovery snapshot](../docs/finite-acquisition-recovery.md).
 That separate synthetic research retains 4/12 original matched target passes
 and 9/12 continuation passes; both earlier full protocols exited 1. The 459 focused tests
@@ -35,6 +35,12 @@ passes, exit 1. The later [saved-only physical-rounding diagnostic](../docs/fini
 accepts none of 128 adjacent physical candidates. These
 [source-bound results](../docs/validation/finite-acquisition-physical-rounding.md)
 add no library feature, release verification or physical acceptance.
+
+A separately frozen [inward-margin follow-up](../docs/finite-acquisition-inward-margin.md)
+passes 103 selected controls and all five gates for 128 new adjacent
+corners. Its independent saved-only audit passes 8,030 checks. The earlier
+0/128 result is preserved; actual PNG cost and recovery improvement remain
+untested. See [the new evidence](../docs/validation/finite-acquisition-inward-margin.md).
 
 ## What was checked automatically
 

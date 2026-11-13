@@ -36,7 +36,7 @@ the research candidate, not main or this library. The
 [original audit record](../docs/validation/finite-acquisition-recovery.md)
 retains 14 unresolved comparisons where pre-cast area differences cannot be
 reconstructed from rounded capture arrays. The
-[current documentation review](../docs/validation/documentation-physical-rounding.md)
+[current documentation review](../docs/validation/documentation-inward-margin.md)
 connects the later results and both first projection-control outcomes. This
 documentation does not add a fitter to main, the workbench or the Photos tab.
 
@@ -57,6 +57,12 @@ passes, exit 1. The later [saved-only physical-rounding diagnostic](../docs/fini
 accepts none of 128 adjacent physical candidates. These
 [source-bound results](../docs/validation/finite-acquisition-physical-rounding.md)
 add no library feature, release verification or physical acceptance.
+
+A separately frozen [inward-margin follow-up](../docs/finite-acquisition-inward-margin.md)
+passes 103 selected controls and all five gates for 128 new adjacent
+corners. Its independent saved-only audit passes 8,030 checks. The earlier
+0/128 result is preserved; actual PNG cost and recovery improvement remain
+untested. See [the new evidence](../docs/validation/finite-acquisition-inward-margin.md).
 
 A practical, source-backed library for turning photographs into printable CAD: recover shape, establish dimensions, rebuild editable geometry, and check the part you print. **Revision 7, November 9, 2026.**
 

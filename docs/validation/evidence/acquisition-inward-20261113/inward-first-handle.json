@@ -1,0 +1,14 @@
+{
+  "format": "inward-first-saved-diagnostic-native-handle",
+  "recorded_at": "2026-11-13T23:32:03.721921+00:00",
+  "head": "66df525dc06ad507b4c9b60c3eade969ff0ed677",
+  "tree": "8b27b9bb28850cf41878ab94060b96edc55a0b10",
+  "command": "set -o pipefail\n.venv/bin/python studies/verification/finite-acquisition-inward-v1.py --output .local/verification/finite-acquisition-inward-v1-first.json 2>&1 | tee .local/verification/finite-acquisition-inward-v1-first.log",
+  "first": {
+    "chunk_id": "333ba3",
+    "wall_time_seconds": 1.001820479,
+    "session_id": 94406,
+    "original_token_count": 0,
+    "output": ""
+  }
+}

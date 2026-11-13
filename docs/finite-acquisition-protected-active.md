@@ -167,8 +167,12 @@ The later 104-input saved-data diagnostic verifies the one complete rational
 certificate independently, then checks the adjacent physical binary64 box.
 All 128 corners fail source membership, despite passing physical bounds and
 the arithmetic floor. This is a representation diagnosis, not a new recovery
-score or global impossibility result. An inward-point method remains a
-[prospective construction](finite-acquisition-physical-rounding.md#an-inward-point-is-future-work).
+score or global impossibility result. A separately admitted
+[inward-point construction](finite-acquisition-inward-margin.md) now passes
+all five gates at all 128 new corners; its 103 controls and independent
+8,030-check saved-data audit pass. The [new outcome](validation/finite-acquisition-inward-margin.md)
+establishes represented local feasibility, without actual PNG-cost evaluation
+or an improved recovery result.
 There is no camera/noise qualification or GUI/HTTP mode.
 
 ## Primary background

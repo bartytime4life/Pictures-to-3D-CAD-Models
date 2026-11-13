@@ -1,0 +1,376 @@
+#!/usr/bin/env python3
+"""Independent saved-data arithmetic audit; no subject imports or new proposals."""
+
+import argparse
+import hashlib
+import itertools
+import json
+import math
+import sys
+from collections import Counter
+from fractions import Fraction as F
+from pathlib import Path
+
+
+EXPECTED = "ace89fd3bd8759aee8734ad0e968ec5f6fbde89c0edb085ca990ec02a56c3f65"
+checks = 0
+failures = []
+
+
+def check(ok, label):
+    global checks
+    checks += 1
+    if not ok:
+        failures.append(label)
+
+
+def equal(x, y, label):
+    check(x == y, label)
+
+
+def dot(x, y):
+    return sum((a * b for a, b in zip(x, y, strict=True)), F(0))
+
+
+def digest(path):
+    h = hashlib.sha256()
+    n = 0
+    with path.open("rb") as stream:
+        for block in iter(lambda: stream.read(1 << 20), b""):
+            n += len(block)
+            h.update(block)
+    return {"sha256": h.hexdigest(), "bytes": n}
+
+
+def load(path):
+    def reject(value):
+        raise ValueError(f"nonfinite JSON {value}")
+
+    return json.loads(path.read_bytes(), parse_constant=reject)
+
+
+def finite_tree(value):
+    if isinstance(value, float):
+        return math.isfinite(value)
+    if isinstance(value, list):
+        return all(map(finite_tree, value))
+    if isinstance(value, dict):
+        return all(isinstance(k, str) and finite_tree(v) for k, v in value.items())
+    return value is None or type(value) in (str, bool, int)
+
+
+def exact_vector(value):
+    return list(map(F, value))
+
+
+def halfspaces(x):
+    rows = []
+    for i, (g, z, lo, hi) in enumerate(zip(x["G"], x["z0"], x["lower"], x["upper"], strict=True)):
+        a = exact_vector(g)
+        if hi is not None:
+            rows.append((a, F(hi) - F(z), ["source_upper", i]))
+        if lo is not None:
+            rows.append(([-v for v in a], F(z) - F(lo), ["source_lower", i]))
+    for j, (lo, hi) in enumerate(zip(x["delta_lower"], x["delta_upper"], strict=True)):
+        a = [F(int(k == j)) for k in range(7)]
+        rows.append((a, F(hi), ["box_upper", j]))
+        rows.append(([-v for v in a], -F(lo), ["box_lower", j]))
+    return rows
+
+
+def ceil_binary(value):
+    rounded = float(value)
+    if F(rounded) < value:
+        rounded = math.nextafter(rounded, math.inf)
+    return rounded
+
+
+def up_ulp(value):
+    return F(math.ulp(ceil_binary(value)))
+
+
+def audit(root, report):
+    report_binding = digest(report)
+    equal(report_binding, {"sha256": EXPECTED, "bytes": 11179905}, "report binding")
+    d = load(report)
+    check(finite_tree(d), "strict native finite report")
+    plan_path = root / "studies/finite-acquisition-inward-v1.json"
+    plan = load(plan_path)
+    equal(digest(plan_path)["sha256"], d["plan_sha256"], "plan binding")
+    equal(d["source_before"], d["source_after"], "source before/after exact")
+    equal(d["source_before"]["count"], 108, "source count")
+    equal(d["source_before"]["head"], "66df525dc06ad507b4c9b60c3eade969ff0ed677", "source head")
+    source_before = {}
+    for name, binding in d["source_before"]["files"].items():
+        actual = digest(root / name)
+        source_before[name] = actual
+        equal(actual, {"sha256": binding["sha256"], "bytes": binding["bytes"]}, f"source {name}")
+        equal(binding["sha256"], binding["head_sha256"], f"source HEAD {name}")
+    olddir = root / plan["saved_recovery"]["path"]
+    oldreport = load(olddir / "report.json")
+    equal(digest(olddir / "report.json"), d["saved_recovery_binding"], "old recovery binding")
+    oldcensus_path = root / plan["saved_census"]["path"]
+    oldcensus = load(oldcensus_path)
+    equal(digest(oldcensus_path), d["saved_census_binding"], "old census binding")
+    equal(d["artifact_bindings"], d["artifact_bindings_after"], "all artifacts before/after")
+    equal(len(d["artifact_bindings"]), 106, "artifact count")
+    for name, binding in d["artifact_bindings"].items():
+        equal(digest(olddir / name), binding, f"artifact {name}")
+    equal(len(d["rows"]), 24, "24 retained rows")
+    equal(sum(r["case"]["family"] == "matched" and r["all_targets"] for r in oldreport["rows"]), 11, "old 11/12 preserved")
+    equal(d["inventory"], {"rows": 24, "fit_files": 17, "no_certificate_fits": 16, "qualified_certificates": 1}, "inventory")
+    for i, (r, old) in enumerate(zip(d["rows"], oldreport["rows"], strict=True)):
+        equal((r["row_index"], r["case"], r["saved_status"], r["saved_all_targets"]), (i, old["case"]["name"], old["status"], old["all_targets"]), f"old row {i}")
+    cert_rows = [r for r in d["rows"] if r["certificates"]]
+    equal(len(cert_rows), 1, "one certificate row")
+    r = cert_rows[0]
+    c = r["certificates"][0]
+    fit = load(olddir / r["case"] / "fit.json")
+    phase = fit["refinement"]
+    iteration = phase["details"]["iterations"][0]
+    event = iteration["events"][0]
+    saved = event["projection"]["exact_polish"]["certificate"]
+    equal(saved, c["saved_certificate"], "original certificate retained")
+    x = c["reconstructed"]
+    equal(x["G"], iteration["source_surrogate"]["jacobian"], "G from original saved source J")
+    equal(x["z0"], list(itertools.chain.from_iterable(iteration["source_snapshot"]["stages"]["optical_linear"]["values"])), "z0 from original source optics")
+    lo = [v[1] for v in iteration["incumbent_bins"]]
+    hi = [v[2] for v in iteration["incumbent_bins"]]
+    lo[event["source_index"]], hi[event["source_index"]] = event["target_interval"]
+    equal((x["lower"], x["upper"]), (lo, hi), "original incumbent and target bands")
+    equal((x["delta_lower"], x["delta_upper"]), (iteration["delta_lower"], iteration["delta_upper"]), "original delta box")
+    incumbent = phase["fit"]["candidates"][iteration["incumbent_candidate_index"]]
+    equal(x["anchor"], incumbent["parameters"] + incumbent["levels"], "anchor from indexed incumbent")
+    bounds = phase["details"]["preflight_input_snapshot"]["bounds"] + phase["details"]["preflight_input_snapshot"]["level_bounds"]
+    equal((x["actual_lower"], x["actual_upper"]), ([b[0] for b in bounds], [b[1] for b in bounds]), "original physical bounds")
+    equal(x["spans"], [b - a for a, b in bounds], "original computed spans")
+    equal((x["original_point"], x["dual"]), (saved["point"], saved["multipliers"]), "original primal/dual exact strings")
+    equal(c["source_index"], event["source_index"], "selected source identity")
+    previous_reconstruction = oldcensus["rows"][5]["certificates"][0]["reconstructed"].copy()
+    previous_reconstruction["original_point"] = previous_reconstruction.pop("point")
+    equal(previous_reconstruction, x, "prior census same exact reconstruction after explicit point-key mapping")
+    previous_candidates = oldcensus["rows"][5]["certificates"][0]["census"]
+    equal((previous_candidates["checked_candidates"], previous_candidates["feasible_count"]), (128, 0), "old negative census unchanged")
+    original = halfspaces(x)
+    equal(len(original), 352, "original352 rows")
+    old = exact_vector(x["original_point"])
+    dual = exact_vector(x["dual"])
+    old_residuals = [dot(a, old) - b for a, b, _ in original]
+    stat = [old[j] + sum((mu * row[0][j] for mu, row in zip(dual, original, strict=True)), F(0)) for j in range(7)]
+    kkt = c["original_certificate_check"]
+    for name, passed in (("primal_feasible", all(v <= 0 for v in old_residuals)), ("dual_feasible", all(v >= 0 for v in dual)), ("complementarity", all(mu * v == 0 for mu, v in zip(dual, old_residuals, strict=True))), ("stationarity", all(v == 0 for v in stat))):
+        equal(kkt[name], passed, f"KKT {name}")
+        check(passed, f"KKT actual {name}")
+    equal(kkt["qualified"], True, "KKT qualified")
+    equal(list(map(F, kkt["primal"]["residuals"])), old_residuals, "KKT saved raw residuals")
+    equal(list(map(F, kkt["stationarity_components"])), stat, "KKT saved stationarity")
+    anchor, spans, lower, upper = (exact_vector(x[k]) for k in ("anchor", "spans", "actual_lower", "actual_upper"))
+    rows = original.copy()
+    for j in range(7):
+        a = [spans[j] if k == j else F(0) for k in range(7)]
+        rows.append((a, upper[j] - anchor[j], ["physical_upper", j]))
+        rows.append(([-v for v in a], anchor[j] - lower[j], ["physical_lower", j]))
+    p = c["construction"]["proof"]
+    equal(len(rows), 366, "augmented366 rows")
+    free = [j for j, s in enumerate(spans) if s]
+    equal(p["free_coordinates"], free, "free coordinates")
+    margins, envelopes = [], []
+    for j in range(7):
+        up = up_ulp(max(abs(anchor[j]), abs(lower[j]), abs(upper[j])))
+        distance = max(abs(lower[j] - anchor[j]), abs(upper[j] - anchor[j]))
+        us = up_ulp(distance)
+        ud = up_ulp((distance + us) / spans[j])
+        e = {"up": up, "D": distance, "us": us, "ud": ud, "rho": (up + us) / spans[j] + ud, "M": (distance + us) / spans[j] + ud}
+        envelopes.append(e)
+        equal({key: F(p["coordinate_envelopes"][j][key]) for key in e}, e, f"coordinate envelope {j}")
+    source_margins = {}
+    for i, (g, z) in enumerate(zip(x["G"], x["z0"], strict=True)):
+        position = [abs(F(gj)) * e["rho"] for gj, e in zip(g, envelopes, strict=True)]
+        products = [abs(F(gj)) * e["M"] for gj, e in zip(g, envelopes, strict=True)]
+        product_ulps = [up_ulp(w) if w else F(0) for w in products]
+        abs_sum = abs(F(z)) + sum((w + u for w, u in zip(products, product_ulps, strict=True)), F(0))
+        reduction = 2 * up_ulp(abs_sum)
+        margin = sum(position + product_ulps, F(0)) + reduction
+        source_margins[i] = margin
+        rec = p["source_margins"][i]
+        equal(F(rec["margin"]), margin, f"source margin {i}")
+        equal(list(map(F, rec["position_terms"])), position, f"source position {i}")
+        equal([(F(a["w"]), F(a["ulp"])) for a in rec["products"]], list(zip(products, product_ulps, strict=True)), f"source products {i}")
+        equal((F(rec["absolute_sum_bound"]), F(rec["fsum_proposal_allowance"])), (abs_sum, reduction), f"source sum {i}")
+    slacks = [b - dot(a, old) for a, b, _ in rows]
+    tight, structural = [], []
+    for i, ((a, b, identity), q, rec) in enumerate(zip(rows, slacks, p["augmented_rows"], strict=True)):
+        is_structural = all(a[j] == 0 for j in free)
+        if is_structural:
+            structural.append(i)
+        elif q == 0:
+            tight.append(i)
+        margin = F(0) if is_structural else (envelopes[identity[1]]["rho"] if identity[0].startswith("box_") else envelopes[identity[1]]["up"] if identity[0].startswith("physical_") else source_margins[identity[1]])
+        margins.append(margin)
+        equal((rec["index"], rec["identity"], exact_vector(rec["coefficients"]), F(rec["bound"]), F(rec["slack"]), rec["structural"], F(rec["margin"])), (i, identity, a, b, q, is_structural, margin), f"augmented row {i}")
+        check(q >= 0, f"old augmented feasibility {i}")
+    equal(p["tight_indices"], tight, "all tight rows")
+    equal(p["structural_indices"], structural, "all structural rows")
+    equal(tight, p["basis_indices"], "all five tight independent basis rows")
+    basis = [[rows[i][0][j] for j in free] for i in p["basis_indices"]]
+    gram = [[dot(a, b) for b in basis] for a in basis]
+    equal([[F(v) for v in row] for row in p["gram_matrix"]], gram, "saved Gram identity")
+    # Independence witness by Leibniz determinant, not another solve/direction.
+    determinant = F(0)
+    for perm in itertools.permutations(range(len(gram))):
+        sign = -1 if sum(perm[i] > perm[j] for i in range(len(perm)) for j in range(i + 1, len(perm))) % 2 else 1
+        term = F(sign)
+        for i, j in enumerate(perm):
+            term *= gram[i][j]
+        determinant += term
+    check(determinant > 0, "Gram determinant positive")
+    y, h = exact_vector(p["gram_solution"]), exact_vector(p["direction"])
+    equal([dot(row, y) for row in gram], [F(1)] * len(gram), "saved y solves Gram*y=1")
+    equal([h[j] for j in free], [-sum((basis[k][jj] * y[k] for k in range(len(y))), F(0)) for jj in range(len(free))], "saved h=-B.T*y")
+    slopes = [dot(a, h) for a, _, _ in rows]
+    for i in tight:
+        check(slopes[i] < 0, f"all tight inward {i}")
+    interval_lower, interval_upper = F(0), None
+    for i, (q, slope, margin, rec) in enumerate(zip(slacks, slopes, margins, p["restrictions"], strict=True)):
+        equal((F(rec["slack"]), F(rec["slope"]), F(rec["margin"])), (q, slope, margin), f"restriction inputs {i}")
+        equal(F(p["augmented_rows"][i]["slope"]), slope, f"row slope {i}")
+        if slope < 0:
+            bound = (margin - q) / -slope
+            equal((rec["kind"], F(rec["bound"])), ("lower", bound), f"lower restriction {i}")
+            interval_lower = max(interval_lower, bound)
+        elif slope > 0:
+            bound = (q - margin) / slope
+            equal((rec["kind"], F(rec["bound"])), ("upper", bound), f"upper restriction {i}")
+            interval_upper = bound if interval_upper is None else min(interval_upper, bound)
+        else:
+            check(q >= margin, f"constant restriction {i}")
+    equal((F(p["scalar_lower"]), F(p["scalar_upper"]), F(p["selected_t"])), (interval_lower, interval_upper, interval_lower), "exact interval and selected lower endpoint")
+    check(F(0) < interval_lower <= interval_upper, "positive nonempty interval")
+    new = exact_vector(c["construction"]["point"])
+    equal([a - b for a, b in zip(new, old, strict=True)], [interval_lower * v for v in h], "saved changed point minus old equals saved t*h")
+    new_slacks = []
+    for i, ((a, b, _), margin, rec) in enumerate(zip(rows, margins, p["new_slacks"], strict=True)):
+        slack = b - dot(a, new)
+        new_slacks.append(slack)
+        equal((F(rec["raw_slack"]), F(rec["strengthened_slack"]), rec["passed"]), (slack, slack - margin, slack >= margin), f"strengthened new row {i}")
+        check(slack >= margin, f"actual strengthened row {i}")
+    census = c["new_census"]
+    targets = exact_vector(census["physical_targets"])
+    equal([t - a for t, a in zip(targets, anchor, strict=True)], [s * v for s, v in zip(spans, new, strict=True)], "saved physical targets match new normalized point")
+    brackets = census["brackets"]
+    for j, (target, bracket) in enumerate(zip(targets, brackets, strict=True)):
+        values = bracket["values"]
+        equal(bracket["hex"], [v.hex() for v in values], f"bracket hex {j}")
+        check(min(map(F, values)) < target < max(map(F, values)), f"strict target bracket {j}")
+        equal(math.nextafter(min(values), math.inf), max(values), f"consecutive bracket {j}")
+        equal(F(values[0]), F(float(target)), f"nearest-first {j}")
+    equal((census["total_candidates"], census["checked_candidates"], len(census["candidates"])), (128, 128, 128), "all128 retained")
+    gates = Counter()
+    physical_vectors = set()
+    exact_min_slacks, represented_min_slacks, computed_min_slacks = [], [], []
+    for i, candidate in enumerate(census["candidates"]):
+        physical = candidate["physical"]
+        physical_vectors.add(tuple(physical))
+        equal(candidate["index"], i, f"candidate index {i}")
+        equal(candidate["mask"], i, f"candidate mask {i}")
+        equal(physical, [brackets[j]["values"][(i >> j) & 1] for j in range(7)], f"saved corner mask {i}")
+        equal(candidate["hex"], [v.hex() for v in physical], f"physical bits {i}")
+        physical_ok = all(lo <= F(v) <= hi for v, lo, hi in zip(physical, lower, upper, strict=True))
+        dphys = [(F(v) - a) / s for v, a, s in zip(physical, anchor, spans, strict=True)]
+        dcomp = [(v - float(a)) / float(s) for v, a, s in zip(physical, anchor, spans, strict=True)]
+        equal(exact_vector(candidate["d_phys"]), dphys, f"dphys {i}")
+        equal(candidate["d_comp"], dcomp, f"dcomp {i}")
+        equal(candidate["d_comp_hex"], [v.hex() for v in dcomp], f"dcomp bits {i}")
+        equal(exact_vector(candidate["d_comp_exact"]), exact_vector(dcomp), f"dcomp exact {i}")
+        actual_flags = {"physical_bounds_feasible": physical_ok}
+        for name, delta, gate in (("exact_physical_feasible", dphys, "exact_physical_gate"), ("exact_represented_feasible", exact_vector(dcomp), "exact_represented_gate")):
+            residuals = [dot(a, delta) - b for a, b, _ in original]
+            equal(exact_vector(candidate[gate]["residuals"]), residuals, f"{gate} residuals {i}")
+            feasible = all(v <= 0 for v in residuals)
+            equal(candidate[gate]["feasible"], feasible, f"{gate} internal flag {i}")
+            equal(candidate[gate]["violated_indices"], [j for j, v in enumerate(residuals) if v > 0], f"{gate} violations {i}")
+            equal(candidate[gate]["violated_identities"], [identity for residual, (_, _, identity) in zip(residuals, original, strict=True) if residual > 0], f"{gate} violation identities {i}")
+            actual_flags[name] = feasible
+            (exact_min_slacks if name == "exact_physical_feasible" else represented_min_slacks).append(-max(residuals))
+        predicted = [math.fsum([z, *(g * v for g, v in zip(row, dcomp, strict=True))]) for row, z in zip(x["G"], x["z0"], strict=True)]
+        equal(candidate["computed_gate"]["predicted_optical"], predicted, f"computed fsum predictions {i}")
+        comp_ok = all(lo <= v <= hi for lo, v, hi in zip(x["lower"], predicted, x["upper"], strict=True)) and all(lo <= v <= hi for lo, v, hi in zip(x["delta_lower"], dcomp, x["delta_upper"], strict=True))
+        actual_flags["computed_feasible"] = comp_ok
+        equal(candidate["computed_gate"]["feasible"], comp_ok, f"computed internal gate {i}")
+        equal(candidate["computed_gate"]["violated_identities"], [], f"computed violation identities {i}")
+        equal(candidate["physical_bounds_violated_identities"], [], f"physical violation identities {i}")
+        selected = c["source_index"]
+        floor = 128 * sys.float_info.epsilon * max(1.0, abs(x["z0"][selected]), math.fsum(abs(g * v) for g, v in zip(x["G"][selected], dcomp, strict=True)))
+        half_width = (x["upper"][selected] - x["lower"][selected]) / 2
+        equal((candidate["arithmetic_floor_value"], candidate["arithmetic_floor_target_half_width"]), (floor, half_width), f"floor arithmetic {i}")
+        actual_flags["arithmetic_floor_feasible"] = floor < half_width
+        for name, passed in actual_flags.items():
+            equal(candidate[name], passed, f"gate {name} {i}")
+            check(passed, f"actual gate passes {name} {i}")
+            gates[name] += int(passed)
+        equal(candidate["feasible"], all(actual_flags.values()), f"allfive candidate {i}")
+        check(candidate["status"] == "checked", f"candidate arithmetic resolved {i}")
+        computed_min_slacks.append(min([v - lo for lo, v in zip(x["lower"], predicted, strict=True)] + [hi - v for v, hi in zip(predicted, x["upper"], strict=True)]))
+    equal(len(physical_vectors), 128, "128 unique saved corners")
+    equal((census["feasible_count"], census["selected_index"], census["arithmetic_unknown_count"]), (128, 0, 0), "census allpass summary")
+    equal(d["row_outcome_counts"], dict(Counter(row["status"] for row in d["rows"]) | {"protocol_failure": 0, "construction_unknown": 0, "complete_negative": 0}), "row outcome summary")
+    for key, expected in (("model_calls", 0), ("new_qp_solves", 0), ("literal_png_trials", 0), ("old_point_census_calls", 0), ("kkt_checks_attempted", 1), ("constructions_attempted", 1), ("new_censuses_attempted", 1), ("new_point_optimality", False), ("original_outcomes_modified", False), ("passed", True)):
+        equal(d[key], expected, f"scope {key}")
+    for key in ("source_unchanged", "saved_inputs_unchanged", "inventory_matches"):
+        check(d[key] is True, f"qualification binding flag {key}")
+    equal(d["artifact_bindings_unchanged_after"], dict.fromkeys(d["artifact_bindings"], True), "all106 per-artifact after check flags")
+    equal(d["saved_report_census_checks_after"], {"saved_recovery_binding": True, "saved_census_binding": True}, "saved report/census after check flags")
+    equal(d["saved_recovery_binding_after"], d["saved_recovery_binding"], "saved recovery after binding")
+    equal(d["saved_census_binding_after"], d["saved_census_binding"], "saved census after binding")
+    equal(d["protocol_failure_count"], 0, "no saved protocol failures")
+    for name, binding in source_before.items():
+        equal(digest(root / name), binding, f"audit interval source unchanged {name}")
+    equal(digest(report), report_binding, "audit interval report unchanged")
+    return {
+        "report_binding": report_binding,
+        "source_head": d["source_before"]["head"],
+        "source_count": 108,
+        "artifact_count": 106,
+        "inventory": d["inventory"],
+        "original_constraints": len(original),
+        "augmented_constraints": len(rows),
+        "tight_indices": tight,
+        "basis_rank_exact": len(basis),
+        "gram_witness_verified_without_new_solve": True,
+        "saved_step": {"float": float(interval_lower), "hex": float(interval_lower).hex()},
+        "max_saved_normalized_displacement": float(max(abs(v - u) for v, u in zip(new, old, strict=True))),
+        "minimum_new_raw_slack": float(min(new_slacks)),
+        "minimum_new_strengthened_slack": float(min(q - m for q, m in zip(new_slacks, margins, strict=True))),
+        "all_five_gates": dict(gates),
+        "candidate_count": 128,
+        "min_exact_physical_slack": float(min(exact_min_slacks)),
+        "min_exact_represented_slack": float(min(represented_min_slacks)),
+        "min_computed_source_slack": min(computed_min_slacks),
+        "physical_candidate_0": census["candidates"][0]["physical"],
+        "scope": "Saved-data consistency and exact local surrogate feasibility only. No subject imports, new proposal/direction/solve/census, model/reference/PNG call, actual-cost, geometry-target, optimum-transfer or nonlinear-code qualification.",
+    }
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--report", type=Path, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    if args.output.exists() or args.output.is_symlink() or not args.output.parent.is_dir():
+        parser.error("output must be fresh in an existing parent")
+    result = {"format": "independent-inward-saved-math-audit-v3", "passed": False, "prior_audits": "receipt-v1.json retained (point/original_point rename); receipt-v2.json retained (per-artifact flag dictionary, not scalar bool). Both were auditor schema-assumption failures; all saved mathematical and five-gate checks passed in each attempt."}
+    try:
+        result.update(audit(args.root.resolve(), args.report.resolve()))
+    except Exception as error:
+        failures.append(f"unexpected {type(error).__name__}: {error}")
+    result.update(checks=checks, failures=failures, passed=not failures, audit_source=digest(Path(__file__)))
+    with args.output.open("x") as stream:
+        json.dump(result, stream, allow_nan=False, indent=2)
+        stream.write("\n")
+    print(json.dumps({"passed": result["passed"], "checks": checks, "failures": len(failures), "output": str(args.output)}, allow_nan=False))
+    return 0 if result["passed"] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

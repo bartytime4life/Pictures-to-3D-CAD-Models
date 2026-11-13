@@ -143,6 +143,11 @@ The later [saved-data physical-rounding diagnostic](finite-acquisition-physical-
 passes 49 controls but finds no accepted point among 128 adjacent physical
 corners. It makes no fitter, QP-solver, forward-model or literal PNG call.
 See [commands as provenance and exact source bindings](validation/finite-acquisition-physical-rounding.md).
+The later [inward-margin diagnostic](finite-acquisition-inward-margin.md)
+passes 103 selected controls and all five gates at all 128 new corners, with
+an independent 8,030-check saved-only audit. It also makes zero forward-model
+or literal PNG calls. Its [source-bound result](validation/finite-acquisition-inward-margin.md)
+does not add an executable command, fitter or UI control to main.
 Those runtime, test and runner files remain absent here; their recorded
 commands require the frozen research checkout and are not main-branch commands.
 

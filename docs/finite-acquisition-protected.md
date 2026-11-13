@@ -17,6 +17,13 @@ The [new result and saved-only physical census](validation/finite-acquisition-ph
 preserve every first failure. The original protected-v1 full study remains
 unrun; only the active-face follow-up has completed a full recovery protocol.
 
+The separately frozen [inward-margin construction](finite-acquisition-inward-margin.md)
+now passes 103 selected controls and all five gates for all 128 new adjacent
+corners; an independent saved-data audit passes 8,030 checks. The old 0/128
+result remains unchanged. This establishes local represented feasibility;
+actual PNG cost, fitter integration and recovery improvement remain untested.
+See [the new result and evidence](validation/finite-acquisition-inward-margin.md).
+
 It keeps the earlier full-protocol failures:
 4/12 original matched passes, 9/12 after the predictor, and 11/12 after both the
 [coupled](finite-acquisition-coupled.md) and

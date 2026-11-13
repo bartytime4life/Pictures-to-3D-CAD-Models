@@ -1,0 +1,25 @@
+{
+  "format": "inward-first-controls-terminal-receipt",
+  "recorded_at": "2026-11-13T23:31:44.880005+00:00",
+  "head": "66df525dc06ad507b4c9b60c3eade969ff0ed677",
+  "tree": "8b27b9bb28850cf41878ab94060b96edc55a0b10",
+  "source_inputs_unchanged": 108,
+  "tests": {
+    "exit_code": 0,
+    "passed": 103,
+    "failed": 0,
+    "seconds": 0.15,
+    "native_session_id": null,
+    "terminal_on_initial_call": true
+  },
+  "log": {
+    "sha256": "d1aa8265a82031894ab87594ad50fddcdafa02bc12305cd7132c4e2b09ff8ebe",
+    "bytes": 180
+  },
+  "handle": {
+    "sha256": "1333aae15a2909235e65fc5c59d7a75542164bb006350007fbfb52db147020ee",
+    "bytes": 850
+  },
+  "saved_inward_diagnostic_executed": false,
+  "scope": "54 new independent arithmetic/protocol cases plus49 previous physical controls on invented data only. Original negative saved census not rerun. Source108 frozen and unchanged; first saved inward diagnostic is now eligible once."
+}

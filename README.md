@@ -135,7 +135,7 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 For the reviewed source revision and available research APIs, read
 [source scope and status](docs/project-status.md) and the
-[current documentation review](docs/validation/documentation-physical-rounding.md).
+[current documentation review](docs/validation/documentation-inward-margin.md).
 Main includes the source-cell mean, five unrounded area sensitivities and
 separate signed linear propagation as developer APIs. Five-parameter recovery
 with unknown brightness is absent from this main-based runtime. A
@@ -148,9 +148,14 @@ also reaches 11/12 after a separately frozen corrected selection passes 821
 tests and 33 subtests. **All five complete 24-case recovery protocols fail.**
 The original [protected-source-bin design](docs/finite-acquisition-protected.md)
 retains its eight failed controls, and the active method's first test-expectation
-failure is preserved. A later [saved-only rounding diagnostic](docs/finite-acquisition-physical-rounding.md)
+failure is preserved. An earlier [saved-only rounding diagnostic](docs/finite-acquisition-physical-rounding.md)
 verifies a rational local optimum but accepts none of 128 adjacent physical
-candidates. The [latest results](docs/validation/finite-acquisition-physical-rounding.md) and
+candidates. A separately frozen [inward-point construction](docs/finite-acquisition-inward-margin.md)
+then passes 103 focused controls and all five original gates for all 128 new
+corners, with zero arithmetic unknowns. An independent saved-data audit passes
+8,030 checks. This establishes represented local feasibility; no actual PNG
+cost comparison or recovery improvement has been demonstrated. The
+[latest results](docs/validation/finite-acquisition-inward-margin.md) and
 [results and remaining limits](docs/validation/finite-acquisition-continuations.md)
 keep software tests and [saved-record audits](docs/finite-acquisition-saved-audit.md)
 separate from camera accuracy and physical acceptance. The

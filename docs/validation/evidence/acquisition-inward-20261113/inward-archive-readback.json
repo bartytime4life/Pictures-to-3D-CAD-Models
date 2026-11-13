@@ -1,0 +1,22 @@
+{
+  "format": "inward-first-complete-archive-readback",
+  "recorded_at": "2026-11-13T23:34:08.350295+00:00",
+  "head": "66df525dc06ad507b4c9b60c3eade969ff0ed677",
+  "tree": "8b27b9bb28850cf41878ab94060b96edc55a0b10",
+  "source": {
+    "path": ".local/verification/finite-acquisition-inward-v1-recorded-source.zip",
+    "sha256": "7df83dff057e3d05c921809c13a1f83263b1cac403fcebe9c69348490a25a4d0",
+    "bytes": 650788,
+    "members": 109,
+    "payload_members_verified": 108
+  },
+  "complete": {
+    "path": ".local/verification/finite-acquisition-inward-v1-complete.zip",
+    "sha256": "f96a32262958833b772fd181d4067ed1ebdaeb335ee99fb5a93e0a0ce86ffc98",
+    "bytes": 21935482,
+    "members": 13,
+    "payload_members_verified": 12
+  },
+  "governing_inputs_unchanged": 108,
+  "scope": "Member hash/size/byte/mode consistency only. Independent saved arithmetic audit, actual-cost evaluation, recovery and physical qualification have separate evidence."
+}
