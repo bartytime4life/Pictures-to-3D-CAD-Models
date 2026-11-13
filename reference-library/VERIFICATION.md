@@ -7,7 +7,7 @@ the existing dated receipt. The receipt, check date and release status were not
 regenerated for this correction.
 
 Repository documentation update, November 13: the
-[current review](../docs/validation/documentation-protected-active.md) links the
+[current review](../docs/validation/documentation-physical-rounding.md) links the
 [local acquisition-recovery snapshot](../docs/finite-acquisition-recovery.md).
 That separate synthetic research retains 4/12 original matched target passes
 and 9/12 continuation passes; both earlier full protocols exited 1. The 459 focused tests
@@ -27,12 +27,14 @@ failures and 28 historical precision unknowns. They do not refresh this
 library's release verification or add a Photos tool.
 
 The [protected-source-bin design](../docs/finite-acquisition-protected.md)
-retains eight failed first controls. Its later
-[exact active-face follow-up](../docs/finite-acquisition-protected-active.md)
-records 820 passes, one failed test expectation and 33 passing subtests, exit 1.
-Neither full protected recovery study has run. The
-[new first outcome](../docs/validation/finite-acquisition-protected-active.md)
-adds no library feature, release verification or physical acceptance.
+retains its eight failed first controls. The
+[active-face follow-up](../docs/finite-acquisition-protected-active.md) preserves
+its first expectation failure, passes a separately frozen selected 821 tests
+and 33 subtests, then completes the original 24-case study at 11/12 matched
+passes, exit 1. The later [saved-only physical-rounding diagnostic](../docs/finite-acquisition-physical-rounding.md)
+accepts none of 128 adjacent physical candidates. These
+[source-bound results](../docs/validation/finite-acquisition-physical-rounding.md)
+add no library feature, release verification or physical acceptance.
 
 ## What was checked automatically
 

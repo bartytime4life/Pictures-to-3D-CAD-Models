@@ -1,9 +1,10 @@
 # Source scope and verification status
 
-## Current source snapshot — November 13, 2026, 22:07 UTC
+## Current source snapshot — November 13, 2026, 23:00 UTC
 
-Main is `bb21f95f6bc8f4ea833b2766b6f635ccc6a6ae77`, tree
-`73f2157ba96a40fbf35ae6dcae854320f57d07e8`. It includes the source-cell mean
+The verified publication base is main
+`e56c47830a7bdcbefbdfeafd033493c1c8815571`, tree
+`457ad340c532ad15865fd691a76d47e89e48cb82`. It includes the source-cell mean
 from [PR #105](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/105),
 the two-direction edge-width repair from
 [PR #107](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/107),
@@ -26,7 +27,10 @@ and corrected saved-only audit. The edge-blur correction in
 [PR #114](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/114)
 merged at 21:33:06 UTC. Documentation
 [PR #115](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/115)
-merged at 21:48:51 UTC; its tree is this main revision. The runtime still matches
+merged at 21:48:51 UTC. Documentation
+[PR #116](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/116)
+merged at 22:25:09 UTC; its tree is the publication base above. This later
+documentation refresh has its own source and checks. The runtime still matches
 PR #114: that correction removes fitted
 paper-light variation before remeasuring supported edge widths on traces with
 zero entered thickness. Positive-thickness traces retain the preceding width
@@ -40,7 +44,7 @@ base after PR #105 closed; its documentation reached main through PR #108.
 | Gaussian finite-material inverse | Developer Python API; four geometry parameters with supplied chord normal and optics. [Contract](finite-shape-inverse.md) |
 | Source-cell area and staged acquisition mean | Developer Python APIs with supplied geometry, levels, kernels and affine sampling; [128 saved-stage comparisons](validation/finite-acquisition-mean.md) |
 | Five unrounded area sensitivities and signed linear propagation | Developer Python APIs; [259 focused tests and 33 study rows](validation/finite-cell-sensitivity.md), without an inverse-recovery result |
-| Five-geometry-parameter acquisition-aware recovery with unknown brightness | Absent from this main-based runtime. A [separate local candidate](finite-acquisition-recovery.md) has four completed, failed recovery protocols; it is not an HTTP mode or automatic correction |
+| Five-geometry-parameter acquisition-aware recovery with unknown brightness | Absent from this main-based runtime. A [separate local candidate](finite-acquisition-recovery.md) has five completed, failed recovery protocols; it is not an HTTP mode or automatic correction |
 
 Hosted checks are tied to their published heads:
 
@@ -54,12 +58,13 @@ Hosted checks are tied to their published heads:
 | PR #113, `6b6683e7bbcb733c3c7d147b3508d4f08d86efe8` | [43505482613](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43505482613): completed, success | [43505482801](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43505482801): completed, success |
 | PR #114, `918410db522c35c3582391a1ad8035195db46f34` | [43510351302](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43510351302): completed, success | No PR-triggered reference-library run listed at readback |
 | PR #115, `897fd0cc6539e17a82344cf216e5a4565462f238` | [43512700142](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43512700142): completed, success | [43512700089](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43512700089): completed, success |
+| PR #116, `f3bbc2bbdd5ae958be33050bf393c32557bc4085` | [43517704845](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43517704845): completed, success | [43517704839](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43517704839): completed, success |
 
 These readbacks do not extend a run to the combined main commit or this later
 documentation change. Merge, hosted checks, installed runtime, real-camera
 accuracy and physical acceptance remain separate.
 
-The [documentation review](validation/documentation-protected-active.md) audits this
+The [documentation review](validation/documentation-physical-rounding.md) audits this
 main-based source. Use [available tools](#available-here) and [remaining integration work](#remaining-integration-work)
 for current capabilities. Earlier snapshots below are historical records; their open
 PR states and absent-module statements describe their own source and time.
@@ -102,16 +107,29 @@ runtime, auditor source, complete ZIPs and full candidate ledgers/arrays are
 outside this documentation publication.
 
 The [protected-source-bin proposal](finite-acquisition-protected.md) at
-`79522b5` retains eight failed first controls. The subsequent
-[exact active-face implementation](finite-acquisition-protected-active.md) at
-`1dade8a` ends its first selected command **exit 1: 820 passes, one failure and
-33 passing subtests**. All 53 original controls rebound to the new subject,
-26 independent math controls and 22 new protocol controls pass. The sole
-failure expects 15 rows where its fixture supplies 16; no corrected test has
-yet been admitted or rerun. The [first outcome and six verbatim records](validation/finite-acquisition-protected-active.md)
-preserve all 96 input hashes and the failed assertion. **Neither protected full
-recovery study has run**, so there is no new matched-case recovery score.
-This documentation publishes no candidate runtime, tests or study runner.
+`79522b5` retains eight failed first controls and its full study remains unrun.
+The [active-face follow-up](finite-acquisition-protected-active.md) preserves
+its first result at `1dade8a`: 820 passes, one failed expectation and 33 passing
+subtests, exit 1. The [dated first record](validation/finite-acquisition-protected-active.md)
+and all 96 original input hashes stay unchanged.
+
+The separately frozen expectation-only correction at `c1a9330` passes **821
+selected tests and 33 subtests**. Its unchanged original **24-case study
+completes at 11/12 matched passes, exit 1**. All 24 rows, the singular-map
+exception and one adverse all-target pass remain retained. Middle PNG still
+misses fraction and conditional reserved-residual targets; no protected trial
+reaches literal evaluation.
+
+The saved-only [physical-rounding diagnostic](finite-acquisition-physical-rounding.md)
+at `b649ea3` passes 49 controls and independently verifies the one qualified
+rational certificate. All **128 adjacent physical corners fail source
+membership**, with zero arithmetic unknowns; physical bounds and arithmetic
+floor pass for every corner. It makes no fitter, QP-solver, forward-model or
+literal PNG call. This excludes only that adjacent box, not feasible points
+elsewhere. [Complete outcomes and copied evidence](validation/finite-acquisition-physical-rounding.md)
+preserve the 100-input and 104-input freezes. An inward-point construction
+remains prospective. Candidate runtime, tests, runners, full arrays and
+complete local ZIPs remain outside this documentation publication.
 
 ## Available here
 
@@ -209,7 +227,7 @@ A main-branch inverse would need the separately
 seeds and bounds, brightness/rank diagnostics, a bounded search for undefined
 derivatives or rounded stages, and prospective recovery checks. The separate
 [local prototype](finite-acquisition-recovery.md) implements those research
-mechanisms, but its four failed protocols leave recovery and adoption unresolved.
+mechanisms, but its five failed protocols leave recovery and adoption unresolved.
 The current five-query coupled controls do not prove five-parameter rank after
 two unknown brightness levels. Supplied source assumptions and observed camera calibration remain
 distinct. Neither study automatically corrects CAD.

@@ -1,0 +1,22 @@
+{
+  "format": "physical-rounding-first-control-terminal-receipt",
+  "recorded_at": "2026-11-13T22:46:06.698748+00:00",
+  "head": "b649ea3e09c5c6e1b772d1bc3f0f5a378f764b33",
+  "tree": "e408b9dbcef0ecd273c31d08f929defae3948736",
+  "governing_inputs_unchanged": 104,
+  "tests": {
+    "exit_code": 0,
+    "passed": 49,
+    "seconds": 0.06,
+    "native_session_id": null,
+    "completion": "Terminal result returned by initial native exec call",
+    "log": {
+      "path": ".local/verification/finite-acquisition-physical-rounding-v1-first-tests.log",
+      "sha256": "a4d26c4451072c7fc4015ee77de830b90039fa384cd2eb589d01cdadbf72585f",
+      "bytes": 99
+    }
+  },
+  "saved_census_executed": false,
+  "model_calls": 0,
+  "scope": "Independent exact-arithmetic controls only, not new recovery. First actual saved census is now eligible once."
+}

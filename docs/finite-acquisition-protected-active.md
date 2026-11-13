@@ -1,11 +1,17 @@
 # Exact active-face checks for protected source-bin proposals
 
-The first selected software run at `1dade8a` ends **exit 1: 820 passed,
-one failed and 33 subtests passed**. The sole failure is a test expectation
-that counts 15 halfspaces where its fixture supplies 16. The
-[first outcome, exact source bindings and pending correction](validation/finite-acquisition-protected-active.md)
-retain that failure. No full active-method recovery study has run, and no
-control-only correction has yet been admitted or executed.
+A separately frozen expectation-only correction at `c1a9330` passes **821
+selected tests and 33 subtests**. Its complete original 24-case recovery study
+still exits 1 at **11/12 matched passes**. The later saved-only
+[physical-rounding diagnostic](finite-acquisition-physical-rounding.md) verifies
+one rational local optimum but finds no accepted point among 128 adjacent
+physical candidates. See the [completed results and source bindings](validation/finite-acquisition-physical-rounding.md).
+
+The [first selected outcome at `1dade8a`](validation/finite-acquisition-protected-active.md)
+remains unchanged: 820 passed, one failed and 33 subtests passed, exit 1. Its
+sole failure counts 15 halfspaces where the fixture supplies 16. The corrected
+test is an additional file; the original failing test and all prior source
+remain immutable. A selected pass does not claim an unrestricted suite pass.
 
 This additive local implementation follows the
 [protected-source-bin design](finite-acquisition-protected.md). That original
@@ -149,11 +155,21 @@ rational-to-binary64 gap. Its 22 new protocol controls and all 53 rebound
 original controls also pass. The complete selected command still fails its one
 new controller assertion. Assertions after that failure were not executed.
 
-Before another control run, admit and freeze the proposed expectation-only
-correction separately, retaining every original input and first outcome. Only
-after its software gate passes may the unchanged 24-case recovery protocol run.
-Neither gate has occurred yet. There is no new matched-case score, global
-recovery guarantee, camera/noise qualification or GUI/HTTP mode.
+The separately admitted correction changes only the new copy's expected row
+count from 15 to 16. Its combined 100-input freeze precedes the selected
+821-test/33-subtest passing run; assertions after the original failure now run
+in that corrected copy. The unchanged full 24-case protocol then completes
+with 11/12 matched passes, one singular-map exception and one adverse case
+meeting all targets. Middle PNG still misses fraction and conditional
+reserved-residual targets. No protected trial reaches literal evaluation.
+
+The later 104-input saved-data diagnostic verifies the one complete rational
+certificate independently, then checks the adjacent physical binary64 box.
+All 128 corners fail source membership, despite passing physical bounds and
+the arithmetic floor. This is a representation diagnosis, not a new recovery
+score or global impossibility result. An inward-point method remains a
+[prospective construction](finite-acquisition-physical-rounding.md#an-inward-point-is-future-work).
+There is no camera/noise qualification or GUI/HTTP mode.
 
 ## Primary background
 

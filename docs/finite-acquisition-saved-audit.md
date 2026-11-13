@@ -1,7 +1,10 @@
 # Saved recovery archives and completed consistency audits
 
 The four separately frozen recovery studies retain **4/12, 9/12, 11/12 and
-11/12 matched passes**. All four complete 24-case protocols exit 1. See the
+11/12 matched passes**. Those four complete 24-case protocols exit 1. The later
+[active-face study also exits 1 at 11/12](validation/finite-acquisition-physical-rounding.md);
+the saved-only physical census is a separate diagnostic, outside these earlier
+full-ledger audits. See the
 [original/predictor record](validation/finite-acquisition-recovery.md) and
 [coupled/event results](validation/finite-acquisition-continuations.md).
 Local packaging, saved-record consistency, model accuracy and physical

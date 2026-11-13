@@ -1,0 +1,11 @@
+{
+  "head": "c1a933099d34475bb1bbfb04de17fa41b61b4d42",
+  "cmd": "set -o pipefail\nOPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python -W error::RuntimeWarning studies/verification/finite-acquisition-recovery-protected-active-controls-v2.py --output-dir .local/verification/finite-acquisition-recovery-protected-active-controls-v2-first 2>&1 | tee .local/verification/finite-acquisition-recovery-protected-active-controls-v2-first-study.log",
+  "first": {
+    "chunk_id": "206b62",
+    "wall_time_seconds": 1.001547043,
+    "session_id": 74108,
+    "original_token_count": 0,
+    "output": ""
+  }
+}

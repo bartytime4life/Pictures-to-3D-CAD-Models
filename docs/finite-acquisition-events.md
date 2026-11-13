@@ -16,9 +16,12 @@ the new event-phase ledger. No physical camera/CAD qualification follows.
 A later [protected-source-bin design](finite-acquisition-protected.md) attempts
 to retain other incumbent bins. Its [first software checks fail eight cases](validation/finite-acquisition-protected.md);
 no full recovery study has run for that strategy. Its subsequent
-[exact active-face follow-up](finite-acquisition-protected-active.md) ends its
-first selected software run with 820 passes, one failed test expectation and
-33 passing subtests, exit 1. That method's full recovery study is also unrun.
+[exact active-face follow-up](finite-acquisition-protected-active.md) preserves
+its first test-expectation failure, then passes a separately frozen corrected
+821-test/33-subtest selection. Its complete original 24-case recovery still
+exits 1 at 11/12 matched passes. A subsequent saved-only
+[physical-rounding census](finite-acquisition-physical-rounding.md) accepts none
+of 128 adjacent physical candidates; it adds no recovery result.
 
 ## The event belongs to a source code
 
