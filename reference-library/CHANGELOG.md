@@ -28,6 +28,14 @@ unresolved saved-audit comparisons. This is a documentation update, not a librar
 release or an addition to main's runtime or the Photos tab. The handbook text,
 generated HTML/PDF, catalog, release counts and dated verification stay unchanged.
 
+### Exact active-face research navigation — November 13, 2026
+
+Link the [exact active-face method](../docs/finite-acquisition-protected-active.md)
+and its [first selected software outcome](../docs/validation/finite-acquisition-protected-active.md):
+820 passes, one failed test expectation and 33 passing subtests, exit 1.
+No full recovery study or corrected control run has occurred. Library code,
+generated reader/PDF and dated release verification remain unchanged.
+
 ### Protected-projection research navigation — November 13, 2026
 
 Link the [protected-source-bin design](../docs/finite-acquisition-protected.md)

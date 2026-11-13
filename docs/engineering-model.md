@@ -282,10 +282,14 @@ The [completed results](validation/finite-acquisition-continuations.md) and
 miss, first failures and 28 historical precision unknowns. Candidate code and
 complete local ZIPs remain separate from this main runtime and workbench UI.
 
-The newer [protected-source-bin design](finite-acquisition-protected.md) fails
-eight first software controls. Its full recovery study has not run. See the
-[first outcome and evidence](validation/finite-acquisition-protected.md) before
-considering further recovery experiments or integration.
+The [protected-source-bin design](finite-acquisition-protected.md) retains its
+eight failed first controls. The later
+[exact active-face implementation](finite-acquisition-protected-active.md) records
+**820 passes, one failed test expectation and 33 passing subtests**, exit 1.
+Its fixture supplies 16 constraint rows, while the assertion expects 15.
+The [first outcome and evidence](validation/finite-acquisition-protected-active.md)
+remain unchanged; a separate control-only correction is pending. Neither
+protected full recovery study has run. This adds no application integration.
 
 A source-derived straight-edge direction may still align the display and
 profile when a ring is retained as line geometry. The rigid rotation preserves

@@ -135,6 +135,13 @@ is an unresolved provenance check, not evidence that a new numerical experiment
 failed. The newer acquisition artifact auditors explicitly support recorded
 source snapshots as data; follow each tool's own contract.
 
+The separate [exact active-face follow-up](finite-acquisition-protected-active.md)
+has a [first selected software record](validation/finite-acquisition-protected-active.md)
+of 820 passes, one failed test expectation and 33 passing subtests, exit 1.
+Its runtime, test files and study runner are absent here. The recorded command
+is provenance for that frozen research checkout, not a runnable main command.
+No full protected recovery study or control-only corrected run is recorded.
+
 ## Output and side effects
 
 Use a new scratch destination for generated benchmark/example reports. The

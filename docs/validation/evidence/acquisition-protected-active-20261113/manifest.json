@@ -1,0 +1,38 @@
+{
+  "format": "documentation-verbatim-evidence-inventory",
+  "source_head": "1dade8af7d4c068e6cdd599f7af87aa168e14068",
+  "source_tree": "daa91d943d89a7546ba3de8da0779d7fe83a84d0",
+  "scope": "First selected software controls: 1 failed, 820 passed, 33 subtests passed, exit 1. No full protected-active recovery study; no corrected controls admitted or rerun. Candidate runtime, tests and runner remain separate local research.",
+  "verbatim_copies": {
+    "first-tests.log": {
+      "source": ".local/verification/finite-acquisition-recovery-protected-active-v1-first-tests.log",
+      "sha256": "252462ddab3f1a4c30667b496093ea479068eedce48ea0fe78d9bfe7a9dcdb91",
+      "bytes": 7367
+    },
+    "first-tests-handle.json": {
+      "source": ".local/verification/finite-acquisition-recovery-protected-active-v1-first-tests-handle.json",
+      "sha256": "f86119dc03ebb30f8c3ed17f12e24b1a079491042a28079f57059a6ac1aa240f",
+      "bytes": 1751
+    },
+    "first-terminal-receipt.json": {
+      "source": ".local/verification/finite-acquisition-recovery-protected-active-v1-first-terminal-receipt.json",
+      "sha256": "a15a424c2cebd835a13688c5733e6cca9a3820e28962effefb38b138ca6e379c",
+      "bytes": 1387
+    },
+    "source-freeze.json": {
+      "source": ".local/verification/finite-acquisition-recovery-protected-active-v1-freeze.json",
+      "sha256": "de9cdca32d53ad5bf66f09b0a2acff089e86f83f10868ad1d6fdeb8e3fe1ba26",
+      "bytes": 13367
+    },
+    "admission.json": {
+      "source": "studies/finite-acquisition-recovery-protected-active-v1.json",
+      "sha256": "462b5c2e11d484998424b95349827d5e0766b63cd01e306295e10099947d1258",
+      "bytes": 22562
+    },
+    "prospective-method.txt": {
+      "source": "docs/finite-acquisition-protected-active.md",
+      "sha256": "cb9073e047762f98694e65ab2c210d8fd11bda8ecfbb1eb5958007f821db5d70",
+      "bytes": 8470
+    }
+  }
+}

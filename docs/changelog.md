@@ -1,5 +1,16 @@
 # Workbench change log
 
+## Exact active-face first controls documented — November 13, 2026
+
+- Record the additive local implementation at `1dade8a`: 820 passes, one failed
+  test expectation and 33 passing subtests, exit 1; full recovery study unrun.
+- Explain exact local-QP certificates, represented feasibility and literal-cost
+  acceptance separately. Preserve the test's 15-versus-16-row discrepancy and
+  the unadmitted correction, without claiming a passing rerun.
+- Add six verbatim first-execution records and update active navigation and
+  source/CI status after PR #115 merged. Preserve runtime, historical records,
+  prior targets and all 96 frozen inputs. [Review scope](validation/documentation-protected-active.md).
+
 ## First protected-source-bin controls documented — November 13, 2026
 
 - Record eight failed first software controls, 752 passes and 33 passing
