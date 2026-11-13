@@ -1,0 +1,28 @@
+{
+  "format": "protected-active-first-control-terminal-receipt",
+  "recorded_at": "2026-11-13T22:02:48.142120+00:00",
+  "head": "1dade8af7d4c068e6cdd599f7af87aa168e14068",
+  "tree": "daa91d943d89a7546ba3de8da0779d7fe83a84d0",
+  "governing_inputs_unchanged": 96,
+  "tests": {
+    "native_session_id": 35429,
+    "exit_code": 1,
+    "failed": 1,
+    "passed": 820,
+    "subtests_passed": 33,
+    "seconds": 16.08,
+    "log": {
+      "path": ".local/verification/finite-acquisition-recovery-protected-active-v1-first-tests.log",
+      "sha256": "252462ddab3f1a4c30667b496093ea479068eedce48ea0fe78d9bfe7a9dcdb91",
+      "bytes": 7367
+    }
+  },
+  "first_handle": {
+    "path": ".local/verification/finite-acquisition-recovery-protected-active-v1-first-tests-handle.json",
+    "sha256": "f86119dc03ebb30f8c3ed17f12e24b1a079491042a28079f57059a6ac1aa240f",
+    "bytes": 1751
+  },
+  "recovery_study_executed": false,
+  "failure": "The invented physical-roundtrip controller fixture has two finite source bounds and14box bounds, so its16-row setup/verification correctly reserves16384stage units. The new test incorrectly expected15rows/15360. All original53rebound,26independent math and22protocol controls pass.",
+  "policy": "Preserve all96 frozen inputs and first outcome. Admit any test correction separately before first new collection/execution; no algorithm or recovery-target change."
+}

@@ -7,6 +7,13 @@ protected recovery study **has not run**. See the [first outcome and exact
 source bindings](validation/finite-acquisition-protected.md). This is a local
 research design, outside main's runtime and automatic tracing.
 
+A separately frozen [exact active-face follow-up](finite-acquisition-protected-active.md)
+passes the 53 original controls when rebound to the new implementation, but
+its complete first selected command still fails: 820 passes, one failed test
+expectation and 33 passing subtests. Its
+[new first outcome](validation/finite-acquisition-protected-active.md) preserves
+the original eight failures. Neither protected full recovery study has run.
+
 It keeps the earlier full-protocol failures:
 4/12 original matched passes, 9/12 after the predictor, and 11/12 after both the
 [coupled](finite-acquisition-coupled.md) and

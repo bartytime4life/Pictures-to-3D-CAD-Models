@@ -1,0 +1,151 @@
+........................................................................ [  8%]
+........................................................................ [ 17%]
+........................................................................ [ 26%]
+........................................................................ [ 35%]
+........................................................................ [ 43%]
+........................................................................ [ 52%]
+........................................................................ [ 61%]
+............................................................... [ 69%]
+................................................................... [ 77%]
+..................................................... [ 83%]
+.............................F.......................................... [ 92%]
+..............................................................           [100%]
+=================================== FAILURES ===================================
+__ test_exact_roundtrip_controller_keeps_shaped_codes_and_bool_counter_scope ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7a01187a2210>
+
+    def test_exact_roundtrip_controller_keeps_shaped_codes_and_bool_counter_scope(monkeypatch):
+        """Invented controller fixture: this exercises the actual _refine caller seam.
+    
+        Operator/QP outputs are stubs. The point deliberately improves literal cost
+        while its actual source code misses the requested target; no physical or
+        solver qualification follows from this mechanics control.
+        """
+        options = settings(
+            max_evaluations=512, max_cell_work=1000, max_stage_work=100000, max_iterations=7
+        )
+        initial = helpers().initial_result(options)
+        monkeypatch.setattr(coupled, "fit_acquisition_segment_coupled", lambda *args, **kwargs: initial)
+        base = initial.best
+    
+        def literal(self, parameters, levels=None, *, purpose="objective"):
+            parameters, levels = tuple(parameters), tuple(levels)
+            cost = 0.0 if parameters[0] > 0.2 else 1.0
+            arrays = tuple(
+                (name, (1,), np.array([value], dtype="<f8").tobytes())
+                for name, value in (
+                    ("prediction", 3.0 - cost),
+                    ("residual", cost),
+                    ("raw_residual", cost),
+                )
+            )
+            candidate = replace(
+                base,
+                index=len(self.candidates),
+                parameters=parameters,
+                levels=levels,
+                cost=cost,
+                _arrays=arrays,
+            )
+            self.candidates.append(candidate)
+            self.evaluations += 1
+            self.cell_work += self.n
+            self.cell_reported += self.n
+            self.stage_work += 5
+            self.stage_reported += 5
+            codes = np.full(self.data["source_shape"], 128 if cost else 130, np.uint8)
+            ref = len(self.code_payloads)
+            self.code_payloads.append((len(self.literal_trials), codes.shape, codes.tobytes()))
+            self.code_entries += codes.size
+            self.code_refs[candidate.index] = ref
+            self.literal_trials.append(
+                {
+                    "candidate_index": candidate.index,
+                    "code_ref": ref,
+                    "purpose": purpose,
+                    "status": "resolved",
+                }
+            )
+            if self.capture_enabled:
+                self.captures[candidate.index] = coupled._freeze_data(
+                    {
+                        "optical_linear": np.full(codes.shape, 128.0, np.float32),
+                        "encoded": codes,
+                        "decoded_linear": np.full(codes.shape, 128.0, np.float32),
+                    }
+                )
+            self._finish(
+                parameters,
+                levels,
+                purpose,
+                {
+                    "cell_reserved": self.n,
+                    "cell_charged": self.n,
+                    "cell_reported": self.n,
+                    "stage_reserved": 5,
+                    "stage_charged": 5,
+                    "stage_reported": 5,
+                },
+                status="resolved",
+                candidate_index=candidate.index,
+            )
+            return candidate
+    
+        monkeypatch.setattr(protected._ProtectedEngine, "evaluate", literal)
+        monkeypatch.setattr(events, "_downstream", lambda engine, incumbent, details: np.ones((1, 1)))
+        monkeypatch.setattr(
+            protected._ProtectedEngine, "decode_table", lambda *args: np.arange(256, dtype=np.float32)
+        )
+        monkeypatch.setattr(
+            events, "_optical_jacobian", lambda *args: np.array([[20.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]])
+        )
+        monkeypatch.setattr(
+            protected,
+            "_bin_interval",
+            lambda engine, incumbent, code, *args: (127.0, 129.0) if code == 128 else (129.0, 131.0),
+        )
+        monkeypatch.setattr(
+            protected,
+            "_score_events",
+            lambda *args: ([(-1.0, 0, 129, 1.0)], {"status": "invented-score"}),
+        )
+        monkeypatch.setattr(
+            events,
+            "_code_boundary",
+            lambda value, code, target, **kwargs: events.CodeBoundary(
+                "witness", code, target, value, 129.0, 2, 128.0, 1, (), None
+            ),
+        )
+    
+        class Projection:
+            status = "resolved"
+            point = (0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+            error = None
+            exact_polish = SimpleNamespace(incomplete_stage=False)
+    
+            def to_dict(self):
+                return {"status": self.status, "point": self.point}
+    
+        monkeypatch.setattr(protected, "_protected_projection", lambda *args, **kwargs: Projection())
+        result = protected.fit_acquisition_segment_protected([3.0], **options)
+        assert type(result.refinement.counters_exact) is bool and result.refinement.counters_exact
+        assert result.evaluations == result.initial_charged[0] + result.refinement.fit.evaluations
+        assert result.stage_work == result.initial_charged[2] + result.refinement.fit.stage_work
+        assert result.selected_phase == "refinement" and result.best.cost == 0.0
+        assert not result.protocol_failure and result.refinement.error is None
+        details = result.refinement.to_dict()["details"]
+        event = details["iterations"][0]["events"][0]
+        assert event["physical_roundtrip_exact"]["status"] == "resolved"
+        assert event["physical_roundtrip_exact"]["feasible"] is True
+>       assert event["physical_roundtrip_exact"]["stage_units_reserved"] == 15 * (
+            protected.EXACT_SETUP_STAGE_UNITS_PER_ROW + protected.EXACT_VERIFY_STAGE_UNITS_PER_ROW
+        )
+E       assert 16384 == (15 * (512 + 512))
+E        +  where 512 = protected.EXACT_SETUP_STAGE_UNITS_PER_ROW
+E        +  and   512 = protected.EXACT_VERIFY_STAGE_UNITS_PER_ROW
+
+tests/test_finite_acquisition_protected_active.py:305: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_finite_acquisition_protected_active.py::test_exact_roundtrip_controller_keeps_shaped_codes_and_bool_counter_scope
+1 failed, 820 passed, 33 subtests passed in 16.08s

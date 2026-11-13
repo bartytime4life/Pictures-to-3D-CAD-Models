@@ -135,7 +135,7 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 For the reviewed source revision and available research APIs, read
 [source scope and status](docs/project-status.md) and the
-[current documentation review](docs/validation/documentation-protected-controls.md).
+[current documentation review](docs/validation/documentation-protected-active.md).
 Main includes the source-cell mean, five unrounded area sensitivities and
 separate signed linear propagation as developer APIs. Five-parameter recovery
 with unknown brightness is absent from this main-based runtime. A
@@ -143,13 +143,15 @@ with unknown brightness is absent from this main-based runtime. A
 4/12 matched passes originally, 9/12 with a smooth proposal, then **11/12**
 with [coupled search](docs/finite-acquisition-coupled.md). A later
 [source-event strategy](docs/finite-acquisition-events.md) stays at 11/12.
-All four complete 24-case protocols fail. The newest
-[protected-source-bin design](docs/finite-acquisition-protected.md) fails eight
-first software checks; its full recovery study has not run. The
+All four complete 24-case protocols fail. The later
+[protected-source-bin design](docs/finite-acquisition-protected.md) retains eight
+failed first controls. Its [exact active-face follow-up](docs/finite-acquisition-protected-active.md)
+records 820 passes, one failed test expectation and 33 passing subtests; the
+full recovery study has not run. The
 [results and remaining limits](docs/validation/finite-acquisition-continuations.md)
 keep software tests and [saved-record audits](docs/finite-acquisition-saved-audit.md)
 separate from camera accuracy and physical acceptance. The
-[preceding documentation review](docs/validation/documentation-mean-state.md),
+[earlier documentation review](docs/validation/documentation-mean-state.md),
 [acquisition-evidence review](docs/validation/documentation-acquisition-state.md)
 and [PR #95 review](docs/validation/documentation-pr95-state.md) retain their
 original workbench and companion-library scope. The

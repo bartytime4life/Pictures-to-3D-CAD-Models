@@ -1,9 +1,9 @@
 # Source scope and verification status
 
-## Current source snapshot — November 13, 2026, 21:38 UTC
+## Current source snapshot — November 13, 2026, 22:07 UTC
 
-Main is `b2597749bdeab040f25b330f77d43cd1657194bc`, tree
-`f1e83e9e8c3045908a37df6f346c00b45f0a49fc`. It includes the source-cell mean
+Main is `bb21f95f6bc8f4ea833b2766b6f635ccc6a6ae77`, tree
+`73f2157ba96a40fbf35ae6dcae854320f57d07e8`. It includes the source-cell mean
 from [PR #105](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/105),
 the two-direction edge-width repair from
 [PR #107](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/107),
@@ -24,7 +24,10 @@ was the preceding main revision. Documentation
 merged at 20:54:25 UTC and recorded the executed coupled/source-event studies
 and corrected saved-only audit. The edge-blur correction in
 [PR #114](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/114)
-merged at 21:33:06 UTC; its merge tree is this main revision. It removes fitted
+merged at 21:33:06 UTC. Documentation
+[PR #115](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/115)
+merged at 21:48:51 UTC; its tree is this main revision. The runtime still matches
+PR #114: that correction removes fitted
 paper-light variation before remeasuring supported edge widths on traces with
 zero entered thickness. Positive-thickness traces retain the preceding width
 path. See [eligibility, regressions and limits](reference-sheet.md#3-segmentation-and-sub-pixel-edges).
@@ -49,13 +52,14 @@ Hosted checks are tied to their published heads:
 | PR #111, `b6ba24992260d49fd0a88a53057799c4f7c85e67` | [43491926326](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43491926326): completed, success | [43491926158](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43491926158): completed, success |
 | PR #112, `42f78743d4abeb84d96e100a2aa0849a11e470f6` | [43497998820](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43497998820): completed, success | [43497998949](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43497998949): completed, success |
 | PR #113, `6b6683e7bbcb733c3c7d147b3508d4f08d86efe8` | [43505482613](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43505482613): completed, success | [43505482801](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43505482801): completed, success |
-| PR #114, `918410db522c35c3582391a1ad8035195db46f34` | [43510351302](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43510351302): in progress at readback | No PR-triggered reference-library run listed at readback |
+| PR #114, `918410db522c35c3582391a1ad8035195db46f34` | [43510351302](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43510351302): completed, success | No PR-triggered reference-library run listed at readback |
+| PR #115, `897fd0cc6539e17a82344cf216e5a4565462f238` | [43512700142](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43512700142): completed, success | [43512700089](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43512700089): completed, success |
 
 These readbacks do not extend a run to the combined main commit or this later
 documentation change. Merge, hosted checks, installed runtime, real-camera
 accuracy and physical acceptance remain separate.
 
-The [documentation review](validation/documentation-protected-controls.md) audits this
+The [documentation review](validation/documentation-protected-active.md) audits this
 main-based source. Use [available tools](#available-here) and [remaining integration work](#remaining-integration-work)
 for current capabilities. Earlier snapshots below are historical records; their open
 PR states and absent-module statements describe their own source and time.
@@ -97,13 +101,17 @@ accuracy. Four complete ZIPs have local member hash/size readback; candidate
 runtime, auditor source, complete ZIPs and full candidate ledgers/arrays are
 outside this documentation publication.
 
-The newest [protected-source-bin proposal](finite-acquisition-protected.md) at
-`79522b5` fails its first software controls: **eight failures, 752 passes and
-33 passing subtests**, exit 1. Seven known-feasible projection cases reach the
-iteration limit; an overflow case escapes numerical-error handling. **No full
-protected recovery study ran**, so this method has no new matched-case score.
-The [first outcome and evidence](validation/finite-acquisition-protected.md)
-remain separate from the earlier completed recovery protocols and main runtime.
+The [protected-source-bin proposal](finite-acquisition-protected.md) at
+`79522b5` retains eight failed first controls. The subsequent
+[exact active-face implementation](finite-acquisition-protected-active.md) at
+`1dade8a` ends its first selected command **exit 1: 820 passes, one failure and
+33 passing subtests**. All 53 original controls rebound to the new subject,
+26 independent math controls and 22 new protocol controls pass. The sole
+failure expects 15 rows where its fixture supplies 16; no corrected test has
+yet been admitted or rerun. The [first outcome and six verbatim records](validation/finite-acquisition-protected-active.md)
+preserve all 96 input hashes and the failed assertion. **Neither protected full
+recovery study has run**, so there is no new matched-case recovery score.
+This documentation publishes no candidate runtime, tests or study runner.
 
 ## Available here
 

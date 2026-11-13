@@ -36,8 +36,8 @@ the research candidate, not main or this library. The
 [original audit record](../docs/validation/finite-acquisition-recovery.md)
 retains 14 unresolved comparisons where pre-cast area differences cannot be
 reconstructed from rounded capture arrays. The
-[current documentation review](../docs/validation/documentation-protected-controls.md)
-connects the later results and first projection failures. This
+[current documentation review](../docs/validation/documentation-protected-active.md)
+connects the later results and both first projection-control outcomes. This
 documentation does not add a fitter to main, the workbench or the Photos tab.
 
 The later local [coupled search](../docs/finite-acquisition-coupled.md) and
@@ -48,11 +48,13 @@ The later local [coupled search](../docs/finite-acquisition-coupled.md) and
 failures and 28 historical precision unknowns. They do not refresh this
 library's release verification or add a Photos tool.
 
-The newer [protected-source-bin design](../docs/finite-acquisition-protected.md)
-fails eight first software controls, with 752 passes and 33 passing subtests.
-Its full recovery study has not run. The
-[first outcome](../docs/validation/finite-acquisition-protected.md) adds no
-library feature, release verification or physical acceptance.
+The [protected-source-bin design](../docs/finite-acquisition-protected.md)
+retains eight failed first controls. Its later
+[exact active-face follow-up](../docs/finite-acquisition-protected-active.md)
+records 820 passes, one failed test expectation and 33 passing subtests, exit 1.
+Neither full protected recovery study has run. The
+[new first outcome](../docs/validation/finite-acquisition-protected-active.md)
+adds no library feature, release verification or physical acceptance.
 
 A practical, source-backed library for turning photographs into printable CAD: recover shape, establish dimensions, rebuild editable geometry, and check the part you print. **Revision 7, November 9, 2026.**
 
