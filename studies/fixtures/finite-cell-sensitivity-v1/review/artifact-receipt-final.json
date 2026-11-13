@@ -1,0 +1,290 @@
+{
+  "all_reference_maxima_independently_recomputed": false,
+  "audit_sha256": "7498829ef2613a41de1131408abe979fa60917667891b99b46a60e87c3ad68fe",
+  "checks": 315826,
+  "checks_by_category": {
+    "arithmetic": 1328,
+    "audit_scope": 2,
+    "binding": 58,
+    "census": 12,
+    "integrity": 2,
+    "json": 258415,
+    "qualification": 201,
+    "reference": 209,
+    "retained_summary": 4,
+    "retention": 33,
+    "schema": 54951,
+    "source": 237,
+    "static_contract": 3,
+    "unknown": 22,
+    "work": 349
+  },
+  "failures": [],
+  "format": "finite-cell-sensitivity-saved-artifact-audit-v1",
+  "import_guard": {
+    "enabled": true,
+    "forbidden_import_attempts": [],
+    "scientific_modules_loaded": []
+  },
+  "input": {
+    "bytes": 4236100,
+    "plan_sha256": "3968d7336fe153f0e7f5631a85c0eaa834130fd68f6d38c9b4bc753bbd5927f5",
+    "report_sha256": "d72bff9c6a7f8b96b540a006623a59f8dfcc9b969f69e97f885eca09bec7be59",
+    "source_commit": "c47214d098a234f28784cb174429e687e799a2bf",
+    "source_pin_count": 10
+  },
+  "limitations": [
+    "Four complement rows omit independent disk-reference arrays: coverage/Cx/Cy/R maxima are retained claims, not independently recomputed metrics.",
+    "Stored geometric reference values are not re-evaluated; only saved-array arithmetic and flags are checked.",
+    "JSON does not prove live NumPy immutability. Frozen bytes-backed implementation and separate immutability test source are checked statically; no runtime test is rerun.",
+    "Arithmetic estimates and order agreement are not certified derivative bounds, geometry recovery, camera qualification or interactive latency evidence.",
+    "The scope counts include intentional unknown safety controls, not33 accuracy successes."
+  ],
+  "missing_saved_reference_arrays": [
+    {
+      "case": "grid-0",
+      "consequence": "saved maxima for coverage/Cx/Cy/R not independently recomputed",
+      "kind": "complement",
+      "missing": "independent disk coverage and Cx/Cy/R reference arrays"
+    },
+    {
+      "case": "grid-1",
+      "consequence": "saved maxima for coverage/Cx/Cy/R not independently recomputed",
+      "kind": "complement",
+      "missing": "independent disk coverage and Cx/Cy/R reference arrays"
+    },
+    {
+      "case": "grid-2",
+      "consequence": "saved maxima for coverage/Cx/Cy/R not independently recomputed",
+      "kind": "complement",
+      "missing": "independent disk coverage and Cx/Cy/R reference arrays"
+    },
+    {
+      "case": "grid-3",
+      "consequence": "saved maxima for coverage/Cx/Cy/R not independently recomputed",
+      "kind": "complement",
+      "missing": "independent disk coverage and Cx/Cy/R reference arrays"
+    }
+  ],
+  "native_json_types": {
+    "NoneType": 20,
+    "bool": 704,
+    "dict": 9021,
+    "float": 88986,
+    "int": 443,
+    "list": 16144,
+    "str": 8566
+  },
+  "passed": true,
+  "population": {
+    "api_calls": {
+      "attempted": 58,
+      "returned": 58
+    },
+    "families": {
+      "grid": 4,
+      "regular": 18,
+      "special": 11
+    },
+    "invariants": 25,
+    "qualification_scopes": {
+      "regular_or_multispan_accuracy_rows": 19,
+      "resolved_special_boundary_accuracy_rows": 3,
+      "safety_unknown_rows_not_accuracy": 5,
+      "whole_grid_identity_rows": 4,
+      "zero_contact_contract_rows": 2
+    },
+    "rows": 33,
+    "status_census": {
+      "nondifferentiable": 2,
+      "parameter_endpoint": 2,
+      "resolved": 7823,
+      "work_limit": 4
+    },
+    "work": {
+      "performed_work": 7827,
+      "required_work": 7831
+    }
+  },
+  "saved_comparison_maxima": {
+    "candidate_vs_saved_boundary_scaled": 1.5543122344752192e-15,
+    "candidate_vs_saved_richardson_scaled": 4.564570943443869e-12
+  },
+  "scope": "stdlib saved data only; no model/reference/generator/package imports or evaluations",
+  "source_verification": {
+    "archive_bytes": 249239,
+    "archive_sha256": "cf896934f7ce83280e77785dfa83a13a39219660d1c7a0ba33bde0123bccef9a",
+    "git_required": false,
+    "members": {
+      "backend/__init__.py": {
+        "bytes": 51,
+        "sha256": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc"
+      },
+      "backend/app.py": {
+        "bytes": 19418,
+        "sha256": "345c7dc8bbc7bfbe616eb2934d2a58cd0b4fa1216dbdaa5272ab3a36b06d96bc"
+      },
+      "backend/assistant.py": {
+        "bytes": 29846,
+        "sha256": "45f05aa8d0738a1da0e3b5040a2c4df8a01a35e9a835e1c06fd47ee3e81758c5"
+      },
+      "backend/circular_joins.py": {
+        "bytes": 14459,
+        "sha256": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7"
+      },
+      "backend/curve_envelope.py": {
+        "bytes": 2960,
+        "sha256": "d37525b42c920a770b783e0c94ff97cf3d5214272d85dcdceae9d23eb184ca27"
+      },
+      "backend/drawing.py": {
+        "bytes": 12908,
+        "sha256": "560f087e28d369a2e0f3b733197c18c5a7aa87c390fe56de7516caf9a08a5e6d"
+      },
+      "backend/edges.py": {
+        "bytes": 34976,
+        "sha256": "5498f1f4d3b52888f9cb3e206ffa21de316f60bcbfa1c9ac4d34949810f1d18f"
+      },
+      "backend/finite_acquisition.py": {
+        "bytes": 10104,
+        "sha256": "c61b9def98132a10bbfe6df2bddbc50f9e9338eded0177a74dc25dff90220921"
+      },
+      "backend/finite_acquisition_linear.py": {
+        "bytes": 12262,
+        "sha256": "bae7b48f4bc6d950551d3f463f5d0dfc53d0d499ff0812547738fcf43154f703"
+      },
+      "backend/finite_affine.py": {
+        "bytes": 15299,
+        "sha256": "d4eb540f6a654178fca41b4be416bd4ad6ebb6b3f645bc78b5383b18b8caa653"
+      },
+      "backend/finite_aperture.py": {
+        "bytes": 14553,
+        "sha256": "75f29a04133ffd142144607a7c7153e12de159ba7c632e01fd46751fa14cd7b5"
+      },
+      "backend/finite_aperture_sensitivity.py": {
+        "bytes": 14430,
+        "sha256": "d481acf746d92568dc317f9dbe9f4741ce863ee241fe84be91264e0ef97d0e51"
+      },
+      "backend/finite_centre_fit.py": {
+        "bytes": 34732,
+        "sha256": "df8a057abefe983ee951c894a9ae44e0c6b0f472d3419578be505973ea3a8bfb"
+      },
+      "backend/finite_normal.py": {
+        "bytes": 18226,
+        "sha256": "e1e548b58c26d98f28475e647594f5273f34734f1284df27a06324cdf022a443"
+      },
+      "backend/finite_observations.py": {
+        "bytes": 17430,
+        "sha256": "09fa843f72b2fc265ba8d4a7111267bf10433eb4f3f2a0600a89cc7871cb3969"
+      },
+      "backend/finite_shape.py": {
+        "bytes": 18056,
+        "sha256": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380"
+      },
+      "backend/fitting.py": {
+        "bytes": 68991,
+        "sha256": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833"
+      },
+      "backend/heic.py": {
+        "bytes": 4820,
+        "sha256": "5e34870379991f8813bacfc4badc8fe7fcf5dbe8aa053156fa352456b208de33"
+      },
+      "backend/models.py": {
+        "bytes": 10732,
+        "sha256": "21e7467766f4a086f52b3756f6b1fa8e4ec96a7b76cf0b4d1131c5f45709e6e1"
+      },
+      "backend/placement.py": {
+        "bytes": 4258,
+        "sha256": "e1745597ca2930d1260659e9f2dc4405f2b7239beb0c12c45fa92b6d3f5c03df"
+      },
+      "backend/printing.py": {
+        "bytes": 13386,
+        "sha256": "58d121ad45f0176b02094f3446dcd020c254ccd78860e5a269b8b6a8d6479915"
+      },
+      "backend/reference.py": {
+        "bytes": 33297,
+        "sha256": "109ccac49f011e8411286ca2e3682caa201e578df39fee7a52425bb507f7d6e0"
+      },
+      "backend/scad.py": {
+        "bytes": 4806,
+        "sha256": "d5cf18312ba10b7e3830d059952c3d078edc1e21813eb2fb03a4fd1ebaf2d534"
+      },
+      "backend/shadow.py": {
+        "bytes": 10113,
+        "sha256": "5b156e36aaa3d4592d658875d22241853dd82682c4a691c610a514af07682dbf"
+      },
+      "backend/sheet.py": {
+        "bytes": 34358,
+        "sha256": "9735ea176217c273fa63d4e7f412210089d7112fb415d9b921322525aedb950f"
+      },
+      "backend/slicer_handoff.py": {
+        "bytes": 6441,
+        "sha256": "774e78fa93dacc348c204d89a0ec4192a01701fb3fa3304ee09960e816101a50"
+      },
+      "backend/slicers.py": {
+        "bytes": 7848,
+        "sha256": "03442055d64c37d46e5806bafdd0bd497b54dacf78bc409addf1ff8400c25bb9"
+      },
+      "backend/three_mf.py": {
+        "bytes": 6544,
+        "sha256": "435afd61c90bb21c305876f681f845a3bfb193a64fa96589e649fb40fd821cf1"
+      },
+      "backend/tone.py": {
+        "bytes": 6309,
+        "sha256": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee"
+      },
+      "backend/tracing.py": {
+        "bytes": 14522,
+        "sha256": "b822716050b285152bcbefe07a0b7da1e02716ecb5d990cbf29af86598a14d2e"
+      },
+      "backend/worker.py": {
+        "bytes": 19014,
+        "sha256": "9c869ffae551485b473aeb54ddc9a0116e8c8df22f92f2c08e2f3e97f24ca846"
+      },
+      "manifest.json": {
+        "bytes": 10598,
+        "sha256": "b16e86a39df4fddcd11b40c21e6b6e02443c8437282e45c1696e39ac28af15ac"
+      },
+      "pyproject.toml": {
+        "bytes": 596,
+        "sha256": "89db6bd352114ad6ed7c979c070e66d47551ef7cca7062778f832bb8934507ab"
+      },
+      "studies/finite-cell-sensitivity-v1.json": {
+        "bytes": 5900,
+        "sha256": "3968d7336fe153f0e7f5631a85c0eaa834130fd68f6d38c9b4bc753bbd5927f5"
+      },
+      "studies/verification/finite-cell-sensitivity-v1.py": {
+        "bytes": 42200,
+        "sha256": "d94b930df57d2b9858631bfa8164c9618f7ff8b45d25c584f7808fea0226a19a"
+      },
+      "tests/test_finite_acquisition.py": {
+        "bytes": 14202,
+        "sha256": "cf605a5cb94edd16bd0572afd15a83671ec61b8f40a263fcbe3ae9be8e46d475"
+      },
+      "tests/test_finite_acquisition_linear.py": {
+        "bytes": 17386,
+        "sha256": "a6875c0c571c3f67b5e291827f860335ffffd894844afaab05901947ff2f63e9"
+      },
+      "tests/test_finite_acquisition_sensitivity.py": {
+        "bytes": 3903,
+        "sha256": "a12fa1864a409bc8c125f44ce31bdbed3e239b73eea7ee251dad536a123a3d76"
+      },
+      "tests/test_finite_acquisition_workspace.py": {
+        "bytes": 5082,
+        "sha256": "2d2ba6e12a7d43f92402b8e20229fa64f607c2f77ce283476e708617b610fd3e"
+      },
+      "tests/test_finite_aperture.py": {
+        "bytes": 12129,
+        "sha256": "e2ec4013126986a80c0e1fea2b6546d3e8bd62dbfb73462cf60f1f8ef5548766"
+      },
+      "tests/test_finite_aperture_sensitivity.py": {
+        "bytes": 5285,
+        "sha256": "3f67748549e8e39475e3b53e2395a966ed6700709a241d0ac080d2704f037bd9"
+      },
+      "uv.lock": {
+        "bytes": 131410,
+        "sha256": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f"
+      }
+    },
+    "mode": "recorded ZIP read as data"
+  }
+}

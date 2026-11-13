@@ -4,11 +4,15 @@ Turn a photograph of a **flat, constant-thickness part** into a scaled CAD solid
 
 The workbench is designed for plates, gaskets, spacers, and templates. It traces what is visible in the photograph; it does not recover hidden geometry or infer physical dimensions.
 
+[Start the app](#start-the-app) · [Try the workflow](#try-the-complete-workflow)
+· [Documentation](docs/README.md) · [Troubleshooting](docs/troubleshooting.md)
+
 For the reviewed source revision and available research APIs, read
 [source scope and status](docs/project-status.md) and the
-[current documentation review](docs/validation/documentation-acquisition-state.md). The earlier
-[documentation review](docs/validation/documentation-pr95-state.md) records
-its PR #95 workbench and companion-library scope. The
+[preceding documentation review](docs/validation/documentation-mean-state.md).
+The earlier [acquisition-evidence review](docs/validation/documentation-acquisition-state.md)
+and [PR #95 review](docs/validation/documentation-pr95-state.md) retain their
+original workbench and companion-library scope. The
 [residual-study record](docs/validation/finite-residual-information.md) retains
 the completed diagnostic and failed normal-angle control. Older test results
 retain their original scope.
@@ -89,8 +93,11 @@ output records and 128 passing comparisons; analytic-geometry query discrepancie
 are at most 0.0000763 unquantized and 0.0000306 sRGB8 intensity levels, with no
 changed encoding codes. The [archive](studies/fixtures/finite-acquisition-mean-v1/README.md)
 preserves first control failures, audit arithmetic discrepancies and the later
-workspace correction. Independent derivatives and prospective geometry recovery
-remain unqualified; this API adds no automatic correction or camera calibration.
+workspace correction. Subsequent
+[five-parameter area sensitivities and a fixed linear operator](docs/finite-cell-sensitivity.md)
+now have [source-bound derivative checks](docs/validation/finite-cell-sensitivity.md).
+They do not differentiate the rounded stages or establish geometry recovery;
+no automatic correction or camera calibration is added.
 
 Final fitted arcs also need [circle-consistent joins](docs/curved-joins.md).
 An unavailable join keeps an affected outline for review when valid, with a

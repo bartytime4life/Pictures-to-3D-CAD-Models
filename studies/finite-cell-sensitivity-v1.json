@@ -1,0 +1,115 @@
+{
+  "format": "finite-cell-sensitivity-prospective-plan",
+  "version": 1,
+  "objective": "Required analytic area sensitivities and a separate smooth linear acquisition operator toward five-parameter geometry recovery; not recovery or physical qualification itself.",
+  "base": {
+    "local_commit": "95d3ca04be3a0442cee07931cfe297061618de9d",
+    "tree": "278cb9abf663b061803e467db06c5a545fc3eb52",
+    "published_documentation_pr": 106
+  },
+  "geometry_family": {
+    "material": "disk(C,R) intersect m dot (x-C)<=f*R; m is the exact represented canonicalized normal from finite_aperture",
+    "parameters": [
+      "centre_x",
+      "centre_y",
+      "radius",
+      "fraction",
+      "normal_angle"
+    ],
+    "angle": "continuous rotation of stored m at its fixed exact norm; not derivative of binary64 input canonicalization",
+    "source_grid": "same exact represented origin/pitch local-cell bounds as finite_aperture",
+    "boundary_method": "all exposed circle intervals plus closing chord flux; exact surd event equality, rational chord slabs, 96-digit decimal event coordinates/moments, binary64 atan2/trigonometry/output",
+    "unknown_policy": "positive-length chord/cell-side coincidence is nondifferentiable; fraction endpoints explicitly withheld; unresolved event separation/classification/intersection remains unknown; NaN internal unknowns serialize only as null with status"
+  },
+  "population": {
+    "regular_cells": 18,
+    "whole_grids": 4,
+    "special_cases": 11,
+    "families": [
+      "arc-only",
+      "chord-only",
+      "joint chord/arc",
+      "rotated and nonunit-dyadic normals",
+      "whole-grid area/translation/radius/fraction/angle sums",
+      "complement",
+      "subdivision",
+      "translation",
+      "quarter-turn",
+      "reflection",
+      "scale",
+      "coincident side",
+      "near coincidence",
+      "isolated tangency/corner",
+      "fraction endpoints",
+      "large-world small-cell",
+      "work refusal"
+    ],
+    "rule": "All authored cases and all failed/unknown reference or candidate outcomes retained. No population, tolerance or source changes after execution without separate admitted continuation.",
+    "definition": "Every fixed case in regular_cases(), grid_cases() and special_cases(), frozen with the complete runner before execution"
+  },
+  "settings": {
+    "fd_step": 0.0001,
+    "area_orders": [
+      64,
+      96
+    ],
+    "area_propagated_order_limit": 2e-06,
+    "fd_step_delta_limit": 2e-05,
+    "candidate_fd_absolute": 3e-06,
+    "candidate_fd_relative": 2e-06,
+    "boundary_orders": [
+      32,
+      64
+    ],
+    "boundary_order_limit": 1e-10,
+    "candidate_boundary_absolute": 2e-09,
+    "candidate_boundary_relative": 2e-09,
+    "invariant_absolute": 2e-08,
+    "invariant_relative": 2e-08
+  },
+  "linear_operator": {
+    "map": "A=ordered queries * post correlation * signed Keys * optical correlation; no float32 casts or encoding",
+    "channels": "1..6 signed finite caller fields plus one explicitly charged constant channel; coverage+five derivatives supported together",
+    "brightness": "two-column basis [A1-Ac,Ac], preserving raw supplied kernel sums",
+    "work": "D*[N*(1+Ko)+M*(16+Kp)], D=C+1; separately bounded coefficient preparation, validation and hashing",
+    "qualification": "fixed independent exact/decimal and explicit border/interpolation controls in tests/test_finite_acquisition_linear.py; six-channel linearity, cancellation, raw coefficient sums, input/hash isolation, resource refusals and immutable outputs",
+    "rounding_comparator": "finite_acquisition remains unchanged; no equivalence to smooth derivatives or source-code quantization intervals asserted",
+    "coupled_controls": "tests/test_finite_acquisition_sensitivity.py checks all five geometry-to-intensity columns by separate perturbed-area means, zero-contrast nonidentifiability and rejection of unknown cell derivatives"
+  },
+  "resources": {
+    "max_cells": 65536,
+    "aperture_work": "one complete source-cell evaluation per unit, maximum65536; not arithmetic or timing units",
+    "cell_events_at_most": 11,
+    "max_decimal_precision": 96,
+    "workspace": "explicit numeric bounds excluding Python/exact-number/allocator/caller overhead; not RSS guarantees",
+    "linear_work_cap": 100000000,
+    "error_estimates": "engineering arithmetic estimates; not certified enclosures or physical uncertainty",
+    "decimal_moment_absolute_allowance": 1e-90,
+    "decimal_moment_relative_refusal": "positive chord length <=1e-90/(64*2**-52) is withheld; absolute moment allowances also propagate to each derivative column",
+    "max_exact_input_coefficient_bits": 8192
+  },
+  "execution": {
+    "freeze_complete_implementation_tests_plan_runner_before_calls": true,
+    "fresh_output_directory_required": true,
+    "runtime_warnings": "errors for focused software tests",
+    "new_captures": 0,
+    "inverse_optimizer_calls": 0,
+    "original_experiment_reruns": 0,
+    "first_failures_retained": true,
+    "reference_independence": "positive vertical-slice integration and boundary GL quadrature do not call Green-area or candidate helpers"
+  },
+  "remaining_goal_requirements": [
+    "prospectively checked geometry recovery in five parameters with observation-derived seeds/bounds",
+    "explicit treatment of nonsmooth coincidences, float32 and source encoding",
+    "source assumptions/camera calibration and projective support",
+    "reserved independent dimensions and real-camera/caliper checks",
+    "one accepted boundary preserved through preview/native CAD/exports",
+    "physical fit/print evidence"
+  ],
+  "primary_sources": [
+    {
+      "url": "https://people.csail.mit.edu/tzumao/diffvg/",
+      "use": "Boundary-flux differentiation after prefiltering; erratum requires arc-length measure dp or norm(p prime)dt. Own closed-form disk/chord derivation, not a DiffVG implementation."
+    }
+  ]
+}

@@ -131,11 +131,24 @@ Use the revision-bound records in [validation.md](validation.md) to identify whi
 implementation was checked. A historical pass does not establish a later head,
 and listing a command here does not establish that it ran.
 
-This main checkout includes PR #103's paper-light/shadow model and preserves
+This main-derived candidate includes PR #103's paper-light/shadow model and preserves
 PR #82's 45-minute workbench job budget. It also contains the conditional
 finite-material Python operators and immutable measured-ring preparation API;
 source-space calibration APIs from the separate research lineage remain absent.
 See [reference-sheet tracing](reference-sheet.md) for the current capture stages.
+
+PR #105 separately adds experimental source-cell area/acquisition Python APIs.
+The [executable example](finite-acquisition-mean.md#small-executable-example)
+uses supplied geometry and settings. Its complete numerical comparison and
+1,173-test result bind `521c318`; 145 focused tests cover the later metadata-only
+workspace repair at `906197f`. See the [exact evidence](validation/finite-acquisition-mean.md).
+A documentation check or example smoke run does not extend either result to
+another revision or add automatic tracing, browser or physical validation.
+
+The subsequent [cell-sensitivity qualification](validation/finite-cell-sensitivity.md)
+passes 259 focused tests at `c47214d`, including the preceding 145 controls,
+five-parameter area derivatives and signed fixed-linear propagation. It adds
+no full application/browser run or inverse-recovery result.
 
 The [affine evaluation upgrade](finite-affine-evaluation.md) has an earlier
 [943-test local Python result, production build and lint](validation/finite-affine-batch.md#software-regression),

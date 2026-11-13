@@ -1,0 +1,192 @@
+#!/usr/bin/env python3
+"""Standard-library saved-data/source audit; no candidate or reference calls."""
+
+import ast
+import builtins
+from collections import Counter
+import hashlib
+import json
+import math
+from pathlib import Path
+import re
+import subprocess
+
+ROOT = Path(__file__).resolve().parents[3]
+HERE = Path(__file__).resolve().parent
+COMMIT = "c47214d098a234f28784cb174429e687e799a2bf"
+BASE = "95d3ca04be3a0442cee07931cfe297061618de9d"
+original_import = builtins.__import__
+
+
+def guarded_import(name, *args, **kwargs):
+    if name.split(".")[0] in {"backend", "tests", "numpy", "cv2"}:
+        raise RuntimeError(f"forbidden import {name}")
+    return original_import(name, *args, **kwargs)
+
+
+builtins.__import__ = guarded_import
+
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def pairs(items):
+    result = {}
+    for key, value in items:
+        if key in result:
+            raise ValueError(f"duplicate JSON key {key}")
+        result[key] = value
+    return result
+
+
+def strict(data):
+    def bad(value):
+        raise ValueError(f"nonfinite JSON token {value}")
+
+    result = json.loads(data, object_pairs_hook=pairs, parse_constant=bad)
+    stack = [result]
+    while stack:
+        value = stack.pop()
+        if type(value) is dict:
+            if "invalid_python_value" in value:
+                raise ValueError("invalid Python value marker")
+            stack.extend(value.values())
+        elif type(value) is list:
+            stack.extend(value)
+        elif type(value) is float and not math.isfinite(value):
+            raise ValueError("nonfinite JSON float")
+    json.dumps(result, allow_nan=False)
+    return result
+
+
+checks, inputs = [], {}
+
+
+def read(relative):
+    data = (ROOT / relative).read_bytes()
+    inputs[relative] = sha(data)
+    return data
+
+
+def check(name, flag):
+    checks.append({"check": name, "passed": bool(flag)})
+
+
+raw = read(".local/verification/finite-cell-sensitivity-v1-first/report.json")
+report = strict(raw)
+check("frozen-source-commit", report["source_commit"] == COMMIT)
+check("source-before-after", report["source_before"] == report["source_after"] and report["source_unchanged"])
+check("complete-source-closure10", len(report["source_before"]) == 10)
+for name, expected in report["source_before"].items():
+    current = read(name)
+    old = subprocess.check_output(["git", "show", f"{COMMIT}:{name}"], cwd=ROOT)
+    check(f"source-current-commit:{name}", expected == sha(current) == sha(old))
+plan = strict(read("studies/finite-cell-sensitivity-v1.json"))
+check("plan-full-binding", report["plan"] == plan and report["plan_sha256"] == inputs["studies/finite-cell-sensitivity-v1.json"])
+check("settings-binding", report["settings"] == plan["settings"])
+changes = subprocess.check_output(["git", "diff", "--name-status", BASE, COMMIT], cwd=ROOT, text=True).splitlines()
+expected_added = {
+    "backend/finite_acquisition_linear.py", "backend/finite_aperture_sensitivity.py",
+    "studies/finite-cell-sensitivity-v1.json", "studies/verification/finite-cell-sensitivity-v1.py",
+    "tests/test_finite_acquisition_linear.py", "tests/test_finite_acquisition_sensitivity.py",
+    "tests/test_finite_aperture_sensitivity.py",
+}
+check("only-seven-added-governing-files-no-inherited-changes", set(changes) == {f"A\t{x}" for x in expected_added})
+check("six-new-Python-files", sum(x.endswith(".py") for x in expected_added) == 6)
+families = Counter(row["family"] for row in report["rows"])
+check("complete33-row-census", len(report["rows"]) == 33 and families == {"regular": 18, "grid": 4, "special": 11})
+check("unique-row-identities", len({(r["family"], r["case"]["name"]) for r in report["rows"]}) == 33)
+records, estimated_comparisons = [], []
+settings = report["settings"]
+reference_columns = 0
+for row in report["rows"]:
+    name = row["case"]["name"]
+    check(f"row-outcome:{name}", row["passed"] is True and row["status"] == "evaluated")
+    records.append(row["candidate"])
+    if "independent_reference" in row:
+        reference = row["independent_reference"]
+        check(f"reference-five-columns:{name}", len(reference["columns"]) == 5 and reference["passed"])
+        for j, column in enumerate(reference["columns"]):
+            reference_columns += 1
+            area = row["case"]["pitch"] ** 2
+            orders = column["raw_area_orders"]
+            for order in ("64", "96"):
+                for divisor in (1, 2):
+                    saved = orders[order][str(divisor)]
+                    step = settings["fd_step"] / divisor
+                    value = (saved["plus_area"] - saved["minus_area"]) / (2 * step * area)
+                    check(f"saved-FD-reduction:{name}:{j}:{order}:{divisor}", saved["scaled_derivative"] == value)
+            low, high = orders["64"], orders["96"]
+            propagated = max((abs(high[str(d)]["plus_area"] - low[str(d)]["plus_area"]) + abs(high[str(d)]["minus_area"] - low[str(d)]["minus_area"])) / (2 * (settings["fd_step"] / d) * area) for d in (1, 2))
+            coarse, fine = high["1"]["scaled_derivative"], high["2"]["scaled_derivative"]
+            richardson = (4 * fine - coarse) / 3
+            actual = row["candidate"]["cells"][0]["jacobian"][j] * column["scale"]
+            boundary = column["boundary_orders"]
+            flags = {
+                "area_order": propagated <= settings["area_propagated_order_limit"],
+                "step": abs(fine - coarse) <= settings["fd_step_delta_limit"],
+                "candidate_fd": abs(actual - richardson) <= settings["candidate_fd_absolute"] + settings["candidate_fd_relative"] * abs(richardson),
+                "boundary_order": abs(boundary["64"] - boundary["32"]) <= settings["boundary_order_limit"],
+                "candidate_boundary": abs(actual - boundary["64"]) <= settings["candidate_boundary_absolute"] + settings["candidate_boundary_relative"] * abs(boundary["64"]),
+            }
+            check(f"saved-reference-arithmetic-and-flags:{name}:{j}", column["candidate_scaled"] == actual and column["richardson"] == richardson and column["noncancelling_area_order_error"] == propagated and column["step_delta"] == abs(fine - coarse) and column["flags"] == flags and column["passed"] is all(flags.values()))
+            error = row["candidate"]["cells"][0]["estimated_absolute_error"][j] * abs(column["scale"])
+            delta = abs(actual - boundary["64"])
+            estimated_comparisons.append({"case": name, "parameter": column["parameter"], "candidate_minus_boundary64_abs": delta, "candidate_scaled_estimate": error, "saved_boundary_order_delta": abs(boundary["64"] - boundary["32"]), "within_estimate_plus_saved_order_delta": delta <= error + abs(boundary["64"] - boundary["32"])})
+    if "whole_grid" in row:
+        grid = row["whole_grid"]
+        cells = row["candidate"]["cells"]
+        unit = row["case"]["pitch"] ** 2
+        area = math.fsum(c["coverage"] for c in cells) * unit
+        jacobian = [math.fsum(c["jacobian"][j] for c in cells) * unit for j in range(5)]
+        flags = [abs(a-b) <= settings["invariant_absolute"] + settings["invariant_relative"] * abs(b) for a, b in zip(jacobian, grid["expected_jacobian"], strict=True)]
+        area_passed = abs(area-grid["expected_area"]) <= settings["invariant_absolute"] + settings["invariant_relative"] * abs(grid["expected_area"])
+        check(f"saved-whole-grid-reduction:{name}", grid["area"] == area and grid["summed_jacobian"] == jacobian and grid["flags"] == flags and grid["area_passed"] is area_passed)
+    for variant in row.get("invariants", {}).get("rows", []):
+        check(f"retained-invariant:{name}:{variant['kind']}", variant["passed"] is True and "candidate" in variant and len(variant["jacobian_max_delta"]) == 5)
+        records.append(variant["candidate"])
+status_census = Counter()
+for ri, record in enumerate(records):
+    n = math.prod(record["shape"])
+    check(f"candidate-work-memory:{ri}", record["required_work"] == n and record["performed_work"] in (0,n) and len(record["cells"]) == n and record["numeric_workspace_bound_bytes"] == 256*n+65536 and record["numeric_workspace_bound_bytes"] >= 176*n and record["parameter_order"] == ["centre_x","centre_y","radius","fraction","normal_angle"])
+    for ci, cell in enumerate(record["cells"]):
+        status = cell["status"]
+        status_census[status] += 1
+        coverage = cell["coverage"]
+        resolved = status == "resolved"
+        check(f"candidate-cell-schema:{ri}:{ci}", (coverage is None and not resolved or type(coverage) in (int,float) and math.isfinite(coverage) and 0 <= coverage <= 1) and ((resolved and type(cell["jacobian"]) is list and len(cell["jacobian"]) == 5 and all(math.isfinite(x) for x in cell["jacobian"]) and type(cell["estimated_absolute_error"]) is list and len(cell["estimated_absolute_error"]) == 5 and all(math.isfinite(x) and x>=0 for x in cell["estimated_absolute_error"])) or (not resolved and cell["jacobian"] is None and cell["estimated_absolute_error"] is None)))
+check("all58APIcalls-recorded", report["api_calls"] == {"attempted":58,"returned":58} and len(records) == 58)
+check("status-census", all(status_census.get(k,0) == v for k,v in report["candidate_status_census"].items()) and sum(status_census.values()) == 7831)
+work = {key:sum(record[key] for record in records) for key in ("required_work","performed_work")}
+check("complete-work-accounting", work == report["candidate_record_work"] == {"required_work":7831,"performed_work":7827})
+check("summary", report["summary"] == {f:{"passed":n,"total":n} for f,n in families.items()} and report["errors"] == [] and report["passed"] is True)
+log = read(".local/verification/cell-sensitivity-first-focused.log").decode()
+dots = sum(len(re.match(r"[.]+", line)[0]) for line in log.splitlines() if re.match(r"[.]+", line))
+check("pytest259-passing-statuses-and-terminal-summary", dots == 259 and re.search(r"^259 passed in 3\.17s$",log,re.M) is not None and not any(word in log for word in ("FAILED","ERROR","skipped","xfailed")))
+paths = ["tests/test_finite_aperture.py","tests/test_finite_acquisition.py","tests/test_finite_acquisition_workspace.py","tests/test_finite_aperture_sensitivity.py","tests/test_finite_acquisition_linear.py","tests/test_finite_acquisition_sensitivity.py"]
+counts = {}
+def population(node):
+    if isinstance(node,(ast.List,ast.Tuple)):return len(node.elts)
+    if isinstance(node,ast.Call) and isinstance(node.func,ast.Name) and node.func.id=="range":return len(range(*[ast.literal_eval(x) for x in node.args]))
+    if isinstance(node,ast.Call) and isinstance(node.func,ast.Attribute) and isinstance(node.func.value,ast.Name) and node.func.value.id=="oracle":return {"regular_cases":18,"grid_cases":4,"special_cases":11}[node.func.attr]
+    raise ValueError(f"unsupported static case population {ast.dump(node)}")
+for path in paths:
+    tree=ast.parse(read(path));count=0
+    for node in tree.body:
+        if isinstance(node,ast.FunctionDef) and node.name.startswith("test_"):
+            size=1
+            for decorator in node.decorator_list:
+                if isinstance(decorator,ast.Call) and isinstance(decorator.func,ast.Attribute) and decorator.func.attr=="parametrize":size*=population(decorator.args[1])
+            count+=size
+    counts[path]=count
+check("independent-static259-cases", sum(counts.values())==259 and counts["tests/test_finite_acquisition_linear.py"]==61 and counts["tests/test_finite_acquisition_sensitivity.py"]==7)
+linear_tree = ast.parse(read("tests/test_finite_acquisition_linear.py"))
+imports = [ast.unparse(n) for n in linear_tree.body if isinstance(n,(ast.Import,ast.ImportFrom))]
+after={name:sha((ROOT/name).read_bytes()) for name in inputs}
+check("all-read-inputs-preserved", after==inputs)
+receipt={"format":"saved-cell-sensitivity-implementation-audit-v1","passed":all(x["passed"] for x in checks),"script_sha256":sha(Path(__file__).read_bytes()),"report_sha256":sha(raw),"source_commit":COMMIT,"base_commit":BASE,"checks":checks,"counts":{"checks":len(checks),"passed":sum(x["passed"] for x in checks),"primary_rows":33,"candidate_records":len(records),"recorded_cells":sum(status_census.values()),"reference_columns":reference_columns,"pytest_pass_dots":dots,"pytest_cases_by_static_file":counts},"status_census":dict(status_census),"work":work,"error_estimate_saved_comparisons":estimated_comparisons,"qualification_wording":{"frozen_plan":"independent exact/decimal and explicit border/interpolation controls in tests/test_finite_acquisition_linear.py","literal_claim_supported":False,"actual_controls":"Independent binary64 unfactored-cubic backward scatter, math.fsum reductions, and exact expected elementary/dyadic values; no general Decimal/Fraction oracle.","imports":imports,"action":"Keep governing plan immutable; qualify publication wording explicitly."},"memory_static_proof":{"cell_peak_numeric_arrays":"176*N bytes: original coverage+Jac+errors88*N and their retained immutable copies88*N","cell_bound":"256*N+65536","linear_bound":"512*D*(N+M)+8*D*(Py_source+Pxy_source+Py_output+Pxy_output)+32*Q*(D+2)+65536","linear_live_arrays":"Source/packing/blur/rectified/final/signed temporaries fit within512*D*(N+M); reflected old/new pads are explicit;32*Q*(D+2)+65536 covers query snapshots/output copies and kernel/matrix scratch.","scope":"Conservative numeric storage accounting from source liveness, excluding caller/Python/exact-number/allocator overhead; not a measured RSS or capacity claim."},"limits":["No operator/reference/candidate or inverse execution by this auditor.","Finite-difference/order consistency and candidate arithmetic estimates are engineering diagnostics, not certified error bounds.","Linear general comparisons are binary64, not an independent arbitrary-precision census.","The quiet pytest log has259passing outcome dots and terminal summary, but no per-test IDs/JUnit file in the supplied folder.","Five coupled FD queries establish derivative agreement, not five-dimensional identifiability after two free brightness nuisances (available residual dimension at most3).","No five-parameter optimizer/recovery, observed-data seed/bounds, heldout dimensional qualification, float32/PNG objective, source-code-bin treatment or trace integration is established."],"inputs_before":inputs,"inputs_after":after,"scientific_imports":0,"operator_reference_or_model_calls":0,"optimizer_calls":0}
+target=HERE/"receipt-first-v1.json"
+with target.open("x") as f:json.dump(receipt,f,allow_nan=False,sort_keys=True,indent=2);f.write("\n")
+print(json.dumps({"passed":receipt["passed"],"checks":len(checks),"pytest_counts":counts,"candidate_status_census":dict(status_census),"reported_estimate_disagreements":sum(not x["within_estimate_plus_saved_order_delta"] for x in estimated_comparisons)},sort_keys=True))
+raise SystemExit(int(not receipt["passed"]))

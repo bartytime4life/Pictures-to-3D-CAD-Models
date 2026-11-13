@@ -1,0 +1,654 @@
+#!/usr/bin/env python3
+"""Audit saved sensitivity scalars/arrays only, with scientific imports blocked."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import importlib.abc
+import json
+import math
+import subprocess
+import sys
+import zipfile
+from collections import Counter
+from dataclasses import dataclass
+from fractions import Fraction
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[3]
+SHA = "d72bff9c6a7f8b96b540a006623a59f8dfcc9b969f69e97f885eca09bec7be59"
+ORDER = ["centre_x", "centre_y", "radius", "fraction", "normal_angle"]
+
+
+class Block(importlib.abc.MetaPathFinder):
+    def find_spec(self, fullname, path=None, target=None):
+        if fullname.split(".")[0] in {"backend", "studies", "tests", "cv2", "scipy"}:
+            raise ImportError("scientific import forbidden in saved audit: " + fullname)
+
+
+class Checks:
+    def __init__(self):
+        self.count = 0
+        self.failures = []
+
+    def check(self, name, value, detail=None):
+        self.count += 1
+        if not value:
+            self.failures.append({"name": name, "detail": detail})
+
+
+@dataclass(frozen=True)
+class _Segment:
+    """Metadata representation only, solely to reconstruct the saved byte hash."""
+
+    centre: tuple
+    radius: float
+    centre_exact: tuple
+    radius_exact: Fraction
+    fraction: Fraction
+    normal: tuple
+
+
+def binding(case):
+    centre = tuple(float(x) for x in case["centre"])
+    radius = float(case["radius"])
+    normal = tuple(float(x) for x in case["normal"])
+    length = math.hypot(*normal)
+    normal = tuple(Fraction(x / length) for x in normal)
+    segment = _Segment(
+        centre,
+        radius,
+        tuple(map(Fraction, centre)),
+        Fraction(radius),
+        Fraction(float(case["fraction"])),
+        normal,
+    )
+    data = repr(
+        (
+            segment,
+            tuple(case["shape"]),
+            tuple(Fraction(float(x)) for x in case["origin"]),
+            Fraction(float(case["pitch"])),
+            "finite-cell-sensitivity-v1",
+        )
+    ).encode()
+    return hashlib.sha256(data).hexdigest()
+
+
+def strict(data):
+    def bad(value):
+        raise ValueError("invalid nonfinite JSON token " + value)
+
+    def number(value):
+        result = float(value)
+        if not math.isfinite(result):
+            raise ValueError("overflowed JSON float")
+        return result
+
+    return json.loads(data, parse_constant=bad, parse_float=number)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--input", "--report", dest="report", type=Path, required=True)
+    parser.add_argument("--root", type=Path, default=ROOT)
+    parser.add_argument("--recorded-source", type=Path)
+    parser.add_argument("--input-sha256", required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    if args.output.exists() or args.output.is_symlink() or not args.output.parent.is_dir():
+        parser.error("fresh output in existing parent required")
+    if args.input_sha256 != SHA or not args.report.is_file() or args.report.is_symlink():
+        parser.error("pinned regular input required")
+    root = args.root.absolute()
+    if args.recorded_source is not None and (
+        not args.recorded_source.is_file() or args.recorded_source.is_symlink()
+    ):
+        parser.error("recorded source must be an existing regular ZIP")
+    raw = args.report.read_bytes()
+    if hashlib.sha256(raw).hexdigest() != SHA:
+        parser.error("input hash mismatch")
+    sys.meta_path.insert(0, Block())
+    report = strict(raw)
+    check = Checks()
+    source_checks = {}
+    zipraw = args.recorded_source.read_bytes() if args.recorded_source is not None else None
+    archive = zipfile.ZipFile(args.recorded_source) if args.recorded_source is not None else None
+
+    def source_data(path):
+        if archive is None:
+            return (root / path).read_bytes()
+        matches = [name for name in archive.namelist() if name == path or name.endswith("/" + path)]
+        if len(matches) != 1:
+            raise ValueError("missing or ambiguous source ZIP path: " + path)
+        return archive.read(matches[0])
+
+    for path, expected in report["source_before"].items():
+        data = source_data(path)
+        current = hashlib.sha256(data).hexdigest()
+        committed = (
+            hashlib.sha256(
+                subprocess.check_output(
+                    ["git", "show", f"{report['source_commit']}:{path}"], cwd=root
+                )
+            ).hexdigest()
+            if archive is None
+            else current
+        )
+        check.check("source_current:" + path, current == expected)
+        check.check("source_committed:" + path, committed == expected)
+        source_checks[path] = current
+    check.check(
+        "source_interval",
+        report["source_before"] == report["source_after"] and report["source_unchanged"] is True,
+    )
+    planbytes = source_data("studies/finite-cell-sensitivity-v1.json")
+    plan = strict(planbytes)
+    check.check("plan_hash", hashlib.sha256(planbytes).hexdigest() == report["plan_sha256"])
+    check.check("plan_copy", plan == report["plan"])
+    settings = report["settings"]
+    check.check("settings", settings == plan["settings"])
+    rows = report["rows"]
+    names = {(row["family"], row["case"]["name"]) for row in rows}
+    special_names = {
+        "coincident-left",
+        "coincident-bottom",
+        "near-coincidence-inside",
+        "near-coincidence-outside",
+        "isolated-circle-tangent",
+        "isolated-chord-corner",
+        "fraction-minus-one",
+        "fraction-plus-one",
+        "large-world-small-cell",
+        "multiple-circle-spans",
+        "budget-before-cellwork",
+    }
+    expected = (
+        {("regular", f"{kind}-{k}") for kind in ("arc", "chord", "joint") for k in range(6)}
+        | {("grid", f"grid-{k}") for k in range(4)}
+        | {("special", name) for name in special_names}
+    )
+    check.check("33_complete_unique_cases", len(rows) == len(names) == 33 and names == expected)
+    records = []
+    all_refs = []
+    reference_rows = []
+    variant_rows = []
+    status_counts = Counter()
+    scientific_limits = []
+
+    def candidate(name, record, case):
+        records.append(record)
+        count = math.prod(case["shape"])
+        check.check(name + ":shape", record["shape"] == case["shape"])
+        check.check(name + ":parameter_order", record["parameter_order"] == ORDER)
+        check.check(name + ":cell_count", len(record["cells"]) == count)
+        check.check(name + ":input_hash", record["input_sha256"] == binding(case))
+        check.check(
+            name + ":work",
+            type(record["required_work"]) is int
+            and type(record["performed_work"]) is int
+            and record["required_work"] == count
+            and record["performed_work"] == (0 if case.get("max_work", 65536) < count else count),
+        )
+        check.check(
+            name + ":workspace", record["numeric_workspace_bound_bytes"] == 256 * count + 65536
+        )
+        for i, cell in enumerate(record["cells"]):
+            status_counts[cell["status"]] += 1
+            check.check(
+                name + f":status:{i}",
+                cell["status"]
+                in {
+                    "resolved",
+                    "nondifferentiable",
+                    "parameter_endpoint",
+                    "unresolved",
+                    "work_limit",
+                },
+            )
+            if cell["status"] == "resolved":
+                check.check(
+                    name + f":resolved:{i}",
+                    type(cell["coverage"]) is float
+                    and math.isfinite(cell["coverage"])
+                    and 0 <= cell["coverage"] <= 1
+                    and len(cell["jacobian"]) == len(cell["estimated_absolute_error"]) == 5,
+                )
+                for j, (value, error) in enumerate(
+                    zip(cell["jacobian"], cell["estimated_absolute_error"], strict=True)
+                ):
+                    check.check(
+                        name + f":finite:{i}:{j}",
+                        type(value) is float
+                        and type(error) is float
+                        and math.isfinite(value)
+                        and math.isfinite(error)
+                        and error >= 0,
+                    )
+            else:
+                check.check(
+                    name + f":withheld:{i}",
+                    cell["jacobian"] is None and cell["estimated_absolute_error"] is None,
+                )
+                check.check(
+                    name + f":unknown_coverage:{i}",
+                    cell["coverage"] is None
+                    or (math.isfinite(cell["coverage"]) and 0 <= cell["coverage"] <= 1),
+                )
+
+    def reference(name, case, record, ref):
+        pitch = case["pitch"]
+        area = pitch * pitch
+        normal = tuple(float(x) for x in case["normal"])
+        length = math.hypot(*normal)
+        stored = tuple(x / length for x in normal)
+        check.check(name + ":stored_normal", tuple(ref["stored_normal"]) == stored)
+        check.check(
+            name + ":exact_squared_normal",
+            Fraction(ref["stored_normal_squared_exact"])
+            == sum((Fraction(x) ** 2 for x in stored), Fraction()),
+        )
+        passed = []
+        for k, column in enumerate(ref["columns"]):
+            check.check(name + f":column:{k}", column["parameter"] == ORDER[k])
+            scale = pitch if k < 3 else 1.0
+            check.check(name + f":scale:{k}", column["scale"] == scale)
+            raw_orders = column["raw_area_orders"]
+            for order in ("64", "96"):
+                for divisor in (1, 2):
+                    step = raw_orders[order][str(divisor)]
+                    h = settings["fd_step"] / divisor
+                    derivative = (step["plus_area"] - step["minus_area"]) / (2 * h * area)
+                    check.check(
+                        name + f":raw_fd:{k}:{order}:{divisor}",
+                        derivative == step["scaled_derivative"],
+                    )
+                    check.check(
+                        name + f":positive_areas:{k}:{order}:{divisor}",
+                        0 <= step["minus_area"] <= area * (1 + 1e-12)
+                        and 0 <= step["plus_area"] <= area * (1 + 1e-12),
+                    )
+            low, high = raw_orders["64"], raw_orders["96"]
+            propagation = max(
+                (
+                    abs(high[str(d)]["plus_area"] - low[str(d)]["plus_area"])
+                    + abs(high[str(d)]["minus_area"] - low[str(d)]["minus_area"])
+                )
+                / (2 * (settings["fd_step"] / d) * area)
+                for d in (1, 2)
+            )
+            coarse, fine = high["1"]["scaled_derivative"], high["2"]["scaled_derivative"]
+            richardson = (4 * fine - coarse) / 3
+            actual = (
+                None
+                if record["cells"][0]["jacobian"] is None
+                else record["cells"][0]["jacobian"][k] * scale
+            )
+            delta_step = abs(fine - coarse)
+            b32, b64 = column["boundary_orders"]["32"], column["boundary_orders"]["64"]
+            bdelta = abs(b64 - b32)
+            fd_limit = settings["candidate_fd_absolute"] + settings["candidate_fd_relative"] * abs(
+                richardson
+            )
+            b_limit = settings["candidate_boundary_absolute"] + settings[
+                "candidate_boundary_relative"
+            ] * abs(b64)
+            flags = {
+                "area_order": propagation <= settings["area_propagated_order_limit"],
+                "step": delta_step <= settings["fd_step_delta_limit"],
+                "candidate_fd": actual is not None and abs(actual - richardson) <= fd_limit,
+                "boundary_order": bdelta <= settings["boundary_order_limit"],
+                "candidate_boundary": actual is not None and abs(actual - b64) <= b_limit,
+            }
+            for key, value in (
+                ("noncancelling_area_order_error", propagation),
+                ("step_delta", delta_step),
+                ("richardson", richardson),
+                ("candidate_scaled", actual),
+                ("boundary_order_delta", bdelta),
+                ("fd_limit", fd_limit),
+                ("boundary_limit", b_limit),
+            ):
+                check.check(name + f":{key}:{k}", value == column[key])
+            check.check(
+                name + f":flags:{k}",
+                column["flags"] == flags and column["passed"] is all(flags.values()),
+            )
+            passed.append(all(flags.values()))
+            guard = (
+                None
+                if record["cells"][0]["estimated_absolute_error"] is None
+                else record["cells"][0]["estimated_absolute_error"][k] * scale
+            )
+            reference_rows.append(
+                {
+                    "case": name,
+                    "parameter": ORDER[k],
+                    "fd_delta": None if actual is None else abs(actual - richardson),
+                    "boundary_delta": None if actual is None else abs(actual - b64),
+                    "candidate_estimate_scaled": guard,
+                    "boundary_order_delta": bdelta,
+                    "area_order_allowance": propagation,
+                    "step_delta": delta_step,
+                    "boundary_minus_estimate": None
+                    if actual is None
+                    else abs(actual - b64) - guard,
+                    "passed": all(flags.values()),
+                }
+            )
+        result = all(passed)
+        check.check(name + ":reference_pass", ref["passed"] is result)
+        all_refs.extend(passed)
+        return result
+
+    def close_metric(name, actual, expected, scale=1):
+        # Independent compensated reductions may differ from NumPy's saved
+        # reduction order. This audits only that rounding-scale distinction.
+        allowance = 64 * 2**-52 * max(1, scale, abs(actual), abs(expected))
+        check.check(
+            name,
+            abs(actual - expected) <= allowance,
+            {"actual": actual, "saved": expected, "rounding_allowance": allowance},
+        )
+
+    for row in rows:
+        case, family = row["case"], row["family"]
+        name = family + ":" + case["name"]
+        record = row["candidate"]
+        candidate(name, record, case)
+        check.check(name + ":evaluated", row["status"] == "evaluated")
+        if "independent_reference" in row:
+            rp = reference(name, case, record, row["independent_reference"])
+        else:
+            rp = True
+        if family == "grid":
+            grid = row["whole_grid"]
+            cellarea = case["pitch"] ** 2
+            area = math.fsum(cell["coverage"] for cell in record["cells"]) * cellarea
+            summed = [
+                math.fsum(cell["jacobian"][k] for cell in record["cells"]) * cellarea
+                for k in range(5)
+            ]
+            check.check(name + ":area_sum", area == grid["area"])
+            check.check(name + ":jacobian_sum", summed == grid["summed_jacobian"])
+            flags = [
+                abs(x - y)
+                <= settings["invariant_absolute"] + settings["invariant_relative"] * abs(y)
+                for x, y in zip(summed, grid["expected_jacobian"], strict=True)
+            ]
+            af = abs(area - grid["expected_area"]) <= settings["invariant_absolute"] + settings[
+                "invariant_relative"
+            ] * abs(grid["expected_area"])
+            check.check(name + ":sum_flags", flags == grid["flags"] and af is grid["area_passed"])
+            variants = row["invariants"]["rows"]
+            expected_variants = {
+                "translation",
+                "rotation90",
+                "reflection",
+                "scale2",
+                "subdivision",
+                "complement",
+            } | ({"large_translation"} if case["name"] == "grid-2" else set())
+            check.check(
+                name + ":variant_census",
+                len(variants) == len(expected_variants)
+                and {v["kind"] for v in variants} == expected_variants,
+            )
+            variant_passes = []
+            h, w = case["shape"]
+            for variant in variants:
+                kind, vr = variant["kind"], variant["candidate"]
+                vn = name + ":" + kind
+                candidate(vn, vr, variant["case"])
+                coverage_deltas, jacobian_deltas = [], [[] for _ in range(5)]
+                passed = all(c["status"] == "resolved" for c in vr["cells"])
+                if kind == "complement":
+                    for a, b in zip(record["cells"], vr["cells"], strict=True):
+                        check.check(
+                            vn + ":disk_coverage_range",
+                            -1e-12 <= a["coverage"] + b["coverage"] <= 1 + 1e-12,
+                        )
+                        jacobian_deltas[3].append(abs(b["jacobian"][3] - a["jacobian"][3]))
+                        jacobian_deltas[4].append(abs(b["jacobian"][4] + a["jacobian"][4]))
+                    for k in (3, 4):
+                        close_metric(
+                            vn + f":complement_max:{k}",
+                            max(jacobian_deltas[k]),
+                            variant["jacobian_max_delta"][k],
+                        )
+                    # Independent per-cell disk targets for Cx,Cy,R/coverage are
+                    # NOT retained in the report; their reported maxima can be
+                    # checked against the absolute gate but not regenerated.
+                    passed = (
+                        passed
+                        and variant["coverage_max_delta"] <= settings["invariant_absolute"]
+                        and all(
+                            x <= settings["invariant_absolute"]
+                            for x in variant["jacobian_max_delta"]
+                        )
+                    )
+                    scientific_limits.append(
+                        vn
+                        + ": full-disk C/R/coverage residual maxima audited from saved scalar only; absent targets not reconstructed"
+                    )
+                else:
+                    for i in range(h):
+                        for j in range(w):
+                            target = record["cells"][i * w + j]
+                            tc, tj = target["coverage"], list(target["jacobian"])
+                            if kind == "subdivision":
+                                sub = [
+                                    vr["cells"][(2 * i + di) * (2 * w) + 2 * j + dj]
+                                    for di in (0, 1)
+                                    for dj in (0, 1)
+                                ]
+                                ac = math.fsum(c["coverage"] for c in sub) / 4
+                                aj = [
+                                    math.fsum(c["jacobian"][k] for c in sub) / 4 for k in range(5)
+                                ]
+                            else:
+                                ni, nj = (
+                                    (j, h - 1 - i)
+                                    if kind == "rotation90"
+                                    else ((i, w - 1 - j) if kind == "reflection" else (i, j))
+                                )
+                                actual = vr["cells"][ni * variant["case"]["shape"][1] + nj]
+                                ac, aj = actual["coverage"], actual["jacobian"]
+                            if kind == "rotation90":
+                                tj[0], tj[1] = -tj[1], tj[0]
+                            elif kind == "reflection":
+                                tj[0], tj[4] = -tj[0], -tj[4]
+                            elif kind == "scale2":
+                                tj[:3] = [x / 2 for x in tj[:3]]
+                            coverage_deltas.append(abs(ac - tc))
+                            for k, (a, b) in enumerate(zip(aj, tj, strict=True)):
+                                delta = abs(a - b)
+                                jacobian_deltas[k].append(delta)
+                                passed = passed and delta <= settings[
+                                    "invariant_absolute"
+                                ] + settings["invariant_relative"] * abs(b)
+                    dc = max(coverage_deltas)
+                    dj = [max(values) for values in jacobian_deltas]
+                    close_metric(vn + ":coverage_max", dc, variant["coverage_max_delta"])
+                    for k in range(5):
+                        close_metric(
+                            vn + f":jacobian_max:{k}",
+                            dj[k],
+                            variant["jacobian_max_delta"][k],
+                            max(abs(c["jacobian"][k]) for c in record["cells"]),
+                        )
+                    passed = passed and dc <= settings["invariant_absolute"]
+                check.check(vn + ":passed", variant["passed"] is passed)
+                variant_passes.append(passed)
+                variant_rows.append(
+                    {
+                        "case": vn,
+                        "passed": passed,
+                        "coverage_delta_saved": variant["coverage_max_delta"],
+                        "jacobian_delta_saved": variant["jacobian_max_delta"],
+                    }
+                )
+            check.check(
+                name + ":invariants_pass", row["invariants"]["passed"] is all(variant_passes)
+            )
+            passed = all(flags) and af and all(variant_passes)
+        elif family == "regular":
+            passed = rp and all(c["status"] == "resolved" for c in record["cells"])
+        else:
+            expected_status = case["expected"]
+            statuses = [c["status"] for c in record["cells"]]
+            if expected_status in {"nondifferentiable", "parameter_endpoint", "work_limit"}:
+                passed = all(s == expected_status for s in statuses)
+            elif expected_status == "resolved_with_boundary":
+                passed = all(s == "resolved" for s in statuses) and rp
+            else:
+                passed = all(s in {"resolved", "unresolved"} for s in statuses)
+                if expected_status == "resolved_zero_or_unresolved":
+                    passed = passed and all(
+                        c["jacobian"] is None or max(map(abs, c["jacobian"])) <= 2e-9
+                        for c in record["cells"]
+                    )
+            if "independent_boundary" in row:
+                independent = row["independent_boundary"]
+                boundary_flags = []
+                for k, col in enumerate(independent["columns"]):
+                    scale = case["pitch"] if k < 3 else 1
+                    actual = (
+                        record["cells"][0]["jacobian"][k] * scale
+                        if statuses == ["resolved"]
+                        else None
+                    )
+                    limit = settings["candidate_boundary_absolute"] + settings[
+                        "candidate_boundary_relative"
+                    ] * abs(col["boundary_high"])
+                    flag = (
+                        actual is not None
+                        and abs(col["boundary_high"] - col["boundary_low"])
+                        <= settings["boundary_order_limit"]
+                        and abs(actual - col["boundary_high"]) <= limit
+                    )
+                    check.check(
+                        name + f":special_boundary:{k}",
+                        col["parameter"] == ORDER[k]
+                        and col["candidate_scaled"] == actual
+                        and col["limit"] == limit
+                        and col["passed"] is flag,
+                    )
+                    boundary_flags.append(flag)
+                resolved = statuses == ["resolved"]
+                check.check(
+                    name + ":special_qualification",
+                    independent["accuracy_qualified"] is (resolved and all(boundary_flags))
+                    and independent["unknown_retained"] is (not resolved)
+                    and independent["passed"] is (not resolved or all(boundary_flags)),
+                )
+                passed = passed and (not resolved or all(boundary_flags))
+        check.check(name + ":row_pass", row["passed"] is passed)
+
+    check.check(
+        "58_api_entries",
+        report["api_calls"] == {"attempted": len(records), "returned": len(records)}
+        and len(records) == 58,
+    )
+    check.check(
+        "status_census",
+        dict(status_counts) == {k: v for k, v in report["candidate_status_census"].items() if v},
+    )
+    check.check(
+        "work_census",
+        report["candidate_record_work"]
+        == {
+            key: sum(record[key] for record in records)
+            for key in ("required_work", "performed_work")
+        },
+    )
+    for family, expected_count in (("regular", 18), ("grid", 4), ("special", 11)):
+        check.check(
+            "summary:" + family,
+            report["summary"][family]
+            == {
+                "total": expected_count,
+                "passed": sum(row["passed"] for row in rows if row["family"] == family),
+            },
+        )
+    check.check(
+        "overall",
+        report["passed"] is True and report["errors"] == [] and all(row["passed"] for row in rows),
+    )
+    check.check("input_immutable", hashlib.sha256(args.report.read_bytes()).hexdigest() == SHA)
+    for path, expected_hash in source_checks.items():
+        check.check(
+            "source_after_audit:" + path,
+            hashlib.sha256(source_data(path)).hexdigest() == expected_hash,
+        )
+    if args.recorded_source is not None:
+        check.check("source_zip_immutable", args.recorded_source.read_bytes() == zipraw)
+    maxima = {
+        key: max(row[key] for row in reference_rows)
+        for key in (
+            "fd_delta",
+            "boundary_delta",
+            "boundary_order_delta",
+            "area_order_allowance",
+            "step_delta",
+            "boundary_minus_estimate",
+        )
+    }
+    estimate_excesses = [row for row in reference_rows if row["boundary_minus_estimate"] > 0]
+    result = {
+        "format": "independent-saved-cell-sensitivity-math-audit-v1",
+        "scope": "Saved JSON arithmetic, matrix index transformations and metadata hashing only. No candidate, area, quadrature, generator, renderer, optimizer, NumPy or scientific helper imports/calls.",
+        "report_sha256": SHA,
+        "report_bytes": len(raw),
+        "audit_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        "source_commit": report["source_commit"],
+        "source_bindings": source_checks,
+        "recorded_source_zip_sha256": None
+        if zipraw is None
+        else hashlib.sha256(zipraw).hexdigest(),
+        "source_verification": "recorded ZIP bytes, no git requirement"
+        if archive is not None
+        else "current and committed source bytes",
+        "checks": check.count,
+        "failures": check.failures,
+        "passed": not check.failures,
+        "rows": len(rows),
+        "api_records": len(records),
+        "status_census": dict(status_counts),
+        "work": report["candidate_record_work"],
+        "regular_reference_columns": 90,
+        "all_fd_reference_columns": len(reference_rows),
+        "variant_controls": len(variant_rows),
+        "reference_maxima": maxima,
+        "boundary_reference_exceeds_estimate": estimate_excesses,
+        "reference_comparisons": reference_rows,
+        "variants": variant_rows,
+        "limits": [
+            "An audit of saved reference values does not independently validate quadrature nodes, positive-area integration or the shape model.",
+            "Candidate-versus-numerical-reference estimate excess is diagnostic, not proof of candidate error undercoverage.",
+            "Whole-grid expected target values are saved targets, not regenerated reference calculations.",
+            *scientific_limits,
+        ],
+    }
+    with args.output.open("x") as stream:
+        json.dump(result, stream, allow_nan=False, sort_keys=True, indent=2)
+        stream.write("\n")
+    print(
+        json.dumps(
+            {
+                "passed": result["passed"],
+                "checks": check.count,
+                "failures": len(check.failures),
+                "maxima": maxima,
+                "estimate_excesses": len(estimate_excesses),
+            },
+            allow_nan=False,
+            sort_keys=True,
+        )
+    )
+    return 0 if result["passed"] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

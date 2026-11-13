@@ -1,6 +1,43 @@
 # Source scope and verification status
 
-## Subsequent developer candidate: source-cell acquisition means
+## Subsequent developer candidate: area sensitivities and linear acquisition
+
+This candidate follows documentation PR #106's tree
+`278cb9abf663b061803e467db06c5a545fc3eb52`. At publication readback, main is
+`b4a7e304e3f0211fe4f6db13834c709fc228381c`, with PR #105's tree
+`68f03a8d408dd10b32f4856e5da87260e53b91ac`. PR #106 merged into the research
+branch; this main-based candidate also carries its reviewed documentation.
+The numerical-source bytes are unchanged by that publication alignment. It adds
+[five unrounded cell-area sensitivities and a fixed linear acquisition API](finite-cell-sensitivity.md),
+with no tracing, Gaussian-fitter or HTTP integration. The first numerical run
+at `c47214d098a234f28784cb174429e687e799a2bf` passes 259 focused tests and all
+33 prescribed study rows, retaining eight deliberately withheld cell results.
+The [complete qualification](validation/finite-cell-sensitivity.md) records
+independent comparisons, source pins, audit limitations and the lack of an
+actual recovery or identifiability result. Earlier snapshots below retain
+their original dates and source scope; no installed or physical result follows.
+
+## Earlier source snapshot — November 13, 2026, 16:58 UTC
+
+These are timestamped source states, not live release indicators. This
+documentation update follows draft
+[PR #105](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/105).
+Its published head `0866578dfd139be5fd572fd93fb65fe7607de529` has tree
+`68f03a8d408dd10b32f4856e5da87260e53b91ac`, identical to local documentation
+base `85541544047e71e8c494bc95ba90ca8df389376a`.
+
+| Source | State at readback | Verification boundary |
+| --- | --- | --- |
+| Main `f2e0fd6a68a4ab26f6eea92a95ebbda673953193` | Includes merged PR #104, tree `72862db3d2c34b758bdd2e98f1cf8e88795c3cb6` | Earlier acquisition evidence and PR #103's paper-light model; no PR #105 source-cell API yet |
+| PR #105, head `0866578dfd139be5fd572fd93fb65fe7607de529` | Open draft, unmerged | Source-cell forward APIs and complete supplied-stage qualification; no geometry recovery or automatic integration |
+| PR #105 hosted workbench check | [Run 43466734083](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43466734083), in progress, no conclusion | Belongs to that published head; this documentation update needs its own checks |
+
+The [documentation review](validation/documentation-mean-state.md) records the
+current text/API audit. The primary `codex/slicer-integration` checkout is
+preserved separately. No installed runtime, deployment or physical acceptance
+follows from these source states.
+
+## Developer candidate: source-cell acquisition means
 
 This candidate extends the evidence package below with independent
 [analytic source-cell integration and discrete acquisition means](finite-acquisition-mean.md).
@@ -23,7 +60,7 @@ separate receipts. The [182-artifact archive](../studies/fixtures/finite-acquisi
 establishes no geometry recovery, physical-camera accuracy or automatic CAD
 correction. This developer branch is not an additional main-branch capability.
 
-## Current source and research evidence — November 13, 2026, 16:02 UTC
+## Earlier acquisition-evidence snapshot — November 13, 2026, 16:02 UTC
 
 The publication base is main
 `68a67e766956ac41a3b73ae73d4ac553ef47db26`, including merged
@@ -191,9 +228,12 @@ Locally distinguishable covariance changes can absorb sampling/resampling
 mismatch rather than identify a physical camera PSF.
 
 The acquisition study now supplies a controlled counterexample to second-moment
-Gaussian closure. A future inverse needs an independently qualified acquisition
-mean and recovery checks, with supplied source assumptions and observed camera
-calibration distinguished. The study does not automatically correct CAD.
+Gaussian closure. A subsequent source-cell mean now has
+[independent supplied-stage qualification](validation/finite-acquisition-mean.md).
+A future inverse still needs qualified derivatives or another bounded search
+method, a declared treatment of rounding/encoding and prospective recovery
+checks. Supplied source assumptions and observed camera calibration remain
+distinct. Neither study automatically corrects CAD.
 
 Automatic adoption also needs supported acquisition and thickness models,
 independent recovery checks and one chosen boundary preserved through preview,

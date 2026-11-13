@@ -93,6 +93,13 @@ come from rendered photographs.
 
 ### Source-bound acquisition evidence
 
+The subsequent [cell-sensitivity operators](finite-cell-sensitivity.md) add
+five unrounded geometry columns and a separate fixed linear acquisition map
+for signed fields. Neither is called by the Gaussian fitter or automatic
+pipeline. Unknown cell derivatives are explicit; linear propagation rejects
+nonfinite inputs. The [qualification](validation/finite-cell-sensitivity.md)
+checks derivatives, rather than estimating geometry or physical accuracy.
+
 The subsequent developer-only
 [source-cell acquisition mean](finite-acquisition-mean.md) composes independent
 analytic cell coverage with explicit discrete kernels, grayscale encoding and
@@ -102,6 +109,12 @@ source array indices, a separate contract from photo geometric coordinates.
 The [complete study](validation/finite-acquisition-mean.md) retains all stage
 arrays, initial failures and source/workspace corrections. Existing Gaussian
 derivatives cannot be attached unchanged, especially through quantization.
+The [API example and limits](finite-acquisition-mean.md#small-executable-example)
+declare source-cell centres separately from output-to-source array indices.
+Validation errors and unresolved geometry/stages raise exceptions; whole-call
+work refusals instead return unknown queries without evaluated stages. The
+shape-aware workspace field counts simultaneous reflected pads and excludes
+caller storage and interpreter/allocator overhead.
 
 The [completed finite-material acquisition study](validation/finite-acquisition-operator.md)
 is a developer forward experiment, not an HTTP capability or an automatic trace

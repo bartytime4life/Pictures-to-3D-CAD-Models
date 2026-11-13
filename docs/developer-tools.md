@@ -6,6 +6,13 @@ Run these from the repository root after setup. `make` prints the supported
 targets. These are the tools present in the reviewed main-based source; research
 scripts from a separate branch are not implied by this list.
 
+On the source-cell candidate, start with the
+[small acquisition example](finite-acquisition-mean.md#small-executable-example)
+and [input/result/resource contract](finite-acquisition-mean.md#refusals-provenance-and-work).
+This is an explicit Python call, not a command that traces a photograph or
+fits geometry. For saved-only review, the 182-artifact workflow in the table
+verifies the independent mean without running a model.
+
 The [acquisition evidence workflow](../studies/fixtures/finite-acquisition-operator-v1/README.md)
 verifies 123 stored artifacts, extracts the complete saved run and checks the
 87-file recorded source snapshot as data. Use that workflow on current main:
@@ -31,6 +38,8 @@ reproducing an archived result; a later backend can invalidate that binding.
 
 | Tool | Entry point | Execution and output |
 | --- | --- | --- |
+| Unrounded cell sensitivities and fixed linear acquisition | `backend.finite_aperture_sensitivity.segment_cell_sensitivity`, `backend.finite_acquisition_linear.acquisition_linear` | Five geometry columns, signed fields and computed constant response; explicit unknowns and resource contracts; [method](finite-cell-sensitivity.md) |
+| Cell-sensitivity saved-data audit | `python3 studies/verification/finite-cell-sensitivity-artifact-audit-v1.py --help` | Saved JSON/source-ZIP arithmetic only; [portable workflow](../studies/fixtures/finite-cell-sensitivity-v1/README.md); no model, derivative or optimizer evaluation |
 | Source-cell acquisition mean | `backend.finite_aperture.segment_cell_coverage`, `backend.finite_acquisition.acquisition_mean` | Experimental Python operators with explicit grid/kernels/map/levels, immutable stages and bounded work; no trace, optimizer or HTTP integration; [contract and limits](finite-acquisition-mean.md) |
 | Source-cell saved-data artifact audit | `.venv/bin/python studies/verification/finite-acquisition-mean-artifact-audit-v1.py --help` | NumPy archive reading and strict JSON/hash arithmetic only; uses the recorded source ZIP as data; [complete 182-artifact workflow](../studies/fixtures/finite-acquisition-mean-v1/README.md#verify-saved-data-without-a-model-call) |
 | Acquisition saved-data artifact audit | `.venv/bin/python studies/verification/finite-acquisition-artifact-audit-v1.py --help` | Standard-library NPY parsing and Pillow PNG decoding; no backend, generator or model imports; use the extracted recorded-source root and saved run in the [complete workflow](../studies/fixtures/finite-acquisition-operator-v1/README.md#verify-and-reconstruct-saved-data) |

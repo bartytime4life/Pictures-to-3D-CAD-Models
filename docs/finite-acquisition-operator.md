@@ -134,27 +134,30 @@ The same 441 output indices are used for both stage lanes and both Gaussian
 comparators within a record. They are forward diagnostic samples, not training
 and held-out data.
 
-## A linear operator before encoding
+## An unrounded linear model before encoding
 
 Let `c_k(theta)` be the fraction of source cell `Q_k` inside the finite material:
 
 ```text
 c_k(theta) = area(Q_k intersect K(theta)) / area(Q_k).
 A = G R W,
-y_unquantized(theta) = b + (a-b) A c(theta),
+y_ideal(theta) = A [b*1 + (a-b)*c(theta)],
 ```
 
 where `b` is linear background, `a` linear material, `W` the supplied discrete
 optical kernel, `R` the known Keys map and `G` the post-resampling smoother.
-This affine brightness form requires `A*1=1`; plateau controls test the actual
-floating implementation. Replicated/reflected borders and finite support remain
-part of the declared operator.
+The two brightness columns are `[A*1-A*c, A*c]`. Simplifying to
+`b+(a-b)*A*c` requires `A*1=1`; raw finite kernel coefficients need not preserve
+constants exactly. Plateau controls test the actual floating implementation.
+Replicated/reflected borders and finite support remain part of the operator.
 
-For fixed geometry, map and kernels, this unquantized expression is separable
-in the two levels. The PNG branch is different:
+For fixed geometry, map and kernels, this **ideal unrounded expression** is
+separable in the two levels. Actual stored float32 stages introduce rounding,
+so the executable unquantized chain is not literally affine in the levels.
+The following PNG expression is likewise schematic, omitting those casts:
 
 ```text
-y_PNG = G R decode(round8(encode(b+(a-b)W c))).
+y_PNG = G R decode(round8(encode(W [b*1+(a-b)*c]))).
 ```
 
 Rounding and transfer functions sit before rectification. They are nonlinear
@@ -291,11 +294,15 @@ A compatible comparison concerns these supplied synthetic stages and the
 declared one-level criterion. It does not identify a real camera's PSF,
 response, illumination or pixel response.
 
-The next dependency is an acquisition-aware forward model that preserves the
-source-cell, finite-kernel, resampling and post-smoothing semantics, including
-the encoding branch's nonlinear brightness behavior. It needs its own
-independent numerical and work checks before fitting more parameters. A
-subsequent inverse needs prospective geometry-recovery checks, observation-derived
+The subsequent [source-cell acquisition mean](finite-acquisition-mean.md) now
+preserves those source-cell, finite-kernel, resampling, smoothing and encoding
+semantics. Its [qualification](validation/finite-acquisition-mean.md) supplies
+independent synthetic numerical and work checks; it does not fit geometry.
+The [subsequent area-sensitivity qualification](validation/finite-cell-sensitivity.md)
+checks five columns and separate signed linear propagation. An inverse still
+needs an objective distinguishing its unrounded model from rounded stages,
+an explicit policy for undefined cell derivatives, and prospective
+geometry-recovery checks, observation-derived
 bounds, reserved independent dimensions and one accepted boundary preserved
 through preview and exports. The existing upload, measurement and review flow
 remains unchanged; this study adds no new interface controls or physical

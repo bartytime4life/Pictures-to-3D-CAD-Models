@@ -1,5 +1,28 @@
 # Workbench change log
 
+## Unrounded source-cell sensitivities — November 13, 2026
+
+- Add five disk/chord area derivatives with exact event predicates, bounded
+  high-precision moments and explicit contact/endpoint/work unknowns.
+- Add a separate fixed float64 acquisition operator for six signed fields plus
+  a charged constant response, preserving raw kernel sums and border semantics.
+- Freeze and retain the first 33-row study, 259 focused tests and saved-only
+  audits. Preserve the plan's overbroad reference wording and missing complement
+  reference-array limitation explicitly. [Method](finite-cell-sensitivity.md)
+  · [qualification](validation/finite-cell-sensitivity.md). No inverse recovery
+  or automatic adoption is added.
+
+## Source-cell documentation alignment — November 13, 2026
+
+- Align the source snapshot and navigation with draft PR #105 while preserving
+  preceding status/CI snapshots and every original scientific outcome.
+- Document actual API limits, exceptions, ordered results, hash inputs and
+  shape-aware workspace accounting; add a small executable coordinate example.
+- Distinguish ideal linear brightness algebra from rounded stages, update the
+  remaining inverse requirements and restore the narrow-wall bound's stated
+  wall-share condition. [Documentation checks](validation/documentation-mean-state.md)
+  remain separate from software, camera and physical qualification.
+
 ## Experimental source-cell acquisition mean — November 13, 2026
 
 - Add independent analytic disk/chord cell coverage and explicit finite-kernel,
