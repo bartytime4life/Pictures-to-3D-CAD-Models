@@ -252,6 +252,9 @@ qualification, not an inverse-recovery result. Analytic pixel-area integration
 and explicit sampling replace a Gaussian point approximation; unknown camera
 calibration, source response and illumination are not inferred. Quantization
 requires separate derivative and recovery treatment before automatic adoption.
+Even `srgb8=False` retains float32 storage transitions. A future smooth model
+would have to be declared separately and compared with those rounded stages;
+small intensity residuals alone do not establish dimensional accuracy.
 
 A source-derived straight-edge direction may still align the display and
 profile when a ring is retained as line geometry. The rigid rotation preserves

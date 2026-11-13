@@ -102,6 +102,12 @@ source array indices, a separate contract from photo geometric coordinates.
 The [complete study](validation/finite-acquisition-mean.md) retains all stage
 arrays, initial failures and source/workspace corrections. Existing Gaussian
 derivatives cannot be attached unchanged, especially through quantization.
+The [API example and limits](finite-acquisition-mean.md#small-executable-example)
+declare source-cell centres separately from output-to-source array indices.
+Validation errors and unresolved geometry/stages raise exceptions; whole-call
+work refusals instead return unknown queries without evaluated stages. The
+shape-aware workspace field counts simultaneous reflected pads and excludes
+caller storage and interpreter/allocator overhead.
 
 The [completed finite-material acquisition study](validation/finite-acquisition-operator.md)
 is a developer forward experiment, not an HTTP capability or an automatic trace

@@ -1,5 +1,13 @@
 # Troubleshooting
 
+For developer-only source-cell predictions, use the
+[input and resource contract](finite-acquisition-mean.md#refusals-provenance-and-work).
+`work_limit` means the whole grid was refused before stage evaluation; returned
+`None` values are unknown, not black pixels. `ValueError` identifies invalid
+inputs; `ArithmeticError` withholds an unresolved numerical result. A `resolved`
+prediction with `adequacy="not_evaluated"` does not validate the camera model or
+recover geometry. These Python operators do not add an interface mode.
+
 Use the visible error message and the **Next step** guide to identify the action that is needed. The guide is deterministic input/build state, not AI advice or manufacturing acceptance. Keep the current photograph and dimensions while correcting a recoverable problem; starting over should not be the default recovery strategy. See the [documentation index](README.md) for other tasks and the [capture guide](capture-guide.md) for source preparation.
 
 ## Image and tracing problems

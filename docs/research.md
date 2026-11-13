@@ -55,6 +55,11 @@ separate workspace-accounting repair. These are supplied-stage forward checks,
 not new captures, geometry recovery or physical camera qualification.
 Independent derivatives and prospective recovery remain the next dependencies;
 no automatic tracing or inverse integration is added.
+The [API contract](finite-acquisition-mean.md#refusals-provenance-and-work)
+now states the input ranges, exact hash inputs, failure behavior and corrected
+workspace formula. Its unquantized path still stores float32 values. Any
+smooth derivative or separable brightness model must distinguish its unrounded
+operator from this executable chain, preserving the computed constant response.
 
 The [original selected design reference](images/design-reference.png) is a generated concept. The [recorded workbench screenshot](images/workbench.png) is browser-rendered implementation evidence; the [guided-workbench review](validation/guided-workbench.md) records the reviewed interaction, screenshots and evidence date. The sample photograph is generated demonstration input and is traced by the real conversion pipeline; it is not a measured reference specimen.
 

@@ -7,6 +7,10 @@ original counts and environment; they are not later retests.
 
 ## Independent source-cell acquisition mean — November 13, 2026
 
+The subsequent [documentation review](validation/documentation-mean-state.md)
+checks navigation, the executable example and API/source consistency without
+rerunning or relabeling the numerical qualification below.
+
 The [complete comparison](validation/finite-acquisition-mean.md) retains all 128
 new forward means across 16 saved synthetic scenes/32 output records. Analytic-D
 query discrepancies are at most `7.6294e-5` unquantized and `3.0518e-5` encoded

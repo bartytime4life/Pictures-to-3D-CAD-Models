@@ -19,6 +19,12 @@ repository changes. This library's own revision, catalog snapshot, image limits,
 browser storage and verification record remain separate. Its portable reader
 works without a running workbench or those parent-repository guides.
 
+For workbench developer research, see the
+[source-cell acquisition model](../docs/finite-acquisition-mean.md) and its
+[source-bound qualification](../docs/validation/finite-acquisition-mean.md).
+Those APIs and synthetic results belong to the workbench candidate, with no
+change to this library's revision, calculators or generated handbook.
+
 A practical, source-backed library for turning photographs into printable CAD: recover shape, establish dimensions, rebuild editable geometry, and check the part you print. **Revision 7, November 9, 2026.**
 
 It contains a 23-chapter handbook, 88 annotated sources (including 21 GitHub repository records), research notes, reusable worksheets, 10 explanatory figures, 14 calculators with a route finder, a local photo workspace, a Python command-line toolkit, and synthetic worked examples that are rendered and checked automatically.
