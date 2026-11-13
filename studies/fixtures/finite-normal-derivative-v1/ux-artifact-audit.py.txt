@@ -1,0 +1,66 @@
+"""Check the current saved artifact manifest without invoking scientific code."""
+
+import argparse
+import gzip
+import hashlib
+import json
+from pathlib import Path
+
+
+def digest(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    if args.output.exists() or args.output.is_symlink():
+        parser.error("output must be fresh")
+    root = args.root.resolve()
+    path = root / "studies/results/finite-normal-derivative-v1-summary.json"
+    raw_index = path.read_bytes()
+    index = json.loads(raw_index)
+    rows = []
+    for item in index["artifacts"]:
+        artifact = root / item["path"]
+        if not artifact.resolve().is_relative_to(root):
+            raise ValueError("artifact escapes source root")
+        raw = artifact.read_bytes()
+        decoded = gzip.decompress(raw) if item["encoding"] == "gzip" else raw
+        checks = {
+            "encoding_known": item["encoding"] in {"identity", "gzip"},
+            "bytes": len(raw) == item["bytes"],
+            "sha256": digest(raw) == item["sha256"],
+            "decoded_bytes": len(decoded) == item["decoded_bytes"],
+            "decoded_sha256": digest(decoded) == item["decoded_sha256"],
+        }
+        if item["path"] == "studies/results/finite-normal-derivative-v1.json.gz":
+            checks["canonical_raw_identity"] = (
+                digest(decoded) == index["report_sha256"]
+                == "d31fcb0436daee9e91bd21d78c1650901916a8c2c77bf6c7e351da61c04e113f"
+            )
+            checks["canonical_decoded_bytes"] = len(decoded) == index["report_bytes"] == 91_924_054
+        rows.append({"path": item["path"], "checks": checks})
+    result = {
+        "format": "pictures-to-cad-finite-normal-artifact-audit",
+        "version": 1,
+        "scope": "Current saved manifest snapshot only; no scientific replay or model imports.",
+        "index_sha256": digest(raw_index),
+        "auditor_sha256": digest(Path(__file__).read_bytes()),
+        "artifacts": rows,
+        "checks": sum(len(row["checks"]) for row in rows),
+        "passed": sum(sum(row["checks"].values()) for row in rows),
+        "original_canonical_exit_code": index["canonical_exit_code"],
+        "original_protocol_passed": index["protocol_passed"],
+    }
+    encoded = json.dumps(result, indent=2, sort_keys=True, allow_nan=False) + "\n"
+    with args.output.open("x", encoding="utf-8") as output:
+        output.write(encoded)
+    print(encoded, end="")
+    return 0 if result["checks"] == result["passed"] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

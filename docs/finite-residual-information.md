@@ -177,24 +177,79 @@ normal differences. Its coarse/fine maximum discrepancies have ratios
 This is post-hoc consistency using shared production derivatives, not an
 independent test or a new `N` qualification. The full original failure remains.
 
-An independent next oracle can differentiate only the finite chord. With
-`t=J*n`, `h=R*f`, and `ell=R*sqrt(1-f²)`, the chord's normal velocity is `-s`:
+## Finite-chord shape derivative: a derived proposal
+
+Let the complete material be `K = disc(C,R) intersect {n dot (x-C) <= R*f}`,
+with unit normal `n`, `R>0`, and `-1<f<1`. Rotate `n` counterclockwise about the
+fixed centre while holding `R` and `f` fixed. With `t=J*n`, `h=R*f`, and
+`ell=R*sqrt(1-f²)`, the chord is `X(s)=C+h*n+s*t`. Its outward normal velocity
+is `-s`; the circular boundary has zero normal velocity.
+
+For a fixed nonsingular homography `H` from the shape plane to the observation frame, the
+Gaussian point-probability derivative is
 
 ```text
-dP/dphi = -integral(s * Gaussian_Sigma(q-C-h*n-s*t), s=-ell..ell).
+dP/dphi = -integral(s * Gaussian_Sigma(p-H(X(s))) * abs(det DH(X(s))),
+                   s=-ell..ell).
 ```
 
-The circular boundary contributes zero normal velocity under rotation about
-its centre. A truncated-normal first-moment formula and independent positive-
-density chord quadrature can test this derivative without angular differencing.
-Neither has been implemented or numerically validated in this change. A new
-prospective test should cover normals, covariance correlation, symmetry, crops,
-reflections and tail/long-chord stability before any new archived trial.
+Here `p` is an observation pixel centre and `Sigma` is a supplied, fixed SPD
+Gaussian covariance in that same frame, in pixel-squared units. `dP/dphi` is
+signed probability per radian; it is not restricted to `[0,1]`. The intensity
+derivative also multiplies by `b-a`.
+This assumes the entire finite material domain and a Gaussian point observation,
+not a threshold contour or an unspecified resampling/pixel-aperture operator.
+A nonlinear lens map is outside this homography derivation.
+
+The projective chart must stay strictly away from its horizon over the **whole
+shape**, not just the chord. Normalize its denominator to `w(x)>0` on that
+domain, so `abs(det DH)=abs(det H)/w³`. A reflected map still uses the absolute
+Jacobian; changing the homogeneous sign or scale of `H` changes no result.
+
+An exact reparameterization reduces both affine and projective maps to one
+Gaussian first moment. Set `X0=C+h*n`, `w(X0+s*t)=w0+s*w1`, `k=w1/w0`,
+`y0=H(X0)`, `V=DH(X0)*t`, and `J0=abs(det DH(X0))`. Then
+
+```text
+z = s/(1+k*s),       zlo = -ell/(1-k*ell),   zhi = ell/(1+k*ell),
+H(X(s)) = y0+z*V,
+dP/dphi = -J0 * integral(z * Gaussian_Sigma(p-y0-z*V), z=zlo..zhi).
+```
+
+For `Sigma=L*L^T`, define `W=L^-1*V`, `r=L^-1*(p-y0)`, `lambda=||W||`,
+`b0=(W/lambda) dot r`, `c0=cross(W/lambda,r)`,
+`ulo=lambda*zlo-b0`, and `uhi=lambda*zhi-b0`.
+Writing `Phi` and `varphi` for the standard normal CDF and density gives
+
+```text
+dP/dphi = -J0 * exp(-c0²/2) / (sqrt(2*pi)*sqrt(det Sigma)*lambda²)
+          * (b0*(Phi(uhi)-Phi(ulo)) + varphi(ulo)-varphi(uhi)).
+```
+
+Affine maps have `k=0`. Projective limits are generally asymmetric, so an affine
+oddness or zero-symmetry shortcut cannot be reused without its assumptions.
+This identity is not a numerically qualified evaluator. Tail-safe CDF
+differences, narrow-interval and first-moment cancellation, representability,
+and charged fallback work still need checks. [Weckesser's numerical note](https://warrenweckesser.github.io/notes/truncnorm.html)
+explains why tail reformulations alone do not cure narrow-interval subtraction;
+[Apache's implementation discussion](https://commons.apache.org/proper/commons-statistics/commons-statistics-distribution/javadocs/api-1.3/src-html/org/apache/commons/statistics/distribution/TruncatedNormalDistribution.html)
+also records moment cancellation. These are numerical background, not validation
+of this derivative.
+
+Independent quadrature in the original `s` coordinate and positive-area angular
+differences at new synthetic scenes remain prospective checks. A separate [experimental operator](finite-normal-derivative.md) and
+[complete failed qualification](validation/finite-normal-derivative.md) now
+retain their own source, work and error-estimation limits. This derivation
+does not establish production correction, and the
+[original failed protocol](validation/finite-residual-information.md) remains
+unchanged. Real acquisition, illumination, thickness and calibration assumptions
+remain separate from this conditional Gaussian derivation.
 
 ## Remaining evidence
 
 The saved-data audit verifies arithmetic and source binding, not physical PSF
-causation. Normal sensitivity still needs independent numerical validation.
+causation. The new normal-sensitivity checks retain compressed-map resource
+and error-estimation limits; they do not replace the old unknown normal columns.
 An acquisition-matched experiment needs actual source samples, transforms,
 finite kernels, encoding/resampling details and stage bytes. Product adoption
 also needs supported optics/thickness frames, measured-photo checks, bounded

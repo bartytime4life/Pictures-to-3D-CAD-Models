@@ -110,3 +110,18 @@ validate an installed model, exercise the network or qualify an export.
 The reference library has its own [build and generation map](../reference-library/BUILD.md).
 Reading its committed HTML/PDF differs from rebuilding it, checking a browser,
 running native OpenSCAD or refreshing external links.
+
+The [finite-chord normal derivative](finite-normal-derivative.md) is now an
+experimental Python operator. Its [complete qualification](validation/finite-normal-derivative.md)
+retains one panel-budget unknown and a compressed-map error-estimation limitation.
+It has no HTTP mode or fitter integration. The saved rotation command above
+remains saved-array arithmetic; it does not validate this new operator.
+
+For the new study, `studies/verification/finite-normal-derivative-v1.py --help`
+and `studies/verification/finite-normal-report-audit-v1.py --help` are read-only.
+The first script's explicit `--output NEW.json` performs the complete 337-scene
+numerical qualification; the second reads an already decoded report with
+`--report FILE --output NEW.json` and makes no model calls. Both refuse an
+existing destination and require its parent. The original study exits 1;
+successful saved-data auditing does not change that result. Follow the
+[hash-verified archive instructions](../studies/fixtures/finite-normal-derivative-v1/README.md).

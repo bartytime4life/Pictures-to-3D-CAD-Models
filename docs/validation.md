@@ -7,6 +7,15 @@ original counts and environment; they are not later retests.
 
 ## Current candidate evidence — November 12, 2026
 
+The [experimental normal-angle derivative](validation/finite-normal-derivative.md)
+passes the application build and 1,037 Python tests. Its complete 337-scene
+qualification retains **exit 1**: 3,885 resolved comparisons, one panel-budget
+unknown, 3,886 converged independent oracles and 36 passing positive-area checks.
+One resolved compressed-map discrepancy also exceeds the candidate error estimate;
+the frozen relative comparison pass does not prove the requested absolute accuracy.
+These limits remain explicit, with no automatic trace or fitter adoption.
+
+
 The [affine finite-material candidate](validation/finite-affine-batch.md)
 passes **943 local Python tests**, production build and lint on the combined
 main-based source. Its fixed experiment passes all 28 numerical/resource
@@ -32,8 +41,12 @@ retains a missed nominal target and background-sensitive or incompatible
 covariance proposals. These developer models do not change automatic tracing
 or establish physical-camera accuracy.
 
-The [preceding documentation review](validation/documentation-pr93-state.md)
-covers published draft PR #93 and its then-proposed next diagnostic. The later
+The [current documentation review](validation/documentation-pr95-state.md)
+covers published draft PR #95, source/CI status, user guides, API contracts,
+saved-review commands and the companion library. It includes the derived
+finite-chord proposal with numerical qualification still pending. The
+[preceding review](validation/documentation-pr93-state.md) covers PR #93 and
+its then-proposed next diagnostic. The later
 [residual-study record](validation/finite-residual-information.md) adds the
 completed failed replay and its own documentation checks.
 The [preceding affine review](validation/documentation-affine-state.md)

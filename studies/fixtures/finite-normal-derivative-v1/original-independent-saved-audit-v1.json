@@ -1,0 +1,95 @@
+{
+  "format": "pictures-to-cad-finite-normal-saved-json-audit",
+  "version": 1,
+  "auditor_sha256": "4cb0cc4d0c65907a4ff8a50f04879f8012202e1ac729ff185066b703db488b20",
+  "canonical_path": "studies/results/finite-normal-derivative-v1.json",
+  "canonical_sha256": "d31fcb0436daee9e91bd21d78c1650901916a8c2c77bf6c7e351da61c04e113f",
+  "canonical_bytes": 91924054,
+  "source_sha256": {
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/app.py": "345c7dc8bbc7bfbe616eb2934d2a58cd0b4fa1216dbdaa5272ab3a36b06d96bc",
+    "backend/assistant.py": "45f05aa8d0738a1da0e3b5040a2c4df8a01a35e9a835e1c06fd47ee3e81758c5",
+    "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+    "backend/curve_envelope.py": "d37525b42c920a770b783e0c94ff97cf3d5214272d85dcdceae9d23eb184ca27",
+    "backend/drawing.py": "560f087e28d369a2e0f3b733197c18c5a7aa87c390fe56de7516caf9a08a5e6d",
+    "backend/edges.py": "c02bcf6f15958ea5c82444de3ea3af37f20031e6df463846dc8082e37abae9ee",
+    "backend/finite_affine.py": "d4eb540f6a654178fca41b4be416bd4ad6ebb6b3f645bc78b5383b18b8caa653",
+    "backend/finite_centre_fit.py": "df8a057abefe983ee951c894a9ae44e0c6b0f472d3419578be505973ea3a8bfb",
+    "backend/finite_normal.py": "e1e548b58c26d98f28475e647594f5273f34734f1284df27a06324cdf022a443",
+    "backend/finite_observations.py": "09fa843f72b2fc265ba8d4a7111267bf10433eb4f3f2a0600a89cc7871cb3969",
+    "backend/finite_shape.py": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+    "backend/fitting.py": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+    "backend/heic.py": "5e34870379991f8813bacfc4badc8fe7fcf5dbe8aa053156fa352456b208de33",
+    "backend/models.py": "21e7467766f4a086f52b3756f6b1fa8e4ec96a7b76cf0b4d1131c5f45709e6e1",
+    "backend/placement.py": "e1745597ca2930d1260659e9f2dc4405f2b7239beb0c12c45fa92b6d3f5c03df",
+    "backend/printing.py": "58d121ad45f0176b02094f3446dcd020c254ccd78860e5a269b8b6a8d6479915",
+    "backend/reference.py": "23a94e699d5499d8a4621902193e3a70214062108a5d0d10abb04df9efb8b69d",
+    "backend/scad.py": "d5cf18312ba10b7e3830d059952c3d078edc1e21813eb2fb03a4fd1ebaf2d534",
+    "backend/sheet.py": "cbb2f4ae8a47ac88dd98adac02590d55a48b05a83523f2e6d1af12da78186393",
+    "backend/slicer_handoff.py": "774e78fa93dacc348c204d89a0ec4192a01701fb3fa3304ee09960e816101a50",
+    "backend/slicers.py": "03442055d64c37d46e5806bafdd0bd497b54dacf78bc409addf1ff8400c25bb9",
+    "backend/three_mf.py": "435afd61c90bb21c305876f681f845a3bfb193a64fa96589e649fb40fd821cf1",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "backend/tracing.py": "b822716050b285152bcbefe07a0b7da1e02716ecb5d990cbf29af86598a14d2e",
+    "backend/worker.py": "9c869ffae551485b473aeb54ddc9a0116e8c8df22f92f2c08e2f3e97f24ca846",
+    "pyproject.toml": "89db6bd352114ad6ed7c979c070e66d47551ef7cca7062778f832bb8934507ab",
+    "studies/finite-free-centre-v1.json": "f8db267fd848363ba91b56cd5a01086f3123ad699f6c0c404166734f3bc582fd",
+    "studies/finite-normal-derivative-compressed-chart-v1.json": "f0bc2095ba23cceb2ffb13d7f915051620cd2496f71a43ebfd0d2f951037e234",
+    "studies/finite-normal-derivative-v1.json": "d31b8ad03b5fe1af8b69dc47be5445b2ebf7034e951254814a57010f3b43de9f",
+    "studies/verification/finite-free-centre-v1.py": "0537540cbfddad2e6209b7b1483977e118c70b64f0d7938e810f942765e579f8",
+    "studies/verification/finite-normal-derivative-v1.py": "8cd752ccf8fef6391d51dc10761f073c3d3f0fb6c45deb977ea346553ee5dd74",
+    "uv.lock": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f"
+  },
+  "checks": 238429,
+  "audit_passed": true,
+  "audit_failures": [],
+  "canonical_protocol_passed": false,
+  "counts": {
+    "scenes": 337,
+    "queries": 3886,
+    "scene_passes": 336,
+    "query_passes": 3885,
+    "oracle_converged_queries": 3886,
+    "positive_area_passes": 36
+  },
+  "candidate_statuses": {
+    "resolved": 3885,
+    "work_limit": 1
+  },
+  "candidate_methods": {
+    "affine_closed_form": 2861,
+    "projective_closed_form": 963,
+    "affine_closed_form_then_chord_quadrature": 41,
+    "projective_closed_form_then_chord_quadrature": 21
+  },
+  "candidate_work": {
+    "evaluations": 437304,
+    "panels": 17214
+  },
+  "oracle_work": {
+    "evaluations": 25745530,
+    "panels": 177151,
+    "leaves": 112133,
+    "direct": 88137,
+    "tails": 23996
+  },
+  "retained_unknowns": [
+    {
+      "scene": "compressed-chart-e16-d0.0001",
+      "query": 0,
+      "pixel": [
+        0,
+        0
+      ],
+      "status": "work_limit",
+      "evaluations": 154388,
+      "panels": 4096
+    }
+  ],
+  "max_resolved_error_estimate": 9.67751923370655e-11,
+  "max_resolved_comparison_delta": 1.7004538221954135e-08,
+  "max_resolved_delta_over_frozen_allowance": 0.004978582239558692,
+  "model_calls": 0,
+  "operator_imports": 0,
+  "scope": "Saved JSON/hash/arithmetic only. Does not rerun or independently validate density nodes or certify numerical error estimates. Canonical protocol remains failed."
+}
