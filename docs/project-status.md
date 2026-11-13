@@ -1,13 +1,18 @@
 # Source scope and verification status
 
-This checkout layers the affine finite-material candidate over main at
+This documentation follows published draft
+[PR #93](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/93),
+head `f7d116e74b028beffe2dee797518767d0e5b7222`, tree
+`aec6ce2f6acedb0c29ad7681a2fdf13662a8a010`. It layers the affine finite-material candidate over main at
 `1d32c432da633df6bb47db2df7b0e9c23de11c81`, after documentation PR #92.
 The candidate's code was committed at `f3bcd98`; its integration checkpoint is
 `faf9b5a600ed64a226307da93615b086a6c38669`. The
 [source-bound qualification record](validation/finite-affine-batch.md) identifies
 its exact software, frozen plan, runner and preserved original comparator.
-The [documentation review](validation/documentation-affine-state.md) covers
-current guides and the companion library. This checkout is separate from the
+The [latest documentation review](validation/documentation-pr93-state.md) covers
+current guides, pending research and the companion library. The
+[preceding affine review](validation/documentation-affine-state.md) retains its
+original evidence. This checkout is separate from the
 preserved primary `codex/slicer-integration` worktree.
 
 The merged [PR #91](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/91)
@@ -19,14 +24,15 @@ shadow-harmonic change. PR #92 changes only documentation relative to that
 main. Its [dated review](validation/documentation-pr91-state.md) retains its
 original source, counts and CI snapshot.
 
-## Repository and CI snapshot — November 13, 2026, 00:23 UTC
+## Repository and CI snapshot — November 13, 2026, 01:08 UTC
 
 This is November 12 in the project's America/Chicago timezone.
 
 | Source lane | State at this readback | Evidence boundary |
 | --- | --- | --- |
 | Main, `1d32c43`, tree `d75d6c76cd5d0529c75e792da7d0fe384d47635c` | Includes merged documentation PR #92 and prior PRs #84, #85, #90 and #91 | Main does not yet include this affine candidate at this snapshot |
-| Affine candidate, integration checkpoint `faf9b5a` | Code `f3bcd98` integrated with both main revisions | [943 local Python tests, build and lint](validation/finite-affine-batch.md#software-regression); source-bound fixed performance comparison; no new browser or installed-machine result |
+| Affine PR #93, head `f7d116e`, tree `aec6ce2` | Open draft against main `1d32c43`; unmerged | [943 local Python tests, build and lint](validation/finite-affine-batch.md#software-regression) bind the unchanged software; source-bound fixed performance comparison; no new local browser or installed-machine result |
+| Proposed residual-information study | Separate local work in progress, outside the PR #93 source | [Prospective method](finite-residual-information.md); no archived-photo derivative or trial-step results published; no new available command in this checkout |
 | PR #92, head `c69d37f` | Merged at 23:58 UTC on November 12 | [Documentation-only review](validation/documentation-pr91-state.md); every inherited non-Markdown byte preserved |
 | PR #91, `6539905`, through PR #90's final `bf592fa` | Included in main at `ec41b0c` | [899 local Python tests](validation/finite-photo-intensity-v2.md#software-regression) belong to the original PR #91 software interval |
 | Shadow-harmonic PR #85, merged at `c166e15` | Included in main before PR #90 | [629-test/74-scenario branch record](validation.md#a-shadows-push-on-a-holes-centre--november-12-2026) remains historical |
@@ -39,9 +45,14 @@ completed with **success** at 00:05 UTC on November 13. PR #91's earlier
 [Validate workbench run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43328477717)
 also completed with **success**. These hosted results are separate from the
 candidate's new 943-test local interval and restricted timing experiment.
-They do not establish CI for an unpublished later candidate commit.
+PR #93's own
+[Validate workbench run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43338583640)
+is **in progress**, with no conclusion at this readback. A successful earlier
+run does not establish CI for that later head or this documentation follow-up.
 
-These are timestamped states, not live indicators. The [PR #91 review](validation/documentation-pr91-state.md),
+These are timestamped states, not live indicators. The
+[preceding 00:23 source snapshot](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/blob/f7d116e74b028beffe2dee797518767d0e5b7222/docs/project-status.md),
+[PR #91 review](validation/documentation-pr91-state.md),
 [PR #88 review](validation/documentation-pr88-state.md) and other dated records
 preserve their original open/draft and CI snapshots. Local checks, hosted CI,
 branch inclusion, installation, deployment and physical acceptance are distinct.
@@ -98,6 +109,12 @@ complete fits** across three predeclared datasets, with 2.75–3.91-second media
 All 36 archived rows retain their prior completion flags and target passes.
 These fixed-workload results leave interactive latency, broader workloads and
 optical-model adequacy unqualified.
+
+The [proposed residual-information diagnostic](finite-residual-information.md)
+would separate covariance sensitivity from brightness, geometry and normal-angle
+sensitivity at saved fits. It is a research plan, not a completed replay or an
+optical correction. Even a locally distinguishable covariance change could absorb
+sampling or resampling mismatch rather than identify a physical camera PSF.
 
 Automatic adoption also needs supported acquisition and thickness models,
 independent recovery checks and one chosen boundary preserved through preview,

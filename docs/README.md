@@ -51,9 +51,10 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |
 | Run a benchmark with measured photos | [Photo benchmark](photo-benchmark.md) |
 | Review completed checks | [Validation overview](validation.md), [design QA](../design-qa.md) |
-| Check documentation coverage and source consistency | [Current affine-source review](validation/documentation-affine-state.md), [preceding PR #91 review](validation/documentation-pr91-state.md), [measured-ring evidence](validation/finite-photo-intensity-v2.md) |
+| Check documentation coverage and source consistency | [Current PR #93 documentation review](validation/documentation-pr93-state.md), [preceding affine-source review](validation/documentation-affine-state.md), [measured-ring evidence](validation/finite-photo-intensity-v2.md) |
 | Review the recent interface changes | [Guided-workbench audit](validation/guided-workbench.md) |
 | Review scope and future work | [Roadmap](roadmap.md), [change log](changelog.md) |
+| Read a proposed diagnostic without mistaking it for a current capability | [Residual information and acquisition-model limits](finite-residual-information.md); no archived-data replay result yet |
 | Reproduce bundled printer data | [Printer source record](../data/PRINTER_SOURCES.md) |
 
 Historical validation reports retain their original revision, environment and

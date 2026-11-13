@@ -32,8 +32,10 @@ retains a missed nominal target and background-sensitive or incompatible
 covariance proposals. These developer models do not change automatic tracing
 or establish physical-camera accuracy.
 
-The [latest documentation review](validation/documentation-affine-state.md)
-covers the affine candidate and all current guides. The preceding
+The [latest documentation review](validation/documentation-pr93-state.md)
+covers published draft PR #93, all current guides and the proposed next diagnostic.
+The [preceding affine review](validation/documentation-affine-state.md)
+retains its original checks. The preceding
 [PR #91 review](validation/documentation-pr91-state.md) covers integrated main
 `ec41b0c`, including PR #85's shadow-harmonic change. The 899-test result above
 predates that combined source; the new 943-test candidate interval includes it.
@@ -43,6 +45,11 @@ The
 scope. Neither documentation review reruns or replaces the geometry/browser
 results below; [current main and dependency states](project-status.md) have a
 separate timestamped snapshot.
+
+The [residual-information proposal](finite-residual-information.md) is future
+work. This documentation pass runs no archived-photo sensitivity calculation,
+tangent step, inverse fit or new performance benchmark. It supplies no further
+scientific pass count and does not change any of the retained target misses.
 
 The preceding [circle-consistent join candidate](validation/directional-free-arcs.md)
 builds on PR #84. It tests the circle represented by actual emitted geometry,

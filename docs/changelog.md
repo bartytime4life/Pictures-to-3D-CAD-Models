@@ -1,5 +1,18 @@
 # Workbench change log
 
+## Documentation alignment with draft PR #93 — November 12, 2026
+
+- Identify the published affine candidate, exact tree, dependency base and
+  timestamped hosted-CI state. Keep completed source-bound results separate
+  from later documentation checks and unmerged publication.
+- Document the proposed residual-information method, its estimated numerical
+  guards and acquisition-data requirements. Explicitly distinguish the proposal
+  from available commands, archived-data results and physical PSF calibration.
+- Update navigation, research, roadmap and contributor guidance; check the full
+  documentation inventory, examples and command help. No executable, study,
+  saved result or generated-library bytes change.
+  [Coverage and verification](validation/documentation-pr93-state.md).
+
 ## Affine finite-material evaluation and documentation — November 12, 2026
 
 - Shared transformed curve panels accelerate exactly affine finite-material

@@ -10,6 +10,12 @@ The [source-scope guide](project-status.md) identifies which algorithms are in
 this main-based checkout. Source-space PSF research on a separate lineage
 does not replace the production rectified-width estimator or add new HTTP modes.
 
+The [prospective residual-information study](finite-residual-information.md)
+describes a proposed way to test local blur/geometry confounding in the saved
+finite-material fits. It is separate from the completed numerical evidence
+below. No archived-photo sensitivity or trial-step result is added by this
+documentation pass.
+
 The [original selected design reference](images/design-reference.png) is a generated concept. The [recorded workbench screenshot](images/workbench.png) is browser-rendered implementation evidence; the [guided-workbench review](validation/guided-workbench.md) records the reviewed interaction, screenshots and evidence date. The sample photograph is generated demonstration input and is traced by the real conversion pipeline; it is not a measured reference specimen.
 
 ## Image to outline

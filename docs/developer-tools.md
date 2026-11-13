@@ -6,6 +6,11 @@ Run these from the repository root after setup. `make` prints the supported
 targets. These are the tools present in the reviewed main-based source; research
 scripts from a separate branch are not implied by this list.
 
+The [proposed residual-information diagnostic](finite-residual-information.md)
+is documented for research review only. Its local work-in-progress plan and
+runner are not included in this source; do not assume a runnable entry point
+or a completed archived-data result from that proposal.
+
 For lightweight checks of the finite-material documentation, use the
 [supplied-model example](finite-shape-inverse.md#coordinate-example),
 [archived preparation example](finite-shape-inverse.md#replay-preparation-without-fitting)
