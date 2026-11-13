@@ -13,15 +13,27 @@ Reading the HTML or the PDF needs no tools: open `index.html` in a browser. The 
 | Plate pipeline and render tests | OpenSCAD (optional; those steps are skipped without it) |
 | Link check, GitHub refresh | Network access |
 
-Install the packages once, from `reference-library/`. `package-lock.json` pins the exact versions; use `npm ci` to reproduce them:
+From the parent repository root, use the supported library-only setup. It creates
+the separate Python environment and installs this library's dependencies:
 
 ```bash
+make setup-library
+cd reference-library
+. .venv/bin/activate
+```
+
+For a standalone copy of the library, run the equivalent setup from its own
+directory:
+
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements.txt
 npm ci
 ```
 
-```bash
-python3 -m pip install -r requirements.txt
-```
+Keep that environment active for the commands below. The library's
+`package-lock.json` pins its Node packages; `npm ci` reproduces those versions.
 
 If Chrome is not installed, run `npx playwright install chromium`, or set `CAD_REFERENCE_CHROME` to a browser executable.
 

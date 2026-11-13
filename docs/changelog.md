@@ -1,5 +1,40 @@
 # Workbench change log
 
+## Experimental finite-chord normal derivative — November 12, 2026
+
+- Add a signed source-angle sensitivity with affine/projective Gaussian first
+  moments and guarded original-chord quadrature. Preserve the existing mean
+  and four-column shape Jacobian schemas and automatic tracing behavior.
+- Freeze and retain all 337 scenes/3,886 queries. The complete protocol exits 1
+  with one panel-budget unknown; a compressed-map error-estimation limitation
+  also remains. Keep all raw arrays and independent audits losslessly.
+- Record 94 focused checks, the build and 1,037 Python tests separately from
+  the scientific result. [Contract](finite-normal-derivative.md) ·
+  [complete evidence and limits](validation/finite-normal-derivative.md).
+
+## Documentation alignment with published PR #95 — November 12, 2026
+
+- Refresh the source, dependency and hosted-CI snapshot after publication of
+  the complete residual-information study. Preserve its failed normal control,
+  unknowns, original target flags and independently audited saved results.
+- Document the finite-chord normal derivative's affine/projective derivation,
+  sign, units and whole-shape chart assumptions. Numerical qualification and
+  integration remain pending; no available operator or accuracy result is added.
+- Review the complete workbench and companion-library documentation, update
+  entry points and retain historical evidence and generated-library outputs.
+  [Coverage and verification](validation/documentation-pr95-state.md).
+
+## Residual information and rotation sensitivity — November 12, 2026
+
+- Retain the complete failed normal-angle protocol, all 12 records, unchanged
+  old flags and fixed-normal conditional steps. Add guarded raw-rank/status
+  handling and a portable independent saved-data auditor.
+- Derive a rotation-sensitivity identity and preserve a separately labeled
+  post-hoc saved-array analysis, with no new model call or normal qualification.
+- Archive every array losslessly, update method/command/evidence navigation,
+  and keep production tracing unchanged.
+  [Complete results and limits](validation/finite-residual-information.md).
+
 ## Documentation alignment with draft PR #93 — November 12, 2026
 
 - Identify the published affine candidate, exact tree, dependency base and

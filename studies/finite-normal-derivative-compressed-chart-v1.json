@@ -1,0 +1,397 @@
+{
+  "format": "pictures-to-cad-finite-normal-derivative-additional-plan",
+  "version": 1,
+  "status": "prospectively frozen before ANY new operator/oracle/test numerical evaluation",
+  "main_plan": "studies/finite-normal-derivative-v1.json",
+  "main_plan_sha256": "d31b8ad03b5fe1af8b69dc47be5445b2ebf7034e951254814a57010f3b43de9f",
+  "reason": "Static code review identifies projective Jacobian endpoint concentration that small mapped travel alone cannot resolve. Add adverse synthetic family before any evaluation; original main plan unchanged. Same frozen tolerance, comparison and all-row preservation criteria.",
+  "algorithm_resolution_guards": {
+    "maximum_whitened_panel_travel": 0.5,
+    "maximum_gaussian_exponent_variation": 8.0,
+    "maximum_denominator_ratio": 2.0,
+    "scope": "For non-tail panels in source-s quadrature; subdivide until guards resolve or retain unknown under existing limits. Apply independently in operator fallback and oracle."
+  },
+  "scenes": [
+    {
+      "id": "compressed-chart-e8-d0.0001",
+      "kind": "prospective_compressed_chart_stress",
+      "centre": [
+        0.0,
+        0.0
+      ],
+      "radius": 1.0,
+      "fraction": 0.0,
+      "normal_degrees": 0.0,
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "homography": [
+        [
+          1.0,
+          0.498046875,
+          0.5
+        ],
+        [
+          0.0,
+          0.498146875,
+          0.5
+        ],
+        [
+          0.0,
+          0.99609375,
+          1.0
+        ]
+      ],
+      "covariance": [
+        [
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "sensor_shape": [
+        3,
+        3
+      ],
+      "pixels_xy": [
+        [
+          0,
+          0
+        ]
+      ],
+      "query_roles": [
+        {
+          "role": "compressed-source-Jacobian-endpoint-spike",
+          "pixel": [
+            0,
+            0
+          ],
+          "query_index": 0
+        }
+      ]
+    },
+    {
+      "id": "compressed-chart-e8-d1e-06",
+      "kind": "prospective_compressed_chart_stress",
+      "centre": [
+        0.0,
+        0.0
+      ],
+      "radius": 1.0,
+      "fraction": 0.0,
+      "normal_degrees": 0.0,
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "homography": [
+        [
+          1.0,
+          0.498046875,
+          0.5
+        ],
+        [
+          0.0,
+          0.498047875,
+          0.5
+        ],
+        [
+          0.0,
+          0.99609375,
+          1.0
+        ]
+      ],
+      "covariance": [
+        [
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "sensor_shape": [
+        3,
+        3
+      ],
+      "pixels_xy": [
+        [
+          0,
+          0
+        ]
+      ],
+      "query_roles": [
+        {
+          "role": "compressed-source-Jacobian-endpoint-spike",
+          "pixel": [
+            0,
+            0
+          ],
+          "query_index": 0
+        }
+      ]
+    },
+    {
+      "id": "compressed-chart-e12-d0.0001",
+      "kind": "prospective_compressed_chart_stress",
+      "centre": [
+        0.0,
+        0.0
+      ],
+      "radius": 1.0,
+      "fraction": 0.0,
+      "normal_degrees": 0.0,
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "homography": [
+        [
+          1.0,
+          0.4998779296875,
+          0.5
+        ],
+        [
+          0.0,
+          0.4999779296875,
+          0.5
+        ],
+        [
+          0.0,
+          0.999755859375,
+          1.0
+        ]
+      ],
+      "covariance": [
+        [
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "sensor_shape": [
+        3,
+        3
+      ],
+      "pixels_xy": [
+        [
+          0,
+          0
+        ]
+      ],
+      "query_roles": [
+        {
+          "role": "compressed-source-Jacobian-endpoint-spike",
+          "pixel": [
+            0,
+            0
+          ],
+          "query_index": 0
+        }
+      ]
+    },
+    {
+      "id": "compressed-chart-e12-d1e-06",
+      "kind": "prospective_compressed_chart_stress",
+      "centre": [
+        0.0,
+        0.0
+      ],
+      "radius": 1.0,
+      "fraction": 0.0,
+      "normal_degrees": 0.0,
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "homography": [
+        [
+          1.0,
+          0.4998779296875,
+          0.5
+        ],
+        [
+          0.0,
+          0.4998789296875,
+          0.5
+        ],
+        [
+          0.0,
+          0.999755859375,
+          1.0
+        ]
+      ],
+      "covariance": [
+        [
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "sensor_shape": [
+        3,
+        3
+      ],
+      "pixels_xy": [
+        [
+          0,
+          0
+        ]
+      ],
+      "query_roles": [
+        {
+          "role": "compressed-source-Jacobian-endpoint-spike",
+          "pixel": [
+            0,
+            0
+          ],
+          "query_index": 0
+        }
+      ]
+    },
+    {
+      "id": "compressed-chart-e16-d0.0001",
+      "kind": "prospective_compressed_chart_stress",
+      "centre": [
+        0.0,
+        0.0
+      ],
+      "radius": 1.0,
+      "fraction": 0.0,
+      "normal_degrees": 0.0,
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "homography": [
+        [
+          1.0,
+          0.49999237060546875,
+          0.5
+        ],
+        [
+          0.0,
+          0.5000923706054687,
+          0.5
+        ],
+        [
+          0.0,
+          0.9999847412109375,
+          1.0
+        ]
+      ],
+      "covariance": [
+        [
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "sensor_shape": [
+        3,
+        3
+      ],
+      "pixels_xy": [
+        [
+          0,
+          0
+        ]
+      ],
+      "query_roles": [
+        {
+          "role": "compressed-source-Jacobian-endpoint-spike",
+          "pixel": [
+            0,
+            0
+          ],
+          "query_index": 0
+        }
+      ]
+    },
+    {
+      "id": "compressed-chart-e16-d1e-06",
+      "kind": "prospective_compressed_chart_stress",
+      "centre": [
+        0.0,
+        0.0
+      ],
+      "radius": 1.0,
+      "fraction": 0.0,
+      "normal_degrees": 0.0,
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "homography": [
+        [
+          1.0,
+          0.49999237060546875,
+          0.5
+        ],
+        [
+          0.0,
+          0.4999933706054687,
+          0.5
+        ],
+        [
+          0.0,
+          0.9999847412109375,
+          1.0
+        ]
+      ],
+      "covariance": [
+        [
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "sensor_shape": [
+        3,
+        3
+      ],
+      "pixels_xy": [
+        [
+          0,
+          0
+        ]
+      ],
+      "query_roles": [
+        {
+          "role": "compressed-source-Jacobian-endpoint-spike",
+          "pixel": [
+            0,
+            0
+          ],
+          "query_index": 0
+        }
+      ]
+    }
+  ],
+  "declared_population": {
+    "main_scenes": 331,
+    "additional_scenes": 6,
+    "total_scenes": 337,
+    "main_unique_queries": 3880,
+    "additional_queries": 6,
+    "total_queries": 3886
+  },
+  "model_calls_before_freeze": 0
+}

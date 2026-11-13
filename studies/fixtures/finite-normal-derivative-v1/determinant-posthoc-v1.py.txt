@@ -1,0 +1,128 @@
+#!/usr/bin/env python3
+"""Saved-H determinant diagnosis, not a finite-normal model/oracle replay.
+
+Only NumPy.linalg.det is called numerically, on six saved normalized matrices.
+Exact Fraction arithmetic and Decimal.from_float arithmetic supply the algebraic
+reference. Hypothetical multiplicative rescaling is NOT an evaluated correction.
+"""
+
+import argparse
+import hashlib
+import json
+import math
+import os
+from decimal import Decimal, localcontext
+from fractions import Fraction
+from pathlib import Path
+
+import numpy as np
+
+RESULT_SHA = "d31fcb0436daee9e91bd21d78c1650901916a8c2c77bf6c7e351da61c04e113f"
+
+
+def sha(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def determinant(h):
+    a, b, c = h[0]
+    d, e, f = h[1]
+    g, i, j = h[2]
+    return a * (e * j - f * i) - b * (d * j - f * g) + c * (d * i - e * g)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", required=True, type=Path)
+    parser.add_argument("--output", required=True, type=Path)
+    args = parser.parse_args()
+    if os.path.lexists(args.output) or not args.output.parent.is_dir():
+        parser.error("fresh output and existing parent required")
+    root = args.root.resolve()
+    result_path = root / "studies/results/finite-normal-derivative-v1.json"
+    source_path = root / "backend/finite_normal.py"
+    before = {str(p.relative_to(root)): sha(p) for p in (result_path, source_path)}
+    if sha(result_path) != RESULT_SHA:
+        raise ValueError("saved v1 report differs")
+    result = json.loads(result_path.read_text())
+    rows = []
+    with localcontext() as context:
+        context.prec = 180
+        for scene in result["rows"]:
+            if scene["kind"] != "prospective_compressed_chart_stress":
+                continue
+            saved = scene["input"]
+            raw = saved["homography"]
+            scale = max(abs(v) for row in raw for v in row)
+            if scale != 1.0 or saved["centre"] != [0.0, 0.0]:
+                raise ValueError("this saved-H diagnosis requires exact scale1/centre0")
+            h = [[v / scale for v in row] for row in raw]
+            exact = determinant([[Fraction.from_float(v) for v in row] for row in h])
+            decdet = determinant([[Decimal.from_float(v) for v in row] for row in h])
+            exact_decimal = Decimal(exact.numerator) / Decimal(exact.denominator)
+            if decdet != exact_decimal:
+                raise ValueError("180-digit Decimal determinant did not reproduce exact Fraction")
+            scalar = h[1][1] - 0.5 * h[2][1]
+            lu = float(np.linalg.det(np.asarray(h, dtype=float)))
+            lu_decimal = Decimal.from_float(lu)
+            relative = lu_decimal / exact_decimal - 1
+            q = scene["queries"][0]
+            oracle = q["oracle"]["values"]["192"]
+            oracle_decimal = Decimal.from_float(oracle)
+            candidate = q["candidate"]["value"]
+            row = {
+                "scene_id": scene["id"], "normalized_local_h": h,
+                "maximum_normalization": scale, "origin_translation": saved["centre"],
+                "exact_determinant_fraction": f"{exact.numerator}/{exact.denominator}",
+                "exact_determinant_decimal": str(exact_decimal),
+                "decimal_180_determinant": str(decdet),
+                "sterbenz_scalar_determinant": scalar, "sterbenz_scalar_hex": scalar.hex(),
+                "sterbenz_scalar_exact": Fraction.from_float(scalar) == exact,
+                "numpy_linalg_det": lu, "numpy_linalg_det_hex": lu.hex(),
+                "determinant_relative_error_decimal": str(relative),
+                "saved_candidate": candidate, "saved_candidate_status": q["candidate"]["status"],
+                "saved_candidate_estimated_error": q["candidate"]["estimated_error"],
+                "saved_oracle192": oracle, "saved_oracle_order_delta": q["oracle"]["order_delta"],
+                "saved_comparison_passed": q["comparison_passed"],
+            }
+            if candidate is not None:
+                candidate_decimal = Decimal.from_float(candidate)
+                observed = candidate_decimal - oracle_decimal
+                observed_relative = candidate_decimal / oracle_decimal - 1
+                predicted = oracle_decimal * relative
+                rescaled = candidate_decimal * exact_decimal / lu_decimal
+                row.update(
+                    observed_difference_decimal=str(observed),
+                    observed_relative_difference_decimal=str(observed_relative),
+                    predicted_determinant_only_difference_decimal=str(predicted),
+                    observed_minus_determinant_prediction_decimal=str(observed - predicted),
+                    relative_difference_minus_determinant_error_decimal=str(observed_relative - relative),
+                    hypothetical_normalizer_only_rescaled_candidate_decimal=str(rescaled),
+                    hypothetical_rescaled_difference_decimal=str(rescaled - oracle_decimal),
+                    observed_difference_over_reported_error=float(abs(observed) / Decimal.from_float(q["candidate"]["estimated_error"])),
+                )
+            rows.append(row)
+    after = {str(p.relative_to(root)): sha(p) for p in (result_path, source_path)}
+    report = {
+        "format": "pictures-to-cad-finite-normal-determinant-posthoc", "version": 1,
+        "source_sha256": sha(__file__), "inputs_before": before, "inputs_after": after,
+        "inputs_unchanged": before == after, "numpy_version": np.__version__,
+        "decimal_precision": 180, "rows": rows,
+        "all_six_compressed_scenes_retained": len(rows) == 6,
+        "all_scalar_reduced_determinants_exact": all(r["sterbenz_scalar_exact"] for r in rows),
+        "linalg_determinant_calls": len(rows), "model_calls": 0, "oracle_calls": 0,
+        "scope": "Post-hoc arithmetic diagnosis only. Original v1 remains unchanged/failed. Hypothetical multiplicative normalizer rescaling holds all other saved computations fixed and is not a model reevaluation or qualified repair. Saved oracle order agreement is not a rigorous bound.",
+    }
+    if not all(math.isfinite(r["numpy_linalg_det"]) for r in rows):
+        raise ValueError("nonfinite determinant")
+    with args.output.open("x") as stream:
+        json.dump(report, stream, indent=2, sort_keys=True, allow_nan=False)
+        stream.write("\n")
+    print(json.dumps({"output": str(args.output), "rows": len(rows), "unchanged": before == after,
+                      "diagnosis": [{k: r[k] for k in ("scene_id", "determinant_relative_error_decimal",
+                                     "observed_relative_difference_decimal", "observed_minus_determinant_prediction_decimal") if k in r}
+                                    for r in rows]}, sort_keys=True, allow_nan=False))
+
+
+if __name__ == "__main__":
+    main()

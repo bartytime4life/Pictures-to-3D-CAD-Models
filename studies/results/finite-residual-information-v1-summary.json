@@ -1,0 +1,560 @@
+{
+  "format": "pictures-to-cad-finite-residual-readable-index",
+  "version": 1,
+  "full_report_sha256": "b1d15d4e006d1f65823cb6bd20810cd127d6d6ac6912973d590f38bd8acc6c74",
+  "full_report_bytes": 8973743,
+  "protocol_passed": false,
+  "terminal_exit_code": 1,
+  "summary": {
+    "controls_passed": 19,
+    "diagnostic_evaluated": 0,
+    "diagnostic_unknown": 10,
+    "failures": 0,
+    "new_fit_pass_count": null,
+    "old_completion_passed": 10,
+    "old_targets_passed": 3,
+    "rows_retained": 12,
+    "upstream_ineligible": 2
+  },
+  "work": {
+    "failed_call_work": "unknown if the public API raised before returning counters",
+    "jacobian_calls_attempted": 10,
+    "mean_calls_attempted": 196,
+    "optimizer_attempts": 0,
+    "optimizer_calls": 0,
+    "preparation_calls": 0,
+    "renderer_calls": 0,
+    "returned_evaluations": 21290976,
+    "returned_panels": 2101194
+  },
+  "rows": [
+    {
+      "index": 0,
+      "name": "small-isotropic",
+      "lane": "legacy_sigma_squared_identity",
+      "status": "diagnostic_unknown",
+      "old_targets_passed": true,
+      "S_stable": true,
+      "N_stable": false,
+      "fixed_normal_covariance_rank": 3,
+      "training_nuisance_residual_energy": 9.154400810606129,
+      "training_unique_covariance_energy": 4.099861863845651,
+      "training_unique_energy_fraction": 0.44785693227410606,
+      "BGS_alpha": 1.0,
+      "BGS_linearity_passed": true,
+      "heldout_before": {
+        "count": 16,
+        "max_abs": 0.8565534812707938,
+        "rms": 0.4537583899578297
+      },
+      "heldout_after": {
+        "count": 16,
+        "max_abs": 0.7098164687500912,
+        "rms": 0.38685138663747853
+      },
+      "descriptive_geometry_after_step": {
+        "available": true,
+        "centre_error_mm": 0.007118362967820902,
+        "fraction_error": 0.0024040741054769943,
+        "model": [
+          "B",
+          "G",
+          "S"
+        ],
+        "radius_error_mm": 0.004103409004509562
+      }
+    },
+    {
+      "index": 1,
+      "name": "small-isotropic",
+      "lane": "nominal_observed_moment_covariance",
+      "status": "diagnostic_unknown",
+      "old_targets_passed": false,
+      "S_stable": true,
+      "N_stable": false,
+      "fixed_normal_covariance_rank": 3,
+      "training_nuisance_residual_energy": 67.72139389029218,
+      "training_unique_covariance_energy": 62.73215333484793,
+      "training_unique_energy_fraction": 0.9263269659876352,
+      "BGS_alpha": 0.3744694782861499,
+      "BGS_linearity_passed": true,
+      "heldout_before": {
+        "count": 16,
+        "max_abs": 3.564799803207677,
+        "rms": 1.4715373201990432
+      },
+      "heldout_after": {
+        "count": 16,
+        "max_abs": 2.503041390050157,
+        "rms": 0.9810511354236616
+      },
+      "descriptive_geometry_after_step": {
+        "available": true,
+        "centre_error_mm": 0.00609905634420665,
+        "fraction_error": 0.0015726834093174324,
+        "model": [
+          "B",
+          "G",
+          "S"
+        ],
+        "radius_error_mm": 0.001013557077195859
+      }
+    },
+    {
+      "index": 2,
+      "name": "small-directional",
+      "lane": "legacy_sigma_squared_identity",
+      "status": "diagnostic_unknown",
+      "old_targets_passed": false,
+      "S_stable": true,
+      "N_stable": false,
+      "fixed_normal_covariance_rank": 3,
+      "training_nuisance_residual_energy": 2082.9442879497483,
+      "training_unique_covariance_energy": 1849.3430604187784,
+      "training_unique_energy_fraction": 0.8878504677813996,
+      "BGS_alpha": 0.04077233090787836,
+      "BGS_linearity_passed": true,
+      "heldout_before": {
+        "count": 16,
+        "max_abs": 17.182065838491823,
+        "rms": 7.5413592611067175
+      },
+      "heldout_after": {
+        "count": 16,
+        "max_abs": 16.64190986594585,
+        "rms": 7.24127664539971
+      },
+      "descriptive_geometry_after_step": {
+        "available": true,
+        "centre_error_mm": 0.10544898047970731,
+        "fraction_error": 0.04041373811501331,
+        "model": [
+          "B",
+          "G",
+          "S"
+        ],
+        "radius_error_mm": 0.0042785576070722975
+      }
+    },
+    {
+      "index": 3,
+      "name": "small-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "status": "diagnostic_unknown",
+      "old_targets_passed": false,
+      "S_stable": true,
+      "N_stable": false,
+      "fixed_normal_covariance_rank": 3,
+      "training_nuisance_residual_energy": 12.801975165585706,
+      "training_unique_covariance_energy": 10.565603833819058,
+      "training_unique_energy_fraction": 0.8253104460178562,
+      "BGS_alpha": 0.30451364682553456,
+      "BGS_linearity_passed": true,
+      "heldout_before": {
+        "count": 16,
+        "max_abs": 1.442765622937344,
+        "rms": 0.6932688992636763
+      },
+      "heldout_after": {
+        "count": 16,
+        "max_abs": 1.019118826926416,
+        "rms": 0.5097969290848978
+      },
+      "descriptive_geometry_after_step": {
+        "available": true,
+        "centre_error_mm": 0.002814303219903844,
+        "fraction_error": 0.001521163897927058,
+        "model": [
+          "B",
+          "G",
+          "S"
+        ],
+        "radius_error_mm": 0.00034169754262691754
+      }
+    },
+    {
+      "index": 4,
+      "name": "medium-directional",
+      "lane": "legacy_sigma_squared_identity",
+      "status": "diagnostic_unknown",
+      "old_targets_passed": false,
+      "S_stable": true,
+      "N_stable": false,
+      "fixed_normal_covariance_rank": 3,
+      "training_nuisance_residual_energy": 1090.3306664124084,
+      "training_unique_covariance_energy": 1027.5271486252825,
+      "training_unique_energy_fraction": 0.9423995676524693,
+      "BGS_alpha": 0.04981653742819421,
+      "BGS_linearity_passed": true,
+      "heldout_before": {
+        "count": 16,
+        "max_abs": 18.02881789406989,
+        "rms": 7.919996597757883
+      },
+      "heldout_after": {
+        "count": 16,
+        "max_abs": 17.17259213265848,
+        "rms": 7.575938986457819
+      },
+      "descriptive_geometry_after_step": {
+        "available": true,
+        "centre_error_mm": 0.026376466662999715,
+        "fraction_error": 0.006951269532125798,
+        "model": [
+          "B",
+          "G",
+          "S"
+        ],
+        "radius_error_mm": 0.02964848236495765
+      }
+    },
+    {
+      "index": 5,
+      "name": "medium-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "status": "diagnostic_unknown",
+      "old_targets_passed": true,
+      "S_stable": true,
+      "N_stable": false,
+      "fixed_normal_covariance_rank": 3,
+      "training_nuisance_residual_energy": 4.26756929228415,
+      "training_unique_covariance_energy": 3.0367726294655184,
+      "training_unique_energy_fraction": 0.7115930454734651,
+      "BGS_alpha": 1.0,
+      "BGS_linearity_passed": true,
+      "heldout_before": {
+        "count": 16,
+        "max_abs": 0.8451689795293476,
+        "rms": 0.3957736639802588
+      },
+      "heldout_after": {
+        "count": 16,
+        "max_abs": 0.46436025707529893,
+        "rms": 0.209620942771703
+      },
+      "descriptive_geometry_after_step": {
+        "available": true,
+        "centre_error_mm": 0.0026967489406918414,
+        "fraction_error": 0.0002146466510521139,
+        "model": [
+          "B",
+          "G",
+          "S"
+        ],
+        "radius_error_mm": 0.001422911733877541
+      }
+    },
+    {
+      "index": 6,
+      "name": "large-directional",
+      "lane": "legacy_sigma_squared_identity",
+      "status": "diagnostic_unknown",
+      "old_targets_passed": false,
+      "S_stable": true,
+      "N_stable": false,
+      "fixed_normal_covariance_rank": 3,
+      "training_nuisance_residual_energy": 2201.232648330741,
+      "training_unique_covariance_energy": 2028.3307958758442,
+      "training_unique_energy_fraction": 0.921452258766917,
+      "BGS_alpha": 0.039895073355290134,
+      "BGS_linearity_passed": true,
+      "heldout_before": {
+        "count": 16,
+        "max_abs": 17.958465030556226,
+        "rms": 10.601771716723334
+      },
+      "heldout_after": {
+        "count": 16,
+        "max_abs": 17.110324026625108,
+        "rms": 10.21122523299605
+      },
+      "descriptive_geometry_after_step": {
+        "available": true,
+        "centre_error_mm": 0.017189412791143603,
+        "fraction_error": 0.005237527895693317,
+        "model": [
+          "B",
+          "G",
+          "S"
+        ],
+        "radius_error_mm": 0.005771619792541927
+      }
+    },
+    {
+      "index": 7,
+      "name": "large-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "status": "diagnostic_unknown",
+      "old_targets_passed": true,
+      "S_stable": true,
+      "N_stable": false,
+      "fixed_normal_covariance_rank": 3,
+      "training_nuisance_residual_energy": 3.033882999917249,
+      "training_unique_covariance_energy": 1.8748300596892677,
+      "training_unique_energy_fraction": 0.6179638633857683,
+      "BGS_alpha": 0.5725151979687709,
+      "BGS_linearity_passed": true,
+      "heldout_before": {
+        "count": 16,
+        "max_abs": 0.865774151361876,
+        "rms": 0.35215032643644373
+      },
+      "heldout_after": {
+        "count": 16,
+        "max_abs": 0.664436454912078,
+        "rms": 0.19676957074701776
+      },
+      "descriptive_geometry_after_step": {
+        "available": true,
+        "centre_error_mm": 0.0018669296727432806,
+        "fraction_error": 0.0004121957480276994,
+        "model": [
+          "B",
+          "G",
+          "S"
+        ],
+        "radius_error_mm": 0.003275187945913416
+      }
+    },
+    {
+      "index": 8,
+      "name": "minor-directional",
+      "lane": "legacy_sigma_squared_identity",
+      "status": "upstream_ineligible",
+      "old_targets_passed": false,
+      "old_completion_passed": false
+    },
+    {
+      "index": 9,
+      "name": "minor-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "status": "upstream_ineligible",
+      "old_targets_passed": false,
+      "old_completion_passed": false
+    },
+    {
+      "index": 10,
+      "name": "rotated-major-directional",
+      "lane": "legacy_sigma_squared_identity",
+      "status": "diagnostic_unknown",
+      "old_targets_passed": false,
+      "S_stable": true,
+      "N_stable": false,
+      "fixed_normal_covariance_rank": 3,
+      "training_nuisance_residual_energy": 2277.5654675579026,
+      "training_unique_covariance_energy": 2151.0232018087922,
+      "training_unique_energy_fraction": 0.9444396801972967,
+      "BGS_alpha": 0.04367013304576491,
+      "BGS_linearity_passed": true,
+      "heldout_before": {
+        "count": 16,
+        "max_abs": 17.964487513574852,
+        "rms": 7.962687111807588
+      },
+      "heldout_after": {
+        "count": 16,
+        "max_abs": 17.330639552176706,
+        "rms": 7.661497225470961
+      },
+      "descriptive_geometry_after_step": {
+        "available": true,
+        "centre_error_mm": 0.022684784144959617,
+        "fraction_error": 0.003302666236653873,
+        "model": [
+          "B",
+          "G",
+          "S"
+        ],
+        "radius_error_mm": 0.022045508046602436
+      }
+    },
+    {
+      "index": 11,
+      "name": "rotated-major-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "status": "diagnostic_unknown",
+      "old_targets_passed": false,
+      "S_stable": true,
+      "N_stable": false,
+      "fixed_normal_covariance_rank": 3,
+      "training_nuisance_residual_energy": 19.20306649183353,
+      "training_unique_covariance_energy": 17.903492977773098,
+      "training_unique_energy_fraction": 0.9323246881109797,
+      "BGS_alpha": 0.28566287897100173,
+      "BGS_linearity_passed": true,
+      "heldout_before": {
+        "count": 16,
+        "max_abs": 2.4510060822627224,
+        "rms": 1.039311806719105
+      },
+      "heldout_after": {
+        "count": 16,
+        "max_abs": 1.8034387182784144,
+        "rms": 0.7494623556532103
+      },
+      "descriptive_geometry_after_step": {
+        "available": true,
+        "centre_error_mm": 0.006864644412891811,
+        "fraction_error": 0.001436760482400934,
+        "model": [
+          "B",
+          "G",
+          "S"
+        ],
+        "radius_error_mm": 0.003807417899770016
+      }
+    }
+  ],
+  "scope": "Readable index only; all raw arrays remain in full lossless report. Fixed-normal conditional findings, not an optical cause, physical calibration or new target pass.",
+  "plan_sha256": "837c626d7add9ebc6927d60245b85c1ad9bd361adaf8205e4bf62a4efd322532",
+  "runner_sha256": "c4da819d3bf34bc4183fe55529d87acedc2946bf0fcdcd878ae2fd20eb3e7d69",
+  "auditor_sha256": "10c87e05f330d110f56a0740580af644b6117981d2eaea02ee31f820995d1e02",
+  "artifacts": [
+    {
+      "path": "studies/results/finite-residual-information-v1.json.gz",
+      "encoding": "gzip",
+      "bytes": 1738153,
+      "sha256": "eb7c0151f4a5c667e0cb6cf3f5e8dc49adf16965d2efe624a688cc4351182360",
+      "decoded_bytes": 8973743,
+      "decoded_sha256": "b1d15d4e006d1f65823cb6bd20810cd127d6d6ac6912973d590f38bd8acc6c74"
+    },
+    {
+      "path": "studies/results/finite-normal-rotation-saved-v1.json.gz",
+      "encoding": "gzip",
+      "bytes": 54227,
+      "sha256": "069456f7139c230de2334aa5033f6483431715197f45c5bace26409cba4b4845",
+      "decoded_bytes": 217943,
+      "decoded_sha256": "6e957b1da5df7ffe84ab949cea3e3c527311e9edeffbdbdcb8ffed6167a8bf71"
+    },
+    {
+      "path": "studies/fixtures/finite-residual-information-v1/prospective-plan-freeze-v1.json",
+      "encoding": "identity",
+      "bytes": 476,
+      "sha256": "23013786212d30703a1c64b7eeffbf3741840e4c157e133b22c42f8b96a51e32",
+      "decoded_bytes": 476,
+      "decoded_sha256": "23013786212d30703a1c64b7eeffbf3741840e4c157e133b22c42f8b96a51e32"
+    },
+    {
+      "path": "studies/fixtures/finite-residual-information-v1/canonical-preflight-freeze-v1.json",
+      "encoding": "identity",
+      "bytes": 5159,
+      "sha256": "ebb86ac550d2afe260bbab8228d70e968f3fadf44ebe5cddfa2b60afe9a0af35",
+      "decoded_bytes": 5159,
+      "decoded_sha256": "ebb86ac550d2afe260bbab8228d70e968f3fadf44ebe5cddfa2b60afe9a0af35"
+    },
+    {
+      "path": "studies/fixtures/finite-residual-information-v1/canonical-terminal-v1.json",
+      "encoding": "identity",
+      "bytes": 5386,
+      "sha256": "b8aca2499099f167cff7e1ba4c41785d1265c6360a03aa25efea4bcca151cb26",
+      "decoded_bytes": 5386,
+      "decoded_sha256": "b8aca2499099f167cff7e1ba4c41785d1265c6360a03aa25efea4bcca151cb26"
+    },
+    {
+      "path": "studies/fixtures/finite-residual-information-v1/canonical-v1.stdout.log",
+      "encoding": "identity",
+      "bytes": 392,
+      "sha256": "0320e3fa14c5620472de43435fe862d5597327a128379bc0d5efd94d74cebf99",
+      "decoded_bytes": 392,
+      "decoded_sha256": "0320e3fa14c5620472de43435fe862d5597327a128379bc0d5efd94d74cebf99"
+    },
+    {
+      "path": "studies/fixtures/finite-residual-information-v1/canonical-v1.stderr.log",
+      "encoding": "identity",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "studies/fixtures/finite-residual-information-v1/canonical-launcher-v1.py.txt",
+      "encoding": "identity",
+      "bytes": 2516,
+      "sha256": "7ee1c1231a569232fd948d7678904c427b9da292f66b846205fc0f548f5738ab",
+      "decoded_bytes": 2516,
+      "decoded_sha256": "7ee1c1231a569232fd948d7678904c427b9da292f66b846205fc0f548f5738ab"
+    },
+    {
+      "path": "studies/fixtures/finite-residual-information-v1/no-optimizer-contracts-v1.json.gz",
+      "encoding": "gzip",
+      "bytes": 12860,
+      "sha256": "ede86ee509a349dc13b1e6e282c47c74403f2c4b75a9e9cd4bbdcac0b69bc3e6",
+      "decoded_bytes": 106879,
+      "decoded_sha256": "fbe17a04becd05f2cf5dac495d03f9c838632e06f58cdc19c35dd21ca0f165ce"
+    },
+    {
+      "path": "studies/fixtures/finite-residual-information-v1/external-contracts-v1.json",
+      "encoding": "identity",
+      "bytes": 1737,
+      "sha256": "ce3a8b4be0a770eb4ede157eab6d22952381d1c9f357942c46f59d8f93b3ff42",
+      "decoded_bytes": 1737,
+      "decoded_sha256": "ce3a8b4be0a770eb4ede157eab6d22952381d1c9f357942c46f59d8f93b3ff42"
+    },
+    {
+      "path": "studies/fixtures/finite-residual-information-v1/independent-saved-audit-v1.json.gz",
+      "encoding": "gzip",
+      "bytes": 91225,
+      "sha256": "ce5303285a744a58f7db5a593cb0e79152c7f89e184f2282a315e8ea3e89f110",
+      "decoded_bytes": 1797988,
+      "decoded_sha256": "01d271083ade85eb052b402b9e5333e696966f1178978cf31fbfc89b20f059c1"
+    },
+    {
+      "path": "studies/fixtures/finite-residual-information-v1/independent-auditor-sentinels-v1.json",
+      "encoding": "identity",
+      "bytes": 3762,
+      "sha256": "ee48ca0613e7fd7b517bfaec806d4d8b06ecde39adc26bbb356b35b890a5b60a",
+      "decoded_bytes": 3762,
+      "decoded_sha256": "ee48ca0613e7fd7b517bfaec806d4d8b06ecde39adc26bbb356b35b890a5b60a"
+    },
+    {
+      "path": "studies/fixtures/finite-residual-information-v1/saved-rotation-freeze-v1.json",
+      "encoding": "identity",
+      "bytes": 579,
+      "sha256": "a6d9ccdae8661bf9b374176764fcba0cccfce9ad4115eb9026f938cc35f041ed",
+      "decoded_bytes": 579,
+      "decoded_sha256": "a6d9ccdae8661bf9b374176764fcba0cccfce9ad4115eb9026f938cc35f041ed"
+    },
+    {
+      "path": "studies/fixtures/finite-residual-information-v1/preflight-runner-4453703.py.txt",
+      "encoding": "identity",
+      "bytes": 67641,
+      "sha256": "445370309253d93d64f8905a91b70c8f57e5f6a4927af1e15c725c7b6f1bb89e",
+      "decoded_bytes": 67641,
+      "decoded_sha256": "445370309253d93d64f8905a91b70c8f57e5f6a4927af1e15c725c7b6f1bb89e"
+    },
+    {
+      "path": "studies/fixtures/finite-residual-information-v1/rotation-independent-audit-v1.json",
+      "encoding": "identity",
+      "bytes": 43999,
+      "sha256": "f5dacf405f1419fd42da76cbd387274d36478c3ca023c8996fc120e68606fd01",
+      "decoded_bytes": 43999,
+      "decoded_sha256": "f5dacf405f1419fd42da76cbd387274d36478c3ca023c8996fc120e68606fd01"
+    },
+    {
+      "path": "studies/fixtures/finite-residual-information-v1/rotation-independent-audit-v2.json",
+      "encoding": "identity",
+      "bytes": 44206,
+      "sha256": "28063d95ae0eda36a4bcea97da840bd644dd88e0bc375a24764c967d9f16dddf",
+      "decoded_bytes": 44206,
+      "decoded_sha256": "28063d95ae0eda36a4bcea97da840bd644dd88e0bc375a24764c967d9f16dddf"
+    },
+    {
+      "path": "studies/fixtures/finite-residual-information-v1/rotation-independent-audit-v2.py.txt",
+      "encoding": "identity",
+      "bytes": 10156,
+      "sha256": "b4c5c0974135cba000305bcfd78c987b7d256cbaad3fcf88731fee1ffda07687",
+      "decoded_bytes": 10156,
+      "decoded_sha256": "b4c5c0974135cba000305bcfd78c987b7d256cbaad3fcf88731fee1ffda07687"
+    }
+  ],
+  "posthoc_rotation_analysis": {
+    "report_sha256": "6e957b1da5df7ffe84ab949cea3e3c527311e9edeffbdbdcb8ffed6167a8bf71",
+    "source_sha256": "35579c70afff504e7af3d9a56ab4177c513090b5561737caa144e0061c7484dc",
+    "scope": "Separately labeled post-hoc saved-array consistency; no independent forward validation or replacement of originalunknownN/failedprotocol.",
+    "independent_saved_audit": {
+      "checks_passed": 13,
+      "scope": "Alternate scalar covariance coefficients and RAW centre Jacobian; saved-only consistency, not new forward validation.",
+      "initial_audit_schema_failure_retained": true
+    }
+  }
+}

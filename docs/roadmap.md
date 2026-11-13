@@ -32,13 +32,17 @@ fits with all earlier target passes retained. Its 2.75–3.91-second medians do
 not qualify interactive adoption. The moment initializer's background-sensitive
 proposals are experimental.
 
-The next proposed diagnostic is [local residual information](finite-residual-information.md):
-project brightness and geometry sensitivities out of covariance sensitivities,
-retain unresolved numerical directions, then test at most one bounded training-only
-step. It has no archived-data replay result yet. Before using it for optical
-inference, preserve the acquisition samples, transform, finite kernels and
-intermediate stage bytes in a new experiment; the existing portable fields do
-not reconstruct their original acquisition chain completely.
+The [local residual-information replay](validation/finite-residual-information.md)
+is complete with a failed normal-angle control. It retains fixed-normal
+covariance sensitivities and ten bounded training-only steps; normal-aware steps
+remain withheld. The [finite-chord normal derivative](finite-residual-information.md#finite-chord-shape-derivative-a-derived-proposal)
+now has an analytic derivation for valid affine and projective maps. An [experimental implementation and independent study](validation/finite-normal-derivative.md)
+now retain one work-limited query and a compressed-map error-estimation
+limitation. Next, investigate determinant conditioning and global adaptive error
+allocation with separately bound evidence; preserve both original failed studies.
+Before optical inference, preserve acquisition samples, transforms, finite
+kernels and intermediate stage bytes in a new experiment; the current portable
+fields do not reconstruct their original acquisition chain completely.
 
 The [engineering model and verification plan](engineering-model.md) defines the 2.5D scope, camera-model assumptions, dimension equations and evidence needed through prototype qualification. The independent source-height check optionally compares a user-bounded measurement with a user-defined allowance; it reports within, outside or inconclusive without assigning a physical accuracy or confidence level.
 
