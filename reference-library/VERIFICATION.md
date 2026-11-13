@@ -7,7 +7,7 @@ the existing dated receipt. The receipt, check date and release status were not
 regenerated for this correction.
 
 Repository documentation update, November 13: the
-[current review](../docs/validation/documentation-executed-recovery.md) links the
+[current review](../docs/validation/documentation-protected-controls.md) links the
 [local acquisition-recovery snapshot](../docs/finite-acquisition-recovery.md).
 That separate synthetic research retains 4/12 original matched target passes
 and 9/12 continuation passes; both earlier full protocols exited 1. The 459 focused tests
@@ -25,6 +25,12 @@ The later local [coupled search](../docs/finite-acquisition-coupled.md) and
 [saved-only audits](../docs/finite-acquisition-saved-audit.md) retain first
 failures and 28 historical precision unknowns. They do not refresh this
 library's release verification or add a Photos tool.
+
+The newer [protected-source-bin design](../docs/finite-acquisition-protected.md)
+fails eight first software controls, with 752 passes and 33 passing subtests.
+Its full recovery study has not run. The
+[first outcome](../docs/validation/finite-acquisition-protected.md) adds no
+library feature, release verification or physical acceptance.
 
 ## What was checked automatically
 

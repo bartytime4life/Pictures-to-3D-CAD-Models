@@ -1,7 +1,7 @@
 # Acquisition-aware geometry recovery
 
 This page records a separately frozen local research candidate, not an API
-installed or merged into the documented main revision `20cc57c`. The candidate
+installed or merged into the documented main revision `b259774`. The candidate
 source is retained locally; this documentation change does not publish its
 runtime, full raw captures or candidate ledgers. See the
 [result, source bindings and audit limits](validation/finite-acquisition-recovery.md).
@@ -34,6 +34,11 @@ The [completed results](validation/finite-acquisition-continuations.md) and
 [saved-only audits](finite-acquisition-saved-audit.md) retain the remaining PNG
 miss, first failures and 28 historical precision unknowns. Candidate code and
 complete local ZIPs remain separate from this main runtime and workbench UI.
+
+The newer [protected-source-bin design](finite-acquisition-protected.md) fails
+eight first software controls. Its full recovery study has not run. See the
+[first outcome and evidence](validation/finite-acquisition-protected.md) before
+considering further recovery experiments or integration.
 
 ## Model and brightness elimination
 

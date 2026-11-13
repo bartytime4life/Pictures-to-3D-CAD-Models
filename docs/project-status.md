@@ -1,9 +1,9 @@
 # Source scope and verification status
 
-## Current source snapshot — November 13, 2026, 20:44 UTC
+## Current source snapshot — November 13, 2026, 21:38 UTC
 
-Main is `20cc57ced925097d7b0a60d13415423b200af75c`, tree
-`ec9aa0478556a21e7be890d6d56317904a633435`. It includes the source-cell mean
+Main is `b2597749bdeab040f25b330f77d43cd1657194bc`, tree
+`f1e83e9e8c3045908a37df6f346c00b45f0a49fc`. It includes the source-cell mean
 from [PR #105](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/105),
 the two-direction edge-width repair from
 [PR #107](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/107),
@@ -19,7 +19,16 @@ merged at 18:59 UTC. Documentation
 merged at 19:25:32 UTC and added the local recovery snapshot. Documentation
 [PR #112](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/112)
 merged at 20:23:44 UTC and added the then-unexecuted coupled proposal; its tree
-matches this main revision. PR #106 merged into its research
+was the preceding main revision. Documentation
+[PR #113](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/113)
+merged at 20:54:25 UTC and recorded the executed coupled/source-event studies
+and corrected saved-only audit. The edge-blur correction in
+[PR #114](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/114)
+merged at 21:33:06 UTC; its merge tree is this main revision. It removes fitted
+paper-light variation before remeasuring supported edge widths on traces with
+zero entered thickness. Positive-thickness traces retain the preceding width
+path. See [eligibility, regressions and limits](reference-sheet.md#3-segmentation-and-sub-pixel-edges).
+PR #106 merged into its research
 base after PR #105 closed; its documentation reached main through PR #108.
 
 | Capability in this source | Scope and evidence |
@@ -39,12 +48,14 @@ Hosted checks are tied to their published heads:
 | PR #110, `8c72d873ae7871584f5c2ca9d12ac5d4bbdfab96` | [43484991562](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43484991562): completed, success | [43484991878](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43484991878): completed, success |
 | PR #111, `b6ba24992260d49fd0a88a53057799c4f7c85e67` | [43491926326](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43491926326): completed, success | [43491926158](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43491926158): completed, success |
 | PR #112, `42f78743d4abeb84d96e100a2aa0849a11e470f6` | [43497998820](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43497998820): completed, success | [43497998949](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43497998949): completed, success |
+| PR #113, `6b6683e7bbcb733c3c7d147b3508d4f08d86efe8` | [43505482613](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43505482613): completed, success | [43505482801](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43505482801): completed, success |
+| PR #114, `918410db522c35c3582391a1ad8035195db46f34` | [43510351302](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43510351302): in progress at readback | No PR-triggered reference-library run listed at readback |
 
 These readbacks do not extend a run to the combined main commit or this later
 documentation change. Merge, hosted checks, installed runtime, real-camera
 accuracy and physical acceptance remain separate.
 
-The [documentation review](validation/documentation-executed-recovery.md) audits this
+The [documentation review](validation/documentation-protected-controls.md) audits this
 main-based source. Use [available tools](#available-here) and [remaining integration work](#remaining-integration-work)
 for current capabilities. Earlier snapshots below are historical records; their open
 PR states and absent-module statements describe their own source and time.
@@ -86,6 +97,14 @@ accuracy. Four complete ZIPs have local member hash/size readback; candidate
 runtime, auditor source, complete ZIPs and full candidate ledgers/arrays are
 outside this documentation publication.
 
+The newest [protected-source-bin proposal](finite-acquisition-protected.md) at
+`79522b5` fails its first software controls: **eight failures, 752 passes and
+33 passing subtests**, exit 1. Seven known-feasible projection cases reach the
+iteration limit; an overflow case escapes numerical-error handling. **No full
+protected recovery study ran**, so this method has no new matched-case score.
+The [first outcome and evidence](validation/finite-acquisition-protected.md)
+remain separate from the earlier completed recovery protocols and main runtime.
+
 ## Available here
 
 The single-user workbench traces one planar, constant-thickness part, uses
@@ -100,7 +119,12 @@ Current main also fits a nonnegative soft-shadow kernel from paper around the
 part and uses a normalized excess-error diagnostic before applying its modelled
 edge level. The near band also selects smoothness, so this is not untouched
 validation. When prior selection lacks enough data, that diagnostic is zero
-by construction. Rejected shadows retain the line method and a trace note. The
+by construction. Rejected shadows retain the line method and a trace note. When a fitted model is accepted and removes at least 3 % of the paper light,
+traces with zero entered thickness remeasure blur with its light variation
+removed, then refit the shadow. Positive-thickness traces keep the previous
+width path because the wall/support model has known failures with the changed
+width. The [new synthetic result](validation.md#the-blur-beside-a-shadow--november-13-2026)
+retains small-hole and sharp-corner regressions and extra trace time. The
 [paper-light record](validation.md#the-papers-light-as-a-fitted-shadow--november-13-2026)
 retains synthetic improvements, regressions and partial contact-shadow recovery;
 this is separate from the known-map acquisition experiment.

@@ -282,6 +282,11 @@ The [completed results](validation/finite-acquisition-continuations.md) and
 miss, first failures and 28 historical precision unknowns. Candidate code and
 complete local ZIPs remain separate from this main runtime and workbench UI.
 
+The newer [protected-source-bin design](finite-acquisition-protected.md) fails
+eight first software controls. Its full recovery study has not run. See the
+[first outcome and evidence](validation/finite-acquisition-protected.md) before
+considering further recovery experiments or integration.
+
 A source-derived straight-edge direction may still align the display and
 profile when a ring is retained as line geometry. The rigid rotation preserves
 distances and radii; axis-aligned width and height depend on that frame. This

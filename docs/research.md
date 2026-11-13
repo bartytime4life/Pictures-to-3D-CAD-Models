@@ -83,6 +83,11 @@ The [completed results](validation/finite-acquisition-continuations.md) and
 miss, first failures and 28 historical precision unknowns. Candidate code and
 complete local ZIPs remain separate from this main runtime and workbench UI.
 
+The newer [protected-source-bin design](finite-acquisition-protected.md) fails
+eight first software controls. Its full recovery study has not run. See the
+[first outcome and evidence](validation/finite-acquisition-protected.md) before
+considering further recovery experiments or integration.
+
 The [original selected design reference](images/design-reference.png) is a generated concept. The [recorded workbench screenshot](images/workbench.png) is browser-rendered implementation evidence; the [guided-workbench review](validation/guided-workbench.md) records the reviewed interaction, screenshots and evidence date. The sample photograph is generated demonstration input and is traced by the real conversion pipeline; it is not a measured reference specimen.
 
 ## Image to outline

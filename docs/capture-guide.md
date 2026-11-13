@@ -23,6 +23,13 @@ The bundled sample uses ordinary tracing with demonstration measurements. Choosi
 
 Upload a still PNG, JPEG, WebP, HEIC, or AVIF of at most **32 MiB** and **70 million decoded pixels**, with both dimensions at least 16 pixels. That covers phone cameras' 12 to 64 megapixel modes, so a photo can be used as the camera saved it. Animated images are rejected. A HEIC's stored rotation is applied, and a HEIC burst uses its primary image. A camera JPEG that embeds a preview or second view (MPO) is accepted, and only its primary image is traced. A 16-bit grayscale PNG is reduced to 8 bits before tracing. For ordinary tracing, the backend applies image orientation and downsizes the longest side to at most **1400 pixels**. A reference-sheet photo is traced at full resolution up to 16 megapixels; a larger one is first reduced to 16 megapixels by averaging linear light, which keeps edges in place, and a notice says so. If the orientation metadata is damaged, the image is traced as stored and a warning says so; check that the outline is oriented like the part before measuring. Inspect the resulting outline rather than assuming that every original pixel became a geometric feature.
 
+A fitted soft-shadow correction does not replace diffuse lighting or independent
+measurements. Its blur remeasurement currently applies only to traces with zero
+entered thickness and an accepted model taking at least 3 % of the light.
+Positive-thickness traces retain the preceding width path because the changed
+width exposes wall/support failures. Enter the part's real thickness; see
+[the method and limits](reference-sheet.md#3-segmentation-and-sub-pixel-edges).
+
 ## Review the outline before measuring
 
 Look at both the outer boundary and each interior boundary. A dark marking can be mistaken for a hole, and a true hole can disappear if its background is too dark. The model will extrude the selected profile, so an incorrect trace remains incorrect after scaling.

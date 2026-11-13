@@ -28,6 +28,13 @@ unresolved saved-audit comparisons. This is a documentation update, not a librar
 release or an addition to main's runtime or the Photos tab. The handbook text,
 generated HTML/PDF, catalog, release counts and dated verification stay unchanged.
 
+### Protected-projection research navigation — November 13, 2026
+
+Link the [protected-source-bin design](../docs/finite-acquisition-protected.md)
+and its [eight failed first software controls](../docs/validation/finite-acquisition-protected.md).
+The full recovery study has not run. This documentation does not change the
+library release, generated reader/PDF or dated verification.
+
 ### Executed research navigation — November 13, 2026
 
 Link the [coupled and source-event results](../docs/validation/finite-acquisition-continuations.md)
