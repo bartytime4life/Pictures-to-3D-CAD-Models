@@ -82,6 +82,16 @@ conversion changes no comparison category. Its
 includes the recorded source. It neither retests current main's newer
 shadow-lighting model nor adds automatic intensity fitting.
 
+The experimental [source-cell acquisition API](docs/finite-acquisition-mean.md)
+now evaluates the declared discrete stages directly. Its
+[qualification](docs/validation/finite-acquisition-mean.md) retains all 32 saved
+output records and 128 passing comparisons; analytic-geometry query discrepancies
+are at most 0.0000763 unquantized and 0.0000306 sRGB8 intensity levels, with no
+changed encoding codes. The [archive](studies/fixtures/finite-acquisition-mean-v1/README.md)
+preserves first control failures, audit arithmetic discrepancies and the later
+workspace correction. Independent derivatives and prospective geometry recovery
+remain unqualified; this API adds no automatic correction or camera calibration.
+
 Final fitted arcs also need [circle-consistent joins](docs/curved-joins.md).
 An unavailable join keeps an affected outline for review when valid, with a
 notice; it does not supply a measured radius. Check

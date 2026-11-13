@@ -93,6 +93,16 @@ come from rendered photographs.
 
 ### Source-bound acquisition evidence
 
+The subsequent developer-only
+[source-cell acquisition mean](finite-acquisition-mean.md) composes independent
+analytic cell coverage with explicit discrete kernels, grayscale encoding and
+signed Keys resampling. It does not call the Gaussian mean, inverse fitter or
+HTTP pipeline. Its supplied affine map takes output pixel centres directly to
+source array indices, a separate contract from photo geometric coordinates.
+The [complete study](validation/finite-acquisition-mean.md) retains all stage
+arrays, initial failures and source/workspace corrections. Existing Gaussian
+derivatives cannot be attached unchanged, especially through quantization.
+
 The [completed finite-material acquisition study](validation/finite-acquisition-operator.md)
 is a developer forward experiment, not an HTTP capability or an automatic trace
 step. It compares supplied true finite-D geometry and levels with an explicit

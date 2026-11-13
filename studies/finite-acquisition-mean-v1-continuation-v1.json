@@ -1,0 +1,24 @@
+{
+  "format": "finite-acquisition-mean-control-continuation-v1",
+  "original_source_commit": "489990e048d74c58d95bd1f7632ab7fb747e8187",
+  "first_focused_run": "studies/fixtures/finite-acquisition-mean-v1/first-focused.json",
+  "original_log_sha256": "be1efd6973b26320dd38c6e11cc1db7b1c6c7ab9916d8ba03011c9652867f937",
+  "original_failed": 12,
+  "original_passed": 122,
+  "scope": "Admit only interior circle-root parameter representation repair; original plan/tests/thresholds/stage model/runner unchanged. No complete capture replay has yet started.",
+  "admitted_helper": {
+    "path": "backend/finite_aperture.py",
+    "before_sha256": "4f81609a21bddf35243912f988a09d850d052c7efc7b27ee6a55c5cfbba99d12",
+    "after_sha256": "75f29a04133ffd142144607a7c7153e12de159ba7c632e01fd46751fa14cd7b5",
+    "repair": "Bounded128/256/512-bit exact integer-sqrt enclosures and rational interior cuts only when binary64 cuts collapse; preserve exact topology, no endpoint snapping."
+  },
+  "unchanged_inputs": {
+    "backend/finite_acquisition.py": "111409dcbd3e916382e47fc3a7c4930cc790ab0c02e4e06152ebf2097baf95f8",
+    "tests/test_finite_aperture.py": "e2ec4013126986a80c0e1fea2b6546d3e8bd62dbfb73462cf60f1f8ef5548766",
+    "tests/test_finite_acquisition.py": "cf605a5cb94edd16bd0572afd15a83671ec61b8f40a263fcbe3ae9be8e46d475",
+    "studies/finite-acquisition-mean-v1.json": "0f8f927b99834726e2f78ea332d69978cf1a3ce94bd4d79073b51aa31a7829e3",
+    "studies/verification/finite-acquisition-mean-v1.py": "19372c639b7008f1813db58ba638a5c270ae463f9ca96f37f8952af92394aad7"
+  },
+  "reuse_of_prior_numerical_controls": false,
+  "next_execution": "Rerun focused134controls undernewfrozenHEAD; complete32record/128call savedcapture replay only after these pass."
+}
