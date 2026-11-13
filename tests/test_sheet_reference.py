@@ -306,6 +306,32 @@ def test_a_shadow_fitted_round_the_part_keeps_its_sizes_under_a_wide_blur(client
     assert any("sharper than its fitted model" in note for note in profile["reference"]["notes"])
 
 
+def test_a_two_way_part_under_a_turned_blur_is_traced_with_each_way_s_width(client, monkeypatch):
+    """A sharp-cornered 120 x 70 mm rectangle faces two ways, so its blur cannot be
+    fitted as a covariance. Under a 3 x 1 px blur turned 30 degrees every edge was
+    traced with the median width, 1.95 px, while the short sides' own was 3.56 px;
+    their paper windows lay inside the step's tail, and the fitted lines stood 0.45 mm
+    short. The blur-rounded corner arcs had stood proud of the lines and hid most of it
+    (0.079 mm); once the final joins kept fitted circles exact, one of them missed its
+    line, the boundary was kept as a traced outline, and it read 0.317 mm off. Each
+    edge is now searched with its own direction's width (edges.edge_widths_by_direction):
+    0.004 mm, with the joins resolved, and the trace says the blur differs by direction."""
+    from shapely.geometry import box
+
+    monkeypatch.setattr(S, "part_local", lambda: box(-60, -35, 60, 35))
+    clean = {"k1": 0.0, "shadow": 0.0, "gradient": 0.0, "noise": 0.0, "quality": 100}
+    data, _ = S.render(blur=(3.0, 1.0, 30.0), tilt=(0.0, 0.0, 4.0), **clean)
+    response = trace(client, data, reference="a4")
+    assert response.status_code == 200, response.text
+    profile = response.json()["profile"]
+    outer = np.array(profile["outer"]) * profile["reference"]["mm_per_px"]
+    (_, _), (w, h), _ = cv2.minAreaRect(outer.astype(np.float32))
+    assert max(abs(max(w, h) - 120), abs(min(w, h) - 70)) < 0.02
+    notes = profile["reference"]["notes"]
+    assert any("edge blur differs by direction" in note for note in notes)
+    assert not any("kept as a traced outline" in note for note in notes)
+
+
 def test_a_directional_blur_is_measured_by_direction_and_stays_within_limits(client):
     """The scientific model review's directional-blur case: the sensor blur is 1 px
     across and 3 px along the photo (a shaken camera). One median blur width for every

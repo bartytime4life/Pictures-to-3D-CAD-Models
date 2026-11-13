@@ -311,6 +311,80 @@ def edge_covariance(g, points, normals, sigma, step=0.125, min_ratio=None):
     return cov
 
 
+def edge_widths_by_direction(g, points, normals, sigma, step=0.125):
+    """Each direction bin's blur width (px, its clean profiles' median), NaN where a bin
+    has fewer than MIN_PER_BIN clean single-step profiles, each bin's count of clean
+    profiles and its normals' mean direction (radians, modulo pi); None without two
+    measured bins.
+
+    When the blur is not measured as a covariance (edge_covariance: a part whose edges
+    face two ways, or a blur that one Gaussian covariance does not explain), each
+    direction's width across its edges is still measured directly. As there, the
+    windows reach 5 times the expected width (at least 8 px): a first pass at 5 sigma,
+    then one at 5 times each bin's own width.
+    """
+    if len(points) < 2 * MIN_PER_BIN or sigma <= 0:
+        return None
+    angle = np.degrees(np.arctan2(normals[:, 1], normals[:, 0])) % 180.0
+    direction = np.floor(angle / (180.0 / DIRECTION_BINS)).astype(int) % DIRECTION_BINS
+    expected = np.full(len(points), float(sigma))
+    medians = np.full(DIRECTION_BINS, np.nan)
+    for _ in range(2):
+        widths = _edge_widths(g, points, normals, np.maximum(8.0, 5 * expected), step, single_step=True)
+        ok = np.isfinite(widths)
+        counts = np.bincount(direction[ok], minlength=DIRECTION_BINS)
+        medians = np.array([
+            float(np.median(widths[ok & (direction == b)])) if counts[b] >= MIN_PER_BIN else np.nan
+            for b in range(DIRECTION_BINS)
+        ])
+        if np.isfinite(medians).sum() < 2:
+            return None
+        expected = np.where(np.isfinite(medians[direction]), medians[direction], expected)
+    # Normals are directions modulo pi: their mean is half the doubled angles' mean.
+    doubled = np.exp(2j * np.radians(angle))
+    means = np.array([
+        float(np.angle(doubled[ok & (direction == b)].mean()) / 2) % math.pi if counts[b] else np.nan
+        for b in range(DIRECTION_BINS)
+    ])
+    return medians, counts, means
+
+
+def _spread_by_direction(normals, medians):
+    """Each normal's width from its own direction bin, or the angularly nearest bin
+    that was measured (edge_widths_by_direction)."""
+    centres = (np.arange(DIRECTION_BINS) + 0.5) * (180.0 / DIRECTION_BINS)
+    measured = np.flatnonzero(np.isfinite(medians))
+    angle = np.degrees(np.arctan2(normals[:, 1], normals[:, 0])) % 180.0
+    gap = np.abs(angle[:, None] - centres[measured][None, :])
+    gap = np.minimum(gap, 180.0 - gap)
+    return medians[measured][np.argmin(gap, axis=1)]
+
+
+def _covariance_from_directions(medians, counts, means):
+    """A positive-definite covariance whose spread across the two best-supported
+    measured direction bins equals their widths, for the shadow model's blur when no
+    covariance is fitted, or None. Aligned with the first bin's normal n1:
+    S = w1^2 n1 n1' + beta n1p n1p', where n1p is n1 turned a quarter, and
+    n2' S n2 = w2^2 gives beta = (w2^2 - w1^2 cos^2 t) / sin^2 t, t being the angle
+    between the bins' mean normals. The cross term in that frame is not measured and is
+    taken as 0."""
+    measured = np.flatnonzero(np.isfinite(medians))
+    if len(measured) < 2:
+        return None
+    first, second = measured[np.argsort(-counts[measured], kind="stable")[:2]]
+    angles = means[[first, second]]
+    t = angles[1] - angles[0]
+    if abs(math.sin(t)) < 0.3:
+        return None
+    w1, w2 = medians[first], medians[second]
+    beta = (w2**2 - w1**2 * math.cos(t) ** 2) / math.sin(t) ** 2
+    if beta <= 0:
+        return None
+    n1 = np.array([math.cos(angles[0]), math.sin(angles[0])])
+    n1p = np.array([-n1[1], n1[0]])
+    return w1**2 * np.outer(n1, n1) + beta * np.outer(n1p, n1p)
+
+
 def subpixel_rings(mask, g, ppm):
     """Outer boundary and holes of the mask at the local half-level, sub-pixel.
 
@@ -378,18 +452,36 @@ def subpixel_rings(mask, g, ppm):
         # 1 / sqrt(det S). The isotropic equivalent is therefore det(S)^(1/4), the
         # geometric mean of the principal spreads, not their quadratic mean.
         sigma = float(np.linalg.det(covariance) ** 0.25)
+    by_direction = None
+    model_covariance = covariance
+    if covariance is None:
+        # Without a covariance each direction's width is still measured directly; where
+        # the directions differ as a shaken camera's do, each edge is searched with its
+        # own. A sharp-cornered rectangle under 3 x 1 px turned 30 degrees, whose two
+        # edge directions cannot fit a covariance, read its short sides' blur as 3.56 px
+        # and was traced with the median 1.95 px: its paper windows lay inside the
+        # step's own tail, and the outline read 0.45 mm short between its fitted lines.
+        measured = edge_widths_by_direction(
+            g, np.vstack([p for p, _ in sampled]), np.vstack([n for _, n in sampled]), sigma
+        )
+        if measured is not None and np.nanmax(measured[0]) > DIRECTIONAL_RATIO * np.nanmin(measured[0]):
+            by_direction = measured[0]
+            # The shadow model blurs its kernel and the step's own tail as the photo
+            # does; with one width it read the wider edges' tail as shadow beside them.
+            model_covariance = _covariance_from_directions(*measured)
     # The paper's light round the part, fitted once as a soft shadow (shadow.py): the
     # second pass places each edge against it where it is adequate.
-    light = shadow.fit_paper_light(g, mask, ppm, sigma, covariance)
+    light = shadow.fit_paper_light(g, mask, ppm, sigma, model_covariance)
     paper_light = light if light.info["used"] else None
     rings = []
     for is_outer, points, support, indices in first:
         _, normals = ring_normals(points)
-        spread = (
-            np.sqrt(np.einsum("ij,jk,ik->i", normals, covariance, normals))
-            if covariance is not None
-            else np.full(len(points), sigma)
-        )
+        if covariance is not None:
+            spread = np.sqrt(np.einsum("ij,jk,ik->i", normals, covariance, normals))
+        elif by_direction is not None:
+            spread = _spread_by_direction(normals, by_direction)
+        else:
+            spread = np.full(len(points), sigma)
         # Which side of each point the paper is on, from the classified mask 3 sigma out.
         probe = np.rint(points + 3 * spread[:, None] * normals - 0.5).astype(int)
         probe = np.clip(probe, 0, np.array(mask.shape[::-1]) - 1)

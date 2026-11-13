@@ -15,6 +15,16 @@
   [Method](finite-acquisition-mean.md) · [evidence](validation/finite-acquisition-mean.md)
   · [archive](../studies/fixtures/finite-acquisition-mean-v1/README.md).
 
+## Two-way parts under a directional blur — November 13, 2026
+
+- A part whose edges face two ways, such as a sharp-cornered rectangle, cannot have
+  its blur fitted as a covariance; each edge is now searched with its own
+  direction's measured width where the directions differ, and the soft-shadow model
+  is blurred to match. Under a 3 × 1 px shaken-camera blur such rectangles read
+  0.28–0.55 mm off, three of them kept as traced outlines; every rectangle case that
+  changed now reads 0.002–0.020 mm. Nothing else changed
+  ([reference-sheet tracing](reference-sheet.md), §3).
+
 ## Acquisition evidence and documentation refresh — November 13, 2026
 
 - Retain 16 synthetic source scenes, 32 paired output-scale records and all 128
