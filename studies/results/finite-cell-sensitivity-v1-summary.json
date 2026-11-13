@@ -1,0 +1,155 @@
+{
+  "format": "finite-cell-sensitivity-result-summary-v1",
+  "source_commit": "c47214d098a234f28784cb174429e687e799a2bf",
+  "plan_sha256": "3968d7336fe153f0e7f5631a85c0eaa834130fd68f6d38c9b4bc753bbd5927f5",
+  "protocol_passed": true,
+  "rows": 33,
+  "regular_cells": 18,
+  "whole_grids": 4,
+  "special_cases": 11,
+  "api_calls": {
+    "attempted": 58,
+    "returned": 58
+  },
+  "cell_statuses": {
+    "nondifferentiable": 2,
+    "parameter_endpoint": 2,
+    "resolved": 7823,
+    "unresolved": 0,
+    "work_limit": 4
+  },
+  "cell_work": {
+    "performed_work": 7827,
+    "required_work": 7831
+  },
+  "software_tests": {
+    "passed": 259,
+    "source_commit": "c47214d098a234f28784cb174429e687e799a2bf",
+    "full_application_suite_rerun": false
+  },
+  "saved_audits": {
+    "math_portable_checks": 57970,
+    "artifact_portable_checks": 315826,
+    "implementation_static_saved_checks": 8471,
+    "all_reference_maxima_independently_recomputed": false
+  },
+  "new_captures": 0,
+  "optimizer_calls": 0,
+  "geometry_recovery_qualified": false,
+  "physical_qualification": false,
+  "limitations_path": "studies/fixtures/finite-cell-sensitivity-v1/qualification-scope.json",
+  "artifacts": [
+    {
+      "path": "studies/fixtures/finite-cell-sensitivity-v1/first-run.log.gz",
+      "encoding": "gzip",
+      "stored_bytes": 410,
+      "sha256": "951d1abfd0934155b415d3a36734c5295ef92773945de7a4f946fec1430dddd5",
+      "decoded_bytes": 1229,
+      "decoded_sha256": "972bcc1885505c26d5eea411ab5d3d13e2bfb33717ba018f50df758bea90bf38"
+    },
+    {
+      "path": "studies/fixtures/finite-cell-sensitivity-v1/qualification-scope.json",
+      "encoding": "raw",
+      "stored_bytes": 1583,
+      "sha256": "26110eff2360c367b231e4dfda22e2dd48fbd46495b97644d0785741d22ee61f",
+      "decoded_bytes": 1583,
+      "decoded_sha256": "26110eff2360c367b231e4dfda22e2dd48fbd46495b97644d0785741d22ee61f"
+    },
+    {
+      "path": "studies/fixtures/finite-cell-sensitivity-v1/recorded-source.zip",
+      "encoding": "raw",
+      "stored_bytes": 249239,
+      "sha256": "cf896934f7ce83280e77785dfa83a13a39219660d1c7a0ba33bde0123bccef9a",
+      "decoded_bytes": 249239,
+      "decoded_sha256": "cf896934f7ce83280e77785dfa83a13a39219660d1c7a0ba33bde0123bccef9a"
+    },
+    {
+      "path": "studies/fixtures/finite-cell-sensitivity-v1/review/artifact-audit-initial.py.txt",
+      "encoding": "raw",
+      "stored_bytes": 29535,
+      "sha256": "aa64303c10963eafa00beac3946798b5ca0f30055756ac6b8ae7a6e998bb8481",
+      "decoded_bytes": 29535,
+      "decoded_sha256": "aa64303c10963eafa00beac3946798b5ca0f30055756ac6b8ae7a6e998bb8481"
+    },
+    {
+      "path": "studies/fixtures/finite-cell-sensitivity-v1/review/artifact-receipt-final.json",
+      "encoding": "raw",
+      "stored_bytes": 10513,
+      "sha256": "0d85a0a50f1730eb521ee7cb6a288a5fdc77f16d7206e8af6bee943fc2a4349b",
+      "decoded_bytes": 10513,
+      "decoded_sha256": "0d85a0a50f1730eb521ee7cb6a288a5fdc77f16d7206e8af6bee943fc2a4349b"
+    },
+    {
+      "path": "studies/fixtures/finite-cell-sensitivity-v1/review/artifact-receipt-first.json",
+      "encoding": "raw",
+      "stored_bytes": 10513,
+      "sha256": "5f9db59bf566f6e9876e438694925c7431758184ca5d4fd31affbd613883dbb6",
+      "decoded_bytes": 10513,
+      "decoded_sha256": "5f9db59bf566f6e9876e438694925c7431758184ca5d4fd31affbd613883dbb6"
+    },
+    {
+      "path": "studies/fixtures/finite-cell-sensitivity-v1/review/implementation-audit.py.txt",
+      "encoding": "raw",
+      "stored_bytes": 14806,
+      "sha256": "d977950140709d72ece1f5c2d38a09deb10aeca3f2f171d596f0f6db7efb87c1",
+      "decoded_bytes": 14806,
+      "decoded_sha256": "d977950140709d72ece1f5c2d38a09deb10aeca3f2f171d596f0f6db7efb87c1"
+    },
+    {
+      "path": "studies/fixtures/finite-cell-sensitivity-v1/review/implementation-receipt-first.json.gz",
+      "encoding": "gzip",
+      "stored_bytes": 27764,
+      "sha256": "e6807029b40d9af659156219133d8f503288330d0ace82ee8650f2afa5944bd5",
+      "decoded_bytes": 720831,
+      "decoded_sha256": "40a89ae893267c777e763009a9a0376db328c990af91f969801a5a9db3c43100"
+    },
+    {
+      "path": "studies/fixtures/finite-cell-sensitivity-v1/review/math-audit.py.txt",
+      "encoding": "raw",
+      "stored_bytes": 28709,
+      "sha256": "e36146c34c8f89fdaa43659ae575bbf30dffd11cbddec4d0ce315524b9d4625b",
+      "decoded_bytes": 28709,
+      "decoded_sha256": "e36146c34c8f89fdaa43659ae575bbf30dffd11cbddec4d0ce315524b9d4625b"
+    },
+    {
+      "path": "studies/fixtures/finite-cell-sensitivity-v1/review/math-receipt-first.json.gz",
+      "encoding": "gzip",
+      "stored_bytes": 7840,
+      "sha256": "32e162710029363b4e508b8d9c486b4064da9a96a71dfd3e20f81d1e0b705dc6",
+      "decoded_bytes": 51207,
+      "decoded_sha256": "1ffbbec96d65775c205c7d9322c470c5b97b0b14233406814aed0e46eb5e6feb"
+    },
+    {
+      "path": "studies/fixtures/finite-cell-sensitivity-v1/review/math-receipt-portable.json.gz",
+      "encoding": "gzip",
+      "stored_bytes": 7892,
+      "sha256": "0f61d9fe619bab505c53ddfcf41d07430aacd257aac9210dd0befb538007af50",
+      "decoded_bytes": 51273,
+      "decoded_sha256": "45522515fcc416d15ab51ea5c5883cc27356672348720cba3b0367ae0cd599e9"
+    },
+    {
+      "path": "studies/fixtures/finite-cell-sensitivity-v1/software/first-focused.log.gz",
+      "encoding": "gzip",
+      "stored_bytes": 73,
+      "sha256": "5956cb8335d2e304cd00e3b0e4d7343a1e936c32d534e8c29b5cc59712793fd8",
+      "decoded_bytes": 340,
+      "decoded_sha256": "552eb6b3fced2d741cf976c1901aa57002443ffc473803273249ef0b9ac5707d"
+    },
+    {
+      "path": "studies/results/finite-cell-sensitivity-v1.json.gz",
+      "encoding": "gzip",
+      "stored_bytes": 123770,
+      "sha256": "a4a81fd5fd1376b22f5c7889f7bed58423fe9d7ffca4260b2ee865d504b5ffc5",
+      "decoded_bytes": 4236100,
+      "decoded_sha256": "d72bff9c6a7f8b96b540a006623a59f8dfcc9b969f69e97f885eca09bec7be59"
+    },
+    {
+      "path": "studies/verification/finite-cell-sensitivity-artifact-audit-v1.py",
+      "encoding": "raw",
+      "stored_bytes": 34936,
+      "sha256": "7498829ef2613a41de1131408abe979fa60917667891b99b46a60e87c3ad68fe",
+      "decoded_bytes": 34936,
+      "decoded_sha256": "7498829ef2613a41de1131408abe979fa60917667891b99b46a60e87c3ad68fe"
+    }
+  ]
+}

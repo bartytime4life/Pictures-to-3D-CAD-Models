@@ -1,0 +1,24 @@
+{
+  "format": "finite-cell-sensitivity-qualification-scope-v1",
+  "governing_source_commit": "c47214d098a234f28784cb174429e687e799a2bf",
+  "frozen_plan_unchanged": true,
+  "new_scientific_calls": 0,
+  "clarifications": [
+    {
+      "topic": "linear reference wording",
+      "original_plan_text": "fixed independent exact/decimal and explicit border/interpolation controls in tests/test_finite_acquisition_linear.py; six-channel linearity, cancellation, raw coefficient sums, input/hash isolation, resource refusals and immutable outputs",
+      "actual_controls": "Independent unfactored Keys cubics, backward stencil scatter and math.fsum in binary64, plus exact elementary dyadic controls. No Decimal/Fraction general linear oracle was executed.",
+      "effect": "Scope overstatement only; original source, thresholds, results and plan preserved."
+    },
+    {
+      "topic": "complement reference retention",
+      "actual_record": "Candidate complement arrays and independent full-disk reference scalar maxima are saved; per-cell full-disk reference arrays are not.",
+      "effect": "Saved-only audit can recompute fraction/angle cancellation and inspect scalar gates; it cannot independently reconstruct coverage/centre/radius reference maxima without new reference evaluations."
+    },
+    {
+      "topic": "identifiability",
+      "actual_record": "Five coupled derivative columns are checked on five query pixels.",
+      "effect": "This does not establish five-geometry-parameter rank after profiling two brightness nuisance levels or demonstrate recovery."
+    }
+  ]
+}

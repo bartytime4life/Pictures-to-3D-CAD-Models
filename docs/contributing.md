@@ -60,7 +60,7 @@ For a documentation-only pass, compare every tracked non-document blob with
 the declared base before and after verification. Preserve accurate historical
 reports and generated library outputs. Library source edits still follow its
 generation rules; a workbench-only navigation change needs no library rebuild.
-The [latest documentation review](validation/documentation-acquisition-state.md)
+The [preceding documentation review](validation/documentation-mean-state.md)
 shows one scoped verification record.
 
 ## Keep documentation and evidence aligned

@@ -5,7 +5,23 @@ record below to assess its evidence. This page separates local checks, hosted
 CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
+## Unrounded cell sensitivities — November 13, 2026
+
+The [first frozen qualification](validation/finite-cell-sensitivity.md) passes
+259 focused tests and 33 prescribed study rows. It checks five unrounded area
+columns and separate signed linear propagation. Across 58 calls, 7,823 cell
+Jacobians resolve; two nondifferentiable, two endpoint and four budget-unknown
+cells remain explicit. This is derivative evidence, without geometry recovery.
+The full report, source ZIP and saved-only audits remain in the
+[portable archive](../studies/fixtures/finite-cell-sensitivity-v1/README.md),
+with the original plan wording and incomplete complement-reference retention
+documented as limitations.
+
 ## Independent source-cell acquisition mean — November 13, 2026
+
+The subsequent [documentation review](validation/documentation-mean-state.md)
+checks navigation, the executable example and API/source consistency without
+rerunning or relabeling the numerical qualification below.
 
 The [complete comparison](validation/finite-acquisition-mean.md) retains all 128
 new forward means across 16 saved synthetic scenes/32 output records. Analytic-D
