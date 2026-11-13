@@ -1,0 +1,1574 @@
+{
+  "canonical_decoded_sha256": "603a39888033cb6db21eb164fbc517ca3cafba942d30fe09321d0028aafecf6e",
+  "criteria": {
+    "all_outputs_finite": true,
+    "all_rows_retained": true,
+    "baseline_not_a_pass_gate": "Retain all baseline errors, original V2 protocol flags and saved oracle allowances. Baseline may exceed the new empirical allowance.",
+    "decimal_precision_stability": "abs(result120-result80)<=1e-65*max(1,abs(result120)), for both Decimal paths and elementary reference, every scene/order",
+    "elementary_comparison": "For each scene/order, exact-source Decimal integral120 agrees with independent identity120 within 1e-10+512*binary64epsilon*abs(identity120)+saved omitted-tail allowance for the old controls only. Float rules still have approximation error; no certified integral bounds.",
+    "endpoint_comparison": "For every scene/order, endpoint_binary64 agrees with independent identity120 under same stated allowance; additionally both original cases must each meet original absolute1e-10.",
+    "no_all_scene_improvement_claim": "Report per-scene signed errors and absolute ratios when baseline error is nonzero; no required improvement factor, no population dropping.",
+    "old_baseline_reproduction": "each order absolute difference<=8*binary64epsilon*max(1,abs(saved_original)); report exact hex equality separately"
+  },
+  "failure_policy": "One canonical diagnostic execution per frozen final diagnostic source; retain nonzero exit and all rows/partials. Fixes require explicit addendum/new version; never overwrite first result. CLI invalid-output rejection occurs before NumPy imports.",
+  "format": "picad-finite-normal-oracle-conditioning-plan",
+  "freeze": "Committed before any baseline/revised/Decimal node evaluation for this diagnostic; no numerical results used to choose new scenes or criteria. Two old cases are post-hoc, never prospective.",
+  "inputs_sha256": {
+    "backend/finite_normal.py": "5038ebe359ae0b3e4e158273ae145a0991feb93258fe723eca942ac49017425f",
+    "pyproject.toml": "89db6bd352114ad6ed7c979c070e66d47551ef7cca7062778f832bb8934507ab",
+    "studies/finite-normal-error-control-inverse-addendum-v2.json": "5703d6fa480ba2801291865b2b9921ba7c8b875ef96adc1beb3d3d4b3bcfb8bd",
+    "studies/finite-normal-error-control-v2.json": "b59d38b3ca92449c4233b947dd061f7a6591ce1944946b6c10e868afaad3adbb",
+    "studies/results/finite-normal-error-control-v2-summary.json": "bfdb923bf45d77ef20f18efcdbd365872adf520569b166c58f5bde09678c8db3",
+    "studies/results/finite-normal-error-control-v2.json.gz": "2ebbb4bc34dcaa97695e2f4de6c40774090aef42e8301d45ee3f7e23489207ec",
+    "studies/verification/finite-normal-derivative-v1.py": "8cd752ccf8fef6391d51dc10761f073c3d3f0fb6c45deb977ea346553ee5dd74",
+    "studies/verification/finite-normal-error-control-v2.py": "835814c5c9bf23d1f8945474ca9b9412ae5a12ff0f358d0e09b6e8bea9d5cdc6",
+    "uv.lock": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f"
+  },
+  "partition": {
+    "cuts": "sorted unique {-1,0,1} union {-1+2^-k,1-2^-k for k=1..28}; no adaptation/tuning/retry",
+    "post_hoc": "preserve all original saved V2 direct and omitted-tail leaves; no partition adaptation or threshold change",
+    "prospective_endpoint_layers": 28
+  },
+  "paths": {
+    "baseline": "Unchanged V2 direct_rule and geometry with generated common rules, no initialize_models/backend import. Retain both orders and compare old totals to saved original values.",
+    "endpoint_binary64": "Compute exact rational homogeneous endpoint residuals and w from represented H/chord and represented panel a,b, round endpoints once, interpolate w/residual with nonnegative (1-node)/2 and (1+node)/2. Use original normalizer/whitening and signed s/weights/log expression; no production moment or angle finite difference.",
+    "exact_source_decimal": "At exact rational s=(a+b)/2+(b-a)/2*represented_node, evaluate exact rational projective denominator/residual, exact h/weights, Decimal exponential/pi; isolates prior source-node placement rounding.",
+    "rounded_source_decimal": "At represented baseline s=fl(middle+half*node), evaluate exact rational w and source residual from exact represented H, exact h/weights, Decimal exponential/pi; isolates coordinate arithmetic after s placement."
+  },
+  "population": {
+    "post_hoc_scenes": 2,
+    "prospective_scenes": 24,
+    "queries_per_scene": 1,
+    "total_scenes": 26
+  },
+  "precision": {
+    "decimal_contexts": [
+      80,
+      120
+    ],
+    "reference": "Independent elementary boundary identity exp(-d^2/(2*(1+c)^2))-exp(-d^2/(2*(1-c)^2)), divided by2*pi*abs(d), exact represented d=H11-H21/2. Machin pi from alternating arctan series15digits past context.",
+    "reference_scope": "Restricted declared exact geometry and identity covariance only; not a general error enclosure."
+  },
+  "rules": {
+    "environment": {
+      "numpy": "2.5.4",
+      "python": "3.12.3"
+    },
+    "generator": "numpy.polynomial.legendre.leggauss",
+    "orders": [
+      96,
+      192
+    ],
+    "retention": "Generate each order once, retain every abscissa/weight as float.hex plus SHA-256; use identical generated arrays in every arithmetic path. Original V2 node arrays were not saved. Reproduction at original partitions is an explicit new comparison, not proof of original array bytes."
+  },
+  "scenes": [
+    {
+      "id": "compressed-chart-e16-d0.0001",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            0.49999237060546875,
+            0.5
+          ],
+          [
+            0.0,
+            0.5000923706054687,
+            0.5
+          ],
+          [
+            0.0,
+            0.9999847412109375,
+            1.0
+          ]
+        ],
+        "id": "compressed-chart-e16-d0.0001",
+        "kind": "prospective_compressed_chart_stress",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "normal_degrees": 0.0,
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "query_roles": [
+          {
+            "pixel": [
+              0,
+              0
+            ],
+            "query_index": 0,
+            "role": "compressed-source-Jacobian-endpoint-spike"
+          }
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "original_query_index": 0,
+      "partition_source": "saved V2 query0 leaf_panels; direct_source_s leaves reevaluated, omitted-tail leaves and allowances preserved",
+      "population": "post_hoc_known_oracle_undercoverage_control"
+    },
+    {
+      "id": "compressed-chart-e16-d1e-06",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            0.49999237060546875,
+            0.5
+          ],
+          [
+            0.0,
+            0.4999933706054687,
+            0.5
+          ],
+          [
+            0.0,
+            0.9999847412109375,
+            1.0
+          ]
+        ],
+        "id": "compressed-chart-e16-d1e-06",
+        "kind": "prospective_compressed_chart_stress",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "normal_degrees": 0.0,
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "query_roles": [
+          {
+            "pixel": [
+              0,
+              0
+            ],
+            "query_index": 0,
+            "role": "compressed-source-Jacobian-endpoint-spike"
+          }
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "original_query_index": 0,
+      "partition_source": "saved V2 query0 leaf_panels; direct_source_s leaves reevaluated, omitted-tail leaves and allowances preserved",
+      "population": "post_hoc_known_oracle_undercoverage_control"
+    },
+    {
+      "denominator_exponent": 10,
+      "id": "conditioning-e10-c-1-d-3e-07",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            -0.49951171875,
+            0.5
+          ],
+          [
+            0.0,
+            -0.49951201875,
+            0.5
+          ],
+          [
+            0.0,
+            -0.9990234375,
+            1.0
+          ]
+        ],
+        "id": "conditioning-e10-c-1-d-3e-07",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "nominal_d": -3e-07,
+      "partition_source": "all source intervals between fixed dyadic endpoint layers, no omitted leaves",
+      "population": "prospective_new_synthetic_conditioning"
+    },
+    {
+      "denominator_exponent": 10,
+      "id": "conditioning-e10-c-1-d+3e-07",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            -0.49951171875,
+            0.5
+          ],
+          [
+            0.0,
+            -0.49951141875,
+            0.5
+          ],
+          [
+            0.0,
+            -0.9990234375,
+            1.0
+          ]
+        ],
+        "id": "conditioning-e10-c-1-d+3e-07",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "nominal_d": 3e-07,
+      "partition_source": "all source intervals between fixed dyadic endpoint layers, no omitted leaves",
+      "population": "prospective_new_synthetic_conditioning"
+    },
+    {
+      "denominator_exponent": 10,
+      "id": "conditioning-e10-c+1-d-3e-07",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            0.49951171875,
+            0.5
+          ],
+          [
+            0.0,
+            0.49951141875,
+            0.5
+          ],
+          [
+            0.0,
+            0.9990234375,
+            1.0
+          ]
+        ],
+        "id": "conditioning-e10-c+1-d-3e-07",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "nominal_d": -3e-07,
+      "partition_source": "all source intervals between fixed dyadic endpoint layers, no omitted leaves",
+      "population": "prospective_new_synthetic_conditioning"
+    },
+    {
+      "denominator_exponent": 10,
+      "id": "conditioning-e10-c+1-d+3e-07",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            0.49951171875,
+            0.5
+          ],
+          [
+            0.0,
+            0.49951201875,
+            0.5
+          ],
+          [
+            0.0,
+            0.9990234375,
+            1.0
+          ]
+        ],
+        "id": "conditioning-e10-c+1-d+3e-07",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "nominal_d": 3e-07,
+      "partition_source": "all source intervals between fixed dyadic endpoint layers, no omitted leaves",
+      "population": "prospective_new_synthetic_conditioning"
+    },
+    {
+      "denominator_exponent": 10,
+      "id": "conditioning-e10-c-1-d-2e-05",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            -0.49951171875,
+            0.5
+          ],
+          [
+            0.0,
+            -0.49953171875,
+            0.5
+          ],
+          [
+            0.0,
+            -0.9990234375,
+            1.0
+          ]
+        ],
+        "id": "conditioning-e10-c-1-d-2e-05",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "nominal_d": -2e-05,
+      "partition_source": "all source intervals between fixed dyadic endpoint layers, no omitted leaves",
+      "population": "prospective_new_synthetic_conditioning"
+    },
+    {
+      "denominator_exponent": 10,
+      "id": "conditioning-e10-c-1-d+2e-05",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            -0.49951171875,
+            0.5
+          ],
+          [
+            0.0,
+            -0.49949171875,
+            0.5
+          ],
+          [
+            0.0,
+            -0.9990234375,
+            1.0
+          ]
+        ],
+        "id": "conditioning-e10-c-1-d+2e-05",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "nominal_d": 2e-05,
+      "partition_source": "all source intervals between fixed dyadic endpoint layers, no omitted leaves",
+      "population": "prospective_new_synthetic_conditioning"
+    },
+    {
+      "denominator_exponent": 10,
+      "id": "conditioning-e10-c+1-d-2e-05",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            0.49951171875,
+            0.5
+          ],
+          [
+            0.0,
+            0.49949171875,
+            0.5
+          ],
+          [
+            0.0,
+            0.9990234375,
+            1.0
+          ]
+        ],
+        "id": "conditioning-e10-c+1-d-2e-05",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "nominal_d": -2e-05,
+      "partition_source": "all source intervals between fixed dyadic endpoint layers, no omitted leaves",
+      "population": "prospective_new_synthetic_conditioning"
+    },
+    {
+      "denominator_exponent": 10,
+      "id": "conditioning-e10-c+1-d+2e-05",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            0.49951171875,
+            0.5
+          ],
+          [
+            0.0,
+            0.49953171875,
+            0.5
+          ],
+          [
+            0.0,
+            0.9990234375,
+            1.0
+          ]
+        ],
+        "id": "conditioning-e10-c+1-d+2e-05",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "nominal_d": 2e-05,
+      "partition_source": "all source intervals between fixed dyadic endpoint layers, no omitted leaves",
+      "population": "prospective_new_synthetic_conditioning"
+    },
+    {
+      "denominator_exponent": 18,
+      "id": "conditioning-e18-c-1-d-3e-07",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            -0.4999980926513672,
+            0.5
+          ],
+          [
+            0.0,
+            -0.4999983926513672,
+            0.5
+          ],
+          [
+            0.0,
+            -0.9999961853027344,
+            1.0
+          ]
+        ],
+        "id": "conditioning-e18-c-1-d-3e-07",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "nominal_d": -3e-07,
+      "partition_source": "all source intervals between fixed dyadic endpoint layers, no omitted leaves",
+      "population": "prospective_new_synthetic_conditioning"
+    },
+    {
+      "denominator_exponent": 18,
+      "id": "conditioning-e18-c-1-d+3e-07",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            -0.4999980926513672,
+            0.5
+          ],
+          [
+            0.0,
+            -0.4999977926513672,
+            0.5
+          ],
+          [
+            0.0,
+            -0.9999961853027344,
+            1.0
+          ]
+        ],
+        "id": "conditioning-e18-c-1-d+3e-07",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "nominal_d": 3e-07,
+      "partition_source": "all source intervals between fixed dyadic endpoint layers, no omitted leaves",
+      "population": "prospective_new_synthetic_conditioning"
+    },
+    {
+      "denominator_exponent": 18,
+      "id": "conditioning-e18-c+1-d-3e-07",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            0.4999980926513672,
+            0.5
+          ],
+          [
+            0.0,
+            0.4999977926513672,
+            0.5
+          ],
+          [
+            0.0,
+            0.9999961853027344,
+            1.0
+          ]
+        ],
+        "id": "conditioning-e18-c+1-d-3e-07",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "nominal_d": -3e-07,
+      "partition_source": "all source intervals between fixed dyadic endpoint layers, no omitted leaves",
+      "population": "prospective_new_synthetic_conditioning"
+    },
+    {
+      "denominator_exponent": 18,
+      "id": "conditioning-e18-c+1-d+3e-07",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            0.4999980926513672,
+            0.5
+          ],
+          [
+            0.0,
+            0.4999983926513672,
+            0.5
+          ],
+          [
+            0.0,
+            0.9999961853027344,
+            1.0
+          ]
+        ],
+        "id": "conditioning-e18-c+1-d+3e-07",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "nominal_d": 3e-07,
+      "partition_source": "all source intervals between fixed dyadic endpoint layers, no omitted leaves",
+      "population": "prospective_new_synthetic_conditioning"
+    },
+    {
+      "denominator_exponent": 18,
+      "id": "conditioning-e18-c-1-d-2e-05",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            -0.4999980926513672,
+            0.5
+          ],
+          [
+            0.0,
+            -0.5000180926513672,
+            0.5
+          ],
+          [
+            0.0,
+            -0.9999961853027344,
+            1.0
+          ]
+        ],
+        "id": "conditioning-e18-c-1-d-2e-05",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "nominal_d": -2e-05,
+      "partition_source": "all source intervals between fixed dyadic endpoint layers, no omitted leaves",
+      "population": "prospective_new_synthetic_conditioning"
+    },
+    {
+      "denominator_exponent": 18,
+      "id": "conditioning-e18-c-1-d+2e-05",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            -0.4999980926513672,
+            0.5
+          ],
+          [
+            0.0,
+            -0.49997809265136717,
+            0.5
+          ],
+          [
+            0.0,
+            -0.9999961853027344,
+            1.0
+          ]
+        ],
+        "id": "conditioning-e18-c-1-d+2e-05",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "nominal_d": 2e-05,
+      "partition_source": "all source intervals between fixed dyadic endpoint layers, no omitted leaves",
+      "population": "prospective_new_synthetic_conditioning"
+    },
+    {
+      "denominator_exponent": 18,
+      "id": "conditioning-e18-c+1-d-2e-05",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            0.4999980926513672,
+            0.5
+          ],
+          [
+            0.0,
+            0.49997809265136717,
+            0.5
+          ],
+          [
+            0.0,
+            0.9999961853027344,
+            1.0
+          ]
+        ],
+        "id": "conditioning-e18-c+1-d-2e-05",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "nominal_d": -2e-05,
+      "partition_source": "all source intervals between fixed dyadic endpoint layers, no omitted leaves",
+      "population": "prospective_new_synthetic_conditioning"
+    },
+    {
+      "denominator_exponent": 18,
+      "id": "conditioning-e18-c+1-d+2e-05",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            0.4999980926513672,
+            0.5
+          ],
+          [
+            0.0,
+            0.5000180926513672,
+            0.5
+          ],
+          [
+            0.0,
+            0.9999961853027344,
+            1.0
+          ]
+        ],
+        "id": "conditioning-e18-c+1-d+2e-05",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "nominal_d": 2e-05,
+      "partition_source": "all source intervals between fixed dyadic endpoint layers, no omitted leaves",
+      "population": "prospective_new_synthetic_conditioning"
+    },
+    {
+      "denominator_exponent": 24,
+      "id": "conditioning-e24-c-1-d-3e-07",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            -0.4999999701976776,
+            0.5
+          ],
+          [
+            0.0,
+            -0.5000002701976776,
+            0.5
+          ],
+          [
+            0.0,
+            -0.9999999403953552,
+            1.0
+          ]
+        ],
+        "id": "conditioning-e24-c-1-d-3e-07",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "nominal_d": -3e-07,
+      "partition_source": "all source intervals between fixed dyadic endpoint layers, no omitted leaves",
+      "population": "prospective_new_synthetic_conditioning"
+    },
+    {
+      "denominator_exponent": 24,
+      "id": "conditioning-e24-c-1-d+3e-07",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            -0.4999999701976776,
+            0.5
+          ],
+          [
+            0.0,
+            -0.4999996701976776,
+            0.5
+          ],
+          [
+            0.0,
+            -0.9999999403953552,
+            1.0
+          ]
+        ],
+        "id": "conditioning-e24-c-1-d+3e-07",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "nominal_d": 3e-07,
+      "partition_source": "all source intervals between fixed dyadic endpoint layers, no omitted leaves",
+      "population": "prospective_new_synthetic_conditioning"
+    },
+    {
+      "denominator_exponent": 24,
+      "id": "conditioning-e24-c+1-d-3e-07",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            0.4999999701976776,
+            0.5
+          ],
+          [
+            0.0,
+            0.4999996701976776,
+            0.5
+          ],
+          [
+            0.0,
+            0.9999999403953552,
+            1.0
+          ]
+        ],
+        "id": "conditioning-e24-c+1-d-3e-07",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "nominal_d": -3e-07,
+      "partition_source": "all source intervals between fixed dyadic endpoint layers, no omitted leaves",
+      "population": "prospective_new_synthetic_conditioning"
+    },
+    {
+      "denominator_exponent": 24,
+      "id": "conditioning-e24-c+1-d+3e-07",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            0.4999999701976776,
+            0.5
+          ],
+          [
+            0.0,
+            0.5000002701976776,
+            0.5
+          ],
+          [
+            0.0,
+            0.9999999403953552,
+            1.0
+          ]
+        ],
+        "id": "conditioning-e24-c+1-d+3e-07",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "nominal_d": 3e-07,
+      "partition_source": "all source intervals between fixed dyadic endpoint layers, no omitted leaves",
+      "population": "prospective_new_synthetic_conditioning"
+    },
+    {
+      "denominator_exponent": 24,
+      "id": "conditioning-e24-c-1-d-2e-05",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            -0.4999999701976776,
+            0.5
+          ],
+          [
+            0.0,
+            -0.5000199701976776,
+            0.5
+          ],
+          [
+            0.0,
+            -0.9999999403953552,
+            1.0
+          ]
+        ],
+        "id": "conditioning-e24-c-1-d-2e-05",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "nominal_d": -2e-05,
+      "partition_source": "all source intervals between fixed dyadic endpoint layers, no omitted leaves",
+      "population": "prospective_new_synthetic_conditioning"
+    },
+    {
+      "denominator_exponent": 24,
+      "id": "conditioning-e24-c-1-d+2e-05",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            -0.4999999701976776,
+            0.5
+          ],
+          [
+            0.0,
+            -0.4999799701976776,
+            0.5
+          ],
+          [
+            0.0,
+            -0.9999999403953552,
+            1.0
+          ]
+        ],
+        "id": "conditioning-e24-c-1-d+2e-05",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "nominal_d": 2e-05,
+      "partition_source": "all source intervals between fixed dyadic endpoint layers, no omitted leaves",
+      "population": "prospective_new_synthetic_conditioning"
+    },
+    {
+      "denominator_exponent": 24,
+      "id": "conditioning-e24-c+1-d-2e-05",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            0.4999999701976776,
+            0.5
+          ],
+          [
+            0.0,
+            0.4999799701976776,
+            0.5
+          ],
+          [
+            0.0,
+            0.9999999403953552,
+            1.0
+          ]
+        ],
+        "id": "conditioning-e24-c+1-d-2e-05",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "nominal_d": -2e-05,
+      "partition_source": "all source intervals between fixed dyadic endpoint layers, no omitted leaves",
+      "population": "prospective_new_synthetic_conditioning"
+    },
+    {
+      "denominator_exponent": 24,
+      "id": "conditioning-e24-c+1-d+2e-05",
+      "input": {
+        "centre": [
+          0.0,
+          0.0
+        ],
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "fraction": 0.0,
+        "homography": [
+          [
+            1.0,
+            0.4999999701976776,
+            0.5
+          ],
+          [
+            0.0,
+            0.5000199701976776,
+            0.5
+          ],
+          [
+            0.0,
+            0.9999999403953552,
+            1.0
+          ]
+        ],
+        "id": "conditioning-e24-c+1-d+2e-05",
+        "normal": [
+          1.0,
+          0.0
+        ],
+        "pixels_xy": [
+          [
+            0,
+            0
+          ]
+        ],
+        "radius": 1.0,
+        "sensor_shape": [
+          3,
+          3
+        ]
+      },
+      "nominal_d": 2e-05,
+      "partition_source": "all source intervals between fixed dyadic endpoint layers, no omitted leaves",
+      "population": "prospective_new_synthetic_conditioning"
+    }
+  ],
+  "scope": "Separate arithmetic diagnostic, not replacement or new qualification of V2 canonical protocol, candidate, full oracle domain, physical optics, residual information or inverse. No production API calls, no optimizer/area/renderer/photo analysis. All failures retained.",
+  "source_base_commit": "5b6ca989cb9a414655e35b4f2e3d4c7fd5b4b769",
+  "source_base_tree": "ba582cac25b7de4ddbc14f7ed2b4f0d5f4598004",
+  "version": 1
+}

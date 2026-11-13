@@ -12,6 +12,11 @@ The original
 This work does not fit a normal, identify physical optics or change automatic
 tracing.
 
+The subsequent [projective-node diagnostic](finite-normal-oracle-conditioning.md)
+traces part of the oracle discrepancy to source-node placement and compares
+stable endpoint interpolation on 26 declared controls. It leaves the original
+V2 report and its general reference-error limitation intact.
+
 ## Represent the matrix actually evaluated
 
 For the operational homography `h`, the area factor is

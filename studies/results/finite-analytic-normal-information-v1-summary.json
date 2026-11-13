@@ -1,0 +1,820 @@
+{
+  "format": "pictures-to-cad-finite-analytic-normal-information-archive",
+  "version": 1,
+  "first_canonical_exit_code": 0,
+  "protocol_passed": true,
+  "plan_sha256": "28efd2aa241b662bdd2f771be48b37d99283c67033980dafc4e2dae23ff68dfd",
+  "plan_freeze_commit": "dfe0b6884bdd296a1115bb361c99f1f41072a845",
+  "source_freeze_commit": "5a63e766b5ed1be28bbcc4a717c1d775eabf43c7",
+  "source_freeze_tree": "88ecc97d6af2a49aba54f867a792261bedc49d41",
+  "decoded_canonical_sha256": "11607377de1a98446c07e53be67c01cf669fd99dca6f1ea0abf8284a1a47d387",
+  "decoded_canonical_bytes": 270836922,
+  "artifacts": [
+    {
+      "path": "studies/results/finite-analytic-normal-information-v1.json.gz",
+      "encoding": "gzip",
+      "bytes": 28083684,
+      "sha256": "7ad761e4cb2d86faa29ebad7f8a0696699ea1d37fb435e037a4ce14aa8c07324",
+      "decoded_bytes": 270836922,
+      "decoded_sha256": "11607377de1a98446c07e53be67c01cf669fd99dca6f1ea0abf8284a1a47d387",
+      "gzip_mtime": 0,
+      "gzip_filename": "",
+      "kind": "complete_original_canonical_report"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/canonical-terminal.json.gz",
+      "kind": "first_canonical_terminal",
+      "encoding": "gzip",
+      "bytes": 58838,
+      "sha256": "fc9b4e333b065713177310e5c17c4232c9f4e4231e9cb208702b881740c921f0",
+      "decoded_bytes": 195121,
+      "decoded_sha256": "a99dac9db7870973778d93a3c03dcce3522ecc4ed8d8090d34f755747a05eaac",
+      "original_provenance_path": ".local/verification/analytic-normal-information-v1-canonical.terminal.json"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/canonical-preflight.json.gz",
+      "kind": "canonical_before_source_freeze",
+      "encoding": "gzip",
+      "bytes": 29523,
+      "sha256": "9b52e45ae45440ee3e7cc7bf50141b1d827d6d30049c2eb0b333b160456cb6fe",
+      "decoded_bytes": 97380,
+      "decoded_sha256": "b4cc4d53c1588e57145cb1441a236100402af3c48ef4302bce1553ca52660cf4",
+      "original_provenance_path": ".local/verification/analytic-normal-canonical-preflight-v1.json"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/canonical-stdout.txt.gz",
+      "kind": "first_canonical_stdout",
+      "encoding": "gzip",
+      "bytes": 363,
+      "sha256": "8aeef4bcf21c9dfd916c5c9ba76b7404ce89eeae823717f74f9ce4b92ad40a45",
+      "decoded_bytes": 700,
+      "decoded_sha256": "968e808624728f85573355dc0a186ef80b5714c0d77237b54e6a9e913ee16488",
+      "original_provenance_path": ".local/verification/analytic-normal-information-v1-canonical.stdout"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/canonical-stderr.txt.gz",
+      "kind": "first_canonical_stderr",
+      "encoding": "gzip",
+      "bytes": 321,
+      "sha256": "d6e9c7894e0b9abaca8c9fe1041c2ca550792edfc288d39fedb8e18c74d33897",
+      "decoded_bytes": 1647,
+      "decoded_sha256": "87affcf12f6a89c039e6585ecd29e696aaf794aa8fc1c34497a794d689298998",
+      "original_provenance_path": ".local/verification/analytic-normal-information-v1-canonical.stderr"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/canonical-launcher.py.txt",
+      "kind": "historical_first_launch_provenance",
+      "encoding": "utf-8",
+      "bytes": 2582,
+      "sha256": "b09f5bbb85ddfe533fbbe2bde27b803d8d617b8e4add0ae5b0d42a068787298e",
+      "decoded_bytes": 2582,
+      "decoded_sha256": "b09f5bbb85ddfe533fbbe2bde27b803d8d617b8e4add0ae5b0d42a068787298e",
+      "original_provenance_path": ".local/verification/run-analytic-normal-canonical-v1.py"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/plan-preflight.json.gz",
+      "kind": "before_scientific_source_plan_binding",
+      "encoding": "gzip",
+      "bytes": 400,
+      "sha256": "4ef6c1f3b389789134e900ad5552763d3c6c94fd9cf988dd56c21f852750f8bc",
+      "decoded_bytes": 594,
+      "decoded_sha256": "f4701b246953dcb60d9321235cbc4b578b8df62c912656c9482a470bda520921",
+      "original_provenance_path": ".local/verification/analytic-normal-plan-root-preflight-v1.json"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/input-preflight.json.gz",
+      "kind": "final_frozen_input_binding",
+      "encoding": "gzip",
+      "bytes": 2635,
+      "sha256": "dccbfebcc8375ceb9af764f5566323c720ee4ec617a85de0cb7e1cc61dccad69",
+      "decoded_bytes": 7441,
+      "decoded_sha256": "85314c2fd754299b98f65adf87834fa0252145774f37982cfb9f09e138f7a818",
+      "original_provenance_path": ".local/verification/analytic-normal-input-root-preflight-v2.json"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/root-saved-summary.json.gz",
+      "kind": "post_hoc_root_saved_arithmetic",
+      "encoding": "gzip",
+      "bytes": 7782,
+      "sha256": "730d04a421f667314149a1876f862fd327784b6d5eaf6a8e7b36d6e607e3b5fc",
+      "decoded_bytes": 46337,
+      "decoded_sha256": "fb8b8dcb98971fd009a07d37044a585b60e86f45ffb4ba104f906c5951a6b4b1",
+      "original_provenance_path": ".local/verification/analytic-normal-root-saved-summary-v1.json"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/protocol-gates-first.json.gz",
+      "kind": "retained_failed_stub_fixture_receipt",
+      "encoding": "gzip",
+      "bytes": 907,
+      "sha256": "875a1dffca4d3ce9d66c97809838d2c40f1d26440a4fc2e9418489c12a12a77e",
+      "decoded_bytes": 4793,
+      "decoded_sha256": "915510430d0fc84666cbc265ebc1f7172f9cf0e1bb12406d8c5f23163a1e56ba",
+      "original_provenance_path": ".local/verification/analytic-normal-protocol-gates-v1.json"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/protocol-gates-corrected-fixture.json.gz",
+      "kind": "passing_corrected_stub_fixture_receipt",
+      "encoding": "gzip",
+      "bytes": 914,
+      "sha256": "c2dd2199f0b26956a8323a1d192598064722a88c083a8ee86f6caed58c9f24bb",
+      "decoded_bytes": 4947,
+      "decoded_sha256": "82689ae0c6a092f178b88f4b0c4334acda9f0ca881368fc9b9229133a70604a4",
+      "original_provenance_path": ".local/verification/analytic-normal-protocol-gates-v2.json"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/protocol-gates-first.py.txt",
+      "kind": "historical_failed_stub_fixture_source",
+      "encoding": "utf-8",
+      "bytes": 7205,
+      "sha256": "fe4f1429169e2b636e9a301102a65bf2979b2ae7f929d5de027212909b996b34",
+      "decoded_bytes": 7205,
+      "decoded_sha256": "fe4f1429169e2b636e9a301102a65bf2979b2ae7f929d5de027212909b996b34",
+      "original_provenance_path": ".local/verification/analytic-normal-protocol-gates-v1.py"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/protocol-gates-corrected-fixture.py.txt",
+      "kind": "historical_corrected_stub_fixture_source",
+      "encoding": "utf-8",
+      "bytes": 7251,
+      "sha256": "662e4c03219b559f0bc7257adfd1100c0015b49421d54c51592f9c90ff7e5b31",
+      "decoded_bytes": 7251,
+      "decoded_sha256": "662e4c03219b559f0bc7257adfd1100c0015b49421d54c51592f9c90ff7e5b31",
+      "original_provenance_path": ".local/verification/analytic-normal-protocol-gates-v2.py"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/driver-static-initial.json.gz",
+      "kind": "initial_unrun_driver_static_receipt",
+      "encoding": "gzip",
+      "bytes": 3529,
+      "sha256": "ec5cf8951ede34fb6a3d36285ba3af7478ce9bb5513aea293f4ef8d0cd0ca5a1",
+      "decoded_bytes": 15100,
+      "decoded_sha256": "1ff9e3821b58fe86983ad461d41468656198498db9588baf4192ec5bc930821c",
+      "original_provenance_path": ".local/verification/analytic-normal-ai/static-handoff-v1.json"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/oracle-partial-precision-static.json.gz",
+      "kind": "before_evaluation_oracle_partial_work_static",
+      "encoding": "gzip",
+      "bytes": 578,
+      "sha256": "39ac70c6aae044632790536fb64cdd0ea1707ba98c35d36b4ab42566f710e7a8",
+      "decoded_bytes": 1398,
+      "decoded_sha256": "8849d311a7879271f58b17e787ee2d69c428de365a8eda0686ea0ef48fffd3dc",
+      "original_provenance_path": ".local/verification/analytic-normal-ai/oracle-partial-precision-static-v1.json"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/oracle-final-static.json.gz",
+      "kind": "final_oracle_static_receipt",
+      "encoding": "gzip",
+      "bytes": 761,
+      "sha256": "d0ea53efa01bac9330ea6822ef11f1d13bc83b51603ac8c7b4b0441ac604e132",
+      "decoded_bytes": 2101,
+      "decoded_sha256": "5575c2d1b9bcb1fd7b6c796d571360dffbabc897a0e38efc1b7e96d0f17ede9e",
+      "original_provenance_path": ".local/verification/analytic-normal-ai/oracle-retention-static-v2.json"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/oracle-initial-source.py.txt",
+      "kind": "historical_unrun_oracle_draft",
+      "encoding": "utf-8",
+      "bytes": 33347,
+      "sha256": "13a774679a38a76e52a5a14468ef47812b5db8c326bfa494d7cf2c40b955ec6e",
+      "decoded_bytes": 33347,
+      "decoded_sha256": "13a774679a38a76e52a5a14468ef47812b5db8c326bfa494d7cf2c40b955ec6e",
+      "original_provenance_path": ".local/verification/analytic-normal-ai/oracle-before-partial-precision-fix.py.txt"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/source-cli-contracts.json.gz",
+      "kind": "blocked_import_cli_and_source_refusal_receipt",
+      "encoding": "gzip",
+      "bytes": 1044,
+      "sha256": "a7fe252dde89549bbe15132926e32947067a09150a5252ea04fabe89fa039001",
+      "decoded_bytes": 7721,
+      "decoded_sha256": "1fba022cdb4e4b1cf0131d90d448611b0120099e01ca8fba051ebf3b3da6fbc9",
+      "original_provenance_path": ".local/verification/analytic-normal-ai/cli-v1/receipt.json"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/source-cli-contracts.py.txt",
+      "kind": "historical_cli_contract_source",
+      "encoding": "utf-8",
+      "bytes": 7126,
+      "sha256": "4ae64fe9393e87989498d5050d0ae80c1cb3a9e868599b60c2cb867e43d2fd09",
+      "decoded_bytes": 7126,
+      "decoded_sha256": "4ae64fe9393e87989498d5050d0ae80c1cb3a9e868599b60c2cb867e43d2fd09",
+      "original_provenance_path": ".local/verification/analytic-normal-ai/cli-v1/check-cli.py"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/bootstrap-missing-inputs.json.gz",
+      "kind": "retained_missing_input_failure_census",
+      "encoding": "gzip",
+      "bytes": 13679,
+      "sha256": "4bc4b88175834e7ea469ea4e2ee5000d36698328db977f030d8fe899a7008e88",
+      "decoded_bytes": 85667,
+      "decoded_sha256": "0b6a16ef4660dda6385542d15ecb01041ed96a66ec267ea117cd155027b93f52",
+      "original_provenance_path": ".local/verification/analytic-normal-ai/cli-v1/thin/bootstrap.json"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/bootstrap-saved-original.json.gz",
+      "kind": "retained_old_rows_on_other_source_failures",
+      "encoding": "gzip",
+      "bytes": 1739314,
+      "sha256": "7a4df3e0c3fb76c0ffb7d9cd13907b0da3f4b6e1ff09e0bfa149e67a3ff00d80",
+      "decoded_bytes": 9067249,
+      "decoded_sha256": "81001a570d6158a491391e6d0c286c1f831036913a0bcedd4f6182099fb02279",
+      "original_provenance_path": ".local/verification/analytic-normal-ai/cli-v1/saved-but-other-inputs-missing/bootstrap.json"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/bootstrap-one-source-mismatch.json.gz",
+      "kind": "retained_complete_closure_source_refusal",
+      "encoding": "gzip",
+      "bytes": 1740242,
+      "sha256": "88cdc1502c19be58b1057696d84572a869cbc278a99bb10dc23a4bc3d28fa4ef",
+      "decoded_bytes": 9033951,
+      "decoded_sha256": "db66951e08d4a9e4cedb1d31cb9c2f1ac99631466395f4cdd73480134c52ab36",
+      "original_provenance_path": ".local/verification/analytic-normal-ai/cli-v1/full-closure-one-mismatch/bootstrap.json"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/bootstrap-changed-plan.json.gz",
+      "kind": "retained_frozen_plan_refusal",
+      "encoding": "gzip",
+      "bytes": 1739364,
+      "sha256": "2cccb2a53fb4e550497808281b8071ad2d7e4eba54af51d57127977d70111f7b",
+      "decoded_bytes": 9065891,
+      "decoded_sha256": "2cd55c1394ad2ddbc82c195313efceaa8eb674fae5b30eef65d665d73c32c1bc",
+      "original_provenance_path": ".local/verification/analytic-normal-ai/cli-v1/changed-plan/bootstrap.json"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/saved-auditor-contracts.json.gz",
+      "kind": "public_saved_auditor_static_cli_contracts",
+      "encoding": "gzip",
+      "bytes": 514,
+      "sha256": "3ab41d84caeacb2516b859defe5d10bc5be902be5d7c4086f414985663a37d08",
+      "decoded_bytes": 1864,
+      "decoded_sha256": "94ead464a929afe63381f5bcb7a13dda7990591024a90735b542a97cf26b0662",
+      "original_provenance_path": ".local/verification/analytic-normal-ai/public-auditor-cli-v1/receipt.json"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/public-saved-audit-first.json.gz",
+      "kind": "first_independent_public_saved_audit",
+      "encoding": "gzip",
+      "bytes": 671,
+      "sha256": "f3f645669e6f371149def370e89418b3e8315293451345e8cbe96b65db0084b7",
+      "decoded_bytes": 1347,
+      "decoded_sha256": "4d9628bef442f48dd478d3ec78cb19eb5941911f863cd0ddb43c9061749ca866",
+      "original_provenance_path": ".local/verification/analytic-normal-ai/public-saved-audit-first-v1.json"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/independent-ux-audit.json.gz",
+      "kind": "independent_census_work_and_QR_saved_audit",
+      "encoding": "gzip",
+      "bytes": 920,
+      "sha256": "20130c2ac42167754e30123e927ecf908ad536e911bd48f9e35b33500bae9d1d",
+      "decoded_bytes": 2152,
+      "decoded_sha256": "2b85afb35b1a6fd9fc7bd488ba64b640c261af6dd74cd8d34aee05be659c21f1",
+      "original_provenance_path": ".local/verification/analytic-normal-ux/canonical-audit-v1.json"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/independent-ux-audit-controls.json.gz",
+      "kind": "invented_saved_auditor_controls",
+      "encoding": "gzip",
+      "bytes": 295,
+      "sha256": "bca75f7a0380eefed99d66c0da1b9ce9cd3703f0d5b359b9009698c57856d9ea",
+      "decoded_bytes": 445,
+      "decoded_sha256": "da61c75bfc413313399605a0b3b8126d768ac288ac746a7b953a1522c47315fe",
+      "original_provenance_path": ".local/verification/analytic-normal-ux/sentinels-v1.json"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/independent-ux-audit.py.txt",
+      "kind": "independent_saved_census_QR_auditor_provenance",
+      "encoding": "utf-8",
+      "bytes": 39517,
+      "sha256": "0971873125ad3c9fca2b95537b52e8a0a8839a0aaf635dc14a580dea7c0a37fc",
+      "decoded_bytes": 39517,
+      "decoded_sha256": "0971873125ad3c9fca2b95537b52e8a0a8839a0aaf635dc14a580dea7c0a37fc",
+      "original_provenance_path": ".local/verification/analytic-normal-ux/audit.py"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/independent-math-audit.json.gz",
+      "kind": "independent_saved_arithmetic_and_numpy_matrix_audit",
+      "encoding": "gzip",
+      "bytes": 3446,
+      "sha256": "21b765f8e9c3f0e67823c1e8ecf2e10f44f7e971519e8b3aa4bd0b86c2adeffd",
+      "decoded_bytes": 52113,
+      "decoded_sha256": "385d4921d42479f189f75260b1c513610f16abe6a477348b1c92f90149299fd2",
+      "original_provenance_path": ".local/verification/analytic-normal-math/audit-v1.json"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/independent-math-audit.py.txt",
+      "kind": "independent_saved_mathematical_auditor_provenance",
+      "encoding": "utf-8",
+      "bytes": 38288,
+      "sha256": "fd34a1c94e82f40e7175af0bd15ce171daf6ca21ca0cde5b81c1d772b9f80de7",
+      "decoded_bytes": 38288,
+      "decoded_sha256": "fd34a1c94e82f40e7175af0bd15ce171daf6ca21ca0cde5b81c1d772b9f80de7",
+      "original_provenance_path": ".local/verification/analytic-normal-math/audit-v1.py"
+    },
+    {
+      "path": "studies/verification/finite-analytic-normal-report-audit-v1.py",
+      "kind": "supported_portable_saved_auditor",
+      "encoding": "utf-8",
+      "bytes": 38705,
+      "sha256": "c740faee2d7e4e9673e67ceca0f9328b8608f3defd4bbbfb5bcfbc8f9d1fe573",
+      "decoded_bytes": 38705,
+      "decoded_sha256": "c740faee2d7e4e9673e67ceca0f9328b8608f3defd4bbbfb5bcfbc8f9d1fe573"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/root-saved-extra.json.gz",
+      "kind": "post_hoc_root_complete_matched_comparison_summary",
+      "encoding": "gzip",
+      "bytes": 4689,
+      "sha256": "c0f75b963cc77f77d671aa7f3e602a2d3430eaf4561438404329c5a0e2d82047",
+      "decoded_bytes": 22519,
+      "decoded_sha256": "db3f3c8098d3c00cae3a1f4602820fceaf7c78001b1b0525df6283e0dc5c6ce1",
+      "original_provenance_path": ".local/verification/analytic-normal-root-saved-extra-v1.json"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/independent-math-interpretation.json.gz",
+      "kind": "post_hoc_independent_saved_interpretation",
+      "encoding": "gzip",
+      "bytes": 8578,
+      "sha256": "68a6e0ef749962656aa251806def95b270753c3dc41994cfc94f5768fbbcb222",
+      "decoded_bytes": 58688,
+      "decoded_sha256": "ee69b041b308b2daf413e6cfcaa9933b83801b66430eea7926072af8bc51f5c9",
+      "original_provenance_path": ".local/verification/analytic-normal-math/interpretation-v1.json"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/independent-math-interpretation.py.txt",
+      "kind": "post_hoc_interpretation_provenance",
+      "encoding": "utf-8",
+      "bytes": 8914,
+      "sha256": "2677b0f93c8f7c9780fa9cd4c03086a533d13357754c85169269209bd1120899",
+      "decoded_bytes": 8914,
+      "decoded_sha256": "2677b0f93c8f7c9780fa9cd4c03086a533d13357754c85169269209bd1120899",
+      "original_provenance_path": ".local/verification/analytic-normal-math/interpretation-v1.py"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/descriptive-truth-audit.json.gz",
+      "kind": "post_hoc_independent_synthetic_truth_scalar_check",
+      "encoding": "gzip",
+      "bytes": 1193,
+      "sha256": "04fa06d226832b00657c5078e595c26d3a18e9f7f2f36dd5e271d3596e1f5249",
+      "decoded_bytes": 4593,
+      "decoded_sha256": "e5191f2a4ec682e065c210b7e156fed1d6d32c7c90742a9150acc50f7b818ca0",
+      "original_provenance_path": ".local/verification/analytic-normal-descriptive-truth-audit-v1.json"
+    },
+    {
+      "path": "studies/fixtures/finite-analytic-normal-information-v1/descriptive-truth-audit.py.txt",
+      "kind": "post_hoc_truth_scalar_checker_provenance",
+      "encoding": "utf-8",
+      "bytes": 2304,
+      "sha256": "ea35af2dedea3d8818a276fc24b714008042fa73e36d735dec3eb366ea210be6",
+      "decoded_bytes": 2304,
+      "decoded_sha256": "ea35af2dedea3d8818a276fc24b714008042fa73e36d735dec3eb366ea210be6",
+      "original_provenance_path": ".local/verification/analytic-normal-descriptive-truth-audit-v1.py"
+    }
+  ],
+  "scope": "Conditional synthetic analytic-normal and one-step diagnostic; saved-data auditors do not re-evaluate models, nodes or references. No automatic tracing, new fit-pass count, camera/physical accuracy or publication/merge qualification.",
+  "retained_failure": "The first stdlib protocol-gate fixture passed7/8 because its row stub omitted required metadata; the corrected fixture passes8/8 with the same governing driver. Both original receipts/sources retained; no scientific evaluation preceded the source freeze.",
+  "old_result_policy": "Complete original residual rows, old3targetpasses/10completions, both upstream refusals and originalfailedFD/control/protocol remain unchanged.",
+  "normal_comparison_summary": {
+    "probability_derivative_max_api_oracle_delta": 1.6431300764452317e-14,
+    "max_api_estimated_error": 3.209282769139866e-12,
+    "max_oracle_estimated_error": 1.9668446085629905e-13,
+    "max_scaled_level_error": 6.24169329637663e-10,
+    "api_work_by_kind": {
+      "normal": {
+        "calls": 15,
+        "queries": 578,
+        "evaluations": 1156,
+        "panels": 578
+      },
+      "mean": {
+        "calls": 10,
+        "queries": 560,
+        "evaluations": 1092212,
+        "panels": 112504
+      }
+    },
+    "matched": [
+      {
+        "index": 0,
+        "scope": "all56",
+        "status": "resolved_under_estimated_guard",
+        "cutoff": 3.2811841670272826e-05,
+        "ranks": [
+          3,
+          3
+        ],
+        "energies": [
+          4.925276708487703,
+          4.925900745202065
+        ],
+        "projector_errors": [
+          4.270258636879085e-09,
+          4.284037126364948e-09
+        ]
+      },
+      {
+        "index": 0,
+        "scope": "training40",
+        "status": "resolved_under_estimated_guard",
+        "cutoff": 2.664760566344834e-05,
+        "ranks": [
+          3,
+          3
+        ],
+        "energies": [
+          4.099861863845651,
+          4.136222349347892
+        ],
+        "projector_errors": [
+          3.863270708161601e-09,
+          3.877111333587716e-09
+        ]
+      },
+      {
+        "index": 1,
+        "scope": "all56",
+        "status": "resolved_under_estimated_guard",
+        "cutoff": 3.329959860627354e-05,
+        "ranks": [
+          3,
+          3
+        ],
+        "energies": [
+          91.96057173070623,
+          91.9584996229211
+        ],
+        "projector_errors": [
+          4.403738887817466e-09,
+          4.41712574548559e-09
+        ]
+      },
+      {
+        "index": 1,
+        "scope": "training40",
+        "status": "resolved_under_estimated_guard",
+        "cutoff": 2.7608936905544473e-05,
+        "ranks": [
+          3,
+          3
+        ],
+        "energies": [
+          62.73215333484793,
+          62.276572656516386
+        ],
+        "projector_errors": [
+          3.976674285120845e-09,
+          3.990140213355179e-09
+        ]
+      },
+      {
+        "index": 2,
+        "scope": "all56",
+        "status": "resolved_under_estimated_guard",
+        "cutoff": 4.307195916950443e-05,
+        "ranks": [
+          3,
+          3
+        ],
+        "energies": [
+          2563.9623747784894,
+          1996.8613694858454
+        ],
+        "projector_errors": [
+          3.1518222134116362e-09,
+          3.157933402945679e-09
+        ]
+      },
+      {
+        "index": 2,
+        "scope": "training40",
+        "status": "resolved_under_estimated_guard",
+        "cutoff": 3.461779747229248e-05,
+        "ranks": [
+          3,
+          3
+        ],
+        "energies": [
+          1849.3430604187784,
+          1373.8522638817963
+        ],
+        "projector_errors": [
+          2.8122819766411974e-09,
+          2.8252987265473164e-09
+        ]
+      },
+      {
+        "index": 3,
+        "scope": "all56",
+        "status": "resolved_under_estimated_guard",
+        "cutoff": 4.092114154647544e-05,
+        "ranks": [
+          3,
+          3
+        ],
+        "energies": [
+          17.275254190624374,
+          16.371916503976863
+        ],
+        "projector_errors": [
+          3.813328266583429e-09,
+          3.864239576509988e-09
+        ]
+      },
+      {
+        "index": 3,
+        "scope": "training40",
+        "status": "resolved_under_estimated_guard",
+        "cutoff": 3.0113033577940668e-05,
+        "ranks": [
+          3,
+          3
+        ],
+        "energies": [
+          10.565603833819058,
+          10.546121141701173
+        ],
+        "projector_errors": [
+          3.6847902914531912e-09,
+          3.758648898840875e-09
+        ]
+      },
+      {
+        "index": 4,
+        "scope": "all56",
+        "status": "resolved_under_estimated_guard",
+        "cutoff": 3.1346316369432185e-05,
+        "ranks": [
+          3,
+          3
+        ],
+        "energies": [
+          1844.19788174923,
+          1721.4163653605929
+        ],
+        "projector_errors": [
+          7.584921848243097e-09,
+          7.659857906606308e-09
+        ]
+      },
+      {
+        "index": 4,
+        "scope": "training40",
+        "status": "resolved_under_estimated_guard",
+        "cutoff": 2.7516767353729277e-05,
+        "ranks": [
+          3,
+          3
+        ],
+        "energies": [
+          1027.5271486252825,
+          984.9048517681484
+        ],
+        "projector_errors": [
+          7.094078467104132e-09,
+          7.206005326917039e-09
+        ]
+      },
+      {
+        "index": 5,
+        "scope": "all56",
+        "status": "resolved_under_estimated_guard",
+        "cutoff": 3.154792368077156e-05,
+        "ranks": [
+          3,
+          3
+        ],
+        "energies": [
+          4.543187924189544,
+          4.133883455285229
+        ],
+        "projector_errors": [
+          7.770075221106283e-09,
+          7.783153199842561e-09
+        ]
+      },
+      {
+        "index": 5,
+        "scope": "training40",
+        "status": "resolved_under_estimated_guard",
+        "cutoff": 2.6968533909927937e-05,
+        "ranks": [
+          3,
+          3
+        ],
+        "energies": [
+          3.0367726294655184,
+          2.7421766326539854
+        ],
+        "projector_errors": [
+          6.8411113034077556e-09,
+          6.902439072715899e-09
+        ]
+      },
+      {
+        "index": 6,
+        "scope": "all56",
+        "status": "resolved_under_estimated_guard",
+        "cutoff": 2.7661621323427385e-05,
+        "ranks": [
+          3,
+          3
+        ],
+        "energies": [
+          3495.4975448775654,
+          3327.0912312336836
+        ],
+        "projector_errors": [
+          1.607470246018951e-08,
+          1.6099116981294004e-08
+        ]
+      },
+      {
+        "index": 6,
+        "scope": "training40",
+        "status": "resolved_under_estimated_guard",
+        "cutoff": 2.3184228320868275e-05,
+        "ranks": [
+          3,
+          3
+        ],
+        "energies": [
+          2028.3307958758442,
+          2013.461260038562
+        ],
+        "projector_errors": [
+          1.4987683617832638e-08,
+          1.536402992375769e-08
+        ]
+      },
+      {
+        "index": 7,
+        "scope": "all56",
+        "status": "resolved_under_estimated_guard",
+        "cutoff": 3.396996998176087e-05,
+        "ranks": [
+          3,
+          3
+        ],
+        "energies": [
+          2.8189281164519397,
+          2.857156202189076
+        ],
+        "projector_errors": [
+          1.6576332581038806e-08,
+          1.6595755487462508e-08
+        ]
+      },
+      {
+        "index": 7,
+        "scope": "training40",
+        "status": "resolved_under_estimated_guard",
+        "cutoff": 2.8301518744163092e-05,
+        "ranks": [
+          3,
+          3
+        ],
+        "energies": [
+          1.8748300596892677,
+          1.9508867204886675
+        ],
+        "projector_errors": [
+          1.508009523736829e-08,
+          1.5319816556658888e-08
+        ]
+      },
+      {
+        "index": 10,
+        "scope": "all56",
+        "status": "resolved_under_estimated_guard",
+        "cutoff": 2.49470819085297e-05,
+        "ranks": [
+          3,
+          3
+        ],
+        "energies": [
+          2891.4227702663306,
+          2830.0905659944
+        ],
+        "projector_errors": [
+          6.039378524577485e-09,
+          6.0475130238751606e-09
+        ]
+      },
+      {
+        "index": 10,
+        "scope": "training40",
+        "status": "resolved_under_estimated_guard",
+        "cutoff": 1.8509402881475822e-05,
+        "ranks": [
+          3,
+          3
+        ],
+        "energies": [
+          2151.0232018087922,
+          2093.6774729923463
+        ],
+        "projector_errors": [
+          5.39059195994415e-09,
+          5.3977721484532665e-09
+        ]
+      },
+      {
+        "index": 11,
+        "scope": "all56",
+        "status": "resolved_under_estimated_guard",
+        "cutoff": 3.255931240357926e-05,
+        "ranks": [
+          3,
+          3
+        ],
+        "energies": [
+          31.39504973082602,
+          30.998237521446953
+        ],
+        "projector_errors": [
+          6.7049790347792376e-09,
+          6.7123203238198845e-09
+        ]
+      },
+      {
+        "index": 11,
+        "scope": "training40",
+        "status": "resolved_under_estimated_guard",
+        "cutoff": 2.613186604602492e-05,
+        "ranks": [
+          3,
+          3
+        ],
+        "energies": [
+          17.903492977773098,
+          17.368770415887063
+        ],
+        "projector_errors": [
+          5.95458535115459e-09,
+          5.9631388927254195e-09
+        ]
+      }
+    ]
+  },
+  "outcome_summary": {
+    "BGNS_trials_executed_once": 10,
+    "BGNS_zero_steps": 0,
+    "algebra_controls_passed": 10,
+    "diagnostic_evaluated": 10,
+    "diagnostic_unknown": 0,
+    "executed_BGNS_linearity_all_passed": true,
+    "executed_BGNS_linearity_passes": 10,
+    "new_fit_pass_count": null,
+    "normal_contexts_retained": 15,
+    "normal_controls_qualified": 5,
+    "normal_queries_compared": 578,
+    "normal_query_comparisons_passed": 578,
+    "old_completions_passed": 10,
+    "old_targets_passed": 3,
+    "protocol_failure_rows": 0,
+    "rows_retained": 12,
+    "upstream_ineligible": 2
+  },
+  "scope_details": {
+    "archived_datasets": 5,
+    "supplied_covariance_hypotheses": 10,
+    "archived_records": 12,
+    "eligible_records": 10,
+    "upstream_refusals": 2,
+    "prospective_diagonal_controls": 4,
+    "post_hoc_original_normal_control": 1,
+    "new_fit_pass_count": null,
+    "physical_accuracy_qualified": false,
+    "heldout_was_used_in_preprocessing": true
+  },
+  "saved_audits": {
+    "public_stdlib": {
+      "checks": 257459,
+      "failures": 0
+    },
+    "independent_census_work_and_QR": {
+      "checks": 803488,
+      "failures": 0
+    },
+    "independent_saved_math_and_numpy": {
+      "checks": 722095,
+      "failures": 0,
+      "independent_svd_kernel": false
+    }
+  },
+  "post_hoc_descriptive_geometry": {
+    "improvement_counts": {
+      "centre": 7,
+      "radius": 6,
+      "fraction": 7
+    },
+    "evaluated_trials": 10,
+    "all_three_errors_increased_indices": [
+      0,
+      1,
+      7
+    ],
+    "new_fit_pass_count": null,
+    "scope": "Synthetic truth examined only after all choices/predictions fixed; residual improvement does not guarantee geometry improvement."
+  }
+}

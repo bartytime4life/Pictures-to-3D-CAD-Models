@@ -14,7 +14,13 @@ calculations remain conditional on the supplied normal. Read the
 and [lossless archive/review commands](../studies/fixtures/finite-residual-information-v1/README.md).
 A separate post-hoc rotation identity below motivated the independently frozen
 [finite-chord study](validation/finite-normal-derivative.md). That study retains
-its own failed outcome; neither replaces the original control or unknown columns.
+its own failed V1 outcome. The later
+[V2 operator correction](finite-normal-error-control.md) and
+[reference-node diagnostic](finite-normal-oracle-conditioning.md) have separate
+qualifications. None replaces this replay's original finite-difference control
+or unknown normal columns. A separate
+[analytic-normal replay](validation/finite-analytic-normal-information.md) now
+qualifies the new method and ten joint trials without replacing this report.
 
 ## Project nuisance directions before interpreting blur
 
@@ -251,8 +257,18 @@ remain separate from this conditional Gaussian derivation.
 ## Remaining evidence
 
 The saved-data audit verifies arithmetic and source binding, not physical PSF
-causation. The new normal-sensitivity checks retain compressed-map resource
-and error-estimation limits; they do not replace the old unknown normal columns.
+causation. The original V1 normal-derivative study retains its compressed-map
+resource and error-estimation failures. The
+[V2 correction](validation/finite-normal-error-control.md) resolves both original
+candidate controls under independent high-precision checks and passes its
+417-scene comparison. The separate
+[26-scene reference diagnostic](validation/finite-normal-oracle-conditioning.md)
+investigates source-node rounding on a restricted family; general oracle error
+accounting remains unqualified. These later studies do not replace the old
+unknown normal columns. The later
+[analytic-normal diagnostic](validation/finite-analytic-normal-information.md)
+qualifies new columns and bounded steps on the exact archived observations;
+its geometric counterexamples and the original FD failure remain separate.
 An acquisition-matched experiment needs actual source samples, transforms,
 finite kernels, encoding/resampling details and stage bytes. Product adoption
 also needs supported optics/thickness frames, measured-photo checks, bounded

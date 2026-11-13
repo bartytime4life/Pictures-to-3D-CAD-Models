@@ -1,0 +1,131 @@
+#!/usr/bin/env python3
+"""Stdlib-only protocol routing controls; no scientific function executes."""
+import hashlib
+import importlib.util
+import json
+from pathlib import Path
+from types import SimpleNamespace
+
+ROOT = Path(__file__).resolve().parents[2]
+SOURCE = ROOT / 'studies/verification/finite-analytic-normal-information-v1.py'
+OUTPUT = Path(__file__).with_suffix('.json')
+if OUTPUT.exists() or OUTPUT.is_symlink():
+    raise SystemExit('fresh receipt required')
+before = hashlib.sha256(SOURCE.read_bytes()).hexdigest()
+spec = importlib.util.spec_from_file_location('protocol_gates_runner_stubbed', SOURCE)
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+checks = []
+counts = {'normal_api_calls': 0, 'oracle_density_calls': 0, 'reference_calls': 0,
+          'numpy_calls': 0, 'svd_calls': 0, 'scientific_algebra_calls': 0,
+          'actual_qualification_calls': 0, 'trial_calls': 0,
+          'stub_qualify_calls': 0, 'stub_normal_entries': 0, 'stub_oracle_entries': 0}
+
+class Calls:
+    def __init__(self):
+        self.log = []
+        self.context = {}
+    def evaluate(self, *args):
+        counts['stub_normal_entries'] += 1
+        return {'stub': 'normal payload'}
+
+class Oracle:
+    def __init__(self, oracle_protocol=False, elementary_protocol=False, elementary_error=False):
+        self.oracle_protocol = oracle_protocol
+        self.elementary_protocol = elementary_protocol
+        self.elementary_error = elementary_error
+    def evaluate_batch(self, *args, **kwargs):
+        counts['stub_oracle_entries'] += 1
+        return {'protocol_failure': self.oracle_protocol, 'stub': 'oracle payload'}
+    def elementary_reference(self, *args):
+        if self.elementary_error:
+            raise TypeError('invented elementary protocol failure')
+        return {'protocol_failure': self.elementary_protocol, 'stub': 'elementary payload'}
+
+original_context = module.normal_context
+module.qualify_normal = lambda *args: stub_qualification()
+def stub_qualification():
+    counts['stub_qualify_calls'] += 1
+    return {'qualified': True, 'block': {'values': [], 'errors': []}}
+module.elementary_comparisons = lambda *args: [{'passed': True}]
+plan = {'normal_api': {'settings': {}}, 'source_chord_oracle': {}}
+for name, bad_validator, oracle_protocol, elementary_protocol, elementary_error in (
+    ('validator_failure_cannot_requalify', True, False, False, False),
+    ('explicit_oracle_failure_cannot_requalify', False, True, False, False),
+    ('elementary_failure_cannot_requalify', False, False, True, False),
+    ('elementary_exception_cannot_requalify', False, False, False, True),
+    ('valid_stub_context_remains_qualified', False, False, False, False),
+):
+    def checker(*args, fail=bad_validator):
+        if fail:
+            raise ValueError('invented oracle payload validator failure')
+    module.check_oracle_payload = checker
+    elementary = {} if elementary_protocol or elementary_error else None
+    result = original_context({}, [], [], Calls(),
+        Oracle(oracle_protocol, elementary_protocol, elementary_error), {}, {}, plan,
+        elementary_control=elementary)
+    expected_failure = bad_validator or oracle_protocol or elementary_protocol or elementary_error
+    passed = (result['protocol_failure'] is expected_failure
+              and result['qualified'] is (not expected_failure))
+    checks.append({'name': name, 'passed': passed, 'retained': result})
+
+# Exercise the explicit row gate even if a future context erroneously returns
+# qualified=True together with protocol_failure=True. All algebra/qualification
+# and numerical dependencies below are stubs; only routing/JSON hashing executes.
+module.make_rules = lambda output: {}
+module.algebra_controls = lambda plan: [{'passed': True}]
+module.data_from_saved = lambda row: {'parameters': {}, 'pixels': [], 'levels': [], 'stub': 'observations only'}
+module.BASE = SimpleNamespace(verify_pixels=lambda row: {},
+    descriptive_evaluation=lambda *args: {'stub': 'postprediction descriptive routing'})
+gates = []
+def gate(records, normal_qualified, controls_qualified):
+    gates.append(normal_qualified)
+    return bool(normal_qualified and controls_qualified)
+module.derivatives_qualified = gate
+def context_stub(*args, **kwargs):
+    archived = args[3].context['scope'] == 'archived_row'
+    return {'protocol_failure': archived, 'qualified': True,
+            'qualification': {'block': {'values': [], 'errors': []}}}
+module.normal_context = context_stub
+def analysis_stub(data, blocks, calls, plan, qualified, analysis):
+    analysis.update(status='diagnostic_evaluated' if qualified else 'diagnostic_unknown',
+                    step={'status': 'withheld', 'local_linearization_qualified': False})
+module.analyze_data = analysis_stub
+rows = []
+for i in range(12):
+    rows.append({'index': i, 'name': f'stub{i}', 'lane': 'stub_lane',
+                 'status': 'upstream_ineligible' if i in (8, 9) else 'stub_old_unknown',
+                 'old_targets_passed': False, 'old_completion_passed': False,
+                 'input_binding': {}, 'observations': {}, 'baseline': {},
+                 'active_brightness': {}, 'blocks': {'B': {}, 'G': {}, 'S': {}},
+                 'finite_differences': [{'stable': True}] * 3})
+control = {'id': 'stub_control', 'legacy_control_index': 0,
+           'parameters': {}, 'pixels': [], 'levels': []}
+stub_plan = {'controls': [], 'legacy_normal_control': control,
+             'population': [{**{k: r[k] for k in ('index', 'name', 'lane')},
+                'eligible': r['index'] not in (8, 9),
+                'original_row_sha256': module.digest(module.canonical_bytes(r))} for r in rows]}
+saved = {'rows': rows, 'independent_forward_controls': [{'passed': True}] * 3}
+report = {}
+module.scientific_run(report, stub_plan, saved, {'rows': rows}, Calls(),
+                      SimpleNamespace(make_constants=lambda *args: {}))
+checks.append({'name': 'all_ten_row_derivative_gates_explicitly_reject_protocol_failure',
+               'passed': len(gates) == 10 and gates == [False] * 10,
+               'gates': gates,
+               'statuses': [r['status'] for r in report['rows']],
+               'rows_retained': len(report['rows'])})
+after = hashlib.sha256(SOURCE.read_bytes()).hexdigest()
+checks.append({'name': 'source_unchanged', 'passed': before == after})
+checks.append({'name': 'zero_actual_scientific_calls', 'passed': all(
+    value == 0 for key, value in counts.items() if not key.startswith('stub_'))})
+receipt = {'scope': 'Invented stdlib-only routing controls; all API, oracle, actual qualification, '
+                    'algebra, NumPy/SVD and trial paths replaced by stubs. No scientific evaluations.',
+           'source_before': before, 'source_after': after,
+           'script_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+           'counts': counts, 'checks': checks, 'passed': all(r['passed'] for r in checks)}
+with OUTPUT.open('x') as stream:
+    json.dump(receipt, stream, indent=2, sort_keys=True, allow_nan=False)
+    stream.write('\n')
+print(json.dumps({'output': str(OUTPUT), 'checks': len(checks), 'passed': receipt['passed']},
+                 sort_keys=True, allow_nan=False))
+raise SystemExit(0 if receipt['passed'] else 1)
