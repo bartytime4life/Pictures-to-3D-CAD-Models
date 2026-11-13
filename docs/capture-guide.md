@@ -52,10 +52,14 @@ With a sheet the width field is filled from the sheet. Measure the part's real w
 Compare every fitted boundary with the photograph. An [initial-fit support
 check](validation/fit-support.md) now prevents the reproduced thin-segment
 extrapolation and retains an outline when the analytic fit lacks support.
-A blur that differs by direction, from a shaken camera, is measured and traced by
-direction when the part's edges face at least three ways (holes help), and the
-trace says so; a steadier photo is still sharper, and under a soft shadow such a
-blur is corrected only in part. Other [camera-model limits](validation/scientific-model-review.md) remain.
+A blur that differs by direction, from a shaken camera, can be measured and
+used separately across supported edges. Estimating a full covariance needs at
+least three independent directions (holes help). A part with only two supported
+directions can still use their measured widths for edge searches and the
+shadow-light model; its corners and curves keep one width. See the
+[method and limits](reference-sheet.md#3-segmentation-and-sub-pixel-edges).
+A steadier photo is still sharper, and under a soft shadow correction can
+remain partial. Other [camera-model limits](validation/scientific-model-review.md) remain.
 For an incorrect fit, use ordinary silhouette tracing with a measured scale or
 reconstruct the critical features in CAD, then check dimensions independently.
 

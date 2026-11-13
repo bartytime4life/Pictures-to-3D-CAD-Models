@@ -8,6 +8,12 @@ uniform point scale through the existing free-circle, free-arc, slot-cap and
 line-refitting calculations. It does not infer a new blur model or add a
 workbench control.
 
+Per-direction edge-search widths can also be available when no full covariance
+has been identified, including two-direction parts. That improves edge
+localization without supplying the covariance required for directional corner
+or curve corrections. The scalar/matrix transport rules below apply to the
+model actually supplied; see [the tracing contract](reference-sheet.md#3-segmentation-and-sub-pixel-edges).
+
 Uniform transport and mixed support have different contracts. Mixed free curves,
 caps and scalar corner fits retain explicit geometry approximations; a mixed
 nonparallel corner with supplied covariance remains withheld. The

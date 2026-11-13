@@ -6,12 +6,17 @@ Run these from the repository root after setup. `make` prints the supported
 targets. These are the tools present in the reviewed main-based source; research
 scripts from a separate branch are not implied by this list.
 
-On the source-cell candidate, start with the
+For the source-cell APIs included in this main-based source, start with the
 [small acquisition example](finite-acquisition-mean.md#small-executable-example)
 and [input/result/resource contract](finite-acquisition-mean.md#refusals-provenance-and-work).
 This is an explicit Python call, not a command that traces a photograph or
 fits geometry. For saved-only review, the 182-artifact workflow in the table
 verifies the independent mean without running a model.
+
+For five unrounded area columns and signed propagation, read the
+[cell-sensitivity contract](finite-cell-sensitivity.md) and its
+[14-artifact saved-only workflow](../studies/fixtures/finite-cell-sensitivity-v1/README.md).
+There is no acquisition-aware five-parameter fit command or HTTP mode yet.
 
 The [acquisition evidence workflow](../studies/fixtures/finite-acquisition-operator-v1/README.md)
 verifies 123 stored artifacts, extracts the complete saved run and checks the

@@ -130,6 +130,14 @@ reproduces scalar-model bias and retains numerical refusals, weak-radius control
 and the remaining physical-model limits. General free curves and slot caps retain
 their separate approximations; this does not import the source-space research stack.
 
+Merged PR #107 also uses measured widths per supported direction when the
+covariance fit is unavailable. Two-direction parts can therefore improve their
+edge searches without identifying a full covariance. A matching covariance
+used for paper-shadow blurring is not supplied to corner/curve correction;
+those paths retain their scalar model. The
+[current method and recorded synthetic comparisons](reference-sheet.md#3-segmentation-and-sub-pixel-edges)
+supersede the historical one-width fallback described below.
+
 The [blur-frame follow-up](blur-frames.md) distinguishes a coordinate error from
 those model errors. A known uniform map transports `sigma` by `k` and covariance
 by `k²`; the radius series is homogeneous only when both radius and spread move
@@ -273,6 +281,11 @@ fresh cohort. The 30 examined cases are now development evidence. An unflagged
 diagnostic cannot establish accurate geometry or a Gaussian optical cause.
 
 ### Directional blur in the tracer — November 12, 2026
+
+This subsection records the earlier covariance path. PR #107's later
+[two-direction repair](reference-sheet.md#3-segmentation-and-sub-pixel-edges)
+also supplies measured edge widths when that covariance is unavailable;
+the historical fallback statements below do not describe every current edge search.
 
 The tracer measures a blur that differs by direction as a covariance S from its edges' widths (σₙ² = nᵀSn in the rectified image) and, above a principal-spread ratio of 1.15, traces each edge with its own σₙ; [reference-sheet tracing](reference-sheet.md), §3, has the method and results. It is not the research diagnostic above, and it answers that qualification's findings with rules of its own:
 

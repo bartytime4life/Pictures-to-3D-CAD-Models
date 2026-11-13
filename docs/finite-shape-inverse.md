@@ -217,7 +217,9 @@ mean after eliminating free brightness levels. Using the residual-dependent
 second term as information could invent geometric identifiability from noise.
 The reported geometry rank uses the projected mean, an arithmetic floor and
 the ceiling `rank(T)-rank(A_F)`. It is not an uncertainty interval or a global
-identifiability certificate. Its condition number uses parameter columns scaled
+identifiability certificate. This rank is conditional on the selected brightness
+face; at active bounds it does not describe the full feasible nuisance tangent
+cone. Its condition number uses parameter columns scaled
 by the supplied domain widths, so it depends on that parameterization.
 Active-face transitions are piecewise smooth;
 actual-cost checks remain necessary.

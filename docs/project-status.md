@@ -1,6 +1,39 @@
 # Source scope and verification status
 
-## Subsequent developer candidate: area sensitivities and linear acquisition
+## Current source snapshot — November 13, 2026, 17:49 UTC
+
+Main is `aa15903c0c3e2415fa5751446c7b871d4d1110cb`, tree
+`1c828c0dd54413e78c6f5788d4d702a6c1158d48`. It includes the source-cell mean
+from [PR #105](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/105),
+the two-direction edge-width repair from
+[PR #107](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/107),
+and the area-sensitivity/linear-acquisition operators from
+[PR #108](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/108).
+All three PRs are merged at this readback. PR #106 merged into its research
+base after PR #105 closed; its documentation reached main through PR #108.
+
+| Capability in this source | Scope and evidence |
+| --- | --- |
+| Photo tracing, measurement, CAD and export | User workflow; two-direction parts can use measured widths per edge without an identified covariance. Their corners and curves retain the scalar model. [Tracing method](reference-sheet.md#3-segmentation-and-sub-pixel-edges) |
+| Gaussian finite-material inverse | Developer Python API; four geometry parameters with supplied chord normal and optics. [Contract](finite-shape-inverse.md) |
+| Source-cell area and staged acquisition mean | Developer Python APIs with supplied geometry, levels, kernels and affine sampling; [128 saved-stage comparisons](validation/finite-acquisition-mean.md) |
+| Five unrounded area sensitivities and signed linear propagation | Developer Python APIs; [259 focused tests and 33 study rows](validation/finite-cell-sensitivity.md), without an inverse-recovery result |
+| Five-geometry-parameter acquisition-aware recovery with unknown brightness | Planned; no implementation, recovery study, HTTP mode or automatic correction in this source |
+
+PR #108's head is `f54e47a443015c2e4701a143c4ac1c469595b731`.
+Its [reference-library run 43475029376](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43475029376)
+has completed successfully; its
+[workbench run 43475029242](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43475029242)
+is still in progress with no conclusion. Those results belong to that PR head,
+which predates the combined main tree above. Merge, hosted checks, installed
+runtime, real-camera accuracy and physical acceptance remain separate.
+
+The [documentation review](validation/documentation-cell-state.md) audits this
+main-based source. Earlier snapshots below are historical records; their open
+PR states and absent-module statements describe their own source and time.
+The primary `codex/slicer-integration` checkout remains separate and unchanged.
+
+## Historical cell-sensitivity publication context
 
 This candidate follows documentation PR #106's tree
 `278cb9abf663b061803e467db06c5a545fc3eb52`. At publication readback, main is
@@ -37,7 +70,7 @@ current text/API audit. The primary `codex/slicer-integration` checkout is
 preserved separately. No installed runtime, deployment or physical acceptance
 follows from these source states.
 
-## Developer candidate: source-cell acquisition means
+## Historical source-cell candidate context
 
 This candidate extends the evidence package below with independent
 [analytic source-cell integration and discrete acquisition means](finite-acquisition-mean.md).
@@ -178,6 +211,10 @@ this is separate from the known-map acquisition experiment.
 Directional covariance is estimated from rise widths in the rectified
 measurement image. It supplies normal-specific edge/wall widths and an
 approximate scalar for other stages; it is not a calibrated sensor PSF.
+When that covariance is unavailable, sufficiently supported directional bins
+can still supply separate edge-search widths. A matching covariance used to
+blur the paper-shadow model is not passed off as an identified covariance for
+corner or curve correction. Those paths retain their scalar fallback.
 Supported nonparallel corners use its full covariance. Uniform thickness scales
 transport blur into supported curve frames. Mixed frames retain their
 approximation/refusal policies. Final accepted arcs use circle-consistent joins,
@@ -192,6 +229,14 @@ the circular-segment mean API dispatches to it while preserving its result
 schema. Projective maps retain the scalar path. See the
 [derivation and work/memory contracts](finite-affine-evaluation.md).
 None is called by automatic trace/build or exposed through an HTTP mode.
+
+`backend.finite_aperture` and `backend.finite_acquisition` supply independent
+source-cell coverage and the literal rounded acquisition chain.
+`backend.finite_aperture_sensitivity` supplies five unrounded area columns;
+`backend.finite_acquisition_linear` propagates signed float64 fields through a
+separate fixed linear model. These operators are available here, but are not
+called by `fit_circular_segment`, automatic tracing or an HTTP route. Turning
+off sRGB8 in the staged mean does not remove its float32 casts.
 
 Source-context capture, raw-source fitting, response calibration and set-inversion
 APIs from the separate research branch must not be assumed available.
@@ -230,9 +275,12 @@ mismatch rather than identify a physical camera PSF.
 The acquisition study now supplies a controlled counterexample to second-moment
 Gaussian closure. A subsequent source-cell mean now has
 [independent supplied-stage qualification](validation/finite-acquisition-mean.md).
-A future inverse still needs qualified derivatives or another bounded search
-method, a declared treatment of rounding/encoding and prospective recovery
-checks. Supplied source assumptions and observed camera calibration remain
+A future inverse can use the separately
+[checked unrounded derivatives](finite-cell-sensitivity.md), but still needs
+observed-only seeds and bounds, brightness/rank diagnostics, a bounded search
+for undefined derivatives or rounded stages, and prospective recovery checks.
+The current five-query coupled controls do not prove five-parameter rank after
+two unknown brightness levels. Supplied source assumptions and observed camera calibration remain
 distinct. Neither study automatically corrects CAD.
 
 Automatic adoption also needs supported acquisition and thickness models,
