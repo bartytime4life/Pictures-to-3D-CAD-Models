@@ -682,6 +682,45 @@ def test_a_directional_blur_shrinks_a_circle_by_its_geometric_mean_variance():
     assert edges.edge_covariance(image, straight, across, 2.0) is None
 
 
+def test_edge_widths_by_direction_reads_each_way_a_two_way_part_faces(monkeypatch):
+    """edges.edge_widths_by_direction, with the widths given directly: a rectangle's
+    edges face two ways, so edge_covariance cannot fit a covariance, but each way's
+    width is still measured. Its long edges read 1.9 px and its short ones 3.5 px; a
+    few corner profiles fall in other bins, which stay unmeasured, and a normal there
+    takes the nearest measured bin's width (_spread_by_direction). With one measured
+    direction there is nothing to compare, and None is returned. The second pass's
+    windows reach 5 times each bin's own width, at least 8 px."""
+    rng = np.random.default_rng(4)
+    # Edges turned 15 degrees, inside the bins of 0-30 and 90-120 degrees.
+    tilt = math.radians(15)
+    angles = np.concatenate([rng.normal(tilt, 0.01, 200), rng.normal(tilt + np.pi / 2, 0.01, 300), [0.95, 1.05, 2.6]])
+    normals = np.column_stack([np.cos(angles), np.sin(angles)])
+    truth = np.where(np.abs(np.cos(angles - tilt)) > 0.9, 3.5, 1.9) * (1 + rng.normal(0, 0.02, len(angles)))
+    windows = []
+
+    def widths(g, points, normals_, half, step, single_step=False):
+        windows.append(np.broadcast_to(half, (len(points),)).copy())
+        return truth[: len(points)]
+
+    monkeypatch.setattr(edges, "_edge_widths", widths)
+    medians, counts, means = edges.edge_widths_by_direction(None, np.zeros((len(angles), 2)), normals, 2.0)
+    assert abs(medians[0] - 3.5) < 0.05 and abs(medians[3] - 1.9) < 0.05
+    assert np.isnan(medians[[1, 2, 4, 5]]).all()
+    assert np.allclose(windows[1][:200], 5 * medians[0]) and np.allclose(windows[1][200:500], 5 * medians[3])
+    corner = np.array([[math.cos(0.75), math.sin(0.75)], [math.cos(1.25), math.sin(1.25)]])
+    assert np.allclose(edges._spread_by_direction(corner, medians), [medians[0], medians[3]])
+    one_way = normals[:200]
+    assert edges.edge_widths_by_direction(None, np.zeros((200, 2)), one_way, 2.0) is None
+    # The shadow model's blur from the two measured ways: each one's spread is its width.
+    S = edges._covariance_from_directions(medians, counts, means)
+    centres = means[[0, 3]]
+    assert np.allclose(centres, [tilt, tilt + np.pi / 2], atol=0.003)
+    for centre, width in zip(centres, (medians[0], medians[3])):
+        n = np.array([math.cos(centre), math.sin(centre)])
+        assert abs(math.sqrt(n @ S @ n) - width) < 1e-9
+    assert np.linalg.eigvalsh(S).min() > 0
+
+
 def test_the_blur_covariance_needs_three_supported_directions_and_must_fit_each(monkeypatch):
     """Properties of edges.edge_covariance's support and adequacy rules, with the edge
     widths given directly. Widths that follow n' S n in six directions return S; the
