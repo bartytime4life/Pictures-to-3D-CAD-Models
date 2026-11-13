@@ -328,6 +328,7 @@ It changes guides relative to that integrated baseline, not runtime behavior.
 | Covariance-aware nonparallel corners | Candidate based on PR #81 (`60732a7`); [687 Python tests, two focused browser scenarios and complete study](validation/anisotropic-corners.md) | Fixed 16-case conditional experiment, thickness-frame controls and bounded line-only recovery; first failed integration retained; no physical-camera qualification |
 | Directional covariance rank guard | Draft PR #78, source `185d682`: [633 local Python tests](validation/directional-blur-rank.md), build and 76 focused checks | Actual sampled Gaussian-step rank counterexample; no new whole-photo, browser or physical-accuracy claim |
 | Recorded directional-blur checks | Branch `claude/directional-blur`, on the slot end-cap commit and `main` at `485da7e` (after #47): **627 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#a-blur-that-differs-by-direction--november-12-2026) | Local result; synthetic photos including the directional-spread qualification's kinds of case, and exact blurred holes; supersedes that record's "no production correction" |
+| Contact-shadow observability study | Branch `claude/contact-shadow-limits` on `main` at `70055dc`, documentation only, as recorded [below](#contact-shadows-beside-an-edge--november-13-2026) | Exactly rendered scenes; an unobservable kernel radius, a closer-fit study and a profile-shape fit, none adopted; capture guidance |
 | Recorded renderer channel-noise checks | Branch `claude/renderer-channel-noise`, on `main` at `e56c478` (after #116): **1302 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#independent-colour-noise-in-the-test-renderer--november-13-2026) | Test renderer only; the documented tables, rectangles, plates and noise seeds re-measured; three regression limits re-set from new and planted-fault figures |
 | Recorded shadow-free blur checks | Branch `claude/shadow-free-blur`, on `main` at `81248a7` (after #113): **1302 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#the-blur-beside-a-shadow--november-13-2026) | Local result; synthetic photos with five shapes of shadow, exactly rendered scenes, the documented tables and noise seeds; parts traced with a thickness keep the shadowed width; second-pass re-centring not adopted |
 | Recorded two-way blur checks | Branch `claude/rect-regression`, on `main` at `f2e0fd6` (after #104): **1041 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#two-way-parts-under-a-directional-blur--november-13-2026) | Local result; synthetic sharp-cornered rectangles, the documented tables and noise seeds; corners and curves of two-way parts keep one width |
@@ -364,6 +365,35 @@ stub fix in managed cloud sessions. The [reference-sensitivity record](validatio
 covers the endpoint explorer. The original CAD release and optional Ollama
 integration retain separate historical evidence. These records do not establish
 that a newly created or published cloud task has been validated.
+
+## Contact shadows beside an edge — November 13, 2026
+
+Branch `claude/contact-shadow-limits`, on `main` at `70055dc` (after #118). A research record, with documentation only; the tracer is unchanged. See [reference-sheet tracing](reference-sheet.md), §3 (**The shadow model beside an edge it shades**).
+
+- **The question.** Why the fitted shadow (`shadow.fit_paper_light`) puts shaded edges outward, and whether a contact shadow, deepest at the part's edge, can be measured from one photo.
+- **The unobservable radius.** A point of paper at a distance u from the part receives the kernel K only at offsets at least u long, since x − o lies in the part only if |o| ≥ u. The fit uses paper from 2.5 σ (plus 1.5 px) out, so K within that radius of its origin never meets the data. Only the smoothness prior and the ridge (10⁻³, which pulls it towards no shadow) set it. This holds for every edge, outline or hole, because each one hides the same strip of offsets.
+- **What that does.** On exactly rendered scenes under a 4 px blur, the fitted light read too bright beside a shaded edge: 2.6 grey levels against a 42-level shadow rise for a renderer-like shadow, and about 11 levels for a contact shadow. With the fitted light the second pass put the shaded side 0.040 px out; with the true light it read within 0.003 px.
+- **Reducing it** (a study on exactly rendered scenes; not adopted, §3). With the footprint from the traced edges, the paper fitted from 1.5 σ with the step's tail computed at full resolution, and a ridge of 10⁻⁴, worst errors under a 4 px blur fell:
+
+  | Shadow | Before (px) | After (px) |
+  | --- | --- | --- |
+  | Renderer-like | 0.047 | 0.020 |
+  | Two lights | 0.114 | 0.017 |
+  | Contact, 1.5 mm | 0.160 | 0.061 |
+  | Contact, 0.8 mm | 0.261 | 0.171 |
+  | None | 0.000 | 0.000 |
+
+  From a mask half a pixel off the edges, the closer fit read the step's own tail as shadow: 0.028–0.045 px on the shadow-free scene. The photos' classified mask lies further off, about a third of σ. In the full tracer on the corrected renderer this went with the re-centred second pass. The contact-shadow seeds went from 107 to 192 µm, as recorded [below](#independent-colour-noise-in-the-test-renderer--november-13-2026).
+- **From the profile's shape** (not adopted). Each straight side's mean profile was fitted with its own edge and part level and one shared, non-negative shadow inside the unobservable radius. The blur's shape decides it:
+
+  | Contact shadow (half level) | Exact blur | Width 0.5 % too wide | Width 1 % too wide | Defocus disk inside the blur |
+  | --- | --- | --- | --- | --- |
+  | 1.5 mm (+0.058 to +0.068 px) | +0.010 to +0.026 px | +0.04 to +0.05 px | +0.06 to +0.07 px | +0.08 to +0.09 px (half level +0.075 to +0.085) |
+  | 0.8 mm (+0.19 px) | +0.10 to +0.11 px | +0.13 px | +0.15 to +0.16 px | +0.17 to +0.18 px (half level +0.20) |
+
+  The shadow-free scene read −0.011 px with the exact blur. A blur measured from one photo is good to 0.5–2 %, so under a wide blur a contact shadow within about 1.5–2.5 blur widths of an edge cannot be told from the edge in one photo. An earlier per-side version on rendered photos had found shadows of strength about 0.2 on shadow-free edges.
+- **Guidance added** (capture guide, **Soften the light**). Focus sharply, since the unmeasurable zone grows with the blur. A shadow reaches from the edge about the part's thickness times the cotangent of the light's elevation, so light from well above shortens it.
+- **Checks run.** Documentation only: local links and anchors checked, and `pytest` with runtime warnings as errors, **1302 passed**.
 
 ## Independent colour noise in the test renderer — November 13, 2026
 
