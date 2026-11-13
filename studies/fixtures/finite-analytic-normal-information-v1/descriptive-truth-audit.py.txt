@@ -1,0 +1,17 @@
+"""Independent scalar check of frozen-prediction synthetic truth scores, post hoc."""
+from pathlib import Path
+import hashlib,json,math
+root=Path.cwd();path=root/'.local/verification/analytic-normal-information-v1-canonical.json'
+raw=path.read_bytes();assert hashlib.sha256(raw).hexdigest()=='11607377de1a98446c07e53be67c01cf669fd99dca6f1ea0abf8284a1a47d387'
+report=json.loads(raw);old={r['index']:r for r in json.loads((root/'studies/results/finite-photo-intensity-v2.json').read_bytes())['rows']};rows=[];checks=0;counts={'centre':0,'radius':0,'fraction':0}
+for row in report['rows']:
+ if row['status']=='upstream_ineligible':continue
+ parameters=row['analysis']['step']['trial_parameters'];source=old[row['index']];truth=source['truth_after_scoring'];ppm=source['ppm'];saved=row['evaluation_after_all_predictions']['single_step_descriptive_geometry'][0]
+ actual={'centre_error_mm':math.hypot(*(parameters['centre'][i]/ppm-truth['centre_mm'][i] for i in range(2))),'radius_error_mm':abs(parameters['radius']/ppm-truth['radius_mm']),'fraction_error':abs(parameters['fraction']-truth['fraction'])}
+ for key,val in actual.items():assert math.isclose(val,saved[key],rel_tol=1e-12,abs_tol=1e-14),(row['index'],key,val,saved[key]);checks+=1
+ baseline=source['geometry_after_scoring'];pairs={'centre':[baseline['centre_error_mm'],actual['centre_error_mm']],'radius':[baseline['absolute_radius_error_mm'],actual['radius_error_mm']],'fraction':[baseline['absolute_fraction_error'],actual['fraction_error']]}
+ for key,(a,b) in pairs.items():counts[key]+=b<a
+ rows.append({'index':row['index'],'errors_baseline_and_new':pairs,'all_three_geometric_errors_increased':all(b>a for a,b in pairs.values())})
+assert len(rows)==10
+out={'input_sha256':hashlib.sha256(raw).hexdigest(),'scope':'Post-hoc synthetic truth arithmetic after all predictions fixed; no model/optimizer/reference, no new target-pass criterion or physical result','checks':checks,'failures':0,'passed':True,'rows':rows,'descriptive_improvement_counts':counts,'all_three_errors_increased_indices':[r['index'] for r in rows if r['all_three_geometric_errors_increased']]}
+(root/'.local/verification/analytic-normal-descriptive-truth-audit-v1.json').write_text(json.dumps(out,indent=2)+'\n');print(json.dumps({k:v for k,v in out.items() if k!='rows'}))

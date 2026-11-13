@@ -1,5 +1,33 @@
 # Workbench change log
 
+## Analytic-normal residual information — November 12, 2026
+
+- Freeze the plan and final scientific source before one complete execution.
+  Qualify all 578 normal comparisons with an independent affine chord reference,
+  preserve all archived rows/B/G/S data, and pass ten bounded joint-trial checks.
+- Compare fixed- and moving-normal covariance information at a shared cutoff.
+  Retain all three directions, conditional energy increases and the cases where
+  lower residuals worsen synthetic geometry. No new fit-pass count or automatic
+  correction is inferred.
+- Preserve the complete lossless report, first routing-fixture failure and
+  independent saved-data audits. Add portable review commands and link the
+  [mathematics](finite-analytic-normal-information.md) and
+  [complete evidence](validation/finite-analytic-normal-information.md).
+
+## Documentation alignment with published PR #100 — November 12, 2026
+
+- Review all workbench, study, fixture and companion-library documentation.
+  Put startup and the user workflow before research detail in the README;
+  refresh current review links and the exact-head PR/CI dependency snapshot.
+- Distinguish the original V1 derivative failures, corrected V2 operator and
+  restricted reference-node diagnostic without rewriting their retained results.
+  Document the current corner stopping rule, near-parallel cap heuristic and
+  narrow-wall example's assumptions.
+- Clarify report overwrites and library build prerequisites. Preserve every
+  non-Markdown file and historical validation record. The
+  [coverage and verification record](validation/documentation-pr100-state.md)
+  separates this documentation pass from numerical, browser and physical work.
+
 ## Projective reference-node arithmetic — November 12, 2026
 
 - Freeze a separate 26-scene diagnostic, retaining both known controls and 24

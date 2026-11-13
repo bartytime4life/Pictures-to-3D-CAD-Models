@@ -152,7 +152,11 @@ reference-library/
 
 ## Build and test
 
-Reading needs nothing but a browser. To rebuild or test, install Node 20+ and Python 3.10+, then run from this folder:
+Reading needs nothing but a browser. Before rebuilding or testing, follow
+[BUILD.md prerequisites and setup](BUILD.md#requirements): Node 20+ and Python
+3.10+ alone do not install the locked Node packages, Python PDF dependencies,
+fonts, browser or OpenSCAD needed by the selected targets. Keep the library's
+Python environment active, then run from this folder:
 
 ```bash
 make test

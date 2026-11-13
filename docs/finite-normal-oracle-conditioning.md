@@ -123,9 +123,10 @@ at fixed represented nodes does not remove coefficient or quadrature-truncation
 error. [NIST's quadrature treatment](https://dlmf.nist.gov/3.5) distinguishes the
 quadrature formula from its remainder.
 
-The next application-facing dependency is a separately frozen
-[normal-aware residual-information diagnostic](finite-residual-information.md).
-It must give the analytic normal column its own statuses, error estimates and
-work accounting while retaining the original finite-difference failure. Only
-after that diagnostic should a bounded normal-aware inverse and one reviewed
-refinement candidate be considered for the interface.
+The separately frozen [analytic-normal residual diagnostic](finite-analytic-normal-information.md)
+now qualifies that column on the archived translation maps, retaining its own
+statuses, errors, work and the original finite-difference failure. Its
+[complete result](validation/finite-analytic-normal-information.md) also shows
+that local residual improvement need not improve synthetic geometry. A bounded
+normal-aware inverse, acquisition/model adequacy and one accepted boundary still
+need qualification before any interface refinement.

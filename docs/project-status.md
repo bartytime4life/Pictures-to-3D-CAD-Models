@@ -1,203 +1,107 @@
 # Source scope and verification status
 
-This follow-up adds a separately frozen
-[projective-node arithmetic diagnostic](validation/finite-normal-oracle-conditioning.md)
-over the published PR #99 source below. It retains 26 passing controls and
-source-bound evidence, with no inherited production-code changes. The original
-V2 protocol and its recorded reference-error limitation remain unchanged.
+This candidate builds on published documentation draft
+[PR #101](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/101),
+head `9db5f3f506020d8673ffa78fb55b7a1b8ee5dbb5`, tree
+`84c9f0fb3930b76fb96d33424cb5fde56a01f9b2`.
+The [preceding documentation review](validation/documentation-pr100-state.md)
+covers its PR #100 base. This candidate adds the separately frozen
+[analytic-normal experiment](validation/finite-analytic-normal-information.md),
+which passes all 578 derivative comparisons and ten bounded joint-trial checks.
+It retains residual/geometry counterexamples and adds no automatic tracing or
+inverse-fitter integration. Its source freeze and full evidence are bound in
+that record; the repository snapshot below retains its earlier timestamp.
 
-This error-control candidate is published as draft
-[PR #99](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/99),
-based on published draft
-[PR #98](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/98),
-head `d496a2b03e8bca02b813b7082b44ac1205b6b8ae`, tree
-`c8fafdf430af1dc523696fb49092150badc71c7d`. Its
-[mathematical correction](finite-normal-error-control.md) passes a separately
-bound [417-scene qualification](validation/finite-normal-error-control.md) and
-1,081 final-source Python tests. The canonical source freeze is local commit
-`4ac158c`; exact byte bindings and the full report are in the
-[archive index](../studies/results/finite-normal-error-control-v2-summary.json).
-The new code has no automatic trace, HTTP or inverse-fitter adoption.
+At the separate **November 13, 2026, 05:18 UTC** readback, PR #101 remained
+open, draft and unmerged at the head above. Its
+[workbench run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43367933355)
+and [reference-library run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43367933387)
+both completed successfully. Main still had the head listed below. These runs
+qualify the published documentation base, not this subsequent analytic-normal
+candidate.
 
-At the November 13, 2026, 03:42 UTC readback, PRs #98 and #99 remain open,
-unmerged drafts and main remains
-`1d32c432da633df6bb47db2df7b0e9c23de11c81`. Local numerical/software evidence
-does not establish merge, installation, deployment or physical acceptance.
-PR #99's initial published head `57dddff5b2d9107a7cd0634b8f634f33fdf926d0`,
-tree `ce97d8ca5f610679a7bc31ffcf1511bd637fbb33`, exactly matches the reviewed
-local tree. Its [workbench run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43360735937)
-is in progress at that snapshot; subsequent documentation commits require their
-own CI. This is November 12 in America/Chicago.
-The following dated snapshots retain their original source and CI states.
+## Repository and CI snapshot — November 13, 2026, 04:40 UTC
 
-## Preceding source background
+This is November 12 in America/Chicago. Main remains
+`1d32c432da633df6bb47db2df7b0e9c23de11c81`, tree
+`d75d6c76cd5d0529c75e792da7d0fe384d47635c`, including documentation PR #92.
+All eight PRs below are **open, draft and unmerged**. The table follows their
+dependency order; none is included in main at this readback.
 
-This documentation follows published draft
-[PR #97](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/97),
-head `d40502fed3de93989c73d4c8cf614f6f6b6d7e45`, tree
-`02fce19eada7ee92858c5dd58815b2d0ca024ad9`. It adds the
-[experimental finite-chord normal derivative](finite-normal-derivative.md)
-over documentation PR #96. The [new qualification](validation/finite-normal-derivative.md)
-retains the original exit 1, one work-limited query and an error-estimation
-limitation on a query returned as resolved. The module is separate from automatic tracing,
-HTTP and the existing four-parameter inverse. Its source and numerical evidence
-are bound independently. The [current documentation review](validation/documentation-pr97-state.md)
-covers the workbench, research contracts and companion reference library.
+| PR and source lane | Published head | Base branch | Workbench CI at this head |
+| --- | --- | --- | --- |
+| [#93: affine evaluation](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/93) | `f7d116e74b028beffe2dee797518767d0e5b7222` | `main` | [Success](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43338583640) |
+| [#94: documentation](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/94) | `2f9abf2a4d2e1b809d2f3115f04fc04470682c4f` | `codex/finite-affine-batch` | [Success](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43343651239) |
+| [#95: residual diagnostic](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/95) | `1f51bae35eb862dca4a259016cc31bf1504207f9` | `codex/documentation-pr93-state` | [Success](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43347556524) |
+| [#96: documentation](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/96) | `6c6edf5d304be38fba64b7081d3c112ea31373f6` | `codex/finite-residual-information-published` | [Success](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43350007631) |
+| [#97: normal derivative V1](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/97) | `d40502fed3de93989c73d4c8cf614f6f6b6d7e45` | `codex/documentation-pr95-state` | [Success](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43353895468) |
+| [#98: documentation](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/98) | `d496a2b03e8bca02b813b7082b44ac1205b6b8ae` | `codex/finite-normal-derivative` | [Success](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43355697191) |
+| [#99: normal error control V2](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/99) | `5b6ca989cb9a414655e35b4f2e3d4c7fd5b4b769` | `codex/documentation-pr97-state` | [Success](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43360856992) |
+| [#100: reference-node diagnostic](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/100) | `f1f0bba313f68d5dc48fdb6e329b0e0535b1903e` | `codex/finite-normal-error-control` | [Success](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43363843583) |
 
-The preceding documentation followed published draft
-[PR #95](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/95),
-head `1f51bae35eb862dca4a259016cc31bf1504207f9`, tree
-`1a20178c6c0154cd848937ccac138e0e34696212`. It adds the frozen
-residual-information diagnostic, complete failed outcome and independent
-saved-data tools over PR #94's documentation and PR #93's affine candidate.
-The [preceding documentation review](validation/documentation-pr95-state.md)
-retains its derivation-only scope before the normal operator was published.
-The primary `codex/slicer-integration` checkout is preserved separately.
+PR #96 also has a successful
+[reference-library run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43350007619)
+at its listed head. Library CI uses path filters; a workbench success is not a
+later library run. These conclusions belong to the listed source heads, not
+this subsequent documentation change. Local checks, hosted CI, merge,
+installation, deployment and physical acceptance are separate observations.
 
-The affine candidate's software was committed at `f3bcd98`, with integration
-checkpoint `faf9b5a600ed64a226307da93615b086a6c38669`. Its
-[source-bound qualification](validation/finite-affine-batch.md) retains the
-943-test interval, frozen comparison and failed continuation comparator.
-The [residual-study record](validation/finite-residual-information.md) binds
-the subsequent research without replacing earlier evidence. Documentation-only
-checks do not rerun or extend that software qualification.
+Earlier timestamped states remain in the
+[preceding source-status page](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/blob/f1f0bba313f68d5dc48fdb6e329b0e0535b1903e/docs/project-status.md)
+and dated [documentation reviews](validation.md). The primary
+`codex/slicer-integration` checkout remains separate at
+`d747e30697a99a8f90d747d23d6ab7c1fa8b95ed`.
 
-## Historical repository and CI snapshot — November 13, 2026, 02:48 UTC
+## Available in this reviewed source
 
-This is November 12 in America/Chicago. These are readback states, not live
-release indicators. All five PRs below are open drafts and unmerged.
-
-| Source lane | Head at this readback | Base branch |
+| Component | Available behavior | Scope and evidence |
 | --- | --- | --- |
-| Main | `1d32c432da633df6bb47db2df7b0e9c23de11c81` | Includes merged documentation PR #92; excludes PRs #93–#97 |
-| [Affine PR #93](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/93) | `f7d116e74b028beffe2dee797518767d0e5b7222` | `main` |
-| [Documentation PR #94](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/94) | `2f9abf2a4d2e1b809d2f3115f04fc04470682c4f` | `codex/finite-affine-batch` |
-| [Residual study PR #95](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/95) | `1f51bae35eb862dca4a259016cc31bf1504207f9` | `codex/documentation-pr93-state` |
-| [Documentation PR #96](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/96) | `6c6edf5d304be38fba64b7081d3c112ea31373f6` | `codex/finite-residual-information-published` |
-| [Normal derivative PR #97](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/97) | `d40502fed3de93989c73d4c8cf614f6f6b6d7e45` | `codex/documentation-pr95-state` |
+| Workbench | Trace one planar, constant-thickness part; set measured scale and thickness; review, build and export CAD | [User workflow](../README.md#try-the-complete-workflow), [engineering model](engineering-model.md) |
+| Reference-sheet tracing | Sheet-plane homography, one radial lens term, subpixel edges, optional design-intent fitting and entered-thickness correction | [Method and assumptions](reference-sheet.md) |
+| Directional blur and fitted geometry | Empirical rectified-image covariance for supported nonparallel corners; uniform blur-frame transport; circle-consistent final joins and bounded recovery/refusal | [Corner model](anisotropic-corners.md), [frames](blur-frames.md), [joins](curved-joins.md) |
+| Optional Ollama assistant | Text context and settings proposals requiring explicit Apply | [Setup and limits](ollama.md); no photograph, outline vertices or mesh sent to the model |
+| Finite-material developer APIs | Circular-segment means, four-column shape Jacobian, supplied-normal centre/radius/chord inverse, immutable measured-ring preparation and shared-panel affine evaluation | [Python contracts](finite-shape-inverse.md), [affine evaluation](finite-affine-evaluation.md) |
+| Normal-angle developer API | Signed probability derivative per source-plane radian, estimated errors, retained statuses and bounded work | [API](finite-normal-derivative.md), [V2 correction](finite-normal-error-control.md) |
+| Reference-node study | Standalone arithmetic diagnostic and saved-data auditor for a restricted 26-control family | [Method](finite-normal-oracle-conditioning.md), [archive](../studies/fixtures/finite-normal-oracle-conditioning-v1/README.md) |
+| Companion library | Offline handbook, calculators, local Photos workspace, OpenSCAD examples and independent mesh checks | [Library guide](../reference-library/README.md), [separate verification](../reference-library/VERIFICATION.md) |
 
-The subsequent CI readback confirms successful final-head runs for
-[PR #95](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43347556524)
-and PR #96's
-[workbench](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43350007631)
-and [library](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43350007619).
-PR #97's [workbench run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43353895468)
-is in progress, with no conclusion. The local 1,037-test software pass and failed
-337-scene scientific study remain [separate evidence](validation/finite-normal-derivative.md).
-Later documentation commits require their own CI; no hosted success establishes
-merge, installation, deployment or physical acceptance.
+The finite-material and normal-angle operators have no HTTP mode and are not
+called by automatic trace/build. The normal derivative does not add a fifth
+column to the existing Jacobian or fit an angle. Source-observation, raw-source
+fitting, response-calibration and set-inversion APIs from the separate research
+lineage are absent here. [Developer tools](developer-tools.md) lists runnable
+commands and side effects; `/docs` on this checkout's running backend describes
+its HTTP API.
 
-## Historical repository and CI snapshot — November 13, 2026, 02:05 UTC
+## Numerical evidence and unresolved limits
 
-This is November 12 in the project's America/Chicago timezone. These were
-readback states, not live release indicators. This retained snapshot predates
-PR #97; its pending-operator row and in-progress PR #95 run describe that time.
-
-| Source lane | State at this readback | Evidence boundary |
+| Study | Retained outcome | What remains unresolved |
 | --- | --- | --- |
-| Main, `1d32c432da633df6bb47db2df7b0e9c23de11c81`, tree `d75d6c76cd5d0529c75e792da7d0fe384d47635c` | Includes merged documentation PR #92 and prior PRs #84, #85, #90 and #91 | Does not include PRs #93–#95 at this snapshot |
-| Affine PR #93, head `f7d116e74b028beffe2dee797518767d0e5b7222` | Open draft against main; unmerged | [943 local Python tests, build and lint](validation/finite-affine-batch.md#software-regression); fixed-workload comparison; no new installed-machine or physical result |
-| Documentation PR #94, head `2f9abf2a4d2e1b809d2f3115f04fc04470682c4f` | Open draft based on PR #93 | [Documentation-only checks](validation/documentation-pr93-state.md); inherited non-Markdown blobs preserved |
-| Residual study PR #95, head `1f51bae35eb862dca4a259016cc31bf1504207f9` | Open draft based on PR #94 | [Complete failed replay](validation/finite-residual-information.md), 12 retained rows and 9,683 saved-data audit checks; no automatic correction |
-| Finite-chord normal derivative | Analytic derivation; numerical implementation and qualification pending | [Derived proposal](finite-residual-information.md#finite-chord-shape-derivative-a-derived-proposal); no published callable operator or new numerical result |
-| Earlier finite-material, corner, frame and join sources | Inherited implementation; original records retained | [Validation overview](validation.md) binds each result to its tested revision |
-| Source-space research PR #79, merged into `codex/source-observation-context` at `98862f8` | Separate lineage | Source-observation/PSF/response-calibration APIs from that branch are absent here |
+| [Measured-ring intensity replay](validation/finite-photo-intensity-v2.md) | Ten eligible fits complete; three of twelve records meet every target; two upstream refusals retained | Supplied optics and illumination; held-out samples influence preprocessing and remain conditional checks |
+| [Affine evaluation](validation/finite-affine-batch.md) | 3.84× faster complete fits on three fixed datasets; all 36 prior rows and flags retained; 943 local Python tests | Broader workloads, interactive latency, physical adequacy; failed continuation comparator retained |
+| [Residual-information V1](validation/finite-residual-information.md) | Overall protocol failed; ten normal columns unknown; ten fixed-normal bounded steps retained | Normal-aware residual qualification and physical interpretation of covariance changes |
+| [Normal derivative V1](validation/finite-normal-derivative.md) | Original exit 1, one panel-budget unknown and a resolved compressed-map error miss retained | Historical result; later code does not rewrite it |
+| [Normal error control V2](validation/finite-normal-error-control.md) | 417 scenes, 4,832 queries and 72 area checks pass frozen criteria; both original candidate controls pass separate high-precision checks; 1,081 final-source Python tests | General reference-oracle error allowance, certified numerical bounds and model adequacy |
+| [Reference-node arithmetic](validation/finite-normal-oracle-conditioning.md) | All 26 controls pass; exact endpoint construction with binary64 interpolation reduces the largest observed reference error from `4.09099e-6` to `7.94156e-10` | Restricted family and represented quadrature rules; neither a general oracle replacement nor universal `1e-10` accuracy |
+| [Analytic-normal residual diagnostic](validation/finite-analytic-normal-information.md) | All 578 comparisons, five normal controls, ten algebra controls and ten single joint trials pass; all original rows/flags retained | Three covariance directions persist; only 3/10 trials beat saved BGS held-out RMS; three worsen all synthetic geometry errors relative to archived baseline fits |
 
-PR #93's own
-[Validate workbench run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43338583640)
-completed with **success**. PR #94's final-head
-[run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43343651239)
-also completed with **success**, bound to `2f9abf2`. PR #95's
-[run](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43347556524)
-is **in progress**, with no conclusion, bound to `1f51bae`. Later commits need
-their own CI. Hosted CI success is separate from the residual experiment's
-retained scientific failure and does not establish merge, installation,
-deployment or physical qualification.
-
-The [preceding PR #93 documentation review](validation/documentation-pr93-state.md),
-[PR #91 review](validation/documentation-pr91-state.md) and
-[earlier status snapshot](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/blob/1f51bae35eb862dca4a259016cc31bf1504207f9/docs/project-status.md)
-preserve their original branch and CI states. Local checks, hosted CI, branch
-inclusion, installation, deployment and physical acceptance remain distinct.
-
-## Available here
-
-The single-user workbench traces one planar, constant-thickness part, uses
-supplied scale and thickness, constructs CAD and exports geometry. Reference
-sheet tracing adds a homography, one radial lens term, subpixel edge
-measurements, optional design-intent fitting and entered-thickness correction
-under the [documented model](reference-sheet.md). The optional Ollama assistant
-receives text context and proposes explicit settings changes; it receives no
-photograph or CAD geometry.
-
-Directional covariance is estimated from rise widths in the rectified
-measurement image. It supplies normal-specific edge/wall widths and an
-approximate scalar for other stages; it is not a calibrated sensor PSF.
-Supported nonparallel corners use its full covariance. Uniform thickness scales
-transport blur into supported curve frames. Mixed frames retain their
-approximation/refusal policies. Final accepted arcs use circle-consistent joins,
-with bounded recovery or refusal. See [stage limits](reference-sheet.md#3-segmentation-and-sub-pixel-edges),
-[blur frames](blur-frames.md) and [curved joins](curved-joins.md).
-
-`backend.finite_shape` and `backend.finite_centre_fit` expose the conditional
-[finite-material developer operators](finite-shape-inverse.md).
-`backend.finite_observations` prepares immutable measured-ring observations.
-`backend.finite_affine` adds shared-panel evaluation for exactly affine maps;
-the circular-segment mean API dispatches to it while preserving its result
-schema. Projective maps retain the scalar path. See the
-[derivation and work/memory contracts](finite-affine-evaluation.md).
-None is called by automatic trace/build or exposed through an HTTP mode.
-
-`backend.finite_normal` exposes the separate signed normal-angle derivative.
-Its [Python contract](finite-normal-derivative.md) retains statuses, estimated
-errors and bounded per-query/batch work. The existing mean and four-column
-Jacobian schemas and inverse callers are unchanged. Its
-[initial failed qualification](validation/finite-normal-derivative.md) records both the
-panel-budget unknown and underestimated compressed-map error. It has no HTTP,
-fitter or automatic-tracing integration. The later
-[error-control implementation](finite-normal-error-control.md) resolves both
-original candidate controls and passes its [new comparison](validation/finite-normal-error-control.md).
-An optimistic oracle allowance remains documented separately.
-
-Source-context capture, raw-source fitting, response calibration and set-inversion
-APIs from the separate research branch must not be assumed available.
-[Developer tools](developer-tools.md) lists runnable entry points and their
-side effects; `/docs` on this checkout's running backend describes its HTTP API.
+The larger software test count does not replace a scientific failure. None of
+these conditional Gaussian studies identifies a physical camera PSF. Covariance
+changes can absorb sampling or resampling mismatch. The inverse still requires
+a supplied normal, homography and covariance; the moment study retains
+background-sensitive and incompatible proposals.
 
 ## Remaining integration work
 
-The centre/radius/chord inverse still requires a supplied normal, homography and
-covariance. Its studies do not establish adequate optics for arbitrary photos,
-a global optimum or a physical error bound. The moment experiment retains
-background-sensitive and incompatible covariance proposals.
+The separate normal-aware residual diagnostic is now complete. It preserves
+the original finite-difference failure and qualifies its new analytic normal
+column independently. General projective reference error accounting remains
+open. A qualified normal-aware inverse and acquisition/model adequacy are still
+research dependencies; the one-step diagnostic is not an automatic feature.
 
-The measured-ring bridge fixes a known whole-sheet initialization problem.
-Its original paired replay completes all ten eligible fits, but only three of
-twelve records meet every target; two upstream refusals remain. Held-out samples
-are excluded from fitting cost but influence initialization and moments, so
-they are conditional residual checks rather than independent predictions.
-
-That replay's original 8–19-second fits remain historical evidence. The
-[affine comparison](validation/finite-affine-batch.md) records **3.84× faster
-complete fits** across three predeclared datasets, with 2.75–3.91-second medians.
-All 36 archived rows retain their prior completion flags and target passes.
-These fixed-workload results leave interactive latency, broader workloads and
-optical-model adequacy unqualified.
-
-The [residual-information diagnostic](validation/finite-residual-information.md)
-separates fixed-normal covariance sensitivity from brightness and geometry, while
-retaining unknown normal sensitivities and an overall failed protocol. A
-post-hoc rotation identity and the derived finite-chord formula motivated the
-separate 337-scene derivative test. That test is complete and failed: one query
-exhausts 4,096 panels, and another exceeds its error estimate. Determinant
-conditioning and global adaptive error allocation are addressed by the later
-V2 source and its separately bound 417-scene comparison. The independent oracle's
-mapped-node/denominator error allowance still needs strengthening. Neither study
-qualifies optical inference or automatic integration.
-Locally distinguishable covariance changes can absorb sampling/resampling
-mismatch rather than identify a physical camera PSF.
-
-Automatic adoption also needs supported acquisition and thickness models,
-independent recovery checks and one chosen boundary preserved through preview,
-native CAD and exports. No real-phone/caliper benchmark, native slicer acceptance
-or physical print qualification follows from the synthetic studies.
+Automatic adoption needs supported acquisition and thickness models,
+independent recovery checks, bounded latency and one chosen boundary preserved
+through preview, native CAD and every export. The saved fields do not completely
+reconstruct the acquisition chain. No real-phone/caliper benchmark, native
+slicer acceptance or physical-print qualification follows from these synthetic
+studies. See the [roadmap](roadmap.md) and [independent checks](engineering-model.md).
