@@ -1,5 +1,23 @@
 # Source scope and verification status
 
+This error-control candidate follows published draft
+[PR #98](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/98),
+head `d496a2b03e8bca02b813b7082b44ac1205b6b8ae`, tree
+`c8fafdf430af1dc523696fb49092150badc71c7d`. Its
+[mathematical correction](finite-normal-error-control.md) passes a separately
+bound [417-scene qualification](validation/finite-normal-error-control.md) and
+1,081 final-source Python tests. The canonical source freeze is local commit
+`4ac158c`; exact byte bindings and the full report are in the
+[archive index](../studies/results/finite-normal-error-control-v2-summary.json).
+The new code has no automatic trace, HTTP or inverse-fitter adoption.
+
+At the latest readback, PR #98 remains an open, unmerged draft and main remains
+`1d32c432da633df6bb47db2df7b0e9c23de11c81`. Local numerical/software evidence
+does not establish merge, installation, deployment or physical acceptance.
+The following dated snapshots retain their original source and CI states.
+
+## Preceding source background
+
 This documentation follows published draft
 [PR #97](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/97),
 head `d40502fed3de93989c73d4c8cf614f6f6b6d7e45`, tree
@@ -30,7 +48,7 @@ The [residual-study record](validation/finite-residual-information.md) binds
 the subsequent research without replacing earlier evidence. Documentation-only
 checks do not rerun or extend that software qualification.
 
-## Repository and CI snapshot — November 13, 2026, 02:48 UTC
+## Historical repository and CI snapshot — November 13, 2026, 02:48 UTC
 
 This is November 12 in America/Chicago. These are readback states, not live
 release indicators. All five PRs below are open drafts and unmerged.
@@ -120,9 +138,12 @@ None is called by automatic trace/build or exposed through an HTTP mode.
 Its [Python contract](finite-normal-derivative.md) retains statuses, estimated
 errors and bounded per-query/batch work. The existing mean and four-column
 Jacobian schemas and inverse callers are unchanged. Its
-[failed qualification](validation/finite-normal-derivative.md) records both the
+[initial failed qualification](validation/finite-normal-derivative.md) records both the
 panel-budget unknown and underestimated compressed-map error. It has no HTTP,
-fitter or automatic-tracing integration.
+fitter or automatic-tracing integration. The later
+[error-control implementation](finite-normal-error-control.md) resolves both
+original candidate controls and passes its [new comparison](validation/finite-normal-error-control.md).
+An optimistic oracle allowance remains documented separately.
 
 Source-context capture, raw-source fitting, response calibration and set-inversion
 APIs from the separate research branch must not be assumed available.
@@ -155,9 +176,10 @@ retaining unknown normal sensitivities and an overall failed protocol. A
 post-hoc rotation identity and the derived finite-chord formula motivated the
 separate 337-scene derivative test. That test is complete and failed: one query
 exhausts 4,096 panels, and another exceeds its error estimate. Determinant
-conditioning and global adaptive error allocation remain proposed repairs,
-without a qualified correction in this source. Neither study qualifies optical
-inference or automatic integration.
+conditioning and global adaptive error allocation are addressed by the later
+V2 source and its separately bound 417-scene comparison. The independent oracle's
+mapped-node/denominator error allowance still needs strengthening. Neither study
+qualifies optical inference or automatic integration.
 Locally distinguishable covariance changes can absorb sampling/resampling
 mismatch rather than identify a physical camera PSF.
 

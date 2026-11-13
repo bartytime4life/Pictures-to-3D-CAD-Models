@@ -1,5 +1,18 @@
 # Workbench change log
 
+## Finite-normal determinant and error control — November 12, 2026
+
+- Compute exact determinants of the actual represented homography and whitening
+  inverse once, including numerical solver off-diagonal entries. Reuse the
+  normalizer through analytic, tail and quadrature paths.
+- Replace fixed per-possible-leaf allowances with a complete adaptive frontier,
+  both-rule arithmetic estimates and an exact, upward-rounded final reduction.
+  Preserve all caps, signed values, statuses, attempted work and old API schemas.
+- Preserve the original failed study; the separate
+  [417-scene qualification](validation/finite-normal-error-control.md) passes
+  its frozen comparisons and high-precision original controls, with an explicit
+  oracle-error limitation. Final software checks pass 1,081 tests, build and lint.
+
 ## Documentation alignment with published PR #97 — November 12, 2026
 
 - Reconcile the README, source status, architecture, development, validation

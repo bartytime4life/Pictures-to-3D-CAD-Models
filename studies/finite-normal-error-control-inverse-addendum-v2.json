@@ -1,0 +1,65 @@
+{
+  "format": "pictures-to-cad-finite-normal-error-control-software-addendum",
+  "version": 2,
+  "main_plan": "studies/finite-normal-error-control-v2.json",
+  "main_plan_sha256": "b59d38b3ca92449c4233b947dd061f7a6591ce1944946b6c10e868afaad3adbb",
+  "status": "Frozen before any repaired-candidate call or new inverse-domain API test. Existing132testpass and27solver-only diagnostic outcomes retained, not relabeled prospective. No canonical execution yet.",
+  "finding": {
+    "source_sha256": "a58d0b8f9c9d4290b6ecf6403b5c657efa60f4410bab345063b4367b67ce6cac",
+    "diagnostic_sha256": "62d7e8eb6a050af70108eb7d4eb44422927fa1d53dcf2b44944aa872805721b6",
+    "diagnostic_scope": "27 standard Cholesky/general-solve calculations only,0 candidate/oracle calls. All27 supported covariances produce a tiny nonzero represented inverse[0,1].",
+    "problem": "The mathematical inverse is triangular, but a pivoted floating solve need not preserve an exact zero upper entry. The candidate unnecessarily returns numerical unknown for valid supported covariance.",
+    "example": {
+      "L": [
+        [
+          0.1,
+          0.0
+        ],
+        [
+          1.1,
+          0.2
+        ]
+      ],
+      "covariance": [
+        [
+          0.010000000000000002,
+          0.11000000000000001
+        ],
+        [
+          0.11000000000000001,
+          1.2500000000000002
+        ]
+      ],
+      "factor": [
+        [
+          0.1,
+          0.0
+        ],
+        [
+          1.1,
+          0.2000000000000001
+        ]
+      ],
+      "inverse": [
+        [
+          10.0,
+          5.551115123125805e-17
+        ],
+        [
+          -54.99999999999997,
+          4.999999999999997
+        ]
+      ],
+      "condition": 62.98412298286225,
+      "upper_nonzero": true
+    }
+  },
+  "implementation_correction": "Compute exact 2x2 determinant of ACTUAL represented inverse: q00*q11-q01*q10, require positive/nonzero, then use existing rational-log conversion allowance. Preserve the represented matrix in whitening; never zero its upper entry. Retain exact 3x3 operational homography determinant and all other V2 guards. No LU determinant in new normalizer.",
+  "additional_software_controls": [
+    "Use the frozen covariance example in an API regression with fixed ordinary segment/query geometry and unchanged controls; it must not be blanket numerical unknown due to inverse upper entry.",
+    "Independent exact rational 2x2 normalization check; assert offdiag term retained, one shared normalizer reused, sign/error/counters unchanged.",
+    "All94old+38existingnewtests remain unchanged unless a concrete assertion depends on the disproved exact-triangle assumption; preserve everyattempt and explain anycorrection."
+  ],
+  "scientific_protocol": "417scenes4832queries72positivearea checks unchanged. No change to scenes, tolerances, order/cap/coverage thresholds, or requirement to retain every failure. This is a software preflight correction before the sole final-source canonical.",
+  "binding": "Newrunner final source_before/after must include this addendum; root will freeze final source after all focused checks."
+}

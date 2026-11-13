@@ -7,7 +7,17 @@ original counts and environment; they are not later retests.
 
 ## Current candidate evidence — November 12, 2026
 
-The [experimental normal-angle derivative](validation/finite-normal-derivative.md)
+The [finite-normal error-control correction](validation/finite-normal-error-control.md)
+passes **1,081 final-source Python tests**, build and lint. Its single complete
+canonical comparison passes all **417 scenes, 4,832 queries and 72 positive-area
+checks** under the frozen criteria. Independent high-precision arithmetic confirms
+both original compressed candidate controls below the requested `1e-10`, while
+exposing an optimistic reference-oracle allowance. This is conditional numerical
+evidence, not a certified absolute bound or automatic photo correction. Both
+earlier failed studies remain intact; the new record separates regression,
+prospective cases, unit checks and saved-data auditing.
+
+The preceding [experimental normal-angle derivative](validation/finite-normal-derivative.md)
 passes the application build and 1,037 Python tests. Its complete 337-scene
 qualification retains **exit 1**: 3,885 resolved comparisons, one panel-budget
 unknown, 3,886 converged independent oracles and 36 passing positive-area checks.

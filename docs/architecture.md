@@ -29,9 +29,12 @@ experimental Python API for signed probability sensitivity per source-normal
 radian. It uses a finite-chord first moment with a charged quadrature fallback;
 its immutable `NormalDerivative` result retains each query's status, estimated
 error and work. It does not extend the existing four-column Jacobian or fit an
-angle. Its [contract](finite-normal-derivative.md) and
-[failed qualification](validation/finite-normal-derivative.md) retain a
-panel-budget unknown and compressed-map error underestimation. It is not called
+angle. Its [contract](finite-normal-derivative.md) and initial
+[failed qualification](validation/finite-normal-derivative.md) retain the original
+panel-budget unknown and compressed-map error underestimation. The current
+[error-control correction](finite-normal-error-control.md) passes a separate
+[417-scene qualification](validation/finite-normal-error-control.md), with a
+remaining oracle-error limitation. It is not called
 by the automatic flow, inverse fitter or HTTP routes below.
 
 ```mermaid

@@ -21,7 +21,10 @@ model and a valid whole-shape projective chart. The
 [experimental operator](finite-normal-derivative.md) now has a
 [complete failed qualification](validation/finite-normal-derivative.md): one
 panel-budget unknown and a compressed-map error-estimation limitation remain.
-It adds no automatic correction.
+The later [error-control mathematics](finite-normal-error-control.md) addresses
+both candidate issues and has a separate [417-scene qualification](validation/finite-normal-error-control.md).
+An elementary high-precision reference corroborates the two original controls
+and exposes an optimistic oracle allowance. Neither study adds automatic correction.
 
 The [original selected design reference](images/design-reference.png) is a generated concept. The [recorded workbench screenshot](images/workbench.png) is browser-rendered implementation evidence; the [guided-workbench review](validation/guided-workbench.md) records the reviewed interaction, screenshots and evidence date. The sample photograph is generated demonstration input and is traced by the real conversion pipeline; it is not a measured reference specimen.
 

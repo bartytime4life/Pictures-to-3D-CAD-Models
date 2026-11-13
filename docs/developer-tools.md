@@ -112,9 +112,11 @@ Reading its committed HTML/PDF differs from rebuilding it, checking a browser,
 running native OpenSCAD or refreshing external links.
 
 The [finite-chord normal derivative](finite-normal-derivative.md) is now an
-experimental Python operator. Its [complete qualification](validation/finite-normal-derivative.md)
+experimental Python operator. Its [original qualification](validation/finite-normal-derivative.md)
 retains one panel-budget unknown and a compressed-map error-estimation limitation.
-It has no HTTP mode or fitter integration. The saved rotation command above
+The subsequent [error-control qualification](validation/finite-normal-error-control.md)
+passes 417 scenes while retaining the original failure and a reference-oracle
+limitation. It has no HTTP mode or fitter integration. The saved rotation command above
 remains saved-array arithmetic; it does not validate this new operator.
 
 For the new study, these parser checks are read-only:
@@ -130,3 +132,18 @@ numerical qualification; the second reads an already decoded report with
 existing destination and require its parent. The original study exits 1;
 successful saved-data auditing does not change that result. Follow the
 [hash-verified archive instructions](../studies/fixtures/finite-normal-derivative-v1/README.md).
+
+The current error-control source has its own runner and saved-data auditor:
+
+```bash
+.venv/bin/python studies/verification/finite-normal-error-control-v2.py --help
+python3 studies/verification/finite-normal-error-control-report-audit-v2.py --help
+```
+
+Both help modes are read-only. The first runner's `--output NEW.json` explicitly
+reevaluates all 417 scenes and 72 area checks; the second requires a decoded
+`--input`, its exact hash, expected API/test hashes and a fresh `--output`.
+Follow the [V2 archive workflow](../studies/fixtures/finite-normal-error-control-v2/README.md)
+for complete arguments and compressed/decoded verification. It performs saved
+arithmetic only. The earlier V1 auditor needs its original source checkout;
+its report must not be rebound to the changed operator in this source.

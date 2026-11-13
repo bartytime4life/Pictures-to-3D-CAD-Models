@@ -136,9 +136,12 @@ This main-based source includes PR #91 and PR #85 and preserves PR #82's
 Python operators and the immutable
 measured-ring preparation API; source-space calibration APIs from the separate
 research lineage remain absent. The [experimental normal-angle derivative](finite-normal-derivative.md)
-has a separately bound [1,037-test local Python run, production build and lint](validation/finite-normal-derivative.md#software-and-evidence-checks).
-Those software passes coexist with its failed numerical qualification; they do
-not repair the panel-budget unknown or compressed-map error estimate.
+retains its initial [1,037-test local Python run and failed numerical study](validation/finite-normal-derivative.md#software-and-evidence-checks).
+The subsequent [error-control correction](validation/finite-normal-error-control.md)
+passes **1,081 final-source Python tests**, build and lint, with 432 bound
+non-Markdown files and 22 built frontend files unchanged during the run. Its
+separate 417-scene numerical result passes the frozen comparisons; estimated
+oracle allowances still need strengthening. These are developer API results.
 Its preceding [affine evaluation upgrade](finite-affine-evaluation.md)
 retains the earlier [943-test local Python run, production build and lint](validation/finite-affine-batch.md#software-regression),
 bound to 284 software inputs and 22 built frontend files. This run includes the

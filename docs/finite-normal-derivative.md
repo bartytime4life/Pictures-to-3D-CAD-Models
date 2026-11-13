@@ -9,6 +9,12 @@ Its [complete qualification](validation/finite-normal-derivative.md) retains one
 panel-budget unknown and an independently observed error-estimation limitation
 on a compressed perspective map. A resolved flag is not an accuracy guarantee.
 
+The later [determinant and global-error correction](finite-normal-error-control.md)
+is implemented in this source. Its [417-scene study](validation/finite-normal-error-control.md)
+passes both frozen comparisons and retains the original V1 failure. High-precision
+checks confirm the two original candidate controls, while exposing a limit in
+the independent oracle's error estimate. The API and statuses below are unchanged.
+
 ## Quantity and coordinates
 
 The material is `disc(C,R) intersect {n dot (x-C) <= R*f}`. Increasing angle

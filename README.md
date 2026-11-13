@@ -7,12 +7,16 @@ The workbench is designed for plates, gaskets, spacers, and templates. It traces
 [Start the app](#start-the-app) · [Try the workflow](#try-the-complete-workflow) · [Documentation](docs/README.md)
 
 For the reviewed source revision, draft PR dependencies and available research
-APIs, read [source scope and status](docs/project-status.md). The current
+APIs, read [source scope and status](docs/project-status.md). The preceding
 [documentation review](docs/validation/documentation-pr97-state.md) covers
 published draft PR #97, the workbench and companion library. The
 [residual-study record](docs/validation/finite-residual-information.md) retains
 the completed diagnostic and failed normal-angle control. Older test results
 retain their original scope.
+
+The current [normal-derivative correction and verification](docs/validation/finite-normal-error-control.md)
+records exact represented determinants and global numerical error control,
+with its complete result and remaining reference-oracle limitation.
 
 For reference-sheet tracing, photograph the whole flat sheet (A4, US Letter, or a sheet you have measured) and explicitly choose it as the **Scale reference**. A successful sheet trace sets scale from its stated size, estimates perspective and one radial lens correction, and fits lines, tangent arcs and circles. Entered thickness supports a side-wall/parallax correction under the method's assumptions. Ordinary tracing and the sample use measured-width scaling instead; they do not perform these corrections. See [reference-sheet tracing](docs/reference-sheet.md) for the mathematics and synthetic evidence, and the [engineering model](docs/engineering-model.md) for independent verification before fabrication.
 
@@ -63,9 +67,13 @@ unknowns and motivates a separately labeled analytic rotation identity. The
 [finite-chord derivation](docs/finite-residual-information.md#finite-chord-shape-derivative-a-derived-proposal)
 covers affine and valid perspective maps and underlies the separate
 [experimental normal-angle derivative](docs/finite-normal-derivative.md).
-Its complete [337-scene qualification](docs/validation/finite-normal-derivative.md)
+Its original [337-scene qualification](docs/validation/finite-normal-derivative.md)
 exited 1: one query reached its panel limit, and a resolved compressed-map
-result exceeded its reported error estimate. These findings remain open.
+result exceeded its reported error estimate. The subsequent
+[error-control study](docs/validation/finite-normal-error-control.md) retains
+that failure and passes all 417 scenes under stricter comparisons. Independent
+high-precision checks confirm both original candidate controls; an optimistic
+reference-oracle allowance remains documented.
 The operator remains outside automatic tracing and fitting.
 
 Final fitted arcs also need [circle-consistent joins](docs/curved-joins.md).
