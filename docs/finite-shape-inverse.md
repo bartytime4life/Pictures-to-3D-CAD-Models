@@ -236,7 +236,11 @@ Their error estimates and finite-work statuses remain explicit.
 The parameterized operator constructs its arc and chord in local coordinates
 about `C`. It does not round three world-coordinate witnesses and reconstruct
 a different circle. The general ring API retains its existing contract; both
-paths share the finite-Gaussian evaluator. Extreme coordinates and requested
+paths use the same finite-Gaussian Green kernel. Exactly affine probability
+queries can [share transformed curve panels](finite-affine-evaluation.md);
+nonzero perspective terms retain the original scalar evaluator. The direct
+shape Jacobian keeps its boundary integral and reuses existing curve samples
+without dropping mapped-velocity finite checks. Extreme coordinates and requested
 derivative tolerances can still be numerically unresolved.
 
 ## Developer contract and interpretation
@@ -247,6 +251,54 @@ and keyword arguments `sensor_shape`, `homography`, `psf_covariance`,
 `level_bounds`, `residual_transform` and explicit search/work settings.
 Domains and pixels must be defined from observations or independent knowledge,
 before comparing a result with evaluation truth.
+
+The validated input ranges are:
+
+| Input | Contract |
+| --- | --- |
+| `pixels_xy`, `raw_values` | `N` unique in-frame integer `(x,y)` pairs, `1 <= N <= 2048`, and `N` finite real observations in the same order |
+| `sensor_shape` | `(height,width)`, each an integer from 1 to `10**9` |
+| `centre_bounds` | Two increasing `[low,high]` pairs, for global `x,y`, within `[-1e9,1e9]` |
+| `radius_bounds` | Increasing pair within `[1e-3,1e6]` in geometry-plane units |
+| `chord_fraction_bounds` | Increasing pair within `[-0.999,0.999]` |
+| `level_bounds` | Shared increasing bounds for both brightness levels, within `[-1e6,1e6]`; default `(0,255)` |
+| `normal`, `homography`, `psf_covariance` | Fixed unit pair, finite nonsingular 3×3 plane-to-observation map, and exactly symmetric positive-definite 2×2 observation-frame covariance; numerical conditioning and whole-domain chart checks also apply |
+
+Every bounds pair must contain a representable interior float; adjacent-float
+endpoints are refused. Numeric inputs must be finite real values, not booleans;
+pixel indices, sensor dimensions and integer controls require integer types.
+Covariance is not repaired by symmetrization or eigenvalue clipping.
+
+| Search control | Default | Accepted range |
+| --- | --- | --- |
+| `grid_points` | 3 | Integer 3–5; the grid has `grid_points**4` entries |
+| `refinement_iterations` | 32 | Integer 0–64 per selected seed |
+| `max_basins` | 8 | Integer 0–16 |
+| `max_evaluations` | 512 | Integer from `grid_points**4` through 4096; uncached objective attempts across the search |
+| `forward_work_limit` | 20,000,000 | Integer 1–100,000,000; shared mean and derivative kernel work across the search |
+| `probability_tolerance` | `1e-8` | `1e-12`–`1e-3`; an engineering numerical target, not physical uncertainty |
+
+`residual_transform=None` uses the identity metric. A finite nonnegative vector
+of length `N` multiplies each residual by that entry; these are residual
+multipliers, not variances or automatically interpreted inverse standard
+deviations. A finite real `M×N` matrix can mix or project observations, including
+with signed entries. It requires `1 <= M <= 2048`, `M*N <= 500000` and
+`M*N*max_evaluations <= 100000000`, using the declared objective-attempt budget.
+The same fixed transform acts on the target and every model column. Zero weights
+and discarded modes remain visible through `residual_rank`; they do not establish
+agreement on the omitted observations or a calibrated noise model.
+
+The standalone `circular_segment_probabilities` and `circular_segment_jacobian`
+operators have different budget names/scopes from the inverse: `max_panels`
+defaults to 4096 and accepts 1–8192 **per queried pixel**, while their
+`max_evaluations` defaults to 2,000,000 and accepts 1–20,000,000 boundary/query-node
+work units **across one operator call**. `fit_circular_segment` has no
+`max_panels` argument and uses that 4096-per-pixel default. Each mean call receives
+at most two million work units and each derivative call at most twenty million,
+both reduced to the remaining shared `forward_work_limit`. Derivative calls do
+not increment the inverse's objective-attempt counter. Cached reuse consumes no
+new objective attempt or kernel work. Inspect returned work and statuses rather
+than treating a cap as completed computation.
 
 All four-dimensional coarse-grid evaluations retain their outcome. Represented local
 basins, candidate costs, numerical guards, endpoint/tie/flat flags, unresolved
@@ -274,8 +326,12 @@ uses that shared cap and is counted separately from objective attempts. More
 basins can remain represented and unrefined. These caps are resource limits,
 not completion guarantees; callers can
 set them explicitly. The independent study uses its own frozen settings. A
-normal study fit takes roughly 20 seconds on its recorded runtime, so this API
-has no qualified interactive latency claim.
+fit's latency depends on its observations, optics and search settings. The
+original study's roughly 20-second fits remain historical results. The
+[affine comparison](validation/finite-affine-batch.md) records 3.84× faster
+complete fits across three fixed 40-training-pixel datasets, with candidate
+medians of 2.75–3.91 seconds. It does not qualify interactive latency or all
+supported transforms; projective evaluation retains the scalar path.
 
 Measurements only along one level contour are insufficient when the two levels
 are free: for constant observed value `c`, choosing `a=b=c` gives zero residual

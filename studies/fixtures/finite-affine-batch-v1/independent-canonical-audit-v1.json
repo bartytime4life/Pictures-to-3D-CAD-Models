@@ -1,0 +1,3809 @@
+{
+  "format": "pictures-to-cad-independent-affine-report-audit",
+  "version": 1,
+  "scope": "Stdlib-only saved-data arithmetic/accounting audit; no numerical-module imports, fits, timing, optical truth or host-quietness proof. Performance misses remain misses even if report integrity passes.",
+  "checks": [
+    {
+      "name": "binding/frozen_plan",
+      "passed": true
+    },
+    {
+      "name": "binding/frozen_runner",
+      "passed": true
+    },
+    {
+      "name": "binding/before_after",
+      "passed": true
+    },
+    {
+      "name": "binding/closure_members",
+      "passed": true,
+      "missing": [],
+      "extra": []
+    },
+    {
+      "name": "binding/current_files",
+      "passed": true,
+      "changed": []
+    },
+    {
+      "name": "binding/frozen_input/studies/verification/finite-free-centre-v1.py",
+      "passed": true
+    },
+    {
+      "name": "binding/frozen_input/studies/finite-free-centre-v1.json",
+      "passed": true
+    },
+    {
+      "name": "binding/frozen_input/studies/results/finite-free-centre-v1.json",
+      "passed": true
+    },
+    {
+      "name": "binding/frozen_input/studies/finite-photo-intensity-v2.json",
+      "passed": true
+    },
+    {
+      "name": "binding/frozen_input/studies/results/finite-photo-intensity-v2.json",
+      "passed": true
+    },
+    {
+      "name": "binding/frozen_input/studies/fixtures/finite-photo-intensity-v2/manifest.json",
+      "passed": true
+    },
+    {
+      "name": "binding/frozen_input/backend/finite_observations.py",
+      "passed": true
+    },
+    {
+      "name": "binding/frozen_input/uv.lock",
+      "passed": true
+    },
+    {
+      "name": "binding/frozen_input/studies/fixtures/finite-affine-batch-v1/original-finite-shape.py.txt",
+      "passed": true
+    },
+    {
+      "name": "binding/frozen_input/studies/fixtures/finite-affine-batch-v1/original-finite-centre-fit.py.txt",
+      "passed": true
+    },
+    {
+      "name": "binding/frozen_input/studies/fixtures/finite-affine-batch-v1/original-sheet.py.txt",
+      "passed": true
+    },
+    {
+      "name": "binding/frozen_input/backend/__init__.py",
+      "passed": true
+    },
+    {
+      "name": "binding/frozen_input/backend/fitting.py",
+      "passed": true
+    },
+    {
+      "name": "binding/frozen_input/backend/circular_joins.py",
+      "passed": true
+    },
+    {
+      "name": "binding/integrated_sheet",
+      "passed": true
+    },
+    {
+      "name": "binding/strict_json_finite",
+      "passed": true
+    },
+    {
+      "name": "binding/archive_original_stack/finite-free-centre-v1",
+      "passed": true
+    },
+    {
+      "name": "binding/archive_original_stack/finite-photo-intensity-v2",
+      "passed": true
+    },
+    {
+      "name": "operators/population",
+      "passed": true
+    },
+    {
+      "name": "operators/identity-isotropic/deltas",
+      "passed": true
+    },
+    {
+      "name": "operators/identity-isotropic/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "operators/identity-isotropic/qualified",
+      "passed": true
+    },
+    {
+      "name": "operators/rotated-normal-correlated/deltas",
+      "passed": true
+    },
+    {
+      "name": "operators/rotated-normal-correlated/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "operators/rotated-normal-correlated/qualified",
+      "passed": true
+    },
+    {
+      "name": "operators/affine-rotation/deltas",
+      "passed": true
+    },
+    {
+      "name": "operators/affine-rotation/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "operators/affine-rotation/qualified",
+      "passed": true
+    },
+    {
+      "name": "operators/affine-scale-shear-correlated/deltas",
+      "passed": true
+    },
+    {
+      "name": "operators/affine-scale-shear-correlated/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "operators/affine-scale-shear-correlated/qualified",
+      "passed": true
+    },
+    {
+      "name": "operators/affine-reflection-correlated/deltas",
+      "passed": true
+    },
+    {
+      "name": "operators/affine-reflection-correlated/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "operators/affine-reflection-correlated/qualified",
+      "passed": true
+    },
+    {
+      "name": "operators/global-centre-local-crop/deltas",
+      "passed": true
+    },
+    {
+      "name": "operators/global-centre-local-crop/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "operators/global-centre-local-crop/qualified",
+      "passed": true
+    },
+    {
+      "name": "operators/positive-homography-scale/deltas",
+      "passed": true
+    },
+    {
+      "name": "operators/positive-homography-scale/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "operators/positive-homography-scale/qualified",
+      "passed": true
+    },
+    {
+      "name": "operators/negative-homography-scale/deltas",
+      "passed": true
+    },
+    {
+      "name": "operators/negative-homography-scale/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "operators/negative-homography-scale/qualified",
+      "passed": true
+    },
+    {
+      "name": "operators/thin-cap/deltas",
+      "passed": true
+    },
+    {
+      "name": "operators/thin-cap/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "operators/thin-cap/qualified",
+      "passed": true
+    },
+    {
+      "name": "operators/near-full-disk/deltas",
+      "passed": true
+    },
+    {
+      "name": "operators/near-full-disk/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "operators/near-full-disk/qualified",
+      "passed": true
+    },
+    {
+      "name": "operators/contained-circle-hole/deltas",
+      "passed": true
+    },
+    {
+      "name": "operators/contained-circle-hole/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "operators/contained-circle-hole/qualified",
+      "passed": true
+    },
+    {
+      "name": "operators/rectangle-separable/deltas",
+      "passed": true
+    },
+    {
+      "name": "operators/rectangle-separable/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "operators/rectangle-separable/qualified",
+      "passed": true
+    },
+    {
+      "name": "operators/rectangle-reflected/deltas",
+      "passed": true
+    },
+    {
+      "name": "operators/rectangle-reflected/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "operators/rectangle-reflected/qualified",
+      "passed": true
+    },
+    {
+      "name": "operators/large-radius-narrow-feature/deltas",
+      "passed": true
+    },
+    {
+      "name": "operators/large-radius-narrow-feature/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "operators/large-radius-narrow-feature/qualified",
+      "passed": true
+    },
+    {
+      "name": "operators/projective-exact-fallback/deltas",
+      "passed": true
+    },
+    {
+      "name": "operators/projective-exact-fallback/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "operators/projective-exact-fallback/qualified",
+      "passed": true
+    },
+    {
+      "name": "operators/near-affine-still-projective/deltas",
+      "passed": true
+    },
+    {
+      "name": "operators/near-affine-still-projective/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "operators/near-affine-still-projective/qualified",
+      "passed": true
+    },
+    {
+      "name": "operators/summary",
+      "passed": true
+    },
+    {
+      "name": "resources/population",
+      "passed": true
+    },
+    {
+      "name": "resources/tiny-panel-limit/accounting",
+      "passed": true
+    },
+    {
+      "name": "resources/tiny-panel-limit/stored_components",
+      "passed": true
+    },
+    {
+      "name": "resources/tiny-panel-limit/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "resources/tiny-panel-limit/qualified",
+      "passed": true
+    },
+    {
+      "name": "resources/tiny-node-limit/accounting",
+      "passed": true
+    },
+    {
+      "name": "resources/tiny-node-limit/stored_components",
+      "passed": true
+    },
+    {
+      "name": "resources/tiny-node-limit/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "resources/tiny-node-limit/qualified",
+      "passed": true
+    },
+    {
+      "name": "resources/partial-shared-work/accounting",
+      "passed": true
+    },
+    {
+      "name": "resources/partial-shared-work/stored_components",
+      "passed": true
+    },
+    {
+      "name": "resources/partial-shared-work/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "resources/partial-shared-work/qualified",
+      "passed": true
+    },
+    {
+      "name": "resources/small-memory/accounting",
+      "passed": true
+    },
+    {
+      "name": "resources/small-memory/stored_components",
+      "passed": true
+    },
+    {
+      "name": "resources/small-memory/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "resources/small-memory/qualified",
+      "passed": true
+    },
+    {
+      "name": "resources/exact-public-count-cap/accounting",
+      "passed": true
+    },
+    {
+      "name": "resources/exact-public-count-cap/stored_components",
+      "passed": true
+    },
+    {
+      "name": "resources/exact-public-count-cap/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "resources/exact-public-count-cap/qualified",
+      "passed": true
+    },
+    {
+      "name": "resources/over-public-count-refusal/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "resources/over-public-count-refusal/qualified",
+      "passed": true
+    },
+    {
+      "name": "resources/summary",
+      "passed": true
+    },
+    {
+      "name": "derivatives/population",
+      "passed": true
+    },
+    {
+      "name": "derivatives/identity-isotropic/deltas",
+      "passed": true
+    },
+    {
+      "name": "derivatives/identity-isotropic/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "derivatives/identity-isotropic/qualified",
+      "passed": true
+    },
+    {
+      "name": "derivatives/rotated-normal-correlated/deltas",
+      "passed": true
+    },
+    {
+      "name": "derivatives/rotated-normal-correlated/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "derivatives/rotated-normal-correlated/qualified",
+      "passed": true
+    },
+    {
+      "name": "derivatives/affine-scale-shear-correlated/deltas",
+      "passed": true
+    },
+    {
+      "name": "derivatives/affine-scale-shear-correlated/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "derivatives/affine-scale-shear-correlated/qualified",
+      "passed": true
+    },
+    {
+      "name": "derivatives/affine-reflection-correlated/deltas",
+      "passed": true
+    },
+    {
+      "name": "derivatives/affine-reflection-correlated/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "derivatives/affine-reflection-correlated/qualified",
+      "passed": true
+    },
+    {
+      "name": "derivatives/global-centre-local-crop/deltas",
+      "passed": true
+    },
+    {
+      "name": "derivatives/global-centre-local-crop/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "derivatives/global-centre-local-crop/qualified",
+      "passed": true
+    },
+    {
+      "name": "derivatives/thin-cap/deltas",
+      "passed": true
+    },
+    {
+      "name": "derivatives/thin-cap/reported_pass",
+      "passed": true
+    },
+    {
+      "name": "derivatives/thin-cap/qualified",
+      "passed": true
+    },
+    {
+      "name": "derivatives/summary",
+      "passed": true
+    },
+    {
+      "name": "replay/population",
+      "passed": true
+    },
+    {
+      "name": "replay/eligible32",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/offgrid-base/matched/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/offgrid-base/matched/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/offgrid-base/matched/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/offgrid-base/matched/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/offgrid-base/matched/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/offgrid-base/matched/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/offgrid-base/matched/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/offgrid-base/matched/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/offgrid-base/matched/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/offgrid-base/matched/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/offgrid-base/matched/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/offgrid-base/matched/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/complement/matched/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/complement/matched/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/complement/matched/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/complement/matched/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/complement/matched/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/complement/matched/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/complement/matched/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/complement/matched/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/complement/matched/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/complement/matched/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/complement/matched/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/complement/matched/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/rotated-anisotropic/matched/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/rotated-anisotropic/matched/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/rotated-anisotropic/matched/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/rotated-anisotropic/matched/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/rotated-anisotropic/matched/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/rotated-anisotropic/matched/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/rotated-anisotropic/matched/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/rotated-anisotropic/matched/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/rotated-anisotropic/matched/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/rotated-anisotropic/matched/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/rotated-anisotropic/matched/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/rotated-anisotropic/matched/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/correlated-quarterturn/matched/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/correlated-quarterturn/matched/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/correlated-quarterturn/matched/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/correlated-quarterturn/matched/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/correlated-quarterturn/matched/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/correlated-quarterturn/matched/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/correlated-quarterturn/matched/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/correlated-quarterturn/matched/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/correlated-quarterturn/matched/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/correlated-quarterturn/matched/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/correlated-quarterturn/matched/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/correlated-quarterturn/matched/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/near-chord/matched/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/near-chord/matched/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/near-chord/matched/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/near-chord/matched/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/near-chord/matched/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/near-chord/matched/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/near-chord/matched/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/near-chord/matched/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/near-chord/matched/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/near-chord/matched/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/near-chord/matched/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/near-chord/matched/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/far-chord/matched/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/far-chord/matched/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/far-chord/matched/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/far-chord/matched/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/far-chord/matched/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/far-chord/matched/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/far-chord/matched/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/far-chord/matched/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/far-chord/matched/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/far-chord/matched/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/far-chord/matched/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/far-chord/matched/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/threshold-051/matched/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/threshold-051/matched/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/threshold-051/matched/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/threshold-051/matched/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/threshold-051/matched/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/threshold-051/matched/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/threshold-051/matched/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/threshold-051/matched/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/threshold-051/matched/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/threshold-051/matched/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/threshold-051/matched/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/threshold-051/matched/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/threshold-051-anisotropic/matched/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/threshold-051-anisotropic/matched/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/threshold-051-anisotropic/matched/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/threshold-051-anisotropic/matched/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/threshold-051-anisotropic/matched/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/threshold-051-anisotropic/matched/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/threshold-051-anisotropic/matched/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/threshold-051-anisotropic/matched/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/threshold-051-anisotropic/matched/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/threshold-051-anisotropic/matched/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/threshold-051-anisotropic/matched/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/threshold-051-anisotropic/matched/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/affine/matched/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/affine/matched/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/affine/matched/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/affine/matched/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/affine/matched/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/affine/matched/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/affine/matched/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/affine/matched/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/affine/matched/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/affine/matched/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/affine/matched/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/affine/matched/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/projective/matched/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/projective/matched/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/projective/matched/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/projective/matched/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/projective/matched/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/projective/matched/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/projective/matched/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/projective/matched/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/projective/matched/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/projective/matched/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/projective/matched/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/projective/matched/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/rotated-central-chord/matched/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/rotated-central-chord/matched/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/rotated-central-chord/matched/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/rotated-central-chord/matched/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/rotated-central-chord/matched/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/rotated-central-chord/matched/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/rotated-central-chord/matched/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/rotated-central-chord/matched/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/rotated-central-chord/matched/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/rotated-central-chord/matched/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/rotated-central-chord/matched/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/rotated-central-chord/matched/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/affine-correlated-moderate-contrast/matched/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/affine-correlated-moderate-contrast/matched/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/affine-correlated-moderate-contrast/matched/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/affine-correlated-moderate-contrast/matched/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/affine-correlated-moderate-contrast/matched/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/affine-correlated-moderate-contrast/matched/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/affine-correlated-moderate-contrast/matched/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/affine-correlated-moderate-contrast/matched/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/affine-correlated-moderate-contrast/matched/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/affine-correlated-moderate-contrast/matched/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/affine-correlated-moderate-contrast/matched/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/affine-correlated-moderate-contrast/matched/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/cropped-chord/diagnostic/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/cropped-chord/diagnostic/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/cropped-chord/diagnostic/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/cropped-chord/diagnostic/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/cropped-chord/diagnostic/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/cropped-chord/diagnostic/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/cropped-chord/diagnostic/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/cropped-chord/diagnostic/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/cropped-chord/diagnostic/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/cropped-chord/diagnostic/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/cropped-chord/diagnostic/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/cropped-chord/diagnostic/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/contour-only-support/diagnostic/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/contour-only-support/diagnostic/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/contour-only-support/diagnostic/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/contour-only-support/diagnostic/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/contour-only-support/diagnostic/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/contour-only-support/diagnostic/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/contour-only-support/diagnostic/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/contour-only-support/diagnostic/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/contour-only-support/diagnostic/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/contour-only-support/diagnostic/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/contour-only-support/diagnostic/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/contour-only-support/diagnostic/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/constant-field/diagnostic/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/constant-field/diagnostic/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/constant-field/diagnostic/original_refusal",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/low-contrast/diagnostic/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/low-contrast/diagnostic/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/low-contrast/diagnostic/original_refusal",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/active-level-bounds/diagnostic/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/active-level-bounds/diagnostic/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/active-level-bounds/diagnostic/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/active-level-bounds/diagnostic/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/active-level-bounds/diagnostic/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/active-level-bounds/diagnostic/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/active-level-bounds/diagnostic/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/active-level-bounds/diagnostic/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/active-level-bounds/diagnostic/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/active-level-bounds/diagnostic/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/active-level-bounds/diagnostic/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/active-level-bounds/diagnostic/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/material-gradient/diagnostic/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/material-gradient/diagnostic/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/material-gradient/diagnostic/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/material-gradient/diagnostic/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/material-gradient/diagnostic/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/material-gradient/diagnostic/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/material-gradient/diagnostic/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/material-gradient/diagnostic/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/material-gradient/diagnostic/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/material-gradient/diagnostic/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/material-gradient/diagnostic/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/material-gradient/diagnostic/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/nonlinear-response/diagnostic/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/nonlinear-response/diagnostic/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/nonlinear-response/diagnostic/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/nonlinear-response/diagnostic/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/nonlinear-response/diagnostic/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/nonlinear-response/diagnostic/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/nonlinear-response/diagnostic/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/nonlinear-response/diagnostic/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/nonlinear-response/diagnostic/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/nonlinear-response/diagnostic/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/nonlinear-response/diagnostic/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/nonlinear-response/diagnostic/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/wrong-covariance/diagnostic/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/wrong-covariance/diagnostic/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/wrong-covariance/diagnostic/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/wrong-covariance/diagnostic/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/wrong-covariance/diagnostic/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/wrong-covariance/diagnostic/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/wrong-covariance/diagnostic/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/wrong-covariance/diagnostic/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/wrong-covariance/diagnostic/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/wrong-covariance/diagnostic/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/wrong-covariance/diagnostic/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/wrong-covariance/diagnostic/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/neighbor-hole/diagnostic/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/neighbor-hole/diagnostic/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/neighbor-hole/diagnostic/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/neighbor-hole/diagnostic/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/neighbor-hole/diagnostic/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/neighbor-hole/diagnostic/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/neighbor-hole/diagnostic/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/neighbor-hole/diagnostic/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/neighbor-hole/diagnostic/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/neighbor-hole/diagnostic/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/neighbor-hole/diagnostic/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/neighbor-hole/diagnostic/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/uniform-pixel-aperture/diagnostic/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/uniform-pixel-aperture/diagnostic/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/uniform-pixel-aperture/diagnostic/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/uniform-pixel-aperture/diagnostic/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/uniform-pixel-aperture/diagnostic/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/uniform-pixel-aperture/diagnostic/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/uniform-pixel-aperture/diagnostic/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/uniform-pixel-aperture/diagnostic/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/uniform-pixel-aperture/diagnostic/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/uniform-pixel-aperture/diagnostic/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/uniform-pixel-aperture/diagnostic/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/uniform-pixel-aperture/diagnostic/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/coarse-work-budget/diagnostic/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/coarse-work-budget/diagnostic/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/coarse-work-budget/diagnostic/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/coarse-work-budget/diagnostic/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/coarse-work-budget/diagnostic/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/coarse-work-budget/diagnostic/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/coarse-work-budget/diagnostic/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/coarse-work-budget/diagnostic/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/coarse-work-budget/diagnostic/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/coarse-work-budget/diagnostic/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/coarse-work-budget/diagnostic/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/coarse-work-budget/diagnostic/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/numerical-query-failure/diagnostic/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/numerical-query-failure/diagnostic/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/numerical-query-failure/diagnostic/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/numerical-query-failure/diagnostic/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/numerical-query-failure/diagnostic/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/numerical-query-failure/diagnostic/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/numerical-query-failure/diagnostic/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/numerical-query-failure/diagnostic/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/numerical-query-failure/diagnostic/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/numerical-query-failure/diagnostic/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/numerical-query-failure/diagnostic/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/original24/numerical-query-failure/diagnostic/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/legacy_sigma_squared_identity/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/legacy_sigma_squared_identity/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/legacy_sigma_squared_identity/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/legacy_sigma_squared_identity/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/legacy_sigma_squared_identity/saved_predictions",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/legacy_sigma_squared_identity/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/legacy_sigma_squared_identity/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/legacy_sigma_squared_identity/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/legacy_sigma_squared_identity/archive_heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/legacy_sigma_squared_identity/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/legacy_sigma_squared_identity/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/legacy_sigma_squared_identity/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/legacy_sigma_squared_identity/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/legacy_sigma_squared_identity/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/nominal_observed_moment_covariance/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/nominal_observed_moment_covariance/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/nominal_observed_moment_covariance/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/nominal_observed_moment_covariance/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/nominal_observed_moment_covariance/saved_predictions",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/nominal_observed_moment_covariance/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/nominal_observed_moment_covariance/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/nominal_observed_moment_covariance/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/nominal_observed_moment_covariance/archive_heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/nominal_observed_moment_covariance/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/nominal_observed_moment_covariance/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/nominal_observed_moment_covariance/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/nominal_observed_moment_covariance/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-isotropic/nominal_observed_moment_covariance/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/legacy_sigma_squared_identity/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/legacy_sigma_squared_identity/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/legacy_sigma_squared_identity/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/legacy_sigma_squared_identity/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/legacy_sigma_squared_identity/saved_predictions",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/legacy_sigma_squared_identity/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/legacy_sigma_squared_identity/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/legacy_sigma_squared_identity/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/legacy_sigma_squared_identity/archive_heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/legacy_sigma_squared_identity/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/legacy_sigma_squared_identity/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/legacy_sigma_squared_identity/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/legacy_sigma_squared_identity/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/legacy_sigma_squared_identity/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/nominal_observed_moment_covariance/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/nominal_observed_moment_covariance/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/nominal_observed_moment_covariance/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/nominal_observed_moment_covariance/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/nominal_observed_moment_covariance/saved_predictions",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/nominal_observed_moment_covariance/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/nominal_observed_moment_covariance/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/nominal_observed_moment_covariance/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/nominal_observed_moment_covariance/archive_heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/nominal_observed_moment_covariance/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/nominal_observed_moment_covariance/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/nominal_observed_moment_covariance/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/nominal_observed_moment_covariance/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/small-directional/nominal_observed_moment_covariance/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/legacy_sigma_squared_identity/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/legacy_sigma_squared_identity/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/legacy_sigma_squared_identity/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/legacy_sigma_squared_identity/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/legacy_sigma_squared_identity/saved_predictions",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/legacy_sigma_squared_identity/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/legacy_sigma_squared_identity/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/legacy_sigma_squared_identity/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/legacy_sigma_squared_identity/archive_heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/legacy_sigma_squared_identity/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/legacy_sigma_squared_identity/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/legacy_sigma_squared_identity/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/legacy_sigma_squared_identity/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/legacy_sigma_squared_identity/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/nominal_observed_moment_covariance/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/nominal_observed_moment_covariance/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/nominal_observed_moment_covariance/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/nominal_observed_moment_covariance/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/nominal_observed_moment_covariance/saved_predictions",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/nominal_observed_moment_covariance/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/nominal_observed_moment_covariance/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/nominal_observed_moment_covariance/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/nominal_observed_moment_covariance/archive_heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/nominal_observed_moment_covariance/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/nominal_observed_moment_covariance/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/nominal_observed_moment_covariance/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/nominal_observed_moment_covariance/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/medium-directional/nominal_observed_moment_covariance/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/legacy_sigma_squared_identity/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/legacy_sigma_squared_identity/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/legacy_sigma_squared_identity/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/legacy_sigma_squared_identity/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/legacy_sigma_squared_identity/saved_predictions",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/legacy_sigma_squared_identity/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/legacy_sigma_squared_identity/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/legacy_sigma_squared_identity/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/legacy_sigma_squared_identity/archive_heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/legacy_sigma_squared_identity/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/legacy_sigma_squared_identity/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/legacy_sigma_squared_identity/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/legacy_sigma_squared_identity/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/legacy_sigma_squared_identity/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/nominal_observed_moment_covariance/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/nominal_observed_moment_covariance/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/nominal_observed_moment_covariance/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/nominal_observed_moment_covariance/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/nominal_observed_moment_covariance/saved_predictions",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/nominal_observed_moment_covariance/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/nominal_observed_moment_covariance/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/nominal_observed_moment_covariance/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/nominal_observed_moment_covariance/archive_heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/nominal_observed_moment_covariance/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/nominal_observed_moment_covariance/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/nominal_observed_moment_covariance/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/nominal_observed_moment_covariance/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/large-directional/nominal_observed_moment_covariance/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/minor-directional/legacy_sigma_squared_identity/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/minor-directional/legacy_sigma_squared_identity/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/minor-directional/legacy_sigma_squared_identity/original_refusal",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/minor-directional/nominal_observed_moment_covariance/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/minor-directional/nominal_observed_moment_covariance/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/minor-directional/nominal_observed_moment_covariance/original_refusal",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/legacy_sigma_squared_identity/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/legacy_sigma_squared_identity/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/legacy_sigma_squared_identity/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/legacy_sigma_squared_identity/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/legacy_sigma_squared_identity/saved_predictions",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/legacy_sigma_squared_identity/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/legacy_sigma_squared_identity/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/legacy_sigma_squared_identity/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/legacy_sigma_squared_identity/archive_heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/legacy_sigma_squared_identity/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/legacy_sigma_squared_identity/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/legacy_sigma_squared_identity/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/legacy_sigma_squared_identity/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/legacy_sigma_squared_identity/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/nominal_observed_moment_covariance/archive_binding",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/nominal_observed_moment_covariance/archived_status",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/nominal_observed_moment_covariance/frozen_input",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/nominal_observed_moment_covariance/completion",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/nominal_observed_moment_covariance/saved_predictions",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/nominal_observed_moment_covariance/geometry_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/nominal_observed_moment_covariance/heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/nominal_observed_moment_covariance/target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/nominal_observed_moment_covariance/archive_heldout_arithmetic",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/nominal_observed_moment_covariance/archive_target_recomputed",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/nominal_observed_moment_covariance/previous_pass_preserved",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/nominal_observed_moment_covariance/comparison",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/nominal_observed_moment_covariance/parameter_deltas",
+      "passed": true
+    },
+    {
+      "name": "replay/photo_v2/rotated-major-directional/nominal_observed_moment_covariance/previous_pass_semantics",
+      "passed": true
+    },
+    {
+      "name": "replay/archive_previous12plus3",
+      "passed": true
+    },
+    {
+      "name": "replay/summary_counts",
+      "passed": true
+    },
+    {
+      "name": "replay/summary_flags",
+      "passed": true
+    },
+    {
+      "name": "entries/ordered_population",
+      "passed": true
+    },
+    {
+      "name": "entries/record/0",
+      "passed": true
+    },
+    {
+      "name": "entries/record/1",
+      "passed": true
+    },
+    {
+      "name": "entries/record/2",
+      "passed": true
+    },
+    {
+      "name": "entries/record/3",
+      "passed": true
+    },
+    {
+      "name": "entries/record/4",
+      "passed": true
+    },
+    {
+      "name": "entries/record/5",
+      "passed": true
+    },
+    {
+      "name": "entries/record/6",
+      "passed": true
+    },
+    {
+      "name": "entries/record/7",
+      "passed": true
+    },
+    {
+      "name": "entries/record/8",
+      "passed": true
+    },
+    {
+      "name": "entries/record/9",
+      "passed": true
+    },
+    {
+      "name": "entries/record/10",
+      "passed": true
+    },
+    {
+      "name": "entries/record/11",
+      "passed": true
+    },
+    {
+      "name": "entries/record/12",
+      "passed": true
+    },
+    {
+      "name": "entries/record/13",
+      "passed": true
+    },
+    {
+      "name": "entries/record/14",
+      "passed": true
+    },
+    {
+      "name": "entries/record/15",
+      "passed": true
+    },
+    {
+      "name": "entries/record/16",
+      "passed": true
+    },
+    {
+      "name": "entries/record/17",
+      "passed": true
+    },
+    {
+      "name": "entries/record/18",
+      "passed": true
+    },
+    {
+      "name": "entries/record/19",
+      "passed": true
+    },
+    {
+      "name": "entries/record/20",
+      "passed": true
+    },
+    {
+      "name": "entries/record/21",
+      "passed": true
+    },
+    {
+      "name": "entries/record/22",
+      "passed": true
+    },
+    {
+      "name": "entries/record/23",
+      "passed": true
+    },
+    {
+      "name": "entries/record/24",
+      "passed": true
+    },
+    {
+      "name": "entries/record/25",
+      "passed": true
+    },
+    {
+      "name": "entries/record/26",
+      "passed": true
+    },
+    {
+      "name": "entries/record/27",
+      "passed": true
+    },
+    {
+      "name": "entries/record/28",
+      "passed": true
+    },
+    {
+      "name": "entries/record/29",
+      "passed": true
+    },
+    {
+      "name": "entries/record/30",
+      "passed": true
+    },
+    {
+      "name": "entries/record/31",
+      "passed": true
+    },
+    {
+      "name": "entries/record/32",
+      "passed": true
+    },
+    {
+      "name": "entries/record/33",
+      "passed": true
+    },
+    {
+      "name": "entries/record/34",
+      "passed": true
+    },
+    {
+      "name": "entries/record/35",
+      "passed": true
+    },
+    {
+      "name": "entries/record/36",
+      "passed": true
+    },
+    {
+      "name": "entries/record/37",
+      "passed": true
+    },
+    {
+      "name": "entries/record/38",
+      "passed": true
+    },
+    {
+      "name": "entries/record/39",
+      "passed": true
+    },
+    {
+      "name": "entries/record/40",
+      "passed": true
+    },
+    {
+      "name": "entries/record/41",
+      "passed": true
+    },
+    {
+      "name": "entries/record/42",
+      "passed": true
+    },
+    {
+      "name": "entries/record/43",
+      "passed": true
+    },
+    {
+      "name": "entries/record/44",
+      "passed": true
+    },
+    {
+      "name": "entries/record/45",
+      "passed": true
+    },
+    {
+      "name": "entries/record/46",
+      "passed": true
+    },
+    {
+      "name": "entries/record/47",
+      "passed": true
+    },
+    {
+      "name": "entries/record/48",
+      "passed": true
+    },
+    {
+      "name": "entries/record/49",
+      "passed": true
+    },
+    {
+      "name": "entries/record/50",
+      "passed": true
+    },
+    {
+      "name": "entries/record/51",
+      "passed": true
+    },
+    {
+      "name": "entries/record/52",
+      "passed": true
+    },
+    {
+      "name": "entries/record/53",
+      "passed": true
+    },
+    {
+      "name": "entries/record/54",
+      "passed": true
+    },
+    {
+      "name": "entries/record/55",
+      "passed": true
+    },
+    {
+      "name": "entries/summary",
+      "passed": true
+    },
+    {
+      "name": "entries/real_counts",
+      "passed": true
+    },
+    {
+      "name": "failures/strict_roundtrip",
+      "passed": true
+    },
+    {
+      "name": "timing/fixed_cpu_metadata",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel_population",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/mean/all_samples",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/mean/timed_order",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/mean/return_quality/original/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/mean/return_quality/candidate/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/mean/return_quality/original/0",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/mean/return_quality/candidate/0",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/mean/return_quality/candidate/1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/mean/return_quality/original/1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/mean/return_quality/original/2",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/mean/return_quality/candidate/2",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/mean/return_quality/candidate/3",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/mean/return_quality/original/3",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/mean/return_quality/original/4",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/mean/return_quality/candidate/4",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/mean/return_quality/candidate/5",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/mean/return_quality/original/5",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/mean/return_quality/original/6",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/mean/return_quality/candidate/6",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/mean/return_quality_flags",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/mean/median/original",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/mean/median/candidate",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/mean/ratios",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/direct_shape_jacobian/all_samples",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/direct_shape_jacobian/timed_order",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/direct_shape_jacobian/return_quality/original/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/direct_shape_jacobian/return_quality/candidate/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/direct_shape_jacobian/return_quality/original/0",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/direct_shape_jacobian/return_quality/candidate/0",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/direct_shape_jacobian/return_quality/candidate/1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/direct_shape_jacobian/return_quality/original/1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/direct_shape_jacobian/return_quality/original/2",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/direct_shape_jacobian/return_quality/candidate/2",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/direct_shape_jacobian/return_quality/candidate/3",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/direct_shape_jacobian/return_quality/original/3",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/direct_shape_jacobian/return_quality/original/4",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/direct_shape_jacobian/return_quality/candidate/4",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/direct_shape_jacobian/return_quality/candidate/5",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/direct_shape_jacobian/return_quality/original/5",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/direct_shape_jacobian/return_quality/original/6",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/direct_shape_jacobian/return_quality/candidate/6",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/direct_shape_jacobian/return_quality_flags",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/direct_shape_jacobian/median/original",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/direct_shape_jacobian/median/candidate",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/40/direct_shape_jacobian/ratios",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/mean/all_samples",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/mean/timed_order",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/mean/return_quality/original/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/mean/return_quality/candidate/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/mean/return_quality/original/0",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/mean/return_quality/candidate/0",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/mean/return_quality/candidate/1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/mean/return_quality/original/1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/mean/return_quality/original/2",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/mean/return_quality/candidate/2",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/mean/return_quality/candidate/3",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/mean/return_quality/original/3",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/mean/return_quality/original/4",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/mean/return_quality/candidate/4",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/mean/return_quality/candidate/5",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/mean/return_quality/original/5",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/mean/return_quality/original/6",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/mean/return_quality/candidate/6",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/mean/return_quality_flags",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/mean/median/original",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/mean/median/candidate",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/mean/ratios",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/direct_shape_jacobian/all_samples",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/direct_shape_jacobian/timed_order",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/direct_shape_jacobian/return_quality/original/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/direct_shape_jacobian/return_quality/candidate/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/direct_shape_jacobian/return_quality/original/0",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/direct_shape_jacobian/return_quality/candidate/0",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/direct_shape_jacobian/return_quality/candidate/1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/direct_shape_jacobian/return_quality/original/1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/direct_shape_jacobian/return_quality/original/2",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/direct_shape_jacobian/return_quality/candidate/2",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/direct_shape_jacobian/return_quality/candidate/3",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/direct_shape_jacobian/return_quality/original/3",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/direct_shape_jacobian/return_quality/original/4",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/direct_shape_jacobian/return_quality/candidate/4",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/direct_shape_jacobian/return_quality/candidate/5",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/direct_shape_jacobian/return_quality/original/5",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/direct_shape_jacobian/return_quality/original/6",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/direct_shape_jacobian/return_quality/candidate/6",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/direct_shape_jacobian/return_quality_flags",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/direct_shape_jacobian/median/original",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/direct_shape_jacobian/median/candidate",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/small-isotropic/legacy_sigma_squared_identity/56/direct_shape_jacobian/ratios",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/mean/all_samples",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/mean/timed_order",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/mean/return_quality/original/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/mean/return_quality/candidate/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/mean/return_quality/original/0",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/mean/return_quality/candidate/0",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/mean/return_quality/candidate/1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/mean/return_quality/original/1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/mean/return_quality/original/2",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/mean/return_quality/candidate/2",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/mean/return_quality/candidate/3",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/mean/return_quality/original/3",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/mean/return_quality/original/4",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/mean/return_quality/candidate/4",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/mean/return_quality/candidate/5",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/mean/return_quality/original/5",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/mean/return_quality/original/6",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/mean/return_quality/candidate/6",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/mean/return_quality_flags",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/mean/median/original",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/mean/median/candidate",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/mean/ratios",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/all_samples",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/timed_order",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/original/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/candidate/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/original/0",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/candidate/0",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/candidate/1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/original/1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/original/2",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/candidate/2",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/candidate/3",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/original/3",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/original/4",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/candidate/4",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/candidate/5",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/original/5",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/original/6",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/candidate/6",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality_flags",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/median/original",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/median/candidate",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/ratios",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/mean/all_samples",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/mean/timed_order",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/mean/return_quality/original/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/mean/return_quality/candidate/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/mean/return_quality/original/0",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/mean/return_quality/candidate/0",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/mean/return_quality/candidate/1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/mean/return_quality/original/1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/mean/return_quality/original/2",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/mean/return_quality/candidate/2",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/mean/return_quality/candidate/3",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/mean/return_quality/original/3",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/mean/return_quality/original/4",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/mean/return_quality/candidate/4",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/mean/return_quality/candidate/5",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/mean/return_quality/original/5",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/mean/return_quality/original/6",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/mean/return_quality/candidate/6",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/mean/return_quality_flags",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/mean/median/original",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/mean/median/candidate",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/mean/ratios",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/all_samples",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/timed_order",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/original/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/candidate/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/original/0",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/candidate/0",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/candidate/1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/original/1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/original/2",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/candidate/2",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/candidate/3",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/original/3",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/original/4",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/candidate/4",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/candidate/5",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/original/5",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/original/6",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/candidate/6",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality_flags",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/median/original",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/median/candidate",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/medium-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/ratios",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/mean/all_samples",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/mean/timed_order",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/mean/return_quality/original/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/mean/return_quality/candidate/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/mean/return_quality/original/0",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/mean/return_quality/candidate/0",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/mean/return_quality/candidate/1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/mean/return_quality/original/1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/mean/return_quality/original/2",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/mean/return_quality/candidate/2",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/mean/return_quality/candidate/3",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/mean/return_quality/original/3",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/mean/return_quality/original/4",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/mean/return_quality/candidate/4",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/mean/return_quality/candidate/5",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/mean/return_quality/original/5",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/mean/return_quality/original/6",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/mean/return_quality/candidate/6",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/mean/return_quality_flags",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/mean/median/original",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/mean/median/candidate",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/mean/ratios",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/all_samples",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/timed_order",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/original/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/candidate/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/original/0",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/candidate/0",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/candidate/1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/original/1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/original/2",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/candidate/2",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/candidate/3",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/original/3",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/original/4",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/candidate/4",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/candidate/5",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/original/5",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/original/6",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality/candidate/6",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/return_quality_flags",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/median/original",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/median/candidate",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/40/direct_shape_jacobian/ratios",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/mean/all_samples",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/mean/timed_order",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/mean/return_quality/original/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/mean/return_quality/candidate/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/mean/return_quality/original/0",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/mean/return_quality/candidate/0",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/mean/return_quality/candidate/1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/mean/return_quality/original/1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/mean/return_quality/original/2",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/mean/return_quality/candidate/2",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/mean/return_quality/candidate/3",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/mean/return_quality/original/3",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/mean/return_quality/original/4",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/mean/return_quality/candidate/4",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/mean/return_quality/candidate/5",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/mean/return_quality/original/5",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/mean/return_quality/original/6",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/mean/return_quality/candidate/6",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/mean/return_quality_flags",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/mean/median/original",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/mean/median/candidate",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/mean/ratios",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/all_samples",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/timed_order",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/original/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/candidate/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/original/0",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/candidate/0",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/candidate/1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/original/1",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/original/2",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/candidate/2",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/candidate/3",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/original/3",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/original/4",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/candidate/4",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/candidate/5",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/original/5",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/original/6",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality/candidate/6",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/return_quality_flags",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/median/original",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/median/candidate",
+      "passed": true
+    },
+    {
+      "name": "timing/kernel/rotated-major-directional/nominal_observed_moment_covariance/56/direct_shape_jacobian/ratios",
+      "passed": true
+    },
+    {
+      "name": "timing/fit_population",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/small-isotropic/legacy_sigma_squared_identity/all_samples",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/small-isotropic/legacy_sigma_squared_identity/timed_order",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/small-isotropic/legacy_sigma_squared_identity/return_quality/original/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/small-isotropic/legacy_sigma_squared_identity/reference_equality/original/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/small-isotropic/legacy_sigma_squared_identity/return_quality/candidate/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/small-isotropic/legacy_sigma_squared_identity/reference_equality/candidate/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/small-isotropic/legacy_sigma_squared_identity/return_quality/original/0",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/small-isotropic/legacy_sigma_squared_identity/reference_equality/original/0",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/small-isotropic/legacy_sigma_squared_identity/return_quality/candidate/0",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/small-isotropic/legacy_sigma_squared_identity/reference_equality/candidate/0",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/small-isotropic/legacy_sigma_squared_identity/return_quality/candidate/1",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/small-isotropic/legacy_sigma_squared_identity/reference_equality/candidate/1",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/small-isotropic/legacy_sigma_squared_identity/return_quality/original/1",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/small-isotropic/legacy_sigma_squared_identity/reference_equality/original/1",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/small-isotropic/legacy_sigma_squared_identity/return_quality/original/2",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/small-isotropic/legacy_sigma_squared_identity/reference_equality/original/2",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/small-isotropic/legacy_sigma_squared_identity/return_quality/candidate/2",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/small-isotropic/legacy_sigma_squared_identity/reference_equality/candidate/2",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/small-isotropic/legacy_sigma_squared_identity/return_quality_flags",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/small-isotropic/legacy_sigma_squared_identity/median/original",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/small-isotropic/legacy_sigma_squared_identity/median/candidate",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/small-isotropic/legacy_sigma_squared_identity/ratios",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/small-isotropic/legacy_sigma_squared_identity/complete_fit_consistency",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/medium-directional/nominal_observed_moment_covariance/all_samples",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/medium-directional/nominal_observed_moment_covariance/timed_order",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/medium-directional/nominal_observed_moment_covariance/return_quality/original/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/medium-directional/nominal_observed_moment_covariance/reference_equality/original/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/medium-directional/nominal_observed_moment_covariance/return_quality/candidate/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/medium-directional/nominal_observed_moment_covariance/reference_equality/candidate/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/medium-directional/nominal_observed_moment_covariance/return_quality/original/0",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/medium-directional/nominal_observed_moment_covariance/reference_equality/original/0",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/medium-directional/nominal_observed_moment_covariance/return_quality/candidate/0",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/medium-directional/nominal_observed_moment_covariance/reference_equality/candidate/0",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/medium-directional/nominal_observed_moment_covariance/return_quality/candidate/1",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/medium-directional/nominal_observed_moment_covariance/reference_equality/candidate/1",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/medium-directional/nominal_observed_moment_covariance/return_quality/original/1",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/medium-directional/nominal_observed_moment_covariance/reference_equality/original/1",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/medium-directional/nominal_observed_moment_covariance/return_quality/original/2",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/medium-directional/nominal_observed_moment_covariance/reference_equality/original/2",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/medium-directional/nominal_observed_moment_covariance/return_quality/candidate/2",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/medium-directional/nominal_observed_moment_covariance/reference_equality/candidate/2",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/medium-directional/nominal_observed_moment_covariance/return_quality_flags",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/medium-directional/nominal_observed_moment_covariance/median/original",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/medium-directional/nominal_observed_moment_covariance/median/candidate",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/medium-directional/nominal_observed_moment_covariance/ratios",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/medium-directional/nominal_observed_moment_covariance/complete_fit_consistency",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/rotated-major-directional/nominal_observed_moment_covariance/all_samples",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/rotated-major-directional/nominal_observed_moment_covariance/timed_order",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/rotated-major-directional/nominal_observed_moment_covariance/return_quality/original/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/rotated-major-directional/nominal_observed_moment_covariance/reference_equality/original/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/rotated-major-directional/nominal_observed_moment_covariance/return_quality/candidate/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/rotated-major-directional/nominal_observed_moment_covariance/reference_equality/candidate/-1",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/rotated-major-directional/nominal_observed_moment_covariance/return_quality/original/0",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/rotated-major-directional/nominal_observed_moment_covariance/reference_equality/original/0",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/rotated-major-directional/nominal_observed_moment_covariance/return_quality/candidate/0",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/rotated-major-directional/nominal_observed_moment_covariance/reference_equality/candidate/0",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/rotated-major-directional/nominal_observed_moment_covariance/return_quality/candidate/1",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/rotated-major-directional/nominal_observed_moment_covariance/reference_equality/candidate/1",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/rotated-major-directional/nominal_observed_moment_covariance/return_quality/original/1",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/rotated-major-directional/nominal_observed_moment_covariance/reference_equality/original/1",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/rotated-major-directional/nominal_observed_moment_covariance/return_quality/original/2",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/rotated-major-directional/nominal_observed_moment_covariance/reference_equality/original/2",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/rotated-major-directional/nominal_observed_moment_covariance/return_quality/candidate/2",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/rotated-major-directional/nominal_observed_moment_covariance/reference_equality/candidate/2",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/rotated-major-directional/nominal_observed_moment_covariance/return_quality_flags",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/rotated-major-directional/nominal_observed_moment_covariance/median/original",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/rotated-major-directional/nominal_observed_moment_covariance/median/candidate",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/rotated-major-directional/nominal_observed_moment_covariance/ratios",
+      "passed": true
+    },
+    {
+      "name": "timing/fit/rotated-major-directional/nominal_observed_moment_covariance/complete_fit_consistency",
+      "passed": true
+    },
+    {
+      "name": "timing/24_real_fit_entries",
+      "passed": true
+    },
+    {
+      "name": "timing/56_total_entries",
+      "passed": true
+    },
+    {
+      "name": "timing/mean_geomean",
+      "passed": true
+    },
+    {
+      "name": "timing/fit_geomean",
+      "passed": true
+    },
+    {
+      "name": "timing/raw_geomeans",
+      "passed": true
+    },
+    {
+      "name": "timing/all_requested_calls_flag",
+      "passed": true
+    },
+    {
+      "name": "timing/goal_booleans",
+      "passed": true
+    },
+    {
+      "name": "summary/kernel_accuracy",
+      "passed": true
+    }
+  ],
+  "checks_passed": 942,
+  "checks_failed": 0,
+  "all_integrity_checks_passed": true,
+  "performance": {
+    "mean_geomean": 10.1284996475863,
+    "fit_geomean": 3.8402241351116935,
+    "mean_goal_met": true,
+    "fit_goal_met": true,
+    "raw_mean_geomean": 10.1284996475863,
+    "raw_fit_geomean": 3.8402241351116935,
+    "fixed_cpu_qualified": true,
+    "all_samples_retained": true,
+    "all_fit_outputs_consistent": true
+  },
+  "replay": {
+    "eligible": 32,
+    "old_target_passes": {
+      "original24": 12,
+      "photo_v2": 3
+    },
+    "new_target_passes": {
+      "original24": 12,
+      "photo_v2": 3
+    },
+    "changed_flags": [],
+    "historical_original24_heldout_scope": "Archived scalar error retained; original archive did not save its independent predicted levels. Candidate prediction deltas and all photo archive predictions are recomputed from saved arrays."
+  },
+  "canonical_sha256": "aa46038d893ad18ccc6b7e2fb4d5af562d6fe73b7a50f5d17274bbd253b6d544",
+  "plan_sha256": "a43e2d97a32e6bd4822dfff9d7c090f9b469c7ac0bbf92caa35173de0d37d0bd",
+  "runner_sha256": "baf0a00bd45d639da22aeaeaa052b52ab41e49e8376010901720aac7a059d7ca",
+  "auditor_sha256": "e34997577db3730a41efb4e22d4a47f2d4a5b3b58d6bef6e54c236694cff4d0e"
+}

@@ -1,0 +1,658 @@
+{
+  "format": "pictures-to-cad-finite-affine-batch-plan",
+  "version": 1,
+  "design_status": "prospectively frozen before batch accuracy/performance or any new optimizer recovery; initial no-fit scalar mean/Jacobian profile allowed after this freeze",
+  "base_revision": "65399053b45f3c38a9d6d2084bc2315aac9bd87e",
+  "scope": "Same conditional finite-material Gaussian Green observation model, batched only for exactly affine maps. Preserve declared centre convention, material/holes, arithmetic/near-travel/embedded-rule/tail guards and finite work. No camera or interactive-user-path qualification from kernel timings.",
+  "base": {
+    "sensor_shape": [
+      160,
+      160
+    ],
+    "centre": [
+      79.37,
+      78.81
+    ],
+    "radius": 10.4,
+    "fraction": 0.27,
+    "normal_degrees": 0.0,
+    "covariance": [
+      [
+        1.21,
+        0.0
+      ],
+      [
+        0.0,
+        1.21
+      ]
+    ],
+    "homography": [
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "source": "point",
+    "levels": [
+      0.0,
+      255.0
+    ]
+  },
+  "operator_cases": [
+    {
+      "name": "identity-isotropic",
+      "changes": {}
+    },
+    {
+      "name": "rotated-normal-correlated",
+      "changes": {
+        "normal_degrees": 37.0,
+        "covariance": [
+          [
+            1.3,
+            0.4
+          ],
+          [
+            0.4,
+            3.7
+          ]
+        ]
+      }
+    },
+    {
+      "name": "affine-rotation",
+      "changes": {
+        "homography": [
+          [
+            0.9210609940028851,
+            -0.3894183423086505,
+            36.0
+          ],
+          [
+            0.3894183423086505,
+            0.9210609940028851,
+            -24.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "normal_degrees": -23.0
+      }
+    },
+    {
+      "name": "affine-scale-shear-correlated",
+      "changes": {
+        "homography": [
+          [
+            1.15,
+            0.18,
+            -20.0
+          ],
+          [
+            -0.08,
+            0.83,
+            21.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "covariance": [
+          [
+            1.8,
+            -0.55
+          ],
+          [
+            -0.55,
+            4.2
+          ]
+        ]
+      }
+    },
+    {
+      "name": "affine-reflection-correlated",
+      "changes": {
+        "homography": [
+          [
+            -1.0,
+            0.12,
+            150.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "covariance": [
+          [
+            1.3,
+            0.4
+          ],
+          [
+            0.4,
+            3.7
+          ]
+        ]
+      }
+    },
+    {
+      "name": "global-centre-local-crop",
+      "changes": {
+        "centre": [
+          119.37,
+          108.81
+        ],
+        "homography": [
+          [
+            1.0,
+            0.0,
+            -40.0
+          ],
+          [
+            0.0,
+            1.0,
+            -30.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "covariance": [
+          [
+            2.1,
+            0.7
+          ],
+          [
+            0.7,
+            4.8
+          ]
+        ]
+      }
+    },
+    {
+      "name": "positive-homography-scale",
+      "changes": {
+        "homography": [
+          [
+            1e+80,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1e+80,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1e+80
+          ]
+        ]
+      }
+    },
+    {
+      "name": "negative-homography-scale",
+      "changes": {
+        "homography": [
+          [
+            -7.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            -7.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            -7.0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "thin-cap",
+      "changes": {
+        "fraction": -0.94,
+        "normal_degrees": 19.0,
+        "covariance": [
+          [
+            1.3,
+            0.4
+          ],
+          [
+            0.4,
+            3.7
+          ]
+        ]
+      }
+    },
+    {
+      "name": "near-full-disk",
+      "changes": {
+        "fraction": 0.94,
+        "normal_degrees": -31.0,
+        "covariance": [
+          [
+            1.8,
+            -0.55
+          ],
+          [
+            -0.55,
+            4.2
+          ]
+        ]
+      }
+    },
+    {
+      "name": "contained-circle-hole",
+      "changes": {
+        "source": "hole",
+        "hole_radius": 2.2,
+        "hole_offset": [
+          -2.0,
+          1.0
+        ],
+        "covariance": [
+          [
+            1.3,
+            0.4
+          ],
+          [
+            0.4,
+            3.7
+          ]
+        ]
+      }
+    },
+    {
+      "name": "rectangle-separable",
+      "shape": "rectangle",
+      "changes": {
+        "rectangle_bounds": [
+          66.25,
+          68.1,
+          91.7,
+          89.8
+        ],
+        "covariance": [
+          [
+            1.21,
+            0.0
+          ],
+          [
+            0.0,
+            3.61
+          ]
+        ]
+      }
+    },
+    {
+      "name": "rectangle-reflected",
+      "shape": "rectangle",
+      "changes": {
+        "rectangle_bounds": [
+          66.25,
+          68.1,
+          91.7,
+          89.8
+        ],
+        "homography": [
+          [
+            -1.0,
+            0.0,
+            160.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "covariance": [
+          [
+            1.21,
+            0.0
+          ],
+          [
+            0.0,
+            3.61
+          ]
+        ]
+      }
+    },
+    {
+      "name": "large-radius-narrow-feature",
+      "changes": {
+        "sensor_shape": [
+          50000,
+          50000
+        ],
+        "centre": [
+          20000.5,
+          20000.5
+        ],
+        "radius": 10000.0,
+        "fraction": 0.2,
+        "covariance": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            9.0
+          ]
+        ],
+        "query_base": [
+          10000,
+          20000
+        ],
+        "query_offsets_x": [
+          -3,
+          -2,
+          -1,
+          0,
+          1,
+          2,
+          3,
+          5
+        ],
+        "query_offsets_y": [
+          -3,
+          -2,
+          -1,
+          0,
+          1,
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "name": "projective-exact-fallback",
+      "expected_path": "scalar_projective",
+      "changes": {
+        "homography": [
+          [
+            1.0,
+            0.04,
+            -2.0
+          ],
+          [
+            0.02,
+            0.98,
+            1.0
+          ],
+          [
+            0.0004,
+            -0.0002,
+            1.0
+          ]
+        ],
+        "covariance": [
+          [
+            1.3,
+            0.4
+          ],
+          [
+            0.4,
+            3.7
+          ]
+        ]
+      }
+    },
+    {
+      "name": "near-affine-still-projective",
+      "expected_path": "scalar_projective",
+      "changes": {
+        "homography": [
+          [
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            1e-12,
+            -1e-12,
+            1.0
+          ]
+        ]
+      }
+    }
+  ],
+  "queries": {
+    "count": 56,
+    "rule": "Cartesian product in listed order y-major, unique integer indices. Default base=floor(mapped declared centre); fixed offsets below. Case-specific query_base/offsets override. These are known-geometry operator controls, not truth-derived inverse ROIs.",
+    "offsets_x": [
+      -14,
+      -9,
+      -4,
+      0,
+      3,
+      7,
+      11,
+      15
+    ],
+    "offsets_y": [
+      -14,
+      -9,
+      -4,
+      0,
+      4,
+      9,
+      14
+    ]
+  },
+  "numerical_controls": {
+    "probability_tolerance": 1e-08,
+    "max_panels": 4096,
+    "max_evaluations": 2000000,
+    "scalar_batch_probability_max_delta": 1e-09,
+    "independent_orders": [
+      32,
+      64
+    ],
+    "independent_max_level_order_delta": 1e-07,
+    "independent_max_level_error": 2e-05,
+    "probability_clipping": false,
+    "refusal_policy": "Retain every case/query/status and execution failure. Full-budget eligible controls must resolve with both paths. Projective and near-affine nonzero denominator-gradient cases must use actual scalar fallback and preserve all original result fields exactly. No nonzero projective coefficient is rounded to affine."
+  },
+  "materials": {
+    "D": "Exact requested local C/R/f curves, not a world-three-point reconstruction. Hole case subtracts the contained complete circle with supplied role; rectangle controls use exact separable Gaussian CDF products after the declared axis-aligned/reflection map.",
+    "positive_area_oracle": "Frozen independent conic vertical-slice erfc/GL implementation0537540c; conic/oracle plan inputs pinned. Never call production flux kernel to generate the oracle values. Entire projected disk must stay in one chart for this oracle."
+  },
+  "resource_controls": [
+    {
+      "name": "tiny-panel-limit",
+      "settings": {
+        "max_panels": 1
+      }
+    },
+    {
+      "name": "tiny-node-limit",
+      "settings": {
+        "max_evaluations": 1
+      }
+    },
+    {
+      "name": "partial-shared-work",
+      "settings": {
+        "max_evaluations": 512
+      }
+    },
+    {
+      "name": "small-memory",
+      "memory_limit_bytes": 1
+    },
+    {
+      "name": "exact-public-count-cap",
+      "query_count": 2048
+    },
+    {
+      "name": "over-public-count-refusal",
+      "query_count": 2049
+    }
+  ],
+  "resource_policy": "Use identity-isotropic geometry unless stated. No allocation beyond explicit batch memory cap; preserve all requested query entries and None/status semantics under exhaustion. Every fallback is charged against the SAME remaining work budget; report batch-spent and scalar-spent work. Different partitions may reach different unresolved sets under tiny budgets; no false probability or work overspend is accepted. Generous-budget accuracy/status requirements remain unchanged.",
+  "derivative_controls": {
+    "cases": [
+      "identity-isotropic",
+      "rotated-normal-correlated",
+      "affine-scale-shear-correlated",
+      "affine-reflection-correlated",
+      "global-centre-local-crop",
+      "thin-cap"
+    ],
+    "oracle_steps": [
+      0.0002,
+      0.0002,
+      0.0002,
+      2e-05
+    ],
+    "rule": "Centered independent-area finite differences at h and h/2 in Cx,Cy,R,f; all56queries. Compare actual boundary-shape Jacobian path(s), not a finite difference of the Green program.",
+    "maximum_absolute_column_error": 2e-06,
+    "maximum_h_vs_half_h_delta": 2e-06,
+    "scope": "Numerical derivative validation under fixed H/Sigma/normal, not Fisher calibration. Mean and direct-shape-Jacobian timings stay separate."
+  },
+  "timing": {
+    "environment_before_numpy": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1"
+    },
+    "cpu_affinity": "Pin to min(os.sched_getaffinity(0)) when supported; record original/pinned affinity, CPU/platform/Python/NumPy, environment and load. If unavailable retain correctness but withhold fixed-CPU timing qualification.",
+    "concurrency": "Sequential paired alternating paths, never concurrent methods or tests in this runner. Root must approve a quiet interval before final timed comparisons; unqualified ambient load remains a limitation.",
+    "clock": "perf_counter_ns; retain every warmup and timed observation, no fastest-only statistic",
+    "initial_scalar_profile": {
+      "case": "medium-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "query_counts": [
+        40,
+        56
+      ],
+      "parameters": "archived observed seed; input arrays/H/Sigma from frozen V2 row",
+      "warmup_calls_each": 1,
+      "timed_repeats_each": 3,
+      "methods": [
+        "original mean",
+        "original direct shape Jacobian"
+      ],
+      "optimizer_calls": 0
+    },
+    "representative_cases": [
+      {
+        "case": "small-isotropic",
+        "lane": "legacy_sigma_squared_identity"
+      },
+      {
+        "case": "medium-directional",
+        "lane": "nominal_observed_moment_covariance"
+      },
+      {
+        "case": "rotated-major-directional",
+        "lane": "nominal_observed_moment_covariance"
+      }
+    ],
+    "query_counts": [
+      40,
+      56
+    ],
+    "parameters": "Frozen V2 observed seed only, same local samples and global geometry/Hcrop; no re-preparation or rerender.",
+    "warmup_calls_each": 1,
+    "paired_timed_repeats": 7,
+    "pair_order": "old/new on even repeat, new/old on odd repeat",
+    "mean_geometric_median_speedup_goal": 3.0,
+    "actual_40_training_fit_geometric_median_speedup_goal": 3.0,
+    "goals_semantics": "Host-bound engineering goals, retained as failed when missed; no numerical/physical criterion is relaxed. Kernel speed alone does not establish optimizer latency or an interactive product path."
+  },
+  "later_optimizer_stage": {
+    "authorization": "No optimizer until root reviews this frozen plan and no-fit profile/controls, then final source freeze.",
+    "inputs": "Replay the SAME archived24 finite-free-centre cases and12 V2 rows from saved local pixels/values/bounds/normal/H/covariance; no rendering, initializer or field change. Retain original no-fit/upstream/control cases rather than fabricating optimizers.",
+    "frozen_input_metric": "Source observations/constants/thresholds already recorded in originals; all original matched/heldout/adverse targets remain unchanged. Original adverse pixel-aperture oracle failure remains explicitly historical and is not repaired by a performance study.",
+    "accuracy": "Compare full geometry/levels/cost/heldout values and every completion/ambiguity/work/numeric flag, retaining differences and both outcomes. Matched original targets must remain passed; preexisting adverse target misses/upstream refusals do not become successes by relabeling.",
+    "timed_fit_subset": "The three representative V2 40-training datasets above; original vs candidate 1warmup and3 alternating paired timed repeats, same fit settings and input arrays. Record all optimizer/forward/derivative calls/work/panels; no shared thread/process pool.",
+    "fit_settings": "Unchanged respective original plans. V2 grid3,iterations24,basins4,evaluations512,forward_work60million,tol1e-8,bounded levels0..255.",
+    "performance_attribution": "Profile geometry/mean/directJacobian/linear-face/GP/refinement time separately via wrappers; report actual fitter time and whether mean-only Amdahl ceiling can meet3x. Profiling runs are not mixed into timed repeats."
+  },
+  "cli": "Required fresh --output NEW_JSON; help/refusal before expensive imports/analysis, no overwrite/dangling symlink. All rows and source before/after closures retained, strict JSON/stdout binding; first actual failure continuation only after root authorizes optimizer stage.",
+  "limits": [
+    "Engineering quadrature/error estimates are not certified Gaussian integrals or physical uncertainty.",
+    "Affine dispatch is exact, not a local-Jacobian approximation to a projective map.",
+    "No response, optical covariance, wall, pixel aperture, topology or normal calibration is inferred.",
+    "No candidate is accepted merely because its performance or local information is good.",
+    "All single-thread/CPU timing conclusions remain machine/load dependent."
+  ],
+  "input_sha256": {
+    "studies/verification/finite-free-centre-v1.py": "0537540cbfddad2e6209b7b1483977e118c70b64f0d7938e810f942765e579f8",
+    "studies/finite-free-centre-v1.json": "f8db267fd848363ba91b56cd5a01086f3123ad699f6c0c404166734f3bc582fd",
+    "studies/results/finite-free-centre-v1.json": "eb5e85ca199999915ffbc8b283fc98ba749d2460f9e44839af5ccb7f740e7087",
+    "studies/finite-photo-intensity-v2.json": "6563b63d283ad984cba38d2275cb20163c28da4b270c6d2a5d419548a15024ae",
+    "studies/results/finite-photo-intensity-v2.json": "967251c4458e7c06f88c6f5d4b01ab77654a0a744e1a181dd79c86df99d39127",
+    "studies/fixtures/finite-photo-intensity-v2/manifest.json": "c32b2ad520145c73c35f8b02108c1e1651315ecd1df368c1552477532bc744b9",
+    "backend/finite_observations.py": "09fa843f72b2fc265ba8d4a7111267bf10433eb4f3f2a0600a89cc7871cb3969",
+    "uv.lock": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f",
+    "studies/fixtures/finite-affine-batch-v1/original-finite-shape.py.txt": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+    "studies/fixtures/finite-affine-batch-v1/original-finite-centre-fit.py.txt": "e2019bcc8b5813c0957967b469baf44bbdd784f50855418852c2686cc48b9ab4"
+  },
+  "baseline_comparator": {
+    "fitter": "Frozen PR91 e2019bcc8b5813c0957967b469baf44bbdd784f50855418852c2686cc48b9ab4 source, byte-identical .py.txt fixture, loaded into isolated module namespace.",
+    "forward": "Frozen9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380 original finite_shape fixture loaded as the baseline fitter sibling, so candidate dispatch cannot leak into the comparator.",
+    "no_flags": "Never emulate old evaluator by toggling flags on modified candidate code.",
+    "shared_dependency_sha256": {
+      "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+      "backend/fitting.py": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+      "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+      "backend/sheet.py": "e18cbe44c476894f1655d6ce66a5e1b11cefe9ca4f95e7e17eb7f52efc236531"
+    }
+  },
+  "candidate_changes": {
+    "means": "New exactly-affine batch Green evaluator with original projection/model/guards and bounded memory/work; otherwise actual original scalar fallback.",
+    "direct_shape_jacobian": "Permitted arithmetic-only reuse of existing curve q/velocity/w in original _at algebra; mapped u AND mapped velocity computed and both finite-checked exactly as before. No removal of unused-but-guarded mapped velocity, model or refusal test.",
+    "possible_further_batch_jacobian": "Not included silently. Root may decide after baseline profile; any additional algorithm must be prospectively described before its timing/recovery qualification."
+  },
+  "freeze_history": {
+    "initial_plan_sha256": "fc5ee486cb11e8995aaaf7ac4c6b682be55ba5f4f2c1a9ed2e0e0a9e9a7de4b2",
+    "initial_plan_local_copy": ".local/verification/finite-affine-batch-initial-plan-v1.json",
+    "refreeze_reason": "Prospective root-requested exact baseline isolation and explicit Jacobian arithmetic-reuse scope, before ANY timing or optimizer run."
+  }
+}

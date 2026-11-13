@@ -1,0 +1,52 @@
+{"case": "identity-isotropic", "passed": true}
+{"case": "rotated-normal-correlated", "passed": true}
+{"case": "affine-rotation", "passed": true}
+{"case": "affine-scale-shear-correlated", "passed": true}
+{"case": "affine-reflection-correlated", "passed": true}
+{"case": "global-centre-local-crop", "passed": true}
+{"case": "positive-homography-scale", "passed": true}
+{"case": "negative-homography-scale", "passed": true}
+{"case": "thin-cap", "passed": true}
+{"case": "near-full-disk", "passed": true}
+{"case": "contained-circle-hole", "passed": true}
+{"case": "rectangle-separable", "passed": true}
+{"case": "rectangle-reflected", "passed": true}
+{"case": "large-radius-narrow-feature", "passed": true}
+{"case": "projective-exact-fallback", "passed": true}
+{"case": "near-affine-still-projective", "passed": true}
+{"optimizer_replay": "original24", "name": "offgrid-base", "lane": "matched", "status": "execution_failure", "targets_passed": false}
+{"optimizer_replay": "original24", "name": "complement", "lane": "matched", "status": "fit_returned", "targets_passed": true}
+{"optimizer_replay": "original24", "name": "rotated-anisotropic", "lane": "matched", "status": "fit_returned", "targets_passed": true}
+{"optimizer_replay": "original24", "name": "correlated-quarterturn", "lane": "matched", "status": "fit_returned", "targets_passed": true}
+{"optimizer_replay": "original24", "name": "near-chord", "lane": "matched", "status": "fit_returned", "targets_passed": true}
+{"optimizer_replay": "original24", "name": "far-chord", "lane": "matched", "status": "fit_returned", "targets_passed": true}
+{"optimizer_replay": "original24", "name": "threshold-051", "lane": "matched", "status": "fit_returned", "targets_passed": true}
+{"optimizer_replay": "original24", "name": "threshold-051-anisotropic", "lane": "matched", "status": "fit_returned", "targets_passed": true}
+{"optimizer_replay": "original24", "name": "affine", "lane": "matched", "status": "fit_returned", "targets_passed": true}
+{"optimizer_replay": "original24", "name": "projective", "lane": "matched", "status": "fit_returned", "targets_passed": true}
+{"optimizer_replay": "original24", "name": "rotated-central-chord", "lane": "matched", "status": "fit_returned", "targets_passed": true}
+{"optimizer_replay": "original24", "name": "affine-correlated-moderate-contrast", "lane": "matched", "status": "fit_returned", "targets_passed": true}
+{"optimizer_replay": "original24", "name": "cropped-chord", "lane": "diagnostic", "status": "fit_returned", "targets_passed": null}
+{"optimizer_replay": "original24", "name": "contour-only-support", "lane": "diagnostic", "status": "fit_returned", "targets_passed": null}
+{"optimizer_replay": "original24", "name": "constant-field", "lane": "diagnostic", "status": "observed_seed_ineligible", "targets_passed": null}
+{"optimizer_replay": "original24", "name": "low-contrast", "lane": "diagnostic", "status": "observed_seed_ineligible", "targets_passed": null}
+{"optimizer_replay": "original24", "name": "active-level-bounds", "lane": "diagnostic", "status": "fit_returned", "targets_passed": null}
+{"optimizer_replay": "original24", "name": "material-gradient", "lane": "diagnostic", "status": "fit_returned", "targets_passed": null}
+{"optimizer_replay": "original24", "name": "nonlinear-response", "lane": "diagnostic", "status": "fit_returned", "targets_passed": null}
+{"optimizer_replay": "original24", "name": "wrong-covariance", "lane": "diagnostic", "status": "fit_returned", "targets_passed": null}
+{"optimizer_replay": "original24", "name": "neighbor-hole", "lane": "diagnostic", "status": "fit_returned", "targets_passed": null}
+{"optimizer_replay": "original24", "name": "uniform-pixel-aperture", "lane": "diagnostic", "status": "fit_returned", "targets_passed": null}
+{"optimizer_replay": "original24", "name": "coarse-work-budget", "lane": "diagnostic", "status": "fit_returned", "targets_passed": null}
+{"optimizer_replay": "original24", "name": "numerical-query-failure", "lane": "diagnostic", "status": "fit_returned", "targets_passed": null}
+{"optimizer_replay": "photo_v2", "name": "small-isotropic", "lane": "legacy_sigma_squared_identity", "status": "fit_returned", "targets_passed": true}
+{"optimizer_replay": "photo_v2", "name": "small-isotropic", "lane": "nominal_observed_moment_covariance", "status": "fit_returned", "targets_passed": false}
+{"optimizer_replay": "photo_v2", "name": "small-directional", "lane": "legacy_sigma_squared_identity", "status": "fit_returned", "targets_passed": false}
+{"optimizer_replay": "photo_v2", "name": "small-directional", "lane": "nominal_observed_moment_covariance", "status": "fit_returned", "targets_passed": false}
+{"optimizer_replay": "photo_v2", "name": "medium-directional", "lane": "legacy_sigma_squared_identity", "status": "fit_returned", "targets_passed": false}
+{"optimizer_replay": "photo_v2", "name": "medium-directional", "lane": "nominal_observed_moment_covariance", "status": "fit_returned", "targets_passed": true}
+{"optimizer_replay": "photo_v2", "name": "large-directional", "lane": "legacy_sigma_squared_identity", "status": "fit_returned", "targets_passed": false}
+{"optimizer_replay": "photo_v2", "name": "large-directional", "lane": "nominal_observed_moment_covariance", "status": "fit_returned", "targets_passed": true}
+{"optimizer_replay": "photo_v2", "name": "minor-directional", "lane": "legacy_sigma_squared_identity", "status": "upstream_ineligible", "targets_passed": false}
+{"optimizer_replay": "photo_v2", "name": "minor-directional", "lane": "nominal_observed_moment_covariance", "status": "upstream_ineligible", "targets_passed": false}
+{"optimizer_replay": "photo_v2", "name": "rotated-major-directional", "lane": "legacy_sigma_squared_identity", "status": "fit_returned", "targets_passed": false}
+{"optimizer_replay": "photo_v2", "name": "rotated-major-directional", "lane": "nominal_observed_moment_covariance", "status": "fit_returned", "targets_passed": false}

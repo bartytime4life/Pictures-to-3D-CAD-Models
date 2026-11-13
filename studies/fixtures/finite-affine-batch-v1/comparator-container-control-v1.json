@@ -1,0 +1,13 @@
+{
+  "format": "pictures-to-cad-frozen-comparator-container-control",
+  "version": 1,
+  "scope": "Stdlib-only demonstration using frozen helper functions and one saved row. Only fit.best.centre list is replaced with an equal-valued tuple, matching the declared CentreCandidate tuple type; this is not a reconstruction of the original process memory.",
+  "runner_sha256": "baf0a00bd45d639da22aeaeaa052b52ab41e49e8376010901720aac7a059d7ca",
+  "changed_container_path": "fit.best.centre",
+  "python_equality": false,
+  "parsed_json_hash_equal": true,
+  "json_roundtrip_equality": true,
+  "canonical_row_name": "complement",
+  "canonical_row_lane": "matched",
+  "canonical_parsed_row_sha256": "fff7c2a47dd3fa71afa511d3d5f15f47c5187acd728cf6212899fe8bd5c41950"
+}

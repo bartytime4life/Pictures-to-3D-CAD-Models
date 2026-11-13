@@ -1,0 +1,344 @@
+{
+  "scope": "First candidate fit entry only throws. All35 later optimizer replay rows compared, retaining work, flags, statuses and profile call records; only named clock fields are removed. Timed-repeat speedups are not compared as deterministic data.",
+  "checks": {
+    "all36_rows_retained": true,
+    "first_entry_only_injected": true,
+    "first_row_explicit_failure": true,
+    "all35_later_rows_identical_except_clocks": false,
+    "source_input_closure_unchanged": true,
+    "all32_accuracy_entry_attempts_logged": true,
+    "31_later_real_accuracy_function_entries": true,
+    "all_required_real_timed_function_entries": true,
+    "canonical_input_unchanged": true
+  },
+  "later_row_comparisons": [
+    {
+      "index": 1,
+      "family": "original24",
+      "name": "complement",
+      "lane": "matched",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "fff7c2a47dd3fa71afa511d3d5f15f47c5187acd728cf6212899fe8bd5c41950",
+      "continuation_parsed_row_sha256": "fff7c2a47dd3fa71afa511d3d5f15f47c5187acd728cf6212899fe8bd5c41950"
+    },
+    {
+      "index": 2,
+      "family": "original24",
+      "name": "rotated-anisotropic",
+      "lane": "matched",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "9777733b2f6122f10286879a3a4b9170c20f08e5e7f19bcf6b7991685226781b",
+      "continuation_parsed_row_sha256": "9777733b2f6122f10286879a3a4b9170c20f08e5e7f19bcf6b7991685226781b"
+    },
+    {
+      "index": 3,
+      "family": "original24",
+      "name": "correlated-quarterturn",
+      "lane": "matched",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "b0747af59844920a9a30a51109a37529f6371c341be886396935014a27594617",
+      "continuation_parsed_row_sha256": "b0747af59844920a9a30a51109a37529f6371c341be886396935014a27594617"
+    },
+    {
+      "index": 4,
+      "family": "original24",
+      "name": "near-chord",
+      "lane": "matched",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "ea83cc908b37802212c886a56d78d8a63fd253a3abd6ccab878f60f4dfa5d344",
+      "continuation_parsed_row_sha256": "ea83cc908b37802212c886a56d78d8a63fd253a3abd6ccab878f60f4dfa5d344"
+    },
+    {
+      "index": 5,
+      "family": "original24",
+      "name": "far-chord",
+      "lane": "matched",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "7747d087e28097b12c4435fd53a9fab6c40d6b6fa3319bb1eb0d9f1e6893b47b",
+      "continuation_parsed_row_sha256": "7747d087e28097b12c4435fd53a9fab6c40d6b6fa3319bb1eb0d9f1e6893b47b"
+    },
+    {
+      "index": 6,
+      "family": "original24",
+      "name": "threshold-051",
+      "lane": "matched",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "3a5c4d490da98ce1f0adff81d4b713f0e70602d20f1c6f55e6e4ea06705f8bdf",
+      "continuation_parsed_row_sha256": "3a5c4d490da98ce1f0adff81d4b713f0e70602d20f1c6f55e6e4ea06705f8bdf"
+    },
+    {
+      "index": 7,
+      "family": "original24",
+      "name": "threshold-051-anisotropic",
+      "lane": "matched",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "b990159c8dd58286e88b6536a214055d6fffce75fe2167dae36b204010516d57",
+      "continuation_parsed_row_sha256": "b990159c8dd58286e88b6536a214055d6fffce75fe2167dae36b204010516d57"
+    },
+    {
+      "index": 8,
+      "family": "original24",
+      "name": "affine",
+      "lane": "matched",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "c3bece4a830981f9c03f3409e833f1d3e34afe070ac7e28e629b3bfcc1790033",
+      "continuation_parsed_row_sha256": "c3bece4a830981f9c03f3409e833f1d3e34afe070ac7e28e629b3bfcc1790033"
+    },
+    {
+      "index": 9,
+      "family": "original24",
+      "name": "projective",
+      "lane": "matched",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "5daf4effb103f37b3bce24b619d26e00e8453a159a83c9a2748b7c50e267ae89",
+      "continuation_parsed_row_sha256": "5daf4effb103f37b3bce24b619d26e00e8453a159a83c9a2748b7c50e267ae89"
+    },
+    {
+      "index": 10,
+      "family": "original24",
+      "name": "rotated-central-chord",
+      "lane": "matched",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "b68dfe8d63c5da875e8ef5f20df2e995fbab295dff1afc53fd88851962d2fd44",
+      "continuation_parsed_row_sha256": "b68dfe8d63c5da875e8ef5f20df2e995fbab295dff1afc53fd88851962d2fd44"
+    },
+    {
+      "index": 11,
+      "family": "original24",
+      "name": "affine-correlated-moderate-contrast",
+      "lane": "matched",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "cc747b7610f59f6dc0d5284483f728bf46469b5530a180f983b3a9eeec0ec933",
+      "continuation_parsed_row_sha256": "cc747b7610f59f6dc0d5284483f728bf46469b5530a180f983b3a9eeec0ec933"
+    },
+    {
+      "index": 12,
+      "family": "original24",
+      "name": "cropped-chord",
+      "lane": "diagnostic",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "a93ffbdbba16ae1cb4fc3ad5f93c89b2c8377ee5b8eb1da57716f884d52d1c10",
+      "continuation_parsed_row_sha256": "a93ffbdbba16ae1cb4fc3ad5f93c89b2c8377ee5b8eb1da57716f884d52d1c10"
+    },
+    {
+      "index": 13,
+      "family": "original24",
+      "name": "contour-only-support",
+      "lane": "diagnostic",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "b3de9635417f566aebb516a29f3b9565bfa10a1acec21af9aec998a5b08fad43",
+      "continuation_parsed_row_sha256": "b3de9635417f566aebb516a29f3b9565bfa10a1acec21af9aec998a5b08fad43"
+    },
+    {
+      "index": 14,
+      "family": "original24",
+      "name": "constant-field",
+      "lane": "diagnostic",
+      "equal_except_clock_measurements": true,
+      "canonical_parsed_row_sha256": "009b1ddb6a3eed7747d19c98cc9e1835627e9734a58e4c0287ef646110c1de6e",
+      "continuation_parsed_row_sha256": "009b1ddb6a3eed7747d19c98cc9e1835627e9734a58e4c0287ef646110c1de6e"
+    },
+    {
+      "index": 15,
+      "family": "original24",
+      "name": "low-contrast",
+      "lane": "diagnostic",
+      "equal_except_clock_measurements": true,
+      "canonical_parsed_row_sha256": "e451b3e652c7c60f8d6dede7e3ab3ff8df4a8127efb4126bf63fba551eb0cd0b",
+      "continuation_parsed_row_sha256": "e451b3e652c7c60f8d6dede7e3ab3ff8df4a8127efb4126bf63fba551eb0cd0b"
+    },
+    {
+      "index": 16,
+      "family": "original24",
+      "name": "active-level-bounds",
+      "lane": "diagnostic",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "5b582ff72829f137bb59c321a2e6affa311371db9d7c62ffee15aaefba90e6f6",
+      "continuation_parsed_row_sha256": "5b582ff72829f137bb59c321a2e6affa311371db9d7c62ffee15aaefba90e6f6"
+    },
+    {
+      "index": 17,
+      "family": "original24",
+      "name": "material-gradient",
+      "lane": "diagnostic",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "398f121b818bb304a8bda489e40b0e87d992c60abdf2653f301b85778ede3aab",
+      "continuation_parsed_row_sha256": "398f121b818bb304a8bda489e40b0e87d992c60abdf2653f301b85778ede3aab"
+    },
+    {
+      "index": 18,
+      "family": "original24",
+      "name": "nonlinear-response",
+      "lane": "diagnostic",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "39118acf0791ce1c19ed1ecfcfce0a59ae063029234f14508568f0bba37c46a6",
+      "continuation_parsed_row_sha256": "39118acf0791ce1c19ed1ecfcfce0a59ae063029234f14508568f0bba37c46a6"
+    },
+    {
+      "index": 19,
+      "family": "original24",
+      "name": "wrong-covariance",
+      "lane": "diagnostic",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "db57774c01a01583caa8a819dd8c418d56ce1b79252a92529ae375c730d80ec3",
+      "continuation_parsed_row_sha256": "db57774c01a01583caa8a819dd8c418d56ce1b79252a92529ae375c730d80ec3"
+    },
+    {
+      "index": 20,
+      "family": "original24",
+      "name": "neighbor-hole",
+      "lane": "diagnostic",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "31d10d20ac4b59d35b197d8d47d1b8cb80e133421472c4c48dfc48fabf412cdd",
+      "continuation_parsed_row_sha256": "31d10d20ac4b59d35b197d8d47d1b8cb80e133421472c4c48dfc48fabf412cdd"
+    },
+    {
+      "index": 21,
+      "family": "original24",
+      "name": "uniform-pixel-aperture",
+      "lane": "diagnostic",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "024b94b9a25308f405c4491a73cb64e2e6ee69017bc27aff0598648d2e1e85db",
+      "continuation_parsed_row_sha256": "024b94b9a25308f405c4491a73cb64e2e6ee69017bc27aff0598648d2e1e85db"
+    },
+    {
+      "index": 22,
+      "family": "original24",
+      "name": "coarse-work-budget",
+      "lane": "diagnostic",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "b6dbea35fd392156b93031f3de16e851ccc1e220bd45a334797c829ecea80f54",
+      "continuation_parsed_row_sha256": "b6dbea35fd392156b93031f3de16e851ccc1e220bd45a334797c829ecea80f54"
+    },
+    {
+      "index": 23,
+      "family": "original24",
+      "name": "numerical-query-failure",
+      "lane": "diagnostic",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "558f5f652bbee1d0fa437ccba06754280ed600440871032380cc85d0f5af9f5e",
+      "continuation_parsed_row_sha256": "558f5f652bbee1d0fa437ccba06754280ed600440871032380cc85d0f5af9f5e"
+    },
+    {
+      "index": 24,
+      "family": "photo_v2",
+      "name": "small-isotropic",
+      "lane": "legacy_sigma_squared_identity",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "6763e1c893c7399544737878c03bdb59cd52d7ce199a39eebb3232152ad13744",
+      "continuation_parsed_row_sha256": "6763e1c893c7399544737878c03bdb59cd52d7ce199a39eebb3232152ad13744"
+    },
+    {
+      "index": 25,
+      "family": "photo_v2",
+      "name": "small-isotropic",
+      "lane": "nominal_observed_moment_covariance",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "1bd242e35ace1b4f3ba7a5d05a7993c458888e28c1cae4865960477434744a07",
+      "continuation_parsed_row_sha256": "1bd242e35ace1b4f3ba7a5d05a7993c458888e28c1cae4865960477434744a07"
+    },
+    {
+      "index": 26,
+      "family": "photo_v2",
+      "name": "small-directional",
+      "lane": "legacy_sigma_squared_identity",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "d49a57c64e9570913a33cfa27fbee2f4ecc9eb2a8647fad994c630eade3b3151",
+      "continuation_parsed_row_sha256": "d49a57c64e9570913a33cfa27fbee2f4ecc9eb2a8647fad994c630eade3b3151"
+    },
+    {
+      "index": 27,
+      "family": "photo_v2",
+      "name": "small-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "05b3be7fbc2c4ce804fd396226fd993e74d8bb4c94a0a5838c24d662deddf55f",
+      "continuation_parsed_row_sha256": "05b3be7fbc2c4ce804fd396226fd993e74d8bb4c94a0a5838c24d662deddf55f"
+    },
+    {
+      "index": 28,
+      "family": "photo_v2",
+      "name": "medium-directional",
+      "lane": "legacy_sigma_squared_identity",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "a3e3702179ef19970f7d671f594f231f1d5c4231ab275fc107393ff687b0360a",
+      "continuation_parsed_row_sha256": "a3e3702179ef19970f7d671f594f231f1d5c4231ab275fc107393ff687b0360a"
+    },
+    {
+      "index": 29,
+      "family": "photo_v2",
+      "name": "medium-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "55ad62e22b7767683669444440b574508cbdbf3e7684231b8102742927fb8203",
+      "continuation_parsed_row_sha256": "55ad62e22b7767683669444440b574508cbdbf3e7684231b8102742927fb8203"
+    },
+    {
+      "index": 30,
+      "family": "photo_v2",
+      "name": "large-directional",
+      "lane": "legacy_sigma_squared_identity",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "6ce95f311bd5b5224fb8e1cb78f6ac6f2d9fbeb836e7dfccfe4d0f68e506d49a",
+      "continuation_parsed_row_sha256": "6ce95f311bd5b5224fb8e1cb78f6ac6f2d9fbeb836e7dfccfe4d0f68e506d49a"
+    },
+    {
+      "index": 31,
+      "family": "photo_v2",
+      "name": "large-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "5ec69c3536ad7afb0a226e3d82e8ebaca05b69a8ab00ced32a731871faf2fecc",
+      "continuation_parsed_row_sha256": "5ec69c3536ad7afb0a226e3d82e8ebaca05b69a8ab00ced32a731871faf2fecc"
+    },
+    {
+      "index": 32,
+      "family": "photo_v2",
+      "name": "minor-directional",
+      "lane": "legacy_sigma_squared_identity",
+      "equal_except_clock_measurements": true,
+      "canonical_parsed_row_sha256": "cd5ebc7fa36fa69fd12cf1833184f65d059ab8aed43bdd4c53e34091363a385d",
+      "continuation_parsed_row_sha256": "cd5ebc7fa36fa69fd12cf1833184f65d059ab8aed43bdd4c53e34091363a385d"
+    },
+    {
+      "index": 33,
+      "family": "photo_v2",
+      "name": "minor-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "equal_except_clock_measurements": true,
+      "canonical_parsed_row_sha256": "267584df00dd01000a7b465f6298577db43ce9a3d04d8fd13560dd628ec81190",
+      "continuation_parsed_row_sha256": "267584df00dd01000a7b465f6298577db43ce9a3d04d8fd13560dd628ec81190"
+    },
+    {
+      "index": 34,
+      "family": "photo_v2",
+      "name": "rotated-major-directional",
+      "lane": "legacy_sigma_squared_identity",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "a89a05cb319a9a0e43e0724d98fdb8ffb8d837d44daeb2486df84038949ee3b6",
+      "continuation_parsed_row_sha256": "a89a05cb319a9a0e43e0724d98fdb8ffb8d837d44daeb2486df84038949ee3b6"
+    },
+    {
+      "index": 35,
+      "family": "photo_v2",
+      "name": "rotated-major-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "equal_except_clock_measurements": false,
+      "canonical_parsed_row_sha256": "7e189356ae3fd72f3cc393186fef2f91303ca0aa8f1a4d9421fb63370b0347d3",
+      "continuation_parsed_row_sha256": "7e189356ae3fd72f3cc393186fef2f91303ca0aa8f1a4d9421fb63370b0347d3"
+    }
+  ],
+  "first_fit_injection": {
+    "requested": true,
+    "candidate_fit_entries": 32,
+    "injections": 1,
+    "scope": "Actual fit-entry exception, not a numerical oracle or no-fit stub."
+  },
+  "canonical_timing_ignored": true,
+  "expected_real_timed_entries_in_requested_continuation": 0,
+  "all_passed": false,
+  "canonical_sha256": "aa46038d893ad18ccc6b7e2fb4d5af562d6fe73b7a50f5d17274bbd253b6d544",
+  "continuation_sha256": "82563273cb34cd51890fcb54bfff82eb1dd6967124429215191dce0fb21abf82",
+  "runner_sha256": "baf0a00bd45d639da22aeaeaa052b52ab41e49e8376010901720aac7a059d7ca",
+  "plan_sha256": "a43e2d97a32e6bd4822dfff9d7c090f9b469c7ac0bbf92caa35173de0d37d0bd"
+}

@@ -5,10 +5,12 @@ Turn a photograph of a **flat, constant-thickness part** into a scaled CAD solid
 The workbench is designed for plates, gaskets, spacers, and templates. It traces what is visible in the photograph; it does not recover hidden geometry or infer physical dimensions.
 
 For the reviewed source revision, draft PR dependencies and available research
-APIs, read [source scope and status](docs/project-status.md). The latest
-[documentation review](docs/validation/documentation-pr91-state.md) covers the
-integrated main source after PR #91, the workbench and companion library. Older
-test results retain their original scope.
+APIs, read [source scope and status](docs/project-status.md). The current
+[documentation review](docs/validation/documentation-pr95-state.md) covers
+published draft PR #95, the workbench and companion library. The
+[residual-study record](docs/validation/finite-residual-information.md) retains
+the completed diagnostic and failed normal-angle control. Older test results
+retain their original scope.
 
 For reference-sheet tracing, photograph the whole flat sheet (A4, US Letter, or a sheet you have measured) and explicitly choose it as the **Scale reference**. A successful sheet trace sets scale from its stated size, estimates perspective and one radial lens correction, and fits lines, tangent arcs and circles. Entered thickness supports a side-wall/parallax correction under the method's assumptions. Ordinary tracing and the sample use measured-width scaling instead; they do not perform these corrections. See [reference-sheet tracing](docs/reference-sheet.md) for the mathematics and synthetic evidence, and the [engineering model](docs/engineering-model.md) for independent verification before fabrication.
 
@@ -45,6 +47,26 @@ The subsequent [measured-ring bridge](docs/finite-shape-inverse.md#prepare-a-mea
 prepares a fixed crop, samples and coordinate mapping for that developer API;
 its [paired replay](docs/validation/finite-photo-intensity-v2.md) preserves the
 earlier failures. It also remains outside automatic tracing.
+
+The [affine evaluator](docs/finite-affine-evaluation.md) shares numerical work
+across pixels under exactly affine maps. A fixed, source-bound comparison records
+**3.84× faster complete fits** across three declared datasets, with medians of
+2.75–3.91 seconds and all prior target passes retained. This is developer API
+evidence; it does not change the photo workflow or qualify interactive latency.
+See the [complete results and limits](docs/validation/finite-affine-batch.md).
+The [residual-information study](docs/finite-residual-information.md) now retains
+a failed normal-angle control and conditional covariance-only steps. Its
+[complete record](docs/validation/finite-residual-information.md) preserves all
+unknowns and motivates a separately labeled analytic rotation identity. The
+[finite-chord derivative proposal](docs/finite-residual-information.md#finite-chord-shape-derivative-a-derived-proposal)
+also covers perspective maps mathematically; its implementation and numerical
+validation remain pending. Neither changes automatic tracing or optical correction.
+
+The [experimental normal-angle derivative](docs/finite-normal-derivative.md)
+adds a direct finite-chord sensitivity under supplied Gaussian optics. Its
+[337-scene qualification](docs/validation/finite-normal-derivative.md) retains
+one work-limited query and an error-estimation limitation on compressed
+perspective maps. It remains outside automatic tracing and fitting.
 
 Final fitted arcs also need [circle-consistent joins](docs/curved-joins.md).
 An unavailable join keeps an affected outline for review when valid, with a

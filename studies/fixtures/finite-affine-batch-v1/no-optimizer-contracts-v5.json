@@ -1,0 +1,196 @@
+{
+  "scope": "No actual optimizer, forward or derivative evaluation. Saved-input metadata, module loading, dataclass/sentinel routing and CLI validation only. perf_counter values belong stubs and are not performance evidence.",
+  "source_before": {
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+    "backend/edges.py": "c02bcf6f15958ea5c82444de3ea3af37f20031e6df463846dc8082e37abae9ee",
+    "backend/finite_affine.py": "d4eb540f6a654178fca41b4be416bd4ad6ebb6b3f645bc78b5383b18b8caa653",
+    "backend/finite_centre_fit.py": "df8a057abefe983ee951c894a9ae44e0c6b0f472d3419578be505973ea3a8bfb",
+    "backend/finite_observations.py": "09fa843f72b2fc265ba8d4a7111267bf10433eb4f3f2a0600a89cc7871cb3969",
+    "backend/finite_shape.py": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+    "backend/fitting.py": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+    "backend/reference.py": "23a94e699d5499d8a4621902193e3a70214062108a5d0d10abb04df9efb8b69d",
+    "backend/sheet.py": "cbb2f4ae8a47ac88dd98adac02590d55a48b05a83523f2e6d1af12da78186393",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "pyproject.toml": "89db6bd352114ad6ed7c979c070e66d47551ef7cca7062778f832bb8934507ab",
+    "studies/finite-affine-batch-v1.json": "a43e2d97a32e6bd4822dfff9d7c090f9b469c7ac0bbf92caa35173de0d37d0bd",
+    "studies/finite-free-centre-v1.json": "f8db267fd848363ba91b56cd5a01086f3123ad699f6c0c404166734f3bc582fd",
+    "studies/finite-photo-intensity-v2.json": "6563b63d283ad984cba38d2275cb20163c28da4b270c6d2a5d419548a15024ae",
+    "studies/fixtures/finite-affine-batch-v1/original-finite-centre-fit.py.txt": "e2019bcc8b5813c0957967b469baf44bbdd784f50855418852c2686cc48b9ab4",
+    "studies/fixtures/finite-affine-batch-v1/original-finite-shape.py.txt": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+    "studies/fixtures/finite-affine-batch-v1/original-sheet.py.txt": "e18cbe44c476894f1655d6ce66a5e1b11cefe9ca4f95e7e17eb7f52efc236531",
+    "studies/fixtures/finite-photo-intensity-v2/manifest.json": "c32b2ad520145c73c35f8b02108c1e1651315ecd1df368c1552477532bc744b9",
+    "studies/results/finite-free-centre-v1.json": "eb5e85ca199999915ffbc8b283fc98ba749d2460f9e44839af5ccb7f740e7087",
+    "studies/results/finite-photo-intensity-v2.json": "967251c4458e7c06f88c6f5d4b01ab77654a0a744e1a181dd79c86df99d39127",
+    "studies/verification/finite-affine-batch-v1.py": "baf0a00bd45d639da22aeaeaa052b52ab41e49e8376010901720aac7a059d7ca",
+    "studies/verification/finite-free-centre-v1.py": "0537540cbfddad2e6209b7b1483977e118c70b64f0d7938e810f942765e579f8",
+    "uv.lock": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f"
+  },
+  "source_after": {
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+    "backend/edges.py": "c02bcf6f15958ea5c82444de3ea3af37f20031e6df463846dc8082e37abae9ee",
+    "backend/finite_affine.py": "d4eb540f6a654178fca41b4be416bd4ad6ebb6b3f645bc78b5383b18b8caa653",
+    "backend/finite_centre_fit.py": "df8a057abefe983ee951c894a9ae44e0c6b0f472d3419578be505973ea3a8bfb",
+    "backend/finite_observations.py": "09fa843f72b2fc265ba8d4a7111267bf10433eb4f3f2a0600a89cc7871cb3969",
+    "backend/finite_shape.py": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+    "backend/fitting.py": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+    "backend/reference.py": "23a94e699d5499d8a4621902193e3a70214062108a5d0d10abb04df9efb8b69d",
+    "backend/sheet.py": "cbb2f4ae8a47ac88dd98adac02590d55a48b05a83523f2e6d1af12da78186393",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "pyproject.toml": "89db6bd352114ad6ed7c979c070e66d47551ef7cca7062778f832bb8934507ab",
+    "studies/finite-affine-batch-v1.json": "a43e2d97a32e6bd4822dfff9d7c090f9b469c7ac0bbf92caa35173de0d37d0bd",
+    "studies/finite-free-centre-v1.json": "f8db267fd848363ba91b56cd5a01086f3123ad699f6c0c404166734f3bc582fd",
+    "studies/finite-photo-intensity-v2.json": "6563b63d283ad984cba38d2275cb20163c28da4b270c6d2a5d419548a15024ae",
+    "studies/fixtures/finite-affine-batch-v1/original-finite-centre-fit.py.txt": "e2019bcc8b5813c0957967b469baf44bbdd784f50855418852c2686cc48b9ab4",
+    "studies/fixtures/finite-affine-batch-v1/original-finite-shape.py.txt": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+    "studies/fixtures/finite-affine-batch-v1/original-sheet.py.txt": "e18cbe44c476894f1655d6ce66a5e1b11cefe9ca4f95e7e17eb7f52efc236531",
+    "studies/fixtures/finite-photo-intensity-v2/manifest.json": "c32b2ad520145c73c35f8b02108c1e1651315ecd1df368c1552477532bc744b9",
+    "studies/results/finite-free-centre-v1.json": "eb5e85ca199999915ffbc8b283fc98ba749d2460f9e44839af5ccb7f740e7087",
+    "studies/results/finite-photo-intensity-v2.json": "967251c4458e7c06f88c6f5d4b01ab77654a0a744e1a181dd79c86df99d39127",
+    "studies/verification/finite-affine-batch-v1.py": "baf0a00bd45d639da22aeaeaa052b52ab41e49e8376010901720aac7a059d7ca",
+    "studies/verification/finite-free-centre-v1.py": "0537540cbfddad2e6209b7b1483977e118c70b64f0d7938e810f942765e579f8",
+    "uv.lock": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f"
+  },
+  "script_sha256": "7f6f85b9fc7d46c3e759a4f835eac0e0cfd890bc1ab2c498e8c8fbbfc282a72c",
+  "checks": [
+    {
+      "name": "help",
+      "passed": true
+    },
+    {
+      "name": "missing",
+      "passed": true
+    },
+    {
+      "name": "existing",
+      "passed": true
+    },
+    {
+      "name": "dangling",
+      "passed": true
+    },
+    {
+      "name": "no-quiet",
+      "passed": true
+    },
+    {
+      "name": "missing-continuation-fields",
+      "passed": true
+    },
+    {
+      "name": "unexpected-canonical",
+      "passed": true
+    },
+    {
+      "name": "occupied-audit",
+      "passed": true
+    },
+    {
+      "name": "occupied-and-symlink-unchanged",
+      "passed": true
+    },
+    {
+      "name": "exact36-datasets32-eligible",
+      "passed": true
+    },
+    {
+      "name": "original-sheet-preloaded-isolated",
+      "passed": true
+    },
+    {
+      "name": "first-stub-entry-retains36-later31-stubs",
+      "passed": true
+    },
+    {
+      "name": "unsafe-fit-payload-withheld-all-rows-retained",
+      "passed": true
+    },
+    {
+      "name": "after-pass-exception-clears-all-flags",
+      "passed": true
+    },
+    {
+      "name": "paired-first-failure-retains8-withholds-speedup",
+      "passed": true
+    },
+    {
+      "name": "continuation-removes-clocks-only",
+      "passed": true
+    },
+    {
+      "name": "continuation-detects-nonclock-work-change",
+      "passed": true
+    },
+    {
+      "name": "returned-incomplete-fits-withhold-qualified-speed",
+      "passed": true
+    },
+    {
+      "name": "timed-even-repeat-original-first",
+      "passed": true
+    },
+    {
+      "name": "different-complete-fit-retains-raw-withholds-qualified-speed",
+      "passed": true
+    },
+    {
+      "name": "stub-call-entry-distinct-from-real-fitter-entry",
+      "passed": true
+    },
+    {
+      "name": "profile-preparation-failure-no-core-entry-restores-wrappers",
+      "passed": true
+    },
+    {
+      "name": "synthetic-entry-failure-never-counts-real-function",
+      "passed": true
+    },
+    {
+      "name": "unsafe-resource-payloads-retained-safely",
+      "passed": true
+    },
+    {
+      "name": "unsafe-derivative-payloads-retained-safely",
+      "passed": true
+    },
+    {
+      "name": "continuation-withholds-without-real-entry-evidence",
+      "passed": true
+    },
+    {
+      "name": "getaffinity-denial-retains-correctness-withholds-timing",
+      "passed": true
+    },
+    {
+      "name": "setaffinity-denial-retains-correctness-withholds-timing",
+      "passed": true
+    },
+    {
+      "name": "wrong-single-cpu-does-not-qualify",
+      "passed": true
+    },
+    {
+      "name": "exact-minimum-cpu-and-one-thread-qualify",
+      "passed": true
+    },
+    {
+      "name": "thread-setting-two-withholds-qualification",
+      "passed": true
+    },
+    {
+      "name": "timed-canonical-no-timing-continuation-requires-only31-real-later-entries",
+      "passed": true
+    },
+    {
+      "name": "source-input-closure-unchanged",
+      "passed": true
+    }
+  ],
+  "summary": {
+    "checks": 33,
+    "passes": 33,
+    "actual_optimizers_executed": 0,
+    "all_passed": true
+  }
+}

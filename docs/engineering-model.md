@@ -226,6 +226,12 @@ intensity mismatches still require a supported observation model. The
 sensitivity. These studies do not establish a physical uncertainty bound or a usable
 covariance for an arbitrary photograph.
 
+The [affine evaluation comparison](validation/finite-affine-batch.md) reduces
+the computational cost of that same supplied-optics model. Its three fixed
+complete-fit medians are 2.75–3.91 seconds, and all archived target passes and
+completion flags are preserved. Numerical parity and faster evaluation leave
+the observation-model and independent dimensional checks above necessary.
+
 A source-derived straight-edge direction may still align the display and
 profile when a ring is retained as line geometry. The rigid rotation preserves
 distances and radii; axis-aligned width and height depend on that frame. This

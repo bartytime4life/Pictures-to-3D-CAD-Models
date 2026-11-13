@@ -5,7 +5,8 @@ transform are caller-supplied hypotheses. The transform is a deterministic metri
 or linear statistic, not calibrated noise. Two bounded constant levels are shared
 by every observation. No response, illumination gradient, pose or PSF is inferred.
 
-The forward operator is the unchanged finite_shape research kernel. The geometry
+The forward operator uses finite_shape's Green kernel, with shared-panel batch
+evaluation for exactly affine maps and scalar fallback otherwise. The geometry
 and bounded variable-projection search extend finite_shape_fit at c9daa2a; unlike
 that fixed-centre prototype, all four (Cx,Cy,R,f) coordinates are fitted here.
 """
@@ -18,6 +19,7 @@ from dataclasses import dataclass, replace
 
 import numpy as np
 
+from . import finite_affine as affine
 from . import finite_shape as finite
 
 _EPS = np.finfo(float).eps
@@ -129,7 +131,8 @@ def circular_segment_probabilities(
     """Finite D probabilities for the ACTUAL parameters, not a rounded 3-point circle.
 
     Fixed integer-pixel centres and all finite_shape numerical/status semantics
-    apply. This shares its evaluator; it is not a second integration algorithm.
+    apply. Exactly affine maps share curve panels across queries; every attempted
+    query-node remains charged and unsupported paths use the scalar evaluator.
     """
     pixels, _ = _pixels(pixels_xy, sensor_shape)
     normal = _normal(normal)
@@ -137,6 +140,25 @@ def circular_segment_probabilities(
     covariance = _array(psf_covariance, (2, 2), "psf_covariance").copy()
     controls = _controls(probability_tolerance, max_panels, max_evaluations)
     geometry = _segment_geometry(radius, chord_fraction, centre, normal, homography, covariance)
+    # Classify the supplied snapshot, before homogeneous normalization can
+    # underflow a nonzero perspective coefficient. The scalar path owns all
+    # projective cases, even when their represented perspective is very small.
+    if np.all(homography[2, :2] == 0):
+        result = affine._probabilities(pixels, geometry, *controls)
+        # Keep this existing API's result type and serialized schema stable.
+        # Batch-specific diagnostics remain available through finite_affine.
+        return finite.FiniteShapeResult(
+            result.probabilities,
+            result.statuses,
+            result.estimated_errors,
+            result.tail_bounds,
+            result.evaluations,
+            result.panels,
+            result.chart_margin,
+            result.reflected,
+            result.topology_validated,
+            result.quadrature_certified,
+        )
     return finite._probabilities(pixels, geometry, *controls)
 
 
@@ -179,7 +201,14 @@ def _jacobian_one(
         ts = (start + end) / 2 + half * nodes
         q, velocity = curve.at(ts)
         w = q @ h[2, :2] + h[2, 2]
-        u, _ = finite._at(curve, matrix, h[2], ts)
+        # Reuse this rule's curve samples while retaining _at's complete finite
+        # guard, including its mapped velocity even though only u enters density.
+        u = (q @ matrix[:, :2].T + matrix[:, 2]) / w[:, None]
+        mapped_velocity = (velocity @ matrix[:, :2].T - u * (velocity @ h[2, :2])[:, None]) / w[
+            :, None
+        ]
+        if not np.isfinite(u).all() or not np.isfinite(mapped_velocity).all():
+            raise ArithmeticError("nonfinite transformed curve")
         density = density_factor * np.exp(-np.sum(u * u, axis=1) / 2)
         speed = np.hypot(velocity[:, 0], velocity[:, 1])
         if curve.delta is None:

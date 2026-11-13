@@ -71,7 +71,7 @@ Coordinates follow the repository convention: pixel *i* spans [*i*, *i* + 1], so
 
 ## 3. Segmentation and sub-pixel edges
 
-**Classification.** After an initial Otsu split, a robust cubic polynomial surface is fitted to the sheet (pixels at least 4 mm from the part) and a plane to the part. Each pixel is normalised as (sheet − value) / (sheet − part) and classified at 0.5. Gradients, vignetting and soft shadow therefore do not move the threshold. Only the largest region is kept, and a 3 mm sheet margin is excluded.
+**Classification.** After an initial Otsu split, a robust cubic polynomial surface is fitted to sheet samples outside the initial part mask expanded by a square kernel about 4 mm across, and a plane to the part. Each pixel is normalised as (sheet − value) / (sheet − part) and classified at 0.5. This compensates smooth lighting variations represented by the fitted surfaces; unmodelled gradients, vignetting and shadows can still bias classification. Only the largest region is kept, and a 3 mm sheet margin is excluded.
 
 **Linear light.** A lens and sensor blur the scene in linear light. The camera then saves each value through a tone curve, close to a 2.2 gamma, which bends a blurred edge's profile. The mid-level property below holds only in linear light.
 
@@ -96,13 +96,13 @@ A camera whose curve differs from sRGB leaves part of the bias. On the overhead 
 
 Phone cameras also apply their own tone mapping, which the file does not record. Its cost is not measured here.
 
-**Mid-level crossing.** Each boundary point is moved along its normal to where the profile crosses the mean of its two end medians. Profiles are sampled with exact float64 bilinear interpolation (§2). For a straight edge blurred by any symmetric point-spread function, the crossing of the continuous profile is the edge itself, whatever the blur width. Bilinear sampling's error is proportional to the profile's curvature, which vanishes at a symmetric edge's mid-level, so it leaves the crossing in place. The blur measurement and the wall model (§5), which use whole profiles, sample them cubically.
+**Mid-level crossing.** Each boundary point is moved along its normal to where the profile crosses the mean of its two end medians. Profiles are sampled with exact float64 bilinear interpolation (§2). For an isolated straight edge with constant levels on either side and a symmetric point-spread function, the continuous profile crosses their mid-level at the edge. Its curvature vanishes there, suppressing the leading bilinear interpolation error, but finite sampling phase and higher-order terms can still shift the interpolated crossing. The phase-bias checks below quantify the tested cases. The blur measurement and the wall model (§5), which use whole profiles, sample them cubically.
 
-Sampling a pixel-integrated image adds a phase-dependent error ("pixel locking"):
+In the tested pixel-integrated profiles, sampling adds a phase-dependent error ("pixel locking"):
 
 - zero for a box blur, because the interpolated profile is exact;
-- at most 0.03 px for Gaussian or triangular blur;
-- zero-mean over the sub-pixel phase, so it averages out along any edge that is not aligned with the pixel grid.
+- below 0.03 px for the tested Gaussian or triangular blur;
+- a mean error magnitude below 0.001 px across the 16 sampled phases. Varying phase along an edge can reduce the average bias; pixel-grid alignment can preserve it.
 
 This is checked at 16 phases by `test_half_level_crossing_on_symmetric_blur_is_unbiased_on_average`. Cubic profile interpolation did not reduce it. An area (moment) estimator removes it on noise-free data, but with realistic sensor noise its per-point spread was larger (0.052 against 0.043 px), so the crossing is kept.
 

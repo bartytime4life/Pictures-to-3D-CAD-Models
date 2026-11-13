@@ -1,0 +1,583 @@
+{
+  "format": "pictures-to-cad-finite-affine-batch-summary",
+  "version": 1,
+  "scope": "Readable index to lossless full reports; not a substitute for the complete archived observations, fit outputs, adverse rows and all warm/timed samples.",
+  "source_before": {
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+    "backend/edges.py": "c02bcf6f15958ea5c82444de3ea3af37f20031e6df463846dc8082e37abae9ee",
+    "backend/finite_affine.py": "d4eb540f6a654178fca41b4be416bd4ad6ebb6b3f645bc78b5383b18b8caa653",
+    "backend/finite_centre_fit.py": "df8a057abefe983ee951c894a9ae44e0c6b0f472d3419578be505973ea3a8bfb",
+    "backend/finite_observations.py": "09fa843f72b2fc265ba8d4a7111267bf10433eb4f3f2a0600a89cc7871cb3969",
+    "backend/finite_shape.py": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+    "backend/fitting.py": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+    "backend/reference.py": "23a94e699d5499d8a4621902193e3a70214062108a5d0d10abb04df9efb8b69d",
+    "backend/sheet.py": "cbb2f4ae8a47ac88dd98adac02590d55a48b05a83523f2e6d1af12da78186393",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "pyproject.toml": "89db6bd352114ad6ed7c979c070e66d47551ef7cca7062778f832bb8934507ab",
+    "studies/finite-affine-batch-v1.json": "a43e2d97a32e6bd4822dfff9d7c090f9b469c7ac0bbf92caa35173de0d37d0bd",
+    "studies/finite-free-centre-v1.json": "f8db267fd848363ba91b56cd5a01086f3123ad699f6c0c404166734f3bc582fd",
+    "studies/finite-photo-intensity-v2.json": "6563b63d283ad984cba38d2275cb20163c28da4b270c6d2a5d419548a15024ae",
+    "studies/fixtures/finite-affine-batch-v1/original-finite-centre-fit.py.txt": "e2019bcc8b5813c0957967b469baf44bbdd784f50855418852c2686cc48b9ab4",
+    "studies/fixtures/finite-affine-batch-v1/original-finite-shape.py.txt": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+    "studies/fixtures/finite-affine-batch-v1/original-sheet.py.txt": "e18cbe44c476894f1655d6ce66a5e1b11cefe9ca4f95e7e17eb7f52efc236531",
+    "studies/fixtures/finite-photo-intensity-v2/manifest.json": "c32b2ad520145c73c35f8b02108c1e1651315ecd1df368c1552477532bc744b9",
+    "studies/results/finite-free-centre-v1.json": "eb5e85ca199999915ffbc8b283fc98ba749d2460f9e44839af5ccb7f740e7087",
+    "studies/results/finite-photo-intensity-v2.json": "967251c4458e7c06f88c6f5d4b01ab77654a0a744e1a181dd79c86df99d39127",
+    "studies/verification/finite-affine-batch-v1.py": "baf0a00bd45d639da22aeaeaa052b52ab41e49e8376010901720aac7a059d7ca",
+    "studies/verification/finite-free-centre-v1.py": "0537540cbfddad2e6209b7b1483977e118c70b64f0d7938e810f942765e579f8",
+    "uv.lock": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f"
+  },
+  "source_after": {
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+    "backend/edges.py": "c02bcf6f15958ea5c82444de3ea3af37f20031e6df463846dc8082e37abae9ee",
+    "backend/finite_affine.py": "d4eb540f6a654178fca41b4be416bd4ad6ebb6b3f645bc78b5383b18b8caa653",
+    "backend/finite_centre_fit.py": "df8a057abefe983ee951c894a9ae44e0c6b0f472d3419578be505973ea3a8bfb",
+    "backend/finite_observations.py": "09fa843f72b2fc265ba8d4a7111267bf10433eb4f3f2a0600a89cc7871cb3969",
+    "backend/finite_shape.py": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+    "backend/fitting.py": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+    "backend/reference.py": "23a94e699d5499d8a4621902193e3a70214062108a5d0d10abb04df9efb8b69d",
+    "backend/sheet.py": "cbb2f4ae8a47ac88dd98adac02590d55a48b05a83523f2e6d1af12da78186393",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "pyproject.toml": "89db6bd352114ad6ed7c979c070e66d47551ef7cca7062778f832bb8934507ab",
+    "studies/finite-affine-batch-v1.json": "a43e2d97a32e6bd4822dfff9d7c090f9b469c7ac0bbf92caa35173de0d37d0bd",
+    "studies/finite-free-centre-v1.json": "f8db267fd848363ba91b56cd5a01086f3123ad699f6c0c404166734f3bc582fd",
+    "studies/finite-photo-intensity-v2.json": "6563b63d283ad984cba38d2275cb20163c28da4b270c6d2a5d419548a15024ae",
+    "studies/fixtures/finite-affine-batch-v1/original-finite-centre-fit.py.txt": "e2019bcc8b5813c0957967b469baf44bbdd784f50855418852c2686cc48b9ab4",
+    "studies/fixtures/finite-affine-batch-v1/original-finite-shape.py.txt": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+    "studies/fixtures/finite-affine-batch-v1/original-sheet.py.txt": "e18cbe44c476894f1655d6ce66a5e1b11cefe9ca4f95e7e17eb7f52efc236531",
+    "studies/fixtures/finite-photo-intensity-v2/manifest.json": "c32b2ad520145c73c35f8b02108c1e1651315ecd1df368c1552477532bc744b9",
+    "studies/results/finite-free-centre-v1.json": "eb5e85ca199999915ffbc8b283fc98ba749d2460f9e44839af5ccb7f740e7087",
+    "studies/results/finite-photo-intensity-v2.json": "967251c4458e7c06f88c6f5d4b01ab77654a0a744e1a181dd79c86df99d39127",
+    "studies/verification/finite-affine-batch-v1.py": "baf0a00bd45d639da22aeaeaa052b52ab41e49e8376010901720aac7a059d7ca",
+    "studies/verification/finite-free-centre-v1.py": "0537540cbfddad2e6209b7b1483977e118c70b64f0d7938e810f942765e579f8",
+    "uv.lock": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f"
+  },
+  "environment": {
+    "affinity_before": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31
+    ],
+    "affinity_after": [
+      0
+    ],
+    "affinity_errors": [],
+    "fixed_cpu_timing_qualified": true,
+    "thread_environment": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1"
+    },
+    "python": "3.12.3",
+    "numpy": "2.5.4",
+    "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.43",
+    "loadavg": [
+      0.56982421875,
+      6.439453125,
+      10.06201171875
+    ]
+  },
+  "canonical_summary": {
+    "operator_cases": 16,
+    "operator_passes": 16,
+    "resource_controls": 6,
+    "resource_passes": 6,
+    "derivative_controls": 6,
+    "derivative_passes": 6,
+    "timing_requested": true,
+    "all_requested_timing_calls_returned": true,
+    "mean_geometric_median_speedup": 10.1284996475863,
+    "raw_mean_geometric_median_speedup": 10.1284996475863,
+    "fixed_cpu_timing_qualified": true,
+    "mean_speed_goal_met": true,
+    "actual_fit_geometric_median_speedup": 3.8402241351116935,
+    "raw_actual_fit_geometric_median_speedup": 3.8402241351116935,
+    "actual_fit_speed_goal_met": true,
+    "optimizer_entries": 56,
+    "actual_optimizers_executed": 56,
+    "actual_callable_entries": 56,
+    "optimizer_count_scope": "Explicit invoke_fit log AFTER all argument/profile preparation. Real fitter entries require exact production function name/module, not dataset attempts or stubs; an entered function need not converge.",
+    "attempted_accuracy_dataset_entries": 32,
+    "attempted_timing_dataset_entries": 24,
+    "accuracy_replay_rows": 36,
+    "accuracy_replay_optimizer_entries": 32,
+    "timing_optimizer_entries": 24,
+    "optimizer_stage": "complete requested",
+    "previous_accuracy_passes_preserved": true,
+    "all_archived_completion_flags_equal": true,
+    "original_matched_target_passes": 12,
+    "photo_v2_target_passes": 3,
+    "kernel_accuracy_passed": true
+  },
+  "fit_timings": [
+    {
+      "name": "small-isotropic",
+      "lane": "legacy_sigma_squared_identity",
+      "training_count": 40,
+      "status": "timed",
+      "medians": {
+        "original": 13.431782665,
+        "candidate": 2.754223156
+      },
+      "all_calls_returned": true,
+      "raw_median_speedup": 4.87679534453816,
+      "median_speedup": 4.87679534453816,
+      "all_required_return_quality_passed": true,
+      "scope": "Raw times retained; failed/unsafe/unresolved/incomplete returns withhold qualified speedup. Warmups never enter medians.",
+      "all_fit_outputs_consistent": true,
+      "candidate_accuracy_replay_fit_sha256": "d66a3d0d6316d48c4829529c0df9f4b2408f7156155c6c6e8dd6a66b7091d808",
+      "original_warmup_fit_sha256": "bab1a86b53a5df2a99d0f98119e5e55ab0e53506f29138966795985373a8a3b4",
+      "qualified_median_speedup": 4.87679534453816
+    },
+    {
+      "name": "medium-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "training_count": 40,
+      "status": "timed",
+      "medians": {
+        "original": 12.917433234,
+        "candidate": 3.910857884
+      },
+      "all_calls_returned": true,
+      "raw_median_speedup": 3.302966667964967,
+      "median_speedup": 3.302966667964967,
+      "all_required_return_quality_passed": true,
+      "scope": "Raw times retained; failed/unsafe/unresolved/incomplete returns withhold qualified speedup. Warmups never enter medians.",
+      "all_fit_outputs_consistent": true,
+      "candidate_accuracy_replay_fit_sha256": "e35228af4f5565ccc43d8abebc1f26c1b65ef9e5ae272c8d91ab9f72938d3843",
+      "original_warmup_fit_sha256": "b33bcb1f6654c75bc89da1d843b9823368e3891e30821a278207dc3c4dbe24bf",
+      "qualified_median_speedup": 3.302966667964967
+    },
+    {
+      "name": "rotated-major-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "training_count": 40,
+      "status": "timed",
+      "medians": {
+        "original": 12.863955281,
+        "candidate": 3.6588409
+      },
+      "all_calls_returned": true,
+      "raw_median_speedup": 3.5158553303041957,
+      "median_speedup": 3.5158553303041957,
+      "all_required_return_quality_passed": true,
+      "scope": "Raw times retained; failed/unsafe/unresolved/incomplete returns withhold qualified speedup. Warmups never enter medians.",
+      "all_fit_outputs_consistent": true,
+      "candidate_accuracy_replay_fit_sha256": "041ee1ea713fde85f593dca35be27f3f29e1df5226912c41de5d46ce6865d703",
+      "original_warmup_fit_sha256": "acef71e6cae27f4650fb3b2b71641285294292ee8f0692a30c6fd278e75178bb",
+      "qualified_median_speedup": 3.5158553303041957
+    }
+  ],
+  "kernel_timings": [
+    {
+      "name": "small-isotropic",
+      "lane": "legacy_sigma_squared_identity",
+      "query_count": 40,
+      "method": "mean",
+      "status": "timed",
+      "medians": {
+        "original": 0.242957514,
+        "candidate": 0.019243604
+      },
+      "all_calls_returned": true,
+      "raw_median_speedup": 12.62536445875731,
+      "median_speedup": 12.62536445875731,
+      "all_required_return_quality_passed": true,
+      "scope": "Raw times retained; failed/unsafe/unresolved/incomplete returns withhold qualified speedup. Warmups never enter medians."
+    },
+    {
+      "name": "small-isotropic",
+      "lane": "legacy_sigma_squared_identity",
+      "query_count": 40,
+      "method": "direct_shape_jacobian",
+      "status": "timed",
+      "medians": {
+        "original": 0.251352357,
+        "candidate": 0.224430003
+      },
+      "all_calls_returned": true,
+      "raw_median_speedup": 1.1199588006956451,
+      "median_speedup": 1.1199588006956451,
+      "all_required_return_quality_passed": true,
+      "scope": "Raw times retained; failed/unsafe/unresolved/incomplete returns withhold qualified speedup. Warmups never enter medians."
+    },
+    {
+      "name": "small-isotropic",
+      "lane": "legacy_sigma_squared_identity",
+      "query_count": 56,
+      "method": "mean",
+      "status": "timed",
+      "medians": {
+        "original": 0.343079147,
+        "candidate": 0.022412933
+      },
+      "all_calls_returned": true,
+      "raw_median_speedup": 15.307195492887967,
+      "median_speedup": 15.307195492887967,
+      "all_required_return_quality_passed": true,
+      "scope": "Raw times retained; failed/unsafe/unresolved/incomplete returns withhold qualified speedup. Warmups never enter medians."
+    },
+    {
+      "name": "small-isotropic",
+      "lane": "legacy_sigma_squared_identity",
+      "query_count": 56,
+      "method": "direct_shape_jacobian",
+      "status": "timed",
+      "medians": {
+        "original": 0.356428795,
+        "candidate": 0.314450836
+      },
+      "all_calls_returned": true,
+      "raw_median_speedup": 1.1334960960320042,
+      "median_speedup": 1.1334960960320042,
+      "all_required_return_quality_passed": true,
+      "scope": "Raw times retained; failed/unsafe/unresolved/incomplete returns withhold qualified speedup. Warmups never enter medians."
+    },
+    {
+      "name": "medium-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "query_count": 40,
+      "method": "mean",
+      "status": "timed",
+      "medians": {
+        "original": 0.25852617,
+        "candidate": 0.030972805
+      },
+      "all_calls_returned": true,
+      "raw_median_speedup": 8.346876235458817,
+      "median_speedup": 8.346876235458817,
+      "all_required_return_quality_passed": true,
+      "scope": "Raw times retained; failed/unsafe/unresolved/incomplete returns withhold qualified speedup. Warmups never enter medians."
+    },
+    {
+      "name": "medium-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "query_count": 40,
+      "method": "direct_shape_jacobian",
+      "status": "timed",
+      "medians": {
+        "original": 0.260094399,
+        "candidate": 0.23086407
+      },
+      "all_calls_returned": true,
+      "raw_median_speedup": 1.1266127249684197,
+      "median_speedup": 1.1266127249684197,
+      "all_required_return_quality_passed": true,
+      "scope": "Raw times retained; failed/unsafe/unresolved/incomplete returns withhold qualified speedup. Warmups never enter medians."
+    },
+    {
+      "name": "medium-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "query_count": 56,
+      "method": "mean",
+      "status": "timed",
+      "medians": {
+        "original": 0.357207101,
+        "candidate": 0.033962678
+      },
+      "all_calls_returned": true,
+      "raw_median_speedup": 10.517636477311948,
+      "median_speedup": 10.517636477311948,
+      "all_required_return_quality_passed": true,
+      "scope": "Raw times retained; failed/unsafe/unresolved/incomplete returns withhold qualified speedup. Warmups never enter medians."
+    },
+    {
+      "name": "medium-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "query_count": 56,
+      "method": "direct_shape_jacobian",
+      "status": "timed",
+      "medians": {
+        "original": 0.357339419,
+        "candidate": 0.316853487
+      },
+      "all_calls_returned": true,
+      "raw_median_speedup": 1.1277749296159711,
+      "median_speedup": 1.1277749296159711,
+      "all_required_return_quality_passed": true,
+      "scope": "Raw times retained; failed/unsafe/unresolved/incomplete returns withhold qualified speedup. Warmups never enter medians."
+    },
+    {
+      "name": "rotated-major-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "query_count": 40,
+      "method": "mean",
+      "status": "timed",
+      "medians": {
+        "original": 0.219629224,
+        "candidate": 0.030539692
+      },
+      "all_calls_returned": true,
+      "raw_median_speedup": 7.191599181812312,
+      "median_speedup": 7.191599181812312,
+      "all_required_return_quality_passed": true,
+      "scope": "Raw times retained; failed/unsafe/unresolved/incomplete returns withhold qualified speedup. Warmups never enter medians."
+    },
+    {
+      "name": "rotated-major-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "query_count": 40,
+      "method": "direct_shape_jacobian",
+      "status": "timed",
+      "medians": {
+        "original": 0.219697963,
+        "candidate": 0.194204717
+      },
+      "all_calls_returned": true,
+      "raw_median_speedup": 1.1312699629226823,
+      "median_speedup": 1.1312699629226823,
+      "all_required_return_quality_passed": true,
+      "scope": "Raw times retained; failed/unsafe/unresolved/incomplete returns withhold qualified speedup. Warmups never enter medians."
+    },
+    {
+      "name": "rotated-major-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "query_count": 56,
+      "method": "mean",
+      "status": "timed",
+      "medians": {
+        "original": 0.299293728,
+        "candidate": 0.033824709
+      },
+      "all_calls_returned": true,
+      "raw_median_speedup": 8.84837554700027,
+      "median_speedup": 8.84837554700027,
+      "all_required_return_quality_passed": true,
+      "scope": "Raw times retained; failed/unsafe/unresolved/incomplete returns withhold qualified speedup. Warmups never enter medians."
+    },
+    {
+      "name": "rotated-major-directional",
+      "lane": "nominal_observed_moment_covariance",
+      "query_count": 56,
+      "method": "direct_shape_jacobian",
+      "status": "timed",
+      "medians": {
+        "original": 0.303508707,
+        "candidate": 0.266734189
+      },
+      "all_calls_returned": true,
+      "raw_median_speedup": 1.1378695327279549,
+      "median_speedup": 1.1378695327279549,
+      "all_required_return_quality_passed": true,
+      "scope": "Raw times retained; failed/unsafe/unresolved/incomplete returns withhold qualified speedup. Warmups never enter medians."
+    }
+  ],
+  "independent_saved_report_audit": {
+    "canonical_checks_passed": 942,
+    "canonical_checks_failed": 0,
+    "with_continuation_checks_passed": 1018,
+    "with_continuation_checks_failed": 0
+  },
+  "continuation": {
+    "original_process_exit_code": 1,
+    "built_in_checks_passed": 8,
+    "built_in_checks_total": 9,
+    "known_defect": "Frozen runner compares in-memory dataclass tuples with saved JSON lists; retain its false equality and exit1. Independent saved-JSON audit compares both parsed artifacts and passes all35 later rows with only six declared clock fields removed.",
+    "real_later_accuracy_fit_entries": 31,
+    "later_rows_preserved": 35,
+    "timed_fit_entries": 0
+  },
+  "retained_limits": [
+    "Only three predeclared 40-training-pixel workloads qualify actual-fit speedups.",
+    "Four original ineligible/upstream rows and all model-mismatch misses remain.",
+    "Historical original24 heldout predictions were not archived; that original target subcheck relies on the source-bound saved scalar.",
+    "No physical optics, interactive UI, installed software, native slicer or manufacturing qualification."
+  ],
+  "artifacts": [
+    {
+      "path": "studies/results/finite-affine-batch-v1.json.gz",
+      "bytes": 1200825,
+      "sha256": "630c7c7efd90b114d4cd37caaa53de7dc0c4a6218bb3517a3aff167fd3a35228",
+      "encoding": "gzip",
+      "decoded_bytes": 16356486,
+      "decoded_sha256": "aa46038d893ad18ccc6b7e2fb4d5af562d6fe73b7a50f5d17274bbd253b6d544",
+      "original_local_path": "studies/results/finite-affine-batch-v1.json"
+    },
+    {
+      "path": "studies/fixtures/finite-affine-batch-v1/first-fit-failure-v1.json.gz",
+      "bytes": 766831,
+      "sha256": "6f2c4c630fc222be90c102bfba239f266c82eb0750bb33573c68ead6626f3961",
+      "encoding": "gzip",
+      "decoded_bytes": 9917770,
+      "decoded_sha256": "82563273cb34cd51890fcb54bfff82eb1dd6967124429215191dce0fb21abf82",
+      "original_local_path": ".local/verification/finite-affine-batch-first-fit-failure-v1.json"
+    },
+    {
+      "path": "studies/fixtures/finite-affine-batch-v1/first-fit-failure-built-in-audit-v1.json",
+      "bytes": 15053,
+      "sha256": "f80547ffb3034c1c9660a268b81c02554325d6f2eceb1dfea558856c078428d9",
+      "encoding": "identity",
+      "decoded_bytes": 15053,
+      "decoded_sha256": "f80547ffb3034c1c9660a268b81c02554325d6f2eceb1dfea558856c078428d9",
+      "original_local_path": ".local/verification/finite-affine-batch-first-fit-failure-audit-v1.json"
+    },
+    {
+      "path": "studies/fixtures/finite-affine-batch-v1/first-fit-failure-command-v1.json",
+      "bytes": 1273,
+      "sha256": "31cb3459fffa654047fd25b289062eaa63ea8f78d30a9aa288b5feff2436f525",
+      "encoding": "identity",
+      "decoded_bytes": 1273,
+      "decoded_sha256": "31cb3459fffa654047fd25b289062eaa63ea8f78d30a9aa288b5feff2436f525",
+      "original_local_path": ".local/verification/finite-affine-batch-first-fit-failure-command-v1.json"
+    },
+    {
+      "path": "studies/fixtures/finite-affine-batch-v1/canonical-progress-v1.log",
+      "bytes": 5958,
+      "sha256": "8712a677f01d7ef0df46106e7a26a8fe54f34fe56748c353edb83bea9539947d",
+      "encoding": "identity",
+      "decoded_bytes": 5958,
+      "decoded_sha256": "8712a677f01d7ef0df46106e7a26a8fe54f34fe56748c353edb83bea9539947d",
+      "original_local_path": ".local/verification/finite-affine-batch-canonical-v1.stderr"
+    },
+    {
+      "path": "studies/fixtures/finite-affine-batch-v1/first-fit-failure-progress-v1.log",
+      "bytes": 5964,
+      "sha256": "8db8a8f0e530e264cb477380ab94b722f262fad6d6fc7163c70f8feb2f6a4454",
+      "encoding": "identity",
+      "decoded_bytes": 5964,
+      "decoded_sha256": "8db8a8f0e530e264cb477380ab94b722f262fad6d6fc7163c70f8feb2f6a4454",
+      "original_local_path": ".local/verification/finite-affine-batch-first-fit-failure-v1.stderr"
+    },
+    {
+      "path": "studies/fixtures/finite-affine-batch-v1/canonical-terminal-audit-v1.json",
+      "bytes": 2217,
+      "sha256": "7aca9dde7c91fd401380b513dfc6da871ca8081f80f441f2f4e4e66b3cebab0f",
+      "encoding": "identity",
+      "decoded_bytes": 2217,
+      "decoded_sha256": "7aca9dde7c91fd401380b513dfc6da871ca8081f80f441f2f4e4e66b3cebab0f",
+      "original_local_path": ".local/verification/finite-affine-batch-canonical-terminal-audit-v1.json"
+    },
+    {
+      "path": "studies/fixtures/finite-affine-batch-v1/independent-canonical-audit-v1.json",
+      "bytes": 120333,
+      "sha256": "d4de0df5e8eb8f844574c922f3eeeecc8b08d1b4627e6a356bb5ba81278107db",
+      "encoding": "identity",
+      "decoded_bytes": 120333,
+      "decoded_sha256": "d4de0df5e8eb8f844574c922f3eeeecc8b08d1b4627e6a356bb5ba81278107db",
+      "original_local_path": ".local/verification/ux-affine-report-audit-v1-result.json"
+    },
+    {
+      "path": "studies/fixtures/finite-affine-batch-v1/independent-continuation-audit-v1.json",
+      "bytes": 126468,
+      "sha256": "8d1ec1421d898b0a29e0f967b973598f7a364bbb8770b51b891608963465ff50",
+      "encoding": "identity",
+      "decoded_bytes": 126468,
+      "decoded_sha256": "8d1ec1421d898b0a29e0f967b973598f7a364bbb8770b51b891608963465ff50",
+      "original_local_path": ".local/verification/ux-affine-report-audit-v1-continuation-result.json"
+    },
+    {
+      "path": "studies/fixtures/finite-affine-batch-v1/comparator-container-control-v1.json",
+      "bytes": 757,
+      "sha256": "8759847dd40f2bdaacbaf54cfa7c966bfe5993fec4cc294a9958a747bdc1a6be",
+      "encoding": "identity",
+      "decoded_bytes": 757,
+      "decoded_sha256": "8759847dd40f2bdaacbaf54cfa7c966bfe5993fec4cc294a9958a747bdc1a6be",
+      "original_local_path": ".local/verification/ux-affine-comparator-container-v1.json"
+    },
+    {
+      "path": "studies/fixtures/finite-affine-batch-v1/no-optimizer-contracts-v5.json",
+      "bytes": 8646,
+      "sha256": "1d7cb286d9e0555ea7becb26c398dac487c6f604d924eee28de8d28f29b0b779",
+      "encoding": "identity",
+      "decoded_bytes": 8646,
+      "decoded_sha256": "1d7cb286d9e0555ea7becb26c398dac487c6f604d924eee28de8d28f29b0b779",
+      "original_local_path": ".local/verification/finite-affine-complete-contracts-v5.json"
+    },
+    {
+      "path": "studies/fixtures/finite-affine-batch-v1/no-optimizer-contracts-v5.py.txt",
+      "bytes": 19979,
+      "sha256": "7f6f85b9fc7d46c3e759a4f835eac0e0cfd890bc1ab2c498e8c8fbbfc282a72c",
+      "encoding": "identity",
+      "decoded_bytes": 19979,
+      "decoded_sha256": "7f6f85b9fc7d46c3e759a4f835eac0e0cfd890bc1ab2c498e8c8fbbfc282a72c",
+      "original_local_path": ".local/verification/finite-affine-complete-contracts-v5.py"
+    },
+    {
+      "path": "studies/fixtures/finite-affine-batch-v1/initial-plan-v1.json",
+      "bytes": 17227,
+      "sha256": "fc5ee486cb11e8995aaaf7ac4c6b682be55ba5f4f2c1a9ed2e0e0a9e9a7de4b2",
+      "encoding": "identity",
+      "decoded_bytes": 17227,
+      "decoded_sha256": "fc5ee486cb11e8995aaaf7ac4c6b682be55ba5f4f2c1a9ed2e0e0a9e9a7de4b2",
+      "original_local_path": ".local/verification/finite-affine-batch-initial-plan-v1.json"
+    },
+    {
+      "path": "studies/fixtures/finite-affine-batch-v1/pre-integration-plan-v1.json",
+      "bytes": 19303,
+      "sha256": "42426f785f04fed97251d13c1bcf56ac8f0abbcf36478dfcaad745bec1cc19fb",
+      "encoding": "identity",
+      "decoded_bytes": 19303,
+      "decoded_sha256": "42426f785f04fed97251d13c1bcf56ac8f0abbcf36478dfcaad745bec1cc19fb",
+      "original_local_path": ".local/verification/finite-affine-batch-pre-integration-plan-v1.json"
+    },
+    {
+      "path": "studies/fixtures/finite-affine-batch-v1/python-regression-v1.xml.gz",
+      "bytes": 17668,
+      "sha256": "6c962176c42134199f0275f16ea4bfa99b765166a6ab055f34f1abb0e2046130",
+      "encoding": "gzip",
+      "decoded_bytes": 131516,
+      "decoded_sha256": "c61918d008c729cd1efef0e72666111c396ac63494263d085ec4d9c1efa4ae3e",
+      "original_local_path": ".local/verification/finite-affine-python.xml"
+    },
+    {
+      "path": "studies/fixtures/finite-affine-batch-v1/python-regression-binding-v1.json",
+      "bytes": 69118,
+      "sha256": "928848d222286b7638c0f7e11022e20376b0c2182ad2a45e93a6af0871811640",
+      "encoding": "identity",
+      "decoded_bytes": 69118,
+      "decoded_sha256": "928848d222286b7638c0f7e11022e20376b0c2182ad2a45e93a6af0871811640",
+      "original_local_path": ".local/verification/finite-affine-python-binding.json"
+    },
+    {
+      "path": "studies/verification/finite-affine-report-audit-v1.py",
+      "bytes": 40563,
+      "sha256": "e34997577db3730a41efb4e22d4a47f2d4a5b3b58d6bef6e54c236694cff4d0e",
+      "encoding": "identity",
+      "decoded_bytes": 40563,
+      "decoded_sha256": "e34997577db3730a41efb4e22d4a47f2d4a5b3b58d6bef6e54c236694cff4d0e",
+      "original_local_path": ".local/verification/ux-affine-report-audit-v1.py"
+    }
+  ],
+  "stdout_binding": {
+    "canonical_bytes_equal_full_json": true,
+    "continuation_bytes_equal_full_json": true
+  },
+  "archive_settings": {
+    "gzip_compresslevel": 9,
+    "gzip_mtime": 0,
+    "gzip_embedded_filename": ""
+  }
+}

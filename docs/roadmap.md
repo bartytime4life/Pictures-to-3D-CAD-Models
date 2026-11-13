@@ -26,7 +26,23 @@ It has no automatic trace/build integration. A subsequent
 explicit observation-region selection and immutable paired samples. Supported
 covariance and thickness frames, independently evaluated source adequacy, latency
 and preservation of final CAD geometry remain prerequisites for user adoption.
-The moment initializer's background-sensitive proposals are experimental.
+The [affine batch upgrade](validation/finite-affine-batch.md) supplies bounded
+work accounting and fixed-workload performance evidence: 3.84× faster complete
+fits with all earlier target passes retained. Its 2.75–3.91-second medians do
+not qualify interactive adoption. The moment initializer's background-sensitive
+proposals are experimental.
+
+The [local residual-information replay](validation/finite-residual-information.md)
+is complete with a failed normal-angle control. It retains fixed-normal
+covariance sensitivities and ten bounded training-only steps; normal-aware steps
+remain withheld. The [finite-chord normal derivative](finite-residual-information.md#finite-chord-shape-derivative-a-derived-proposal)
+now has an analytic derivation for valid affine and projective maps. An [experimental implementation and independent study](validation/finite-normal-derivative.md)
+now retain one work-limited query and a compressed-map error-estimation
+limitation. Next, investigate determinant conditioning and global adaptive error
+allocation with separately bound evidence; preserve both original failed studies.
+Before optical inference, preserve acquisition samples, transforms, finite
+kernels and intermediate stage bytes in a new experiment; the current portable
+fields do not reconstruct their original acquisition chain completely.
 
 The [engineering model and verification plan](engineering-model.md) defines the 2.5D scope, camera-model assumptions, dimension equations and evidence needed through prototype qualification. The independent source-height check optionally compares a user-bounded measurement with a user-defined allowance; it reports within, outside or inconclusive without assigning a physical accuracy or confidence level.
 
@@ -44,7 +60,7 @@ Reference entry also includes an [endpoint-placement sensitivity explorer](refer
 | Measured-photo benchmark | Quantify error on real parts | **The runner is implemented** (`make photo-benchmark`; [guide](photo-benchmark.md)): bounded global size correspondence, complete dimension-coverage totals, conditional per-dimension error, observed spread, and a two-term scale/edge diagnostic. Still needed: independently evaluated, calipered parts photographed with real phones under predeclared crossed conditions and reserved checks |
 | Directional blur and independent simulation | Expose model mismatch before applying unsupported corrections | **Implemented:** a separate synthetic radial inverse, production inverse-domain safeguards and test-only higher-order lens stress inputs; [record](validation/radial-inverse.md). The [30-case blur qualification](validation/directional-spread-qualification.md) found missed cases for its research diagnostic; the tracer fits a uniform directional blur with orientation-support and adequacy rules ([method](reference-sheet.md)). Supported nonparallel fillets use its covariance. Unresolved fits normally retain the traced boundary; invalid corrected rings may use a frozen initial fit as a line-only polygon after validity and whole-boundary tolerance checks, with an undetermined-radius notice and refusal otherwise ([recovery limits](anisotropic-corners.md#when-the-corrected-source-ring-is-invalid)). Needed: finite-shape adequacy, general free-arc and slot-cap models beyond their existing approximations, covariance uncertainty, spatially varying blur, sharpening, a paper-light model for soft shadows under a wide blur (hole positions are corrected; the slot and outline are not) and reserved real captures |
 | Blur frames after thickness correction | Keep known coordinate changes consistent with blur units | **Implemented:** uniform point scales transport scalar spread, covariance, free-curve correction, cap placement and line windows ([frame and support rules](blur-frames.md)). Mixed free curves, caps and scalar corners retain warned geometry approximations; mixed supplied-covariance nonparallel corners remain withheld. Needed: adequate mixed-frame and finite-shape models, independently checked critical radii and real-capture evidence |
-| Finite-material intensity fitting | Use the whole material region when an isolated arc model is inadequate | **Developer APIs only:** supplied-optics inverse and immutable measured-ring preparation ([contract](finite-shape-inverse.md)); the [paired replay](validation/finite-photo-intensity-v2.md) retains three all-target passes among twelve records. Needed: adequate optics/illumination and thickness frames, independently checked recovery, bounded-work acceleration measured on actual fits, preserved refusals, and one accepted boundary through preview and exports |
+| Finite-material intensity fitting | Use the whole material region when an isolated arc model is inadequate | **Developer APIs only:** supplied-optics inverse and immutable measured-ring preparation ([contract](finite-shape-inverse.md)); the [paired replay](validation/finite-photo-intensity-v2.md) retains three all-target passes among twelve records. Needed: adequate optics/illumination and thickness frames, independently checked recovery, broader latency qualification after the [fixed affine performance pass](validation/finite-affine-batch.md), preserved refusals, and one accepted boundary through preview and exports |
 | Measured local-model selection | Choose the smallest assistant that gives useful advice quickly | Installed artifact/license verification, repeatable latency results, and human review of fixed project-specific cases |
 | Opt-in vision guidance | Give capture advice based on the actual photograph | Explicit image-sharing control, a verified local vision model, resource bounds, and evaluation against visible evidence |
 | Assembly-aware splitting | Add useful joints or locating features between pieces | Measured clearance/kerf, topology checks, validated joinery, and explicit assembly assumptions |

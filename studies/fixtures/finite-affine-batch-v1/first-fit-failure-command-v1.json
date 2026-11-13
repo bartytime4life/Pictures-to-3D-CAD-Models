@@ -1,0 +1,12 @@
+{
+  "scope": "ONE actual first-fit-entry exception, then all later accuracy fits; no optimizer benchmark timing rerun. Explicit parent authorization.",
+  "command": "OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 .venv/bin/python studies/verification/finite-affine-batch-v1.py --complete --no-timing --inject-first-fit-failure --canonical studies/results/finite-affine-batch-v1.json --output .local/verification/finite-affine-batch-first-fit-failure-v1.json --audit .local/verification/finite-affine-batch-first-fit-failure-audit-v1.json",
+  "source_before": {
+    "studies/verification/finite-affine-batch-v1.py": "baf0a00bd45d639da22aeaeaa052b52ab41e49e8376010901720aac7a059d7ca",
+    "studies/finite-affine-batch-v1.json": "a43e2d97a32e6bd4822dfff9d7c090f9b469c7ac0bbf92caa35173de0d37d0bd",
+    "backend/finite_centre_fit.py": "df8a057abefe983ee951c894a9ae44e0c6b0f472d3419578be505973ea3a8bfb",
+    "backend/finite_affine.py": "d4eb540f6a654178fca41b4be416bd4ad6ebb6b3f645bc78b5383b18b8caa653",
+    "backend/sheet.py": "cbb2f4ae8a47ac88dd98adac02590d55a48b05a83523f2e6d1af12da78186393",
+    "studies/results/finite-affine-batch-v1.json": "aa46038d893ad18ccc6b7e2fb4d5af562d6fe73b7a50f5d17274bbd253b6d544"
+  }
+}

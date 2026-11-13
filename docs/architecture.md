@@ -13,6 +13,17 @@ HTTP route and are not called by the automatic trace/build flow below. See
 global-to-crop transform and fixed sample/bounds preparation. It is a separate
 developer operator, with typed refusals; the automatic flow below is unchanged.
 
+`backend.finite_affine.finite_shape_probabilities` exposes shared-panel affine
+evaluation for complete rings and holes, with batch diagnostics. The established
+`circular_segment_probabilities` entry point dispatches exactly affine maps to
+that evaluator and returns its original `FiniteShapeResult` schema. Nonzero raw
+perspective terms retain the scalar evaluator, including terms that would
+underflow during normalization. Direct Jacobians reuse curve samples but keep
+their existing arithmetic guards and derivative model. Work charges include
+discarded batch evaluations before fallback; workspace has a separate declared
+bound. See the [mathematics and resource contracts](finite-affine-evaluation.md)
+and [source-bound comparison](validation/finite-affine-batch.md).
+
 ```mermaid
 flowchart LR
     A[Photo upload] --> B[Validate and normalize image]
@@ -230,7 +241,7 @@ The profile is validated at the API boundary even when it originated in this app
 
 `GET /api/slicers` checks fixed executable names or server-configured paths without executing them. It reports target releases, executable availability and whether direct opening is enabled; installed versions remain unchecked.
 
-`POST /api/models/{job_id}/slicer/{program_id}` accepts an empty JSON object for `bambu` or `prusa`. With `PICAD_ENABLE_SLICER_LAUNCH=1`, a loopback caller/host and matching Origin, it retains a copy of the generated 3MF and requests GUI opening using a fixed argument list without a shell. The API accepts neither executable paths nor arbitrary arguments. The response is HTTP 202 with `launch_requested`, not proof of import. A per-process lock and two-second cooldown bound launch attempts; request cancellation keeps the lock until the worker completes.
+`POST /api/models/{job_id}/slicer/{program_id}` accepts an empty JSON object for `bambu` or `prusa`. With `PICAD_ENABLE_SLICER_LAUNCH=1`, an HTTP loopback caller/host, a matching Origin and JSON content type, it retains a copy of the generated 3MF and requests GUI opening using a fixed argument list without a shell. HTTPS loopback and remote workbenches use the downloadable handoff ZIP instead. The API accepts neither executable paths nor arbitrary arguments. The response is HTTP 202 with `launch_requested`, not proof of import. A per-process lock and two-second cooldown bound launch attempts; request cancellation keeps the lock until the worker completes.
 
 Copies under `.local/slicer-handoffs/` (or `PICAD_SLICER_HANDOFF_DIR`) outlive temporary model expiry and deletion and remain until manually removed. This workflow does not slice or send anything to a printer. See [slicer setup and limits](slicers.md).
 
@@ -254,8 +265,8 @@ The status endpoint returns HTTP 200 with `running: false` when Ollama is unavai
 
 | Boundary | Current limit |
 | --- | --- |
-| Photo upload | 32 MiB |
-| Any other request body | 10 MiB |
+| Photo upload | 32 MiB file content; 32 MiB + 64 KiB total trace-request body |
+| Any other request body | 10 MiB + 64 KiB total middleware limit; individual schema limits still apply |
 | Decoded image | 70 million pixels; at least 16 pixels per side |
 | HEIC decoding | A child process per file; 60-second timeout; 4 GiB address space and 60 s of processor time where the platform enforces them |
 | Normalized image | Longest side at most 1400 pixels (without a reference sheet) |
@@ -270,6 +281,10 @@ The status endpoint returns HTTP 200 with `running: false` when Ollama is unavai
 | Split grid and solids | 1–4 rows/columns; at most 8 cells and 8 connected pieces |
 | Assistant question/context | 1600-character question; up to 8 warnings of 300 characters each |
 | Assistant inference | One concurrent request; 120-second chat timeout plus short model checks; 2 MiB upstream response cap |
+
+The middleware's additional 64 KiB allows request framing and form fields above
+the nominal body budgets. The trace endpoint separately checks the file content
+against 32 MiB. This allowance does not increase image, geometry or field limits.
 
 Do not increase the web server worker count as a substitute for a job queue: the concurrency locks are per process, while the capacity count covers every model directory on disk, including those of other processes sharing the job directory. The supplied startup runs a single API process.
 

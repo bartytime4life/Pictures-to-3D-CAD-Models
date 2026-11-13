@@ -1,0 +1,88 @@
+from pathlib import Path
+import contextlib,copy,hashlib,importlib.util,io,json,sys,tempfile,types
+from dataclasses import make_dataclass
+root=Path.cwd();path=root/'studies/verification/finite-normal-derivative-v1.py'
+spec=importlib.util.spec_from_file_location('normal_study_contracts',path);m=importlib.util.module_from_spec(spec);sys.modules[spec.name]=m;spec.loader.exec_module(m)
+plan,extra,scenes=m.load_plans();checks=[]
+def check(name,fn):
+    fn();checks.append({'name':name,'passed':True})
+def full_census(r):
+    assert len(r['rows'])==337 and sum(len(x['queries']) for x in r['rows'])==3886
+    assert len(r['positive_area'])==12 and sum(len(x['queries']) for x in r['positive_area'])==36
+
+def bootstrap():
+    r=m.bootstrap_failure(plan,extra,scenes,ImportError('invented startup fault'));full_census(r)
+    assert not r['protocol_passed'] and all(not q['comparison_passed'] for x in r['rows'] for q in x['queries'])
+check('stdlib_startup_failure_retains_complete_identity_census',bootstrap)
+def late_nonfinite():
+    r=m.failed_record({'id':'invented'},'late',ValueError('sentinel'),{'protocol_passed':True,'queries':[{'comparison_passed':True,'oracle_converged':True}],'unsafe':{'x':float('nan')}})
+    assert not r['protocol_passed'] and not r['queries'][0]['comparison_passed'] and not r['queries'][0]['oracle_converged']
+    assert 'unsafe' not in r and r['withheld_unsafe_fields']==['unsafe']
+check('nonfinite_whole_field_withheld_and_nested_green_flags_reset',late_nonfinite)
+def fake_payload(n):
+    return {'derivatives':(0.,)*n,'statuses':('resolved',)*n,'estimated_errors':(0.,)*n,'query_methods':('affine_closed_form',)*n,'query_evaluations':(2,)*n,'query_panels':(1,)*n,'evaluations':2*n,'panels':n,'chart_margin':1.,'reflected':False,'method':'finite_chord_shape','quadrature_certified':False}
+class API:
+    def __init__(self,change=None):self.change=change
+    def circular_segment_normal_derivative(self,pixels,*args,**kw):
+        d=fake_payload(len(pixels))
+        if self.change:self.change(d)
+        return make_dataclass('InventedResult',[(k,object) for k in d])(**d)
+def candidate_valid():
+    r=m.candidate_record(API(),scenes[0],plan['operator']);assert len(r['statuses'])==len(scenes[0]['pixels_xy'])
+check('invented_valid_candidate_schema',candidate_valid)
+changes={
+ 'negative_counter':lambda d:d.update(query_evaluations=(-1,)*(len(d['statuses'])),evaluations=-len(d['statuses'])),
+ 'boolean_counter':lambda d:d.update(query_panels=(True,)*len(d['statuses'])),
+ 'resolved_error_over_tolerance':lambda d:d.update(estimated_errors=(1.,)*len(d['statuses'])),
+ 'nonfinite_value':lambda d:d.update(derivatives=(float('nan'),)*len(d['statuses'])),
+ 'unknown_enum':lambda d:d.update(statuses=('green',)*len(d['statuses'])),
+ 'unknown_retains_value':lambda d:d.update(statuses=('work_limit',)*len(d['statuses'])),
+}
+for name,change in changes.items():
+    def refused(change=change):
+        try:m.candidate_record(API(change),scenes[0],plan['operator'])
+        except (ValueError,TypeError):return
+        raise AssertionError('invalid candidate accepted')
+    check(name+'_refused',refused)
+m.NP=types.SimpleNamespace(__version__='invented-no-numpy')
+def oracle(*a,**k):return {'oracle_converged':True,'values':{'96':0.,'192':0.},'order_delta':0.,'tail_envelope_sum':0.}
+m.direct_oracle=oracle
+original_area=m.area_check
+m.area_check=lambda scene,selection,*a,**kw:{'scene_id':scene['id'],'query_indices':selection['query_indices'],'queries':[{'query_index':i,'protocol_passed':True}for i in selection['query_indices']],'protocol_passed':True}
+def valid_census():
+    with contextlib.redirect_stderr(io.StringIO()):r=m.run_study(plan,extra,scenes,api=API(),area_helper=object())
+    full_census(r);assert r['protocol_passed'] and r['summary']['query_passes']==3886
+check('invented_full_census_pipeline_retained',valid_census)
+def first_query_failure():
+    counter=[0]
+    def fault(*args,**kw):
+        counter[0]+=1
+        if counter[0]==1:raise TypeError('invented first query')
+        return oracle()
+    m.direct_oracle=fault
+    with contextlib.redirect_stderr(io.StringIO()):r=m.run_study(plan,extra,scenes,api=API(),area_helper=object())
+    full_census(r);assert not r['protocol_passed'] and r['summary']['query_passes']==3885
+    assert not r['rows'][0]['queries'][0]['comparison_passed'] and r['rows'][-1]['protocol_passed']
+    m.direct_oracle=oracle
+check('invented_first_query_failure_keeps_all_later_queries',first_query_failure)
+def json_refusals():
+    for text in ['{"a":1,"a":2}','{"a":NaN}','{"a":1e999}']:
+        with tempfile.NamedTemporaryFile(mode='w+',dir=root/'.local/verification',suffix='.json') as f:
+            f.write(text);f.flush()
+            try:m.strict_json(f.name)
+            except ValueError:continue
+            raise AssertionError('unsafe JSON accepted')
+check('duplicate_nonfinite_overflow_json_refused',json_refusals)
+def cli_refusals():
+    with tempfile.TemporaryDirectory(dir=root/'.local/verification') as folder:
+        existing=Path(folder)/'existing';existing.write_text('keep');dangling=Path(folder)/'dangling';dangling.symlink_to('absent')
+        for args,code in [(['--help'],0),(['--output',str(existing)],2),(['--output',str(dangling)],2),(['--output',str(Path(folder)/'missing'/'out.json')],2)]:
+            with contextlib.redirect_stdout(io.StringIO()),contextlib.redirect_stderr(io.StringIO()):
+                try:m.main(args)
+                except SystemExit as e:assert e.code==code
+                else:raise AssertionError('CLI did not exit')
+        assert existing.read_text()=='keep' and dangling.is_symlink()
+check('help_and_fresh_destination_refusals',cli_refusals)
+assert 'numpy' not in sys.modules and 'backend.finite_normal' not in sys.modules
+report={'scope':'Invented protocol payloads and stdlib CLI only; no production API/oracle/NumPy imports or scientific results','checks':checks,'checks_passed':len(checks),'runner_sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'production_imports':0,'numerical_evaluations':0}
+(root/'.local/verification/normal-runner-contracts-initial.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report))

@@ -1,0 +1,145 @@
+{
+  "artifacts": [
+    {
+      "checks": {
+        "bytes": true,
+        "canonical_decoded_bytes": true,
+        "canonical_raw_identity": true,
+        "decoded_bytes": true,
+        "decoded_sha256": true,
+        "encoding_known": true,
+        "sha256": true
+      },
+      "path": "studies/results/finite-normal-derivative-v1.json.gz"
+    },
+    {
+      "checks": {
+        "bytes": true,
+        "decoded_bytes": true,
+        "decoded_sha256": true,
+        "encoding_known": true,
+        "sha256": true
+      },
+      "path": "studies/fixtures/finite-normal-derivative-v1/build-v1.log"
+    },
+    {
+      "checks": {
+        "bytes": true,
+        "decoded_bytes": true,
+        "decoded_sha256": true,
+        "encoding_known": true,
+        "sha256": true
+      },
+      "path": "studies/fixtures/finite-normal-derivative-v1/canonical-preflight-freeze-v1.json"
+    },
+    {
+      "checks": {
+        "bytes": true,
+        "decoded_bytes": true,
+        "decoded_sha256": true,
+        "encoding_known": true,
+        "sha256": true
+      },
+      "path": "studies/fixtures/finite-normal-derivative-v1/canonical-terminal-v1.json"
+    },
+    {
+      "checks": {
+        "bytes": true,
+        "decoded_bytes": true,
+        "decoded_sha256": true,
+        "encoding_known": true,
+        "sha256": true
+      },
+      "path": "studies/fixtures/finite-normal-derivative-v1/canonical-v1.stderr.log"
+    },
+    {
+      "checks": {
+        "bytes": true,
+        "decoded_bytes": true,
+        "decoded_sha256": true,
+        "encoding_known": true,
+        "sha256": true
+      },
+      "path": "studies/fixtures/finite-normal-derivative-v1/canonical-v1.stdout.log"
+    },
+    {
+      "checks": {
+        "bytes": true,
+        "decoded_bytes": true,
+        "decoded_sha256": true,
+        "encoding_known": true,
+        "sha256": true
+      },
+      "path": "studies/fixtures/finite-normal-derivative-v1/focused-preflight-freeze-v1.json"
+    },
+    {
+      "checks": {
+        "bytes": true,
+        "decoded_bytes": true,
+        "decoded_sha256": true,
+        "encoding_known": true,
+        "sha256": true
+      },
+      "path": "studies/fixtures/finite-normal-derivative-v1/focused-tests-v1.xml"
+    },
+    {
+      "checks": {
+        "bytes": true,
+        "decoded_bytes": true,
+        "decoded_sha256": true,
+        "encoding_known": true,
+        "sha256": true
+      },
+      "path": "studies/fixtures/finite-normal-derivative-v1/full-python-tests-v1.log"
+    },
+    {
+      "checks": {
+        "bytes": true,
+        "decoded_bytes": true,
+        "decoded_sha256": true,
+        "encoding_known": true,
+        "sha256": true
+      },
+      "path": "studies/fixtures/finite-normal-derivative-v1/full-python-tests-v1.xml"
+    },
+    {
+      "checks": {
+        "bytes": true,
+        "decoded_bytes": true,
+        "decoded_sha256": true,
+        "encoding_known": true,
+        "sha256": true
+      },
+      "path": "studies/fixtures/finite-normal-derivative-v1/runner-contracts-v1.json"
+    },
+    {
+      "checks": {
+        "bytes": true,
+        "decoded_bytes": true,
+        "decoded_sha256": true,
+        "encoding_known": true,
+        "sha256": true
+      },
+      "path": "studies/fixtures/finite-normal-derivative-v1/runner-contracts-v1.py.txt"
+    },
+    {
+      "checks": {
+        "bytes": true,
+        "decoded_bytes": true,
+        "decoded_sha256": true,
+        "encoding_known": true,
+        "sha256": true
+      },
+      "path": "studies/fixtures/finite-normal-derivative-v1/software-regression-v1.json.gz"
+    }
+  ],
+  "auditor_sha256": "eb6d5e7f92b398ecb893111d58c46c38cf97f533ae5898caa2c957601e5b73de",
+  "checks": 67,
+  "format": "pictures-to-cad-finite-normal-artifact-audit",
+  "index_sha256": "b2718b4d64f1172086df9f395e20025c5e3bc83223cd0fc6ded85222edf0bd56",
+  "original_canonical_exit_code": 1,
+  "original_protocol_passed": false,
+  "passed": 67,
+  "scope": "Current saved manifest snapshot only; no scientific replay or model imports.",
+  "version": 1
+}

@@ -1,5 +1,70 @@
 # Workbench change log
 
+## Experimental finite-chord normal derivative — November 12, 2026
+
+- Add a signed source-angle sensitivity with affine/projective Gaussian first
+  moments and guarded original-chord quadrature. Preserve the existing mean
+  and four-column shape Jacobian schemas and automatic tracing behavior.
+- Freeze and retain all 337 scenes/3,886 queries. The complete protocol exits 1
+  with one panel-budget unknown; a compressed-map error-estimation limitation
+  also remains. Keep all raw arrays and independent audits losslessly.
+- Record 94 focused checks, the build and 1,037 Python tests separately from
+  the scientific result. [Contract](finite-normal-derivative.md) ·
+  [complete evidence and limits](validation/finite-normal-derivative.md).
+
+## Documentation alignment with published PR #95 — November 12, 2026
+
+- Refresh the source, dependency and hosted-CI snapshot after publication of
+  the complete residual-information study. Preserve its failed normal control,
+  unknowns, original target flags and independently audited saved results.
+- Document the finite-chord normal derivative's affine/projective derivation,
+  sign, units and whole-shape chart assumptions. Numerical qualification and
+  integration remain pending; no available operator or accuracy result is added.
+- Review the complete workbench and companion-library documentation, update
+  entry points and retain historical evidence and generated-library outputs.
+  [Coverage and verification](validation/documentation-pr95-state.md).
+
+## Residual information and rotation sensitivity — November 12, 2026
+
+- Retain the complete failed normal-angle protocol, all 12 records, unchanged
+  old flags and fixed-normal conditional steps. Add guarded raw-rank/status
+  handling and a portable independent saved-data auditor.
+- Derive a rotation-sensitivity identity and preserve a separately labeled
+  post-hoc saved-array analysis, with no new model call or normal qualification.
+- Archive every array losslessly, update method/command/evidence navigation,
+  and keep production tracing unchanged.
+  [Complete results and limits](validation/finite-residual-information.md).
+
+## Documentation alignment with draft PR #93 — November 12, 2026
+
+- Identify the published affine candidate, exact tree, dependency base and
+  timestamped hosted-CI state. Keep completed source-bound results separate
+  from later documentation checks and unmerged publication.
+- Document the proposed residual-information method, its estimated numerical
+  guards and acquisition-data requirements. Explicitly distinguish the proposal
+  from available commands, archived-data results and physical PSF calibration.
+- Update navigation, research, roadmap and contributor guidance; check the full
+  documentation inventory, examples and command help. No executable, study,
+  saved result or generated-library bytes change.
+  [Coverage and verification](validation/documentation-pr93-state.md).
+
+## Affine finite-material evaluation and documentation — November 12, 2026
+
+- Shared transformed curve panels accelerate exactly affine finite-material
+  means, with the existing scalar path for perspective and unsupported batches.
+  Work includes discarded evaluations; workspace has an explicit bound. The
+  existing circular-segment result schema and optical model are preserved.
+- The fixed comparison passes 28 numerical/resource controls, preserves all
+  36 archived rows and previous target passes, and records 10.13× faster means
+  and 3.84× faster complete fits. The three fit medians are 2.75–3.91 seconds;
+  interactive latency and physical accuracy remain unqualified.
+- The integrated candidate passes 943 local Python tests, production build
+  and lint. Updated current guides, source/CI snapshots, runnable study modes,
+  evidence navigation and the engineering limits. Dated reports and companion
+  library generated outputs retain their original scope.
+  [Algorithm](finite-affine-evaluation.md) · [complete evidence](validation/finite-affine-batch.md)
+  · [documentation checks](validation/documentation-affine-state.md).
+
 This is a source-change summary, not a list of published releases. The companion
 library maintains its own [revision history](../reference-library/CHANGELOG.md).
 
