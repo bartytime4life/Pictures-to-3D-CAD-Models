@@ -4,10 +4,11 @@ Turn a photograph of a **flat, constant-thickness part** into a scaled CAD solid
 
 The workbench is designed for plates, gaskets, spacers, and templates. It traces what is visible in the photograph; it does not recover hidden geometry or infer physical dimensions.
 
-For the reviewed source revision, draft PR dependencies and available research
-APIs, read [source scope and status](docs/project-status.md). The current
-[documentation review](docs/validation/documentation-pr95-state.md) covers
-published draft PR #95, the workbench and companion library. The
+For the reviewed source revision and available research APIs, read
+[source scope and status](docs/project-status.md) and the
+[current documentation review](docs/validation/documentation-acquisition-state.md). The earlier
+[documentation review](docs/validation/documentation-pr95-state.md) records
+its PR #95 workbench and companion-library scope. The
 [residual-study record](docs/validation/finite-residual-information.md) retains
 the completed diagnostic and failed normal-angle control. Older test results
 retain their original scope.
@@ -59,14 +60,27 @@ a failed normal-angle control and conditional covariance-only steps. Its
 [complete record](docs/validation/finite-residual-information.md) preserves all
 unknowns and motivates a separately labeled analytic rotation identity. The
 [finite-chord derivative proposal](docs/finite-residual-information.md#finite-chord-shape-derivative-a-derived-proposal)
-also covers perspective maps mathematically; its implementation and numerical
-validation remain pending. Neither changes automatic tracing or optical correction.
+also covers perspective maps mathematically. Its experimental implementation
+and retained numerical limitations are described below; neither changes automatic
+tracing or optical correction.
 
 The [experimental normal-angle derivative](docs/finite-normal-derivative.md)
 adds a direct finite-chord sensitivity under supplied Gaussian optics. Its
 [337-scene qualification](docs/validation/finite-normal-derivative.md) retains
 one work-limited query and an error-estimation limitation on compressed
 perspective maps. It remains outside automatic tracing and fitting.
+
+The [known acquisition-operator study](docs/finite-acquisition-operator.md)
+archives 16 synthetic scenes and 32 output-scale records from source `0714aad`,
+separately from this main-based backend. Even at supplied true geometry and
+levels, a moment-matched Gaussian is incompatible in 9/32 unquantized and
+16/32 PNG comparisons under the declared one-level criterion. The
+[record](docs/validation/finite-acquisition-operator.md) preserves the initial
+bootstrap failure and 320 raw scalar-serialization failures; saved-only native
+conversion changes no comparison category. Its
+[123-artifact archive](studies/fixtures/finite-acquisition-operator-v1/README.md)
+includes the recorded source. It neither retests current main's newer
+shadow-lighting model nor adds automatic intensity fitting.
 
 Final fitted arcs also need [circle-consistent joins](docs/curved-joins.md).
 An unavailable join keeps an affected outline for review when valid, with a
@@ -190,7 +204,7 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 ## Honest limits
 
 - A single image supplies a 2D outline. Thickness is entered by the user; recesses, sloped walls, threads, and hidden features are not reconstructed.
-- One outside width or two-point reference sets uniform scale. It does not correct perspective, lens distortion, or an out-of-plane part. A reference sheet estimates perspective and one radial lens coefficient in the sheet's plane, and the parallax of a vertical-walled part of the entered thickness. Its edges are measured in linear light, decoding the photo as sRGB. The second edge pass follows a locally linear paper-side shadow slope; nonlinear shadows and a camera's own tone mapping remain limits. Near-frontal camera height can be inferred from suitable holes assumed round; without that evidence or EXIF, an assumed lens remains necessary. The recorded errors come from rendered photographs with exact ground truth. [The photo benchmark](docs/photo-benchmark.md) measures real photos against calipers, and no such result is recorded yet.
+- One outside width or two-point reference sets uniform scale. It does not correct perspective, lens distortion, or an out-of-plane part. A reference sheet estimates perspective and one radial lens coefficient in the sheet's plane, and the parallax of a vertical-walled part of the entered thickness. Its edges are measured in linear light, decoding the photo as sRGB. The paper-side model follows local slopes and can apply a soft shadow fitted round the part when its numerical checks accept it; contact shadows, sharper shadow transitions and a camera's own tone mapping remain limits. Near-frontal camera height can be inferred from suitable holes assumed round; without that evidence or EXIF, an assumed lens remains necessary. The recorded errors come from rendered photographs with exact ground truth. [The photo benchmark](docs/photo-benchmark.md) measures real photos against calipers, and no such result is recorded yet.
 - A reference sheet's stated size sets the scale. The workbench checks the sheet's proportions against the photo, but not its absolute size: measure your sheet.
 - Tracing approximates pixel boundaries. Smooth-looking geometry is not evidence of manufacturing accuracy.
 - Relative detail can simplify the CAD outline; it does not recover missing image detail or establish a minimum printable wall thickness.
@@ -217,6 +231,7 @@ Start with the [documentation index](docs/README.md) for capture, engineering, e
 - [Data handling and security boundaries](docs/privacy-security.md)
 - [Troubleshooting](docs/troubleshooting.md)
 - [Research and design decisions](docs/research.md)
+- [Known acquisition stages: recorded-source evidence and model limits](docs/finite-acquisition-operator.md)
 - [Scope and roadmap](docs/roadmap.md)
 - [Validation results](docs/validation.md)
 - [Guided workbench review](docs/validation/guided-workbench.md)

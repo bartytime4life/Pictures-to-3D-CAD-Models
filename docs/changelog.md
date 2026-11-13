@@ -1,5 +1,21 @@
 # Workbench change log
 
+## Acquisition evidence and documentation refresh — November 13, 2026
+
+- Retain 16 synthetic source scenes, 32 paired output-scale records and all 128
+  forward comparisons. Second-moment Gaussian matching leaves 9 unquantized and
+  16 PNG cells incompatible, with one PNG inconclusive; no geometry is fitted.
+- Preserve the original bootstrap failure and continuation's 320 raw scalar
+  markers. Add hash-bound saved normalization, independent audits and the full
+  123-artifact package, including the 87-file recorded source snapshot.
+- Publish the evidence on main `68a67e7`, preserving its newer soft-shadow
+  implementation. Refresh source status, developer instructions, architecture,
+  engineering limits, research, roadmap and navigation; check the complete
+  documentation inventory. Dated records and generated library outputs retain
+  their original scope. [Method](finite-acquisition-operator.md) ·
+  [evidence](validation/finite-acquisition-operator.md) ·
+  [saved review](../studies/fixtures/finite-acquisition-operator-v1/README.md).
+
 ## Experimental finite-chord normal derivative — November 12, 2026
 
 - Add a signed source-angle sensitivity with affine/projective Gaussian first

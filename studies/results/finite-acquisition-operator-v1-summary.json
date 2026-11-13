@@ -1,0 +1,1304 @@
+{
+  "artifacts": [
+    {
+      "decoded_bytes": 5093,
+      "decoded_sha256": "846d1f26635122a6b5038a5f9347421edc8f61181478702e8e602b99b8994e88",
+      "encoding": "identity",
+      "kind": "source_or_plan",
+      "path": "studies/finite-acquisition-operator-v1-continuation-v1.json",
+      "sha256": "846d1f26635122a6b5038a5f9347421edc8f61181478702e8e602b99b8994e88",
+      "stored_bytes": 5093
+    },
+    {
+      "decoded_bytes": 14666,
+      "decoded_sha256": "bf12681eeda0c44552a94ea5f033424bf20aca2f9f56c83ed9226b404675989e",
+      "encoding": "identity",
+      "kind": "source_or_plan",
+      "path": "studies/finite-acquisition-operator-v1.json",
+      "sha256": "bf12681eeda0c44552a94ea5f033424bf20aca2f9f56c83ed9226b404675989e",
+      "stored_bytes": 14666
+    },
+    {
+      "decoded_bytes": 1601,
+      "decoded_sha256": "53f06234cb8848f3e023cc5115d879aae8ad343ce73a676ef4d74410f5b42b87",
+      "encoding": "identity",
+      "kind": "retained_first_failure",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/bootstrap-failure/bootstrap-only.patch",
+      "sha256": "53f06234cb8848f3e023cc5115d879aae8ad343ce73a676ef4d74410f5b42b87",
+      "stored_bytes": 1601
+    },
+    {
+      "decoded_bytes": 2220,
+      "decoded_sha256": "df337f3ee42f6977ca67a86240293b0c446fea0c4c7721728b4a1209d816cdb3",
+      "encoding": "gzip",
+      "kind": "retained_first_failure",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/bootstrap-failure/launcher.py.txt.gz",
+      "sha256": "f14ba7a1f84013484680e611c6350a86e89582d57c7fe268b61ca521a7e00bb2",
+      "stored_bytes": 1031
+    },
+    {
+      "decoded_bytes": 4114,
+      "decoded_sha256": "92944af7af4667be895cfed235b601bee34f174a881323e44e948acdc59ab0a5",
+      "encoding": "identity",
+      "kind": "retained_first_failure",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/bootstrap-failure/manifest.json",
+      "sha256": "92944af7af4667be895cfed235b601bee34f174a881323e44e948acdc59ab0a5",
+      "stored_bytes": 4114
+    },
+    {
+      "decoded_bytes": 78539,
+      "decoded_sha256": "24932b67cebc003b7d79ec9e9e04b83ed96463c31c0015ea20752bf274ddef07",
+      "encoding": "gzip",
+      "kind": "retained_first_failure",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/bootstrap-failure/preflight.json.gz",
+      "sha256": "9d4f07b74d70a7d16e16700d6d3f8e69d6e58772dea40caf83ec8cf7fa31a06d",
+      "stored_bytes": 28912
+    },
+    {
+      "decoded_bytes": 492192,
+      "decoded_sha256": "c5cef04f49969d607fb85c425bb6b1192e4ef60e373f6412eaf55cc664a2ffc0",
+      "encoding": "gzip",
+      "kind": "retained_first_failure",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/bootstrap-failure/report.json.gz",
+      "sha256": "7901593e03d6e46175721ee0299b7df760a7c24a3994a9bbcaddf761ffa70e9d",
+      "stored_bytes": 21587
+    },
+    {
+      "decoded_bytes": 2685,
+      "decoded_sha256": "d559c38d01bd5ccf4fa8772e439d5a3041ee29c96e154cd584202a76090456df",
+      "encoding": "gzip",
+      "kind": "retained_first_failure",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/bootstrap-failure/routing-contracts-v1.json.gz",
+      "sha256": "d15746867c11dfd6fc47c19cdbb7f0681ca132cb99927651feaba2a1a09300d2",
+      "stored_bytes": 558
+    },
+    {
+      "decoded_bytes": 4821,
+      "decoded_sha256": "170a74e6181e39b0fcf2b7d3c5afc61f2fcadbb8b0a4f0ae89d133b02b7de862",
+      "encoding": "gzip",
+      "kind": "retained_first_failure",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/bootstrap-failure/routing-contracts-v1.py.txt.gz",
+      "sha256": "f13a3cd14b7707d23a43c37d54297a9c017e9ddee8dbab9e555981db9abfff83",
+      "stored_bytes": 2065
+    },
+    {
+      "decoded_bytes": 3884,
+      "decoded_sha256": "5d6a0294bdc33b81b636fe45f7f1c594d8c7df6517510f345a6b8086a4b906ba",
+      "encoding": "gzip",
+      "kind": "retained_first_failure",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/bootstrap-failure/routing-contracts-v2.json.gz",
+      "sha256": "10183f017e1a2177126d0ab73a5ea22665f30cbe2ec561d45eed49f21091cc71",
+      "stored_bytes": 742
+    },
+    {
+      "decoded_bytes": 5274,
+      "decoded_sha256": "3f4aa1f862b64aaa284ddeb210e4d484771e030f003f5a34ce86d6377d2f5e36",
+      "encoding": "gzip",
+      "kind": "retained_first_failure",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/bootstrap-failure/routing-contracts-v2.py.txt.gz",
+      "sha256": "4fc9be700a3561824a079668893c1bf65a93dda8709ef1c48d4204b173ada254",
+      "stored_bytes": 2217
+    },
+    {
+      "decoded_bytes": 22674,
+      "decoded_sha256": "21a2f8389094a76bbd14a3d7a43933fe56a32da8296092ebdcdac2980220e72a",
+      "encoding": "identity",
+      "kind": "retained_first_failure",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/bootstrap-failure/stage-helper-original.py.txt",
+      "sha256": "21a2f8389094a76bbd14a3d7a43933fe56a32da8296092ebdcdac2980220e72a",
+      "stored_bytes": 22674
+    },
+    {
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "kind": "retained_first_failure",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/bootstrap-failure/stderr.txt.gz",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "stored_bytes": 20
+    },
+    {
+      "decoded_bytes": 1160,
+      "decoded_sha256": "8c4c8f1c6690f088df3f7b2df97063061811eea50acf145f69cb8bebcdd7acb4",
+      "encoding": "gzip",
+      "kind": "retained_first_failure",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/bootstrap-failure/stdout.txt.gz",
+      "sha256": "1804584499b5dba96ade7c80fa63e1362fe9d9da6cfa88acae6e25fa4205ce05",
+      "stored_bytes": 283
+    },
+    {
+      "decoded_bytes": 156534,
+      "decoded_sha256": "c65a1f7b9d599aec05332598f34d146129138bb88f25f7466ccb0824a53fd708",
+      "encoding": "gzip",
+      "kind": "retained_first_failure",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/bootstrap-failure/terminal.json.gz",
+      "sha256": "45917eaa54ddb0bec50f21ecf26711fc772701d03702ad17bddd74b88fb23400",
+      "stored_bytes": 57163
+    },
+    {
+      "decoded_bytes": 15439,
+      "decoded_sha256": "862aef8b3440a0157342da9c58f02cfe02c9def7a4a5db14a32c8ef5ab105e97",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-directional-phase0/q-1.npz",
+      "run_relative_path": "major-directional-phase0/q-1.npz",
+      "sha256": "862aef8b3440a0157342da9c58f02cfe02c9def7a4a5db14a32c8ef5ab105e97",
+      "stored_bytes": 15439
+    },
+    {
+      "decoded_bytes": 22573,
+      "decoded_sha256": "354ee8336730b0c31f6e196c4168aa8d8fa9e7a01f1bb6dce492ad16541b3008",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-directional-phase0/q-1p25.npz",
+      "run_relative_path": "major-directional-phase0/q-1p25.npz",
+      "sha256": "354ee8336730b0c31f6e196c4168aa8d8fa9e7a01f1bb6dce492ad16541b3008",
+      "stored_bytes": 22573
+    },
+    {
+      "decoded_bytes": 13442,
+      "decoded_sha256": "b953d331acb7c949f850df275c1e991f13d04320b1fc95329aee382d5540bf08",
+      "encoding": "gzip",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-directional-phase0/scene.json.gz",
+      "run_relative_path": "major-directional-phase0/scene.json",
+      "sha256": "e24e18fb01cc603b0e68ed57d27bea047957cf24758d0cefd40a7792d9f95c59",
+      "stored_bytes": 3257
+    },
+    {
+      "decoded_bytes": 10604,
+      "decoded_sha256": "e89857dcb02f853611ce1a3f5deab1128680adfef75dcc95983daa55402cef1f",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-directional-phase0/source.npz",
+      "run_relative_path": "major-directional-phase0/source.npz",
+      "sha256": "e89857dcb02f853611ce1a3f5deab1128680adfef75dcc95983daa55402cef1f",
+      "stored_bytes": 10604
+    },
+    {
+      "decoded_bytes": 1106,
+      "decoded_sha256": "37bbdfe5a54d95e990a263ddf4a798b65caae802f8acbc26fd099d31d058e450",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-directional-phase0/source.png",
+      "run_relative_path": "major-directional-phase0/source.png",
+      "sha256": "37bbdfe5a54d95e990a263ddf4a798b65caae802f8acbc26fd099d31d058e450",
+      "stored_bytes": 1106
+    },
+    {
+      "decoded_bytes": 15450,
+      "decoded_sha256": "22b877acd5e207aa0cfe8d68eab026d10bc88f46a52c8b7d3cb351401200c05d",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-directional-phase1/q-1.npz",
+      "run_relative_path": "major-directional-phase1/q-1.npz",
+      "sha256": "22b877acd5e207aa0cfe8d68eab026d10bc88f46a52c8b7d3cb351401200c05d",
+      "stored_bytes": 15450
+    },
+    {
+      "decoded_bytes": 22598,
+      "decoded_sha256": "3899367794e85145288ef68f21d33ccacd78ab07036c98160599588b35bd7d5c",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-directional-phase1/q-1p25.npz",
+      "run_relative_path": "major-directional-phase1/q-1p25.npz",
+      "sha256": "3899367794e85145288ef68f21d33ccacd78ab07036c98160599588b35bd7d5c",
+      "stored_bytes": 22598
+    },
+    {
+      "decoded_bytes": 13443,
+      "decoded_sha256": "0c48a012c84fb6cd4ae25e948feb4fcffaee8ce7ae4ff0d7f579dfff6645cf27",
+      "encoding": "gzip",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-directional-phase1/scene.json.gz",
+      "run_relative_path": "major-directional-phase1/scene.json",
+      "sha256": "384d2d1a0b2dacc774ce7e9b14696577800758ace200f04ce027348db094e048",
+      "stored_bytes": 3262
+    },
+    {
+      "decoded_bytes": 10672,
+      "decoded_sha256": "683f8682893fc3d47330e8915f49c49e73bace691e2528bb1921b82be8b90446",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-directional-phase1/source.npz",
+      "run_relative_path": "major-directional-phase1/source.npz",
+      "sha256": "683f8682893fc3d47330e8915f49c49e73bace691e2528bb1921b82be8b90446",
+      "stored_bytes": 10672
+    },
+    {
+      "decoded_bytes": 1062,
+      "decoded_sha256": "2ff82c505c37e2b0bb3d98dd3c0c3f9b8fc79c2e604cb615ef7e041f0ecd0984",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-directional-phase1/source.png",
+      "run_relative_path": "major-directional-phase1/source.png",
+      "sha256": "2ff82c505c37e2b0bb3d98dd3c0c3f9b8fc79c2e604cb615ef7e041f0ecd0984",
+      "stored_bytes": 1062
+    },
+    {
+      "decoded_bytes": 15428,
+      "decoded_sha256": "e8c990cd468e4ac0534dc3ae42d2aead4a7fcfb608c68bab114f3799a211211e",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-directional-phase2/q-1.npz",
+      "run_relative_path": "major-directional-phase2/q-1.npz",
+      "sha256": "e8c990cd468e4ac0534dc3ae42d2aead4a7fcfb608c68bab114f3799a211211e",
+      "stored_bytes": 15428
+    },
+    {
+      "decoded_bytes": 22635,
+      "decoded_sha256": "b97dc10d98d8be62015a26c54d48d6d4a71d43c004c037102f622c4a4efe4ceb",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-directional-phase2/q-1p25.npz",
+      "run_relative_path": "major-directional-phase2/q-1p25.npz",
+      "sha256": "b97dc10d98d8be62015a26c54d48d6d4a71d43c004c037102f622c4a4efe4ceb",
+      "stored_bytes": 22635
+    },
+    {
+      "decoded_bytes": 13444,
+      "decoded_sha256": "16c0a5533329f871a96066126629a06f22212c47457b480ada25916585967430",
+      "encoding": "gzip",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-directional-phase2/scene.json.gz",
+      "run_relative_path": "major-directional-phase2/scene.json",
+      "sha256": "19bba3b0d7621e74d2596ad460ff804c0e10bf42d5b9b98a1fe1aec413230c2d",
+      "stored_bytes": 3241
+    },
+    {
+      "decoded_bytes": 10857,
+      "decoded_sha256": "602e6e7eca754b507bca145d77bd16cf46c8fdd54a3145138daa9672bf6aff6f",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-directional-phase2/source.npz",
+      "run_relative_path": "major-directional-phase2/source.npz",
+      "sha256": "602e6e7eca754b507bca145d77bd16cf46c8fdd54a3145138daa9672bf6aff6f",
+      "stored_bytes": 10857
+    },
+    {
+      "decoded_bytes": 1083,
+      "decoded_sha256": "84f43b5801119a1afa0b807fe5d64d442ead6176c1922f6d99e66102f6e495c1",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-directional-phase2/source.png",
+      "run_relative_path": "major-directional-phase2/source.png",
+      "sha256": "84f43b5801119a1afa0b807fe5d64d442ead6176c1922f6d99e66102f6e495c1",
+      "stored_bytes": 1083
+    },
+    {
+      "decoded_bytes": 15455,
+      "decoded_sha256": "4630923aaa32a0000f24443dd113e4241790f68123881852f5ba96146b835664",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-directional-phase3/q-1.npz",
+      "run_relative_path": "major-directional-phase3/q-1.npz",
+      "sha256": "4630923aaa32a0000f24443dd113e4241790f68123881852f5ba96146b835664",
+      "stored_bytes": 15455
+    },
+    {
+      "decoded_bytes": 22635,
+      "decoded_sha256": "06af28ec3e43e4b4ee5d9ebef4e292c2cd6edafbc413c1830cb9c39f0e6cc5cd",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-directional-phase3/q-1p25.npz",
+      "run_relative_path": "major-directional-phase3/q-1p25.npz",
+      "sha256": "06af28ec3e43e4b4ee5d9ebef4e292c2cd6edafbc413c1830cb9c39f0e6cc5cd",
+      "stored_bytes": 22635
+    },
+    {
+      "decoded_bytes": 13446,
+      "decoded_sha256": "c1cb6a35808a3f5da7e05cd71dca04d7944f6087e59cc1a1d4a1b54998575498",
+      "encoding": "gzip",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-directional-phase3/scene.json.gz",
+      "run_relative_path": "major-directional-phase3/scene.json",
+      "sha256": "2d5fe9b952ae024620c6b92806c246703314c4bd33cfeb9b20b039bfc04388d9",
+      "stored_bytes": 3247
+    },
+    {
+      "decoded_bytes": 10863,
+      "decoded_sha256": "1d27e0be88cf4d9eef6502998291bdaeea7d86c3e81870513bea926f6caf9dbb",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-directional-phase3/source.npz",
+      "run_relative_path": "major-directional-phase3/source.npz",
+      "sha256": "1d27e0be88cf4d9eef6502998291bdaeea7d86c3e81870513bea926f6caf9dbb",
+      "stored_bytes": 10863
+    },
+    {
+      "decoded_bytes": 1085,
+      "decoded_sha256": "ea578bcd3e82a929dcf6a80b74d6b5eced117612d50f25112b0cea5eccba3725",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-directional-phase3/source.png",
+      "run_relative_path": "major-directional-phase3/source.png",
+      "sha256": "ea578bcd3e82a929dcf6a80b74d6b5eced117612d50f25112b0cea5eccba3725",
+      "stored_bytes": 1085
+    },
+    {
+      "decoded_bytes": 8056,
+      "decoded_sha256": "6645b92b412942e04c33ad47e56c7dda03ec4bfe82c8282e47e04f51e07a5183",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-isotropic-phase0/q-1.npz",
+      "run_relative_path": "major-isotropic-phase0/q-1.npz",
+      "sha256": "6645b92b412942e04c33ad47e56c7dda03ec4bfe82c8282e47e04f51e07a5183",
+      "stored_bytes": 8056
+    },
+    {
+      "decoded_bytes": 11320,
+      "decoded_sha256": "c18ed2d939febd2323bd5ab45aa95a21eded4fa79a88380315efa57e8bfe195e",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-isotropic-phase0/q-1p25.npz",
+      "run_relative_path": "major-isotropic-phase0/q-1p25.npz",
+      "sha256": "c18ed2d939febd2323bd5ab45aa95a21eded4fa79a88380315efa57e8bfe195e",
+      "stored_bytes": 11320
+    },
+    {
+      "decoded_bytes": 13436,
+      "decoded_sha256": "451bb066f28d69fce27e6fa668029aa56fb19698a1e0e17047b17a4d9d07f5ef",
+      "encoding": "gzip",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-isotropic-phase0/scene.json.gz",
+      "run_relative_path": "major-isotropic-phase0/scene.json",
+      "sha256": "2d3e46d6b9049945ab4e1ad162a97b06ae9721a301f581f17c2d44a923903c18",
+      "stored_bytes": 3264
+    },
+    {
+      "decoded_bytes": 5877,
+      "decoded_sha256": "81807784bc19b46b72f5a280ea2beb4f1f67f16c0fced1ea7c7fb7634a5e541e",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-isotropic-phase0/source.npz",
+      "run_relative_path": "major-isotropic-phase0/source.npz",
+      "sha256": "81807784bc19b46b72f5a280ea2beb4f1f67f16c0fced1ea7c7fb7634a5e541e",
+      "stored_bytes": 5877
+    },
+    {
+      "decoded_bytes": 969,
+      "decoded_sha256": "7cb4de4372511d14d78a052bd2cc593026111f32b899ace8b62e63511e9b3cfc",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-isotropic-phase0/source.png",
+      "run_relative_path": "major-isotropic-phase0/source.png",
+      "sha256": "7cb4de4372511d14d78a052bd2cc593026111f32b899ace8b62e63511e9b3cfc",
+      "stored_bytes": 969
+    },
+    {
+      "decoded_bytes": 8401,
+      "decoded_sha256": "7c3396201c3dd9443794dd728e28b624962f06987589de622b039e0cc49d84f6",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-isotropic-phase1/q-1.npz",
+      "run_relative_path": "major-isotropic-phase1/q-1.npz",
+      "sha256": "7c3396201c3dd9443794dd728e28b624962f06987589de622b039e0cc49d84f6",
+      "stored_bytes": 8401
+    },
+    {
+      "decoded_bytes": 15823,
+      "decoded_sha256": "f514dbe75fd217dd9a15c3cae69d6f51e61b6861a67d2c913f0fc29ac673f7cb",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-isotropic-phase1/q-1p25.npz",
+      "run_relative_path": "major-isotropic-phase1/q-1p25.npz",
+      "sha256": "f514dbe75fd217dd9a15c3cae69d6f51e61b6861a67d2c913f0fc29ac673f7cb",
+      "stored_bytes": 15823
+    },
+    {
+      "decoded_bytes": 13441,
+      "decoded_sha256": "3cde742ba1d1bad3239c3140df7b61e5201cfee42113b9ebaea0bdd211def90b",
+      "encoding": "gzip",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-isotropic-phase1/scene.json.gz",
+      "run_relative_path": "major-isotropic-phase1/scene.json",
+      "sha256": "753f7f21b4a25dffca4f233ac22c7a1b7f0be8570af5d62895e3249f59bcf349",
+      "stored_bytes": 3257
+    },
+    {
+      "decoded_bytes": 5986,
+      "decoded_sha256": "168736dd4a94bba8d1c234ae7c0066bee95cef9e048d63c37efcb21514c069d2",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-isotropic-phase1/source.npz",
+      "run_relative_path": "major-isotropic-phase1/source.npz",
+      "sha256": "168736dd4a94bba8d1c234ae7c0066bee95cef9e048d63c37efcb21514c069d2",
+      "stored_bytes": 5986
+    },
+    {
+      "decoded_bytes": 984,
+      "decoded_sha256": "d021e2af5884e880ecc48523b63d7b663d9476f837fb96803f6a095a76ffea31",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-isotropic-phase1/source.png",
+      "run_relative_path": "major-isotropic-phase1/source.png",
+      "sha256": "d021e2af5884e880ecc48523b63d7b663d9476f837fb96803f6a095a76ffea31",
+      "stored_bytes": 984
+    },
+    {
+      "decoded_bytes": 11203,
+      "decoded_sha256": "8f9dc93ef8c6fdc0d6f91ee219aeca64873f2563892a5d1cb9562d6a9615234e",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-isotropic-phase2/q-1.npz",
+      "run_relative_path": "major-isotropic-phase2/q-1.npz",
+      "sha256": "8f9dc93ef8c6fdc0d6f91ee219aeca64873f2563892a5d1cb9562d6a9615234e",
+      "stored_bytes": 11203
+    },
+    {
+      "decoded_bytes": 15820,
+      "decoded_sha256": "3e1f0e3faa7c1f38d28b3796d91b02d35e7c9cc6eab842dbbf2a1b241536773e",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-isotropic-phase2/q-1p25.npz",
+      "run_relative_path": "major-isotropic-phase2/q-1p25.npz",
+      "sha256": "3e1f0e3faa7c1f38d28b3796d91b02d35e7c9cc6eab842dbbf2a1b241536773e",
+      "stored_bytes": 15820
+    },
+    {
+      "decoded_bytes": 13432,
+      "decoded_sha256": "25ce854fbba1b2c9f41ae1a102fb294fe9a07f66982a2261d2d178c8a67775dc",
+      "encoding": "gzip",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-isotropic-phase2/scene.json.gz",
+      "run_relative_path": "major-isotropic-phase2/scene.json",
+      "sha256": "f1d23022f9f0be077f5832385bbd561ae1ead0ff2a26ba6629bcb2f5fc58f22f",
+      "stored_bytes": 3257
+    },
+    {
+      "decoded_bytes": 7115,
+      "decoded_sha256": "0514d06c32bfbb8006c032b8d9301547d0b44c7195449df3faf61cd344d8a718",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-isotropic-phase2/source.npz",
+      "run_relative_path": "major-isotropic-phase2/source.npz",
+      "sha256": "0514d06c32bfbb8006c032b8d9301547d0b44c7195449df3faf61cd344d8a718",
+      "stored_bytes": 7115
+    },
+    {
+      "decoded_bytes": 1031,
+      "decoded_sha256": "623654d70177fc49fefd4245691fa0f31005e7c203627517ef325c59c651a979",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-isotropic-phase2/source.png",
+      "run_relative_path": "major-isotropic-phase2/source.png",
+      "sha256": "623654d70177fc49fefd4245691fa0f31005e7c203627517ef325c59c651a979",
+      "stored_bytes": 1031
+    },
+    {
+      "decoded_bytes": 11030,
+      "decoded_sha256": "d98b1487f4a861d11f48986045894a41633e1bb5584e990663268ae95e68cd99",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-isotropic-phase3/q-1.npz",
+      "run_relative_path": "major-isotropic-phase3/q-1.npz",
+      "sha256": "d98b1487f4a861d11f48986045894a41633e1bb5584e990663268ae95e68cd99",
+      "stored_bytes": 11030
+    },
+    {
+      "decoded_bytes": 15614,
+      "decoded_sha256": "d3a33d71ea6939fd0e7c73cfffdee63238b39cbe7a5d637ca4d3048b756b44b1",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-isotropic-phase3/q-1p25.npz",
+      "run_relative_path": "major-isotropic-phase3/q-1p25.npz",
+      "sha256": "d3a33d71ea6939fd0e7c73cfffdee63238b39cbe7a5d637ca4d3048b756b44b1",
+      "stored_bytes": 15614
+    },
+    {
+      "decoded_bytes": 13447,
+      "decoded_sha256": "008221ccdbff98c3cb38657db992f82a94d733b138aa50a20f198bff1cae3857",
+      "encoding": "gzip",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-isotropic-phase3/scene.json.gz",
+      "run_relative_path": "major-isotropic-phase3/scene.json",
+      "sha256": "0bade783b2ac3821a9b2eb4dcefe4b7eff632d3a82c0e4424066a57ae7a41415",
+      "stored_bytes": 3250
+    },
+    {
+      "decoded_bytes": 7059,
+      "decoded_sha256": "ea5f5bec95a7afea38bea9b4d03d137bfeb15dcca40179943a1233d8d30e7a2d",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-isotropic-phase3/source.npz",
+      "run_relative_path": "major-isotropic-phase3/source.npz",
+      "sha256": "ea5f5bec95a7afea38bea9b4d03d137bfeb15dcca40179943a1233d8d30e7a2d",
+      "stored_bytes": 7059
+    },
+    {
+      "decoded_bytes": 1008,
+      "decoded_sha256": "37ed56aeec319beea2370e19b72886cb2307b7ac2ff973ac5ad401460774d1f8",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/major-isotropic-phase3/source.png",
+      "run_relative_path": "major-isotropic-phase3/source.png",
+      "sha256": "37ed56aeec319beea2370e19b72886cb2307b7ac2ff973ac5ad401460774d1f8",
+      "stored_bytes": 1008
+    },
+    {
+      "decoded_bytes": 7839,
+      "decoded_sha256": "c525864ba5e406e2530546ab1f07b9489dcfa91595d94238692b684da84f5c94",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-directional-phase0/q-1.npz",
+      "run_relative_path": "minor-rotated-directional-phase0/q-1.npz",
+      "sha256": "c525864ba5e406e2530546ab1f07b9489dcfa91595d94238692b684da84f5c94",
+      "stored_bytes": 7839
+    },
+    {
+      "decoded_bytes": 11118,
+      "decoded_sha256": "bf947358b93ebcdbbdc2de247b918f853eabf47ca45b21bbea5b532c5072e312",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-directional-phase0/q-1p25.npz",
+      "run_relative_path": "minor-rotated-directional-phase0/q-1p25.npz",
+      "sha256": "bf947358b93ebcdbbdc2de247b918f853eabf47ca45b21bbea5b532c5072e312",
+      "stored_bytes": 11118
+    },
+    {
+      "decoded_bytes": 13480,
+      "decoded_sha256": "afba4cc9119411c9e87ec7404da518afe00d371cd6f219d0c0f4be11270b0582",
+      "encoding": "gzip",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-directional-phase0/scene.json.gz",
+      "run_relative_path": "minor-rotated-directional-phase0/scene.json",
+      "sha256": "2ff502e4c89f738e8a9431971d404f82956dbecc925ca7c3884b75a43b0dac93",
+      "stored_bytes": 3275
+    },
+    {
+      "decoded_bytes": 6954,
+      "decoded_sha256": "f527fe77b7879664d78a65473b291318a6fb2bc68d225ce14b32d1d82c1d69f8",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-directional-phase0/source.npz",
+      "run_relative_path": "minor-rotated-directional-phase0/source.npz",
+      "sha256": "f527fe77b7879664d78a65473b291318a6fb2bc68d225ce14b32d1d82c1d69f8",
+      "stored_bytes": 6954
+    },
+    {
+      "decoded_bytes": 592,
+      "decoded_sha256": "26cc9a1d9deb691f09fd5f845fa9846dfeb61e579c955a23acde7f4ed8778620",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-directional-phase0/source.png",
+      "run_relative_path": "minor-rotated-directional-phase0/source.png",
+      "sha256": "26cc9a1d9deb691f09fd5f845fa9846dfeb61e579c955a23acde7f4ed8778620",
+      "stored_bytes": 592
+    },
+    {
+      "decoded_bytes": 7762,
+      "decoded_sha256": "7e18ab6258959a800ed690e7140f45a69647e58d768639de0d79eaf4af44f1dd",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-directional-phase1/q-1.npz",
+      "run_relative_path": "minor-rotated-directional-phase1/q-1.npz",
+      "sha256": "7e18ab6258959a800ed690e7140f45a69647e58d768639de0d79eaf4af44f1dd",
+      "stored_bytes": 7762
+    },
+    {
+      "decoded_bytes": 11029,
+      "decoded_sha256": "b262e59cd56d821227ee140a91b4935ef0844c22df39a851a215228f848eafbc",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-directional-phase1/q-1p25.npz",
+      "run_relative_path": "minor-rotated-directional-phase1/q-1p25.npz",
+      "sha256": "b262e59cd56d821227ee140a91b4935ef0844c22df39a851a215228f848eafbc",
+      "stored_bytes": 11029
+    },
+    {
+      "decoded_bytes": 13481,
+      "decoded_sha256": "6fe2913e98431b2e9e9cba7a63399fb0c0873f86a68cf03d47a70f56c4dcd57a",
+      "encoding": "gzip",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-directional-phase1/scene.json.gz",
+      "run_relative_path": "minor-rotated-directional-phase1/scene.json",
+      "sha256": "6ba4a42fd305ff7ebe5247bc3338c9aa318d1882600580d57bee43ca53c0d159",
+      "stored_bytes": 3291
+    },
+    {
+      "decoded_bytes": 6896,
+      "decoded_sha256": "87688c47e0c57f9c4640a8cfe0d33e2a757badaa89a599967c1ab8e341b144e3",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-directional-phase1/source.npz",
+      "run_relative_path": "minor-rotated-directional-phase1/source.npz",
+      "sha256": "87688c47e0c57f9c4640a8cfe0d33e2a757badaa89a599967c1ab8e341b144e3",
+      "stored_bytes": 6896
+    },
+    {
+      "decoded_bytes": 592,
+      "decoded_sha256": "db97a2e8690699bddde5cb27749c2c9ff9bbb72a7baa2742878c521cf51172df",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-directional-phase1/source.png",
+      "run_relative_path": "minor-rotated-directional-phase1/source.png",
+      "sha256": "db97a2e8690699bddde5cb27749c2c9ff9bbb72a7baa2742878c521cf51172df",
+      "stored_bytes": 592
+    },
+    {
+      "decoded_bytes": 7865,
+      "decoded_sha256": "640d237e851362de364f2a05f04851883e78bb02ad7817ac4a4658af5f9b1b49",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-directional-phase2/q-1.npz",
+      "run_relative_path": "minor-rotated-directional-phase2/q-1.npz",
+      "sha256": "640d237e851362de364f2a05f04851883e78bb02ad7817ac4a4658af5f9b1b49",
+      "stored_bytes": 7865
+    },
+    {
+      "decoded_bytes": 11141,
+      "decoded_sha256": "daeb0bb60cb4912ed8f69a27a5a409e3b3261948c2d2f06c551354dbf4a6d1a7",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-directional-phase2/q-1p25.npz",
+      "run_relative_path": "minor-rotated-directional-phase2/q-1p25.npz",
+      "sha256": "daeb0bb60cb4912ed8f69a27a5a409e3b3261948c2d2f06c551354dbf4a6d1a7",
+      "stored_bytes": 11141
+    },
+    {
+      "decoded_bytes": 13481,
+      "decoded_sha256": "35d3cc3b342d3d4c8dc0e70fcbfe6c27443bab89e41eb3558aff83df0378708a",
+      "encoding": "gzip",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-directional-phase2/scene.json.gz",
+      "run_relative_path": "minor-rotated-directional-phase2/scene.json",
+      "sha256": "0c65c9cf81f1fd9c56257f0becc602efab2f4ddf17869c94f782dd4a717c47ab",
+      "stored_bytes": 3290
+    },
+    {
+      "decoded_bytes": 7016,
+      "decoded_sha256": "49ae80c74fc41dd191c597d34ad8c2fc699dcb179324e407af4e2cf60ce9a87a",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-directional-phase2/source.npz",
+      "run_relative_path": "minor-rotated-directional-phase2/source.npz",
+      "sha256": "49ae80c74fc41dd191c597d34ad8c2fc699dcb179324e407af4e2cf60ce9a87a",
+      "stored_bytes": 7016
+    },
+    {
+      "decoded_bytes": 591,
+      "decoded_sha256": "d32937b70b5f821ffbbfe4b730ab539cf3b33ec718d1b59f2442e0489b468510",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-directional-phase2/source.png",
+      "run_relative_path": "minor-rotated-directional-phase2/source.png",
+      "sha256": "d32937b70b5f821ffbbfe4b730ab539cf3b33ec718d1b59f2442e0489b468510",
+      "stored_bytes": 591
+    },
+    {
+      "decoded_bytes": 7813,
+      "decoded_sha256": "6664b3fb4813d6e31f116b6d45083fee962e3156059e05742831e42177843fff",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-directional-phase3/q-1.npz",
+      "run_relative_path": "minor-rotated-directional-phase3/q-1.npz",
+      "sha256": "6664b3fb4813d6e31f116b6d45083fee962e3156059e05742831e42177843fff",
+      "stored_bytes": 7813
+    },
+    {
+      "decoded_bytes": 11107,
+      "decoded_sha256": "fa0d5d9c57edde4b885d97b42311356bb2ab88b74418e98296711531fc528683",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-directional-phase3/q-1p25.npz",
+      "run_relative_path": "minor-rotated-directional-phase3/q-1p25.npz",
+      "sha256": "fa0d5d9c57edde4b885d97b42311356bb2ab88b74418e98296711531fc528683",
+      "stored_bytes": 11107
+    },
+    {
+      "decoded_bytes": 13471,
+      "decoded_sha256": "18df522c34e7268ba044d469f2bca32a8225ffd2dc4351ff5629b800e0c58056",
+      "encoding": "gzip",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-directional-phase3/scene.json.gz",
+      "run_relative_path": "minor-rotated-directional-phase3/scene.json",
+      "sha256": "ce3b36c7fc5ad9aa3b504d39d6fb163c62c37a3467884f0833fd63eb1e72b0aa",
+      "stored_bytes": 3290
+    },
+    {
+      "decoded_bytes": 6975,
+      "decoded_sha256": "12df0e921b970d97c9591eb3520a9abb3a8c662c2c74dda70e6b8ed0f6d1bba2",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-directional-phase3/source.npz",
+      "run_relative_path": "minor-rotated-directional-phase3/source.npz",
+      "sha256": "12df0e921b970d97c9591eb3520a9abb3a8c662c2c74dda70e6b8ed0f6d1bba2",
+      "stored_bytes": 6975
+    },
+    {
+      "decoded_bytes": 582,
+      "decoded_sha256": "7bb3e9ce5c584198d89e60228f2bf40ac9a326b51029ea125c647e5a24a97de2",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-directional-phase3/source.png",
+      "run_relative_path": "minor-rotated-directional-phase3/source.png",
+      "sha256": "7bb3e9ce5c584198d89e60228f2bf40ac9a326b51029ea125c647e5a24a97de2",
+      "stored_bytes": 582
+    },
+    {
+      "decoded_bytes": 5371,
+      "decoded_sha256": "b6f160055bb7b1938380eeaff79854ed3d0d790601ab8a136d8505e910e7f054",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-isotropic-phase0/q-1.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase0/q-1.npz",
+      "sha256": "b6f160055bb7b1938380eeaff79854ed3d0d790601ab8a136d8505e910e7f054",
+      "stored_bytes": 5371
+    },
+    {
+      "decoded_bytes": 7322,
+      "decoded_sha256": "e57adad8cd47019d8cc2365ef2b38b717fefd275bc342520d83665bcc4463311",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-isotropic-phase0/q-1p25.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase0/q-1p25.npz",
+      "sha256": "e57adad8cd47019d8cc2365ef2b38b717fefd275bc342520d83665bcc4463311",
+      "stored_bytes": 7322
+    },
+    {
+      "decoded_bytes": 13476,
+      "decoded_sha256": "ba1911dcc28b906b24b4490249c031a68f5afb42811eb9043e4819ded28d0238",
+      "encoding": "gzip",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-isotropic-phase0/scene.json.gz",
+      "run_relative_path": "minor-rotated-isotropic-phase0/scene.json",
+      "sha256": "8b5030a16f1f86ca170114aa5985dce38e86dd54d1871c6d40cf8352c090d425",
+      "stored_bytes": 3295
+    },
+    {
+      "decoded_bytes": 4345,
+      "decoded_sha256": "0fb44b33808eb8cad00a2388c0e48ad7c072d847385ca1282ee6d24aacb4670e",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-isotropic-phase0/source.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase0/source.npz",
+      "sha256": "0fb44b33808eb8cad00a2388c0e48ad7c072d847385ca1282ee6d24aacb4670e",
+      "stored_bytes": 4345
+    },
+    {
+      "decoded_bytes": 625,
+      "decoded_sha256": "0a3e0daa0c93bb095074a9ba070c906ea83f4d4f15ab250aa0f2d4f900890fee",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-isotropic-phase0/source.png",
+      "run_relative_path": "minor-rotated-isotropic-phase0/source.png",
+      "sha256": "0a3e0daa0c93bb095074a9ba070c906ea83f4d4f15ab250aa0f2d4f900890fee",
+      "stored_bytes": 625
+    },
+    {
+      "decoded_bytes": 5374,
+      "decoded_sha256": "4b3524abe0cc6adcad8a185a7b355f28c5b44e3be23642350e8f3eaace841d29",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-isotropic-phase1/q-1.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase1/q-1.npz",
+      "sha256": "4b3524abe0cc6adcad8a185a7b355f28c5b44e3be23642350e8f3eaace841d29",
+      "stored_bytes": 5374
+    },
+    {
+      "decoded_bytes": 7320,
+      "decoded_sha256": "f2e14e94809349f448e003236142e6683912ab215574b2cf50312eee499ef7a4",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-isotropic-phase1/q-1p25.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase1/q-1p25.npz",
+      "sha256": "f2e14e94809349f448e003236142e6683912ab215574b2cf50312eee499ef7a4",
+      "stored_bytes": 7320
+    },
+    {
+      "decoded_bytes": 13480,
+      "decoded_sha256": "6424845f83e4eddd1139f442412b2eeb2d2f9e643aa210cb6c88a801af9ddd7a",
+      "encoding": "gzip",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-isotropic-phase1/scene.json.gz",
+      "run_relative_path": "minor-rotated-isotropic-phase1/scene.json",
+      "sha256": "4891907432ae610d10a173b53dd55c79ed4d4a159a8ebf0cd9fc2df8987874f1",
+      "stored_bytes": 3285
+    },
+    {
+      "decoded_bytes": 4308,
+      "decoded_sha256": "3ff2cd01ee0e4f44f1585cbb538ae7824c70b224094d984ebc0629adc6b0cad1",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-isotropic-phase1/source.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase1/source.npz",
+      "sha256": "3ff2cd01ee0e4f44f1585cbb538ae7824c70b224094d984ebc0629adc6b0cad1",
+      "stored_bytes": 4308
+    },
+    {
+      "decoded_bytes": 612,
+      "decoded_sha256": "fe3be0364e57ebb7433f1a19dbdde3a4d3eb5e11a8920fb6499800e3a25e2cea",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-isotropic-phase1/source.png",
+      "run_relative_path": "minor-rotated-isotropic-phase1/source.png",
+      "sha256": "fe3be0364e57ebb7433f1a19dbdde3a4d3eb5e11a8920fb6499800e3a25e2cea",
+      "stored_bytes": 612
+    },
+    {
+      "decoded_bytes": 5373,
+      "decoded_sha256": "956c3290a1e98531bee2e5e58eb3e32047ef35866be1ab5d3c185332e981ce47",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-isotropic-phase2/q-1.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase2/q-1.npz",
+      "sha256": "956c3290a1e98531bee2e5e58eb3e32047ef35866be1ab5d3c185332e981ce47",
+      "stored_bytes": 5373
+    },
+    {
+      "decoded_bytes": 7310,
+      "decoded_sha256": "354ddeabb4f244f8e5fdc54f1af50246088376b454adffbe4f6754463a07f00b",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-isotropic-phase2/q-1p25.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase2/q-1p25.npz",
+      "sha256": "354ddeabb4f244f8e5fdc54f1af50246088376b454adffbe4f6754463a07f00b",
+      "stored_bytes": 7310
+    },
+    {
+      "decoded_bytes": 13480,
+      "decoded_sha256": "1c1c27625126ff7108e56f00d6db643a8e8f84040ef69b6533ccf67b6d6ac2f6",
+      "encoding": "gzip",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-isotropic-phase2/scene.json.gz",
+      "run_relative_path": "minor-rotated-isotropic-phase2/scene.json",
+      "sha256": "b4b772883dafe14dc88d069373f0625156d990611cd640c21e6c6166d2ad3f55",
+      "stored_bytes": 3287
+    },
+    {
+      "decoded_bytes": 4337,
+      "decoded_sha256": "de22ec668c2e707e2e963908718208434b83f8963b4ec69a3c459700819b4c41",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-isotropic-phase2/source.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase2/source.npz",
+      "sha256": "de22ec668c2e707e2e963908718208434b83f8963b4ec69a3c459700819b4c41",
+      "stored_bytes": 4337
+    },
+    {
+      "decoded_bytes": 621,
+      "decoded_sha256": "cf71cddd26156301dffb27c8c7a5bfa38af5fa15d1605bdbce2961c073c28a6a",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-isotropic-phase2/source.png",
+      "run_relative_path": "minor-rotated-isotropic-phase2/source.png",
+      "sha256": "cf71cddd26156301dffb27c8c7a5bfa38af5fa15d1605bdbce2961c073c28a6a",
+      "stored_bytes": 621
+    },
+    {
+      "decoded_bytes": 5369,
+      "decoded_sha256": "1b8be1c634ec6b3078947a477ee57047c40a2cd419dbe1d8d4ff4c8661aef66d",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-isotropic-phase3/q-1.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase3/q-1.npz",
+      "sha256": "1b8be1c634ec6b3078947a477ee57047c40a2cd419dbe1d8d4ff4c8661aef66d",
+      "stored_bytes": 5369
+    },
+    {
+      "decoded_bytes": 7291,
+      "decoded_sha256": "077f9035279abf1b1f3ca82f50281b11aee511d7c81760f941e5471ba99ea90d",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-isotropic-phase3/q-1p25.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase3/q-1p25.npz",
+      "sha256": "077f9035279abf1b1f3ca82f50281b11aee511d7c81760f941e5471ba99ea90d",
+      "stored_bytes": 7291
+    },
+    {
+      "decoded_bytes": 13475,
+      "decoded_sha256": "db57fc312503ad4f212e6cce93aeec2b4b89e61a61865a4ce8615cd75405c389",
+      "encoding": "gzip",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-isotropic-phase3/scene.json.gz",
+      "run_relative_path": "minor-rotated-isotropic-phase3/scene.json",
+      "sha256": "bbb217d3cc337edd41fe30ec3b166f0ea3e97c997c6f74ee3353833acea7fe98",
+      "stored_bytes": 3287
+    },
+    {
+      "decoded_bytes": 4302,
+      "decoded_sha256": "4cb13abeb32f57587fe1e62384d5b477dd970d490347b663b0efa3d306ceb8c5",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-isotropic-phase3/source.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase3/source.npz",
+      "sha256": "4cb13abeb32f57587fe1e62384d5b477dd970d490347b663b0efa3d306ceb8c5",
+      "stored_bytes": 4302
+    },
+    {
+      "decoded_bytes": 625,
+      "decoded_sha256": "0a4386f253cc116e1f451864fdbef0aa18ceb00973382abd547dda1c8506ae27",
+      "encoding": "identity",
+      "kind": "capture_file",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/captures/minor-rotated-isotropic-phase3/source.png",
+      "run_relative_path": "minor-rotated-isotropic-phase3/source.png",
+      "sha256": "0a4386f253cc116e1f451864fdbef0aa18ceb00973382abd547dda1c8506ae27",
+      "stored_bytes": 625
+    },
+    {
+      "decoded_bytes": 1196,
+      "decoded_sha256": "032f265281cb1ec6612831b4e7aeff4416a57f154f59a012446e0ce3bc21feaf",
+      "encoding": "gzip",
+      "kind": "progress",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/continuation/progress.jsonl.gz",
+      "run_relative_path": "progress.jsonl",
+      "sha256": "8734cd591ce6d89a43eb6da78fae101af0ebb257da3a4a4240ebab2cef6aed3a",
+      "stored_bytes": 192
+    },
+    {
+      "decoded_bytes": 559883,
+      "decoded_sha256": "1bad130ec886b7dc2797425d3d755e42e0047941191101e285d422951f999baa",
+      "encoding": "identity",
+      "kind": "recorded_source_snapshot",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/recorded-source.zip",
+      "sha256": "1bad130ec886b7dc2797425d3d755e42e0047941191101e285d422951f999baa",
+      "stored_bytes": 559883
+    },
+    {
+      "decoded_bytes": 110887,
+      "decoded_sha256": "c44c71f74156915e53cf69a7bdf9e17745ff41a31e01fb97e2925b81c9645d3f",
+      "encoding": "gzip",
+      "kind": "saved_review_evidence",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/review/artifact-audit-first.json.gz",
+      "sha256": "28295d79b4f2600c2dfc6202c7c85d98f9b7acc49eebd74d939fe6d80e67d7bf",
+      "stored_bytes": 2137
+    },
+    {
+      "decoded_bytes": 18920,
+      "decoded_sha256": "5bc8cf2280410d06093a0fe173aee6f356240189e3eae6341ba3cf2324f1f096",
+      "encoding": "gzip",
+      "kind": "saved_review_evidence",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/review/artifact-audit.py.txt.gz",
+      "sha256": "d5b8c8aaf085cdbbea93dd71ec46b59cf9610cb0d73d560f45647713c053bd81",
+      "stored_bytes": 5997
+    },
+    {
+      "decoded_bytes": 601,
+      "decoded_sha256": "110ea1ad0ac23714fbf6ff1b36de2d94be036d3fababfc95123caa6a7f81f2d3",
+      "encoding": "gzip",
+      "kind": "saved_review_evidence",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/review/bootstrap-original-inventory.json.gz",
+      "sha256": "0be2370cfb5281693ae6bcec3f44f00d91ed0e92e09e418aa3311baecde6fd4c",
+      "stored_bytes": 258
+    },
+    {
+      "decoded_bytes": 1691,
+      "decoded_sha256": "c63af9ec123cfcb4358626041297717dcc6cd5768cfb1229e1b932204e8b4211",
+      "encoding": "gzip",
+      "kind": "saved_review_evidence",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/review/bootstrap-repair-static.json.gz",
+      "sha256": "9cb9bd3b73fda31846b9c0cf3c34dc3edd293abd3f2593948fcd3ba146593690",
+      "stored_bytes": 638
+    },
+    {
+      "decoded_bytes": 1525,
+      "decoded_sha256": "af93d3471fbcbfdfbd652055ee2bc828b5e9f05a565c99bba0bf78891e70dc96",
+      "encoding": "gzip",
+      "kind": "saved_review_evidence",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/review/continuation-contracts.json.gz",
+      "sha256": "d7af90ddb8cd01bb24c403bb18a5ba1f1b402c871727713f907964888b51efb9",
+      "stored_bytes": 383
+    },
+    {
+      "decoded_bytes": 3787,
+      "decoded_sha256": "1ceff9e8aa3f54304a4fe1d5a5029bd15f82c3d9661633156236343056e0f224",
+      "encoding": "gzip",
+      "kind": "saved_review_evidence",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/review/continuation-contracts.py.txt.gz",
+      "sha256": "82e3aecb3ca0c452761561763acf60bec82d01ee2918a7dab3d7e10397d28d48",
+      "stored_bytes": 1693
+    },
+    {
+      "decoded_bytes": 2335,
+      "decoded_sha256": "402e15d6fed151e124b30b2751f093d9c2b76b5444c257500040ae0221438f2b",
+      "encoding": "gzip",
+      "kind": "saved_review_evidence",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/review/launcher.py.txt.gz",
+      "sha256": "b45ea8db35ab9a067b2f022c9ee7c2ff9057109b8f26d86fdfef8050a82a8098",
+      "stored_bytes": 1069
+    },
+    {
+      "decoded_bytes": 154748,
+      "decoded_sha256": "05d5601768caf1e6094733011b59107756f11288c9c3d1b52a32b09214f1bbca",
+      "encoding": "gzip",
+      "kind": "saved_review_evidence",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/review/math-audit.json.gz",
+      "sha256": "bab5e4979875ffcd66cd6de24ab908c47ac40b0c67a9c4871bd6cf8298d381c2",
+      "stored_bytes": 13090
+    },
+    {
+      "decoded_bytes": 27494,
+      "decoded_sha256": "ccef295733b3da08e66b93dd15ac71e0d03fc3781d07e59f135c125bf3f60292",
+      "encoding": "gzip",
+      "kind": "saved_review_evidence",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/review/math-audit.py.txt.gz",
+      "sha256": "cbe549105fdd932a6f6095fc00483a25db6c6e709e1d4904415f6635f26c98af",
+      "stored_bytes": 7495
+    },
+    {
+      "decoded_bytes": 1246,
+      "decoded_sha256": "bb77907b2554efa27c9960a1ef154d6060265b1407ea34eb7dee92fda974538f",
+      "encoding": "gzip",
+      "kind": "saved_review_evidence",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/review/normalization-contracts.json.gz",
+      "sha256": "aca504e4084e165a968f533fe23fccd9d5b5fbab8cc35609838426855efef0cc",
+      "stored_bytes": 368
+    },
+    {
+      "decoded_bytes": 3403,
+      "decoded_sha256": "c7bbe2aad024e25109c37b67565f8690c92fd776507683961915464381659217",
+      "encoding": "gzip",
+      "kind": "saved_review_evidence",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/review/normalization-contracts.py.txt.gz",
+      "sha256": "3ddc40d8ae1123f8b12c2c3e7a9deedcefabf263984e98c4da83ba8d100c3ad9",
+      "stored_bytes": 1511
+    },
+    {
+      "decoded_bytes": 81021,
+      "decoded_sha256": "c2c1901b3ceb69bb6074efd9de408029683ae083365e8bd547e7a9c9b90336ac",
+      "encoding": "gzip",
+      "kind": "saved_review_evidence",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/review/preflight.json.gz",
+      "sha256": "578bb07dc3b65562a8dd73a6be704db1a97729c3ed81b9664f73ea0cd25a4683",
+      "stored_bytes": 29640
+    },
+    {
+      "decoded_bytes": 1712,
+      "decoded_sha256": "47dcac0cf72a92806ad4ef76f60ff489a11aa242b70b226cedc3dbc4d058ab63",
+      "encoding": "gzip",
+      "kind": "saved_review_evidence",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/review/root-saved-summary.json.gz",
+      "sha256": "a301e576ff8c89935e0f20538f594896104938dbfddab47c2217a7361cb7baf6",
+      "stored_bytes": 626
+    },
+    {
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "kind": "saved_review_evidence",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/review/stderr.txt.gz",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "stored_bytes": 20
+    },
+    {
+      "decoded_bytes": 1402,
+      "decoded_sha256": "49e38d8608fdd3031f5123c0eb8cee2b6260f1676edb5502fdaaf10691e77d84",
+      "encoding": "gzip",
+      "kind": "saved_review_evidence",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/review/stdout.txt.gz",
+      "sha256": "49a8589a190b9f9922b54755bdade2f23013e7bc6d1b664f4cf1b2a8a4acaa5c",
+      "stored_bytes": 383
+    },
+    {
+      "decoded_bytes": 161332,
+      "decoded_sha256": "39eca855ba4e8a373a9b21737415acca8fc83fd20beb3fab216602bc839b40f4",
+      "encoding": "gzip",
+      "kind": "saved_review_evidence",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/review/terminal.json.gz",
+      "sha256": "99a50cf43767d30c89ea2d920539b44113784b824a84d1b067952ac9757445eb",
+      "stored_bytes": 58539
+    },
+    {
+      "decoded_bytes": 121160,
+      "decoded_sha256": "9871c1acbd72e3381ba7c186e92aa524ea80fb6c3166cad91ee9aa02fa9a706b",
+      "encoding": "gzip",
+      "kind": "saved_review_evidence",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/review/ux-audit.json.gz",
+      "sha256": "76b4978af8bb9f21d065817bcc417313dad9d067cdc77fdd0c32140ff84f7890",
+      "stored_bytes": 5770
+    },
+    {
+      "decoded_bytes": 21421,
+      "decoded_sha256": "9ea0ee71c448962c73ca464d34de6933265cfe43488a98adcdc0209f3a3a1474",
+      "encoding": "gzip",
+      "kind": "saved_review_evidence",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/review/ux-audit.py.txt.gz",
+      "sha256": "56b59663b1deb202691c4a5096453c2f67704ed6dcd2667392cf5d5f7a10ce99",
+      "stored_bytes": 6497
+    },
+    {
+      "decoded_bytes": 14326874,
+      "decoded_sha256": "90a7d6db7f9555c3f06c22b269897e72b50a4f9453eb5f1952acc3e5b9631f6b",
+      "encoding": "gzip",
+      "kind": "derived_native_scalar_report",
+      "path": "studies/results/finite-acquisition-operator-v1-normalized.json.gz",
+      "sha256": "bcb9108d7ad3e910ffd25fe87cf9d25d05d9ccab11d816ecc0154a5c5400a180",
+      "stored_bytes": 2646371
+    },
+    {
+      "decoded_bytes": 14242714,
+      "decoded_sha256": "15df34975e0d2c56325a8e4efbea07145a6f0958133e4413a1b36f2ae5a29078",
+      "encoding": "gzip",
+      "kind": "complete_original_continuation_report",
+      "path": "studies/results/finite-acquisition-operator-v1-raw.json.gz",
+      "run_relative_path": "report.json",
+      "sha256": "f84553e230e1d0515a47903cc9a302fbdeac3d008e18d79c155a8a421ef5056b",
+      "stored_bytes": 2649699
+    },
+    {
+      "decoded_bytes": 18920,
+      "decoded_sha256": "5bc8cf2280410d06093a0fe173aee6f356240189e3eae6341ba3cf2324f1f096",
+      "encoding": "identity",
+      "kind": "source_or_plan",
+      "path": "studies/verification/finite-acquisition-artifact-audit-v1.py",
+      "sha256": "5bc8cf2280410d06093a0fe173aee6f356240189e3eae6341ba3cf2324f1f096",
+      "stored_bytes": 18920
+    },
+    {
+      "decoded_bytes": 17817,
+      "decoded_sha256": "ea83c6bb2ac18b992ca87d29e7b8b35f6972d6c20d058fb0dda83687a5daad7f",
+      "encoding": "identity",
+      "kind": "source_or_plan",
+      "path": "studies/verification/finite-acquisition-controls-v1.py",
+      "sha256": "ea83c6bb2ac18b992ca87d29e7b8b35f6972d6c20d058fb0dda83687a5daad7f",
+      "stored_bytes": 17817
+    },
+    {
+      "decoded_bytes": 5561,
+      "decoded_sha256": "df22a817fbd48f0bd825891d703ee3caaa1a8496757824ac7a1a9c34d5106858",
+      "encoding": "identity",
+      "kind": "source_or_plan",
+      "path": "studies/verification/finite-acquisition-normalize-v1.py",
+      "sha256": "df22a817fbd48f0bd825891d703ee3caaa1a8496757824ac7a1a9c34d5106858",
+      "stored_bytes": 5561
+    },
+    {
+      "decoded_bytes": 9547,
+      "decoded_sha256": "0f80af3847cb21ed153c2e495a6076aa17cb27ea177ee8613ef82746c86bad8d",
+      "encoding": "identity",
+      "kind": "source_or_plan",
+      "path": "studies/verification/finite-acquisition-operator-v1-continuation-v1.py",
+      "sha256": "0f80af3847cb21ed153c2e495a6076aa17cb27ea177ee8613ef82746c86bad8d",
+      "stored_bytes": 9547
+    },
+    {
+      "decoded_bytes": 32328,
+      "decoded_sha256": "0e5d6f5ddcb8753e61d871232d5ce5b0acaa82bbc5be4625b3280cc385fe21ab",
+      "encoding": "identity",
+      "kind": "source_or_plan",
+      "path": "studies/verification/finite-acquisition-operator-v1.py",
+      "sha256": "0e5d6f5ddcb8753e61d871232d5ce5b0acaa82bbc5be4625b3280cc385fe21ab",
+      "stored_bytes": 32328
+    },
+    {
+      "decoded_bytes": 23209,
+      "decoded_sha256": "ce46423ede03885fcd702204abe97653a86c77a2ebc86999605d8d733c820a51",
+      "encoding": "identity",
+      "kind": "source_or_plan",
+      "path": "studies/verification/finite-acquisition-stages-v1.py",
+      "sha256": "ce46423ede03885fcd702204abe97653a86c77a2ebc86999605d8d733c820a51",
+      "stored_bytes": 23209
+    }
+  ],
+  "audits": {
+    "artifact": {
+      "artifact_failures": 0,
+      "checks": 1294,
+      "raw_scalar_contract_passed": false
+    },
+    "continuation_contracts": {
+      "checks": 19,
+      "failures": 0
+    },
+    "math": {
+      "checks": 148471,
+      "failures": 0,
+      "raw_scalar_contract_passed": false
+    },
+    "normalization_contracts": {
+      "checks": 15,
+      "failures": 0
+    },
+    "ux": {
+      "checks": 33100,
+      "failures": 320,
+      "raw_scalar_markers_are_all_failures": true
+    }
+  },
+  "continuation": {
+    "adequacy_cells": 128,
+    "adequacy_counts": {
+      "moment_gaussian/decoded_png": {
+        "compatible": 15,
+        "incompatible": 16,
+        "inconclusive": 1,
+        "numerical_unknown": 0
+      },
+      "moment_gaussian/unquantized": {
+        "compatible": 23,
+        "incompatible": 9,
+        "inconclusive": 0,
+        "numerical_unknown": 0
+      },
+      "nominal_gaussian/decoded_png": {
+        "compatible": 5,
+        "incompatible": 27,
+        "inconclusive": 0,
+        "numerical_unknown": 0
+      },
+      "nominal_gaussian/unquantized": {
+        "compatible": 7,
+        "incompatible": 24,
+        "inconclusive": 1,
+        "numerical_unknown": 0
+      }
+    },
+    "decoded_report_bytes": 14242714,
+    "decoded_report_sha256": "15df34975e0d2c56325a8e4efbea07145a6f0958133e4413a1b36f2ae5a29078",
+    "execution_declared_protocol_passed": true,
+    "exit_code": 0,
+    "forward_work_by_execution": {
+      "new": {
+        "calls": 64,
+        "completed_calls": 64,
+        "evaluations": 41806468,
+        "panels": 2406722,
+        "queries": 28224
+      },
+      "reused": {
+        "calls": 4,
+        "completed_calls": 4,
+        "evaluations": 41604,
+        "panels": 2316,
+        "queries": 24
+      }
+    },
+    "invalid_scalar_tags": {
+      "bool": 32,
+      "float32": 288
+    },
+    "raw_scalar_serialization_passed": false,
+    "row_count": 32,
+    "scene_count": 16,
+    "source_commit": "0714aadf04f6af2130bfe5af70d9dafbbe4677a7"
+  },
+  "first_failed_attempt": {
+    "captured_scenes": 0,
+    "decoded_report_sha256": "c5cef04f49969d607fb85c425bb6b1192e4ef60e373f6412eaf55cc664a2ffc0",
+    "exit_code": 1,
+    "source_commit": "4e111997d0495f695f9d6adbcf2741dea73c44b9",
+    "unknown_adequacy_cells": 128,
+    "unknown_rows": 32
+  },
+  "format": "pictures-to-cad-finite-acquisition-archive-index",
+  "limits": [
+    "Forward-only known-map synthetic study at supplied geometry/levels.",
+    "32 scale rows share16 source scenes; not32 independent captures.",
+    "No inverse/geometry recovery, physical optics, old-error attribution or automatic integration.",
+    "Raw serializer failed320scalar fields; original reports/failures retained and derived conversion separate."
+  ],
+  "normalization": {
+    "changed_fields": 320,
+    "decoded_report_sha256": "90a7d6db7f9555c3f06c22b269897e72b50a4f9453eb5f1952acc3e5b9631f6b",
+    "drops_rows_or_predictions": false,
+    "new_scientific_calls": 0,
+    "scientific_qualification_assigned": false
+  },
+  "recorded_source_snapshot": {
+    "path": "studies/fixtures/finite-acquisition-operator-v1/recorded-source.zip",
+    "scope": "Exact recorded runtime/input source bytes, read as data by the portable auditor. No Git metadata or private media.",
+    "source_commit": "0714aadf04f6af2130bfe5af70d9dafbbe4677a7",
+    "source_files": 87
+  },
+  "version": 1
+}

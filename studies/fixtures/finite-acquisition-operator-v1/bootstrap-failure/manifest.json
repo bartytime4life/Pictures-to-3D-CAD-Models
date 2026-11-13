@@ -1,0 +1,82 @@
+{
+  "artifacts": [
+    {
+      "decoded_bytes": 492192,
+      "decoded_sha256": "c5cef04f49969d607fb85c425bb6b1192e4ef60e373f6412eaf55cc664a2ffc0",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/bootstrap-failure/report.json.gz",
+      "sha256": "7901593e03d6e46175721ee0299b7df760a7c24a3994a9bbcaddf761ffa70e9d"
+    },
+    {
+      "decoded_bytes": 78539,
+      "decoded_sha256": "24932b67cebc003b7d79ec9e9e04b83ed96463c31c0015ea20752bf274ddef07",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/bootstrap-failure/preflight.json.gz",
+      "sha256": "9d4f07b74d70a7d16e16700d6d3f8e69d6e58772dea40caf83ec8cf7fa31a06d"
+    },
+    {
+      "decoded_bytes": 156534,
+      "decoded_sha256": "c65a1f7b9d599aec05332598f34d146129138bb88f25f7466ccb0824a53fd708",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/bootstrap-failure/terminal.json.gz",
+      "sha256": "45917eaa54ddb0bec50f21ecf26711fc772701d03702ad17bddd74b88fb23400"
+    },
+    {
+      "decoded_bytes": 1160,
+      "decoded_sha256": "8c4c8f1c6690f088df3f7b2df97063061811eea50acf145f69cb8bebcdd7acb4",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/bootstrap-failure/stdout.txt.gz",
+      "sha256": "1804584499b5dba96ade7c80fa63e1362fe9d9da6cfa88acae6e25fa4205ce05"
+    },
+    {
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/bootstrap-failure/stderr.txt.gz",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "decoded_bytes": 2220,
+      "decoded_sha256": "df337f3ee42f6977ca67a86240293b0c446fea0c4c7721728b4a1209d816cdb3",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/bootstrap-failure/launcher.py.txt.gz",
+      "sha256": "f14ba7a1f84013484680e611c6350a86e89582d57c7fe268b61ca521a7e00bb2"
+    },
+    {
+      "decoded_bytes": 4821,
+      "decoded_sha256": "170a74e6181e39b0fcf2b7d3c5afc61f2fcadbb8b0a4f0ae89d133b02b7de862",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/bootstrap-failure/routing-contracts-v1.py.txt.gz",
+      "sha256": "f13a3cd14b7707d23a43c37d54297a9c017e9ddee8dbab9e555981db9abfff83"
+    },
+    {
+      "decoded_bytes": 2685,
+      "decoded_sha256": "d559c38d01bd5ccf4fa8772e439d5a3041ee29c96e154cd584202a76090456df",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/bootstrap-failure/routing-contracts-v1.json.gz",
+      "sha256": "d15746867c11dfd6fc47c19cdbb7f0681ca132cb99927651feaba2a1a09300d2"
+    },
+    {
+      "decoded_bytes": 5274,
+      "decoded_sha256": "3f4aa1f862b64aaa284ddeb210e4d484771e030f003f5a34ce86d6377d2f5e36",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/bootstrap-failure/routing-contracts-v2.py.txt.gz",
+      "sha256": "4fc9be700a3561824a079668893c1bf65a93dda8709ef1c48d4204b173ada254"
+    },
+    {
+      "decoded_bytes": 3884,
+      "decoded_sha256": "5d6a0294bdc33b81b636fe45f7f1c594d8c7df6517510f345a6b8086a4b906ba",
+      "path": "studies/fixtures/finite-acquisition-operator-v1/bootstrap-failure/routing-contracts-v2.json.gz",
+      "sha256": "10183f017e1a2177126d0ab73a5ea22665f30cbe2ec561d45eed49f21091cc71"
+    },
+    {
+      "path": "studies/fixtures/finite-acquisition-operator-v1/bootstrap-failure/stage-helper-original.py.txt",
+      "sha256": "21a2f8389094a76bbd14a3d7a43933fe56a32da8296092ebdcdac2980220e72a"
+    },
+    {
+      "path": "studies/fixtures/finite-acquisition-operator-v1/bootstrap-failure/bootstrap-only.patch",
+      "sha256": "53f06234cb8848f3e023cc5115d879aae8ad343ce73a676ef4d74410f5b42b87"
+    }
+  ],
+  "captures_attempted_before_source_admission_failure": 16,
+  "captures_generated": 0,
+  "completed_control_calls": 4,
+  "completed_control_queries": 24,
+  "first_exit": 1,
+  "format": "pictures-to-cad-acquisition-first-bootstrap-failure",
+  "report_decoded_sha256": "c5cef04f49969d607fb85c425bb6b1192e4ef60e373f6412eaf55cc664a2ffc0",
+  "retained_rows": 32,
+  "retained_unknown_adequacy_cells": 128,
+  "source_commit": "4e111997d0495f695f9d6adbcf2741dea73c44b9"
+}

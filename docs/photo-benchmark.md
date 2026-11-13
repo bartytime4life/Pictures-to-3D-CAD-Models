@@ -1,6 +1,6 @@
 # Photo benchmark: your photos against your calipers
 
-Every accuracy figure in this repository so far comes from rendered photographs. `make photo-benchmark` measures the reference-sheet tracer on real ones: you photograph parts you have measured, list those measurements in a small file, and it reports how far each traced dimension lies from your calipers and how much it moves between repeat shots.
+The pipeline-error examples here use synthetic rendered photographs; no real-photo dimensional qualification is recorded. `make photo-benchmark` compares the reference-sheet tracer with your measurements: you photograph parts you have measured, list those measurements in a small file, and it reports how far each traced dimension lies from your calipers and how much it moves between repeat shots.
 
 **No result from real photos is recorded yet.** The example report below comes from rendered photos and shows the format only.
 
@@ -91,7 +91,7 @@ Put the photos in one folder with a `benchmark.json` beside them:
 | `caliper_uncertainty_mm` | A numeric comparison threshold above 0 and at most 5 mm; 0.03 if left out. Mean errors beyond it are printed in bold. Record separately whether your entered specification is an accuracy limit, absolute bound or standard uncertainty. The runner does not distinguish them or propagate a measurement uncertainty budget. |
 | `name` | A label for the report. Parts need different names. |
 | `photos` | File names or patterns, relative to the folder. |
-| `thickness_mm` | The part's thickness. With it, the trace removes the visible side walls, as **Build** does in the workbench. Leave it out for a part thin enough to ignore. |
+| `thickness_mm` | The part's measured thickness. It enables the modelled wall/parallax correction, as **Build** does in the workbench. Omitting it applies no entered-thickness correction; omission does not establish that the physical part is thin or has zero thickness. |
 | `light_part` | `true` for a light part on a dark sheet. |
 | `measured` | The measurements of step 2. |
 
@@ -124,7 +124,7 @@ A trace takes a few seconds per photo. The command exits with an error when the 
 
 ## 6. Read the report
 
-This report is the `--example` folder: three **rendered** photos of the test plate at 22°, 9° and 0° tilt, 4 mm thick, with its design dimensions as the caliper values.
+The following report is the PR #103 guide snapshot at `7f60d4f`: three **rendered** photos from the `--example` folder at 22°, 9° and 0° tilt, 4 mm thick, with design dimensions as the caliper values. It is not a fresh benchmark of later checkouts; bind any regenerated report to its own source revision.
 
 > 3 of 3 photos traced.
 > Dimensions: 48 of 48 requested compared; 0 unmatched in successful traces; 0 unavailable in failed traces.

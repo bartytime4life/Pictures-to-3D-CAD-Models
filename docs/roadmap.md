@@ -33,16 +33,29 @@ not qualify interactive adoption. The moment initializer's background-sensitive
 proposals are experimental.
 
 The [local residual-information replay](validation/finite-residual-information.md)
-is complete with a failed normal-angle control. It retains fixed-normal
+is complete with a failed normal-angle control. That diagnostic retains fixed-normal
 covariance sensitivities and ten bounded training-only steps; normal-aware steps
-remain withheld. The [finite-chord normal derivative](finite-residual-information.md#finite-chord-shape-derivative-a-derived-proposal)
+remain withheld there. The [finite-chord normal derivative](finite-residual-information.md#finite-chord-shape-derivative-a-derived-proposal)
 now has an analytic derivation for valid affine and projective maps. An [experimental implementation and independent study](validation/finite-normal-derivative.md)
 now retain one work-limited query and a compressed-map error-estimation
-limitation. Next, investigate determinant conditioning and global adaptive error
-allocation with separately bound evidence; preserve both original failed studies.
-Before optical inference, preserve acquisition samples, transforms, finite
-kernels and intermediate stage bytes in a new experiment; the current portable
-fields do not reconstruct their original acquisition chain completely.
+limitation. This checkout retains those V1 numerical limits. Preserve both
+original failed studies when reviewing subsequent corrections.
+Later [analytic-normal research](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/blob/0f1adbd391f7fa015f458cca60dcfe2a0e2dad9e/docs/validation/finite-analytic-normal-information.md)
+has its own recorded branch and does not qualify the current-main operator.
+
+The [known acquisition-operator study](finite-acquisition-operator.md) preserves
+complete stages from source `0714aad` for 16 new scenes and 32 output-scale
+records. Under the declared one-level criterion, nominal Gaussian PNG
+comparisons are 5 compatible/27 incompatible. Moment matching leaves 15
+compatible/16 incompatible/1 inconclusive PNG comparisons and 23 compatible/9
+incompatible unquantized comparisons. Its [full record](validation/finite-acquisition-operator.md)
+retains the pre-capture failure and 320 raw scalar-serialization failures;
+separate saved-only conversion changes no category. Prioritize an independently
+checked acquisition-aware forward model before fitting more parameters or
+qualifying an inverse for automatic refinement. The recorded-source archive
+does not retest current main's newer shadow-lighting model. Older processed-field
+archives still lack their complete original acquisition chain, so these new
+scenes cannot explain their historical errors.
 
 The [engineering model and verification plan](engineering-model.md) defines the 2.5D scope, camera-model assumptions, dimension equations and evidence needed through prototype qualification. The independent source-height check optionally compares a user-bounded measurement with a user-defined allowance; it reports within, outside or inconclusive without assigning a physical accuracy or confidence level.
 
@@ -54,13 +67,13 @@ Reference entry also includes an [endpoint-placement sensitivity explorer](refer
 | --- | --- | --- |
 | Additional measured feature checks | Compare reserved hole spacings or other dimensions beyond the current outside-height check | Unambiguous feature selection, preserved model revision, and clear separation of checks from values used to set scale |
 | Manual profile correction | Repair a small tracing error without retaking the photo | Undo/redo, topology validation, accessible editing, consistent export revisions |
-| Lens and perspective correction | Improve suitable off-axis captures | **Implemented for reference-sheet photos** (one radial coefficient, plane homography, top-face parallax; [method](reference-sheet.md)). Still needed: measured accuracy on reference parts and real phones, tangential/k₂ lens terms, edge levels for shadows that are not linear near an edge (linear paper slopes are now followed), a check of real cameras' tone mapping against the sRGB decoding, and a camera height for near-frontal photos of parts without round holes (qualifying off-center holes assumed round can now provide it when the search accepts an identifiable minimum; narrow walls can share a tone estimate when sufficient bands and the fit's acceptance checks support it) |
+| Lens and perspective correction | Improve suitable off-axis captures | **Implemented for reference-sheet photos** (one radial coefficient, plane homography, top-face parallax; [method](reference-sheet.md)). Still needed: measured accuracy on reference parts and real phones, tangential/k₂ lens terms, contact/sharp-shadow handling beyond the supported soft-shadow model, a check of real cameras' tone mapping against the sRGB decoding, and a camera height for near-frontal photos of parts without round holes (qualifying off-center holes assumed round can now provide it when the search accepts an identifiable minimum; narrow walls can share a tone estimate when sufficient bands and the fit's acceptance checks support it) |
 | Parametric CAD recipes | Make more of the construction editable downstream | A defined feature schema, stable regeneration, and version migration |
 | Analytic line and circle fitting | Replace suitable traced approximations with editable geometric features | **Implemented for reference-sheet photos**, with residual gates, an [initial-fit support check](validation/fit-support.md), a reported and optional snap list, and polyline fallback. The [canonical-join port](curved-joins.md) keeps accepted final arcs on their fitted circles and gives targeted recovery/refusal for unavailable joins. Further work: physical forward-model adequacy after Gaussian/design reconstruction, directional partial-arc and finite-shape models, per-item snap review, fitted geometry for split output and for photos without a sheet, validated per-dimension uncertainty |
 | Measured-photo benchmark | Quantify error on real parts | **The runner is implemented** (`make photo-benchmark`; [guide](photo-benchmark.md)): bounded global size correspondence, complete dimension-coverage totals, conditional per-dimension error, observed spread, and a two-term scale/edge diagnostic. Still needed: independently evaluated, calipered parts photographed with real phones under predeclared crossed conditions and reserved checks |
 | Directional blur and independent simulation | Expose model mismatch before applying unsupported corrections | **Implemented:** a separate synthetic radial inverse, production inverse-domain safeguards and test-only higher-order lens stress inputs; [record](validation/radial-inverse.md). The [30-case blur qualification](validation/directional-spread-qualification.md) found missed cases for its research diagnostic; the tracer fits a uniform directional blur with orientation-support and adequacy rules ([method](reference-sheet.md)). Supported nonparallel fillets use its covariance. Unresolved fits normally retain the traced boundary; invalid corrected rings may use a frozen initial fit as a line-only polygon after validity and whole-boundary tolerance checks, with an undetermined-radius notice and refusal otherwise ([recovery limits](anisotropic-corners.md#when-the-corrected-source-ring-is-invalid)). Needed: finite-shape adequacy, general free-arc and slot-cap models beyond their existing approximations, covariance uncertainty, spatially varying blur, sharpening, contact shadows and sharp-edged shadows under a wide blur (a soft shadow is fitted round the part; [method](reference-sheet.md)) and reserved real captures |
 | Blur frames after thickness correction | Keep known coordinate changes consistent with blur units | **Implemented:** uniform point scales transport scalar spread, covariance, free-curve correction, cap placement and line windows ([frame and support rules](blur-frames.md)). Mixed free curves, caps and scalar corners retain warned geometry approximations; mixed supplied-covariance nonparallel corners remain withheld. Needed: adequate mixed-frame and finite-shape models, independently checked critical radii and real-capture evidence |
-| Finite-material intensity fitting | Use the whole material region when an isolated arc model is inadequate | **Developer APIs only:** supplied-optics inverse and immutable measured-ring preparation ([contract](finite-shape-inverse.md)); the [paired replay](validation/finite-photo-intensity-v2.md) retains three all-target passes among twelve records. Needed: adequate optics/illumination and thickness frames, independently checked recovery, broader latency qualification after the [fixed affine performance pass](validation/finite-affine-batch.md), preserved refusals, and one accepted boundary through preview and exports |
+| Finite-material intensity fitting | Use the whole material region when an isolated arc model is inadequate | **Developer APIs only:** supplied-optics inverse and immutable measured-ring preparation ([contract](finite-shape-inverse.md)); the [paired replay](validation/finite-photo-intensity-v2.md) retains three all-target passes among twelve records. The [recorded-source acquisition audit](finite-acquisition-operator.md) finds second-moment Gaussian closure insufficient. Needed first: an independently checked acquisition-aware mean; then adequate optics/illumination and thickness frames, prospective recovery with reserved dimensions, broader latency qualification after the [fixed affine performance pass](validation/finite-affine-batch.md), preserved refusals, and one accepted boundary through preview and exports |
 | Measured local-model selection | Choose the smallest assistant that gives useful advice quickly | Installed artifact/license verification, repeatable latency results, and human review of fixed project-specific cases |
 | Opt-in vision guidance | Give capture advice based on the actual photograph | Explicit image-sharing control, a verified local vision model, resource bounds, and evaluation against visible evidence |
 | Assembly-aware splitting | Add useful joints or locating features between pieces | Measured clearance/kerf, topology checks, validated joinery, and explicit assembly assumptions |
@@ -75,11 +88,10 @@ Before expanding the scope, keep the current workflow dependable: verify support
 Initial circle/piece fits now have a source-support check. Benchmark correspondence and complete coverage accounting are now implemented.
 Supported nonparallel corners now use the empirical directional covariance;
 known uniform thickness maps also transport blur for the existing free-curve
-and cap approximations ([blur frames](blur-frames.md)). Prioritize remaining
-final forward-model adequacy, finite-shape interactions and mixed-frame
-policies, then
-independently specified model-mismatch experiments and repeatable ground-truth
-capture. The lens renderer is now separately implemented, but the shared
+and cap approximations ([blur frames](blur-frames.md)). Prioritize an
+acquisition-aware finite-material forward model, then independently checked
+inverse recovery and repeatable ground-truth capture. Finite-shape interactions
+and mixed-frame policies remain. The lens renderer is now separately implemented, but the shared
 physical assumptions and observed higher-order mismatch remain. Keep the
 directional-spread prototype out of product reporting; the tracer's own
 directional fit (reference-sheet §3) needs real shaken captures next.

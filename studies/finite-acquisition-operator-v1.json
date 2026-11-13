@@ -1,0 +1,343 @@
+{
+  "acquisition": {
+    "arc_vertices": 8193,
+    "coverage": "tests.synthetic.coverage of a new inscribed finite-D polygon, ppm1 x0=y0=0; float32 area fractions, no table/sheet-boundary signal",
+    "encoded_levels": {
+      "background": 230,
+      "material": 40
+    },
+    "encoding": "independent synthetic.linear_to_srgb, clip/rint uint8 grayscale RGB PNG, then backend.tone.linear_mix; no JPEG/noise/texture/shadow/thickness",
+    "lanes": [
+      "unquantized",
+      "decoded_png"
+    ],
+    "map": "known M=[[1,0,16.5],[0,1,16.5],[0,0,1]], k1=0; +.5 binds area-renderer index centres to photo geometric centres. It is not an observed ring shift.",
+    "margin": 16,
+    "optical": "float32 filter2D; BORDER_REFLECT_101; isotropic kernel outer(getGaussianKernel(11,1.2)); directional synthetic.rotated_gaussian(3,1,30). Save actual coefficients, sum, mean and covariance.",
+    "output_scales": [
+      1.0,
+      1.25
+    ],
+    "plane_size": [
+      64,
+      64
+    ],
+    "raw_shape": [
+      96,
+      96
+    ],
+    "rectification": "backend.sheet.rectify_gray float64 Keys intermediate stored float32; backend OpenCV GaussianBlur sigma.7, compare explicit7x7 post kernel; edge replication inside Keys",
+    "retention": "All source coverage/optical/PNG RGB/decoded arrays, actual kernel arrays, original PNG bytes, pre/post smoothing fields, maps, q, raw-array and file hashes, versions, all row errors and work. Numeric NPZ only, allow_pickle=False."
+  },
+  "base_published_commit": "0f1adbd391f7fa015f458cca60dcfe2a0e2dad9e",
+  "base_tree": "25d9ab66f853b0e9096c5931901687408934eb70",
+  "comparators": {
+    "forward_api": "backend.finite_shape.finite_shape_probabilities on analytic finite-D chord/arc ring, not the renderer polygon. probability_tolerance1e-9, max_panels8192, max_evaluations20000000 per batch. No optimizers/Jacobians/covariance/normal trials.",
+    "moment_gaussian": "Sigma=q\u00b2*(actual normalized discrete optical kernel covariance+I/12)+actual normalized discrete post-kernel covariance. The I/12 is source pixel-box second moment; Keys reproduces quadratics so contributes zero formal second moment, not a positive PSF. Match moments only, not full operator.",
+    "nominal_gaussian": "Sigma=q\u00b2*Sigma_optical_nominal + .7\u00b2*I; nominal iso1.2\u00b2I or rotated diag(3\u00b2,1\u00b2) at30deg; contrast/background fixed supplied generator levels."
+  },
+  "controls": {
+    "cli": "Help/missing/existing/dangling-symlink --output-dir refuses before numerical imports. Strict JSON, fresh destination, complete source hashes before/after, every scene/row exception retained.",
+    "constant": "Unquantized all-background/all-material fields use the same known-map/post sequence; max plateau drift<=2e-4 levels.",
+    "exact_keys": "Independent Fraction Keys a=-1/2 at phases0,1/5,1/4,2/5,1/2,3/5,3/4,4/5 (includes actual q1.25 phases and q1 phase1/2). Verify moments0=1,1=2=0,3=f(1-f)(1-2f),4=-9f\u00b2(1-f)\u00b2, ramp/quadratic reproduction. Polynomial identity L1=1+f(1-f)<=5/4 for all0<=f<=1 via1/4-f(1-f)=(f-1/2)\u00b2; tensor L1<=25/16. Compare production _keys weights at all declared phases within2e-14.",
+    "independent_gaussian": "Four diagonal rectangular Gaussian controls (q1/1.25, sigma1.2/3), six fixed integer query points each; analytic erf/erfc product reference independent of area implementation. Every API resolved and discrepancy<=reported error+2e-12 and<=1e-8 probability. Failure withholds study API comparisons, retaining every row.",
+    "independent_gaussian_definitions": {
+      "covariance": "(q*sigma)^2*I",
+      "map": "H=diag(q,q,1)",
+      "pixels_xy": [
+        [
+          0,
+          0
+        ],
+        [
+          10,
+          10
+        ],
+        [
+          19,
+          19
+        ],
+        [
+          29,
+          10
+        ],
+        [
+          35,
+          35
+        ],
+        [
+          15,
+          31
+        ]
+      ],
+      "q": [
+        1.0,
+        1.25
+      ],
+      "reference": "product over x/y of[erfc((10q-(pixel+.5))/(sqrt2*q*sigma))-erfc((30q-(pixel+.5))/(sqrt2*q*sigma))]/2, supplied source-frame rectangle, no clipping",
+      "ring": "four line tuples joining consecutive rectangle corners, final closes first",
+      "sensor_shape": [
+        80,
+        80
+      ],
+      "sigma": [
+        1.2,
+        3.0
+      ],
+      "source_rectangle": [
+        [
+          10.0,
+          10.0
+        ],
+        [
+          30.0,
+          10.0
+        ],
+        [
+          30.0,
+          30.0
+        ],
+        [
+          10.0,
+          30.0
+        ]
+      ]
+    },
+    "post_kernel": "Interior .7 GaussianBlur versus explicit getGaussianKernel(7,.7) outer filter, maxabs<=2e-4 levels (float32 engineering allowance); compare whole fields too, retain border differences.",
+    "quantization": "For each row, maxabs(PNG final-unquantized final)<=25/16 * maxabs(decoded_linear-optical_linear) +64*eps32*25/16*max(1,maxabs(optical_linear),maxabs(decoded_linear)). Sup-norm propagation through signed Keys, positive smoothing and float32 allowance; not a stochastic noise model.",
+    "source_coverage": "For each polygon, independent Shapely intersection area on first16 raster boundary cells in row-major order; max absolute disagreement<=2e-7 source-pixel area. All cells and values retained.",
+    "tessellation": "Arc area loss <=R\u00b2*theta\u00b3/(12*(8193-1)\u00b2), theta=2pi-2acos(f); propagated via max optical weight*25/16*absolute contrast. Retain bound and require<=1e-3 levels; not a camera accuracy bound."
+  },
+  "design_status": "prospective; frozen before any new coverage, kernel, control, forward or resampling evaluation",
+  "execution_order": {
+    "control_forward_max_calls": 4,
+    "control_forward_max_queries": 24,
+    "controls": "independent exact Fraction, production Keys, four rectangular Gaussian controls q then sigma. Any failed global numerical control prevents all64 main API calls; retain scene generation and32 unknown rows.",
+    "expected_adequacy_cells": 128,
+    "expected_residual_values": 56448,
+    "geometry_jacobian_calls": 0,
+    "main_forward_max_calls": 64,
+    "main_forward_max_queries": 28224,
+    "normal_derivative_calls": 0,
+    "old_model_replays": 0,
+    "optimizers": 0,
+    "scenes": "plan order major/minor-rotated, isotropic/directional, phases0..3; source scenes generated once; q1 then1.25 per scene; nominal thenmoment per row; prediction reused unquantized thenPNG.",
+    "work": "Record each attempted/completed forward call/query count plus all returned evaluations/panels; never restart, change budget, retry a failed call or choose a best lane."
+  },
+  "format": "pictures-to-cad-finite-acquisition-operator-plan",
+  "historical_policy": "No old photo rerender, old fit, old finite-difference replacement or causal attribution of historical errors. Original source PNG/estimated H/kernel/intermediate stages are absent from the portable historical fields.",
+  "input_sha256": {
+    "backend/__init__.py": "3f72cea62103136ba8b5748d8288284c14de8ba426bd13d31bf9628cb57c7adc",
+    "backend/circular_joins.py": "1647721fe8763c61ae3c3fe2eb51201fc1d3cf5866c27a49caa74e66e682bde7",
+    "backend/edges.py": "c02bcf6f15958ea5c82444de3ea3af37f20031e6df463846dc8082e37abae9ee",
+    "backend/finite_shape.py": "9102f9e19127ce3666d2bf8744b0356bcc923060f2b142c8a2cbd50a363f5380",
+    "backend/fitting.py": "99354fa9822a354bfabe6b9069e2872bc75afe88d627f8e431a5ef6bb6b72833",
+    "backend/reference.py": "23a94e699d5499d8a4621902193e3a70214062108a5d0d10abb04df9efb8b69d",
+    "backend/sheet.py": "cbb2f4ae8a47ac88dd98adac02590d55a48b05a83523f2e6d1af12da78186393",
+    "backend/tone.py": "88a9d8937c27c0793d650e1c8762c0acb24c17de710a6c6b20992929360f50ee",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v2-plan.json": "2db3148f3be75ea7f9750aeae7115dd23762a581c1f3f879b484c7e1b3c9d687",
+    "studies/fixtures/finite-moment-photo-v1/baseline-v2-probe.py.txt": "b3733f8fa037b9fa1c4401991c7a5ac23438dc8040232124ff1df63a7be3323a",
+    "studies/results/finite-analytic-normal-information-v1-summary.json": "d84dae990abee39ec4c7fba31d514df5975e386bcf2c0d646a0d71440e66a2e7",
+    "tests/synthetic.py": "58a19b94363e71a9889fd49eb4904989f0e3101221c5c13b2a54bd536c424c4c",
+    "uv.lock": "a0bdc9cf481acc3cc5e0309204ea218ccab7624b28bf39bd0cf00fa1a0556c2f"
+  },
+  "outcome_policy": {
+    "adequacy_threshold_levels": 1.0,
+    "geometry": "No fitted geometry, no recovery/target-pass counts, no physical optics or automatic correction claim. Radius/chord/depth are fixed generator definitions, not measured validations.",
+    "protocol": "Protocol success means complete population, stable inputs and all declared numerical/control contracts, not Gaussian adequacy. Incompatible Gaussian rows are valid adverse outcomes.",
+    "representation": "The represented-polygon chain is fully archived. Analytic D is the intended geometry; tessellation allowance prevents classifying a one-level boundary case on inscribed-polygon error alone. Float32 allowance is declared before execution, not estimated from model discrepancy.",
+    "status": "For each stage/covariance cell use max_abs residual over441points. E=max API intensity error + retained analytic-D tessellation level allowance +64*eps32*25/16*max(1,source optical peak,source decoded peak). Compatible iff max_abs+E<=1; incompatible iff max_abs-E>1; otherwise inconclusive. Quantization is an intentional stage difference, not added as random uncertainty. These engineering allowances are not rigorous enclosures.",
+    "unknown": "Unresolved/None API values or comparator exceptions retain all returned query statuses/errors/work and receive numerical_unknown adequacy, never fabricated predictions or incompatible labels. Later comparators/rows/scenes continue. Every scene/q identity retained if upstream exceptions occur."
+  },
+  "pre_execution_amendment": {
+    "prior_plan_sha256": "f633494ba47951ca129402bc2055b8d64702a1520cb9b4d72555ecf54908ab41",
+    "reason": "Static independent review before any new scientific evaluation: bind actual resampling phases, complete rectangle controls, distinguish stage values, and make unknown/call/enclosure semantics explicit. Original plan retained in commit0dfd47e. No outcomes observed or thresholds relaxed."
+  },
+  "queries": {
+    "geometric_centres": "API pixel index i queries i+.5; true source geometry stays in plane units, Hout=diag(q,q,1).",
+    "integer_pixels": "For each q, centre-index=floor(q*true_centre) componentwise; Cartesian offsets -20,-18,...,20 in x/y, ordered y then x. Exactly441 distinct in-bounds output pixel indices.",
+    "reuse": "Same441 indices across both encoding stages; stage-specific observed values reused unchanged across both covariance comparators. Predictions computed once per covariance/q and reused for both stages. All points are forward diagnostic, never held-out."
+  },
+  "question": "On new known-map flat finite-D captures, does the current continuous-Gaussian point model reproduce the complete declared discrete acquisition chain at supplied true geometry/levels, and is second-moment closure sufficient?",
+  "row_count": 32,
+  "scenes": [
+    {
+      "blur": "isotropic",
+      "centre": [
+        32.0,
+        32.0
+      ],
+      "fraction": 0.25,
+      "name": "major-isotropic-phase0",
+      "normal_degrees": 0.0,
+      "radius": 12.0
+    },
+    {
+      "blur": "isotropic",
+      "centre": [
+        32.25,
+        32.5
+      ],
+      "fraction": 0.25,
+      "name": "major-isotropic-phase1",
+      "normal_degrees": 0.0,
+      "radius": 12.0
+    },
+    {
+      "blur": "isotropic",
+      "centre": [
+        32.5,
+        32.25
+      ],
+      "fraction": 0.25,
+      "name": "major-isotropic-phase2",
+      "normal_degrees": 0.0,
+      "radius": 12.0
+    },
+    {
+      "blur": "isotropic",
+      "centre": [
+        32.75,
+        32.75
+      ],
+      "fraction": 0.25,
+      "name": "major-isotropic-phase3",
+      "normal_degrees": 0.0,
+      "radius": 12.0
+    },
+    {
+      "blur": "directional",
+      "centre": [
+        32.0,
+        32.0
+      ],
+      "fraction": 0.25,
+      "name": "major-directional-phase0",
+      "normal_degrees": 0.0,
+      "radius": 12.0
+    },
+    {
+      "blur": "directional",
+      "centre": [
+        32.25,
+        32.5
+      ],
+      "fraction": 0.25,
+      "name": "major-directional-phase1",
+      "normal_degrees": 0.0,
+      "radius": 12.0
+    },
+    {
+      "blur": "directional",
+      "centre": [
+        32.5,
+        32.25
+      ],
+      "fraction": 0.25,
+      "name": "major-directional-phase2",
+      "normal_degrees": 0.0,
+      "radius": 12.0
+    },
+    {
+      "blur": "directional",
+      "centre": [
+        32.75,
+        32.75
+      ],
+      "fraction": 0.25,
+      "name": "major-directional-phase3",
+      "normal_degrees": 0.0,
+      "radius": 12.0
+    },
+    {
+      "blur": "isotropic",
+      "centre": [
+        32.0,
+        32.0
+      ],
+      "fraction": -0.4,
+      "name": "minor-rotated-isotropic-phase0",
+      "normal_degrees": 37.0,
+      "radius": 6.0
+    },
+    {
+      "blur": "isotropic",
+      "centre": [
+        32.25,
+        32.5
+      ],
+      "fraction": -0.4,
+      "name": "minor-rotated-isotropic-phase1",
+      "normal_degrees": 37.0,
+      "radius": 6.0
+    },
+    {
+      "blur": "isotropic",
+      "centre": [
+        32.5,
+        32.25
+      ],
+      "fraction": -0.4,
+      "name": "minor-rotated-isotropic-phase2",
+      "normal_degrees": 37.0,
+      "radius": 6.0
+    },
+    {
+      "blur": "isotropic",
+      "centre": [
+        32.75,
+        32.75
+      ],
+      "fraction": -0.4,
+      "name": "minor-rotated-isotropic-phase3",
+      "normal_degrees": 37.0,
+      "radius": 6.0
+    },
+    {
+      "blur": "directional",
+      "centre": [
+        32.0,
+        32.0
+      ],
+      "fraction": -0.4,
+      "name": "minor-rotated-directional-phase0",
+      "normal_degrees": 37.0,
+      "radius": 6.0
+    },
+    {
+      "blur": "directional",
+      "centre": [
+        32.25,
+        32.5
+      ],
+      "fraction": -0.4,
+      "name": "minor-rotated-directional-phase1",
+      "normal_degrees": 37.0,
+      "radius": 6.0
+    },
+    {
+      "blur": "directional",
+      "centre": [
+        32.5,
+        32.25
+      ],
+      "fraction": -0.4,
+      "name": "minor-rotated-directional-phase2",
+      "normal_degrees": 37.0,
+      "radius": 6.0
+    },
+    {
+      "blur": "directional",
+      "centre": [
+        32.75,
+        32.75
+      ],
+      "fraction": -0.4,
+      "name": "minor-rotated-directional-phase3",
+      "normal_degrees": 37.0,
+      "radius": 6.0
+    }
+  ],
+  "source_scene_count": 16,
+  "version": 1
+}

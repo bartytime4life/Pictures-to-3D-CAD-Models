@@ -58,7 +58,7 @@ The application does not call a paid or external inference service. Its optional
 
 ## Geometry conventions
 
-Traced points use image pixel coordinates, with the image's vertical coordinate increasing downward. Pixel *i* spans *i* to *i* + 1, so the image spans 0 to its pixel width. Outlines follow the outer edges of boundary pixels: a part covering pixel columns 50–450 spans 50 to 451, and a hole follows the edges of the material around it. Conversion translates and scales the profile into a centered XY model plane, then extrudes along Z. The measured scale is the entered reference width divided by the traced profile's horizontal span. An explicit XY design percentage multiplies that scale; a separate thickness percentage multiplies the entered thickness. Design choices do not overwrite the source measurements.
+Traced points use image pixel coordinates, with the image's vertical coordinate increasing downward. Pixel *i* spans *i* to *i* + 1, so the image spans 0 to its pixel width. The ordinary threshold trace follows the outer edges of boundary pixels: a part covering pixel columns 50–450 spans 50 to 451, and a hole follows the edges of the material around it. Reference-sheet localization instead supplies subpixel points and supported analytic geometry. Conversion translates and scales the profile into a centered XY model plane, then extrudes along Z. The measured scale is the entered reference width divided by the traced profile's horizontal span. An explicit XY design percentage multiplies that scale; a separate thickness percentage multiplies the entered thickness. Design choices do not overwrite the source measurements.
 
 Source profiles and their image overlays use pixels; built CAD coordinates and physical inputs use millimeters. A reference-sheet profile retains `mm_per_px` for its display frame. The entered thickness is independent of image scale. Changing display units must convert entered physical values rather than reinterpret the same number in another unit.
 
@@ -84,10 +84,32 @@ defines the boundaries.
 Reference-sheet edges are placed against the paper's own light beside them.
 `backend/shadow.py` fits a soft shadow once from the paper round the part, as the
 footprint convolved with a non-negative kernel of no fixed shape, and
-`backend/sheet.py` places each edge against that light where the fit predicts the
-paper nearest the edges within 2 % of its light; elsewhere a straight-line paper
-level fitted to each profile stands. The [method and results](reference-sheet.md#3-segmentation-and-sub-pixel-edges)
+`backend/sheet.py` can place each edge against that fitted light. Paper-data
+availability and a 2 % normalized excess-error criterion control model use;
+otherwise a straight-line paper level fitted to each profile stands. The
+criterion is not a physical bound on the paper's light at an obscured edge.
+The [method and results](reference-sheet.md#3-segmentation-and-sub-pixel-edges)
 come from rendered photographs.
+
+### Source-bound acquisition evidence
+
+The [completed finite-material acquisition study](validation/finite-acquisition-operator.md)
+is a developer forward experiment, not an HTTP capability or an automatic trace
+step. It compares supplied true finite-D geometry and levels with an explicit
+coverage/discrete-blur/PNG/Keys/smoothing chain. Its 32 records retain 128 paired
+comparisons: the moment-matched Gaussian remains incompatible in 9/32
+unquantized and 16/32 PNG comparisons, with one PNG inconclusive. It performs
+no inverse geometry recovery.
+
+Those results bind historical source `0714aad`, not the current main pipeline
+or its newer paper-shadow model. The [123-artifact archive](../studies/results/finite-acquisition-operator-v1-summary.json)
+includes all numeric stages, original PNGs, failures and an 87-file recorded
+source ZIP. The raw scalar-contract failure and reversible normalized artifact
+remain distinct from the numerical/model outcomes. Use the
+[archive instructions](../studies/fixtures/finite-acquisition-operator-v1/README.md)
+for saved-data auditing; a new numerical replay requires its own qualified
+source and environment. Importing the study into
+a newer checkout does not requalify its acquisition operator or physical optics.
 
 ### Circle-consistent final assembly
 
@@ -157,7 +179,7 @@ A multipart request includes:
 
 The response contains a normalized display image, its dimensions, the traced outer boundary and holes, the bounding box, the chosen threshold, and any relevant warnings.
 
-With a reference sheet, the display image is the rectified, perspective- and lens-corrected view of the part. A detected straight-edge direction can set a rigid display/profile rotation even when an affected ring is retained as line geometry. This coordinate alignment is separate from accepting analytic geometry or claiming exact snapping. The profile also carries `primitives`: exact `line`, `arc` (start, mid, end) and `circle` segments for the outer boundary and every hole, in the same display-pixel frame. It also carries `reference`, the evidence for that trace: sheet kind and size, `mm_per_px`, the lens coefficient, edge blur, any thickness correction with camera height and focal-length source, and notes such as the snap list and the sheet-proportions check. The outside width is the outline's span in that frame × `mm_per_px`. See [reference-sheet tracing](reference-sheet.md) and [display alignment](curved-joins.md#display-alignment-is-a-coordinate-choice).
+With a reference sheet, the display image is the rectified, perspective- and lens-corrected view of the part. A detected straight-edge direction can set a rigid display/profile rotation even when an affected ring is retained as line geometry. This coordinate alignment is separate from accepting analytic geometry or claiming exact snapping. The profile also carries `primitives`: analytic `line`, `arc` (start, mid, end) and `circle` segments for the outer boundary and every hole, in the same display-pixel frame. It also carries `reference`, the evidence for that trace: sheet kind and size, `mm_per_px`, the lens coefficient, edge blur, any thickness correction with camera height and focal-length source, and notes such as the snap list and the sheet-proportions check. The outside width is the outline's span in that frame × `mm_per_px`. See [reference-sheet tracing](reference-sheet.md) and [display alignment](curved-joins.md#display-alignment-is-a-coordinate-choice).
 
 The normalized image and trace share the same coordinate system. This avoids using uncorrected EXIF orientation for one while displaying the other differently.
 
