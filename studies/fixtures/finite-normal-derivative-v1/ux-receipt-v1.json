@@ -1,0 +1,178 @@
+{
+  "audit_passed": false,
+  "candidate_evaluations": 437304,
+  "candidate_method_counts": {
+    "affine_closed_form": 2861,
+    "affine_closed_form_then_chord_quadrature": 41,
+    "projective_closed_form": 963,
+    "projective_closed_form_then_chord_quadrature": 21
+  },
+  "candidate_panels": 17214,
+  "candidate_status_counts": {
+    "resolved": 3885,
+    "work_limit": 1
+  },
+  "checks": {
+    "area": {
+      "checks": 409,
+      "passed": 409
+    },
+    "area_arithmetic": {
+      "checks": 432,
+      "passed": 424
+    },
+    "candidate_accounting": {
+      "checks": 37945,
+      "passed": 37945
+    },
+    "comparison_arithmetic": {
+      "checks": 7770,
+      "passed": 7770
+    },
+    "json": {
+      "checks": 1,
+      "passed": 1
+    },
+    "oracle_accounting": {
+      "checks": 19430,
+      "passed": 19430
+    },
+    "oracle_arithmetic": {
+      "checks": 31088,
+      "passed": 31088
+    },
+    "oracle_panels": {
+      "checks": 404426,
+      "passed": 404426
+    },
+    "oracle_tree": {
+      "checks": 123791,
+      "passed": 123791
+    },
+    "pins": {
+      "checks": 87,
+      "passed": 87
+    },
+    "population": {
+      "checks": 1352,
+      "passed": 1352
+    },
+    "roles": {
+      "checks": 15900,
+      "passed": 15900
+    },
+    "sign": {
+      "checks": 2866,
+      "passed": 2866
+    },
+    "statuses": {
+      "checks": 8446,
+      "passed": 8446
+    },
+    "summary": {
+      "checks": 4,
+      "passed": 4
+    }
+  },
+  "expected_original_exit_from_protocol": 1,
+  "failures": [
+    {
+      "context": "core-11100/1",
+      "group": "area_arithmetic"
+    },
+    {
+      "context": "core-11101/3",
+      "group": "area_arithmetic"
+    },
+    {
+      "context": "core-11101/8",
+      "group": "area_arithmetic"
+    },
+    {
+      "context": "core-11101/1",
+      "group": "area_arithmetic"
+    },
+    {
+      "context": "core-11102/1",
+      "group": "area_arithmetic"
+    },
+    {
+      "context": "core-10210/3",
+      "group": "area_arithmetic"
+    },
+    {
+      "context": "core-10212/3",
+      "group": "area_arithmetic"
+    },
+    {
+      "context": "core-12121/3",
+      "group": "area_arithmetic"
+    }
+  ],
+  "finite_float_fields_checked": 1304134,
+  "format": "pictures-to-cad-saved-normal-derivative-independent-audit",
+  "independently_recounted_summary": {
+    "all_area_queries_retained": true,
+    "all_scenes_and_queries_retained": true,
+    "old_archived_data_analyses": 0,
+    "optimizer_calls": 0,
+    "oracle_converged_queries": 3886,
+    "planned_queries": 3886,
+    "planned_scenes": 337,
+    "positive_area_passes": 36,
+    "positive_area_queries": 36,
+    "positive_area_scenes": 12,
+    "query_passes": 3885,
+    "renderer_calls": 0,
+    "retained_queries": 3886,
+    "retained_scenes": 337,
+    "scene_passes": 336,
+    "unit_private_branch_controls_executed_here": false
+  },
+  "max_resolved_comparison_delta": 1.7004538221954135e-08,
+  "oracle_evaluations": 25745530,
+  "oracle_leaf_methods": {
+    "bounded_tail": 23996,
+    "direct_source_s": 88137
+  },
+  "original_scientific_protocol_passed": false,
+  "provenance": {
+    "auditor_sha256": "0bcfde92b4d8d43ebcdc0ddb15ebc0151c743a500a9d782e7c372ec1734a6fa6",
+    "plan_sha256": "d31b8ad03b5fe1af8b69dc47be5445b2ebf7034e951254814a57010f3b43de9f",
+    "report_bytes": 91924054,
+    "report_sha256": "d31fcb0436daee9e91bd21d78c1650901916a8c2c77bf6c7e351da61c04e113f",
+    "revision_recorded_in_report": "f7df559024646e0f50629570230bce00eb3401f3",
+    "source_snapshot_members": 33,
+    "supplement_sha256": "f0bc2095ba23cceb2ffb13d7f915051620cd2496f71a43ebfd0d2f951037e234"
+  },
+  "resolved_sign_counts": {
+    "negative": 1853,
+    "positive": 1855,
+    "zero": 177
+  },
+  "retained_scientific_failures": [
+    {
+      "candidate": {
+        "estimated_error": null,
+        "method": "projective_closed_form_then_chord_quadrature",
+        "status": "work_limit",
+        "value": null
+      },
+      "candidate_evaluations": 154388,
+      "candidate_panels": 4096,
+      "oracle_converged": true,
+      "oracle_values": {
+        "192": 1591.549428179194,
+        "96": 1591.5494281791937
+      },
+      "pixel": [
+        0,
+        0
+      ],
+      "query_index": 0,
+      "scene_id": "compressed-chart-e16-d0.0001"
+    }
+  ],
+  "scope": "Saved-data consistency only; no model/oracle/renderer/optimizer import or execution, no physical accuracy or certified error claim.",
+  "version": 1
+}

@@ -1,0 +1,272 @@
+#!/usr/bin/env python3
+"""Audit only the saved finite-normal v1 report with Python standard library.
+
+No production/oracle import, Gaussian integration, model call or replay occurs.
+Saved quadrature contributions are summed and saved algebra/guards recomputed.
+This verifies report arithmetic/accounting, not transcendental oracle validity.
+"""
+
+import argparse
+import hashlib
+import json
+import math
+import os
+import time
+from collections import Counter
+from pathlib import Path
+
+EXPECTED_RESULT_SHA = "d31fcb0436daee9e91bd21d78c1650901916a8c2c77bf6c7e351da61c04e113f"
+EXPECTED_PLAN_SHA = "d31b8ad03b5fe1af8b69dc47be5445b2ebf7034e951254814a57010f3b43de9f"
+EXPECTED_EXTRA_SHA = "f0bc2095ba23cceb2ffb13d7f915051620cd2496f71a43ebfd0d2f951037e234"
+
+
+def sha(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def parsed_sha(value):
+    data = json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False)
+    return hashlib.sha256(data.encode()).hexdigest()
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", required=True, type=Path)
+    parser.add_argument("--output", required=True, type=Path)
+    args = parser.parse_args()
+    if os.path.lexists(args.output) or not args.output.parent.is_dir():
+        parser.error("output must be fresh with an existing parent")
+    started = time.perf_counter()
+    root = args.root.resolve()
+    result_path = root / "studies/results/finite-normal-derivative-v1.json"
+    plan_path = root / "studies/finite-normal-derivative-v1.json"
+    extra_path = root / "studies/finite-normal-derivative-compressed-chart-v1.json"
+    paths = (result_path, plan_path, extra_path)
+    before = {str(p.relative_to(root)): sha(p) for p in paths}
+    result, plan, extra = (json.loads(p.read_text()) for p in paths)
+    counts, failures = Counter(), []
+
+    def check(category, condition, identity, **details):
+        counts[category] += 1
+        if not condition:
+            failures.append({"category": category, "identity": identity, **details})
+
+    def close(a, b):
+        if a == b:
+            return True
+        if not (math.isfinite(a) and math.isfinite(b)):
+            return False
+        return abs(a - b) <= 8 * math.ulp(max(abs(a), abs(b)))
+
+    def eq(category, actual, expected, identity):
+        check(category, close(actual, expected), identity, actual=actual, expected=expected)
+
+    check("binding", before[str(result_path.relative_to(root))] == EXPECTED_RESULT_SHA, "result")
+    check("binding", before[str(plan_path.relative_to(root))] == EXPECTED_PLAN_SHA, "plan")
+    check("binding", before[str(extra_path.relative_to(root))] == EXPECTED_EXTRA_SHA, "supplement")
+    check("binding", result["source_before"] == result["source_after"], "saved source equality")
+    check("binding", result["source_unchanged"] is True, "source flag")
+    check("binding", result["plan_sha256"] == EXPECTED_PLAN_SHA, "result plan binding")
+    check("binding", result["supplement_sha256"] == EXPECTED_EXTRA_SHA, "result supplement binding")
+    for name, record in result["source_before"].items():
+        path = root / name
+        check("current_source", path.stat().st_size == record["bytes"] and sha(path) == record["sha256"], name)
+    scenes = [*plan["scenes"], *extra["scenes"]]
+    check("population", len(scenes) == len(result["rows"]) == 337, "scenes")
+    settings = plan["oracle"]
+    guards = extra["algorithm_resolution_guards"]
+    pass_count, oracle_count, query_count = 0, 0, 0
+    unknowns, row_summaries, max_compare, max_order = [], [], (0, None), (0, None)
+    leaf_count = Counter()
+    total_oracle_work = 0
+    for index, (scene, row) in enumerate(zip(scenes, result["rows"], strict=True)):
+        sid = scene["id"]
+        check("identity", row["id"] == sid and row["index"] == index, sid)
+        check("identity", parsed_sha(row["input"]) == parsed_sha(scene), sid + ":input")
+        check("population", len(row["queries"]) == len(scene["pixels_xy"]), sid)
+        candidate = row["candidate"]
+        for name in ("derivatives", "statuses", "estimated_errors", "query_methods", "query_evaluations", "query_panels"):
+            check("candidate", len(candidate[name]) == len(row["queries"]), sid + ":" + name)
+        check("candidate_work", candidate["evaluations"] == sum(candidate["query_evaluations"]), sid)
+        check("candidate_work", candidate["panels"] == sum(candidate["query_panels"]), sid)
+        check("candidate_work", candidate["evaluations"] <= plan["operator"]["max_evaluations"], sid)
+        scene_passes = []
+        for i, (pixel, query) in enumerate(zip(scene["pixels_xy"], row["queries"], strict=True)):
+            identity = f"{sid}:{i}"
+            query_count += 1
+            check("identity", query["query_index"] == i and query["pixel"] == pixel, identity)
+            expected_roles = [r["role"] for r in scene["query_roles"] if r["query_index"] == i]
+            check("identity", query["roles"] == expected_roles, identity + ":roles")
+            status, value, error = (candidate[k][i] for k in ("statuses", "derivatives", "estimated_errors"))
+            check("candidate", status in {"resolved", "work_limit", "numerical"}, identity)
+            for name in ("query_evaluations", "query_panels"):
+                v = candidate[name][i]
+                check("candidate_work", type(v) is int and v >= 0, identity + ":" + name)
+            check("candidate_work", candidate["query_panels"][i] <= plan["operator"]["max_panels"], identity)
+            if status == "resolved":
+                check("candidate", type(value) in (float, int) and math.isfinite(value)
+                      and type(error) in (float, int) and math.isfinite(error)
+                      and 0 <= error <= plan["operator"]["probability_tolerance"], identity)
+            else:
+                check("candidate", value is None and error is None, identity)
+                unknowns.append({"scene_id": sid, "query_index": i, "status": status,
+                                 "method": candidate["query_methods"][i],
+                                 "evaluations": candidate["query_evaluations"][i],
+                                 "panels": candidate["query_panels"][i]})
+            check("candidate", query["candidate"] == {
+                "value": value, "estimated_error": error, "status": status,
+                "method": candidate["query_methods"][i]}, identity + ":query copy")
+            oracle = query["oracle"]
+            leaves = oracle["leaf_panels"]
+            initial = oracle["initial_source_cuts"]
+            check("oracle_partition", oracle["initial_panel_count"] == len(initial) - 1, identity)
+            check("oracle_partition", all(a < b for a, b in zip(initial, initial[1:])), identity)
+            ordered = sorted(leaves, key=lambda p: p["start"])
+            check("oracle_partition", ordered[0]["start"] == initial[0]
+                  and ordered[-1]["end"] == initial[-1], identity + ":endpoints")
+            check("oracle_partition", all(a["end"] == b["start"] for a, b in zip(ordered, ordered[1:])), identity + ":closed cover")
+            check("oracle_partition", oracle["panels_inspected"] == 2 * len(leaves) - (len(initial) - 1), identity + ":binary forest")
+            direct = [p for p in leaves if p["method"] == "direct_source_s"]
+            tail = [p for p in leaves if p["method"] == "bounded_tail"]
+            leaf_count.update(direct=len(direct), tail=len(tail))
+            check("oracle_partition", len(direct) + len(tail) == len(leaves), identity + ":methods")
+            for j, panel in enumerate(direct):
+                check("oracle_resolution", panel["whitened_travel"] <= guards["maximum_whitened_panel_travel"]
+                      and panel["gaussian_exponent_variation"] <= guards["maximum_gaussian_exponent_variation"]
+                      and panel["denominator_ratio"] <= guards["maximum_denominator_ratio"], f"{identity}:leaf{j}")
+            eq("oracle_tail", oracle["per_panel_tail_threshold"], 1e-13 / (len(initial) - 1), identity)
+            for j, panel in enumerate(tail):
+                check("oracle_tail", 0 <= panel["absolute_tail_envelope"] <= oracle["per_panel_tail_threshold"], f"{identity}:tail{j}")
+            tail_sum = math.fsum(p["absolute_tail_envelope"] for p in tail)
+            eq("oracle_tail", oracle["tail_envelope_sum"], tail_sum, identity)
+            check("oracle_tail", tail_sum <= 1e-13, identity)
+            eq("oracle_work", oracle["endpoint_evaluations"], 2 + 2 * oracle["panels_inspected"], identity)
+            work = oracle["endpoint_evaluations"]
+            for order in settings["orders"]:
+                key = str(order)
+                summed = math.fsum(p["values"][key] for p in direct)
+                error_sum = math.fsum(p["roundoff_estimates"][key] for p in direct)
+                eq("oracle_sum", oracle["values"][key], summed, identity + ":" + key)
+                eq("oracle_sum", oracle["partial_integrals"][key], summed, identity + ":partial" + key)
+                eq("oracle_sum", oracle["roundoff_estimates"][key], error_sum, identity + ":error" + key)
+                check("oracle_work", oracle["rule_evaluations"][key] == order * len(direct), identity + ":" + key)
+                work += oracle["rule_evaluations"][key]
+            check("oracle_work", work == oracle["evaluations"], identity)
+            check("oracle_work", work <= settings["maximum_evaluations_per_query"]
+                  and oracle["panels_inspected"] <= settings["maximum_panels"], identity + ":caps")
+            total_oracle_work += work
+            low, high = (oracle["values"][str(o)] for o in settings["orders"])
+            delta = abs(high - low)
+            order_allowance = settings["order_agreement_abs"] + settings["order_agreement_rel"] * abs(high)
+            converged = delta <= order_allowance
+            eq("oracle_order", oracle["order_delta"], delta, identity)
+            eq("oracle_order", oracle["order_allowance"], order_allowance, identity)
+            check("oracle_order", oracle["oracle_converged"] == converged and oracle["status"] == "resolved", identity)
+            oracle_count += converged
+            if delta > max_order[0]:
+                max_order = delta, identity
+            passed = False
+            if status == "resolved" and converged:
+                actual_delta = abs(value - high)
+                limit = math.fsum((settings["comparison_abs"], settings["comparison_rel"] * abs(high),
+                                  error, 2 * delta, tail_sum))
+                eq("comparison", query["comparison_delta"], actual_delta, identity)
+                eq("comparison", query["comparison_allowance"], limit, identity)
+                passed = actual_delta <= limit
+                if actual_delta > max_compare[0]:
+                    max_compare = actual_delta, identity
+            else:
+                check("comparison", "comparison_delta" not in query and "comparison_allowance" not in query, identity)
+            check("comparison", query["comparison_passed"] == passed, identity)
+            pass_count += passed
+            scene_passes.append(passed)
+        check("scene", row["protocol_passed"] == all(scene_passes), sid)
+        row_summaries.append({"scene_id": sid, "queries": len(scene_passes),
+                              "passes": sum(scene_passes), "protocol_passed": all(scene_passes)})
+    by_id = {row["id"]: row for row in result["rows"]}
+    area_settings = plan["positive_area_corroboration"]
+    h = area_settings["h_radians"]
+    area_count, area_passes = 0, 0
+    area_max = {name: (0, None) for name in ("order", "step", "candidate")}
+    for selection, area in zip(area_settings["selection"], result["positive_area"], strict=True):
+        sid = selection["scene_id"]
+        check("area_identity", area["scene_id"] == sid and area["query_indices"] == selection["query_indices"], sid)
+        expected_centres = [[float(v) + .5 for v in by_id[sid]["input"]["pixels_xy"][i]]
+                            for i in selection["query_indices"]]
+        check("area_identity", area["observation_centres"] == expected_centres, sid)
+        computed_passes = []
+        for local_i, (index, query) in enumerate(zip(selection["query_indices"], area["queries"], strict=True)):
+            identity = f"{sid}:{index}"
+            area_count += 1
+            means, fd = {}, {}
+            for order in area_settings["orders"]:
+                means[order] = {name: record["probabilities"][local_i] for name, record in area["means"][str(order)].items()}
+                v = means[order]
+                fd[order] = {"h": (v["plus_h"] - v["minus_h"]) / (2*h),
+                             "half": (v["plus_half"] - v["minus_half"]) / h}
+                for key in ("h", "half"):
+                    eq("area_fd", query["finite_differences"][str(order)][key], fd[order][key], identity)
+            lo, hi = area_settings["orders"]
+            order_delta = max(abs(fd[hi][key] - fd[lo][key]) for key in ("h", "half"))
+            propagated = {
+                "h": (abs(means[hi]["plus_h"] - means[lo]["plus_h"]) + abs(means[hi]["minus_h"] - means[lo]["minus_h"])) / (2*h),
+                "half": (abs(means[hi]["plus_half"] - means[lo]["plus_half"]) + abs(means[hi]["minus_half"] - means[lo]["minus_half"])) / h,
+            }
+            guard = max(order_delta, *propagated.values())
+            step = abs(fd[hi]["half"] - fd[hi]["h"])
+            richardson = (4 * fd[hi]["half"] - fd[hi]["h"]) / 3
+            candidate = by_id[sid]["candidate"]["derivatives"][index]
+            delta = abs(candidate - richardson)
+            allowance = area_settings["candidate_richardson_abs"] + area_settings["candidate_richardson_rel"] * abs(richardson)
+            for key, expected in (("derivative_order_delta", order_delta), ("derivative_order_guard_value", guard),
+                                  ("h_half_delta", step), ("richardson", richardson),
+                                  ("candidate", candidate), ("candidate_delta", delta), ("candidate_allowance", allowance)):
+                eq("area_math", query[key], expected, identity + ":" + key)
+            for key in ("h", "half"):
+                eq("area_math", query["propagated_area_order_discrepancy"][key], propagated[key], identity)
+            order_pass = guard <= area_settings["derivative_order_agreement_abs"]
+            step_pass = step <= area_settings["step_half_agreement_abs"]
+            passed = order_pass and step_pass and delta <= allowance
+            check("area_criterion", query["derivative_order_passed"] == order_pass
+                  and query["h_half_passed"] == step_pass and query["candidate_resolved"] is True
+                  and query["protocol_passed"] == passed, identity)
+            computed_passes.append(passed)
+            area_passes += passed
+            for key, value in (("order", guard), ("step", step), ("candidate", delta)):
+                if value > area_max[key][0]:
+                    area_max[key] = value, identity
+        check("area_criterion", area["protocol_passed"] == all(computed_passes), sid)
+    computed = {"scene_passes": sum(row["protocol_passed"] for row in row_summaries),
+                "query_passes": pass_count, "oracle_converged_queries": oracle_count,
+                "retained_scenes": len(row_summaries), "retained_queries": query_count,
+                "positive_area_scenes": len(result["positive_area"]),
+                "positive_area_queries": area_count, "positive_area_passes": area_passes}
+    for key, value in computed.items():
+        check("summary", result["summary"][key] == value, key)
+    check("summary", result["protocol_passed"] == (pass_count == query_count and area_passes == area_count), "overall")
+    after = {str(p.relative_to(root)): sha(p) for p in paths}
+    check("binding", before == after, "saved inputs unchanged")
+    report = {"format": "pictures-to-cad-finite-normal-saved-math-audit", "version": 1,
+              "audit_source_sha256": sha(__file__), "inputs_before": before, "inputs_after": after,
+              "checks": sum(counts.values()), "checks_by_category": dict(counts),
+              "failures": failures, "passed": not failures,
+              "recomputed_summary": computed, "unknown_candidates": unknowns,
+              "max_saved_candidate_oracle_delta": max_compare, "max_saved_oracle_order_delta": max_order,
+              "positive_area_maxima": area_max, "oracle_leaf_counts": dict(leaf_count),
+              "saved_oracle_evaluation_total": total_oracle_work, "rows": row_summaries,
+              "model_calls": 0, "oracle_calls": 0, "numerical_replays": 0,
+              "scope": "Saved arithmetic, guards, partitions, accounting and source binding only. Does not independently validate Gaussian integrals; original failed protocol and unknown remain unchanged.",
+              "comparison_arithmetic": "Recomputed saved algebra; reported float equality permits up to8ULP for association, without changing any study pass threshold.",
+              "runtime_seconds": time.perf_counter() - started}
+    with args.output.open("x") as stream:
+        json.dump(report, stream, sort_keys=True, indent=2, allow_nan=False)
+        stream.write("\n")
+    print(json.dumps({"passed": report["passed"], "checks": report["checks"], "failures": len(failures),
+                      "recomputed_summary": computed, "unknowns": unknowns,
+                      "area_maxima": area_max, "max_comparison_delta": max_compare,
+                      "output": str(args.output)}, allow_nan=False, sort_keys=True))
+    return 0 if report["passed"] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,61 @@
+{
+  "scope": "Invented protocol payloads and stdlib CLI only; no production API/oracle/NumPy imports or scientific results",
+  "checks": [
+    {
+      "name": "stdlib_startup_failure_retains_complete_identity_census",
+      "passed": true
+    },
+    {
+      "name": "nonfinite_whole_field_withheld_and_nested_green_flags_reset",
+      "passed": true
+    },
+    {
+      "name": "invented_valid_candidate_schema",
+      "passed": true
+    },
+    {
+      "name": "negative_counter_refused",
+      "passed": true
+    },
+    {
+      "name": "boolean_counter_refused",
+      "passed": true
+    },
+    {
+      "name": "resolved_error_over_tolerance_refused",
+      "passed": true
+    },
+    {
+      "name": "nonfinite_value_refused",
+      "passed": true
+    },
+    {
+      "name": "unknown_enum_refused",
+      "passed": true
+    },
+    {
+      "name": "unknown_retains_value_refused",
+      "passed": true
+    },
+    {
+      "name": "invented_full_census_pipeline_retained",
+      "passed": true
+    },
+    {
+      "name": "invented_first_query_failure_keeps_all_later_queries",
+      "passed": true
+    },
+    {
+      "name": "duplicate_nonfinite_overflow_json_refused",
+      "passed": true
+    },
+    {
+      "name": "help_and_fresh_destination_refusals",
+      "passed": true
+    }
+  ],
+  "checks_passed": 13,
+  "runner_sha256": "8cd752ccf8fef6391d51dc10761f073c3d3f0fb6c45deb977ea346553ee5dd74",
+  "production_imports": 0,
+  "numerical_evaluations": 0
+}

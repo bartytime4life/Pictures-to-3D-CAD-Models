@@ -7,6 +7,15 @@ original counts and environment; they are not later retests.
 
 ## Current candidate evidence — November 12, 2026
 
+The [experimental normal-angle derivative](validation/finite-normal-derivative.md)
+passes the application build and 1,037 Python tests. Its complete 337-scene
+qualification retains **exit 1**: 3,885 resolved comparisons, one panel-budget
+unknown, 3,886 converged independent oracles and 36 passing positive-area checks.
+One resolved compressed-map discrepancy also exceeds the candidate error estimate;
+the frozen relative comparison pass does not prove the requested absolute accuracy.
+These limits remain explicit, with no automatic trace or fitter adoption.
+
+
 The [affine finite-material candidate](validation/finite-affine-batch.md)
 passes **943 local Python tests**, production build and lint on the combined
 main-based source. Its fixed experiment passes all 28 numerical/resource

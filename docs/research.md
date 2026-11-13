@@ -17,9 +17,11 @@ post-hoc rotation identity is consistent with the observed finite-difference ste
 scaling; it does not replace the original failed normal control or identify a
 physical PSF. A further [finite-chord derivation](finite-residual-information.md#finite-chord-shape-derivative-a-derived-proposal)
 covers affine and projective maps under a fixed, supplied Gaussian observation
-model and a valid whole-shape projective chart. Its first-moment formula still
-needs independent numerical checks, cancellation guards and bounded fallback
-qualification. It adds no qualified API, numerical result or automatic correction.
+model and a valid whole-shape projective chart. The
+[experimental operator](finite-normal-derivative.md) now has a
+[complete failed qualification](validation/finite-normal-derivative.md): one
+panel-budget unknown and a compressed-map error-estimation limitation remain.
+It adds no automatic correction.
 
 The [original selected design reference](images/design-reference.png) is a generated concept. The [recorded workbench screenshot](images/workbench.png) is browser-rendered implementation evidence; the [guided-workbench review](validation/guided-workbench.md) records the reviewed interaction, screenshots and evidence date. The sample photograph is generated demonstration input and is traced by the real conversion pipeline; it is not a measured reference specimen.
 

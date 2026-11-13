@@ -237,8 +237,10 @@ also records moment cancellation. These are numerical background, not validation
 of this derivative.
 
 Independent quadrature in the original `s` coordinate and positive-area angular
-differences at new synthetic scenes remain prospective checks. No new API,
-numerical qualification or production correction is established here, and the
+differences at new synthetic scenes remain prospective checks. A separate [experimental operator](finite-normal-derivative.md) and
+[complete failed qualification](validation/finite-normal-derivative.md) now
+retain their own source, work and error-estimation limits. This derivation
+does not establish production correction, and the
 [original failed protocol](validation/finite-residual-information.md) remains
 unchanged. Real acquisition, illumination, thickness and calibration assumptions
 remain separate from this conditional Gaussian derivation.
@@ -246,7 +248,8 @@ remain separate from this conditional Gaussian derivation.
 ## Remaining evidence
 
 The saved-data audit verifies arithmetic and source binding, not physical PSF
-causation. Normal sensitivity still needs independent numerical validation.
+causation. The new normal-sensitivity checks retain compressed-map resource
+and error-estimation limits; they do not replace the old unknown normal columns.
 An acquisition-matched experiment needs actual source samples, transforms,
 finite kernels, encoding/resampling details and stage bytes. Product adoption
 also needs supported optics/thickness frames, measured-photo checks, bounded

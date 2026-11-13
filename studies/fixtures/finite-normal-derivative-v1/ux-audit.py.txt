@@ -1,0 +1,542 @@
+"""Independently audit frozen normal-derivative JSON; never import/evaluate a model.
+
+This verifies saved population, role maps, source pins, accounting and arithmetic.
+It cannot establish that saved forward/oracle values equal physical observations.
+The original failed scientific protocol remains failed when this audit passes.
+"""
+
+import argparse
+import hashlib
+import itertools
+import json
+import math
+import sys
+from collections import Counter, defaultdict
+from pathlib import Path
+
+REPORT_SHA = "d31fcb0436daee9e91bd21d78c1650901916a8c2c77bf6c7e351da61c04e113f"
+PLAN_SHA = "d31b8ad03b5fe1af8b69dc47be5445b2ebf7034e951254814a57010f3b43de9f"
+SUPPLEMENT_SHA = "f0bc2095ba23cceb2ffb13d7f915051620cd2496f71a43ebfd0d2f951037e234"
+API_SHA = "e1e548b58c26d98f28475e647594f5273f34734f1284df27a06324cdf022a443"
+RUNNER_SHA = "8cd752ccf8fef6391d51dc10761f073c3d3f0fb6c45deb977ea346553ee5dd74"
+REVISION = "f7df559024646e0f50629570230bce00eb3401f3"
+EPS = sys.float_info.epsilon
+
+
+def sha(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+
+def unique(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f"duplicate JSON key {key}")
+        result[key] = value
+    return result
+
+
+def reject_constant(value):
+    raise ValueError(f"nonfinite JSON constant {value}")
+
+
+def read_json(path):
+    raw = path.read_bytes()
+    return raw, json.loads(raw, object_pairs_hook=unique, parse_constant=reject_constant)
+
+
+def close(left, right, scale=0.0):
+    return abs(left - right) <= 128 * EPS * max(abs(left), abs(right), scale, 1e-300)
+
+
+def audit(root, report_path):
+    raw, result = read_json(report_path)
+    plan_raw, plan = read_json(root / "studies/finite-normal-derivative-v1.json")
+    supplement_raw, supplement = read_json(
+        root / "studies/finite-normal-derivative-compressed-chart-v1.json"
+    )
+    counts = defaultdict(lambda: {"checks": 0, "passed": 0})
+    failures = []
+
+    def check(group, condition, context):
+        counts[group]["checks"] += 1
+        counts[group]["passed"] += bool(condition)
+        if not condition:
+            failures.append({"group": group, "context": context})
+
+    check("pins", sha(raw) == REPORT_SHA, "complete raw report")
+    check("pins", sha(plan_raw) == PLAN_SHA, "main prospective plan")
+    check("pins", sha(supplement_raw) == SUPPLEMENT_SHA, "prospective supplement")
+    for field, expected in (
+        ("plan_sha256", PLAN_SHA),
+        ("supplement_sha256", SUPPLEMENT_SHA),
+        ("api_file_sha256", API_SHA),
+        ("runner_sha256", RUNNER_SHA),
+        ("revision", REVISION),
+    ):
+        check("pins", result[field] == expected, field)
+    check("pins", result["source_before"] == result["source_after"], "source snapshots equal")
+    check("pins", result["source_unchanged"] is True, "reported unchanged")
+    check("pins", result["source_after_failure"] is None, "no source-check exception")
+    for path, binding in result["source_before"].items():
+        source = (root / path).read_bytes()
+        check("pins", sha(source) == binding["sha256"], path + " SHA")
+        check("pins", len(source) == binding["bytes"], path + " bytes")
+    for path, digest in plan["inputs_sha256"].items():
+        check("pins", sha((root / path).read_bytes()) == digest, "main plan input " + path)
+    check("pins", supplement["main_plan_sha256"] == PLAN_SHA, "supplement parent")
+    check("pins", result["settings"]["operator"] == plan["operator"], "operator settings")
+    check("pins", result["settings"]["oracle"] == plan["oracle"], "oracle settings")
+    check(
+        "pins",
+        result["settings"]["algorithm_resolution_guards"]
+        == supplement["algorithm_resolution_guards"],
+        "resolution guards",
+    )
+
+    nonfinite = []
+    numbers = 0
+
+    def walk(value, path="report"):
+        nonlocal numbers
+        if isinstance(value, float):
+            numbers += 1
+            if not math.isfinite(value):
+                nonfinite.append(path)
+        elif isinstance(value, dict):
+            for key, item in value.items():
+                walk(item, path + "." + key)
+        elif isinstance(value, list):
+            for index, item in enumerate(value):
+                walk(item, path + f"[{index}]")
+
+    walk(result)
+    check("json", not nonfinite, nonfinite)
+    scenes = plan["scenes"] + supplement["scenes"]
+    rows = result["rows"]
+    check("population", len(rows) == len(scenes) == 337, "all prospective scenes")
+    check("population", len({row["id"] for row in rows}) == len(rows), "unique scene ids")
+    check("population", not result["setup_failures"], "no unreported setup replacement")
+    expected_queries = sum(len(scene["pixels_xy"]) for scene in scenes)
+    check("population", expected_queries == 3886, "all prospective unique queries")
+    status_counts, method_counts, leaf_methods, sign_counts = (
+        Counter(),
+        Counter(),
+        Counter(),
+        Counter(),
+    )
+    scientific_failures = []
+    passed_queries = oracle_passes = 0
+    max_resolved_delta = 0.0
+    candidate_evaluations = candidate_panels = oracle_evaluations = 0
+    operator = plan["operator"]
+    oracle_settings = plan["oracle"]
+    guards = supplement["algorithm_resolution_guards"]
+    for index, (row, scene) in enumerate(zip(rows, scenes, strict=True)):
+        key = scene["id"]
+        check("population", row["index"] == index and row["id"] == key, key + " order")
+        check("population", row["input"] == scene, key + " complete declared input")
+        check("population", row["kind"] == scene["kind"], key + " scene kind")
+        candidate, queries = row["candidate"], row["queries"]
+        size = len(scene["pixels_xy"])
+        check("population", len(queries) == size, key + " query population")
+        for field in (
+            "derivatives",
+            "statuses",
+            "estimated_errors",
+            "query_methods",
+            "query_evaluations",
+            "query_panels",
+        ):
+            check("candidate_accounting", len(candidate[field]) == size, key + " " + field)
+        check(
+            "candidate_accounting",
+            candidate["evaluations"]
+            == sum(candidate["query_evaluations"])
+            <= operator["max_evaluations"],
+            key + " cumulative evaluations",
+        )
+        check("candidate_accounting", candidate["panels"] == sum(candidate["query_panels"]), key)
+        check("candidate_accounting", candidate["quadrature_certified"] is False, key)
+        candidate_evaluations += candidate["evaluations"]
+        candidate_panels += candidate["panels"]
+        for qi, query in enumerate(queries):
+            qkey = f"{key}/{qi}"
+            check("roles", query["query_index"] == qi, qkey + " index")
+            check("roles", query["pixel"] == scene["pixels_xy"][qi], qkey + " pixel")
+            expected_roles = []
+            for role in scene["query_roles"]:
+                if role["query_index"] == qi:
+                    expected_roles.append(role["role"])
+                    check("roles", role["pixel"] == query["pixel"], qkey + " role pixel")
+            check("roles", query["roles"] == expected_roles, qkey + " complete aliases")
+            qcandidate = query["candidate"]
+            for local, array in (
+                ("value", "derivatives"),
+                ("status", "statuses"),
+                ("estimated_error", "estimated_errors"),
+                ("method", "query_methods"),
+            ):
+                check("candidate_accounting", qcandidate[local] == candidate[array][qi], qkey)
+            used, panels = candidate["query_evaluations"][qi], candidate["query_panels"][qi]
+            check("candidate_accounting", 0 <= panels <= operator["max_panels"], qkey)
+            check("candidate_accounting", used >= 2 * panels >= 0, qkey)
+            check("candidate_accounting", (used - 2 * panels) % 36 == 0, qkey + " node accounting")
+            method, status = qcandidate["method"], qcandidate["status"]
+            status_counts[status] += 1
+            method_counts[method] += 1
+            raw_affine = all(value == 0 for value in scene["homography"][2][:2])
+            check(
+                "candidate_accounting",
+                method.startswith("affine_closed_form" if raw_affine else "projective_closed_form"),
+                qkey + " raw-H classification",
+            )
+            if not method.endswith("_then_chord_quadrature"):
+                check("candidate_accounting", used == 2 and panels == 1, qkey + " analytic cost")
+            if status == "resolved":
+                check(
+                    "statuses",
+                    qcandidate["value"] is not None
+                    and 0 <= qcandidate["estimated_error"] <= operator["probability_tolerance"],
+                    qkey,
+                )
+            else:
+                check(
+                    "statuses",
+                    status in {"work_limit", "numerical"}
+                    and qcandidate["value"] is None
+                    and qcandidate["estimated_error"] is None,
+                    qkey,
+                )
+
+            oracle = query["oracle"]
+            leaves = sorted(oracle["leaf_panels"], key=lambda leaf: leaf["start"])
+            cuts = oracle["initial_source_cuts"]
+            check("oracle_tree", oracle["initial_panel_count"] == len(cuts) - 1, qkey)
+            check("oracle_tree", leaves[0]["start"] == cuts[0], qkey + " left endpoint")
+            check("oracle_tree", leaves[-1]["end"] == cuts[-1], qkey + " right endpoint")
+            for left, right in itertools.pairwise(leaves):
+                check("oracle_tree", left["end"] == right["start"], qkey + " closed coverage")
+            check(
+                "oracle_tree",
+                oracle["panels_inspected"] == 2 * len(leaves) - oracle["initial_panel_count"],
+                qkey + " complete binary forests",
+            )
+            direct = [leaf for leaf in leaves if leaf["method"] == "direct_source_s"]
+            tail = [leaf for leaf in leaves if leaf["method"] == "bounded_tail"]
+            check("oracle_panels", len(direct) + len(tail) == len(leaves), qkey)
+            check(
+                "oracle_accounting",
+                oracle["endpoint_evaluations"] == 2 + 2 * oracle["panels_inspected"],
+                qkey,
+            )
+            check(
+                "oracle_accounting",
+                oracle["evaluations"]
+                == oracle["endpoint_evaluations"] + sum(oracle["rule_evaluations"].values())
+                <= oracle_settings["maximum_evaluations_per_query"],
+                qkey,
+            )
+            check(
+                "oracle_accounting",
+                oracle["panels_inspected"] <= oracle_settings["maximum_panels"],
+                qkey,
+            )
+            oracle_evaluations += oracle["evaluations"]
+            for leaf in leaves:
+                leaf_methods[leaf["method"]] += 1
+                check("oracle_panels", leaf["start"] < leaf["end"], qkey)
+            for leaf in direct:
+                for field, limit in (
+                    ("whitened_travel", "maximum_whitened_panel_travel"),
+                    ("gaussian_exponent_variation", "maximum_gaussian_exponent_variation"),
+                    ("denominator_ratio", "maximum_denominator_ratio"),
+                ):
+                    check("oracle_panels", 0 <= leaf[field] <= guards[limit], qkey + " " + field)
+            for leaf in tail:
+                check(
+                    "oracle_panels",
+                    0 <= leaf["absolute_tail_envelope"] <= oracle["per_panel_tail_threshold"],
+                    qkey,
+                )
+            for order in ("96", "192"):
+                values = [leaf["values"][order] for leaf in direct]
+                summed = math.fsum(values)
+                scale = math.fsum(abs(value) for value in values)
+                check(
+                    "oracle_arithmetic",
+                    close(summed, oracle["partial_integrals"][order], scale),
+                    qkey,
+                )
+                check("oracle_arithmetic", close(summed, oracle["values"][order], scale), qkey)
+                check(
+                    "oracle_accounting",
+                    oracle["rule_evaluations"][order] == int(order) * len(direct),
+                    qkey,
+                )
+            tail_sum = math.fsum(leaf["absolute_tail_envelope"] for leaf in tail)
+            check("oracle_arithmetic", close(tail_sum, oracle["tail_envelope_sum"]), qkey)
+            delta = abs(oracle["values"]["192"] - oracle["values"]["96"])
+            allowance = oracle_settings["order_agreement_abs"] + oracle_settings[
+                "order_agreement_rel"
+            ] * abs(oracle["values"]["192"])
+            check("oracle_arithmetic", close(delta, oracle["order_delta"]), qkey)
+            check("oracle_arithmetic", close(allowance, oracle["order_allowance"]), qkey)
+            converged = oracle["status"] == "resolved" and delta <= allowance
+            check("oracle_arithmetic", oracle["oracle_converged"] == converged, qkey)
+            oracle_passes += converged
+            if status == "resolved":
+                comparison_delta = abs(qcandidate["value"] - oracle["values"]["192"])
+                comparison_allowance = (
+                    oracle_settings["comparison_abs"]
+                    + oracle_settings["comparison_rel"] * abs(oracle["values"]["192"])
+                    + qcandidate["estimated_error"]
+                    + 2 * delta
+                    + tail_sum
+                )
+                check(
+                    "comparison_arithmetic",
+                    close(comparison_delta, query["comparison_delta"]),
+                    qkey,
+                )
+                check(
+                    "comparison_arithmetic",
+                    close(comparison_allowance, query["comparison_allowance"]),
+                    qkey,
+                )
+                passed = converged and comparison_delta <= comparison_allowance
+                max_resolved_delta = max(max_resolved_delta, comparison_delta)
+                if abs(oracle["values"]["192"]) > comparison_allowance:
+                    check("sign", qcandidate["value"] * oracle["values"]["192"] > 0, qkey)
+                sign_counts[
+                    "positive"
+                    if qcandidate["value"] > 0
+                    else "negative"
+                    if qcandidate["value"] < 0
+                    else "zero"
+                ] += 1
+            else:
+                passed = False
+            check("statuses", query["comparison_passed"] == passed, qkey)
+            passed_queries += passed
+            if not passed:
+                scientific_failures.append(
+                    {
+                        "scene_id": key,
+                        "query_index": qi,
+                        "pixel": query["pixel"],
+                        "candidate": qcandidate,
+                        "candidate_evaluations": used,
+                        "candidate_panels": panels,
+                        "oracle_values": oracle["values"],
+                        "oracle_converged": converged,
+                    }
+                )
+        passed = all(query["comparison_passed"] for query in queries)
+        check("statuses", row["protocol_passed"] == passed, key)
+        check("statuses", row["status"] == ("passed" if passed else "protocol_failure"), key)
+
+    area_settings = plan["positive_area_corroboration"]
+    area_passes = 0
+    check(
+        "area", len(result["positive_area"]) == len(area_settings["selection"]) == 12, "area scenes"
+    )
+    by_id = {row["id"]: row for row in rows}
+    for area, selection in zip(result["positive_area"], area_settings["selection"], strict=True):
+        key = selection["scene_id"]
+        row = by_id[key]
+        indices = selection["query_indices"]
+        check("area", area["scene_id"] == key and area["query_indices"] == indices, key)
+        check(
+            "area",
+            area["observation_centres"]
+            == [[x + 0.5, y + 0.5] for i in indices for x, y in [row["input"]["pixels_xy"][i]]],
+            key + " pixel centres",
+        )
+        check("area", len(area["queries"]) == len(indices) == 3, key)
+        h = area_settings["h_radians"]
+        for order in ("96", "192"):
+            for side, delta in (
+                ("plus_h", h),
+                ("minus_h", -h),
+                ("plus_half", h / 2),
+                ("minus_half", -h / 2),
+            ):
+                payload = area["means"][order][side]
+                check("area", payload["angle_delta_radians"] == delta, key + order + side)
+                check("area", len(payload["probabilities"]) == 3, key)
+                check("area", payload["whole_material_chart_minimum"] > 0, key)
+        for position, (query, qi) in enumerate(zip(area["queries"], indices, strict=True)):
+            qkey = f"{key}/{qi}"
+            check(
+                "area",
+                query["query_index"] == qi and query["pixel"] == row["input"]["pixels_xy"][qi],
+                qkey,
+            )
+            fd = {}
+            for order in ("96", "192"):
+                means = area["means"][order]
+                fd[order] = {
+                    "h": (
+                        means["plus_h"]["probabilities"][position]
+                        - means["minus_h"]["probabilities"][position]
+                    )
+                    / (2 * h),
+                    "half": (
+                        means["plus_half"]["probabilities"][position]
+                        - means["minus_half"]["probabilities"][position]
+                    )
+                    / h,
+                }
+                for step in ("h", "half"):
+                    check(
+                        "area_arithmetic",
+                        close(fd[order][step], query["finite_differences"][order][step]),
+                        qkey,
+                    )
+            richardson = (4 * fd["192"]["half"] - fd["192"]["h"]) / 3
+            order_delta = max(abs(fd["192"][step] - fd["96"][step]) for step in ("h", "half"))
+            propagated = {}
+            for step, denominator in (("h", 2 * h), ("half", h)):
+                propagated[step] = (
+                    math.fsum(
+                        abs(
+                            area["means"]["192"][side + "_" + step]["probabilities"][position]
+                            - area["means"]["96"][side + "_" + step]["probabilities"][position]
+                        )
+                        for side in ("plus", "minus")
+                    )
+                    / denominator
+                )
+            order_guard = max(order_delta, *propagated.values())
+            half_delta = abs(fd["192"]["half"] - fd["192"]["h"])
+            candidate = row["candidate"]["derivatives"][qi]
+            check("area_arithmetic", candidate == query["candidate"], qkey)
+            check("area_arithmetic", close(richardson, query["richardson"]), qkey)
+            check("area_arithmetic", close(order_delta, query["derivative_order_delta"]), qkey)
+            check(
+                "area_arithmetic",
+                all(
+                    close(value, query["propagated_area_order_discrepancy"][step])
+                    for step, value in propagated.items()
+                ),
+                qkey + " propagated order discrepancy",
+            )
+            check(
+                "area_arithmetic",
+                close(order_guard, query["derivative_order_guard_value"]),
+                qkey + " conservative order guard",
+            )
+            check("area_arithmetic", close(half_delta, query["h_half_delta"]), qkey)
+            check(
+                "area_arithmetic",
+                close(abs(candidate - richardson), query["candidate_delta"]),
+                qkey,
+            )
+            allowance = area_settings["candidate_richardson_abs"] + area_settings[
+                "candidate_richardson_rel"
+            ] * abs(richardson)
+            check("area_arithmetic", close(allowance, query["candidate_allowance"]), qkey)
+            check(
+                "area_arithmetic",
+                query["h_half_passed"] == (half_delta <= area_settings["step_half_agreement_abs"]),
+                qkey,
+            )
+            check(
+                "area_arithmetic",
+                query["derivative_order_passed"]
+                == (
+                    query["derivative_order_guard_value"]
+                    <= area_settings["derivative_order_agreement_abs"]
+                ),
+                qkey,
+            )
+            passed = (
+                query["candidate_resolved"]
+                and query["derivative_order_passed"]
+                and query["h_half_passed"]
+                and query["candidate_delta"] <= query["candidate_allowance"]
+            )
+            check("area", query["protocol_passed"] == passed, qkey)
+            area_passes += passed
+        check(
+            "area",
+            area["protocol_passed"] == all(q["protocol_passed"] for q in area["queries"]),
+            key,
+        )
+    expected_summary = {
+        "all_area_queries_retained": True,
+        "all_scenes_and_queries_retained": True,
+        "old_archived_data_analyses": 0,
+        "optimizer_calls": 0,
+        "oracle_converged_queries": oracle_passes,
+        "planned_queries": expected_queries,
+        "planned_scenes": len(scenes),
+        "positive_area_passes": area_passes,
+        "positive_area_queries": 36,
+        "positive_area_scenes": 12,
+        "query_passes": passed_queries,
+        "renderer_calls": 0,
+        "retained_queries": sum(len(row["queries"]) for row in rows),
+        "retained_scenes": len(rows),
+        "scene_passes": sum(row["protocol_passed"] for row in rows),
+        "unit_private_branch_controls_executed_here": False,
+    }
+    check("summary", result["summary"] == expected_summary, "independently recounted")
+    check("summary", result["protocol_passed"] is False, "original scientific failure preserved")
+    check("summary", len(scientific_failures) == 1, "sole retained failure")
+    check(
+        "summary",
+        scientific_failures[0]["scene_id"] == "compressed-chart-e16-d0.0001",
+        "failure identity",
+    )
+    return {
+        "format": "pictures-to-cad-saved-normal-derivative-independent-audit",
+        "version": 1,
+        "audit_passed": not failures,
+        "scope": "Saved-data consistency only; no model/oracle/renderer/optimizer import or execution, no physical accuracy or certified error claim.",
+        "provenance": {
+            "report_sha256": sha(raw),
+            "report_bytes": len(raw),
+            "plan_sha256": sha(plan_raw),
+            "supplement_sha256": sha(supplement_raw),
+            "auditor_sha256": sha(Path(__file__).read_bytes()),
+            "source_snapshot_members": len(result["source_before"]),
+            "revision_recorded_in_report": result["revision"],
+        },
+        "checks": dict(counts),
+        "failures": failures,
+        "original_scientific_protocol_passed": result["protocol_passed"],
+        "expected_original_exit_from_protocol": 1,
+        "independently_recounted_summary": expected_summary,
+        "candidate_status_counts": dict(status_counts),
+        "candidate_method_counts": dict(method_counts),
+        "resolved_sign_counts": dict(sign_counts),
+        "oracle_leaf_methods": dict(leaf_methods),
+        "finite_float_fields_checked": numbers,
+        "max_resolved_comparison_delta": max_resolved_delta,
+        "candidate_evaluations": candidate_evaluations,
+        "candidate_panels": candidate_panels,
+        "oracle_evaluations": oracle_evaluations,
+        "retained_scientific_failures": scientific_failures,
+    }
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--report", type=Path, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    if args.output.exists() or args.output.is_symlink():
+        parser.error("output must be a fresh path")
+    result = audit(args.root.resolve(), args.report.resolve())
+    encoded = json.dumps(result, indent=2, sort_keys=True, allow_nan=False) + "\n"
+    with args.output.open("x", encoding="utf-8") as handle:
+        handle.write(encoded)
+    print(encoded, end="")
+    return 0 if result["audit_passed"] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
