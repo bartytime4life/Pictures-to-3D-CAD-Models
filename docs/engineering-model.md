@@ -175,8 +175,11 @@ physical camera assumptions remain. The [directional-spread qualification](valid
 documents missed directional cases and unknown outcomes for its research
 diagnostic. The tracer's own covariance fit adds orientation-support and
 per-direction adequacy rules and traces a uniform directional blur by direction
-([reference-sheet tracing](reference-sheet.md), §3). Supported nonparallel
-fillets now use that empirical rectified-image covariance in their
+([reference-sheet tracing](reference-sheet.md), §3). Supported edges can also
+use their directly measured directional widths when a full
+covariance is unavailable. A two-direction shadow-blurring covariance is not an
+identified covariance for geometry correction. Supported nonparallel
+fillets with an accepted empirical rectified-image covariance use it in their
 [Gaussian corner model](anisotropic-corners.md); unresolved covariance fits or
 mixed supplied-covariance supports normally retain the affected traced boundary.
 If the corrected source ring is invalid, a frozen, already accepted geometric fit

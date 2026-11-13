@@ -5,6 +5,19 @@ record below to assess its evidence. This page separates local checks, hosted
 CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
+## Documentation alignment with merged PRs #105, #107 and #108 — November 13, 2026
+
+The [current documentation review](validation/documentation-cell-state.md)
+uses main `aa15903c0c3e2415fa5751446c7b871d4d1110cb`. It updates branch
+inclusion, two-direction edge-width guidance, developer API shapes/resources,
+and the remaining recovery requirements. The README now puts startup ahead of
+detailed research. Frozen plans, archived outcomes and generated library
+products retain their original bytes and evidence scope.
+
+These documentation checks do not extend earlier numerical or application
+results to this revision. The new small sensitivity example demonstrates
+calling the supplied-model APIs, without inverse fitting or physical validation.
+
 ## Unrounded cell sensitivities — November 13, 2026
 
 The [first frozen qualification](validation/finite-cell-sensitivity.md) passes

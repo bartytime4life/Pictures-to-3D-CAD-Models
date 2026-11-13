@@ -28,7 +28,12 @@ after rectification and the measurement pipeline's resampling and smoothing.
 It is not a raw sensor-space optical covariance. The scalar summary
 `sigma = det(S)**0.25` is the geometric mean of the principal standard
 deviations; it cannot preserve the blur's orientation at a nonparallel corner.
-No additional covariance is inferred when the matrix is absent.
+No additional covariance is inferred for corner fitting when the matrix is absent.
+The tracer can still use per-direction measured edge widths for a two-direction
+part and construct a matching covariance solely to blur its paper-shadow model.
+That construction does not identify the missing covariance cross term or supply
+the matrix to this corner model; corner and curve corrections keep one width.
+See [two-direction edge tracing](reference-sheet.md#3-segmentation-and-sub-pixel-edges).
 
 The public numerical helper has this call outline with caller-supplied geometry:
 

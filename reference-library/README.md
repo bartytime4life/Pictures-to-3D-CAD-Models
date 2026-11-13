@@ -22,7 +22,11 @@ works without a running workbench or those parent-repository guides.
 For workbench developer research, see the
 [source-cell acquisition model](../docs/finite-acquisition-mean.md) and its
 [source-bound qualification](../docs/validation/finite-acquisition-mean.md).
-Those APIs and synthetic results belong to the workbench candidate, with no
+The subsequent [unrounded area sensitivities](../docs/finite-cell-sensitivity.md)
+and [saved-only archive](../studies/fixtures/finite-cell-sensitivity-v1/README.md)
+are also workbench research APIs. Check the
+[dated source snapshot](../docs/project-status.md) for branch inclusion.
+Those APIs and synthetic results belong to the workbench, with no
 change to this library's revision, calculators or generated handbook.
 
 A practical, source-backed library for turning photographs into printable CAD: recover shape, establish dimensions, rebuild editable geometry, and check the part you print. **Revision 7, November 9, 2026.**
@@ -158,7 +162,12 @@ reference-library/
 
 ## Build and test
 
-Reading needs nothing but a browser. To rebuild or test, install Node 20+ and Python 3.10+, then run from this folder:
+Reading needs nothing but a browser. Before rebuilding or testing, follow the
+[dependency and environment setup](BUILD.md#requirements), including the Python
+and Node packages and the browser/font prerequisites for the steps you need.
+The parent repository's `make setup-library` prepares this library's separate
+environment; a standalone copy has its own setup instructions in that guide.
+With that environment active, run from this folder:
 
 ```bash
 make test

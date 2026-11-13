@@ -77,6 +77,12 @@ directional rise-width covariance belongs to this rectified field. Normal-specif
 widths drive edge/wall localization. Supported nonparallel fillets now use the
 full covariance, transported into their corrected frame; free arcs/circles keep
 the scalar `(det S)^¼` correction, and slot ends keep a directional approximation.
+Without an accepted covariance, supported direction bins can still provide
+their own measured widths for second-pass edge searches. A covariance matching
+the two best-supported widths can blur the paper-shadow model, but is not an
+identified optical covariance and does not enable covariance-based corner or
+curve correction. Those corrections retain the scalar path. See
+[two-direction tracing](reference-sheet.md#3-segmentation-and-sub-pixel-edges).
 Neither numerical rank, model convergence nor positive definiteness converts
 these empirical widths into a calibrated camera PSF; [the tracing guide](reference-sheet.md#3-segmentation-and-sub-pixel-edges)
 defines the boundaries.
@@ -99,6 +105,11 @@ for signed fields. Neither is called by the Gaussian fitter or automatic
 pipeline. Unknown cell derivatives are explicit; linear propagation rejects
 nonfinite inputs. The [qualification](validation/finite-cell-sensitivity.md)
 checks derivatives, rather than estimating geometry or physical accuracy.
+The parameter order is `(centre_x, centre_y, radius, fraction, normal_angle)`;
+the angle rotates a stored normal continuously in radians. It is not a fifth
+parameter of the existing fixed-normal Gaussian fitter. A future inverse must
+keep the unrounded linear objective separate from the float32/sRGB8 stages and
+qualify its own search, brightness handling and geometry-information rank.
 
 The subsequent developer-only
 [source-cell acquisition mean](finite-acquisition-mean.md) composes independent

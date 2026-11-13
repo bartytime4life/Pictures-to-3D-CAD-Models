@@ -237,9 +237,11 @@ also records moment cancellation. These are numerical background, not validation
 of this derivative.
 
 Independent quadrature in the original `s` coordinate and positive-area angular
-differences at new synthetic scenes remain prospective checks. A separate [experimental operator](finite-normal-derivative.md) and
-[complete failed qualification](validation/finite-normal-derivative.md) now
-retain their own source, work and error-estimation limits. This derivation
+differences were executed in the separately bound
+[experimental operator's V1 qualification](validation/finite-normal-derivative.md).
+That complete failed qualification retains its unknown and error-estimation
+limits; it does not replace the original archived normal-column failures.
+The [operator](finite-normal-derivative.md) retains its own source and work contract. This derivation
 does not establish production correction, and the
 [original failed protocol](validation/finite-residual-information.md) remains
 unchanged. Real acquisition, illumination, thickness and calibration assumptions

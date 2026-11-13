@@ -2,7 +2,7 @@
 
 Use the [documentation index](README.md) to find the user guide, implementation
 contract and validation record for the behavior you want to change.
-The [source-scope guide](project-status.md) distinguishes the main-based repair
+The [source-scope guide](project-status.md) distinguishes the current main source
 from research PRs targeting another branch. Record the actual base and executable
 revision; a higher PR number or test count does not imply integration into main.
 
@@ -60,7 +60,7 @@ For a documentation-only pass, compare every tracked non-document blob with
 the declared base before and after verification. Preserve accurate historical
 reports and generated library outputs. Library source edits still follow its
 generation rules; a workbench-only navigation change needs no library rebuild.
-The [preceding documentation review](validation/documentation-mean-state.md)
+The [current documentation review](validation/documentation-cell-state.md)
 shows one scoped verification record.
 
 ## Keep documentation and evidence aligned

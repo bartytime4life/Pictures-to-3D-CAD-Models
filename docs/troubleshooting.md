@@ -8,6 +8,12 @@ inputs; `ArithmeticError` withholds an unresolved numerical result. A `resolved`
 prediction with `adequacy="not_evaluated"` does not validate the camera model or
 recover geometry. These Python operators do not add an interface mode.
 
+The separate [area sensitivities and linear propagation](finite-cell-sensitivity.md)
+use different result contracts: unknown cell Jacobians are NaN with explicit
+statuses, while a refused linear call has absent arrays. Inspect every status
+before assembling fields. Replacing unknown derivatives by zeros changes the
+model. Neither API supplies a five-geometry-parameter fitter.
+
 Use the visible error message and the **Next step** guide to identify the action that is needed. The guide is deterministic input/build state, not AI advice or manufacturing acceptance. Keep the current photograph and dimensions while correcting a recoverable problem; starting over should not be the default recovery strategy. See the [documentation index](README.md) for other tasks and the [capture guide](capture-guide.md) for source preparation.
 
 ## Image and tracing problems
@@ -45,7 +51,9 @@ edge localization alone does not validate a radius. Supported nonparallel
 fillets use the full covariance, while free curves and caps retain separate
 approximations; a rank/SPD check does not establish physical measurement accuracy. A missing
 directional note can mean insufficient independent direction support; it does
-not prove isotropic optics. See [model boundaries](reference-sheet.md#3-segmentation-and-sub-pixel-edges).
+not prove isotropic optics. Two supported directions may still supply separate
+edge-search widths without a full covariance; that does not enable directional
+corner or curve correction. See [model boundaries](reference-sheet.md#3-segmentation-and-sub-pixel-edges).
 
 A note that curved edges use measurements from both the top and bottom means
 the thickness correction applies different maps within their support. Their

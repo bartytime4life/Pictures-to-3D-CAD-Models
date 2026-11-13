@@ -1,5 +1,19 @@
 # Workbench change log
 
+## Documentation aligned with current main — November 13, 2026
+
+- Put installation and the first workflow ahead of detailed research in the
+  README; update the source snapshot to include merged PRs #105, #107 and #108.
+- Explain per-direction edge widths without a fitted covariance throughout
+  capture, architecture, corner/frame and troubleshooting guidance.
+- Complete the sensitivity API signatures, array shapes and resource contract;
+  add a small no-fit example and separate implemented derivatives from planned
+  recovery with unknown brightness. Correct a stale prospective-check statement
+  while preserving the completed failed study.
+- Review workbench and companion-library documentation, fix the library's
+  setup prerequisite, and preserve historical reports and generated outputs.
+  [Review and verification](validation/documentation-cell-state.md).
+
 ## Unrounded source-cell sensitivities — November 13, 2026
 
 - Add five disk/chord area derivatives with exact event predicates, bounded
