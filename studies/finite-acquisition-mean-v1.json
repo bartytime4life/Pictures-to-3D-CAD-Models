@@ -1,0 +1,69 @@
+{
+  "format": "finite-acquisition-mean-prospective-plan",
+  "version": 1,
+  "scope": "Independent source-cell integration and explicit discrete forward stages, developer-only. No fit, calibration, geometry recovery, camera or automatic-trace qualification.",
+  "population": {
+    "archive_index": "studies/results/finite-acquisition-operator-v1-summary.json",
+    "artifacts": 123,
+    "source_scenes": 16,
+    "output_records": 32,
+    "stages": ["unquantized", "grayscale_srgb8"],
+    "queries_per_record": 441,
+    "rule": "Retain every indexed scene, both q values, both lanes and all stage arrays. Do not select successful cases. Missing, input, numerical and work failures are durable outcomes."
+  },
+  "source_grid": {
+    "shape": [96, 96],
+    "origin_cell_centre": [-16, -16],
+    "pitch": 1,
+    "geometry": "disk intersect n dot (x-centre) <= fraction*radius",
+    "area_method": "Clip each source-cell rectangle by the half-plane, then signed circular Green edge integrals. No polygonized-circle generator or Gaussian reference import."
+  },
+  "arithmetic": {
+    "coverage_storage": "float32 before source mixing",
+    "brightness": "float64 background*(1-coverage)+material*coverage then float32",
+    "optical": "raw saved coefficients, independent direct float64 correlation, REFLECT_101, then float32",
+    "encoding": "float64 sRGB, clip0..255, ties-to-even uint8, grayscale",
+    "decoding": "float32 LUT then three sequential float32 Rec709 channel accumulations",
+    "rectification": "Independent signed factored Keys weights a=-1/2, float64, replicated source borders, then float32",
+    "post": "Independent direct float64 correlation by saved7x7 coefficients, REFLECT_101, then float32; compared with original automatic GaussianBlur, not asserted bit-identical",
+    "output_map": "For q: [[1/q,0,16],[0,1/q,16]] maps output geometric pixel centres to source array indices"
+  },
+  "comparisons": {
+    "saved_coverage_replay": "First replay each saved source coverage through both stage lanes. This isolates downstream arithmetic parity from the analytic-D/polygon difference.",
+    "analytic_geometry_replay": "Then replace coverage by independent analytic disk/halfplane cell areas. Retain full stage discrepancies, total area, every query residual and all encoding code differences.",
+    "downstream_unquantized_absolute_allowance_levels": 0.002,
+    "decoded_replay_rule": "Quantization is discontinuous. Count every code change; final PNG discrepancy must be <=(25/16)*sum(abs(post_kernel))*max(abs(new_decoded_source-old_decoded_source))+0.002. Also retain the raw one-level outcomes, without using this stage bound to relabel them.",
+    "analytic_coverage_rule": "Absolute per-cell difference <= inscribed polygon total area-loss bound + 4*eps32; signed total-area difference checked separately. Analytic segment area sum tolerance1e-9*max(1,R^2), assuming disk fully inside grid.",
+    "analytic_unquantized_rule": "Full output max discrepancy <=0.002+(25/16)*sum(abs(post_kernel))*sum(abs(optical_kernel))*abs(background-material)*(polygon_area_loss_bound+4*eps32). This is an engineering comparison, not a certified enclosure.",
+    "geometry_controls": "Closed-form disks/semidisks/quadrants/segments, empty/full/tangent cells, complemented halfplanes, partition sums, rotation/translation/scale controls and independent positive-area numerical controls. Keep every failure; no tolerance retuning.",
+    "budget_controls": "Budget refusal before stage work; preserve one unknown per query. Validate excessive dimensions/kernels/maps/invalid inputs; verify immutable outputs/input isolation and input-binding changes.",
+    "serialization": "Strict native JSON with allow_nan=false; no fallback invalid_python_value markers. Raw unknowns are null with explicit reason."
+  },
+  "limits": {
+    "max_source_cells": 65536,
+    "max_output_cells": 65536,
+    "max_queries": 4096,
+    "max_kernel_dimension": 31,
+    "max_declared_stage_work": 100000000,
+    "numeric_workspace": "512*(source_cells+output_cells)+131072 bytes, excluding caller inputs and Python/allocator overhead",
+    "work_definition": "Source mixing cells + optical kernel products +16 Keys taps/output cell +post kernel products; grayscale encoding/decoding add4/source cell. Coverage geometry work is separate and source-cell bounded. Not a timing benchmark."
+  },
+  "execution": {
+    "fresh_output_directory_required": true,
+    "frozen_source_commit_required_before_scientific_calls": true,
+    "no_generator_or_old_gaussian_reference_calls": true,
+    "no_original_experiment_rerun": true,
+    "new_inverse_optimizer_calls": 0,
+    "stages": "Implementation may be statically reviewed before the freeze. Freeze full implementation/tests/runner before numerical execution; after a failure, retain it and admit any correction separately."
+  },
+  "primary_research": [
+    {
+      "url": "https://bigwww.epfl.ch/publications/unser0001/",
+      "use": "Sampling/reconstruction and prefilters are distinct operators. Background, not a qualification of this implementation."
+    },
+    {
+      "url": "https://arxiv.org/abs/1812.10515",
+      "use": "Primary work on analytic disk/grid overlap. This implementation derives its own clipped-cell Green integral; it does not copy or claim to implement that paper's case tally."
+    }
+  ]
+}

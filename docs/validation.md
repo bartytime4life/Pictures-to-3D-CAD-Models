@@ -5,6 +5,23 @@ record below to assess its evidence. This page separates local checks, hosted
 CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
+## Independent source-cell acquisition mean — November 13, 2026
+
+The [complete comparison](validation/finite-acquisition-mean.md) retains all 128
+new forward means across 16 saved synthetic scenes/32 output records. Analytic-D
+query discrepancies are at most `7.6294e-5` unquantized and `3.0518e-5` encoded
+intensity levels, with zero changed encoding codes. All 56,448 residuals and
+768 stage arrays are archived. This is supplied-model agreement, without fitting
+or recovering geometry.
+
+The original focused run's 12 failures, first mathematical audit's 32 scalar
+mismatches and a general workspace undercount remain explicit. The full suite
+passes 1,173 tests at numerical source `521c318`; the later workspace-only
+correction passes 145 focused tests and a 22-check source-equivalence audit.
+Independent saved-data checks and portable review remain separate from software,
+hosted, camera and physical acceptance. See the
+[182-artifact workflow](../studies/fixtures/finite-acquisition-mean-v1/README.md).
+
 ## Acquisition evidence and documentation refresh — November 13, 2026
 
 The publication base is main `68a67e766956ac41a3b73ae73d4ac553ef47db26`,

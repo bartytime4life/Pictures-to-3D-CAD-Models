@@ -1,5 +1,28 @@
 # Source scope and verification status
 
+## Subsequent developer candidate: source-cell acquisition means
+
+This candidate extends the evidence package below with independent
+[analytic source-cell integration and discrete acquisition means](finite-acquisition-mean.md).
+Its publication base is main `f2e0fd6a68a4ab26f6eea92a95ebbda673953193`,
+including merged PR #104. That base's tree exactly matches the reviewed
+`72862db3d2c34b758bdd2e98f1cf8e88795c3cb6`; no production-source change arrived
+between the numerical work and this base readback.
+It adds no automatic tracing or inverse-fit integration. The
+[complete comparison](validation/finite-acquisition-mean.md) retains all 128
+saved-coverage/analytic-D/encoding comparisons across 32 original output records.
+Analytic query discrepancies are at most `7.6294e-5` unquantized and `3.0518e-5`
+encoded intensity levels, with no changed encoding codes.
+
+Numerical evidence and the 1,173-test software result bind source `521c318`.
+A subsequent metadata-only workspace repair passes 145 focused tests and a
+22-check source-equivalence audit. The original 12 failed controls and first
+mathematical audit's 32 arithmetic mismatches remain archived. Source freezes,
+workspace repair, portable saved-data checks and any later hosted CI have
+separate receipts. The [182-artifact archive](../studies/fixtures/finite-acquisition-mean-v1/README.md)
+establishes no geometry recovery, physical-camera accuracy or automatic CAD
+correction. This developer branch is not an additional main-branch capability.
+
 ## Current source and research evidence — November 13, 2026, 16:02 UTC
 
 The publication base is main

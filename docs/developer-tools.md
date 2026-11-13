@@ -31,6 +31,8 @@ reproducing an archived result; a later backend can invalidate that binding.
 
 | Tool | Entry point | Execution and output |
 | --- | --- | --- |
+| Source-cell acquisition mean | `backend.finite_aperture.segment_cell_coverage`, `backend.finite_acquisition.acquisition_mean` | Experimental Python operators with explicit grid/kernels/map/levels, immutable stages and bounded work; no trace, optimizer or HTTP integration; [contract and limits](finite-acquisition-mean.md) |
+| Source-cell saved-data artifact audit | `.venv/bin/python studies/verification/finite-acquisition-mean-artifact-audit-v1.py --help` | NumPy archive reading and strict JSON/hash arithmetic only; uses the recorded source ZIP as data; [complete 182-artifact workflow](../studies/fixtures/finite-acquisition-mean-v1/README.md#verify-saved-data-without-a-model-call) |
 | Acquisition saved-data artifact audit | `.venv/bin/python studies/verification/finite-acquisition-artifact-audit-v1.py --help` | Standard-library NPY parsing and Pillow PNG decoding; no backend, generator or model imports; use the extracted recorded-source root and saved run in the [complete workflow](../studies/fixtures/finite-acquisition-operator-v1/README.md#verify-and-reconstruct-saved-data) |
 | Acquisition native-scalar derivation | `python3 studies/verification/finite-acquisition-normalize-v1.py --help` | Standard-library-only, exact raw-report hash and whitelisted 320 fields; fresh output; no new scientific qualification |
 | Workbench setup/start/development | `make setup-app`, `make start`, `make dev` | Setup installs locked dependencies and builds; start/dev launch services |
@@ -127,6 +129,14 @@ synthetic scenes and calls forward models. The main-based publication does not
 qualify fresh execution against its changed backend; a new experiment must bind
 its own source and environment. Do not import the recorded source merely to
 inspect the archive. The documented portable workflow reads its bytes only.
+
+The source-cell mean study's explicit runner,
+`studies/verification/finite-acquisition-mean-v1.py --output-dir NEW_DIRECTORY`,
+performs new acquisition-mean evaluations against saved captures and requires
+its runtime/input source files committed in the current HEAD. Its help mode
+does not evaluate a mean. A new execution has its own source binding; the saved
+record at `521c318` is not silently relabeled after the workspace-metadata repair.
+Use the saved-data workflow for ordinary review.
 
 The [finite-chord normal derivative](finite-normal-derivative.md) is now an
 experimental Python operator. Its [complete qualification](validation/finite-normal-derivative.md)

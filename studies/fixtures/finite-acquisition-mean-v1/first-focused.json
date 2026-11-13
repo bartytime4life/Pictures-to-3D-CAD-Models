@@ -1,0 +1,19 @@
+{
+  "source_commit": "489990e048d74c58d95bd1f7632ab7fb747e8187",
+  "command": [
+    ".venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "-W",
+    "error::RuntimeWarning",
+    "tests/test_finite_aperture.py",
+    "tests/test_finite_acquisition.py"
+  ],
+  "exit_code": 1,
+  "passed": 122,
+  "failed": 12,
+  "log_sha256": "be1efd6973b26320dd38c6e11cc1db7b1c6c7ab9916d8ba03011c9652867f937",
+  "failure_scope": "area-complement controls; exact represented interior roots round to endpoints and are explicitly refused",
+  "complete_capture_replay_started": false
+}

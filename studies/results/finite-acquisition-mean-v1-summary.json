@@ -1,0 +1,1806 @@
+{
+  "artifacts": [
+    {
+      "decoded_bytes": 10104,
+      "decoded_sha256": "c61b9def98132a10bbfe6df2bddbc50f9e9338eded0177a74dc25dff90220921",
+      "encoding": "identity",
+      "kind": "current_source_or_plan",
+      "path": "backend/finite_acquisition.py",
+      "sha256": "c61b9def98132a10bbfe6df2bddbc50f9e9338eded0177a74dc25dff90220921",
+      "stored_bytes": 10104
+    },
+    {
+      "decoded_bytes": 14553,
+      "decoded_sha256": "75f29a04133ffd142144607a7c7153e12de159ba7c632e01fd46751fa14cd7b5",
+      "encoding": "identity",
+      "kind": "current_source_or_plan",
+      "path": "backend/finite_aperture.py",
+      "sha256": "75f29a04133ffd142144607a7c7153e12de159ba7c632e01fd46751fa14cd7b5",
+      "stored_bytes": 14553
+    },
+    {
+      "decoded_bytes": 1748,
+      "decoded_sha256": "f10580d0a5d29731b66f8de3988c865129438578cc2b643865cd0247f2462f86",
+      "encoding": "identity",
+      "kind": "current_source_or_plan",
+      "path": "studies/finite-acquisition-mean-v1-continuation-v1.json",
+      "sha256": "f10580d0a5d29731b66f8de3988c865129438578cc2b643865cd0247f2462f86",
+      "stored_bytes": 1748
+    },
+    {
+      "decoded_bytes": 1874,
+      "decoded_sha256": "860bbf5d5337693417db241b038c9a85b7dd483adc2fb12ad25000fd557c170e",
+      "encoding": "identity",
+      "kind": "current_source_or_plan",
+      "path": "studies/finite-acquisition-mean-v1-workspace-repair-v1.json",
+      "sha256": "860bbf5d5337693417db241b038c9a85b7dd483adc2fb12ad25000fd557c170e",
+      "stored_bytes": 1874
+    },
+    {
+      "decoded_bytes": 5342,
+      "decoded_sha256": "0f8f927b99834726e2f78ea332d69978cf1a3ce94bd4d79073b51aa31a7829e3",
+      "encoding": "identity",
+      "kind": "current_source_or_plan",
+      "path": "studies/finite-acquisition-mean-v1.json",
+      "sha256": "0f8f927b99834726e2f78ea332d69978cf1a3ce94bd4d79073b51aa31a7829e3",
+      "stored_bytes": 5342
+    },
+    {
+      "decoded_bytes": 1384322,
+      "decoded_sha256": "02a13338909426b10cdd4eb5b75bd22f9cef5ae13475f8999bc29c8d970d3499",
+      "encoding": "gzip",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/census.json.gz",
+      "run_relative_path": "census.json",
+      "sha256": "e77b5fcc2bd35bcb892071c1b8840d161665175862f8808369bca9674c05f4cd",
+      "stored_bytes": 3933
+    },
+    {
+      "decoded_bytes": 73856,
+      "decoded_sha256": "b1a927824d99c7f3c676d408c0b883a356e90773f2e71fdc5ba2537959ffd4de",
+      "encoding": "gzip",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase0-analytic-coverage.npy.gz",
+      "run_relative_path": "major-directional-phase0-analytic-coverage.npy",
+      "sha256": "188089e6b110b2fcec11d3808044f9c6ac203017e44df85c5b5c01ce2e4f4d7a",
+      "stored_bytes": 539
+    },
+    {
+      "decoded_bytes": 14260,
+      "decoded_sha256": "fc2c647fd33b3c12196d18e4cc4754e614779255ee150e3f6d9c14e9867b3098",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase0-q1-analytic_D-png.npz",
+      "run_relative_path": "major-directional-phase0-q1-analytic_D-png.npz",
+      "sha256": "fc2c647fd33b3c12196d18e4cc4754e614779255ee150e3f6d9c14e9867b3098",
+      "stored_bytes": 14260
+    },
+    {
+      "decoded_bytes": 13871,
+      "decoded_sha256": "3500fae2616f08f31835515a207c420e6e4db36ba18fddcf7cf34d91261b7fed",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase0-q1-analytic_D-unquantized.npz",
+      "run_relative_path": "major-directional-phase0-q1-analytic_D-unquantized.npz",
+      "sha256": "3500fae2616f08f31835515a207c420e6e4db36ba18fddcf7cf34d91261b7fed",
+      "stored_bytes": 13871
+    },
+    {
+      "decoded_bytes": 14327,
+      "decoded_sha256": "ff72d610b3cebba08fd4b7377a801519e79c96b130f97a49a0b556175e89d6db",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase0-q1-saved_polygon-png.npz",
+      "run_relative_path": "major-directional-phase0-q1-saved_polygon-png.npz",
+      "sha256": "ff72d610b3cebba08fd4b7377a801519e79c96b130f97a49a0b556175e89d6db",
+      "stored_bytes": 14327
+    },
+    {
+      "decoded_bytes": 13940,
+      "decoded_sha256": "1fff22850b2a0ffd0fa7bc5b86eb585247f382df2da7a2fedc3dbf5928507323",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase0-q1-saved_polygon-unquantized.npz",
+      "run_relative_path": "major-directional-phase0-q1-saved_polygon-unquantized.npz",
+      "sha256": "1fff22850b2a0ffd0fa7bc5b86eb585247f382df2da7a2fedc3dbf5928507323",
+      "stored_bytes": 13940
+    },
+    {
+      "decoded_bytes": 17241,
+      "decoded_sha256": "42fb6066967f0c71016027ef4a887a238b806007a083e4fcfff793c4463e1662",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase0-q1.25-analytic_D-png.npz",
+      "run_relative_path": "major-directional-phase0-q1.25-analytic_D-png.npz",
+      "sha256": "42fb6066967f0c71016027ef4a887a238b806007a083e4fcfff793c4463e1662",
+      "stored_bytes": 17241
+    },
+    {
+      "decoded_bytes": 17999,
+      "decoded_sha256": "cbeaf1ae7f6584be435fe28eb87c42f99fe03fe89d7f876730c1955f41984a06",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase0-q1.25-analytic_D-unquantized.npz",
+      "run_relative_path": "major-directional-phase0-q1.25-analytic_D-unquantized.npz",
+      "sha256": "cbeaf1ae7f6584be435fe28eb87c42f99fe03fe89d7f876730c1955f41984a06",
+      "stored_bytes": 17999
+    },
+    {
+      "decoded_bytes": 17308,
+      "decoded_sha256": "9a3bcb4854c7ba494e6cbe48640ee8afffb9f3669007b24d81754963d5260a1a",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase0-q1.25-saved_polygon-png.npz",
+      "run_relative_path": "major-directional-phase0-q1.25-saved_polygon-png.npz",
+      "sha256": "9a3bcb4854c7ba494e6cbe48640ee8afffb9f3669007b24d81754963d5260a1a",
+      "stored_bytes": 17308
+    },
+    {
+      "decoded_bytes": 18064,
+      "decoded_sha256": "2edad7efa67a19a791d24b994df411db8ce0c169a9acfd6bc02dbf3f091add65",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase0-q1.25-saved_polygon-unquantized.npz",
+      "run_relative_path": "major-directional-phase0-q1.25-saved_polygon-unquantized.npz",
+      "sha256": "2edad7efa67a19a791d24b994df411db8ce0c169a9acfd6bc02dbf3f091add65",
+      "stored_bytes": 18064
+    },
+    {
+      "decoded_bytes": 73856,
+      "decoded_sha256": "716dd7308fad5265299c17c0f04dcd3340d7f787b498ae5c34eebb20d5665f7f",
+      "encoding": "gzip",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase1-analytic-coverage.npy.gz",
+      "run_relative_path": "major-directional-phase1-analytic-coverage.npy",
+      "sha256": "e7a460005e14de004a7e8a10723723f56e823042e6344713de57d596078d9737",
+      "stored_bytes": 608
+    },
+    {
+      "decoded_bytes": 14356,
+      "decoded_sha256": "e7e7f57f2af23b697deba793e527cb278287100df87d18ff1d9ebf7fef23db24",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase1-q1-analytic_D-png.npz",
+      "run_relative_path": "major-directional-phase1-q1-analytic_D-png.npz",
+      "sha256": "e7e7f57f2af23b697deba793e527cb278287100df87d18ff1d9ebf7fef23db24",
+      "stored_bytes": 14356
+    },
+    {
+      "decoded_bytes": 13804,
+      "decoded_sha256": "b32822af5135d09401732d2c8525015f4a5d8245b1e2a6346d6dab5855d2683a",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase1-q1-analytic_D-unquantized.npz",
+      "run_relative_path": "major-directional-phase1-q1-analytic_D-unquantized.npz",
+      "sha256": "b32822af5135d09401732d2c8525015f4a5d8245b1e2a6346d6dab5855d2683a",
+      "stored_bytes": 13804
+    },
+    {
+      "decoded_bytes": 14413,
+      "decoded_sha256": "bde6107e6ff402337e5d780fdbcd09a15b65ac75c293fe638f0e65e7c5b22195",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase1-q1-saved_polygon-png.npz",
+      "run_relative_path": "major-directional-phase1-q1-saved_polygon-png.npz",
+      "sha256": "bde6107e6ff402337e5d780fdbcd09a15b65ac75c293fe638f0e65e7c5b22195",
+      "stored_bytes": 14413
+    },
+    {
+      "decoded_bytes": 13859,
+      "decoded_sha256": "04647d47585332a688db30ede1dcd711042f101c2ff61cba5984df94dd42111c",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase1-q1-saved_polygon-unquantized.npz",
+      "run_relative_path": "major-directional-phase1-q1-saved_polygon-unquantized.npz",
+      "sha256": "04647d47585332a688db30ede1dcd711042f101c2ff61cba5984df94dd42111c",
+      "stored_bytes": 13859
+    },
+    {
+      "decoded_bytes": 17389,
+      "decoded_sha256": "5f15dd4a9c39aa2c914de311c80910ba4fc0ccbee4cf3fb31bf12a0a9e368a60",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase1-q1.25-analytic_D-png.npz",
+      "run_relative_path": "major-directional-phase1-q1.25-analytic_D-png.npz",
+      "sha256": "5f15dd4a9c39aa2c914de311c80910ba4fc0ccbee4cf3fb31bf12a0a9e368a60",
+      "stored_bytes": 17389
+    },
+    {
+      "decoded_bytes": 17922,
+      "decoded_sha256": "f56f80cf94f9df0356254a8bf121f3ebf07e98524e899008b5512c8660071981",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase1-q1.25-analytic_D-unquantized.npz",
+      "run_relative_path": "major-directional-phase1-q1.25-analytic_D-unquantized.npz",
+      "sha256": "f56f80cf94f9df0356254a8bf121f3ebf07e98524e899008b5512c8660071981",
+      "stored_bytes": 17922
+    },
+    {
+      "decoded_bytes": 17446,
+      "decoded_sha256": "070fced9009805dad6ffb19873b8b9621492e0748703171a5b134cea998bdf2d",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase1-q1.25-saved_polygon-png.npz",
+      "run_relative_path": "major-directional-phase1-q1.25-saved_polygon-png.npz",
+      "sha256": "070fced9009805dad6ffb19873b8b9621492e0748703171a5b134cea998bdf2d",
+      "stored_bytes": 17446
+    },
+    {
+      "decoded_bytes": 17973,
+      "decoded_sha256": "7a4ba6e47727db86cf114a7bf5635b06b0c622ae63d4ceaf70145537cd7ae653",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase1-q1.25-saved_polygon-unquantized.npz",
+      "run_relative_path": "major-directional-phase1-q1.25-saved_polygon-unquantized.npz",
+      "sha256": "7a4ba6e47727db86cf114a7bf5635b06b0c622ae63d4ceaf70145537cd7ae653",
+      "stored_bytes": 17973
+    },
+    {
+      "decoded_bytes": 73856,
+      "decoded_sha256": "35bfeb1a87110f4bc9b4234c69ae00082a99f22c93438c66b99459756539675c",
+      "encoding": "gzip",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase2-analytic-coverage.npy.gz",
+      "run_relative_path": "major-directional-phase2-analytic-coverage.npy",
+      "sha256": "2364153bdc12016f3653317f4eac37be4973aad93429c5800cd3531ce198b9c9",
+      "stored_bytes": 734
+    },
+    {
+      "decoded_bytes": 14538,
+      "decoded_sha256": "02cbe82c83b6d990a0c215faa2d271255a1e063025a96573ed79944b677a4136",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase2-q1-analytic_D-png.npz",
+      "run_relative_path": "major-directional-phase2-q1-analytic_D-png.npz",
+      "sha256": "02cbe82c83b6d990a0c215faa2d271255a1e063025a96573ed79944b677a4136",
+      "stored_bytes": 14538
+    },
+    {
+      "decoded_bytes": 13974,
+      "decoded_sha256": "98c84ea291980f6935beefc520167db2cad47c71f2dc518ab389836d1db3f4aa",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase2-q1-analytic_D-unquantized.npz",
+      "run_relative_path": "major-directional-phase2-q1-analytic_D-unquantized.npz",
+      "sha256": "98c84ea291980f6935beefc520167db2cad47c71f2dc518ab389836d1db3f4aa",
+      "stored_bytes": 13974
+    },
+    {
+      "decoded_bytes": 14617,
+      "decoded_sha256": "43d9b40e5bc7fc08a530ed92fe0514d432eddfaa4381191b98351044638385bd",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase2-q1-saved_polygon-png.npz",
+      "run_relative_path": "major-directional-phase2-q1-saved_polygon-png.npz",
+      "sha256": "43d9b40e5bc7fc08a530ed92fe0514d432eddfaa4381191b98351044638385bd",
+      "stored_bytes": 14617
+    },
+    {
+      "decoded_bytes": 14058,
+      "decoded_sha256": "cd505ea8b159be887857b80c2ac3d6b1d133d19695bf15beeec8b2356f375812",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase2-q1-saved_polygon-unquantized.npz",
+      "run_relative_path": "major-directional-phase2-q1-saved_polygon-unquantized.npz",
+      "sha256": "cd505ea8b159be887857b80c2ac3d6b1d133d19695bf15beeec8b2356f375812",
+      "stored_bytes": 14058
+    },
+    {
+      "decoded_bytes": 17585,
+      "decoded_sha256": "d28940a7bfed9de36d3c7d2166d07fa18f4c80eb377f9a768e6b55ffd3685bf9",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase2-q1.25-analytic_D-png.npz",
+      "run_relative_path": "major-directional-phase2-q1.25-analytic_D-png.npz",
+      "sha256": "d28940a7bfed9de36d3c7d2166d07fa18f4c80eb377f9a768e6b55ffd3685bf9",
+      "stored_bytes": 17585
+    },
+    {
+      "decoded_bytes": 18119,
+      "decoded_sha256": "7a41063871f55754f1146cf946cfa8a8a25d7621b759eca92caf3d5b85b937a1",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase2-q1.25-analytic_D-unquantized.npz",
+      "run_relative_path": "major-directional-phase2-q1.25-analytic_D-unquantized.npz",
+      "sha256": "7a41063871f55754f1146cf946cfa8a8a25d7621b759eca92caf3d5b85b937a1",
+      "stored_bytes": 18119
+    },
+    {
+      "decoded_bytes": 17664,
+      "decoded_sha256": "43345e5fcf5f1e97fc9df4182042333d3dbf877e96077b40a19540593e874733",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase2-q1.25-saved_polygon-png.npz",
+      "run_relative_path": "major-directional-phase2-q1.25-saved_polygon-png.npz",
+      "sha256": "43345e5fcf5f1e97fc9df4182042333d3dbf877e96077b40a19540593e874733",
+      "stored_bytes": 17664
+    },
+    {
+      "decoded_bytes": 18204,
+      "decoded_sha256": "5db684be678d050f94d90bf9fd096327b4597c371da0ea3aa7d88358f9b7f0ff",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase2-q1.25-saved_polygon-unquantized.npz",
+      "run_relative_path": "major-directional-phase2-q1.25-saved_polygon-unquantized.npz",
+      "sha256": "5db684be678d050f94d90bf9fd096327b4597c371da0ea3aa7d88358f9b7f0ff",
+      "stored_bytes": 18204
+    },
+    {
+      "decoded_bytes": 73856,
+      "decoded_sha256": "d64318eb34858586ce09f7bac69049437e661d192d2b758b7868c8d061a48ca5",
+      "encoding": "gzip",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase3-analytic-coverage.npy.gz",
+      "run_relative_path": "major-directional-phase3-analytic-coverage.npy",
+      "sha256": "1fe32b5cc9f64b3f7bd04d61a9c004d5272f8e6e44cbdb7851229d883155b38c",
+      "stored_bytes": 739
+    },
+    {
+      "decoded_bytes": 14579,
+      "decoded_sha256": "140e6b47e415d562262a33f82aab939f3fc04cecd662903fe36267ba9dbe4731",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase3-q1-analytic_D-png.npz",
+      "run_relative_path": "major-directional-phase3-q1-analytic_D-png.npz",
+      "sha256": "140e6b47e415d562262a33f82aab939f3fc04cecd662903fe36267ba9dbe4731",
+      "stored_bytes": 14579
+    },
+    {
+      "decoded_bytes": 14069,
+      "decoded_sha256": "fd1cb996a439044bf8a5e803f594d57766961b63ae3ca2b35a002e816d0df559",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase3-q1-analytic_D-unquantized.npz",
+      "run_relative_path": "major-directional-phase3-q1-analytic_D-unquantized.npz",
+      "sha256": "fd1cb996a439044bf8a5e803f594d57766961b63ae3ca2b35a002e816d0df559",
+      "stored_bytes": 14069
+    },
+    {
+      "decoded_bytes": 14623,
+      "decoded_sha256": "e0737050ac827f54e5e93c673d15e4960b244f11221338da7bf9eda66bbb570b",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase3-q1-saved_polygon-png.npz",
+      "run_relative_path": "major-directional-phase3-q1-saved_polygon-png.npz",
+      "sha256": "e0737050ac827f54e5e93c673d15e4960b244f11221338da7bf9eda66bbb570b",
+      "stored_bytes": 14623
+    },
+    {
+      "decoded_bytes": 14120,
+      "decoded_sha256": "8e512dd9c49e08dfc1e248d60b26daf32c4216c0285cd656f8134466b69ed0c2",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase3-q1-saved_polygon-unquantized.npz",
+      "run_relative_path": "major-directional-phase3-q1-saved_polygon-unquantized.npz",
+      "sha256": "8e512dd9c49e08dfc1e248d60b26daf32c4216c0285cd656f8134466b69ed0c2",
+      "stored_bytes": 14120
+    },
+    {
+      "decoded_bytes": 17604,
+      "decoded_sha256": "f867af8568fff313e46e91ffdb4bba2fa0738556a99178dfd1042ec6ee4ac853",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase3-q1.25-analytic_D-png.npz",
+      "run_relative_path": "major-directional-phase3-q1.25-analytic_D-png.npz",
+      "sha256": "f867af8568fff313e46e91ffdb4bba2fa0738556a99178dfd1042ec6ee4ac853",
+      "stored_bytes": 17604
+    },
+    {
+      "decoded_bytes": 18243,
+      "decoded_sha256": "c6d5ce2d673215e5b209c982b9da01626b18b16b2e8ff5b0b8e75c98126a4fd9",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase3-q1.25-analytic_D-unquantized.npz",
+      "run_relative_path": "major-directional-phase3-q1.25-analytic_D-unquantized.npz",
+      "sha256": "c6d5ce2d673215e5b209c982b9da01626b18b16b2e8ff5b0b8e75c98126a4fd9",
+      "stored_bytes": 18243
+    },
+    {
+      "decoded_bytes": 17648,
+      "decoded_sha256": "17d62efab918eb8fc75155562a7b751dae1a4fcf8c91d658b4bcffce5049e6f0",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase3-q1.25-saved_polygon-png.npz",
+      "run_relative_path": "major-directional-phase3-q1.25-saved_polygon-png.npz",
+      "sha256": "17d62efab918eb8fc75155562a7b751dae1a4fcf8c91d658b4bcffce5049e6f0",
+      "stored_bytes": 17648
+    },
+    {
+      "decoded_bytes": 18287,
+      "decoded_sha256": "9cbabde3e69cdafa760835d64af3076c85472d19b4b3d7b38711883f51eb3895",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-directional-phase3-q1.25-saved_polygon-unquantized.npz",
+      "run_relative_path": "major-directional-phase3-q1.25-saved_polygon-unquantized.npz",
+      "sha256": "9cbabde3e69cdafa760835d64af3076c85472d19b4b3d7b38711883f51eb3895",
+      "stored_bytes": 18287
+    },
+    {
+      "decoded_bytes": 73856,
+      "decoded_sha256": "b1a927824d99c7f3c676d408c0b883a356e90773f2e71fdc5ba2537959ffd4de",
+      "encoding": "gzip",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase0-analytic-coverage.npy.gz",
+      "run_relative_path": "major-isotropic-phase0-analytic-coverage.npy",
+      "sha256": "188089e6b110b2fcec11d3808044f9c6ac203017e44df85c5b5c01ce2e4f4d7a",
+      "stored_bytes": 539
+    },
+    {
+      "decoded_bytes": 6874,
+      "decoded_sha256": "0538d8e41d7328a7847aa705b65e9e6bbd45831b028629526d2bbea91f891f05",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase0-q1-analytic_D-png.npz",
+      "run_relative_path": "major-isotropic-phase0-q1-analytic_D-png.npz",
+      "sha256": "0538d8e41d7328a7847aa705b65e9e6bbd45831b028629526d2bbea91f891f05",
+      "stored_bytes": 6874
+    },
+    {
+      "decoded_bytes": 5941,
+      "decoded_sha256": "174ae9bd5e6505b785b230afac2d7cc241c66ae8e5af86e2a53d6f212e010fd3",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase0-q1-analytic_D-unquantized.npz",
+      "run_relative_path": "major-isotropic-phase0-q1-analytic_D-unquantized.npz",
+      "sha256": "174ae9bd5e6505b785b230afac2d7cc241c66ae8e5af86e2a53d6f212e010fd3",
+      "stored_bytes": 5941
+    },
+    {
+      "decoded_bytes": 6940,
+      "decoded_sha256": "a45afb6ce6d66a7568691078ac6c847a6f1d98933e5076229a213a6ba99edf17",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase0-q1-saved_polygon-png.npz",
+      "run_relative_path": "major-isotropic-phase0-q1-saved_polygon-png.npz",
+      "sha256": "a45afb6ce6d66a7568691078ac6c847a6f1d98933e5076229a213a6ba99edf17",
+      "stored_bytes": 6940
+    },
+    {
+      "decoded_bytes": 6007,
+      "decoded_sha256": "5cf616e1ee3e835b8c49065399db52e88db710a5b0a22f28f0a6d6f56dd09705",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase0-q1-saved_polygon-unquantized.npz",
+      "run_relative_path": "major-isotropic-phase0-q1-saved_polygon-unquantized.npz",
+      "sha256": "5cf616e1ee3e835b8c49065399db52e88db710a5b0a22f28f0a6d6f56dd09705",
+      "stored_bytes": 6007
+    },
+    {
+      "decoded_bytes": 7889,
+      "decoded_sha256": "72a0b2de01ab0bfd07535777f1902c98af9100d009d3155cde22105f9b3e35f6",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase0-q1.25-analytic_D-png.npz",
+      "run_relative_path": "major-isotropic-phase0-q1.25-analytic_D-png.npz",
+      "sha256": "72a0b2de01ab0bfd07535777f1902c98af9100d009d3155cde22105f9b3e35f6",
+      "stored_bytes": 7889
+    },
+    {
+      "decoded_bytes": 7189,
+      "decoded_sha256": "5a3bb37e766885ad9b9d10f76738fa9839c6be72813840b7ccc73404a544b46d",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase0-q1.25-analytic_D-unquantized.npz",
+      "run_relative_path": "major-isotropic-phase0-q1.25-analytic_D-unquantized.npz",
+      "sha256": "5a3bb37e766885ad9b9d10f76738fa9839c6be72813840b7ccc73404a544b46d",
+      "stored_bytes": 7189
+    },
+    {
+      "decoded_bytes": 7955,
+      "decoded_sha256": "a772b6218713e4f98727ac529b58ecbbfd025546e63e1d70e7aaf5e9ed7bc81b",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase0-q1.25-saved_polygon-png.npz",
+      "run_relative_path": "major-isotropic-phase0-q1.25-saved_polygon-png.npz",
+      "sha256": "a772b6218713e4f98727ac529b58ecbbfd025546e63e1d70e7aaf5e9ed7bc81b",
+      "stored_bytes": 7955
+    },
+    {
+      "decoded_bytes": 7259,
+      "decoded_sha256": "7b6f3a80d8e1e61c1ee09a7a445f8a48ce1381f213263f0aa3f16b687d9b980e",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase0-q1.25-saved_polygon-unquantized.npz",
+      "run_relative_path": "major-isotropic-phase0-q1.25-saved_polygon-unquantized.npz",
+      "sha256": "7b6f3a80d8e1e61c1ee09a7a445f8a48ce1381f213263f0aa3f16b687d9b980e",
+      "stored_bytes": 7259
+    },
+    {
+      "decoded_bytes": 73856,
+      "decoded_sha256": "716dd7308fad5265299c17c0f04dcd3340d7f787b498ae5c34eebb20d5665f7f",
+      "encoding": "gzip",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase1-analytic-coverage.npy.gz",
+      "run_relative_path": "major-isotropic-phase1-analytic-coverage.npy",
+      "sha256": "e7a460005e14de004a7e8a10723723f56e823042e6344713de57d596078d9737",
+      "stored_bytes": 608
+    },
+    {
+      "decoded_bytes": 7191,
+      "decoded_sha256": "1457f9d0b5ac4d516391223f7899b7645631be4fa902ad34d6a0dce1eebb1dbd",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase1-q1-analytic_D-png.npz",
+      "run_relative_path": "major-isotropic-phase1-q1-analytic_D-png.npz",
+      "sha256": "1457f9d0b5ac4d516391223f7899b7645631be4fa902ad34d6a0dce1eebb1dbd",
+      "stored_bytes": 7191
+    },
+    {
+      "decoded_bytes": 6228,
+      "decoded_sha256": "5d573577d72a3021f83d95ea24b2456211b01640fee6586b3a5ba72b3480bce6",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase1-q1-analytic_D-unquantized.npz",
+      "run_relative_path": "major-isotropic-phase1-q1-analytic_D-unquantized.npz",
+      "sha256": "5d573577d72a3021f83d95ea24b2456211b01640fee6586b3a5ba72b3480bce6",
+      "stored_bytes": 6228
+    },
+    {
+      "decoded_bytes": 7246,
+      "decoded_sha256": "29a7ce8da23f1c914289a9bd3ccf500e8df66cd2d7d1b20482634d352ef9a86e",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase1-q1-saved_polygon-png.npz",
+      "run_relative_path": "major-isotropic-phase1-q1-saved_polygon-png.npz",
+      "sha256": "29a7ce8da23f1c914289a9bd3ccf500e8df66cd2d7d1b20482634d352ef9a86e",
+      "stored_bytes": 7246
+    },
+    {
+      "decoded_bytes": 6278,
+      "decoded_sha256": "6dea1d229eae43dca75aa2915f2c69c8ab9cc183c53c5e2d1f19653f88773669",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase1-q1-saved_polygon-unquantized.npz",
+      "run_relative_path": "major-isotropic-phase1-q1-saved_polygon-unquantized.npz",
+      "sha256": "6dea1d229eae43dca75aa2915f2c69c8ab9cc183c53c5e2d1f19653f88773669",
+      "stored_bytes": 6278
+    },
+    {
+      "decoded_bytes": 11190,
+      "decoded_sha256": "14a8373e74a9739290892dfb3192ff15f5068ec9bc9db1dffbd406a9ca17b102",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase1-q1.25-analytic_D-png.npz",
+      "run_relative_path": "major-isotropic-phase1-q1.25-analytic_D-png.npz",
+      "sha256": "14a8373e74a9739290892dfb3192ff15f5068ec9bc9db1dffbd406a9ca17b102",
+      "stored_bytes": 11190
+    },
+    {
+      "decoded_bytes": 11208,
+      "decoded_sha256": "6e41723162ddecd1d700c2c95fdfe231c404911dafaf9b524a5c86722b3f8a07",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase1-q1.25-analytic_D-unquantized.npz",
+      "run_relative_path": "major-isotropic-phase1-q1.25-analytic_D-unquantized.npz",
+      "sha256": "6e41723162ddecd1d700c2c95fdfe231c404911dafaf9b524a5c86722b3f8a07",
+      "stored_bytes": 11208
+    },
+    {
+      "decoded_bytes": 11245,
+      "decoded_sha256": "cae73dd859b829730e3a38a448d968562f8e9666935dc95c879a4fab743b2119",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase1-q1.25-saved_polygon-png.npz",
+      "run_relative_path": "major-isotropic-phase1-q1.25-saved_polygon-png.npz",
+      "sha256": "cae73dd859b829730e3a38a448d968562f8e9666935dc95c879a4fab743b2119",
+      "stored_bytes": 11245
+    },
+    {
+      "decoded_bytes": 11260,
+      "decoded_sha256": "9e0bcc648387fb4fbe581b201c8b0a780be3b7179417d7930b7b4aa32a0f841d",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase1-q1.25-saved_polygon-unquantized.npz",
+      "run_relative_path": "major-isotropic-phase1-q1.25-saved_polygon-unquantized.npz",
+      "sha256": "9e0bcc648387fb4fbe581b201c8b0a780be3b7179417d7930b7b4aa32a0f841d",
+      "stored_bytes": 11260
+    },
+    {
+      "decoded_bytes": 73856,
+      "decoded_sha256": "35bfeb1a87110f4bc9b4234c69ae00082a99f22c93438c66b99459756539675c",
+      "encoding": "gzip",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase2-analytic-coverage.npy.gz",
+      "run_relative_path": "major-isotropic-phase2-analytic-coverage.npy",
+      "sha256": "2364153bdc12016f3653317f4eac37be4973aad93429c5800cd3531ce198b9c9",
+      "stored_bytes": 734
+    },
+    {
+      "decoded_bytes": 10928,
+      "decoded_sha256": "88f9722215dd92a6f28c9878694520ae24c8cda60ce7b49530bd4a9accb469b3",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase2-q1-analytic_D-png.npz",
+      "run_relative_path": "major-isotropic-phase2-q1-analytic_D-png.npz",
+      "sha256": "88f9722215dd92a6f28c9878694520ae24c8cda60ce7b49530bd4a9accb469b3",
+      "stored_bytes": 10928
+    },
+    {
+      "decoded_bytes": 9842,
+      "decoded_sha256": "a57a9dcde4c8e1db424dd60d83e0ffbf3374a26ef20ad00017e5f841565e157f",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase2-q1-analytic_D-unquantized.npz",
+      "run_relative_path": "major-isotropic-phase2-q1-analytic_D-unquantized.npz",
+      "sha256": "a57a9dcde4c8e1db424dd60d83e0ffbf3374a26ef20ad00017e5f841565e157f",
+      "stored_bytes": 9842
+    },
+    {
+      "decoded_bytes": 11000,
+      "decoded_sha256": "d70b9a4d6eac24054d80a7151b89fd208d3bc66ec79e1719654eba5b2f090315",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase2-q1-saved_polygon-png.npz",
+      "run_relative_path": "major-isotropic-phase2-q1-saved_polygon-png.npz",
+      "sha256": "d70b9a4d6eac24054d80a7151b89fd208d3bc66ec79e1719654eba5b2f090315",
+      "stored_bytes": 11000
+    },
+    {
+      "decoded_bytes": 9913,
+      "decoded_sha256": "783338f2347a4b0cbe444528c7e7a6d7f3d5b8d8ef667ca56ec0fb69b82eef29",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase2-q1-saved_polygon-unquantized.npz",
+      "run_relative_path": "major-isotropic-phase2-q1-saved_polygon-unquantized.npz",
+      "sha256": "783338f2347a4b0cbe444528c7e7a6d7f3d5b8d8ef667ca56ec0fb69b82eef29",
+      "stored_bytes": 9913
+    },
+    {
+      "decoded_bytes": 12946,
+      "decoded_sha256": "379376d24efe925fdb786aa3ab14ad043db22b3202c11ef1c5981661253c285a",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase2-q1.25-analytic_D-png.npz",
+      "run_relative_path": "major-isotropic-phase2-q1.25-analytic_D-png.npz",
+      "sha256": "379376d24efe925fdb786aa3ab14ad043db22b3202c11ef1c5981661253c285a",
+      "stored_bytes": 12946
+    },
+    {
+      "decoded_bytes": 12397,
+      "decoded_sha256": "c5902744e299a8477727184ddee499f8742f2292e97445c27b32909b5c2ded4e",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase2-q1.25-analytic_D-unquantized.npz",
+      "run_relative_path": "major-isotropic-phase2-q1.25-analytic_D-unquantized.npz",
+      "sha256": "c5902744e299a8477727184ddee499f8742f2292e97445c27b32909b5c2ded4e",
+      "stored_bytes": 12397
+    },
+    {
+      "decoded_bytes": 13018,
+      "decoded_sha256": "b080aa31af66190b9b398ae07d70494ca3a5a143563d919b69a7a3b237dc9d16",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase2-q1.25-saved_polygon-png.npz",
+      "run_relative_path": "major-isotropic-phase2-q1.25-saved_polygon-png.npz",
+      "sha256": "b080aa31af66190b9b398ae07d70494ca3a5a143563d919b69a7a3b237dc9d16",
+      "stored_bytes": 13018
+    },
+    {
+      "decoded_bytes": 12469,
+      "decoded_sha256": "e421d69b51c901fc4d1a5a096990c00fe10496696b8f8216b2eb5c5b9151713e",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase2-q1.25-saved_polygon-unquantized.npz",
+      "run_relative_path": "major-isotropic-phase2-q1.25-saved_polygon-unquantized.npz",
+      "sha256": "e421d69b51c901fc4d1a5a096990c00fe10496696b8f8216b2eb5c5b9151713e",
+      "stored_bytes": 12469
+    },
+    {
+      "decoded_bytes": 73856,
+      "decoded_sha256": "d64318eb34858586ce09f7bac69049437e661d192d2b758b7868c8d061a48ca5",
+      "encoding": "gzip",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase3-analytic-coverage.npy.gz",
+      "run_relative_path": "major-isotropic-phase3-analytic-coverage.npy",
+      "sha256": "1fe32b5cc9f64b3f7bd04d61a9c004d5272f8e6e44cbdb7851229d883155b38c",
+      "stored_bytes": 739
+    },
+    {
+      "decoded_bytes": 10756,
+      "decoded_sha256": "8b4357bbd350b7b8d0697bf57862303c29659771f6dace61e6dc04c0cbda725b",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase3-q1-analytic_D-png.npz",
+      "run_relative_path": "major-isotropic-phase3-q1-analytic_D-png.npz",
+      "sha256": "8b4357bbd350b7b8d0697bf57862303c29659771f6dace61e6dc04c0cbda725b",
+      "stored_bytes": 10756
+    },
+    {
+      "decoded_bytes": 9775,
+      "decoded_sha256": "aa1ce34251c743557508e38ba25445cb81f71c0afb1a5b93587333f1bd9801fa",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase3-q1-analytic_D-unquantized.npz",
+      "run_relative_path": "major-isotropic-phase3-q1-analytic_D-unquantized.npz",
+      "sha256": "aa1ce34251c743557508e38ba25445cb81f71c0afb1a5b93587333f1bd9801fa",
+      "stored_bytes": 9775
+    },
+    {
+      "decoded_bytes": 10803,
+      "decoded_sha256": "afec6b21ebc489b195eebb843882688225e6c566eadabd389e81a6b7327e3703",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase3-q1-saved_polygon-png.npz",
+      "run_relative_path": "major-isotropic-phase3-q1-saved_polygon-png.npz",
+      "sha256": "afec6b21ebc489b195eebb843882688225e6c566eadabd389e81a6b7327e3703",
+      "stored_bytes": 10803
+    },
+    {
+      "decoded_bytes": 9821,
+      "decoded_sha256": "23ed1a591b30a916c51f97490fd3b1c940db2ed0d935bb3336b6a9fd99021c52",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase3-q1-saved_polygon-unquantized.npz",
+      "run_relative_path": "major-isotropic-phase3-q1-saved_polygon-unquantized.npz",
+      "sha256": "23ed1a591b30a916c51f97490fd3b1c940db2ed0d935bb3336b6a9fd99021c52",
+      "stored_bytes": 9821
+    },
+    {
+      "decoded_bytes": 12789,
+      "decoded_sha256": "c62f20cf6847ac749b8856ef6e0b02816fc1987cd06a9987088e70eb81273c50",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase3-q1.25-analytic_D-png.npz",
+      "run_relative_path": "major-isotropic-phase3-q1.25-analytic_D-png.npz",
+      "sha256": "c62f20cf6847ac749b8856ef6e0b02816fc1987cd06a9987088e70eb81273c50",
+      "stored_bytes": 12789
+    },
+    {
+      "decoded_bytes": 12198,
+      "decoded_sha256": "0aaef48348725b420c0da4c8642701fc4c1a352a4b3657d99d0893aad0087405",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase3-q1.25-analytic_D-unquantized.npz",
+      "run_relative_path": "major-isotropic-phase3-q1.25-analytic_D-unquantized.npz",
+      "sha256": "0aaef48348725b420c0da4c8642701fc4c1a352a4b3657d99d0893aad0087405",
+      "stored_bytes": 12198
+    },
+    {
+      "decoded_bytes": 12836,
+      "decoded_sha256": "bad1574a1e20b63439c484b8c8b7df9254b531e2c371b776bcb0708105f8431e",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase3-q1.25-saved_polygon-png.npz",
+      "run_relative_path": "major-isotropic-phase3-q1.25-saved_polygon-png.npz",
+      "sha256": "bad1574a1e20b63439c484b8c8b7df9254b531e2c371b776bcb0708105f8431e",
+      "stored_bytes": 12836
+    },
+    {
+      "decoded_bytes": 12245,
+      "decoded_sha256": "d4095a13cb044f23a18c4606c11f0a5eb3cc8bf71413127b3c0e90723743b7e5",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/major-isotropic-phase3-q1.25-saved_polygon-unquantized.npz",
+      "run_relative_path": "major-isotropic-phase3-q1.25-saved_polygon-unquantized.npz",
+      "sha256": "d4095a13cb044f23a18c4606c11f0a5eb3cc8bf71413127b3c0e90723743b7e5",
+      "stored_bytes": 12245
+    },
+    {
+      "decoded_bytes": 73856,
+      "decoded_sha256": "db8a63376d259058c09f81cc37f67b3a664788c9cd991c66e449e21c15524d4b",
+      "encoding": "gzip",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase0-analytic-coverage.npy.gz",
+      "run_relative_path": "minor-rotated-directional-phase0-analytic-coverage.npy",
+      "sha256": "0189a51f5a85c2be846abd965e1977886f31c9dcc9a208a33eedfe329d044006",
+      "stored_bytes": 498
+    },
+    {
+      "decoded_bytes": 7592,
+      "decoded_sha256": "8a9ec8cd42464f5a441570c1f23e3e12c5dfca33ac475bc0162221ee559546b7",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase0-q1-analytic_D-png.npz",
+      "run_relative_path": "minor-rotated-directional-phase0-q1-analytic_D-png.npz",
+      "sha256": "8a9ec8cd42464f5a441570c1f23e3e12c5dfca33ac475bc0162221ee559546b7",
+      "stored_bytes": 7592
+    },
+    {
+      "decoded_bytes": 7632,
+      "decoded_sha256": "b79f88419f5e26fe6c17e84ea74a685574868b968c559d6c0a2543686628222f",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase0-q1-analytic_D-unquantized.npz",
+      "run_relative_path": "minor-rotated-directional-phase0-q1-analytic_D-unquantized.npz",
+      "sha256": "b79f88419f5e26fe6c17e84ea74a685574868b968c559d6c0a2543686628222f",
+      "stored_bytes": 7632
+    },
+    {
+      "decoded_bytes": 7623,
+      "decoded_sha256": "a09125f8e00f62d48c8a05621b07127e1ef6227967f04e973e5df6447bcfa316",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase0-q1-saved_polygon-png.npz",
+      "run_relative_path": "minor-rotated-directional-phase0-q1-saved_polygon-png.npz",
+      "sha256": "a09125f8e00f62d48c8a05621b07127e1ef6227967f04e973e5df6447bcfa316",
+      "stored_bytes": 7623
+    },
+    {
+      "decoded_bytes": 7664,
+      "decoded_sha256": "cdc1a94b066c805a8f33dd5359ebb4c29584bf56054a7ef8ffd96cf93b9f95f0",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase0-q1-saved_polygon-unquantized.npz",
+      "run_relative_path": "minor-rotated-directional-phase0-q1-saved_polygon-unquantized.npz",
+      "sha256": "cdc1a94b066c805a8f33dd5359ebb4c29584bf56054a7ef8ffd96cf93b9f95f0",
+      "stored_bytes": 7664
+    },
+    {
+      "decoded_bytes": 8912,
+      "decoded_sha256": "a1d064d90a1f207af3554f195a94f9a81f98b98c2fdd686021f653d7ca8459df",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase0-q1.25-analytic_D-png.npz",
+      "run_relative_path": "minor-rotated-directional-phase0-q1.25-analytic_D-png.npz",
+      "sha256": "a1d064d90a1f207af3554f195a94f9a81f98b98c2fdd686021f653d7ca8459df",
+      "stored_bytes": 8912
+    },
+    {
+      "decoded_bytes": 9596,
+      "decoded_sha256": "787f91028c7cbde3f4cd7165e1ff7e004c1444d98a421fdae4544dde85a080db",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase0-q1.25-analytic_D-unquantized.npz",
+      "run_relative_path": "minor-rotated-directional-phase0-q1.25-analytic_D-unquantized.npz",
+      "sha256": "787f91028c7cbde3f4cd7165e1ff7e004c1444d98a421fdae4544dde85a080db",
+      "stored_bytes": 9596
+    },
+    {
+      "decoded_bytes": 8943,
+      "decoded_sha256": "6a88dce1a78785351417a205855b01c17a59e1ad3c25ade00856fca7dfe7a954",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase0-q1.25-saved_polygon-png.npz",
+      "run_relative_path": "minor-rotated-directional-phase0-q1.25-saved_polygon-png.npz",
+      "sha256": "6a88dce1a78785351417a205855b01c17a59e1ad3c25ade00856fca7dfe7a954",
+      "stored_bytes": 8943
+    },
+    {
+      "decoded_bytes": 9625,
+      "decoded_sha256": "e0ea3f1d1dbd941017274518dbad39df36cfa8cffe53b094ab43ae130519b601",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase0-q1.25-saved_polygon-unquantized.npz",
+      "run_relative_path": "minor-rotated-directional-phase0-q1.25-saved_polygon-unquantized.npz",
+      "sha256": "e0ea3f1d1dbd941017274518dbad39df36cfa8cffe53b094ab43ae130519b601",
+      "stored_bytes": 9625
+    },
+    {
+      "decoded_bytes": 73856,
+      "decoded_sha256": "d1410eee30669d4eae050903ff6e504c20a9115ddcbb36c5f29fac181da34c33",
+      "encoding": "gzip",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase1-analytic-coverage.npy.gz",
+      "run_relative_path": "minor-rotated-directional-phase1-analytic-coverage.npy",
+      "sha256": "ca13c4ce57eca0641419013decc77345eb89f42a9fd8313c618eacef1245b740",
+      "stored_bytes": 526
+    },
+    {
+      "decoded_bytes": 7532,
+      "decoded_sha256": "2f7197ac23b47a6aba3b9aeb17485ab88b0143002268744a0e23ebd21ece074d",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase1-q1-analytic_D-png.npz",
+      "run_relative_path": "minor-rotated-directional-phase1-q1-analytic_D-png.npz",
+      "sha256": "2f7197ac23b47a6aba3b9aeb17485ab88b0143002268744a0e23ebd21ece074d",
+      "stored_bytes": 7532
+    },
+    {
+      "decoded_bytes": 7566,
+      "decoded_sha256": "96af6a1122ba01303f85a9b3b7e389e2f7d448e6f11e7695e75ecf4c131cb00d",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase1-q1-analytic_D-unquantized.npz",
+      "run_relative_path": "minor-rotated-directional-phase1-q1-analytic_D-unquantized.npz",
+      "sha256": "96af6a1122ba01303f85a9b3b7e389e2f7d448e6f11e7695e75ecf4c131cb00d",
+      "stored_bytes": 7566
+    },
+    {
+      "decoded_bytes": 7558,
+      "decoded_sha256": "b9a481a2c077b67e19af7c1d5d471e7783c2e754d2596da4db20ec00d33430fe",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase1-q1-saved_polygon-png.npz",
+      "run_relative_path": "minor-rotated-directional-phase1-q1-saved_polygon-png.npz",
+      "sha256": "b9a481a2c077b67e19af7c1d5d471e7783c2e754d2596da4db20ec00d33430fe",
+      "stored_bytes": 7558
+    },
+    {
+      "decoded_bytes": 7593,
+      "decoded_sha256": "f3ae96b490ae58cd7a77f9760528e805fa7fb3a7eeee466ba369ec1cd65bf53b",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase1-q1-saved_polygon-unquantized.npz",
+      "run_relative_path": "minor-rotated-directional-phase1-q1-saved_polygon-unquantized.npz",
+      "sha256": "f3ae96b490ae58cd7a77f9760528e805fa7fb3a7eeee466ba369ec1cd65bf53b",
+      "stored_bytes": 7593
+    },
+    {
+      "decoded_bytes": 8853,
+      "decoded_sha256": "999d580d017f4bd60798d011203b24ae6f07f510d74453e028243963ca668da1",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase1-q1.25-analytic_D-png.npz",
+      "run_relative_path": "minor-rotated-directional-phase1-q1.25-analytic_D-png.npz",
+      "sha256": "999d580d017f4bd60798d011203b24ae6f07f510d74453e028243963ca668da1",
+      "stored_bytes": 8853
+    },
+    {
+      "decoded_bytes": 9553,
+      "decoded_sha256": "3d966f1db4a2b58feeb02ca5b8a4e1d755306403b98e08bd278f63be3a232c2e",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase1-q1.25-analytic_D-unquantized.npz",
+      "run_relative_path": "minor-rotated-directional-phase1-q1.25-analytic_D-unquantized.npz",
+      "sha256": "3d966f1db4a2b58feeb02ca5b8a4e1d755306403b98e08bd278f63be3a232c2e",
+      "stored_bytes": 9553
+    },
+    {
+      "decoded_bytes": 8879,
+      "decoded_sha256": "b0932b2a3cc800e4387624e5dd9fe186f7a4c0ad3668b080cbb5eacc1af6e8db",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase1-q1.25-saved_polygon-png.npz",
+      "run_relative_path": "minor-rotated-directional-phase1-q1.25-saved_polygon-png.npz",
+      "sha256": "b0932b2a3cc800e4387624e5dd9fe186f7a4c0ad3668b080cbb5eacc1af6e8db",
+      "stored_bytes": 8879
+    },
+    {
+      "decoded_bytes": 9579,
+      "decoded_sha256": "fb2c1b6e789b27312760c17e66158049274974da729fde81520369bf5f0af2d2",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase1-q1.25-saved_polygon-unquantized.npz",
+      "run_relative_path": "minor-rotated-directional-phase1-q1.25-saved_polygon-unquantized.npz",
+      "sha256": "fb2c1b6e789b27312760c17e66158049274974da729fde81520369bf5f0af2d2",
+      "stored_bytes": 9579
+    },
+    {
+      "decoded_bytes": 73856,
+      "decoded_sha256": "bacab271be15e214d6ad96f0fa6587a9809a97e581a03e9248a0b3062a839d8d",
+      "encoding": "gzip",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase2-analytic-coverage.npy.gz",
+      "run_relative_path": "minor-rotated-directional-phase2-analytic-coverage.npy",
+      "sha256": "00a87a57a6ed02005588c950dea8a3bf6d68cfc5de5c5e735594792c326df1aa",
+      "stored_bytes": 544
+    },
+    {
+      "decoded_bytes": 7674,
+      "decoded_sha256": "4bc53adf03b05703c0fec80ae400eeaef2bdf735a3c67f44e17d84f586dd8ebc",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase2-q1-analytic_D-png.npz",
+      "run_relative_path": "minor-rotated-directional-phase2-q1-analytic_D-png.npz",
+      "sha256": "4bc53adf03b05703c0fec80ae400eeaef2bdf735a3c67f44e17d84f586dd8ebc",
+      "stored_bytes": 7674
+    },
+    {
+      "decoded_bytes": 7684,
+      "decoded_sha256": "adb1f7bd234cbe3be25ddac3f531d7e18a22ba7043b7f697686d4f36ff63cec7",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase2-q1-analytic_D-unquantized.npz",
+      "run_relative_path": "minor-rotated-directional-phase2-q1-analytic_D-unquantized.npz",
+      "sha256": "adb1f7bd234cbe3be25ddac3f531d7e18a22ba7043b7f697686d4f36ff63cec7",
+      "stored_bytes": 7684
+    },
+    {
+      "decoded_bytes": 7697,
+      "decoded_sha256": "4e5854f4aa886a9c3238c4a47d7780796460a5305ce5bde2c50438c365b451d6",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase2-q1-saved_polygon-png.npz",
+      "run_relative_path": "minor-rotated-directional-phase2-q1-saved_polygon-png.npz",
+      "sha256": "4e5854f4aa886a9c3238c4a47d7780796460a5305ce5bde2c50438c365b451d6",
+      "stored_bytes": 7697
+    },
+    {
+      "decoded_bytes": 7708,
+      "decoded_sha256": "8bfbcd459f4b6bdee6a0f6fec75b68860292cf4c890cfcf5e1e2ac4a2eebe392",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase2-q1-saved_polygon-unquantized.npz",
+      "run_relative_path": "minor-rotated-directional-phase2-q1-saved_polygon-unquantized.npz",
+      "sha256": "8bfbcd459f4b6bdee6a0f6fec75b68860292cf4c890cfcf5e1e2ac4a2eebe392",
+      "stored_bytes": 7708
+    },
+    {
+      "decoded_bytes": 9001,
+      "decoded_sha256": "481057dc8f3d6c558dd5012626a9734b0c3aad6cfcb8516e214b33a388d41657",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase2-q1.25-analytic_D-png.npz",
+      "run_relative_path": "minor-rotated-directional-phase2-q1.25-analytic_D-png.npz",
+      "sha256": "481057dc8f3d6c558dd5012626a9734b0c3aad6cfcb8516e214b33a388d41657",
+      "stored_bytes": 9001
+    },
+    {
+      "decoded_bytes": 9649,
+      "decoded_sha256": "86e9c975d15c6d6efae9c32af1850ec01cc5caebf67388b39a1f1dbb36954eb2",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase2-q1.25-analytic_D-unquantized.npz",
+      "run_relative_path": "minor-rotated-directional-phase2-q1.25-analytic_D-unquantized.npz",
+      "sha256": "86e9c975d15c6d6efae9c32af1850ec01cc5caebf67388b39a1f1dbb36954eb2",
+      "stored_bytes": 9649
+    },
+    {
+      "decoded_bytes": 9024,
+      "decoded_sha256": "39001ed6293bb1ca3bedfb108c753224bff313248d2951abdd35a7973ff91227",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase2-q1.25-saved_polygon-png.npz",
+      "run_relative_path": "minor-rotated-directional-phase2-q1.25-saved_polygon-png.npz",
+      "sha256": "39001ed6293bb1ca3bedfb108c753224bff313248d2951abdd35a7973ff91227",
+      "stored_bytes": 9024
+    },
+    {
+      "decoded_bytes": 9673,
+      "decoded_sha256": "6e09fd8452a6739f038d1bd5b4a7a39abda7a350bb98dfc7d1e222d2f8d2e852",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase2-q1.25-saved_polygon-unquantized.npz",
+      "run_relative_path": "minor-rotated-directional-phase2-q1.25-saved_polygon-unquantized.npz",
+      "sha256": "6e09fd8452a6739f038d1bd5b4a7a39abda7a350bb98dfc7d1e222d2f8d2e852",
+      "stored_bytes": 9673
+    },
+    {
+      "decoded_bytes": 73856,
+      "decoded_sha256": "86145b6514d5364b30c00bb9b716e10274ea2b65fd537edd00a08badf7bf5d47",
+      "encoding": "gzip",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase3-analytic-coverage.npy.gz",
+      "run_relative_path": "minor-rotated-directional-phase3-analytic-coverage.npy",
+      "sha256": "8e630f101fe576c90bb8cd2b6f9bb5bc2201556e2c7e6c35cc5518e42d040405",
+      "stored_bytes": 513
+    },
+    {
+      "decoded_bytes": 7615,
+      "decoded_sha256": "a5a64c3c3d0ae71087b2df6a87509c1246a76e42eba7ce14cc6a8ddaefd73589",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase3-q1-analytic_D-png.npz",
+      "run_relative_path": "minor-rotated-directional-phase3-q1-analytic_D-png.npz",
+      "sha256": "a5a64c3c3d0ae71087b2df6a87509c1246a76e42eba7ce14cc6a8ddaefd73589",
+      "stored_bytes": 7615
+    },
+    {
+      "decoded_bytes": 7652,
+      "decoded_sha256": "36b791c656080406f56ad6c0eea96ce57ccd2f17fef21245aeed59a092606e16",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase3-q1-analytic_D-unquantized.npz",
+      "run_relative_path": "minor-rotated-directional-phase3-q1-analytic_D-unquantized.npz",
+      "sha256": "36b791c656080406f56ad6c0eea96ce57ccd2f17fef21245aeed59a092606e16",
+      "stored_bytes": 7652
+    },
+    {
+      "decoded_bytes": 7644,
+      "decoded_sha256": "331a04a0c71d383fc15558a57b0c2f2faf6ee5345fab955c1d54c58032a3f9ef",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase3-q1-saved_polygon-png.npz",
+      "run_relative_path": "minor-rotated-directional-phase3-q1-saved_polygon-png.npz",
+      "sha256": "331a04a0c71d383fc15558a57b0c2f2faf6ee5345fab955c1d54c58032a3f9ef",
+      "stored_bytes": 7644
+    },
+    {
+      "decoded_bytes": 7681,
+      "decoded_sha256": "2ce10661a626fed0751e3dac300c921852dc7c2e205b04105d048e216eb195de",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase3-q1-saved_polygon-unquantized.npz",
+      "run_relative_path": "minor-rotated-directional-phase3-q1-saved_polygon-unquantized.npz",
+      "sha256": "2ce10661a626fed0751e3dac300c921852dc7c2e205b04105d048e216eb195de",
+      "stored_bytes": 7681
+    },
+    {
+      "decoded_bytes": 8946,
+      "decoded_sha256": "6524071b1058ad8399acd238864faa1d8a00dc0268d88a5d408619222f71d572",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase3-q1.25-analytic_D-png.npz",
+      "run_relative_path": "minor-rotated-directional-phase3-q1.25-analytic_D-png.npz",
+      "sha256": "6524071b1058ad8399acd238864faa1d8a00dc0268d88a5d408619222f71d572",
+      "stored_bytes": 8946
+    },
+    {
+      "decoded_bytes": 9605,
+      "decoded_sha256": "b2ee7faae5ff4535732847356f935dd08dd9f08c5ebd9b4a9d43af613e75f492",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase3-q1.25-analytic_D-unquantized.npz",
+      "run_relative_path": "minor-rotated-directional-phase3-q1.25-analytic_D-unquantized.npz",
+      "sha256": "b2ee7faae5ff4535732847356f935dd08dd9f08c5ebd9b4a9d43af613e75f492",
+      "stored_bytes": 9605
+    },
+    {
+      "decoded_bytes": 8975,
+      "decoded_sha256": "e00afdc253d87ae6afb58dc9f84dc9c661dd0789d82282f4860918a91bb170e4",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase3-q1.25-saved_polygon-png.npz",
+      "run_relative_path": "minor-rotated-directional-phase3-q1.25-saved_polygon-png.npz",
+      "sha256": "e00afdc253d87ae6afb58dc9f84dc9c661dd0789d82282f4860918a91bb170e4",
+      "stored_bytes": 8975
+    },
+    {
+      "decoded_bytes": 9637,
+      "decoded_sha256": "c758cae33d8b8ec688f67fffd490bff27285f7b5c436f8c02de01139a71e57f6",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-directional-phase3-q1.25-saved_polygon-unquantized.npz",
+      "run_relative_path": "minor-rotated-directional-phase3-q1.25-saved_polygon-unquantized.npz",
+      "sha256": "c758cae33d8b8ec688f67fffd490bff27285f7b5c436f8c02de01139a71e57f6",
+      "stored_bytes": 9637
+    },
+    {
+      "decoded_bytes": 73856,
+      "decoded_sha256": "db8a63376d259058c09f81cc37f67b3a664788c9cd991c66e449e21c15524d4b",
+      "encoding": "gzip",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase0-analytic-coverage.npy.gz",
+      "run_relative_path": "minor-rotated-isotropic-phase0-analytic-coverage.npy",
+      "sha256": "0189a51f5a85c2be846abd965e1977886f31c9dcc9a208a33eedfe329d044006",
+      "stored_bytes": 498
+    },
+    {
+      "decoded_bytes": 5782,
+      "decoded_sha256": "0c9f5dfe1c705eee41f94b4ef73290b4b158c01310e280d22f102e9d00b56bb4",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase0-q1-analytic_D-png.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase0-q1-analytic_D-png.npz",
+      "sha256": "0c9f5dfe1c705eee41f94b4ef73290b4b158c01310e280d22f102e9d00b56bb4",
+      "stored_bytes": 5782
+    },
+    {
+      "decoded_bytes": 5133,
+      "decoded_sha256": "67b8d16de30f77fb4eb634f32fc8456f0bd1431d870dfa49f74f1cecdeffdd15",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase0-q1-analytic_D-unquantized.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase0-q1-analytic_D-unquantized.npz",
+      "sha256": "67b8d16de30f77fb4eb634f32fc8456f0bd1431d870dfa49f74f1cecdeffdd15",
+      "stored_bytes": 5133
+    },
+    {
+      "decoded_bytes": 5815,
+      "decoded_sha256": "ccfbd34e4421e605ae1bd9b83d433f596382a9cb44c5afbf90cac3fc204eb220",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase0-q1-saved_polygon-png.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase0-q1-saved_polygon-png.npz",
+      "sha256": "ccfbd34e4421e605ae1bd9b83d433f596382a9cb44c5afbf90cac3fc204eb220",
+      "stored_bytes": 5815
+    },
+    {
+      "decoded_bytes": 5166,
+      "decoded_sha256": "b30b6b8d068622e007e0d1789413888defb7e09fdb463340e96c88f1bd3fff73",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase0-q1-saved_polygon-unquantized.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase0-q1-saved_polygon-unquantized.npz",
+      "sha256": "b30b6b8d068622e007e0d1789413888defb7e09fdb463340e96c88f1bd3fff73",
+      "stored_bytes": 5166
+    },
+    {
+      "decoded_bytes": 6595,
+      "decoded_sha256": "ee97f47112b253149c87abae1af0032cd7fb403539716a5cc243b31428fec405",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase0-q1.25-analytic_D-png.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase0-q1.25-analytic_D-png.npz",
+      "sha256": "ee97f47112b253149c87abae1af0032cd7fb403539716a5cc243b31428fec405",
+      "stored_bytes": 6595
+    },
+    {
+      "decoded_bytes": 6272,
+      "decoded_sha256": "0d1a5436b12e84a5bc878f8cbf759a15ba178b3cde6ef5dc6143e41d3143776d",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase0-q1.25-analytic_D-unquantized.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase0-q1.25-analytic_D-unquantized.npz",
+      "sha256": "0d1a5436b12e84a5bc878f8cbf759a15ba178b3cde6ef5dc6143e41d3143776d",
+      "stored_bytes": 6272
+    },
+    {
+      "decoded_bytes": 6628,
+      "decoded_sha256": "07fceff7ec5d30fbaa14b79ea84a037cff65df7106611042f132b82f38d1ee86",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase0-q1.25-saved_polygon-png.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase0-q1.25-saved_polygon-png.npz",
+      "sha256": "07fceff7ec5d30fbaa14b79ea84a037cff65df7106611042f132b82f38d1ee86",
+      "stored_bytes": 6628
+    },
+    {
+      "decoded_bytes": 6303,
+      "decoded_sha256": "c85964f494d45bb860537175ca8c6ae2a812f929a1bfce6add10516239ee7b2a",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase0-q1.25-saved_polygon-unquantized.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase0-q1.25-saved_polygon-unquantized.npz",
+      "sha256": "c85964f494d45bb860537175ca8c6ae2a812f929a1bfce6add10516239ee7b2a",
+      "stored_bytes": 6303
+    },
+    {
+      "decoded_bytes": 73856,
+      "decoded_sha256": "d1410eee30669d4eae050903ff6e504c20a9115ddcbb36c5f29fac181da34c33",
+      "encoding": "gzip",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase1-analytic-coverage.npy.gz",
+      "run_relative_path": "minor-rotated-isotropic-phase1-analytic-coverage.npy",
+      "sha256": "ca13c4ce57eca0641419013decc77345eb89f42a9fd8313c618eacef1245b740",
+      "stored_bytes": 526
+    },
+    {
+      "decoded_bytes": 5736,
+      "decoded_sha256": "078f73f129d87261caf78561c3b7fea28a2be17086760b11b81fcb73b89a64c9",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase1-q1-analytic_D-png.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase1-q1-analytic_D-png.npz",
+      "sha256": "078f73f129d87261caf78561c3b7fea28a2be17086760b11b81fcb73b89a64c9",
+      "stored_bytes": 5736
+    },
+    {
+      "decoded_bytes": 5123,
+      "decoded_sha256": "3bc31a0dbb93b8e0300d0583ecba02d6fbcd45828f38f93481c9c488a9a58454",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase1-q1-analytic_D-unquantized.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase1-q1-analytic_D-unquantized.npz",
+      "sha256": "3bc31a0dbb93b8e0300d0583ecba02d6fbcd45828f38f93481c9c488a9a58454",
+      "stored_bytes": 5123
+    },
+    {
+      "decoded_bytes": 5765,
+      "decoded_sha256": "38413e5fe734d72f6ea2afdc07516dfc015ca2db244c667f88ed2b4ebc66e399",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase1-q1-saved_polygon-png.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase1-q1-saved_polygon-png.npz",
+      "sha256": "38413e5fe734d72f6ea2afdc07516dfc015ca2db244c667f88ed2b4ebc66e399",
+      "stored_bytes": 5765
+    },
+    {
+      "decoded_bytes": 5150,
+      "decoded_sha256": "3a6e9ab28d8caf49cb9958f8229af7783d1ead3716d82acb58e146306176f303",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase1-q1-saved_polygon-unquantized.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase1-q1-saved_polygon-unquantized.npz",
+      "sha256": "3a6e9ab28d8caf49cb9958f8229af7783d1ead3716d82acb58e146306176f303",
+      "stored_bytes": 5150
+    },
+    {
+      "decoded_bytes": 6565,
+      "decoded_sha256": "600171da52c734ca6ea2a676e69e332d8f0d2023bda512429cf20a66039a7425",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase1-q1.25-analytic_D-png.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase1-q1.25-analytic_D-png.npz",
+      "sha256": "600171da52c734ca6ea2a676e69e332d8f0d2023bda512429cf20a66039a7425",
+      "stored_bytes": 6565
+    },
+    {
+      "decoded_bytes": 6227,
+      "decoded_sha256": "5f155778aee2334cb5ddee3c3996b7812be79a28f5611c178bec968d53014c89",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase1-q1.25-analytic_D-unquantized.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase1-q1.25-analytic_D-unquantized.npz",
+      "sha256": "5f155778aee2334cb5ddee3c3996b7812be79a28f5611c178bec968d53014c89",
+      "stored_bytes": 6227
+    },
+    {
+      "decoded_bytes": 6594,
+      "decoded_sha256": "4f6d4123604462b7745b6a47ad3d31fab153777634d62b67b5cb9f9bf032f35d",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase1-q1.25-saved_polygon-png.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase1-q1.25-saved_polygon-png.npz",
+      "sha256": "4f6d4123604462b7745b6a47ad3d31fab153777634d62b67b5cb9f9bf032f35d",
+      "stored_bytes": 6594
+    },
+    {
+      "decoded_bytes": 6258,
+      "decoded_sha256": "a224e109fcb270f7fbaa0c4a8e32d44dbc2f34096f7fd1ab0e1ae0c5c33921d8",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase1-q1.25-saved_polygon-unquantized.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase1-q1.25-saved_polygon-unquantized.npz",
+      "sha256": "a224e109fcb270f7fbaa0c4a8e32d44dbc2f34096f7fd1ab0e1ae0c5c33921d8",
+      "stored_bytes": 6258
+    },
+    {
+      "decoded_bytes": 73856,
+      "decoded_sha256": "bacab271be15e214d6ad96f0fa6587a9809a97e581a03e9248a0b3062a839d8d",
+      "encoding": "gzip",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase2-analytic-coverage.npy.gz",
+      "run_relative_path": "minor-rotated-isotropic-phase2-analytic-coverage.npy",
+      "sha256": "00a87a57a6ed02005588c950dea8a3bf6d68cfc5de5c5e735594792c326df1aa",
+      "stored_bytes": 544
+    },
+    {
+      "decoded_bytes": 5757,
+      "decoded_sha256": "46cd866270c31a89dfca50a7987c4691268f03d2c26dbe67a888adcabe7aed3e",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase2-q1-analytic_D-png.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase2-q1-analytic_D-png.npz",
+      "sha256": "46cd866270c31a89dfca50a7987c4691268f03d2c26dbe67a888adcabe7aed3e",
+      "stored_bytes": 5757
+    },
+    {
+      "decoded_bytes": 5192,
+      "decoded_sha256": "dcf98c45fec4934659a2752c2d2de96faf6c814faf4908a6922b332580ee6f2f",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase2-q1-analytic_D-unquantized.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase2-q1-analytic_D-unquantized.npz",
+      "sha256": "dcf98c45fec4934659a2752c2d2de96faf6c814faf4908a6922b332580ee6f2f",
+      "stored_bytes": 5192
+    },
+    {
+      "decoded_bytes": 5778,
+      "decoded_sha256": "4d3dc92dded3387c2db36af2a942ea133ef781714cbc9b95a824ab8a1e77bb61",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase2-q1-saved_polygon-png.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase2-q1-saved_polygon-png.npz",
+      "sha256": "4d3dc92dded3387c2db36af2a942ea133ef781714cbc9b95a824ab8a1e77bb61",
+      "stored_bytes": 5778
+    },
+    {
+      "decoded_bytes": 5212,
+      "decoded_sha256": "a4f53ce62698a0f7f523caae0383040f625ef2af9c569a6b6ee30829260cd2f5",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase2-q1-saved_polygon-unquantized.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase2-q1-saved_polygon-unquantized.npz",
+      "sha256": "a4f53ce62698a0f7f523caae0383040f625ef2af9c569a6b6ee30829260cd2f5",
+      "stored_bytes": 5212
+    },
+    {
+      "decoded_bytes": 6566,
+      "decoded_sha256": "dbcedaa57b40fc1b83c05995dea8213f316f04f3e9bea61788a4f6072a01c41c",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase2-q1.25-analytic_D-png.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase2-q1.25-analytic_D-png.npz",
+      "sha256": "dbcedaa57b40fc1b83c05995dea8213f316f04f3e9bea61788a4f6072a01c41c",
+      "stored_bytes": 6566
+    },
+    {
+      "decoded_bytes": 6316,
+      "decoded_sha256": "f1cde89c21376c539d268fff8acef1e44e90223806b188702a994ce17d60a5d4",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase2-q1.25-analytic_D-unquantized.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase2-q1.25-analytic_D-unquantized.npz",
+      "sha256": "f1cde89c21376c539d268fff8acef1e44e90223806b188702a994ce17d60a5d4",
+      "stored_bytes": 6316
+    },
+    {
+      "decoded_bytes": 6587,
+      "decoded_sha256": "03a0e2b718116d44f4844a1667a7d9e13f97b059bb52e8fe7067feccbd8af674",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase2-q1.25-saved_polygon-png.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase2-q1.25-saved_polygon-png.npz",
+      "sha256": "03a0e2b718116d44f4844a1667a7d9e13f97b059bb52e8fe7067feccbd8af674",
+      "stored_bytes": 6587
+    },
+    {
+      "decoded_bytes": 6337,
+      "decoded_sha256": "f9bc122a25359b47d3234aadc16ff37c3ff875bc6a3e56debf8afc386ebcb556",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase2-q1.25-saved_polygon-unquantized.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase2-q1.25-saved_polygon-unquantized.npz",
+      "sha256": "f9bc122a25359b47d3234aadc16ff37c3ff875bc6a3e56debf8afc386ebcb556",
+      "stored_bytes": 6337
+    },
+    {
+      "decoded_bytes": 73856,
+      "decoded_sha256": "86145b6514d5364b30c00bb9b716e10274ea2b65fd537edd00a08badf7bf5d47",
+      "encoding": "gzip",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase3-analytic-coverage.npy.gz",
+      "run_relative_path": "minor-rotated-isotropic-phase3-analytic-coverage.npy",
+      "sha256": "8e630f101fe576c90bb8cd2b6f9bb5bc2201556e2c7e6c35cc5518e42d040405",
+      "stored_bytes": 513
+    },
+    {
+      "decoded_bytes": 5759,
+      "decoded_sha256": "5cb0d3c2d26158ead9f36bbc864429e2d118cf67b664d2810dff27b4effc4f2d",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase3-q1-analytic_D-png.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase3-q1-analytic_D-png.npz",
+      "sha256": "5cb0d3c2d26158ead9f36bbc864429e2d118cf67b664d2810dff27b4effc4f2d",
+      "stored_bytes": 5759
+    },
+    {
+      "decoded_bytes": 5127,
+      "decoded_sha256": "dfdccf772fd37908954c071745b2fc7302f48c5e36060d8c69d51460273dc13c",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase3-q1-analytic_D-unquantized.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase3-q1-analytic_D-unquantized.npz",
+      "sha256": "dfdccf772fd37908954c071745b2fc7302f48c5e36060d8c69d51460273dc13c",
+      "stored_bytes": 5127
+    },
+    {
+      "decoded_bytes": 5787,
+      "decoded_sha256": "4bdc42a638a83b223e68d4466593878193d98d854eb2b4b5b705b586d727b301",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase3-q1-saved_polygon-png.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase3-q1-saved_polygon-png.npz",
+      "sha256": "4bdc42a638a83b223e68d4466593878193d98d854eb2b4b5b705b586d727b301",
+      "stored_bytes": 5787
+    },
+    {
+      "decoded_bytes": 5152,
+      "decoded_sha256": "24fbca5b7a4c434adf26543ee6e20d89e7b267b5be1f32ec3e3e5e2fbae0c689",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase3-q1-saved_polygon-unquantized.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase3-q1-saved_polygon-unquantized.npz",
+      "sha256": "24fbca5b7a4c434adf26543ee6e20d89e7b267b5be1f32ec3e3e5e2fbae0c689",
+      "stored_bytes": 5152
+    },
+    {
+      "decoded_bytes": 6564,
+      "decoded_sha256": "131a84cb4fcc3745f343d7a2a0904d898dc489f24de8319cbe5a56917889e095",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase3-q1.25-analytic_D-png.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase3-q1.25-analytic_D-png.npz",
+      "sha256": "131a84cb4fcc3745f343d7a2a0904d898dc489f24de8319cbe5a56917889e095",
+      "stored_bytes": 6564
+    },
+    {
+      "decoded_bytes": 6225,
+      "decoded_sha256": "5bc5ba6e979c021a0892003bb31a58d59231968efca0834bd02b00f7271bcbb3",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase3-q1.25-analytic_D-unquantized.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase3-q1.25-analytic_D-unquantized.npz",
+      "sha256": "5bc5ba6e979c021a0892003bb31a58d59231968efca0834bd02b00f7271bcbb3",
+      "stored_bytes": 6225
+    },
+    {
+      "decoded_bytes": 6592,
+      "decoded_sha256": "85b59e7cdcc5f60f2139545ef0e073fda9f0425d425448a81fd99ebea2d92a2a",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase3-q1.25-saved_polygon-png.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase3-q1.25-saved_polygon-png.npz",
+      "sha256": "85b59e7cdcc5f60f2139545ef0e073fda9f0425d425448a81fd99ebea2d92a2a",
+      "stored_bytes": 6592
+    },
+    {
+      "decoded_bytes": 6255,
+      "decoded_sha256": "94877d8842c41f5989fd72aac3827dcff4bfb72c17cf3eab3723736edd1a9551",
+      "encoding": "identity",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/minor-rotated-isotropic-phase3-q1.25-saved_polygon-unquantized.npz",
+      "run_relative_path": "minor-rotated-isotropic-phase3-q1.25-saved_polygon-unquantized.npz",
+      "sha256": "94877d8842c41f5989fd72aac3827dcff4bfb72c17cf3eab3723736edd1a9551",
+      "stored_bytes": 6255
+    },
+    {
+      "decoded_bytes": 121438,
+      "decoded_sha256": "73e372ed5b4e36dcc8439529295dfdc279e11e20ed837dae8b11c95c39e093d6",
+      "encoding": "gzip",
+      "kind": "complete_saved_run",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/canonical/progress.jsonl.gz",
+      "run_relative_path": "progress.jsonl",
+      "sha256": "e38396fce1f3ecc60fa58155792a2b7cf0ec2cf5350f04eea7230f472d620b4b",
+      "stored_bytes": 14219
+    },
+    {
+      "decoded_bytes": 4281,
+      "decoded_sha256": "6f125767eeae05c12a6d2a4df44a1e5290ae32e4765d0541e771ac2db752baf0",
+      "encoding": "identity",
+      "kind": "retained_failure_or_source",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/first-aperture.py.txt.gz",
+      "sha256": "6f125767eeae05c12a6d2a4df44a1e5290ae32e4765d0541e771ac2db752baf0",
+      "stored_bytes": 4281
+    },
+    {
+      "decoded_bytes": 565,
+      "decoded_sha256": "5365990c3bbd8205edde8da8e9993c347dfd3dfe37ac12f6d62392bf84b373fa",
+      "encoding": "identity",
+      "kind": "retained_failure_or_source",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/first-focused.json",
+      "sha256": "5365990c3bbd8205edde8da8e9993c347dfd3dfe37ac12f6d62392bf84b373fa",
+      "stored_bytes": 565
+    },
+    {
+      "decoded_bytes": 2662,
+      "decoded_sha256": "364478d5163442ca5cf4397710d05b59a16076ebe858d2312ed3b4389a947a84",
+      "encoding": "identity",
+      "kind": "retained_failure_or_source",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/first-focused.log.gz",
+      "sha256": "364478d5163442ca5cf4397710d05b59a16076ebe858d2312ed3b4389a947a84",
+      "stored_bytes": 2662
+    },
+    {
+      "decoded_bytes": 25068,
+      "decoded_sha256": "3b7eb3b50d56f5ab2fadd20d615fb2e112761df656b2c8383c576d996821d50e",
+      "encoding": "identity",
+      "kind": "retained_failure_or_source",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/recorded-source.zip",
+      "sha256": "3b7eb3b50d56f5ab2fadd20d615fb2e112761df656b2c8383c576d996821d50e",
+      "stored_bytes": 25068
+    },
+    {
+      "decoded_bytes": 697065,
+      "decoded_sha256": "d3ef43d55f03d9a307905b4665c6641362713e0cd64afd1d8487f2e7037f272e",
+      "encoding": "gzip",
+      "kind": "review_receipt_or_tool",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/review/artifact-first.json.gz",
+      "sha256": "1c2607f1c4dab7fb1ec929b05c269a06cb6bb96c5dad9f778584fa91dd1743f2",
+      "stored_bytes": 56187
+    },
+    {
+      "decoded_bytes": 14532,
+      "decoded_sha256": "63f5db8b1b663b55699bca38f6a8c333b4a7f4f0e686043932326da7359ded7b",
+      "encoding": "gzip",
+      "kind": "review_receipt_or_tool",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/review/artifact-first.py.txt.gz",
+      "sha256": "2a58e568b61581ae7b73c5869f36f95e5d58c0bd69568b1524fe8b77b084f1b7",
+      "stored_bytes": 4752
+    },
+    {
+      "decoded_bytes": 0,
+      "decoded_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "encoding": "gzip",
+      "kind": "review_receipt_or_tool",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/review/canonical.stderr.gz",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "stored_bytes": 20
+    },
+    {
+      "decoded_bytes": 112,
+      "decoded_sha256": "eec90dc102674638d787e139bf58272dfe4bef7ece786275f0e576452b4315a2",
+      "encoding": "gzip",
+      "kind": "review_receipt_or_tool",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/review/canonical.stdout.gz",
+      "sha256": "c22abba6978d9fc2a26c24ebc88b3f3df2358cd428e663d12cbc330d7dc3d920",
+      "stored_bytes": 116
+    },
+    {
+      "decoded_bytes": 1386,
+      "decoded_sha256": "d2c7e3ed9b10aeab1b3cbe5e9696511bda5c44e30b06b1fcfb743dc4db67a37c",
+      "encoding": "gzip",
+      "kind": "review_receipt_or_tool",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/review/endpoint-diagnosis.json.gz",
+      "sha256": "9f5d33fe9734c96e7d46df24595b897c01de80441c1ce9e33f11c6d41386cc86",
+      "stored_bytes": 756
+    },
+    {
+      "decoded_bytes": 2484,
+      "decoded_sha256": "9e695c93574b3da9963578ca329b1934f4aee87771648d159934a025c057e915",
+      "encoding": "gzip",
+      "kind": "review_receipt_or_tool",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/review/endpoint-diagnosis.py.txt.gz",
+      "sha256": "fd2e7f060fe86a7ac599956393664d2768303d3b8b0809961877bd125e036ea7",
+      "stored_bytes": 1241
+    },
+    {
+      "decoded_bytes": 240,
+      "decoded_sha256": "aaa18df3020f763fe5ec41db387fb65f5a885f13c5642f67ca2579efcf810d1a",
+      "encoding": "gzip",
+      "kind": "review_receipt_or_tool",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/review/focused-v2.json.gz",
+      "sha256": "759f9c2daddc1eb6746715f1b66e24fcbe1e63a09467efbe3658fc397f301001",
+      "stored_bytes": 191
+    },
+    {
+      "decoded_bytes": 180,
+      "decoded_sha256": "3d0e8c9f591a014460247becbb0d7a030967e760d4d39b6fdbae49edb0c0a718",
+      "encoding": "gzip",
+      "kind": "review_receipt_or_tool",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/review/focused-v2.log.gz",
+      "sha256": "0e00daa3f212873e927edca51cfb4ddd60d3904aeef5fbd674ca6473cce3b46a",
+      "stored_bytes": 62
+    },
+    {
+      "decoded_bytes": 338,
+      "decoded_sha256": "b918c11ec749265aaabcb700d663a23a7344e83cf6e7570c7de2c7a0e095cdbe",
+      "encoding": "gzip",
+      "kind": "review_receipt_or_tool",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/review/focused-v3.json.gz",
+      "sha256": "3d0dc24eb8565586066788215462a685c339c25fa1a87455cdfab66d8a3589f4",
+      "stored_bytes": 258
+    },
+    {
+      "decoded_bytes": 260,
+      "decoded_sha256": "2a718545e28a7dd35be68bb776cb8cbf44fd4d4ce916a6b5ac9551ea8b987c42",
+      "encoding": "gzip",
+      "kind": "review_receipt_or_tool",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/review/focused-v3.log.gz",
+      "sha256": "2a87b5bc5fae7c4e4d1fe8e4c8030cc381ed183271e0f2c4baeec31c37128522",
+      "stored_bytes": 68
+    },
+    {
+      "decoded_bytes": 346,
+      "decoded_sha256": "ec01504e984afd77f51e9498d785e8518d9eaacfc02f8fdc4c110bda2934b96e",
+      "encoding": "gzip",
+      "kind": "review_receipt_or_tool",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/review/full-suite-v1.json.gz",
+      "sha256": "518a63a421373e9b798b34e5d5de5dfe251d9e5ab01017efd0676a19b9d16293",
+      "stored_bytes": 269
+    },
+    {
+      "decoded_bytes": 1393,
+      "decoded_sha256": "1bfdef0eb489ca36cbb6aca074b74fbfabddf313e1528d4b040670938bf56744",
+      "encoding": "gzip",
+      "kind": "review_receipt_or_tool",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/review/full-suite-v1.log.gz",
+      "sha256": "2eb3f3cf5dae1fbabd5cd14e8d89fc889bed6963abd51ae63784a98d94dac2b4",
+      "stored_bytes": 131
+    },
+    {
+      "decoded_bytes": 146761,
+      "decoded_sha256": "db4c7a8336e6d53f3cbd3aa67f9660044a88be2839acfc111c7d47f41644633b",
+      "encoding": "gzip",
+      "kind": "review_receipt_or_tool",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/review/math-first.json.gz",
+      "sha256": "94203dcbcd7c9d8bf24c06553349859a8799fed3c2dbe20bce59e6fac227f1f5",
+      "stored_bytes": 23759
+    },
+    {
+      "decoded_bytes": 23208,
+      "decoded_sha256": "8bc38403538256eee5a9cf94df957c036144b9517a48df69dd13b25f93308ee3",
+      "encoding": "gzip",
+      "kind": "review_receipt_or_tool",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/review/math-first.py.txt.gz",
+      "sha256": "9e5c3210f503b44c855bdafa6af1574124982471d7032bd5c1c96f3270b92d79",
+      "stored_bytes": 6495
+    },
+    {
+      "decoded_bytes": 169542,
+      "decoded_sha256": "df39a214c8db725e99be0d07ba5927f7fcc327af543b437e517c29f8cbc55bb7",
+      "encoding": "gzip",
+      "kind": "review_receipt_or_tool",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/review/math-v2.json.gz",
+      "sha256": "bf5cc58fb4ef52def26e99e0392d9b6eb68533c204a0a5b2c0839222ab367de4",
+      "stored_bytes": 24459
+    },
+    {
+      "decoded_bytes": 24608,
+      "decoded_sha256": "ab67ba651a8fb11e6b6ce16ee8330dfdb990d0982037f5a67689e7f3a0bdfdbf",
+      "encoding": "gzip",
+      "kind": "review_receipt_or_tool",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/review/math-v2.py.txt.gz",
+      "sha256": "aed5f4eee37225bebb15fb512739d32cff048a372cd87445e38d7fded4a03917",
+      "stored_bytes": 6780
+    },
+    {
+      "decoded_bytes": 695048,
+      "decoded_sha256": "2b02844391681ad7a4aa680ca5ce24a3b9aa3ccb2426deff4874fe51ce6c66c1",
+      "encoding": "gzip",
+      "kind": "review_receipt_or_tool",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/review/portable-artifact.json.gz",
+      "sha256": "9b262285c44fed002a7f828bb4a180476f007cb91e32827fa561a9c204e050d5",
+      "stored_bytes": 55614
+    },
+    {
+      "decoded_bytes": 6860,
+      "decoded_sha256": "0d92f38505937195a928a29d833fcce41e375d64deec0ddd9c5b6ea1a9588902",
+      "encoding": "gzip",
+      "kind": "review_receipt_or_tool",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/review/workspace-ast-proof.json.gz",
+      "sha256": "4a1c207c8ae016ac45d3d3bbc47c7666d39df307afa192480f62c68543662bd8",
+      "stored_bytes": 1617
+    },
+    {
+      "decoded_bytes": 4705,
+      "decoded_sha256": "17ad1981725f647962cf40b3657642ffeea0a0631e292a56ed004a86c2343f6a",
+      "encoding": "gzip",
+      "kind": "review_receipt_or_tool",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/review/workspace-ast-proof.py.txt.gz",
+      "sha256": "9ba2d6282a6809a2857a6a80dadb9180ee0880e4583a51a71e50a3e0fb0722c2",
+      "stored_bytes": 1874
+    },
+    {
+      "decoded_bytes": 1529,
+      "decoded_sha256": "f01ac617060d3f5232361bfab08655fd221f6a4ba146bd41bc9b04a8ea16cfe9",
+      "encoding": "gzip",
+      "kind": "review_receipt_or_tool",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/review/workspace-static-v1.json.gz",
+      "sha256": "b8494b2578e9ed4a2d0a1a3f5340636c861b0299ba8ae5a0602dbbb61970469d",
+      "stored_bytes": 671
+    },
+    {
+      "decoded_bytes": 1727,
+      "decoded_sha256": "ad0a001c2e9fa42ab1f525d33b456b70673787d5a9216f6d19ed791a0a4c5272",
+      "encoding": "gzip",
+      "kind": "review_receipt_or_tool",
+      "path": "studies/fixtures/finite-acquisition-mean-v1/review/workspace-static-v2.json.gz",
+      "sha256": "1c2c2de40bd467b088fe4274b5470b100361dfc9dd08431c55e609776db78ff7",
+      "stored_bytes": 782
+    },
+    {
+      "decoded_bytes": 2779510,
+      "decoded_sha256": "bd8127cc84999e7c5572797c46c2ba62bda29e2262ce57375c1e9745ce9133c3",
+      "encoding": "gzip",
+      "kind": "complete_saved_run",
+      "path": "studies/results/finite-acquisition-mean-v1.json.gz",
+      "run_relative_path": "report.json",
+      "sha256": "574934513d5f14202b92f738366f066ee924fd3b3c8baf896beb6b424f31bb4f",
+      "stored_bytes": 268319
+    },
+    {
+      "decoded_bytes": 17634,
+      "decoded_sha256": "b12c0b7f832047b9f19f03f5608f61c098a5db70205873dbd4d1531da401e61e",
+      "encoding": "identity",
+      "kind": "current_source_or_plan",
+      "path": "studies/verification/finite-acquisition-mean-artifact-audit-v1.py",
+      "sha256": "b12c0b7f832047b9f19f03f5608f61c098a5db70205873dbd4d1531da401e61e",
+      "stored_bytes": 17634
+    },
+    {
+      "decoded_bytes": 15679,
+      "decoded_sha256": "19372c639b7008f1813db58ba638a5c270ae463f9ca96f37f8952af92394aad7",
+      "encoding": "identity",
+      "kind": "current_source_or_plan",
+      "path": "studies/verification/finite-acquisition-mean-v1.py",
+      "sha256": "19372c639b7008f1813db58ba638a5c270ae463f9ca96f37f8952af92394aad7",
+      "stored_bytes": 15679
+    },
+    {
+      "decoded_bytes": 14202,
+      "decoded_sha256": "cf605a5cb94edd16bd0572afd15a83671ec61b8f40a263fcbe3ae9be8e46d475",
+      "encoding": "identity",
+      "kind": "current_source_or_plan",
+      "path": "tests/test_finite_acquisition.py",
+      "sha256": "cf605a5cb94edd16bd0572afd15a83671ec61b8f40a263fcbe3ae9be8e46d475",
+      "stored_bytes": 14202
+    },
+    {
+      "decoded_bytes": 5082,
+      "decoded_sha256": "2d2ba6e12a7d43f92402b8e20229fa64f607c2f77ce283476e708617b610fd3e",
+      "encoding": "identity",
+      "kind": "current_source_or_plan",
+      "path": "tests/test_finite_acquisition_workspace.py",
+      "sha256": "2d2ba6e12a7d43f92402b8e20229fa64f607c2f77ce283476e708617b610fd3e",
+      "stored_bytes": 5082
+    },
+    {
+      "decoded_bytes": 12129,
+      "decoded_sha256": "e2ec4013126986a80c0e1fea2b6546d3e8bd62dbfb73462cf60f1f8ef5548766",
+      "encoding": "identity",
+      "kind": "current_source_or_plan",
+      "path": "tests/test_finite_aperture.py",
+      "sha256": "e2ec4013126986a80c0e1fea2b6546d3e8bd62dbfb73462cf60f1f8ef5548766",
+      "stored_bytes": 12129
+    }
+  ],
+  "format": "finite-acquisition-mean-complete-archive-v1",
+  "limits": [
+    "Supplied synthetic source, geometry, kernels and map only; no camera/geometry-recovery/automatic-trace qualification.",
+    "Original12focusedfailures and32firstmathauditfailures retained.",
+    "Recorded numerical source predates metadata-only workspace correction; compare exactsourceZIP and repairadmission.",
+    "Operationalfloat32 allowances differ slightly from binary64 formula; all128outcomes passboth without categorychange."
+  ],
+  "population": {
+    "declared_stage_work": 487211008,
+    "new_mean_calls": 128,
+    "original_output_records": 32,
+    "query_residuals": 56448,
+    "source_scenes": 16,
+    "stage_arrays": 768
+  },
+  "raw_report_sha256": "bd8127cc84999e7c5572797c46c2ba62bda29e2262ce57375c1e9745ce9133c3",
+  "source_numerical_commit": "521c318bcb10975643a1396547e4ab1f41c7da9e"
+}

@@ -1,0 +1,21 @@
+{
+  "format": "finite-acquisition-workspace-accounting-repair-v1",
+  "recorded_numerical_source_commit": "521c318bcb10975643a1396547e4ab1f41c7da9e",
+  "recorded_source_zip": "studies/fixtures/finite-acquisition-mean-v1/recorded-source.zip",
+  "recorded_source_zip_sha256": "3b7eb3b50d56f5ab2fadd20d615fb2e112761df656b2c8383c576d996821d50e",
+  "affected_source": "backend/finite_acquisition.py",
+  "before_sha256": "111409dcbd3e916382e47fc3a7c4930cc790ab0c02e4e06152ebf2097baf95f8",
+  "after_sha256": "c61b9def98132a10bbfe6df2bddbc50f9e9338eded0177a74dc25dff90220921",
+  "failure": "Valid1x65536sourcewith31x31opticalpad has simultaneouslylivearraylowerbound34086160B, exceedingprevious33686016B by400144B. Recorded96x96studyshapesunaffected.",
+  "correction": "512*(source_cells+output_cells)+8*(source_Ypad+source_XYpad+output_Ypad+output_XYpad)+262144",
+  "scope": "Metadata-only; no numerical-stage,inputhash,work,query,threshold or existingtestchanges. Historicalrawreport and sourceZIPremainunchanged. Qualifynewaccountingwith11newcasesplusunchanged134focusedcontrols; do not rerun archivedpredictions merelytochangeworkspacefields.",
+  "new_test": "tests/test_finite_acquisition_workspace.py",
+  "new_test_sha256": "2d2ba6e12a7d43f92402b8e20229fa64f607c2f77ce283476e708617b610fd3e",
+  "unchanged_inputs": {
+    "backend/finite_aperture.py": "75f29a04133ffd142144607a7c7153e12de159ba7c632e01fd46751fa14cd7b5",
+    "tests/test_finite_aperture.py": "e2ec4013126986a80c0e1fea2b6546d3e8bd62dbfb73462cf60f1f8ef5548766",
+    "tests/test_finite_acquisition.py": "cf605a5cb94edd16bd0572afd15a83671ec61b8f40a263fcbe3ae9be8e46d475",
+    "studies/finite-acquisition-mean-v1.json": "0f8f927b99834726e2f78ea332d69978cf1a3ce94bd4d79073b51aa31a7829e3",
+    "studies/verification/finite-acquisition-mean-v1.py": "19372c639b7008f1813db58ba638a5c270ae463f9ca96f37f8952af92394aad7"
+  }
+}

@@ -42,6 +42,20 @@ shadow-lighting model. These forward-only findings support an acquisition-aware
 mean before fitting more parameters. They neither recover geometry, explain
 historical fit errors nor qualify current-main automatic tracing.
 
+The subsequent [source-cell acquisition mean](finite-acquisition-mean.md) is
+now an experimental developer API. It integrates analytic finite-D cell coverage
+and applies supplied kernels, levels, a known affine map and explicit encoding.
+The [complete qualification](validation/finite-acquisition-mean.md) passes all
+128 comparisons over the same 32 saved output records, with no changed encoding
+codes. Analytic-D query discrepancies are at most 0.0000763 unquantized and
+0.0000306 sRGB8 intensity levels. The
+[portable archive](../studies/fixtures/finite-acquisition-mean-v1/README.md)
+retains the first failed controls, initial audit arithmetic mismatches and a
+separate workspace-accounting repair. These are supplied-stage forward checks,
+not new captures, geometry recovery or physical camera qualification.
+Independent derivatives and prospective recovery remain the next dependencies;
+no automatic tracing or inverse integration is added.
+
 The [original selected design reference](images/design-reference.png) is a generated concept. The [recorded workbench screenshot](images/workbench.png) is browser-rendered implementation evidence; the [guided-workbench review](validation/guided-workbench.md) records the reviewed interaction, screenshots and evidence date. The sample photograph is generated demonstration input and is traced by the real conversion pipeline; it is not a measured reference specimen.
 
 ## Image to outline
