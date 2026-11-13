@@ -1,5 +1,17 @@
 # Workbench change log
 
+## Experimental finite-chord normal derivative — November 12, 2026
+
+- Add a signed source-angle sensitivity with affine/projective Gaussian first
+  moments and guarded original-chord quadrature. Preserve the existing mean
+  and four-column shape Jacobian schemas and automatic tracing behavior.
+- Freeze and retain all 337 scenes/3,886 queries. The complete protocol exits 1
+  with one panel-budget unknown; a compressed-map error-estimation limitation
+  also remains. Keep all raw arrays and independent audits losslessly.
+- Record 94 focused checks, the build and 1,037 Python tests separately from
+  the scientific result. [Contract](finite-normal-derivative.md) ·
+  [complete evidence and limits](validation/finite-normal-derivative.md).
+
 ## Documentation alignment with published PR #95 — November 12, 2026
 
 - Refresh the source, dependency and hosted-CI snapshot after publication of

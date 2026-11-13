@@ -62,6 +62,12 @@ unknowns and motivates a separately labeled analytic rotation identity. The
 also covers perspective maps mathematically; its implementation and numerical
 validation remain pending. Neither changes automatic tracing or optical correction.
 
+The [experimental normal-angle derivative](docs/finite-normal-derivative.md)
+adds a direct finite-chord sensitivity under supplied Gaussian optics. Its
+[337-scene qualification](docs/validation/finite-normal-derivative.md) retains
+one work-limited query and an error-estimation limitation on compressed
+perspective maps. It remains outside automatic tracing and fitting.
+
 Final fitted arcs also need [circle-consistent joins](docs/curved-joins.md).
 An unavailable join keeps an affected outline for review when valid, with a
 notice; it does not supply a measured radius. Check

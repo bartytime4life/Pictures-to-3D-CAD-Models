@@ -1,0 +1,12 @@
+{
+  "stage": "first-focused-tests-before-execution",
+  "head": "555228c2abb2deb8174e8046a4ffbff60a0c9895",
+  "source_sha256": {
+    "backend/finite_normal.py": "e1e548b58c26d98f28475e647594f5273f34734f1284df27a06324cdf022a443",
+    "tests/test_finite_normal.py": "2e3991fcae912266d1a504d7333b22292b65c712faa39ba26ca47b8ca8d83416",
+    "studies/finite-normal-derivative-v1.json": "d31b8ad03b5fe1af8b69dc47be5445b2ebf7034e951254814a57010f3b43de9f",
+    "studies/finite-normal-derivative-compressed-chart-v1.json": "f0bc2095ba23cceb2ffb13d7f915051620cd2496f71a43ebfd0d2f951037e234"
+  },
+  "prior_new_operator_oracle_evaluations": 0,
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 .venv/bin/python -W error::RuntimeWarning -m pytest tests/test_finite_normal.py -q --junitxml=.local/verification/finite-normal-focused-initial.xml"
+}

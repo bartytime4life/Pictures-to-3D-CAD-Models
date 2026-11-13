@@ -1,0 +1,2116 @@
+{
+  "audit_source_sha256": "2ce7845ee7e8e35b9e8136b500dda33aef2e0c4a87b1fb73286248f5d1673fff",
+  "checks": 249228,
+  "checks_by_category": {
+    "area_criterion": 48,
+    "area_fd": 144,
+    "area_identity": 24,
+    "area_math": 324,
+    "binding": 8,
+    "candidate": 13680,
+    "candidate_work": 12669,
+    "comparison": 11657,
+    "current_source": 33,
+    "identity": 8446,
+    "oracle_order": 11658,
+    "oracle_partition": 23316,
+    "oracle_resolution": 88137,
+    "oracle_sum": 23316,
+    "oracle_tail": 35654,
+    "oracle_work": 19430,
+    "population": 338,
+    "scene": 337,
+    "summary": 9
+  },
+  "comparison_arithmetic": "Recomputed saved algebra; reported float equality permits up to8ULP for association, without changing any study pass threshold.",
+  "failures": [],
+  "format": "pictures-to-cad-finite-normal-saved-math-audit",
+  "inputs_after": {
+    "studies/finite-normal-derivative-compressed-chart-v1.json": "f0bc2095ba23cceb2ffb13d7f915051620cd2496f71a43ebfd0d2f951037e234",
+    "studies/finite-normal-derivative-v1.json": "d31b8ad03b5fe1af8b69dc47be5445b2ebf7034e951254814a57010f3b43de9f",
+    "studies/results/finite-normal-derivative-v1.json": "d31fcb0436daee9e91bd21d78c1650901916a8c2c77bf6c7e351da61c04e113f"
+  },
+  "inputs_before": {
+    "studies/finite-normal-derivative-compressed-chart-v1.json": "f0bc2095ba23cceb2ffb13d7f915051620cd2496f71a43ebfd0d2f951037e234",
+    "studies/finite-normal-derivative-v1.json": "d31b8ad03b5fe1af8b69dc47be5445b2ebf7034e951254814a57010f3b43de9f",
+    "studies/results/finite-normal-derivative-v1.json": "d31fcb0436daee9e91bd21d78c1650901916a8c2c77bf6c7e351da61c04e113f"
+  },
+  "max_saved_candidate_oracle_delta": [
+    1.7004538221954135e-08,
+    "compressed-chart-e16-d1e-06:0"
+  ],
+  "max_saved_oracle_order_delta": [
+    1.8400214685243554e-10,
+    "compressed-chart-e16-d1e-06:0"
+  ],
+  "model_calls": 0,
+  "numerical_replays": 0,
+  "oracle_calls": 0,
+  "oracle_leaf_counts": {
+    "direct": 88137,
+    "tail": 23996
+  },
+  "passed": true,
+  "positive_area_maxima": {
+    "candidate": [
+      3.6869480801726695e-09,
+      "core-11101:3"
+    ],
+    "order": [
+      2.764863893389702e-10,
+      "core-11102:3"
+    ],
+    "step": [
+      1.0550138540565968e-08,
+      "core-11100:8"
+    ]
+  },
+  "recomputed_summary": {
+    "oracle_converged_queries": 3886,
+    "positive_area_passes": 36,
+    "positive_area_queries": 36,
+    "positive_area_scenes": 12,
+    "query_passes": 3885,
+    "retained_queries": 3886,
+    "retained_scenes": 337,
+    "scene_passes": 336
+  },
+  "rows": [
+    {
+      "passes": 8,
+      "protocol_passed": true,
+      "queries": 8,
+      "scene_id": "core-00000"
+    },
+    {
+      "passes": 9,
+      "protocol_passed": true,
+      "queries": 9,
+      "scene_id": "core-00001"
+    },
+    {
+      "passes": 8,
+      "protocol_passed": true,
+      "queries": 8,
+      "scene_id": "core-00002"
+    },
+    {
+      "passes": 10,
+      "protocol_passed": true,
+      "queries": 10,
+      "scene_id": "core-00003"
+    },
+    {
+      "passes": 7,
+      "protocol_passed": true,
+      "queries": 7,
+      "scene_id": "core-00010"
+    },
+    {
+      "passes": 6,
+      "protocol_passed": true,
+      "queries": 6,
+      "scene_id": "core-00011"
+    },
+    {
+      "passes": 7,
+      "protocol_passed": true,
+      "queries": 7,
+      "scene_id": "core-00012"
+    },
+    {
+      "passes": 9,
+      "protocol_passed": true,
+      "queries": 9,
+      "scene_id": "core-00013"
+    },
+    {
+      "passes": 10,
+      "protocol_passed": true,
+      "queries": 10,
+      "scene_id": "core-00020"
+    },
+    {
+      "passes": 10,
+      "protocol_passed": true,
+      "queries": 10,
+      "scene_id": "core-00021"
+    },
+    {
+      "passes": 9,
+      "protocol_passed": true,
+      "queries": 9,
+      "scene_id": "core-00022"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-00023"
+    },
+    {
+      "passes": 8,
+      "protocol_passed": true,
+      "queries": 8,
+      "scene_id": "core-00100"
+    },
+    {
+      "passes": 8,
+      "protocol_passed": true,
+      "queries": 8,
+      "scene_id": "core-00101"
+    },
+    {
+      "passes": 9,
+      "protocol_passed": true,
+      "queries": 9,
+      "scene_id": "core-00102"
+    },
+    {
+      "passes": 8,
+      "protocol_passed": true,
+      "queries": 8,
+      "scene_id": "core-00103"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-00110"
+    },
+    {
+      "passes": 10,
+      "protocol_passed": true,
+      "queries": 10,
+      "scene_id": "core-00111"
+    },
+    {
+      "passes": 10,
+      "protocol_passed": true,
+      "queries": 10,
+      "scene_id": "core-00112"
+    },
+    {
+      "passes": 10,
+      "protocol_passed": true,
+      "queries": 10,
+      "scene_id": "core-00113"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-00120"
+    },
+    {
+      "passes": 10,
+      "protocol_passed": true,
+      "queries": 10,
+      "scene_id": "core-00121"
+    },
+    {
+      "passes": 9,
+      "protocol_passed": true,
+      "queries": 9,
+      "scene_id": "core-00122"
+    },
+    {
+      "passes": 10,
+      "protocol_passed": true,
+      "queries": 10,
+      "scene_id": "core-00123"
+    },
+    {
+      "passes": 9,
+      "protocol_passed": true,
+      "queries": 9,
+      "scene_id": "core-00200"
+    },
+    {
+      "passes": 10,
+      "protocol_passed": true,
+      "queries": 10,
+      "scene_id": "core-00201"
+    },
+    {
+      "passes": 8,
+      "protocol_passed": true,
+      "queries": 8,
+      "scene_id": "core-00202"
+    },
+    {
+      "passes": 9,
+      "protocol_passed": true,
+      "queries": 9,
+      "scene_id": "core-00203"
+    },
+    {
+      "passes": 9,
+      "protocol_passed": true,
+      "queries": 9,
+      "scene_id": "core-00210"
+    },
+    {
+      "passes": 9,
+      "protocol_passed": true,
+      "queries": 9,
+      "scene_id": "core-00211"
+    },
+    {
+      "passes": 10,
+      "protocol_passed": true,
+      "queries": 10,
+      "scene_id": "core-00212"
+    },
+    {
+      "passes": 9,
+      "protocol_passed": true,
+      "queries": 9,
+      "scene_id": "core-00213"
+    },
+    {
+      "passes": 9,
+      "protocol_passed": true,
+      "queries": 9,
+      "scene_id": "core-00220"
+    },
+    {
+      "passes": 9,
+      "protocol_passed": true,
+      "queries": 9,
+      "scene_id": "core-00221"
+    },
+    {
+      "passes": 7,
+      "protocol_passed": true,
+      "queries": 7,
+      "scene_id": "core-00222"
+    },
+    {
+      "passes": 8,
+      "protocol_passed": true,
+      "queries": 8,
+      "scene_id": "core-00223"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-01000"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-01001"
+    },
+    {
+      "passes": 10,
+      "protocol_passed": true,
+      "queries": 10,
+      "scene_id": "core-01002"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-01003"
+    },
+    {
+      "passes": 9,
+      "protocol_passed": true,
+      "queries": 9,
+      "scene_id": "core-01010"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-01011"
+    },
+    {
+      "passes": 10,
+      "protocol_passed": true,
+      "queries": 10,
+      "scene_id": "core-01012"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-01013"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-01020"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-01021"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-01022"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-01023"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-01100"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-01101"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-01102"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-01103"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-01110"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-01111"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-01112"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-01113"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-01120"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-01121"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-01122"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-01123"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-01200"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-01201"
+    },
+    {
+      "passes": 10,
+      "protocol_passed": true,
+      "queries": 10,
+      "scene_id": "core-01202"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-01203"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-01210"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-01211"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-01212"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-01213"
+    },
+    {
+      "passes": 10,
+      "protocol_passed": true,
+      "queries": 10,
+      "scene_id": "core-01220"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-01221"
+    },
+    {
+      "passes": 9,
+      "protocol_passed": true,
+      "queries": 9,
+      "scene_id": "core-01222"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-01223"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-02000"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-02001"
+    },
+    {
+      "passes": 9,
+      "protocol_passed": true,
+      "queries": 9,
+      "scene_id": "core-02002"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-02003"
+    },
+    {
+      "passes": 8,
+      "protocol_passed": true,
+      "queries": 8,
+      "scene_id": "core-02010"
+    },
+    {
+      "passes": 10,
+      "protocol_passed": true,
+      "queries": 10,
+      "scene_id": "core-02011"
+    },
+    {
+      "passes": 8,
+      "protocol_passed": true,
+      "queries": 8,
+      "scene_id": "core-02012"
+    },
+    {
+      "passes": 10,
+      "protocol_passed": true,
+      "queries": 10,
+      "scene_id": "core-02013"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-02020"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-02021"
+    },
+    {
+      "passes": 9,
+      "protocol_passed": true,
+      "queries": 9,
+      "scene_id": "core-02022"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-02023"
+    },
+    {
+      "passes": 10,
+      "protocol_passed": true,
+      "queries": 10,
+      "scene_id": "core-02100"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-02101"
+    },
+    {
+      "passes": 9,
+      "protocol_passed": true,
+      "queries": 9,
+      "scene_id": "core-02102"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-02103"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-02110"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-02111"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-02112"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-02113"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-02120"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-02121"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-02122"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-02123"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-02200"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-02201"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-02202"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-02203"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-02210"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-02211"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-02212"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-02213"
+    },
+    {
+      "passes": 10,
+      "protocol_passed": true,
+      "queries": 10,
+      "scene_id": "core-02220"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-02221"
+    },
+    {
+      "passes": 9,
+      "protocol_passed": true,
+      "queries": 9,
+      "scene_id": "core-02222"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-02223"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-10000"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-10001"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-10002"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-10003"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-10010"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-10011"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-10012"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-10013"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-10020"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-10021"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-10022"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-10023"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-10100"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-10101"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-10102"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-10103"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-10110"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-10111"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-10112"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-10113"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-10120"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-10121"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-10122"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-10123"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-10200"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-10201"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-10202"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-10203"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-10210"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-10211"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-10212"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-10213"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-10220"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-10221"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-10222"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-10223"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11000"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11001"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11002"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11003"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-11010"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-11011"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11012"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-11013"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11020"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11021"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11022"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11023"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11100"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11101"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11102"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11103"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11110"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11111"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11112"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11113"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11120"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11121"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11122"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11123"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11200"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-11201"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11202"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-11203"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11210"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11211"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11212"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-11213"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-11220"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-11221"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-11222"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-11223"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-12000"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-12001"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-12002"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-12003"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-12010"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-12011"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-12012"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-12013"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-12020"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-12021"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-12022"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-12023"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-12100"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-12101"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-12102"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-12103"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-12110"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-12111"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-12112"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-12113"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-12120"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-12121"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-12122"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-12123"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-12200"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-12201"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-12202"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-12203"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-12210"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-12211"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-12212"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-12213"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-12220"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-12221"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-12222"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-12223"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-20000"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20001"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20002"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20003"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-20010"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20011"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20012"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20013"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20020"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20021"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20022"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20023"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20100"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20101"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-20102"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20103"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20110"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20111"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20112"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20113"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20120"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20121"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20122"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20123"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20200"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20201"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20202"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20203"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20210"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20211"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20212"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-20213"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-20220"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-20221"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-20222"
+    },
+    {
+      "passes": 11,
+      "protocol_passed": true,
+      "queries": 11,
+      "scene_id": "core-20223"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21000"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21001"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21002"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21003"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-21010"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21011"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21012"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-21013"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21020"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21021"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21022"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21023"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21100"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21101"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21102"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21103"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21110"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21111"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21112"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21113"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21120"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21121"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21122"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21123"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-21200"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21201"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21202"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21203"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21210"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21211"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21212"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21213"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-21220"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-21221"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-21222"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-21223"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22000"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22001"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22002"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22003"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-22010"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22011"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-22012"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-22013"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22020"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22021"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22022"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22023"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22100"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22101"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22102"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22103"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22110"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22111"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22112"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22113"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22120"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22121"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22122"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22123"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22200"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-22201"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-22202"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22203"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22210"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22211"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22212"
+    },
+    {
+      "passes": 13,
+      "protocol_passed": true,
+      "queries": 13,
+      "scene_id": "core-22213"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-22220"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-22221"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-22222"
+    },
+    {
+      "passes": 12,
+      "protocol_passed": true,
+      "queries": 12,
+      "scene_id": "core-22223"
+    },
+    {
+      "passes": 3,
+      "protocol_passed": true,
+      "queries": 3,
+      "scene_id": "isotropic_symmetry"
+    },
+    {
+      "passes": 4,
+      "protocol_passed": true,
+      "queries": 4,
+      "scene_id": "complement_base"
+    },
+    {
+      "passes": 3,
+      "protocol_passed": true,
+      "queries": 3,
+      "scene_id": "long_chord_signed"
+    },
+    {
+      "passes": 3,
+      "protocol_passed": true,
+      "queries": 3,
+      "scene_id": "short_chord"
+    },
+    {
+      "passes": 3,
+      "protocol_passed": true,
+      "queries": 3,
+      "scene_id": "far_tail"
+    },
+    {
+      "passes": 4,
+      "protocol_passed": true,
+      "queries": 4,
+      "scene_id": "narrow_endpoint"
+    },
+    {
+      "passes": 4,
+      "protocol_passed": true,
+      "queries": 4,
+      "scene_id": "strong_projective"
+    },
+    {
+      "passes": 1,
+      "protocol_passed": true,
+      "queries": 1,
+      "scene_id": "compressed-chart-e8-d0.0001"
+    },
+    {
+      "passes": 1,
+      "protocol_passed": true,
+      "queries": 1,
+      "scene_id": "compressed-chart-e8-d1e-06"
+    },
+    {
+      "passes": 1,
+      "protocol_passed": true,
+      "queries": 1,
+      "scene_id": "compressed-chart-e12-d0.0001"
+    },
+    {
+      "passes": 1,
+      "protocol_passed": true,
+      "queries": 1,
+      "scene_id": "compressed-chart-e12-d1e-06"
+    },
+    {
+      "passes": 0,
+      "protocol_passed": false,
+      "queries": 1,
+      "scene_id": "compressed-chart-e16-d0.0001"
+    },
+    {
+      "passes": 1,
+      "protocol_passed": true,
+      "queries": 1,
+      "scene_id": "compressed-chart-e16-d1e-06"
+    }
+  ],
+  "runtime_seconds": 0.6257756169652566,
+  "saved_oracle_evaluation_total": 25745530,
+  "scope": "Saved arithmetic, guards, partitions, accounting and source binding only. Does not independently validate Gaussian integrals; original failed protocol and unknown remain unchanged.",
+  "unknown_candidates": [
+    {
+      "evaluations": 154388,
+      "method": "projective_closed_form_then_chord_quadrature",
+      "panels": 4096,
+      "query_index": 0,
+      "scene_id": "compressed-chart-e16-d0.0001",
+      "status": "work_limit"
+    }
+  ],
+  "version": 1
+}

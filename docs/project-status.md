@@ -1,5 +1,13 @@
 # Source scope and verification status
 
+This subsequent research candidate adds the
+[experimental finite-chord normal derivative](finite-normal-derivative.md)
+over documentation PR #96. The [new qualification](validation/finite-normal-derivative.md)
+retains the original exit 1, one work-limited query and a resolved compressed-map
+error-estimation limitation. The new module is separate from automatic tracing,
+HTTP and the existing four-parameter inverse. Its source and numerical evidence
+are bound independently; the historical publication snapshot below predates it.
+
 This documentation follows published draft
 [PR #95](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/95),
 head `1f51bae35eb862dca4a259016cc31bf1504207f9`, tree
