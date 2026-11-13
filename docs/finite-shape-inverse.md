@@ -29,6 +29,11 @@ is near the measured arc. Holes, other nearby material, walls, illumination
 gradients, nonlinear response and pixel-aperture integration require their own
 models; they are not inferred here.
 
+The separate [source-cell acquisition API](finite-acquisition-mean.md) now
+integrates pixel areas and supplied discrete stages. This Gaussian fitter does
+not use it. Its rounded unquantized and sRGB8 paths need their own objective,
+derivative and recovery qualification before a fitter can adopt them.
+
 In the workbench, `g` is a Keys-resampled linear-light mix followed by smoothing.
 Its empirical rectified covariance is not a calibrated sensor PSF. Passing `g`
 and an identity homography to this model is an effective-Gaussian hypothesis;

@@ -98,7 +98,8 @@ Initial circle/piece fits now have a source-support check. Benchmark corresponde
 Supported nonparallel corners now use the empirical directional covariance;
 known uniform thickness maps also transport blur for the existing free-curve
 and cap approximations ([blur frames](blur-frames.md)). Prioritize
-independent derivatives for the experimental acquisition-aware mean, then
+qualified derivatives or another bounded search for the experimental
+acquisition-aware mean, with rounding and encoding treated explicitly, then
 prospective inverse recovery and repeatable ground-truth capture. Finite-shape interactions
 and mixed-frame policies remain. The lens renderer is now separately implemented, but the shared
 physical assumptions and observed higher-order mismatch remain. Keep the

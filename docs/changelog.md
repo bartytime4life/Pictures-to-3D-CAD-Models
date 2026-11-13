@@ -1,5 +1,16 @@
 # Workbench change log
 
+## Source-cell documentation alignment — November 13, 2026
+
+- Align the source snapshot and navigation with draft PR #105 while preserving
+  preceding status/CI snapshots and every original scientific outcome.
+- Document actual API limits, exceptions, ordered results, hash inputs and
+  shape-aware workspace accounting; add a small executable coordinate example.
+- Distinguish ideal linear brightness algebra from rounded stages, update the
+  remaining inverse requirements and restore the narrow-wall bound's stated
+  wall-share condition. [Documentation checks](validation/documentation-mean-state.md)
+  remain separate from software, camera and physical qualification.
+
 ## Experimental source-cell acquisition mean — November 13, 2026
 
 - Add independent analytic disk/chord cell coverage and explicit finite-kernel,
