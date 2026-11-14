@@ -589,14 +589,18 @@ export default function ReliefStudio() {
               </button>
             </div>
             <div className="canvas-stage model-stage">
-              <ModelViewer
-                mesh={result?.mesh ?? null}
-                resetKey={resetKey}
-                loading={!!busy}
-                color={draft.color}
-                material={draft.material}
-                lighting="raking"
-              />
+              {/* Mount the viewer only once there is a model: its own empty placeholder
+                  describes the flat-part workflow and would overlap this page's message. */}
+              {result && (
+                <ModelViewer
+                  mesh={result.mesh}
+                  resetKey={resetKey}
+                  loading={!!busy}
+                  color={draft.color}
+                  material={draft.material}
+                  lighting="raking"
+                />
+              )}
               {busy && (
                 <div className="processing-status" role="status">
                   <SpinnerGap size={20} className="spinner" />
