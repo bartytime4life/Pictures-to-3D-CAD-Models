@@ -1,0 +1,628 @@
+{
+  "format": "restoration-v2-ux-saved-lifecycle-audit-v1",
+  "source_imports": 0,
+  "model_reference_optimizer_calls": 0,
+  "new_points_or_census": 0,
+  "summary": {
+    "rows": 24,
+    "status_counts": {
+      "completed": 23,
+      "exception": 1
+    },
+    "matched_passes": 11,
+    "matched_total": 12,
+    "adverse_all_target_passes": 1,
+    "study_exit_code": 1,
+    "study_passed": false,
+    "source_records": 131,
+    "artifacts": 106,
+    "row_details": [
+      {
+        "case": "minor-smooth",
+        "family": "matched",
+        "status": "completed",
+        "fit_attempted": true,
+        "all_targets": true,
+        "failed_targets": [],
+        "reported_errors": {
+          "centre_error_pitch": 4.300296032997827e-06,
+          "radius_error_pitch": 3.2700928493945014e-06,
+          "fraction_error": 7.928787559841055e-07,
+          "wrapped_angle_degrees": 1.0162365985209678e-05,
+          "reserved_dimension_error_pitch": 1.671312079842835e-06,
+          "sampled_bidirectional_boundary_error_pitch": 1.3048671352322572e-06,
+          "conditional_query_max_residual_linear_level": 4.857900233901091e-05
+        },
+        "selected_fit": {
+          "cost": 1.2625311769207077e-08,
+          "tied": false,
+          "work_exhausted": false,
+          "completion_withheld": false,
+          "search_statuses": [
+            "projected_gradient_resolution",
+            "projected_gradient_resolution",
+            "projected_gradient_resolution",
+            "projected_gradient_resolution"
+          ]
+        }
+      },
+      {
+        "case": "minor-staged",
+        "family": "matched",
+        "status": "completed",
+        "fit_attempted": true,
+        "all_targets": true,
+        "failed_targets": [],
+        "reported_errors": {
+          "centre_error_pitch": 4.535053163306009e-06,
+          "radius_error_pitch": 3.4566641362587802e-06,
+          "fraction_error": 8.414938057477173e-07,
+          "wrapped_angle_degrees": 9.944769125454912e-06,
+          "reserved_dimension_error_pitch": 1.7505153993013778e-06,
+          "sampled_bidirectional_boundary_error_pitch": 1.3640417479976463e-06,
+          "conditional_query_max_residual_linear_level": 6.103515625e-05
+        },
+        "selected_fit": {
+          "cost": 1.4435499906539917e-08,
+          "tied": false,
+          "work_exhausted": false,
+          "completion_withheld": false,
+          "search_statuses": [
+            "poll_resolution"
+          ]
+        }
+      },
+      {
+        "case": "minor-png",
+        "family": "matched",
+        "status": "completed",
+        "fit_attempted": true,
+        "all_targets": true,
+        "failed_targets": [],
+        "reported_errors": {
+          "centre_error_pitch": 0.004887169327463237,
+          "radius_error_pitch": 0.0002058275618921357,
+          "fraction_error": 0.0017524856527610932,
+          "wrapped_angle_degrees": 0.07329944747636931,
+          "reserved_dimension_error_pitch": 0.008703959211974421,
+          "sampled_bidirectional_boundary_error_pitch": 0.0074765427985809775,
+          "conditional_query_max_residual_linear_level": 0.0
+        },
+        "selected_fit": {
+          "cost": 0.0,
+          "tied": true,
+          "work_exhausted": false,
+          "completion_withheld": false,
+          "search_statuses": [
+            "poll_resolution"
+          ]
+        }
+      },
+      {
+        "case": "middle-smooth",
+        "family": "matched",
+        "status": "completed",
+        "fit_attempted": true,
+        "all_targets": true,
+        "failed_targets": [],
+        "reported_errors": {
+          "centre_error_pitch": 5.651078811693906e-06,
+          "radius_error_pitch": 3.409773217999401e-06,
+          "fraction_error": 2.6040274055116885e-06,
+          "wrapped_angle_degrees": 4.655275753286218e-06,
+          "reserved_dimension_error_pitch": 9.784007107604964e-06,
+          "sampled_bidirectional_boundary_error_pitch": 4.4500887299570024e-06,
+          "conditional_query_max_residual_linear_level": 0.0003577478766345621
+        },
+        "selected_fit": {
+          "cost": 6.941742066729151e-07,
+          "tied": false,
+          "work_exhausted": false,
+          "completion_withheld": false,
+          "search_statuses": [
+            "projected_gradient_resolution",
+            "projected_gradient_resolution",
+            "projected_gradient_resolution",
+            "projected_gradient_resolution"
+          ]
+        }
+      },
+      {
+        "case": "middle-staged",
+        "family": "matched",
+        "status": "completed",
+        "fit_attempted": true,
+        "all_targets": true,
+        "failed_targets": [],
+        "reported_errors": {
+          "centre_error_pitch": 5.63032441668589e-06,
+          "radius_error_pitch": 3.3788039761617483e-06,
+          "fraction_error": 2.6022859603014314e-06,
+          "wrapped_angle_degrees": 4.148243430408532e-06,
+          "reserved_dimension_error_pitch": 9.720921339884114e-06,
+          "sampled_bidirectional_boundary_error_pitch": 4.445513307249627e-06,
+          "conditional_query_max_residual_linear_level": 0.00035858154296875
+        },
+        "selected_fit": {
+          "cost": 7.068520062603055e-07,
+          "tied": false,
+          "work_exhausted": false,
+          "completion_withheld": false,
+          "search_statuses": [
+            "poll_resolution"
+          ]
+        }
+      },
+      {
+        "case": "middle-png",
+        "family": "matched",
+        "status": "completed",
+        "fit_attempted": true,
+        "all_targets": false,
+        "failed_targets": [
+          "fraction_error"
+        ],
+        "reported_errors": {
+          "centre_error_pitch": 0.007574318437095146,
+          "radius_error_pitch": 0.0016426599167358447,
+          "fraction_error": 0.00320694906346225,
+          "wrapped_angle_degrees": 0.03695307004350863,
+          "reserved_dimension_error_pitch": 0.009019052130506466,
+          "sampled_bidirectional_boundary_error_pitch": 0.005931632881079452,
+          "conditional_query_max_residual_linear_level": 0.0
+        },
+        "selected_fit": {
+          "cost": 0.0,
+          "tied": true,
+          "work_exhausted": false,
+          "completion_withheld": false,
+          "search_statuses": [
+            "poll_resolution"
+          ]
+        }
+      },
+      {
+        "case": "major-smooth",
+        "family": "matched",
+        "status": "completed",
+        "fit_attempted": true,
+        "all_targets": true,
+        "failed_targets": [],
+        "reported_errors": {
+          "centre_error_pitch": 3.5638280836706112e-06,
+          "radius_error_pitch": 1.7767241393684685e-06,
+          "fraction_error": 1.841787668155348e-06,
+          "wrapped_angle_degrees": 5.8865427402492236e-05,
+          "reserved_dimension_error_pitch": 1.364795745573133e-05,
+          "sampled_bidirectional_boundary_error_pitch": 5.509184724742845e-06,
+          "conditional_query_max_residual_linear_level": 0.000567573582912928
+        },
+        "selected_fit": {
+          "cost": 1.8422445415495556e-06,
+          "tied": false,
+          "work_exhausted": false,
+          "completion_withheld": false,
+          "search_statuses": [
+            "projected_gradient_resolution",
+            "projected_gradient_resolution",
+            "projected_gradient_resolution",
+            "projected_gradient_resolution"
+          ]
+        }
+      },
+      {
+        "case": "major-staged",
+        "family": "matched",
+        "status": "completed",
+        "fit_attempted": true,
+        "all_targets": true,
+        "failed_targets": [],
+        "reported_errors": {
+          "centre_error_pitch": 3.6058890961074757e-06,
+          "radius_error_pitch": 1.787133973696342e-06,
+          "fraction_error": 1.8590362493853263e-06,
+          "wrapped_angle_degrees": 5.983989383713014e-05,
+          "reserved_dimension_error_pitch": 1.3765899736561948e-05,
+          "sampled_bidirectional_boundary_error_pitch": 5.576821988841027e-06,
+          "conditional_query_max_residual_linear_level": 0.0005645751953125
+        },
+        "selected_fit": {
+          "cost": 1.8391924172906585e-06,
+          "tied": false,
+          "work_exhausted": false,
+          "completion_withheld": false,
+          "search_statuses": [
+            "poll_resolution"
+          ]
+        }
+      },
+      {
+        "case": "major-png",
+        "family": "matched",
+        "status": "completed",
+        "fit_attempted": true,
+        "all_targets": true,
+        "failed_targets": [],
+        "reported_errors": {
+          "centre_error_pitch": 0.001215948616159028,
+          "radius_error_pitch": 0.00026064196692265895,
+          "fraction_error": 0.0005789070722583833,
+          "wrapped_angle_degrees": 0.00582824860117795,
+          "reserved_dimension_error_pitch": 0.002988892528859921,
+          "sampled_bidirectional_boundary_error_pitch": 0.0015854339871249495,
+          "conditional_query_max_residual_linear_level": 0.0
+        },
+        "selected_fit": {
+          "cost": 0.0,
+          "tied": true,
+          "work_exhausted": false,
+          "completion_withheld": false,
+          "search_statuses": [
+            "poll_resolution"
+          ]
+        }
+      },
+      {
+        "case": "wrapped-major-smooth",
+        "family": "matched",
+        "status": "completed",
+        "fit_attempted": true,
+        "all_targets": true,
+        "failed_targets": [],
+        "reported_errors": {
+          "centre_error_pitch": 5.563211415143731e-07,
+          "radius_error_pitch": 1.8549456060057423e-07,
+          "fraction_error": 5.21480263859786e-07,
+          "wrapped_angle_degrees": 0.00024619855679300584,
+          "reserved_dimension_error_pitch": 5.670012285463599e-06,
+          "sampled_bidirectional_boundary_error_pitch": 9.63774545450264e-06,
+          "conditional_query_max_residual_linear_level": 0.0004928996562796328
+        },
+        "selected_fit": {
+          "cost": 7.720476952515999e-07,
+          "tied": false,
+          "work_exhausted": false,
+          "completion_withheld": false,
+          "search_statuses": [
+            "projected_gradient_resolution",
+            "projected_gradient_resolution",
+            "projected_gradient_resolution",
+            "projected_gradient_resolution"
+          ]
+        }
+      },
+      {
+        "case": "wrapped-major-staged",
+        "family": "matched",
+        "status": "completed",
+        "fit_attempted": true,
+        "all_targets": true,
+        "failed_targets": [],
+        "reported_errors": {
+          "centre_error_pitch": 5.573427616690571e-07,
+          "radius_error_pitch": 1.6667636115741402e-07,
+          "fraction_error": 5.124919590926424e-07,
+          "wrapped_angle_degrees": 0.0002471723213173922,
+          "reserved_dimension_error_pitch": 5.5548576138875205e-06,
+          "sampled_bidirectional_boundary_error_pitch": 9.644415554969793e-06,
+          "conditional_query_max_residual_linear_level": 0.00048828125
+        },
+        "selected_fit": {
+          "cost": 7.767557690385728e-07,
+          "tied": false,
+          "work_exhausted": false,
+          "completion_withheld": false,
+          "search_statuses": [
+            "poll_resolution"
+          ]
+        }
+      },
+      {
+        "case": "wrapped-major-png",
+        "family": "matched",
+        "status": "completed",
+        "fit_attempted": true,
+        "all_targets": true,
+        "failed_targets": [],
+        "reported_errors": {
+          "centre_error_pitch": 0.0012594611316010505,
+          "radius_error_pitch": 0.00017732229373601527,
+          "fraction_error": 0.0006120885987213054,
+          "wrapped_angle_degrees": 0.17098447920014115,
+          "reserved_dimension_error_pitch": 0.006602860427283641,
+          "sampled_bidirectional_boundary_error_pitch": 0.008000673584943333,
+          "conditional_query_max_residual_linear_level": 0.0
+        },
+        "selected_fit": {
+          "cost": 0.0,
+          "tied": true,
+          "work_exhausted": false,
+          "completion_withheld": false,
+          "search_statuses": [
+            "poll_resolution"
+          ]
+        }
+      },
+      {
+        "case": "zero-smooth",
+        "family": "adverse",
+        "status": "completed",
+        "fit_attempted": false,
+        "all_targets": false,
+        "failed_targets": [],
+        "reported_errors": null,
+        "selected_fit": null
+      },
+      {
+        "case": "zero-png",
+        "family": "adverse",
+        "status": "completed",
+        "fit_attempted": false,
+        "all_targets": false,
+        "failed_targets": [],
+        "reported_errors": null,
+        "selected_fit": null
+      },
+      {
+        "case": "low-staged",
+        "family": "adverse",
+        "status": "completed",
+        "fit_attempted": false,
+        "all_targets": false,
+        "failed_targets": [],
+        "reported_errors": null,
+        "selected_fit": null
+      },
+      {
+        "case": "cropped-smooth",
+        "family": "adverse",
+        "status": "completed",
+        "fit_attempted": false,
+        "all_targets": false,
+        "failed_targets": [],
+        "reported_errors": null,
+        "selected_fit": null
+      },
+      {
+        "case": "thin-png",
+        "family": "adverse",
+        "status": "completed",
+        "fit_attempted": false,
+        "all_targets": false,
+        "failed_targets": [],
+        "reported_errors": null,
+        "selected_fit": null
+      },
+      {
+        "case": "almost-circle-smooth",
+        "family": "adverse",
+        "status": "completed",
+        "fit_attempted": false,
+        "all_targets": false,
+        "failed_targets": [],
+        "reported_errors": null,
+        "selected_fit": null
+      },
+      {
+        "case": "wrong-optics-smooth",
+        "family": "adverse",
+        "status": "completed",
+        "fit_attempted": true,
+        "all_targets": false,
+        "failed_targets": [
+          "centre_error_pitch",
+          "radius_error_pitch",
+          "fraction_error",
+          "wrapped_angle_degrees",
+          "reserved_dimension_error_pitch",
+          "sampled_bidirectional_boundary_error_pitch",
+          "conditional_query_max_residual_linear_level"
+        ],
+        "reported_errors": {
+          "centre_error_pitch": 0.2980810581188262,
+          "radius_error_pitch": 0.05732986749431701,
+          "fraction_error": 0.027941193405275982,
+          "wrapped_angle_degrees": 3.3639328917122393,
+          "reserved_dimension_error_pitch": 0.1436014356116777,
+          "sampled_bidirectional_boundary_error_pitch": 0.3158998841854488,
+          "conditional_query_max_residual_linear_level": 38.48910530683135
+        },
+        "selected_fit": {
+          "cost": 4266.825435956874,
+          "tied": false,
+          "work_exhausted": false,
+          "completion_withheld": false,
+          "search_statuses": [
+            "projected_gradient_resolution",
+            "projected_gradient_resolution",
+            "projected_gradient_resolution",
+            "projected_gradient_resolution"
+          ]
+        }
+      },
+      {
+        "case": "gradient-staged",
+        "family": "adverse",
+        "status": "completed",
+        "fit_attempted": true,
+        "all_targets": false,
+        "failed_targets": [
+          "centre_error_pitch",
+          "wrapped_angle_degrees",
+          "conditional_query_max_residual_linear_level"
+        ],
+        "reported_errors": {
+          "centre_error_pitch": 0.021973451758807935,
+          "radius_error_pitch": 0.0026642906839020597,
+          "fraction_error": 0.0015538161449952792,
+          "wrapped_angle_degrees": 0.22608532216299057,
+          "reserved_dimension_error_pitch": 0.010220945857083663,
+          "sampled_bidirectional_boundary_error_pitch": 0.02463772972830469,
+          "conditional_query_max_residual_linear_level": 4.830718994140625
+        },
+        "selected_fit": {
+          "cost": 919.7765387540036,
+          "tied": false,
+          "work_exhausted": false,
+          "completion_withheld": false,
+          "search_statuses": [
+            "poll_resolution"
+          ]
+        }
+      },
+      {
+        "case": "singular-map-png",
+        "family": "adverse",
+        "status": "exception",
+        "fit_attempted": false,
+        "all_targets": false,
+        "failed_targets": [],
+        "reported_errors": null,
+        "selected_fit": null
+      },
+      {
+        "case": "five-queries-smooth",
+        "family": "adverse",
+        "status": "completed",
+        "fit_attempted": true,
+        "all_targets": false,
+        "failed_targets": [
+          "centre_error_pitch",
+          "radius_error_pitch",
+          "fraction_error",
+          "wrapped_angle_degrees",
+          "reserved_dimension_error_pitch",
+          "sampled_bidirectional_boundary_error_pitch",
+          "conditional_query_max_residual_linear_level",
+          "bounded_local_search_completion",
+          "geometry_rank_conservative_when_smooth"
+        ],
+        "reported_errors": {
+          "centre_error_pitch": 3.4208383475262725,
+          "radius_error_pitch": 1.0478496671001745,
+          "fraction_error": 0.3416635759965726,
+          "wrapped_angle_degrees": 22.287904362118873,
+          "reserved_dimension_error_pitch": 1.0123138153491746,
+          "sampled_bidirectional_boundary_error_pitch": 3.3976669032961366,
+          "conditional_query_max_residual_linear_level": 163.3573929151139
+        },
+        "selected_fit": {
+          "cost": 2.423380700838948e-27,
+          "tied": true,
+          "work_exhausted": false,
+          "completion_withheld": false,
+          "search_statuses": [
+            "poll_resolution",
+            "poll_resolution",
+            "poll_resolution",
+            "poll_resolution"
+          ]
+        }
+      },
+      {
+        "case": "coincident-smooth",
+        "family": "adverse",
+        "status": "completed",
+        "fit_attempted": true,
+        "all_targets": true,
+        "failed_targets": [],
+        "reported_errors": {
+          "centre_error_pitch": 1.529261138723815e-05,
+          "radius_error_pitch": 1.0949463536302773e-05,
+          "fraction_error": 4.37828061483625e-06,
+          "wrapped_angle_degrees": 1.6785097188167367e-06,
+          "reserved_dimension_error_pitch": 2.1899000299363536e-05,
+          "sampled_bidirectional_boundary_error_pitch": 1.2332169353257427e-05,
+          "conditional_query_max_residual_linear_level": 0.0015348349423334184
+        },
+        "selected_fit": {
+          "cost": 4.8110691938300795e-06,
+          "tied": false,
+          "work_exhausted": false,
+          "completion_withheld": false,
+          "search_statuses": [
+            "projected_gradient_resolution",
+            "projected_gradient_resolution",
+            "projected_gradient_resolution",
+            "projected_gradient_resolution"
+          ]
+        }
+      },
+      {
+        "case": "budget-png",
+        "family": "adverse",
+        "status": "completed",
+        "fit_attempted": true,
+        "all_targets": false,
+        "failed_targets": [
+          "centre_error_pitch",
+          "radius_error_pitch",
+          "fraction_error",
+          "wrapped_angle_degrees",
+          "reserved_dimension_error_pitch",
+          "sampled_bidirectional_boundary_error_pitch",
+          "conditional_query_max_residual_linear_level",
+          "bounded_local_search_completion"
+        ],
+        "reported_errors": {
+          "centre_error_pitch": 0.2491654365138992,
+          "radius_error_pitch": 0.15011550895648007,
+          "fraction_error": 0.021117821223272687,
+          "wrapped_angle_degrees": 1.2005903896106396,
+          "reserved_dimension_error_pitch": 0.3211377507902844,
+          "sampled_bidirectional_boundary_error_pitch": 0.39927857607016515,
+          "conditional_query_max_residual_linear_level": 50.94593811035156
+        },
+        "selected_fit": {
+          "cost": 8543.495705853818,
+          "tied": false,
+          "work_exhausted": true,
+          "completion_withheld": false,
+          "search_statuses": [
+            "work_limit"
+          ]
+        }
+      }
+    ]
+  },
+  "input_bindings": {
+    "freeze": {
+      "sha256": "7d244b9b197217dd7b06718bdde69769cf3f163489192b267e211d6ecaab726b",
+      "bytes": 58218
+    },
+    "launch": {
+      "sha256": "52e721818c7beefbf32237c66f6a425fdf46b4662fbc56dab8a40a5784d522c3",
+      "bytes": 1277
+    },
+    "terminal": {
+      "sha256": "a9a6870357a01c064f70c8eb92ce89cadd41c23f2fd743c6d2cf1f37999c123c",
+      "bytes": 2168
+    },
+    "controls": {
+      "sha256": "95aa737833027c1ecca122c204d9091a3cf3ce89568bab9a746f2cda3c3c4362",
+      "bytes": 1155
+    },
+    "log": {
+      "sha256": "c8752addde7153afbabd7d800112a6e2541f970d109fac7f48dbff97e07d315c",
+      "bytes": 1767
+    },
+    "report": {
+      "sha256": "4eadc2057ded427a4727cb2e14cae0aac153907fd511252423529dcd612fc982",
+      "bytes": 264057
+    }
+  },
+  "checks": 1333,
+  "failures": [],
+  "passed": true,
+  "auditor": {
+    "sha256": "b88131f64df77e0ceffe1efc8f157e07bc85f34b5a34974b0151c15a7a8ee935",
+    "bytes": 22037
+  },
+  "local_source_files_read": true,
+  "exclusions": [
+    "independent forward/reference/area/boundary/rank/stopping calculus",
+    "rational certificate and correction derivation",
+    "held-out statistical independence",
+    "unknown-camera or physical accuracy"
+  ]
+}

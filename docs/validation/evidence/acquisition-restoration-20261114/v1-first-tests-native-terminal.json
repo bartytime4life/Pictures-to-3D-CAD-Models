@@ -1,0 +1,35 @@
+{
+  "attempt": 1,
+  "reruns": 0,
+  "native_session_id": 51215,
+  "initial_native_result": {
+    "chunk_id": "a9a97b",
+    "wall_time_seconds": 1.000403678,
+    "session_id": 51215,
+    "original_token_count": 46,
+    "output": "........................................................................ [  6%]\n........................................................................ [ 12%]\n......................."
+  },
+  "observations": [
+    {
+      "chunk_id": "646524",
+      "wall_time_seconds": 5.001483746,
+      "session_id": 51215,
+      "original_token_count": 76,
+      "output": "................................................. [ 18%]\n........................................................................ [ 25%]\n........................................................................ [ 31%]\n........................................................................ [ 37%]\n....."
+    },
+    {
+      "chunk_id": "b79437",
+      "wall_time_seconds": 0.000015189,
+      "exit_code": 1,
+      "original_token_count": 835,
+      "output": "................................................................... [ 44%]\n............................................................... [ 49%]\n................................................................... [ 55%]\n..................................................... [ 60%]\n........................................................................ [ 66%]\n........................................................................ [ 72%]\n........................................................................ [ 79%]\n........................................................................ [ 85%]\n........................................................................ [ 91%]\n........F............................................................... [ 98%]\n....................                                                     [100%]\n=================================== FAILURES ===================================\n___ test_dependent_tight_normal_cannot_be_dropped_from_all_tight_sign_check ____\n\n    def test_dependent_tight_normal_cannot_be_dropped_from_all_tight_sign_check():\n        # x>=1,y>=1, -x-y>=-2 force x=y=1. First two normals suggest\n        # h=(1,1), which fails the third tight normal's strict-inward condition.\n        spec = problem(\n            G=[seven(1, 0), seven(0, 1), seven(-1, -1)],\n            lower=[1.0, 1.0, -2.0],\n            upper=[2.0, 2.0, 0.0],\n            point=seven(1, 1),\n            dual=[0, 1, 0, 1, 0, 0] + [0] * 14,\n            delta_lower=[-2.0] * 2 + [0.0] * 5,\n            delta_upper=[2.0] * 2 + [0.0] * 5,\n            spans=[1.0] * 2 + [0.0] * 5,\n            actual_lower=[-2.0] * 2 + [0.0] * 5,\n            actual_upper=[2.0] * 2 + [0.0] * 5,\n        )\n>       assert certificate(spec)[\"qualified\"] is True\n               ^^^^^^^^^^^^^^^^^\n\ntests/test_finite_acquisition_restoration_math.py:340: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \ntests/test_finite_acquisition_restoration_math.py:65: in certificate\n    return rational.certificate_check(*(spec[name] for name in names))\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nbackend/finite_acquisition_restoration_rational.py:226: in certificate_check\n    *_, rows = _problem(G, z0, lower, upper, delta_lower, delta_upper)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nbackend/finite_acquisition_restoration_rational.py:187: in _problem\n    anchors = _vector(z0, n, \"z0\", binary=True)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalues = [0.0], length = 3, label = 'z0', binary = True\n\n    def _vector(values, length, label, *, binary=False):\n        if (\n            not isinstance(values, Sequence)\n            or isinstance(values, (str, bytes))\n            or len(values) != length\n        ):\n>           raise ValueError(f\"{label} must contain{length} coordinates\")\nE           ValueError: z0 must contain3 coordinates\n\nbackend/finite_acquisition_restoration_rational.py:155: ValueError\n=========================== short test summary info ============================\nFAILED tests/test_finite_acquisition_restoration_math.py::test_dependent_tight_normal_cannot_be_dropped_from_all_tight_sign_check\n1 failed, 1138 passed, 33 subtests passed in 16.81s\n"
+    }
+  ],
+  "terminal_exit": 1,
+  "observed_passed": 1138,
+  "observed_failed": 1,
+  "observed_subtests_passed": 33,
+  "full_study_permitted": false,
+  "full_study_attempted": false,
+  "failure": "Three-row invented math fixture retains the one-row default z0; validation rejects shape before intended mathematical assertion. No backend correction is justified by this failure."
+}

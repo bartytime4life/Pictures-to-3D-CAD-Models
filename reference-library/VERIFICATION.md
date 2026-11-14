@@ -7,7 +7,7 @@ the existing dated receipt. The receipt, check date and release status were not
 regenerated for this correction.
 
 Repository documentation update, November 13: the
-[current review](../docs/validation/documentation-restoration-draft.md) links the
+[current review](../docs/validation/documentation-restoration-result.md) links the
 [local acquisition-recovery snapshot](../docs/finite-acquisition-recovery.md).
 That separate synthetic research retains 4/12 original matched target passes
 and 9/12 continuation passes; both earlier full protocols exited 1. The 459 focused tests
@@ -51,13 +51,16 @@ uses one fixed equality-restoration step and one nearest physical tuple. Its
 first actual pair reduces training cost **0.302031169350812 to 0.0** on the
 135 supplied synthetic PNG training samples. Only source 62 changes code
 (93 to 92), with no collateral code change. [Complete paired result](../docs/validation/finite-acquisition-defect-corrector.md).
-This is a local training result; full recovery has not been rerun, and the
-original failed 11/12 protocol and main runtime remain unchanged.
+That standalone probe did not rerun full recovery. Its result remains
+separate from the later fresh live study below.
 
-A [local restoration controller draft](../docs/finite-acquisition-restoration.md)
-is authored and unrun. Its ten untracked files and proposed 126-path
-inventory add no library feature, new test result or refreshed release
-verification. The original failed full-recovery result remains 11/12.
+The [live restoration controller](../docs/finite-acquisition-restoration-result.md)
+is frozen at research `e677039` and its selected controls pass 1,169 tests
+and 33 subtests (one malformed predecessor node is independently replaced).
+The fresh full 24-case study remains **11/12 matched passes, exit 1**:
+zero image residuals do not meet every geometry target. These results add
+no library feature, Photos tool, generated reader or refreshed release
+verification. [Full result and limitations](../docs/validation/finite-acquisition-restoration-result.md).
 
 
 ## What was checked automatically

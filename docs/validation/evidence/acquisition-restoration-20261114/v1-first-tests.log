@@ -1,0 +1,66 @@
+........................................................................ [  6%]
+........................................................................ [ 12%]
+........................................................................ [ 18%]
+........................................................................ [ 25%]
+........................................................................ [ 31%]
+........................................................................ [ 37%]
+........................................................................ [ 44%]
+............................................................... [ 49%]
+................................................................... [ 55%]
+..................................................... [ 60%]
+........................................................................ [ 66%]
+........................................................................ [ 72%]
+........................................................................ [ 79%]
+........................................................................ [ 85%]
+........................................................................ [ 91%]
+........F............................................................... [ 98%]
+....................                                                     [100%]
+=================================== FAILURES ===================================
+___ test_dependent_tight_normal_cannot_be_dropped_from_all_tight_sign_check ____
+
+    def test_dependent_tight_normal_cannot_be_dropped_from_all_tight_sign_check():
+        # x>=1,y>=1, -x-y>=-2 force x=y=1. First two normals suggest
+        # h=(1,1), which fails the third tight normal's strict-inward condition.
+        spec = problem(
+            G=[seven(1, 0), seven(0, 1), seven(-1, -1)],
+            lower=[1.0, 1.0, -2.0],
+            upper=[2.0, 2.0, 0.0],
+            point=seven(1, 1),
+            dual=[0, 1, 0, 1, 0, 0] + [0] * 14,
+            delta_lower=[-2.0] * 2 + [0.0] * 5,
+            delta_upper=[2.0] * 2 + [0.0] * 5,
+            spans=[1.0] * 2 + [0.0] * 5,
+            actual_lower=[-2.0] * 2 + [0.0] * 5,
+            actual_upper=[2.0] * 2 + [0.0] * 5,
+        )
+>       assert certificate(spec)["qualified"] is True
+               ^^^^^^^^^^^^^^^^^
+
+tests/test_finite_acquisition_restoration_math.py:340: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_finite_acquisition_restoration_math.py:65: in certificate
+    return rational.certificate_check(*(spec[name] for name in names))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend/finite_acquisition_restoration_rational.py:226: in certificate_check
+    *_, rows = _problem(G, z0, lower, upper, delta_lower, delta_upper)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend/finite_acquisition_restoration_rational.py:187: in _problem
+    anchors = _vector(z0, n, "z0", binary=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+values = [0.0], length = 3, label = 'z0', binary = True
+
+    def _vector(values, length, label, *, binary=False):
+        if (
+            not isinstance(values, Sequence)
+            or isinstance(values, (str, bytes))
+            or len(values) != length
+        ):
+>           raise ValueError(f"{label} must contain{length} coordinates")
+E           ValueError: z0 must contain3 coordinates
+
+backend/finite_acquisition_restoration_rational.py:155: ValueError
+=========================== short test summary info ============================
+FAILED tests/test_finite_acquisition_restoration_math.py::test_dependent_tight_normal_cannot_be_dropped_from_all_tight_sign_check
+1 failed, 1138 passed, 33 subtests passed in 16.81s

@@ -1,0 +1,29 @@
+{
+  "format": "finite-acquisition-restoration-controls-v2-static-review",
+  "recorded_at": "2026-11-14T02:11:35.128481+00:00",
+  "independent_static_review_completed": true,
+  "subject_execution": false,
+  "reviewed_new_files": {
+    "tests/test_finite_acquisition_restoration_math_rebound.py": "8d828c63a64760e70a8f6c422607ccd2b814f3543e128940c666d5b89bed9530",
+    "tests/test_finite_acquisition_restoration_protocol_v2.py": "f883a31ba68e8fbd64da6c020d401a85fa99f6e58ea97593c568bf37f0c3a108",
+    "studies/verification/finite-acquisition-recovery-restoration-controls-v2.py": "1776e687b0fd09be958ba07ac6868e96d1be44fb6e49e6a1d2844b5a9db7ea33",
+    "studies/finite-acquisition-recovery-restoration-controls-v2.json": "0e067b19f854306ed3d207196e5d37504b67426690cdfb9ebe8c4b52eb47ec53",
+    "docs/finite-acquisition-restoration-controls-v2.md": "c77b9978ce8c62efad5603599d584bcaf4b58fcbfba18e4a130b4c695459acdb"
+  },
+  "reviewers": {
+    "ai_review": "Independent hand-math review of explicit three-anchor replacement; same KKT and dependent-tight obstruction, clear.",
+    "ux_review": "Independent root plan/guide and rebound protocol compatibility review, clear. New adapter18 function bodies ASTidentical; only labels/131inventory/old126closure validation differ.",
+    "root": "Independent newrunner authority/shape/131gates and ASTdiff, equivalentmathcase/protocolclone/admission+testmapping review, clear."
+  },
+  "correction_scope": "Fixture anchors only; no backend/operator/search/target change. Exact old malformed node preserved and explicitly deselected only with equivalent replacement required.",
+  "prior_failed_native_session": 51215,
+  "prior_failed_terminal_result_preserved": true,
+  "old126_inputs_unchanged": true,
+  "prospective_selected_controls": 1169,
+  "original_subtests_separate": 33,
+  "first_native_count_authoritative": true,
+  "static_native_binding": {
+    "path": ".local/verification/finite-acquisition-restoration-controls-v2-static-native.json",
+    "sha256": "0ae70074c3fea8a65830e8dfccd1da94c4a54ffedaf10564f60f783123e5232e"
+  }
+}

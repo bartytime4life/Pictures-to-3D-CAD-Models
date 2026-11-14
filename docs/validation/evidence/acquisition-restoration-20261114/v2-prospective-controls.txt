@@ -1,0 +1,82 @@
+# Restoration controls: separately admitted fixture repair
+
+This is a prospective, unexecuted correction to an **invented software-control
+fixture**, with no runtime or mathematical algorithm change. All new v2 files
+require independent review, commit and a combined source freeze before
+their first import, collection, test, solve, point or model call.
+
+## Preserve the first failed run
+
+The preceding 126-input source at `7a126d47607ac759b21b388f3194ae6984546e7b`
+was committed and frozen before its first selected controls ran. Native
+session **51215** terminated with **1,138 passes, one failure and 33 passing
+subtests**, exit 1, in 16.81 seconds.
+
+The dependent-tight-normal control changed its matrix from one row to three
+but retained the helper's one-value `z0`. Shape validation raised
+`ValueError: z0 must contain3 coordinates` before the intended certificate
+and inward-sign assertions. The first failed file, log, receipt, admission,
+guide and all 126 inputs remain unchanged. No v1 full recovery study ran.
+
+The first terminal receipt is local metadata at
+`.local/verification/finite-acquisition-recovery-restoration-v1-first-tests-terminal-receipt.json`,
+SHA256 `7a0507321e57fd828d58ad5041f921c6456a46c02e787527e7249a305e13455f`.
+Its existence does not authorize a v1 full study.
+
+## Equivalent mathematical control
+
+The replacement independently supplies all three zero optical anchors for
+the original constraints:
+
+~~~text
+x >= 1, y >= 1, -x-y >= -2; hence x=y=1.
+~~~
+
+At that point, the first two tight normals propose an inward direction with
+both coordinates positive. The third, dependent tight normal obstructs strict
+inward motion. The control must retain the original KKT qualification and
+verify that every tight row participates in this sign test. Adding the missing
+anchors does not permit dropping the dependent constraint or weakening the
+mathematical expectation.
+
+Only the exact malformed node is deselected from the next run. Its equivalent
+replacement is required. All other original selected cases and the 33
+subtests remain selected. Thirty separately rebound protocol cases check
+the new adapter's lifecycle. The prospective total is **1,169 cases**;
+the first native collection and result are authoritative.
+
+## Unchanged recovery and source gates
+
+The [new admission](../studies/finite-acquisition-recovery-restoration-controls-v2.json)
+binds all 126 preceding source hashes and Git modes plus five new files,
+a **131-path union**. The new runner validates that predecessor closure
+against its fixed combined hash, retains all known after-check identities,
+and independently checks committed regular-file modes and bytes.
+An omitted declaration, symlink, committed chmod, late error or source
+change must withhold both top and nested qualification labels.
+
+All four restoration backend modules remain byte-for-byte unchanged. The
+live event order, inward construction, one correction through actual rejected
+optics, strict actual cost relative to the accepted incumbent, single episode,
+shared charging policy, caps and original completed-search linkage remain
+those of [the preceding prospective strategy](finite-acquisition-restoration.md).
+No new optimum, geometry rank or convergence theorem is claimed.
+
+Only a terminal pass of this separately frozen selected-control run permits
+the first fresh complete study. The new adapter preserves the original
+**24 cases: 12 matched and 12 adverse**, numerical targets, independent
+reference orders, observations, kernels/maps, observed-only seeds/levels and
+adverse work limits. It saves the full fit before truth evaluation.
+Reserved residual checks remain conditional because initialization already
+uses reserved intensities.
+
+Retain every refusal, exception, unknown and unstarted row. Never overwrite
+or restart a first destination. Preserve the first native handle, log, result
+and terminal exit. A later correction needs new source and admission; none
+of the first 131 governing files may be edited after execution begins.
+
+There is no promised recovery score. The prior full result remains 11/12
+until a new full protocol is actually completed. Even a passing synthetic
+study would not establish independent forward/rank qualification, unknown
+camera accuracy, main/UI integration, installed behavior, native slicing,
+physical fit or printing.

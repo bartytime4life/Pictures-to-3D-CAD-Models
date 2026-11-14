@@ -1,0 +1,17 @@
+{
+  "format": "saved-audit-preexecution-freeze-v1",
+  "script": ".local/verification/restoration-ai/saved-audit/check.py",
+  "sha256": "687c204864b732f8a85a14c5b13fe51e83a631a0cb1f26ab7100a76c677baa2d",
+  "bytes": 22912,
+  "mode": "100755",
+  "static_checks": "Ruff format/check and AST compile pass",
+  "subject_imports": 0,
+  "saved_audit_runs": 0,
+  "prior_authoring_failures": [
+    "Tool-call JavaScript string syntax rejected before patch write",
+    "Ruff EXE001 fixed by chmod755",
+    "Ruff SIM114 combined identical counter branches"
+  ],
+  "input_report_sha256": "4eadc2057ded427a4727cb2e14cae0aac153907fd511252423529dcd612fc982",
+  "authorized_scope": "stdlib-only saved bytes/accounting after root terminal; no subject imports/evaluation"
+}

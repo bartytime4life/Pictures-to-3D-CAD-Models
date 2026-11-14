@@ -159,13 +159,15 @@ synthetic PNG context. Its [recorded commands](validation/finite-acquisition-def
 also require the exact frozen research checkout. Those runtime, test and
 runner files remain absent here; they are not main-branch commands.
 
-The proposed `fit_acquisition_segment_restoration(...)` entry point exists
-only in an [uncommitted local draft](finite-acquisition-restoration.md).
-Its four backend modules, three control files, adapter, admission and guide
-are authored but unrun. The prospective inventory of 126 paths is not a
-completed source freeze. This documentation publishes no executable draft
-or runnable main command; existing probe results do not validate its changed
-live accounting.
+`fit_acquisition_segment_restoration(...)` is implemented in the separate
+131-input research freeze `e677039`, outside this main-based source.
+Its selected controls pass 1,169 tests and 33 subtests, with one malformed
+predecessor node deselected and independently replaced. The first fresh full
+study remains 11/12 matched passes, exit 1. See the
+[current controller method](finite-acquisition-restoration-result.md) and
+[recorded command and terminal chain](validation/finite-acquisition-restoration-result.md#recorded-execution).
+Those historical commands require the exact research checkout; they are
+not additional `make` targets or executable main/UI features.
 
 ## Output and side effects
 

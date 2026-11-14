@@ -1,5 +1,20 @@
 # Workbench change log
 
+## Executed live restoration documented — November 14, 2026 UTC
+
+- Replace current unrun-draft labels with the independently frozen 131-input
+  research source, first controls and fresh original 24-case study.
+- Preserve the failed v1 fixture, admit the equivalent replacement separately,
+  and record 1,169 passing selected tests plus 33 subtests. Full recovery
+  remains 11/12, exit 1: exact image agreement still misses the fraction target.
+- Publish [first report, terminal chain and saved-only audits](validation/finite-acquisition-restoration-result.md),
+  including both prior mathematical-auditor schema failures. Explain why
+  code-equivalent parameter witnesses do not bound uncertainty or prove the
+  target impossible. [Method](finite-acquisition-restoration-result.md).
+- Refresh all current guide entry points. Historical records, frozen source,
+  main runtime, generated library outputs and physical status retain their scope.
+
+
 ## Unrun restoration candidate documented — November 14, 2026 UTC
 
 - Add a [draft-method guide](finite-acquisition-restoration.md) for the locally

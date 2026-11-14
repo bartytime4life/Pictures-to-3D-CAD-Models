@@ -1,0 +1,25 @@
+{
+  "format": "restoration-v2-ux-saved-audit-first-execution",
+  "native_session_id": 86877,
+  "attempt": 1,
+  "reruns": 0,
+  "exit_code": 0,
+  "initial_chunk_id": "5ce49b",
+  "terminal_chunk_id": "1a59cc",
+  "records": {
+    "audit.py": {
+      "sha256": "b88131f64df77e0ceffe1efc8f157e07bc85f34b5a34974b0151c15a7a8ee935",
+      "bytes": 22037
+    },
+    "receipt.json": {
+      "sha256": "231e1fa38e0526b12e60a927d4917055e59cef6723109d82543f3699a303a0a0",
+      "bytes": 21384
+    },
+    "first.log": {
+      "sha256": "875c1ff28b2c81c6a7710ecaa06b44db16fe82e244472e714d18745825180c38",
+      "bytes": 48
+    }
+  },
+  "scientific_subject_imports_or_calls": 0,
+  "scope": "First saved-only lifecycle audit; scientific study remains exit1 at11/12. No governing inputs or saved first results edited."
+}

@@ -133,54 +133,29 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 ## Engineering evidence and developer research
 
-For the reviewed source revision and available research APIs, read
-[source scope and status](docs/project-status.md) and the
-[current documentation review](docs/validation/documentation-restoration-draft.md).
-Main includes the source-cell mean, five unrounded area sensitivities and
-separate signed linear propagation as developer APIs. Five-parameter recovery
-with unknown brightness is absent from this main-based runtime. A
-[separate local research prototype](docs/finite-acquisition-recovery.md) records
-4/12 matched passes originally, 9/12 with a smooth proposal, then **11/12**
-with [coupled search](docs/finite-acquisition-coupled.md). A later
-[source-event strategy](docs/finite-acquisition-events.md) stays at 11/12.
-The [exact active-face follow-up](docs/finite-acquisition-protected-active.md)
-also reaches 11/12 after a separately frozen corrected selection passes 821
-tests and 33 subtests. **All five complete 24-case recovery protocols fail.**
-The original [protected-source-bin design](docs/finite-acquisition-protected.md)
-retains its eight failed controls, and the active method's first test-expectation
-failure is preserved. An earlier [saved-only rounding diagnostic](docs/finite-acquisition-physical-rounding.md)
-verifies a rational local optimum but accepts none of 128 adjacent physical
-candidates. A separately frozen [inward-point construction](docs/finite-acquisition-inward-margin.md)
-then passes 103 focused controls and all five original gates for all 128 new
-corners, with zero arithmetic unknowns. An independent saved-data audit passes
-8,030 checks. A later [paired literal check](docs/finite-acquisition-inward-literal.md)
-exactly reproduces the baseline but increases actual training cost from
-0.302031169350812 to 0.40923713513984694, so its candidate is rejected. Target
-cell 62 reaches code 92; collateral cell 33 changes 106 to 105. The original
-11/12 recovery result and runtime remain unchanged. The
-[latest paired result](docs/validation/finite-acquisition-defect-corrector.md) and
-[results and remaining limits](docs/validation/finite-acquisition-continuations.md)
-keep software tests and [saved-record audits](docs/finite-acquisition-saved-audit.md)
-separate from camera accuracy and physical acceptance.
+Read [source scope and status](docs/project-status.md) and the
+[current documentation review](docs/validation/documentation-restoration-result.md)
+when switching branches. Main includes the source-cell mean, five unrounded
+area sensitivities and signed linear propagation as developer APIs.
+Five-parameter acquisition-aware recovery with unknown brightness remains
+separate local research, with no workbench control or main HTTP mode.
 
-A subsequent [observed-defect correction](docs/finite-acquisition-defect-corrector.md)
-reduces actual training cost to **0.0** on 135 supplied synthetic PNG samples,
-changing only the intended source code. It passes 220 selected software
-controls and a qualified paired comparison. This does not establish unique
-geometry, reserved-sample accuracy or a new full-recovery result.
+The latest [live restoration study](docs/finite-acquisition-restoration-result.md)
+is committed and frozen at `e677039`, with 131 governing inputs. Its selected
+controls pass **1,169 tests and 33 subtests** after a separately admitted
+fixture repair. The first full original 24-case study still fails at
+**11/12 matched passes, exit 1**. Middle PNG exactly matches the supplied
+169-pixel reference output, including all training and conditional reserved
+samples, but its chord-fraction error is **0.003206949 > 0.002**.
 
-A [local restoration controller draft](docs/finite-acquisition-restoration.md)
-now proposes using that construction during a fresh fit. It is authored but
-uncommitted and unrun, with no new test or recovery result and no workbench
-control.
-
-The [earlier documentation review](docs/validation/documentation-mean-state.md),
-[acquisition-evidence review](docs/validation/documentation-acquisition-state.md)
-and [PR #95 review](docs/validation/documentation-pr95-state.md) retain their
-original workbench and companion-library scope. The
-[residual-study record](docs/validation/finite-residual-information.md) retains
-the completed diagnostic and failed normal-angle control. Older test results
-retain their original scope.
+An exact quantized image match does not establish unique or accurate geometry.
+The [complete result, first failures and saved audits](docs/validation/finite-acquisition-restoration-result.md)
+retain this limitation. The [earlier recovery protocols](docs/finite-acquisition-recovery.md),
+[negative literal pair](docs/finite-acquisition-inward-literal.md) and
+[standalone correction](docs/finite-acquisition-defect-corrector.md) keep their
+own source and outcomes. All six completed 24-case recovery protocols fail.
+Independent forward/rank qualification, measured-camera accuracy and physical
+CAD/print acceptance remain separate from software and saved-record checks.
 
 For reference-sheet tracing, photograph the whole flat sheet (A4, US Letter, or a sheet you have measured) and explicitly choose it as the **Scale reference**. A successful sheet trace sets scale from its stated size, estimates perspective and one radial lens correction, and fits lines, tangent arcs and circles. Entered thickness supports a side-wall/parallax correction under the method's assumptions. Ordinary tracing and the sample use measured-width scaling instead; they do not perform these corrections. See [reference-sheet tracing](docs/reference-sheet.md) for the mathematics and synthetic evidence, and the [engineering model](docs/engineering-model.md) for independent verification before fabrication.
 

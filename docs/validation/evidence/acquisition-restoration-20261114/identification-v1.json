@@ -1,0 +1,224 @@
+{
+  "format": "restoration-v2-saved-identification-evidence",
+  "recorded_at": "2026-11-14T02:19:07.398809+00:00",
+  "script": {
+    "path": ".local/verification/restoration-v2-identification-saved-v1.py",
+    "sha256": "071bbfde19a96a433f8319cfb84845c1e630c2909ca2382c1518be0357b8f35e"
+  },
+  "inputs": {
+    "report": {
+      "sha256": "4eadc2057ded427a4727cb2e14cae0aac153907fd511252423529dcd612fc982",
+      "bytes": 264057
+    },
+    "fit": {
+      "sha256": "3a3c5b0f5b5ca743bbadb237958167f72f48eb3c3f632747859df14b563e720f",
+      "bytes": 59766223
+    },
+    "capture_sha256": "f24bc640d8cbda96b6254ebb879df0f3b91654310f670812d484ac586c08138b"
+  },
+  "checks": {
+    "all135_training_residuals_exactly_zero": true,
+    "all34_conditional_reserved_residuals_exactly_zero": true,
+    "full169_pixel_float32_field_equal_reference_bytes": true,
+    "source169_encoded_codes_equal_reference_bytes": true,
+    "distinct_saved_parameter_tuples_with_same_complete_source_code_pattern": 10,
+    "saved_zero_cost_candidates": 10,
+    "same_code_group_candidate_indices": [
+      2,
+      186,
+      200,
+      214,
+      220,
+      228,
+      234,
+      238,
+      239,
+      240
+    ],
+    "zero_cost_code_groups": {
+      "9def04635193f3ed7351cbaf77d40279434171b4da5d668eaa4fb8399022bfac": [
+        2,
+        186,
+        200,
+        214,
+        220,
+        228,
+        234,
+        238,
+        239,
+        240
+      ]
+    },
+    "completed_original_search": [
+      "poll_resolution"
+    ],
+    "remaining_failed_targets": [
+      "fraction_error"
+    ]
+  },
+  "saved_witness_parameters": [
+    {
+      "candidate_index": 2,
+      "parameters": [
+        5.870124148570346,
+        6.117573300926215,
+        3.411642659916736,
+        0.16679305093653776,
+        1.1306449527409792
+      ],
+      "levels": [
+        21.9872555740398,
+        218.25931253499678
+      ],
+      "code_sha256": "9def04635193f3ed7351cbaf77d40279434171b4da5d668eaa4fb8399022bfac"
+    },
+    {
+      "candidate_index": 186,
+      "parameters": [
+        5.870646619459251,
+        6.117573300926216,
+        3.411642659916736,
+        0.16679305093653773,
+        1.1306449527409796
+      ],
+      "levels": [
+        21.9872555740398,
+        218.25931253499678
+      ],
+      "code_sha256": "9def04635193f3ed7351cbaf77d40279434171b4da5d668eaa4fb8399022bfac"
+    },
+    {
+      "candidate_index": 200,
+      "parameters": [
+        5.870385384014799,
+        6.117573300926216,
+        3.411642659916736,
+        0.16679305093653773,
+        1.1306449527409796
+      ],
+      "levels": [
+        21.9872555740398,
+        218.25931253499678
+      ],
+      "code_sha256": "9def04635193f3ed7351cbaf77d40279434171b4da5d668eaa4fb8399022bfac"
+    },
+    {
+      "candidate_index": 214,
+      "parameters": [
+        5.870254766292575,
+        6.117573300926216,
+        3.411642659916736,
+        0.16679305093653773,
+        1.1306449527409796
+      ],
+      "levels": [
+        21.9872555740398,
+        218.25931253499678
+      ],
+      "code_sha256": "9def04635193f3ed7351cbaf77d40279434171b4da5d668eaa4fb8399022bfac"
+    },
+    {
+      "candidate_index": 220,
+      "parameters": [
+        5.870124148570348,
+        6.117573300926216,
+        3.411642659916736,
+        0.1668006421840963,
+        1.1306449527409796
+      ],
+      "levels": [
+        21.9872555740398,
+        218.25931253499678
+      ],
+      "code_sha256": "9def04635193f3ed7351cbaf77d40279434171b4da5d668eaa4fb8399022bfac"
+    },
+    {
+      "candidate_index": 228,
+      "parameters": [
+        5.8701894574314615,
+        6.117573300926216,
+        3.411642659916736,
+        0.16679305093653773,
+        1.1306449527409796
+      ],
+      "levels": [
+        21.9872555740398,
+        218.25931253499678
+      ],
+      "code_sha256": "9def04635193f3ed7351cbaf77d40279434171b4da5d668eaa4fb8399022bfac"
+    },
+    {
+      "candidate_index": 234,
+      "parameters": [
+        5.870124148570348,
+        6.117573300926216,
+        3.411642659916736,
+        0.166796846560317,
+        1.1306449527409796
+      ],
+      "levels": [
+        21.9872555740398,
+        218.25931253499678
+      ],
+      "code_sha256": "9def04635193f3ed7351cbaf77d40279434171b4da5d668eaa4fb8399022bfac"
+    },
+    {
+      "candidate_index": 238,
+      "parameters": [
+        5.870124148570348,
+        6.117573300926216,
+        3.411642659916736,
+        0.16679305093653773,
+        1.1306449527409796
+      ],
+      "levels": [
+        21.987741947941167,
+        218.25931253499678
+      ],
+      "code_sha256": "9def04635193f3ed7351cbaf77d40279434171b4da5d668eaa4fb8399022bfac"
+    },
+    {
+      "candidate_index": 239,
+      "parameters": [
+        5.870124148570348,
+        6.117573300926216,
+        3.411642659916736,
+        0.16679305093653773,
+        1.1306449527409796
+      ],
+      "levels": [
+        21.9872555740398,
+        218.2588261610954
+      ],
+      "code_sha256": "9def04635193f3ed7351cbaf77d40279434171b4da5d668eaa4fb8399022bfac"
+    },
+    {
+      "candidate_index": 240,
+      "parameters": [
+        5.870124148570348,
+        6.117573300926216,
+        3.411642659916736,
+        0.16679305093653773,
+        1.1306449527409796
+      ],
+      "levels": [
+        21.9872555740398,
+        218.25979890889815
+      ],
+      "code_sha256": "9def04635193f3ed7351cbaf77d40279434171b4da5d668eaa4fb8399022bfac"
+    }
+  ],
+  "observed_fraction_min": 0.16679305093653773,
+  "observed_fraction_max": 0.1668006421840963,
+  "fraction_error": 0.00320694906346225,
+  "original_fraction_target": 0.002,
+  "mathematical_implication": "The specified sum-of-squares training cost is nonnegative and this actual witness attains zero. Its objective value is minimal; further strict objective reduction cannot repair its fraction error. Multiple distinct saved parameter tuples give the same complete source code pattern and training prediction under the fixed supplied downstream operator.",
+  "limits": [
+    "Observed extrema are sampled witnesses, not a feasible-set enclosure, confidence interval or worst-case uncertainty bound.",
+    "Direct full-field comparison is retained for the accepted trial; downstream equivalence for the other source-code-identical witnesses follows conditionally from the fixed deterministic decoder/resampling/post operator.",
+    "These witnesses do not prove that the original0.002 target is unattainable or that every equally good fit fails it.",
+    "No unique geometry, observation rank, unknown-camera accuracy, physical correctness or global-search certificate is established.",
+    "No new source coverage, forward-model, derivative, optimizer, candidate point or fit was executed."
+  ],
+  "new_scientific_calls": 0
+}

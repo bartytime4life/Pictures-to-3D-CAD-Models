@@ -71,14 +71,17 @@ uses one fixed equality-restoration step and one nearest physical tuple. Its
 first actual pair reduces training cost **0.302031169350812 to 0.0** on the
 135 supplied synthetic PNG training samples. Only source 62 changes code
 (93 to 92), with no collateral code change. [Complete paired result](validation/finite-acquisition-defect-corrector.md).
-This is a local training result; full recovery has not been rerun, and the
-original failed 11/12 protocol and main runtime remain unchanged.
+That standalone probe did not rerun full recovery. The subsequent live study
+has its own source freeze and result; the earlier failed protocols
+and main runtime remain unchanged.
 
-A separate [restoration controller draft](finite-acquisition-restoration.md)
-is now authored in local research. It has not been committed, frozen or
-executed. Its proposed live accounting differs from the completed standalone
-probe; the earlier result does not validate that policy. There is no new
-software-test result, recovery score or available main command.
+The separate [live restoration controller](finite-acquisition-restoration-result.md)
+is now frozen and executed in local research. Its selected controls pass
+1,169 tests and 33 subtests, with one malformed predecessor node deselected
+and independently replaced. The fresh original 24-case study remains
+**11/12 matched passes, exit 1**. Middle PNG has zero training and conditional
+reserved residuals but misses the fraction target: 0.003206949 > 0.002.
+It adds no main runtime, HTTP mode or workbench control.
 
 These separate local studies add no main runtime or workbench integration.
 

@@ -12,7 +12,8 @@ This is separate local research. Main has no five-geometry-parameter
 acquisition-aware recovery fitter or workbench control for this correction.
 Zero quantized training residual does not establish unique geometry, a reserved
 prediction, full recovery, camera accuracy or a physical tolerance. The original
-11/12 full-recovery result remains failed; that protocol has not been rerun.
+11/12 full-recovery result remains failed. This standalone experiment did
+not rerun it; the later live study has a separate result below.
 The preceding [literal pair](finite-acquisition-inward-literal.md), cost
 0.40923713513984694 and collateral code change, remains rejected and unchanged.
 
@@ -28,10 +29,12 @@ has lower slack `0.00022125244140625`, below `2^-12`, with its code preserved.
 This diagnostic illustrates why a proposed storage allowance is separate
 from an observed nonlinear result or a uniform remainder guarantee.
 
-The next [live-controller draft](finite-acquisition-restoration.md) is
-authored but uncommitted and unrun. It proposes using fresh fit context and
-a different live charging policy. This saved single-context result does not
-validate that integration or add a full-recovery score.
+The later [live controller](finite-acquisition-restoration-result.md) is
+frozen and executed using fresh fit context and a distinct per-operation
+charging policy. Its 1,169 selected controls and 33 subtests pass. The fresh
+24-case study still fails at 11/12; zero training and conditional reserved
+residuals leave a fraction error above its original target. This standalone
+single-context record retains its own source and accounting.
 
 ## Keep the accepted and rejected points distinct
 

@@ -1,0 +1,22 @@
+{
+  "format": "finite-acquisition-recovery-restoration-controls-v2-first-full-study-launch",
+  "recorded_at": "2026-11-14T02:13:10.681818+00:00",
+  "command": "set -o pipefail\nOPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python studies/verification/finite-acquisition-recovery-restoration-controls-v2.py --output-dir .local/verification/finite-acquisition-recovery-restoration-controls-v2-first 2>&1 | tee .local/verification/finite-acquisition-recovery-restoration-controls-v2-first.log",
+  "source_head": "e677039274707f8c19e3efaa005f69d74b393868",
+  "source_tree": "a981dc46ede1cb628c4e780c09cef3c57385b8ee",
+  "source_closure_sha256": "33ce7a777b732e6970092c119bb18f7b72e234a2b15ca37c92ba2c9274136576",
+  "freeze": {
+    "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-freeze.json",
+    "bytes": 58218,
+    "sha256": "7d244b9b197217dd7b06718bdde69769cf3f163489192b267e211d6ecaab726b"
+  },
+  "controls_receipt": {
+    "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first-tests-terminal-receipt.json",
+    "bytes": 1155,
+    "sha256": "95aa737833027c1ecca122c204d9091a3cf3ce89568bab9a746f2cda3c3c4362"
+  },
+  "attempt": 1,
+  "reruns": 0,
+  "original_cases": 24,
+  "original_targets_unchanged": true
+}

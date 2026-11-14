@@ -10,6 +10,14 @@ All dates are 2026. Revisions are numbered in `library.json`, which feeds the HT
 - Record complete source, parameter, schema and output hashes, OpenSCAD versions, logs and actual-mesh checks. Include real default-model renders and editable starter files.
 - Exercise browser downloads through actual OpenSCAD renders, with isolated desktop/mobile checks and preservation regression tests. Rebuild the handbook, verification record and portable archive. No slicing or physical print qualification.
 
+### Repository documentation: executed restoration — November 14, 2026 UTC
+
+Link the [executed research method](../docs/finite-acquisition-restoration-result.md)
+and [full 11/12 result](../docs/validation/finite-acquisition-restoration-result.md).
+The selected 1,169 controls and 33 subtests pass; an exact image match still
+misses one geometry target. This is repository guidance, with no new library
+revision, generated reader/PDF, catalog or release verification.
+
 ### Repository documentation: unrun restoration draft — November 14, 2026 UTC
 
 Link the [prospective local controller](../docs/finite-acquisition-restoration.md)

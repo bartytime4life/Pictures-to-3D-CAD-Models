@@ -43,7 +43,7 @@ merged at 23:54:08 UTC and records the saved inward construction.
 Documentation [PR #121](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/121)
 is also merged; its tree is the publication base above. It records the
 completed negative literal probe. This refresh preserves those records and
-adds the separately frozen observed-defect correction's first result. The
+adds the independently frozen live-restoration controls and first full result. The
 workbench runtime still matches PR #114: that correction removes fitted
 paper-light variation before remeasuring supported edge widths on traces with
 zero entered thickness. Positive-thickness traces retain the preceding width
@@ -57,7 +57,7 @@ base after PR #105 closed; its documentation reached main through PR #108.
 | Gaussian finite-material inverse | Developer Python API; four geometry parameters with supplied chord normal and optics. [Contract](finite-shape-inverse.md) |
 | Source-cell area and staged acquisition mean | Developer Python APIs with supplied geometry, levels, kernels and affine sampling; [128 saved-stage comparisons](validation/finite-acquisition-mean.md) |
 | Five unrounded area sensitivities and signed linear propagation | Developer Python APIs; [259 focused tests and 33 study rows](validation/finite-cell-sensitivity.md), without an inverse-recovery result |
-| Five-geometry-parameter acquisition-aware recovery with unknown brightness | Absent from this main-based runtime. A [separate local candidate](finite-acquisition-recovery.md) has five completed, failed recovery protocols; it is not an HTTP mode or automatic correction |
+| Five-geometry-parameter acquisition-aware recovery with unknown brightness | Absent from this main-based runtime. A [separate local candidate](finite-acquisition-recovery.md) has six completed, failed recovery protocols; it is not an HTTP mode or automatic correction |
 
 Hosted checks are tied to their published heads:
 
@@ -91,7 +91,7 @@ this refresh have separate status.
 Merge, hosted checks, installed runtime, real-camera
 accuracy and physical acceptance remain separate.
 
-The [documentation review](validation/documentation-restoration-draft.md) audits this
+The [documentation review](validation/documentation-restoration-result.md) audits this
 main-based source. Use [available tools](#available-here) and [remaining integration work](#remaining-integration-work)
 for current capabilities. Earlier snapshots below are historical records; their open
 PR states and absent-module statements describe their own source and time.
@@ -193,18 +193,31 @@ the pair, giving aggregate 994 / 135,707 / 56,473,790 under unchanged caps.
 See [the full first result and limits](validation/finite-acquisition-defect-corrector.md).
 
 This standalone local correction is implemented and tested in research.
-A new [live restoration controller](finite-acquisition-restoration.md) is
-authored as ten untracked research files at the same committed HEAD
-`d986f1f`. Its proposed union contains the unchanged 116 preceding inputs
-and ten new identities, **126 paths, not a completed freeze**. Independent
-review, commit and combined hashing remain pending. Only static formatting,
-lint and compilation have been reported for the draft; no new subject import,
-collection, test, solve, point or model call has run. The new per-operation
-live budget policy is unvalidated. Reserved scoring and the complete original
-24-case recovery protocol have not been rerun. Zero quantized training residual
-does not identify unique or true geometry. Candidate runtime,
-tests, runners, original raw recovery artifacts, preceding full diagnostic
-arrays and complete local ZIPs remain outside this documentation publication.
+The later [live restoration controller](finite-acquisition-restoration-result.md)
+was independently reviewed, committed and frozen before execution. V1 source
+`7a126d4` binds 126 inputs; its first controls fail on one malformed fixture
+(1,138 passes, one failure, 33 subtests). No v1 full study ran. The separately
+admitted fixture repair at `e677039274707f8c19e3efaa005f69d74b393868`, tree
+`a981dc46ede1cb628c4e780c09cef3c57385b8ee`, preserves all 126 inputs within
+a 131-input freeze. Its selected controls pass 1,169 tests and 33 subtests,
+with exactly the malformed predecessor node deselected and replaced.
+
+The first fresh original 24-case protocol completes with **11/12 matched
+passes, exit 1**, 23 completed rows and the retained singular-map exception.
+Middle PNG reaches zero training cost and zero conditional reserved residuals;
+its fraction error 0.00320694906346225 still exceeds 0.002. Completed-search
+linkage and ties are retained. Total middle-fit work is
+992 evaluations / 135,369 cell units / 25,569,832 stage units under the
+original caps; this is a fresh integrated ledger, distinct from standalone
+probe aggregates. [First report and interpretation](validation/finite-acquisition-restoration-result.md).
+
+Saved-only mathematical, accounting/provenance and record audits pass, retaining
+two earlier mathematical-auditor schema failures. A separate saved-data check
+finds ten distinct parameter tuples sharing the complete source code pattern;
+their observed extent is not an uncertainty enclosure. Source, raw evidence,
+first failures and older outcomes remain unchanged. Research runtime/tests,
+full candidate arrays and complete ZIPs remain outside this documentation
+publication. Main/UI integration and physical qualification remain incomplete.
 
 ## Available here
 
@@ -302,7 +315,7 @@ A main-branch inverse would need the separately
 seeds and bounds, brightness/rank diagnostics, a bounded search for undefined
 derivatives or rounded stages, and prospective recovery checks. The separate
 [local prototype](finite-acquisition-recovery.md) implements those research
-mechanisms, but its five failed protocols leave recovery and adoption unresolved.
+mechanisms, but its six failed protocols leave recovery and adoption unresolved.
 The current five-query coupled controls do not prove five-parameter rank after
 two unknown brightness levels. Supplied source assumptions and observed camera calibration remain
 distinct. Neither study automatically corrects CAD.

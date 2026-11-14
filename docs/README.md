@@ -51,7 +51,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |
 | Run a benchmark with measured photos | [Photo benchmark](photo-benchmark.md) |
 | Review completed checks | [Validation overview](validation.md), [design QA](../design-qa.md) |
-| Check documentation coverage and source consistency | [Current documentation audit](validation/documentation-restoration-draft.md), [source and CI snapshot](project-status.md), [preceding published review](validation/documentation-defect-corrector.md) |
+| Check documentation coverage and source consistency | [Current documentation audit](validation/documentation-restoration-result.md), [source and CI snapshot](project-status.md), [preceding published review](validation/documentation-restoration-draft.md) |
 | Review the recent interface changes | [Guided-workbench audit](validation/guided-workbench.md) |
 | Review scope and future work | [Roadmap](roadmap.md), [change log](changelog.md) |
 | Diagnose fixed-normal residual information and its original failed normal control | [Method and rotation identity](finite-residual-information.md), [derived finite-chord proposal](finite-residual-information.md#finite-chord-shape-derivative-a-derived-proposal), [retained failed protocol](validation/finite-residual-information.md), [portable saved-data audit](../studies/fixtures/finite-residual-information-v1/README.md) |
@@ -66,8 +66,8 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Understand rational-to-physical rounding | [Original five gates and negative corner census](finite-acquisition-physical-rounding.md), [49 controls and complete negative 128-corner diagnostic](validation/finite-acquisition-physical-rounding.md); no new fit or improvement |
 | Review the inward-point representation step | [Exact construction and unchanged gates](finite-acquisition-inward-margin.md), [103 focused controls, 128/128 feasible new corners and saved-data audit](validation/finite-acquisition-inward-margin.md); local feasibility only |
 | Review the actual PNG cost test | [Paired replay and acceptance rule](finite-acquisition-inward-literal.md), [162 selected controls and complete negative result](validation/finite-acquisition-inward-literal.md); exact baseline, higher candidate cost, no recovery improvement |
-| Review the observed-defect correction | [One equality-restoration step](finite-acquisition-defect-corrector.md), [220 controls and first actual training improvement](validation/finite-acquisition-defect-corrector.md); zero training cost for one supplied synthetic PNG context, full recovery not rerun |
-| Review the prospective live restoration controller | [Draft method, accounting and evidence gates](finite-acquisition-restoration.md); authored and unrun, no new recovery score or main command |
+| Review the observed-defect correction | [One equality-restoration step](finite-acquisition-defect-corrector.md), [220 controls and first actual training improvement](validation/finite-acquisition-defect-corrector.md); zero training cost for one supplied synthetic PNG context; the later live study is separate |
+| Review the executed live restoration controller | [Current method and limits](finite-acquisition-restoration-result.md), [first full result and evidence](validation/finite-acquisition-restoration-result.md); 1,169 controls pass, full recovery remains 11/12 with a geometry miss |
 | Review saved-record consistency and packaging | [Archive inventory, completed audits, first failures and precision gaps](finite-acquisition-saved-audit.md); no forward-model or physical qualification |
 | Reproduce bundled printer data | [Printer source record](../data/PRINTER_SOURCES.md) |
 

@@ -5,16 +5,23 @@ record below to assess its evidence. This page separates local checks, hosted
 CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
-## Documentation of an unrun restoration candidate — November 14, 2026 UTC
+## Live restoration: exact image, remaining geometry miss — November 14, 2026 UTC
 
-The [current documentation review](validation/documentation-restoration-draft.md)
-adds the [prospective live restoration method](finite-acquisition-restoration.md).
-All ten new research files are authored and untracked. Their 126-path source
-inventory is prospective; there is no completed freeze or new scientific
-execution. Static checks do not qualify recovery, the proposed live budget
-policy or original search completion. The latest completed full protocol
-remains **11/12 matched passes, exit 1**; the separately qualified single-case
-training improvement below remains unchanged.
+The [current documentation review](validation/documentation-restoration-result.md)
+records research `e677039`, its 131-input freeze and the first fresh full
+24-case result: **11/12 matched passes, exit 1**. V1's first suite failed on
+a malformed optical-anchor fixture (1,138 passes, one failure, 33 subtests).
+All v1 inputs stay frozen. The separately admitted equivalent replacement
+passes with the selected suite: **1,169 tests, one deselected predecessor
+node and 33 passing subtests**. Only then was the first full study run.
+
+Middle PNG reaches zero cost on 135 training samples, zero residual on 34
+conditional reserved samples, and exact 169-pixel output equality. Its
+fraction error **0.00320694906346225 > 0.002** remains the failed target.
+All 24 original identities, adverse cases, limits, search completion and
+ties are retained. [Current method](finite-acquisition-restoration-result.md) ·
+[complete result, first attempts and audit limits](validation/finite-acquisition-restoration-result.md).
+This documentation update makes no new scientific or application run.
 
 ## One observed-defect correction: zero training cost — November 14, 2026
 

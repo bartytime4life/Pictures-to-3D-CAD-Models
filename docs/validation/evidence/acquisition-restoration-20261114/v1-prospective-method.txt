@@ -1,0 +1,212 @@
+# Live inward and observed-defect restoration
+
+This is a **prospective, unexecuted research strategy**. All new backend
+math/controller code, independent controls, full-protocol adapter, admission
+and this guide must be independently reviewed, committed and combined-hashed
+with the preceding 116 governing files before any first new subject import,
+collection, test, solve, point or model call. No new recovery score or
+runtime qualification is claimed here.
+
+The preceding saved-context experiment reduced actual training cost from
+0.302031169350812 to zero for one supplied synthetic PNG case. Only source
+62 changed code in that experiment. It did not rerun the original 24-case
+protocol or identify unique geometry. This new strategy must derive its
+inputs from a **fresh live fit**, without reading that saved point, optical
+field, certificate or result.
+
+## Integrate at the event that loses a represented point
+
+The existing protected controller can retain an exactly qualified rational
+certificate even when its floating-point projection is unavailable. The
+new controller intercepts that live event before the old early continuation.
+It starts with the exact unchanged coupled-v1 initial phase **once**, then
+uses the existing protected event order, score census, encoder witnesses,
+source bands and original final coordinate polish.
+
+Only the first eligible exact certificate in a complete fit may trigger a
+restoration episode. There is at most one inward nearest trial and, after a
+fully resolved rejected trial, one defect-corrected nearest trial. There is
+no case-name, row-family, source-62 or rank-five condition. Smooth, staged
+and already-zero-cost paths retain their ordinary behavior.
+
+Bind the current accepted physical tuple `p0`, its actual optical field `z0`,
+the live seven-column matrix `G`, selected event and target code, raw source
+bands, normalized bounds, physical limits and spans, exact point and dual,
+and source/operator identities. Keep the accepted capture pinned. Reading
+the rejected trial must not repin or replace it.
+
+## One inward physical proposal
+
+Reverify the exact certificate under its unchanged old local problem before
+using its point. Certificate coordinates and duals are bounded exact
+rational strings, not floats parsed through a lossy conversion.
+
+Use the previously derived bounded inward construction on all original
+halfspaces and the physical-domain rows. Retain its exact basis, Gram
+witness, margins, ray interval, selected displacement and all row slacks.
+Rank, fixed-coordinate, bit-cap or empty-ray obstruction is an event-local
+unknown, not global infeasibility.
+
+For the one constructed normalized displacement `d` form
+
+~~~text
+p_target = F(p0) + F(s) d,
+p1 = nearest_binary64(p_target),
+~~~
+
+where `F` converts each stored binary64 operand to its exact rational value.
+Take only this nearest physical tuple. No 128-corner census, cost-based
+corner selection, clipping or alternate fallback is performed.
+
+Require the original five gates: physical limits/fixed identity, exact
+membership of the physical round trip, exact membership of computed
+coordinates, computed source/domain membership, and selected-band arithmetic
+floor. Exact and computed normalization remain distinct. The selected band
+is its declared central-half proposal slice, not the whole encoder bin.
+
+Evaluate a fully qualified `p1` through the **same live engine** and original
+training queries, residual weights and own brightness levels. Accept only
+a fully resolved strict actual-cost decrease relative to `p0`. Code-pattern
+changes are diagnostics and do not veto an otherwise valid decrease.
+
+## One correction through a rejected actual observation
+
+Only a fully resolved, valid rejected `p1` supplies the actual optical field
+`z1` for a correction. Keep `p0` as the acceptance reference. Use
+
+~~~text
+u = (p - p1) / s,
+m1(u) = z1 + G u,
+d1 = (F(p1) - F(p0)) / F(s).
+~~~
+
+Zero spans fix their coordinates. Check the original `p0`-normalized domain,
+using exact operands before subtraction and division; do not round a shifted
+intercept or box into another helper's interface.
+
+Retain the first independent original tight normals in original row order
+after removing fixed coordinates. Let their matrix be `B` and their new
+signed bounds be `beta`. Solve exactly once:
+
+~~~text
+(B B^T) lambda = beta - storage_margin - representation_margin,
+u = B^T lambda.
+~~~
+
+Keep every dependent, inactive and physical row for final verification.
+The equality and row-space identities prove minimum Euclidean norm **only
+for the selected equalities**: for `B h = 0`, `u^T h = 0` and
+`||u+h||^2 = ||u||^2 + ||h||^2`. This is not a full inequality-QP optimum,
+a transfer of old KKT optimality or a nonlinear convergence theorem.
+
+Use the fixed source guard `2^-12` on nonstructural source rows and the
+separate binary64 representation allowance. Structural rows receive no
+strict margin. Numerical input bounds are checked; nearest rounding and
+gradual underflow remain assumptions. The storage allowance does not bound
+geometry-linearization remainder, mixed brightness terms, stale derivatives
+or an unknown nonlinear pipeline.
+
+Take one nearest physical tuple and require all final exact/computed/domain,
+source and arithmetic-floor gates. No new inequality search, basis exchange,
+retry, corner census or step-size choice occurs. Evaluate that point at
+most once through the same live engine and compare strictly with `p0`,
+not merely with rejected `p1`.
+
+This design is informed by the working-set minimum-norm correction and
+subsequent actual trial test in
+[Byrd, Nocedal, Waltz and Wu, section 2.5](https://optimization-online.org/wp-content/uploads/2011/04/3003.pdf).
+Their smoothness assumptions do not hold for this quantized chain. The
+strategy does not identify a Maratos effect or inherit their convergence
+results. The standard floating-point arithmetic model is described in
+[Higham and Mary, section 2.2](https://eprints.maths.manchester.ac.uk/2780/1/paper.pdf);
+their LU theorem is not claimed here.
+
+## One shared live budget
+
+The prospective study retains ordinary/default per-fit ceilings of **2,048
+evaluations, 1,000,000 cell units and 100,000,000 stage units**, the original
+iteration limits and each adverse case's lower declared limits. These are
+study ceilings, not API validation maxima for caller budgets. Include
+the coupled initial phase, all event work, both new constructions, actual
+trials, captures and final coordinate polish in that one budget.
+
+Before an episode, preflight the conservative worst-case work for both
+mathematical constructions and two actual forwards. This is **affordability
+only**, not an additional debit. An unaffordable optional episode may be
+skipped while ordinary event or coordinate work remains affordable; that
+skip alone must not falsely mark the whole engine exhausted.
+
+Charge the entire declared bounded tariff for each invoked mathematical
+construction **before** its rational arithmetic. No refund follows a rank,
+bit, representation or all-row failure. Actual literal evaluations retain
+the existing engine's before-operator reservation and actual-work handling.
+Do not call the archived standalone paired-probe orchestrator, replay the
+incumbent separately, restart budgets or debit nested work twice.
+
+For `S` finite source-band sides, let `R=S+14` include normalized box rows
+and `A=R+14` add physical-domain rows. Each invoked construction uses
+`T=65536+512*(R+9*A)` stage units, with `A<=4096`. For `N` source cells,
+`M` output pixels and kernel entry counts `Ko,Kp`, one actual PNG forward
+uses `W=N*(1+Ko+4)+M*(16+Kp)` stage units. Worst-case episode
+preflight is `[2,2*N,2*T+2*W]`, affordability only.
+
+Capture has a separate cap of **1,048,576 numeric entries**, requested as
+`2*(6*N+2*M)` for two trial calls, pre-cast coverage and seven available
+stages. These are conservative accounting units and payload entries, not
+elapsed time, total process memory or bit-complexity theorems. Uncalled
+later operations remain unattempted, not completed or hidden zero-work calls.
+
+Unknown actual work or protocol/source failure withholds qualification.
+Retain reservation, charged, reported and unavailable work separately, with
+reasons and every partially completed record.
+
+## Preserve stopping, ambiguity and evidence
+
+An accepted restored point becomes the next live incumbent. A later event
+would require fresh actual optics and a freshly charged matrix. The
+one-episode cap prevents another restoration; normal bounded event control
+and the original final coordinate search remain available.
+
+The selected best must belong to the original completed-search record,
+without exhausted, opaque or completion-withheld work. Zero training cost
+does not waive that gate. Keep tied candidates, flatness, undefined rounded
+derivatives and unknown geometry rank. Tight-basis rank is not observation
+rank. A quantized zero-cost point can still miss a geometric or conditional
+reserved target.
+
+Retain bounded episode context/proof and all available actual stages, code
+payload references, candidates, rejected/unknown outcomes and search links.
+Capture allocation is bounded and declared before execution; retain any
+unavailable payload explicitly. No archival point is injected into a fresh
+fit, and no reference or reserved dimension selects a proposal.
+
+## Original full protocol and first outcomes
+
+The [new admission](../studies/finite-acquisition-recovery-restoration-v1.json)
+binds the preceding 116 files and ten new governing files, a 126-file union.
+The [adapter](../studies/verification/finite-acquisition-recovery-restoration-v1.py)
+regenerates every original observation and runs observed-only preparation
+and fitting before original post-fit reference/dimension evaluation.
+
+Preserve all **24 cases: 12 matched and 12 adverse**, original geometry
+targets, reference area orders, kernels, maps, query mask, up to four observed
+seeds, level rules, five-query adverse case and tight-budget adverse case.
+Save the complete fit before opening truth dimensions. Initialization already
+uses reserved intensities, so their residual checks remain conditional.
+
+Predeclare every row. Keep exceptions, refusals, unknowns and unstarted rows;
+a late error must not leave a counted pass. Independently check all known
+source paths before and after, even if an earlier path is missing or escapes.
+Quarantine top and nested success/completion labels on provenance failure
+while retaining the raw computed diagnostics.
+
+Only the terminal pass of the first independently authored selected controls
+permits the first full protocol. Preserve the exact command, initial native
+handle where returned, log, first output and terminal exit. Poll the same
+live handle after an observation timeout. Do not restart or overwrite a first
+destination. Any post-execution fix requires new source files and admission.
+
+No expected score is promised. A successful controlled recovery protocol would
+still leave independent forward/rank checks, real-camera calibration, main
+runtime integration, installation, native slicer behavior, physical CAD fit,
+print strength and field qualification separate.

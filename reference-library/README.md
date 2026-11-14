@@ -36,7 +36,7 @@ the research candidate, not main or this library. The
 [original audit record](../docs/validation/finite-acquisition-recovery.md)
 retains 14 unresolved comparisons where pre-cast area differences cannot be
 reconstructed from rounded capture arrays. The
-[current documentation review](../docs/validation/documentation-restoration-draft.md)
+[current documentation review](../docs/validation/documentation-restoration-result.md)
 connects the later results and both first projection-control outcomes. This
 documentation does not add a fitter to main, the workbench or the Photos tab.
 
@@ -73,13 +73,16 @@ uses one fixed equality-restoration step and one nearest physical tuple. Its
 first actual pair reduces training cost **0.302031169350812 to 0.0** on the
 135 supplied synthetic PNG training samples. Only source 62 changes code
 (93 to 92), with no collateral code change. [Complete paired result](../docs/validation/finite-acquisition-defect-corrector.md).
-This is a local training result; full recovery has not been rerun, and the
-original failed 11/12 protocol and main runtime remain unchanged.
+That standalone probe did not rerun full recovery. Its result remains
+separate from the later fresh live study below.
 
-A [local restoration controller draft](../docs/finite-acquisition-restoration.md)
-is authored and unrun. Its ten untracked files and proposed 126-path
-inventory add no library feature, new test result or refreshed release
-verification. The original failed full-recovery result remains 11/12.
+The [live restoration controller](../docs/finite-acquisition-restoration-result.md)
+is frozen at research `e677039` and its selected controls pass 1,169 tests
+and 33 subtests (one malformed predecessor node is independently replaced).
+The fresh full 24-case study remains **11/12 matched passes, exit 1**:
+zero image residuals do not meet every geometry target. These results add
+no library feature, Photos tool, generated reader or refreshed release
+verification. [Full result and limitations](../docs/validation/finite-acquisition-restoration-result.md).
 
 
 A practical, source-backed library for turning photographs into printable CAD: recover shape, establish dimensions, rebuild editable geometry, and check the part you print. **Revision 7, November 9, 2026.**

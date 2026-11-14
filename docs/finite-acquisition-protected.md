@@ -1,18 +1,21 @@
 # Protected source-bin proposals
 
-A separate [restoration controller draft](finite-acquisition-restoration.md)
-is now authored in local research. It has not been committed, frozen or
-executed. Its proposed live accounting differs from the completed standalone
-probe; the earlier result does not validate that policy. There is no new
-software-test result, recovery score or available main command.
+The separate [live restoration controller](finite-acquisition-restoration-result.md)
+is now frozen and executed in local research. Its selected controls pass
+1,169 tests and 33 subtests, with one malformed predecessor node deselected
+and independently replaced. The fresh original 24-case study remains
+**11/12 matched passes, exit 1**. Middle PNG has zero training and conditional
+reserved residuals but misses the fraction target: 0.003206949 > 0.002.
+It adds no main runtime, HTTP mode or workbench control.
 
 The subsequent [observed-defect correction](finite-acquisition-defect-corrector.md)
 uses one fixed equality-restoration step and one nearest physical tuple. Its
 first actual pair reduces training cost **0.302031169350812 to 0.0** on the
 135 supplied synthetic PNG training samples. Only source 62 changes code
 (93 to 92), with no collateral code change. [Complete paired result](validation/finite-acquisition-defect-corrector.md).
-This is a local training result; full recovery has not been rerun, and the
-original failed 11/12 protocol and main runtime remain unchanged.
+That standalone probe did not rerun full recovery. The subsequent live study
+has its own source freeze and result; the earlier failed protocols
+and main runtime remain unchanged.
 
 The first frozen software checks **fail: eight failures, 752 passes and 33
 passing subtests**, exit 1. Seven known-feasible projection controls reach the
@@ -29,7 +32,9 @@ separately frozen corrected selection passes 821 tests and 33 subtests; the
 subsequent complete original 24-case study still fails at 11/12 matched passes.
 The [new result and saved-only physical census](validation/finite-acquisition-physical-rounding.md)
 preserve every first failure. The original protected-v1 full study remains
-unrun; only the active-face follow-up has completed a full recovery protocol.
+unrun. The active-face follow-up and later
+[live restoration method](finite-acquisition-restoration-result.md) each have
+their own completed, failed full recovery protocol.
 
 The separately frozen [inward-margin construction](finite-acquisition-inward-margin.md)
 passes 103 selected controls and all five gates for all 128 new adjacent

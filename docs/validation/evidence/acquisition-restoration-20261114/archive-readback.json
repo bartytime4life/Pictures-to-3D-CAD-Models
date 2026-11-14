@@ -1,0 +1,22 @@
+{
+  "format": "restoration-controls-v2-portable-archive-readback",
+  "recorded_at": "2026-11-14T02:17:15.436151+00:00",
+  "source": {
+    "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-source.zip",
+    "bytes": 832932,
+    "sha256": "4a4c8c4738a5375a6c27dcae805f858d33f9202f80253e13f9203299011c6bea",
+    "members": 132
+  },
+  "complete": {
+    "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-complete.zip",
+    "bytes": 42357190,
+    "sha256": "f9569d7313f69a101de6aea3391e9f4c906fdf58fab4858b890ee592a92f0597",
+    "members": 138
+  },
+  "source_entries": 131,
+  "fresh_study_artifacts_plus_report": 107,
+  "all_member_hashes_and_sizes_verified": true,
+  "prior_first_failure_retained": true,
+  "later_audits_separate": true,
+  "scientific_calls": 0
+}

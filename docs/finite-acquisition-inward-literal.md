@@ -5,8 +5,10 @@ uses one fixed equality-restoration step and one nearest physical tuple. Its
 first actual pair reduces training cost **0.302031169350812 to 0.0** on the
 135 supplied synthetic PNG training samples. Only source 62 changes code
 (93 to 92), with no collateral code change. [Complete paired result](validation/finite-acquisition-defect-corrector.md).
-This is a local training result; full recovery has not been rerun, and the
-original failed 11/12 protocol and main runtime remain unchanged.
+That standalone probe did not rerun full recovery. The later
+[live restoration study](finite-acquisition-restoration-result.md) has now
+completed at 11/12, exit 1, with zero image residuals and a geometry miss.
+The earlier failed protocols and main runtime remain unchanged.
 
 The first paired test at research source `98fb1ae` exactly reproduces the
 saved incumbent but **rejects the predetermined inward candidate**. Actual

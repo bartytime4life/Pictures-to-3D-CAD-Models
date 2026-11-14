@@ -1,0 +1,294 @@
+{
+  "format": "restoration-result-documentation-evidence-v1",
+  "recorded_at": "2026-11-14T02:30:56.657020+00:00",
+  "scope": "Verbatim synthetic-research reports, first-attempt metadata, admissions, source inventories and saved-only audits. Documentation publication only; copied scripts are text, not installed tools.",
+  "research_head": "e677039274707f8c19e3efaa005f69d74b393868",
+  "research_tree": "a981dc46ede1cb628c4e780c09cef3c57385b8ee",
+  "governing_source_count": 131,
+  "governing_closure_sha256": "33ce7a777b732e6970092c119bb18f7b72e234a2b15ca37c92ba2c9274136576",
+  "verbatim_files": {
+    "v1-freeze.json": {
+      "source": ".local/verification/finite-acquisition-recovery-restoration-v1-freeze.json",
+      "sha256": "7eeee6ca169c62d2df77e9a553bba7e6dc7fdb2d7205b885f9d7b09d49777aa7",
+      "bytes": 56678
+    },
+    "v2-freeze.json": {
+      "source": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-freeze.json",
+      "sha256": "7d244b9b197217dd7b06718bdde69769cf3f163489192b267e211d6ecaab726b",
+      "bytes": 58218
+    },
+    "v1-static-review.json": {
+      "source": ".local/verification/finite-acquisition-restoration-static-review-v1.json",
+      "sha256": "030b24a36a4f411ed8806d64d6c6ce558e211ea41f38f4c5efb9e619e4458656",
+      "bytes": 3165
+    },
+    "v2-static-review.json": {
+      "source": ".local/verification/finite-acquisition-restoration-controls-v2-static-review.json",
+      "sha256": "c73f58adff932782afd167f909822daabf121b5e8563b21a9e9a413226832b07",
+      "bytes": 2070
+    },
+    "archive-readback.json": {
+      "source": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-archive-readback.json",
+      "sha256": "ad0af9a8125c4fb7804c5897a9c4e7b164e46283e163551ed9a7f5b28b021e3a",
+      "bytes": 820
+    },
+    "identification-v1.json": {
+      "source": ".local/verification/restoration-v2-identification-saved-v1.json",
+      "sha256": "fdb067926d0270981fb6001f838348ec094ce4b198a313157d325ab925f7fc74",
+      "bytes": 6717
+    },
+    "identification-v1.py.txt": {
+      "source": ".local/verification/restoration-v2-identification-saved-v1.py",
+      "sha256": "071bbfde19a96a433f8319cfb84845c1e630c2909ca2382c1518be0357b8f35e",
+      "bytes": 6859
+    },
+    "v1-first-tests.log": {
+      "source": ".local/verification/finite-acquisition-recovery-restoration-v1-first-tests.log",
+      "sha256": "e2aed88d3abf1e73a4a77691ed698601d3faef5032ea63d2c1e55b3a8dfad1cd",
+      "bytes": 3824
+    },
+    "v1-first-tests-launch.json": {
+      "source": ".local/verification/finite-acquisition-recovery-restoration-v1-first-tests-launch.json",
+      "sha256": "1e647416bc643d90185abb9c3d7e4a52d6e5e0de7dbc5edb8a858f2966ec5e21",
+      "bytes": 2093
+    },
+    "v1-first-tests-initial-native.json": {
+      "source": ".local/verification/finite-acquisition-recovery-restoration-v1-first-tests-initial-native.json",
+      "sha256": "8cb951a29242bfb6a3445756f70c73129a2df04719da0b00ad754b7bfe21d1cd",
+      "bytes": 317
+    },
+    "v1-first-tests-observation-1.json": {
+      "source": ".local/verification/finite-acquisition-recovery-restoration-v1-first-tests-observation-1.json",
+      "sha256": "4b35b417c328b41745ec784328d687b11477c0bf7216380aefdf389a5bf6f4aa",
+      "bytes": 438
+    },
+    "v1-first-tests-observation-2.json": {
+      "source": ".local/verification/finite-acquisition-recovery-restoration-v1-first-tests-observation-2.json",
+      "sha256": "3bc04ba331518e8d0e0ea742a28eda9551c145461f83630e08171cffd97b9339",
+      "bytes": 3533
+    },
+    "v1-first-tests-native-terminal.json": {
+      "source": ".local/verification/finite-acquisition-recovery-restoration-v1-first-tests-native-terminal.json",
+      "sha256": "2a2ee7895aae052b75dbe121508a7be3c943ecee061f89a6f896297314efe8ef",
+      "bytes": 4844
+    },
+    "v1-first-tests-terminal-receipt.json": {
+      "source": ".local/verification/finite-acquisition-recovery-restoration-v1-first-tests-terminal-receipt.json",
+      "sha256": "7a0507321e57fd828d58ad5041f921c6456a46c02e787527e7249a305e13455f",
+      "bytes": 1670
+    },
+    "v2-first-tests.log": {
+      "source": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first-tests.log",
+      "sha256": "645248657515b32a98a70f30f5a4d11d434436911d607aa71f66095f040e1fb2",
+      "bytes": 1383
+    },
+    "v2-first-tests-launch.json": {
+      "source": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first-tests-launch.json",
+      "sha256": "08aa7cb5e9cc0f244aa633050401448172d95f41a1245b44e4e4762f5108ca2c",
+      "bytes": 2459
+    },
+    "v2-first-tests-initial-native.json": {
+      "source": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first-tests-initial-native.json",
+      "sha256": "220e24063329a47a76742b3bd1dd0b492893bded0d38b82bc5057f0472fb23a8",
+      "bytes": 317
+    },
+    "v2-first-tests-observation-1.json": {
+      "source": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first-tests-observation-1.json",
+      "sha256": "ac492ede07cbd0aa27be0cfc74e6a9e15db86ad1af7dfd318f3e132c69b93b1e",
+      "bytes": 439
+    },
+    "v2-first-tests-observation-2.json": {
+      "source": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first-tests-observation-2.json",
+      "sha256": "3a573a8e4a9026641f54da0d23fd595f4882eed2f32db9d4925e86a146d821e9",
+      "bytes": 1037
+    },
+    "v2-first-tests-native-terminal.json": {
+      "source": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first-tests-native-terminal.json",
+      "sha256": "c30ab279fef40158b603cd8652cd45088b368db7f792f406e27a79057676cb5f",
+      "bytes": 2072
+    },
+    "v2-first-tests-terminal-receipt.json": {
+      "source": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first-tests-terminal-receipt.json",
+      "sha256": "95aa737833027c1ecca122c204d9091a3cf3ce89568bab9a746f2cda3c3c4362",
+      "bytes": 1155
+    },
+    "v2-first-full.log": {
+      "source": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first.log",
+      "sha256": "c8752addde7153afbabd7d800112a6e2541f970d109fac7f48dbff97e07d315c",
+      "bytes": 1767
+    },
+    "v2-first-full-launch.json": {
+      "source": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first-launch.json",
+      "sha256": "52e721818c7beefbf32237c66f6a425fdf46b4662fbc56dab8a40a5784d522c3",
+      "bytes": 1277
+    },
+    "v2-first-full-initial-native.json": {
+      "source": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first-initial-native.json",
+      "sha256": "f5d8563d28744b743dc2539b3a6c06385af4ec7bd35724bda64379f90ddfd883",
+      "bytes": 131
+    },
+    "v2-first-full-observation-1.json": {
+      "source": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first-observation-1.json",
+      "sha256": "ab5cfaf8b0328e02531ba0e50287fae6e60876f4506d369fe2f802ba60c0a5cd",
+      "bytes": 1851
+    },
+    "v2-first-full-observation-2.json": {
+      "source": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first-observation-2.json",
+      "sha256": "ef1bf65bd9f080d574fee71a74db5a675ff2846abc291c2df8b402da99951ed3",
+      "bytes": 447
+    },
+    "v2-first-full-native-terminal.json": {
+      "source": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first-native-terminal.json",
+      "sha256": "b8c5591d5b232fc433306f35d500475ab03b6359c10bfae681475e9c1b3c2d6a",
+      "bytes": 2747
+    },
+    "v2-first-full-terminal-receipt.json": {
+      "source": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first-terminal-receipt.json",
+      "sha256": "a9a6870357a01c064f70c8eb92ce89cadd41c23f2fd743c6d2cf1f37999c123c",
+      "bytes": 2168
+    },
+    "report.json": {
+      "source": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/report.json",
+      "sha256": "4eadc2057ded427a4727cb2e14cae0aac153907fd511252423529dcd612fc982",
+      "bytes": 264057
+    },
+    "v1-admission.json": {
+      "source": "studies/finite-acquisition-recovery-restoration-v1.json",
+      "sha256": "aae43f599a0b69c546ce12d3eeca77575eab5bbb30f78ec6bc6f9c8b3ef712b0",
+      "bytes": 36257
+    },
+    "controls-v2-admission.json": {
+      "source": "studies/finite-acquisition-recovery-restoration-controls-v2.json",
+      "sha256": "0e067b19f854306ed3d207196e5d37504b67426690cdfb9ebe8c4b52eb47ec53",
+      "bytes": 32769
+    },
+    "v1-prospective-method.txt": {
+      "source": "docs/finite-acquisition-restoration.md",
+      "sha256": "e649605b215fbb08a340a8105855b3dc754f8c0e7e8498ba07a65e051a9df833",
+      "bytes": 11175
+    },
+    "v2-prospective-controls.txt": {
+      "source": "docs/finite-acquisition-restoration-controls-v2.md",
+      "sha256": "c77b9978ce8c62efad5603599d584bcaf4b58fcbfba18e4a130b4c695459acdb",
+      "bytes": 4337
+    },
+    "math-audit-v1.py.txt": {
+      "source": ".local/verification/restoration-math-audit/audit-v1.py",
+      "sha256": "7f39cd6330bbf94fcc1d61936c8b57c6fb3932150a092e0bc45866a3286d5405",
+      "bytes": 48625
+    },
+    "math-audit-v2.py.txt": {
+      "source": ".local/verification/restoration-math-audit/audit-v2.py",
+      "sha256": "727db26cb60701dca28f25b00a9ea6b13969d5e8e0a1fa0b365bddf41c553fc8",
+      "bytes": 49585
+    },
+    "math-audit-v3.py.txt": {
+      "source": ".local/verification/restoration-math-audit/audit-v3.py",
+      "sha256": "c015d3f28855ea5eff86936b8e9f3c36a5b37e18839b9759d71e0d35b1f9582f",
+      "bytes": 49884
+    },
+    "math-receipt-v1.json": {
+      "source": ".local/verification/restoration-math-audit/receipt-v1.json",
+      "sha256": "b3eb10e0019151561967d7124f4d7d4c72243999eb711bae5e9322484714e916",
+      "bytes": 140678
+    },
+    "math-receipt-v2.json": {
+      "source": ".local/verification/restoration-math-audit/receipt-v2.json",
+      "sha256": "7bc735e0488efd20ef0223df385d5842a972de4d8ff04d2192f2c77b43dfb710",
+      "bytes": 2009
+    },
+    "math-receipt-v3.json": {
+      "source": ".local/verification/restoration-math-audit/receipt-v3.json",
+      "sha256": "33ae11575a2501f26f44df0a32553c99a72f522db51dd80f7a53f1259f5c32ea",
+      "bytes": 141120
+    },
+    "math-execution-v1.log": {
+      "source": ".local/verification/restoration-math-audit/execution-v1.log",
+      "sha256": "7c9c94347b5cdb45801bb21302088bbb23db543f02824eeb9b2a518c93cd5428",
+      "bytes": 127
+    },
+    "math-execution-v2.log": {
+      "source": ".local/verification/restoration-math-audit/execution-v2.log",
+      "sha256": "19e37977b35f1cdd73d68ec28242ff17496bea5820560225b301a20c7c2d9961",
+      "bytes": 123
+    },
+    "math-execution-v3.log": {
+      "source": ".local/verification/restoration-math-audit/execution-v3.log",
+      "sha256": "35550e3505d24d8ef8e672ce15161878d3d7f05e92b855370e6cc56e841e963b",
+      "bytes": 126
+    },
+    "math-interpretation-v1.txt": {
+      "source": ".local/verification/restoration-math-audit/interpretation-v1.md",
+      "sha256": "d683ceea7cf05f2c29352fbbb5ecf5e940034020060d67866c7f5a932a7faa0e",
+      "bytes": 6409
+    },
+    "math-manifest-v1.json": {
+      "source": ".local/verification/restoration-math-audit/manifest-v1.json",
+      "sha256": "16b22ff1b56c0fb4ce45c0ae5c7a2cc431bcf62201a94a545aa8eadd1443e490",
+      "bytes": 2720
+    },
+    "accounting-check.py.txt": {
+      "source": ".local/verification/restoration-ai/saved-audit/check.py",
+      "sha256": "687c204864b732f8a85a14c5b13fe51e83a631a0cb1f26ab7100a76c677baa2d",
+      "bytes": 22912
+    },
+    "accounting-receipt-v1.json": {
+      "source": ".local/verification/restoration-ai/saved-audit/receipt-v1.json",
+      "sha256": "45a30a78459557e93767d58bd13338d7cd522e7c9cad2133c4699ed904b521fb",
+      "bytes": 55595
+    },
+    "accounting-evidence-v1.py.txt": {
+      "source": ".local/verification/restoration-ai/saved-audit/evidence-v1.py",
+      "sha256": "e250640bf1d835d66ae6edb28fa975a0765508e4a8801f7b633e453cf8e6cca4",
+      "bytes": 5452
+    },
+    "accounting-evidence-receipt-v1.json": {
+      "source": ".local/verification/restoration-ai/saved-audit/evidence-receipt-v1.json",
+      "sha256": "18cdc5b8bba2fb0b14f877d4a02b736ef5883bddc5b3347ca1014df2f32ea3f3",
+      "bytes": 32530
+    },
+    "accounting-preexecution-v1.json": {
+      "source": ".local/verification/restoration-ai/saved-audit/preexecution-v1.json",
+      "sha256": "76c304b47466a91de6390ab5ea0ecfadb3798a605ac0890e446b42832e8318f4",
+      "bytes": 754
+    },
+    "accounting-seal-v1.json": {
+      "source": ".local/verification/restoration-ai/saved-audit/seal-v1.json",
+      "sha256": "ecddf647494aa896c2e5fb6ebd5707c0b2c152d15eac79e884b87cac14df15fb",
+      "bytes": 1317
+    },
+    "records-audit.py.txt": {
+      "source": ".local/verification/restoration-v2-ux-audit-v1/audit.py",
+      "sha256": "b88131f64df77e0ceffe1efc8f157e07bc85f34b5a34974b0151c15a7a8ee935",
+      "bytes": 22037
+    },
+    "records-receipt.json": {
+      "source": ".local/verification/restoration-v2-ux-audit-v1/receipt.json",
+      "sha256": "231e1fa38e0526b12e60a927d4917055e59cef6723109d82543f3699a303a0a0",
+      "bytes": 21384
+    },
+    "records-execution-first.json": {
+      "source": ".local/verification/restoration-v2-ux-audit-v1/execution-first.json",
+      "sha256": "79964a1f019e5237e1a8befa2967961b2849d4062f64d69666007471346a0292",
+      "bytes": 802
+    },
+    "records-first.log": {
+      "source": ".local/verification/restoration-v2-ux-audit-v1/first.log",
+      "sha256": "875c1ff28b2c81c6a7710ecaa06b44db16fe82e244472e714d18745825180c38",
+      "bytes": 48
+    },
+    "published-authoring-explanation.txt": {
+      "source": "documentation head 2b14839126c53563509126a0742df97d6d1abddb:docs/finite-acquisition-restoration.md",
+      "sha256": "5374478cf34e7060742d39318b3a948e77fc0cc3ae0c2c5731b7d8f2c2876d59",
+      "bytes": 8704
+    }
+  },
+  "not_included": [
+    "research runtime and scientific tests",
+    "106 full raw artifacts and full candidate ledgers",
+    "local source and complete ZIP payloads",
+    "private photographs or models"
+  ],
+  "path_semantics": "Paths inside copies refer to the separate research checkout. Local scripts and raw artifacts may be required for their historical commands; they are not runnable paths in this main-based publication.",
+  "new_scientific_calls_for_documentation": 0
+}

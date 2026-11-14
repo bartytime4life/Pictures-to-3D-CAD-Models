@@ -1,4 +1,11 @@
-# Prospective live restoration controller
+# Historical authoring design for live restoration
+
+This page preserves the **pre-execution authoring snapshot**. For current
+status, read the [executed controller method](finite-acquisition-restoration-result.md)
+and [first full result](validation/finite-acquisition-restoration-result.md).
+The [original published explanation](validation/evidence/acquisition-restoration-20261114/published-authoring-explanation.txt)
+is retained verbatim. Statements below about untracked files and pending
+execution describe that earlier snapshot.
 
 **Authored local draft; uncommitted and unrun.** This page records the
 candidate's design, not a qualified main API or workbench feature. No new

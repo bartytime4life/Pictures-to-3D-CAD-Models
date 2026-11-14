@@ -1,14 +1,21 @@
 # Saved recovery archives and completed consistency audits
 
-The [restoration authoring inventory](validation/evidence/acquisition-restoration-authoring-20261114/manifest.json)
-records ten draft identities only. It is not a combined source freeze,
-executed control suite, saved scientific result or independent model audit.
-See the [draft's remaining evidence gates](finite-acquisition-restoration.md#required-validation).
+The latest [restoration evidence inventory](validation/evidence/acquisition-restoration-20261114/manifest.json)
+binds the first 131-input full study and later saved-only checks. The study
+remains **11/12 matched passes, exit 1**. Its mathematical audit passes
+29,022 checks; accounting and provenance audits pass 19,362 and 620 checks;
+the record audit passes 1,333 checks. Two preceding mathematical-auditor
+schema failures remain preserved. These counts enumerate saved-record checks,
+not independent experiments or forward-model qualification. See the
+[complete first result](validation/finite-acquisition-restoration-result.md).
+The [earlier authoring inventory](validation/evidence/acquisition-restoration-authoring-20261114/manifest.json)
+retains its then-unrun snapshot.
 
 The four separately frozen recovery studies retain **4/12, 9/12, 11/12 and
 11/12 matched passes**. Those four complete 24-case protocols exit 1. The later
 [active-face study also exits 1 at 11/12](validation/finite-acquisition-physical-rounding.md);
-the saved-only physical census is a separate diagnostic, outside these earlier
+the subsequent [live restoration study](validation/finite-acquisition-restoration-result.md) also fails at 11/12. The
+saved-only physical census is a separate diagnostic, outside these earlier
 full-ledger audits. See the
 [original/predictor record](validation/finite-acquisition-recovery.md) and
 [coupled/event results](validation/finite-acquisition-continuations.md).

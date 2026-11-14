@@ -1,0 +1,7 @@
+{
+  "chunk_id": "bfc062",
+  "wall_time_seconds": 0.000007133,
+  "exit_code": 1,
+  "original_token_count": 70,
+  "output": "{\"name\": \"five-queries-smooth\", \"status\": \"completed\", \"all_targets\": false}\n{\"name\": \"coincident-smooth\", \"status\": \"completed\", \"all_targets\": true}\n{\"name\": \"budget-png\", \"status\": \"completed\", \"all_targets\": false}\n{\"matched_passes\": 11, \"matched_total\": 12, \"passed\": false}\n"
+}
