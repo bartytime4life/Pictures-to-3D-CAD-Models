@@ -3,8 +3,8 @@
 ## Current source snapshot — November 13, 2026
 
 The verified publication base is main
-`47b02ad7805d2f90250f9395ef442138f942436b`, tree
-`a4b80f3f0c26f7c8b5c39a928db960c7b63323f6`. It includes the source-cell mean
+`5aaf7010d5fb4b9159206d7cb52a632b6c2940d5`, tree
+`c6328013f0532c2998d09eb8569e38c318b0becb`. It includes the source-cell mean
 from [PR #105](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/105),
 the two-direction edge-width repair from
 [PR #107](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/107),
@@ -36,9 +36,12 @@ merged at 23:14:25 UTC and recorded the failed physical-corner census.
 merged at 23:24:40 UTC. It changes the synthetic renderer's colour-channel
 noise, associated regressions and recorded reference-sheet results. Documentation
 [PR #119](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/119)
-merged at 23:40:24 UTC; its tree is the publication base above. It records
-contact-shadow observability studies and capture guidance, without adopting
-a tracer change. This refresh preserves both changes and does not retest
+merged at 23:40:24 UTC. It records contact-shadow observability studies and
+capture guidance, without adopting a tracer change. Documentation
+[PR #120](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/120)
+merged at 23:54:08 UTC; its tree is the publication base above. It records the
+saved inward construction before the later actual literal probe. This refresh
+preserves those changes and does not retest
 the separate frozen research source. The workbench runtime still matches
 PR #114: that correction removes fitted
 paper-light variation before remeasuring supported edge widths on traces with
@@ -70,12 +73,17 @@ Hosted checks are tied to their published heads:
 | PR #116, `f3bbc2bbdd5ae958be33050bf393c32557bc4085` | [43517704845](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43517704845): completed, success | [43517704839](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43517704839): completed, success |
 | PR #117, `740e9483a619346010c3b99bc2ffeb63a5fa3b48` | [43524563678](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43524563678): completed, success | [43524563696](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43524563696): completed, success |
 
-These readbacks do not extend a run to the combined main commit or this later
+PR #120's workbench [43530191760](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43530191760)
+and reference-library [43530191830](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43530191830)
+checks both completed successfully at `12448a56b8bd306028f9f0556d2742de8801955b`.
+Its merged tree matches that head. Automated code review did not complete
+because of the reported usage limit; it is separate from those successful
+workflow checks. These readbacks do not extend a run to this later
 documentation change. No PR #118 or #119 hosted-check result is asserted here.
 Merge, hosted checks, installed runtime, real-camera
 accuracy and physical acceptance remain separate.
 
-The [documentation review](validation/documentation-inward-margin.md) audits this
+The [documentation review](validation/documentation-inward-literal.md) audits this
 main-based source. Use [available tools](#available-here) and [remaining integration work](#remaining-integration-work)
 for current capabilities. Earlier snapshots below are historical records; their open
 PR states and absent-module statements describe their own source and time.
@@ -149,9 +157,23 @@ original gates, with zero arithmetic unknowns**. The independent saved-data
 audit passes **8,030 checks**. See [completed results and scope](validation/finite-acquisition-inward-margin.md).
 This is represented local feasibility, not an actual PNG cost improvement.
 The original 11/12 full recovery and earlier 0/128 census remain unchanged.
-A literal incumbent/trial cost comparison requires a separate admission and
-freeze; none has run. Candidate runtime, tests, runners, full arrays and
-complete local ZIPs remain outside this documentation publication.
+The separately frozen [paired literal test](finite-acquisition-inward-literal.md)
+at `98fb1aeeb54bd13d3c4dd324f323736109d17d0d` adds four governing files,
+preserving all 112 source bindings and 106 original artifacts. Its 162
+selected controls pass, including one tiny real PNG operator control. The
+actual pair exactly reproduces the incumbent on all nine baseline checks but
+raises training cost **0.302031169350812 to 0.40923713513984694**. Its status is
+`complete_no_improvement`, exit 1, with no protocol failure: the predetermined
+candidate is rejected. Target cell 62 reaches code 92; collateral cell 33
+changes 106 to 105. The independent saved mathematical audit passes 841
+checks. See [the complete first output, stages and receipts](validation/finite-acquisition-inward-literal.md).
+
+This pair adds two evaluations, 338 cell units and 10,478 stage units,
+bringing the aggregate to 992 / 135,369 / 54,531,024 under unchanged caps.
+It does not rerun full recovery, construct another point or integrate a fitter.
+A nonlinear model correction remains unimplemented. Candidate runtime,
+tests, runners, original raw recovery artifacts, preceding full diagnostic
+arrays and complete local ZIPs remain outside this documentation publication.
 
 ## Available here
 

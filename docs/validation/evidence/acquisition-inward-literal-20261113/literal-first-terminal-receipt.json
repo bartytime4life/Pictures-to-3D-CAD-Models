@@ -1,0 +1,105 @@
+{
+  "format": "inward-literal-first-paired-terminal-receipt",
+  "recorded_at": "2026-11-14T00:14:39.901230+00:00",
+  "head": "98fb1aeeb54bd13d3c4dd324f323736109d17d0d",
+  "tree": "40f54d13a2e5bdc7723f2a59ae86589dea6e1cff",
+  "native_session_id": null,
+  "terminal_on_initial_call": true,
+  "terminal_observation": {
+    "chunk_id": "a34dc1",
+    "wall_time_seconds": 2.488299533,
+    "exit_code": 1,
+    "original_token_count": 34,
+    "output": "{\"output\": \".local/verification/finite-acquisition-inward-literal-v1-first.json\", \"status\": \"complete_no_improvement\", \"passed\": false}\n"
+  },
+  "exit_code": 1,
+  "status": "complete_no_improvement",
+  "paired_probe_complete": true,
+  "baseline_qualified": true,
+  "strict_training_improvement_accepted": false,
+  "protocol_failure": false,
+  "controls": {
+    "passed": 162,
+    "seconds": 0.22,
+    "exit_code": 0
+  },
+  "inventory": {
+    "rows": 24,
+    "fit_files": 17,
+    "no_certificate_fits": 16,
+    "qualified_certificates": 1
+  },
+  "source_inputs_unchanged": 112,
+  "saved_artifacts_unchanged": 106,
+  "actual_costs": [
+    0.302031169350812,
+    0.40923713513984694
+  ],
+  "code_changes": {
+    "selected_target_matched": true,
+    "selected_before": 93,
+    "selected_after": 92,
+    "all_changed_indices": [
+      33,
+      62
+    ],
+    "all_changed_count": 2,
+    "other_changed_indices": [
+      33
+    ],
+    "other_changed_count": 1
+  },
+  "pair_reservation": [
+    2,
+    338,
+    10478
+  ],
+  "aggregate_work": [
+    992,
+    135369,
+    54531024
+  ],
+  "call_counts": {
+    "logical_forward_attempts": 2,
+    "coverage_calls_attempted": 2,
+    "coverage_calls_completed": 2,
+    "acquisition_calls_attempted": 2,
+    "acquisition_calls_completed": 2
+  },
+  "new_qp_solves": 0,
+  "files": {
+    "first.json": {
+      "sha256": "e09b56e646459f90b0371a9ec5bacaecbaf7fc5146c577687b5f7a8cd6e22307",
+      "bytes": 324890
+    },
+    "first.log": {
+      "sha256": "315e6ffd00be83b70d9e43456d4b9fb2cbd77f6afdc0bd9eaf1b1a899c3fb27c",
+      "bytes": 136
+    },
+    "first-run-handle.json": {
+      "sha256": "620785456d14c5218785e1c9f6a3d27a2de0acab27353173db1ee632b75f9efa",
+      "bytes": 568
+    },
+    "first-tests.log": {
+      "sha256": "ab005b1a3723054d741b9f618f61e5593e630baa34f3b6b06f4eb6e01d2e45c9",
+      "bytes": 260
+    },
+    "first-tests-handle.json": {
+      "sha256": "37017723bd2dab2dbb1ac6ecb7043dda283ab9c7777f2555909b1d1435c9893c",
+      "bytes": 771
+    },
+    "first-tests-terminal-receipt.json": {
+      "sha256": "342f8de430509f05ca3c017cb867cc11edf06e05493c9116407157ee840642e0",
+      "bytes": 937
+    },
+    "freeze.json": {
+      "sha256": "ffd283c89e8c30c6e802b5fa9d402ae39914e48c402f862a2c14091f3d44ff21",
+      "bytes": 20942
+    },
+    "static-reviews.json": {
+      "sha256": "b183f6616b7fce408eefd48697f07fdf5452b86ccf60dddbbbce53c8d0ce37fa",
+      "bytes": 3308
+    }
+  },
+  "scope": "First complete negative actual-cost comparison, exact archived incumbent replay. One predetermined candidate, no retries or alternate corners; original recovery11/12 and both earlier rounding outcomes unchanged. Saved-stage independent arithmetic audit and next nonlinear correction remain separate."
+}

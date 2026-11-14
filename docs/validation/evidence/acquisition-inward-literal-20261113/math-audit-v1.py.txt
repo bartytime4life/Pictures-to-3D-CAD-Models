@@ -1,0 +1,270 @@
+#!/usr/bin/env python3
+"""Saved-only paired literal arithmetic; no subject, array library or model imports."""
+
+import argparse
+import hashlib
+import json
+import math
+import struct
+from pathlib import Path
+
+
+EXPECTED = "e09b56e646459f90b0371a9ec5bacaecbaf7fc5146c577687b5f7a8cd6e22307"
+checks = 0
+failures = []
+
+
+def check(ok, label):
+    global checks
+    checks += 1
+    if not ok:
+        failures.append(label)
+
+
+def equal(left, right, label):
+    check(left == right, label)
+
+
+def binding(path):
+    digest = hashlib.sha256()
+    count = 0
+    with path.open("rb") as stream:
+        for block in iter(lambda: stream.read(1 << 20), b""):
+            count += len(block)
+            digest.update(block)
+    return {"sha256": digest.hexdigest(), "bytes": count}
+
+
+def load(path):
+    def reject(value):
+        raise ValueError(f"nonfinite token:{value}")
+
+    return json.loads(path.read_bytes(), parse_constant=reject)
+
+
+def native(value):
+    if isinstance(value, dict):
+        return all(type(k) is str and native(v) for k, v in value.items())
+    if isinstance(value, list):
+        return all(map(native, value))
+    return type(value) in (type(None), str, bool, int) or type(value) is float and math.isfinite(value)
+
+
+def flatten(value):
+    if isinstance(value, list):
+        return [v for item in value for v in flatten(item)]
+    return [value]
+
+
+def payload(values, shape, dtype):
+    flat = flatten(values)
+    equal(len(flat), math.prod(shape), "saved stage shape product")
+    formats = {"<f4": "f", "<f8": "d", "|u1": "B", "<i8": "q"}
+    raw = struct.pack("<" + formats[dtype] * len(flat), *flat)
+    equal(list(struct.unpack("<" + formats[dtype] * len(flat), raw)), flat, "saved values exactly represented in declared dtype")
+    return raw
+
+
+def array_record(record, label):
+    raw = payload(record["values"], record["shape"], record["dtype"])
+    equal(hashlib.sha256(raw).hexdigest(), record["sha256"], f"stage hash {label}")
+    return raw
+
+
+def bits(values):
+    return struct.pack("!" + "d" * len(values), *values)
+
+
+def mean_hash(forward, inputs):
+    h = hashlib.sha256()
+    arrays = (
+        ("coverage", forward["coverage"]["values"], tuple(inputs["source_shape"]), "<f8"),
+        ("levels", forward["point"][5:], (2,), "<f8"),
+        ("optical", inputs["optical_kernel"], (len(inputs["optical_kernel"]), len(inputs["optical_kernel"][0])), "<f8"),
+        ("post", inputs["post_kernel"], (len(inputs["post_kernel"]), len(inputs["post_kernel"][0])), "<f8"),
+        ("map", inputs["output_to_source_index"], (2, 3), "<f8"),
+        ("queries", inputs["queries"], (len(inputs["queries"]), 2), "<i8"),
+    )
+    for name, values, shape, dtype in arrays:
+        h.update(repr((name, shape, dtype)).encode())
+        h.update(payload(values, shape, dtype))
+    h.update(repr((tuple(inputs["output_shape"]), True, "finite-acquisition-v1")).encode())
+    return h.hexdigest()
+
+
+def audit(root, path):
+    report_binding = binding(path)
+    equal(report_binding, {"sha256": EXPECTED, "bytes": 324890}, "literal report exact binding")
+    d = load(path)
+    check(native(d), "strict JSON native finite")
+    equal(d["source_before"], d["source_after"], "source before/after")
+    equal(d["source_before"]["count"], 112, "112 source inputs")
+    equal(d["source_before"]["head"], "98fb1aeeb54bd13d3c4dd324f323736109d17d0d", "112 source HEAD")
+    source_bindings = {}
+    for name, record in d["source_before"]["files"].items():
+        actual = binding(root / name)
+        source_bindings[name] = actual
+        equal(actual, {"sha256": record["sha256"], "bytes": record["bytes"]}, f"source {name}")
+        equal(record["sha256"], record["head_sha256"], f"source committed {name}")
+    plan_path = root / "studies/finite-acquisition-inward-literal-v1.json"
+    plan = load(plan_path)
+    equal(binding(plan_path)["sha256"], d["plan_sha256"], "plan pin")
+    run = root / plan["saved_recovery"]["path"]
+    old_report_path = run / "report.json"
+    old_report = load(old_report_path)
+    inward_path = root / plan["saved_inward"]["path"]
+    inward = load(inward_path)
+    equal(binding(old_report_path), d["saved_recovery_binding"], "historical report binding")
+    equal(binding(inward_path), d["saved_inward_binding"], "inward binding")
+    equal(binding(root / plan["saved_census"]["path"]), d["saved_census_binding"], "old negative census binding")
+    equal(d["artifact_bindings"], d["artifact_bindings_after"], "106 artifacts before/after")
+    equal(len(d["artifact_bindings"]), 106, "106 artifacts retained")
+    for name, expected in d["artifact_bindings"].items():
+        equal(binding(run / name), expected, f"artifact {name}")
+    equal(d["inventory"], {"rows": 24, "fit_files": 17, "no_certificate_fits": 16, "qualified_certificates": 1}, "24/17/16/1 inventory")
+    equal(len(d["rows"]), 24, "24 row census")
+    for i, (row, old) in enumerate(zip(d["rows"], old_report["rows"], strict=True)):
+        equal((row["row_index"], row["case"], row["saved_status"], row["saved_all_targets"]), (i, old["case"]["name"], old["status"], old["all_targets"]), f"original row identity/outcome {i}")
+    paired = [r for r in d["rows"] if r["pairs"]]
+    equal(len(paired), 1, "one paired context")
+    row = paired[0]
+    equal(row["case"], "middle-png", "paired original case")
+    record = row["pairs"][0]
+    pair = record["pair"]
+    fit = load(run / row["case"] / "fit.json")
+    phase = fit["refinement"]
+    it = phase["details"]["iterations"][0]
+    index = it["incumbent_candidate_index"]
+    historical = phase["fit"]["candidates"][index]
+    equal(record["baseline"], historical, "exact indexed historical candidate")
+    equal(record["snapshot"], it["source_snapshot"], "exact historical source snapshot")
+    ir = next(r for r in inward["rows"] if r["case"] == row["case"])
+    cert = ir["certificates"][0]
+    corner = cert["new_census"]["candidates"][0]
+    equal(record["corner"], corner["physical"], "saved corner0 exactly reused")
+    equal(record["saved_corner_index"], 0, "deterministic index0")
+    inputs = record["inputs"]
+    equal(inputs, {k: phase["details"]["preflight_input_snapshot"][k] for k in inputs}, "fixed original ten training inputs")
+    equal(inputs, {k: fit["input_snapshot"][k] for k in inputs}, "outer input snapshot agrees")
+    equal(len(inputs["queries"]), 135, "135 original training queries")
+    forwards = pair["forwards"]
+    equal(len(forwards), 2, "two retained forwards")
+    source_n, output_n = math.prod(inputs["source_shape"]), math.prod(inputs["output_shape"])
+    optical_n = sum(map(len, inputs["optical_kernel"]))
+    post_n = sum(map(len, inputs["post_kernel"]))
+    w = source_n * (1 + optical_n + 4) + output_n * (16 + post_n)
+    equal((source_n, output_n, w), (169, 169, 5239), "work formula")
+    reservation = [2, 2 * source_n, 2 * w]
+    prior = [fit[k] for k in ("evaluations", "cell_work", "stage_work")]
+    aggregate = [a + b for a, b in zip(prior, reservation, strict=True)]
+    equal(pair["prior_work"], prior, "actual saved total work")
+    for key in ("pair_reservation", "charged", "held"):
+        equal(pair[key], reservation, f"whole pair work {key}")
+    equal(pair["aggregate_work"], aggregate, "saved plus pair charges")
+    equal(aggregate, [992, 135369, 54531024], "exact aggregate totals")
+    check(all(a <= b for a, b in zip(aggregate, pair["limits"], strict=True)), "global caps remain respected")
+    stage_names = ["coverage", "source_linear", "optical_linear", "encoded", "decoded_linear", "rectified", "final"]
+    costs = []
+    for j, forward in enumerate(forwards):
+        expected_point = historical["parameters"] + historical["levels"] if j == 0 else corner["physical"]
+        equal(forward["point"], expected_point, f"exact forward point {j}")
+        equal(forward["hex"], [v.hex() for v in expected_point], f"forward physical bits {j}")
+        equal(forward["status"], "resolved", f"forward status {j}")
+        equal(forward["stage_order"], stage_names, f"all seven stages/order {j}")
+        equal(set(forward["stages"]), set(stage_names), f"stage census {j}")
+        array_record(forward["coverage"], f"{j}/raw coverage")
+        for name, stage in forward["stages"].items():
+            expected_shape = inputs["output_shape"] if name in ("rectified", "final") else inputs["source_shape"]
+            equal(stage["shape"], expected_shape, f"stage shape {j}/{name}")
+            equal(stage["dtype"], "|u1" if name == "encoded" else "<f4", f"stage dtype {j}/{name}")
+            array_record(stage, f"{j}/{name}")
+        equal(mean_hash(forward, inputs), forward["input_sha256"], f"independent acquisition input hash {j}")
+        predicted = [forward["stages"]["final"]["values"][y][x] for x, y in inputs["queries"]]
+        equal(bits(predicted), bits(forward["prediction"]), f"ordered final-stage query sampling {j}")
+        raw = [target - value for target, value in zip(inputs["target"], predicted, strict=True)]
+        weighted = [weight * value for weight, value in zip(inputs["weights"], raw, strict=True)]
+        equal(bits(raw), bits(forward["raw_residual"]), f"unweighted residual arithmetic {j}")
+        equal(bits(weighted), bits(forward["weighted_residual"]), f"weights multiply residuals {j}")
+        norm = math.hypot(*weighted)
+        cost = norm * norm
+        costs.append(cost)
+        equal(bits([cost]), bits([forward["cost"]]), f"old hypot-square cost {j}")
+        equal(forward["reservations"], {"evaluations": 1, "cell_work": source_n, "stage_work": w}, f"per-forward reservation {j}")
+        equal(forward["charged"], forward["reservations"], f"no refund {j}")
+        equal(forward["reported"], {"cell_work": None, "stage_work": w}, f"independent work reports {j}")
+        equal(forward["caller_accounted_cell_work"], source_n, f"caller-accounted aperture {j}")
+        check(all(forward[k] is True for k in ("coverage_attempted", "coverage_completed", "acquisition_attempted", "acquisition_completed")), f"all successful calls {j}")
+        equal(forward["opaque_failed_work"], False, f"no opaque failed call {j}")
+    first, second = forwards
+    equal(first["input_sha256"], historical["mean_input_sha256"], "historical mean input hash exact")
+    equal(first["input_sha256"], record["snapshot"]["mean_input_sha256"], "historical snapshot mean hash exact")
+    for name in ("optical_linear", "encoded", "decoded_linear"):
+        equal(first["stages"][name], record["snapshot"]["stages"][name], f"historical source stage exact {name}")
+    for current, old in (("prediction", "prediction"), ("raw_residual", "raw_residual"), ("weighted_residual", "residual")):
+        equal(bits(first[current]), bits(historical[old]), f"historical {current} bits exact")
+    equal(bits([costs[0]]), bits([historical["cost"]]), "historical cost bits exact")
+    equal(len(pair["baseline_comparison"]["checks"]), 9, "nine historical checks")
+    check(all(pair["baseline_comparison"]["checks"].values()), "all nine historical checks true")
+    old_codes = flatten(first["stages"]["encoded"]["values"])
+    new_codes = flatten(second["stages"]["encoded"]["values"])
+    changed = [i for i, (a, b) in enumerate(zip(old_codes, new_codes, strict=True)) if a != b]
+    selected = record["selected_source_index"]
+    collateral = [i for i in changed if i != selected]
+    expected_codes = {"selected_target_matched": new_codes[selected] == record["target_code"], "selected_before": old_codes[selected], "selected_after": new_codes[selected], "all_changed_indices": changed, "all_changed_count": len(changed), "other_changed_indices": collateral, "other_changed_count": len(collateral)}
+    equal(pair["code_changes"], expected_codes, "actual source-code differences")
+    equal(changed, [33, 62], "observed code changed indices")
+    equal(pair["strict_cost_improved"], costs[1] < costs[0], "strict literal cost relation")
+    for scope in (d, pair):
+        equal(scope["status"], "complete_no_improvement", "complete negative status")
+        equal(scope["paired_probe_complete"], True, "completed valid comparison")
+        equal(scope["baseline_qualified"], True, "exact baseline qualifies")
+        equal(scope["protocol_failure"], False, "not a protocol failure")
+        equal(scope["strict_training_improvement_accepted"], False, "no strict cost acceptance")
+        for key in ("logical_forward_attempts", "coverage_calls_attempted", "coverage_calls_completed", "acquisition_calls_attempted", "acquisition_calls_completed"):
+            equal(scope[key], 2, f"actual paired call count {key}")
+    equal(d["passed"], False, "exit1 negative protocol outcome")
+    for key in ("optimizer_calls", "preparation_calls", "reference_calls", "reserved_scoring_calls", "new_qp_solves"):
+        equal(d[key], 0, f"no new {key}")
+    # Saved affine predictions are verified only at their already retained
+    # displacement; this never proposes/interpolates another geometry.
+    x = cert["reconstructed"]
+    local = corner["computed_gate"]["predicted_optical"]
+    delta = corner["d_comp"]
+    equal([math.fsum([z, *(g * v for g, v in zip(row, delta, strict=True))]) for row, z in zip(x["G"], x["z0"], strict=True)], local, "retained local predictions recomputed at retained displacement")
+    old_optical = flatten(first["stages"]["optical_linear"]["values"])
+    actual_optical = flatten(second["stages"]["optical_linear"]["values"])
+    equal(old_optical, x["z0"], "local intercept is exactly actual incumbent optics")
+    defects = []
+    for i, (z, prediction, actual, lo, hi) in enumerate(zip(old_optical, local, actual_optical, x["lower"], x["upper"], strict=True)):
+        check(lo <= prediction <= hi, f"saved local band membership {i}")
+        defects.append({"source_index": i, "row_column": [i // inputs["source_shape"][1], i % inputs["source_shape"][1]], "old_code": old_codes[i], "actual_new_code": new_codes[i], "old_optical": z, "saved_local_prediction": prediction, "actual_optical": actual, "actual_minus_local": actual - prediction, "local_change": prediction - z, "actual_change": actual - z, "band_lower": lo, "band_upper": hi, "local_lower_slack": prediction - lo, "local_upper_slack": hi - prediction, "actual_lower_slack": actual - lo, "actual_upper_slack": hi - actual, "actual_in_band": lo <= actual <= hi})
+    violations = [r["source_index"] for r in defects if not r["actual_in_band"]]
+    for name, expected in source_bindings.items():
+        equal(binding(root / name), expected, f"audit interval source unchanged {name}")
+    equal(binding(path), report_binding, "audit interval original report unchanged")
+    return {"report_binding": report_binding, "source_head": d["source_before"]["head"], "source_count": 112, "artifact_count": 106, "inventory": d["inventory"], "baseline_checks_exact": 9, "costs": costs, "cost_difference": costs[1] - costs[0], "code_changes": expected_codes, "pair_reservation": reservation, "aggregate_work": aggregate, "all_169_raw_bands": {"local_passes": len(local), "actual_passes": len(local) - len(violations), "actual_violations": violations}, "maximum_absolute_actual_minus_local": max(abs(r["actual_minus_local"]) for r in defects), "source_33": defects[33], "source_62": defects[62], "all_source_defects": defects, "scope": "Saved-only cost/hash/work/baseline/code arithmetic and observed local-model discrepancy. No subject/NumPy/backend import, operator/reference/optimizer/QP/census/new-point/interpolation calls; no geometry-recovery, physical or global-causal claim."}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--report", type=Path, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    if args.output.exists() or args.output.is_symlink() or not args.output.parent.is_dir():
+        parser.error("fresh output required in an existing parent")
+    result = {"format": "independent-inward-literal-saved-math-audit-v1", "passed": False}
+    try:
+        result.update(audit(args.root.resolve(), args.report.resolve()))
+    except Exception as error:
+        failures.append(f"unexpected {type(error).__name__}:{error}")
+    result.update(checks=checks, failures=failures, passed=not failures, audit_source=binding(Path(__file__)))
+    with args.output.open("x") as stream:
+        json.dump(result, stream, indent=2, allow_nan=False)
+        stream.write("\n")
+    print(json.dumps({"passed": result["passed"], "checks": checks, "failures": len(failures), "output": str(args.output)}))
+    return 0 if result["passed"] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

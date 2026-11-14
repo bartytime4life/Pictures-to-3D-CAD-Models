@@ -7,7 +7,7 @@ the existing dated receipt. The receipt, check date and release status were not
 regenerated for this correction.
 
 Repository documentation update, November 13: the
-[current review](../docs/validation/documentation-inward-margin.md) links the
+[current review](../docs/validation/documentation-inward-literal.md) links the
 [local acquisition-recovery snapshot](../docs/finite-acquisition-recovery.md).
 That separate synthetic research retains 4/12 original matched target passes
 and 9/12 continuation passes; both earlier full protocols exited 1. The 459 focused tests
@@ -38,9 +38,13 @@ add no library feature, release verification or physical acceptance.
 
 A separately frozen [inward-margin follow-up](../docs/finite-acquisition-inward-margin.md)
 passes 103 selected controls and all five gates for 128 new adjacent
-corners. Its independent saved-only audit passes 8,030 checks. The earlier
-0/128 result is preserved; actual PNG cost and recovery improvement remain
-untested. See [the new evidence](../docs/validation/finite-acquisition-inward-margin.md).
+corners. Its independent saved-only audit passes 8,030 checks. A later
+[paired literal check](../docs/finite-acquisition-inward-literal.md) exactly
+reproduces the baseline but raises training cost from 0.302031169350812 to
+0.40923713513984694; its candidate is rejected. Target cell 62 reaches code 92,
+while collateral cell 33 changes 106 to 105. The earlier 0/128 census and
+failed 11/12 full recovery remain unchanged. See [the complete negative result](../docs/validation/finite-acquisition-inward-literal.md).
+These studies add no library feature or physical qualification.
 
 ## What was checked automatically
 

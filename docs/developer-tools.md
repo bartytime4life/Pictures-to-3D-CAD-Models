@@ -148,8 +148,12 @@ passes 103 selected controls and all five gates at all 128 new corners, with
 an independent 8,030-check saved-only audit. It also makes zero forward-model
 or literal PNG calls. Its [source-bound result](validation/finite-acquisition-inward-margin.md)
 does not add an executable command, fitter or UI control to main.
-Those runtime, test and runner files remain absent here; their recorded
-commands require the frozen research checkout and are not main-branch commands.
+A separately frozen 112-input [paired literal runner](finite-acquisition-inward-literal.md)
+passes 162 selected controls, replays the baseline exactly and rejects the
+predetermined candidate on higher actual training cost. Its [recorded commands
+and first terminal outcomes](validation/finite-acquisition-inward-literal.md#recorded-commands-and-terminal-results)
+are provenance for that research checkout. Those runtime, test and runner
+files remain absent here; they are not main-branch commands.
 
 ## Output and side effects
 

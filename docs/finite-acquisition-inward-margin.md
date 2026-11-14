@@ -161,8 +161,13 @@ changes to the construction, gates or scientific evidence.
 The diagnostic retains all 24 original rows, 17 fits and 16 fits without a
 qualified certificate. It verifies 108 source inputs and 106 saved artifacts
 before and after. It makes no old-point census call or new model call. This
-establishes represented feasibility for the saved local surrogate. A future
-runtime proposal still needs separately admitted work accounting and an
-actual literal training-cost evaluation; strict cost decrease must decide
-acceptance under the original recovery limits and targets. No automatic
+establishes represented feasibility for the saved local surrogate. The later
+separately frozen [paired literal test](finite-acquisition-inward-literal.md)
+now supplies the actual-cost check: it exactly reproduces the incumbent but
+rejects the selected corner because training cost increases. Its target code
+changes as intended, and one protected code changes too. See the
+[complete negative result](validation/finite-acquisition-inward-literal.md).
+This later evaluation does not change the 108-input diagnostic's zero-call
+scope or the original failed full recovery. Runtime integration still needs
+separate admission and a complete original 24-case protocol. No automatic
 trace/CAD change, camera qualification or physical-fit claim follows here.

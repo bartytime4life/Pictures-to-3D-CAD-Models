@@ -95,7 +95,10 @@ pass at all 128 new adjacent corners, with zero arithmetic unknowns. An
 independent saved-only audit passes 8,030 checks. The original 0/128 result
 is unchanged because the new census surrounds a different rational point.
 See [its result and evidence](validation/finite-acquisition-inward-margin.md).
-Actual PNG cost, solver integration and full recovery remain untested.
+A separately frozen [paired literal check](finite-acquisition-inward-literal.md)
+has now tested the predetermined candidate: exact baseline, higher actual
+training cost and rejection. [Complete negative result](validation/finite-acquisition-inward-literal.md).
+Solver integration and a new full recovery protocol remain unrun.
 
 Let `T` contain **every** tight row. A rational direction must satisfy
 `A_T h < 0`. If those normals are independently verified and their Gram

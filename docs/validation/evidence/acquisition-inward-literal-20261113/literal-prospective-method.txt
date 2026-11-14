@@ -1,0 +1,194 @@
+# A paired literal PNG test of the inward candidate
+
+This is a **prospective, unexecuted protocol**. The new runner, independent
+controls, admission and this guide must be reviewed, committed and hashed with
+all 108 unchanged preceding inputs before the first new import, test collection
+or operator call. No actual image-cost result is claimed here.
+
+The preceding [inward construction](finite-acquisition-inward.md) checks all
+128 adjacent physical corners of one changed rational point. Every corner
+passes the five unchanged local feasibility gates, with zero arithmetic
+unknowns. Its selected controls pass 103 tests, and an independent saved-only
+audit passes 8,030 checks. The original physical census remains 0/128; the
+original full recovery remains 11/12 matched passes, exit 1.
+
+Those gates concern a local linear model. Actual coverage, float32 casts,
+encoding and sampling can behave differently. This next test asks whether
+the predetermined represented candidate lowers the actual rounded-pipeline
+training cost. A local-surrogate certificate alone cannot answer that question.
+
+## Fix the two inputs before evaluating either
+
+Visit all 24 original report rows and 17 saved fits in their original order.
+Retain the 16 fits without a qualified certificate and every pre-fit refusal
+and exception. The saved inward report has one eligible context: middle PNG,
+source-cell index 62, proposed code 93 to 92.
+
+Use exactly saved `new_census.selected_index=0` and that candidate's physical
+tuple and hexadecimal values. Do not recompute it from rational displacement,
+choose another corner, rerank 128 corners by cost or change selection after
+seeing a result. The saved five gates must all be true, the census complete
+and its arithmetic unknown count zero.
+
+The baseline is the candidate identified by the **same saved iteration** as
+the event certificate. Bind `iteration.incumbent_candidate_index`,
+`source_snapshot.candidate_index`, the candidate's mean-input hash and the
+inward report's anchor. The final fit's best candidate is not a substitute
+for that historical context.
+
+For each tuple retain its own two saved brightness levels without refitting.
+The candidate and baseline levels may differ. There is no brightness profile,
+new preparation, optimizer, new direction, rational solve, census or retry.
+Reserved queries and reference/capture arrays are excluded from selection,
+evaluation and cost. Hashing their archived files for provenance does not
+score their values.
+
+## Replay the unchanged acquisition chain
+
+The enclosing phase's preflight snapshot supplies the source grid, origin,
+pitch, kernels, output grid/map, ordered training queries, observations and
+weights. Check agreement with the outer input snapshot and observed-input
+record. Reuse the saved map directly; do not add a half-pixel shift, crop,
+normalization or camera recalibration.
+
+For the seven-vector `p`, evaluate the unchanged direct operators:
+
+```text
+coverage = segment_cell_coverage(
+    centre=p[:2], radius=p[2], fraction=p[3],
+    normal=(cos(p[4]),sin(p[4])), shape=source_shape,
+    origin=origin, pitch=pitch)
+
+mean = acquisition_mean(
+    coverage, levels=p[5:], optical_kernel=optical_kernel,
+    output_shape=output_shape, output_to_source_index=output_map,
+    post_kernel=post_kernel, queries=training_queries,
+    srgb8=True, max_work=required)
+```
+
+This retains existing aperture normal canonicalization and the original
+float32 coverage storage, brightness mixing, reflected optical correlation,
+source sRGB8 encoding, sequential float32 Rec709 decoding, Keys sampling and
+post kernel. It uses the frozen supplied-acquisition API rather than a new
+renderer or surrogate.
+
+Retain all seven fresh stages for both phases, with raw-byte hashes, dtypes,
+shapes and values. Also retain ordered predictions/statuses, input hash,
+required/performed work, numeric workspace and the input tuples' exact bits.
+
+## Qualify the historical baseline before interpreting the candidate
+
+The archived event-context snapshot contains full `optical_linear`, `encoded`
+and `decoded_linear` stages. Require bitwise equality with their archived
+dtype, shape, values and raw-byte hash. Check the candidate-bound encoded
+archive entry as well where retained. Require the actual mean-input hash to
+match both the historical candidate and the source snapshot.
+
+All 135 ordered predictions, raw residuals, weighted residuals and the cost
+must reproduce exactly. The saved cost is `0.302031169350812`; the mean-input
+hash is
+`e789cdb9660c588292dd421ff03f8decc5c7ffe1f7ebc72da113b571c23f0cd0`.
+Agreement between two newly generated results is insufficient: compare with
+the archived incumbent evidence.
+
+Retain both predetermined phase attempts even if the first cannot qualify,
+provided the full pair was reserved. A mismatch or failure cannot trigger a
+retry, another candidate or relaxed equality. Preserve any computed values
+as raw evidence and withhold acceptance.
+
+## Use the original actual training cost
+
+For ordered training predictions `v`, observations `y` and positive weights
+`w`, use the existing rounded-mode calculation:
+
+```text
+raw = y - v
+r = w * raw
+norm = hypot(*r)
+cost = norm * norm
+```
+
+Weights multiply residuals; their squares therefore enter the quadratic
+objective. The [hypot operation](https://docs.python.org/3.12/library/math.html#math.hypot)
+computes the Euclidean norm; acceptance uses its operational binary64 square,
+matching the existing fitter. It does not replace that value with an exact
+rational sum. Do not divide by query count,
+reweight observations or add reference/reserved penalties.
+
+Refuse nonfinite predictions/residuals, nonpositive weights and nonzero raw
+residuals that underflow to zero when weighted. Preserve the original norm
+overflow and nonzero-square-underflow guards. Once the historical baseline
+qualifies, acceptance is **strictly** `candidate_cost < baseline_cost`.
+Equality is not an improvement; no tolerance changes that decision.
+
+Compare the two complete source uint8 arrays and retain every changed
+row-major source index. Record the selected source-62 target hit and every
+collateral change separately from cost acceptance. A training-query index is
+not a source-cell index. A code-pattern mismatch must not veto a strict actual
+cost decrease; code preservation is a separate diagnostic.
+
+## Reserve the whole pair under the original limits
+
+Let `N` be source cells, `M` output cells and `Kopt,Kpost` the kernel sizes.
+The unchanged PNG operator requires, per forward evaluation,
+
+```text
+cell_work = N
+stage_work = N*(1 + Kopt + 4) + M*(16 + Kpost).
+```
+
+Here `N=M=169`, `Kopt=9` and `Kpost=1`. One forward requires 169 cell units
+and 5,239 stage units. The pair reserves **two evaluations, 338 cell units
+and 10,478 stage units before the first operator call**. Two logical forwards
+comprise two aperture calls and two acquisition calls; those counts are
+reported separately.
+
+The archived whole-fit totals are 990 evaluations, 135,031 cell units and
+54,520,546 stage units, under unchanged caps of 2,048, 1,000,000 and
+100,000,000. The pair must fit in the remaining budget. No old cache credit,
+borrowed phase allocation or new runtime budget is allowed.
+
+Keep reservations, attempted phases/operators, reported work and held charges
+separate. Reservations remain held on failures. Aperture has no independent
+work report: record its reported work as opaque while retaining the charge.
+Missing, invalid or out-of-range acquisition work does not earn zero-work
+credit. An unresolved first phase leaves its failure and reserved work intact
+while the bounded second attempt is recorded independently.
+
+## Provenance, outcomes and first execution
+
+The [new admission](../studies/finite-acquisition-inward-literal-v1.json) keeps
+four source lanes separate: original recovery 100 inputs at `c1a9330`, old
+physical census 104 at `b649ea3`, inward construction 108 at `66df525`, and
+this new 112-input probe. Bind the exact bytes parsed for the original report,
+old census, inward result and every fit. Check all 106 original artifacts and
+all 112 current sources before and after, including failures. A missing early
+artifact must not prevent retaining later after-checks. Late binding errors
+override acceptance labels while leaving computed facts visible.
+
+Require a nonzero eligible denominator and the complete expected inventory.
+`paired_probe_complete`, historical-baseline qualification and strict cost
+acceptance remain distinct fields:
+
+| Outcome | Interpretation | Exit |
+| --- | --- | --- |
+| `literal_training_improvement` | Every required pair and historical baseline qualifies, each candidate strictly lowers cost, and all final bindings pass | 0 |
+| `complete_no_improvement` | Complete qualified comparison, without strict improvement | 1 |
+| `paired_unresolved` | Work, numerical or operator failure prevents a qualified comparison | 1 |
+| `protocol_failure` | Source, saved identity, baseline reproduction, schema or metadata mismatch; acceptance withheld | 1 |
+
+Refuse an existing output, symlink or missing parent before imports/calls.
+After independent static review, freeze and commit all 112 inputs before the
+first new import or collection. First run only the selected independent
+invented-data controls, including one tiny direct PNG control. They must pass
+terminally before the saved paired probe executes once. Preserve each first
+command, native handle where one exists, log, result and exit. Any correction
+after first execution needs a separate admission and files; do not amend the
+original result or governing bytes.
+
+A lower actual training cost is useful evidence toward recovery. It is not
+a new full 24-case score or proof of geometry targets, nonlinear protected
+codes, unique geometry, camera adequacy or physical fit. Fitter integration
+still requires shared work accounting, a new source/test/admission freeze and
+another complete original study. No automatic tracing, CAD/UI/HTTP change,
+installation, deployment or physical acceptance is established here.

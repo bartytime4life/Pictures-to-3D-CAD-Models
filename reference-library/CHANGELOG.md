@@ -10,6 +10,16 @@ All dates are 2026. Revisions are numbered in `library.json`, which feeds the HT
 - Record complete source, parameter, schema and output hashes, OpenSCAD versions, logs and actual-mesh checks. Include real default-model renders and editable starter files.
 - Exercise browser downloads through actual OpenSCAD renders, with isolated desktop/mobile checks and preservation regression tests. Rebuild the handbook, verification record and portable archive. No slicing or physical print qualification.
 
+### Workbench negative literal-pair navigation — November 13, 2026
+
+Link the [actual paired PNG result](../docs/validation/finite-acquisition-inward-literal.md):
+162 selected controls pass; the baseline replays exactly, but the candidate
+raises training cost 0.302031169350812 to 0.40923713513984694 and is rejected.
+Target cell 62 reaches code 92 while protected cell 33 changes 106 to 105.
+The independent saved mathematical audit passes 841 checks. Current guide
+links reflect that completed negative result; library catalog, reader, PDF
+and release records remain unchanged. No physical qualification is added.
+
 ### Workbench inward-margin result navigation — November 13, 2026
 
 Link the [new saved-only construction and audit](../docs/validation/finite-acquisition-inward-margin.md):

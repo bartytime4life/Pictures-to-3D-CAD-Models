@@ -1,0 +1,17 @@
+{
+  "format": "inward-literal-ux-saved-audit-v1",
+  "report": {
+    "sha256": "e09b56e646459f90b0371a9ec5bacaecbaf7fc5146c577687b5f7a8cd6e22307",
+    "bytes": 324890
+  },
+  "audit_sha256": "c313725b1b642ba97e5adb4e3d194f9b9a0f07106731ecc8feec7b201a70c0e3",
+  "checks": 1000128,
+  "failed": 0,
+  "failures": [],
+  "status": "saved_records_consistent_complete_negative",
+  "model_imports": 0,
+  "model_or_forward_calls": 0,
+  "new_points_or_censuses": 0,
+  "scope": "Saved finite JSON, raw byte/hash reconstruction, retained residual/cost arithmetic, source/artifact identity and inventory only. No independent coverage, optical/encoding/resampling, geometry-target or physical validation.",
+  "native_scope": "Saved stdout states complete_no_improvement/passed=false; native terminal exit supplied by parent until its separately retained terminal receipt is available. This audit does not launch or inspect a running process."
+}

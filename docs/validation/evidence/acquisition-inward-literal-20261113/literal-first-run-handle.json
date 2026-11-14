@@ -1,0 +1,10 @@
+{
+  "command": "set -o pipefail\n.venv/bin/python studies/verification/finite-acquisition-inward-literal-v1.py --output .local/verification/finite-acquisition-inward-literal-v1-first.json 2>&1 | tee .local/verification/finite-acquisition-inward-literal-v1-first.log",
+  "result": {
+    "chunk_id": "a34dc1",
+    "wall_time_seconds": 2.488299533,
+    "exit_code": 1,
+    "original_token_count": 34,
+    "output": "{\"output\": \".local/verification/finite-acquisition-inward-literal-v1-first.json\", \"status\": \"complete_no_improvement\", \"passed\": false}\n"
+  }
+}

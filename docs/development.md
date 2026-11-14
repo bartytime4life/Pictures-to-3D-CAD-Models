@@ -194,11 +194,14 @@ one rational local optimum but finds **zero accepted candidates among 128
 adjacent physical corners**, with no arithmetic unknowns. See the
 [complete results and source bindings](validation/finite-acquisition-physical-rounding.md).
 The separately frozen [inward-margin construction](finite-acquisition-inward-margin.md)
-now passes 103 selected controls and all five gates for all 128 new adjacent
+passes 103 selected controls and all five gates for all 128 new adjacent
 corners; an independent saved-data audit passes 8,030 checks. The old 0/128
-result remains unchanged. This establishes local represented feasibility;
-actual PNG cost, fitter integration and recovery improvement remain untested.
-See [the new result and evidence](validation/finite-acquisition-inward-margin.md).
+result remains unchanged. The later [paired literal check](finite-acquisition-inward-literal.md)
+exactly reproduces the baseline but raises actual training cost from
+0.302031169350812 to 0.40923713513984694, so its predetermined candidate is
+rejected. Target source cell 62 reaches code 92; collateral cell 33 changes
+106 to 105. [Complete negative result](validation/finite-acquisition-inward-literal.md).
+Full recovery remains 11/12; fitter integration is still absent.
 These separate local studies add no main runtime or workbench integration.
 
 The [affine evaluation upgrade](finite-affine-evaluation.md) has an earlier

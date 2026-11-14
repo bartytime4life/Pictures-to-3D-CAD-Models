@@ -135,7 +135,7 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 For the reviewed source revision and available research APIs, read
 [source scope and status](docs/project-status.md) and the
-[current documentation review](docs/validation/documentation-inward-margin.md).
+[current documentation review](docs/validation/documentation-inward-literal.md).
 Main includes the source-cell mean, five unrounded area sensitivities and
 separate signed linear propagation as developer APIs. Five-parameter recovery
 with unknown brightness is absent from this main-based runtime. A
@@ -153,9 +153,12 @@ verifies a rational local optimum but accepts none of 128 adjacent physical
 candidates. A separately frozen [inward-point construction](docs/finite-acquisition-inward-margin.md)
 then passes 103 focused controls and all five original gates for all 128 new
 corners, with zero arithmetic unknowns. An independent saved-data audit passes
-8,030 checks. This establishes represented local feasibility; no actual PNG
-cost comparison or recovery improvement has been demonstrated. The
-[latest results](docs/validation/finite-acquisition-inward-margin.md) and
+8,030 checks. A later [paired literal check](docs/finite-acquisition-inward-literal.md)
+exactly reproduces the baseline but increases actual training cost from
+0.302031169350812 to 0.40923713513984694, so its candidate is rejected. Target
+cell 62 reaches code 92; collateral cell 33 changes 106 to 105. The original
+11/12 recovery result and runtime remain unchanged. The
+[latest results](docs/validation/finite-acquisition-inward-literal.md) and
 [results and remaining limits](docs/validation/finite-acquisition-continuations.md)
 keep software tests and [saved-record audits](docs/finite-acquisition-saved-audit.md)
 separate from camera accuracy and physical acceptance. The

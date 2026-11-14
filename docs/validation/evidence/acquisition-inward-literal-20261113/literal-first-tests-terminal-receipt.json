@@ -1,0 +1,25 @@
+{
+  "format": "inward-literal-first-controls-terminal-receipt",
+  "recorded_at": "2026-11-14T00:11:43.348704+00:00",
+  "head": "98fb1aeeb54bd13d3c4dd324f323736109d17d0d",
+  "tree": "40f54d13a2e5bdc7723f2a59ae86589dea6e1cff",
+  "source_inputs_unchanged": 112,
+  "tests": {
+    "exit_code": 0,
+    "passed": 162,
+    "failed": 0,
+    "seconds": 0.22,
+    "native_session_id": null,
+    "terminal_on_initial_call": true
+  },
+  "log": {
+    "sha256": "ab005b1a3723054d741b9f618f61e5593e630baa34f3b6b06f4eb6e01d2e45c9",
+    "bytes": 260
+  },
+  "handle": {
+    "sha256": "37017723bd2dab2dbb1ac6ecb7043dda283ab9c7777f2555909b1d1435c9893c",
+    "bytes": 771
+  },
+  "saved_paired_probe_executed": false,
+  "scope": "59 new invented arithmetic/protocol controls, including one actual one-cell zero-PNG acquisition operator call, plus103 unchanged prior inward/physical controls. No saved-case model or recovery run;112-source freeze unchanged."
+}

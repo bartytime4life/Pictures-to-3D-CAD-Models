@@ -1,0 +1,58 @@
+# Saved-only inward literal probe interpretation
+
+Input report SHA-256:
+`e09b56e646459f90b0371a9ec5bacaecbaf7fc5146c577687b5f7a8cd6e22307`
+(324,890 bytes), source `98fb1aeeb54bd13d3c4dd324f323736109d17d0d`.
+
+The independent standard-library audit's first execution passes 841 checks.
+It reads retained JSON and source/artifact bytes only. It imports no subject,
+NumPy or backend; performs no operator/reference/optimizer/QP/census call;
+and constructs no new geometry, direction or interpolated candidate. It
+verifies stage-byte hashes, original mean-input hashes, ordered query values,
+residual/weight/cost arithmetic, historical baseline binding, code differences,
+work and the saved local predictions at their already retained displacement.
+Its success does not replace the governing experiment's exit 1.
+
+The exact historical incumbent replay qualifies all nine checks. Actual
+training costs are 0.302031169350812 and 0.40923713513984694, respectively:
+the candidate is worse by 0.10720596578903496. This is a complete valid
+comparison without improvement, not a protocol failure. All 112 source and
+106 artifact bindings agree. The held pair is 2 evaluations / 338 cell work /
+10,478 stage work; combined totals are 992 / 135,369 / 54,531,024.
+
+All 169 retained local affine optical predictions satisfy their declared
+bands. Actual optical values satisfy 167; indices 33 and 62 fail:
+
+| Source | Saved local | Actual | Actual minus local | Relevant band side | Actual side violation |
+| --- | --- | --- | --- | --- | --- |
+| 33 | 36.38638305664528 | 36.38624954223633 | -0.00013351440895092992 | lower 36.386383056640625 | 0.000133514404296875 below |
+| 62 | 27.446351528163046 | 27.447145462036133 | +0.000793933873087127 | upper 27.446351528167725 | 0.0007939338684082031 above |
+
+The local slacks at these sides are only approximately 4.65e-12 and 4.68e-12.
+The largest absolute actual-minus-local optical difference is
+0.0033637480281960563 at index 80, whose actual value remains in its band.
+
+Exactly two source codes change: 33 goes 106 to 105; 62 goes 93 to 92.
+Index 33 is a genuine protected-code change. Index 62 reaches the requested
+code 92: its band violation concerns the narrower central-half proposal slice,
+not the full operational bin for code 92. A target-code hit does not decide
+acceptance; the strict actual training-cost comparison correctly rejects it.
+
+The earlier exact rational/represented feasibility result remains valid for
+its local affine model. This new probe demonstrates that it does not establish
+the nonlinear source-band predictions or actual cost. It does not isolate
+the defect into geometry curvature, mixed geometry/brightness dependence or
+float32 stage arithmetic. In the ideal precast source mix
+`I=a+(b-a)c(g)`, a finite joint change includes the mixed term
+`(delta_b-delta_a)*(c(g1)-c(g0))` in addition to the geometry linearization
+remainder; the literal stages introduce further rounding. No individual
+cause is established by the saved difference alone.
+
+A possible future defect-corrected local model
+`m1(d)=z1+G*(d-d1)` would interpolate the observed rejected optical field at
+its original-coordinate displacement. It would still need a new admission,
+original incumbent bins/physical domain and cost reference, fresh actual-cost
+acceptance, bounded work and its own qualification. It would not promote the
+rejected point to accepted incumbent, make G a derivative of the rounded
+pipeline, or certify an unobserved point. No such proposal has been computed
+or evaluated in this audit.
