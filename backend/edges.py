@@ -983,14 +983,23 @@ def correct_silhouette(points, normals, nadir, height, thickness, is_outer):
         ring = ring.buffer(0)
     ratio = height / (height - thickness)
     # The bottom candidate (the point itself) is in h⁻¹(S) where h of it is in S; the
-    # top candidate is in S where it is.
-    raised = nadir + (points - nadir) * ratio
-    inside_raised = shapely.contains_xy(ring, raised[:, 0], raised[:, 1])
+    # top candidate is in S where it is. One on S's boundary, within roundoff, counts as
+    # in it: at a tangent point that bounds no wall's edge the other candidate lies
+    # exactly there. A wall's edge lies s² / 2r outside the outline s along it, so only
+    # its points within about 3 µm of its ends pass (r = 20 mm, coordinates to 200 mm).
+    tolerance = 1e-9 * (1.0 + float(np.abs(points).max()))
+
+    def in_material(candidates):
+        # A hole's material lies outside its ring.
+        inside = shapely.contains_xy(ring, candidates[:, 0], candidates[:, 1])
+        ok = inside if is_outer else ~inside
+        if (~ok).any():
+            ok[~ok] = shapely.distance(ring.boundary, shapely.points(candidates[~ok])) <= tolerance
+        return ok
+
     lowered = nadir + (points - nadir) / ratio
-    inside_lowered = shapely.contains_xy(ring, lowered[:, 0], lowered[:, 1])
-    # A hole's material lies outside its ring.
-    bottom_ok = inside_raised if is_outer else ~inside_raised
-    top_ok = inside_lowered if is_outer else ~inside_lowered
+    bottom_ok = in_material(nadir + (points - nadir) * ratio)
+    top_ok = in_material(lowered)
     chosen = np.where(bottom_ok != top_ok, top_ok, top)
     corrected = np.where(chosen[:, None], lowered, points)
     return corrected, chosen, bottom_ok | top_ok
