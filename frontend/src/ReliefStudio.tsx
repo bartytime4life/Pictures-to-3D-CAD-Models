@@ -26,6 +26,7 @@ import type {
   ReliefMode,
   ReliefResult,
   ReliefSettings,
+  ReliefShape,
 } from './relief';
 import './ReliefStudio.css';
 
@@ -60,6 +61,10 @@ type Draft = {
   autoLevels: boolean;
   material: ReliefMaterial;
   color: string;
+  shape: ReliefShape;
+  diameter: string;
+  opening: string;
+  collar: string;
 };
 
 const initialDraft: Draft = {
@@ -80,22 +85,31 @@ const initialDraft: Draft = {
   autoLevels: true,
   material: 'pla',
   color: '#e8e4da',
+  shape: 'flat',
+  diameter: '100',
+  opening: '35',
+  collar: '3',
 };
 
-type SampleKind = 'photo' | 'depth';
+type SampleKind = 'photo' | 'depth' | 'globe';
 
 // The depth sample's white level is 1.1 sphere radii and its sphere spans 30% of the
 // image width (scripts/generate_relief_samples.py). A 100 mm wide relief therefore has
 // a 30 mm sphere radius, and a span of 1.1 x 30 = 33 mm makes the dome a true hemisphere.
 const MOON_DEPTH_SPAN_PER_WIDTH = 1.1 * (270 / 900);
 const SAMPLES: Record<SampleKind, { url: string; file: string; draft: Partial<Draft> }> = {
-  photo: { url: '/relief-sample.png', file: 'moon.png', draft: { name: 'Moon relief' } },
+  photo: {
+    url: '/relief-sample.png',
+    file: 'moon.png',
+    draft: { name: 'Moon relief', shape: 'flat' },
+  },
   depth: {
     url: '/relief-sample-depth.png',
     file: 'moon-depth.png',
     draft: {
       name: 'Moon dome',
       mode: 'relief',
+      shape: 'flat',
       source: 'depth',
       width: '100',
       min: '1.6',
@@ -105,6 +119,24 @@ const SAMPLES: Record<SampleKind, { url: string; file: string; draft: Partial<Dr
       gamma: '1',
       autoLevels: false,
       denoise: 'off',
+    },
+  },
+  // A generated 2:1 moon map wrapped into a backlit sphere: a moon lamp.
+  globe: {
+    url: '/moon-map.png',
+    file: 'moon-map.png',
+    draft: {
+      name: 'Moon lamp',
+      mode: 'lithophane',
+      shape: 'sphere',
+      source: 'photo',
+      diameter: '100',
+      opening: '35',
+      collar: '3',
+      min: '0.8',
+      max: '3',
+      autoLevels: true,
+      denoise: 'light',
     },
   },
 };
@@ -131,6 +163,18 @@ function toSettings(draft: Draft, revision: number): ReliefSettings | string {
   if (max === null) return 'Thickest wall must be between 0.4 and 40 mm.';
   if (max - min < 0.1) return 'Thickest wall must exceed the thinnest by at least 0.1 mm.';
   if (frame === null) return 'Frame must be between 0 and 20 mm.';
+  const diameter = number(draft.diameter, 30, 250);
+  const opening = number(draft.opening, 10, 200);
+  const collar = number(draft.collar, 0, 20);
+  if (draft.shape === 'sphere') {
+    if (diameter === null) return 'Sphere diameter must be between 30 and 250 mm.';
+    if (opening === null) return 'Opening must be between 10 and 200 mm.';
+    if (collar === null) return 'Collar must be between 0 and 20 mm.';
+    const inside = diameter / 2 - max;
+    if (inside < 10) return 'The sphere is too small for its thickest wall.';
+    if (opening / 2 > 0.9 * inside)
+      return 'The opening must be narrower than 90% of the inside diameter.';
+  }
   if (gamma === null) return 'Tone curve must be between 0.25 and 4.';
   if (nozzle === null) return 'Nozzle width must be between 0.1 and 1.2 mm.';
   if (halfValue === null) return 'Half-value thickness must be between 0.05 and 10 mm.';
@@ -155,6 +199,10 @@ function toSettings(draft: Draft, revision: number): ReliefSettings | string {
     auto_levels: draft.autoLevels,
     material: draft.material,
     color: draft.color,
+    shape: draft.shape,
+    sphere_diameter_mm: diameter ?? 100,
+    opening_mm: opening ?? 35,
+    collar_mm: collar ?? 3,
   };
 }
 
@@ -254,6 +302,7 @@ export default function ReliefStudio() {
     !!result &&
     (typeof settings === 'string' || geometryKey(settings) !== builtKey || file !== builtFile);
   const lithophane = draft.mode === 'lithophane';
+  const sphere = draft.shape === 'sphere';
 
   useEffect(() => {
     fetch('/api/blender')
@@ -606,6 +655,13 @@ export default function ReliefStudio() {
                     >
                       Try the moon depth map
                     </button>
+                    <button
+                      className="outlined-button"
+                      disabled={!!busy}
+                      onClick={() => void loadSample('globe')}
+                    >
+                      Try the moon lamp
+                    </button>
                   </div>
                 </div>
               )}
@@ -663,13 +719,48 @@ export default function ReliefStudio() {
         </section>
 
         <section className="relief-controls" aria-label="Size and thickness">
-          <NumberInput
-            id="relief-width"
-            label="Picture width"
-            value={draft.width}
-            onChange={(v) => update('width', v)}
-            hint="Height follows the picture’s shape"
-          />
+          <div className="relief-field">
+            <span className="relief-label" id="relief-shape-label">
+              Shape
+            </span>
+            <div className="relief-toggle" role="group" aria-labelledby="relief-shape-label">
+              <button aria-pressed={!sphere} onClick={() => update('shape', 'flat')}>
+                Flat
+              </button>
+              <button aria-pressed={sphere} onClick={() => update('shape', 'sphere')}>
+                Sphere
+              </button>
+            </div>
+            <span className="relief-hint">
+              {sphere ? 'Wraps a 2:1 world-map picture' : 'Panel or plaque'}
+            </span>
+          </div>
+          {sphere ? (
+            <>
+              <NumberInput
+                id="relief-diameter"
+                label="Sphere diameter"
+                value={draft.diameter}
+                onChange={(v) => update('diameter', v)}
+                hint="Outside, at the thickest wall"
+              />
+              <NumberInput
+                id="relief-opening"
+                label="Bottom opening"
+                value={draft.opening}
+                onChange={(v) => update('opening', v)}
+                hint="Flat base around the light"
+              />
+            </>
+          ) : (
+            <NumberInput
+              id="relief-width"
+              label="Picture width"
+              value={draft.width}
+              onChange={(v) => update('width', v)}
+              hint="Height follows the picture’s shape"
+            />
+          )}
           <NumberInput
             id="relief-min"
             label="Thinnest"
@@ -684,13 +775,23 @@ export default function ReliefStudio() {
             onChange={(v) => update('max', v)}
             hint={lithophane ? 'Darkest areas' : 'Highest areas'}
           />
-          <NumberInput
-            id="relief-frame"
-            label="Frame"
-            value={draft.frame}
-            onChange={(v) => update('frame', v)}
-            hint="Solid border, added outside the picture"
-          />
+          {sphere ? (
+            <NumberInput
+              id="relief-collar"
+              label="Collar"
+              value={draft.collar}
+              onChange={(v) => update('collar', v)}
+              hint="Full-thickness band above the opening"
+            />
+          ) : (
+            <NumberInput
+              id="relief-frame"
+              label="Frame"
+              value={draft.frame}
+              onChange={(v) => update('frame', v)}
+              hint="Solid border, added outside the picture"
+            />
+          )}
           {lithophane ? (
             <NumberInput
               id="relief-hvl"
@@ -834,12 +935,21 @@ export default function ReliefStudio() {
         {result && stats && (
           <section className="relief-results" aria-label="Results">
             <div className="relief-card">
-              <h2>{result.kind === 'lithophane' ? 'Your lithophane' : 'Your relief'}</h2>
+              <h2>
+                {result.shape === 'sphere'
+                  ? result.kind === 'lithophane'
+                    ? 'Your lamp'
+                    : 'Your globe'
+                  : result.kind === 'lithophane'
+                    ? 'Your lithophane'
+                    : 'Your relief'}
+              </h2>
               <dl className="relief-facts">
                 <dt>Size</dt>
                 <dd>
-                  {fmt(result.dimensions.width, 1)} × {fmt(result.dimensions.height, 1)} ×{' '}
-                  {fmt(result.dimensions.thickness, 2)} mm
+                  {stats.sphere
+                    ? `Ø ${fmt(stats.sphere.outer_diameter_mm, 1)} mm, ${fmt(stats.sphere.height_mm, 1)} mm tall (inside Ø ${fmt(stats.sphere.inner_diameter_mm, 1)} mm)`
+                    : `${fmt(result.dimensions.width, 1)} × ${fmt(result.dimensions.height, 1)} × ${fmt(result.dimensions.thickness, 2)} mm`}
                 </dd>
                 <dt>Thickness range</dt>
                 <dd>
@@ -904,7 +1014,7 @@ export default function ReliefStudio() {
                     1e-6 * stats.mesh.volume_mm3
                   }
                 >
-                  {`Volume by two independent methods agrees: ${fmt(stats.mesh.volume_mm3, 3)} vs ${fmt(stats.volume_cross_check_mm3, 3)} mm³`}
+                  {`Volume cross-check agrees: ${fmt(stats.mesh.volume_mm3, 3)} vs ${fmt(stats.volume_cross_check_mm3, 3)} mm³ by ${stats.volume_check?.label ?? 'the top-surface sum'}`}
                 </Check>
               </ul>
               <dl className="relief-facts">
@@ -920,6 +1030,25 @@ export default function ReliefStudio() {
                     ? `σ = ${fmt(stats.nozzle_filter.sigma_mm, 3)} mm removed ${fmt(stats.nozzle_filter.removed_rms_mm, 3)} mm RMS (max ${fmt(stats.nozzle_filter.removed_max_mm, 2)} mm) of unprintable detail`
                     : 'Off: detail finer than the nozzle is kept but may not print'}
                 </dd>
+                {stats.sphere && (
+                  <>
+                    <dt>Bed contact</dt>
+                    <dd>
+                      {fmt(stats.sphere.bed_contact_mm2, 0)} mm² flat ring around the{' '}
+                      {fmt(stats.sphere.opening_mm, 0)} mm opening
+                    </dd>
+                    <dt>Overhangs</dt>
+                    <dd>
+                      {fmt(stats.sphere.overhang_fraction * 100, 1)}% of the surface faces down more
+                      than {fmt(stats.sphere.overhang_degrees, 0)}° from vertical
+                    </dd>
+                    <dt>Triangle fit</dt>
+                    <dd>
+                      {fmt(stats.sphere.polyhedral_vs_smooth * 100, 3)}% volume difference from the
+                      smooth surface
+                    </dd>
+                  </>
+                )}
                 <dt>Steepest slope</dt>
                 <dd>
                   {fmt(stats.slope_deg.max, 0)}° (95% of the surface under{' '}
@@ -966,11 +1095,17 @@ export default function ReliefStudio() {
             <div className="relief-card">
               <h2>Open in Blender</h2>
               <p className="relief-text">
-                The Blender ZIP rebuilds this exact solid as an editable scene: the surface is a
-                Displace modifier reading the 16-bit height map, so you can change its strength
-                live, sculpt, or render it.
+                The Blender ZIP rebuilds this exact solid as an editable scene: the surface is
+                lifted by{' '}
+                {result.shape === 'sphere'
+                  ? 'a Geometry Nodes modifier that moves each point outward along its radius'
+                  : 'a Displace modifier'}{' '}
+                reading the 16-bit height map, so you can change its strength live, sculpt, or
+                render it.
                 {lithophane &&
-                  ' The lithophane scene uses a Volume Absorption material with density μ and a backlight, so a Cycles render shows the Beer–Lambert prediction.'}
+                  (result.shape === 'sphere'
+                    ? ' The lamp scene glows from a light sphere just inside the wall, standing in for light scattered in the plastic, and uses a Volume Absorption material with density μ, so a Cycles render shows the Beer–Lambert prediction.'
+                    : ' The lithophane scene uses a Volume Absorption material with density μ and a backlight, so a Cycles render shows the Beer–Lambert prediction.')}
               </p>
               {blender?.launch_available ? (
                 <button className="outlined-button" disabled={stale} onClick={openBlender}>
