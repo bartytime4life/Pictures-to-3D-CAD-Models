@@ -541,3 +541,60 @@ def test_cycles_render_agrees_with_beer_lambert(tmp_path):
     predicted = np.exp(-config["mu_per_mm"] * thickness[row, col])
     assert np.corrcoef(light[inside], predicted[inside])[0, 1] > 0.98
     assert np.median(light[inside] / predicted[inside]) == pytest.approx(1, abs=0.03)
+
+
+# ------------------------------------------------------------- moon samples
+
+
+def load_generator():
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "generate_relief_samples", ROOT / "scripts" / "generate_relief_samples.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_sample_generator_reproduces_both_committed_samples(tmp_path):
+    load_generator().main(tmp_path)
+    for name in ("relief-sample.png", "relief-sample-depth.png"):
+        committed = cv2.imread(str(ROOT / "frontend" / "public" / name), cv2.IMREAD_UNCHANGED)
+        regenerated = cv2.imread(str(tmp_path / name), cv2.IMREAD_UNCHANGED)
+        assert committed.dtype == regenerated.dtype and np.array_equal(committed, regenerated), name
+
+
+def test_moon_depth_sample_builds_a_true_hemisphere(tmp_path):
+    generator = load_generator()
+    data = (ROOT / "frontend" / "public" / "relief-sample-depth.png").read_bytes()
+    width = 100.0
+    radius = generator.RADIUS / generator.WIDTH * width  # 30 mm
+    span = generator.DEPTH_FULL_SCALE * radius  # the studio button's setting: 33 mm
+    result, job = build(
+        tmp_path,
+        data,
+        source="depth",
+        width_mm=width,
+        min_mm=1.6,
+        max_mm=1.6 + span,
+        auto_levels=False,
+        denoise="off",
+    )
+    assert result["stats"]["source"]["samples"] == "16-bit grayscale"
+    assert result["stats"]["mesh"]["closed_and_oriented"]
+    levels = cv2.imread(str(job / "heightmap.png"), cv2.IMREAD_UNCHANGED) / 65535
+    height = levels * span  # above the 1.6 mm base
+    grid = result["stats"]["grid"]
+    rows, cols = height.shape
+    y, x = np.mgrid[0:rows, 0:cols]
+    cx = generator.CENTRE_X / generator.WIDTH * (cols - 1)
+    cy = generator.CENTRE_Y / generator.HEIGHT * (rows - 1)
+    r = np.hypot((x - cx) * grid["pitch_x_mm"], (y - cy) * grid["pitch_y_mm"])
+    # Medians over thin rings ignore the craters; a sphere has z = sqrt(R^2 - r^2).
+    for ring in (0.0, 10.0, 20.0, 25.0, 28.0):
+        band = np.abs(r - ring) < (1.0 if ring else 1.5)
+        assert np.median(height[band]) == pytest.approx(math.sqrt(radius**2 - ring**2), abs=0.6), (
+            ring
+        )
+    assert np.median(height[r > radius + 1.5]) == pytest.approx(0, abs=1e-6)

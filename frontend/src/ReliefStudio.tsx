@@ -41,7 +41,6 @@ const PHOTO_TYPES = [
   'image/avif',
 ];
 const PHOTO_NAME = /\.(heic|heif|avif)$/i;
-const SAMPLE = '/relief-sample.png';
 
 type Draft = {
   name: string;
@@ -81,6 +80,33 @@ const initialDraft: Draft = {
   autoLevels: true,
   material: 'pla',
   color: '#e8e4da',
+};
+
+type SampleKind = 'photo' | 'depth';
+
+// The depth sample's white level is 1.1 sphere radii and its sphere spans 30% of the
+// image width (scripts/generate_relief_samples.py). A 100 mm wide relief therefore has
+// a 30 mm sphere radius, and a span of 1.1 x 30 = 33 mm makes the dome a true hemisphere.
+const MOON_DEPTH_SPAN_PER_WIDTH = 1.1 * (270 / 900);
+const SAMPLES: Record<SampleKind, { url: string; file: string; draft: Partial<Draft> }> = {
+  photo: { url: '/relief-sample.png', file: 'moon.png', draft: { name: 'Moon relief' } },
+  depth: {
+    url: '/relief-sample-depth.png',
+    file: 'moon-depth.png',
+    draft: {
+      name: 'Moon dome',
+      mode: 'relief',
+      source: 'depth',
+      width: '100',
+      min: '1.6',
+      max: String(Math.round((1.6 + 100 * MOON_DEPTH_SPAN_PER_WIDTH) * 100) / 100),
+      frame: '0',
+      invert: false,
+      gamma: '1',
+      autoLevels: false,
+      denoise: 'off',
+    },
+  },
 };
 
 function number(value: string, low: number, high: number) {
@@ -280,7 +306,7 @@ export default function ReliefStudio() {
     }
   }
 
-  function choose(next: File, name?: string) {
+  function choose(next: File, overrides?: Partial<Draft>) {
     if (!PHOTO_TYPES.includes(next.type) && !PHOTO_NAME.test(next.name)) {
       setError('Choose a PNG, JPEG, WebP, HEIC or AVIF image.');
       return;
@@ -292,18 +318,19 @@ export default function ReliefStudio() {
     setFile(next);
     setSourceUrl(URL.createObjectURL(next));
     setView('photo');
-    const nextDraft = name ? { ...draft, name } : draft;
-    if (name) setDraft(nextDraft);
+    const nextDraft = overrides ? { ...draft, ...overrides } : draft;
+    if (overrides) setDraft(nextDraft);
     void build(next, nextDraft);
   }
 
-  async function loadSample() {
+  async function loadSample(kind: SampleKind) {
+    const sample = SAMPLES[kind];
     setBusy('Loading the sample…');
     try {
-      const response = await fetch(SAMPLE);
+      const response = await fetch(sample.url);
       if (!response.ok) throw new Error('The sample image could not be loaded.');
       const blob = await response.blob();
-      choose(new File([blob], 'moon.png', { type: 'image/png' }), 'Moon relief');
+      choose(new File([blob], sample.file, { type: 'image/png' }), sample.draft);
     } catch (caught) {
       setBusy('');
       setError(caught instanceof Error ? caught.message : String(caught));
@@ -396,7 +423,7 @@ export default function ReliefStudio() {
     event.preventDefault();
     setDragging(false);
     const dropped = event.dataTransfer.files[0];
-    if (dropped) choose(dropped, dropped.name.replace(/\.[^.]+$/, ''));
+    if (dropped) choose(dropped, { name: dropped.name.replace(/\.[^.]+$/, '') });
   }
 
   const stats = result?.stats;
@@ -529,7 +556,7 @@ export default function ReliefStudio() {
                   aria-label="Choose an image"
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     const chosen = e.target.files?.[0];
-                    if (chosen) choose(chosen, chosen.name.replace(/\.[^.]+$/, ''));
+                    if (chosen) choose(chosen, { name: chosen.name.replace(/\.[^.]+$/, '') });
                     e.target.value = '';
                   }}
                 />
@@ -565,8 +592,19 @@ export default function ReliefStudio() {
                       <UploadSimple size={20} />
                       Choose image
                     </button>
-                    <button className="outlined-button" disabled={!!busy} onClick={loadSample}>
+                    <button
+                      className="outlined-button"
+                      disabled={!!busy}
+                      onClick={() => void loadSample('photo')}
+                    >
                       Try the moon sample
+                    </button>
+                    <button
+                      className="outlined-button"
+                      disabled={!!busy}
+                      onClick={() => void loadSample('depth')}
+                    >
+                      Try the moon depth map
                     </button>
                   </div>
                 </div>
