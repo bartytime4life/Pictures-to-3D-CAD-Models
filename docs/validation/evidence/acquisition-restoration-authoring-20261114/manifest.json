@@ -1,0 +1,96 @@
+{
+  "format": "acquisition-restoration-authoring-inventory-v1",
+  "recorded_at": "2026-11-14T01:46:39.558182+00:00",
+  "scope": "Read-only byte inventory of uncommitted, unexecuted research drafts. Not a source freeze, admission, test result, experiment, or publication of executable code.",
+  "research_committed_head": "d986f1f2db12791b96aad21dcc4f1e7977029c40",
+  "research_committed_tree": "83e1635eb176c0776ec62ee6f442abb85b2e4ed7",
+  "previous_governing_input_count": 116,
+  "previous_freeze_sha256": "460ccf2bf8b3bf82ada0f56e5e4de50d5e20f12f3c378dcb59e33173bf7f550c",
+  "previous_closure_sha256": "f52f39e6fdc96092a1197a36e9ad0c2fbb8df60e0f685714eff84c68d3b2ace5",
+  "previous_inputs_verified_unchanged": true,
+  "draft_count": 10,
+  "prospective_union_identity_count": 126,
+  "combined_freeze_completed": false,
+  "independent_static_review_completed": false,
+  "new_subject_execution_reported": false,
+  "drafts": {
+    "backend/finite_acquisition_restoration_rational.py": {
+      "sha256": "fa22ae47510869ad348f27fc6e9d7d74261ca1957367162e322c8215ecacdc75",
+      "bytes": 20976,
+      "executable": false,
+      "git_state": "untracked"
+    },
+    "backend/finite_acquisition_restoration_inward.py": {
+      "sha256": "e9052f475b13908f7ec9537dd0da22a9c87e82b1572e762b0b25588b3e8620e7",
+      "bytes": 20680,
+      "executable": false,
+      "git_state": "untracked"
+    },
+    "backend/finite_acquisition_restoration_correction.py": {
+      "sha256": "c0f597b68d35f696af353ee822011e056b8f203cf2f252b8536eecaec3e68635",
+      "bytes": 16874,
+      "executable": false,
+      "git_state": "untracked"
+    },
+    "backend/finite_acquisition_restoration.py": {
+      "sha256": "23687af029fb16d66ccb2807922036eca7edc334296507a6be55b6ecb319db5b",
+      "bytes": 57801,
+      "executable": false,
+      "git_state": "untracked"
+    },
+    "tests/test_finite_acquisition_restoration_math.py": {
+      "sha256": "9e01b3d5ac056e6f865cf5f9f3d8ae8b6d37482d305c2b9f2300622dd339dae8",
+      "bytes": 19011,
+      "executable": false,
+      "git_state": "untracked"
+    },
+    "tests/test_finite_acquisition_restoration.py": {
+      "sha256": "ac4335481c88ddee2741badc5e1c8a7cdcad2c2a4ba18196e98d9197ad86ee48",
+      "bytes": 30323,
+      "executable": false,
+      "git_state": "untracked"
+    },
+    "tests/test_finite_acquisition_restoration_protocol.py": {
+      "sha256": "92f482dd538c0877932a7fc91eff547957295dcfe4db362077be3e4f5c480321",
+      "bytes": 13945,
+      "executable": false,
+      "git_state": "untracked"
+    },
+    "studies/verification/finite-acquisition-recovery-restoration-v1.py": {
+      "sha256": "695a241dfe2ddcbddb2083f5ed981c0ae9ba8946fea1cc61d92181534ea29ee7",
+      "bytes": 34772,
+      "executable": true,
+      "git_state": "untracked"
+    },
+    "studies/finite-acquisition-recovery-restoration-v1.json": {
+      "sha256": "e9cba4f04e709b1975f3142f01da5d81f0d93283b8421035734951297d13e7c4",
+      "bytes": 34615,
+      "executable": false,
+      "git_state": "untracked"
+    },
+    "docs/finite-acquisition-restoration.md": {
+      "sha256": "dbfd03815bd9cb5e729b284b1af6d04ca616f5684e280662c322d00eaff4b102",
+      "bytes": 10611,
+      "executable": false,
+      "git_state": "untracked"
+    }
+  },
+  "publication_contains_draft_source": false,
+  "prior_results_unchanged": {
+    "single_saved_context_training_cost": [
+      0.302031169350812,
+      0.0
+    ],
+    "full_original_cases": 24,
+    "full_original_matched_passes": 11,
+    "full_original_matched_total": 12,
+    "full_original_protocol_exit": 1
+  },
+  "validation_required": [
+    "independent review of exact proposed source",
+    "commit and combined source freeze",
+    "first selected control suite and retained terminal result",
+    "only after controls pass: first unchanged 24-case study",
+    "independent saved-result review and separate qualification"
+  ]
+}

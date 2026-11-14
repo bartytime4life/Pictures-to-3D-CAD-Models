@@ -63,8 +63,14 @@ root without rebuilding or rewriting its verification record:
 python3 -m unittest discover -s reference-library/tests/python -p test_docs.py
 ```
 
-These tests check documented counts, local links and worked examples using the
-standard library. They do not exercise the workbench, browser or native CAD tools.
+These 19 tests check documented counts, worked examples and relative files
+in the nine Markdown files listed by `MARKDOWN` in
+`reference-library/tests/python/test_docs.py`. Their link checks skip heading
+fragments. They do not cover the full repository documentation inventory,
+workbench, browser or native CAD tools. Full-inventory Markdown parsing,
+heading/HTML fragments, fences and table checks are a separate documentation
+audit. The library's `make links` checks external catalog URLs, not this
+repository's complete Markdown navigation.
 A handbook text change also needs its generated HTML and PDF rebuilt; follow the
 [library generation map](../reference-library/BUILD.md#what-is-generated-from-what).
 
@@ -73,7 +79,7 @@ the declared base before and after verification. Preserve accurate historical
 reports. Keep generated library outputs unchanged unless their source changed;
 then regenerate them and list those outputs explicitly in the review. Library source edits still follow its
 generation rules; a workbench-only navigation change needs no library rebuild.
-The [current documentation review](validation/documentation-defect-corrector.md)
+The [current documentation review](validation/documentation-restoration-draft.md)
 separates this documentation-only main update from the
 [local acquisition-recovery snapshot](finite-acquisition-recovery.md).
 The [earlier main documentation review](validation/documentation-main109-state.md)

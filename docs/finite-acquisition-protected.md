@@ -1,5 +1,11 @@
 # Protected source-bin proposals
 
+A separate [restoration controller draft](finite-acquisition-restoration.md)
+is now authored in local research. It has not been committed, frozen or
+executed. Its proposed live accounting differs from the completed standalone
+probe; the earlier result does not validate that policy. There is no new
+software-test result, recovery score or available main command.
+
 The subsequent [observed-defect correction](finite-acquisition-defect-corrector.md)
 uses one fixed equality-restoration step and one nearest physical tuple. Its
 first actual pair reduces training cost **0.302031169350812 to 0.0** on the
@@ -33,7 +39,7 @@ exactly reproduces the baseline but raises actual training cost from
 0.302031169350812 to 0.40923713513984694, so its predetermined candidate is
 rejected. Target source cell 62 reaches code 92; collateral cell 33 changes
 106 to 105. [Complete negative result](validation/finite-acquisition-inward-literal.md).
-Full recovery remains 11/12; fitter integration is still absent.
+Full recovery remains 11/12; acquisition-aware fitter integration is absent from main.
 
 It keeps the earlier full-protocol failures:
 4/12 original matched passes, 9/12 after the predictor, and 11/12 after both the

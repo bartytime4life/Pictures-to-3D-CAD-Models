@@ -36,7 +36,7 @@ the research candidate, not main or this library. The
 [original audit record](../docs/validation/finite-acquisition-recovery.md)
 retains 14 unresolved comparisons where pre-cast area differences cannot be
 reconstructed from rounded capture arrays. The
-[current documentation review](../docs/validation/documentation-defect-corrector.md)
+[current documentation review](../docs/validation/documentation-restoration-draft.md)
 connects the later results and both first projection-control outcomes. This
 documentation does not add a fitter to main, the workbench or the Photos tab.
 
@@ -75,6 +75,11 @@ first actual pair reduces training cost **0.302031169350812 to 0.0** on the
 (93 to 92), with no collateral code change. [Complete paired result](../docs/validation/finite-acquisition-defect-corrector.md).
 This is a local training result; full recovery has not been rerun, and the
 original failed 11/12 protocol and main runtime remain unchanged.
+
+A [local restoration controller draft](../docs/finite-acquisition-restoration.md)
+is authored and unrun. Its ten untracked files and proposed 126-path
+inventory add no library feature, new test result or refreshed release
+verification. The original failed full-recovery result remains 11/12.
 
 
 A practical, source-backed library for turning photographs into printable CAD: recover shape, establish dimensions, rebuild editable geometry, and check the part you print. **Revision 7, November 9, 2026.**

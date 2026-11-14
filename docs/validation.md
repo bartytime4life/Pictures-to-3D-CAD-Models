@@ -5,9 +5,20 @@ record below to assess its evidence. This page separates local checks, hosted
 CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
+## Documentation of an unrun restoration candidate — November 14, 2026 UTC
+
+The [current documentation review](validation/documentation-restoration-draft.md)
+adds the [prospective live restoration method](finite-acquisition-restoration.md).
+All ten new research files are authored and untracked. Their 126-path source
+inventory is prospective; there is no completed freeze or new scientific
+execution. Static checks do not qualify recovery, the proposed live budget
+policy or original search completion. The latest completed full protocol
+remains **11/12 matched passes, exit 1**; the separately qualified single-case
+training improvement below remains unchanged.
+
 ## One observed-defect correction: zero training cost — November 14, 2026
 
-The [current documentation review](validation/documentation-defect-corrector.md)
+The [preceding documentation review](validation/documentation-defect-corrector.md)
 starts from main `9d15a1e`, after PR #121 merged. Separate research `d986f1f`
 freezes 116 governing inputs before the first **220 selected tests pass**.
 The first actual pair reproduces the accepted incumbent exactly, then reduces

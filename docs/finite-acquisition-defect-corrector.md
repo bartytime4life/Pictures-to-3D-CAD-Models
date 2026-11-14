@@ -28,6 +28,11 @@ has lower slack `0.00022125244140625`, below `2^-12`, with its code preserved.
 This diagnostic illustrates why a proposed storage allowance is separate
 from an observed nonlinear result or a uniform remainder guarantee.
 
+The next [live-controller draft](finite-acquisition-restoration.md) is
+authored but uncommitted and unrun. It proposes using fresh fit context and
+a different live charging policy. This saved single-context result does not
+validate that integration or add a full-recovery score.
+
 ## Keep the accepted and rejected points distinct
 
 Let `p0` be the saved accepted incumbent, `p1` the rejected literal candidate,

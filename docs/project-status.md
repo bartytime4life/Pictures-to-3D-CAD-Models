@@ -91,7 +91,7 @@ this refresh have separate status.
 Merge, hosted checks, installed runtime, real-camera
 accuracy and physical acceptance remain separate.
 
-The [documentation review](validation/documentation-defect-corrector.md) audits this
+The [documentation review](validation/documentation-restoration-draft.md) audits this
 main-based source. Use [available tools](#available-here) and [remaining integration work](#remaining-integration-work)
 for current capabilities. Earlier snapshots below are historical records; their open
 PR states and absent-module statements describe their own source and time.
@@ -192,10 +192,17 @@ Whole charged work is 2 / 338 / 1,942,766, including mathematical work and
 the pair, giving aggregate 994 / 135,707 / 56,473,790 under unchanged caps.
 See [the full first result and limits](validation/finite-acquisition-defect-corrector.md).
 
-This local correction is implemented and tested in research. Fitter integration,
-reserved checks and the complete original recovery protocol have not been
-rerun for it. Zero quantized training residual does not identify unique or
-true geometry. Candidate runtime,
+This standalone local correction is implemented and tested in research.
+A new [live restoration controller](finite-acquisition-restoration.md) is
+authored as ten untracked research files at the same committed HEAD
+`d986f1f`. Its proposed union contains the unchanged 116 preceding inputs
+and ten new identities, **126 paths, not a completed freeze**. Independent
+review, commit and combined hashing remain pending. Only static formatting,
+lint and compilation have been reported for the draft; no new subject import,
+collection, test, solve, point or model call has run. The new per-operation
+live budget policy is unvalidated. Reserved scoring and the complete original
+24-case recovery protocol have not been rerun. Zero quantized training residual
+does not identify unique or true geometry. Candidate runtime,
 tests, runners, original raw recovery artifacts, preceding full diagnostic
 arrays and complete local ZIPs remain outside this documentation publication.
 

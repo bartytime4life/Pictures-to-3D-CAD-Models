@@ -52,7 +52,7 @@ exactly reproduces the baseline but raises actual training cost from
 0.302031169350812 to 0.40923713513984694, so its predetermined candidate is
 rejected. Target source cell 62 reaches code 92; collateral cell 33 changes
 106 to 105. [Complete negative result](validation/finite-acquisition-inward-literal.md).
-Full recovery remains 11/12; fitter integration is still absent.
+Full recovery remains 11/12; acquisition-aware fitter integration is absent from main.
 
 The subsequent [observed-defect correction](finite-acquisition-defect-corrector.md)
 uses one fixed equality-restoration step and one nearest physical tuple. Its
@@ -61,6 +61,12 @@ first actual pair reduces training cost **0.302031169350812 to 0.0** on the
 (93 to 92), with no collateral code change. [Complete paired result](validation/finite-acquisition-defect-corrector.md).
 This is a local training result; full recovery has not been rerun, and the
 original failed 11/12 protocol and main runtime remain unchanged.
+
+A separate [restoration controller draft](finite-acquisition-restoration.md)
+is now authored in local research. It has not been committed, frozen or
+executed. Its proposed live accounting differs from the completed standalone
+probe; the earlier result does not validate that policy. There is no new
+software-test result, recovery score or available main command.
 
 These separate local studies add no main runtime or workbench integration.
 

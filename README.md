@@ -135,7 +135,7 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 For the reviewed source revision and available research APIs, read
 [source scope and status](docs/project-status.md) and the
-[current documentation review](docs/validation/documentation-defect-corrector.md).
+[current documentation review](docs/validation/documentation-restoration-draft.md).
 Main includes the source-cell mean, five unrounded area sensitivities and
 separate signed linear propagation as developer APIs. Five-parameter recovery
 with unknown brightness is absent from this main-based runtime. A
@@ -167,8 +167,14 @@ A subsequent [observed-defect correction](docs/finite-acquisition-defect-correct
 reduces actual training cost to **0.0** on 135 supplied synthetic PNG samples,
 changing only the intended source code. It passes 220 selected software
 controls and a qualified paired comparison. This does not establish unique
-geometry, reserved-sample accuracy or a new full-recovery result. The
-[earlier documentation review](docs/validation/documentation-mean-state.md),
+geometry, reserved-sample accuracy or a new full-recovery result.
+
+A [local restoration controller draft](docs/finite-acquisition-restoration.md)
+now proposes using that construction during a fresh fit. It is authored but
+uncommitted and unrun, with no new test or recovery result and no workbench
+control.
+
+The [earlier documentation review](docs/validation/documentation-mean-state.md),
 [acquisition-evidence review](docs/validation/documentation-acquisition-state.md)
 and [PR #95 review](docs/validation/documentation-pr95-state.md) retain their
 original workbench and companion-library scope. The

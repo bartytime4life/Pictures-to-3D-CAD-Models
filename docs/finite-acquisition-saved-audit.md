@@ -1,5 +1,10 @@
 # Saved recovery archives and completed consistency audits
 
+The [restoration authoring inventory](validation/evidence/acquisition-restoration-authoring-20261114/manifest.json)
+records ten draft identities only. It is not a combined source freeze,
+executed control suite, saved scientific result or independent model audit.
+See the [draft's remaining evidence gates](finite-acquisition-restoration.md#required-validation).
+
 The four separately frozen recovery studies retain **4/12, 9/12, 11/12 and
 11/12 matched passes**. Those four complete 24-case protocols exit 1. The later
 [active-face study also exits 1 at 11/12](validation/finite-acquisition-physical-rounding.md);

@@ -7,7 +7,7 @@ the existing dated receipt. The receipt, check date and release status were not
 regenerated for this correction.
 
 Repository documentation update, November 13: the
-[current review](../docs/validation/documentation-defect-corrector.md) links the
+[current review](../docs/validation/documentation-restoration-draft.md) links the
 [local acquisition-recovery snapshot](../docs/finite-acquisition-recovery.md).
 That separate synthetic research retains 4/12 original matched target passes
 and 9/12 continuation passes; both earlier full protocols exited 1. The 459 focused tests
@@ -53,6 +53,11 @@ first actual pair reduces training cost **0.302031169350812 to 0.0** on the
 (93 to 92), with no collateral code change. [Complete paired result](../docs/validation/finite-acquisition-defect-corrector.md).
 This is a local training result; full recovery has not been rerun, and the
 original failed 11/12 protocol and main runtime remain unchanged.
+
+A [local restoration controller draft](../docs/finite-acquisition-restoration.md)
+is authored and unrun. Its ten untracked files and proposed 126-path
+inventory add no library feature, new test result or refreshed release
+verification. The original failed full-recovery result remains 11/12.
 
 
 ## What was checked automatically

@@ -1,5 +1,17 @@
 # Workbench change log
 
+## Unrun restoration candidate documented — November 14, 2026 UTC
+
+- Add a [draft-method guide](finite-acquisition-restoration.md) for the locally
+  authored live controller, exact-arithmetic limits, shared budget proposal
+  and required first-execution gates.
+- Distinguish ten untracked drafts and the prospective 126-path inventory from
+  the completed 116-input single-context probe. No new recovery score, tested
+  controller, main API, UI or release is claimed.
+- Refresh current navigation, source status and research guidance. Clarify the
+  limited scope of the 19 library documentation tests. Historical evidence,
+  source, generated reader/PDF and release records are preserved.
+
 ## Observed-defect correction documented — November 14, 2026
 
 - Record research `d986f1f`, its 116-input freeze, 220 passing selected controls

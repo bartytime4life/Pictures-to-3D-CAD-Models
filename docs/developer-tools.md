@@ -159,6 +159,14 @@ synthetic PNG context. Its [recorded commands](validation/finite-acquisition-def
 also require the exact frozen research checkout. Those runtime, test and
 runner files remain absent here; they are not main-branch commands.
 
+The proposed `fit_acquisition_segment_restoration(...)` entry point exists
+only in an [uncommitted local draft](finite-acquisition-restoration.md).
+Its four backend modules, three control files, adapter, admission and guide
+are authored but unrun. The prospective inventory of 126 paths is not a
+completed source freeze. This documentation publishes no executable draft
+or runnable main command; existing probe results do not validate its changed
+live accounting.
+
 ## Output and side effects
 
 Use a new scratch destination for generated benchmark/example reports. The
