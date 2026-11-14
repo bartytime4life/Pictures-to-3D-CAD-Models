@@ -1,5 +1,31 @@
 # Workbench change log
 
+## The second edge pass starts near each edge — November 13, 2026
+
+- The second edge pass is anchored where it starts, and it started from the
+  classified mask, a third of σ into the dark side: exactly blurred plates read
+  their sides up to 0.049 px into the part. A provisional search now places each
+  point near its edge and the final one starts there, wherever its profile sees that
+  edge alone; the plates read within 0.0023 px. The shadow model takes its footprint
+  exactly from those rings and fits the paper from 2 σ of them: on exact scenes under
+  a 4 px blur its worst errors beside a shadow fell from 0.037–0.113 to
+  0.024–0.040 px. Summed over the documented tables the errors fall from 1851 to
+  1269 µm. Contact shadows read worse (seeds 107 → 188 µm), as do the motion-streak
+  and defocus plates (16–28 %): the start bias had offset both. The trace now says
+  when a shadow lies against every edge, and three regression limits were re-set
+  ([reference-sheet tracing](reference-sheet.md), §3).
+
+## Snapping's dominant axis — November 13, 2026
+
+- Snapping made lines within 0.6° of a dominant axis exact, and turned the drawing
+  to it. That axis was the 4θ mean of every line, which is undefined where their
+  directions cancel: an equilateral triangle's or a regular hexagon's sides, or a
+  rectangle beside one long oblique edge, whose sides then did not snap. On a
+  rendered triangle under a 1 px blur one side was turned 0.60°, and its corners
+  read as an arc and a sharp corner bounded at R6.8 mm. The axis is now the direction
+  that gathers the most straight edge within 0.6°, and a line snaps only with
+  another in its family ([reference-sheet tracing](reference-sheet.md), §7).
+
 ## Same-image diagnostic executed — November 14, 2026 UTC
 
 - Record the 144-input freeze, preserved first control failures and separately

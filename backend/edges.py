@@ -13,6 +13,7 @@ in linear light (backend.tone), where blur and partial coverage mix tones linear
 
 from __future__ import annotations
 
+import itertools
 import math
 
 import cv2
@@ -158,6 +159,7 @@ def ring_normals(ring, sigma=2.0):
 
 
 DIRECTIONAL_RATIO = 1.15  # principal blur spreads further apart are traced by direction
+LIGHT_ROUNDS = 2  # shadow fits, each with the footprint of the rings the last one placed
 
 
 def _paper_light_variation(light, points, normals, t, step, paper_side, spread):
@@ -527,6 +529,114 @@ def _measure_blur(g, outline, outline_normals, sampled, light=None, mask=None, b
     return sigma, covariance, by_direction, model_covariance, raw
 
 
+def _accumulate_edge(acc, x0, y0, x1, y1):
+    """Add one directed edge's signed area to a row accumulator (a polygon rasteriser's
+    accumulation buffer): after a cumulative sum along each row, every cell holds the
+    exact signed area of its pixel square [i, i + 1] x [j, j + 1] inside the polygon.
+    The same method as the test renderer's exact coverage (tests/synthetic.py)."""
+    if y0 == y1:
+        return
+    sign = 1.0
+    if y0 > y1:
+        x0, y0, x1, y1, sign = x1, y1, x0, y0, -1.0
+    dxdy = (x1 - x0) / (y1 - y0)
+    rows = acc.shape[0]
+    first, last = max(0, math.floor(y0)), min(rows, math.ceil(y1))
+    x = x0 + dxdy * (max(y0, first) - y0)
+    for y in range(first, last):
+        dy = min(y + 1.0, y1) - max(float(y), y0)
+        x_next = x + dxdy * dy
+        d = dy * sign
+        lo, hi = (x, x_next) if x < x_next else (x_next, x)
+        lo_floor = math.floor(lo)
+        i0, i1 = lo_floor, math.ceil(hi)
+        if i1 <= i0 + 1:
+            # Within one cell: the area right of the edge's mean position stays in it.
+            mid = 0.5 * (x + x_next) - lo_floor
+            acc[y, i0] += d * (1.0 - mid)
+            acc[y, i0 + 1] += d * mid
+        else:
+            inv = 1.0 / (hi - lo)
+            f0 = lo - lo_floor
+            a0 = 0.5 * inv * (1.0 - f0) ** 2
+            f1 = hi - math.ceil(hi) + 1.0
+            am = 0.5 * inv * f1 * f1
+            acc[y, i0] += d * a0
+            if i1 == i0 + 2:
+                acc[y, i0 + 1] += d * (1.0 - a0 - am)
+            else:
+                a1 = inv * (1.5 - f0)
+                acc[y, i0 + 1] += d * (a1 - a0)
+                acc[y, i0 + 2 : i1 - 1] += d * inv
+                a2 = a1 + (i1 - i0 - 3) * inv
+                acc[y, i1 - 1] += d * (1.0 - a2 - am)
+            acc[y, i1] += d * am
+        x = x_next
+
+
+def _footprint(rings, shape):
+    """The part's exact coverage of each pixel, from traced rings [(is_outer, points)]:
+    each ring's edges add their signed area to a row accumulator, outer rings turning
+    one way and holes the other (_accumulate_edge). Pixel i spans [i, i + 1], as the
+    rings' coordinates do. Filling a supersampled grid instead (cv2.fillPoly, 4 x)
+    counted boundary sub-pixels as inside and put every edge 0.15 px outward, and the
+    fitted shadow read the misplaced step tail as a 1.4-1.9 % shadow."""
+    H, W = shape
+    acc = np.zeros((H, W + 2), np.float64)
+    for is_outer, points in rings:
+        if len(points) < 3:
+            continue
+        p = np.asarray(points, np.float64)
+        x, y = p[:, 0], p[:, 1]
+        area = 0.5 * float(np.sum(x * np.roll(y, -1) - np.roll(x, -1) * y))
+        if (area > 0) != is_outer:
+            p = p[::-1]
+        closed = np.vstack([p, p[:1]])
+        for (ax, ay), (bx, by) in itertools.pairwise(closed):
+            _accumulate_edge(acc, min(max(ax, 0.0), W), ay, min(max(bx, 0.0), W), by)
+    # Outer rings and holes turn opposite ways, so their signed areas cancel in holes.
+    return np.clip(np.abs(np.cumsum(acc, axis=1)[:, :W]), 0.0, 1.0).astype(np.float32)
+
+
+def _alone(mask, points, normals, reach):
+    """True where the classified mask changes only once along each normal within
+    +-reach (px, per point): the edge is the only one a window that long sees."""
+    reach = np.broadcast_to(np.asarray(reach, float), (len(points),))
+    t = np.arange(-1.0, 1.0 + 1e-9, 1 / 32)[None, :] * reach[:, None]
+    xs = np.clip(np.rint(points[:, None, 0] + t * normals[:, None, 0] - 0.5).astype(int), 0, mask.shape[1] - 1)
+    ys = np.clip(np.rint(points[:, None, 1] + t * normals[:, None, 1] - 0.5).astype(int), 0, mask.shape[0] - 1)
+    inside = mask[ys, xs] > 0
+    return np.count_nonzero(inside[:, 1:] != inside[:, :-1], axis=1) <= 1
+
+
+EDGE_RISE_MM = 2.0  # how far beyond the fit's start the shadow's rise is read
+
+
+def _edge_rise(light, mask, points, normals, sigma, ppm):
+    """How much the fitted paper light still rises outward where the fit starts, round
+    the outline: (L(d + EDGE_RISE_MM) - L(d)) / L(d + EDGE_RISE_MM) at each point, d being
+    the fit's start (shadow.TRACED_FIT). Within d the shadow cannot be measured; a light
+    still rising at d is a shadow deepening towards the edge, and one that does so all
+    round is cast from every side, deepest at the edge. Returns its median, and per
+    eighth of the outward direction its median: the largest (edge_rise_top), and the
+    smallest over the largest (edge_rise_balance), near 1 for a rise all round and near
+    0 for one on some sides only."""
+    side = _paper_side_of(mask, points, normals, np.full(len(points), sigma))
+    out = normals * side[:, None]
+    d = shadow.TRACED_FIT[1] * sigma + 1.5
+    far = d + EDGE_RISE_MM * ppm
+    near_l = sample_bilinear(light.sharp, points[:, 0] + d * out[:, 0] - 0.5, points[:, 1] + d * out[:, 1] - 0.5)
+    far_l = sample_bilinear(light.sharp, points[:, 0] + far * out[:, 0] - 0.5, points[:, 1] + far * out[:, 1] - 0.5)
+    rise = (far_l - near_l) / np.maximum(far_l, 1e-9)
+    eighth = np.floor(np.arctan2(out[:, 1], out[:, 0]) / (np.pi / 4)).astype(int) % 8
+    medians = [float(np.median(rise[eighth == k])) for k in range(8) if np.count_nonzero(eighth == k) >= 5]
+    top = max(medians) if medians else 0.0
+    return {
+        "edge_rise": float(np.median(rise)), "edge_rise_top": top,
+        "edge_rise_balance": min(medians) / top if top > 0 else 0.0,
+    }
+
+
 def subpixel_rings(mask, g, ppm, shadow_free_blur=True):
     """Outer boundary and holes of the mask at the local half-level, sub-pixel.
 
@@ -539,6 +649,9 @@ def subpixel_rings(mask, g, ppm, shadow_free_blur=True):
     the ring over 20 points, so a soft shadow beside an edge does not push it outward;
     where a shadow model fitted to all the paper round the part is adequate
     (shadow.fit_paper_light), the paper's light follows that model's curvature too.
+    Pass 2 runs twice: a provisional search with the line alone, whose rings give the
+    shadow model its footprint, and the final one from those rings, since its windows
+    are anchored where it starts.
     """
     contours, hierarchy = cv2.findContours(mask, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
     hierarchy = hierarchy[0]
@@ -582,31 +695,77 @@ def subpixel_rings(mask, g, ppm, shadow_free_blur=True):
     # (_edge_widths) and the light fitted again with it. A shallower one is mostly the
     # classified mask's own offset from the edges, read as shadow (up to 2.3 % on exactly
     # blurred scenes), and taking it out read the blur up to 0.6 % narrow.
-    light = shadow.fit_paper_light(g, mask, ppm, sigma, model_covariance)
-    # `shadow_free_blur` False keeps the width with the shadow in: a part traced with a
-    # thickness, whose wall model and piecewise thickness map were validated with it
-    # (docs/reference-sheet.md, Limits).
-    if shadow_free_blur and light.info["used"] and light.info.get("depth", 0.0) >= shadow.NOTICEABLE_DEPTH and sigma > 0:
-        sigma, covariance, by_direction, model_covariance, _ = _measure_blur(
-            g, outer[::4], normals[::4], sampled, light, mask, raw
-        )
-        light = shadow.fit_paper_light(g, mask, ppm, sigma, model_covariance)
-    paper_light = light if light.info["used"] else None
-    rings = []
-    for is_outer, points, support, indices in first:
-        _, normals = ring_normals(points)
+    def spreads(normals):
         if covariance is not None:
-            spread = np.sqrt(np.einsum("ij,jk,ik->i", normals, covariance, normals))
-        elif by_direction is not None:
-            spread = _spread_by_direction(normals, by_direction)
-        else:
-            spread = np.full(len(points), sigma)
+            return np.sqrt(np.einsum("ij,jk,ik->i", normals, covariance, normals))
+        if by_direction is not None:
+            return _spread_by_direction(normals, by_direction)
+        return np.full(len(normals), sigma)
+
+    def second_pass(start, normals, light):
+        spread = spreads(normals)
         # Which side of each point the paper is on, from the classified mask 3 sigma out.
-        paper_side = _paper_side_of(mask, points, normals, spread)
-        moved, keep = half_level_search(
-            g, points, normals, half=max(4.0, 3.5 * float(spread.max())), sigma=spread, ring_smoothing=20.0,
-            paper_side=paper_side, paper_light=paper_light,
-        )
+        search = {
+            "half": max(4.0, 3.5 * float(spread.max())), "sigma": spread, "ring_smoothing": 20.0,
+            "paper_side": _paper_side_of(mask, start, normals, spread), "paper_light": light,
+        }
+        moved, keep = half_level_search(g, start, normals, **search)
+        return moved, keep, spread
+
+    # The second pass's windows, its step-tail removal and its median-level start are
+    # anchored where it starts, so its result depends on that start. Pass 1 starts from
+    # the classified mask, cut at the midpoint of saved values, a third of sigma into
+    # the dark side, and its 4 px windows recover that only in part: on exactly blurred
+    # plates the sides read 0.049 px into the material at a 3.85 px blur. A provisional
+    # second pass with the line alone therefore places every ring near its edge, and the
+    # final one starts there: 0.0015 px. The provisional rings also give the shadow model
+    # its footprint (_footprint, shadow.TRACED_FIT): from the mask's pixels its fitted
+    # kernel read the step's own tail as a 0.7 % shadow.
+    # Starting again converges only where the profile sees this edge alone. Across a
+    # thin hole or at a sharp corner it reaches another, whose step its paper line reads
+    # as a slope, and each start reads a different level: a circular-segment hole 10 px
+    # across moved 0.3 px into itself on one restart and 0.4 px on the next. There the
+    # final pass starts from pass 1, as it did before.
+    starts, alone = [], []
+    for _, points, _, _ in first:
+        _, across = ring_normals(points)
+        moved, keep, spread = second_pass(points, across, None)
+        # The profile reaches 5 sigma (sheet.half_level_search), and its paper line is
+        # fitted out there; another edge's step reaches 2.5 sigma towards it.
+        reach = max(4.0, 3.5 * float(spread.max()), 5 * float(spread.max())) + 2.5 * spread
+        lone = _alone(mask, points, across, reach)
+        alone.append(lone)
+        starts.append((np.where((keep & lone)[:, None], moved, points), across))
+    # Under a shadow the line puts the provisional rings outward, and so the footprint;
+    # the light is then fitted again from the rings it placed (LIGHT_ROUNDS).
+    for round_ in range(LIGHT_ROUNDS):
+        footprint = _footprint([(is_outer, start) for (is_outer, _, _, _), (start, _) in zip(first, starts)], mask.shape)
+        light = shadow.fit_paper_light(g, mask, ppm, sigma, model_covariance, footprint)
+        # `shadow_free_blur` False keeps the width with the shadow in: a part traced with a
+        # thickness, whose wall model and piecewise thickness map were validated with it
+        # (docs/reference-sheet.md, Limits).
+        if (
+            round_ == 0 and shadow_free_blur and light.info["used"]
+            and light.info.get("depth", 0.0) >= shadow.NOTICEABLE_DEPTH and sigma > 0
+        ):
+            sigma, covariance, by_direction, model_covariance, _ = _measure_blur(
+                g, outer[::4], normals[::4], sampled, light, mask, raw
+            )
+            light = shadow.fit_paper_light(g, mask, ppm, sigma, model_covariance, footprint)
+        paper_light = light if light.info["used"] else None
+        final = [second_pass(start, across, paper_light) for start, across in starts]
+        if paper_light is None:
+            break
+        if round_ + 1 < LIGHT_ROUNDS:
+            starts = [
+                (np.where((keep & lone)[:, None], moved, points), across)
+                for (_, points, _, _), (moved, keep, _), (_, across), lone in zip(first, final, starts, alone)
+            ]
+    if paper_light is not None:
+        o = next(i for i, ring in enumerate(first) if ring[0])
+        light.info.update(_edge_rise(paper_light, mask, final[o][0][final[o][1]], starts[o][1][final[o][1]], sigma, ppm))
+    rings = []
+    for (is_outer, _, support, indices), (moved, keep, spread) in zip(first, final):
         if keep.sum() < 8:
             if is_outer:
                 raise EdgeError("The part's outline is not clear enough to trace. Improve the contrast.")

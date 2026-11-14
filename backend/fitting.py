@@ -119,7 +119,7 @@ def _line(points, a, b):
     seg = span_points(points, a, b)
     c, d, rms = line_tls(seg)
     res = np.abs((seg - c) @ np.array([-d[1], d[0]]))
-    return Primitive("line", {"c": c, "d": d}, rms, float(res.max()), (a, b))
+    return Primitive("line", {"c": c, "d": d, "extent": float(np.ptp(seg @ d))}, rms, float(res.max()), (a, b))
 
 
 def fit_ring(points, tol, min_line, circle_rel=0.01, support_points=None, support_error=0.0):
@@ -872,6 +872,16 @@ def correct_blur(prims, sigma, *, blur_scales=None):
 def snap_axes(rings, angle_tol_deg=0.6):
     """Make lines within angle_tol of the dominant axis (or its perpendicular) exact.
 
+    The dominant axis is the direction, modulo a quarter turn, that gathers the most
+    straight edge (each line weighted by its extent, or equally without one) within
+    angle_tol: each line's own direction is tried, and the axis is the weighted
+    4-theta circular mean of the lines it gathers. Lines are snapped only when it
+    gathers two or more; a lone line has nothing to be made parallel to. The 4-theta
+    mean of every line, used before, is undefined where the directions cancel in it:
+    an equilateral triangle's sides, 60 degrees apart, sum to nothing there, and the
+    tracer's rounding then set an axis 0.47 degrees from one side, which was turned
+    onto it and its corners read sharp to 10 mm.
+
     Returns (notes, axis): axis is the dominant direction in radians within
     (-pi/4, pi/4], or None when there are no lines. Refit the snapped lines' offsets
     with refit_lines afterwards.
@@ -880,12 +890,25 @@ def snap_axes(rings, angle_tol_deg=0.6):
     if not lines:
         return [], None
     angles = np.array([math.atan2(p.data["d"][1], p.data["d"][0]) for p in lines])
-    axis = math.atan2(np.sin(4 * angles).sum(), np.cos(4 * angles).sum()) / 4
+    extents = [p.data.get("extent") for p in lines]
+    weights = np.array(extents, float) if all(e is not None for e in extents) else np.ones(len(lines))
+    tol = math.radians(angle_tol_deg)
+
+    def gathered(axis):
+        # Each line's angle from the axis, modulo a quarter turn, in [-pi/4, pi/4).
+        off = (angles - axis + math.pi / 4) % (math.pi / 2) - math.pi / 4
+        return np.abs(off) < tol
+
+    def mean_axis(near):
+        w = weights * near
+        return math.atan2(float(w @ np.sin(4 * angles)), float(w @ np.cos(4 * angles))) / 4
+
+    axis = max((mean_axis(gathered(a)) for a in angles), key=lambda axis: float(weights @ gathered(axis)))
+    near = gathered(axis)
     snapped = 0
-    for p in lines:
-        a = math.atan2(p.data["d"][1], p.data["d"][0])
+    for p, a, close in zip(lines, angles, near):
         target = axis + round((a - axis) / (math.pi / 2)) * math.pi / 2
-        if abs(math.degrees(a - target)) < angle_tol_deg:
+        if close and near.sum() >= 2:
             p.data["d"] = np.array([math.cos(target), math.sin(target)])
             p.data["snapped"] = True
             snapped += 1

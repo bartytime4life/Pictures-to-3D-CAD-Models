@@ -13,7 +13,8 @@ extrapolated inward misses the light's curvature there; K, fitted once to all th
 round the part, carries the shadow's shape to every edge.
 
 `fit_paper_light` fits P as a quadratic and K >= 0 on a grid of nodes (bilinear tents)
-to the photo's linear light on paper cells beyond 2.5 sigma from the classified part,
+to the photo's linear light on paper cells beyond 2 sigma from the part's traced
+edges (2.5 sigma from the classified part without them),
 with the photo's blur applied to the model. The step's own blurred tail on those cells
 is removed first. K's smoothness prior is chosen by how well a fit to the farther paper
 predicts the band nearest the edges, the band the model is used to reach, and the model
@@ -35,11 +36,27 @@ RADIUS_MM = 9.0  # kernel reach
 BAND_MM = 15.0  # paper used, out from the part
 NEAR_MM = 1.5  # width of the held-out band nearest the edges
 PRIORS = (0.01, 0.03, 0.1, 0.3, 1.0, 3.0)  # candidate smoothness weights
-RIDGE = 1e-3
 ADEQUATE_FRACTION = 0.02
 BORDER_MM = 3.0  # as edges.BORDER_MM: the sheet's margin, never paper data
 MIN_CELLS = 400
 NOTICEABLE_DEPTH = 0.03  # a fitted shadow this deep is reported and taken out of the blur
+# Where the paper's fit starts, in blur widths (plus 1.5 px) from the part: the first fit,
+# the final one once the step's own tail is subtracted, and the ridge on the kernel.
+# From the classified mask, which lies off the edges, the tail is placed only roughly;
+# from a footprint traced at the edges (edges._footprint) it is exact, and the fit can
+# start closer, where it sees more of the kernel. Closer still, the tail's share of the
+# contrast makes an error in the measured blur read as shadow: on an exactly rendered
+# shadow-free scene under a 4 px blur, the blur taken 2 % narrow moved the edges
+# 0.0107 px into the material with the fit from 1.5 sigma and 0.0042 px from 2 sigma.
+MASK_FIT = (3.5, 2.5, 1e-3)
+TRACED_FIT = (3.0, 2.0, 1e-4)
+# The fitted light's rise beyond the fit's start (edges._edge_rise) from which the trace
+# says the shadow lies against the edges all round: its smallest median over eighths of
+# the outline's direction against its largest, and that largest. On rendered photos
+# contact shadows read 0.69-0.85, shadows cast from one side or two 0.00-0.14, and a
+# 0.8 mm contact shadow under a 3 px blur rises 0.4 %: it lies within the start.
+CONTACT_BALANCE = 0.5
+CONTACT_RISE = 0.01
 
 
 @dataclass
@@ -52,12 +69,22 @@ class PaperLight:
     info: dict = field(default_factory=dict)
 
 
-def fit_paper_light(g, mask, ppm, sigma, covariance=None):
+def fit_paper_light(g, mask, ppm, sigma, covariance=None, footprint=None):
     """Fit the paper's light round the classified part (`mask`, rectified) in the
     linear-light image `g`. `sigma` is the edge blur in px, or `covariance` its 2 x 2
-    covariance (px^2) when it differs by direction. Returns a PaperLight, with
-    info["used"] False and no images when the model is not adequate or the paper is too
-    scarce to fit it; the caller then keeps the per-profile line."""
+    covariance (px^2) when it differs by direction. `footprint`, the part's coverage of
+    each pixel from its traced edges (edges._footprint), is the F of the model, sets the
+    paper cells' distances and gives the step's own tail exactly, computed at full
+    resolution; the fit then starts closer to the edges (TRACED_FIT). Without it the
+    classified mask stands in (MASK_FIT). Returns a PaperLight, with info["used"] False
+    and no images when the model is not adequate or the paper is too scarce to fit it;
+    the caller then keeps the per-profile line.
+
+    Paper at a distance u from the part receives the kernel only at offsets at least u
+    long, so the kernel within the fit's start radius never meets the data: the
+    smoothness prior and the ridge set it there. The ridge pulls it towards no shadow,
+    which reads the light beside a shaded edge too bright; the traced fit's smaller
+    ridge pulls less."""
     H, W = g.shape
     f = max(1, round(CELL_MM * ppm))
     h, w = H // f, W // f
@@ -66,10 +93,11 @@ def fit_paper_light(g, mask, ppm, sigma, covariance=None):
     if spread <= 0 or h < 8 or w < 8:
         return PaperLight(None, None, info)
     gw = g[: h * f, : w * f].reshape(h, f, w, f).mean((1, 3)).astype(np.float64)
-    material = (mask > 0).astype(np.float32)
+    material = (mask > 0).astype(np.float32) if footprint is None else np.asarray(footprint, np.float32)
     Fw = material[: h * f, : w * f].reshape(h, f, w, f).mean((1, 3)).astype(np.float64)
     # Distance (px) from each paper pixel to the part, and per cell its least.
-    dist = cv2.distanceTransform((mask == 0).astype(np.uint8), cv2.DIST_L2, 5)
+    paper_px = (mask == 0) if footprint is None else (material < 0.5)
+    dist = cv2.distanceTransform(paper_px.astype(np.uint8), cv2.DIST_L2, 5)
     border = int(BORDER_MM * ppm + 4 * spread) + 2
     dist[:border, :] = dist[-border:, :] = 0
     dist[:, :border] = dist[:, -border:] = 0
@@ -100,7 +128,7 @@ def fit_paper_light(g, mask, ppm, sigma, covariance=None):
     def solve(normal, rhs, prior):
         scale = np.trace(normal[6:, 6:]) / (n * n)
         matrix = normal.copy()
-        matrix[6:, 6:] += prior * scale * smooth / 20 + RIDGE * scale * np.eye(n * n)
+        matrix[6:, 6:] += prior * scale * smooth / 20 + ridge * scale * np.eye(n * n)
         free = np.ones(len(rhs), bool)
         theta = np.zeros(len(rhs))
         for _ in range(60):  # active set: kernel nodes held at zero where they would go negative
@@ -115,7 +143,7 @@ def fit_paper_light(g, mask, ppm, sigma, covariance=None):
 
     def fit(yy, xx, values, choose):
         A = design(yy, xx)
-        near = distw[yy, xx] < (2.5 * spread + 1.5) + NEAR_MM * ppm
+        near = distw[yy, xx] < (fit_from * spread + 1.5) + NEAR_MM * ppm
         far = ~near
         normal_far, rhs_far = A[far].T @ A[far], A[far].T @ values[far]
         normal = normal_far + A[near].T @ A[near]
@@ -142,7 +170,8 @@ def fit_paper_light(g, mask, ppm, sigma, covariance=None):
         paper = c[0] + c[1] * u_grid + c[2] * v_grid + c[3] * u_grid**2 + c[4] * u_grid * v_grid + c[5] * v_grid**2
         return paper, sharp, blurred
 
-    yy, xx = cells(3.5 * spread + 1.5)
+    first_from, fit_from, ridge = MASK_FIT if footprint is None else TRACED_FIT
+    yy, xx = cells(first_from * spread + 1.5)
     if len(yy) < MIN_CELLS:
         return PaperLight(None, None, info)
     theta, _, _, _ = fit(yy, xx, gw[yy, xx], choose=False)
@@ -151,8 +180,15 @@ def fit_paper_light(g, mask, ppm, sigma, covariance=None):
     paper, sharp, _ = images(theta)
     inside = Fw > 0.999
     part_level = float(np.median(gw[inside])) if inside.any() else 0.0
-    tail = (part_level - (paper - sharp)) * _blur(Fw, spread, covariance, f)
-    yy, xx = cells(2.5 * spread + 1.5)
+    if footprint is not None:
+        # At full resolution, then averaged over each cell: the step is far sharper than
+        # a cell, and blurring it on the cells misplaces its tail.
+        light_full = _upsample(paper - sharp, f, H, W).astype(np.float64)
+        full = _blur((part_level - light_full) * material, spread, covariance, 1)
+        tail = full[: h * f, : w * f].reshape(h, f, w, f).mean((1, 3))
+    else:
+        tail = (part_level - (paper - sharp)) * _blur(Fw, spread, covariance, f)
+    yy, xx = cells(fit_from * spread + 1.5)
     theta, prior, rms, errors = fit(yy, xx, gw[yy, xx] - tail[yy, xx], choose=True)
     paper, sharp, blurred = images(theta)
     paper_level = float(np.median(paper[Fw == 0])) if (Fw == 0).any() else 1.0

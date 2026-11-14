@@ -1051,6 +1051,36 @@ def test_dominant_axis_ignores_line_direction_and_quarter_turns():
         assert abs(axis - true_axis) < 1e-12
 
 
+def test_the_dominant_axis_is_the_direction_that_gathers_the_most_edge():
+    """The 4-theta mean of every line is undefined where their directions cancel in it.
+    An equilateral triangle's sides, 60 degrees apart, sum to nothing there: turning one
+    side 0.02 degrees moved that mean from -42.3 to -31.8 degrees, and with it the
+    drawing's rotation, and on a traced triangle it fell 0.47 degrees from one side,
+    which was then turned onto it. One long oblique edge beside a rectangle pulled the
+    mean 3.3 degrees off the rectangle, so none of its sides snapped. The axis is now the
+    direction, modulo a quarter turn, that gathers the most straight edge within the
+    snap tolerance, and a line is snapped only with another in its family."""
+
+    def lines(degrees, extents):
+        return [
+            fitting.Primitive("line", {"c": np.zeros(2), "d": np.array([math.cos(a), math.sin(a)]), "extent": e}, 0, 0)
+            for a, e in zip(np.radians(degrees), extents)
+        ]
+
+    rng = np.random.default_rng(3)
+    for _ in range(20):
+        noise = rng.normal(0, 0.05, 5)
+        triangle = lines(np.array([5.73, 125.73, 245.73]) + noise[:3], [380, 380, 380])
+        before = [p.data["d"].copy() for p in triangle]
+        notes, axis = fitting.snap_axes([triangle])
+        assert not notes and all(np.array_equal(p.data["d"], d) for p, d in zip(triangle, before))
+        assert abs(math.degrees(axis) - (5.73 + noise[0])) < 1e-9
+        mixed = lines(np.array([2.0, 92.0, 182.0, 272.0, 60.0]) + noise, [120, 70, 120, 70, 300])
+        notes, axis = fitting.snap_axes([mixed])
+        assert abs(math.degrees(axis) - 2.0) < 0.1
+        assert [bool(p.data.get("snapped")) for p in mixed] == [True, True, True, True, False]
+
+
 def outline_points(shape, turn_deg=0.0, step=0.2):
     """Noise-free points at most `step` apart along a shapely outline, after turning it."""
     import shapely

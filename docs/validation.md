@@ -414,6 +414,8 @@ It changes guides relative to that integrated baseline, not runtime behavior.
 | Directional covariance rank guard | Draft PR #78, source `185d682`: [633 local Python tests](validation/directional-blur-rank.md), build and 76 focused checks | Actual sampled Gaussian-step rank counterexample; no new whole-photo, browser or physical-accuracy claim |
 | Recorded directional-blur checks | Branch `claude/directional-blur`, on the slot end-cap commit and `main` at `485da7e` (after #47): **627 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#a-blur-that-differs-by-direction--november-12-2026) | Local result; synthetic photos including the directional-spread qualification's kinds of case, and exact blurred holes; supersedes that record's "no production correction" |
 | Contact-shadow observability study | Branch `claude/contact-shadow-limits` on `main` at `70055dc`, documentation only, as recorded [below](#contact-shadows-beside-an-edge--november-13-2026) | Exactly rendered scenes; an unobservable kernel radius, a closer-fit study and a profile-shape fit, none adopted; capture guidance |
+| Recorded second-pass start checks | Branch `claude/second-pass-start`, on `main` at `e29b560` (after #122) and the snapping-axis commit: **1304 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#where-the-second-pass-starts--november-13-2026) | Local result; exactly blurred plates and exactly rendered scenes, the documented tables, rectangles, plates and noise seeds; contact shadows and non-Gaussian blurs read worse, three limits re-set from new and planted-fault figures |
+| Recorded snapping-axis checks | Branch `claude/snap-dominant-axis`, on `main` at `e29b560` (after #122): **1304 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#snappings-dominant-axis--november-13-2026) | Local result; synthetic line sets and rendered triangles; shapes whose lines share one family snap as before |
 | Recorded renderer channel-noise checks | Branch `claude/renderer-channel-noise`, on `main` at `e56c478` (after #116): **1302 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#independent-colour-noise-in-the-test-renderer--november-13-2026) | Test renderer only; the documented tables, rectangles, plates and noise seeds re-measured; three regression limits re-set from new and planted-fault figures |
 | Recorded shadow-free blur checks | Branch `claude/shadow-free-blur`, on `main` at `81248a7` (after #113): **1302 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#the-blur-beside-a-shadow--november-13-2026) | Local result; synthetic photos with five shapes of shadow, exactly rendered scenes, the documented tables and noise seeds; parts traced with a thickness keep the shadowed width; second-pass re-centring not adopted |
 | Recorded two-way blur checks | Branch `claude/rect-regression`, on `main` at `f2e0fd6` (after #104): **1041 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#two-way-parts-under-a-directional-blur--november-13-2026) | Local result; synthetic sharp-cornered rectangles, the documented tables and noise seeds; corners and curves of two-way parts keep one width |
@@ -450,6 +452,75 @@ stub fix in managed cloud sessions. The [reference-sensitivity record](validatio
 covers the endpoint explorer. The original CAD release and optional Ollama
 integration retain separate historical evidence. These records do not establish
 that a newly created or published cloud task has been validated.
+
+## Where the second pass starts — November 13, 2026
+
+Branch `claude/second-pass-start`, on `main` at `e29b560` (after #122) and the snapping-axis commit below it. See [reference-sheet tracing](reference-sheet.md), §3 (**Where the second pass starts**, **The shadow model beside an edge it shades**), **Results on rendered photographs** and Limits.
+
+- **What was found.** The second edge pass is anchored where it starts, and it started from the classified mask, a third of σ into the dark side. On exactly blurred plates (a 240 px square turned 7° with a Ø60 px hole), into the material:
+
+  | Blur | Sides before | Hole before | Sides now | Hole now |
+  | --- | --- | --- | --- | --- |
+  | 1.6 px | 0.0062 px | 0.0032 px | 0.0023 px | −0.0001 px |
+  | 2.7 px | 0.0227 px | 0.0184 px | 0.0020 px | −0.0008 px |
+  | 3.85 px | 0.0487 px | 0.0440 px | 0.0017 px | −0.0001 px |
+
+- **The change** (`edges.subpixel_rings`).
+  - A provisional second pass with the paper's line alone; the final pass starts from its crossing.
+  - Only where the classified mask changes once along each point's normal within 5 σ + 2.5 σ (`edges._alone`). A circular-segment hole 10 px across, which reaches another edge there, moved 0.3 px into itself on one restart and 0.4 px on the next, and its area fell 1.9 mm² short (35.23 mm²); it now starts from pass 1 and reads 35.11 mm², against 35.05 mm² before.
+  - The shadow model's footprint is each pixel's exact coverage by the provisional rings (`edges._footprint`). A footprint filled on a 4 × grid with `cv2.fillPoly` put the edges 0.15 px outward, which the fitted kernel read as a 1.4–1.9 % shadow.
+  - The light is fitted twice, the second time from the rings the first placed (`edges.LIGHT_ROUNDS`).
+  - With that footprint the paper is fitted from 2 σ of the edges, the first fit from 3 σ, with a ridge of 10⁻⁴ (`shadow.TRACED_FIT`); without one, from 2.5 and 3.5 σ with 10⁻³ as before (`shadow.MASK_FIT`).
+  - The trace says when the shadow lies against every edge (`edges._edge_rise`, `shadow.CONTACT_BALANCE`). Per eighth of the outline's direction, the median rise of the fitted light over 2 mm beyond the fit's start: the smallest is at least half the largest, and the largest at least 1 %. Over two seeds at 1 and 3 px, contact shadows read 0.69–0.85, the renderer's 25 % and 47 % shadows, two lights and a disc lamp 0.00–0.14.
+- **Exactly rendered scenes** with the footprint exact, worst edge error against the true light, mask fit → traced fit: under 4 px, none 0.0016 → 0.0000, renderer-like 30 % 0.037 → 0.027, 25 % the other way 0.094 → 0.040, two lights 0.113 → 0.024, contact 1.5 mm 0.158 → 0.086 and 0.8 mm 0.258 → 0.218 px; under 2 px, 0.0007 → 0.0000, 0.0035 → 0.0032, 0.0062 → 0.0031, 0.0135 → 0.0091, 0.021 → 0.014 and 0.093 → 0.086 px.
+- **Studied, not adopted.**
+  - **The fit from 1.5 σ.** Errors 0.022, 0.022, 0.023 and 0.066 px for the first four shadows under 4 px, but with the blur taken 2 % narrow the shadow-free scene's edges moved 0.0107 px into the material, against 0.0042 px from 2 σ. The disc test image (`test_half_level_edges_and_blur_correction_are_unbiased`) holds two blurs 2 % apart: its outer square's edges lie on pixel boundaries, where coverage sampled before a discrete blur gives √(σ² − 1/12), and its hole's √(σ² + 1/12). The pipeline measured 1.9291 px, the square's; the hole's radius read 0.0101 px large from 1.5 σ and 0.0072 px from 2 σ (limit 0.01). The blur estimator itself reads within 0.16–0.25 % at the hole.
+  - **The tail's width as a free column** (its derivative with respect to the blur's scale). It cleared the shadow-free scene under the 2 % error, but beside every shadow, with the blur exact, it took a 1.5–14 % wider blur: a shadow deepest at the edge looks like a wider tail. The 1.5 mm contact shadow's error went from 0.066 to 0.121 px. A Gaussian prior of 2 % on the scale, weighed against the first fit's cell noise, did not hold it.
+- **The documented case set** (`main` at `70055dc`, whose tracer is `e29b560`'s → now):
+
+  | Case | Before | Now |
+  | --- | --- | --- |
+  | 44 table rows, summed | 1851 µm | 1269 µm (37 rows better, 7 worse) |
+  | Noise-free 3 px, 22° | 100.8 µm | 29.9 µm |
+  | Noise-free 1 × 3 px, 22° | 63.3 µm | 29.6 µm |
+  | 1 × 3 px with all effects, no shadow | 86.7 µm | 39.8 µm |
+  | Noise-free 3 px, 22°, 25 % shadow | 45.0 µm | 66.8 µm |
+  | 47 % shadow photo | 14.8 µm | 16.4 µm |
+
+  - **The other rows that rose:** the tilted lens photo 13.3 → 14.0, 2 px with the shadow 25.1 → 27.0, 3 × 1 px along 0° at 22° with all effects 26.3 → 42.7, and 2 × 1 px turned 37° at 22°, noise-free 15.3 → 16.4 and with all effects 22.0 → 25.7 µm.
+  - **Rectangles and capsules,** mean outline error: noise-free 9.1 → 6.4 µm, with all effects but the shadow 15.1 → 1.8 µm, with the shadow 8.4 → 5.5 µm (largest 19.9 → 13.4 µm).
+  - **Noise seeds 201–206,** summed: the tilted photo 15.7 → 15.0 µm, overhead 16.5 → 15.1, 1 × 3 px 61.5 → 45.9, the 4 mm plate 27.0 → 26.9, two lights 55.2 → 57.3, contact 3 px 106.7 → 187.5. Hole positions rose under 1 × 3 px, 10.0 → 12.9 µm, with two lights 12.5 → 16.8 µm, and with the contact shadow 10.9 → 15.6 µm.
+  - **Motion-streak and defocus plates:** 24.5 → 31.4, 44.2 → 52.0, 22.0 → 25.6 and 40.8 → 50.6 µm.
+  - **Why some rose.** The start bias put every edge into the material, and it had offset three outward errors. On the noise-free 3 px photo without a shadow the Ø6 holes read 0.025 mm large before and 0.0035 mm small now; with the 25 % shadow, 0.0034 mm large before and 0.0145 mm small now. The shadow's own push, the difference, is 0.022 mm before and 0.011 mm now. The contact shadow lies within the radius no fit can see (§3). Under a disk blur of 4 px the edges already read outward before (Ø6 0.0062 mm small, outline 0.0121 mm large), and 0.0073 and 0.0147 mm now.
+- **Test limits re-set.** Each limit sits between the new figure and the figure with the test's own fault planted, except the 1 × 3 px regression guard's, whose fault reads better:
+
+  | Test, quantity | Now | With the fault | Limit |
+  | --- | --- | --- | --- |
+  | `test_a_soft_shadow_under_a_wide_blur_keeps_the_holes_in_place`, noise-free 3 px with the shadow, position | 0.0071 mm | 0.0253 mm (harmonic dropped) | 0.014 (unchanged) |
+  | The same test, its 1 × 3 px photo, a regression guard only | 0.0222 mm | 0.0173 mm | 0.02 → 0.03 |
+  | `test_a_shadow_fitted_round_the_part_keeps_its_sizes_under_a_wide_blur`, Ø6 / Ø22 / slot | 0.0145 / 0.0131 / 0.0148 mm | 0.0317 / 0.0302 / 0.0494 mm (model off) | 0.006 → 0.02, 0.009 → 0.02, 0.016 → 0.03 |
+  | The same test, contact shadow, Ø22 / slot | 0.0401 / 0.0461 mm | | 0.055 (unchanged) |
+
+  The fitted-shadow test now also requires the contact note on the contact photo and not on the one-sided shadow's. `test_complete_support_indices_survive_the_subpixel_rejection_passes` follows the provisional and final passes.
+- **Time.** The tilted test photo takes 1.75 s, against 1.38 s; without a shadow 1.35 s, against 0.99 s; at 4000 × 3000, 4.20 s against 3.70 s.
+- **Checks run.** `pytest` with runtime warnings as errors: **1304 passed**. Ruff and Prettier passed. **74 browser scenarios** passed with the system Chrome.
+
+## Snapping's dominant axis — November 13, 2026
+
+Branch `claude/snap-dominant-axis`, on `main` at `e29b560` (after #122). See [reference-sheet tracing](reference-sheet.md), §7 (**Design intent**).
+
+- **What was found.** `fitting.snap_axes` made lines within 0.6° of a dominant axis exact, and the drawing turns to that axis. The axis was the 4θ circular mean of every line, which is undefined where their directions cancel in it:
+
+  | Lines | 4θ mean of all lines | Gathered edge |
+  | --- | --- | --- |
+  | Equilateral triangle, sides 60° apart | −42.3°, and −31.8° with one side turned 0.02° | The first longest side; nothing snapped |
+  | Regular hexagon | −27.2° | One pair of parallel sides |
+  | Rectangle at 2°, beside one oblique edge longer than either of its sides | −1.3°: no side within 0.6°, none snapped | 2.0°: the rectangle's four sides snapped |
+
+- **On rendered triangles** (`test_sharp_corners_are_traced_sharp`, 60° corners, 5 px/mm). Under a 1 px blur the mean fell 0.60° from one side, which was turned onto it. Its points then lay 1.14 px rms from the line, against 0.01–0.02 px on the other sides; one corner was fitted as an arc and another bounded at R6.8 mm. With the gathered axis nothing is snapped, and the three corners read sharp under R0.124, 0.128 and 0.118 mm. Under the test's 1.6 px blur the bounds are 0.184, 0.149 and 0.155 mm, as before; there the mean had happened to fall clear of every side. The tracer change in preparation (the second pass started near each edge) moved its points by under 0.06 px, enough to put the mean 0.47° from one side and that triangle's corner bound at R10.4 mm.
+- **The change.** Each line's own direction is tried as the axis; the axis is the extent-weighted 4θ mean of the lines within 0.6° of it, modulo a quarter turn, and the one that gathers the most straight edge is kept. A line is snapped only with another in its family. Lines from `fitting.fit_ring` carry their extent; lines without one weigh the same.
+- **Tests.** `test_the_dominant_axis_is_the_direction_that_gathers_the_most_edge` (triangles and a rectangle beside an oblique edge, 20 noise draws each) and `test_sharp_corners_are_traced_sharp` with the triangle under a 1 px blur both fail on `main` and pass with the change. Shapes whose lines share one family, rectangles and slots among them, snap as before.
+- **Checks run.** `pytest` with runtime warnings as errors: **1304 passed**. Ruff and Prettier passed. **74 browser scenarios** passed with the system Chrome.
 
 ## Contact shadows beside an edge — November 13, 2026
 
