@@ -7,7 +7,7 @@ the existing dated receipt. The receipt, check date and release status were not
 regenerated for this correction.
 
 Repository documentation update, November 13: the
-[current review](../docs/validation/documentation-inward-literal.md) links the
+[current review](../docs/validation/documentation-defect-corrector.md) links the
 [local acquisition-recovery snapshot](../docs/finite-acquisition-recovery.md).
 That separate synthetic research retains 4/12 original matched target passes
 and 9/12 continuation passes; both earlier full protocols exited 1. The 459 focused tests
@@ -45,6 +45,15 @@ reproduces the baseline but raises training cost from 0.302031169350812 to
 while collateral cell 33 changes 106 to 105. The earlier 0/128 census and
 failed 11/12 full recovery remain unchanged. See [the complete negative result](../docs/validation/finite-acquisition-inward-literal.md).
 These studies add no library feature or physical qualification.
+
+The subsequent [observed-defect correction](../docs/finite-acquisition-defect-corrector.md)
+uses one fixed equality-restoration step and one nearest physical tuple. Its
+first actual pair reduces training cost **0.302031169350812 to 0.0** on the
+135 supplied synthetic PNG training samples. Only source 62 changes code
+(93 to 92), with no collateral code change. [Complete paired result](../docs/validation/finite-acquisition-defect-corrector.md).
+This is a local training result; full recovery has not been rerun, and the
+original failed 11/12 protocol and main runtime remain unchanged.
+
 
 ## What was checked automatically
 

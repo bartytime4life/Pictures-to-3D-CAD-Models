@@ -5,9 +5,27 @@ record below to assess its evidence. This page separates local checks, hosted
 CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
+## One observed-defect correction: zero training cost — November 14, 2026
+
+The [current documentation review](validation/documentation-defect-corrector.md)
+starts from main `9d15a1e`, after PR #121 merged. Separate research `d986f1f`
+freezes 116 governing inputs before the first **220 selected tests pass**.
+The first actual pair reproduces the accepted incumbent exactly, then reduces
+cost **0.302031169350812 to 0.0** on all 135 supplied synthetic PNG training
+samples. Only source 62 changes code (93 to 92); no other code changes.
+One Gram solve and one nearest tuple are retained, with all five local gates
+passing. Status `literal_training_improvement`, terminal exit 0, no protocol
+failure. [Method](finite-acquisition-defect-corrector.md) ·
+[complete result and evidence](validation/finite-acquisition-defect-corrector.md).
+
+The prospective total 218 was an addition mistake: 58 new + 162 unchanged
+predecessor cases = 220. Its original note is preserved. Full recovery and
+reserved scoring were not rerun. Original failed protocols, prior negative
+literal result, main runtime, camera and physical qualification remain distinct.
+
 ## Actual paired PNG cost: candidate rejected — November 13, 2026
 
-The [current documentation review](validation/documentation-inward-literal.md)
+The [preceding documentation review](validation/documentation-inward-literal.md)
 starts from main `5aaf701`, after PR #120 merged. Separate research `98fb1ae`
 freezes 112 governing inputs before 162 selected controls pass. The first
 actual pair reproduces the saved incumbent on all nine qualification checks

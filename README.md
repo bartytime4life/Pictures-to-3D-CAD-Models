@@ -135,7 +135,7 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 For the reviewed source revision and available research APIs, read
 [source scope and status](docs/project-status.md) and the
-[current documentation review](docs/validation/documentation-inward-literal.md).
+[current documentation review](docs/validation/documentation-defect-corrector.md).
 Main includes the source-cell mean, five unrounded area sensitivities and
 separate signed linear propagation as developer APIs. Five-parameter recovery
 with unknown brightness is absent from this main-based runtime. A
@@ -158,10 +158,16 @@ exactly reproduces the baseline but increases actual training cost from
 0.302031169350812 to 0.40923713513984694, so its candidate is rejected. Target
 cell 62 reaches code 92; collateral cell 33 changes 106 to 105. The original
 11/12 recovery result and runtime remain unchanged. The
-[latest results](docs/validation/finite-acquisition-inward-literal.md) and
+[latest paired result](docs/validation/finite-acquisition-defect-corrector.md) and
 [results and remaining limits](docs/validation/finite-acquisition-continuations.md)
 keep software tests and [saved-record audits](docs/finite-acquisition-saved-audit.md)
-separate from camera accuracy and physical acceptance. The
+separate from camera accuracy and physical acceptance.
+
+A subsequent [observed-defect correction](docs/finite-acquisition-defect-corrector.md)
+reduces actual training cost to **0.0** on 135 supplied synthetic PNG samples,
+changing only the intended source code. It passes 220 selected software
+controls and a qualified paired comparison. This does not establish unique
+geometry, reserved-sample accuracy or a new full-recovery result. The
 [earlier documentation review](docs/validation/documentation-mean-state.md),
 [acquisition-evidence review](docs/validation/documentation-acquisition-state.md)
 and [PR #95 review](docs/validation/documentation-pr95-state.md) retain their

@@ -1,5 +1,13 @@
 # Protected source-bin proposals
 
+The subsequent [observed-defect correction](finite-acquisition-defect-corrector.md)
+uses one fixed equality-restoration step and one nearest physical tuple. Its
+first actual pair reduces training cost **0.302031169350812 to 0.0** on the
+135 supplied synthetic PNG training samples. Only source 62 changes code
+(93 to 92), with no collateral code change. [Complete paired result](validation/finite-acquisition-defect-corrector.md).
+This is a local training result; full recovery has not been rerun, and the
+original failed 11/12 protocol and main runtime remain unchanged.
+
 The first frozen software checks **fail: eight failures, 752 passes and 33
 passing subtests**, exit 1. Seven known-feasible projection controls reach the
 iteration limit; an overflow case escapes numerical-error handling. The full

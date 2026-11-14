@@ -152,8 +152,12 @@ A separately frozen 112-input [paired literal runner](finite-acquisition-inward-
 passes 162 selected controls, replays the baseline exactly and rejects the
 predetermined candidate on higher actual training cost. Its [recorded commands
 and first terminal outcomes](validation/finite-acquisition-inward-literal.md#recorded-commands-and-terminal-results)
-are provenance for that research checkout. Those runtime, test and runner
-files remain absent here; they are not main-branch commands.
+are provenance for that research checkout. The later 116-input
+[corrector/probe](finite-acquisition-defect-corrector.md) passes 220 selected
+controls and reduces actual paired training cost to zero for one supplied
+synthetic PNG context. Its [recorded commands](validation/finite-acquisition-defect-corrector.md#recorded-commands-and-first-results)
+also require the exact frozen research checkout. Those runtime, test and
+runner files remain absent here; they are not main-branch commands.
 
 ## Output and side effects
 

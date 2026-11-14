@@ -1,5 +1,13 @@
 # Rational local optima and physical floating-point trials
 
+The subsequent [observed-defect correction](finite-acquisition-defect-corrector.md)
+uses one fixed equality-restoration step and one nearest physical tuple. Its
+first actual pair reduces training cost **0.302031169350812 to 0.0** on the
+135 supplied synthetic PNG training samples. Only source 62 changes code
+(93 to 92), with no collateral code change. [Complete paired result](validation/finite-acquisition-defect-corrector.md).
+This is a local training result; full recovery has not been rerun, and the
+original failed 11/12 protocol and main runtime remain unchanged.
+
 The completed saved-data diagnostic at `b649ea3` independently verifies one
 rational local-QP optimum, but **none of 128 adjacent physical binary64
 candidates passes the unchanged constraints**. All corners were checked; there

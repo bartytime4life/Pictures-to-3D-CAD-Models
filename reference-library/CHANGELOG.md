@@ -10,6 +10,16 @@ All dates are 2026. Revisions are numbered in `library.json`, which feeds the HT
 - Record complete source, parameter, schema and output hashes, OpenSCAD versions, logs and actual-mesh checks. Include real default-model renders and editable starter files.
 - Exercise browser downloads through actual OpenSCAD renders, with isolated desktop/mobile checks and preservation regression tests. Rebuild the handbook, verification record and portable archive. No slicing or physical print qualification.
 
+### Workbench observed-defect correction navigation — November 14, 2026
+
+Link the [one-step method](../docs/finite-acquisition-defect-corrector.md) and
+[first paired result](../docs/validation/finite-acquisition-defect-corrector.md):
+220 controls pass, the accepted incumbent replays exactly and actual cost
+falls to zero on the 135 supplied synthetic PNG training samples. Only source
+62 changes code. The complete recovery protocol and reserved checks have not
+been rerun. This navigation update does not refresh the library's release,
+generated reader/PDF, catalog or physical acceptance.
+
 ### Workbench negative literal-pair navigation — November 13, 2026
 
 Link the [actual paired PNG result](../docs/validation/finite-acquisition-inward-literal.md):

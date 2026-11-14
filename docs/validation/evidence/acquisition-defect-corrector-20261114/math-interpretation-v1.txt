@@ -1,0 +1,94 @@
+# Independent saved-only defect-corrector interpretation
+
+The first saved-only audit execution passes **10,560 checks, zero failures**.
+It reads canonical report
+`1738ab1ef1e5784dac9381c558a8f0947fbcf15b72208e432e7c8785f312c34d`
+(1,826,974 bytes), source `d986f1f2db12791b96aad21dcc4f1e7977029c40`.
+The script imports only the standard library. It imports no subject, runner,
+backend, NumPy or scientific reference, computes no matrix-system solution,
+and calls no model, aperture, forward, optimizer, derivative or census.
+Determinants, products and comparisons operate on the already saved matrices;
+rounding checks compare the already saved target with the already saved tuple.
+No new point, correction direction, active set or trial is proposed.
+
+## Exact local proof and represented tuple
+
+The audit reconstructs all **352 original halfspaces plus 14 physical rows**.
+All five original KKT flags independently pass for the original local QP.
+The independently recovered original-order tight basis is
+`[67, 123, 124, 188, 219]`, with rank five. A direct determinant identity
+verifies the saved Gram matrix is positive definite. The audit checks the
+saved Gram solution against its exact saved right-hand side without solving
+another system, verifies `u = B^T lambda`, the selected equality identities,
+and `||u||^2 = rhs^T lambda`.
+
+Full row rank plus the equality and row-space identities establish the saved
+correction's minimum Euclidean norm **within the selected equality system**:
+any other solution differs by a nullspace vector orthogonal to `u`. This is
+not a certificate for the complete reanchored inequality QP or the nonlinear
+rounded acquisition objective, and no original KKT optimum transfers to it.
+
+Every row-specific storage/representation margin and all 366 strengthened
+pre-round slacks are independently recomputed. The sole retained physical
+tuple is nearest binary64 rounding of the saved exact target. Exact physical,
+exact computed-normalized, computed-source/original-domain, physical-bound,
+and strict arithmetic-floor gates all pass. No 128-corner census is repeated.
+
+## Actual paired result
+
+The original accepted incumbent remains the baseline. All nine historical
+baseline checks match exactly, including all three source-stage byte records.
+All seven stage payloads of both forwards, raw coverage, mean-input bindings,
+ordered saved final queries, raw residuals, weighted residuals and
+`math.hypot(*weighted_residual)**2` costs are independently checked.
+
+Actual training cost is **0.302031169350812 -> 0.0**. Every retained training
+residual in the corrected forward is zero. The intended source cell **62**
+changes **93 -> 92**; no other source code changes. In particular, protected
+cell 33 remains code 106. This supports the reported
+`literal_training_improvement` and strict actual-cost acceptance of this one
+paired proposal under the frozen training observations.
+
+All **169 actual raw source bands** pass, including the originally narrowed
+source-62 central-half slice. The stronger diagnostic storage-eroded bands
+pass for **168/169 actual values**. Source 109 remains in its original raw
+bin and preserves code 117, but its actual lower slack is
+`0.00022125244140625`, below the proposal guard `1/4096` =
+`0.000244140625`. Thus the observed success must not be described as every
+actual value retaining the full interior guard. That guard is a proposal
+storage/arithmetic allowance, not a certified nonlinear remainder enclosure.
+
+| Source | Centered local prediction | Actual optical | Actual minus local | Raw lower slack | Outcome |
+| --- | --- | --- | --- | --- | --- |
+| 33 | 36.38662719726677 | 36.386627197265625 | -1.1439738045737613e-12 | 0.000244140625 | Code106 preserved |
+| 62 | 27.446107387541385 | 27.446090698242188 | -1.6689299197736318e-05 | 0.30861997604370117 | Target92 reached |
+| 109 | 44.94745635986623 | 44.94743347167969 | -2.2888186542502353e-05 | 0.00022125244140625 | Raw bin/code117 preserved; guard not preserved |
+
+The largest absolute actual-minus-centered discrepancy is
+`0.00012837167371415603` at source 80, whose raw and storage-eroded bands both
+pass. These observations do not isolate geometry curvature, mixed brightness
+terms, stale-Jacobian effects or staged rounding as individual causes.
+
+## Work, identity and limits
+
+The audit verifies all **116 source bindings and 114 saved bindings**, the
+complete **24 rows / 17 fits / 16 no-certificate dispositions / one eligible
+context**, and unchanged audit-interval source/report bytes.
+
+Starting work is `992 / 135369 / 54531024`. The mathematical reservation is
+**1,932,288 stage units**; the paired forwards reserve **2 evaluations,
+338 cell units and 10,478 stage units**. The complete precharged increment is
+`2 / 338 / 1942766`, giving aggregate **994 / 135707 / 56473790**, below the
+unchanged caps `2048 / 1000000 / 100000000`. Both aperture calls and both
+acquisition calls complete; there is one saved Gram solve and no inequality
+QP solve, new derivative, optimizer, reference or preparation call.
+
+The first controls report **220 passes**: 58 new plus 162 unchanged selected
+predecessor cases. The prospective count 218 was an addition mistake,
+not a changed test population. Its original record remains preserved.
+
+This is one training-only paired improvement, not a new full recovery study.
+The earlier complete 24-case **11/12 matched, exit 1** result is unchanged.
+No new held-out residual, geometric truth target, five-parameter recovery,
+uniqueness, global convergence, actual camera, GUI/HTTP integration, deployed
+runtime, physical accuracy or print-fit result is asserted by this audit.

@@ -1,10 +1,10 @@
 # Source scope and verification status
 
-## Current source snapshot — November 13, 2026
+## Current source snapshot — November 14, 2026 UTC
 
 The verified publication base is main
-`5aaf7010d5fb4b9159206d7cb52a632b6c2940d5`, tree
-`c6328013f0532c2998d09eb8569e38c318b0becb`. It includes the source-cell mean
+`9d15a1eec33b660455b05d7fedaea50faebc35fd`, tree
+`1958ef5891f2f96e18eae252ed5fcf775df44a25`. It includes the source-cell mean
 from [PR #105](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/105),
 the two-direction edge-width repair from
 [PR #107](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/107),
@@ -39,11 +39,12 @@ noise, associated regressions and recorded reference-sheet results. Documentatio
 merged at 23:40:24 UTC. It records contact-shadow observability studies and
 capture guidance, without adopting a tracer change. Documentation
 [PR #120](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/120)
-merged at 23:54:08 UTC; its tree is the publication base above. It records the
-saved inward construction before the later actual literal probe. This refresh
-preserves those changes and does not retest
-the separate frozen research source. The workbench runtime still matches
-PR #114: that correction removes fitted
+merged at 23:54:08 UTC and records the saved inward construction.
+Documentation [PR #121](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/121)
+is also merged; its tree is the publication base above. It records the
+completed negative literal probe. This refresh preserves those records and
+adds the separately frozen observed-defect correction's first result. The
+workbench runtime still matches PR #114: that correction removes fitted
 paper-light variation before remeasuring supported edge widths on traces with
 zero entered thickness. Positive-thickness traces retain the preceding width
 path. See [eligibility, regressions and limits](reference-sheet.md#3-segmentation-and-sub-pixel-edges).
@@ -80,10 +81,17 @@ Its merged tree matches that head. Automated code review did not complete
 because of the reported usage limit; it is separate from those successful
 workflow checks. These readbacks do not extend a run to this later
 documentation change. No PR #118 or #119 hosted-check result is asserted here.
+At the November 14, 2026 readback, PR #121's head
+`4479152286e8eb435d4527f2cc9a6feba4c54e71` has a successful reference-library
+[run 43534952226](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43534952226).
+Its workbench [run 43534952161](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43534952161)
+also completed successfully on the final readback. No result at its merge
+commit is asserted; its merged tree matches that head. Later checks for
+this refresh have separate status.
 Merge, hosted checks, installed runtime, real-camera
 accuracy and physical acceptance remain separate.
 
-The [documentation review](validation/documentation-inward-literal.md) audits this
+The [documentation review](validation/documentation-defect-corrector.md) audits this
 main-based source. Use [available tools](#available-here) and [remaining integration work](#remaining-integration-work)
 for current capabilities. Earlier snapshots below are historical records; their open
 PR states and absent-module statements describe their own source and time.
@@ -171,7 +179,23 @@ checks. See [the complete first output, stages and receipts](validation/finite-a
 This pair adds two evaluations, 338 cell units and 10,478 stage units,
 bringing the aggregate to 992 / 135,369 / 54,531,024 under unchanged caps.
 It does not rerun full recovery, construct another point or integrate a fitter.
-A nonlinear model correction remains unimplemented. Candidate runtime,
+The separately frozen [observed-defect corrector](finite-acquisition-defect-corrector.md)
+at `d986f1f2db12791b96aad21dcc4f1e7977029c40` preserves all preceding 112 inputs
+within a 116-input closure. Its first selected suite passes **220 tests**;
+the prospective total 218 was an addition error, preserved alongside the
+actual result (58 new + 162 predecessor cases = 220). One equality-only
+minimum-norm correction and one nearest tuple pass all five local gates.
+The actual pair exactly reproduces `p0`, then lowers training cost to **0.0**
+at all 135 saved queries. Only source 62 changes code, 93 to 92; source 33
+stays at 106. This compares with accepted `p0`, not merely rejected `p1`.
+Whole charged work is 2 / 338 / 1,942,766, including mathematical work and
+the pair, giving aggregate 994 / 135,707 / 56,473,790 under unchanged caps.
+See [the full first result and limits](validation/finite-acquisition-defect-corrector.md).
+
+This local correction is implemented and tested in research. Fitter integration,
+reserved checks and the complete original recovery protocol have not been
+rerun for it. Zero quantized training residual does not identify unique or
+true geometry. Candidate runtime,
 tests, runners, original raw recovery artifacts, preceding full diagnostic
 arrays and complete local ZIPs remain outside this documentation publication.
 

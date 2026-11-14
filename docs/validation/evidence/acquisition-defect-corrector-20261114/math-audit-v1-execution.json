@@ -1,0 +1,24 @@
+{
+  "format": "independent-defect-corrector-math-audit-execution-v1",
+  "command": "python .local/verification/defect-corrector-math-audit/audit-v1.py --root . --report .local/verification/finite-acquisition-defect-corrector-v1-first.json --output .local/verification/defect-corrector-math-audit/receipt-v1.json",
+  "execution": "first saved-only audit execution; terminal exit0",
+  "checks": 10560,
+  "failures": 0,
+  "scientific_subject_imports": 0,
+  "model_operator_solver_or_census_calls": 0,
+  "new_points_or_trials": 0,
+  "files": {
+    "audit-v1.py": {
+      "sha256": "12eaf13e11c503c1ec05919fa9b6ed5e7be8e01156a82939de94a3a9047a5793",
+      "bytes": 31402
+    },
+    "receipt-v1.json": {
+      "sha256": "3d63fc4fe98a6ec88fece1f879da86c71a35e181ad1b0a17bcf4c1645dd9befd",
+      "bytes": 92270
+    },
+    "interpretation-v1.md": {
+      "sha256": "787fa6e9237bb682acc3ac59c97f0aa7edd49091ba508aa83e4f300bc6dcb987",
+      "bytes": 5646
+    }
+  }
+}

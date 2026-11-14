@@ -1,0 +1,730 @@
+#!/usr/bin/env python3
+"""Independent saved-array arithmetic, never a subject/model/solver replay.
+
+No runner, backend, oracle, NumPy, matrix solver, SVD, optimizer, or census is
+imported. Determinants verify only the rank of already saved small matrices;
+no direction/point/linear-system solution is computed. Rounded targets are
+checked against their already retained physical tuple, not proposed anew.
+"""
+
+import argparse
+import hashlib
+import itertools
+import json
+import math
+import struct
+from fractions import Fraction as F
+from pathlib import Path
+
+EXPECTED = "1738ab1ef1e5784dac9381c558a8f0947fbcf15b72208e432e7c8785f312c34d"
+SIZE = 1826974
+HEAD = "d986f1f2db12791b96aad21dcc4f1e7977029c40"
+checks = 0
+failures = []
+
+
+def check(value, label):
+    global checks
+    checks += 1
+    if not value:
+        failures.append(label)
+
+
+def eq(a, b, label):
+    check(a == b, label)
+
+
+def bind(path):
+    h = hashlib.sha256()
+    n = 0
+    with path.open("rb") as f:
+        for block in iter(lambda: f.read(1 << 20), b""):
+            h.update(block)
+            n += len(block)
+    return {"sha256": h.hexdigest(), "bytes": n}
+
+
+def load(path):
+    def bad(value):
+        raise ValueError("nonfinite token:" + value)
+
+    def number(value):
+        result = float(value)
+        if not math.isfinite(result):
+            raise ValueError("nonfinite numeric literal")
+        return result
+
+    return json.loads(path.read_bytes(), parse_constant=bad, parse_float=number)
+
+
+def native(value):
+    if isinstance(value, dict):
+        return all(type(k) is str and native(v) for k, v in value.items())
+    if isinstance(value, list):
+        return all(map(native, value))
+    return (
+        type(value) in (type(None), str, bool, int) or type(value) is float and math.isfinite(value)
+    )
+
+
+def vec(values):
+    return [F(v) for v in values]
+
+
+def dot(a, b):
+    return sum((x * y for x, y in zip(a, b, strict=True)), F(0))
+
+
+def flat(value):
+    if isinstance(value, list):
+        return [v for item in value for v in flat(item)]
+    return [value]
+
+
+def bits(value):
+    return struct.pack("<" + "d" * len(value), *value)
+
+
+def array_bytes(record, label):
+    values = flat(record["values"])
+    eq(len(values), math.prod(record["shape"]), label + " shape")
+    kind = {"<f4": "f", "<f8": "d", "<i8": "q", "|u1": "B"}[record["dtype"]]
+    result = struct.pack("<" + kind * len(values), *values)
+    eq(list(struct.unpack("<" + kind * len(values), result)), values, label + " represented dtype")
+    eq(hashlib.sha256(result).hexdigest(), record["sha256"], label + " hash")
+    return result
+
+
+def raw_bytes(values, shape, dtype):
+    values = flat(values)
+    eq(len(values), math.prod(shape), "mean binding array length")
+    kind = {"<f4": "f", "<f8": "d", "<i8": "q", "|u1": "B"}[dtype]
+    return struct.pack("<" + kind * len(values), *values)
+
+
+def mean_hash(forward, inputs):
+    h = hashlib.sha256()
+    arrays = (
+        ("coverage", forward["coverage"]["values"], tuple(inputs["source_shape"]), "<f8"),
+        ("levels", forward["point"][5:], (2,), "<f8"),
+        (
+            "optical",
+            inputs["optical_kernel"],
+            (len(inputs["optical_kernel"]), len(inputs["optical_kernel"][0])),
+            "<f8",
+        ),
+        (
+            "post",
+            inputs["post_kernel"],
+            (len(inputs["post_kernel"]), len(inputs["post_kernel"][0])),
+            "<f8",
+        ),
+        ("map", inputs["output_to_source_index"], (2, 3), "<f8"),
+        ("queries", inputs["queries"], (len(inputs["queries"]), 2), "<i8"),
+    )
+    for name, values, shape, dtype in arrays:
+        h.update(repr((name, shape, dtype)).encode())
+        h.update(raw_bytes(values, shape, dtype))
+    h.update(repr((tuple(inputs["output_shape"]), True, "finite-acquisition-v1")).encode())
+    return h.hexdigest()
+
+
+def determinant(matrix):
+    """Leibniz identity on saved matrices only, independent of elimination."""
+    n = len(matrix)
+    total = F(0)
+    for permutation in itertools.permutations(range(n)):
+        inversions = sum(permutation[i] > permutation[j] for i in range(n) for j in range(i + 1, n))
+        term = F((-1) ** inversions)
+        for i, j in enumerate(permutation):
+            term *= matrix[i][j]
+        total += term
+    return total
+
+
+def gram(rows):
+    return [[dot(a, b) for b in rows] for a in rows]
+
+
+def ceil_binary64(value):
+    result = float(value)
+    if not math.isfinite(result):
+        raise ArithmeticError("saved envelope exceeds float range")
+    if F(result) < value:
+        result = math.nextafter(result, math.inf)
+    if not math.isfinite(result):
+        raise ArithmeticError("saved envelope upward conversion exceeds float range")
+    check(F(result) >= value, "independent upward conversion")
+    return result
+
+
+def up_ulp(value):
+    return F(math.ulp(ceil_binary64(value)))
+
+
+def envelope(anchor, span, lower, upper):
+    if not span:
+        return dict.fromkeys(("up", "D", "us", "ud", "rho", "M"), F(0))
+    up = up_ulp(max(abs(anchor), abs(lower), abs(upper)))
+    D = max(abs(lower - anchor), abs(upper - anchor))
+    us = up_ulp(D)
+    ud = up_ulp((D + us) / span)
+    return {
+        "up": up,
+        "D": D,
+        "us": us,
+        "ud": ud,
+        "rho": (up + us) / span + ud,
+        "M": (D + us) / span + ud,
+    }
+
+
+def source_margin(row, intercept, envelopes):
+    position = sum((abs(g) * e["rho"] for g, e in zip(row, envelopes, strict=True)), F(0))
+    magnitude = [abs(g) * e["M"] for g, e in zip(row, envelopes, strict=True)]
+    products = [up_ulp(v) if v else F(0) for v in magnitude]
+    return (
+        position
+        + sum(products, F(0))
+        + 2 * up_ulp(abs(intercept) + sum(magnitude, F(0)) + sum(products, F(0)))
+    )
+
+
+def source_bound(value):
+    return None if value is None else F(value)
+
+
+def check_rows(rows, point, margins, saved, label):
+    eq(len(saved), len(rows), label + " census")
+    passed = []
+    for i, ((a, b, identity), margin, record) in enumerate(zip(rows, margins, saved, strict=True)):
+        slack = b - dot(a, point)
+        eq(record["row_index"], i, label + " index")
+        eq(record["identity"], identity, label + " identity")
+        eq(F(record["raw_slack"]), slack, label + " raw slack")
+        eq(F(record["strengthened_slack"]), slack - margin, label + " strengthened slack")
+        eq(record["passed"], slack >= margin, label + " flag")
+        passed.append(slack >= margin)
+    return all(passed)
+
+
+def audit(root, path):
+    expected = bind(path)
+    eq(expected, {"sha256": EXPECTED, "bytes": SIZE}, "canonical report binding")
+    d = load(path)
+    check(native(d), "strict native finite report")
+    eq(d["source_before"], d["source_after"], "116 source before/after")
+    eq(d["source_before"]["count"], 116, "116 source census")
+    eq(d["source_before"]["head"], HEAD, "source HEAD")
+    eq(d["source_before"]["errors"], [], "no source errors")
+    source_inputs = {}
+    for name, record in d["source_before"]["files"].items():
+        actual = bind(root / name)
+        eq(actual, {"sha256": record["sha256"], "bytes": record["bytes"]}, "source " + name)
+        eq(record["sha256"], record["head_sha256"], "committed source " + name)
+        source_inputs[name] = actual
+    plan_path = root / "studies/finite-acquisition-defect-corrector-v1.json"
+    plan = load(plan_path)
+    eq(bind(plan_path)["sha256"], d["plan_sha256"], "admission hash")
+    eq(plan["expected_inventory"], d["inventory"], "frozen inventory criterion")
+    eq(d["saved_before"], d["saved_after"], "all saved inputs before/after")
+    eq(d["saved_before"]["errors"], [], "no saved binding errors")
+    eq(len(d["expected_saved_bindings"]), 114, "106 artifacts plus8 records")
+    for name, record in d["expected_saved_bindings"].items():
+        actual = bind(root / record["path"])
+        eq(actual, {"sha256": record["sha256"], "bytes": record["bytes"]}, "saved input " + name)
+        eq(d["saved_before"]["bindings"][name], actual, "saved receipt " + name)
+    eq(
+        d["inventory"],
+        {"rows": 24, "fit_files": 17, "no_certificate_fits": 16, "qualified_certificates": 1},
+        "24/17/16/1 inventory",
+    )
+    eq(len(d["rows"]), 24, "all24 rows retained")
+    eq([r["row_index"] for r in d["rows"]], list(range(24)), "row order")
+    records = [c for row in d["rows"] for c in row["corrections"]]
+    eq(len(records), 1, "one correction context")
+    record = records[0]
+    exp = record["experiment"]
+    construction = exp["construction"]
+    proof = construction["proof"]
+    x = record["correction_inputs"]
+    G, z0, z1 = [vec(row) for row in x["G"]], vec(x["z0"]), vec(x["actual_optical"])
+    L, U = [source_bound(v) for v in x["lower"]], [source_bound(v) for v in x["upper"]]
+    dl, du = vec(x["delta_lower"]), vec(x["delta_upper"])
+    old_point, dual = vec(x["original_point"]), vec(x["dual"])
+    p0, p1, spans = vec(x["anchor"]), vec(x["rejected_point"]), vec(x["spans"])
+    physicalL, physicalU = vec(x["actual_lower"]), vec(x["actual_upper"])
+    original = []
+    for i, (g, z, lo, hi) in enumerate(zip(G, z0, L, U, strict=True)):
+        if hi is not None:
+            original.append((g, hi - z, ["source_upper", i]))
+        if lo is not None:
+            original.append(([-v for v in g], z - lo, ["source_lower", i]))
+    for j in range(7):
+        unit = [F(int(k == j)) for k in range(7)]
+        original.extend(
+            ((unit, du[j], ["box_upper", j]), ([-v for v in unit], -dl[j], ["box_lower", j]))
+        )
+    eq(len(original), 352, "original halfspaces reconstructed")
+    residuals = [dot(a, old_point) - b for a, b, _ in original]
+    stationarity = [
+        old_point[j] + sum((v * a[j] for v, (a, _, _) in zip(dual, original, strict=True)), F(0))
+        for j in range(7)
+    ]
+    complementary = [v * r for v, r in zip(dual, residuals, strict=True)]
+    flags = {
+        "primal_feasible": all(r <= 0 for r in residuals),
+        "dual_feasible": all(v >= 0 for v in dual),
+        "stationarity": all(v == 0 for v in stationarity),
+        "complementarity": all(v == 0 for v in complementary),
+    }
+    flags["qualified"] = all(flags.values())
+    for k, value in flags.items():
+        eq(proof["old_kkt"][k], value, "independent old KKT " + k)
+    eq(vec(proof["old_kkt"]["primal"]["residuals"]), residuals, "old KKT residuals")
+    eq(vec(proof["old_kkt"]["stationarity_components"]), stationarity, "old KKT stationarity")
+    eq(
+        vec(proof["old_kkt"]["complementarity_products"]),
+        complementary,
+        "old KKT complementary products",
+    )
+    free = [j for j, span in enumerate(spans) if span]
+    eq(proof["free_coordinates"], free, "free-coordinate census")
+    d1 = [(v - a) / s if s else F(0) for v, a, s in zip(p1, p0, spans, strict=True)]
+    eq(vec(proof["exact_d1"]), d1, "exact original-chart rejected delta")
+    rows = []
+    for a, _, identity in original:
+        kind, j = identity
+        b = (
+            U[j] - z1[j]
+            if kind == "source_upper"
+            else z1[j] - L[j]
+            if kind == "source_lower"
+            else du[j] - d1[j]
+            if kind == "box_upper"
+            else d1[j] - dl[j]
+        )
+        rows.append((a, b, identity))
+    for j, span in enumerate(spans):
+        a = [span if k == j else F(0) for k in range(7)]
+        rows.extend(
+            (
+                (a, physicalU[j] - p1[j], ["physical_upper", j]),
+                ([-v for v in a], p1[j] - physicalL[j], ["physical_lower", j]),
+            )
+        )
+    eq(len(rows), 366, "augmented halfspaces reconstructed")
+    env1 = [
+        envelope(a, s, lo, hi) for a, s, lo, hi in zip(p1, spans, physicalL, physicalU, strict=True)
+    ]
+    env0 = [
+        envelope(a, s, lo, hi) for a, s, lo, hi in zip(p0, spans, physicalL, physicalU, strict=True)
+    ]
+    for label, envs in (("rounding_envelopes", env1), ("original_chart_envelopes", env0)):
+        for j, (got, actual) in enumerate(zip(proof[label], envs, strict=True)):
+            eq(got["coordinate"], j, label + " coordinate")
+            for k, v in actual.items():
+                eq(F(got[k]), v, label + " " + k)
+    storage, margins = [], []
+    for i, ((a, b, identity), saved) in enumerate(zip(rows, proof["augmented_rows"], strict=True)):
+        kind, j = identity
+        structural = all(not a[k] for k in free)
+        s = F(0) if structural or not kind.startswith("source_") else F(1, 4096)
+        rep = (
+            F(0)
+            if structural
+            else source_margin(G[j], z1[j], env1)
+            if kind.startswith("source_")
+            else env0[j]["rho"]
+            if kind.startswith("box_")
+            else env1[j]["up"]
+        )
+        storage.append(s)
+        margins.append(s + rep)
+        eq(saved["row_index"], i, "augmented row index")
+        eq(saved["identity"], identity, "augmented row identity")
+        eq(vec(saved["coefficients"]), a, "augmented row coefficients")
+        eq(F(saved["bound"]), b, "centered row RHS")
+        eq(saved["structural"], structural, "structural row")
+        eq(F(saved["storage_margin"]), s, "storage margin")
+        eq(F(saved["representation_margin"]), rep, "representation margin")
+        eq(F(saved["pre_margin"]), s + rep, "pre margin")
+    tight = [
+        i
+        for i, (a, b, _) in enumerate(original)
+        if dot(a, old_point) == b and any(a[j] for j in free)
+    ]
+    eq(proof["original_tight_rows"], tight, "all original tight rows")
+    basis = []
+    for i in tight:
+        reduced = [[original[k][0][j] for j in free] for k in basis + [i]]
+        if len(reduced) <= len(free) and determinant(gram(reduced)) != 0:
+            basis.append(i)
+    eq(proof["basis_rows"], basis, "first-independent original-order basis")
+    eq(basis, [67, 123, 124, 188, 219], "retained basis census")
+    B = [[rows[i][0][j] for j in free] for i in basis]
+    gram_matrix = gram(B)
+    eq([vec(row) for row in proof["gram_matrix"]], gram_matrix, "saved Gram products")
+    determinant_value = determinant(gram_matrix)
+    check(determinant_value > 0, "saved Gram has independent rows")
+    rhs = [rows[i][1] - margins[i] for i in basis]
+    eq(vec(proof["rhs"]), rhs, "single Gram RHS")
+    lam = vec(proof["gram_solution"])
+    eq(
+        [dot(row, lam) for row in gram_matrix],
+        rhs,
+        "saved Gram solution satisfies equations; no solve",
+    )
+    u = vec(proof["correction"])
+    for j in range(7):
+        expected_component = (
+            sum((lam[k] * rows[i][0][j] for k, i in enumerate(basis)), F(0)) if j in free else F(0)
+        )
+        eq(u[j], expected_component, "saved correction lies in retained row space")
+    eq([dot(rows[i][0], u) for i in basis], rhs, "selected restored equalities")
+    eq(dot(u, u), dot(rhs, lam), "minimum-equality-norm identity")
+    eq(proof["row_space_components"], ["0"] * len(free), "reported row-space exact residuals")
+    check(
+        proof["row_space_verified"] and proof["basis_equalities_verified"],
+        "reported equality checks",
+    )
+    pre_ok = check_rows(rows, u, margins, proof["pre_slacks"], "pre-round")
+    check(pre_ok, "all366 strengthened pre-round rows")
+    nearest = proof["nearest"]
+    p2 = vec(nearest["physical"])
+    targets = [a + s * value for a, s, value in zip(p1, spans, u, strict=True)]
+    eq(vec(nearest["physical_targets"]), targets, "saved exact physical target identity")
+    eq(
+        nearest["physical"],
+        [float(value) for value in targets],
+        "one retained tuple is nearest round of saved target",
+    )
+    eq(nearest["hex"], [float(value).hex() for value in p2], "retained physical bits")
+    eq(construction["physical_point"], nearest["physical"], "returned sole tuple")
+    exact_u = [(p - a) / s if s else F(0) for p, a, s in zip(p2, p1, spans, strict=True)]
+    computed_u = [
+        (float(p) - float(a)) / float(s) if s else 0.0
+        for p, a, s in zip(p2, p1, spans, strict=True)
+    ]
+    computed_d = [
+        (float(p) - float(a)) / float(s) if s else 0.0
+        for p, a, s in zip(p2, p0, spans, strict=True)
+    ]
+    eq(vec(nearest["exact_u"]), exact_u, "retained exact physical correction")
+    eq(bits(nearest["computed_u"]), bits(computed_u), "computed centered correction bits")
+    eq(bits(nearest["computed_original_d"]), bits(computed_d), "computed original-domain bits")
+    exact_ok = check_rows(rows, exact_u, storage, nearest["exact_physical_rows"], "exact physical")
+    represented_ok = check_rows(
+        rows, vec(computed_u), storage, nearest["exact_computed_rows"], "exact computed"
+    )
+    predicted = [
+        math.fsum([float(z), *(float(g) * v for g, v in zip(row, computed_u, strict=True))])
+        for row, z in zip(G, z1, strict=True)
+    ]
+    eq(
+        bits(predicted),
+        bits(nearest["predicted_optical"]),
+        "saved centered computed optical values",
+    )
+    computed_violations = []
+    for i, (value, lo, hi, row) in enumerate(zip(predicted, L, U, G, strict=True)):
+        m = F(1, 4096) if any(row[j] and spans[j] for j in range(7)) else F(0)
+        if lo is not None and F(value) < lo + m:
+            computed_violations.append(["source_lower", i])
+        if hi is not None and F(value) > hi - m:
+            computed_violations.append(["source_upper", i])
+    original_bad = [
+        j
+        for j, (v, lo, hi) in enumerate(zip(computed_d, dl, du, strict=True))
+        if not lo <= F(v) <= hi
+    ]
+    eq(computed_violations, nearest["computed_source_violations"], "computed source failures")
+    eq(
+        original_bad,
+        nearest["computed_original_box_violations"],
+        "computed original bounds failures",
+    )
+    selected = exp["selected_source_index"]
+    floor = (
+        128
+        * 2.0**-52
+        * max(
+            1.0,
+            abs(float(z1[selected])),
+            math.fsum(abs(float(g) * v) for g, v in zip(G[selected], computed_u, strict=True)),
+        )
+    )
+    eq(floor, nearest["arithmetic_floor"], "selected arithmetic floor")
+    gates = {
+        "physical_bounds": all(
+            lo <= p <= hi for p, lo, hi in zip(p2, physicalL, physicalU, strict=True)
+        ),
+        "exact_physical": exact_ok,
+        "exact_computed": represented_ok,
+        "computed": not computed_violations and not original_bad,
+        "arithmetic_floor": floor < float(U[selected] - L[selected]) / 2,
+    }
+    eq(nearest["gates"], gates, "allfive nearest gates")
+    eq(proof["post_gates"], gates, "public gate aliases")
+    check(all(gates.values()), "retained nearest tuple passes five unchanged gate kinds")
+    eq(nearest["candidate_count"], 1, "one tuple only; no census")
+    eq(construction["new_point_optimality"], False, "no transferred QP optimality")
+    eq(construction["new_qp_solves"], 0, "no inequality QP solve")
+    eq(proof["gram_solves_attempted"], 1, "one saved Gram attempt")
+    eq(proof["gram_solves_completed"], 1, "one saved Gram completion")
+    # Restore stage bytes and costs; this is not stage propagation.
+    inputs, baseline, snapshot = record["inputs"], record["baseline"], record["snapshot"]
+    first, second = exp["forwards"]
+    costs = []
+    for f in (first, second):
+        eq(f["status"], "resolved", "forward resolved")
+        eq(f["protocol_failure"], False, "forward protocol flag")
+        eq(f["payload_errors"], [], "forward schema errors")
+        eq(f["statuses"], ["resolved"] * len(inputs["queries"]), "all saved query statuses")
+        eq(f["hex"], [v.hex() for v in f["point"]], "forward parameter bits")
+        for stage, values in f["stages"].items():
+            array_bytes(values, f["label"] + " " + stage)
+        array_bytes(f["coverage"], f["label"] + " raw coverage")
+        eq(len(f["stages"]), 7, "all seven acquisition stages")
+        final = f["stages"]["final"]["values"]
+        prediction = [final[y][xx] for xx, y in inputs["queries"]]
+        eq(bits(prediction), bits(f["prediction"]), "prediction reads saved final ordered queries")
+        raw = [a - b for a, b in zip(inputs["target"], prediction, strict=True)]
+        weighted = [a * b for a, b in zip(raw, inputs["weights"], strict=True)]
+        eq(bits(raw), bits(f["raw_residual"]), "raw residual bits")
+        eq(bits(weighted), bits(f["weighted_residual"]), "weighted residual bits")
+        nrm = math.hypot(*weighted)
+        cost = nrm * nrm
+        eq(cost, f["cost"], "guarded hypot squared cost")
+        costs.append(cost)
+        eq(mean_hash(f, inputs), f["input_sha256"], "public mean input binding")
+    checks_baseline = {
+        "forward_resolved": first["status"] == "resolved",
+        "mean_input_sha256": first["input_sha256"]
+        == baseline["mean_input_sha256"]
+        == snapshot["mean_input_sha256"],
+    }
+    for name in ("optical_linear", "encoded", "decoded_linear"):
+        actual = array_bytes(first["stages"][name], "baseline got " + name)
+        old = array_bytes(snapshot["stages"][name], "baseline snapshot " + name)
+        checks_baseline[name + "_snapshot"] = actual == old
+    for new, old in (
+        ("prediction", "prediction"),
+        ("raw_residual", "raw_residual"),
+        ("weighted_residual", "residual"),
+    ):
+        checks_baseline[new] = bits(first[new]) == bits(baseline[old])
+    checks_baseline["cost"] = bits([first["cost"]]) == bits([baseline["cost"]])
+    eq(exp["baseline_comparison"]["checks"], checks_baseline, "all nine baseline checks recomputed")
+    check(all(checks_baseline.values()), "historical baseline exact")
+    previous = load(root / d["expected_saved_bindings"]["literal"]["path"])
+    past = next(c for row in previous["rows"] for c in row["pairs"] if c["path"] == record["path"])
+    eq(baseline, past["baseline"], "accepted p0 baseline not redefined")
+    eq(snapshot, past["snapshot"], "original source snapshot not redefined")
+    eq(
+        bits(first["point"]),
+        bits(baseline["parameters"] + baseline["levels"]),
+        "literal first is accepted p0",
+    )
+    eq(bits(second["point"]), bits(nearest["physical"]), "literal second is sole new tuple")
+    eq(
+        bits(x["rejected_point"]),
+        bits(past["pair"]["forwards"][1]["point"]),
+        "rejected anchor is old observed p1",
+    )
+    eq(
+        bits(x["actual_optical"]),
+        bits(flat(past["pair"]["forwards"][1]["stages"]["optical_linear"]["values"])),
+        "reanchor through saved actual p1 optics",
+    )
+    before_codes, after_codes = (
+        flat(first["stages"]["encoded"]["values"]),
+        flat(second["stages"]["encoded"]["values"]),
+    )
+    changed = [i for i, (a, b) in enumerate(zip(before_codes, after_codes, strict=True)) if a != b]
+    collateral = [i for i in changed if i != selected]
+    code_result = {
+        "selected_target_matched": after_codes[selected] == exp["target_code"],
+        "selected_before": before_codes[selected],
+        "selected_after": after_codes[selected],
+        "all_changed_indices": changed,
+        "all_changed_count": len(changed),
+        "other_changed_indices": collateral,
+        "other_changed_count": len(collateral),
+    }
+    eq(exp["code_changes"], code_result, "source code change census")
+    actual_optical = flat(second["stages"]["optical_linear"]["values"])
+    source_records = []
+    for i, (old, model, actual, lo, hi, row) in enumerate(
+        zip(z1, predicted, actual_optical, L, U, G, strict=True)
+    ):
+        margin = F(1, 4096) if any(row[j] and spans[j] for j in range(7)) else F(0)
+        actual_f = F(actual)
+        in_raw = (lo is None or actual_f >= lo) and (hi is None or actual_f <= hi)
+        in_eroded = (lo is None or actual_f >= lo + margin) and (
+            hi is None or actual_f <= hi - margin
+        )
+        source_records.append(
+            {
+                "source_index": i,
+                "rejected_actual": float(old),
+                "centered_local": model,
+                "new_actual": actual,
+                "actual_minus_centered": actual - model,
+                "lower": None if lo is None else float(lo),
+                "upper": None if hi is None else float(hi),
+                "actual_lower_slack": None if lo is None else float(actual_f - lo),
+                "actual_upper_slack": None if hi is None else float(hi - actual_f),
+                "actual_in_raw_band": in_raw,
+                "actual_in_storage_eroded_band": in_eroded,
+                "incumbent_code": before_codes[i],
+                "new_code": after_codes[i],
+            }
+        )
+    # Shared tariffs and actual attempts are separate quantities.
+    n = math.prod(inputs["source_shape"])
+    m = math.prod(inputs["output_shape"])
+    ko = sum(map(len, inputs["optical_kernel"]))
+    kp = sum(map(len, inputs["post_kernel"]))
+    stage = n * (1 + ko + 4) + m * (16 + kp)
+    math_units = 65536 + 512 * (len(original) + 9 * len(rows))
+    pair = [2, 2 * n, 2 * stage]
+    whole = [2, 2 * n, math_units + 2 * stage]
+    aggregate = [a + b for a, b in zip(exp["prior_work"], whole, strict=True)]
+    eq(math_units, exp["math_reservation"], "mathematical tariff")
+    eq(pair, exp["pair_reservation"], "pair tariff")
+    eq(whole, exp["whole_reservation"], "whole tariff")
+    eq(exp["held"], whole, "upfront hold")
+    eq(exp["charged"], whole, "whole debit, no second charge")
+    eq(exp["aggregate_work"], aggregate, "shared aggregate")
+    eq(exp["prior_work"], past["pair"]["aggregate_work"], "no reset from preceding rejected work")
+    check(all(a <= b for a, b in zip(aggregate, exp["limits"], strict=True)), "shared caps")
+    eq(construction["work"]["charged"], math_units, "nested math is reserved view")
+    eq(construction["work"]["reported"], math_units, "completed math report")
+    for f in exp["forwards"]:
+        expected_forward = {"evaluations": 1, "cell_work": n, "stage_work": stage}
+        eq(f["reservations"], expected_forward, "forward reservation")
+        eq(f["charged"], expected_forward, "forward charge view")
+        eq(f["reported"], {"cell_work": None, "stage_work": stage}, "independent work reports")
+        eq(f["caller_accounted_cell_work"], n, "aperture caller cell charge")
+        eq(f["pair_budget_at_entry"], exp["pair_accounting_view"], "precharged ledger visible")
+        check(not f["opaque_failed_work"], "no opaque work")
+    for scope in (d, exp):
+        eq(scope["status"], "literal_training_improvement", "successful paired status")
+        eq(scope["paired_probe_complete"], True, "paired complete flag")
+        eq(
+            scope["strict_training_improvement_accepted"],
+            costs[1] < costs[0],
+            "strict acceptance flag",
+        )
+        eq(scope["protocol_failure"], False, "no protocol failure")
+        for key in (
+            "logical_forward_attempts",
+            "coverage_calls_attempted",
+            "coverage_calls_completed",
+            "acquisition_calls_attempted",
+            "acquisition_calls_completed",
+        ):
+            eq(scope[key], 2, "attempt count " + key)
+        for key in ("gram_solves_attempted", "gram_solves_completed"):
+            eq(scope[key], 1, "saved Gram count " + key)
+    for key in (
+        "optimizer_calls",
+        "new_qp_solves",
+        "new_jacobian_calls",
+        "reference_calls",
+        "preparation_calls",
+        "reserved_scoring_calls",
+    ):
+        eq(d[key], 0, "no new " + key)
+    eq(d["full_recovery_retested"], False, "no full recovery retest")
+    eq(d["original_outcomes_modified"], False, "no original outcome changed")
+    # Interval binding recheck, not a model/auditor replay.
+    for name, before in source_inputs.items():
+        eq(bind(root / name), before, "audit interval unchanged " + name)
+    eq(bind(path), expected, "audit interval report unchanged")
+    return {
+        "input_binding": expected,
+        "source_head": HEAD,
+        "source_count": 116,
+        "saved_binding_count": len(d["expected_saved_bindings"]),
+        "inventory": d["inventory"],
+        "old_kkt_flags": flags,
+        "tight_rows": tight,
+        "basis_rows": basis,
+        "equality_basis_rank": len(basis),
+        "gram_determinant_positive": determinant_value > 0,
+        "minimum_equality_norm_squared": str(dot(u, u)),
+        "single_gram_solution_verified_without_solving": True,
+        "all_strengthened_rows": pre_ok,
+        "nearest_gates": gates,
+        "baseline_checks": checks_baseline,
+        "costs": costs,
+        "cost_difference": costs[1] - costs[0],
+        "code_changes": code_result,
+        "actual_raw_band_passes": sum(r["actual_in_raw_band"] for r in source_records),
+        "actual_storage_eroded_band_passes": sum(
+            r["actual_in_storage_eroded_band"] for r in source_records
+        ),
+        "actual_raw_band_violations": [
+            r["source_index"] for r in source_records if not r["actual_in_raw_band"]
+        ],
+        "actual_storage_eroded_band_violations": [
+            r["source_index"] for r in source_records if not r["actual_in_storage_eroded_band"]
+        ],
+        "maximum_absolute_actual_minus_centered": max(
+            abs(r["actual_minus_centered"]) for r in source_records
+        ),
+        "source33": source_records[33],
+        "source62": source_records[62],
+        "all_source_comparisons": source_records,
+        "prior_work": exp["prior_work"],
+        "math_reservation": math_units,
+        "pair_reservation": pair,
+        "whole_reservation": whole,
+        "aggregate_work": aggregate,
+        "limits": exp["limits"],
+        "control_count_reconciliation": {
+            "prospective_total_mistake": 218,
+            "new": 58,
+            "prior": 162,
+            "actual_total": 220,
+        },
+        "scope": "Saved-only exact proof/rank/slack/norm/rounding/hash/work and observed cost/code arithmetic. No subject/backend/NumPy/SVD/matrix-solve/optimizer/model/reference/operator/census/new-point evaluation. Minimum norm refers only to retained equality restoration; zero training cost is not holdout, geometry, full-recovery, physical or global qualification.",
+    }
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--report", type=Path, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    if args.output.exists() or args.output.is_symlink() or not args.output.parent.is_dir():
+        parser.error("fresh output required in existing parent")
+    result = {"format": "independent-defect-corrector-saved-math-audit-v1", "passed": False}
+    try:
+        result.update(audit(args.root.resolve(), args.report.resolve()))
+    except Exception as error:  # noqa: BLE001 - preserve the first unexpected saved-audit failure
+        failures.append(f"unexpected {type(error).__name__}:{error}")
+    result.update(
+        checks=checks, failures=failures, passed=not failures, audit_source=bind(Path(__file__))
+    )
+    with args.output.open("x") as out:
+        json.dump(result, out, indent=2, allow_nan=False)
+        out.write("\n")
+    print(
+        json.dumps(
+            {
+                "passed": result["passed"],
+                "checks": checks,
+                "failures": len(failures),
+                "output": str(args.output),
+            }
+        )
+    )
+    return 0 if result["passed"] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,25 @@
+{
+  "format": "finite-acquisition-defect-corrector-v1-independent-static-review",
+  "recorded_at": "2026-11-14T01:02:51.536605+00:00",
+  "all_clear": true,
+  "new_source_sha256": {
+    "studies/verification/finite-acquisition-defect-corrector-v1.py": "b2c2651f466588a19e8bfd7a77f1a56c8bd8093a3b87d2795924a46e32ffaf7b",
+    "tests/test_finite_acquisition_defect_corrector.py": "5e359e5dd14f999d8a72ef4867c59185258672a6bb6941df4d0e3ff0cb65dad6",
+    "studies/finite-acquisition-defect-corrector-v1.json": "b6f1d5dcc59032d7cfbde196adae76d1fb82d76ff802b252c48ed2686b74439a",
+    "docs/finite-acquisition-defect-corrector.md": "fdc20be6b4d7cf9594178b70665569091a65e8f86b24ece972ecf7e83fc3900e"
+  },
+  "reviewers": {
+    "root": "Read source/tests/plan/guide; AST compile only and style checks; old112 unchanged.",
+    "math_review": "Independent exact-hash mathematical and test-contract review clear; authored44 new test functions/58 cases.",
+    "ai_review": "Independent exact-hash source/API/provenance/accounting and math-authored tests/plan/guide review clear.",
+    "ux_review": "Independent exact-hash lifecycle and truthful-status/provenance review clear."
+  },
+  "controls_prospective": {
+    "new_expanded_cases": 58,
+    "unchanged_selected_predecessor_cases": 162,
+    "total": 218
+  },
+  "new_subject_imports_collection_tests_solves_points_or_model_calls": 0,
+  "first_controls_status": "unrun",
+  "first_saved_corrector_probe_status": "unrun"
+}

@@ -1,0 +1,36 @@
+{
+  "format": "finite-acquisition-defect-corrector-v1-first-native-terminal",
+  "command": "set -o pipefail\n.venv/bin/python studies/verification/finite-acquisition-defect-corrector-v1.py --output .local/verification/finite-acquisition-defect-corrector-v1-first.json 2>&1 | tee .local/verification/finite-acquisition-defect-corrector-v1-first.log",
+  "initial_native_result": {
+    "chunk_id": "e083f5",
+    "wall_time_seconds": 1.000956562,
+    "session_id": 63113,
+    "original_token_count": 0,
+    "output": ""
+  },
+  "terminal_native_result": {
+    "chunk_id": "664569",
+    "wall_time_seconds": 1.0028e-05,
+    "exit_code": 0,
+    "original_token_count": 49,
+    "output": "{\"row\": 5, \"case\": \"middle-png\", \"status\": \"visited\"}\n{\"output\": \".local/verification/finite-acquisition-defect-corrector-v1-first.json\", \"status\": \"literal_training_improvement\", \"passed\": true}\n"
+  },
+  "native_session_id": 63113,
+  "attempt": 1,
+  "reruns": 0,
+  "result": {
+    "path": ".local/verification/finite-acquisition-defect-corrector-v1-first.json",
+    "bytes": 1826974,
+    "sha256": "1738ab1ef1e5784dac9381c558a8f0947fbcf15b72208e432e7c8785f312c34d"
+  },
+  "log": {
+    "path": ".local/verification/finite-acquisition-defect-corrector-v1-first.log",
+    "bytes": 196,
+    "sha256": "69460b56104948a33fbfc69e06ab113326b43983009719595d3b187d4c28830f"
+  },
+  "launch": {
+    "path": ".local/verification/finite-acquisition-defect-corrector-v1-first-native-launch.json",
+    "bytes": 538,
+    "sha256": "5e6f7522a9d3bd40ebfb972ce17a0ead5904d1344405dcc1d56503e7412d3b55"
+  }
+}

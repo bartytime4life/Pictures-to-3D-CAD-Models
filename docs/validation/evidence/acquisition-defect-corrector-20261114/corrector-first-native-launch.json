@@ -1,0 +1,12 @@
+{
+  "format": "finite-acquisition-defect-corrector-v1-first-native-launch",
+  "command": "set -o pipefail\n.venv/bin/python studies/verification/finite-acquisition-defect-corrector-v1.py --output .local/verification/finite-acquisition-defect-corrector-v1-first.json 2>&1 | tee .local/verification/finite-acquisition-defect-corrector-v1-first.log",
+  "chunk_id": "e083f5",
+  "wall_time_seconds": 1.000956562,
+  "session_id": 63113,
+  "original_token_count": 0,
+  "output": "",
+  "attempt": 1,
+  "reruns": 0,
+  "native_session_id": 63113
+}

@@ -104,6 +104,15 @@ exactly reproduces the baseline but raises actual training cost from
 rejected. Target source cell 62 reaches code 92; collateral cell 33 changes
 106 to 105. [Complete negative result](validation/finite-acquisition-inward-literal.md).
 Full recovery remains 11/12; fitter integration is still absent.
+
+The subsequent [observed-defect correction](finite-acquisition-defect-corrector.md)
+uses one fixed equality-restoration step and one nearest physical tuple. Its
+first actual pair reduces training cost **0.302031169350812 to 0.0** on the
+135 supplied synthetic PNG training samples. Only source 62 changes code
+(93 to 92), with no collateral code change. [Complete paired result](validation/finite-acquisition-defect-corrector.md).
+This is a local training result; full recovery has not been rerun, and the
+original failed 11/12 protocol and main runtime remain unchanged.
+
 These separate local studies add no main runtime or workbench integration.
 
 The [engineering model and verification plan](engineering-model.md) defines the 2.5D scope, camera-model assumptions, dimension equations and evidence needed through prototype qualification. The independent source-height check optionally compares a user-bounded measurement with a user-defined allowance; it reports within, outside or inconclusive without assigning a physical accuracy or confidence level.

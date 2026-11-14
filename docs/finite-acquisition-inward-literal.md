@@ -1,5 +1,13 @@
 # Actual PNG cost after the inward construction
 
+The subsequent [observed-defect correction](finite-acquisition-defect-corrector.md)
+uses one fixed equality-restoration step and one nearest physical tuple. Its
+first actual pair reduces training cost **0.302031169350812 to 0.0** on the
+135 supplied synthetic PNG training samples. Only source 62 changes code
+(93 to 92), with no collateral code change. [Complete paired result](validation/finite-acquisition-defect-corrector.md).
+This is a local training result; full recovery has not been rerun, and the
+original failed 11/12 protocol and main runtime remain unchanged.
+
 The first paired test at research source `98fb1ae` exactly reproduces the
 saved incumbent but **rejects the predetermined inward candidate**. Actual
 training cost rises from **0.302031169350812 to 0.40923713513984694**. Source
@@ -117,13 +125,13 @@ their original local-model scope.
 
 ## Remaining engineering work
 
-A model reanchored through the rejected trial's actual optical observation is
-an unimplemented proposal. It has no admitted candidate, new solve, actual
-cost result or convergence guarantee. Any future correction needs a separate
-reviewed admission and source freeze before execution, the original bounds,
-training-only selection and shared caps, explicit nonlinear validation, and
-strict actual-cost acceptance. The rejected trial cannot become the accepted
-incumbent by relabeling it.
+A separately admitted [observed-defect correction](finite-acquisition-defect-corrector.md)
+now reanchors the local model through this rejected trial's actual optical
+observation. Its 116-input source freeze precedes 220 passing controls and
+one fixed correction, reducing actual training cost to zero in the saved
+synthetic PNG context. It retains the original bounds, training-only inputs,
+shared caps and strict comparison against accepted `p0`. This does not accept
+the old rejected trial or supply a convergence guarantee.
 
 Runtime integration would then require another complete original 24-case
 protocol under the original targets. The paired test neither retests that

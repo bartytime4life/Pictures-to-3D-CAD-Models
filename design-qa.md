@@ -5,7 +5,7 @@ older screenshots, test totals or runtime observations validate the current
 checkout. No browser, geometry or accessibility tests were rerun for this
 documentation refresh.
 
-The [current documentation review](docs/validation/documentation-inward-literal.md)
+The [current documentation review](docs/validation/documentation-defect-corrector.md)
 also links a [separate local recovery prototype](docs/finite-acquisition-recovery.md).
 Its focused tests and synthetic study do not change the reviewed interface below
 or add acquisition-fitting controls to the workbench.

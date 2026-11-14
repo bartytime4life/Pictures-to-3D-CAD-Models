@@ -73,7 +73,7 @@ the declared base before and after verification. Preserve accurate historical
 reports. Keep generated library outputs unchanged unless their source changed;
 then regenerate them and list those outputs explicitly in the review. Library source edits still follow its
 generation rules; a workbench-only navigation change needs no library rebuild.
-The [current documentation review](validation/documentation-inward-literal.md)
+The [current documentation review](validation/documentation-defect-corrector.md)
 separates this documentation-only main update from the
 [local acquisition-recovery snapshot](finite-acquisition-recovery.md).
 The [earlier main documentation review](validation/documentation-main109-state.md)

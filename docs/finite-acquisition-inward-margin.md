@@ -1,5 +1,13 @@
 # An inward margin before physical floating-point rounding
 
+The subsequent [observed-defect correction](finite-acquisition-defect-corrector.md)
+uses one fixed equality-restoration step and one nearest physical tuple. Its
+first actual pair reduces training cost **0.302031169350812 to 0.0** on the
+135 supplied synthetic PNG training samples. Only source 62 changes code
+(93 to 92), with no collateral code change. [Complete paired result](validation/finite-acquisition-defect-corrector.md).
+This is a local training result; full recovery has not been rerun, and the
+original failed 11/12 protocol and main runtime remain unchanged.
+
 The saved-data construction at `66df525` finds a changed rational point whose
 **128 adjacent physical binary64 candidates all pass the five unchanged local
 feasibility gates**. Its 103 selected software controls pass. An independent

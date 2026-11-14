@@ -79,6 +79,28 @@ The [terminal receipt](validation/evidence/acquisition-continuations-20261113/au
 records first outcomes and unchanged inputs. It runs with standard-library
 Python 3.14.4, zero backend imports and zero model/reference/optimizer calls.
 
+## Observed-defect correction and its saved-only review
+
+The [new paired correction](validation/finite-acquisition-defect-corrector.md)
+retains the complete first 1,826,974-byte output, exact Gram witness and
+nearest tuple, all local gates, both forwards and all seven stages each.
+The saved cost is 0.302031169350812 at the qualified incumbent and 0.0 at the
+corrected tuple; only source 62 changes code. Its mathematical, provenance
+and record-consistency reviews inspect those retained records without another
+subject import, solve or optical evaluation. The published
+[inventory](validation/evidence/acquisition-defect-corrector-20261114/manifest.json)
+keeps the first result, controls, receipts and later audits distinct.
+
+Its local source ZIP has 117 members (116 frozen files and a manifest),
+732,739 bytes, SHA-256
+`d2f0e09e53ea46f4e6cdf482117262e8b8e978cf43187b84ad87ab4d65517424`.
+The complete first-record ZIP has 15 members, 23,580,692 bytes, SHA-256
+`965e42bb750d870e7bc4885b99ee2f69e91aaa920f312a6cf7c825493409f455`.
+Decompressed member hashes and sizes pass; source modes also pass. It includes
+the preceding literal archive. Later audits remain separate from that first
+archive. Packaging and saved arithmetic do not establish geometry accuracy,
+reserved predictions, a new full-recovery result or physical acceptance.
+
 ## Later paired-literal saved-only audits
 
 The [paired literal result](validation/finite-acquisition-inward-literal.md)

@@ -1,0 +1,165 @@
+{
+  "format": "documentation-observed-defect-corrector-evidence-v1",
+  "research_head": "d986f1f2db12791b96aad21dcc4f1e7977029c40",
+  "research_tree": "83e1635eb176c0776ec62ee6f442abb85b2e4ed7",
+  "closure_sha256": "f52f39e6fdc96092a1197a36e9ad0c2fbb8df60e0f685714eff84c68d3b2ace5",
+  "verbatim_copies": {
+    "corrector-admission.json": {
+      "source": "studies/finite-acquisition-defect-corrector-v1.json",
+      "bytes": 88262,
+      "sha256": "b6f1d5dcc59032d7cfbde196adae76d1fb82d76ff802b252c48ed2686b74439a",
+      "verbatim": true
+    },
+    "corrector-prospective-method.txt": {
+      "source": "docs/finite-acquisition-defect-corrector.md",
+      "bytes": 12474,
+      "sha256": "fdc20be6b4d7cf9594178b70665569091a65e8f86b24ece972ecf7e83fc3900e",
+      "verbatim": true
+    },
+    "corrector-freeze.json": {
+      "source": ".local/verification/finite-acquisition-defect-corrector-v1-freeze.json",
+      "bytes": 21675,
+      "sha256": "460ccf2bf8b3bf82ada0f56e5e4de50d5e20f12f3c378dcb59e33173bf7f550c",
+      "verbatim": true
+    },
+    "corrector-static-reviews.json": {
+      "source": ".local/verification/finite-acquisition-defect-corrector-v1-static-reviews.json",
+      "bytes": 1455,
+      "sha256": "2bea9f50e18e336fc47f006b58d7e364da672a5a5712be269e0b73aff18871cf",
+      "verbatim": true
+    },
+    "corrector-root-static.json": {
+      "source": ".local/verification/defect-corrector-root-static.json",
+      "bytes": 1080,
+      "sha256": "57e67f3a366b8392dfc472e2c110e5a8e166c22cce78598d60caf5b4c0746891",
+      "verbatim": true
+    },
+    "corrector-first-tests.log": {
+      "source": ".local/verification/finite-acquisition-defect-corrector-v1-first-tests.log",
+      "bytes": 340,
+      "sha256": "c7eea3d2f59ae77108752984df50b0cb14b1edfcedd7198fad4e3e5a5b4e62f4",
+      "verbatim": true
+    },
+    "corrector-first-tests-receipt.json": {
+      "source": ".local/verification/finite-acquisition-defect-corrector-v1-first-tests-receipt.json",
+      "bytes": 1384,
+      "sha256": "91796b36d2d4836515ef67b8cbc788c01ee3f2fe6ccc448a2b09701fb440e6e5",
+      "verbatim": true
+    },
+    "corrector-first.json": {
+      "source": ".local/verification/finite-acquisition-defect-corrector-v1-first.json",
+      "bytes": 1826974,
+      "sha256": "1738ab1ef1e5784dac9381c558a8f0947fbcf15b72208e432e7c8785f312c34d",
+      "verbatim": true
+    },
+    "corrector-first.log": {
+      "source": ".local/verification/finite-acquisition-defect-corrector-v1-first.log",
+      "bytes": 196,
+      "sha256": "69460b56104948a33fbfc69e06ab113326b43983009719595d3b187d4c28830f",
+      "verbatim": true
+    },
+    "corrector-first-native-launch.json": {
+      "source": ".local/verification/finite-acquisition-defect-corrector-v1-first-native-launch.json",
+      "bytes": 538,
+      "sha256": "5e6f7522a9d3bd40ebfb972ce17a0ead5904d1344405dcc1d56503e7412d3b55",
+      "verbatim": true
+    },
+    "corrector-first-terminal-receipt.json": {
+      "source": ".local/verification/finite-acquisition-defect-corrector-v1-first-terminal-receipt.json",
+      "bytes": 1591,
+      "sha256": "b83dc4717319594b03c2257193f4e8a8fb0940264581b1a2f7586d48fc0fed60",
+      "verbatim": true
+    },
+    "corrector-archive-readback.json": {
+      "source": ".local/verification/finite-acquisition-defect-corrector-v1-portable-archive-readback.json",
+      "bytes": 752,
+      "sha256": "abe8a8ddabb3492c6bc1bef6bed97c271fb4716459e4fb5c4926948b39017a09",
+      "verbatim": true
+    },
+    "math-audit-v1.py.txt": {
+      "source": ".local/verification/defect-corrector-math-audit/audit-v1.py",
+      "bytes": 31402,
+      "sha256": "12eaf13e11c503c1ec05919fa9b6ed5e7be8e01156a82939de94a3a9047a5793",
+      "verbatim": true
+    },
+    "math-audit-v1-receipt.json": {
+      "source": ".local/verification/defect-corrector-math-audit/receipt-v1.json",
+      "bytes": 92270,
+      "sha256": "3d63fc4fe98a6ec88fece1f879da86c71a35e181ad1b0a17bcf4c1645dd9befd",
+      "verbatim": true
+    },
+    "math-audit-v1-execution.json": {
+      "source": ".local/verification/defect-corrector-math-audit/execution-v1.json",
+      "bytes": 956,
+      "sha256": "00cd318e9e6ea643a77cb63b4739daca1165e44a2a1bd187bdec52bb06f978e8",
+      "verbatim": true
+    },
+    "math-interpretation-v1.txt": {
+      "source": ".local/verification/defect-corrector-math-audit/interpretation-v1.md",
+      "bytes": 5646,
+      "sha256": "787fa6e9237bb682acc3ac59c97f0aa7edd49091ba508aa83e4f300bc6dcb987",
+      "verbatim": true
+    },
+    "source-audit-v1.py.txt": {
+      "source": ".local/verification/defect-corrector-ai/saved-audit-v1.py",
+      "bytes": 25990,
+      "sha256": "fb3095d304048dd9c153736161ff9aae134c4427c1044137273fa7faea310d1f",
+      "verbatim": true
+    },
+    "source-audit-v1-receipt.json": {
+      "source": ".local/verification/defect-corrector-ai/saved-audit-v1.json",
+      "bytes": 5301492,
+      "sha256": "83d07cdcb6c57331a886400eb2b1edce9d31f950bc594b59d067a31c2332dd51",
+      "verbatim": true
+    },
+    "ux-audit-v1.py.txt": {
+      "source": ".local/verification/defect-corrector-ux-audit-v1/audit.py",
+      "bytes": 13591,
+      "sha256": "0424fbc924e548f0a78f512da952d9cb8d120816a5aa7d8447a7cf5a60c0b98d",
+      "verbatim": true
+    },
+    "ux-audit-v1-receipt.json": {
+      "source": ".local/verification/defect-corrector-ux-audit-v1/receipt.json",
+      "bytes": 993,
+      "sha256": "5559c280b42b4b28999a1924536b741de9000fe90a4a0669820f6f8fa302a6ca",
+      "verbatim": true
+    },
+    "ux-audit-v1-first.log": {
+      "source": ".local/verification/defect-corrector-ux-audit-v1/first.log",
+      "bytes": 167,
+      "sha256": "e130be66fa4984afdfba8d8f89c67aec98c3d996f1482356f05956e3c8f88daa",
+      "verbatim": true
+    },
+    "ux-audit-v1-native-supplement.json": {
+      "source": ".local/verification/defect-corrector-ux-audit-v1/native-supplement.json",
+      "bytes": 740,
+      "sha256": "9c5bd6d2c769bd09541d554acaa354856ee5d4fff18da3be2136333991dc7894",
+      "verbatim": true
+    }
+  },
+  "publication_scope": "Complete first correction/probe JSON and selected first receipts, prospective bindings, packaging readback and later saved-only audits. No derived extract. Source/auditor texts are non-executable copies.",
+  "excluded": "Research runtime/tests/source ZIPs, original106rawartifacts, prior full diagnostic arrays, complete ZIPs and all private photos/models. Prior published negative records remain in their own unchanged directory.",
+  "local_archive_readback": {
+    "format": "finite-acquisition-defect-corrector-v1-portable-archive-readback",
+    "source": {
+      "path": ".local/verification/finite-acquisition-defect-corrector-v1-recorded-source.zip",
+      "bytes": 732739,
+      "sha256": "d2f0e09e53ea46f4e6cdf482117262e8b8e978cf43187b84ad87ab4d65517424",
+      "members": 117,
+      "governing_inputs": 116,
+      "all_member_bytes_hashes_and_modes_verified": true
+    },
+    "complete": {
+      "path": ".local/verification/finite-acquisition-defect-corrector-v1-complete.zip",
+      "bytes": 23580692,
+      "sha256": "965e42bb750d870e7bc4885b99ee2f69e91aaa920f312a6cf7c825493409f455",
+      "members": 15,
+      "all_member_bytes_and_hashes_verified": true
+    },
+    "first_outcomes_preserved": true,
+    "subject_execution_calls": 0
+  },
+  "first_outcome": "literal_training_improvement; terminal0; one actual corrected tuple, no rerun.",
+  "controls_count": "First220pass; prospective218 addition error retained;58new+162predecessor=220.",
+  "limitations": "No complete recovery retest, reserved scoring, geometry/rank/camera/physical qualification or main runtime integration."
+}

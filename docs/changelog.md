@@ -1,5 +1,18 @@
 # Workbench change log
 
+## Observed-defect correction documented — November 14, 2026
+
+- Record research `d986f1f`, its 116-input freeze, 220 passing selected controls
+  and first actual paired training improvement: cost 0.302031169350812 to 0.0
+  on 135 supplied synthetic PNG samples, with only source 62 changing code.
+- Explain the equality-only minimum-norm proposal, global storage guard,
+  one nearest tuple, all-row gates and whole-work prepayment. Keep the prior
+  negative pair, prospective 218-count addition mistake and failed full
+  recovery unchanged. [Method](finite-acquisition-defect-corrector.md) ·
+  [first result](validation/finite-acquisition-defect-corrector.md).
+- Refresh current guidance from main after PR #121 merged. No main runtime or
+  library release change. [Documentation review](validation/documentation-defect-corrector.md).
+
 ## Actual PNG pair rejected on higher cost — November 13, 2026
 
 - Record the separate 112-input research freeze at `98fb1ae`: 162 selected
