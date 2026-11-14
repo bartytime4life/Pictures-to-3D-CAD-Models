@@ -879,9 +879,9 @@ def subpixel_rings(mask, g, ppm, shadow_free_blur=True, remove_glare=True):
     for round_ in range(LIGHT_ROUNDS):
         footprint = _footprint([(is_outer, start) for (is_outer, _, _, _), (start, _) in zip(first, starts)], mask.shape)
         light = shadow.fit_paper_light(g, mask, ppm, sigma, model_covariance, footprint)
-        # `shadow_free_blur` False keeps the width with the shadow in: a part traced with a
-        # thickness, whose wall model and piecewise thickness map were validated with it
-        # (docs/reference-sheet.md, Limits).
+        # `shadow_free_blur` False keeps the width with the shadow in. The trace passes
+        # True for every part: a thick part's wall model takes the shadow's light out of
+        # its profiles too (rings' "paper_model"; docs/reference-sheet.md, §5).
         if (
             round_ == 0 and shadow_free_blur and light.info["used"]
             and light.info.get("depth", 0.0) >= shadow.NOTICEABLE_DEPTH and sigma > 0
@@ -917,7 +917,7 @@ def subpixel_rings(mask, g, ppm, shadow_free_blur=True, remove_glare=True):
         rings.append({
             "outer": is_outer, "points": moved[keep], "support": support,
             "support_indices": indices[keep], "sigma_n": spread[keep], "covariance": covariance,
-            "paper_light": light.info,
+            "paper_light": light.info, "paper_model": paper_light,
         })
     return rings, sigma, tiny
 
@@ -983,14 +983,23 @@ def correct_silhouette(points, normals, nadir, height, thickness, is_outer):
         ring = ring.buffer(0)
     ratio = height / (height - thickness)
     # The bottom candidate (the point itself) is in h⁻¹(S) where h of it is in S; the
-    # top candidate is in S where it is.
-    raised = nadir + (points - nadir) * ratio
-    inside_raised = shapely.contains_xy(ring, raised[:, 0], raised[:, 1])
+    # top candidate is in S where it is. One on S's boundary, within roundoff, counts as
+    # in it: at a tangent point that bounds no wall's edge the other candidate lies
+    # exactly there. A wall's edge lies s² / 2r outside the outline s along it, so only
+    # its points within about 3 µm of its ends pass (r = 20 mm, coordinates to 200 mm).
+    tolerance = 1e-9 * (1.0 + float(np.abs(points).max()))
+
+    def in_material(candidates):
+        # A hole's material lies outside its ring.
+        inside = shapely.contains_xy(ring, candidates[:, 0], candidates[:, 1])
+        ok = inside if is_outer else ~inside
+        if (~ok).any():
+            ok[~ok] = shapely.distance(ring.boundary, shapely.points(candidates[~ok])) <= tolerance
+        return ok
+
     lowered = nadir + (points - nadir) / ratio
-    inside_lowered = shapely.contains_xy(ring, lowered[:, 0], lowered[:, 1])
-    # A hole's material lies outside its ring.
-    bottom_ok = inside_raised if is_outer else ~inside_raised
-    top_ok = inside_lowered if is_outer else ~inside_lowered
+    bottom_ok = in_material(nadir + (points - nadir) * ratio)
+    top_ok = in_material(lowered)
     chosen = np.where(bottom_ok != top_ok, top_ok, top)
     corrected = np.where(chosen[:, None], lowered, points)
     return corrected, chosen, bottom_ok | top_ok
@@ -1076,7 +1085,7 @@ def normal_cdf(z):
     return 0.5 * (1.0 + np.sign(z) * erf)
 
 
-def pooled_wall_tone(g, points, normals, band, sigma, steps=17, sample=160):
+def pooled_wall_tone(g, points, normals, band, sigma, steps=17, sample=160, light=None):
     """One wall tone shared by many narrow wall bands, or None.
 
     Where no band is wide enough (2.5 sigma) for a free two-step fit, each narrow band
@@ -1104,7 +1113,7 @@ def pooled_wall_tone(g, points, normals, band, sigma, steps=17, sample=160):
     if len(points) > sample:
         pick = np.linspace(0, len(points) - 1, sample).round().astype(int)
         points, normals, band, sigma = points[pick], normals[pick], band[pick], sigma[pick]
-    _, c0, c1, c2 = _wall_tone_parabolas(g, points, normals, band, sigma)
+    _, c0, c1, c2 = _wall_tone_parabolas(g, points, normals, band, sigma, light=light)
 
     def total(tone):
         return _refined_minimum(c0 + (c1 + c2 * tone) * tone)[2].sum()
@@ -1123,7 +1132,7 @@ def pooled_wall_tone(g, points, normals, band, sigma, steps=17, sample=160):
     return float(grid[k] + np.clip(shift, -1, 1) * (grid[1] - grid[0]))
 
 
-def _wall_tone_parabolas(g, points, normals, band, sigma, step=0.125):
+def _wall_tone_parabolas(g, points, normals, band, sigma, step=0.125, light=None):
     """The two-step model's residual as a function of the wall tone B, for each point
     and each candidate edge offset e (two_step_refine).
 
@@ -1135,12 +1144,19 @@ def _wall_tone_parabolas(g, points, normals, band, sigma, step=0.125):
     value or one per point (the edge's own spread across it under a directional blur).
     Returns (candidates, c0, c1, c2), each of shape (points, candidates); the candidate
     offsets are the same multiples of each point's sigma.
+    `light`, the fitted paper light (shadow.PaperLight), takes its variation out of each
+    profile's paper side (_paper_light_variation), which the flat sheet tone A cannot
+    follow: a soft shadow on a hole's floor, darkest beside the wall, otherwise reads as
+    wall and moves the edge outward.
     """
     sigma = np.broadcast_to(np.asarray(sigma, float), (len(points),))
     t = np.arange(-(float(band.max()) + 4 * float(sigma.max())), 4 * float(sigma.max()) + step / 2, step)
     sx = points[:, None, 0] + t[None, :] * normals[:, None, 0] - 0.5
     sy = points[:, None, 1] + t[None, :] * normals[:, None, 1] - 0.5
     y = sample_keys(g, sx, sy)
+    if light is not None:
+        # t runs along the material-outward normal, so the paper lies at t > 0.
+        y = y - _paper_light_variation(light, points, normals, t, step, 1.0, sigma)
     yy = np.einsum("nt,nt->n", y, y)
     candidates = np.arange(-0.6, 0.8 + 1e-9, 0.02)[None, :] * sigma[:, None]
     c0, c1, c2 = (np.empty(candidates.shape) for _ in range(3))
@@ -1180,7 +1196,7 @@ def _refined_minimum(residuals):
     return best, np.clip(shift, -1, 1), least
 
 
-def two_step_refine(g, points, normals, band, sigma, wall_tone=None, step=0.125, with_residuals=False):
+def two_step_refine(g, points, normals, band, sigma, wall_tone=None, step=0.125, with_residuals=False, light=None):
     """Locate an edge that has a narrow wall band on its material side.
 
     `g` holds linear light, in which the model below is exact for flat tones.
@@ -1206,7 +1222,7 @@ def two_step_refine(g, points, normals, band, sigma, wall_tone=None, step=0.125,
     """
     if len(points) == 0:
         return (points, np.empty(0), np.empty(0)) if with_residuals else (points, np.empty(0))
-    candidates, c0, c1, c2 = _wall_tone_parabolas(g, points, normals, band, sigma, step)
+    candidates, c0, c1, c2 = _wall_tone_parabolas(g, points, normals, band, sigma, step, light=light)
     if wall_tone is None:
         curvature = c2 + 1e-9  # a band too narrow to see leaves c2 at zero
         walls = -c1 / (2 * curvature)

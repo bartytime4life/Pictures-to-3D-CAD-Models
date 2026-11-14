@@ -12,7 +12,7 @@ from shapely.geometry import LineString, Polygon
 
 from backend import edges, fitting, reference, tone
 from backend.models import Profile
-from backend.tracing import TraceError, trace_image
+from backend.tracing import trace_image
 from tests import synthetic as S
 
 
@@ -201,6 +201,16 @@ def test_reference_keeps_the_actual_piecewise_thickness_frame_on_covariance_supp
     top = np.sum(normals * (original - nadir), axis=1) > 0
     expected = original.copy()
     expected[top] = np.asarray(nadir) + 0.8 * (original[top] - nadir)
+    # Points on no corrected outline are dropped (edges.correct_silhouette). This
+    # prescribed silhouette jumps from the top edge to the bottom edge between two
+    # samples, without the wall's edge between them, so the bottom sample beside each
+    # switch lies just off it.
+    *_, keep = reference.edges.correct_silhouette(original, normals, np.asarray(nadir), 100.0, 20.0, True)
+    switches = np.flatnonzero(top != np.roll(top, 1))
+    dropped = np.flatnonzero(~keep)
+    assert len(dropped) <= len(switches)
+    assert all(np.min(np.abs(d - switches)) <= 1 for d in dropped)
+    expected, top = expected[keep], top[keep]
     roundoff = 16 * np.finfo(float).eps * max(np.abs(original).max(), max(map(abs, nadir)))
     np.testing.assert_allclose(captured["points"], expected, rtol=0, atol=roundoff)
     np.testing.assert_array_equal(captured["scales"], np.where(top, 0.8, 1.0))
@@ -508,15 +518,17 @@ def test_geometric_recovery_sampling_does_not_silently_cap_a_large_circle():
     assert sagitta <= 0.03 / 16 + 2e-12
 
 
-def test_actual_thick_directional_trace_uses_bounded_geometric_recovery_and_keeps_strict_validation(
+def test_actual_thick_directional_trace_no_longer_crosses_itself_and_keeps_strict_validation(
     monkeypatch,
 ):
     """The original regression photo; an unresolved radius is never emitted as an arc.
 
-    Its valid pre-thickness source crosses after the piecewise map. A frozen geometric
-    fit, distinct from a deblurred radius estimate, stays within the existing fit tube.
-    The synthetic feature scorer expects analytic outer arcs and cannot score this
-    representation; this regression checks the complete validated outline instead.
+    Its thickness-corrected outline crossed itself where support switches between the
+    top and bottom edges, along the wall's vertical edges, and was kept only as a
+    bounded geometric fit (_geometric_source_polyline). Those edges are now dropped
+    (edges.correct_silhouette): the corrected source is valid, and the photo traces
+    with that recovery withheld. The synthetic feature scorer expects analytic outer
+    arcs and cannot score this representation; this checks the validated outline.
     """
     captures = []
     original = reference._geometric_source_polyline
@@ -529,26 +541,13 @@ def test_actual_thick_directional_trace_uses_bounded_geometric_recovery_and_keep
     monkeypatch.setattr(reference, "_geometric_source_polyline", capture)
     data, _ = S.render(blur=(1.0, 3.0), thickness=4.0)
     result = trace_image(data, reference="a4", thickness_mm=4.0)
-    assert captures
-    recovered = [
-        (source, candidate, tolerance)
-        for source, candidate, tolerance in captures
-        if candidate is not None
-    ]
-    assert recovered
-    for source, candidate, tolerance in recovered:
-        assert not Polygon(source).is_valid
-        assert Polygon(candidate).is_valid
-        source_curve = LineString(np.vstack([source, source[:1]]))
-        assert source_curve.buffer(tolerance).covers(Polygon(candidate).boundary)
-        assert Polygon(candidate).boundary.buffer(tolerance).covers(source_curve)
+    assert not captures
     profile = Profile.model_validate(result["profile"])
     assert {p.kind for p in profile.primitives.outer} == {"line"}
     assert any(p.kind == "circle" for ring in profile.primitives.holes for p in ring)
     assert any("corner radius could not be determined" in note for note in result["warnings"])
-    assert any("corrected trace crossed itself" in note for note in result["warnings"])
-    # Without a qualifying bounded geometric candidate, the original strict Profile
-    # rejection remains in force. No buffer(0), component deletion or relaxed rule.
+    assert not any("corrected trace crossed itself" in note for note in result["warnings"])
+    # Without a bounded geometric candidate the strict Profile validation still holds,
+    # and the photo traces: no buffer(0), component deletion or relaxed rule.
     monkeypatch.setattr(reference, "_geometric_source_polyline", lambda *_: None)
-    with pytest.raises(TraceError, match="could not form a valid profile"):
-        trace_image(data, reference="a4", thickness_mm=4.0)
+    Profile.model_validate(trace_image(data, reference="a4", thickness_mm=4.0)["profile"])

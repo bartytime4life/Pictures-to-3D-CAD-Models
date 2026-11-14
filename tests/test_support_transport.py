@@ -153,18 +153,31 @@ def test_support_uses_final_camera_once_and_final_refined_pairs(monkeypatch, sig
         assert top.any() and (~top).any()
         return (mm - top[:, None] * (thickness / final_height) * relative) * ppm
 
+    monkeypatch.setattr(edges, "correct_thickness", real_correct)
     for i, ((original_points, original_support), captured) in enumerate(
         zip(originals, fitted_inputs)
     ):
         refined_points, measured_normals = refine_calls[-1][1][i]
         np.testing.assert_allclose(measured_normals, fine_normals[i], atol=1e-12)
-        expected_points = expected_transport(refined_points, fine_normals[i])
+        # The measured points drop those that lie on no corrected outline
+        # (edges.correct_silhouette): on these sparse circles, only next to a switch
+        # between the top and bottom edges. The support keeps every point.
+        *_, keep = edges.correct_silhouette(
+            refined_points / ppm, fine_normals[i], final_nadir, final_height, thickness, rings[i]["outer"]
+        )
+        relative = refined_points / ppm - final_nadir
+        top = np.sum(relative * fine_normals[i], axis=1) > 0
+        switches = np.flatnonzero(top != np.roll(top, 1))
+        dropped = np.flatnonzero(~keep)
+        assert len(dropped) <= 2
+        assert all(np.min(np.abs((d - switches + len(top) // 2) % len(top) - len(top) // 2)) <= 1 for d in dropped)
+        expected_points = expected_transport(refined_points, fine_normals[i])[keep]
         expected_support = expected_transport(original_support, coarse_normals[i])
         np.testing.assert_allclose(captured[0], expected_points, rtol=0, atol=1e-12)
         np.testing.assert_allclose(captured[1], expected_support, rtol=0, atol=1e-12)
-        expected_error = np.linalg.norm(expected_points - expected_support[indices], axis=1).max()
+        expected_error = np.linalg.norm(expected_points - expected_support[indices[keep]], axis=1).max()
         assert captured[2] == pytest.approx(expected_error, rel=0, abs=1e-12)
-        np.testing.assert_array_equal(rings[i]["support_indices"], indices)
+        np.testing.assert_array_equal(rings[i]["support_indices"], indices[keep])
         # Each measured/coarse pair is transported exactly once with the FINAL
         # camera. The coarse input is still the original full contour.
         for call, before in zip(corrections[2 * i : 2 * i + 2], (refined_points, original_support)):
@@ -175,12 +188,12 @@ def test_support_uses_final_camera_once_and_final_refined_pairs(monkeypatch, sig
             assert np.max(np.abs(refined_points - refine_calls[0][1][i][0])) > 0.01
             before_refinement = expected_transport(original_points, fine_normals[i])
             stale_error = np.linalg.norm(
-                before_refinement - expected_support[indices], axis=1
+                before_refinement[keep] - expected_support[indices[keep]], axis=1
             ).max()
             assert abs(expected_error - stale_error) > 0.01
             first_refinement = expected_transport(refine_calls[0][1][i][0], fine_normals[i])
             provisional_error = np.linalg.norm(
-                first_refinement - expected_support[indices], axis=1
+                first_refinement[keep] - expected_support[indices[keep]], axis=1
             ).max()
             assert abs(expected_error - provisional_error) > 0.01
         else:
