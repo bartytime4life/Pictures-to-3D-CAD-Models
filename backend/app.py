@@ -19,6 +19,7 @@ from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from pydantic import BaseModel, ConfigDict, Field
 
 from . import blender as blender_bridge
+from . import depth as depth_model
 from .assistant import AssistantError, AssistantRequest, assistant_status, chat
 from .models import BuildRequest, Detail, Reference
 from .printing import load_printer_catalog
@@ -60,6 +61,7 @@ DOWNLOADS = {
     "heightmap": ("heightmap.png", "image/png"),
     "blender": ("blender-relief.zip", "application/zip"),
     "wedge": ("calibration-wedge.stl", "model/stl"),
+    "depth": ("depth-estimate.png", "image/png"),
 }
 UUID_PATTERN = re.compile(r"^[0-9a-f]{32}$")
 # Mirror the companion's scripts/lib/serve.mjs publication boundary. Local CAD
@@ -446,6 +448,13 @@ class CalibrationRequest(BaseModel):
     thickness_mm: list[float] = Field(min_length=3, max_length=32)
     readings: list[float] = Field(min_length=3, max_length=32)
     scale: Literal["srgb8", "linear"] = "srgb8"
+
+
+@app.get("/api/relief/depth")
+async def depth_status():
+    # Reports whether the optional depth model is installed and verified; never downloads.
+    state = await asyncio.to_thread(depth_model.status)
+    return JSONResponse(state, headers={"Cache-Control": "no-store"})
 
 
 @app.post("/api/relief/calibrate")

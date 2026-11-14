@@ -38,6 +38,7 @@ import numpy as np
 from PIL import Image
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from .depth import DepthError, estimate_depth
 from .three_mf import write_mesh_3mf
 from .tracing import load_image
 
@@ -63,8 +64,9 @@ class ReliefSettings(BaseModel):
     name: str = Field(default="Relief", min_length=1, max_length=100)
     revision: int = Field(default=0, ge=0)
     mode: Literal["relief", "lithophane"] = "relief"
-    # Relief only: a photo maps brightness to height; a depth map is used as stored data.
-    source: Literal["photo", "depth"] = "photo"
+    # Relief only: a photo maps brightness to height; a depth map is used as stored data;
+    # "ai" estimates relative depth from an ordinary photo with the optional local model.
+    source: Literal["photo", "depth", "ai"] = "photo"
     width_mm: float = Field(default=100, ge=10, le=400)
     min_mm: float = Field(default=1.6, ge=0.2, le=20)
     max_mm: float = Field(default=4.0, ge=0.4, le=40)
@@ -90,6 +92,11 @@ class ReliefSettings(BaseModel):
     def check_range(self):
         if self.max_mm - self.min_mm < 0.1:
             raise ValueError("Maximum thickness must exceed minimum thickness by at least 0.1 mm.")
+        if self.source == "ai" and (self.mode != "relief" or self.shape != "flat"):
+            raise ValueError(
+                "AI depth makes flat reliefs only. Choose Relief and the Flat shape, or "
+                "another picture type."
+            )
         if self.shape == "sphere":
             inner = self.sphere_diameter_mm / 2 - self.max_mm
             if inner < 10:
@@ -473,9 +480,24 @@ def build_relief(data: bytes, settings: ReliefSettings, job_dir: Path) -> dict:
     span = t_max - t_min
     lithophane = settings.mode == "lithophane"
     is_depth = image.mode == "F" or (settings.source == "depth" and not lithophane)
+    estimate = None
 
     # 1. The quantity that drives thickness, sampled on the grid.
-    if lithophane:
+    if settings.source == "ai":
+        # Relative depth estimated from the photo: white = nearest, scale and offset unknown.
+        try:
+            field, estimate = estimate_depth(image)
+        except DepthError as exc:
+            raise ReliefError(str(exc)) from None
+        display = field
+        sample_kind = f"{sample_kind}, depth estimated by {estimate['model']}"
+        cv2.imwrite(str(job_dir / "depth-estimate.png"), np.round(field * 65535).astype(np.uint16))
+        notices.append(
+            "Depth was estimated from the photo by a local AI model. It shows what is in front "
+            "of what, not measured distances: heights follow your Thinnest and Thickest "
+            "settings. Check the height map before printing."
+        )
+    elif lithophane:
         field = luminance
     elif is_depth:
         # A depth map is data, not light: use its stored values without colour decoding.
@@ -566,6 +588,7 @@ def build_relief(data: bytes, settings: ReliefSettings, job_dir: Path) -> dict:
                 "image_pixel_mm": pixel_mm,
             },
             "source": {"width_px": w_px, "height_px": h_px, "samples": sample_kind},
+            "depth_estimate": estimate,
             "nozzle_filter": {
                 "enabled": settings.nozzle_filter,
                 "fwhm_mm": settings.nozzle_mm,
@@ -639,6 +662,12 @@ def build_relief(data: bytes, settings: ReliefSettings, job_dir: Path) -> dict:
         "units": "mm",
         "provenance": "Thickness derived from image tone by the stated model; the source image is not stored.",
     }
+    if estimate:
+        recipe["provenance"] = (
+            f"Thickness derived from relative depth estimated by {estimate['model']} "
+            f"({estimate['license']}, revision {estimate['revision']}); the source image is not "
+            "stored."
+        )
     (job_dir / "project.json").write_text(
         json.dumps(recipe, indent=2, allow_nan=False), encoding="utf-8"
     )
@@ -651,6 +680,8 @@ def build_relief(data: bytes, settings: ReliefSettings, job_dir: Path) -> dict:
         write_wedge(job_dir, t_min, t_max)
         downloads["wedge"] = f"/api/download/{job_dir.name}/wedge"
         stats["wedge_mm"] = wedge_thicknesses(t_min, t_max)
+    if estimate:
+        downloads["depth"] = f"/api/download/{job_dir.name}/depth"
 
     preview_mesh = _preview_mesh(thickness, xs, ys)
     return {

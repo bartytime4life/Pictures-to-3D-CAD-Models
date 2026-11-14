@@ -1,5 +1,16 @@
 # Validation results
 
+## Optional AI depth for reliefs — November 14, 2026
+
+**Picture type: Photo → AI depth** estimates relative depth from an ordinary photo with Depth Anything V2 Small (Apache-2.0, ONNX, revision `4472b736`, SHA-256 checked) on the CPU, and makes a flat relief from it. Setup does not download the model; `make depth-model` does.
+
+- **Python:** **1,383 tests** passed on `main` at `7e0a1dd` plus this change, in 7.0 minutes, with the model installed. 25 are in the new `tests/test_depth.py`: preprocessing sizes and normalization, the scoring metrics, missing, wrong-size and wrong-hash model files, the install script's pins, builds with a stand-in network, API errors, and two that run the real model. Without the model those two are skipped. `make lint` passed Ruff and Prettier.
+- **Browser:** all **81 Chrome scenarios** passed against a dedicated server, in 7.0 minutes. They include two new relief scenarios. One checks the controls with the model reported missing and present, and that a lithophane sends the photo instead of AI depth. The other, when the model is installed, builds the AI moon and checks its facts, the 16-bit depth download and accessibility.
+- **Moon sample** (`make depth-benchmark`; the true heights are known). On the sunlit disc, AI depth ranks the heights at Spearman ρ = 0.94, with 8.7% aligned RMS error. Photo-mode brightness scores ρ = −0.16 and 21.8%. The full table and its limits are in the [relief guide](relief.md#measured-on-the-moon-sample).
+- **Runtime:** OpenCV's DNN module could not load the model, because it has dynamic input shapes, so ONNX Runtime 1.32.0 was added. Inference took 0.4–0.7 s at 728 × 518, and a full 100 mm build took about 2.3 s.
+
+Nothing was printed, and no real photographs were scored; the benchmark is one synthetic scene.
+
 ## Spheres and moon lamps — November 14, 2026
 
 **Shape: Sphere** wraps a 2:1 equirectangular picture around a hollow ball, as a lithophane lamp or a relief globe. It has a flat base ring around a light opening, and a Blender scene built with Geometry Nodes. A generated, seamless moon map is the sample.

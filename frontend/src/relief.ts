@@ -2,13 +2,14 @@
 
 export type ReliefMode = 'relief' | 'lithophane';
 export type ReliefShape = 'flat' | 'sphere';
+export type ReliefSource = 'photo' | 'depth' | 'ai';
 export type ReliefMaterial = 'pla' | 'petg' | 'abs' | 'asa' | 'tpu' | 'nylon';
 
 export type ReliefSettings = {
   name: string;
   revision: number;
   mode: ReliefMode;
-  source: 'photo' | 'depth';
+  source: ReliefSource;
   width_mm: number;
   min_mm: number;
   max_mm: number;
@@ -61,6 +62,13 @@ export type ReliefResult = {
       image_pixel_mm: number;
     };
     source: { width_px: number; height_px: number; samples: string };
+    depth_estimate?: {
+      model: string;
+      license: string;
+      revision: string;
+      input_px: [number, number];
+      seconds: number;
+    } | null;
     nozzle_filter: {
       enabled: boolean;
       fwhm_mm: number;
@@ -104,7 +112,33 @@ export type ReliefResult = {
   };
 };
 
-export type ReliefDownload = 'stl' | '3mf' | 'heightmap' | 'blender' | 'project' | 'wedge';
+export type ReliefDownload =
+  'stl' | '3mf' | 'heightmap' | 'depth' | 'blender' | 'project' | 'wedge';
+
+/** GET /api/relief/depth: whether the optional AI depth model is installed and verified. */
+export type DepthModelStatus = {
+  available: boolean;
+  model: string;
+  license: string;
+  revision: string;
+  bytes: number;
+  reason: string;
+};
+
+/**
+ * The picture type actually sent. AI depth makes flat reliefs only, so lithophanes and
+ * spheres use the photo's light instead (the backend rejects the combination). The
+ * draft keeps the user's choice, so switching back restores it.
+ */
+export function effectiveSource(draft: {
+  source: ReliefSource;
+  mode: ReliefMode;
+  shape: ReliefShape;
+}): ReliefSource {
+  return draft.source === 'ai' && (draft.mode !== 'relief' || draft.shape !== 'flat')
+    ? 'photo'
+    : draft.source;
+}
 
 export type BlenderStatus = {
   name: string;
@@ -162,6 +196,7 @@ export function filenameFor(kind: ReliefDownload, name: string) {
     stl: `${base}.stl`,
     '3mf': `${base}.3mf`,
     heightmap: `${base}-heightmap.png`,
+    depth: `${base}-depth.png`,
     blender: `${base}-blender.zip`,
     project: `${base}-relief.json`,
     wedge: `${base}-calibration-wedge.stl`,
