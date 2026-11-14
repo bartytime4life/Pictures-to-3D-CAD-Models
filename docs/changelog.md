@@ -1,5 +1,14 @@
 # Workbench change log
 
+## Thick parts' wall edges taken out of the corrected outline — November 14, 2026
+
+- A part traced with a thickness no longer fails where its outline switches between
+  the top and bottom edges. There the photo shows the wall's vertical edge, which the
+  thickness correction turned into an out-and-back run along the ray from the nadir.
+  Under a 1 x 3 px blur that run crossed itself, and five of six noise seeds of the
+  22-degree 4 mm plate failed to trace. Those points are now dropped, and all seven
+  seeds trace ([reference-sheet tracing](reference-sheet.md), Limits).
+
 ## Veiling glare taken out — November 14, 2026
 
 - Veiling glare, which #125 measured and reported, is now fitted to the part's own
