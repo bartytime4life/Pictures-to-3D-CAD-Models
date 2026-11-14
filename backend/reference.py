@@ -191,6 +191,33 @@ class _Transform:
         return (float(p[0]), float(p[1]))
 
 
+# A thick part's hole is seen as the overlap of its bottom outline and its enlarged top
+# outline, with a corner where they cross: where its support switches between the top
+# and bottom edges. The blur rounds that corner. On the rendered 4 mm plate tilted 22°
+# under a 1 x 3 px blur, points 15-35° round a 6 mm hole from each switch, 2-3 sigma of
+# arc, lay 0.6-1.5 px inside it, which put the hole 0.41-0.47 px RMS off its circle
+# against a 0.41 px gate. The circle is fitted and tested without them.
+SWITCH_CORNER_SIGMAS = 3.0
+
+
+def _off_switch_corners(ring, sigma):
+    """A mask over a thick part's ring of the points farther than SWITCH_CORNER_SIGMAS
+    blur widths from every switch between top and bottom support, or None where the ring
+    has no switch, or the mask would leave fewer than half its points."""
+    scales = ring.get("blur_scales")
+    if scales is None or sigma <= 0:
+        return None
+    top = np.asarray(scales) != 1.0
+    if top.all() or not top.any():
+        return None
+    points = ring["points"]
+    switches = np.flatnonzero(top != np.roll(top, 1))
+    corners = 0.5 * (points[switches] + points[switches - 1])
+    distance = np.linalg.norm(points[:, None, :] - corners[None, :, :], axis=2).min(axis=1)
+    keep = distance > SWITCH_CORNER_SIGMAS * sigma
+    return keep if keep.sum() >= max(0.5 * len(points), 8) else None
+
+
 def _refine_walls(g, rings, camera, thickness_mm, sigma, ppm):
     """Each ring's points with the edges that show a narrow side wall refined by the
     two-step model (edges.two_step_refine), before the parallax correction, with their
@@ -425,6 +452,7 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
         prims = fitting.fit_ring(
             ring["points"], tolerance_px, min_line_px,
             support_points=ring.get("support"), support_error=support_error,
+            circle_points=_off_switch_corners(ring, sigma),
         )
         if prims and ring.get("covariance") is not None and not Polygon(ring["points"]).is_valid:
             source_fit = _geometric_source_polyline(ring["points"], prims, tolerance_px)

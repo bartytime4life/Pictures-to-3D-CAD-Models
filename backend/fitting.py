@@ -122,7 +122,7 @@ def _line(points, a, b):
     return Primitive("line", {"c": c, "d": d, "extent": float(np.ptp(seg @ d))}, rms, float(res.max()), (a, b))
 
 
-def fit_ring(points, tol, min_line, circle_rel=0.01, support_points=None, support_error=0.0):
+def fit_ring(points, tol, min_line, circle_rel=0.01, support_points=None, support_error=0.0, circle_points=None):
     """A circle, a cycle of lines and arcs, or None (keep the polyline).
 
     A ring is one circle when its centre is inside the source ring and a circle fits
@@ -135,9 +135,15 @@ def fit_ring(points, tol, min_line, circle_rel=0.01, support_points=None, suppor
     third of the circle's. Assembled boundaries must also have source support: small
     radial/line residuals alone do not justify closing a short arc into a whole circle
     or extending nearly parallel lines to a distant intersection.
+
+    `circle_points`, a boolean mask over the points, fits and tests the circle on those
+    alone; the source support is still checked against every point. A thick part's
+    hole, seen as the overlap of its bottom outline and its enlarged top outline, has a
+    corner where they cross, and the blur rounds it: those points are not on the circle
+    (reference.SWITCH_CORNER_SIGMAS).
     """
     support = points if support_points is None else support_points
-    cx, cy, r, rms, mx = fit_circle(points)
+    cx, cy, r, rms, mx = fit_circle(points if circle_points is None else points[circle_points])
     gate = max(tol, circle_rel * r)
     if rms < gate and mx < 4 * gate and shapely.contains_xy(Polygon(support), cx, cy):
         circle = [Primitive("circle", {"c": (cx, cy), "r": r}, rms, mx)]
