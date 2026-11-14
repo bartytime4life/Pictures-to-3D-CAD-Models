@@ -1,0 +1,22 @@
+{
+  "format": "inward-literal-first-complete-archive-readback",
+  "recorded_at": "2026-11-14T00:15:30.382660+00:00",
+  "head": "98fb1aeeb54bd13d3c4dd324f323736109d17d0d",
+  "tree": "40f54d13a2e5bdc7723f2a59ae86589dea6e1cff",
+  "source": {
+    "path": ".local/verification/finite-acquisition-inward-literal-v1-recorded-source.zip",
+    "sha256": "9975f48280ae60ccc7e660aa2d0d24ffb52cfa18665d89fd52548523b8d78ddf",
+    "bytes": 687965,
+    "members": 113,
+    "payload_members_verified": 112
+  },
+  "complete": {
+    "path": ".local/verification/finite-acquisition-inward-literal-v1-complete.zip",
+    "sha256": "00e05652a1ab037b44f9d502cfface4bfa4d677dc69beac6ab2f3ee349b8cd7f",
+    "bytes": 22677115,
+    "members": 13,
+    "payload_members_verified": 12
+  },
+  "governing_inputs_unchanged": 112,
+  "scope": "Member hash/size/byte/mode consistency only. Paired cost negative; independent saved arithmetic and future nonlinear correction are separate. No model/test/rerun for packaging."
+}

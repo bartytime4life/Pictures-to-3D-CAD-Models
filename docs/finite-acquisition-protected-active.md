@@ -171,8 +171,12 @@ score or global impossibility result. A separately admitted
 [inward-point construction](finite-acquisition-inward-margin.md) now passes
 all five gates at all 128 new corners; its 103 controls and independent
 8,030-check saved-data audit pass. The [new outcome](validation/finite-acquisition-inward-margin.md)
-establishes represented local feasibility, without actual PNG-cost evaluation
-or an improved recovery result.
+establishes represented local feasibility. A separately frozen
+[paired literal test](finite-acquisition-inward-literal.md) then reproduces the
+baseline exactly but increases actual training cost from 0.302031169350812 to
+0.40923713513984694, rejecting the candidate. Cell 62 reaches code 92, while
+protected cell 33 changes 106 to 105. [Complete negative result](validation/finite-acquisition-inward-literal.md).
+The original full recovery result remains 11/12.
 There is no camera/noise qualification or GUI/HTTP mode.
 
 ## Primary background

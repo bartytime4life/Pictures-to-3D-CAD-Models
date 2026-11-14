@@ -1,0 +1,75 @@
+{
+  "format": "inward-literal-preexecution-static-reviews",
+  "reviewed_new_files": {
+    "studies/verification/finite-acquisition-inward-literal-v1.py": "841cb7655ab52313c13a168d70d9cb81fd17d81ebc164e55766a99f480e9f01a",
+    "tests/test_finite_acquisition_inward_literal.py": "65760a51b4b7deb515ba70b176a4ce8e123f053f581238abf84d79071ac9b87b",
+    "studies/finite-acquisition-inward-literal-v1.json": "20a3ddf3cfa10ace6685155277c11da7c9ead021e1f6f6264082282ab98973ed",
+    "docs/finite-acquisition-inward-literal.md": "2daa126f513b16356ebc265a815ba0a1b40387082a97b5182a2e9306b4fa4b17"
+  },
+  "reviews": [
+    {
+      "role": "mathematics",
+      "agent": "math_review",
+      "status": "clear",
+      "scope": "Independent runner arithmetic/protocol cross-review; authored independent invented-data controls,59 cases. No execution."
+    },
+    {
+      "role": "source_api",
+      "agent": "ai_review",
+      "status": "clear",
+      "scope": "Authored runner; independently reviewed exact59-case controls, root admission/guide and API/schema/work agreement. No execution."
+    },
+    {
+      "role": "protocol_usability",
+      "agent": "ux_review",
+      "status": "clear",
+      "scope": "Independent exact-hash runner/admission/guide lifecycle, provenance, reservation and claim review. No execution."
+    },
+    {
+      "role": "root_review",
+      "agent": "root",
+      "status": "clear",
+      "scope": "Independent full runner/control review, old schema and bit-binding review; authored admission/guide. Static Ruff/AST/compile only. All108 prior source bytes unchanged."
+    }
+  ],
+  "selected_case_count": 162,
+  "new_case_count": 59,
+  "prior_case_count": 103,
+  "real_invented_png_controls": 1,
+  "subject_imports_before_freeze": 0,
+  "saved_case_forwards_before_freeze": 0,
+  "root_static": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "2f2167",
+        "wall_time_seconds": 1.0249e-05,
+        "exit_code": 0,
+        "original_token_count": 5,
+        "output": "All checks passed!\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "a98740",
+        "wall_time_seconds": 1.2454e-05,
+        "exit_code": 0,
+        "original_token_count": 7,
+        "output": "2 files already formatted\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "chunk_id": "ca8ad4",
+        "wall_time_seconds": 0.053828243,
+        "exit_code": 0,
+        "original_token_count": 121,
+        "output": "{\"static\": {\"studies/verification/finite-acquisition-inward-literal-v1.py\": {\"sha256\": \"841cb7655ab52313c13a168d70d9cb81fd17d81ebc164e55766a99f480e9f01a\", \"bytes\": 45341, \"syntax_only\": true}, \"tests/test_finite_acquisition_inward_literal.py\": {\"sha256\": \"65760a51b4b7deb515ba70b176a4ce8e123f053f581238abf84d79071ac9b87b\", \"bytes\": 29064, \"syntax_only\": true, \"test_functions\": 25, \"test_cases\": 59}}, \"prior_inputs_unchanged\": 108, \"new_subject_imports\": 0, \"subject_executions\": 0}\n"
+      }
+    }
+  ],
+  "scope": "Every new file independently statically reviewed before first subject import, collection, test or operator call. Authoring corrections and static style failures are distinct from first scientific executions.",
+  "recorded_at": "2026-11-14T00:11:13.364070+00:00"
+}

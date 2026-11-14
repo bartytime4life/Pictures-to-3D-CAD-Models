@@ -1,5 +1,21 @@
 # Workbench change log
 
+## Actual PNG pair rejected on higher cost — November 13, 2026
+
+- Record the separate 112-input research freeze at `98fb1ae`: 162 selected
+  controls pass; the first actual paired probe reproduces the baseline
+  exactly but increases training cost 0.302031169350812 to
+  0.40923713513984694. Candidate rejected, `complete_no_improvement`, exit 1.
+- Preserve target cell 62 reaching code 92 and collateral cell 33 changing
+  106 to 105. Link the 841-check saved mathematical audit, complete first
+  paired JSON, source/artifact bindings and work accounting.
+  [Method](finite-acquisition-inward-literal.md) ·
+  [Results](validation/finite-acquisition-inward-literal.md).
+- Refresh current guides after documentation PR #120 merged. The original
+  failed 11/12 full recovery, earlier 0/128 census and 128/128 local result
+  remain unchanged. No fitter, user control or runtime behavior changes.
+  [Documentation review](validation/documentation-inward-literal.md).
+
 ## Exact inward-point representation step documented — November 13, 2026
 
 - Record the separate 108-input research freeze at `66df525`: 103 focused

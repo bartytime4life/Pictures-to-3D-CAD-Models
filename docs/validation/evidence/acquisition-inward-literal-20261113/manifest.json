@@ -1,0 +1,132 @@
+{
+  "format": "documentation-inward-literal-evidence-v1",
+  "research_head": "98fb1aeeb54bd13d3c4dd324f323736109d17d0d",
+  "research_tree": "40f54d13a2e5bdc7723f2a59ae86589dea6e1cff",
+  "publication_base": "5aaf7010d5fb4b9159206d7cb52a632b6c2940d5",
+  "verbatim_copies": {
+    "literal-admission.json": {
+      "source": "studies/finite-acquisition-inward-literal-v1.json",
+      "sha256": "20a3ddf3cfa10ace6685155277c11da7c9ead021e1f6f6264082282ab98973ed",
+      "bytes": 63169
+    },
+    "literal-prospective-method.txt": {
+      "source": "docs/finite-acquisition-inward-literal.md",
+      "sha256": "2daa126f513b16356ebc265a815ba0a1b40387082a97b5182a2e9306b4fa4b17",
+      "bytes": 10053
+    },
+    "literal-freeze.json": {
+      "source": ".local/verification/finite-acquisition-inward-literal-v1-freeze.json",
+      "sha256": "ffd283c89e8c30c6e802b5fa9d402ae39914e48c402f862a2c14091f3d44ff21",
+      "bytes": 20942
+    },
+    "literal-static-reviews.json": {
+      "source": ".local/verification/finite-acquisition-inward-literal-v1-static-reviews.json",
+      "sha256": "b183f6616b7fce408eefd48697f07fdf5452b86ccf60dddbbbce53c8d0ce37fa",
+      "bytes": 3308
+    },
+    "literal-first.json": {
+      "source": ".local/verification/finite-acquisition-inward-literal-v1-first.json",
+      "sha256": "e09b56e646459f90b0371a9ec5bacaecbaf7fc5146c577687b5f7a8cd6e22307",
+      "bytes": 324890
+    },
+    "literal-first.log": {
+      "source": ".local/verification/finite-acquisition-inward-literal-v1-first.log",
+      "sha256": "315e6ffd00be83b70d9e43456d4b9fb2cbd77f6afdc0bd9eaf1b1a899c3fb27c",
+      "bytes": 136
+    },
+    "literal-first-run-handle.json": {
+      "source": ".local/verification/finite-acquisition-inward-literal-v1-first-run-handle.json",
+      "sha256": "620785456d14c5218785e1c9f6a3d27a2de0acab27353173db1ee632b75f9efa",
+      "bytes": 568
+    },
+    "literal-first-tests.log": {
+      "source": ".local/verification/finite-acquisition-inward-literal-v1-first-tests.log",
+      "sha256": "ab005b1a3723054d741b9f618f61e5593e630baa34f3b6b06f4eb6e01d2e45c9",
+      "bytes": 260
+    },
+    "literal-first-tests-handle.json": {
+      "source": ".local/verification/finite-acquisition-inward-literal-v1-first-tests-handle.json",
+      "sha256": "37017723bd2dab2dbb1ac6ecb7043dda283ab9c7777f2555909b1d1435c9893c",
+      "bytes": 771
+    },
+    "literal-first-tests-terminal-receipt.json": {
+      "source": ".local/verification/finite-acquisition-inward-literal-v1-first-tests-terminal-receipt.json",
+      "sha256": "342f8de430509f05ca3c017cb867cc11edf06e05493c9116407157ee840642e0",
+      "bytes": 937
+    },
+    "literal-first-terminal-receipt.json": {
+      "source": ".local/verification/finite-acquisition-inward-literal-v1-first-terminal-receipt.json",
+      "sha256": "842d710705cd3a9b670f55d0c6ac394c1bf6e7325462927376267e457d0a9bca",
+      "bytes": 3198
+    },
+    "literal-archive-readback.json": {
+      "source": ".local/verification/finite-acquisition-inward-literal-v1-portable-archive-readback.json",
+      "sha256": "d14289044b74bfa08be4afac85fab69fbf8ca157cb9d38bab31765a430eec1ab",
+      "bytes": 989
+    },
+    "math-audit-v1.py.txt": {
+      "source": ".local/verification/inward-literal-math-audit/audit-v1.py",
+      "sha256": "c7eb79550ea9764bdaf25afdda80360f05267ea568445c551703f67e212aa5e9",
+      "bytes": 16691
+    },
+    "math-audit-v1-receipt.json": {
+      "source": ".local/verification/inward-literal-math-audit/receipt-v1.json",
+      "sha256": "c8318f82d78d9dde392c3125ea7fc8df1a039f493e99b8fd086230187967339b",
+      "bytes": 124480
+    },
+    "math-interpretation-v1.txt": {
+      "source": ".local/verification/inward-literal-math-audit/interpretation-v1.md",
+      "sha256": "4a85e9e8fc2d8b64187525201c91a6ee40f81aecdca4f4f75e64fc5e0a86edd0",
+      "bytes": 3543
+    },
+    "ux-audit-v1.py.txt": {
+      "source": ".local/verification/inward-literal-ux-audit-v1/audit.py",
+      "sha256": "c313725b1b642ba97e5adb4e3d194f9b9a0f07106731ecc8feec7b201a70c0e3",
+      "bytes": 14300
+    },
+    "ux-audit-v1-receipt.json": {
+      "source": ".local/verification/inward-literal-ux-audit-v1/receipt.json",
+      "sha256": "45ea6bef001d5d2308486c665c36b095377f27968b11664f39cb289e4ef02c60",
+      "bytes": 928
+    },
+    "ux-audit-v1-first.log": {
+      "source": ".local/verification/inward-literal-ux-audit-v1/first.log",
+      "sha256": "f1692a1fb8aa977595461b6fb4d7ff7c450710ab755e1032babb9c4ea5e362a4",
+      "bytes": 169
+    },
+    "ux-audit-v1-native-supplement.json": {
+      "source": ".local/verification/inward-literal-ux-audit-v1/native-supplement.json",
+      "sha256": "bc07dbd5fc548fb772751e02f1f95fb1488592ead434d7eb6eb852cf3420a1ea",
+      "bytes": 760
+    }
+  },
+  "scope": "Complete first paired-probe JSON, first controls/probe records, prospective admission/freeze and later saved-only audits. Synthetic saved evidence only. No derived extract or new scientific execution.",
+  "omissions": [
+    "Research runner and tests",
+    "112-member source payload and source ZIP",
+    "Complete nested ZIP",
+    "Original 106 raw recovery artifacts and full previous diagnostics"
+  ],
+  "local_archive_readback": {
+    "format": "inward-literal-first-complete-archive-readback",
+    "recorded_at": "2026-11-14T00:15:30.382660+00:00",
+    "head": "98fb1aeeb54bd13d3c4dd324f323736109d17d0d",
+    "tree": "40f54d13a2e5bdc7723f2a59ae86589dea6e1cff",
+    "source": {
+      "path": ".local/verification/finite-acquisition-inward-literal-v1-recorded-source.zip",
+      "sha256": "9975f48280ae60ccc7e660aa2d0d24ffb52cfa18665d89fd52548523b8d78ddf",
+      "bytes": 687965,
+      "members": 113,
+      "payload_members_verified": 112
+    },
+    "complete": {
+      "path": ".local/verification/finite-acquisition-inward-literal-v1-complete.zip",
+      "sha256": "00e05652a1ab037b44f9d502cfface4bfa4d677dc69beac6ab2f3ee349b8cd7f",
+      "bytes": 22677115,
+      "members": 13,
+      "payload_members_verified": 12
+    },
+    "governing_inputs_unchanged": 112,
+    "scope": "Member hash/size/byte/mode consistency only. Paired cost negative; independent saved arithmetic and future nonlinear correction are separate. No model/test/rerun for packaging."
+  }
+}

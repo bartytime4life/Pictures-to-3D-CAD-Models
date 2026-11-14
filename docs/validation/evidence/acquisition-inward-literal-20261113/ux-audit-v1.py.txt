@@ -1,0 +1,218 @@
+#!/usr/bin/env python3
+"""Saved JSON/byte consistency audit; no subject imports or forward evaluations."""
+
+import hashlib
+import json
+import math
+import struct
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[3]
+REPORT = ROOT / ".local/verification/finite-acquisition-inward-literal-v1-first.json"
+OUT = Path(__file__).with_name("receipt.json")
+EXPECTED = "e09b56e646459f90b0371a9ec5bacaecbaf7fc5146c577687b5f7a8cd6e22307"
+checks = 0
+failures = []
+
+
+def check(name, condition):
+    global checks
+    checks += 1
+    if condition is not True:
+        failures.append(name)
+
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def binding(path):
+    digest, size = hashlib.sha256(), 0
+    with path.open("rb") as stream:
+        while block := stream.read(1024 * 1024):
+            digest.update(block)
+            size += len(block)
+    return {"sha256": digest.hexdigest(), "bytes": size}
+
+
+def load(path):
+    data = path.read_bytes()
+
+    def pairs(items):
+        result = {}
+        for key, value in items:
+            if key in result:
+                raise ValueError("duplicate JSON key")
+            result[key] = value
+        return result
+
+    def bad(value):
+        raise ValueError(f"nonfinite JSON token: {value}")
+
+    result = json.loads(data, object_pairs_hook=pairs, parse_constant=bad)
+
+    def finite(value):
+        if isinstance(value, float):
+            check("finite JSON number", math.isfinite(value))
+        elif isinstance(value, dict):
+            for item in value.values():
+                finite(item)
+        elif isinstance(value, list):
+            for item in value:
+                finite(item)
+
+    finite(result)
+    return result, {"sha256": sha(data), "bytes": len(data)}
+
+
+def bits(values):
+    return b"".join(struct.pack("!d", v) for v in values)
+
+
+def array_bytes(record):
+    flat = [v for row in record["values"] for v in row]
+    check("array row shape", len(record["values"]) == record["shape"][0])
+    check("array column shape", all(len(row) == record["shape"][1] for row in record["values"]))
+    kind = {"<f4": "f", "<f8": "d", "|u1": "B"}[record["dtype"]]
+    raw = struct.pack("<" + kind * len(flat), *flat)
+    check("array byte hash", sha(raw) == record["sha256"])
+    return raw
+
+
+def main():
+    if OUT.exists() or OUT.is_symlink():
+        raise FileExistsError(OUT)
+    result, result_binding = load(REPORT)
+    check("canonical report hash", result_binding["sha256"] == EXPECTED)
+    check("canonical report size", result_binding["bytes"] == 324890)
+    plan, plan_binding = load(ROOT / "studies/finite-acquisition-inward-literal-v1.json")
+    check("plan binding", result["plan_sha256"] == plan_binding["sha256"])
+    old_run = ROOT / plan["saved_recovery"]["path"]
+    original, original_binding = load(old_run / "report.json")
+    inward, inward_binding = load(ROOT / plan["saved_inward"]["path"])
+    census, census_binding = load(ROOT / plan["saved_census"]["path"])
+    for name, old in (("recovery", original_binding), ("inward", inward_binding), ("census", census_binding)):
+        check(f"{name} before/after binding", result[f"saved_{name}_binding"] == old == result[f"saved_{name}_binding_after"])
+        spec = plan[f"saved_{name}"]
+        expected = {"sha256": spec.get("sha256", spec.get("report_sha256")), "bytes": spec.get("bytes", spec.get("report_bytes"))}
+        check(f"{name} admitted binding", old == expected)
+
+    check("negative outcome", result["status"] == "complete_no_improvement" and result["passed"] is False)
+    check("qualified complete comparison", result["paired_probe_complete"] is True and result["baseline_qualified"] is True)
+    check("no accepted trial", result["strict_training_improvement_accepted"] is False)
+    check("no protocol failure", result["protocol_failure"] is False and result["errors"] == [])
+    check("full inventory", result["inventory"] == {"rows": 24, "fit_files": 17, "no_certificate_fits": 16, "qualified_certificates": 1})
+    check("24 rows retained", len(result["rows"]) == len(original["rows"]) == len(inward["rows"]) == 24)
+    for i, (row, old, prior) in enumerate(zip(result["rows"], original["rows"], inward["rows"], strict=True)):
+        check(f"row{i} identity", row["row_index"] == i and row["case"] == old["case"]["name"] == prior["case"])
+        check(f"row{i} original flags", row["saved_status"] == old["status"] and row["saved_all_targets"] == old["all_targets"])
+    check("unchanged original matched score", original["matched_passes"] == 11)
+    check("unchanged original census", census["passed"] is False)
+    check("unchanged inward outcome", inward["passed"] is True)
+    check("all prior outcome flags unchanged", result["original_outcomes_modified"] is False and result["full_recovery_retested"] is False)
+    for key in ("optimizer_calls", "preparation_calls", "reference_calls", "reserved_scoring_calls", "new_qp_solves"):
+        check("no extra " + key, result[key] == 0)
+    check("source closures equal", result["source_before"] == result["source_after"] and result["source_unchanged"] is True)
+    check("112 source closure", result["source_before"]["count"] == len(result["source_before"]["files"]) == 112 and result["source_before"]["errors"] == [])
+    check("frozen commit", result["source_before"]["head"] == "98fb1aeeb54bd13d3c4dd324f323736109d17d0d")
+    for path, record in result["source_before"]["files"].items():
+        actual = binding(ROOT / path)
+        check("source bytes " + path, actual == {"sha256": record["sha256"], "bytes": record["bytes"]} and record["sha256"] == record["head_sha256"])
+    check("106 original artifacts", len(original["artifacts"]) == len(result["artifact_bindings"]) == len(result["artifact_bindings_after"]) == 106)
+    for path, expected in original["artifacts"].items():
+        check("artifact " + path, binding(old_run / path) == expected == result["artifact_bindings"][path] == result["artifact_bindings_after"][path])
+    check("109 final saved checks", len(result["saved_checks_after"]) == 109 and all(value is True for value in result["saved_checks_after"].values()))
+    check("no binding errors", result["saved_inputs_unchanged"] is True and result["artifact_binding_errors"] == result["saved_binding_errors_after"] == [])
+
+    contexts = [(row, record) for row in result["rows"] for record in row["pairs"]]
+    check("one context", len(contexts) == 1)
+    row, record = contexts[0]
+    pair = record["pair"]
+    check("context identity", row["case"] == "middle-png" and record["saved_corner_index"] == 0 and record["selected_source_index"] == 62 and record["target_code"] == 92)
+    old_fit, old_fit_binding = load(old_run / row["case"] / "fit.json")
+    check("old fit parsed-byte binding", old_fit_binding == original["artifacts"][row["case"] + "/fit.json"])
+    node, phase, iteration = old_fit, None, None
+    for key in record["path"]:
+        if isinstance(node, dict):
+            if "details" in node and "fit" in node:
+                phase = node
+            if "source_snapshot" in node and "incumbent_candidate_index" in node:
+                iteration = node
+        node = node[key]
+    baseline = phase["fit"]["candidates"][iteration["incumbent_candidate_index"]]
+    check("same archived baseline", record["baseline"] == baseline and record["snapshot"] == iteration["source_snapshot"])
+    saved = inward["rows"][row["row_index"]]["certificates"][0]["new_census"]
+    check("same selected saved corner", saved["selected_index"] == 0 and bits(record["corner"]) == bits(saved["candidates"][0]["physical"]))
+    for key in ("source_shape", "origin", "pitch", "optical_kernel", "output_shape", "output_to_source_index", "post_kernel", "queries", "target", "weights"):
+        check("same saved training " + key, record["inputs"][key] == phase["details"]["preflight_input_snapshot"][key] == old_fit["input_snapshot"][key])
+    check("nine baseline checks", len(pair["baseline_comparison"]["checks"]) == 9 and all(value is True for value in pair["baseline_comparison"]["checks"].values()) and pair["baseline_comparison"]["mismatches"] == [])
+    expected_charge = [2, 338, 10478]
+    expected_total = [992, 135369, 54531024]
+    check("pair held and charged", pair["pair_reservation"] == pair["held"] == pair["charged"] == expected_charge and pair["aggregate_work"] == expected_total)
+    check("no budget exceeded", all(value <= cap for value, cap in zip(expected_total, pair["limits"], strict=True)))
+    check("two phases", len(pair["forwards"]) == 2 and [f["label"] for f in pair["forwards"]] == ["incumbent", "saved_corner_0"])
+    for key in ("logical_forward_attempts", "coverage_calls_attempted", "coverage_calls_completed", "acquisition_calls_attempted", "acquisition_calls_completed"):
+        check("operator census " + key, pair[key] == result[key] == 2)
+    names = ["coverage", "source_linear", "optical_linear", "encoded", "decoded_linear", "rectified", "final"]
+    inputs = record["inputs"]
+    stage_bytes = []
+    for i, forward in enumerate(pair["forwards"]):
+        check("phase complete", forward["status"] == "resolved" and forward["protocol_failure"] is False and forward["error"] is None and forward["payload_errors"] == [])
+        check("phase correct point", bits(forward["point"]) == bits(baseline["parameters"] + baseline["levels"] if i == 0 else record["corner"]) and forward["hex"] == [v.hex() for v in forward["point"]])
+        check("phase upfront reservation", forward["pair_budget_at_entry"] == {"held": expected_charge, "charged": expected_charge, "aggregate_work": expected_total})
+        check("independent versus caller work", forward["reported"] == {"cell_work": None, "stage_work": 5239} and forward["caller_accounted_cell_work"] == 169 and forward["opaque_failed_work"] is False)
+        check("phase charged", forward["charged"] == forward["reservations"] == {"evaluations": 1, "cell_work": 169, "stage_work": 5239})
+        check("phase acquisition work", forward["required_work"] == forward["returned_required_work"] == forward["returned_performed_work"] == 5239)
+        check("135 statuses", len(forward["statuses"]) == len(inputs["queries"]) == 135 and set(forward["statuses"]) == {"resolved"})
+        check("seven stages ordered", list(forward["stages"]) == forward["stage_order"] == names)
+        raw_stages = {name: array_bytes(forward["stages"][name]) for name in names}
+        stage_bytes.append(raw_stages)
+        array_bytes(forward["coverage"])
+        for name in names:
+            check("stage declared shape/dtype", forward["stages"][name]["shape"] == [13, 13] and forward["stages"][name]["dtype"] == ("|u1" if name == "encoded" else "<f4"))
+        queried = [forward["stages"]["final"]["values"][y][x] for x, y in inputs["queries"]]
+        check("predictions indexed from retained final", bits(queried) == bits(forward["prediction"]))
+        residual = [target - value for target, value in zip(inputs["target"], forward["prediction"], strict=True)]
+        weighted = [weight * value for weight, value in zip(inputs["weights"], residual, strict=True)]
+        check("saved raw residual arithmetic", bits(residual) == bits(forward["raw_residual"]))
+        check("saved weighted residual arithmetic", bits(weighted) == bits(forward["weighted_residual"]))
+        norm = math.hypot(*weighted)
+        check("saved cost arithmetic", bits([norm * norm]) == bits([forward["cost"]]))
+    first, second = pair["forwards"]
+    for key, oldkey in (("prediction", "prediction"), ("raw_residual", "raw_residual"), ("weighted_residual", "residual")):
+        check("exact historical " + key, bits(first[key]) == bits(baseline[oldkey]))
+    check("exact historical cost", bits([first["cost"]]) == bits([baseline["cost"]]))
+    check("exact historical input", first["input_sha256"] == baseline["mean_input_sha256"] == record["snapshot"]["mean_input_sha256"])
+    for name in ("optical_linear", "encoded", "decoded_linear"):
+        old_bytes = array_bytes(record["snapshot"]["stages"][name])
+        check("exact historical stage " + name, stage_bytes[0][name] == old_bytes)
+    changed = [i for i, (a, b) in enumerate(zip(stage_bytes[0]["encoded"], stage_bytes[1]["encoded"], strict=True)) if a != b]
+    check("full source code change list", changed == pair["code_changes"]["all_changed_indices"] == [33, 62])
+    check("selected and collateral diagnostics", pair["code_changes"] == {"selected_target_matched": True, "selected_before": 93, "selected_after": 92, "all_changed_indices": [33, 62], "all_changed_count": 2, "other_changed_indices": [33], "other_changed_count": 1})
+    check("strict negative comparison", first["cost"] == 0.302031169350812 and second["cost"] == 0.40923713513984694 and second["cost"] > first["cost"] and pair["strict_cost_improved"] is False and pair["accepted"] is False)
+    check("complete negative no withheld interpretation", pair["status"] == "complete_no_improvement" and pair["paired_probe_complete"] is True and pair["interpretation_withheld"] is False and pair["opaque_failed_work"] is False)
+
+    receipt = {
+        "format": "inward-literal-ux-saved-audit-v1",
+        "report": result_binding,
+        "audit_sha256": sha(Path(__file__).read_bytes()),
+        "checks": checks,
+        "failed": len(failures),
+        "failures": failures,
+        "status": "saved_records_consistent_complete_negative" if not failures else "inconsistent",
+        "model_imports": 0,
+        "model_or_forward_calls": 0,
+        "new_points_or_censuses": 0,
+        "scope": "Saved finite JSON, raw byte/hash reconstruction, retained residual/cost arithmetic, source/artifact identity and inventory only. No independent coverage, optical/encoding/resampling, geometry-target or physical validation.",
+        "native_scope": "Saved stdout states complete_no_improvement/passed=false; native terminal exit supplied by parent until its separately retained terminal receipt is available. This audit does not launch or inspect a running process.",
+    }
+    with OUT.open("x") as stream:
+        json.dump(receipt, stream, indent=2, allow_nan=False)
+        stream.write("\n")
+    print(json.dumps({"output": str(OUT), "checks": checks, "failed": len(failures)}))
+    return 1 if failures else 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

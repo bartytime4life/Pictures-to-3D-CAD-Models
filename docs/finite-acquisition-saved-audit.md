@@ -79,6 +79,26 @@ The [terminal receipt](validation/evidence/acquisition-continuations-20261113/au
 records first outcomes and unchanged inputs. It runs with standard-library
 Python 3.14.4, zero backend imports and zero model/reference/optimizer calls.
 
+## Later paired-literal saved-only audits
+
+The [paired literal result](validation/finite-acquisition-inward-literal.md)
+retains the entire first output, all seven stages of each forward evaluation,
+the first controls and native terminal receipts. Its independent saved-data
+mathematical audit passes **841 checks**: exact baseline, residual and cost
+arithmetic, code changes, source/artifact bindings and charged work. It also
+compares saved local predictions with saved actual optical values. A separate
+record-consistency audit and terminal supplement agree. Its large scalar
+check count mainly traverses finite JSON values; it is not a count of
+independent scientific experiments.
+
+The candidate is rejected because actual training cost rises from
+0.302031169350812 to 0.40923713513984694. Target 62 reaches code 92, while
+collateral 33 changes 106 to 105. Neither audit repeats an optical model,
+generates a new point or retests full recovery. The
+[new inventory](validation/evidence/acquisition-inward-literal-20261113/manifest.json)
+publishes 19 verbatim records, with no derived extract. Local source and
+complete ZIP member readbacks remain separate from the later audits.
+
 ## Later inward-margin saved-only audit
 
 A separate [inward-margin result](validation/finite-acquisition-inward-margin.md)

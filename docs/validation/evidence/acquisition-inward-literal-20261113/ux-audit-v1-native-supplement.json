@@ -1,0 +1,20 @@
+{
+  "format": "inward-literal-ux-terminal-supplement-v1",
+  "terminal_receipt_sha256": "842d710705cd3a9b670f55d0c6ac394c1bf6e7325462927376267e457d0a9bca",
+  "checks": {
+    "terminal_on_initial_call": true,
+    "native_exit_one": true,
+    "complete_negative": true,
+    "frozen_head": true,
+    "file:first.json": true,
+    "file:first.log": true,
+    "file:first-run-handle.json": true,
+    "file:first-tests.log": true,
+    "file:first-tests-handle.json": true,
+    "file:first-tests-terminal-receipt.json": true,
+    "file:freeze.json": true,
+    "file:static-reviews.json": true
+  },
+  "failed": [],
+  "scope": "Saved terminal observation and file-hash readback only; original saved audit receipt preserved unchanged; no process or subject invocation."
+}

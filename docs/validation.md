@@ -5,9 +5,27 @@ record below to assess its evidence. This page separates local checks, hosted
 CI, library releases and physical qualification. Older sections retain their
 original counts and environment; they are not later retests.
 
+## Actual paired PNG cost: candidate rejected — November 13, 2026
+
+The [current documentation review](validation/documentation-inward-literal.md)
+starts from main `5aaf701`, after PR #120 merged. Separate research `98fb1ae`
+freezes 112 governing inputs before 162 selected controls pass. The first
+actual pair reproduces the saved incumbent on all nine qualification checks
+but increases training cost **0.302031169350812 to 0.40923713513984694**.
+The predetermined candidate is rejected: `complete_no_improvement`, exit 1,
+with no protocol failure. Source 62 reaches target code 92; collateral 33
+changes protected code 106 to 105. A saved-only mathematical audit passes
+841 checks. See [the method](finite-acquisition-inward-literal.md) and
+[complete first result and evidence](validation/finite-acquisition-inward-literal.md).
+
+This is two actual forwards under the original training-only inputs and caps,
+not a new full recovery study. The earlier local representation result,
+negative census, first failures and failed 11/12 recovery remain unchanged.
+No main runtime, UI, independent forward model or physical result is added.
+
 ## Inward-margin representation result — November 13, 2026
 
-The [current documentation review](validation/documentation-inward-margin.md)
+The [preceding documentation review](validation/documentation-inward-margin.md)
 starts from main `47b02ad`, after PRs #117, #118 and #119 merged. Separately frozen
 research `66df525`, with 108 governing inputs, passes **103 selected controls**.
 Its first saved-only construction and new census pass **all five gates at
