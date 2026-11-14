@@ -783,7 +783,7 @@ def _deglare(g, fit, sigma):
     return ((g - fit["g"] * up) / (1 - fit["g"])).astype(g.dtype)
 
 
-def subpixel_rings(mask, g, ppm, shadow_free_blur=True, remove_glare=True):
+def subpixel_rings(mask, g, ppm, shadow_free_blur=True, remove_glare=True, bounded_openings=False):
     """Outer boundary and holes of the mask at the local half-level, sub-pixel.
 
     `g` is the lightly smoothed rectified photo in linear light.
@@ -863,15 +863,20 @@ def subpixel_rings(mask, g, ppm, shadow_free_blur=True, remove_glare=True):
         spread = spreads(normals)
         # Which side of each point the paper is on, from the classified mask 3 sigma out.
         side = _paper_side_of(mask, start, normals, spread)
-        # Across a narrow opening the paper end stops short of its far edge (sheet.
-        # half_level_search's paper_extent): a thick part's hole, seen as the overlap of
-        # its bottom and enlarged top outlines, can be under 5 sigma across.
         half = max(4.0, 3.5 * float(spread.max()))
         search = {
             "half": half, "sigma": spread, "ring_smoothing": 20.0,
             "paper_side": side, "paper_light": light,
-            "paper_extent": _paper_extent(mask, start, normals, side, max(half, 5 * float(spread.max())) + 2.5 * spread),
         }
+        if bounded_openings:
+            # A thick part's hole, seen as the overlap of its bottom and enlarged top
+            # outlines, can be under 5 sigma across: its paper end stops short of the
+            # far edge (sheet.half_level_search's paper_extent). Only for a part traced
+            # with a thickness: on a thin cap hole, 4-6 sigma across in a flat part, it
+            # moved the edges outward. Its old reading had a bias of its own that hid
+            # the hole's widening, and reading the paper right left the hole 0.38 mm
+            # too wide where it had read 0.25 mm.
+            search["paper_extent"] = _paper_extent(mask, start, normals, side, max(half, 5 * float(spread.max())) + 2.5 * spread)
         moved, keep = half_level_search(g, start, normals, **search)
         return moved, keep, spread
 
