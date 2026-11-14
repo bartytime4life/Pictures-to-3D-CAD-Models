@@ -1,5 +1,17 @@
 # Workbench change log
 
+## Real cameras' optical effects measured — November 14, 2026
+
+- The test renderer can add veiling glare, lateral chromatic aberration and a
+  phone's sharpening, each off by default. Sharpening matters most: a mild unsharp
+  mask on the saved values read the outline 0.026–0.045 mm small, because in linear
+  light it moves a straight edge's half level towards the dark side (0.065 px under a
+  1.6 px blur); one photo cannot show it, so the capture guide asks for sharpening
+  off. Glare moves edges into the part too (0.005–0.023 mm at 10 %), and the fitted
+  shadow took it for a shadow against every edge; the part brightening beside the paper
+  tells it apart, and the trace now reports glare. Chromatic aberration is taken up by
+  the sheet (at most 0.005 mm) ([reference-sheet tracing](reference-sheet.md), §3).
+
 ## The second edge pass starts near each edge — November 13, 2026
 
 - The second edge pass is anchored where it starts, and it started from the

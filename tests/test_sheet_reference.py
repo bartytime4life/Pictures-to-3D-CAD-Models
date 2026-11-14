@@ -325,6 +325,33 @@ def test_a_shadow_fitted_round_the_part_keeps_its_sizes_under_a_wide_blur(client
     assert any("sharper than its fitted model" in note for note in profile["reference"]["notes"])
 
 
+def test_veiling_glare_is_told_from_a_contact_shadow(client):
+    """Light a lens scatters from the bright paper (synthetic.render's `glare`) dims the
+    paper beside the part, as a contact shadow does, and the fitted shadow read it as one
+    against every edge. Glare also brightens the part beside the paper, which a shadow
+    cannot: with 10 % of the light scattered the part's light rose 1.2 % of its contrast
+    towards its outline, against -0.04 % with the contact shadow. The trace reports glare
+    then, and no contact shadow."""
+    def notes(**kw):
+        return trace(client, S.render(**kw)[0], reference="a4").json()["profile"]["reference"]["notes"]
+
+    glared = notes(shadow=0.0, glare=0.10)
+    assert any("veiling glare" in note for note in glared)
+    assert not any("lies against nearly all" in note for note in glared)
+    contact = notes(shadow_kernel=[("gauss", 0.0, 0.0, 1.5, 1.0)])
+    assert any("lies against nearly all" in note for note in contact)
+    assert not any("veiling glare" in note for note in contact)
+
+
+def test_lateral_chromatic_aberration_is_absorbed_by_the_sheet(client):
+    """Red magnified and blue shrunk about the image centre (synthetic.render's
+    `chromatic_px`, 1.5 px at the corners) is a magnification of the photo, which the
+    sheet's homography takes up with the part's: the outline reads within 0.01 mm."""
+    profile = trace(client, S.render(chromatic_px=1.5)[0], reference="a4").json()["profile"]
+    errors = S.feature_errors(profile)
+    assert errors["outer"] < 0.01 and errors["small"] < 0.006 and errors["bore"] < 0.006
+
+
 def test_a_soft_shadow_does_not_widen_the_measured_edge_blur(client):
     """A soft shadow darkens the paper towards the part, and its light still rises
     where each profile's 25-75 % width is read, so it read as blur. Under a 3 px sensor
