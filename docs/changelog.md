@@ -1,5 +1,16 @@
 # Workbench change log
 
+## Snapping's dominant axis — November 13, 2026
+
+- Snapping made lines within 0.6° of a dominant axis exact, and turned the drawing
+  to it. That axis was the 4θ mean of every line, which is undefined where their
+  directions cancel: an equilateral triangle's or a regular hexagon's sides, or a
+  rectangle beside one long oblique edge, whose sides then did not snap. On a
+  rendered triangle under a 1 px blur one side was turned 0.60°, and its corners
+  read as an arc and a sharp corner bounded at R6.8 mm. The axis is now the direction
+  that gathers the most straight edge within 0.6°, and a line snaps only with
+  another in its family ([reference-sheet tracing](reference-sheet.md), §7).
+
 ## Same-image diagnostic executed — November 14, 2026 UTC
 
 - Record the 144-input freeze, preserved first control failures and separately

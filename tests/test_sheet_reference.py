@@ -853,14 +853,19 @@ def test_inside_and_outside_fillets_of_an_l_shaped_plate(radius_mm, sigma_px):
     assert all(error < 0.5 * p.data["r_sd"] / ppm for error, p in zip(errors, arcs))
 
 
-@pytest.mark.parametrize(("sides", "turn", "sigma_px"), [(4, 0.0, 1.6), (4, 0.0, 2.5), (6, 0.2, 1.6), (3, 0.1, 1.6)])
+@pytest.mark.parametrize(
+    ("sides", "turn", "sigma_px"), [(4, 0.0, 1.6), (4, 0.0, 2.5), (6, 0.2, 1.6), (3, 0.1, 1.6), (3, 0.1, 1.0)]
+)
 def test_sharp_corners_are_traced_sharp(sides, turn, sigma_px):
     """Rendered plates with sharp corners. Blur rounds a sharp corner; before the exact
     corner model each was fitted as a fillet of R0.4 to R1.1 mm. Now the corner is sharp,
     its edges meet, and the note bounds any fillet there: under R0.5 mm at right and
     wider angles, and under R0.75 mm at the triangle's 60 degree tips. There the
     tracer's local level cannot reach both plateaus, its points sit a little off the
-    half-level, and the bound, set by their residual, is looser."""
+    half-level, and the bound, set by their residual, is looser. Under a 1 px blur the
+    triangle had one corner fitted as an arc and another bounded at R6.8 mm: snapping
+    had turned a side onto an axis its sides do not have
+    (test_the_dominant_axis_is_the_direction_that_gathers_the_most_edge)."""
     from shapely.geometry import Polygon, box
 
     ppm = 5.0

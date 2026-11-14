@@ -414,6 +414,7 @@ It changes guides relative to that integrated baseline, not runtime behavior.
 | Directional covariance rank guard | Draft PR #78, source `185d682`: [633 local Python tests](validation/directional-blur-rank.md), build and 76 focused checks | Actual sampled Gaussian-step rank counterexample; no new whole-photo, browser or physical-accuracy claim |
 | Recorded directional-blur checks | Branch `claude/directional-blur`, on the slot end-cap commit and `main` at `485da7e` (after #47): **627 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#a-blur-that-differs-by-direction--november-12-2026) | Local result; synthetic photos including the directional-spread qualification's kinds of case, and exact blurred holes; supersedes that record's "no production correction" |
 | Contact-shadow observability study | Branch `claude/contact-shadow-limits` on `main` at `70055dc`, documentation only, as recorded [below](#contact-shadows-beside-an-edge--november-13-2026) | Exactly rendered scenes; an unobservable kernel radius, a closer-fit study and a profile-shape fit, none adopted; capture guidance |
+| Recorded snapping-axis checks | Branch `claude/snap-dominant-axis`, on `main` at `e29b560` (after #122): **1304 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#snappings-dominant-axis--november-13-2026) | Local result; synthetic line sets and rendered triangles; shapes whose lines share one family snap as before |
 | Recorded renderer channel-noise checks | Branch `claude/renderer-channel-noise`, on `main` at `e56c478` (after #116): **1302 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#independent-colour-noise-in-the-test-renderer--november-13-2026) | Test renderer only; the documented tables, rectangles, plates and noise seeds re-measured; three regression limits re-set from new and planted-fault figures |
 | Recorded shadow-free blur checks | Branch `claude/shadow-free-blur`, on `main` at `81248a7` (after #113): **1302 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#the-blur-beside-a-shadow--november-13-2026) | Local result; synthetic photos with five shapes of shadow, exactly rendered scenes, the documented tables and noise seeds; parts traced with a thickness keep the shadowed width; second-pass re-centring not adopted |
 | Recorded two-way blur checks | Branch `claude/rect-regression`, on `main` at `f2e0fd6` (after #104): **1041 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#two-way-parts-under-a-directional-blur--november-13-2026) | Local result; synthetic sharp-cornered rectangles, the documented tables and noise seeds; corners and curves of two-way parts keep one width |
@@ -450,6 +451,23 @@ stub fix in managed cloud sessions. The [reference-sensitivity record](validatio
 covers the endpoint explorer. The original CAD release and optional Ollama
 integration retain separate historical evidence. These records do not establish
 that a newly created or published cloud task has been validated.
+
+## Snapping's dominant axis — November 13, 2026
+
+Branch `claude/snap-dominant-axis`, on `main` at `e29b560` (after #122). See [reference-sheet tracing](reference-sheet.md), §7 (**Design intent**).
+
+- **What was found.** `fitting.snap_axes` made lines within 0.6° of a dominant axis exact, and the drawing turns to that axis. The axis was the 4θ circular mean of every line, which is undefined where their directions cancel in it:
+
+  | Lines | 4θ mean of all lines | Gathered edge |
+  | --- | --- | --- |
+  | Equilateral triangle, sides 60° apart | −42.3°, and −31.8° with one side turned 0.02° | The first longest side; nothing snapped |
+  | Regular hexagon | −27.2° | One pair of parallel sides |
+  | Rectangle at 2°, beside one oblique edge longer than either of its sides | −1.3°: no side within 0.6°, none snapped | 2.0°: the rectangle's four sides snapped |
+
+- **On rendered triangles** (`test_sharp_corners_are_traced_sharp`, 60° corners, 5 px/mm). Under a 1 px blur the mean fell 0.60° from one side, which was turned onto it. Its points then lay 1.14 px rms from the line, against 0.01–0.02 px on the other sides; one corner was fitted as an arc and another bounded at R6.8 mm. With the gathered axis nothing is snapped, and the three corners read sharp under R0.124, 0.128 and 0.118 mm. Under the test's 1.6 px blur the bounds are 0.184, 0.149 and 0.155 mm, as before; there the mean had happened to fall clear of every side. The tracer change in preparation (the second pass started near each edge) moved its points by under 0.06 px, enough to put the mean 0.47° from one side and that triangle's corner bound at R10.4 mm.
+- **The change.** Each line's own direction is tried as the axis; the axis is the extent-weighted 4θ mean of the lines within 0.6° of it, modulo a quarter turn, and the one that gathers the most straight edge is kept. A line is snapped only with another in its family. Lines from `fitting.fit_ring` carry their extent; lines without one weigh the same.
+- **Tests.** `test_the_dominant_axis_is_the_direction_that_gathers_the_most_edge` (triangles and a rectangle beside an oblique edge, 20 noise draws each) and `test_sharp_corners_are_traced_sharp` with the triangle under a 1 px blur both fail on `main` and pass with the change. Shapes whose lines share one family, rectangles and slots among them, snap as before.
+- **Checks run.** `pytest` with runtime warnings as errors: **1304 passed**. Ruff and Prettier passed. **74 browser scenarios** passed with the system Chrome.
 
 ## Contact shadows beside an edge — November 13, 2026
 
