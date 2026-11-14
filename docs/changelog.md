@@ -1,5 +1,15 @@
 # Workbench change log
 
+## A thick part's holes fitted clear of their corners — November 14, 2026
+
+- A thick part's hole is seen as the overlap of its bottom outline and its enlarged
+  top outline, cornered where they cross, and the blur rounds those corners. On the
+  22-degree 4 mm plate under a 1 x 3 px blur that put one 6 mm hole just outside the
+  circle test, so it was kept as a traced outline and the photo could not be
+  scored. Its circle is now fitted clear of the corners, and all seven seeds score;
+  their small holes and outline still read outside the test limits
+  ([reference-sheet tracing](reference-sheet.md), Limits).
+
 ## Thick parts take the shadow-free blur — November 14, 2026
 
 - A thick part's wall model now takes the fitted shadow's light out of its profiles.
