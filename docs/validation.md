@@ -1,5 +1,19 @@
 # Validation results
 
+## Elevation maps at true scale — November 14, 2026
+
+**Picture type: Elevation map** builds reliefs from single-band TIFF or PNG heights, such as NASA's [CGI Moon Kit](https://svs.gsfc.nasa.gov/4720) maps. Heights are converted to millimetres at the model's true scale, then multiplied by a chosen exaggeration. A generated float-kilometre moon elevation map, from the same features as the moon albedo map, is the sample.
+
+- **Python:** **1,365 tests** passed (50 in `tests/test_relief.py`, 8 of them for elevation maps). `make lint` passed.
+- **Browser:** all **80 Chrome scenarios** passed against a dedicated server, in 6.9 minutes. A new elevation-globe scenario checks the true-scale arithmetic shown to the user (0.339 mm × 12 = 4.07 mm), the hidden tone controls, and the server's "Use at most …×" refusal.
+- **Flat true scale:** a 1 km hill on a 10 km wide map printed 100 mm wide is 10 mm tall at 1× and 25 mm at 2.5×, within 0.1%. Thickest becomes Thinnest plus that height.
+- **Units:** metre, kilometre and NASA-style unsigned half-metre (+20,000 offset) encodings of the same terrain give the same relief within 0.1%.
+- **Bad data:** NaN and −3.4×10³⁸ fill values are replaced by the median height and counted, and signed 16-bit heights keep their sign. Colour, JPEG, out-of-range exaggeration, negligible relief and lithophane mode are refused with explanations.
+- **Sphere true scale:** a 5 km cap on a 100 mm Moon (1,737.4 km radius) at 10× stands 1.439 mm proud of the far side's surface in the exported STL, as predicted (within 2%).
+- **Sample:** the generator reproduces all four committed samples pixel for pixel. The elevation sample builds a closed globe (Euler characteristic 2) with 11.79 km of relief.
+
+The NASA facts in the guide (formats, units, sizes and credit line) come from NASA's page, read on November 14, 2026. No NASA file was downloaded or tested. Nothing was printed.
+
 ## Spheres and moon lamps — November 14, 2026
 
 **Shape: Sphere** wraps a 2:1 equirectangular picture around a hollow ball, as a lithophane lamp or a relief globe. It has a flat base ring around a light opening, and a Blender scene built with Geometry Nodes. A generated, seamless moon map is the sample.
