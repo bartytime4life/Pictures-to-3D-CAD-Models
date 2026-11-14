@@ -1,5 +1,14 @@
 # Workbench change log
 
+## Veiling glare taken out — November 14, 2026
+
+- Veiling glare, which #125 measured and reported, is now fitted to the part's own
+  light and taken out before the edges are placed: a plane plus the glare of one
+  Poisson kernel, whose transform is exact, and the model's exact inverse. With 10 %
+  of the light scattered, the summed error over seven seeds under a 3 px blur falls
+  from 90 to 42 µm (33 µm without glare). Glare-free photos are left unchanged
+  ([reference-sheet tracing](reference-sheet.md), §3).
+
 ## Real cameras' optical effects measured — November 14, 2026
 
 - The test renderer can add veiling glare, lateral chromatic aberration and a

@@ -662,7 +662,109 @@ def _part_rise(g, mask, points, normals, sigma, ppm):
     return float(np.median(rise)) - 0.5 * math.erfc(d / sigma / math.sqrt(2))
 
 
-def subpixel_rings(mask, g, ppm, shadow_free_blur=True):
+GLARE_GAIN = 0.25  # share of the part's own light variation the veil must explain
+GLARE_RANGE = (0.01, 0.3)  # fractions of the light scattered that are corrected
+GLARE_MAX_MM = 40.0  # widest veil spread tried
+GLARE_CELLS = 4e5  # most cells the glare fit uses
+
+
+def _glare_cell(shape, sigma):
+    """The glare fit's cell (px): about the blur, which the veil's spread is at least
+    twice, and no more than GLARE_CELLS cells over the image."""
+    return max(1, round(float(sigma)), math.ceil(math.sqrt(shape[0] * shape[1] / GLARE_CELLS)))
+
+
+def _glare_veil(cells, f, scale):
+    """A function a -> the veiling-glare spread of `cells` (an image averaged over f x f
+    px cells) by the kernel a / (2 pi (r^2 + a^2)^1.5), a in px, whose Fourier transform
+    is exp(-2 pi a |xi|): the Poisson kernel's. Zero-padded, so light outside the image
+    adds none. With `scale` = g, the veil of the image before the glare instead,
+    K * I with O = (1 - g) I + g K * I, whose transform is K O / (1 - g + g K)."""
+    h, w = cells.shape
+    H, W = cv2.getOptimalDFTSize(2 * h), cv2.getOptimalDFTSize(2 * w)
+    padded = np.zeros((H, W))
+    padded[:h, :w] = cells
+    spectrum = np.fft.rfft2(padded)
+    rho = np.hypot(np.fft.fftfreq(H)[:, None], np.fft.rfftfreq(W)[None, :])
+
+    def veil(a):
+        k = np.exp(-2 * np.pi * (a / f) * rho)
+        if scale:
+            k = k / (1 - scale + scale * k)
+        return np.fft.irfft2(spectrum * k, s=(H, W))[:h, :w]
+
+    return veil
+
+
+def _glare_fit(g, mask, sigma, ppm):
+    """Veiling glare, light the lens scatters, fitted to the part's own light: O = (1 - g)
+    I + g K * I with K the Poisson kernel of spread a (`_glare_veil`), I the image before
+    the glare and O the photo. Inside the part, beyond 4 sigma + 1 px of its outline where
+    the edges' own blur has died away, I is the part's light, taken as a plane, and O is
+    the plane plus g K * O to first order: linear in g for each a. a is tried from 2
+    sigma, below which the glare cannot be told from the blur, in quarter octaves to
+    GLARE_MAX_MM. Returns {"g", "a" (px), "gain"}, gain being the share of the plane's
+    residual the veil explains, or None with too little of the part to fit."""
+    f = _glare_cell(g.shape, sigma)
+    h, w = g.shape[0] // f, g.shape[1] // f
+    cells = g[: h * f, : w * f].reshape(h, f, w, f).mean((1, 3)).astype(np.float64)
+    inside = cv2.distanceTransform((mask > 0).astype(np.uint8), cv2.DIST_L2, 5)
+    depth = inside[: h * f, : w * f].reshape(h, f, w, f).min((1, 3))
+    use = depth >= 4 * sigma + 1
+    border = int(BORDER_MM * ppm / f) + 1
+    use[:border] = use[-border:] = False
+    use[:, :border] = use[:, -border:] = False
+    yy, xx = np.nonzero(use)
+    if len(yy) < 200:
+        return None
+    obs = cells[yy, xx]
+    plane = np.column_stack([np.ones(len(yy)), (xx - w / 2) / w, (yy - h / 2) / h])
+    base = float(np.sum((plane @ np.linalg.lstsq(plane, obs, rcond=None)[0] - obs) ** 2))
+    if base <= 0:
+        return None
+    veil = _glare_veil(cells, f, 0.0)
+
+    def trial(a):
+        design = np.column_stack([plane, veil(a)[yy, xx]])
+        coef, *_ = np.linalg.lstsq(design, obs, rcond=None)
+        return float(np.sum((design @ coef - obs) ** 2)), float(coef[3])
+
+    tried = {}
+    a = 2 * sigma
+    while a <= GLARE_MAX_MM * ppm:  # octaves, then quarter octaves round the best
+        tried[a] = trial(a)
+        a *= 2
+    best = min(tried, key=lambda k: tried[k][0])
+    for step in (-0.75, -0.5, -0.25, 0.25, 0.5, 0.75):
+        a = best * 2**step
+        if 2 * sigma <= a <= GLARE_MAX_MM * ppm:
+            tried[a] = trial(a)
+    best = min(tried, key=lambda k: tried[k][0])
+    near = [next((k for k in tried if abs(k / (best * 2**step) - 1) < 1e-6), None) for step in (-0.25, 0.25)]
+    if None not in near:  # a parabola in log a through the three
+        r0, r1, r2 = tried[near[0]][0], tried[best][0], tried[near[1]][0]
+        if r0 + r2 > 2 * r1:
+            a = best * 2 ** (0.125 * (r0 - r2) / (r0 + r2 - 2 * r1))
+            tried[a] = trial(a)
+            best = min(tried, key=lambda k: tried[k][0])
+    rss, fraction = tried[best]
+    return {"g": fraction, "a": best, "gain": 1 - rss / base}
+
+
+def _deglare(g, fit, sigma):
+    """The image before the glare `fit` (_glare_fit): I = (O - g K * I) / (1 - g), K * I
+    computed exactly from O on the cells and brought back to every pixel."""
+    f = _glare_cell(g.shape, sigma)
+    H, W = g.shape
+    h, w = H // f, W // f
+    cells = g[: h * f, : w * f].reshape(h, f, w, f).mean((1, 3)).astype(np.float64)
+    before = _glare_veil(cells, f, fit["g"])(fit["a"])
+    up = cv2.resize(before.astype(np.float32), (w * f, h * f), interpolation=cv2.INTER_CUBIC)
+    up = np.pad(up, ((0, H - h * f), (0, W - w * f)), mode="edge")
+    return ((g - fit["g"] * up) / (1 - fit["g"])).astype(g.dtype)
+
+
+def subpixel_rings(mask, g, ppm, shadow_free_blur=True, remove_glare=True):
     """Outer boundary and holes of the mask at the local half-level, sub-pixel.
 
     `g` is the lightly smoothed rectified photo in linear light.
@@ -711,6 +813,17 @@ def subpixel_rings(mask, g, ppm, shadow_free_blur=True):
     _, normals = ring_normals(outer)
     sampled = [(points[::2], ring_normals(points)[1][::2]) for _, points, _, _ in first]
     sigma, covariance, by_direction, model_covariance, raw = _measure_blur(g, outer[::4], normals[::4], sampled)
+    # Veiling glare brightens the part beside the bright paper and dims the paper beside
+    # it, moving edges into the part; it widens the measured blur too. Where the part's
+    # own light shows it (_glare_fit), it is taken out of the image and the blur measured
+    # again. Not for a part traced with a thickness, whose walls are brighter than its top.
+    glare = _glare_fit(g, mask, sigma, ppm) if remove_glare and sigma > 0 else None
+    corrected = (
+        glare is not None and glare["gain"] >= GLARE_GAIN and GLARE_RANGE[0] <= glare["g"] <= GLARE_RANGE[1]
+    )
+    if corrected:
+        g = _deglare(g, glare, sigma)
+        sigma, covariance, by_direction, model_covariance, raw = _measure_blur(g, outer[::4], normals[::4], sampled)
     # The paper's light round the part, fitted once as a soft shadow (shadow.py): the
     # second pass places each edge against it where it is adequate. A shadow beside the
     # edges also widens their measured blur: its light rises slowly away from them, and a
@@ -792,6 +905,8 @@ def subpixel_rings(mask, g, ppm, shadow_free_blur=True):
         light.info.update(_edge_rise(paper_light, mask, outline, across, sigma, ppm))
     if sigma > 0:
         light.info["part_rise"] = _part_rise(g, mask, outline, across, sigma, ppm)
+    if corrected:
+        light.info.update(glare=glare["g"], glare_mm=glare["a"] / ppm)
     rings = []
     for (is_outer, _, support, indices), (moved, keep, spread) in zip(first, final):
         if keep.sum() < 8:
