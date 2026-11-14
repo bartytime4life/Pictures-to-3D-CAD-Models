@@ -201,6 +201,10 @@ def _refine_walls(g, rings, camera, thickness_mm, sigma, ppm):
     if sigma <= 0:
         return [(ring["points"].copy(), edges.material_normals(ring["points"] / ppm, ring["outer"])) for ring in rings], notes
     ratio = camera["height_mm"] / (camera["height_mm"] - thickness_mm)
+    # Where the shadow model was used, its light's variation is taken out of the wall
+    # profiles' paper side too (edges._wall_tone_parabolas).
+    paper_model = next((r["paper_model"] for r in rings if r.get("paper_model") is not None), None)
+    shaded = {} if paper_model is None else {"light": paper_model}
     # Bottom-edge silhouette points have the visible wall on their material side, a
     # band (ratio - 1) |(p - N) . n| wide. A single mid-level crossing is biased into
     # the material by up to 0.2 sigma for bands of 1-3 sigma (edges.two_step_refine).
@@ -226,7 +230,7 @@ def _refine_walls(g, rings, camera, thickness_mm, sigma, ppm):
     wall_tone = None
     if len(wide_points) >= 30:
         _, tones = edges.two_step_refine(
-            g, wide_points, np.vstack([w[1] for w in wide]), np.concatenate([w[2] for w in wide]), np.concatenate([w[3] for w in wide])
+            g, wide_points, np.vstack([w[1] for w in wide]), np.concatenate([w[2] for w in wide]), np.concatenate([w[3] for w in wide]), **shaded
         )
         wall_tone = float(np.median(tones))
     else:
@@ -236,7 +240,7 @@ def _refine_walls(g, rings, camera, thickness_mm, sigma, ppm):
         pooled = sum(len(p[0]) for p in pool)
         if pooled >= 30:
             wall_tone = edges.pooled_wall_tone(
-                g, np.vstack([p[0] for p in pool]), np.vstack([p[1] for p in pool]), np.concatenate([p[2] for p in pool]), np.concatenate([p[3] for p in pool])
+                g, np.vstack([p[0] for p in pool]), np.vstack([p[1] for p in pool]), np.concatenate([p[2] for p in pool]), np.concatenate([p[3] for p in pool]), **shaded
             )
         if wall_tone is not None:
             notes.append(
@@ -255,7 +259,7 @@ def _refine_walls(g, rings, camera, thickness_mm, sigma, ppm):
         points = ring["points"].copy()
         if wall_tone is not None and narrow.any():
             moved, _ = edges.two_step_refine(
-                g, points[narrow], normals[narrow], band[narrow], spread[narrow], wall_tone=wall_tone
+                g, points[narrow], normals[narrow], band[narrow], spread[narrow], wall_tone=wall_tone, **shaded
             )
             points[narrow] += weight[narrow, None] * (moved - points[narrow])
         refined.append((points, normals))
@@ -295,8 +299,11 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
         g = cv2.GaussianBlur(
             sheet.rectify_gray(tone.linear_mix(rgb, weights), matrix, k1, plane, ppm), (0, 0), 0.7
         )
-        # The fourth argument, shadow_free_blur, is positional: tests stand in for this call.
-        rings, sigma, tiny = edges.subpixel_rings(mask, g, ppm, not thickness_mm, not thickness_mm)
+        # The fourth argument, shadow_free_blur, is positional: tests stand in for this
+        # call. A part traced with a thickness takes the shadow-free blur too, now that
+        # its wall model takes the shadow's light out of its profiles (_refine_walls);
+        # glare removal stays off for it (its walls are brighter than its top).
+        rings, sigma, tiny = edges.subpixel_rings(mask, g, ppm, True, not thickness_mm)
     except edges.EdgeError as exc:
         raise ReferenceError_(str(exc), sheet_missing=True) from exc
     notes = list(seg_notes)

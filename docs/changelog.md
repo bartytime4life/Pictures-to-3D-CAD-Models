@@ -1,5 +1,15 @@
 # Workbench change log
 
+## Thick parts take the shadow-free blur — November 14, 2026
+
+- A thick part's wall model now takes the fitted shadow's light out of its profiles.
+  On a hole floor the shadow is darkest beside the wall, and the flat paper level the
+  model assumed read it as wall, moving the far side of each hole outward. On a
+  frontal photo that set the camera height found from the holes 3.3 % low under the
+  shadow-free blur. With the light taken out it reads 0.5 % low, as without a
+  shadow, so thick parts now take the shadow-free blur like other parts
+  ([reference-sheet tracing](reference-sheet.md), §5 and Limits).
+
 ## Thick parts' wall edges taken out of the corrected outline — November 14, 2026
 
 - A part traced with a thickness no longer fails where its outline switches between

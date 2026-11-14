@@ -1015,6 +1015,37 @@ def test_two_step_wall_model_is_unbiased_with_a_known_wall_tone_and_degenerate_w
     assert np.abs(fixed[:, 0] - edge).max() < 0.02 * sigma
 
 
+def test_two_step_wall_model_takes_a_shadow_on_the_paper_out_with_its_light():
+    """A soft shadow on the paper beside a wall, darkest at the edge, as on a thick
+    part's hole floor, is not the flat sheet tone the two-step model fits: the fit read
+    its rise as wall and put the edge 0.35-0.40 sigma outward under a shadow taking 40 %
+    of the light at the edge and fading over 6 px. On a frontal photo that stretched
+    the holes, and the camera height found from their roundness (edges.roundness_focal)
+    read 3.3 % low. Given the fitted paper light (shadow.PaperLight.sharp), its variation
+    is taken out of each profile's paper side, as the blur's measurement does, and the
+    edge is placed within 0.02 sigma."""
+    from backend import shadow
+
+    sigma, edge, fine = 1.6, 100.3, 16
+
+    def paper(x):
+        return 236.0 * (1 - 0.4 * np.exp(-np.clip(x - edge, 0, None) / 6.0))
+
+    xs = (np.arange(200 * fine) + 0.5) / fine
+    light = shadow.PaperLight(np.tile(paper(np.arange(200) + 0.5), (20, 1)), None)
+    points = np.column_stack([np.full(4, edge - 0.2 * sigma), [5.0, 8.0, 11.0, 14.0]])
+    normals = np.tile([1.0, 0.0], (4, 1))
+    for width in (1.0, 1.6, 2.5, 3.0):
+        band = np.full(4, width * sigma)
+        sharp = np.where(xs < edge - band[0], 48.0, np.where(xs < edge, 78.0, paper(xs)))
+        blurred = cv2.GaussianBlur(sharp[None, :], (0, 0), sigma * fine)[0]
+        image = np.tile(np.interp(np.arange(200) + 0.5, xs, blurred), (20, 1))
+        flat, _ = edges.two_step_refine(image, points, normals, band, sigma, wall_tone=78.0)
+        lit, _ = edges.two_step_refine(image, points, normals, band, sigma, wall_tone=78.0, light=light)
+        assert flat[0, 0] - edge > 0.3 * sigma
+        assert abs(lit[0, 0] - edge) < 0.02 * sigma
+
+
 # ---------------------------------------------------------------------- properties
 
 
