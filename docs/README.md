@@ -20,6 +20,7 @@ different source and validation histories.
 | Resize, inspect printer fit or make straight-cut pieces | [Print planning](print-planning.md), [printer catalog](printer-catalog.md) |
 | Choose CAD, mesh, drawing or source files | [Exports and dimensional checks](exports.md) |
 | Prepare Bambu Studio or PrusaSlicer handoffs | [Slicer integration](slicers.md) |
+| Turn any picture into a relief or backlit lithophane, or edit it in Blender | [Relief and lithophane studio](relief.md) |
 | Ask the optional text-only local assistant | [Ollama setup and controls](ollama.md), [model evaluation plan](ollama-models.md) |
 | Recover from an error or missing result | [Troubleshooting](troubleshooting.md) |
 | Understand photo, model and local-data handling | [Privacy and security](privacy-security.md) |

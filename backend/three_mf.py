@@ -150,3 +150,73 @@ def write_3mf(path: Path, objects, *, name="Measured part"):
         archive.writestr("[Content_Types].xml", _xml(content_types))
         archive.writestr("_rels/.rels", _xml(relationships))
         archive.writestr(MODEL_PATH, _xml(model))
+
+
+def write_mesh_3mf(path: Path, vertices, triangles, *, name="Relief", object_name="Relief"):
+    """Write one already-indexed, closed mesh (NumPy arrays) as a 3MF Core package.
+
+    Large height fields have hundreds of thousands of vertices, so the model part is
+    serialized directly instead of through per-element ElementTree nodes. The package
+    layout, namespaces and units match :func:`write_3mf`.
+    """
+    from xml.sax.saxutils import quoteattr
+
+    import numpy as np
+
+    vertices = np.asarray(vertices, dtype=np.float64)
+    triangles = np.asarray(triangles, dtype=np.int64)
+    if (
+        vertices.ndim != 2
+        or vertices.shape[1] != 3
+        or triangles.ndim != 2
+        or triangles.shape[1] != 3
+        or not len(triangles)
+        or not np.all(np.isfinite(vertices))
+        or triangles.min() < 0
+        or triangles.max() >= len(vertices)
+    ):
+        raise ThreeMFError("The generated mesh is incomplete. Rebuild the model.")
+    vertex_xml = "\n".join(
+        f'<vertex x="{x:.9g}" y="{y:.9g}" z="{z:.9g}"/>' for x, y, z in vertices.tolist()
+    )
+    triangle_xml = "\n".join(
+        f'<triangle v1="{a}" v2="{b}" v3="{c}"/>' for a, b, c in triangles.tolist()
+    )
+    model = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        f'<model xmlns="{CORE_NAMESPACE}" unit="millimeter" xml:lang="en-US">\n'
+        f'<metadata name="Title">{_escape(name)}</metadata>\n'
+        '<metadata name="Application">Pictures to CAD</metadata>\n'
+        f'<resources><object id="1" type="model" name={quoteattr(object_name)}><mesh>\n'
+        f"<vertices>\n{vertex_xml}\n</vertices>\n<triangles>\n{triangle_xml}\n</triangles>\n"
+        "</mesh></object></resources>\n"
+        '<build><item objectid="1"/></build>\n</model>\n'
+    )
+    content_types = ET.Element("Types", {"xmlns": CONTENT_TYPES_NAMESPACE})
+    ET.SubElement(
+        content_types,
+        "Default",
+        {
+            "Extension": "rels",
+            "ContentType": "application/vnd.openxmlformats-package.relationships+xml",
+        },
+    )
+    ET.SubElement(
+        content_types, "Default", {"Extension": "model", "ContentType": MODEL_CONTENT_TYPE}
+    )
+    relationships = ET.Element("Relationships", {"xmlns": RELATIONSHIPS_NAMESPACE})
+    ET.SubElement(
+        relationships,
+        "Relationship",
+        {"Id": "rel0", "Type": MODEL_RELATIONSHIP, "Target": f"/{MODEL_PATH}"},
+    )
+    with zipfile.ZipFile(path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+        archive.writestr("[Content_Types].xml", _xml(content_types))
+        archive.writestr("_rels/.rels", _xml(relationships))
+        archive.writestr(MODEL_PATH, model.encode("utf-8"))
+
+
+def _escape(text):
+    from xml.sax.saxutils import escape
+
+    return escape(text)

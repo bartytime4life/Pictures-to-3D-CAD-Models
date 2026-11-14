@@ -1,0 +1,330 @@
+.relief-studio main {
+  padding: 0 12px 40px;
+}
+.relief-modes {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  padding: 18px 0;
+  flex-wrap: wrap;
+}
+.relief-mode {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  min-width: 300px;
+  max-width: 420px;
+  padding: 14px 20px;
+  border: 1.5px solid var(--border);
+  border-radius: 11px;
+  background: var(--panel);
+  color: #e6ecf0;
+}
+.relief-mode strong {
+  display: block;
+  font-size: 18px;
+}
+.relief-mode small {
+  color: var(--muted);
+  font-size: 14px;
+}
+.relief-mode[aria-checked='true'] {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+.relief-mode[aria-checked='true'] svg {
+  color: var(--accent);
+}
+.relief-mode:hover:not(:disabled) {
+  border-color: var(--focus);
+}
+.relief-viewports {
+  height: calc(100dvh - 380px);
+  min-height: 420px;
+}
+.relief-image-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #15191c;
+}
+.relief-image-stage.dragging {
+  outline: 2px dashed var(--accent);
+  outline-offset: -8px;
+}
+.relief-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  image-rendering: auto;
+}
+.relief-start {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  pointer-events: auto;
+}
+.relief-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 26px;
+  align-items: flex-start;
+  justify-content: center;
+  border-top: 1px solid #41484d;
+  margin: 18px -12px 0;
+  padding: 20px 24px 12px;
+}
+.relief-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 140px;
+}
+.relief-field > label,
+.relief-label {
+  font-size: 15px;
+  font-weight: 550;
+}
+.relief-field .number-field {
+  max-width: 170px;
+  height: 42px;
+}
+.relief-field select {
+  height: 42px;
+  border: 1px solid #8d969d;
+  border-radius: 6px;
+  padding: 6px 10px;
+  color: #f7fafc;
+  background: #272d32;
+  max-width: 340px;
+}
+.relief-field input[type='color'] {
+  width: 64px;
+  height: 42px;
+  border: 1px solid #8d969d;
+  border-radius: 6px;
+  background: #272d32;
+  padding: 3px;
+}
+.relief-hint {
+  font-size: 12px;
+  color: #a8b2ba;
+  line-height: 1.35;
+  max-width: 260px;
+}
+.relief-toggle {
+  display: flex;
+  height: 42px;
+  border: 1px solid #8d969d;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.relief-toggle button {
+  flex: 1;
+  border: 0;
+  background: #272d32;
+  color: #c9d3da;
+  padding: 0 14px;
+  font-weight: 550;
+}
+.relief-toggle button[aria-pressed='true'] {
+  background: #0078b4;
+  color: #fff;
+}
+.relief-build {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-self: center;
+}
+.relief-panel {
+  max-width: 1200px;
+  margin: 6px auto 0;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--surface);
+}
+.relief-panel > summary {
+  cursor: pointer;
+  padding: 12px 18px;
+  font-weight: 600;
+}
+.relief-advanced {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 26px;
+  align-items: flex-end;
+  padding: 4px 18px 18px;
+}
+.relief-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+  gap: 14px;
+  max-width: 1500px;
+  margin: 18px auto 0;
+}
+.relief-card {
+  border: 1.5px solid var(--border);
+  background: var(--panel);
+  border-radius: 11px;
+  padding: 16px 20px;
+  min-width: 0;
+}
+.relief-card h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  font-size: 19px;
+}
+.relief-facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 6px 16px;
+  margin: 0 0 12px;
+  font-size: 14px;
+}
+.relief-facts dt {
+  color: var(--muted);
+}
+.relief-facts dd {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.relief-facts small {
+  font-family: 'Inter Variable', sans-serif;
+  color: var(--muted);
+}
+.relief-downloads {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 10px;
+}
+.relief-download {
+  justify-content: flex-start;
+  text-align: left;
+  gap: 10px;
+}
+.relief-download small {
+  display: block;
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 12px;
+}
+.relief-checks {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+  font-size: 14px;
+}
+.relief-checks li {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.relief-checks svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.check-ok svg {
+  color: #5ad69b;
+}
+.check-bad svg {
+  color: #f0a08c;
+}
+.relief-explain summary {
+  cursor: pointer;
+  color: var(--accent);
+  font-size: 14px;
+}
+.relief-explain p,
+.relief-text {
+  font-size: 14px;
+  line-height: 1.55;
+  color: #d4dce2;
+}
+.relief-steps {
+  font-size: 14px;
+  line-height: 1.6;
+  padding-left: 20px;
+}
+.relief-steps code,
+.relief-text code {
+  font-family: var(--mono);
+  background: #15191c;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+.relief-wedge {
+  display: grid;
+  gap: 12px;
+}
+.relief-wedge table {
+  border-collapse: collapse;
+  font-size: 14px;
+  max-width: 380px;
+}
+.relief-wedge th,
+.relief-wedge td {
+  text-align: left;
+  padding: 3px 10px 3px 0;
+}
+.relief-wedge td input {
+  width: 110px;
+  height: 32px;
+  border: 1px solid #8d969d;
+  border-radius: 5px;
+  background: #272d32;
+  color: #f7fafc;
+  padding: 0 8px;
+  font-family: var(--mono);
+}
+.relief-fit {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+  font-size: 14px;
+}
+.relief-notes ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+@media (max-width: 1000px) {
+  .relief-viewports {
+    grid-template-columns: 1fr;
+    height: auto;
+    max-height: none;
+  }
+  .relief-viewports .viewport-panel {
+    height: 420px;
+  }
+}
+@media (max-width: 720px) {
+  .relief-studio .topbar {
+    gap: 10px;
+    padding: 0 12px;
+  }
+  .relief-studio .project-name {
+    display: none;
+  }
+  .relief-mode {
+    min-width: 0;
+    width: 100%;
+  }
+  .relief-controls {
+    justify-content: flex-start;
+    padding: 16px;
+  }
+  .relief-field {
+    min-width: calc(50% - 13px);
+  }
+}

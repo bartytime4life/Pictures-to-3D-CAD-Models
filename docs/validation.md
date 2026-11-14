@@ -1,5 +1,33 @@
 # Validation results
 
+## Relief and lithophane studio with Blender handoff — November 14, 2026
+
+A second tool at `/#relief` turns a picture into a relief or a backlit lithophane. It exports STL, 3MF, a 16-bit height map, a settings recipe, a Blender ZIP and, for lithophanes, a calibration wedge. It can also open the scene in an installed Blender. See the [relief guide](relief.md).
+
+- **Python:** **1,342 tests** passed on the branch rebased onto `main` at `903f76e` (the 1,311 existing plus 31 in `tests/test_relief.py`), with no failures or skips. The run took 7.4 minutes. `make lint` passed Ruff and Prettier.
+- **Browser:** the production typecheck/build and all **77 Chrome browser scenarios** passed against a dedicated server (74 existing plus 3 relief scenarios), in 6.9 minutes.
+  - Earlier full runs, before the rebase, failed intermittently. The cause was the last relief scenario ending while the workbench's own sample trace still held the server's single trace slot. That scenario now waits for the workbench to finish and clears its exports.
+  - The unchanged pre-rebase base commit passed its 39 scenarios under the same machine load.
+- **Uploads:** relief uploads use the workbench's decoders, formats (PNG, JPEG, WebP, HEIC, AVIF) and 32 MiB limit. 16-bit grayscale PNGs keep full depth.
+- **Colour science and optics:**
+  - The sRGB transfer function, luminance and CIE L* match published reference values.
+  - The Beer–Lambert inversion round-trips to 1e-12 relative.
+  - A least-squares fit recovers a synthetic 0.62 mm half-value thickness exactly from linear readings, and within 3% from rounded 8-bit camera values.
+- **Geometry:**
+  - Every generated surface and the step wedge is closed and consistently oriented.
+  - Every one has Euler characteristic 2 (genus 0) and nondegenerate triangles.
+  - The divergence-theorem volume agrees to 1e-12 relative with an independent projected-area × mean-height sum, and a flat field reproduces its box volume.
+  - 16-bit depth-map input is sampled to better than a quarter of an 8-bit step.
+- **Blender 5.3.0 (installed through Snap):**
+  - Headless Blender ran the exported script with no project values in it.
+  - The Displace-modifier result had the same vertex and triangle counts as the workbench STL, volume within 1e-6 relative, and bounds within 0.1 µm. Its unique vertex positions matched to the STL's float precision.
+  - A Cycles render of the lithophane scene correlated above 0.98 with the Beer–Lambert transmission map, with a median ratio within 3% of 1. During development the measured values were r = 0.993 and ratio 0.997.
+- **Launcher:**
+  - Mocked-process tests covered the fixed argument list without a shell, the static script bytes, rejection of unexpected ZIP members, same-origin loopback and opt-in requirements, and refusal of a command-line value for `PICAD_BLENDER`.
+  - In one manual check, **Open in Blender** started the installed Blender with the retained scene. The scene was not inspected in that window.
+
+These runs used Python 3.12.3, Node.js 22.13.1, Google Chrome 157.0.8103.78 and Blender 5.3.0, on a workstation under heavy unrelated load (load average 9–17). The sample is generated imagery. No relief, lithophane or wedge was printed, and the default half-value thickness is a placeholder rather than a measured filament property. Blender versions older than 5.3 were not tested.
+
 ## Same-image alternatives, unchanged recovery miss — November 14, 2026 UTC
 
 Research `44ad56c` freezes 144 inputs. Repaired selected controls pass

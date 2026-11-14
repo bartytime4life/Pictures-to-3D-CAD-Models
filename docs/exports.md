@@ -166,6 +166,18 @@ Changing a photo, outline, reference width, thickness, or other geometry setting
 
 The preview and download links returned by a successful build belong to that build. The interface releases superseded builds, and its current build when its page is closed or reloaded. Remaining temporary server artifacts expire after one hour. Download files and recipes you want to keep; old links are not an archive. If the result has expired or been cleared, rebuild the current settings to obtain fresh links.
 
+## Relief and lithophane exports
+
+The [relief studio](relief.md) produces a different set of files:
+
+- **STL** and **3MF:** one closed, outward-oriented mesh in millimetres, with its flat base at Z zero and the picture's top-left at the far-left, high-Y corner.
+- **Height map PNG:** 16-bit grayscale, one pixel per surface point. Black is the thinnest wall and white the thickest.
+- **Blender ZIP:** an editable scene that rebuilds the same solid (see [Blender](relief.md#blender)).
+- **Settings JSON:** the relief recipe, without the picture.
+- **Calibration wedge** (lithophanes only): an eight-step STL.
+
+Each build reports its mesh topology and two independent volume calculations. Check them with the independent mesh checker as for any STL; a relief is a single closed solid of genus 0.
+
 ## A practical import checklist
 
 1. Confirm the expected units.
