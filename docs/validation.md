@@ -414,6 +414,7 @@ It changes guides relative to that integrated baseline, not runtime behavior.
 | Directional covariance rank guard | Draft PR #78, source `185d682`: [633 local Python tests](validation/directional-blur-rank.md), build and 76 focused checks | Actual sampled Gaussian-step rank counterexample; no new whole-photo, browser or physical-accuracy claim |
 | Recorded directional-blur checks | Branch `claude/directional-blur`, on the slot end-cap commit and `main` at `485da7e` (after #47): **627 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#a-blur-that-differs-by-direction--november-12-2026) | Local result; synthetic photos including the directional-spread qualification's kinds of case, and exact blurred holes; supersedes that record's "no production correction" |
 | Contact-shadow observability study | Branch `claude/contact-shadow-limits` on `main` at `70055dc`, documentation only, as recorded [below](#contact-shadows-beside-an-edge--november-13-2026) | Exactly rendered scenes; an unobservable kernel radius, a closer-fit study and a profile-shape fit, none adopted; capture guidance |
+| Recorded glare-removal checks | Branch `claude/glare-correction`, on `main` at `51c1816` (after #125): **1311 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#veiling-glare-taken-out--november-14-2026) | Local result; rendered photos with veiling glare of two shapes, exact discs; glare-free photos unchanged |
 | Recorded optical-effects checks | Branch `claude/optical-effects`, on the second-pass start commit (`main` at `e29b560`, after #122): **1309 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#real-cameras-optical-effects--november-14-2026) | Local result; rendered photos with veiling glare, lateral chromatic aberration and sharpening, exact 1-D edges; sharpening and glare not corrected |
 | Recorded second-pass start checks | Branch `claude/second-pass-start`, on `main` at `e29b560` (after #122) and the snapping-axis commit: **1304 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#where-the-second-pass-starts--november-13-2026) | Local result; exactly blurred plates and exactly rendered scenes, the documented tables, rectangles, plates and noise seeds; contact shadows and non-Gaussian blurs read worse, three limits re-set from new and planted-fault figures |
 | Recorded snapping-axis checks | Branch `claude/snap-dominant-axis`, on `main` at `e29b560` (after #122): **1304 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#snappings-dominant-axis--november-13-2026) | Local result; synthetic line sets and rendered triangles; shapes whose lines share one family snap as before |
@@ -453,6 +454,27 @@ stub fix in managed cloud sessions. The [reference-sensitivity record](validatio
 covers the endpoint explorer. The original CAD release and optional Ollama
 integration retain separate historical evidence. These records do not establish
 that a newly created or published cloud task has been validated.
+
+## Veiling glare taken out — November 14, 2026
+
+Branch `claude/glare-correction`, on `main` at `51c1816` (after #125). See [reference-sheet tracing](reference-sheet.md), §3 (**Optical effects of real cameras**, **Glare taken out**) and Limits. #125 measured veiling glare and reported it; this fits it from the part's own light and removes it before the edges are placed.
+
+- **The model** (`edges._glare_fit`, `edges._deglare`). O = (1 − g) I + g K ∗ I, with O the photo, I the image before the glare and K the two-dimensional Poisson kernel a / 2π (r² + a²)^1.5, whose Fourier transform is exactly exp(−2π a |ξ|). Inside the part beyond 4 σ + 1 px of its outline, I is a plane and O the plane plus g K ∗ O to first order. Each a gives a linear fit in g: from 2 σ, in octaves to 40 mm, then in quarter octaves round the best and by a parabola in log a. The glare is removed where it explains at least a quarter of the part's light variation beyond the plane and 1 % ≤ g ≤ 30 %. K ∗ I has the exact transform K Ô / (1 − g + g K). The fit works on cells about σ wide, at most 400 000, and takes 0.04–0.16 s. The blur is then measured again. Parts traced with a thickness are left out.
+- **An exact disc** (`test_veiling_glare_is_fitted_from_the_part_and_taken_out`) with 10 % of its light scattered by the renderer's spatial kernel of a = 20 px: g 0.106 and a 18 px, 91 % of the glare beside the edge removed. The renderer's kernel, cut off at its grid and renormalised, has a near field heavier by about a/480: g read 0.104 on a disc twice the size.
+- **Fits on rendered photos:** g 0.102–0.106 and a 21–23 px with 10 % at a = 20 photo px, 0.030–0.031 with 3 %. Every glare-free photo tried fitted g −0.002 to −0.001 and was left unchanged: shadows, contact shadows, directional blurs, sharpening, 4000 × 3000. The 44 documented table rows and the four motion-streak and defocus plates read the same to the last digit.
+- **Residual veil**, against the same photo rendered without glare, whose noise is drawn after the glare from the same sequence: at most 0.22 % of the contrast beside the outline and the holes, against 2–5.5 %, overhead and tilted 22°.
+- **Seven seeds**, summed error, without glare → 10 % glare → glare taken out:
+
+  | Photo | Without glare | 10 % glare | Glare taken out |
+  | --- | --- | --- | --- |
+  | 1 px | 12.5 µm | 17.1 µm | 13.5 µm |
+  | 3 px, tilted | 33.3 µm | 89.9 µm | 41.6 µm |
+  | 3 px, overhead | 32.9 µm | 85.8 µm | 43.5 µm |
+
+  Hole positions under 3 px keep their rise (0.0117 → 0.0180 → 0.0182 mm tilted), because the division by 1 − g and the brighter part add noise.
+- **Glare of other shapes.** With 60 % in a Gaussian of a and 40 % in one of 6 a, the outline under 3 px went from 0.021 mm small to 0.001 mm large. Glare of a = 5 px, within twice the blur, went from 0.0142 mm small to 0.0024 mm large under 1 px.
+- **Tests.** `test_veiling_glare_is_fitted_from_the_part_and_taken_out`. `test_veiling_glare_is_taken_out_before_the_edges_are_placed`: outline 0.003 mm and Ø6 0.000 mm under 3 px, and 0.022 and 0.008 mm with the removal switched off. `test_veiling_glare_is_told_from_a_contact_shadow`, unchanged.
+- **Checks run.** `pytest` with runtime warnings as errors: **1311 passed**. Ruff and Prettier passed. **74 browser scenarios** passed with the system Chrome.
 
 ## Real cameras' optical effects — November 14, 2026
 

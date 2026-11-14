@@ -330,8 +330,9 @@ def test_veiling_glare_is_told_from_a_contact_shadow(client):
     paper beside the part, as a contact shadow does, and the fitted shadow read it as one
     against every edge. Glare also brightens the part beside the paper, which a shadow
     cannot: with 10 % of the light scattered the part's light rose 1.2 % of its contrast
-    towards its outline, against -0.04 % with the contact shadow. The trace reports glare
-    then, and no contact shadow."""
+    towards its outline, against -0.04 % with the contact shadow. The glare is now fitted
+    to the part's light and taken out, and the trace says so and reports no contact
+    shadow (test_veiling_glare_is_taken_out_before_the_edges_are_placed)."""
     def notes(**kw):
         return trace(client, S.render(**kw)[0], reference="a4").json()["profile"]["reference"]["notes"]
 
@@ -341,6 +342,24 @@ def test_veiling_glare_is_told_from_a_contact_shadow(client):
     contact = notes(shadow_kernel=[("gauss", 0.0, 0.0, 1.5, 1.0)])
     assert any("lies against nearly all" in note for note in contact)
     assert not any("veiling glare" in note for note in contact)
+
+
+def test_veiling_glare_is_taken_out_before_the_edges_are_placed(client, monkeypatch):
+    """With 10 % of the light scattered (synthetic.render's `glare`, a = 20 px) under a
+    3 px blur, the outline read 0.022 mm small and Ø6 0.008 mm large. The glare fitted to
+    the part's own light (edges._glare_fit) read about 10 % over about 22 px, and with it
+    taken out (edges._deglare) they read 0.003 and 0.000 mm. Over seven seeds the summed
+    error went from 90 to 42 um, against 33 um without glare; hole positions keep the
+    noise that the brighter part and the division by 1 - g add."""
+    data = S.render(glare=0.10, blur=3.0, shadow=0.0)[0]
+    profile = trace(client, data, reference="a4").json()["profile"]
+    errors = S.feature_errors(profile)
+    assert errors["outer"] < 0.01 and errors["small"] < 0.004
+    assert any("veiling glare), about 10 %" in note for note in profile["reference"]["notes"])
+    original = edges.subpixel_rings
+    monkeypatch.setattr(edges, "subpixel_rings", lambda mask, g, ppm, *rest: original(mask, g, ppm, rest[0], False))
+    errors = S.feature_errors(trace(client, data, reference="a4").json()["profile"])
+    assert errors["outer"] > 0.015 and errors["small"] > 0.006
 
 
 def test_lateral_chromatic_aberration_is_absorbed_by_the_sheet(client):

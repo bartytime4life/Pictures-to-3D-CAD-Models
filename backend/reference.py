@@ -296,7 +296,7 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
             sheet.rectify_gray(tone.linear_mix(rgb, weights), matrix, k1, plane, ppm), (0, 0), 0.7
         )
         # The fourth argument, shadow_free_blur, is positional: tests stand in for this call.
-        rings, sigma, tiny = edges.subpixel_rings(mask, g, ppm, not thickness_mm)
+        rings, sigma, tiny = edges.subpixel_rings(mask, g, ppm, not thickness_mm, not thickness_mm)
     except edges.EdgeError as exc:
         raise ReferenceError_(str(exc), sheet_missing=True) from exc
     notes = list(seg_notes)
@@ -323,7 +323,11 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
         notes.append(
             "A shadow beside the part has an edge sharper than its fitted model can follow, so edges were placed against a straight-line paper level there and may read a little outward. Soft, even light is better."
         )
-    if glare:
+    if light.get("glare"):
+        notes.append(
+            f"Light scattered in the lens (veiling glare), about {100 * light['glare']:.0f} % of it spread over about {light['glare_mm']:.1f} mm, was fitted to the part's own light and taken out before the edges were placed. A clean lens, a hood and no bright light near the frame reduce it."
+        )
+    elif glare:
         notes.append(
             f"The part's own light rises towards its outline, by {100 * light['part_rise']:.1f} % of its contrast: light scattered in the lens (veiling glare) brightens the part beside the paper and dims the paper beside it, moving edges into the part. A clean lens, a hood and no bright light near the frame reduce it."
         )
