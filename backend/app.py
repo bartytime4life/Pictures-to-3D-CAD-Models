@@ -149,7 +149,7 @@ class BodyTooLarge(HTTPException):
 def body_limit(path):
     """(bytes allowed, refusal) for a request body. A photo upload may be larger than
     any other request; both allow 64 KiB for multipart framing and form fields."""
-    if path == "/api/trace":
+    if path in ("/api/trace", "/api/relief"):
         return MAX_BYTES + 64 * 1024, "Upload exceeds the 32 MiB limit."
     return MAX_BODY + 64 * 1024, "Upload exceeds the 10 MiB limit."
 
@@ -408,9 +408,9 @@ async def relief(
         finally:
             await file.close()
         if not data:
-            raise HTTPException(422, "Choose a PNG, JPEG, or WebP image.")
+            raise HTTPException(422, "Choose a PNG, JPEG, WebP, HEIC or AVIF image.")
         if len(data) > MAX_BYTES:
-            raise HTTPException(413, "Choose an image under 10 MiB.")
+            raise HTTPException(413, "Choose an image under 32 MiB.")
         try:
             parsed = ReliefSettings.model_validate_json(settings)
         except ValueError as exc:

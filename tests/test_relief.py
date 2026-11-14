@@ -362,6 +362,10 @@ def test_relief_api_rejects_bad_settings_and_images(client):
     )
 
 
+def test_relief_upload_shares_the_photo_size_limit():
+    assert api.body_limit("/api/relief") == api.body_limit("/api/trace")
+
+
 def test_calibration_api(client):
     thickness = relief.wedge_thicknesses(0.8, 3.0)
     readings = (np.exp(-1.2 * (np.array(thickness) - 0.8)) * 1000).tolist()

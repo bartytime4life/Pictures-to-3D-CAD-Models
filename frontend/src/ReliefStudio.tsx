@@ -29,7 +29,18 @@ import type {
 } from './relief';
 import './ReliefStudio.css';
 
-const MAX_FILE = 10 * 1024 * 1024;
+const MAX_FILE = 32 * 1024 * 1024;
+// The same photo formats as the workbench. Some browsers report no type for HEIC, so
+// the file name is accepted as well.
+const PHOTO_TYPES = [
+  'image/png',
+  'image/jpeg',
+  'image/webp',
+  'image/heic',
+  'image/heif',
+  'image/avif',
+];
+const PHOTO_NAME = /\.(heic|heif|avif)$/i;
 const SAMPLE = '/relief-sample.png';
 
 type Draft = {
@@ -270,12 +281,12 @@ export default function ReliefStudio() {
   }
 
   function choose(next: File, name?: string) {
-    if (!['image/png', 'image/jpeg', 'image/webp'].includes(next.type)) {
-      setError('Choose a PNG, JPEG, or WebP image.');
+    if (!PHOTO_TYPES.includes(next.type) && !PHOTO_NAME.test(next.name)) {
+      setError('Choose a PNG, JPEG, WebP, HEIC or AVIF image.');
       return;
     }
     if (next.size > MAX_FILE) {
-      setError('Choose an image under 10 MiB.');
+      setError('Choose an image under 32 MiB.');
       return;
     }
     setFile(next);
@@ -514,7 +525,7 @@ export default function ReliefStudio() {
                   ref={fileInput}
                   type="file"
                   hidden
-                  accept="image/png,image/jpeg,image/webp"
+                  accept="image/png,image/jpeg,image/webp,image/heic,image/heif,image/avif,.heic,.heif,.avif"
                   aria-label="Choose an image"
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     const chosen = e.target.files?.[0];
@@ -541,7 +552,10 @@ export default function ReliefStudio() {
                 <div className="model-empty">
                   <ImageIcon size={45} weight="light" />
                   <h3>Drop a picture here.</h3>
-                  <p>PNG, JPEG or WebP up to 10 MiB. A 16-bit grayscale depth map also works.</p>
+                  <p>
+                    PNG, JPEG, WebP, HEIC or AVIF up to 32 MiB. A 16-bit grayscale depth map also
+                    works.
+                  </p>
                   <div className="relief-start">
                     <button
                       className="primary-button"

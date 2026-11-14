@@ -4,10 +4,11 @@
 
 A second tool at `/#relief` turns a picture into a relief or a backlit lithophane. It exports STL, 3MF, a 16-bit height map, a settings recipe, a Blender ZIP and, for lithophanes, a calibration wedge. It can also open the scene in an installed Blender. See the [relief guide](relief.md).
 
-- **Python:** **267 tests** passed (237 existing plus 30 in `tests/test_relief.py`), with no failures or skips. The run took 34.7 seconds. `make lint` passed Ruff and Prettier.
-- **Browser:** the production typecheck/build and all **42 Chrome browser scenarios** passed against a dedicated server (39 existing plus 3 relief scenarios), in 3.2 minutes.
-  - Earlier full runs failed intermittently. The cause was the last relief scenario ending while the workbench's own sample trace still held the server's single trace slot. That scenario now waits for the workbench to finish and clears its exports.
-  - The unchanged base commit passed its 39 scenarios under the same machine load.
+- **Python:** **1,342 tests** passed on the branch rebased onto `main` at `903f76e` (the 1,311 existing plus 31 in `tests/test_relief.py`), with no failures or skips. The run took 7.4 minutes. `make lint` passed Ruff and Prettier.
+- **Browser:** the production typecheck/build and all **77 Chrome browser scenarios** passed against a dedicated server (74 existing plus 3 relief scenarios), in 6.9 minutes.
+  - Earlier full runs, before the rebase, failed intermittently. The cause was the last relief scenario ending while the workbench's own sample trace still held the server's single trace slot. That scenario now waits for the workbench to finish and clears its exports.
+  - The unchanged pre-rebase base commit passed its 39 scenarios under the same machine load.
+- **Uploads:** relief uploads use the workbench's decoders, formats (PNG, JPEG, WebP, HEIC, AVIF) and 32 MiB limit. 16-bit grayscale PNGs keep full depth.
 - **Colour science and optics:**
   - The sRGB transfer function, luminance and CIE L* match published reference values.
   - The Beer–Lambert inversion round-trips to 1e-12 relative.
@@ -25,7 +26,7 @@ A second tool at `/#relief` turns a picture into a relief or a backlit lithophan
   - Mocked-process tests covered the fixed argument list without a shell, the static script bytes, rejection of unexpected ZIP members, same-origin loopback and opt-in requirements, and refusal of a command-line value for `PICAD_BLENDER`.
   - In one manual check, **Open in Blender** started the installed Blender with the retained scene. The scene was not inspected in that window.
 
-This run used Python 3.12.3, Node.js 22.13.1, Google Chrome 157.0.8103.78 and Blender 5.3.0. The sample is generated imagery. No relief, lithophane or wedge was printed, and the default half-value thickness is a placeholder rather than a measured filament property. Blender versions older than 5.3 were not tested.
+These runs used Python 3.12.3, Node.js 22.13.1, Google Chrome 157.0.8103.78 and Blender 5.3.0, on a workstation under heavy unrelated load (load average 9–17). The sample is generated imagery. No relief, lithophane or wedge was printed, and the default half-value thickness is a placeholder rather than a measured filament property. Blender versions older than 5.3 were not tested.
 
 ## Same-image alternatives, unchanged recovery miss — November 14, 2026 UTC
 

@@ -131,7 +131,9 @@ test('relief page rejects unsupported files and fits a phone screen', async ({ p
     mimeType: 'text/plain',
     buffer: Buffer.from('not an image'),
   });
-  await expect(page.getByRole('alert')).toContainText('Choose a PNG, JPEG, or WebP image.');
+  await expect(page.getByRole('alert')).toContainText(
+    'Choose a PNG, JPEG, WebP, HEIC or AVIF image.',
+  );
   await page.getByRole('button', { name: 'Dismiss error' }).click();
   await page.getByRole('button', { name: 'Try the moon sample' }).click();
   await expect(page.getByRole('button', { name: 'Update model' })).toBeEnabled({

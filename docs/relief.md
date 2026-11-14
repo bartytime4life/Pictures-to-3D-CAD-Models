@@ -14,7 +14,7 @@ The page shows the generated moon sample. The sample image is procedurally gener
 ## Use it
 
 1. Choose **Relief** or **Lithophane**.
-2. Drop in a PNG, JPEG or WebP (up to 10 MiB), or press **Try the moon sample**. A 16-bit grayscale PNG is read at full depth, so depth maps from other tools keep all 65,536 levels.
+2. Drop in a PNG, JPEG, WebP, HEIC or AVIF picture (up to 32 MiB), or press **Try the moon sample**. A 16-bit grayscale PNG is read at full depth, so depth maps from other tools keep all 65,536 levels.
 3. Set **Picture width**, the **Thinnest** and **Thickest** walls, and an optional **Frame**. The picture's height follows its aspect ratio; a frame is added outside the picture at full thickness.
 4. Lithophane only: set the filament's **Half-value thickness** (see [calibration](#calibrate-a-filament)). The line under **Update model** shows the light range those settings can produce.
 5. Press **Update model** after changes. Downloads are disabled while the shown model is out of date.
