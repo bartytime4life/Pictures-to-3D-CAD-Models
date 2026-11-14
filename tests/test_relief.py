@@ -18,7 +18,7 @@ from PIL import Image
 
 from backend import app as api
 from backend import blender as blender_bridge
-from backend import relief
+from backend import relief, sphere
 from backend.relief import ReliefError, ReliefSettings
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -559,7 +559,7 @@ def load_generator():
 
 def test_sample_generator_reproduces_both_committed_samples(tmp_path):
     load_generator().main(tmp_path)
-    for name in ("relief-sample.png", "relief-sample-depth.png"):
+    for name in ("relief-sample.png", "relief-sample-depth.png", "moon-map.png"):
         committed = cv2.imread(str(ROOT / "frontend" / "public" / name), cv2.IMREAD_UNCHANGED)
         regenerated = cv2.imread(str(tmp_path / name), cv2.IMREAD_UNCHANGED)
         assert committed.dtype == regenerated.dtype and np.array_equal(committed, regenerated), name
@@ -598,3 +598,241 @@ def test_moon_depth_sample_builds_a_true_hemisphere(tmp_path):
             ring
         )
     assert np.median(height[r > radius + 1.5]) == pytest.approx(0, abs=1e-6)
+
+
+# ------------------------------------------------------------------- spheres
+
+
+def equirect(array):
+    return png(np.dstack([array] * 3).astype(np.uint8))
+
+
+def sphere_settings(**changes):
+    return ReliefSettings(shape="sphere", **changes)
+
+
+def test_sphere_frame_puts_the_opening_and_both_cuts_in_one_plane():
+    settings = sphere_settings(sphere_diameter_mm=100, max_mm=3, opening_mm=40)
+    frame = sphere.sphere_frame(settings)
+    assert frame["r_in"] == pytest.approx(47)
+    # The inner sphere meets the cut plane on a circle of the requested diameter...
+    assert frame["r_in"] * math.sin(frame["theta_in"]) == pytest.approx(20)
+    # ...and both cuts lie at the same height.
+    assert frame["r_in"] * math.cos(frame["theta_in"]) == pytest.approx(frame["z_cut"])
+    assert frame["r_out"] * math.cos(frame["theta_out"]) == pytest.approx(frame["z_cut"])
+
+
+def test_sphere_settings_reject_impossible_shapes():
+    with pytest.raises(ValueError, match="too small"):
+        sphere_settings(sphere_diameter_mm=30, max_mm=8)
+    with pytest.raises(ValueError, match="opening"):
+        sphere_settings(sphere_diameter_mm=60, max_mm=3, opening_mm=50)
+
+
+def test_equirect_sampling_wraps_without_a_seam():
+    w, h = 720, 360
+    longitude = (np.arange(w) + 0.5) / w * 2 * math.pi
+    field = np.tile((np.cos(longitude) + 1) / 2, (h, 1)).astype(np.float32)
+    columns = 96
+    thetas = np.linspace(0, 2.5, 40)
+    values = sphere.sample_equirect(field, columns, thetas)
+    expected = (np.cos(np.arange(columns) * 2 * math.pi / columns) + 1) / 2
+    assert np.abs(values[5:] - expected).max() < 0.01  # Including longitude 0 at the seam.
+    assert np.ptp(values[0]) == 0  # The pole is one point.
+
+
+def test_spherical_nozzle_filter_keeps_constants_and_wraps():
+    thetas = np.linspace(0, 2.6, 50)
+    flat = np.full((50, 120), 2.0)
+    assert np.allclose(sphere.nozzle_filter(flat, thetas, 50, 0.17), 2.0)
+    stripe = flat.copy()
+    stripe[:, 0] = 3.0  # A one-column ridge on the seam spreads to both neighbours.
+    smoothed = sphere.nozzle_filter(stripe, thetas, 50, 3.0)
+    assert smoothed[25, 1] == pytest.approx(smoothed[25, -1], rel=1e-9)
+    assert smoothed[25, 1] > 2.0
+
+
+def test_constant_shell_volume_matches_the_closed_form(tmp_path):
+    gray = np.full((300, 600), 128)
+    result, _ = build(
+        tmp_path,
+        equirect(gray),
+        shape="sphere",
+        mode="relief",
+        min_mm=2,
+        max_mm=3,
+        auto_levels=False,
+        denoise="off",
+        collar_mm=0,
+    )
+    frame = sphere.sphere_frame(sphere_settings(min_mm=2, max_mm=3))
+    t = result["dimensions"]["min_thickness"]  # Uniform away from the one-row collar.
+    r_out, r_in, depth = frame["r_in"] + t, frame["r_in"], -frame["z_cut"]
+    theta_out = math.acos(frame["z_cut"] / r_out)
+
+    def cap_and_cone(r, theta):
+        return (
+            2 * math.pi * r**3 / 3 * (1 - math.cos(theta))
+            + math.pi / 3 * (r * math.sin(theta)) ** 2 * depth
+        )
+
+    exact = cap_and_cone(r_out, theta_out) - cap_and_cone(r_in, frame["theta_in"])
+    stats = result["stats"]
+    # The only collar row is at full thickness; the closed form ignores that one row.
+    assert stats["sphere"]["smooth_volume_mm3"] == pytest.approx(exact, rel=5e-3)
+    # Inscribed triangles approximate the smooth surfaces to second order.
+    assert abs(stats["sphere"]["polyhedral_vs_smooth"]) < 5e-3
+
+
+def test_sphere_build_is_closed_flat_based_and_radially_thick(tmp_path):
+    rng = np.random.default_rng(5)
+    picture = rng.integers(0, 255, (256, 512))
+    result, job = build(
+        tmp_path,
+        equirect(picture),
+        shape="sphere",
+        mode="lithophane",
+        min_mm=0.8,
+        max_mm=3,
+        sphere_diameter_mm=80,
+        opening_mm=30,
+    )
+    stats = result["stats"]
+    mesh = stats["mesh"]
+    assert mesh["closed_and_oriented"] and mesh["euler_characteristic"] == 2
+    assert mesh["volume_mm3"] == pytest.approx(stats["volume_check"]["value_mm3"], rel=1e-9)
+    assert result["shape"] == "sphere" and "wedge" in result["downloads"]
+    vertices = read_stl(job / "model.stl").reshape(-1, 3).astype(np.float64)
+    assert vertices[:, 2].min() == pytest.approx(0, abs=1e-4)
+    on_bed = vertices[np.abs(vertices[:, 2]) < 1e-4]
+    radius = np.hypot(on_bed[:, 0], on_bed[:, 1])
+    assert radius.min() == pytest.approx(15, abs=1e-3)  # The 30 mm opening.
+    frame = sphere.sphere_frame(sphere_settings(sphere_diameter_mm=80, max_mm=3, opening_mm=30))
+    assert radius.max() == pytest.approx(40 * math.sin(frame["theta_out"]), abs=1e-3)
+    centre = np.array([0, 0, -frame["z_cut"]])
+    distance = np.linalg.norm(vertices - centre, axis=1)
+    assert distance.max() <= 40 + 1e-3
+    assert stats["sphere"]["bed_contact_mm2"] > 0
+    assert 0 < stats["sphere"]["overhang_fraction"] < 0.5
+    assert stats["optics"]["dynamic_range_stops"] == pytest.approx(2.2 / 0.5)
+
+
+def test_sphere_warns_when_the_picture_is_not_a_world_map(tmp_path):
+    result, _ = build(tmp_path, gradient_photo(200, 200), shape="sphere")
+    assert any("not a 2:1 world map" in warning for warning in result["warnings"])
+
+
+def test_sphere_api_and_downloads(client):
+    picture = np.tile(np.linspace(0, 255, 400), (200, 1))
+    response = post_relief(
+        client,
+        equirect(picture),
+        shape="sphere",
+        mode="lithophane",
+        sphere_diameter_mm=60,
+        min_mm=0.8,
+        max_mm=2.5,
+        opening_mm=25,
+    )
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["shape"] == "sphere"
+    for url in body["downloads"].values():
+        assert client.get(url).status_code == 200
+
+
+@pytest.mark.skipif(BLENDER is None, reason="Blender is not installed")
+def test_blender_rebuilds_the_same_sphere(tmp_path):
+    rng = np.random.default_rng(9)
+    picture = cv2.GaussianBlur(rng.random((200, 400)) * 255, (0, 0), 3)
+    result, job = build(
+        tmp_path,
+        equirect(picture),
+        shape="sphere",
+        mode="lithophane",
+        sphere_diameter_mm=60,
+        min_mm=0.8,
+        max_mm=2.5,
+        opening_mm=25,
+    )
+    folder = tmp_path / "blender"
+    with zipfile.ZipFile(job / "blender-relief.zip") as archive:
+        archive.extractall(folder)
+    run_blender(folder, "--", "--report", "report.json", "--export-stl", "out.stl")
+    report = json.loads((folder / "report.json").read_text())
+    mesh = result["stats"]["mesh"]
+    assert report["manifold"]
+    assert (report["vertices"], report["triangles"]) == (mesh["vertices"], mesh["triangles"])
+    assert report["volume_mm3"] == pytest.approx(mesh["volume_mm3"], rel=1e-6)
+    ours, theirs = read_stl(job / "model.stl"), read_stl(folder / "out.stl")
+    assert ours.shape == theirs.shape
+    # Same triangles in the same order, up to the rotation of each triangle's vertices.
+    distance = np.min(
+        [np.abs(ours - np.roll(theirs, k, axis=1)).max(axis=(1, 2)) for k in range(3)], axis=0
+    )
+    assert distance.max() < 1e-4
+
+
+@pytest.mark.skipif(BLENDER is None, reason="Blender is not installed")
+def test_cycles_lamp_render_matches_beer_lambert_through_a_shell(tmp_path):
+    # A uniform wall: a view ray at distance rho from the centre crosses
+    # L = sqrt(R_out^2 - rho^2) - sqrt(R_in^2 - rho^2) of plastic in the front wall, so the
+    # glowing interior should appear with brightness exp(-mu L): darker towards the edge.
+    gray = np.full((200, 400), 140)
+    result, job = build(
+        tmp_path,
+        equirect(gray),
+        shape="sphere",
+        mode="lithophane",
+        sphere_diameter_mm=60,
+        min_mm=0.8,
+        max_mm=3,
+        opening_mm=20,
+        collar_mm=0,
+        denoise="off",
+        auto_levels=False,
+        half_value_mm=0.7,
+    )
+    folder = tmp_path / "blender"
+    with zipfile.ZipFile(job / "blender-relief.zip") as archive:
+        archive.extractall(folder)
+    size = 240
+    (folder / "lowres.py").write_text(
+        f"import bpy\ns = bpy.context.scene\ns.render.resolution_x = s.render.resolution_y = {size}\n"
+        "s.cycles.samples = 16\ns.cycles.device = 'CPU'\n"
+    )
+    subprocess.run(
+        [
+            BLENDER,
+            "-b",
+            "--factory-startup",
+            "--python",
+            "build_relief.py",
+            "--python",
+            "lowres.py",
+            "--python-expr",
+            (
+                "import bpy; bpy.context.scene.render.filepath='render.png'; "
+                "bpy.ops.render.render(write_still=True)"
+            ),
+        ],
+        cwd=folder,
+        capture_output=True,
+        timeout=900,
+        check=True,
+    )
+    light = relief.srgb_to_linear(
+        cv2.imread(str(folder / "render.png"), cv2.IMREAD_UNCHANGED)[..., :3].mean(axis=2) / 255
+    )
+    config = json.loads((folder / "relief.json").read_text())
+    r_in = config["r_in_mm"]
+    thickness = result["dimensions"]["min_thickness"]  # Uniform; collar is one row only.
+    r_out = r_in + thickness
+    mu = config["mu_per_mm"]
+    mm_per_px = 1.25 * 60 / size
+    centre = size / 2 - 0.5
+    for rho in (0.0, 0.4 * r_in, 0.7 * r_in):
+        column = round(centre + rho / mm_per_px)
+        patch = light[round(centre) - 1 : round(centre) + 2, column - 1 : column + 2].mean()
+        path = math.sqrt(r_out**2 - rho**2) - math.sqrt(r_in**2 - rho**2)
+        assert patch == pytest.approx(math.exp(-mu * path), rel=0.04), rho

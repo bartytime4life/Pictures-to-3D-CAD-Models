@@ -79,11 +79,28 @@ class ReliefSettings(BaseModel):
     auto_levels: bool = True
     material: Literal["pla", "petg", "abs", "asa", "tpu", "nylon"] = "pla"
     color: str = Field(default="#e8e4da", pattern=r"^#[0-9a-fA-F]{6}$")
+    # Sphere shape: a 2:1 equirectangular picture wrapped around a hollow ball whose wall
+    # thickness follows the picture, cut flat at the bottom around a light opening.
+    shape: Literal["flat", "sphere"] = "flat"
+    sphere_diameter_mm: float = Field(default=100, ge=30, le=250)
+    opening_mm: float = Field(default=35, ge=10, le=200)
+    collar_mm: float = Field(default=3, ge=0, le=20)
 
     @model_validator(mode="after")
     def check_range(self):
         if self.max_mm - self.min_mm < 0.1:
             raise ValueError("Maximum thickness must exceed minimum thickness by at least 0.1 mm.")
+        if self.shape == "sphere":
+            inner = self.sphere_diameter_mm / 2 - self.max_mm
+            if inner < 10:
+                raise ValueError(
+                    "The sphere is too small for its thickest wall. Enlarge the sphere or "
+                    "thin the wall so the inside is at least 20 mm across."
+                )
+            if self.opening_mm / 2 > 0.9 * inner:
+                raise ValueError(
+                    "The opening must be narrower than 90% of the sphere's inside diameter."
+                )
         self.color = self.color.lower()
         return self
 
@@ -211,13 +228,14 @@ def fit_half_value(thickness_mm, readings, scale: Literal["srgb8", "linear"] = "
 # --------------------------------------------------------------------------- meshing
 
 
-def heightfield_mesh(z, xs, ys):
+def heightfield_mesh(z, xs, ys, keys=None):
     """Close a height field into a watertight, outward-oriented triangle solid.
 
     ``z[r, c]`` is the top height at ``(xs[c], ys[r])``; ``xs`` increases and ``ys``
     decreases with the row index, so row 0 is the image top. Each grid cell is split
     along the diagonal with the smaller height change, which follows ridges and valleys
-    instead of cutting across them. Side walls drop vertically to a flat base at z = 0,
+    instead of cutting across them. ``keys`` (the exact integer 16-bit levels) decides
+    the diagonals when given, so ties break identically in Blender. Side walls drop vertically to a flat base at z = 0,
     triangulated as a fan around an interior centre vertex so no triangle is degenerate.
     """
     z = np.asarray(z, dtype=np.float64)
@@ -232,7 +250,7 @@ def heightfield_mesh(z, xs, ys):
     index = np.arange(nx * ny).reshape(ny, nx)
     a, b = index[:-1, :-1].ravel(), index[:-1, 1:].ravel()  # upper-left, upper-right
     c, d = index[1:, :-1].ravel(), index[1:, 1:].ravel()  # lower-left, lower-right
-    flat = z.ravel()
+    flat = z.ravel() if keys is None else np.asarray(keys, dtype=np.int64).ravel()
     along_ad = np.abs(flat[a] - flat[d]) <= np.abs(flat[b] - flat[c])
     tri_top = np.concatenate(
         [
@@ -302,7 +320,7 @@ def mesh_report(vertices, triangles):
     }
 
 
-def heightfield_volume(z, xs, ys, triangles_top_count=None):
+def heightfield_volume(z, xs, ys, keys=None):
     """Volume of the meshed height field from the top surface alone.
 
     For a solid whose base lies on z = 0 and whose walls are vertical, the divergence
@@ -315,7 +333,8 @@ def heightfield_volume(z, xs, ys, triangles_top_count=None):
     cell_area = dy[:, None] * dx[None, :]
     za, zb = z[:-1, :-1], z[:-1, 1:]
     zc, zd = z[1:, :-1], z[1:, 1:]
-    along_ad = np.abs(za - zd) <= np.abs(zb - zc)
+    k = z if keys is None else np.asarray(keys, dtype=np.int64)
+    along_ad = np.abs(k[:-1, :-1] - k[1:, 1:]) <= np.abs(k[:-1, 1:] - k[1:, :-1])
     # Diagonal a-d: triangles (c, d, a) and (d, b, a); diagonal b-c: (c, d, b), (c, b, a).
     sums = np.where(along_ad, (zc + zd + za) + (zd + zb + za), (zc + zd + zb) + (zc + zb + za))
     return math.fsum((cell_area / 2 * sums / 3).ravel().tolist())
@@ -403,8 +422,42 @@ def _grid_size(settings, aspect):
     return nx, ny, height_mm, notices
 
 
+def tone_to_thickness(values, settings):
+    """Map sampled tone (0..1) to wall thickness in mm, shared by every shape.
+
+    Returns ``(thickness, clipped, target, stats)``. A lithophane inverts Beer-Lambert
+    for the target transmission ``target``; ``clipped`` marks tones darker than the
+    thickest wall can show. A relief maps (optionally stretched) tone to height.
+    """
+    t_min, t_max = settings.min_mm, settings.max_mm
+    span = t_max - t_min
+    stats = {}
+    if settings.mode == "lithophane":
+        white = float(np.percentile(values, 99.5)) if settings.auto_levels else 1.0
+        target = np.clip(values / max(white, 1e-6), 0, 1)
+        thickness, clipped = lithophane_thickness(target, t_min, t_max, settings.half_value_mm)
+        stats["auto_levels_white"] = white
+        return thickness, clipped, target, stats
+    v = np.clip(values, 0, 1)
+    if settings.auto_levels:
+        # Stretch the 0.5th-99.5th percentile tones to the full thickness range, so the
+        # chosen thinnest and thickest walls are reached by the picture itself.
+        low, high = (float(q) for q in np.percentile(v, [0.5, 99.5]))
+        if high - low > 1e-6:
+            v = np.clip((v - low) / (high - low), 0, 1)
+        stats["auto_levels_range"] = [low, high]
+    if settings.invert:
+        v = 1 - v
+    thickness = t_min + span * v**settings.gamma
+    return thickness, np.zeros_like(thickness, dtype=bool), None, stats
+
+
 def build_relief(data: bytes, settings: ReliefSettings, job_dir: Path) -> dict:
     """Compute the thickness map, mesh it, verify it and write every export."""
+    if settings.shape == "sphere":
+        from .sphere import build_sphere
+
+        return build_sphere(data, settings, job_dir)
     image, notices = load_image(data, keep_depth=True)
     notices = list(notices)
     luminance, display, sample_kind = _image_fields(image)
@@ -442,25 +495,7 @@ def build_relief(data: bytes, settings: ReliefSettings, job_dir: Path) -> dict:
         ).astype(np.float64)
 
     # 3. Tone to thickness.
-    stats = {}
-    if lithophane:
-        white = float(np.percentile(values, 99.5)) if settings.auto_levels else 1.0
-        target = np.clip(values / max(white, 1e-6), 0, 1)
-        thickness_raw, clipped = lithophane_thickness(target, t_min, t_max, settings.half_value_mm)
-        stats["auto_levels_white"] = white
-    else:
-        v = np.clip(values, 0, 1)
-        if settings.auto_levels:
-            # Stretch the 0.5th-99.5th percentile tones to the full thickness range, so the
-            # chosen thinnest and thickest walls are reached by the picture itself.
-            low, high = (float(q) for q in np.percentile(v, [0.5, 99.5]))
-            if high - low > 1e-6:
-                v = np.clip((v - low) / (high - low), 0, 1)
-            stats["auto_levels_range"] = [low, high]
-        if settings.invert:
-            v = 1 - v
-        thickness_raw = t_min + span * v**settings.gamma
-        clipped = np.zeros_like(thickness_raw, dtype=bool)
+    thickness_raw, clipped, target, stats = tone_to_thickness(values, settings)
 
     # 4. Nozzle-width low-pass: a Gaussian whose full width at half maximum equals the
     # nozzle width. Detail narrower than the extruded line cannot be printed laterally.
@@ -493,9 +528,9 @@ def build_relief(data: bytes, settings: ReliefSettings, job_dir: Path) -> dict:
     gy, gx = thickness.shape
     xs = np.arange(gx) * pitch_x
     ys = (gy - 1 - np.arange(gy)) * pitch_y
-    vertices, triangles = heightfield_mesh(thickness, xs, ys)
+    vertices, triangles = heightfield_mesh(thickness, xs, ys, keys=levels)
     report = mesh_report(vertices, triangles)
-    surface_volume = heightfield_volume(thickness, xs, ys)
+    surface_volume = heightfield_volume(thickness, xs, ys, keys=levels)
     if not report["closed_and_oriented"] or report["genus"] != 0:
         raise ReliefError("The generated surface did not close into a solid. Try again.")
     if not math.isclose(report["volume_mm3"], surface_volume, rel_tol=1e-9):
@@ -544,6 +579,11 @@ def build_relief(data: bytes, settings: ReliefSettings, job_dir: Path) -> dict:
             "density_g_cm3": density,
             "mesh": report,
             "volume_cross_check_mm3": surface_volume,
+            "volume_check": {
+                "label": "top triangles' projected area × mean height",
+                "value_mm3": surface_volume,
+                "rel_tol": 1e-9,
+            },
         }
     )
     if lithophane:
@@ -711,14 +751,17 @@ download anything or change Blender preferences.
 
 ## What you get
 
-- `Relief` - a closed solid built the same way as `model.stl`: a flat base, vertical
-  walls and a top surface lifted by a **Displace** modifier that reads
-  `heightmap.png` (16-bit, one pixel per vertex). Change the modifier's *Strength* to
-  rescale the relief height live; Strength equals maximum minus minimum thickness.
-- A camera and lights. Lithophanes get a Cycles scene: a backlight panel behind the
-  part and a *Volume Absorption* material whose density is the attenuation
-  coefficient mu (per mm), so a render shows the Beer-Lambert prediction of the
-  backlit print. Reliefs get a low raking light that shows surface detail.
+- `Relief` - a closed solid built the same way as `model.stl`. A flat relief has a
+  flat base, vertical walls and a top surface lifted by a **Displace** modifier that
+  reads `heightmap.png` (16-bit, one pixel per vertex). A sphere's outer surface is
+  moved outward along each radius by a **Geometry Nodes** modifier ("Radial height")
+  reading the same map. Change *Strength* to rescale the height live; it equals
+  maximum minus minimum thickness.
+- A camera and lights. Lithophanes get a Cycles scene with a *Volume Absorption*
+  material whose density is the attenuation coefficient mu (per mm), so a render
+  shows the Beer-Lambert prediction: a flat panel is lit by a backlight behind it, a
+  lamp by an emitting sphere just inside its wall. Reliefs get a low raking light
+  that shows surface detail.
 - `model.stl` - the exact exported geometry, if you prefer to import a mesh instead.
 
 To print a version you edited in Blender, export STL with *Apply Modifiers* on and
@@ -736,7 +779,7 @@ evaluated (displaced) solid.
 
 
 def write_blender_bundle(
-    job_dir, settings, dims, columns, rows, pitch_x, pitch_y, frame_x, frame_y
+    job_dir, settings, dims, columns, rows, pitch_x, pitch_y, frame_x, frame_y, extra=None
 ):
     lithophane = settings.mode == "lithophane"
     config = {
@@ -759,6 +802,8 @@ def write_blender_bundle(
         "half_value_mm": settings.half_value_mm if lithophane else None,
         "dimensions_mm": dims,
         "diagonal_rule": "split each cell along the diagonal with the smaller height change",
+        "shape": settings.shape,
+        **(extra or {}),
     }
     payload = {
         "build_relief.py": BLENDER_SCRIPT.read_bytes(),

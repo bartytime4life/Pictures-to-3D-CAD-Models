@@ -72,8 +72,7 @@ def build_mesh(config, levels):
     """Same vertices, diagonals and faces as the workbench's height-field mesher."""
     rows, cols = levels.shape
     px, py = config["pitch_x_mm"], config["pitch_y_mm"]
-    t_min, span = config["min_mm"], config["max_mm"] - config["min_mm"]
-    z = t_min + levels / 65535.0 * span
+    t_min = config["min_mm"]
     xs = np.arange(cols) * px
     ys = (rows - 1 - np.arange(rows)) * py
     gx, gy = np.meshgrid(xs, ys)
@@ -81,7 +80,7 @@ def build_mesh(config, levels):
     index = np.arange(rows * cols).reshape(rows, cols)
     a, b = index[:-1, :-1].ravel(), index[:-1, 1:].ravel()
     c, d = index[1:, :-1].ravel(), index[1:, 1:].ravel()
-    flat = z.ravel()
+    flat = np.round(levels).astype(np.int64).ravel()  # Exact, as in the workbench.
     along_ad = np.abs(flat[a] - flat[d]) <= np.abs(flat[b] - flat[c])
     tri_top = np.concatenate(
         [
@@ -190,6 +189,18 @@ def material(config, obj):
     obj.data.materials.append(mat)
 
 
+def black_world(scene):
+    """A black, non-emitting background, for node-based and plain worlds alike."""
+    if scene.world is None:
+        scene.world = bpy.data.worlds.new("World")
+    scene.world.color = (0, 0, 0)
+    if scene.world.use_nodes:
+        background = scene.world.node_tree.nodes.get("Background")
+        if background is not None:
+            background.inputs["Color"].default_value = (0, 0, 0, 1)
+            background.inputs["Strength"].default_value = 0.0
+
+
 def staging(config):
     scene = bpy.context.scene
     width, height = config["dimensions_mm"]["width"], config["dimensions_mm"]["height"]
@@ -236,9 +247,7 @@ def staging(config):
         glow.node_tree.links.new(emission.outputs[0], nodes.get("Material Output").inputs[0])
         panel_mesh.materials.append(glow)
         scene.collection.objects.link(panel)
-        if scene.world is None:
-            scene.world = bpy.data.worlds.new("World")
-        scene.world.color = (0, 0, 0)
+        black_world(scene)
     else:
         sun_data = bpy.data.lights.new("Raking light", type="SUN")
         sun_data.energy = 4
@@ -249,12 +258,205 @@ def staging(config):
         scene.collection.objects.link(sun)
 
 
+def sphere_directions(thetas, columns):
+    lambdas = np.arange(columns) * 2 * math.pi / columns
+    st, ct = np.sin(thetas)[:, None], np.cos(thetas)[:, None]
+    return np.stack(
+        [
+            st * np.cos(lambdas)[None, :],
+            st * np.sin(lambdas)[None, :],
+            np.broadcast_to(ct, (len(thetas), columns)),
+        ],
+        axis=-1,
+    )
+
+
+def build_sphere_mesh(config, levels):
+    """Same vertices, diagonals and faces as the workbench's sphere mesher, with the outer
+    surface at its thinnest radius; Geometry Nodes add the picture's thickness radially."""
+    rows, columns = levels.shape
+    t_min = config["min_mm"]
+    r_in = config["r_in_mm"]
+    keys = np.round(levels).astype(np.int64)
+    thetas = np.linspace(0, config["theta_out"], rows)
+    inner_thetas = np.linspace(0, config["theta_in"], config["inner_rows"])
+    base = r_in + t_min
+    outer_dir = sphere_directions(thetas, columns)
+    inner_dir = sphere_directions(inner_thetas, columns)
+    vertices = np.concatenate(
+        [
+            np.array([[0.0, 0.0, base]]),
+            (outer_dir[1:] * base).reshape(-1, 3),
+            np.array([[0.0, 0.0, r_in]]),
+            (inner_dir[1:] * r_in).reshape(-1, 3),
+        ]
+    )
+    inner_base = 1 + (rows - 1) * columns
+    j = np.arange(columns)
+    jn = (j + 1) % columns
+
+    def ring(start, i, k=j):
+        return start + 1 + (i - 1) * columns + k
+
+    faces = [np.column_stack([np.zeros(columns, dtype=np.int64), ring(0, 1), ring(0, 1, jn)])]
+    for i in range(1, rows - 1):
+        a, b, c, d = ring(0, i), ring(0, i, jn), ring(0, i + 1), ring(0, i + 1, jn)
+        # Integer levels compare exactly, matching the workbench's tie-breaking.
+        along_ad = np.abs(keys[i, j] - keys[i + 1, jn]) <= np.abs(keys[i, jn] - keys[i + 1, j])
+        faces.append(
+            np.where(along_ad[:, None], np.column_stack([c, d, a]), np.column_stack([c, d, b]))
+        )
+        faces.append(
+            np.where(along_ad[:, None], np.column_stack([d, b, a]), np.column_stack([c, b, a]))
+        )
+    pole = np.full(columns, inner_base, dtype=np.int64)
+    faces.append(np.column_stack([pole, ring(inner_base, 1, jn), ring(inner_base, 1)]))
+    inner_rows = config["inner_rows"]
+    for i in range(1, inner_rows - 1):
+        a, b = ring(inner_base, i), ring(inner_base, i, jn)
+        c, d = ring(inner_base, i + 1), ring(inner_base, i + 1, jn)
+        faces.append(np.column_stack([a, d, c]))
+        faces.append(np.column_stack([a, b, d]))
+    ol, on = ring(0, rows - 1), ring(0, rows - 1, jn)
+    il, inn = ring(inner_base, inner_rows - 1), ring(inner_base, inner_rows - 1, jn)
+    faces.append(np.column_stack([on, ol, il]))
+    faces.append(np.column_stack([il, inn, on]))
+    faces = np.concatenate(faces)
+    mesh = bpy.data.meshes.new(config["name"])
+    mesh.from_pydata(vertices.tolist(), [], faces.tolist())
+    # Per-point lookup coordinates at pixel centres: outer ring i reads image row i (from
+    # the top), longitude j reads column j. The pole and inner points read nothing.
+    u = np.zeros(len(vertices))
+    v = np.zeros(len(vertices))
+    outer_count = inner_base
+    index = np.arange(1, outer_count)
+    u[index] = ((index - 1) % columns + 0.5) / columns
+    v[index] = (rows - 1 - ((index - 1) // columns + 1) + 0.5) / rows
+    u[0], v[0] = 0.5 / columns, (rows - 1 + 0.5) / rows
+    lookup = mesh.attributes.new("heightmap_uv", "FLOAT_VECTOR", "POINT")
+    lookup.data.foreach_set("vector", np.column_stack([u, v, np.zeros(len(u))]).ravel())
+    surface = mesh.attributes.new("surface", "FLOAT", "POINT")
+    weights = np.zeros(len(vertices))
+    weights[:outer_count] = 1.0
+    surface.data.foreach_set("value", weights)
+    mesh.update()
+    return mesh
+
+
+def radial_height_nodes(image, strength):
+    """Geometry Nodes: move each 'surface' point outward along its radius by
+    strength x height-map value (nearest pixel), i.e. r = r_in + t_min + t."""
+    group = bpy.data.node_groups.new("Radial height", "GeometryNodeTree")
+    group.interface.new_socket("Geometry", in_out="INPUT", socket_type="NodeSocketGeometry")
+    socket = group.interface.new_socket("Strength", in_out="INPUT", socket_type="NodeSocketFloat")
+    socket.default_value = strength
+    group.interface.new_socket("Geometry", in_out="OUTPUT", socket_type="NodeSocketGeometry")
+    nodes, links = group.nodes, group.links
+    source = nodes.new("NodeGroupInput")
+    result = nodes.new("NodeGroupOutput")
+    lookup = nodes.new("GeometryNodeInputNamedAttribute")
+    lookup.data_type = "FLOAT_VECTOR"
+    lookup.inputs["Name"].default_value = "heightmap_uv"
+    weight = nodes.new("GeometryNodeInputNamedAttribute")
+    weight.data_type = "FLOAT"
+    weight.inputs["Name"].default_value = "surface"
+    texture = nodes.new("GeometryNodeImageTexture")
+    texture.interpolation = "Closest"
+    texture.extension = "EXTEND"
+    texture.inputs["Image"].default_value = image
+    position = nodes.new("GeometryNodeInputPosition")
+    direction = nodes.new("ShaderNodeVectorMath")
+    direction.operation = "NORMALIZE"
+    amount = nodes.new("ShaderNodeMath")
+    amount.operation = "MULTIPLY"
+    weighted = nodes.new("ShaderNodeMath")
+    weighted.operation = "MULTIPLY"
+    offset = nodes.new("ShaderNodeVectorMath")
+    offset.operation = "SCALE"
+    move = nodes.new("GeometryNodeSetPosition")
+    links.new(lookup.outputs["Attribute"], texture.inputs["Vector"])
+    links.new(texture.outputs["Color"], amount.inputs[0])
+    links.new(source.outputs["Strength"], amount.inputs[1])
+    links.new(amount.outputs[0], weighted.inputs[0])
+    links.new(weight.outputs["Attribute"], weighted.inputs[1])
+    links.new(position.outputs["Position"], direction.inputs[0])
+    links.new(direction.outputs["Vector"], offset.inputs[0])
+    links.new(weighted.outputs[0], offset.inputs["Scale"])
+    links.new(source.outputs["Geometry"], move.inputs["Geometry"])
+    links.new(offset.outputs["Vector"], move.inputs["Offset"])
+    links.new(move.outputs["Geometry"], result.inputs["Geometry"])
+    return group
+
+
+def sphere_object(config, folder):
+    image, levels = heightmap(config, folder)
+    mesh = build_sphere_mesh(config, levels)
+    obj = bpy.data.objects.new("Relief", mesh)
+    obj["pictures_to_cad"] = True
+    # The mesh is centred on the sphere; the object sits with its flat cut on Z zero.
+    obj.location = (0.0, 0.0, -config["z_cut_mm"])
+    bpy.context.scene.collection.objects.link(obj)
+    modifier = obj.modifiers.new("Height", type="NODES")
+    modifier.node_group = radial_height_nodes(image, config["max_mm"] - config["min_mm"])
+    return obj
+
+
+def sphere_staging(config):
+    scene = bpy.context.scene
+    diameter = config["dimensions_mm"]["diameter"]
+    centre_z = -config["z_cut_mm"]
+    camera_data = bpy.data.cameras.new("Camera")
+    camera_data.type = "ORTHO"
+    camera_data.ortho_scale = diameter * 1.25
+    camera_data.clip_end = 10000
+    camera = bpy.data.objects.new("Camera", camera_data)
+    camera["pictures_to_cad"] = True
+    # Looking north-east-ward at the sphere from the -Y side, level with its centre.
+    camera.location = (0.0, -500.0, centre_z)
+    camera.rotation_euler = (math.radians(90), 0, 0)
+    scene.collection.objects.link(camera)
+    scene.camera = camera
+    scene.render.resolution_x = scene.render.resolution_y = 1200
+    if config["mode"] == "lithophane":
+        scene.render.engine = "CYCLES"
+        scene.cycles.samples = 64
+        scene.view_settings.view_transform = "Standard"
+        scene.view_settings.look = "None"
+        # Real filament scatters light, so the whole wall glows. The scene's equivalent of
+        # the flat backlight panel is an emitting sphere just inside the wall: every view
+        # ray through the wall then ends on uniform light, and a pixel shows
+        # exp(-mu x path length in the wall), the Beer-Lambert prediction.
+        bpy.ops.mesh.primitive_uv_sphere_add(
+            segments=128, ring_count=64, radius=config["r_in_mm"] * 0.97, location=(0, 0, centre_z)
+        )
+        bulb = bpy.context.active_object
+        bulb.name = "Lamp"
+        bulb["pictures_to_cad"] = True
+        glow = bpy.data.materials.new("Lamp")
+        glow.use_nodes = True
+        nodes = glow.node_tree.nodes
+        nodes.remove(nodes.get("Principled BSDF"))
+        emission = nodes.new("ShaderNodeEmission")
+        emission.inputs["Strength"].default_value = 1.0
+        glow.node_tree.links.new(emission.outputs[0], nodes.get("Material Output").inputs[0])
+        bulb.data.materials.append(glow)
+        black_world(scene)
+    else:
+        sun_data = bpy.data.lights.new("Raking light", type="SUN")
+        sun_data.energy = 4
+        sun = bpy.data.objects.new("Raking light", sun_data)
+        sun["pictures_to_cad"] = True
+        sun.rotation_euler = (math.radians(70), 0, math.radians(-40))
+        scene.collection.objects.link(sun)
+
+
 def evaluated_report(obj, path):
     depsgraph = bpy.context.evaluated_depsgraph_get()
     evaluated = obj.evaluated_get(depsgraph)
     mesh = evaluated.to_mesh()
     bm = bmesh.new()
     bm.from_mesh(mesh)
+    bm.transform(obj.matrix_world)  # World coordinates, as the STL export writes them.
     coordinates = np.array([v.co[:] for v in bm.verts])
     report = {
         "vertices": len(bm.verts),
@@ -282,9 +484,14 @@ def main():
     clear_default_scene()
     units = bpy.context.scene.unit_settings
     units.system, units.scale_length, units.length_unit = "METRIC", 0.001, "MILLIMETERS"
-    obj = relief_object(config, folder)
-    material(config, obj)
-    staging(config)
+    if config.get("shape") == "sphere":
+        obj = sphere_object(config, folder)
+        material(config, obj)
+        sphere_staging(config)
+    else:
+        obj = relief_object(config, folder)
+        material(config, obj)
+        staging(config)
     for other in list(bpy.context.scene.objects):
         if other is not None and other != obj:
             other.select_set(False)

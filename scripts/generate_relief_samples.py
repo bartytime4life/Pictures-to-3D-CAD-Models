@@ -2,10 +2,13 @@
 
     .venv/bin/python scripts/generate_relief_samples.py [OUTPUT_DIR]
 
-Writes ``relief-sample.png`` (a lit, cratered sphere: an 8-bit sRGB "photograph") and
-``relief-sample-depth.png`` (the same sphere's height as a 16-bit depth map, white =
-nearest) to OUTPUT_DIR, by default ``frontend/public``. Both use the same seeded
-crater positions and radii, so the depth map is the true shape behind the photo.
+Writes three images to OUTPUT_DIR, by default ``frontend/public``:
+
+* ``relief-sample.png``: a lit, cratered sphere, as an 8-bit sRGB "photograph";
+* ``relief-sample-depth.png``: that sphere's height as a 16-bit depth map (white =
+  nearest), from the same seeded craters, so it is the true shape behind the photo;
+* ``moon-map.png``: a 2:1 equirectangular albedo map of a whole cratered moon, for
+  wrapping around a sphere (a moon lamp). It wraps seamlessly at 0/360 degrees.
 Everything is procedural; no photograph or third-party data is involved.
 """
 
@@ -94,10 +97,60 @@ def depth():
     return np.round(height * 65535).astype(np.uint16)
 
 
+MAP_WIDTH, MAP_HEIGHT = 1024, 512
+MAP_SEED = 29
+
+
+def moon_map():
+    """Albedo of a whole moon in equirectangular projection (longitude across, from the
+    north pole at the top to the south pole at the bottom).
+
+    Maria and craters are placed at random directions on the unit sphere and measured
+    by great-circle angle, so features near the poles are not stretched and the map
+    has no seam. Craters have a bright rim and a slightly darker floor.
+    """
+    rng = np.random.default_rng(MAP_SEED)
+    rows = (np.arange(MAP_HEIGHT) + 0.5) / MAP_HEIGHT * np.pi  # colatitude
+    columns = (np.arange(MAP_WIDTH) + 0.5) / MAP_WIDTH * 2 * np.pi  # longitude
+    theta, lam = np.meshgrid(rows, columns, indexing="ij")
+    points = np.stack(
+        [np.sin(theta) * np.cos(lam), np.sin(theta) * np.sin(lam), np.cos(theta)], axis=-1
+    )
+
+    def random_direction():
+        v = rng.normal(size=3)
+        return v / np.linalg.norm(v)
+
+    albedo = np.full(theta.shape, 0.78)
+    for _ in range(12):  # Maria: broad, dark, overlapping basins.
+        centre, size = random_direction(), rng.uniform(0.18, 0.5)
+        angle = np.arccos(np.clip(points @ centre, -1, 1))
+        albedo -= 0.32 * np.exp(-((angle / size) ** 4))
+    albedo = np.maximum(albedo, 0.3)
+    for _ in range(40):  # Low-contrast mottling.
+        centre, size = random_direction(), rng.uniform(0.05, 0.2)
+        angle = np.arccos(np.clip(points @ centre, -1, 1))
+        albedo += rng.uniform(-0.04, 0.04) * np.exp(-((angle / size) ** 2))
+    for _ in range(300):
+        # Crater sizes follow a power law, as on real surfaces: many small, few large.
+        centre = random_direction()
+        size = np.radians(min(0.5 * rng.uniform(0.02, 1) ** -0.75, 8.0))
+        angle = np.arccos(np.clip(points @ centre, -1, 1)) / size
+        rim = 0.07 * np.exp(-(((angle - 1) / 0.25) ** 2))
+        floor = 0.05 * np.exp(-((angle / 0.75) ** 2))
+        halo = 0.05 * np.exp(-((angle / 2.5) ** 2)) if rng.random() < 0.08 else 0
+        albedo += rim - floor + halo
+    linear = np.clip(albedo, 0.05, 1.0) ** 1.6  # Albedo to reflectance contrast.
+    srgb = np.where(linear <= 0.0031308, 12.92 * linear, 1.055 * linear ** (1 / 2.4) - 0.055)
+    gray = (np.clip(srgb, 0, 1) * 255).round().astype(np.uint8)
+    return np.dstack([gray, gray, gray])
+
+
 def main(output):
     output.mkdir(parents=True, exist_ok=True)
     cv2.imwrite(str(output / "relief-sample.png"), photo())
     cv2.imwrite(str(output / "relief-sample-depth.png"), depth())
+    cv2.imwrite(str(output / "moon-map.png"), moon_map())
 
 
 if __name__ == "__main__":

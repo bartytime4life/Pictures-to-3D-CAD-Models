@@ -48,7 +48,7 @@ test('moon sample becomes a verified relief with valid downloads', async ({ page
     page.getByText('Watertight: every edge is shared by exactly two faces'),
   ).toBeVisible();
   await expect(page.getByText(/Euler characteristic .* = 2 \(one solid/)).toBeVisible();
-  await expect(page.getByText(/Volume by two independent methods agrees/)).toBeVisible();
+  await expect(page.getByText(/Volume cross-check agrees/)).toBeVisible();
   await expect(page.locator('.check-bad')).toHaveCount(0);
   await expect(page.getByRole('heading', { name: 'Your relief' })).toBeVisible();
   await page.evaluate(
@@ -169,4 +169,41 @@ test('moon depth map builds a hemisphere dome', async ({ page }) => {
   // A 100 mm wide sample has a 30 mm sphere radius: 1.6 mm base + 30 mm dome.
   await expect(page.locator('.relief-facts dd').first()).toHaveText(/× 31\.(59|60) mm/);
   await expect(page.locator('.check-bad')).toHaveCount(0);
+});
+
+test('moon lamp wraps a world map into a verified hollow sphere', async ({ page }, testInfo) => {
+  await page.goto('/#relief');
+  await page.getByRole('button', { name: 'Try the moon lamp' }).click();
+  await expect(page.getByRole('heading', { name: 'Your lamp' })).toBeVisible({
+    timeout: 90_000,
+  });
+  await expect(page.locator('canvas[data-model-ready="true"]')).toBeVisible();
+  const shape = page.getByRole('group', { name: 'Shape' });
+  await expect(shape.getByRole('button', { name: 'Sphere' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+  await expect(page.getByLabel('Sphere diameter')).toHaveValue('100');
+  await expect(page.getByText(/Ø 100\.0 mm, .* mm tall/)).toBeVisible();
+  await expect(page.getByText(/V − E \+ F = .* = 2/)).toBeVisible();
+  await expect(page.locator('.check-bad')).toHaveCount(0);
+  await expect(page.getByText(/flat ring around the 35 mm opening/)).toBeVisible();
+  await page.evaluate(
+    () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))),
+  );
+  await page.screenshot({ path: 'docs/images/relief-sphere.png', fullPage: true });
+  const stl = await download(page, /^STL/, testInfo);
+  expect(stl.data.length).toBe(84 + 50 * stl.data.readUInt32LE(80));
+  const blender = await download(page, /^Blender ZIP/, testInfo);
+  expect(blender.data.includes(Buffer.from('build_relief.py'))).toBe(true);
+
+  // An impossible sphere is explained before anything is sent.
+  await page.getByLabel('Sphere diameter').fill('30');
+  // A 30 mm sphere has a 24 mm inside, too small around a 35 mm opening.
+  await expect(
+    page.getByText('The opening must be narrower than 90% of the inside diameter.'),
+  ).toBeVisible();
+  await page.getByLabel('Thickest').fill('6'); // Leaves 18 mm inside a 30 mm sphere.
+  await expect(page.getByText('The sphere is too small for its thickest wall.')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Update model' })).toBeDisabled();
 });

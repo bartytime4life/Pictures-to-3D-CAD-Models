@@ -78,6 +78,28 @@ The mass estimate is volume × a typical datasheet density at 100% infill (PLA 1
 
 A height field printed flat has no overhangs. Slope figures describe how steep the surface gets, not a support requirement.
 
+## Spheres: globes and moon lamps
+
+Choose **Shape: Sphere** to wrap the picture around a hollow ball instead of a flat panel, or press **Try the moon lamp**. With **Lithophane** this makes a lamp: a light inside shines out through walls whose thickness follows the picture. With **Relief** it makes a raised globe.
+
+![Moon lamp from the generated moon map, with its sphere checks](images/relief-sphere.png)
+
+- **Picture.** Use a 2:1 equirectangular "world map": longitude runs across, 0–360° eastward, and the rows run from the north pole at the top to the south pole at the bottom. The left and right edges meet seamlessly. Other shapes are stretched to fit, and the notes say so. The moon map sample, `moon-map.png`, comes from the same generator script. Its maria and power-law crater sizes are placed by great-circle distance, so nothing stretches near the poles.
+- **Sizes.**
+  - **Sphere diameter** is the outside at the thickest wall.
+  - The inside is a smooth sphere of diameter D − 2 × Thickest.
+  - **Bottom opening** is the diameter of the hole in that inside sphere, for the light and its cable.
+- **Flat base.** One horizontal plane cuts both the inside and outside surfaces at the height where the opening has that diameter. A **Collar** band at full thickness keeps the outside cut circular, so the flat ring between the two cuts lies on the print bed. Its area is reported.
+- **Physics.** A light at the centre shines along the radius, crossing exactly t of plastic, so the lithophane mapping t = t_min − ln(Y)/μ is unchanged. Seen from outside, a view ray at distance ρ from the centre of a uniform wall crosses √(R_out² − ρ²) − √(R_in² − ρ²) of plastic, more towards the edge. That is why lamps darken at their rim.
+- **Detail filter.** On a sphere, a picture column is narrower near the poles (radius × sin θ × Δλ). The nozzle filter therefore uses one Gaussian width along meridians and a per-row width along parallels. The along-parallel part is applied as a circular convolution with transfer function exp(−2π²σ²f²), so it wraps across the seam.
+- **Checks.**
+  - The solid is a thick bowl: one closed surface with Euler characteristic 2.
+  - Its divergence volume is computed about two origins, the sphere's centre and the bed origin. The two agree only for a closed surface.
+  - The report gives the difference between the triangle mesh and the smooth surface's volume, which is integrated numerically; it is typically under 0.5%.
+  - It also reports the share of surface that faces downward more than 45° from vertical, mostly the inside of the dome, which prints as a ceiling.
+- **Printing.** Print standing on the flat opening ring and check supports in your slicer. The outer surface is limited to 200,000 points; larger spheres get a wider spacing, and the notes say so.
+- **Blender.** The ZIP builds the same triangles, ordered and oriented identically. A Geometry Nodes modifier moves each outer point outward along its radius by Strength × height-map value. Lamps render in Cycles with an emitting sphere just inside the wall, standing in for light scattered by the plastic.
+
 ## Calibrate a filament
 
 Lithophane mode adds a **Calibration wedge** download: eight steps, each 10 × 25 mm, from the thinnest to the thickest wall. The wedge's risers are 0.02 mm ramps, far below printing resolution, and its volume equals that of ideal vertical steps.
@@ -106,7 +128,7 @@ Extract the ZIP and run `blender --python build_relief.py` in that folder. Alter
 - **Lithophanes:** a Cycles scene with a backlight panel and a *Volume Absorption* material whose density equals μ per millimetre. A render is a physical simulation of the Beer–Lambert prediction.
 - **Reliefs:** a sun 25° above the horizon (raking light) and the chosen colour.
 
-Scene units are millimetres. To print an edited version, export STL with *Apply Modifiers* on and re-check it in your slicer; Blender edits do not update the studio.
+Scene units are millimetres. Sphere scenes replace the Displace modifier with a Geometry Nodes modifier named *Radial height* (input *Strength*), because a sphere's thickness is added along each radius. To print an edited version, export STL with *Apply Modifiers* on and re-check it in your slicer; Blender edits do not update the studio.
 
 The script also runs headless for checks:
 

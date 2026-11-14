@@ -1,6 +1,7 @@
 // Relief & lithophane request/response shapes and small pure helpers.
 
 export type ReliefMode = 'relief' | 'lithophane';
+export type ReliefShape = 'flat' | 'sphere';
 export type ReliefMaterial = 'pla' | 'petg' | 'abs' | 'asa' | 'tpu' | 'nylon';
 
 export type ReliefSettings = {
@@ -22,6 +23,10 @@ export type ReliefSettings = {
   auto_levels: boolean;
   material: ReliefMaterial;
   color: string;
+  shape: ReliefShape;
+  sphere_diameter_mm: number;
+  opening_mm: number;
+  collar_mm: number;
 };
 
 export type MeshReport = {
@@ -38,6 +43,7 @@ export type MeshReport = {
 export type ReliefResult = {
   id: string;
   kind: ReliefMode;
+  shape?: ReliefShape;
   revision: number;
   dimensions: { width: number; height: number; thickness: number; min_thickness: number };
   volume_mm3: number;
@@ -68,6 +74,19 @@ export type ReliefResult = {
     density_g_cm3: number;
     mesh: MeshReport;
     volume_cross_check_mm3: number;
+    volume_check?: { label: string; value_mm3: number; rel_tol: number };
+    sphere?: {
+      outer_diameter_mm: number;
+      inner_diameter_mm: number;
+      opening_mm: number;
+      height_mm: number;
+      bed_contact_mm2: number;
+      overhang_area_mm2: number;
+      overhang_fraction: number;
+      overhang_degrees: number;
+      smooth_volume_mm3: number;
+      polyhedral_vs_smooth: number;
+    };
     auto_levels_white?: number;
     auto_levels_range?: [number, number];
     wedge_mm?: number[];

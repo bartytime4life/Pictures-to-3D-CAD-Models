@@ -1,5 +1,35 @@
 # Validation results
 
+## Spheres and moon lamps — November 14, 2026
+
+**Shape: Sphere** wraps a 2:1 equirectangular picture around a hollow ball, as a lithophane lamp or a relief globe. It has a flat base ring around a light opening, and a Blender scene built with Geometry Nodes. A generated, seamless moon map is the sample.
+
+- **Python:** **1,356 tests** passed, 43 of them in `tests/test_relief.py`. `make lint` passed Ruff and Prettier.
+- **Browser:** all **79 Chrome scenarios** passed against a dedicated server, in 6.7 minutes. They include a new moon-lamp scenario that checks the sphere's facts, downloads and impossible-size messages.
+- **Geometry:**
+  - The inner sphere's opening has the requested diameter, and both cuts lie in one plane.
+  - Every sphere is closed, with Euler characteristic 2. Its divergence volume agrees about the sphere's centre and the bed origin to 1e-9.
+  - The flat ring rests at Z zero between the opening radius and the outer cut radius, and no vertex lies outside the outer radius.
+  - A constant-thickness shell matches the closed-form cap-and-cone volume to 0.5%, and its triangle mesh is within 0.5% of the smooth solid.
+- **Sampling and filtering:**
+  - Equirectangular sampling reproduces a cosine field to within 0.01 across the 0/360° seam.
+  - The pole collapses to one value.
+  - The spherical nozzle filter leaves constants unchanged and spreads a seam ridge symmetrically.
+- **Blender 5.3.0 (headless):**
+  - The Geometry Nodes scene exports the same 496,080 triangles as the workbench STL, in the same order. Each triangle matches within 7.6 µm, the limit of float32 precision.
+  - Diagonal ties are now broken on the integer 16-bit levels in both programs, for flat reliefs too. Before that fix, float rounding had split a few collar cells along different diagonals.
+- **Lamp render:** a Cycles render of a uniform 60 mm lamp lit from inside matched Beer–Lambert through a shell, exp(−μ(√(R_out² − ρ²) − √(R_in² − ρ²))):
+
+  | ρ (mm) | Rendered | Predicted |
+  | --- | --- | --- |
+  | 0 | 0.1188 | 0.1188 |
+  | 10.8 | 0.0988 | 0.0994 |
+  | 18.9 | 0.0558 | 0.0559 |
+
+  The test tolerance is 4%.
+
+Nothing was printed. Overhang figures are geometric; support needs depend on the printer and slicer.
+
 ## Moon depth-map sample — November 14, 2026
 
 The relief studio has a second sample: the true 16-bit height of the generated moon. A new script, `scripts/generate_relief_samples.py`, produces both samples from one seeded crater list.
