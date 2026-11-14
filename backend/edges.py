@@ -598,6 +598,25 @@ def _footprint(rings, shape):
     return np.clip(np.abs(np.cumsum(acc, axis=1)[:, :W]), 0.0, 1.0).astype(np.float32)
 
 
+def _paper_extent(mask, points, normals, paper_side, reach):
+    """How far (px) the classified paper runs from each point along its normal, on its
+    paper side (`paper_side`, +1 or -1), before material starts again: the width of an
+    opening the point bounds. inf where the mask stays paper within `reach` (px, per
+    point). The first pixel or so beside the point is skipped: the mask is cut a
+    fraction of the blur away from the edge."""
+    reach = np.broadcast_to(np.asarray(reach, float), (len(points),))
+    side = np.asarray(paper_side, float)
+    t = np.arange(1.0, float(reach.max()) + 0.5, 0.5)
+    xs = np.clip(np.rint(points[:, None, 0] + (side[:, None] * t[None, :]) * normals[:, None, 0] - 0.5).astype(int), 0, mask.shape[1] - 1)
+    ys = np.clip(np.rint(points[:, None, 1] + (side[:, None] * t[None, :]) * normals[:, None, 1] - 0.5).astype(int), 0, mask.shape[0] - 1)
+    material = (mask[ys, xs] > 0) & (t[None, :] <= reach[:, None])
+    # Material again after paper: the first material sample past the first paper one.
+    paper_seen = np.cumsum(~material, axis=1) > 0
+    again = material & paper_seen
+    first = np.argmax(again, axis=1)
+    return np.where(again.any(axis=1), t[first], np.inf)
+
+
 def _alone(mask, points, normals, reach):
     """True where the classified mask changes only once along each normal within
     +-reach (px, per point): the edge is the only one a window that long sees."""
@@ -843,9 +862,15 @@ def subpixel_rings(mask, g, ppm, shadow_free_blur=True, remove_glare=True):
     def second_pass(start, normals, light):
         spread = spreads(normals)
         # Which side of each point the paper is on, from the classified mask 3 sigma out.
+        side = _paper_side_of(mask, start, normals, spread)
+        # Across a narrow opening the paper end stops short of its far edge (sheet.
+        # half_level_search's paper_extent): a thick part's hole, seen as the overlap of
+        # its bottom and enlarged top outlines, can be under 5 sigma across.
+        half = max(4.0, 3.5 * float(spread.max()))
         search = {
-            "half": max(4.0, 3.5 * float(spread.max())), "sigma": spread, "ring_smoothing": 20.0,
-            "paper_side": _paper_side_of(mask, start, normals, spread), "paper_light": light,
+            "half": half, "sigma": spread, "ring_smoothing": 20.0,
+            "paper_side": side, "paper_light": light,
+            "paper_extent": _paper_extent(mask, start, normals, side, max(half, 5 * float(spread.max())) + 2.5 * spread),
         }
         moved, keep = half_level_search(g, start, normals, **search)
         return moved, keep, spread

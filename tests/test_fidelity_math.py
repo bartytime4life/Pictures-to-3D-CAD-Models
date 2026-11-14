@@ -1046,6 +1046,32 @@ def test_two_step_wall_model_takes_a_shadow_on_the_paper_out_with_its_light():
         assert abs(lit[0, 0] - edge) < 0.02 * sigma
 
 
+def test_an_edge_across_a_narrow_opening_reads_its_paper_short_of_the_far_edge():
+    """Across a narrow opening, as a thick part's hole seen as the overlap of its bottom
+    and enlarged top outlines, the paper end of an edge's profile reaches the opening's
+    far edge, whose blurred step reads as darker paper: the edge was placed 0.35 sigma
+    into an opening 4.6 sigma wide (on the 22° plate under 1 x 3 px, its 6 mm holes'
+    near sides 0.1-0.17 mm inside). With the opening's width (`paper_extent`) the paper
+    is read 2.5 sigma short of the far edge: within 0.03 sigma. A wide opening is
+    unchanged, and one too narrow for that is read at its middle."""
+    sigma, edge, fine = 4.0, 60.3, 16
+    xs = (np.arange(200 * fine) + 0.5) / fine
+    points, normals, side = np.array([[edge - 1.0, 10.0]]), np.array([[1.0, 0.0]]), np.array([1])
+    found = {}
+    for widths in (3.0, 4.6, 9.0):
+        width = widths * sigma
+        sharp = np.where(xs < edge, 48.0, np.where(xs < edge + width, 236.0, 78.0))
+        blurred = cv2.GaussianBlur(sharp[None, :], (0, 0), sigma * fine)[0]
+        image = np.tile(np.interp(np.arange(200) + 0.5, xs, blurred), (20, 1))
+        args = {"half": 3.5 * sigma, "sigma": sigma, "paper_side": side}
+        plain, _ = sheet.half_level_search(image, points, normals, **args)
+        bounded, _ = sheet.half_level_search(image, points, normals, **args, paper_extent=np.array([width + 1.0]))
+        found[widths] = ((plain[0, 0] - edge) / sigma, (bounded[0, 0] - edge) / sigma)
+    assert found[4.6][0] > 0.3 and abs(found[4.6][1]) < 0.03
+    assert abs(found[9.0][0] - found[9.0][1]) < 1e-9
+    assert abs(found[3.0][1]) < abs(found[3.0][0])
+
+
 # ---------------------------------------------------------------------- properties
 
 
