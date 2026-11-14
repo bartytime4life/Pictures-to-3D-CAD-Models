@@ -286,8 +286,14 @@ def test_unresolved_corner_recovers_its_ring_from_source_and_keeps_other_analyti
         unresolved=True,
         hole=True,
     )
-    assert len(corrected) == len(equalised) == 1
-    assert [p.kind for p in corrected[0]] == ["circle"]
+    # The outer ring's unresolved corners are kept as traced points between its fitted
+    # edges (reference._trace_unresolved_corners): they reach the blur correction and
+    # equalising with their radius withheld and their unresolved flag cleared, and
+    # leave no arc in the outline.
+    assert len(corrected) == len(equalised) == 2
+    assert [p.kind for p in corrected[1]] == ["circle"]
+    corners = [p for p in corrected[0] if p.kind == "arc"]
+    assert corners and all(p.data["traced_corner"] and p.data["blur_correction_withheld"] for p in corners)
     primitives = result["profile"]["primitives"]
     assert {piece["kind"] for piece in primitives["outer"]} == {"line"}
     assert primitives["holes"][0][0]["kind"] == "circle"
@@ -297,7 +303,7 @@ def test_unresolved_corner_recovers_its_ring_from_source_and_keeps_other_analyti
     assert result["bounds"]["height"] == pytest.approx(float(np.ptp(original[:, 1])), abs=0.1)
     assert any("corner radius could not be determined" in note for note in result["warnings"])
     assert any(
-        "One boundary was kept as a traced outline" in note
+        f"{len(corners)} corners were kept as traced, between fitted edges" in note
         for note in result["profile"]["reference"]["notes"]
     )
 
@@ -316,10 +322,13 @@ def test_actual_mixed_thickness_corner_is_withheld_before_scalar_radius_inferenc
         actual_fillets=True,
     )
     assert set(captured["scales"]) == {0.8, 1.0}
-    unsupported = [p for p in captured["prims"] if p.data.get("blur_unresolved")]
+    # The withheld corners are kept as traced (reference._trace_unresolved_corners):
+    # their radius stays undetermined and no arc is emitted for them.
+    unsupported = [p for p in captured["prims"] if p.data.get("traced_corner")]
     assert unsupported
     assert all(math.isinf(p.data["r_sd"]) and not p.data.get("sharp") for p in unsupported)
-    assert {p["kind"] for p in result["profile"]["primitives"]["outer"]} == {"line"}
+    resolved = [p for p in captured["prims"] if p.kind == "arc" and not p.data.get("traced_corner")]
+    assert [p["kind"] for p in result["profile"]["primitives"]["outer"]].count("arc") == len(resolved)
     assert result["bounds"]["width"] == pytest.approx(100.0, abs=0.1)
     assert result["bounds"]["height"] == pytest.approx(70.0, abs=0.1)
     assert any("corner radius could not be determined" in note for note in result["warnings"])
@@ -527,8 +536,13 @@ def test_actual_thick_directional_trace_no_longer_crosses_itself_and_keeps_stric
     top and bottom edges, along the wall's vertical edges, and was kept only as a
     bounded geometric fit (_geometric_source_polyline). Those edges are now dropped
     (edges.correct_silhouette): the corrected source is valid, and the photo traces
-    with that recovery withheld. The synthetic feature scorer expects analytic outer
-    arcs and cannot score this representation; this checks the validated outline.
+    with that recovery withheld.
+
+    Two of its corners mix top and bottom support under the directional blur, so their
+    radius is withheld. The whole outline was kept as a traced outline; now only those
+    corners are, as their traced points between the fitted edges
+    (reference._trace_unresolved_corners): the outer boundary has its four fitted lines
+    and only the two resolved corners as arcs, and its corners note says so.
     """
     captures = []
     original = reference._geometric_source_polyline
@@ -543,9 +557,12 @@ def test_actual_thick_directional_trace_no_longer_crosses_itself_and_keeps_stric
     result = trace_image(data, reference="a4", thickness_mm=4.0)
     assert not captures
     profile = Profile.model_validate(result["profile"])
-    assert {p.kind for p in profile.primitives.outer} == {"line"}
+    kinds = [p.kind for p in profile.primitives.outer]
+    assert kinds.count("arc") == 2 and set(kinds) == {"line", "arc"}
     assert any(p.kind == "circle" for ring in profile.primitives.holes for p in ring)
     assert any("corner radius could not be determined" in note for note in result["warnings"])
+    assert any("2 corners were kept as traced, between fitted edges" in note for note in result["warnings"])
+    assert not result["profile"]["reference"]["notes"][0].endswith("kept as traced outlines.")
     assert not any("corrected trace crossed itself" in note for note in result["warnings"])
     # Without a bounded geometric candidate the strict Profile validation still holds,
     # and the photo traces: no buffer(0), component deletion or relaxed rule.

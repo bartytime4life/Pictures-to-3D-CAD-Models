@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import base64
 import io
+import itertools
 import math
 
 import cv2
@@ -92,6 +93,66 @@ def _segments_for(points, prims, tolerance_px, join_notices=None, boundary="boun
             "Review those edges and measure critical curves in CAD."
         )
     return [("line", vertices[k], vertices[(k + 1) % len(vertices)]) for k in range(len(vertices))], False
+
+
+def _trace_unresolved_corners(prims):
+    """Make each arc whose blur model is unresolved, between two fitted lines, a traced
+    corner: placed tangent to both at its fitted radius, with no blur correction, so
+    the boundary assembles, and later replaced by its traced points
+    (_traced_corner_segments). Returns False, changing nothing, when any unresolved
+    primitive is not such an arc or its corner has no tangent frame.
+
+    A corner whose support mixes the top and bottom edges of a part traced with a
+    thickness, under a blur that differs by direction, has no Gaussian model: its
+    radius is withheld. Before, so was the whole boundary, kept as a traced outline, and
+    its straight edges were then read from their noisiest points: the 4 mm plate's
+    outline, 22° under 1 x 3 px, 0.051-0.088 mm off, where each edge's mean lay
+    within 0.016 mm of its true place.
+    """
+    count = len(prims)
+    frames = {}
+    for k, p in enumerate(prims):
+        if not p.data.get("blur_unresolved"):
+            continue
+        before, after = prims[k - 1], prims[(k + 1) % count]
+        if p.kind != "arc" or before.kind != "line" or after.kind != "line" or count < 3:
+            return False
+        frame = fitting.fillet_frame(before, after, p.data["c"], p.data["r"])
+        if frame is None:
+            return False
+        frames[k] = frame
+    for k, (c0, v) in frames.items():
+        data = prims[k].data
+        data.pop("blur_unresolved")
+        data.update(fillet=(tuple(c0), tuple(v)), blur_correction_withheld=True, traced_corner=True)
+    return bool(frames)
+
+
+def _traced_corner_segments(points, prims, segs):
+    """Segments with each traced corner's arc replaced by the traced points between its
+    two ends, in order, and how many lines those are; None when the segments do not
+    follow the primitives one to one."""
+    if len(segs) != len(prims):
+        return None
+    out, traced = [], 0
+    for p, seg in zip(prims, segs):
+        if not p.data.get("traced_corner"):
+            out.append(seg)
+            continue
+        if seg[0] != "arc":
+            return None
+        start, end = np.asarray(seg[1], float), np.asarray(seg[-1], float)
+        chord = end - start
+        length = float(chord @ chord)
+        source = fitting.span_points(points, *p.span)
+        if length <= 0 or len(source) == 0:
+            return None
+        along = (source - start) @ chord / length
+        between = source[(along > 0) & (along < 1)]
+        path = [start, *between, end]
+        out.extend(("line", a, b) for a, b in itertools.pairwise(path))
+        traced += len(path) - 1
+    return out, traced
 
 
 def _geometric_source_polyline(points, prims, tolerance_px):
@@ -485,9 +546,15 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
                     blur_scales=ring.get("blur_scales"),
                 )
     unresolved = 0
+    traced_corners = 0
     geometric_recoveries = {}
     for index, (ring, prims) in enumerate(fitted):
         if prims and any(p.data.get("blur_unresolved") for p in prims):
+            # An unresolved corner between two fitted edges is kept as its traced points
+            # and the edges stay fitted (_trace_unresolved_corners).
+            if id(ring) not in source_fits and _trace_unresolved_corners(prims):
+                traced_corners += sum(bool(p.data.get("traced_corner")) for p in prims)
+                continue
             # Unsupported piecewise frames or an unresolved directional model must
             # not pass through scalar blur correction or radius equalisation.
             fitted[index] = (ring, None)
@@ -495,8 +562,14 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
             if id(ring) in source_fits:
                 geometric_recoveries[id(ring)] = source_fits[id(ring)]
     blur_notes = []
-    if unresolved:
+    if unresolved or traced_corners:
         parts = ["A corner radius could not be determined."]
+        if traced_corners:
+            parts.append(
+                "One corner was kept as traced, between fitted edges."
+                if traced_corners == 1
+                else f"{traced_corners} corners were kept as traced, between fitted edges."
+            )
         traced_count = unresolved - len(geometric_recoveries)
         if traced_count:
             parts.append(
@@ -554,11 +627,27 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
             # An arc whose three points are collinear (one that closes on itself after a
             # zero-length line, seen on a badly blurred hole) describes nothing.
             polygon = None
+        traced_lines = 0
+        if analytic and prims and any(p.data.get("traced_corner") for p in prims):
+            segs = _traced_corner_segments(ring["points"], prims, segs)
+            if segs is not None:
+                segs, traced_lines = segs
+            if segs is None:
+                segs, analytic = _segments_for(ring["points"], None, polyline_px)
+            else:
+                try:
+                    polygon = Polygon(fitting.sample_segments(segs, 0.01 * ppm))
+                except ValueError:
+                    polygon = None
         if analytic and (polygon is None or not polygon.is_valid or polygon.area <= 0):
             segs, analytic = _segments_for(ring["points"], None, polyline_px)
         if analytic:
-            accepted_prims.append(prims)
-        described.append({"outer": ring["outer"], "segments": segs, "analytic": analytic})
+            # A traced corner claims no radius: no radius note, equalising or count.
+            accepted_prims.append([p for p in prims if not p.data.get("traced_corner")])
+        described.append({
+            "outer": ring["outer"], "segments": segs, "analytic": analytic,
+            "traced_lines": traced_lines if analytic else 0,
+        })
     mixed_blur_notes = []
     if any(
         description["analytic"] and prims and any(p.data.get("blur_frame_mixed") for p in prims)
@@ -653,6 +742,7 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
         if d["analytic"]:
             for s in d["segments"]:
                 counts[s[0]] += 1
+            counts["line"] -= d["traced_lines"]  # a traced corner's chords are not fitted
     unfitted = sum(1 for d in described if not d["analytic"])
     notes.insert(
         0,
