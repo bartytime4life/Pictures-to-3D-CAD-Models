@@ -1,5 +1,15 @@
 # Workbench change log
 
+## Edges read short of a narrow opening's far edge — November 14, 2026
+
+- Across a narrow opening, an edge's profile read its paper level from samples that
+  reached the opening's far edge, whose darker step moved the edge into the
+  opening. A thick part's hole, seen as the overlap of its bottom and enlarged top
+  outlines, can be under 5 blur widths across: on the 22-degree 4 mm plate under a
+  1 x 3 px blur the 6 mm holes read 0.053-0.074 mm small. The paper is now read
+  short of the far edge, and they read 0.005-0.018 mm off, inside the test limits
+  ([reference-sheet tracing](reference-sheet.md), Limits).
+
 ## A thick part's holes fitted clear of their corners — November 14, 2026
 
 - A thick part's hole is seen as the overlap of its bottom outline and its enlarged
