@@ -207,3 +207,23 @@ test('moon lamp wraps a world map into a verified hollow sphere', async ({ page 
   await expect(page.getByText('The sphere is too small for its thickest wall.')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Update model' })).toBeDisabled();
 });
+
+test('moon elevation map builds a true-scale exaggerated globe', async ({ page }) => {
+  await page.goto('/#relief');
+  await page.getByRole('button', { name: 'Try the moon elevation globe' }).click();
+  await expect(page.getByRole('heading', { name: 'Your globe' })).toBeVisible({
+    timeout: 90_000,
+  });
+  await expect(page.getByLabel('Exaggeration')).toHaveValue('12');
+  await expect(page.getByLabel('Heights are in')).toHaveValue('km');
+  await expect(page.getByLabel('Thickest')).toHaveCount(0); // Set by the data.
+  await expect(page.getByRole('group', { name: 'Bright areas are' })).toHaveCount(0);
+  // 11.8 km of relief on a 50 mm-radius Moon (1737.4 km) is 0.34 mm; 12x is 4.07 mm.
+  await expect(page.getByText(/0\.3[34]\d mm at true scale × 12\.0 = 4\.0\d mm/)).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Height map' })).toBeVisible();
+  await expect(page.locator('.check-bad')).toHaveCount(0);
+
+  await page.getByLabel('Exaggeration').fill('1000');
+  await page.getByRole('button', { name: 'Update model' }).click();
+  await expect(page.getByRole('alert')).toContainText('Use at most');
+});
