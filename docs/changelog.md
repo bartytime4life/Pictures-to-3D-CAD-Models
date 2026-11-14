@@ -1,5 +1,14 @@
 # Workbench change log
 
+## The narrow-opening reading kept to thick parts — November 14, 2026
+
+- The narrow-opening reading added for thick parts' holes reached flat parts too. On
+  a thin cap hole it uncovered an error that the old reading had hidden: the hole is
+  traced too wide, and its area went from right, by cancellation, to 4.1 mm2 large.
+  The reading is now used only on a part traced with a thickness, and a thin hole's
+  width is recorded as an open problem ([reference-sheet tracing](reference-sheet.md),
+  Limits).
+
 ## Edges read short of a narrow opening's far edge — November 14, 2026
 
 - Across a narrow opening, an edge's profile read its paper level from samples that

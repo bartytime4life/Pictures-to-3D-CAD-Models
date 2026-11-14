@@ -329,8 +329,10 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
         # The fourth argument, shadow_free_blur, is positional: tests stand in for this
         # call. A part traced with a thickness takes the shadow-free blur too, now that
         # its wall model takes the shadow's light out of its profiles (_refine_walls);
-        # glare removal stays off for it (its walls are brighter than its top).
-        rings, sigma, tiny = edges.subpixel_rings(mask, g, ppm, True, not thickness_mm)
+        # glare removal stays off for it (its walls are brighter than its top). The
+        # sixth argument reads a narrow opening's paper short of its far edge, for a
+        # thick part's holes only (edges.subpixel_rings' bounded_openings).
+        rings, sigma, tiny = edges.subpixel_rings(mask, g, ppm, True, not thickness_mm, bool(thickness_mm))
     except edges.EdgeError as exc:
         raise ReferenceError_(str(exc), sheet_missing=True) from exc
     notes = list(seg_notes)
