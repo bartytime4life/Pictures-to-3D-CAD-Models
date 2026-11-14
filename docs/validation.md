@@ -1,5 +1,16 @@
 # Validation results
 
+## Moon depth-map sample — November 14, 2026
+
+The relief studio has a second sample: the true 16-bit height of the generated moon. A new script, `scripts/generate_relief_samples.py`, produces both samples from one seeded crater list.
+
+- `tests/test_relief.py` (33 tests) passed. One new test regenerates both samples and checks them pixel for pixel against the committed files; the existing photo is reproduced unchanged.
+- The other new test builds the depth sample at 100 mm wide with Thickest 34.6 mm. Median heights over thin rings match a 30 mm sphere, z = √(R² − r²), within 0.6 mm (the measured error is under 0.1 mm at r = 0, 10, 20, 25 and 28 mm). The surrounding base stays flat.
+- The four relief browser scenarios passed, including one that loads the depth sample and checks the 31.6 mm overall thickness and the settings it applies. `make lint` passed.
+- The built dome's volume, 67,779 mm³, is within 0.2% of an ideal hemisphere plus base (67,926 mm³).
+
+Nothing was printed.
+
 ## Relief and lithophane studio with Blender handoff — November 14, 2026
 
 A second tool at `/#relief` turns a picture into a relief or a backlit lithophane. It exports STL, 3MF, a 16-bit height map, a settings recipe, a Blender ZIP and, for lithophanes, a calibration wedge. It can also open the scene in an installed Blender. See the [relief guide](relief.md).

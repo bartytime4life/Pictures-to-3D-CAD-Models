@@ -6,6 +6,14 @@ The studio turns any picture into a printable 3D surface without CAD work. Open 
 
 The page shows the generated moon sample. The sample image is procedurally generated (a lit sphere with synthetic craters); it is not a photograph or third-party artwork.
 
+There are two samples, produced together by [`scripts/generate_relief_samples.py`](../scripts/generate_relief_samples.py) from one seeded crater list:
+
+- **Try the moon sample** loads the lit "photograph". Its relief follows *brightness*: the sunlit side comes out high and the shadowed side low, so it embosses the picture rather than recreating a ball. Brightness in a photo depends on lighting, not only on shape.
+- **Try the moon depth map** loads the true height of the same sphere and craters as a 16-bit depth map, with white at 1.1 sphere radii. The button sets *Picture type* to depth map, turns auto levels off and sets Thickest to 34.6 mm. At 100 mm wide the sphere's radius is 30 mm, so the 33 mm span makes the dome a true hemisphere.
+  - On a 1.6 mm base, the built dome's median height matches √(R² − r²) to within 0.1 mm from the centre out to r = 28 mm.
+  - Its volume is within 0.2% of an ideal hemisphere plus base; the craters account for the difference.
+  - To keep the hemisphere at another width, keep *Thickest − Thinnest* at 0.33 × the width.
+
 | Mode | What you get | Typical use |
 | --- | --- | --- |
 | **Relief** | Raised picture on a flat base. Bright areas are high (or low, with **Sunken**). | Plaques, tactile pictures, embossed signs, textures |

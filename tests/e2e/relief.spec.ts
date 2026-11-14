@@ -156,3 +156,17 @@ test('relief page rejects unsupported files and fits a phone screen', async ({ p
   });
   expect(leftover).toBe(true);
 });
+
+test('moon depth map builds a hemisphere dome', async ({ page }) => {
+  await page.goto('/#relief');
+  await page.getByRole('button', { name: 'Try the moon depth map' }).click();
+  await expect(page.getByRole('heading', { name: 'Your relief' })).toBeVisible({
+    timeout: 60_000,
+  });
+  await expect(page.getByLabel('Thickest')).toHaveValue('34.6');
+  await page.getByText('Fine-tune (optional)').click();
+  await expect(page.getByLabel('Picture type')).toHaveValue('depth');
+  // A 100 mm wide sample has a 30 mm sphere radius: 1.6 mm base + 30 mm dome.
+  await expect(page.locator('.relief-facts dd').first()).toHaveText(/× 31\.(59|60) mm/);
+  await expect(page.locator('.check-bad')).toHaveCount(0);
+});
