@@ -126,6 +126,9 @@ test('lithophane reports optics, offers the wedge, and fits a filament', async (
 test('relief page rejects unsupported files and fits a phone screen', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/#relief');
+  // Before any build, only this page's own empty-state message is shown.
+  await expect(page.getByText('Your 3D model appears here.')).toBeVisible();
+  await expect(page.getByText('Your CAD model will appear here')).toHaveCount(0);
   await page.locator('input[type="file"]').setInputFiles({
     name: 'notes.txt',
     mimeType: 'text/plain',
