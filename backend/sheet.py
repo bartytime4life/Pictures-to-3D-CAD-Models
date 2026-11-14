@@ -88,6 +88,7 @@ def half_level_search(
     ring_smoothing=0.0,
     paper_side=None,
     paper_light=None,
+    paper_extent=None,
 ):
     """Move each point along its normal to the crossing of its local mid-level.
 
@@ -126,6 +127,13 @@ def half_level_search(
     model without a shadow leaves the line method as it was. The level is then the
     blurred step's exact value at its edge, A / 2 + int_0^inf B(t +- u) phi_sigma(u) du
     (_modelled_level), for any curvature of B.
+
+    `paper_extent` (px per point, with `sigma` and `paper_side`; inf where none) is how
+    far the paper runs along the normal before material starts again: across a narrow
+    opening the profile's paper end reaches the opening's far edge, whose blurred step
+    reads as a darker paper and moves the edge into the opening. The paper end is then
+    read only up to 2.5 sigma short of that edge; where that leaves nothing beyond the
+    step's own 2.5 sigma, it is the median at the opening's middle, flat.
     """
     # edges.edge_sigma returns 0 when no profile has the contrast to measure the blur;
     # the median-level search then stands.
@@ -141,6 +149,26 @@ def half_level_search(
     k = max(2, round(0.15 * inner.sum()))
     low = np.median(profile[:, inner][:, :k], axis=1)
     high = np.median(profile[:, inner][:, -k:], axis=1)
+    narrow = None
+    if sloped and paper_extent is not None and paper_side is not None:
+        extent = np.asarray(paper_extent, float)
+        paper_high = np.asarray(paper_side) > 0
+        # The paper end's samples: within the opening, 2.5 sigma short of its far edge.
+        along = np.where(paper_high[:, None], t[None, :], -t[None, :])
+        clear = (along >= 2.5 * sigma[:, None]) & (along <= (extent - 2.5 * sigma)[:, None])
+        middle = np.abs(along - (extent / 2)[:, None]) <= np.maximum(0.25 * sigma, step)[:, None]
+        cut = np.isfinite(extent) & (extent - 2.5 * sigma < reach)
+        tight = cut & (clear.sum(axis=1) < 4)
+        narrow = np.where(tight[:, None], middle, clear) & cut[:, None]
+        # An opening too narrow to hold even its middle keeps the full window.
+        cut &= narrow.any(axis=1)
+        tight &= cut
+        narrow &= cut[:, None]
+        paper_end = np.full(len(points), np.nan)
+        if cut.any():
+            paper_end[cut] = np.nanmedian(np.where(narrow[cut], profile[cut], np.nan), axis=1)
+        high = np.where(cut & paper_high, paper_end, high)
+        low = np.where(cut & ~paper_high, paper_end, low)
     if not sloped:
         level_t = np.repeat(((low + high) / 2)[:, None], len(t), axis=1)
     else:
@@ -150,6 +178,11 @@ def half_level_search(
         within = np.abs(t)[None, :] <= reach + step / 2
         lo_end = (t[None, :] <= -2.5 * sigma[:, None]) & within
         hi_end = (t[None, :] >= 2.5 * sigma[:, None]) & within
+        if narrow is not None:
+            cut_high = cut & paper_high
+            cut_low = cut & ~paper_high
+            hi_end = np.where(cut_high[:, None], narrow, hi_end)
+            lo_end = np.where(cut_low[:, None], narrow, lo_end)
         tail = (high - low)[:, None] * _upper_tail(np.abs(t)[None, :] / sigma[:, None])
         flattened = np.where(t[None, :] < 0, profile - tail, profile + tail)
 
@@ -164,6 +197,13 @@ def half_level_search(
 
         a0, a1 = line(lo_end)
         b0, b1 = line(hi_end)
+        if narrow is not None and tight.any():
+            # The opening's middle alone: too short for a slope, so its median, flat.
+            middle_level = np.full(len(points), np.nan)
+            middle_level[tight] = np.nanmedian(np.where(narrow[tight], flattened[tight], np.nan), axis=1)
+            flat_high, flat_low = tight & paper_high, tight & ~paper_high
+            b0, b1 = np.where(flat_high, middle_level, b0), np.where(flat_high, 0.0, b1)
+            a0, a1 = np.where(flat_low, middle_level, a0), np.where(flat_low, 0.0, a1)
         if paper_side is not None:
             # The material side keeps a flat level, the median of its end.
             material_low = np.asarray(paper_side) > 0
