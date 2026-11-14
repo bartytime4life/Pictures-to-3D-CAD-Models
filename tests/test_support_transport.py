@@ -120,7 +120,10 @@ def test_support_uses_final_camera_once_and_final_refined_pairs(monkeypatch, sig
     class CapturedBothRings(Exception):
         pass
 
-    def capture_fit(points, tol, min_line, *, support_points, support_error):
+    def capture_fit(points, tol, min_line, *, support_points, support_error, circle_points=None):
+        # The circle is fitted clear of switch corners (reference._off_switch_corners):
+        # a mask over these points, or None.
+        assert circle_points is None or circle_points.shape == (len(points),)
         fitted_inputs.append((points.copy(), support_points.copy(), support_error))
         if len(fitted_inputs) == len(rings):
             raise CapturedBothRings
