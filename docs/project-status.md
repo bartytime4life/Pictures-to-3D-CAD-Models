@@ -2,7 +2,9 @@
 
 ## Current source snapshot — November 14, 2026 UTC
 
-The verified publication base is main
+This documentation continuation follows published head
+`5f609af4944ba0ddc8b6b1e0c26eec81a75912c0`, tree
+`3be623931f96071addf98bfea3cb335282658aab`. Its runtime integration base is main
 `9d15a1eec33b660455b05d7fedaea50faebc35fd`, tree
 `1958ef5891f2f96e18eae252ed5fcf775df44a25`. It includes the source-cell mean
 from [PR #105](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/105),
@@ -43,7 +45,9 @@ merged at 23:54:08 UTC and records the saved inward construction.
 Documentation [PR #121](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/121)
 is also merged; its tree is the publication base above. It records the
 completed negative literal probe. This refresh preserves those records and
-adds the independently frozen live-restoration controls and first full result. The
+records the independently frozen live-restoration result and the subsequent
+144-input same-image diagnostic, including its first control failures and
+additive repair. The
 workbench runtime still matches PR #114: that correction removes fitted
 paper-light variation before remeasuring supported edge widths on traces with
 zero entered thickness. Positive-thickness traces retain the preceding width
@@ -88,10 +92,16 @@ Its workbench [run 43534952161](https://github.com/bartytime4life/Pictures-to-3D
 also completed successfully on the final readback. No result at its merge
 commit is asserted; its merged tree matches that head. Later checks for
 this refresh have separate status.
+PR #122's preceding documentation head `5f609af4944ba0ddc8b6b1e0c26eec81a75912c0`
+has successful workbench [43550876449](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43550876449)
+and reference-library [43550876412](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/runs/43550876412)
+runs at this readback. Those runs do not apply to this later documentation
+continuation. PR #122 remains open and unmerged.
+
 Merge, hosted checks, installed runtime, real-camera
 accuracy and physical acceptance remain separate.
 
-The [documentation review](validation/documentation-codecell-draft.md) audits this
+The [documentation review](validation/documentation-codecell-result.md) audits this
 main-based source. Use [available tools](#available-here) and [remaining integration work](#remaining-integration-work)
 for current capabilities. Earlier snapshots below are historical records; their open
 PR states and absent-module statements describe their own source and time.
@@ -220,12 +230,13 @@ full candidate arrays and complete ZIPs remain outside this documentation
 publication. Main/UI integration and physical qualification remain incomplete.
 
 The subsequent [code-cell diagnostic](finite-acquisition-codecell-probe.md)
-is currently six untracked, uncommitted source/test files in the separate
-research checkout. It proposes bounded actual witnesses using observed inputs
-and one fixed baseline. No combined admission, source freeze, collected tests
-or first scientific execution exists at this snapshot. This documentation
-publication includes its explanation and static file inventory, without runtime
-or tests. The executed 131-input study above remains the latest full result.
+is frozen at research `44ad56cf7026bb642a4ed0a8d71e93b7b3103903`, with
+144 governing inputs and 236 saved bindings. Repaired selected controls pass
+1,417 tests and 33 subtests, with three predecessor nodes independently
+replaced. The first actual probe qualifies four eligible fits and 168 new
+compatible tuples. Its exit 0 records alternative discovery, not recovery
+success. The original 11/12 result and middle geometry miss remain unchanged.
+[Complete population, source and limits](validation/finite-acquisition-codecell-result.md).
 
 ## Available here
 

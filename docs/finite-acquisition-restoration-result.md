@@ -6,6 +6,11 @@ PNG exactly reproduces the supplied image but misses the chord-fraction
 accuracy target. Read the [complete first result and evidence](validation/finite-acquisition-restoration-result.md)
 for the source freeze, failed controls, corrected selection and terminal exits.
 
+A [later actual diagnostic](validation/finite-acquisition-codecell-result.md)
+now records alternative geometries with the same images, while leaving this
+full recovery result and its middle-case miss unchanged. The saved-ten-tuple
+check described below is the earlier restoration record, not the later probe.
+
 This main-based checkout publishes documentation and saved evidence only.
 `fit_acquisition_segment_restoration(...)`, its scientific tests and its
 runner are absent here. It adds no HTTP mode, tracing option or workbench

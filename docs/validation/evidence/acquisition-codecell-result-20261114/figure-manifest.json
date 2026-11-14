@@ -1,0 +1,20 @@
+{
+  "source_case_sha256": "18ae136e9e86b27081b8aa406cf037840c0fa6965e6c9847f68be5a47c2f93ad",
+  "saved_array_audit_sha256": "202236f056e91d37684d4c9c057be10ccfe5688cdfe95b9c05645c82ccd71bd2",
+  "script_sha256": "c540bfd9a1651f47443f0c211bd766e4b927056d83cea6d62cee41998c02c92c",
+  "extreme_saved_trial_indices": [
+    45,
+    17
+  ],
+  "scope": "Display of saved raw coverage and encoded source arrays only; no reconstruction, new candidate tuple or model call.",
+  "outputs": {
+    "same-pixels-different-geometry.png": {
+      "sha256": "547b310531d2709104bfe2a636ddb088aa277c275eba063683cb9a66eee1ef98",
+      "bytes": 90164
+    },
+    "same-pixels-different-geometry.svg": {
+      "sha256": "86d76b3bbf27354a7542f7a66a57da269622465d4a0e39f731704b8aeabf5b1b",
+      "bytes": 88892
+    }
+  }
+}

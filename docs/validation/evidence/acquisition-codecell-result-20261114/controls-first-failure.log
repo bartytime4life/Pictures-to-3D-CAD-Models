@@ -1,0 +1,60 @@
+........................................................................ [  5%]
+........................................................................ [ 10%]
+........................................................................ [ 15%]
+........................................................................ [ 20%]
+........................................................................ [ 25%]
+........................................................................ [ 30%]
+........................................................................ [ 36%]
+............................................................... [ 40%]
+................................................................... [ 45%]
+..................................................... [ 49%]
+........................................................................ [ 54%]
+........................................................................ [ 59%]
+........................................................................ [ 64%]
+........................................................................ [ 69%]
+........................................................................ [ 75%]
+........................................................................ [ 80%]
+........................................................................ [ 85%]
+........................................................................ [ 90%]
+......................................FF................................ [ 95%]
+.............................................................            [100%]
+=================================== FAILURES ===================================
+___ test_actual_ledger_and_capture_cache_never_replay_a_cached_literal_tuple ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7b56cbfa1ac0>
+
+    def test_actual_ledger_and_capture_cache_never_replay_a_cached_literal_tuple(monkeypatch):
+        engine, literal_trial, point, calls = real_ledger_fixture(monkeypatch)
+        first, fresh = literal_trial(engine, point, "invented_baseline")
+        second, cached = literal_trial(engine, point, "invented_same_tuple")
+        assert first is second and first is not None
+        assert calls["coverage"] == calls["mean"] == 1
+        assert calls["precharged"] == [(1, 2, 46)]
+        assert [engine.evaluations, engine.cell_work, engine.stage_work] == [1, 2, 46]
+        assert [engine.cell_reported, engine.stage_reported] == [2, 46]
+        assert [row.status for row in engine.ledger] == ["resolved", "cache_hit"]
+>       assert engine.ledger[1].cell_charged == engine.ledger[1].stage_charged == 0
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'AcquisitionEvaluation' object has no attribute 'cell_charged'. Did you mean: 'cell_work_charged'?
+
+tests/test_finite_acquisition_codecell_probe.py:533: AttributeError
+_ test_actual_ledger_retains_precharged_opaque_failure_without_retry_or_capture _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7b56cbf41010>
+
+    def test_actual_ledger_retains_precharged_opaque_failure_without_retry_or_capture(monkeypatch):
+        engine, literal_trial, point, calls = real_ledger_fixture(monkeypatch, fail_mean=True)
+        result, failed = literal_trial(engine, point, "invented_stage_failure")
+        assert result is None and failed["status"] == "numerical"
+        assert calls["coverage"] == calls["mean"] == 1
+        assert calls["precharged"] == [(1, 2, 46)]
+        assert [engine.evaluations, engine.cell_work, engine.stage_work] == [1, 2, 46]
+>       assert engine.ledger[0].stage_reserved == engine.ledger[0].stage_charged == 46
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'AcquisitionEvaluation' object has no attribute 'stage_reserved'. Did you mean: 'stage_work_reserved'?
+
+tests/test_finite_acquisition_codecell_probe.py:550: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_finite_acquisition_codecell_probe.py::test_actual_ledger_and_capture_cache_never_replay_a_cached_literal_tuple
+FAILED tests/test_finite_acquisition_codecell_probe.py::test_actual_ledger_retains_precharged_opaque_failure_without_retry_or_capture
+2 failed, 1394 passed, 1 deselected, 33 subtests passed in 17.26s

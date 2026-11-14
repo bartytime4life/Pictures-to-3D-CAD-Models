@@ -169,12 +169,14 @@ study remains 11/12 matched passes, exit 1. See the
 Those historical commands require the exact research checkout; they are
 not additional `make` targets or executable main/UI features.
 
-The later [code-cell diagnostic draft](finite-acquisition-codecell-probe.md)
-has proposed Python helper/controller interfaces and a local runner, all outside
-this checkout. They are uncommitted and unrun. Its combined admission, freeze,
-first controls and first probe are still pending; no runnable main command or
-passed-test count is provided. The guide distinguishes proposal arithmetic,
-actual witnesses and full recovery acceptance.
+The later [code-cell diagnostic](finite-acquisition-codecell-probe.md) is
+implemented only in the separate 144-input research freeze `44ad56c`.
+Its repaired first controls pass 1,417 tests and 33 subtests; the first actual
+probe finds 168 compatible alternatives, exit 0. This is a diagnostic result,
+not an additional main command or fitter mode. The [complete result](validation/finite-acquisition-codecell-result.md)
+binds the recorded execution and keeps the original 11/12 recovery failure.
+Reproduction requires the exact research source, saved inputs, freeze and
+controls receipt; the published documentation extracts are insufficient alone.
 
 ## Output and side effects
 

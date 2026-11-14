@@ -1,0 +1,213 @@
+{
+  "format": "independent-codecell-saved-math-audit-v1",
+  "scope": "SAVED JSON/Fraction/scalar/array-byte arithmetic only; no subject imports, LS/SVD/solver, unrecorded candidate, forward, reference, encoder or fitter calls",
+  "script_sha256": "2d053116cf997007cba282dbb3ee854a5b8935353973949a962a8abe5fcd31be",
+  "report_sha256": "51658a514f41eb26ef98f0a401020e75a02d1fef8a8244be479417b431b3444a",
+  "report_expected_sha256": "51658a514f41eb26ef98f0a401020e75a02d1fef8a8244be479417b431b3444a",
+  "limitations": [
+    "No independent LS/SVD/rank/minimum-norm solve; saved direction arithmetic is checked only.",
+    "Exact interval and point gates concern the stored affine surrogate, not nonlinear optical inclusion.",
+    "Actual stored byte-equal witnesses are conditional on this fixed numerical operator and declared domain, not physical truth.",
+    "Sampled spans are lower bounds, not outer/confidence/enclosure/feasible intervals.",
+    "Half-diameter lower bound concerns a common estimator across the verified equal-observation alternatives; no uniform benchmark impossibility is proved.",
+    "Original full recovery stays11/12 and is not rescored."
+  ],
+  "checks": 3815680,
+  "failure_count": 0,
+  "failures": [],
+  "counters": {
+    "recorded_slots": 196,
+    "checked_source_floors": 27832,
+    "slot_status:qualified": 168,
+    "slot_status:unchanged": 21,
+    "slot_status:duplicate": 7
+  },
+  "cases": {
+    "minor-png": {
+      "census": {
+        "compatible_actual_slots": 49,
+        "distinct_new_parameter_tuples": 49,
+        "distinct_new_geometry_tuples": 49,
+        "distinct_new_fraction_values": 49
+      },
+      "fraction_min": -0.5524998970242435,
+      "fraction_max": -0.544516998598625,
+      "fraction_diameter_exact": "4493972296869/562949953421312",
+      "conditional_two_witness_minimax_lower_bound_exact": "4493972296869/1125899906842624",
+      "conditional_lower_bound_gt_original_tau": true,
+      "original_tau_exact": "1/500",
+      "extreme_witnesses": [
+        {
+          "axis": 6,
+          "slot": 2,
+          "trial_index": 45,
+          "parameters": [
+            6.144266227543163,
+            6.210945506208846,
+            3.6420903675563903,
+            -0.5524998970242435,
+            0.30839755044588796
+          ]
+        },
+        {
+          "axis": 2,
+          "slot": 2,
+          "trial_index": 17,
+          "parameters": [
+            6.106823529684463,
+            6.201625223063925,
+            3.614157825672919,
+            -0.544516998598625,
+            0.3089992052376404
+          ]
+        }
+      ],
+      "max_saved_response_exact_difference": 5.35651361023267e-13,
+      "slot_statuses": {
+        "qualified": 49
+      }
+    },
+    "middle-png": {
+      "census": {
+        "compatible_actual_slots": 49,
+        "distinct_new_parameter_tuples": 49,
+        "distinct_new_geometry_tuples": 49,
+        "distinct_new_fraction_values": 49
+      },
+      "fraction_min": 0.16676279128473026,
+      "fraction_max": 0.16733677942146846,
+      "fraction_diameter_exact": "10340051034917/18014398509481984",
+      "conditional_two_witness_minimax_lower_bound_exact": "10340051034917/36028797018963968",
+      "conditional_lower_bound_gt_original_tau": false,
+      "original_tau_exact": "1/500",
+      "extreme_witnesses": [
+        {
+          "axis": 0,
+          "slot": 5,
+          "trial_index": 6,
+          "parameters": [
+            5.8701974045898195,
+            6.117631815005458,
+            3.4116933942983723,
+            0.16676279128473026,
+            1.1306375484730098
+          ]
+        },
+        {
+          "axis": 6,
+          "slot": 2,
+          "trial_index": 45,
+          "parameters": [
+            5.869813616003361,
+            6.1170611270258375,
+            3.4127698231668018,
+            0.16733677942146846,
+            1.1306306863185263
+          ]
+        }
+      ],
+      "max_saved_response_exact_difference": 5.091189611248283e-13,
+      "slot_statuses": {
+        "qualified": 49
+      }
+    },
+    "major-png": {
+      "census": {
+        "compatible_actual_slots": 21,
+        "distinct_new_parameter_tuples": 21,
+        "distinct_new_geometry_tuples": 21,
+        "distinct_new_fraction_values": 21
+      },
+      "fraction_min": 0.6093432763117355,
+      "fraction_max": 0.6095960322110473,
+      "fraction_diameter_exact": "2276622747913/9007199254740992",
+      "conditional_two_witness_minimax_lower_bound_exact": "2276622747913/18014398509481984",
+      "conditional_lower_bound_gt_original_tau": false,
+      "original_tau_exact": "1/500",
+      "extreme_witnesses": [
+        {
+          "axis": 4,
+          "slot": 5,
+          "trial_index": 15,
+          "parameters": [
+            6.258645172259483,
+            5.840330755434402,
+            3.8198419281322176,
+            0.6093432763117355,
+            2.4305442053723922
+          ]
+        },
+        {
+          "axis": 0,
+          "slot": 5,
+          "trial_index": 3,
+          "parameters": [
+            6.259291440274894,
+            5.840114107566662,
+            3.819548838793147,
+            0.6095960322110473,
+            2.4298485670892913
+          ]
+        }
+      ],
+      "max_saved_response_exact_difference": 7.29214539712752e-13,
+      "slot_statuses": {
+        "unchanged": 21,
+        "qualified": 21,
+        "duplicate": 7
+      }
+    },
+    "wrapped-major-png": {
+      "census": {
+        "compatible_actual_slots": 49,
+        "distinct_new_parameter_tuples": 49,
+        "distinct_new_geometry_tuples": 49,
+        "distinct_new_fraction_values": 49
+      },
+      "fraction_min": 0.8290267711908844,
+      "fraction_max": 0.8295395016050038,
+      "fraction_diameter_exact": "4618265003939/9007199254740992",
+      "conditional_two_witness_minimax_lower_bound_exact": "4618265003939/18014398509481984",
+      "conditional_lower_bound_gt_original_tau": false,
+      "original_tau_exact": "1/500",
+      "extreme_witnesses": [
+        {
+          "axis": 3,
+          "slot": 2,
+          "trial_index": 24,
+          "parameters": [
+            6.090242162626424,
+            6.16875858083889,
+            3.520419415250826,
+            0.8290267711908844,
+            -0.06017340683415015
+          ]
+        },
+        {
+          "axis": 0,
+          "slot": 2,
+          "trial_index": 3,
+          "parameters": [
+            6.08941802238798,
+            6.168757197791091,
+            3.5200701212302747,
+            0.8295395016050038,
+            -0.060220747665868116
+          ]
+        }
+      ],
+      "max_saved_response_exact_difference": 4.0683787809436877e-13,
+      "slot_statuses": {
+        "qualified": 49
+      }
+    }
+  },
+  "input_hashes": {
+    ".local/verification/finite-acquisition-codecell-probe-controls-v2-first/report.json": "51658a514f41eb26ef98f0a401020e75a02d1fef8a8244be479417b431b3444a",
+    ".local/verification/finite-acquisition-codecell-probe-controls-v2-first/minor-png.json": "18ae136e9e86b27081b8aa406cf037840c0fa6965e6c9847f68be5a47c2f93ad",
+    ".local/verification/finite-acquisition-codecell-probe-controls-v2-first/middle-png.json": "f11dfc8d3805210632843315c50be0a2c22e810fbf1f27c25f2010200071289e",
+    ".local/verification/finite-acquisition-codecell-probe-controls-v2-first/major-png.json": "c8ca5611c2b9e6d05dbd8cc7213285f231f600c3d3b21827e5c6b6384f43ec66",
+    ".local/verification/finite-acquisition-codecell-probe-controls-v2-first/wrapped-major-png.json": "0303e549a57149e4c26a1cf5ad1a8d4b2fc2fb5f23820f0eef595bc53466b01c"
+  },
+  "passed": true
+}

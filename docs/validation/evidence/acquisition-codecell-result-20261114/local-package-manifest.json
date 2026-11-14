@@ -1,0 +1,2083 @@
+{
+  "format": "codecell-first144-portable-result-manifest-v1",
+  "source_head": "44ad56cf7026bb642a4ed0a8d71e93b7b3103903",
+  "report_sha256": "51658a514f41eb26ef98f0a401020e75a02d1fef8a8244be479417b431b3444a",
+  "source_archive": {
+    "path": ".local/verification/codecell-result-package-v1/payload/recorded-source.zip",
+    "sha256": "3f64087f5c2656254269b1ba195605606190e00d11184359cb6cc65e51e915fe",
+    "bytes": 949256,
+    "permissions_octal": "0o664",
+    "git_mode": "100644",
+    "members": 145,
+    "every_member_bytes_mode_hash_verified": true
+  },
+  "source_member_count": 145,
+  "governing_source_count": 144,
+  "external_freeze_count": 1,
+  "saved_binding_coverage": {
+    "total_records": 236,
+    "payload_records_included": 8,
+    "payload_records_hash_referenced_only": 228,
+    "all236_payloads_included": false,
+    "entries": {
+      "artifact:almost-circle-smooth/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/almost-circle-smooth/capture.npz",
+        "sha256": "4160551adc653249de71e4c7054f49e077ffb0adf5f594c2779a2732052ccbc7",
+        "bytes": 10670,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:almost-circle-smooth/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/almost-circle-smooth/initialization.json",
+        "sha256": "141d06e6e54ec53dd795725c5ac0cda676c592dbc4f0e8ae064c2f6606c886d7",
+        "bytes": 27808,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:almost-circle-smooth/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/almost-circle-smooth/record.json",
+        "sha256": "717a2aebf86610e6778cf2c9fca02244a754231102b1238792af9bdbbe00a287",
+        "bytes": 631,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:budget-png/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/budget-png/capture.npz",
+        "sha256": "f24bc640d8cbda96b6254ebb879df0f3b91654310f670812d484ac586c08138b",
+        "bytes": 7259,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:budget-png/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/budget-png/fit.json",
+        "sha256": "545eea454d1f8c0fe3807067ae025c3fdc31b517be07a6b034005b43e26cbc22",
+        "bytes": 230696,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:budget-png/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/budget-png/initialization.json",
+        "sha256": "b05fd25735250236b71f20e2ed785e49ecee54a3189bbc0b6f9935174de28f0d",
+        "bytes": 27874,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:budget-png/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/budget-png/observed-fit-input.json",
+        "sha256": "378a27579e4de24dbcf20a420f3573f7a51fe7d26ab2c6867477cd698141235b",
+        "bytes": 10381,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:budget-png/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/budget-png/record.json",
+        "sha256": "e19fc2de7538feab1535667839f1809809bb4b48036e0af5c802e7e1b1257a54",
+        "bytes": 3087,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:coincident-smooth/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/coincident-smooth/capture.npz",
+        "sha256": "5b1f849edfee3561be1d97cc84d2ccf86d4e2b8ec436f1715788e7d117356254",
+        "bytes": 7461,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:coincident-smooth/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/coincident-smooth/fit.json",
+        "sha256": "0ec059bfd98bc5f1a8ab5bf601c7ac12f2c960cf24568e64ab7a59e978b8450f",
+        "bytes": 2294686,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:coincident-smooth/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/coincident-smooth/initialization.json",
+        "sha256": "d645df65b2198ac949b38d2fbf85eb5635e39c448ee05aa3918904cf09b29330",
+        "bytes": 28246,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:coincident-smooth/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/coincident-smooth/observed-fit-input.json",
+        "sha256": "71f59c5703461a8d76e7c0d8718996e5d343114955227581f1b237a1ec9b355c",
+        "bytes": 10463,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:coincident-smooth/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/coincident-smooth/record.json",
+        "sha256": "e1bce850415f69835647c81726ad93d978467c292e05cbcaf4b4258b220f49e8",
+        "bytes": 3588,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:cropped-smooth/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/cropped-smooth/capture.npz",
+        "sha256": "90588a367b2a56339354317d016ad64ed484f4155f6586640425f74200c55323",
+        "bytes": 7972,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:cropped-smooth/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/cropped-smooth/initialization.json",
+        "sha256": "1661a6a5b04ee46588e093284173f3a016339476f3180468d009320c34b2822d",
+        "bytes": 12597,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:cropped-smooth/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/cropped-smooth/record.json",
+        "sha256": "7f92f8a9aca45ab20bf16164df7fde722173e9852ec5ab0055b89a49b3eb6c73",
+        "bytes": 625,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:five-queries-smooth/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/five-queries-smooth/capture.npz",
+        "sha256": "1aba7375ee1b1197d43fc30d4ae35c0d720778323253e1ddda6f92a4057e70cd",
+        "bytes": 6310,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:five-queries-smooth/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/five-queries-smooth/fit.json",
+        "sha256": "3a1bc07b9e5e04e82d7031302991bdb34c0b1a482c3135357b7db86b2ac788d4",
+        "bytes": 37083964,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:five-queries-smooth/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/five-queries-smooth/initialization.json",
+        "sha256": "efcbcc6a28291f0a76896d6b42934b94a42d2ab68057155db7712d1a0f395407",
+        "bytes": 27781,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:five-queries-smooth/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/five-queries-smooth/observed-fit-input.json",
+        "sha256": "3648c30b00fc4fb5b2d89c1c84f776fd3d5178de9a270d60619494910e948b1b",
+        "bytes": 7556,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:five-queries-smooth/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/five-queries-smooth/record.json",
+        "sha256": "c319a7c4b347a8ac44bc51cacaa096b027784978ff9293c8843cce7d396fa846",
+        "bytes": 7193,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:gradient-staged/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/gradient-staged/capture.npz",
+        "sha256": "5f5456192d2735844a09b1685e005ccc6bb22958df6351eb0da53f7a47ac6fb6",
+        "bytes": 6686,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:gradient-staged/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/gradient-staged/fit.json",
+        "sha256": "254d90ed2899b985a97ed1737f7494148f43f1779732c194689da1abb18daccc",
+        "bytes": 23951212,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:gradient-staged/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/gradient-staged/initialization.json",
+        "sha256": "4cd993cbe87f3df91cd2061bc8ce8ea9426bba1d7d326fdc8d26d3531cda8fda",
+        "bytes": 28302,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:gradient-staged/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/gradient-staged/observed-fit-input.json",
+        "sha256": "fa1f56d3792bc379680a68bcba063ad3d276771e266e7cde7189e676405ecd3c",
+        "bytes": 10222,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:gradient-staged/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/gradient-staged/record.json",
+        "sha256": "80ab2a99b34a3cb7e0a52a986aeeb294fc05d42a5612d37c4593070e089a99ef",
+        "bytes": 3283,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:low-staged/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/low-staged/capture.npz",
+        "sha256": "7a3efbfc6f422cdcbff18bdefa93d81fac7abd1658599d717b0ced6a05ab7475",
+        "bytes": 5447,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:low-staged/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/low-staged/initialization.json",
+        "sha256": "a5b3e77db912c2fe409b9d8a058204a8ac5c86c8d55a161e8d4b6335b9396e48",
+        "bytes": 11787,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:low-staged/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/low-staged/record.json",
+        "sha256": "723b83ea786f928879e806ed9318abd8d4bb1c21b02b24b5c95e78d723b14f98",
+        "bytes": 600,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:major-png/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/major-png/capture.npz",
+        "sha256": "72a20f85ffeda6f1fcd0ecc4688be79447783d02a0bf8caf5d79f42074cfe972",
+        "bytes": 8190,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:major-png/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/major-png/fit.json",
+        "sha256": "4bc4dc405cc06573d56f4a4b7a4bb5ab9d73814f599a0a7e0f48e86ae6e01504",
+        "bytes": 39910819,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:major-png/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/major-png/initialization.json",
+        "sha256": "1449ec7a66efa9b484d06b9b8a85b631bebc6873af7d75ffb8b92b675356449e",
+        "bytes": 28199,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:major-png/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/major-png/observed-fit-input.json",
+        "sha256": "362be9ab82e4e7f0aff86118ee887839e72700fbb9a243e43ce87e04d1a8a66c",
+        "bytes": 10174,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:major-png/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/major-png/record.json",
+        "sha256": "db53d5f5ddea45c3e817b872b1b879a71fbd7e30b417de9b979c911d7dd8e741",
+        "bytes": 2728,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:major-smooth/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/major-smooth/capture.npz",
+        "sha256": "4b409918add535cc78b7c5ff61b06fca7b54bc8907c5bbe77dd567c77e60292b",
+        "bytes": 10161,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:major-smooth/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/major-smooth/fit.json",
+        "sha256": "19f0daab74b451c7571d3a7a66d3815c66829ee1ef4b4c128b9e8228075345d7",
+        "bytes": 1871827,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:major-smooth/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/major-smooth/initialization.json",
+        "sha256": "076f5a74c5546f33bde65b2baf65b97fda3ca07e9c5384a2e89de07ad777766c",
+        "bytes": 28585,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:major-smooth/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/major-smooth/observed-fit-input.json",
+        "sha256": "bb0ac94a96cbc027826e2b100ab8a1cf00b63ebbed17cb810f1ae546bc5a0381",
+        "bytes": 10468,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:major-smooth/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/major-smooth/record.json",
+        "sha256": "f8d29450aaa5b7c0e7323ee23ff3e10830f452e5e14bee78b361cf46803d861b",
+        "bytes": 3597,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:major-staged/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/major-staged/capture.npz",
+        "sha256": "5f5456192d2735844a09b1685e005ccc6bb22958df6351eb0da53f7a47ac6fb6",
+        "bytes": 6686,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:major-staged/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/major-staged/fit.json",
+        "sha256": "c7a72c256b156cb652fed47fb518deed5edcdc0e710f63514e82e192c19ab803",
+        "bytes": 19817725,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:major-staged/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/major-staged/initialization.json",
+        "sha256": "3c50a99762080ab15eb113636b50942cc89eb3d1cb0a82c02e311a17ede67daa",
+        "bytes": 28220,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:major-staged/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/major-staged/observed-fit-input.json",
+        "sha256": "80c2e5eb68678faf92fa63814f3d79a2a6e71dcf1409aaac0b85380f82de7935",
+        "bytes": 10201,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:major-staged/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/major-staged/record.json",
+        "sha256": "24f65f7c00696a34e0b1053e389b5853ed80e9c644e54eeca422237c11dceb95",
+        "bytes": 3010,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:middle-png/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/middle-png/capture.npz",
+        "sha256": "f24bc640d8cbda96b6254ebb879df0f3b91654310f670812d484ac586c08138b",
+        "bytes": 7259,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:middle-png/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/middle-png/fit.json",
+        "sha256": "3a3c5b0f5b5ca743bbadb237958167f72f48eb3c3f632747859df14b563e720f",
+        "bytes": 59766223,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:middle-png/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/middle-png/initialization.json",
+        "sha256": "b05fd25735250236b71f20e2ed785e49ecee54a3189bbc0b6f9935174de28f0d",
+        "bytes": 27874,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:middle-png/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/middle-png/observed-fit-input.json",
+        "sha256": "052bf1e4af14180c6a29db63e5cd31eb781c183681fc36aef49011f2e1e7b24d",
+        "bytes": 10391,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:middle-png/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/middle-png/record.json",
+        "sha256": "71ea0d2bde14dbafe1f4c4ecc51051e6f644a7b8a193e6bd4a689518651979ad",
+        "bytes": 2735,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:middle-smooth/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/middle-smooth/capture.npz",
+        "sha256": "195df4d0b6e7a2f5474efd5cf3eeb5c7839afb73863b6e8f8505b477e6591694",
+        "bytes": 8750,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:middle-smooth/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/middle-smooth/fit.json",
+        "sha256": "d00065adfc4ab66226612d3d39991f470dce02667c2d2548a3592e5614505aab",
+        "bytes": 1990106,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:middle-smooth/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/middle-smooth/initialization.json",
+        "sha256": "e947eb582e741987ac798a12cf00df8cd532bfa9ffcdbade5ca35c2de86d6eb6",
+        "bytes": 28118,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:middle-smooth/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/middle-smooth/observed-fit-input.json",
+        "sha256": "9832820728bf1ce4349eac9deb958a338f0e031b691fa6d05890b3885915cb77",
+        "bytes": 10565,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:middle-smooth/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/middle-smooth/record.json",
+        "sha256": "d37f8246b18b3486f07887380d0a693d99d0731387969f2743f1173b21328eb0",
+        "bytes": 3598,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:middle-staged/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/middle-staged/capture.npz",
+        "sha256": "4c2c095d85ecf073ca2fbdf0828bedc4e72f602dffb6d6fac7c7eaf357194543",
+        "bytes": 5929,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:middle-staged/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/middle-staged/fit.json",
+        "sha256": "f60ffea179c8d00e0799011ac56c74da7e0cbbcc4aad103b73c67c51060fbb46",
+        "bytes": 22800544,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:middle-staged/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/middle-staged/initialization.json",
+        "sha256": "3a826b42b46c066a1710909b3ddb3ba0004f1e805fc85d658ec1775ec5fe19e8",
+        "bytes": 27389,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:middle-staged/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/middle-staged/observed-fit-input.json",
+        "sha256": "e779131b85882641b66d69e7f5687fe137df1346226f5463e975d069072e7226",
+        "bytes": 9946,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:middle-staged/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/middle-staged/record.json",
+        "sha256": "e53ad16678ed1455cb8e04bfb76bcea4cd374ae87619861006bb6f7346d13f77",
+        "bytes": 3288,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:minor-png/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/minor-png/capture.npz",
+        "sha256": "f55097f4adfafc866532dd554eb2743f2640fd61ad043fbf696ff397f64d852b",
+        "bytes": 5671,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:minor-png/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/minor-png/fit.json",
+        "sha256": "6339a0682c39be7d509ef052ad87291cd1fbd80437d7d5bb60b6663661608bfb",
+        "bytes": 30783547,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:minor-png/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/minor-png/initialization.json",
+        "sha256": "738632463ed1b4c358245b5895b0a36d38bdc7cf257a59a63385daac64aea6c0",
+        "bytes": 27737,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:minor-png/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/minor-png/observed-fit-input.json",
+        "sha256": "fe0938288ce49acfcb23a32cad6f65d9be96e436ffb48e5098859fcaa845ba7c",
+        "bytes": 10565,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:minor-png/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/minor-png/record.json",
+        "sha256": "9f8d71700fa9389a470795c6f709f21daa6da73b1e671b112b5098cee43111fd",
+        "bytes": 2746,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:minor-smooth/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/minor-smooth/capture.npz",
+        "sha256": "1aba7375ee1b1197d43fc30d4ae35c0d720778323253e1ddda6f92a4057e70cd",
+        "bytes": 6310,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:minor-smooth/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/minor-smooth/fit.json",
+        "sha256": "9de2c7b9260a65c3a1d2f42244cb9dd43274de756ed4955612071b65c390c3dd",
+        "bytes": 3173573,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:minor-smooth/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/minor-smooth/initialization.json",
+        "sha256": "efcbcc6a28291f0a76896d6b42934b94a42d2ab68057155db7712d1a0f395407",
+        "bytes": 27781,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:minor-smooth/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/minor-smooth/observed-fit-input.json",
+        "sha256": "6bce725a874fd1a0eb719e890d9cff66b208f6b3d9345dd68cbaef2719f2821d",
+        "bytes": 10575,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:minor-smooth/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/minor-smooth/record.json",
+        "sha256": "437c8643f44b3deb634e795cecacdc6f8350804e6bcb3151c376fc18df83e483",
+        "bytes": 3638,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:minor-staged/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/minor-staged/capture.npz",
+        "sha256": "2646e9f7cd5ab2b1febb4dd9537fca2dac71bc5b3c5835ccaa2fb02779188e07",
+        "bytes": 4567,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:minor-staged/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/minor-staged/fit.json",
+        "sha256": "3b43cf2e0a1fb1d6e8dcaf90cd3b6a2b5f371f4594b7bdab816c8da00e88b549",
+        "bytes": 20170084,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:minor-staged/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/minor-staged/initialization.json",
+        "sha256": "efe9db0eaf7de6781610f492eaa13cbb1bdfb9b64f5af635cbfb07ad7c7b3830",
+        "bytes": 26548,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:minor-staged/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/minor-staged/observed-fit-input.json",
+        "sha256": "dccf4eb1ea54855daf442005aa3d19e375dd61033d146753a6d8651d04e69e9a",
+        "bytes": 9548,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:minor-staged/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/minor-staged/record.json",
+        "sha256": "337725d29184b32731e2abc30938dc4f6ad470d6240ebb0b6b0848aa450e0922",
+        "bytes": 2855,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:singular-map-png/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/singular-map-png/capture.npz",
+        "sha256": "f24bc640d8cbda96b6254ebb879df0f3b91654310f670812d484ac586c08138b",
+        "bytes": 7259,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:singular-map-png/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/singular-map-png/record.json",
+        "sha256": "4d0239d75930e55b9d1adc6d9c244dd9cc8305782bf0eef31d6bf238620f6d82",
+        "bytes": 1906,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:source-freeze.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/source-freeze.json",
+        "sha256": "bba5a45bc4d013d9c1f58c5eb669a00e4942f3f8ab69955288328d801e2a5f01",
+        "bytes": 96293,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:thin-png/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/thin-png/capture.npz",
+        "sha256": "3346ced818f464b804a13a12b62465b99138c68896629a09925e3628f2244eb0",
+        "bytes": 4422,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:thin-png/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/thin-png/initialization.json",
+        "sha256": "f7dfe9a94c240b5d6497d5b6f030b8b623d4bc50a04f5866571790611595725b",
+        "bytes": 12491,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:thin-png/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/thin-png/record.json",
+        "sha256": "54e49a6bffe5873312c3bd43e6c0b336db7af81e853eb1119837ad93de54c4a9",
+        "bytes": 594,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:wrapped-major-png/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/wrapped-major-png/capture.npz",
+        "sha256": "855bf9aeff769fe4a7d0e891e02ff25157b68d35cc1f0fb1a5d9c25a200bc3ee",
+        "bytes": 7596,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:wrapped-major-png/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/wrapped-major-png/fit.json",
+        "sha256": "a77d1c7a1b5c7ce0c5c0bfd76cba6703035536d7a4837286cbc3870fc25cca55",
+        "bytes": 21251096,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:wrapped-major-png/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/wrapped-major-png/initialization.json",
+        "sha256": "a5942656c4e47f870c5538ace94eba7b92a0d9ac7c1103f307dddb6e50d8ae1d",
+        "bytes": 28538,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:wrapped-major-png/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/wrapped-major-png/observed-fit-input.json",
+        "sha256": "26d38e117bc5ead5faae10a856f79dcb7eb35b5b12edfb7b163d833f937603d7",
+        "bytes": 10655,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:wrapped-major-png/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/wrapped-major-png/record.json",
+        "sha256": "ad48d43ba5135a501374b18806db35034e7ef3fe19691f2cbe8ecc693ec461da",
+        "bytes": 2751,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:wrapped-major-smooth/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/wrapped-major-smooth/capture.npz",
+        "sha256": "f98e0b539c00cd14113d5031d75d6f760b161cedac438979532342a190f9d1b9",
+        "bytes": 9355,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:wrapped-major-smooth/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/wrapped-major-smooth/fit.json",
+        "sha256": "fa83602b6d20c5e73306f52b333eb72c6e635553c081ad57bb5da838d3da9705",
+        "bytes": 1880368,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:wrapped-major-smooth/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/wrapped-major-smooth/initialization.json",
+        "sha256": "594b22dee1857d8f4e7b89374bb01a4c132cd7e50196704edd44135633b5aeae",
+        "bytes": 28475,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:wrapped-major-smooth/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/wrapped-major-smooth/observed-fit-input.json",
+        "sha256": "542338afe8d3fc5068ea92b6ded50d296e88372c89252266d0c7bb28749bcedb",
+        "bytes": 10504,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:wrapped-major-smooth/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/wrapped-major-smooth/record.json",
+        "sha256": "e552cae5bc861bd0404a938d53493093fd8b1262780e43e3e7bd30a291937c78",
+        "bytes": 3616,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:wrapped-major-staged/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/wrapped-major-staged/capture.npz",
+        "sha256": "42843f4291da5fb81eabed073d32d05e2b30c521837e5307021d3fcd3450a4e9",
+        "bytes": 6220,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:wrapped-major-staged/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/wrapped-major-staged/fit.json",
+        "sha256": "1fac01ecb88019aa012a2ae24d2b2ad36732051a2b6f4527e5cc8bec51b33ac1",
+        "bytes": 20948818,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:wrapped-major-staged/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/wrapped-major-staged/initialization.json",
+        "sha256": "7a6f9e0872c3ed7a2565ca65d6607359fd971190bb96d66b00681999a7ecd613",
+        "bytes": 27970,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:wrapped-major-staged/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/wrapped-major-staged/observed-fit-input.json",
+        "sha256": "634193753489b7eefad2822b7b5729219529790989966b67925f0aa234c9ac87",
+        "bytes": 10141,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:wrapped-major-staged/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/wrapped-major-staged/record.json",
+        "sha256": "d3bf616120e8c20f3ae4bfa9e9e5646e3e5d378d00c80de0aae16b9dcec60c27",
+        "bytes": 2955,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:wrong-optics-smooth/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/wrong-optics-smooth/capture.npz",
+        "sha256": "195df4d0b6e7a2f5474efd5cf3eeb5c7839afb73863b6e8f8505b477e6591694",
+        "bytes": 8750,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:wrong-optics-smooth/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/wrong-optics-smooth/fit.json",
+        "sha256": "7b63a943f00124a34addb4c6ac718909f459de2b149852c62c52af779185cdcb",
+        "bytes": 4378875,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:wrong-optics-smooth/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/wrong-optics-smooth/initialization.json",
+        "sha256": "53d1d0a310be2882690e675a81b9be6a06e8859496f7fe390eba85526eab5f69",
+        "bytes": 27952,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:wrong-optics-smooth/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/wrong-optics-smooth/observed-fit-input.json",
+        "sha256": "95bc78a87e12f091dc6b870bded17baaa1be858328ac6715871b6af95c2e7e83",
+        "bytes": 10424,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:wrong-optics-smooth/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/wrong-optics-smooth/record.json",
+        "sha256": "7c2c27791aea5ac0d5bb8c54195aeb2b1ef505b566ad762b6d6150b16d94a6e1",
+        "bytes": 3491,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:zero-png/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/zero-png/capture.npz",
+        "sha256": "cbb755361c34d585d9e338031f2c4d18221a3d9331a099f7e8acdb68900b3942",
+        "bytes": 3937,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:zero-png/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/zero-png/initialization.json",
+        "sha256": "8c7f4c9636cf3b163dc9b90f12284f16f96c2eb6e74cd84303f240a4636ac468",
+        "bytes": 12618,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:zero-png/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/zero-png/record.json",
+        "sha256": "28d34eaf426bc8acb90992cd7574eca06b0a5b900a641daa541722b87e7b86f3",
+        "bytes": 595,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:zero-smooth/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/zero-smooth/capture.npz",
+        "sha256": "9ba075fd8511b1624775f2542225c5bd53b28c4e853d635849e8d8891c05ddc0",
+        "bytes": 3391,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:zero-smooth/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/zero-smooth/initialization.json",
+        "sha256": "56d3bc38f635b0c2b87d3a456263c52b67e2c8f7fc331ddd06441767fc9e97d0",
+        "bytes": 12590,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "artifact:zero-smooth/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/zero-smooth/record.json",
+        "sha256": "04e0f8a0ceee54d90a538b761b958088d3f0629534cd8012c25df135884740c6",
+        "bytes": 601,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:almost-circle-smooth/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/almost-circle-smooth/capture.npz",
+        "sha256": "4160551adc653249de71e4c7054f49e077ffb0adf5f594c2779a2732052ccbc7",
+        "bytes": 10670,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:almost-circle-smooth/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/almost-circle-smooth/initialization.json",
+        "sha256": "141d06e6e54ec53dd795725c5ac0cda676c592dbc4f0e8ae064c2f6606c886d7",
+        "bytes": 27808,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:almost-circle-smooth/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/almost-circle-smooth/record.json",
+        "sha256": "0bcf3b99be84bab027ec30f789b13f0c3f9abb326d2a3d77cc0e528d26c42bcd",
+        "bytes": 630,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:budget-png/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/budget-png/capture.npz",
+        "sha256": "f24bc640d8cbda96b6254ebb879df0f3b91654310f670812d484ac586c08138b",
+        "bytes": 7259,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:budget-png/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/budget-png/fit.json",
+        "sha256": "5a9156ea2d21e83209269b99872730cc041a826d4052b6cce606a9464683129e",
+        "bytes": 229730,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:budget-png/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/budget-png/initialization.json",
+        "sha256": "b05fd25735250236b71f20e2ed785e49ecee54a3189bbc0b6f9935174de28f0d",
+        "bytes": 27874,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:budget-png/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/budget-png/observed-fit-input.json",
+        "sha256": "378a27579e4de24dbcf20a420f3573f7a51fe7d26ab2c6867477cd698141235b",
+        "bytes": 10381,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:budget-png/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/budget-png/record.json",
+        "sha256": "f7e3d643ea5910974d9d15fa60866a6fcd49d4fe5c1290e28ca4219bf70a6509",
+        "bytes": 3089,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:coincident-smooth/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/coincident-smooth/capture.npz",
+        "sha256": "5b1f849edfee3561be1d97cc84d2ccf86d4e2b8ec436f1715788e7d117356254",
+        "bytes": 7461,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:coincident-smooth/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/coincident-smooth/fit.json",
+        "sha256": "c1ec7f3ec418c1eab70da88d74b24222c51563ce95616a94e1bebeac9edfbf24",
+        "bytes": 2293720,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:coincident-smooth/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/coincident-smooth/initialization.json",
+        "sha256": "d645df65b2198ac949b38d2fbf85eb5635e39c448ee05aa3918904cf09b29330",
+        "bytes": 28246,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:coincident-smooth/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/coincident-smooth/observed-fit-input.json",
+        "sha256": "71f59c5703461a8d76e7c0d8718996e5d343114955227581f1b237a1ec9b355c",
+        "bytes": 10463,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:coincident-smooth/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/coincident-smooth/record.json",
+        "sha256": "1126de86b8a9ec8dc1a252ba8f31b975062b502217eaeca1019c275e7b99b4fd",
+        "bytes": 3588,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:cropped-smooth/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/cropped-smooth/capture.npz",
+        "sha256": "90588a367b2a56339354317d016ad64ed484f4155f6586640425f74200c55323",
+        "bytes": 7972,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:cropped-smooth/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/cropped-smooth/initialization.json",
+        "sha256": "1661a6a5b04ee46588e093284173f3a016339476f3180468d009320c34b2822d",
+        "bytes": 12597,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:cropped-smooth/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/cropped-smooth/record.json",
+        "sha256": "2d97c55b83fadc3be0f94ce6bd24899897f52a74bf96ce8a458f83a92e1e4182",
+        "bytes": 625,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:five-queries-smooth/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/five-queries-smooth/capture.npz",
+        "sha256": "1aba7375ee1b1197d43fc30d4ae35c0d720778323253e1ddda6f92a4057e70cd",
+        "bytes": 6310,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:five-queries-smooth/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/five-queries-smooth/fit.json",
+        "sha256": "8a1a739077bb439cc650a7b02d94224f74d8a64e6bb48c503219044c30127129",
+        "bytes": 37082998,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:five-queries-smooth/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/five-queries-smooth/initialization.json",
+        "sha256": "efcbcc6a28291f0a76896d6b42934b94a42d2ab68057155db7712d1a0f395407",
+        "bytes": 27781,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:five-queries-smooth/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/five-queries-smooth/observed-fit-input.json",
+        "sha256": "3648c30b00fc4fb5b2d89c1c84f776fd3d5178de9a270d60619494910e948b1b",
+        "bytes": 7556,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:five-queries-smooth/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/five-queries-smooth/record.json",
+        "sha256": "13be932c500ac771feacb78f71bc34dd6d74ca6a287929ed49c4202fee96e94f",
+        "bytes": 7192,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:gradient-staged/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/gradient-staged/capture.npz",
+        "sha256": "5f5456192d2735844a09b1685e005ccc6bb22958df6351eb0da53f7a47ac6fb6",
+        "bytes": 6686,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:gradient-staged/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/gradient-staged/fit.json",
+        "sha256": "9207bf228837eeab1124417f6d2d45edb48da32b14b3b7c3083355be904f149b",
+        "bytes": 23950246,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:gradient-staged/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/gradient-staged/initialization.json",
+        "sha256": "4cd993cbe87f3df91cd2061bc8ce8ea9426bba1d7d326fdc8d26d3531cda8fda",
+        "bytes": 28302,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:gradient-staged/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/gradient-staged/observed-fit-input.json",
+        "sha256": "fa1f56d3792bc379680a68bcba063ad3d276771e266e7cde7189e676405ecd3c",
+        "bytes": 10222,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:gradient-staged/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/gradient-staged/record.json",
+        "sha256": "eb704a304c1d971f9e8221d32a2f9f97d41fa9cb06e2d3d33e9c479be0ef9052",
+        "bytes": 3282,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:low-staged/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/low-staged/capture.npz",
+        "sha256": "7a3efbfc6f422cdcbff18bdefa93d81fac7abd1658599d717b0ced6a05ab7475",
+        "bytes": 5447,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:low-staged/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/low-staged/initialization.json",
+        "sha256": "a5b3e77db912c2fe409b9d8a058204a8ac5c86c8d55a161e8d4b6335b9396e48",
+        "bytes": 11787,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:low-staged/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/low-staged/record.json",
+        "sha256": "f4487a7732822c3ccb68eaadf97396da7133423eea158b344fb2a0126dbcdc6a",
+        "bytes": 600,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:major-png/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/major-png/capture.npz",
+        "sha256": "72a20f85ffeda6f1fcd0ecc4688be79447783d02a0bf8caf5d79f42074cfe972",
+        "bytes": 8190,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:major-png/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/major-png/fit.json",
+        "sha256": "1386e8334d90ec50926f1b431ba87821ff0ffac433d78c7c3e826656822719b7",
+        "bytes": 39909853,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:major-png/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/major-png/initialization.json",
+        "sha256": "1449ec7a66efa9b484d06b9b8a85b631bebc6873af7d75ffb8b92b675356449e",
+        "bytes": 28199,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:major-png/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/major-png/observed-fit-input.json",
+        "sha256": "362be9ab82e4e7f0aff86118ee887839e72700fbb9a243e43ce87e04d1a8a66c",
+        "bytes": 10174,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:major-png/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/major-png/record.json",
+        "sha256": "1546c575f67500bd92bf456cd34023ded00749d7afa5c26f72e1a52a7c122ed6",
+        "bytes": 2728,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:major-smooth/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/major-smooth/capture.npz",
+        "sha256": "4b409918add535cc78b7c5ff61b06fca7b54bc8907c5bbe77dd567c77e60292b",
+        "bytes": 10161,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:major-smooth/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/major-smooth/fit.json",
+        "sha256": "67fed68c5a260466544a64911e56d58d9efd2cb9980e0736ef69efecdb94e893",
+        "bytes": 1870861,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:major-smooth/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/major-smooth/initialization.json",
+        "sha256": "076f5a74c5546f33bde65b2baf65b97fda3ca07e9c5384a2e89de07ad777766c",
+        "bytes": 28585,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:major-smooth/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/major-smooth/observed-fit-input.json",
+        "sha256": "bb0ac94a96cbc027826e2b100ab8a1cf00b63ebbed17cb810f1ae546bc5a0381",
+        "bytes": 10468,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:major-smooth/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/major-smooth/record.json",
+        "sha256": "45d3918098cd3f35c40a039bed1d13c4a2c683b9eeed503c1ce03771fc0fbb84",
+        "bytes": 3597,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:major-staged/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/major-staged/capture.npz",
+        "sha256": "5f5456192d2735844a09b1685e005ccc6bb22958df6351eb0da53f7a47ac6fb6",
+        "bytes": 6686,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:major-staged/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/major-staged/fit.json",
+        "sha256": "5bd3db4d5846c6acd6511e01d34976bf3dea79b88319468d96791331f1613e38",
+        "bytes": 19816759,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:major-staged/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/major-staged/initialization.json",
+        "sha256": "3c50a99762080ab15eb113636b50942cc89eb3d1cb0a82c02e311a17ede67daa",
+        "bytes": 28220,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:major-staged/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/major-staged/observed-fit-input.json",
+        "sha256": "80c2e5eb68678faf92fa63814f3d79a2a6e71dcf1409aaac0b85380f82de7935",
+        "bytes": 10201,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:major-staged/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/major-staged/record.json",
+        "sha256": "e9005d8ea16cbbad43cfc703efb1e070393cf5791620d707339086dad890670a",
+        "bytes": 3011,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:middle-png/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/middle-png/capture.npz",
+        "sha256": "f24bc640d8cbda96b6254ebb879df0f3b91654310f670812d484ac586c08138b",
+        "bytes": 7259,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:middle-png/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/middle-png/fit.json",
+        "sha256": "c41f9a7261749779c1448fe01ecb26db0b45d43f9d20634bf910f26218edfd8d",
+        "bytes": 57258843,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:middle-png/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/middle-png/initialization.json",
+        "sha256": "b05fd25735250236b71f20e2ed785e49ecee54a3189bbc0b6f9935174de28f0d",
+        "bytes": 27874,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:middle-png/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/middle-png/observed-fit-input.json",
+        "sha256": "052bf1e4af14180c6a29db63e5cd31eb781c183681fc36aef49011f2e1e7b24d",
+        "bytes": 10391,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:middle-png/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/middle-png/record.json",
+        "sha256": "e13a20612f5ace92f87e15183bc145f55a4e7829d95d56e15995b3655777f759",
+        "bytes": 2797,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:middle-smooth/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/middle-smooth/capture.npz",
+        "sha256": "195df4d0b6e7a2f5474efd5cf3eeb5c7839afb73863b6e8f8505b477e6591694",
+        "bytes": 8750,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:middle-smooth/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/middle-smooth/fit.json",
+        "sha256": "a5db538ecedf2ce12dbed0a99ca31b74de612baa71775a3297e7867dca64f8de",
+        "bytes": 1989140,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:middle-smooth/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/middle-smooth/initialization.json",
+        "sha256": "e947eb582e741987ac798a12cf00df8cd532bfa9ffcdbade5ca35c2de86d6eb6",
+        "bytes": 28118,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:middle-smooth/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/middle-smooth/observed-fit-input.json",
+        "sha256": "9832820728bf1ce4349eac9deb958a338f0e031b691fa6d05890b3885915cb77",
+        "bytes": 10565,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:middle-smooth/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/middle-smooth/record.json",
+        "sha256": "da340747b3fca563867fb309eaf51dde5ea51d9621feb07e4e4b1cad85af86b5",
+        "bytes": 3598,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:middle-staged/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/middle-staged/capture.npz",
+        "sha256": "4c2c095d85ecf073ca2fbdf0828bedc4e72f602dffb6d6fac7c7eaf357194543",
+        "bytes": 5929,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:middle-staged/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/middle-staged/fit.json",
+        "sha256": "46d63fe9732428317c3798330443d7c9b7b396367fec4a2319cd9fbb50c90c13",
+        "bytes": 22799578,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:middle-staged/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/middle-staged/initialization.json",
+        "sha256": "3a826b42b46c066a1710909b3ddb3ba0004f1e805fc85d658ec1775ec5fe19e8",
+        "bytes": 27389,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:middle-staged/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/middle-staged/observed-fit-input.json",
+        "sha256": "e779131b85882641b66d69e7f5687fe137df1346226f5463e975d069072e7226",
+        "bytes": 9946,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:middle-staged/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/middle-staged/record.json",
+        "sha256": "2247f79a87e4ca6a713433fc7d0b8b9078b71e5b3e4340358e2808f96b00f7d9",
+        "bytes": 3288,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:minor-png/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/minor-png/capture.npz",
+        "sha256": "f55097f4adfafc866532dd554eb2743f2640fd61ad043fbf696ff397f64d852b",
+        "bytes": 5671,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:minor-png/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/minor-png/fit.json",
+        "sha256": "044d272e89e71a7560be7a3baf395a0a139fff828c2933e14611269765c16ad4",
+        "bytes": 30782581,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:minor-png/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/minor-png/initialization.json",
+        "sha256": "738632463ed1b4c358245b5895b0a36d38bdc7cf257a59a63385daac64aea6c0",
+        "bytes": 27737,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:minor-png/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/minor-png/observed-fit-input.json",
+        "sha256": "fe0938288ce49acfcb23a32cad6f65d9be96e436ffb48e5098859fcaa845ba7c",
+        "bytes": 10565,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:minor-png/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/minor-png/record.json",
+        "sha256": "552c92e2a8d7e9aed73a2a937ba07050576ccda6d666d5923109e1d970d56a0b",
+        "bytes": 2746,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:minor-smooth/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/minor-smooth/capture.npz",
+        "sha256": "1aba7375ee1b1197d43fc30d4ae35c0d720778323253e1ddda6f92a4057e70cd",
+        "bytes": 6310,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:minor-smooth/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/minor-smooth/fit.json",
+        "sha256": "e62f81c69ad1631b80c0791271b8ecc3f1bab259e17ef886487c36eaa33642e8",
+        "bytes": 3172607,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:minor-smooth/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/minor-smooth/initialization.json",
+        "sha256": "efcbcc6a28291f0a76896d6b42934b94a42d2ab68057155db7712d1a0f395407",
+        "bytes": 27781,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:minor-smooth/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/minor-smooth/observed-fit-input.json",
+        "sha256": "6bce725a874fd1a0eb719e890d9cff66b208f6b3d9345dd68cbaef2719f2821d",
+        "bytes": 10575,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:minor-smooth/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/minor-smooth/record.json",
+        "sha256": "45ec4673921d464b6b48afbe336f87392c9fcad076b1a35a4f9a54459b53a4b5",
+        "bytes": 3638,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:minor-staged/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/minor-staged/capture.npz",
+        "sha256": "2646e9f7cd5ab2b1febb4dd9537fca2dac71bc5b3c5835ccaa2fb02779188e07",
+        "bytes": 4567,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:minor-staged/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/minor-staged/fit.json",
+        "sha256": "3e9323cfa4037abee6312344e010dfed4e6357c110c15924d410a538afc92c9e",
+        "bytes": 20169118,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:minor-staged/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/minor-staged/initialization.json",
+        "sha256": "efe9db0eaf7de6781610f492eaa13cbb1bdfb9b64f5af635cbfb07ad7c7b3830",
+        "bytes": 26548,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:minor-staged/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/minor-staged/observed-fit-input.json",
+        "sha256": "dccf4eb1ea54855daf442005aa3d19e375dd61033d146753a6d8651d04e69e9a",
+        "bytes": 9548,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:minor-staged/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/minor-staged/record.json",
+        "sha256": "ecb0d3444f132b694a48e73bb2125c19197efe2576fdcf0ea0d5aefe30abc8fc",
+        "bytes": 2855,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:singular-map-png/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/singular-map-png/capture.npz",
+        "sha256": "f24bc640d8cbda96b6254ebb879df0f3b91654310f670812d484ac586c08138b",
+        "bytes": 7259,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:singular-map-png/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/singular-map-png/record.json",
+        "sha256": "ea16754ee5997dec4ecef2ffafb068934955c01c6977e71a4df582f10aebfcbb",
+        "bytes": 1872,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:source-freeze.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/source-freeze.json",
+        "sha256": "f386407f739d06e2336e972f2bfa7a910375e4abf7da43737da7b5885b2a5a6f",
+        "bytes": 51004,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:thin-png/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/thin-png/capture.npz",
+        "sha256": "3346ced818f464b804a13a12b62465b99138c68896629a09925e3628f2244eb0",
+        "bytes": 4422,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:thin-png/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/thin-png/initialization.json",
+        "sha256": "f7dfe9a94c240b5d6497d5b6f030b8b623d4bc50a04f5866571790611595725b",
+        "bytes": 12491,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:thin-png/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/thin-png/record.json",
+        "sha256": "d8521d8b71b129b6ab6f80a7aaa6ff269bc383e21c5b583964716e5b22670a06",
+        "bytes": 594,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:wrapped-major-png/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/wrapped-major-png/capture.npz",
+        "sha256": "855bf9aeff769fe4a7d0e891e02ff25157b68d35cc1f0fb1a5d9c25a200bc3ee",
+        "bytes": 7596,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:wrapped-major-png/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/wrapped-major-png/fit.json",
+        "sha256": "dfdb91591f6da6feacdefb200a85082d7bf95322bfde91c8493aaa54001fd788",
+        "bytes": 21250130,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:wrapped-major-png/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/wrapped-major-png/initialization.json",
+        "sha256": "a5942656c4e47f870c5538ace94eba7b92a0d9ac7c1103f307dddb6e50d8ae1d",
+        "bytes": 28538,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:wrapped-major-png/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/wrapped-major-png/observed-fit-input.json",
+        "sha256": "26d38e117bc5ead5faae10a856f79dcb7eb35b5b12edfb7b163d833f937603d7",
+        "bytes": 10655,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:wrapped-major-png/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/wrapped-major-png/record.json",
+        "sha256": "43439c109e442c1b50d634c8689b19d2c30b0555bdc7fab2a5931e258e2682f3",
+        "bytes": 2752,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:wrapped-major-smooth/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/wrapped-major-smooth/capture.npz",
+        "sha256": "f98e0b539c00cd14113d5031d75d6f760b161cedac438979532342a190f9d1b9",
+        "bytes": 9355,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:wrapped-major-smooth/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/wrapped-major-smooth/fit.json",
+        "sha256": "aea31b9b8ce6c87c6cf2aa92dc7b925c5faa2e4a18585f3ac939cd8f8762aa34",
+        "bytes": 1879402,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:wrapped-major-smooth/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/wrapped-major-smooth/initialization.json",
+        "sha256": "594b22dee1857d8f4e7b89374bb01a4c132cd7e50196704edd44135633b5aeae",
+        "bytes": 28475,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:wrapped-major-smooth/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/wrapped-major-smooth/observed-fit-input.json",
+        "sha256": "542338afe8d3fc5068ea92b6ded50d296e88372c89252266d0c7bb28749bcedb",
+        "bytes": 10504,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:wrapped-major-smooth/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/wrapped-major-smooth/record.json",
+        "sha256": "41780bef3f971df64831625d187f79812aeebc2624517ff7631395041d6aa05d",
+        "bytes": 3617,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:wrapped-major-staged/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/wrapped-major-staged/capture.npz",
+        "sha256": "42843f4291da5fb81eabed073d32d05e2b30c521837e5307021d3fcd3450a4e9",
+        "bytes": 6220,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:wrapped-major-staged/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/wrapped-major-staged/fit.json",
+        "sha256": "b36141d3ab24d57f61c829dcd1fe1cce0416618ceac7cfecfaae4511144259be",
+        "bytes": 20947852,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:wrapped-major-staged/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/wrapped-major-staged/initialization.json",
+        "sha256": "7a6f9e0872c3ed7a2565ca65d6607359fd971190bb96d66b00681999a7ecd613",
+        "bytes": 27970,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:wrapped-major-staged/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/wrapped-major-staged/observed-fit-input.json",
+        "sha256": "634193753489b7eefad2822b7b5729219529790989966b67925f0aa234c9ac87",
+        "bytes": 10141,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:wrapped-major-staged/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/wrapped-major-staged/record.json",
+        "sha256": "8c57fadfff854eaa72aac550f163bfb92e677704970aa0dab8db15ecb8fc35ad",
+        "bytes": 2955,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:wrong-optics-smooth/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/wrong-optics-smooth/capture.npz",
+        "sha256": "195df4d0b6e7a2f5474efd5cf3eeb5c7839afb73863b6e8f8505b477e6591694",
+        "bytes": 8750,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:wrong-optics-smooth/fit.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/wrong-optics-smooth/fit.json",
+        "sha256": "1258508c1a50a256fe4ed701c8053d50066795a1bfdb7c50b059c72ea80ff0c5",
+        "bytes": 4377909,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:wrong-optics-smooth/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/wrong-optics-smooth/initialization.json",
+        "sha256": "53d1d0a310be2882690e675a81b9be6a06e8859496f7fe390eba85526eab5f69",
+        "bytes": 27952,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:wrong-optics-smooth/observed-fit-input.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/wrong-optics-smooth/observed-fit-input.json",
+        "sha256": "95bc78a87e12f091dc6b870bded17baaa1be858328ac6715871b6af95c2e7e83",
+        "bytes": 10424,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:wrong-optics-smooth/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/wrong-optics-smooth/record.json",
+        "sha256": "0e229d85ea86bca8785a51166e4109bc9eadb3ff6def66bedf995ffd6a58115c",
+        "bytes": 3491,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:zero-png/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/zero-png/capture.npz",
+        "sha256": "cbb755361c34d585d9e338031f2c4d18221a3d9331a099f7e8acdb68900b3942",
+        "bytes": 3937,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:zero-png/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/zero-png/initialization.json",
+        "sha256": "8c7f4c9636cf3b163dc9b90f12284f16f96c2eb6e74cd84303f240a4636ac468",
+        "bytes": 12618,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:zero-png/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/zero-png/record.json",
+        "sha256": "4592c419dbc27c9561fdcda02d357c4b0968ea80487f1e76ab8040f1e7b80d95",
+        "bytes": 596,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:zero-smooth/capture.npz": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/zero-smooth/capture.npz",
+        "sha256": "9ba075fd8511b1624775f2542225c5bd53b28c4e853d635849e8d8891c05ddc0",
+        "bytes": 3391,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:zero-smooth/initialization.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/zero-smooth/initialization.json",
+        "sha256": "56d3bc38f635b0c2b87d3a456263c52b67e2c8f7fc331ddd06441767fc9e97d0",
+        "bytes": 12590,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:artifact:zero-smooth/record.json": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/zero-smooth/record.json",
+        "sha256": "8ebd2ccd68a72c6555d07321ec1935ae88baadfd1174799dcd0ed91d86277244",
+        "bytes": 602,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:census": {
+        "path": ".local/verification/finite-acquisition-physical-rounding-v1-first.json",
+        "sha256": "fcf64aa7549f35b6edd27fc38104aef69ead6053469980486b4b0edcdd1c5443",
+        "bytes": 9669740,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:controls_receipt": {
+        "path": ".local/verification/finite-acquisition-inward-literal-v1-first-tests-terminal-receipt.json",
+        "sha256": "342f8de430509f05ca3c017cb867cc11edf06e05493c9116407157ee840642e0",
+        "bytes": 937,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:freeze": {
+        "path": ".local/verification/finite-acquisition-inward-literal-v1-freeze.json",
+        "sha256": "ffd283c89e8c30c6e802b5fa9d402ae39914e48c402f862a2c14091f3d44ff21",
+        "bytes": 20942,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:inward": {
+        "path": ".local/verification/finite-acquisition-inward-v1-first.json",
+        "sha256": "ace89fd3bd8759aee8734ad0e968ec5f6fbde89c0edb085ca990ec02a56c3f65",
+        "bytes": 11179905,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:literal": {
+        "path": ".local/verification/finite-acquisition-inward-literal-v1-first.json",
+        "sha256": "e09b56e646459f90b0371a9ec5bacaecbaf7fc5146c577687b5f7a8cd6e22307",
+        "bytes": 324890,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:literal_plan": {
+        "path": "studies/finite-acquisition-inward-literal-v1.json",
+        "sha256": "20a3ddf3cfa10ace6685155277c11da7c9ead021e1f6f6264082282ab98973ed",
+        "bytes": 63169,
+        "payload_included": true,
+        "archived_as": "source/recorded-source.zip!/studies/finite-acquisition-inward-literal-v1.json"
+      },
+      "inherited:recovery": {
+        "path": ".local/verification/finite-acquisition-recovery-protected-active-controls-v2-first/report.json",
+        "sha256": "fe72dfe41cb961adc635390398714e377c97d384e7a3ed41fa5b98b7267fc056",
+        "bytes": 140994,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "inherited:terminal_receipt": {
+        "path": ".local/verification/finite-acquisition-inward-literal-v1-first-terminal-receipt.json",
+        "sha256": "842d710705cd3a9b670f55d0c6ac394c1bf6e7325462927376267e457d0a9bca",
+        "bytes": 3198,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "previous_complete_zip": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-complete.zip",
+        "sha256": "f9569d7313f69a101de6aea3391e9f4c906fdf58fab4858b890ee592a92f0597",
+        "bytes": 42357190,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "previous_first_controls_terminal": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first-tests-terminal-receipt.json",
+        "sha256": "95aa737833027c1ecca122c204d9091a3cf3ce89568bab9a746f2cda3c3c4362",
+        "bytes": 1155,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "previous_first_full_terminal": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first-terminal-receipt.json",
+        "sha256": "a9a6870357a01c064f70c8eb92ce89cadd41c23f2fd743c6d2cf1f37999c123c",
+        "bytes": 2168,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "previous_freeze": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-freeze.json",
+        "sha256": "7d244b9b197217dd7b06718bdde69769cf3f163489192b267e211d6ecaab726b",
+        "bytes": 58218,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "previous_source_zip": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-source.zip",
+        "sha256": "4a4c8c4738a5375a6c27dcae805f858d33f9202f80253e13f9203299011c6bea",
+        "bytes": 832932,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "report": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/report.json",
+        "sha256": "4eadc2057ded427a4727cb2e14cae0aac153907fd511252423529dcd612fc982",
+        "bytes": 264057,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "v1-first:.local/verification/finite-acquisition-recovery-restoration-v1-first-tests-native-terminal.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-v1-first-tests-native-terminal.json",
+        "sha256": "2a2ee7895aae052b75dbe121508a7be3c943ecee061f89a6f896297314efe8ef",
+        "bytes": 4844,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "v1-first:.local/verification/finite-acquisition-recovery-restoration-v1-first-tests-terminal-receipt.json": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-v1-first-tests-terminal-receipt.json",
+        "sha256": "7a0507321e57fd828d58ad5041f921c6456a46c02e787527e7249a305e13455f",
+        "bytes": 1670,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "v1-first:.local/verification/finite-acquisition-recovery-restoration-v1-first-tests.log": {
+        "path": ".local/verification/finite-acquisition-recovery-restoration-v1-first-tests.log",
+        "sha256": "e2aed88d3abf1e73a4a77691ed698601d3faef5032ea63d2c1e55b3a8dfad1cd",
+        "bytes": 3824,
+        "payload_included": false,
+        "archived_as": null
+      },
+      "first139:.local/verification/finite-acquisition-codecell-probe-v1-freeze.json": {
+        "path": ".local/verification/finite-acquisition-codecell-probe-v1-freeze.json",
+        "sha256": "589ae113a9cfc64ce733784f11b7ed411188c9d9a50aeba8f7a50228b3c4cb8b",
+        "bytes": 92566,
+        "payload_included": true,
+        "archived_as": "first-controls-139/finite-acquisition-codecell-probe-v1-freeze.json"
+      },
+      "first139:.local/verification/finite-acquisition-codecell-probe-v1-first-tests-launch.json": {
+        "path": ".local/verification/finite-acquisition-codecell-probe-v1-first-tests-launch.json",
+        "sha256": "8a5f04a9e552e0dd1f99dabd0e4dd04de37a8462f81f9cbee65a0faba73bc542",
+        "bytes": 2668,
+        "payload_included": true,
+        "archived_as": "first-controls-139/finite-acquisition-codecell-probe-v1-first-tests-launch.json"
+      },
+      "first139:.local/verification/finite-acquisition-codecell-probe-v1-first-tests-initial-native.json": {
+        "path": ".local/verification/finite-acquisition-codecell-probe-v1-first-tests-initial-native.json",
+        "sha256": "f221e44987b099d74f1def99f70dbcec988543fe7d43c303e279a5ad6b851311",
+        "bytes": 317,
+        "payload_included": true,
+        "archived_as": "first-controls-139/finite-acquisition-codecell-probe-v1-first-tests-initial-native.json"
+      },
+      "first139:.local/verification/finite-acquisition-codecell-probe-v1-first-tests-observation-1.json": {
+        "path": ".local/verification/finite-acquisition-codecell-probe-v1-first-tests-observation-1.json",
+        "sha256": "52e6f05a2cb66f9d2da32aba23fd80bf2074ad94272e2911391e69141a926245",
+        "bytes": 439,
+        "payload_included": true,
+        "archived_as": "first-controls-139/finite-acquisition-codecell-probe-v1-first-tests-observation-1.json"
+      },
+      "first139:.local/verification/finite-acquisition-codecell-probe-v1-first-tests-native-terminal.json": {
+        "path": ".local/verification/finite-acquisition-codecell-probe-v1-first-tests-native-terminal.json",
+        "sha256": "0a94394ff346f78fad9546ed9448f2b2017996a7622ab6de25da850f66e09aa7",
+        "bytes": 4000,
+        "payload_included": true,
+        "archived_as": "first-controls-139/finite-acquisition-codecell-probe-v1-first-tests-native-terminal.json"
+      },
+      "first139:.local/verification/finite-acquisition-codecell-probe-v1-first-tests-terminal-receipt.json": {
+        "path": ".local/verification/finite-acquisition-codecell-probe-v1-first-tests-terminal-receipt.json",
+        "sha256": "a2e6fd97dcf71fa9959d1abb49ed3ad3e7358c9f285aa010aa17d9f7cc9a3f33",
+        "bytes": 4347,
+        "payload_included": true,
+        "archived_as": "first-controls-139/finite-acquisition-codecell-probe-v1-first-tests-terminal-receipt.json"
+      },
+      "first139:.local/verification/finite-acquisition-codecell-probe-v1-first-tests.log": {
+        "path": ".local/verification/finite-acquisition-codecell-probe-v1-first-tests.log",
+        "sha256": "5c453afd61e77531ee6309d06fb57646769c871ccb334c4e00bb461f1d83507c",
+        "bytes": 4280,
+        "payload_included": true,
+        "archived_as": "first-controls-139/finite-acquisition-codecell-probe-v1-first-tests.log"
+      }
+    }
+  },
+  "source_to_archived": {
+    ".local/verification/codecell-ai-saved-audit-v1/audit-v2.py": "audits/ai-accounting/audit-v2.py",
+    ".local/verification/codecell-ai-saved-audit-v1/audit.py": "audits/ai-accounting/audit.py",
+    ".local/verification/codecell-ai-saved-audit-v1/first-auditor-terminal.json": "audits/ai-accounting/first-auditor-terminal.json",
+    ".local/verification/codecell-ai-saved-audit-v1/inspect-records.py": "audits/ai-accounting/inspect-records.py",
+    ".local/verification/codecell-ai-saved-audit-v1/inspect-schema.py": "audits/ai-accounting/inspect-schema.py",
+    ".local/verification/codecell-ai-saved-audit-v1/inspect-small.py": "audits/ai-accounting/inspect-small.py",
+    ".local/verification/codecell-ai-saved-audit-v1/receipt-v1.json": "audits/ai-accounting/receipt-v1.json",
+    ".local/verification/codecell-ai-saved-audit-v1/receipt-v2.json": "audits/ai-accounting/receipt-v2.json",
+    ".local/verification/codecell-ai-saved-audit-v1/second-auditor-terminal.json": "audits/ai-accounting/second-auditor-terminal.json",
+    ".local/verification/codecell-math-audit-v1/audit.py": "audits/math/audit.py",
+    ".local/verification/codecell-math-audit-v1/first.log": "audits/math/first.log",
+    ".local/verification/codecell-math-audit-v1/interpretation.md": "audits/math/interpretation.md",
+    ".local/verification/codecell-math-audit-v1/linkage-supplement-first.log": "audits/math/linkage-supplement-first.log",
+    ".local/verification/codecell-math-audit-v1/linkage-supplement-receipt.json": "audits/math/linkage-supplement-receipt.json",
+    ".local/verification/codecell-math-audit-v1/linkage-supplement.py": "audits/math/linkage-supplement.py",
+    ".local/verification/codecell-math-audit-v1/manifest.json": "audits/math/manifest.json",
+    ".local/verification/codecell-math-audit-v1/receipt-first.json": "audits/math/receipt-first.json",
+    ".local/verification/codecell-root-array-audit-v1/audit.py": "audits/root-arrays/audit.py",
+    ".local/verification/codecell-root-array-audit-v1/receipt.json": "audits/root-arrays/receipt.json",
+    ".local/verification/codecell-ux-saved-audit-v1.json": "audits/ux/codecell-ux-saved-audit-v1.json",
+    ".local/verification/codecell-ux-saved-audit-v1.launch.json": "audits/ux/codecell-ux-saved-audit-v1.launch.json",
+    ".local/verification/codecell-ux-saved-audit-v1.py": "audits/ux/codecell-ux-saved-audit-v1.py",
+    ".local/verification/codecell-ux-saved-audit-v1.stderr.log": "audits/ux/codecell-ux-saved-audit-v1.stderr.log",
+    ".local/verification/codecell-ux-saved-audit-v1.stdout.log": "audits/ux/codecell-ux-saved-audit-v1.stdout.log",
+    ".local/verification/codecell-ux-saved-audit-v1.terminal.json": "audits/ux/codecell-ux-saved-audit-v1.terminal.json",
+    ".local/verification/codecell-ux-saved-inspection-v1.json": "audits/ux/codecell-ux-saved-inspection-v1.json",
+    ".local/verification/codecell-result-figure-v2/manifest.json": "figures/v2/manifest.json",
+    ".local/verification/codecell-result-figure-v2/plot.py": "figures/v2/plot.py",
+    ".local/verification/codecell-result-figure-v2/same-pixels-different-geometry.png": "figures/v2/same-pixels-different-geometry.png",
+    ".local/verification/codecell-result-figure-v2/same-pixels-different-geometry.svg": "figures/v2/same-pixels-different-geometry.svg",
+    ".local/verification/finite-acquisition-codecell-probe-v1-first-tests-initial-native.json": "first-controls-139/finite-acquisition-codecell-probe-v1-first-tests-initial-native.json",
+    ".local/verification/finite-acquisition-codecell-probe-v1-first-tests-launch.json": "first-controls-139/finite-acquisition-codecell-probe-v1-first-tests-launch.json",
+    ".local/verification/finite-acquisition-codecell-probe-v1-first-tests-native-terminal.json": "first-controls-139/finite-acquisition-codecell-probe-v1-first-tests-native-terminal.json",
+    ".local/verification/finite-acquisition-codecell-probe-v1-first-tests-observation-1.json": "first-controls-139/finite-acquisition-codecell-probe-v1-first-tests-observation-1.json",
+    ".local/verification/finite-acquisition-codecell-probe-v1-first-tests-terminal-receipt.json": "first-controls-139/finite-acquisition-codecell-probe-v1-first-tests-terminal-receipt.json",
+    ".local/verification/finite-acquisition-codecell-probe-v1-first-tests.log": "first-controls-139/finite-acquisition-codecell-probe-v1-first-tests.log",
+    ".local/verification/finite-acquisition-codecell-probe-v1-freeze.json": "first-controls-139/finite-acquisition-codecell-probe-v1-freeze.json",
+    ".local/verification/finite-acquisition-codecell-probe-controls-v2-first-tests-initial-native.json": "first-controls-144/finite-acquisition-codecell-probe-controls-v2-first-tests-initial-native.json",
+    ".local/verification/finite-acquisition-codecell-probe-controls-v2-first-tests-launch.json": "first-controls-144/finite-acquisition-codecell-probe-controls-v2-first-tests-launch.json",
+    ".local/verification/finite-acquisition-codecell-probe-controls-v2-first-tests-native-terminal.json": "first-controls-144/finite-acquisition-codecell-probe-controls-v2-first-tests-native-terminal.json",
+    ".local/verification/finite-acquisition-codecell-probe-controls-v2-first-tests-terminal-receipt.json": "first-controls-144/finite-acquisition-codecell-probe-controls-v2-first-tests-terminal-receipt.json",
+    ".local/verification/finite-acquisition-codecell-probe-controls-v2-first-tests.log": "first-controls-144/finite-acquisition-codecell-probe-controls-v2-first-tests.log",
+    ".local/verification/finite-acquisition-codecell-probe-controls-v2-first-initial-native.json": "first-probe-144/finite-acquisition-codecell-probe-controls-v2-first-initial-native.json",
+    ".local/verification/finite-acquisition-codecell-probe-controls-v2-first-launch.json": "first-probe-144/finite-acquisition-codecell-probe-controls-v2-first-launch.json",
+    ".local/verification/finite-acquisition-codecell-probe-controls-v2-first-native-terminal.json": "first-probe-144/finite-acquisition-codecell-probe-controls-v2-first-native-terminal.json",
+    ".local/verification/finite-acquisition-codecell-probe-controls-v2-first-terminal-receipt.json": "first-probe-144/finite-acquisition-codecell-probe-controls-v2-first-terminal-receipt.json",
+    ".local/verification/finite-acquisition-codecell-probe-controls-v2-first.log": "first-probe-144/finite-acquisition-codecell-probe-controls-v2-first.log",
+    ".local/verification/finite-acquisition-codecell-probe-controls-v2-first/major-png.json": "results/major-png.json",
+    ".local/verification/finite-acquisition-codecell-probe-controls-v2-first/middle-png.json": "results/middle-png.json",
+    ".local/verification/finite-acquisition-codecell-probe-controls-v2-first/minor-png.json": "results/minor-png.json",
+    ".local/verification/finite-acquisition-codecell-probe-controls-v2-first/report.json": "results/report.json",
+    ".local/verification/finite-acquisition-codecell-probe-controls-v2-first/wrapped-major-png.json": "results/wrapped-major-png.json",
+    ".local/verification/finite-acquisition-codecell-probe-controls-v2-freeze.json": "source/first144-freeze.json"
+  },
+  "members": {
+    "README.md": {
+      "sha256": "21885a553c288b790d6d455b2222301547dba87bd0b211f2dd53be938f42885e",
+      "bytes": 1890,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "audits/ai-accounting/audit-v2.py": {
+      "sha256": "070cf35870f374f8cddea489d2fc8c724b712d6daeed266c943c8e8d70ff8a11",
+      "bytes": 29376,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "audits/ai-accounting/audit.py": {
+      "sha256": "c68cbaa1c94ce2f6eccab6b8f973b82a69521369858eee6bb59e55b63d18856a",
+      "bytes": 29192,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "audits/ai-accounting/first-auditor-terminal.json": {
+      "sha256": "6ac33d7d2fc9104789e6eb579e21e1c0a915a040a945b5dfef44ff4fa6ba5d03",
+      "bytes": 363,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "audits/ai-accounting/inspect-records.py": {
+      "sha256": "f2c4be3357388f9cc1450ef849fa36b3d0affc87692d8276ddd136921060dc5a",
+      "bytes": 2079,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "audits/ai-accounting/inspect-schema.py": {
+      "sha256": "71f296df5bb7b0cd90e4a45053501f10778ed46cb46c04054617cc1c47b08537",
+      "bytes": 1185,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "audits/ai-accounting/inspect-small.py": {
+      "sha256": "d36ad7d11825460799f9e8dbb2c213c489ccfa76594b547da83195fd53429057",
+      "bytes": 1491,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "audits/ai-accounting/receipt-v1.json": {
+      "sha256": "f146e0c360ba8df21c97dbc2a8b90fa0da830c09f0946c054fa4fc9b4b4151e0",
+      "bytes": 105975,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "audits/ai-accounting/receipt-v2.json": {
+      "sha256": "02fda07983fb6c2cc7f79474a7b54d4799941204d7073461ec34bdfe31feeeae",
+      "bytes": 109261,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "audits/ai-accounting/second-auditor-terminal.json": {
+      "sha256": "b2cd1a13eeab4de52d1a64693dd3abdd9fdd8f0ff64e2c676d1e0389b04ee85f",
+      "bytes": 328,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "audits/math/audit.py": {
+      "sha256": "2d053116cf997007cba282dbb3ee854a5b8935353973949a962a8abe5fcd31be",
+      "bytes": 24061,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "audits/math/first.log": {
+      "sha256": "7e1c9680ed73c565243fb1e5a8cccbb4cf9b490ca717b2e6a9f25306776dbc8a",
+      "bytes": 131,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "audits/math/interpretation.md": {
+      "sha256": "0ea553c1e69e470a78a9594bed9846acd8cb1e1a6c96b2e45522fde3b8bc2e1d",
+      "bytes": 5244,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "audits/math/linkage-supplement-first.log": {
+      "sha256": "d3194c8186c3337744ca70f02dc334ec74c172215f576cea2ed22273b8a880f8",
+      "bytes": 53,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "audits/math/linkage-supplement-receipt.json": {
+      "sha256": "f9039522903280756a3d9fa8476f79476ead818855b7e4dbe025442cd0a78f15",
+      "bytes": 1499,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "audits/math/linkage-supplement.py": {
+      "sha256": "0bbf45eaba4b2a993e51d591ac06cb875076e119adaf853fcb873b7432676d1c",
+      "bytes": 2916,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "audits/math/manifest.json": {
+      "sha256": "8ce6e0164b058db0162a551f96de93cd3d59d32dfa5d84eb2ba0242b9a1ff2f8",
+      "bytes": 1120,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "audits/math/receipt-first.json": {
+      "sha256": "f082f2a384c0d853abfa676286a660aa37aac4967fc6611e0eabe345c71c8426",
+      "bytes": 7544,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "audits/root-arrays/audit.py": {
+      "sha256": "8136f066a34db50e60b036a2e6e96bfff71dbd8fa32e61046f60a5fe19c53d52",
+      "bytes": 8939,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "audits/root-arrays/receipt.json": {
+      "sha256": "202236f056e91d37684d4c9c057be10ccfe5688cdfe95b9c05645c82ccd71bd2",
+      "bytes": 4652,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "audits/ux/codecell-ux-saved-audit-v1.json": {
+      "sha256": "f5201e547f6240ecadbcd4536cb35ee7e077760a866d48cac70f67a3011ef955",
+      "bytes": 8022,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "audits/ux/codecell-ux-saved-audit-v1.launch.json": {
+      "sha256": "86998281ad1b1a30ae728426cae5817ce605abdf559cb437cb7ebd799f278620",
+      "bytes": 319,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "audits/ux/codecell-ux-saved-audit-v1.py": {
+      "sha256": "d664ed90095f473354b34b2e1fb44c606f52a83b2735f1675bd7462353f4872c",
+      "bytes": 24585,
+      "permissions_octal": "0o755",
+      "git_mode": "100755"
+    },
+    "audits/ux/codecell-ux-saved-audit-v1.stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "audits/ux/codecell-ux-saved-audit-v1.stdout.log": {
+      "sha256": "6d53fef3cc0603e7b4e433589395d148c8ead7243a1ce8cb3a014303a7783c74",
+      "bytes": 113,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "audits/ux/codecell-ux-saved-audit-v1.terminal.json": {
+      "sha256": "63cfed79eb7c49809eb7a55d06ebbb3c212aa013297ffb5c704b9076b215eddd",
+      "bytes": 1098,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "audits/ux/codecell-ux-saved-inspection-v1.json": {
+      "sha256": "c209866fba6e0e0282c6afa789b172185eafa4c8bf17ef7a54a1efbe4894d233",
+      "bytes": 804,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "figures/v2/manifest.json": {
+      "sha256": "775f1d0fae8cbf317f0d6b1734e047b1f10767ee71b4f076f0864a8f7a2e157d",
+      "bytes": 796,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "figures/v2/plot.py": {
+      "sha256": "c540bfd9a1651f47443f0c211bd766e4b927056d83cea6d62cee41998c02c92c",
+      "bytes": 3383,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "figures/v2/same-pixels-different-geometry.png": {
+      "sha256": "547b310531d2709104bfe2a636ddb088aa277c275eba063683cb9a66eee1ef98",
+      "bytes": 90164,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "figures/v2/same-pixels-different-geometry.svg": {
+      "sha256": "86d76b3bbf27354a7542f7a66a57da269622465d4a0e39f731704b8aeabf5b1b",
+      "bytes": 88892,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "first-controls-139/finite-acquisition-codecell-probe-v1-first-tests-initial-native.json": {
+      "sha256": "f221e44987b099d74f1def99f70dbcec988543fe7d43c303e279a5ad6b851311",
+      "bytes": 317,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "first-controls-139/finite-acquisition-codecell-probe-v1-first-tests-launch.json": {
+      "sha256": "8a5f04a9e552e0dd1f99dabd0e4dd04de37a8462f81f9cbee65a0faba73bc542",
+      "bytes": 2668,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "first-controls-139/finite-acquisition-codecell-probe-v1-first-tests-native-terminal.json": {
+      "sha256": "0a94394ff346f78fad9546ed9448f2b2017996a7622ab6de25da850f66e09aa7",
+      "bytes": 4000,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "first-controls-139/finite-acquisition-codecell-probe-v1-first-tests-observation-1.json": {
+      "sha256": "52e6f05a2cb66f9d2da32aba23fd80bf2074ad94272e2911391e69141a926245",
+      "bytes": 439,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "first-controls-139/finite-acquisition-codecell-probe-v1-first-tests-terminal-receipt.json": {
+      "sha256": "a2e6fd97dcf71fa9959d1abb49ed3ad3e7358c9f285aa010aa17d9f7cc9a3f33",
+      "bytes": 4347,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "first-controls-139/finite-acquisition-codecell-probe-v1-first-tests.log": {
+      "sha256": "5c453afd61e77531ee6309d06fb57646769c871ccb334c4e00bb461f1d83507c",
+      "bytes": 4280,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "first-controls-139/finite-acquisition-codecell-probe-v1-freeze.json": {
+      "sha256": "589ae113a9cfc64ce733784f11b7ed411188c9d9a50aeba8f7a50228b3c4cb8b",
+      "bytes": 92566,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "first-controls-144/finite-acquisition-codecell-probe-controls-v2-first-tests-initial-native.json": {
+      "sha256": "3e67e776c8c9f495c019d610582c3e3d4af96653d2153df1f0e2d61f94547462",
+      "bytes": 317,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "first-controls-144/finite-acquisition-codecell-probe-controls-v2-first-tests-launch.json": {
+      "sha256": "3095aab41bdb619425e8ec3166c73e514e46a1b18173b971205b5b18e5f11613",
+      "bytes": 3309,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "first-controls-144/finite-acquisition-codecell-probe-controls-v2-first-tests-native-terminal.json": {
+      "sha256": "fc8b856a5fa0a65cfa3189abab48b6b293657460eb8c55d018e66a216181dd70",
+      "bytes": 1666,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "first-controls-144/finite-acquisition-codecell-probe-controls-v2-first-tests-terminal-receipt.json": {
+      "sha256": "853ea0c64228298adb2a0fdec08d1cfd3ce7a87175b34e7e53a3f9227d9da69c",
+      "bytes": 4411,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "first-controls-144/finite-acquisition-codecell-probe-controls-v2-first-tests.log": {
+      "sha256": "03f1734bec92dbdc1fa0d688ae3b03a4bd3de4a70ef34d9716185a98bfff4ddb",
+      "bytes": 1703,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "first-probe-144/finite-acquisition-codecell-probe-controls-v2-first-initial-native.json": {
+      "sha256": "53995b05b14a9eeefe197aa3b547c45445a6a90a5e9496e93a8a4d087fc1863e",
+      "bytes": 131,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "first-probe-144/finite-acquisition-codecell-probe-controls-v2-first-launch.json": {
+      "sha256": "9195ed498d593209292b50a0694e773ae4962cf474a64b3e8af1952a4e4ee085",
+      "bytes": 928,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "first-probe-144/finite-acquisition-codecell-probe-controls-v2-first-native-terminal.json": {
+      "sha256": "06f29ad26ee729b8ae62b906ad592329be52752e6984c411bebdbddf935719cb",
+      "bytes": 774,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "first-probe-144/finite-acquisition-codecell-probe-controls-v2-first-terminal-receipt.json": {
+      "sha256": "fc48c77a086ca90afa9e792c61db220066759d1dab252c244476e6a28ee57ab7",
+      "bytes": 122757,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "first-probe-144/finite-acquisition-codecell-probe-controls-v2-first.log": {
+      "sha256": "552abea3af64c2364a47e586b4d8beb1bb7f2be31588fb7c0ec6399a14f209f5",
+      "bytes": 582,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "package.py": {
+      "sha256": "94ce317f5123f54d05737e5404409b4c8bdac4a3286fa065c689a4b0036b929e",
+      "bytes": 18004,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "results/major-png.json": {
+      "sha256": "c8ca5611c2b9e6d05dbd8cc7213285f231f600c3d3b21827e5c6b6384f43ec66",
+      "bytes": 15781556,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "results/middle-png.json": {
+      "sha256": "f11dfc8d3805210632843315c50be0a2c22e810fbf1f27c25f2010200071289e",
+      "bytes": 21921472,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "results/minor-png.json": {
+      "sha256": "18ae136e9e86b27081b8aa406cf037840c0fa6965e6c9847f68be5a47c2f93ad",
+      "bytes": 19694508,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "results/report.json": {
+      "sha256": "51658a514f41eb26ef98f0a401020e75a02d1fef8a8244be479417b431b3444a",
+      "bytes": 172568,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "results/wrapped-major-png.json": {
+      "sha256": "0303e549a57149e4c26a1cf5ad1a8d4b2fc2fb5f23820f0eef595bc53466b01c",
+      "bytes": 22040501,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "source/first144-freeze.json": {
+      "sha256": "21d84e15b4c8aa745cc157d4787c19304782cf0788b9548cea81b65941ed37de",
+      "bytes": 95585,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "source/recorded-source.zip": {
+      "sha256": "3f64087f5c2656254269b1ba195605606190e00d11184359cb6cc65e51e915fe",
+      "bytes": 949256,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    },
+    "source/source-archive-readback.json": {
+      "sha256": "a9f2cdaabbd62efbb0e0d2ea18df5012fb2590159fee19a976673c99922a9a16",
+      "bytes": 33482,
+      "permissions_octal": "0o664",
+      "git_mode": "100644"
+    }
+  },
+  "manifest_self_scope": "This manifest lists all payload members except itself; outer readback includes and hashes it.",
+  "scope": "Evidence packaging only. No execution of copied source/audits, models, reference or scientific functions.",
+  "original_recovery_rescored": false,
+  "new_best_selected": false,
+  "audit_checker_first_error_preserved": "audits/ai-accounting/receipt-v1.json",
+  "ux_final_receipt": ".local/verification/codecell-ux-saved-audit-v1.json",
+  "ux_final_receipt_sha256": "f5201e547f6240ecadbcd4536cb35ee7e077760a866d48cac70f67a3011ef955"
+}

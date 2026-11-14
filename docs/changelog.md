@@ -1,5 +1,17 @@
 # Workbench change log
 
+## Same-image diagnostic executed — November 14, 2026 UTC
+
+- Record the 144-input freeze, preserved first control failures and separately
+  admitted repair: 1,417 selected tests and 33 subtests pass.
+- Document 168 actual compatible alternatives, a conditional two-witness
+  numerical-model bound, and the unchanged 11/12 full recovery failure.
+- Refresh current guides and navigation; preserve dated draft inventories,
+  first attempts, scientific source, generated library outputs and release records.
+- Add the [complete result](validation/finite-acquisition-codecell-result.md)
+  and [documentation review](validation/documentation-codecell-result.md).
+  No main runtime, UI or physical-qualification change.
+
 ## Unrun same-image diagnostic documented — November 14, 2026 UTC
 
 - Describe the [local code-cell draft](finite-acquisition-codecell-probe.md), its

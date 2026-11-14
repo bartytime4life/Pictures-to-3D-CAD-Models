@@ -1,5 +1,20 @@
 # Validation results
 
+## Same-image alternatives, unchanged recovery miss — November 14, 2026 UTC
+
+Research `44ad56c` freezes 144 inputs. Repaired selected controls pass
+**1,417 tests and 33 subtests**, with three malformed predecessor nodes
+independently replaced. Its first actual diagnostic retains all 24 cases and
+17 saved fits, qualifies four, and finds **168 new compatible tuples**, exit 0.
+A minor-case pair gives a conditional image-only fraction error lower bound
+of about 0.003991449 for the fixed numerical operator/domain. This does not
+enclose all compatible geometry, resolve middle PNG or bound physical error.
+Original full recovery remains **11/12 matched passes, exit 1**.
+[Method](finite-acquisition-codecell-probe.md) ·
+[first controls, complete result and saved audits](validation/finite-acquisition-codecell-result.md) ·
+[current documentation review](validation/documentation-codecell-result.md).
+This documentation update runs no new scientific model or recovery study.
+
 Use the [documentation index](README.md) to find a guide and the revision-bound
 record below to assess its evidence. This page separates local checks, hosted
 CI, library releases and physical qualification. Older sections retain their
@@ -7,7 +22,7 @@ original counts and environment; they are not later retests.
 
 ## Live restoration: exact image, remaining geometry miss — November 14, 2026 UTC
 
-The [current documentation review](validation/documentation-codecell-draft.md)
+The [current documentation review](validation/documentation-codecell-result.md)
 records research `e677039`, its 131-input freeze and the first fresh full
 24-case result: **11/12 matched passes, exit 1**. V1's first suite failed on
 a malformed optical-anchor fixture (1,138 passes, one failure, 33 subtests).

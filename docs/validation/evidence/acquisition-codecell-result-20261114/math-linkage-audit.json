@@ -1,0 +1,16 @@
+{
+  "format": "independent-codecell-saved-actual-linkage-supplement-v1",
+  "scope": "Saved ledger/record identities only; zero subject imports, solves, models or reference calls",
+  "script_sha256": "0bbf45eaba4b2a993e51d591ac06cb875076e119adaf853fcb873b7432676d1c",
+  "checks": 1726,
+  "failure_count": 0,
+  "failures": [],
+  "input_hashes": {
+    "/home/bartytime/.codex/worktrees/acquisition-recovery/3D & CAD/.local/verification/finite-acquisition-codecell-probe-controls-v2-first/report.json": "51658a514f41eb26ef98f0a401020e75a02d1fef8a8244be479417b431b3444a",
+    "/home/bartytime/.codex/worktrees/acquisition-recovery/3D & CAD/.local/verification/finite-acquisition-codecell-probe-controls-v2-first/minor-png.json": "18ae136e9e86b27081b8aa406cf037840c0fa6965e6c9847f68be5a47c2f93ad",
+    "/home/bartytime/.codex/worktrees/acquisition-recovery/3D & CAD/.local/verification/finite-acquisition-codecell-probe-controls-v2-first/middle-png.json": "f11dfc8d3805210632843315c50be0a2c22e810fbf1f27c25f2010200071289e",
+    "/home/bartytime/.codex/worktrees/acquisition-recovery/3D & CAD/.local/verification/finite-acquisition-codecell-probe-controls-v2-first/major-png.json": "c8ca5611c2b9e6d05dbd8cc7213285f231f600c3d3b21827e5c6b6384f43ec66",
+    "/home/bartytime/.codex/worktrees/acquisition-recovery/3D & CAD/.local/verification/finite-acquisition-codecell-probe-controls-v2-first/wrapped-major-png.json": "0303e549a57149e4c26a1cf5ad1a8d4b2fc2fb5f23820f0eef595bc53466b01c"
+  },
+  "passed": true
+}

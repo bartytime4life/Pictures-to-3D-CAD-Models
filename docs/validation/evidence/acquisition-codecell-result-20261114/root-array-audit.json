@@ -1,0 +1,151 @@
+{
+  "format": "codecell-independent-saved-array-audit-v1",
+  "recorded_at": "2026-11-14T03:46:06.415575+00:00",
+  "report_sha256": "51658a514f41eb26ef98f0a401020e75a02d1fef8a8244be479417b431b3444a",
+  "auditor_sha256": "8136f066a34db50e60b036a2e6e96bfff71dbd8fa32e61046f60a5fe19c53d52",
+  "checks": 9681,
+  "arrays": 1376,
+  "array_values": 232544,
+  "actual_captures": 172,
+  "distinct_new_geometry_tuples": 168,
+  "rows": [
+    {
+      "name": "minor-png",
+      "actual_captures": 50,
+      "new_tuples": 49,
+      "fraction_min": -0.5524998970242435,
+      "fraction_max": -0.544516998598625,
+      "diameter_exact": "4493972296869/562949953421312",
+      "half_diameter_exact": "4493972296869/1125899906842624",
+      "conditional_minimax_lower_bound": 0.0039914492128092505,
+      "exceeds_original_0_002": true,
+      "extreme_trial_indices": [
+        45,
+        17
+      ],
+      "min_tuple": [
+        6.144266227543163,
+        6.210945506208846,
+        3.6420903675563903,
+        -0.5524998970242435,
+        0.30839755044588796,
+        235.01019851206817,
+        26.859941700273342
+      ],
+      "max_tuple": [
+        6.106823529684463,
+        6.201625223063925,
+        3.614157825672919,
+        -0.544516998598625,
+        0.3089992052376404,
+        235.0188947371571,
+        28.746357167620346
+      ],
+      "historical_source_replay": "not_retained"
+    },
+    {
+      "name": "middle-png",
+      "actual_captures": 50,
+      "new_tuples": 49,
+      "fraction_min": 0.16676279128473026,
+      "fraction_max": 0.16733677942146846,
+      "diameter_exact": "10340051034917/18014398509481984",
+      "half_diameter_exact": "10340051034917/36028797018963968",
+      "conditional_minimax_lower_bound": 0.0002869940683691008,
+      "exceeds_original_0_002": false,
+      "extreme_trial_indices": [
+        6,
+        45
+      ],
+      "min_tuple": [
+        5.8701974045898195,
+        6.117631815005458,
+        3.4116933942983723,
+        0.16676279128473026,
+        1.1306375484730098,
+        21.98724059446568,
+        218.25972932347634
+      ],
+      "max_tuple": [
+        5.869813616003361,
+        6.1170611270258375,
+        3.4127698231668018,
+        0.16733677942146846,
+        1.1306306863185263,
+        21.980118868898632,
+        217.91667058412068
+      ],
+      "historical_source_replay": "equal"
+    },
+    {
+      "name": "major-png",
+      "actual_captures": 22,
+      "new_tuples": 21,
+      "fraction_min": 0.6093432763117355,
+      "fraction_max": 0.6095960322110473,
+      "diameter_exact": "2276622747913/9007199254740992",
+      "half_diameter_exact": "2276622747913/18014398509481984",
+      "conditional_minimax_lower_bound": 0.0001263779496559203,
+      "exceeds_original_0_002": false,
+      "extreme_trial_indices": [
+        15,
+        3
+      ],
+      "min_tuple": [
+        6.258645172259483,
+        5.840330755434402,
+        3.8198419281322176,
+        0.6093432763117355,
+        2.4305442053723922,
+        254.9532150568124,
+        0.0002737792346459232
+      ],
+      "max_tuple": [
+        6.259291440274894,
+        5.840114107566662,
+        3.819548838793147,
+        0.6095960322110473,
+        2.4298485670892913,
+        254.95282020308812,
+        0.00015760391424940643
+      ],
+      "historical_source_replay": "not_retained"
+    },
+    {
+      "name": "wrapped-major-png",
+      "actual_captures": 50,
+      "new_tuples": 49,
+      "fraction_min": 0.8290267711908844,
+      "fraction_max": 0.8295395016050038,
+      "diameter_exact": "4618265003939/9007199254740992",
+      "half_diameter_exact": "4618265003939/18014398509481984",
+      "conditional_minimax_lower_bound": 0.00025636520705968335,
+      "exceeds_original_0_002": false,
+      "extreme_trial_indices": [
+        24,
+        3
+      ],
+      "min_tuple": [
+        6.090242162626424,
+        6.16875858083889,
+        3.520419415250826,
+        0.8290267711908844,
+        -0.06017340683415015,
+        230.98926735488965,
+        35.126254245784246
+      ],
+      "max_tuple": [
+        6.08941802238798,
+        6.168757197791091,
+        3.5200701212302747,
+        0.8295395016050038,
+        -0.060220747665868116,
+        230.98840183795764,
+        35.12769013562973
+      ],
+      "historical_source_replay": "not_retained"
+    }
+  ],
+  "errors": [],
+  "scope": "Saved JSON and represented bytes only. No project imports, model/operator evaluations, new candidate points, SVD, fit or re-score. Conditional two-witness minimax inequality is a lower bound for this fixed numerical observation contract, not an outer enclosure or physical accuracy claim. Original full study remains 11/12, exit1."
+}

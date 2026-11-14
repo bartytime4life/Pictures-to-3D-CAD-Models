@@ -119,12 +119,14 @@ and independently replaced. The fresh original 24-case study remains
 reserved residuals but misses the fraction target: 0.003206949 > 0.002.
 It adds no main runtime, HTTP mode or workbench control.
 
-The subsequent [unrun code-cell diagnostic](finite-acquisition-codecell-probe.md)
-would test alternative tuples with the same complete source codes and final
-output, holding one baseline and sensitivity matrix fixed across all axes.
-Actual sampled witnesses could show compatible alternatives; their observed
-span would not enclose all compatible geometry. The draft has no executed
-result and does not replace a recovered best or change the original targets.
+The subsequent [code-cell diagnostic](finite-acquisition-codecell-probe.md)
+finds 168 actual compatible alternatives across four eligible PNG fits, with
+one fixed baseline and sensitivity matrix per fit. Its minor-case witnesses
+give a conditional two-point image-only error lower bound above 0.002 under
+the numerical model/domain. Sampled spans do not enclose compatible geometry,
+establish physical uncertainty or resolve the middle-case miss. The
+[first result](validation/finite-acquisition-codecell-result.md) retains failed
+controls and their additive repair; no recovered best or original target changes.
 
 These separate local studies add no main runtime or workbench integration.
 

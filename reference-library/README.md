@@ -36,7 +36,7 @@ the research candidate, not main or this library. The
 [original audit record](../docs/validation/finite-acquisition-recovery.md)
 retains 14 unresolved comparisons where pre-cast area differences cannot be
 reconstructed from rounded capture arrays. The
-[current documentation review](../docs/validation/documentation-codecell-draft.md)
+[current documentation review](../docs/validation/documentation-codecell-result.md)
 connects the later results and both first projection-control outcomes. This
 documentation does not add a fitter to main, the workbench or the Photos tab.
 
@@ -83,6 +83,12 @@ The fresh full 24-case study remains **11/12 matched passes, exit 1**:
 zero image residuals do not meet every geometry target. These results add
 no library feature, Photos tool, generated reader or refreshed release
 verification. [Full result and limitations](../docs/validation/finite-acquisition-restoration-result.md).
+
+The subsequent [same-image diagnostic](../docs/validation/finite-acquisition-codecell-result.md)
+records 168 actual compatible alternatives after 1,417 selected controls and
+33 subtests pass. It leaves the original 11/12 recovery result unchanged and
+adds no library feature or refreshed release verification. Its numerical-model
+ambiguity result is separate from physical-camera or print accuracy.
 
 
 A practical, source-backed library for turning photographs into printable CAD: recover shape, establish dimensions, rebuild editable geometry, and check the part you print. **Revision 7, November 9, 2026.**

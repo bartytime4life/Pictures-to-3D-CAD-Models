@@ -1,0 +1,92 @@
+# Independent saved-only mathematical audit
+
+The first checker passed **3,815,680 checks with zero discrepancies**. A separate
+actual-ledger linkage supplement passed **1,726 checks with zero discrepancies**.
+Both first attempts, source files, logs and receipts are retained. There was no
+subject import, LS/SVD/optimization solve, unrecorded candidate generation,
+coverage/acquisition/encoder/reference evaluation, fitter call or original
+protocol rescore. Checking the recorded nearest rounding generated no additional
+experimental point.
+
+Input: sole terminal report SHA256
+51658a514f41eb26ef98f0a401020e75a02d1fef8a8244be479417b431b3444a
+and its four hash-bound case JSON artifacts. Saved before/after fingerprint
+censuses remain 144 source and 236 input bindings. This audit compared those
+saved fingerprints; current-source/provenance readback is a separate proof lane.
+
+## Recomputed arithmetic
+
+- Seven source-optical columns from the saved six ideal linear fields, constant
+  response, signed contrast and original coordinate spans.
+- All stored source/physical halfspaces, exact bound subtractions, ray slopes,
+  restrictions and finite interval endpoints, using independent Fraction
+  expressions on represented inputs.
+- All 196 slots: fixed order, recorded targets, nearest rounding, exact physical
+  chart, computed chart, exact and computed memberships, plus 28,832 applicable
+  strict finite-bin arithmetic-floor checks.
+- Proposal-to-actual-capture links, full saved code/final-output byte equality,
+  predictions and zero residual/cost facts. The supplement independently binds
+  each capture's seven coordinates to its single resolved non-cache ledger
+  entry, candidate identity, purpose and code-payload identity.
+- Exact extrema, distinct tuple/fraction counts, ledger charge sums,
+  shared-budget aggregates and capture entries.
+
+All 28 directions use one fixed baseline and G per case. Saved responses were
+checked against exact represented matrix-vector arithmetic with a separate
+engineering rounding diagnostic. No LS/SVD was rerun; this does not certify an
+exact minimum-norm direction, numerical rank or physical information rank.
+Affine exactness does not enclose the nonlinear optical function. Arithmetic
+floors remain proposal gates, not global roundoff/nonlinear error theorems.
+
+## Retained actual census
+
+There are 24 original dispositions, 17 saved fit contexts and four qualified PNG
+diagnostics. All 196 slots remain: 168 qualified and actually sampled, 21 rounded
+to baseline and seven duplicated another same-axis tuple. The last 28 are all
+major PNG; they made no hidden actual calls. Four baselines plus 168 proposals
+give 172 complete actual captures.
+
+| Case | New compatible tuples / fraction values | Fraction minimum | Fraction maximum | Exact sampled diameter |
+|---|---:|---:|---:|---|
+| minor-png | 49 | -0.5524998970242435 | -0.544516998598625 | 4493972296869/562949953421312 |
+| middle-png | 49 | 0.16676279128473026 | 0.16733677942146846 | 10340051034917/18014398509481984 |
+| major-png | 21 | 0.6093432763117355 | 0.6095960322110473 | 2276622747913/9007199254740992 |
+| wrapped-major-png | 49 | 0.8290267711908844 | 0.8295395016050038 | 4618265003939/9007199254740992 |
+
+All counted alternatives differ from their own baseline in represented geometry
+five-tuple and fraction, retain the same complete saved source codes and final
+field, and have zero training residual/cost. These facts hold separately per
+image; points from different images are not pooled into one feasible set.
+
+## Conditional two-witness consequence
+
+For two verified alternatives with the same fixed numerical observation and
+fraction coordinates f1 and f2, any common image-only output fhat satisfies
+
+    |f1-f2| <= |fhat-f1| + |fhat-f2|
+    max(|fhat-f1|, |fhat-f2|) >= |f1-f2|/2.
+
+Minor PNG's extrema are actual captures (axis 6, slot 2, trial 45) and
+(axis 2, slot 2, trial 17). Their exact half-separation is
+
+    4493972296869/1125899906842624 > 1/500 = 0.002.
+
+Over a numerical-model/domain class admitting BOTH seven-parameter alternatives,
+one common estimate from their identical observation cannot have absolute
+fraction error <=0.002 for both. This is a conditional two-point minimax lower
+bound, not identification of either alternative as physical or synthetic truth.
+All geometry coordinates and both unknown brightness levels may vary within
+the original declared domain. Reserved truth/dimensions did not select them.
+
+Middle PNG's smaller span establishes neither a 0.002 impossibility nor attainable
+accuracy: only a subset of compatible points was sampled. No sampled span is an
+outer bound, confidence interval, feasible interval or complete diameter.
+Coordinate aliases prevent a generic five-tuple count from certifying distinct
+physical shapes.
+
+The saved actual equal-observation witnesses demonstrate ambiguity conditional
+on the declared numerical model. They do not prove uniform failure of the
+original 12-case benchmark, explain middle PNG's geometry error, recover
+geometry, certify physical/camera ambiguity or uncertainty coverage, or show
+that intermediate points are compatible. Original recovery remains 11/12,
+with the original fraction target unresolved and its best unchanged.

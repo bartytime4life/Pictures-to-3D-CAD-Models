@@ -1,143 +1,114 @@
-# Proposed diagnostic for geometries with the same image
+# Diagnostic for geometries with the same image
 
-**Local authoring draft; uncommitted and unrun at this documentation snapshot.**
-The draft follows research source `e677039`, whose
-[first full restoration study](validation/finite-acquisition-restoration-result.md)
-still fails at **11/12 matched passes, exit 1**. No new recovery score,
-compatible geometry, uncertainty bound or application feature is established.
-The [documentation review](validation/documentation-codecell-draft.md) records
-the exact draft files inspected. Their runtime and tests are absent from this
-main-based documentation checkout.
+The separate research diagnostic is committed and frozen at `44ad56c`, with
+144 governing inputs. Its corrected selected controls pass **1,417 tests and
+33 subtests**, with three malformed predecessor nodes deselected and equivalent
+replacements selected. Its first actual probe completes successfully and finds
+**168 distinct alternative parameter tuples** across four eligible PNG fits.
+Every alternative reproduces its fresh baseline's complete source codes and
+final output bytes. The [complete result](validation/finite-acquisition-codecell-result.md)
+retains all 24 original case identities, first failures and interpretation limits.
 
-## Why investigate image-equivalent geometries?
+The original recovery study remains **11/12 matched passes, exit 1**. This
+diagnostic neither selects a new recovered best nor changes its targets.
+The runtime, tests and runner remain outside this main-based documentation
+checkout; there is no workbench control, HTTP mode or new main command.
+The [earlier draft review](validation/documentation-codecell-draft.md) and
+[exact prospective documentation](validation/evidence/acquisition-codecell-result-20261114/prospective-documentation-guide.txt)
+retain their dated, unrun status.
 
-Middle PNG in the completed study matches all 169 reference output pixels,
-including 135 training and 34 conditional reserved samples. Its fraction error
-is nevertheless 0.00320694906346225, above the original 0.002 target.
-This motivates testing whether other geometries produce the same source codes
-and zero training residual. An unsuccessful local search would not establish
-that no such geometry exists.
+## Inputs and eligibility
 
-The draft proposes a bounded diagnostic after a safe, completed PNG fit with
-zero cost and zero raw and weighted training residuals. Its selected best must
-be linked to a completed bounded search; other cases remain recorded and
-unprobed. It would keep
-the original best candidate, ties, geometry targets and full-study result.
-It consumes observed training inputs, the saved best and existing work ledger;
-reference geometry and reserved evaluation dimensions are not proposal inputs.
-All 24 original case identities would remain visible, including exceptions,
-absent fits, ineligible rows and refusals. Eligibility depends on recorded
-completion and data checks rather than selecting the known failing case.
+The diagnostic reads observed training inputs, the saved best and its used work.
+A safe, completed PNG fit must have zero cost and zero raw and weighted training
+residuals, matching observed targets, a valid domain, and a selected best linked
+to a completed bounded search. Case identity, reference geometry and reserved
+evaluation dimensions do not select proposals. Ineligible and absent fits stay
+in the population report.
 
-## Local proposal mathematics
+A fresh charged baseline first reproduces the saved seven-coordinate tuple,
+cost, predictions, residuals and input hash. Historical complete source codes
+are compared only when retained; missing historical codes are explicitly
+`not_retained`. Fresh complete baseline codes define the subsequent cell.
+
+## Fixed affine proposals, actual image checks
 
 The seven coordinates are center x, center y, radius, chord fraction, normal
-angle in radians and two intensity levels. Let `p0` be the saved physical tuple, `s` its
-declared coordinate spans, and `u` normalized displacement:
+angle in radians and two intensity levels. With anchor `p0`, declared spans
+`s` and normalized displacement `u`, the proposal is
 
 ```text
 p = p0 + diag(s) u
 z(u) ≈ z0 + G u
 ```
 
-`z0` is the actual baseline source-optical field before source encoding.
-`G` is the sensitivity of the corresponding unrounded source-optical model,
-expressed in normalized coordinates and including coordinate spans. It is not
-a derivative of the stored float32 field or the literal PNG map.
-One baseline and one `G` remain fixed across all axes.
-The second equation
-is a local affine proposal, not an inclusion bound for the nonlinear operator.
+One actual baseline `z0` and one fresh unrounded source-optical sensitivity
+matrix `G`, already scaled by spans, stay fixed across seven axes. `G` is not
+a derivative of the stored float32 field or literal quantized map. For each
+free axis `j`, fix `d[j]=1` and compensate with the other free columns using
+numerical least squares at `rcond=128*epsilon*max(matrix_shape)`. Fixed
+coordinates remain zero. Numerical rank is a proposal diagnostic, not an
+exact rank or physical identifiability certificate.
 
-For each nonfixed coordinate `j`, the direction fixes `d[j] = 1`, keeps fixed
-coordinates zero, and solves `G[:, K] d[K] ≈ -G[:, j]` for the other free
-coordinates `K`. The draft uses numerical least squares with
-`rcond = 128 * binary64_epsilon * max(N, len(K))`. The
-[NumPy least-squares contract](https://numpy.org/doc/stable/reference/generated/numpy.linalg.lstsq.html)
-describes its residual and minimum-norm solution convention. Numerical rank
-here is a proposal diagnostic; it does not certify physical information rank
-or an exact mathematical minimum.
+Rational arithmetic intersects `u=t*d` against every stored affine source
+encoder band and the physical box. One-sided saturated bands keep their
+one-sided bounds. For the resulting endpoints `a,b`, the seven slots are
+`a/4,a/2,3*a/4,b/4,b/2,3*b/4,(a+b)/2`. Each gets one nearest physical binary64
+tuple and the original exact/computed normalization, domain, raw-band and
+arithmetic-floor gates. There is no clipping, adaptive reranking or fallback.
+The affine interval is not a nonlinear inclusion bound.
 
-Along `u = t d`, rational arithmetic would intersect the stored affine field
-with every source encoder band and the declared physical box. Saturated
-encoder bands retain their one-sided bounds. This exact interval belongs only
-to the stored affine surrogate. The seven declared slots are one quarter,
-one half and three quarters of each signed interval endpoint, plus the
-interval midpoint. Each slot gets one nearest represented physical tuple,
-subject to the existing domain, round-trip, band and arithmetic-floor checks.
-There is no clipping, adjacent-float search or adaptive reranking.
+Only actual calls through the same acquisition engine can qualify a witness:
+complete source codes and final output bytes must match the baseline, training
+predictions must match, and cost and raw/weighted residuals must be zero.
+All seven stages and raw binary64 coverage are retained. Distinct represented
+five-coordinate geometry tuples count separately; angle aliases can still
+describe the same physical shape.
 
-## What would qualify an actual witness?
+## Interfaces, work and qualification
 
-A fresh, charged baseline would first reproduce the saved parameters, levels,
-predictions, residuals, zero cost and input hash. Historical complete codes
-would be compared when retained; their absence would be recorded explicitly.
-Fresh complete baseline codes define all subsequent code comparisons.
-
-Every eligible proposed tuple would then need an actual call through the
-same numerical acquisition operator. A compatible witness requires equal
-complete source codes, equal complete final output bytes, equal training
-predictions, zero raw and weighted training residuals, and zero cost.
-The proposed record retains all seven acquisition stages and raw binary64
-coverage. A surrogate pass alone cannot qualify a witness.
-
-## Limits, accounting and failure records
-
-The draft Python interfaces are `profile_direction(G, axis, fixed, *, reserve)`,
+The research Python interfaces are `profile_direction(G, axis, fixed, *, reserve)`,
 `ray_points(G, z0, lower, upper, anchor, spans, actual_lower, actual_upper,
-direction, *, reserve)`, and `probe_codecell(inputs, saved_best, used, limits,
-*, expected_codes)`. The keyword arguments shown after `*` are optional.
-Invalid input raises `ValueError`; numerical obstructions and denied work
-reservations remain explicit results, and protocol failures withhold
-interpretation. These interfaces are not installed or exported in main.
-The direction axis is a nonboolean integer in `0..6`; fixed flags are seven
-actual booleans, and spans are nonnegative. A missing source-band side uses
-`None`, negative infinity for a lower side, or positive infinity for an upper
-side. Proposal arithmetic assumes binary64 nearest rounding and gradual
-underflow; those assumptions are not a hardware qualification.
+direction, *, reserve)` and `probe_codecell(inputs, saved_best, used, limits,
+*, expected_codes)`. Keyword arguments after `*` are optional. Invalid input
+raises `ValueError`; denied reservations and numerical obstructions remain
+explicit results. See the [frozen governing method](validation/evidence/acquisition-codecell-result-20261114/v1-prospective-method.txt)
+for the exact contract and [additive control repair](validation/evidence/acquisition-codecell-result-20261114/v2-control-repair.txt).
 
-The draft allows at most 49 proposal trials plus one baseline. All baseline,
-sensitivity, band, direction, rational-ray and actual-trial work uses the
-original remaining budget after the saved fit; it would not reset the fit's
-2,048 evaluations, 1,000,000 cell units or 100,000,000 stage-unit caps.
-Direction and ray calculations reserve respectively `65536 + 128*N*49` and
-`65536 + 512*(2*N+14)*7` stage units before the corresponding calculation.
-Rational intermediates have a 32,768-bit cap. Those units are not elapsed time,
-memory measurements or a proof of bit complexity.
+At most 49 proposals plus one baseline use the original remaining budget after
+the saved fit. Baseline, sensitivity, encoder, direction, exact-ray and literal
+work all share the original caps: 2,048 evaluations, 1,000,000 cell units and
+100,000,000 stage units. Per direction, reserve `65536+128*N*49`; per ray,
+reserve `65536+512*(2*N+14)*7` before calculation, with no refund on expected
+unknowns. Exact rational intermediates have a 32,768-bit bound. The helper
+accepts at most 4,096 source rows. Aggregate capture entries obey
+`50*(6*N+2*M)<=1048576`; complete codes have a separate entry cap. These
+units are not elapsed time, measured memory or bit-complexity guarantees.
 
-The standalone helper accepts 1–4,096 source rows. The controller additionally
-preflights aggregate capture entries using `50 * (6*N + 2*M) <= 1,048,576`,
-where `N` and `M` are source and output cell counts. It also caps complete
-code entries. Budget refusals, arithmetic unknowns, unattempted slots and
-protocol failures would remain explicit. Source changes or incomplete
-accounting would withhold interpretation while retaining raw records.
+The runner checks committed source and saved bindings before subject imports
+and again afterward. Each raw case remains `interpretation_withheld=true`.
+Only the complete population report can qualify it after source, auxiliary,
+artifact and accounting gates. Protocol completion and finding an actual
+alternative are distinct outcomes; diagnostic exit 0 does not mean recovery
+passed. The original best, ties and full-study score remain unchanged.
 
-The planned runner checks committed source and saved-input bindings before
-subject imports, verifies consumed metadata and source again afterward,
-and writes only to a new confined local output directory. An individual raw
-case file cannot establish qualification without the complete final report.
-The admission, combined source freeze, first controls and first probe result
-do not yet exist at this snapshot. There is no ready-to-run reproduction
-command in this guide, and exit-status policy remains subject to review.
+## What the result establishes
 
-## How to interpret a future result
+Sampled compatible extrema give a lower bound on possible extent, not an outer
+bound, confidence interval, complete feasible interval or recovered geometry.
+The space between extrema need not be feasible. The same-source-code subset is
+only part of all states compatible with the observed output.
 
-Verified compatible tuples would be sampled witnesses inside the set admitted
-by this fixed numerical operator and domain. Their observed coordinate span
-would be a **lower bound on possible extent**, not an upper bound, confidence
-interval or enclosure of all admissible geometry. Duplicate slots need not
-yield distinct tuples; the interval between sampled extrema need not be
-feasible. The fixed source-code pattern is only part of the full set compatible
-with the training output. No successful witness search would establish real-camera
-accuracy, physical fit or a better choice of recovered geometry.
+For minor PNG, two actual equal-output witnesses differ in fraction by about
+0.007982898. By the triangle inequality, any common image-only fraction estimate
+must err by at least half that separation, about **0.003991449**, for one of
+the two alternatives. This conditional statement assumes the declared numerical
+operator/domain and permits both unknown brightness levels. It does not prove
+the original 12-record benchmark impossible, resolve the middle case, or bound
+real-camera error or physical fit. [Exact values and evidence](validation/finite-acquisition-codecell-result.md).
 
-The distinction between finding examples and enclosing every data-consistent
-parameter is central to
-[Jaulin and Walter's bounded-error set-inversion method](https://webperso.ensta.fr/Jaulin/paper_automatica93.pdf).
-Its interval guarantees require a valid inclusion method; this local affine
-diagnostic does not implement one for the quantized acquisition pipeline.
-Independent measured features and qualified nonlinear bounds remain possible
-follow-up work. Original reserved dimensions remain evaluation evidence.
-
-Until the new source is reviewed, committed, frozen and executed under its
-admission, use the [executed restoration result](finite-acquisition-restoration-result.md)
-for conclusions. The original geometry miss remains unresolved.
+Follow-up work needs observed-data-only decision rules, qualified nonlinear
+bounds or genuinely independent measured features under declared error bounds.
+The [engineering model](engineering-model.md) keeps image evidence and physical
+measurements distinct. No truth-selected endpoint or reserved dimension is fed
+back as a new measurement.

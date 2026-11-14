@@ -318,6 +318,13 @@ and independently replaced. The fresh original 24-case study remains
 reserved residuals but misses the fraction target: 0.003206949 > 0.002.
 It adds no main runtime, HTTP mode or workbench control.
 
+The subsequent [same-image diagnostic](finite-acquisition-codecell-probe.md)
+qualifies 168 actual alternatives across four eligible fits in research `44ad56c`.
+Its conditional minor-case two-witness bound describes the fixed numerical
+model/domain, not physical uncertainty or a new recovery result. The original
+11/12 recovery failure remains; [complete evidence](validation/finite-acquisition-codecell-result.md).
+The diagnostic remains outside this runtime and UI.
+
 These separate local studies add no main runtime or workbench integration.
 
 A source-derived straight-edge direction may still align the display and

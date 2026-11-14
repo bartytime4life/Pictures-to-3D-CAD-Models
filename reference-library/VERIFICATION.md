@@ -7,7 +7,7 @@ the existing dated receipt. The receipt, check date and release status were not
 regenerated for this correction.
 
 Repository documentation update, November 13: the
-[current review](../docs/validation/documentation-codecell-draft.md) links the
+[current review](../docs/validation/documentation-codecell-result.md) links the
 [local acquisition-recovery snapshot](../docs/finite-acquisition-recovery.md).
 That separate synthetic research retains 4/12 original matched target passes
 and 9/12 continuation passes; both earlier full protocols exited 1. The 459 focused tests
@@ -61,6 +61,12 @@ The fresh full 24-case study remains **11/12 matched passes, exit 1**:
 zero image residuals do not meet every geometry target. These results add
 no library feature, Photos tool, generated reader or refreshed release
 verification. [Full result and limitations](../docs/validation/finite-acquisition-restoration-result.md).
+
+The subsequent [same-image diagnostic](../docs/validation/finite-acquisition-codecell-result.md)
+records 168 actual compatible alternatives after 1,417 selected controls and
+33 subtests pass. It leaves the original 11/12 recovery result unchanged and
+adds no library feature or refreshed release verification. Its numerical-model
+ambiguity result is separate from physical-camera or print accuracy.
 
 
 ## What was checked automatically
