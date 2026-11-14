@@ -133,7 +133,10 @@ def half_level_search(
     opening the profile's paper end reaches the opening's far edge, whose blurred step
     reads as a darker paper and moves the edge into the opening. The paper end is then
     read only up to 2.5 sigma short of that edge; where that leaves nothing beyond the
-    step's own 2.5 sigma, it is the median at the opening's middle, flat.
+    step's own 2.5 sigma, it is the median at the opening's middle, flat. Where the
+    opening's far edge, from the mask or from the profile itself, lies within the
+    profile's reach, the edge is then placed by the two-edge model (_two_edge_offsets),
+    where that finds one; the single crossing stands elsewhere.
     """
     # edges.edge_sigma returns 0 when no profile has the contrast to measure the blur;
     # the median-level search then stands.
@@ -244,10 +247,136 @@ def half_level_search(
         if ring_smoothing > 0:
             correction = _smooth_along_ring(correction, ring_smoothing, points)
         offset = offset + correction
+    if sloped and paper_extent is not None and paper_side is not None:
+        # Across a narrow opening the profile is a bump, not a step: placed by the
+        # two-edge model where the opening's far edge lies within the profile's reach.
+        # The classified mask says where an opening closes, and the profile shows it
+        # where the mask, cut at one level, has lost a faint one: past the paper's peak
+        # the profile falls back below halfway to the material's level. A thin cap
+        # hole's tips, under 1.5 sigma across, were open in the profiles and closed in
+        # the mask, and kept the single crossing, 0.3 mm into the material.
+        hint = np.asarray(paper_extent, float)
+        paper_up = np.asarray(paper_side) > 0
+        along_paper = np.where(paper_up[:, None], t[None, :], -t[None, :])
+        ahead = along_paper > 0
+        rows_all = np.arange(len(points))
+        peak_at = np.argmax(np.where(ahead, profile, -np.inf), axis=1)
+        peak = profile[rows_all, peak_at]
+        material_end = np.where(paper_up, low, high)
+        fallen = ahead & (along_paper > along_paper[rows_all, peak_at][:, None])
+        fallen &= (profile - ((material_end + peak) / 2)[:, None]) * np.sign(peak - material_end)[:, None] < 0
+        seen = np.where(fallen.any(axis=1), along_paper[rows_all, np.argmax(fallen, axis=1)], np.inf)
+        extent = np.fmin(hint, seen)
+        # A profile the ends' contrast rejects stays rejected: at a thick part's hole's
+        # corners, where its two outlines cross, the bump is not one-dimensional, and
+        # keeping those profiles left a 6 mm hole too far from round to be a circle.
+        bounded = keep & np.isfinite(extent) & (extent <= reach + 2.5 * sigma)
+        if bounded.any():
+            rows = np.flatnonzero(bounded)
+            fitted = _two_edge_offsets(
+                gray, points[rows], normals[rows], sigma[rows], np.asarray(paper_side)[rows],
+                extent[rows], step, min_contrast,
+            )
+            good = np.isfinite(fitted)
+            offset[rows[good]] = fitted[good]
     keep &= np.isfinite(offset)
     moved = points.astype(np.float64).copy()
     moved[keep] += offset[keep, None] * normals[keep]
     return moved, keep
+
+
+# The two-edge model's search: edge offsets within this many sigma of the point, and
+# opening widths from TWO_EDGE_MIN_WIDTH sigma to the mask's width plus 3 sigma.
+TWO_EDGE_REACH = 1.5
+TWO_EDGE_MIN_WIDTH = 0.25
+
+
+def _two_edge_offsets(gray, points, normals, sigma, paper_side, extent, step, min_contrast=12.0):
+    """Each point's edge across a narrow opening, as an offset along its normal (NaN where
+    no fit is found), by the two-edge model.
+
+    Across an opening of width w the blurred profile along the paper side is
+        I(t) = M (1 - P1) + P (P1 - P2) + F P2,  P1 = Phi((t - e) / s), P2 = Phi((t - e - w) / s),
+    with M the material's level, P the paper's and F the far side's (the material
+    again, or a thick part's wall). For each (e, w) it is linear in (M, P, F), solved by
+    least squares; (e, w) is found on a grid, then on a finer one round the least. A
+    single crossing of a level read from the profile's ends is biased there: an opening
+    narrower than about 3 sigma never reaches the paper, so the level reads low and the
+    edge moves into the material (0.9 sigma at 1.5 sigma across), and a wider one's far
+    step reads as a darker paper and moves it into the opening (0.44 sigma at 4 sigma).
+    On exact profiles the model places the edge within 0.012 sigma from 1.5 to 9 sigma
+    across, with a grey level of noise within 0.015 sigma (SD), the paper level free.
+    """
+    out = np.full(len(points), np.nan)
+    for i in range(len(points)):
+        s = float(sigma[i])
+        side = float(paper_side[i])
+        width_max = float(extent[i]) + 3 * s
+        t = np.arange(-4 * s, width_max + 4 * s + step / 2, step)
+        xs = points[i, 0] + side * t * normals[i, 0] - 0.5
+        ys = points[i, 1] + side * t * normals[i, 1] - 0.5
+        y = sample_keys(gray, xs[None, :], ys[None, :])[0]
+        near = np.arange(-TWO_EDGE_REACH, TWO_EDGE_REACH + 1e-9, 0.05) * s
+        far = np.arange(near[0] + TWO_EDGE_MIN_WIDTH * s, width_max + TWO_EDGE_REACH * s + 1e-9, 0.05 * s)
+        coarse = _two_edge_search(t, y, s, near, far, TWO_EDGE_MIN_WIDTH * s)
+        if coarse is None:
+            continue
+        e0, w0, _ = coarse
+        fine = _two_edge_search(
+            t, y, s, e0 + np.arange(-0.05, 0.0501, 0.005) * s,
+            e0 + w0 + np.arange(-0.05, 0.0501, 0.005) * s, TWO_EDGE_MIN_WIDTH * s,
+        )
+        if fine is None:
+            continue
+        e, _, (m, paper, _far) = fine
+        # An edge needs paper brighter or darker than the material; the sign follows it.
+        if abs(encoded_from_linear(paper) - encoded_from_linear(m)) < min_contrast:
+            continue
+        out[i] = side * e
+    return out
+
+
+def _two_edge_search(t, y, s, edges_at, fars_at, min_width):
+    """The least two-edge residual of profile `y` over a grid of near edges e and far
+    edges f = e + w (w >= `min_width`): (e, w, (M, P, F)), or None. Each step depends on
+    one edge only, so every sum the 3 x 3 normal equations need comes from the two
+    grids' profiles and one matrix product."""
+    p1 = _phi((t[None, :] - edges_at[:, None]) / s)  # (E, T)
+    p2 = _phi((t[None, :] - fars_at[:, None]) / s)  # (F, T)
+    n, y0 = float(len(t)), float(y.sum())
+    a1, a2 = p1.sum(axis=1)[:, None], p2.sum(axis=1)[None, :]
+    q11, q22 = (p1 * p1).sum(axis=1)[:, None], (p2 * p2).sum(axis=1)[None, :]
+    q12 = p1 @ p2.T
+    y1, y2 = (p1 @ y)[:, None], (p2 @ y)[None, :]
+    # Basis (1 - P1, P1 - P2, P2), its Gram matrix and right-hand side per (e, f).
+    g = np.empty(q12.shape + (3, 3))
+    g[..., 0, 0] = n - 2 * a1 + q11
+    g[..., 0, 1] = g[..., 1, 0] = a1 - a2 - q11 + q12
+    g[..., 0, 2] = g[..., 2, 0] = a2 - q12
+    g[..., 1, 1] = q11 - 2 * q12 + q22
+    g[..., 1, 2] = g[..., 2, 1] = q12 - q22
+    g[..., 2, 2] = np.broadcast_to(q22, q12.shape)
+    rhs = np.stack(np.broadcast_arrays(y0 - y1, y1 - y2, y2), axis=-1)
+    valid = fars_at[None, :] - edges_at[:, None] >= min_width
+    if not valid.any():
+        return None
+    try:
+        levels = np.linalg.solve(g + 1e-9 * np.eye(3), rhs[..., None])[..., 0]
+    except np.linalg.LinAlgError:
+        return None
+    residual = np.where(valid, float(y @ y) - np.einsum("efi,efi->ef", levels, rhs), np.inf)
+    k, j = np.unravel_index(int(np.argmin(residual)), residual.shape)
+    return edges_at[k], fars_at[j] - edges_at[k], levels[k, j]
+
+
+def _phi(z):
+    """Standard normal CDF via Abramowitz & Stegun 7.1.26 (|error| < 1.5e-7), as
+    edges.normal_cdf (which imports this module)."""
+    z = np.asarray(z, float)
+    x = np.abs(z) / np.sqrt(2.0)
+    u = 1.0 / (1.0 + 0.3275911 * x)
+    poly = u * (0.254829592 + u * (-0.284496736 + u * (1.421413741 + u * (-1.453152027 + u * 1.061405429))))
+    return 0.5 * (1.0 + np.sign(z) * (1.0 - poly * np.exp(-x * x)))
 
 
 def _modelled_level(light, points, normals, t, step, sigma, flattened, paper_high, material, window, inner, level_t):

@@ -1,5 +1,24 @@
 # Workbench change log
 
+## Narrow openings placed by a two-edge model — November 14, 2026
+
+- Across a narrow opening an edge's blurred profile is a bump, not a step, and its
+  single crossing was biased both ways: into the material where the opening is under
+  about 3 blur widths, into the opening where it is a little wider. A thick part's
+  edges across such an opening are now placed by fitting both edges and three levels.
+  A thin hole in a flat part is not: its tips are a two-dimensional problem the model
+  does not describe, and correcting its middle alone left its area 1.8 mm2 small
+  ([reference-sheet tracing](reference-sheet.md), Limits).
+
+## Unresolved corners kept as traced between fitted edges — November 14, 2026
+
+- A corner whose blur model cannot be resolved, on a thick part under a blur that
+  differs by direction, no longer takes its whole boundary with it: the boundary's
+  edges and other corners stay fitted, and only that corner is kept as traced, with
+  no radius claimed. On the 22-degree 4 mm plate under a 1 x 3 px blur the outline
+  read 0.051-0.088 mm off as a traced outline, and now 0.008-0.031 mm; every feature
+  on its seven seeds is inside the test limits ([reference-sheet tracing](reference-sheet.md), Limits).
+
 ## The narrow-opening reading kept to thick parts — November 14, 2026
 
 - The narrow-opening reading added for thick parts' holes reached flat parts too. On
