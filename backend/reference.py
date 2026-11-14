@@ -370,9 +370,17 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
                 refined, wall_notes = _refine_walls(g, rings, camera, thickness_mm, sigma, ppm)
         notes.extend(wall_notes)
         for ring, (points, normals) in zip(rings, refined):
-            corrected, top = edges.correct_thickness(
-                points / ppm, normals, camera["nadir_mm"], camera["height_mm"], thickness_mm
+            # The wall's vertical edges, where support switches between the top and
+            # bottom edges, are dropped (edges.correct_silhouette).
+            corrected, top, keep = edges.correct_silhouette(
+                points / ppm, normals, camera["nadir_mm"], camera["height_mm"], thickness_mm, ring["outer"]
             )
+            if keep.sum() < 8:
+                keep[:] = True
+            corrected, top = corrected[keep], top[keep]
+            for key in ("sigma_n", "support_indices"):
+                if key in ring:
+                    ring[key] = ring[key][keep]
             ring["points"] = corrected * ppm
             # The blur was measured before the piecewise thickness map. A corner
             # wholly formed by the top edge has its covariance scaled by alpha²;
@@ -382,8 +390,9 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
             if "support" in ring:
                 support = ring["support"] / ppm
                 support_normals = edges.material_normals(support, ring["outer"])
-                ring["support"], _ = edges.correct_thickness(
-                    support, support_normals, camera["nadir_mm"], camera["height_mm"], thickness_mm
+                # The support keeps every point: support_indices pair the points with it.
+                ring["support"], _, _ = edges.correct_silhouette(
+                    support, support_normals, camera["nadir_mm"], camera["height_mm"], thickness_mm, ring["outer"]
                 )
                 ring["support"] *= ppm
         if camera["focal_source"] == "assumed":

@@ -1163,6 +1163,40 @@ def test_thickness_correction_is_a_homothety_about_the_nadir():
     assert np.allclose(corrected[0], [99.0, 0.0]) and np.allclose(corrected[1:], points[1:])
 
 
+def test_the_walls_vertical_edges_are_dropped_from_the_corrected_outline():
+    """Where support switches between the top and bottom edges the silhouette runs along
+    the ray from the nadir, from the bottom edge's tangent point to the top edge's: the
+    wall's vertical edge, (D / (D - t) - 1) |P - N| long, 1.9 mm on the 22° photo. Its
+    points face neither way. On the rendered plate under a 1 x 3 px blur, normals of
+    either sign alternated along it, and the corrected outline ran out along the ray
+    and back, crossed itself and stopped the trace on six seeds of six."""
+    from shapely.geometry import Point as P_
+    from shapely.geometry import Polygon as Poly
+
+    nadir, height, thickness = np.array([0.0, -180.0]), 400.0, 4.0
+    ratio = height / (height - thickness)
+    part = P_(0.0, 0.0).buffer(20.0, 256)
+    top = Poly(nadir + (np.asarray(part.exterior.coords) - nadir) * ratio)
+    # The wall sweeps the part between the two: for a disk, their convex hull.
+    line = part.union(top).convex_hull.exterior
+    ring = np.array([line.interpolate(s).coords[0] for s in np.arange(0, line.length, 0.05)])
+    normals = edges.material_normals(ring, True)
+    relative = ring - nadir
+    # The wall's edges lie on neither the bottom edge nor the top edge's image.
+    wall = np.array([min(part.exterior.distance(P_(p)), top.exterior.distance(P_(p))) > 1e-4 for p in ring])
+    assert wall.sum() > 60  # both vertical edges, 1.81 mm each, tangent to both circles
+    # Normals of either sign along the wall's edges, as noise leaves them.
+    flip = wall & (np.arange(len(ring)) % 2 == 0)
+    normals[flip] = normals[flip] - 2e-3 * relative[flip] / np.linalg.norm(relative[flip], axis=1)[:, None]
+    old, _ = edges.correct_thickness(ring, normals, nadir, height, thickness)
+    # Out along the tangent and back: 1.81² / (2 · 20) = 0.08 mm off the circle.
+    assert np.abs(np.linalg.norm(old, axis=1) - 20).max() > 0.07 and not Poly(old).is_valid
+    corrected, _, keep = edges.correct_silhouette(ring, normals, nadir, height, thickness, True)
+    assert keep.sum() > 0.9 * len(ring) and not keep[wall].any()
+    assert np.abs(np.linalg.norm(corrected[keep], axis=1) - 20).max() < 1e-3
+    assert Poly(corrected[keep]).is_valid
+
+
 def test_profile_without_fitted_geometry_is_unchanged():
     profile = Profile(outer=[(0, 0), (10, 0), (10, 5), (0, 5)])
     assert profile.model_dump(exclude_none=True) == {"outer": [(0, 0), (10, 0), (10, 5), (0, 5)], "holes": []}

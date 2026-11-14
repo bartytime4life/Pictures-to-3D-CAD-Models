@@ -952,6 +952,50 @@ def correct_thickness(points, normals, nadir, height, thickness):
     return corrected, top
 
 
+def correct_silhouette(points, normals, nadir, height, thickness, is_outer):
+    """correct_thickness for one traced ring, with the wall's vertical edges taken out.
+
+    The photo's silhouette S of a vertical-walled part P is the union of P (bottom
+    edge) and its image h(P) (top edge, enlarged about the nadir by D / (D - t)), and
+    the part is P = S ∩ h⁻¹(S) wherever each ray from the nadir crosses it in one
+    interval (one each side, for a hole). Where support switches between the edges
+    the ray is tangent to the outline, and the silhouette runs straight along it from
+    the bottom edge's tangent point P to the top edge's h(P): the wall's vertical edge
+    seen from the camera, (D / (D - t) - 1) |P - N| long. Its points face neither way,
+    and either correction leaves them on that ray, beyond P (bottom) or short of it
+    (top), so the corrected outline went out along the ray and back; with noise in the
+    normals the two kinds alternated and it crossed itself.
+
+    Each point therefore keeps the candidate that lies on S ∩ h⁻¹(S): its bottom
+    candidate (the point) where it lies in h⁻¹(S), its top candidate where it lies in S.
+    Where both do the normal decides, as in correct_thickness; the points of the wall's
+    vertical edges lie in neither and are dropped. `points` are one ring's silhouette
+    points in order, `normals` their material normals. Returns (corrected, top, keep),
+    each over all the points; only `keep`'s are on the corrected outline.
+    """
+    corrected, top = correct_thickness(points, normals, nadir, height, thickness)
+    if len(points) < 3:
+        return corrected, top, np.ones(len(points), bool)
+    import shapely
+
+    ring = Polygon(points)
+    if not ring.is_valid:
+        ring = ring.buffer(0)
+    ratio = height / (height - thickness)
+    # The bottom candidate (the point itself) is in h⁻¹(S) where h of it is in S; the
+    # top candidate is in S where it is.
+    raised = nadir + (points - nadir) * ratio
+    inside_raised = shapely.contains_xy(ring, raised[:, 0], raised[:, 1])
+    lowered = nadir + (points - nadir) / ratio
+    inside_lowered = shapely.contains_xy(ring, lowered[:, 0], lowered[:, 1])
+    # A hole's material lies outside its ring.
+    bottom_ok = inside_raised if is_outer else ~inside_raised
+    top_ok = inside_lowered if is_outer else ~inside_lowered
+    chosen = np.where(bottom_ok != top_ok, top_ok, top)
+    corrected = np.where(chosen[:, None], lowered, points)
+    return corrected, chosen, bottom_ok | top_ok
+
+
 def roundness_focal(holes, pose_at, thickness, diagonal, gate, lo=10.0, hi=200.0, steps=49):
     """The focal length at which a thick part's holes are round after the parallax
     correction, or None.
