@@ -306,11 +306,15 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
             f"The edge blur differs by direction, from {spreads.min() / ppm:.3f} mm across the sharpest edges to {spreads.max() / ppm:.3f} mm across the softest, as a shaken camera's does; each edge was measured with its own. A steadier photo is sharper."
         )
     light = next((ring.get("paper_light") for ring in rings if ring.get("paper_light")), {})
+    # A part traced with a thickness shows a wall, brighter than its top, beside parts of
+    # its outline.
+    glare = not thickness_mm and light.get("part_rise", 0) >= edges.GLARE_RISE
     if light.get("used") and light.get("depth", 0) >= shadow.NOTICEABLE_DEPTH:
         notes.append(
             f"A soft shadow beside the part takes up to {100 * light['depth']:.0f} % of the paper's light; it was fitted from the paper all round, and each edge was placed against the shadowed light."
         )
-        if light.get("edge_rise_balance", 0) >= shadow.CONTACT_BALANCE and light.get("edge_rise_top", 0) >= shadow.CONTACT_RISE:
+        # Under glare the paper's dip all round is the glare's own (below).
+        if not glare and light.get("edge_rise_balance", 0) >= shadow.CONTACT_BALANCE and light.get("edge_rise_top", 0) >= shadow.CONTACT_RISE:
             hidden_mm = (shadow.TRACED_FIT[1] * sigma + 1.5) / ppm
             notes.append(
                 f"The shadow lies against nearly all of the part's edges, as light from all round casts it. Within about {hidden_mm:.1f} mm of an edge, at this photo's blur, a shadow cannot be measured, and one deepest at the edge reads as the edge moved outward. Light from well above and sharp focus reduce it."
@@ -318,6 +322,10 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
     elif "excess" in light and not light.get("used") and light.get("depth", 0) >= shadow.NOTICEABLE_DEPTH:
         notes.append(
             "A shadow beside the part has an edge sharper than its fitted model can follow, so edges were placed against a straight-line paper level there and may read a little outward. Soft, even light is better."
+        )
+    if glare:
+        notes.append(
+            f"The part's own light rises towards its outline, by {100 * light['part_rise']:.1f} % of its contrast: light scattered in the lens (veiling glare) brightens the part beside the paper and dims the paper beside it, moving edges into the part. A clean lens, a hood and no bright light near the frame reduce it."
         )
     if weights != tone.LUMINANCE:
         notes.append(

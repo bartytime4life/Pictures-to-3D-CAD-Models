@@ -414,6 +414,7 @@ It changes guides relative to that integrated baseline, not runtime behavior.
 | Directional covariance rank guard | Draft PR #78, source `185d682`: [633 local Python tests](validation/directional-blur-rank.md), build and 76 focused checks | Actual sampled Gaussian-step rank counterexample; no new whole-photo, browser or physical-accuracy claim |
 | Recorded directional-blur checks | Branch `claude/directional-blur`, on the slot end-cap commit and `main` at `485da7e` (after #47): **627 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#a-blur-that-differs-by-direction--november-12-2026) | Local result; synthetic photos including the directional-spread qualification's kinds of case, and exact blurred holes; supersedes that record's "no production correction" |
 | Contact-shadow observability study | Branch `claude/contact-shadow-limits` on `main` at `70055dc`, documentation only, as recorded [below](#contact-shadows-beside-an-edge--november-13-2026) | Exactly rendered scenes; an unobservable kernel radius, a closer-fit study and a profile-shape fit, none adopted; capture guidance |
+| Recorded optical-effects checks | Branch `claude/optical-effects`, on the second-pass start commit (`main` at `e29b560`, after #122): **1309 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#real-cameras-optical-effects--november-14-2026) | Local result; rendered photos with veiling glare, lateral chromatic aberration and sharpening, exact 1-D edges; sharpening and glare not corrected |
 | Recorded second-pass start checks | Branch `claude/second-pass-start`, on `main` at `e29b560` (after #122) and the snapping-axis commit: **1304 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#where-the-second-pass-starts--november-13-2026) | Local result; exactly blurred plates and exactly rendered scenes, the documented tables, rectangles, plates and noise seeds; contact shadows and non-Gaussian blurs read worse, three limits re-set from new and planted-fault figures |
 | Recorded snapping-axis checks | Branch `claude/snap-dominant-axis`, on `main` at `e29b560` (after #122): **1304 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#snappings-dominant-axis--november-13-2026) | Local result; synthetic line sets and rendered triangles; shapes whose lines share one family snap as before |
 | Recorded renderer channel-noise checks | Branch `claude/renderer-channel-noise`, on `main` at `e56c478` (after #116): **1302 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#independent-colour-noise-in-the-test-renderer--november-13-2026) | Test renderer only; the documented tables, rectangles, plates and noise seeds re-measured; three regression limits re-set from new and planted-fault figures |
@@ -452,6 +453,30 @@ stub fix in managed cloud sessions. The [reference-sensitivity record](validatio
 covers the endpoint explorer. The original CAD release and optional Ollama
 integration retain separate historical evidence. These records do not establish
 that a newly created or published cloud task has been validated.
+
+## Real cameras' optical effects — November 14, 2026
+
+Branch `claude/optical-effects`, on the second-pass start commit below it (`main` at `e29b560`, after #122). See [reference-sheet tracing](reference-sheet.md), §3 (**Optical effects of real cameras**) and Limits, and the [capture guide](capture-guide.md#photograph-the-part-on-a-reference-sheet).
+
+- **The renderer** (`synthetic.render`), each effect off by default and the default photos unchanged bit for bit:
+  - `glare` and `glare_px`: a fraction of the light scattered by the kernel a / 2π (r² + a²)^1.5, in linear light after the optical blur, by FFT on a zero-padded grid (`synthetic._veil`).
+  - `chromatic_px`: red magnified and blue shrunk about the image centre by that shift at the corners, resampled in float64 with the Keys cubic (`synthetic._magnify`). `cv2.remap`'s cubic put a point 0.6 % of the way out 4 % short of its place.
+  - `sharpen` and `sharpen_px`: an unsharp mask on each channel's saved values before the noise.
+- **The magnitudes** come from published measurements: ISO 9358 veiling glare of commercial lenses about 1–10 %; phones' sharpening overshoot, measured by edge profiles (Imatest); lateral chromatic aberration growing towards the corners and corrected by phones in processing.
+- **Results**, mean signed errors over seeds 201–203 in the reference-sheet table (§3). Sharpening with amount 0.6 and a 1 px radius read the outline 0.026–0.045 mm small and Ø6 0.023–0.027 mm large on the three photo sets, and the blur 2–10 % narrow; with 1.2 and 1.5 px, up to 0.094 mm small and 29 % narrow. Glare at 10 % moved the outline 0.005–0.023 mm in and Ø22 up to 0.021 mm large; at 3 %, the outline up to 0.006 mm. Chromatic aberration up to 1.5 px moved every dimension by at most 0.005 mm. Noise-free, high-quality overhead photos read within 0.003 mm of the noisy ones, so the effects are the filters', not noise or JPEG.
+- **Sharpening's mechanism**, on exact 1-D edges: the half-level crossing moves towards the dark side by 0.065 px (amount 0.6, 1 px) and 0.207 px (1.2, 1.5 px) under a 1.6 px blur, and 0.032 and 0.134 px under 3.9 px. Masking linear light instead moves it by under 0.001 px. The mild mask overshoots by 0.1 % of the step, so overshoot cannot detect it; a tone curve also makes the profile asymmetric, so asymmetry cannot tell them apart. Not corrected; the capture guide asks for sharpening off.
+- **Glare told from a contact shadow.** The fitted shadow took glare's dip of the paper, all round the part, as a contact shadow: at 10 % the "against every edge" note fired. The part's light 2 σ + 1.5 px in from the outline against 2 mm further in, less the step's own tail, rose by the following share of the contrast (three seeds, 1 and 3 px blurs):
+
+  | Photo | Rise |
+  | --- | --- |
+  | No glare: none, the renderer's shadow, a contact shadow, a 4 mm part, sharpened | −0.33 to +0.07 % |
+  | Glare 3 % | +0.24 to +0.33 % |
+  | Glare 10 %, a of 5 or 20 px, with or without a contact shadow | +0.70 to +1.73 % |
+
+  From 0.5 %, the trace reports glare and no contact shadow (`edges._part_rise`, `edges.GLARE_RISE`); parts traced with a thickness, whose wall is brighter than their top, are left out.
+- **Tests.** `test_veiling_glare_spreads_light_by_its_long_tailed_kernel`, `test_lateral_chromatic_aberration_moves_red_out_and_blue_in_at_the_corners`, `test_sharpening_saved_values_moves_the_half_level_into_the_dark_side`, `test_veiling_glare_is_told_from_a_contact_shadow` and `test_lateral_chromatic_aberration_is_absorbed_by_the_sheet`.
+- **Also corrected:** the capture guide's contact-shadow figures, which the second-pass start commit changed in the reference sheet.
+- **Checks run.** `pytest` with runtime warnings as errors: **1309 passed**. Ruff and Prettier passed. **74 browser scenarios** passed with the system Chrome.
 
 ## Where the second pass starts — November 13, 2026
 

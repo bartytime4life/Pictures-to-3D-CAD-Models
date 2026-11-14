@@ -610,6 +610,11 @@ def _alone(mask, points, normals, reach):
 
 
 EDGE_RISE_MM = 2.0  # how far beyond the fit's start the shadow's rise is read
+# The part's rise towards its outline (_part_rise) from which the trace reports veiling
+# glare. On rendered photos under 1 and 3 px blurs, three seeds each, it read -0.33 to
+# +0.07 % of the contrast without glare (with shadows, contact shadows, a 4 mm part or
+# sharpening); with 10 % of the light scattered 0.70-1.73 %, and with 3 % 0.24-0.33 %.
+GLARE_RISE = 0.005
 
 
 def _edge_rise(light, mask, points, normals, sigma, ppm):
@@ -635,6 +640,26 @@ def _edge_rise(light, mask, points, normals, sigma, ppm):
         "edge_rise": float(np.median(rise)), "edge_rise_top": top,
         "edge_rise_balance": min(medians) / top if top > 0 else 0.0,
     }
+
+
+def _part_rise(g, mask, points, normals, sigma, ppm):
+    """How much the part's own light rises towards its outline, as a share of the
+    paper-part contrast: the median round the outline of (G(-d) - G(-d - EDGE_RISE_MM)) /
+    (paper - part), less the blurred step's own tail there, Q(d / sigma); G is the photo's
+    light, d the shadow fit's start, and -d lies in the part. Veiling glare, light the
+    lens scatters from the bright paper, brightens the part beside it; a shadow on the
+    paper does not, and a thick part's brighter wall lies on one side of it only."""
+    side = _paper_side_of(mask, points, normals, np.full(len(points), sigma))
+    out = normals * side[:, None]
+    d = shadow.TRACED_FIT[1] * sigma + 1.5
+    far = d + EDGE_RISE_MM * ppm
+
+    def at(distance):
+        return sample_bilinear(g, points[:, 0] + distance * out[:, 0] - 0.5, points[:, 1] + distance * out[:, 1] - 0.5)
+
+    part_far, paper = at(-far), at(far + EDGE_RISE_MM * ppm)
+    rise = (at(-d) - part_far) / np.maximum(paper - part_far, 1e-9)
+    return float(np.median(rise)) - 0.5 * math.erfc(d / sigma / math.sqrt(2))
 
 
 def subpixel_rings(mask, g, ppm, shadow_free_blur=True):
@@ -761,9 +786,12 @@ def subpixel_rings(mask, g, ppm, shadow_free_blur=True):
                 (np.where((keep & lone)[:, None], moved, points), across)
                 for (_, points, _, _), (moved, keep, _), (_, across), lone in zip(first, final, starts, alone)
             ]
+    o = next(i for i, ring in enumerate(first) if ring[0])
+    outline, across = final[o][0][final[o][1]], starts[o][1][final[o][1]]
     if paper_light is not None:
-        o = next(i for i, ring in enumerate(first) if ring[0])
-        light.info.update(_edge_rise(paper_light, mask, final[o][0][final[o][1]], starts[o][1][final[o][1]], sigma, ppm))
+        light.info.update(_edge_rise(paper_light, mask, outline, across, sigma, ppm))
+    if sigma > 0:
+        light.info["part_rise"] = _part_rise(g, mask, outline, across, sigma, ppm)
     rings = []
     for (is_outer, _, support, indices), (moved, keep, spread) in zip(first, final):
         if keep.sum() < 8:

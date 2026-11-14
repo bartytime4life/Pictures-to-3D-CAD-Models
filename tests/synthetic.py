@@ -296,6 +296,11 @@ def render(
     focal=None,
     distance=440.0,
     shadow_kernel=None,
+    glare=0.0,
+    glare_px=20.0,
+    chromatic_px=0.0,
+    sharpen=0.0,
+    sharpen_px=1.0,
 ):
     """Returns (jpeg bytes, truth dict).
 
@@ -326,6 +331,17 @@ def render(
     alike at every edge: a 3.9 px edge read 0.02-0.03 px towards the paper, on noisy
     photos too. Sensor noise is independent in each channel, and a sensor always has at
     least the dither's.
+
+    Three optical effects of real cameras are off by default:
+    `glare` is the fraction of the light a lens scatters into a veiling glare, spread by
+    the long-tailed kernel a / (2 pi (r^2 + a^2)^1.5) with a = `glare_px` photo pixels
+    (ISO 9358 measures commercial lenses' veiling glare at about 1-10 %).
+    `chromatic_px` is lateral chromatic aberration: red magnified and blue shrunk about
+    the image centre so that each moves this many pixels at the image's corners, against
+    green; phones correct most of it in processing.
+    `sharpen` is an unsharp mask on the saved values, saved + sharpen (saved - G * saved)
+    with G a Gaussian of `sharpen_px`, as a phone's processing sharpens: it overshoots
+    either side of an edge.
     """
     if gamma is None:
         to_linear, to_saved = srgb_to_linear, linear_to_srgb
@@ -416,14 +432,22 @@ def render(
         image = cv2.GaussianBlur(image, (0, 0), blur_x, sigmaY=blur_y)
     else:
         image = cv2.filter2D(image, -1, rotated_gaussian(*blur), borderType=cv2.BORDER_REFLECT)
+    if glare > 0:
+        image = (1 - glare) * image + glare * _veil(image, glare_px)
     # The camera saves through its tone curve; noise is added on the saved scale, where
     # a processed photo's noise is roughly even across tones, independently in each
     # colour channel as a sensor's is, and the saved values are rounded (they had been
     # truncated, half a level low on average).
-    saved = to_saved(image)
+    if chromatic_px:
+        planes = [_magnify(image, scale) for scale in _chromatic_scales(chromatic_px, size)]
+    else:
+        planes = [image] * 3
+    saved_planes = [to_saved(plane) for plane in planes]
+    if sharpen > 0:
+        saved_planes = [p + sharpen * (p - cv2.GaussianBlur(p, (0, 0), sharpen_px)) for p in saved_planes]
     rgb = np.dstack([
         np.clip(np.rint(saved * tint + rng.normal(0, noise, image.shape) + dither * rng.uniform(-0.5, 0.5, image.shape)), 0, 255)
-        for tint in (1.0, 0.97, 0.92)
+        for saved, tint in zip(saved_planes, (1.0, 0.97, 0.92))
     ]).astype(np.uint8)
     from PIL import Image
 
@@ -444,6 +468,52 @@ def render(
         "size": size,
     }
     return encoded.tobytes(), truth
+
+
+def _veil(image, a):
+    """`image` convolved with the veiling-glare kernel a / (2 pi (r^2 + a^2)^1.5), whose
+    integral over the plane is 1, by FFT on a zero-padded grid: light outside the frame
+    is not in the photo, so it adds none."""
+    h, w = image.shape
+    H, W = cv2.getOptimalDFTSize(2 * h), cv2.getOptimalDFTSize(2 * w)
+    y = np.fft.fftfreq(H, 1 / H)[:, None]
+    x = np.fft.fftfreq(W, 1 / W)[None, :]
+    kernel = a / (2 * np.pi * (x * x + y * y + a * a) ** 1.5)
+    kernel /= kernel.sum()
+    padded = np.zeros((H, W))
+    padded[:h, :w] = image
+    out = np.fft.irfft2(np.fft.rfft2(padded) * np.fft.rfft2(kernel), s=(H, W))[:h, :w]
+    return out.astype(np.float32)
+
+
+def _chromatic_scales(corner_px, size):
+    """Magnifications of red, green and blue about the image centre that move red out
+    and blue in by `corner_px` at the corners."""
+    half_diagonal = math.hypot(size[0], size[1]) / 2
+    d = corner_px / half_diagonal
+    return (1 + d, 1.0, 1 - d)
+
+
+def _magnify(image, scale):
+    """`image` magnified by `scale` about its centre (pixel centres at i + 0.5), resampled
+    in float64 with the Keys cubic kernel (a = -1/2) along each axis in turn.
+    `cv2.remap`'s cubic, with its 1/32 px positions and a = -3/4, moved a point 0.6 % of
+    the way from the centre 4 % short of its place."""
+    if scale == 1.0:
+        return image
+    out = np.asarray(image, np.float64)
+    for axis in (1, 0):
+        n = out.shape[axis]
+        source = n / 2 + (np.arange(n) + 0.5 - n / 2) / scale - 0.5
+        base = np.floor(source).astype(int)
+        f = source - base
+        taps = []
+        for k, x in zip((-1, 0, 1, 2), (1 + f, f, 1 - f, 2 - f)):
+            weight = np.where(x <= 1, 1.5 * x**3 - 2.5 * x**2 + 1, -0.5 * x**3 + 2.5 * x**2 - 4 * x + 2)
+            index = np.clip(base + k, 0, n - 1)
+            taps.append(np.take(out, index, axis=axis) * (weight[None, :] if axis == 1 else weight[:, None]))
+        out = sum(taps)
+    return out.astype(np.float32)
 
 
 def _flat_photo(table, paper, regions, ppm, blur):
