@@ -1,5 +1,15 @@
 # Workbench change log
 
+## Unrun same-image diagnostic documented — November 14, 2026 UTC
+
+- Describe the [local code-cell draft](finite-acquisition-codecell-probe.md), its
+  proposed API, fixed baseline, resource limits and actual-witness requirements.
+- Distinguish six untracked source/test drafts from the executed 131-input
+  restoration study. No new witness, passing scientific test or recovery result
+  is claimed; the original full study remains 11/12, exit 1.
+- Refresh navigation and the [current documentation review](validation/documentation-codecell-draft.md).
+  Preserve historical validation, frozen research and generated library outputs.
+
 ## Executed live restoration documented — November 14, 2026 UTC
 
 - Replace current unrun-draft labels with the independently frozen 131-input

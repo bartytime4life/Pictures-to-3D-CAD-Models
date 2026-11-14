@@ -134,7 +134,7 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 ## Engineering evidence and developer research
 
 Read [source scope and status](docs/project-status.md) and the
-[current documentation review](docs/validation/documentation-restoration-result.md)
+[current documentation review](docs/validation/documentation-codecell-draft.md)
 when switching branches. Main includes the source-cell mean, five unrounded
 area sensitivities and signed linear propagation as developer APIs.
 Five-parameter acquisition-aware recovery with unknown brightness remains
@@ -156,6 +156,9 @@ retain this limitation. The [earlier recovery protocols](docs/finite-acquisition
 own source and outcomes. All six completed 24-case recovery protocols fail.
 Independent forward/rank qualification, measured-camera accuracy and physical
 CAD/print acceptance remain separate from software and saved-record checks.
+A [new local diagnostic draft](docs/finite-acquisition-codecell-probe.md) proposes
+testing geometries with identical source codes. It is uncommitted and unrun;
+the executed 11/12 result remains the latest recovery evidence.
 
 For reference-sheet tracing, photograph the whole flat sheet (A4, US Letter, or a sheet you have measured) and explicitly choose it as the **Scale reference**. A successful sheet trace sets scale from its stated size, estimates perspective and one radial lens correction, and fits lines, tangent arcs and circles. Entered thickness supports a side-wall/parallax correction under the method's assumptions. Ordinary tracing and the sample use measured-width scaling instead; they do not perform these corrections. See [reference-sheet tracing](docs/reference-sheet.md) for the mathematics and synthetic evidence, and the [engineering model](docs/engineering-model.md) for independent verification before fabrication.
 

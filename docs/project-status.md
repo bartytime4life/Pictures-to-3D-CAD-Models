@@ -91,7 +91,7 @@ this refresh have separate status.
 Merge, hosted checks, installed runtime, real-camera
 accuracy and physical acceptance remain separate.
 
-The [documentation review](validation/documentation-restoration-result.md) audits this
+The [documentation review](validation/documentation-codecell-draft.md) audits this
 main-based source. Use [available tools](#available-here) and [remaining integration work](#remaining-integration-work)
 for current capabilities. Earlier snapshots below are historical records; their open
 PR states and absent-module statements describe their own source and time.
@@ -218,6 +218,14 @@ their observed extent is not an uncertainty enclosure. Source, raw evidence,
 first failures and older outcomes remain unchanged. Research runtime/tests,
 full candidate arrays and complete ZIPs remain outside this documentation
 publication. Main/UI integration and physical qualification remain incomplete.
+
+The subsequent [code-cell diagnostic](finite-acquisition-codecell-probe.md)
+is currently six untracked, uncommitted source/test files in the separate
+research checkout. It proposes bounded actual witnesses using observed inputs
+and one fixed baseline. No combined admission, source freeze, collected tests
+or first scientific execution exists at this snapshot. This documentation
+publication includes its explanation and static file inventory, without runtime
+or tests. The executed 131-input study above remains the latest full result.
 
 ## Available here
 

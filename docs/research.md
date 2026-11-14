@@ -119,6 +119,13 @@ and independently replaced. The fresh original 24-case study remains
 reserved residuals but misses the fraction target: 0.003206949 > 0.002.
 It adds no main runtime, HTTP mode or workbench control.
 
+The subsequent [unrun code-cell diagnostic](finite-acquisition-codecell-probe.md)
+would test alternative tuples with the same complete source codes and final
+output, holding one baseline and sensitivity matrix fixed across all axes.
+Actual sampled witnesses could show compatible alternatives; their observed
+span would not enclose all compatible geometry. The draft has no executed
+result and does not replace a recovered best or change the original targets.
+
 These separate local studies add no main runtime or workbench integration.
 
 The [original selected design reference](images/design-reference.png) is a generated concept. The [recorded workbench screenshot](images/workbench.png) is browser-rendered implementation evidence; the [guided-workbench review](validation/guided-workbench.md) records the reviewed interaction, screenshots and evidence date. The sample photograph is generated demonstration input and is traced by the real conversion pipeline; it is not a measured reference specimen.

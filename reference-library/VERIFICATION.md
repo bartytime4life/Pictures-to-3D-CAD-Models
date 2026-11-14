@@ -7,7 +7,7 @@ the existing dated receipt. The receipt, check date and release status were not
 regenerated for this correction.
 
 Repository documentation update, November 13: the
-[current review](../docs/validation/documentation-restoration-result.md) links the
+[current review](../docs/validation/documentation-codecell-draft.md) links the
 [local acquisition-recovery snapshot](../docs/finite-acquisition-recovery.md).
 That separate synthetic research retains 4/12 original matched target passes
 and 9/12 continuation passes; both earlier full protocols exited 1. The 459 focused tests

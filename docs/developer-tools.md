@@ -169,6 +169,13 @@ study remains 11/12 matched passes, exit 1. See the
 Those historical commands require the exact research checkout; they are
 not additional `make` targets or executable main/UI features.
 
+The later [code-cell diagnostic draft](finite-acquisition-codecell-probe.md)
+has proposed Python helper/controller interfaces and a local runner, all outside
+this checkout. They are uncommitted and unrun. Its combined admission, freeze,
+first controls and first probe are still pending; no runnable main command or
+passed-test count is provided. The guide distinguishes proposal arithmetic,
+actual witnesses and full recovery acceptance.
+
 ## Output and side effects
 
 Use a new scratch destination for generated benchmark/example reports. The

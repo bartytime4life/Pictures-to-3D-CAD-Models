@@ -7,7 +7,7 @@ original counts and environment; they are not later retests.
 
 ## Live restoration: exact image, remaining geometry miss — November 14, 2026 UTC
 
-The [current documentation review](validation/documentation-restoration-result.md)
+The [current documentation review](validation/documentation-codecell-draft.md)
 records research `e677039`, its 131-input freeze and the first fresh full
 24-case result: **11/12 matched passes, exit 1**. V1's first suite failed on
 a malformed optical-anchor fixture (1,138 passes, one failure, 33 subtests).

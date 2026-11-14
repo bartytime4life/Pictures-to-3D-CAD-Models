@@ -36,7 +36,7 @@ the research candidate, not main or this library. The
 [original audit record](../docs/validation/finite-acquisition-recovery.md)
 retains 14 unresolved comparisons where pre-cast area differences cannot be
 reconstructed from rounded capture arrays. The
-[current documentation review](../docs/validation/documentation-restoration-result.md)
+[current documentation review](../docs/validation/documentation-codecell-draft.md)
 connects the later results and both first projection-control outcomes. This
 documentation does not add a fitter to main, the workbench or the Photos tab.
 
