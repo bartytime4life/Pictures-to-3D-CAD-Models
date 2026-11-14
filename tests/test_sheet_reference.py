@@ -1197,6 +1197,33 @@ def test_the_walls_vertical_edges_are_dropped_from_the_corrected_outline():
     assert Poly(corrected[keep]).is_valid
 
 
+def test_a_thick_hole_is_fitted_as_a_circle_clear_of_its_switch_corners():
+    """A thick part's hole is seen as the overlap of its bottom outline and its enlarged
+    top outline, cornered where they cross, and the blur rounds those corners. On the
+    22° plate under 1 x 3 px the 6 mm hole farthest from the nadir read 0.6-1.5 px
+    inside its circle 15-35° from each switch, 0.41-0.47 px RMS against a 0.41 px gate
+    on seven seeds; it was fitted as lines and arcs, its joins failed, and it was kept
+    as a traced outline. A 15.4 px hole dented so is refused as a circle on all its
+    points and found clear of the corners, its radius within 0.02 px."""
+    from backend import reference
+
+    radius, sigma, tolerance = 15.4, 2.72, 0.408
+    angle = np.linspace(0, 2 * np.pi, 80, endpoint=False)
+    from_switch = np.min(np.abs(np.angle(np.exp(1j * (angle[:, None] - np.array([0.0, np.pi]))))), axis=1)
+    dent = -1.5 * np.exp(-0.5 * ((from_switch - np.radians(22)) / np.radians(5)) ** 2)
+    points = 100 + (radius + dent)[:, None] * np.column_stack([np.cos(angle), np.sin(angle)])
+    ring = {"points": points, "blur_scales": np.where(np.sin(angle) > 0, 0.99, 1.0)}
+    clear = reference._off_switch_corners(ring, sigma)
+    assert 0 < (~clear).sum() < 0.5 * len(points)
+    assert fitting.fit_ring(points, tolerance, 3.0) is None
+    prims = fitting.fit_ring(points, tolerance, 3.0, circle_points=clear)
+    assert [p.kind for p in prims] == ["circle"]
+    assert abs(prims[0].data["r"] - radius) < 0.02
+    # A ring traced wholly from one edge has no switch, and keeps every point.
+    assert reference._off_switch_corners({**ring, "blur_scales": np.full(80, 0.99)}, sigma) is None
+    assert reference._off_switch_corners({"points": points}, sigma) is None
+
+
 def test_profile_without_fitted_geometry_is_unchanged():
     profile = Profile(outer=[(0, 0), (10, 0), (10, 5), (0, 5)])
     assert profile.model_dump(exclude_none=True) == {"outer": [(0, 0), (10, 0), (10, 5), (0, 5)], "holes": []}
