@@ -925,7 +925,10 @@ def snap_axes(rings, angle_tol_deg=0.6):
 def equalise_radii(rings, radius_rel=0.03, scale=1.0, unit="mm"):
     """Give arcs and circles whose radii agree within radius_rel their mean radius."""
     curved = sorted(
-        (p for prims in rings for p in prims if p.kind in ("arc", "circle") and not p.data.get("end_cap")),
+        (
+            p for prims in rings for p in prims
+            if p.kind in ("arc", "circle") and not p.data.get("end_cap") and not p.data.get("traced_corner")
+        ),
         key=lambda p: p.data["r"],
     )
     notes, used = [], set()
@@ -1114,6 +1117,30 @@ def place_fillets(prims):
             _move_arc_centre(p, centre, p.data["r"])
 
 
+def fillet_frame(l1, l2, centre, r):
+    """The bisector frame of a fillet tangent to lines l1 and l2: (c0, v) with its centre
+    at c0 + r v for radius r, the side of the corner the arc at `centre` (radius `r`)
+    lies on. None for parallel lines, or when that arc's centre lies more than
+    max(2, r / 4) from the frame's."""
+    d1, d2 = np.asarray(l1.data["d"]), np.asarray(l2.data["d"])
+    n1, n2 = np.array([-d1[1], d1[0]]), np.array([-d2[1], d2[0]])
+    c1, c2 = np.asarray(l1.data["c"]), np.asarray(l2.data["c"])
+    best = None
+    for s1 in (-1, 1):
+        for s2 in (-1, 1):
+            try:
+                c0 = intersect(c1, d1, c2, d2)
+                v = np.linalg.solve(np.vstack([n1, n2]), [s1, s2])
+            except np.linalg.LinAlgError:
+                continue
+            distance = np.linalg.norm(c0 + r * v - np.asarray(centre, float))
+            if best is None or distance < best[0]:
+                best = (distance, c0, v)
+    if best is None or best[0] > max(2.0, 0.25 * r):
+        return None
+    return best[1], best[2]
+
+
 def fit_fillets(points, prims, tol, sigma=0.0, covariance=None, *, blur_scales=None):
     """Constrain each arc between two lines to be tangent to both.
 
@@ -1212,22 +1239,12 @@ def fit_fillets(points, prims, tol, sigma=0.0, covariance=None, *, blur_scales=N
             _move_arc_centre(p, mid + d1 * axial, r)
             p.data["end_cap"] = True
             continue
-        best = None
-        for s1 in (-1, 1):
-            for s2 in (-1, 1):
-                try:
-                    c0 = intersect(c1, d1, c2, d2)
-                    v = np.linalg.solve(np.vstack([n1, n2]), [s1, s2])
-                except np.linalg.LinAlgError:
-                    continue
-                distance = np.linalg.norm(c0 + old_r * v - old_c)
-                if best is None or distance < best[0]:
-                    best = (distance, c0, v)
-        if best is None or best[0] > max(2.0, 0.25 * old_r):
+        frame = fillet_frame(l1, l2, old_c, old_r)
+        if frame is None:
             if covariance is not None:
                 p.data.update(r_sd=math.inf, blur_unresolved=True)
             continue
-        _, c0, v = best
+        c0, v = frame
         seg = span_points(points, *p.span)
         # An arc point 2.5 sigma along the arc from an edge lies (2.5 sigma)^2 / (2r)
         # off that edge.
