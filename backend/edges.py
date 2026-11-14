@@ -783,7 +783,58 @@ def _deglare(g, fit, sigma):
     return ((g - fit["g"] * up) / (1 - fit["g"])).astype(g.dtype)
 
 
-def subpixel_rings(mask, g, ppm, shadow_free_blur=True, remove_glare=True, bounded_openings=False):
+TAIL_REACH = 6.0  # blur widths over which the step's measured tail is read
+TAIL_FROM = 4.0  # and where the material's own level is read, beyond it
+
+
+def _edge_tail(g, rings, spreads, mask, step=0.125):
+    """The blurred step's tail as measured, a function z -> its fraction of the step at z
+    blur widths from the edge, or None with too few profiles.
+
+    The second pass removes the step's own tail from each profile before fitting a line
+    to each end beyond 2.5 sigma (sheet.half_level_search). It took the Gaussian's,
+    Q(z), and a defocus disk's or a motion streak's ends sooner: on exactly blurred
+    plates a 4 px disk put the sides 0.015 px out of the part, a 2.5 px one 0.010 px and
+    a 10 px streak 0.011 px. Here each lone edge point's profile is read on its material
+    side, where no shadow falls, with z = distance / that point's own spread: its rise
+    above the material's level (read beyond TAIL_FROM), over the step. The median of
+    each z, made non-increasing, is the tail; a Gaussian blur gives Q(z). Veiling glare
+    is part of the lens's blur, and the tail takes up its near part: with 10 % of the
+    light scattered and left in, a 3 px photo's summed error over seven seeds was 54 um
+    against 90 um with Q. `rings` holds (points, normals, use) per ring, on the edge."""
+    z = np.arange(0.0, TAIL_REACH + 1e-9, 0.125)
+    rows = []
+    for points, normals, use in rings:
+        if not use.any():
+            continue
+        p, n = points[use], normals[use]
+        spread = spreads(n)
+        side = _paper_side_of(mask, p, n, spread)
+        into = -side[:, None] * n  # towards the material
+        t = z[None, :] * spread[:, None]
+        sx = p[:, None, 0] + t * into[:, None, 0] - 0.5
+        sy = p[:, None, 1] + t * into[:, None, 1] - 0.5
+        material = sample_keys(g, sx, sy)
+        level = np.median(material[:, z >= TAIL_FROM], axis=1)
+        contrast = 2 * (material[:, 0] - level)  # the half level lies on the edge
+        good = np.abs(encoded_from_linear(level + contrast) - encoded_from_linear(level)) >= 20
+        rows.append((material[good] - level[good, None]) / contrast[good, None])
+    if not rows:
+        return None
+    rows = np.vstack(rows)
+    if len(rows) < 100:
+        return None
+    measured = np.clip(np.minimum.accumulate(np.median(rows, axis=0)), 0.0, 0.5)
+    measured[z >= TAIL_FROM] = 0.0  # the level was read there
+
+    def shape(values):
+        return np.interp(values, z, measured, right=0.0)
+
+    shape.measured = (z, measured)
+    return shape
+
+
+def subpixel_rings(mask, g, ppm, shadow_free_blur=True, remove_glare=True, bounded_openings=False, measure_tail=True):
     """Outer boundary and holes of the mask at the local half-level, sub-pixel.
 
     `g` is the lightly smoothed rectified photo in linear light.
@@ -859,6 +910,8 @@ def subpixel_rings(mask, g, ppm, shadow_free_blur=True, remove_glare=True, bound
             return _spread_by_direction(normals, by_direction)
         return np.full(len(normals), sigma)
 
+    tail = {"shape": None}
+
     def second_pass(start, normals, light):
         spread = spreads(normals)
         # Which side of each point the paper is on, from the classified mask 3 sigma out.
@@ -867,6 +920,7 @@ def subpixel_rings(mask, g, ppm, shadow_free_blur=True, remove_glare=True, bound
         search = {
             "half": half, "sigma": spread, "ring_smoothing": 20.0,
             "paper_side": side, "paper_light": light,
+            "tail_shape": tail["shape"],
         }
         if bounded_openings:
             # A thick part's hole, seen as the overlap of its bottom and enlarged top
@@ -921,6 +975,11 @@ def subpixel_rings(mask, g, ppm, shadow_free_blur=True, remove_glare=True, bound
             )
             light = shadow.fit_paper_light(g, mask, ppm, sigma, model_covariance, footprint)
         paper_light = light if light.info["used"] else None
+        # The step's tail as measured (_edge_tail), from the rings this round starts at,
+        # with this round's blur: under a shadow the provisional rings lie outward, and the
+        # blur measured with the shadow in is wider, and either reads the tail short.
+        if measure_tail:
+            tail["shape"] = _edge_tail(g, [(start, across, lone) for (start, across), lone in zip(starts, alone)], spreads, mask)
         final = [second_pass(start, across, paper_light) for start, across in starts]
         if paper_light is None:
             break

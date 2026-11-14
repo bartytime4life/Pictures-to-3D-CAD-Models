@@ -1,5 +1,18 @@
 # Workbench change log
 
+## The blurred edge's tail measured, not assumed — November 14, 2026
+
+- Before placing an edge, the tracer removes the blurred step's own tail from each
+  profile. It took that tail as a Gaussian blur's. A defocus disk's or a motion
+  streak's tail ends sooner, and the excess read as light rising towards the edge:
+  out-of-focus and motion-blurred photos read their edges outward. The tail is now
+  measured from the photo's own edges, on the part's side, where no shadow falls. On
+  the rendered plates under two motion streaks and two defocus disks, the summed error
+  fell from 26-52 to 9-32 micrometres. On lossless photos every feature read closer.
+  On quality-90 JPEG photos the edges now read about 1-2 micrometres into the part:
+  the Gaussian tail had been offsetting part of JPEG's own pull
+  ([reference-sheet tracing](reference-sheet.md), §3 and Limits).
+
 ## Narrow openings placed by a two-edge model — November 14, 2026
 
 - Across a narrow opening an edge's blurred profile is a bump, not a step, and its

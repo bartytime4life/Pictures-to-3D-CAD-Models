@@ -346,11 +346,15 @@ def test_veiling_glare_is_told_from_a_contact_shadow(client):
 
 def test_veiling_glare_is_taken_out_before_the_edges_are_placed(client, monkeypatch):
     """With 10 % of the light scattered (synthetic.render's `glare`, a = 20 px) under a
-    3 px blur, the outline read 0.022 mm small and Ø6 0.008 mm large. The glare fitted to
-    the part's own light (edges._glare_fit) read about 10 % over about 22 px, and with it
-    taken out (edges._deglare) they read 0.003 and 0.000 mm. Over seven seeds the summed
-    error went from 90 to 42 um, against 33 um without glare; hole positions keep the
-    noise that the brighter part and the division by 1 - g add."""
+    3 px blur, the outline read 0.022 mm small and Ø6 0.008 mm large while the step's
+    tail was taken as the Gaussian's. Glare is part of the lens's blur, and the tail as
+    measured (edges._edge_tail) takes up its near part: left in, the outline reads
+    0.001 mm, but Ø6 0.011 mm small. The glare fitted to the part's own light
+    (edges._glare_fit) reads about 10 % over about 22 px, and with it taken out
+    (edges._deglare) they read 0.002 and 0.002 mm. Over seven seeds the summed error is
+    42 um with the glare taken out and 54 um with it left in (90 um with the Gaussian's
+    tail), against 33 um without glare; hole positions keep the noise that the brighter
+    part and the division by 1 - g add."""
     data = S.render(glare=0.10, blur=3.0, shadow=0.0)[0]
     profile = trace(client, data, reference="a4").json()["profile"]
     errors = S.feature_errors(profile)
@@ -359,7 +363,7 @@ def test_veiling_glare_is_taken_out_before_the_edges_are_placed(client, monkeypa
     original = edges.subpixel_rings
     monkeypatch.setattr(edges, "subpixel_rings", lambda mask, g, ppm, *rest: original(mask, g, ppm, rest[0], False))
     errors = S.feature_errors(trace(client, data, reference="a4").json()["profile"])
-    assert errors["outer"] > 0.015 and errors["small"] > 0.006
+    assert errors["small"] > 0.006
 
 
 def test_lateral_chromatic_aberration_is_absorbed_by_the_sheet(client):
