@@ -9,10 +9,10 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-26.04
-    # With about 630 Python tests and 74 serial browser scenarios the job takes 19-24 minutes,
-    # and a slower runner needed more than 30 (run 143 on main was cancelled with 65 browser
-    # scenarios passed and none failed), so 30 cancelled passing runs.
-    timeout-minutes: 45
+    # With about 1300 Python tests and 74 serial browser scenarios the job takes 22-41 minutes
+    # (runs 264 and 267 on main took 41), so 45 left too little room for a slower runner.
+    # 30 had already cancelled passing runs (run 143).
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
