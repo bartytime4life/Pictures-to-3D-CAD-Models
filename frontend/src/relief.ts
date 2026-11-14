@@ -2,7 +2,7 @@
 
 export type ReliefMode = 'relief' | 'lithophane';
 export type ReliefShape = 'flat' | 'sphere';
-export type ReliefSource = 'photo' | 'depth' | 'ai';
+export type ReliefSource = 'photo' | 'depth' | 'elevation' | 'ai';
 export type ReliefMaterial = 'pla' | 'petg' | 'abs' | 'asa' | 'tpu' | 'nylon';
 
 export type ReliefSettings = {
@@ -28,7 +28,13 @@ export type ReliefSettings = {
   sphere_diameter_mm: number;
   opening_mm: number;
   collar_mm: number;
+  elevation_unit: ElevationUnit;
+  exaggeration: number;
+  ground_width_km: number;
+  body_radius_km: number;
 };
+
+export type ElevationUnit = 'km' | 'm' | 'half_m';
 
 export type MeshReport = {
   vertices: number;
@@ -82,6 +88,18 @@ export type ReliefResult = {
     density_g_cm3: number;
     mesh: MeshReport;
     volume_cross_check_mm3: number;
+    elevation?: {
+      unit: ElevationUnit;
+      lowest_km: number;
+      highest_km: number;
+      relief_km: number;
+      mm_per_km: number;
+      scale_basis: string;
+      true_scale_relief_mm: number;
+      exaggeration: number;
+      printed_relief_mm: number;
+      nodata_fraction: number;
+    };
     volume_check?: { label: string; value_mm3: number; rel_tol: number };
     sphere?: {
       outer_diameter_mm: number;

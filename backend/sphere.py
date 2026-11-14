@@ -34,6 +34,7 @@ from .relief import (
     lightness,
     linear_to_srgb,
     mesh_report,
+    prepare_elevation,
     tone_to_thickness,
     transmission,
     write_binary_stl,
@@ -242,9 +243,15 @@ def overhang_area(vertices, triangles, degrees=OVERHANG_DEGREES):
 
 
 def build_sphere(data, settings, job_dir):
-    image, notices = load_image(data, keep_depth=True)
+    elevation = None
+    if settings.source == "elevation":
+        image, settings, notices, elevation = prepare_elevation(data, settings)
+    else:
+        image, notices = load_image(data, keep_depth=True)
     notices = list(notices)
     luminance, display, sample_kind = _image_fields(image)
+    if elevation:
+        sample_kind = "elevation map"
     w_px, h_px = image.size
     if abs(w_px / h_px - 2) > 0.1:
         notices.append(
@@ -345,6 +352,7 @@ def build_sphere(data, settings, job_dir):
                 "image_pixel_mm": 2 * math.pi * r_out / w_px,
             },
             "source": {"width_px": w_px, "height_px": h_px, "samples": sample_kind},
+            **({"elevation": elevation} if elevation else {}),
             "nozzle_filter": {
                 "enabled": settings.nozzle_filter,
                 "fwhm_mm": settings.nozzle_mm,

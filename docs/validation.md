@@ -4,12 +4,26 @@
 
 **Picture type: Photo → AI depth** estimates relative depth from an ordinary photo with Depth Anything V2 Small (Apache-2.0, ONNX, revision `4472b736`, SHA-256 checked) on the CPU, and makes a flat relief from it. Setup does not download the model; `make depth-model` does.
 
-- **Python:** **1,383 tests** passed on `main` at `7e0a1dd` plus this change, in 7.0 minutes, with the model installed. 25 are in the new `tests/test_depth.py`: preprocessing sizes and normalization, the scoring metrics, missing, wrong-size and wrong-hash model files, the install script's pins, builds with a stand-in network, API errors, and two that run the real model. Without the model those two are skipped. `make lint` passed Ruff and Prettier.
-- **Browser:** all **81 Chrome scenarios** passed against a dedicated server, in 7.0 minutes. They include two new relief scenarios. One checks the controls with the model reported missing and present, and that a lithophane sends the photo instead of AI depth. The other, when the model is installed, builds the AI moon and checks its facts, the 16-bit depth download and accessibility.
+- **Python:** **1,390 tests** passed after merging `main` at `80220db` (elevation maps), in 7.9 minutes, with the model installed. 25 are in the new `tests/test_depth.py`: preprocessing sizes and normalization, the scoring metrics, missing, wrong-size and wrong-hash model files, the install script's pins, builds with a stand-in network, API errors, and two that run the real model. Without the model those two are skipped. `make lint` passed Ruff and Prettier.
+- **Browser:** all **82 Chrome scenarios** passed against a dedicated server, in 7.0 minutes. They include two new relief scenarios. One checks the controls with the model reported missing and present, and that a lithophane sends the photo instead of AI depth. The other, when the model is installed, builds the AI moon and checks its facts, the 16-bit depth download and accessibility.
 - **Moon sample** (`make depth-benchmark`; the true heights are known). On the sunlit disc, AI depth ranks the heights at Spearman ρ = 0.94, with 8.7% aligned RMS error. Photo-mode brightness scores ρ = −0.16 and 21.8%. The full table and its limits are in the [relief guide](relief.md#measured-on-the-moon-sample).
 - **Runtime:** OpenCV's DNN module could not load the model, because it has dynamic input shapes, so ONNX Runtime 1.32.0 was added. Inference took 0.4–0.7 s at 728 × 518, and a full 100 mm build took about 2.3 s.
 
 Nothing was printed, and no real photographs were scored; the benchmark is one synthetic scene.
+
+## Elevation maps at true scale — November 14, 2026
+
+**Picture type: Elevation map** builds reliefs from single-band TIFF or PNG heights, such as NASA's [CGI Moon Kit](https://svs.gsfc.nasa.gov/4720) maps. Heights are converted to millimetres at the model's true scale, then multiplied by a chosen exaggeration. A generated float-kilometre moon elevation map, from the same features as the moon albedo map, is the sample.
+
+- **Python:** **1,365 tests** passed (50 in `tests/test_relief.py`, 8 of them for elevation maps). `make lint` passed.
+- **Browser:** all **80 Chrome scenarios** passed against a dedicated server, in 6.9 minutes. A new elevation-globe scenario checks the true-scale arithmetic shown to the user (0.339 mm × 12 = 4.07 mm), the hidden tone controls, and the server's "Use at most …×" refusal.
+- **Flat true scale:** a 1 km hill on a 10 km wide map printed 100 mm wide is 10 mm tall at 1× and 25 mm at 2.5×, within 0.1%. Thickest becomes Thinnest plus that height.
+- **Units:** metre, kilometre and NASA-style unsigned half-metre (+20,000 offset) encodings of the same terrain give the same relief within 0.1%.
+- **Bad data:** NaN and −3.4×10³⁸ fill values are replaced by the median height and counted, and signed 16-bit heights keep their sign. Colour, JPEG, out-of-range exaggeration, negligible relief and lithophane mode are refused with explanations.
+- **Sphere true scale:** a 5 km cap on a 100 mm Moon (1,737.4 km radius) at 10× stands 1.439 mm proud of the far side's surface in the exported STL, as predicted (within 2%).
+- **Sample:** the generator reproduces all four committed samples pixel for pixel. The elevation sample builds a closed globe (Euler characteristic 2) with 11.79 km of relief.
+
+The NASA facts in the guide (formats, units, sizes and credit line) come from NASA's page, read on November 14, 2026. No NASA file was downloaded or tested. Nothing was printed.
 
 ## Spheres and moon lamps — November 14, 2026
 

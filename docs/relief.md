@@ -149,6 +149,26 @@ Choose **Shape: Sphere** to wrap the picture around a hollow ball instead of a f
 - **Printing.** Print standing on the flat opening ring and check supports in your slicer. The outer surface is limited to 200,000 points; larger spheres get a wider spacing, and the notes say so.
 - **Blender.** The ZIP builds the same triangles, ordered and oriented identically. A Geometry Nodes modifier moves each outer point outward along its radius by Strength × height-map value. Lamps render in Cycles with an emitting sphere just inside the wall, standing in for light scattered by the plastic.
 
+## Elevation maps: real terrain at true scale
+
+Set **Picture type** to **Elevation map** (under *Fine-tune*), or press **Try the moon elevation globe**, to build a relief from measured heights instead of picture tones.
+
+- **Input:** a single-band TIFF or PNG of heights: 32-bit float, or signed or unsigned 16-bit integers. Choose the unit under **Heights are in**: kilometres, metres, or half-metres. Samples that are not numbers, or that lie beyond ±10⁷ (common fill values), are replaced by the median height and reported. Large maps are reduced by area averaging to at most 2,048 samples on their long side.
+- **True scale:** heights become millimetres at the model's own scale.
+  - Flat: mm per km = Picture width ÷ **Ground width** (the real distance across the map).
+  - Sphere: mm per km = sphere radius ÷ **Body radius** (Moon 1,737.4 km, Earth 6,371 km, Mars 3,389.5 km).
+- **Exaggeration:** **Exaggeration** multiplies that scale. Real terrain is small at print scale. The generated moon's 11.8 km of relief is 0.34 mm on a 100 mm globe, so the sample uses 12×, which is 4.07 mm.
+- **Thickest is set by the data:** Thinnest + exaggerated relief. The lowest height maps to Thinnest. A pit narrower than the nozzle is smoothed by the detail filter, so the printed minimum can be higher; the moon sample's deepest small crater prints at 2.8 mm on a 2 mm Thinnest. Tone settings (auto levels, tone curve, raised/sunken, noise smoothing) do not apply to measured heights. If the relief would exceed the 40 mm limit, or not fit inside the sphere, the message names the largest exaggeration that fits.
+- **Elevation maps make reliefs only.** A lithophane's thickness encodes light, not height.
+
+**NASA's Moon.** NASA's Scientific Visualization Studio publishes the [CGI Moon Kit](https://svs.gsfc.nasa.gov/4720), with displacement maps from LRO's laser altimeter (LOLA) at 4, 16 and 64 pixels per degree. Its page describes the formats:
+- "floating-point TIFFs in kilometers, relative to a radius of 1737.4 km": choose *Kilometres*;
+- "unsigned 16-bit TIFFs in half-meters", offset by 10 km so that all values are positive: choose *Half-metres*. The offset does not matter here, because only height differences shape the relief.
+
+`ldem_4.tif` (1440 × 720, 4.0 MB), `ldem_4_uint.tif` (2.0 MB) and `ldem_16_uint.tif` (5760 × 2880, 31.7 MB) fit within the 32 MiB upload limit; `ldem_16.tif` (63.3 MB) and the 64 pixel-per-degree files do not. The page says the map is "centered on 0° longitude". The studio puts the image's left edge at its own 0° meridian, which only rotates the globe. NASA asks that the data be credited to "NASA's Scientific Visualization Studio", and notes the kit is meant for rendering. For science, use the source LOLA data.
+
+The generated sample, `moon-elevation.tif`, uses the same layout: 1440 × 720 float32 kilometres. It is produced by [`scripts/generate_relief_samples.py`](../scripts/generate_relief_samples.py) from the same features as `moon-map.png`. Maria are about 2 km deep. Craters follow simple-crater proportions, with depth ≈ 0.2 × diameter and rim height ≈ 0.04 × diameter, capped at 4 km and 1 km.
+
 ## Calibrate a filament
 
 Lithophane mode adds a **Calibration wedge** download: eight steps, each 10 × 25 mm, from the thinnest to the thickest wall. The wedge's risers are 0.02 mm ramps, far below printing resolution, and its volume equals that of ideal vertical steps.

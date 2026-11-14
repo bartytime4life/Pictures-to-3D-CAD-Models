@@ -559,7 +559,12 @@ def load_generator():
 
 def test_sample_generator_reproduces_both_committed_samples(tmp_path):
     load_generator().main(tmp_path)
-    for name in ("relief-sample.png", "relief-sample-depth.png", "moon-map.png"):
+    for name in (
+        "relief-sample.png",
+        "relief-sample-depth.png",
+        "moon-map.png",
+        "moon-elevation.tif",
+    ):
         committed = cv2.imread(str(ROOT / "frontend" / "public" / name), cv2.IMREAD_UNCHANGED)
         regenerated = cv2.imread(str(tmp_path / name), cv2.IMREAD_UNCHANGED)
         assert committed.dtype == regenerated.dtype and np.array_equal(committed, regenerated), name
@@ -836,3 +841,147 @@ def test_cycles_lamp_render_matches_beer_lambert_through_a_shell(tmp_path):
         patch = light[round(centre) - 1 : round(centre) + 2, column - 1 : column + 2].mean()
         path = math.sqrt(r_out**2 - rho**2) - math.sqrt(r_in**2 - rho**2)
         assert patch == pytest.approx(math.exp(-mu * path), rel=0.04), rho
+
+
+# ------------------------------------------------------------- elevation maps
+
+
+def tiff(array):
+    buffer = io.BytesIO()
+    mode = "F" if array.dtype == np.float32 else None
+    Image.fromarray(array, mode).save(buffer, "TIFF") if mode else Image.fromarray(array).save(
+        buffer, "TIFF"
+    )
+    return buffer.getvalue()
+
+
+def hill(size=400, peak=1000.0, sigma=60):
+    y, x = np.mgrid[0:size, 0:size]
+    return (peak * np.exp(-((x - size / 2) ** 2 + (y - size / 2) ** 2) / (2 * sigma**2))).astype(
+        np.float32
+    )
+
+
+def test_flat_elevation_is_true_scale_times_exaggeration(tmp_path):
+    # A 1 km hill on a 10 km wide map printed 100 mm wide is 10 mm tall at true scale.
+    for exaggeration, expected in ((1, 10.0), (2.5, 25.0)):
+        result, _ = build(
+            tmp_path,
+            tiff(hill()),
+            source="elevation",
+            elevation_unit="m",
+            ground_width_km=10,
+            width_mm=100,
+            min_mm=2,
+            max_mm=2.1,
+            exaggeration=exaggeration,
+            nozzle_filter=False,
+        )
+        elevation = result["stats"]["elevation"]
+        assert elevation["mm_per_km"] == pytest.approx(10)
+        assert elevation["true_scale_relief_mm"] == pytest.approx(10, rel=1e-3)
+        assert elevation["printed_relief_mm"] == pytest.approx(expected, rel=1e-3)
+        assert result["dimensions"]["thickness"] == pytest.approx(2 + expected, rel=2e-3)
+        assert result["settings"]["max_mm"] == pytest.approx(2 + elevation["printed_relief_mm"])
+        assert result["stats"]["source"]["samples"] == "elevation map"
+
+
+def test_elevation_units_agree():
+    metres = hill(peak=1000.0)
+    km = (metres / 1000).astype(np.float32)
+    half_metres = np.round(metres * 2 + 20_000).astype(np.uint16)  # NASA _uint layout
+    spans = []
+    for data, unit in ((tiff(metres), "m"), (tiff(km), "km"), (tiff(half_metres), "half_m")):
+        *_, stats = relief.prepare_elevation(
+            data, ReliefSettings(source="elevation", elevation_unit=unit, ground_width_km=10)
+        )
+        spans.append(stats["printed_relief_mm"])
+    assert spans == pytest.approx([spans[0]] * 3, rel=1e-3)
+
+
+def test_signed_elevations_and_fill_values():
+    data = hill(peak=500.0) - 250  # Heights below the datum are negative.
+    data[0, :5] = np.nan
+    data[1, :5] = -3.4e38  # A common GeoTIFF fill value.
+    values, nodata = relief.load_elevation(tiff(data.astype(np.float32)))
+    assert np.isfinite(values).all() and values.min() >= -250 - 1e-3
+    assert nodata == pytest.approx(10 / data.size)
+    signed = np.array([[-500, 1200], [300, -20]] * 10, dtype=np.int16).repeat(10, axis=1)
+    assert relief.load_elevation(tiff(signed))[0].min() == -500
+
+
+def test_elevation_maps_are_checked():
+    with pytest.raises(ReliefError, match="one band"):
+        relief.load_elevation(gradient_photo())
+    with pytest.raises(ReliefError, match="TIFF or PNG"):
+        buffer = io.BytesIO()
+        Image.fromarray(hill().astype(np.uint8)).save(buffer, "JPEG")
+        relief.load_elevation(buffer.getvalue())
+    with pytest.raises(ReliefError, match="at most"):
+        relief.prepare_elevation(
+            tiff(hill()),
+            ReliefSettings(source="elevation", elevation_unit="m", ground_width_km=1, width_mm=100),
+        )
+    with pytest.raises(ReliefError, match="Increase the exaggeration"):
+        relief.prepare_elevation(
+            tiff(hill(peak=1.0)),
+            ReliefSettings(source="elevation", elevation_unit="m", ground_width_km=1000),
+        )
+    with pytest.raises(ValueError, match="Choose Relief"):
+        ReliefSettings(source="elevation", mode="lithophane")
+
+
+def test_sphere_elevation_is_true_scale_on_the_body(tmp_path):
+    # A 5 km cap on the Moon (radius 1737.4 km) on a 100 mm sphere at 10x stands
+    # 5 / 1737.4 x 50 mm x 10 = 1.439 mm proud of the surrounding surface.
+    lat = (np.arange(360) + 0.5) / 360 * np.pi
+    lon = (np.arange(720) + 0.5) / 720 * 2 * np.pi
+    theta, lam = np.meshgrid(lat, lon, indexing="ij")
+    direction = np.stack(
+        [np.sin(theta) * np.cos(lam), np.sin(theta) * np.sin(lam), np.cos(theta)], -1
+    )
+    angle = np.arccos(np.clip(direction @ np.array([1.0, 0, 0]), -1, 1))
+    km = (5 * np.exp(-((angle / 0.4) ** 2))).astype(np.float32)
+    result, job = build(
+        tmp_path,
+        tiff(km),
+        shape="sphere",
+        source="elevation",
+        exaggeration=10,
+        min_mm=2,
+        max_mm=2.1,
+    )
+    expected = 5 / 1737.4 * 50 * 10
+    assert result["stats"]["elevation"]["printed_relief_mm"] == pytest.approx(expected, rel=1e-3)
+    vertices = read_stl(job / "model.stl").reshape(-1, 3).astype(np.float64)
+    frame = sphere.sphere_frame(ReliefSettings(**result["settings"]))
+    radius = np.linalg.norm(vertices - np.array([0, 0, -frame["z_cut"]]), axis=1)
+    outer = radius[radius > frame["r_in"] + 1.0]
+    # The cap's peak and the far side's flat floor differ by the scaled height.
+    assert outer.max() - np.percentile(outer, 5) == pytest.approx(expected, rel=0.02)
+
+
+def test_moon_elevation_sample_builds_a_globe(tmp_path):
+    data = (ROOT / "frontend" / "public" / "moon-elevation.tif").read_bytes()
+    result, _ = build(
+        tmp_path, data, shape="sphere", source="elevation", exaggeration=12, min_mm=2, max_mm=2.1
+    )
+    elevation = result["stats"]["elevation"]
+    assert elevation["relief_km"] == pytest.approx(11.79, abs=0.05)
+    assert result["stats"]["mesh"]["closed_and_oriented"]
+    assert result["stats"]["mesh"]["euler_characteristic"] == 2
+
+
+def test_elevation_api_accepts_tiff(client):
+    response = post_relief(
+        client,
+        tiff(hill()),
+        source="elevation",
+        elevation_unit="m",
+        ground_width_km=10,
+        width_mm=60,
+        min_mm=1.5,
+        max_mm=1.6,
+    )
+    assert response.status_code == 200, response.text
+    assert response.json()["stats"]["elevation"]["printed_relief_mm"] == pytest.approx(6, rel=1e-3)
