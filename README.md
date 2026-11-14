@@ -7,11 +7,12 @@ The workbench is designed for plates, gaskets, spacers, and templates. It traces
 [Start the app](#start-the-app) · [Try the workflow](#try-the-complete-workflow)
 · [Documentation](docs/README.md) · [Troubleshooting](docs/troubleshooting.md)
 
-This repository contains two related tools:
+This repository contains three related tools:
 
 | Component | Use it for | Entry point |
 | --- | --- | --- |
 | Photo-to-CAD workbench | Trace, measure, review, and export a flat part | `make start` after setup |
+| Relief and lithophane studio | Turn any picture into a raised relief or a backlit lithophane, with an editable Blender scene | **Relief & Lithophane** in the app header, or `/#relief` |
 | Reference library and OpenSCAD workspace | Read the handbook, calculate dimensions, and design parameter-driven mounting plates or fit coupons | **OpenSCAD** in the app header, [offline library](reference-library/index.html), or [its guide](reference-library/README.md) |
 
 ![Pictures to CAD workbench showing the traced sample beside its generated CAD solid](docs/images/workbench.png)
@@ -42,6 +43,23 @@ make dev
 ```
 
 See [development and setup](docs/development.md) for prerequisites, commands, and troubleshooting.
+
+## Relief and lithophane studio
+
+Not every picture is a flat part. Open **Relief & Lithophane** to turn any photo, drawing or depth map into a printable surface with no CAD work: choose **Relief** (a raised picture on a flat base) or **Lithophane** (a thin panel that shows the photo when lit from behind), drop in a picture, and set the width and the thinnest and thickest walls.
+
+![Relief studio showing the moon sample's height map and its 3D relief](docs/images/relief.png)
+
+Behind those few controls:
+
+- Colour science: sRGB decoding, Rec. 709 luminance and CIE L* lightness for reliefs.
+- Beer–Lambert optics for lithophanes, with a printable step wedge and a least-squares fit of your filament's half-value thickness.
+- A Gaussian detail filter matched to the nozzle width, and edge-preserving noise smoothing.
+- A watertight mesh, checked by its Euler characteristic and by two independent volume calculations.
+
+Every build reports these numbers beside the 3D preview.
+
+Download STL or 3MF for a slicer, a 16-bit height map, or a **Blender ZIP**. The ZIP rebuilds the identical solid in Blender as a live **Displace** modifier and, for lithophanes, sets up a Cycles backlight scene that renders the Beer–Lambert prediction. With `PICAD_ENABLE_BLENDER_LAUNCH=1`, **Open in Blender** starts an installed Blender with that scene. Blender is optional; nothing else needs it. See the [relief and lithophane guide](docs/relief.md).
 
 ## Bambu Studio and PrusaSlicer
 
@@ -113,6 +131,10 @@ source files** for DXF, SVG, PDF, and OpenSCAD.
 | Parts ZIP | Importing generated pieces separately | A STEP, STL and 3MF per piece, plus a manifest |
 | Slicer handoff ZIP | Preparing a Bambu Studio or PrusaSlicer import | Geometry, split pieces, recipe, printer/material planning notes, instructions and payload hashes |
 | Save project JSON | Restoring the workbench settings and browser measurement notes | Outline, source measurements, optional endpoint reference and independent-height decision inputs, and design/print settings. The browser saves version 3 for fitted/reference-sheet profiles and version 2 for ordinary polygons; version 1 imports remain supported. Photos are excluded |
+| Relief STL / 3MF | Printing a relief or lithophane | Closed millimetre mesh of the 16-bit height field, flat base at Z zero |
+| Height map PNG | Using the surface in other tools | 16-bit grayscale, one pixel per surface point, thinnest to thickest wall |
+| Blender ZIP | Editing or rendering a relief in Blender | Static build script, height map, settings, STL and hashes; no photo |
+| Calibration wedge | Measuring a filament for lithophanes | Eight-step STL from thinnest to thickest wall |
 
 To measure the reference-sheet tracer on your own photos, run `make photo-benchmark PHOTOS=folder` on a folder of photos and the dimensions you measured with calipers. It reports each dimension's error and its spread between repeat shots; see [the photo benchmark](docs/photo-benchmark.md). No result from real photos is recorded yet.
 
@@ -121,6 +143,8 @@ Use the browser's **Save project** or **Save editable project recipe** to retain
 OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.scad` in OpenSCAD to edit its thickness, apply an additional XY scale, or select a split piece. Ordinary and split outlines use polygon extrusions; a fitted single-part export retains circle primitives and samples other fitted arcs. Neither route recovers the original CAD constraints or feature history. For a new plate with deliberately dimensioned holes, use the companion [OpenSCAD workspace](reference-library/index.html#cad) and its [native build guide](reference-library/OPENSCAD.md).
 
 ## Honest limits
+
+These apply to the flat-part workbench. The relief studio has its own [limits](docs/relief.md#limits): its height comes from image tone, not recovered shape.
 
 - A single image supplies a 2D outline. Thickness is entered by the user; recesses, sloped walls, threads, and hidden features are not reconstructed.
 - One outside width or two-point reference sets uniform scale. It does not correct perspective, lens distortion, or an out-of-plane part. A reference sheet estimates perspective and one radial lens coefficient in the sheet's plane, and the parallax of a vertical-walled part of the entered thickness. Its edges are measured in linear light, decoding the photo as sRGB. The paper-side model follows local slopes and can apply a soft shadow fitted round the part when its numerical checks accept it; contact shadows, sharper shadow transitions and a camera's own tone mapping remain limits. Near-frontal camera height can be inferred from suitable holes assumed round; without that evidence or EXIF, an assumed lens remains necessary. The recorded errors come from rendered photographs with exact ground truth. [The photo benchmark](docs/photo-benchmark.md) measures real photos against calipers, and no such result is recorded yet.
@@ -264,6 +288,7 @@ before relying on it for fit.
 
 Start with the [documentation index](docs/README.md) for capture, engineering, export, development and evidence routes. [Source scope and status](docs/project-status.md) distinguishes this main-based tracing, corner, blur-frame and join line from the separate source-space calibration research branch and records their review states.
 
+- [Relief and lithophane studio, its science, and Blender](docs/relief.md)
 - [Capture and calibration guide](docs/capture-guide.md)
 - [Engineering model and independent verification](docs/engineering-model.md)
 - [Reference-sheet tracing: method, mathematics and evidence](docs/reference-sheet.md)

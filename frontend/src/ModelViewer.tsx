@@ -29,8 +29,13 @@ const finishes: Record<PreviewMaterial, { roughness: number; clearcoat: number }
   nylon: { roughness: 0.65, clearcoat: 0 },
 };
 
+// 'raking' lights the part from about 15 degrees above the horizon with little fill, so
+// shallow relief casts readable shading. Lighting only; geometry is unchanged.
+export type ViewerLighting = 'studio' | 'raking';
+
 type ModelViewerProps = {
   mesh: PreviewMesh | null;
+  lighting?: ViewerLighting;
   resetKey: number;
   loading: boolean;
   color?: string;
@@ -163,8 +168,10 @@ function CadScene({
   material,
   parts,
   separated,
+  lighting = 'studio',
 }: {
   mesh: PreviewMesh;
+  lighting?: ViewerLighting;
   resetKey: number;
   request: ViewRequest;
   actions: React.RefObject<ViewerActions | null>;
@@ -323,14 +330,18 @@ function CadScene({
   }, [actions, camera, invalidate, display]);
 
   const span = display.span;
+  const raking = lighting === 'raking';
+  const fill = raking ? 0.3 : 1;
   return (
     <>
       <color attach="background" args={['#1b2025']} />
-      <ambientLight intensity={0.25} />
-      <hemisphereLight args={['#edf0f3', '#525a62', 0.9]} />
+      <ambientLight intensity={0.25 * fill} />
+      <hemisphereLight args={['#edf0f3', '#525a62', 0.9 * fill]} />
       <directionalLight
-        position={[-span * 0.8, -span * 0.6, span * 2]}
-        intensity={2.0}
+        position={
+          raking ? [-span * 1.6, span * 0.5, span * 0.45] : [-span * 0.8, -span * 0.6, span * 2]
+        }
+        intensity={raking ? 3.2 : 2.0}
         castShadow
         shadow-mapSize={[1024, 1024]}
         shadow-camera-left={-span}
@@ -342,25 +353,25 @@ function CadScene({
         shadow-bias={-0.0002}
         shadow-normalBias={span * 0.0005}
       />
-      <directionalLight position={[span, span, span]} intensity={0.9} color="#dde3e8" />
+      <directionalLight position={[span, span, span]} intensity={0.9 * fill} color="#dde3e8" />
       <Environment resolution={128} frames={1}>
         <Lightformer
           form="rect"
-          intensity={3}
+          intensity={3 * fill}
           color="#ffffff"
           position={[-5, -3, 6]}
           scale={[7, 5, 1]}
         />
         <Lightformer
           form="rect"
-          intensity={1.6}
+          intensity={1.6 * fill}
           color="#e5e9ed"
           position={[5, 3, 7]}
           scale={[5, 9, 1]}
         />
         <Lightformer
           form="rect"
-          intensity={0.8}
+          intensity={0.8 * fill}
           color="#ffffff"
           position={[0, -7, 1]}
           scale={[12, 2, 1]}
@@ -427,6 +438,7 @@ export default function ModelViewer({
   color = '#c4c7ca',
   material = 'pla',
   parts = noParts,
+  lighting = 'studio',
 }: ModelViewerProps) {
   const [request, setRequest] = useState<ViewRequest>({ view: 'iso', sequence: 0 });
   const [attempt, setAttempt] = useState(0);
@@ -523,6 +535,7 @@ export default function ModelViewer({
                   material={previewMaterial}
                   parts={parts}
                   separated={showSeparated}
+                  lighting={lighting}
                 />
               </Suspense>
             </Canvas>

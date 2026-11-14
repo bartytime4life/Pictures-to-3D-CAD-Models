@@ -13,6 +13,7 @@ import {
   FloppyDisk,
   Image as ImageIcon,
   Info,
+  Mountains,
   PencilSimple,
   Polygon,
   Question,
@@ -1404,6 +1405,14 @@ export default function App() {
           </button>
         </div>
         <div className="header-actions">
+          <a
+            className="text-button guide-button"
+            href="#relief"
+            aria-label="Relief and lithophane studio"
+          >
+            <Mountains size={25} />
+            <span>Relief &amp; Lithophane</span>
+          </a>
           <a
             className="text-button guide-button"
             href="/reference-library/index.html#cad"

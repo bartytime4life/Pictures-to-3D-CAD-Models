@@ -11,16 +11,18 @@ import time
 import uuid
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Literal
 
 from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
+from . import blender as blender_bridge
 from .assistant import AssistantError, AssistantRequest, assistant_status, chat
 from .models import BuildRequest, Detail, Reference
 from .printing import load_printer_catalog
+from .relief import ReliefError, ReliefSettings, fit_half_value
 from .slicers import PROGRAMS, SlicerError, launch, launch_request_allowed, program_status
 from .tracing import MAX_BYTES, TraceError, trace_image
 
@@ -29,6 +31,9 @@ LIBRARY_ROOT = ROOT / "reference-library"
 JOB_ROOT = Path(os.environ.get("PICTURES_CAD_JOB_DIR", ROOT / ".local" / "jobs")).resolve()
 SLICER_HANDOFF_ROOT = Path(
     os.environ.get("PICAD_SLICER_HANDOFF_DIR", ROOT / ".local" / "slicer-handoffs")
+).resolve()
+BLENDER_HANDOFF_ROOT = Path(
+    os.environ.get("PICAD_BLENDER_HANDOFF_DIR", ROOT / ".local" / "blender-handoffs")
 ).resolve()
 TTL_SECONDS = 3600
 # Request bodies other than a photo upload (project recipes, assistant questions).
@@ -52,6 +57,9 @@ DOWNLOADS = {
     "prusa": ("prusa-handoff.zip", "application/zip"),
     "project": ("project.json", "application/json"),
     "parts": ("parts.zip", "application/zip"),
+    "heightmap": ("heightmap.png", "image/png"),
+    "blender": ("blender-relief.zip", "application/zip"),
+    "wedge": ("calibration-wedge.stl", "model/stl"),
 }
 UUID_PATTERN = re.compile(r"^[0-9a-f]{32}$")
 # Mirror the companion's scripts/lib/serve.mjs publication boundary. Local CAD
@@ -109,6 +117,7 @@ async def lifespan(app):
     app.state.assistant_lock = asyncio.Lock()
     app.state.slicer_lock = asyncio.Lock()
     app.state.slicer_last_launch = 0.0
+    app.state.blender_last_launch = 0.0
 
     async def expire_jobs():
         while True:
@@ -300,68 +309,151 @@ async def trace(
             raise HTTPException(422, str(exc)) from exc
 
 
+def reserve_job():
+    """Create one private job directory, or refuse when temporary storage is full."""
+    cleanup_jobs()
+    jobs = [p for p in JOB_ROOT.iterdir() if UUID_PATTERN.fullmatch(p.name) and p.is_dir()]
+    if len(jobs) >= MAX_JOBS:
+        # Capacity is bounded; prior downloads stay valid until their TTL instead of disappearing silently.
+        raise HTTPException(
+            429,
+            "Temporary model storage is full. Delete older models or wait for expiry, then try again.",
+            headers={"Retry-After": "60"},
+        )
+    job_dir = JOB_ROOT / uuid.uuid4().hex
+    job_dir.mkdir(mode=0o700)
+    return job_dir
+
+
+async def run_worker(job_dir, module, prepare, fallback):
+    """Run one isolated, time-bounded worker process for a reserved job directory."""
+    process = None
+    try:
+        prepare(job_dir)
+        process = await asyncio.create_subprocess_exec(
+            sys.executable,
+            "-m",
+            module,
+            str(job_dir),
+            cwd=ROOT,
+            stdout=asyncio.subprocess.DEVNULL,
+            stderr=asyncio.subprocess.DEVNULL,
+        )
+        try:
+            await asyncio.wait_for(process.wait(), timeout=BUILD_TIMEOUT)
+        except TimeoutError as exc:
+            process.kill()
+            await process.wait()
+            raise HTTPException(
+                504, "CAD generation exceeded 60 seconds. Reduce outline detail and try again."
+            ) from exc
+        if process.returncode != 0 or not (job_dir / "result.json").is_file():
+            failure = job_dir / "error.json"
+            if failure.is_file():
+                info = json.loads(failure.read_text(encoding="utf-8"))
+                if info.get("public") is True and isinstance(info.get("error"), str):
+                    raise HTTPException(422, info["error"][:500])
+            raise HTTPException(422, fallback)
+        result = json.loads((job_dir / "result.json").read_text(encoding="utf-8"))
+        (job_dir / "input.json").unlink(missing_ok=True)
+        return result
+    except BaseException:
+        if process is not None and process.returncode is None:
+            process.kill()
+            await process.wait()
+        shutil.rmtree(job_dir, ignore_errors=True)
+        raise
+
+
+def busy_building():
+    return HTTPException(
+        429,
+        "Another model is being built. Wait a moment and try again.",
+        headers={"Retry-After": "3"},
+    )
+
+
 @app.post("/api/build")
 async def build(request: BuildRequest):
     lock = app.state.cad_lock
     if lock.locked():
-        raise HTTPException(
-            429,
-            "Another model is being built. Wait a moment and try again.",
-            headers={"Retry-After": "3"},
-        )
+        raise busy_building()
     async with lock:
-        cleanup_jobs()
-        jobs = [p for p in JOB_ROOT.iterdir() if UUID_PATTERN.fullmatch(p.name) and p.is_dir()]
-        if len(jobs) >= MAX_JOBS:
-            # Capacity is bounded; prior downloads stay valid until their TTL instead of disappearing silently.
-            raise HTTPException(
-                429,
-                "Temporary model storage is full. Delete older models or wait for expiry, then try again.",
-                headers={"Retry-After": "60"},
-            )
-        job_id = uuid.uuid4().hex
-        job_dir = JOB_ROOT / job_id
-        job_dir.mkdir(mode=0o700)
-        process = None
-        try:
+        job_dir = reserve_job()
+
+        def prepare(directory):
             # Explicit UTF-8: names may be non-ASCII and the locale default may not be UTF-8.
-            (job_dir / "input.json").write_text(request.model_dump_json(), encoding="utf-8")
-            process = await asyncio.create_subprocess_exec(
-                sys.executable,
-                "-m",
-                "backend.worker",
-                str(job_dir),
-                cwd=ROOT,
-                stdout=asyncio.subprocess.DEVNULL,
-                stderr=asyncio.subprocess.DEVNULL,
-            )
-            try:
-                await asyncio.wait_for(process.wait(), timeout=BUILD_TIMEOUT)
-            except TimeoutError as exc:
-                process.kill()
-                await process.wait()
-                raise HTTPException(
-                    504, "CAD generation exceeded 60 seconds. Reduce outline detail and try again."
-                ) from exc
-            if process.returncode != 0 or not (job_dir / "result.json").is_file():
-                failure = job_dir / "error.json"
-                if failure.is_file():
-                    info = json.loads(failure.read_text(encoding="utf-8"))
-                    if info.get("public") is True and isinstance(info.get("error"), str):
-                        raise HTTPException(422, info["error"][:500])
-                raise HTTPException(
-                    422,
-                    "This outline could not be converted to a solid. Reduce detail or remove very narrow features and try again.",
-                )
-            result = json.loads((job_dir / "result.json").read_text(encoding="utf-8"))
-            (job_dir / "input.json").unlink(missing_ok=True)
-            return result
-        except BaseException:
-            if process is not None and process.returncode is None:
-                process.kill()
-                await process.wait()
-            shutil.rmtree(job_dir, ignore_errors=True)
-            raise
+            (directory / "input.json").write_text(request.model_dump_json(), encoding="utf-8")
+
+        return await run_worker(
+            job_dir,
+            "backend.worker",
+            prepare,
+            "This outline could not be converted to a solid. Reduce detail or remove very narrow features and try again.",
+        )
+
+
+@app.post("/api/relief")
+async def relief(
+    file: Annotated[UploadFile, File()],
+    settings: Annotated[str, Form(max_length=4000)] = "{}",
+):
+    lock = app.state.cad_lock
+    if lock.locked():
+        await file.close()
+        raise busy_building()
+    async with lock:
+        try:
+            data = await file.read(MAX_BYTES + 1)
+        finally:
+            await file.close()
+        if not data:
+            raise HTTPException(422, "Choose a PNG, JPEG, or WebP image.")
+        if len(data) > MAX_BYTES:
+            raise HTTPException(413, "Choose an image under 10 MiB.")
+        try:
+            parsed = ReliefSettings.model_validate_json(settings)
+        except ValueError as exc:
+            raise HTTPException(422, relief_settings_error(exc)) from None
+        job_dir = reserve_job()
+
+        def prepare(directory):
+            (directory / "input.json").write_text(parsed.model_dump_json(), encoding="utf-8")
+            source = directory / "source.upload"
+            source.write_bytes(data)
+            source.chmod(0o600)
+
+        return await run_worker(
+            job_dir,
+            "backend.relief_worker",
+            prepare,
+            "This image could not be converted to a relief. Try a smaller width or another image.",
+        )
+
+
+def relief_settings_error(exc):
+    errors = getattr(exc, "errors", list)()
+    messages = []
+    for error in errors[:3]:
+        field = ".".join(str(v) for v in error.get("loc", ()))
+        text = str(error.get("msg", "invalid value")).removeprefix("Value error, ")
+        messages.append(f"{field}: {text}" if field else text)
+    return "; ".join(messages) or "Relief settings are not valid."
+
+
+class CalibrationRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid", allow_inf_nan=False)
+    thickness_mm: list[float] = Field(min_length=3, max_length=32)
+    readings: list[float] = Field(min_length=3, max_length=32)
+    scale: Literal["srgb8", "linear"] = "srgb8"
+
+
+@app.post("/api/relief/calibrate")
+async def calibrate(request: CalibrationRequest):
+    try:
+        return fit_half_value(request.thickness_mm, request.readings, request.scale)
+    except ReliefError as exc:
+        raise HTTPException(422, str(exc)) from None
 
 
 def resolve_job(job_id: str):
@@ -423,6 +515,49 @@ async def open_in_slicer(
                 task.exception()
             raise
         except SlicerError as exc:
+            raise HTTPException(409, str(exc)) from None
+    return result
+
+
+@app.get("/api/blender")
+async def blender_status():
+    # Discovery only inspects configured paths; reading this endpoint never starts Blender.
+    return JSONResponse(blender_bridge.status(), headers={"Cache-Control": "no-store"})
+
+
+@app.post("/api/models/{job_id}/blender", status_code=202)
+async def open_in_blender(job_id: str, request: Request, payload: SlicerLaunchRequest):
+    if not launch_request_allowed(
+        request.client.host if request.client else None,
+        str(request.url),
+        request.headers.get("origin"),
+        request.headers.get("content-type", ""),
+    ):
+        raise HTTPException(403, "Open Blender from the workbench on this computer.")
+    directory = resolve_job(job_id)
+    async with app.state.slicer_lock:
+        if time.monotonic() - app.state.blender_last_launch < 2:
+            raise HTTPException(429, "Wait a moment before opening another Blender window.")
+        app.state.blender_last_launch = time.monotonic()
+        task = asyncio.create_task(
+            asyncio.to_thread(
+                blender_bridge.launch, directory / "blender-relief.zip", BLENDER_HANDOFF_ROOT
+            )
+        )
+        try:
+            result = await asyncio.shield(task)
+        except asyncio.CancelledError:
+            while not task.done():
+                try:
+                    await asyncio.shield(task)
+                except asyncio.CancelledError:
+                    continue
+                except (blender_bridge.BlenderError, OSError):
+                    break
+            if not task.cancelled():
+                task.exception()
+            raise
+        except blender_bridge.BlenderError as exc:
             raise HTTPException(409, str(exc)) from None
     return result
 

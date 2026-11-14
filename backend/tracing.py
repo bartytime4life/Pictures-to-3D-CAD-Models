@@ -143,6 +143,80 @@ def decode_with_pillow(data, notices):
     return image, focal_35mm
 
 
+DECODE_ERRORS = (
+    UnidentifiedImageError,
+    OSError,
+    EOFError,
+    ValueError,
+    RuntimeError,  # Pillow's AVIF decoder reports a damaged file this way.
+    SyntaxError,  # A damaged PNG chunk can fail only when its pixels are loaded.
+    Image.DecompressionBombError,
+    Image.DecompressionBombWarning,
+)
+
+
+def _sixteen_bit_gray(data):
+    """A 16-bit grayscale still (such as an exported depth map) as a float image in 0..1,
+    oriented and at most MAX_SIDE on its long side; None for any other image."""
+    with warnings.catch_warnings():
+        warnings.simplefilter("error", Image.DecompressionBombWarning)
+        with Image.open(io.BytesIO(data)) as raw:
+            if raw.format != "PNG" or not (raw.mode == "I" or raw.mode.startswith("I;16")):
+                return None
+            if "transparency" in raw.info or getattr(raw, "n_frames", 1) != 1:
+                return None
+            if raw.width * raw.height > MAX_PIXELS:
+                raise TraceError(TOO_MANY_PIXELS)
+            if min(raw.size) < MIN_SIDE:
+                raise TraceError(TOO_SMALL)
+            raw.load()
+            try:
+                method = ORIENTATION.get(raw.getexif().get(ExifTags.Base.Orientation, 1))
+            except Exception:  # noqa: BLE001 - any malformed EXIF block is untrusted input.
+                method = None
+            oriented = raw.transpose(method) if method else raw
+            samples = np.clip(np.asarray(oriented, dtype=np.float32), 0, 65535) / 65535
+    image = Image.fromarray(samples.astype(np.float32), "F")
+    image.thumbnail((MAX_SIDE, MAX_SIDE), Image.Resampling.BILINEAR)
+    image.load()
+    return image
+
+
+def load_image(data: bytes, *, keep_depth: bool = False):
+    """Decode one bounded still image with the tracer's decoders, limits and orientation.
+
+    Returns ``(image, notices)``: an RGB image at most MAX_SIDE on its long side. With
+    ``keep_depth``, a 16-bit grayscale PNG (such as an exported depth map) is returned as
+    a 32-bit float ``F`` image with samples in 0..1, so its 65,536 levels are kept.
+    """
+    if not data or len(data) > MAX_BYTES:
+        raise TraceError("Choose an image between 1 byte and 32 MiB.")
+    notices = []
+    try:
+        if keep_depth and not heic.is_heic(data):
+            depth = _sixteen_bit_gray(data)
+            if depth is not None:
+                return depth, notices
+        if heic.is_heic(data):
+            try:
+                image, _ = heic.decode(data, MAX_PIXELS, MIN_SIDE)
+            except heic.HeicError as exc:
+                refusal = {"pixels": TOO_MANY_PIXELS, "small": TOO_SMALL}.get(exc.reason)
+                if refusal:
+                    raise TraceError(refusal) from exc
+                raise ValueError("The HEIC image could not be decoded.") from exc
+        else:
+            image, _ = decode_with_pillow(data, notices)
+        image.thumbnail((MAX_SIDE, MAX_SIDE), Image.Resampling.LANCZOS)
+    except TraceError:
+        raise
+    except DECODE_ERRORS as exc:
+        raise TraceError(
+            f"The image could not be decoded. Try a valid {FORMAT_NAMES} image under 70 megapixels."
+        ) from exc
+    return image, notices
+
+
 def trace_image(
     data: bytes,
     threshold: int = -1,

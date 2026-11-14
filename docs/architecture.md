@@ -370,6 +370,14 @@ The profile is validated at the API boundary even when it originated in this app
 
 `DELETE /api/models` clears all completed temporary models and reports the number removed. It rejects the request with 409 while a CAD build is active. This is a global operation in the single-user service, not a per-account deletion request.
 
+### Relief and lithophane studio
+
+`POST /api/relief` takes a multipart `file` (PNG, JPEG or WebP, the same decoder and limits as tracing) and a `settings` JSON string: `mode` (`relief` or `lithophane`), `width_mm`, `min_mm`, `max_mm`, `frame_mm`, `source`, `invert`, `gamma`, `auto_levels`, `denoise`, `nozzle_mm`, `nozzle_filter`, `pitch_mm`, `half_value_mm`, `material`, `color`, `name` and `revision`. It shares the CAD lock, job storage limit and 60-second worker bound with `/api/build`. The worker reads the uploaded image once and deletes it before computing. The response contains dimensions, volume, statistics (grid, filters, slope, mass, mesh topology and both volume calculations, and lithophane optics), a coarser preview mesh, a preview image derived from the thickness map, warnings and download links for `stl`, `3mf`, `heightmap`, `blender`, `project` and, for lithophanes, `wedge`.
+
+`POST /api/relief/calibrate` fits `ln Y = a − μ t` to `thickness_mm` and `readings` (`scale` `srgb8` or `linear`) and returns μ, the half-value thickness with its standard error, R² and any excluded steps.
+
+`GET /api/blender` reports whether Blender was found and whether direct opening is enabled, without running it. `POST /api/models/{job_id}/blender`, with `PICAD_ENABLE_BLENDER_LAUNCH=1` and the same loopback, same-origin JSON requirements as the slicer launcher, extracts the generated Blender ZIP's fixed file names into `.local/blender-handoffs/<id>/` and starts `blender --python build_relief.py` without a shell. The script is the repository's static `backend/blender_relief.py`; settings reach it only as JSON data. See the [relief guide](relief.md).
+
 ### Optional local slicer opening
 
 `GET /api/slicers` checks fixed executable names or server-configured paths without executing them. It reports target releases, executable availability and whether direct opening is enabled; installed versions remain unchecked.
