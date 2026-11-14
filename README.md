@@ -59,6 +59,8 @@ Behind those few controls:
 
 Every build reports these numbers beside the 3D preview.
 
+Choose **Shape: Sphere** (or **Try the moon lamp**) to wrap a 2:1 world-map picture around a hollow ball. As a lithophane it makes a moon lamp, with a flat base ring around a light opening. The overhang share and bed-contact area are reported.
+
 Download STL or 3MF for a slicer, a 16-bit height map, or a **Blender ZIP**. The ZIP rebuilds the identical solid in Blender as a live **Displace** modifier and, for lithophanes, sets up a Cycles backlight scene that renders the Beer–Lambert prediction. With `PICAD_ENABLE_BLENDER_LAUNCH=1`, **Open in Blender** starts an installed Blender with that scene. Blender is optional; nothing else needs it. See the [relief and lithophane guide](docs/relief.md).
 
 ## Bambu Studio and PrusaSlicer
