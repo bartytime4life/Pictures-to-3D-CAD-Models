@@ -112,7 +112,10 @@ def test_independently_measured_localization_allowance_does_not_change_the_circl
     assert circle.kind == "circle" and abs(circle.data["r"] - 30) < 1e-10
 
 
-def test_complete_support_indices_survive_both_subpixel_rejection_passes(monkeypatch):
+def test_complete_support_indices_survive_the_subpixel_rejection_passes(monkeypatch):
+    """The ring keeps the first pass's support, indexed through the final pass's keep;
+    the final pass starts where the provisional one crossed, and from the first pass's
+    point where it found no crossing (edges.subpixel_rings)."""
     mask = np.zeros((100, 100), np.uint8)
     cv2.circle(mask, (50, 50), 30, 1, -1)
     calls = []
@@ -129,10 +132,11 @@ def test_complete_support_indices_survive_both_subpixel_rejection_passes(monkeyp
     (ring,), _, _ = edges.subpixel_rings(mask, mask.astype(np.float32), ppm=4)
     contours, _ = cv2.findContours(mask, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
     expected_support = contours[0].reshape(-1, 2).astype(np.float64) + 0.5
-    first, second = calls
+    first, provisional, *_, final = calls
     assert np.array_equal(ring["support"], expected_support)
-    assert np.array_equal(ring["support_indices"], np.flatnonzero(first[2])[second[2]])
-    assert np.array_equal(ring["points"], second[1][second[2]])
+    assert np.array_equal(ring["support_indices"], np.flatnonzero(first[2])[final[2]])
+    assert np.array_equal(ring["points"], final[1][final[2]])
+    assert np.array_equal(final[0], np.where(provisional[2][:, None], provisional[1], provisional[0]))
 
 
 def test_rendered_cap_hole_survives_trace_and_actual_cad_build(monkeypatch, tmp_path):

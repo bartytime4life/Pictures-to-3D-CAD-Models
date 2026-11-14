@@ -310,6 +310,11 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
         notes.append(
             f"A soft shadow beside the part takes up to {100 * light['depth']:.0f} % of the paper's light; it was fitted from the paper all round, and each edge was placed against the shadowed light."
         )
+        if light.get("edge_rise_balance", 0) >= shadow.CONTACT_BALANCE and light.get("edge_rise_top", 0) >= shadow.CONTACT_RISE:
+            hidden_mm = (shadow.TRACED_FIT[1] * sigma + 1.5) / ppm
+            notes.append(
+                f"The shadow lies against nearly all of the part's edges, as light from all round casts it. Within about {hidden_mm:.1f} mm of an edge, at this photo's blur, a shadow cannot be measured, and one deepest at the edge reads as the edge moved outward. Light from well above and sharp focus reduce it."
+            )
     elif "excess" in light and not light.get("used") and light.get("depth", 0) >= shadow.NOTICEABLE_DEPTH:
         notes.append(
             "A shadow beside the part has an edge sharper than its fitted model can follow, so edges were placed against a straight-line paper level there and may read a little outward. Soft, even light is better."
