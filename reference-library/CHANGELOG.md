@@ -10,6 +10,31 @@ All dates are 2026. Revisions are numbered in `library.json`, which feeds the HT
 - Record complete source, parameter, schema and output hashes, OpenSCAD versions, logs and actual-mesh checks. Include real default-model renders and editable starter files.
 - Exercise browser downloads through actual OpenSCAD renders, with isolated desktop/mobile checks and preservation regression tests. Rebuild the handbook, verification record and portable archive. No slicing or physical print qualification.
 
+### Repository documentation: executed restoration — November 14, 2026 UTC
+
+Link the [executed research method](../docs/finite-acquisition-restoration-result.md)
+and [full 11/12 result](../docs/validation/finite-acquisition-restoration-result.md).
+The selected 1,169 controls and 33 subtests pass; an exact image match still
+misses one geometry target. This is repository guidance, with no new library
+revision, generated reader/PDF, catalog or release verification.
+
+### Repository documentation: unrun restoration draft — November 14, 2026 UTC
+
+Link the [prospective local controller](../docs/finite-acquisition-restoration.md)
+and its [documentation review](../docs/validation/documentation-restoration-draft.md).
+This changes repository guidance only: no library revision, generated reader,
+PDF, catalog, release verification or physical qualification is regenerated.
+
+### Workbench observed-defect correction navigation — November 14, 2026
+
+Link the [one-step method](../docs/finite-acquisition-defect-corrector.md) and
+[first paired result](../docs/validation/finite-acquisition-defect-corrector.md):
+220 controls pass, the accepted incumbent replays exactly and actual cost
+falls to zero on the 135 supplied synthetic PNG training samples. Only source
+62 changes code. The complete recovery protocol and reserved checks have not
+been rerun. This navigation update does not refresh the library's release,
+generated reader/PDF, catalog or physical acceptance.
+
 ### Workbench negative literal-pair navigation — November 13, 2026
 
 Link the [actual paired PNG result](../docs/validation/finite-acquisition-inward-literal.md):

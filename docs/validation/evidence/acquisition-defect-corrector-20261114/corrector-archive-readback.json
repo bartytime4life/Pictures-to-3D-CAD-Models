@@ -1,0 +1,20 @@
+{
+  "format": "finite-acquisition-defect-corrector-v1-portable-archive-readback",
+  "source": {
+    "path": ".local/verification/finite-acquisition-defect-corrector-v1-recorded-source.zip",
+    "bytes": 732739,
+    "sha256": "d2f0e09e53ea46f4e6cdf482117262e8b8e978cf43187b84ad87ab4d65517424",
+    "members": 117,
+    "governing_inputs": 116,
+    "all_member_bytes_hashes_and_modes_verified": true
+  },
+  "complete": {
+    "path": ".local/verification/finite-acquisition-defect-corrector-v1-complete.zip",
+    "bytes": 23580692,
+    "sha256": "965e42bb750d870e7bc4885b99ee2f69e91aaa920f312a6cf7c825493409f455",
+    "members": 15,
+    "all_member_bytes_and_hashes_verified": true
+  },
+  "first_outcomes_preserved": true,
+  "subject_execution_calls": 0
+}

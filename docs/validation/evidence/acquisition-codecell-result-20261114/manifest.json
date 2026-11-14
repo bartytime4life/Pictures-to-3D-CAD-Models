@@ -1,0 +1,146 @@
+{
+  "format": "documentation-codecell-result-evidence-v1",
+  "source_head": "44ad56cf7026bb642a4ed0a8d71e93b7b3103903",
+  "coverage": "Verbatim report, freeze, selected controls/probe receipts and logs, saved-only audit receipts and saved-data figure. Full raw case arrays, research runtime/tests and complete result ZIP remain local; predecessor payloads are hash referenced, not all included. This is not a self-contained scientific reproduction.",
+  "files": {
+    "prospective-documentation-guide.txt": {
+      "source_documentation_head": "5f609af4944ba0ddc8b6b1e0c26eec81a75912c0",
+      "source": "docs/finite-acquisition-codecell-probe.md",
+      "bytes": 8339,
+      "sha256": "2c14626f3e3687e147725b513880fe27eb4047de5e5e23e821f562a1cd607a30",
+      "verbatim": true
+    },
+    "freeze.json": {
+      "source": ".local/verification/finite-acquisition-codecell-probe-controls-v2-freeze.json",
+      "bytes": 95585,
+      "sha256": "21d84e15b4c8aa745cc157d4787c19304782cf0788b9548cea81b65941ed37de",
+      "verbatim": true
+    },
+    "report.json": {
+      "source": ".local/verification/finite-acquisition-codecell-probe-controls-v2-first/report.json",
+      "bytes": 172568,
+      "sha256": "51658a514f41eb26ef98f0a401020e75a02d1fef8a8244be479417b431b3444a",
+      "verbatim": true
+    },
+    "controls-first-failure-receipt.json": {
+      "source": ".local/verification/finite-acquisition-codecell-probe-v1-first-tests-terminal-receipt.json",
+      "bytes": 4347,
+      "sha256": "a2e6fd97dcf71fa9959d1abb49ed3ad3e7358c9f285aa010aa17d9f7cc9a3f33",
+      "verbatim": true
+    },
+    "controls-first-failure.log": {
+      "source": ".local/verification/finite-acquisition-codecell-probe-v1-first-tests.log",
+      "bytes": 4280,
+      "sha256": "5c453afd61e77531ee6309d06fb57646769c871ccb334c4e00bb461f1d83507c",
+      "verbatim": true
+    },
+    "controls-repaired-receipt.json": {
+      "source": ".local/verification/finite-acquisition-codecell-probe-controls-v2-first-tests-terminal-receipt.json",
+      "bytes": 4411,
+      "sha256": "853ea0c64228298adb2a0fdec08d1cfd3ce7a87175b34e7e53a3f9227d9da69c",
+      "verbatim": true
+    },
+    "controls-repaired.log": {
+      "source": ".local/verification/finite-acquisition-codecell-probe-controls-v2-first-tests.log",
+      "bytes": 1703,
+      "sha256": "03f1734bec92dbdc1fa0d688ae3b03a4bd3de4a70ef34d9716185a98bfff4ddb",
+      "verbatim": true
+    },
+    "probe-terminal-receipt.json": {
+      "source": ".local/verification/finite-acquisition-codecell-probe-controls-v2-first-terminal-receipt.json",
+      "bytes": 122757,
+      "sha256": "fc48c77a086ca90afa9e792c61db220066759d1dab252c244476e6a28ee57ab7",
+      "verbatim": true
+    },
+    "probe.log": {
+      "source": ".local/verification/finite-acquisition-codecell-probe-controls-v2-first.log",
+      "bytes": 582,
+      "sha256": "552abea3af64c2364a47e586b4d8beb1bb7f2be31588fb7c0ec6399a14f209f5",
+      "verbatim": true
+    },
+    "root-array-audit.json": {
+      "source": ".local/verification/codecell-root-array-audit-v1/receipt.json",
+      "bytes": 4652,
+      "sha256": "202236f056e91d37684d4c9c057be10ccfe5688cdfe95b9c05645c82ccd71bd2",
+      "verbatim": true
+    },
+    "math-audit.json": {
+      "source": ".local/verification/codecell-math-audit-v1/receipt-first.json",
+      "bytes": 7544,
+      "sha256": "f082f2a384c0d853abfa676286a660aa37aac4967fc6611e0eabe345c71c8426",
+      "verbatim": true
+    },
+    "math-linkage-audit.json": {
+      "source": ".local/verification/codecell-math-audit-v1/linkage-supplement-receipt.json",
+      "bytes": 1499,
+      "sha256": "f9039522903280756a3d9fa8476f79476ead818855b7e4dbe025442cd0a78f15",
+      "verbatim": true
+    },
+    "accounting-audit-first-failure.json": {
+      "source": ".local/verification/codecell-ai-saved-audit-v1/receipt-v1.json",
+      "bytes": 105975,
+      "sha256": "f146e0c360ba8df21c97dbc2a8b90fa0da830c09f0946c054fa4fc9b4b4151e0",
+      "verbatim": true
+    },
+    "accounting-audit.json": {
+      "source": ".local/verification/codecell-ai-saved-audit-v1/receipt-v2.json",
+      "bytes": 109261,
+      "sha256": "02fda07983fb6c2cc7f79474a7b54d4799941204d7073461ec34bdfe31feeeae",
+      "verbatim": true
+    },
+    "same-pixels-different-geometry.png": {
+      "source": ".local/verification/codecell-result-figure-v2/same-pixels-different-geometry.png",
+      "bytes": 90164,
+      "sha256": "547b310531d2709104bfe2a636ddb088aa277c275eba063683cb9a66eee1ef98",
+      "verbatim": true
+    },
+    "same-pixels-different-geometry.svg": {
+      "source": ".local/verification/codecell-result-figure-v2/same-pixels-different-geometry.svg",
+      "bytes": 88892,
+      "sha256": "86d76b3bbf27354a7542f7a66a57da269622465d4a0e39f731704b8aeabf5b1b",
+      "verbatim": true
+    },
+    "figure-manifest.json": {
+      "source": ".local/verification/codecell-result-figure-v2/manifest.json",
+      "bytes": 796,
+      "sha256": "775f1d0fae8cbf317f0d6b1734e047b1f10767ee71b4f076f0864a8f7a2e157d",
+      "verbatim": true
+    },
+    "v1-prospective-method.txt": {
+      "source": "docs/finite-acquisition-codecell-probe.md",
+      "bytes": 13554,
+      "sha256": "112a578e21987273198b9c35116c875f4307b1682c40b48dcd35395a51311bd8",
+      "verbatim": true
+    },
+    "v2-control-repair.txt": {
+      "source": "docs/finite-acquisition-codecell-probe-controls-v2.md",
+      "bytes": 6706,
+      "sha256": "674750c03dcd7712a91d11c194d03514c07a476aaa384911227e734c518ff43b",
+      "verbatim": true
+    },
+    "population-audit.json": {
+      "source": ".local/verification/codecell-ux-saved-audit-v1.json",
+      "bytes": 8022,
+      "sha256": "f5201e547f6240ecadbcd4536cb35ee7e077760a866d48cac70f67a3011ef955",
+      "verbatim": true
+    },
+    "local-package-manifest.json": {
+      "source": ".local/verification/codecell-result-package-v1/payload/manifest.json",
+      "bytes": 108463,
+      "sha256": "b7d25065a7d6065b44cc11d8b069265fa943cc4a2fa062902d4f92c274e35625",
+      "verbatim": true
+    },
+    "local-package-readback.json": {
+      "source": ".local/verification/codecell-result-package-v1/readback.json",
+      "bytes": 50104,
+      "sha256": "1b514805d233f1b4f752c97cafcf0c694b083912d9d42b9af3f9cc924decaaf7",
+      "verbatim": true
+    },
+    "math-interpretation.txt": {
+      "source": ".local/verification/codecell-math-audit-v1/interpretation.md",
+      "bytes": 5244,
+      "sha256": "0ea553c1e69e470a78a9594bed9846acd8cb1e1a6c96b2e45522fde3b8bc2e1d",
+      "verbatim": true
+    }
+  }
+}

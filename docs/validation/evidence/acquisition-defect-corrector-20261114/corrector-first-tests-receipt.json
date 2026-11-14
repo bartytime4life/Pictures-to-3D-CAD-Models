@@ -1,0 +1,19 @@
+{
+  "format": "finite-acquisition-defect-corrector-v1-first-controls-native",
+  "command": "set -o pipefail\nOPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python -W error::RuntimeWarning -m pytest -q tests/test_finite_acquisition_defect_corrector.py tests/test_finite_acquisition_inward_literal.py tests/test_finite_acquisition_inward.py tests/test_finite_acquisition_physical_rounding.py 2>&1 | tee .local/verification/finite-acquisition-defect-corrector-v1-first-tests.log",
+  "chunk_id": "78e6f0",
+  "wall_time_seconds": 0.338204283,
+  "exit_code": 0,
+  "original_token_count": 85,
+  "output": "........................................................................ [ 32%]\n........................................................................ [ 65%]\n........................................................................ [ 98%]\n....                                                                     [100%]\n220 passed in 0.30s\n",
+  "native_session_id": null,
+  "attempt": 1,
+  "reruns": 0,
+  "expected_expanded_cases_prospective": 218,
+  "observed_passed": 220,
+  "scope": "First terminal controls pass; prospective count218 mismatch retained. No second collection or run.",
+  "log": {
+    "path": ".local/verification/finite-acquisition-defect-corrector-v1-first-tests.log",
+    "sha256": "c7eea3d2f59ae77108752984df50b0cb14b1edfcedd7198fad4e3e5a5b4e62f4"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "format": "restoration-saved-review-seal-v1",
+  "scope": "Metadata-only review of immutable saved outputs; no subject imports/models/solvers/references/points/truth evaluations",
+  "accounting_review": {
+    "attempt": 1,
+    "reruns": 0,
+    "exit": 0,
+    "checks": 19362,
+    "failures": 0,
+    "native_session": 49954,
+    "initial_chunk": "c29372",
+    "terminal_chunk": "2794a6"
+  },
+  "evidence_supplement": {
+    "attempt": 1,
+    "reruns": 0,
+    "exit": 0,
+    "checks": 620,
+    "failures": 0,
+    "terminal_chunk": "9286ee"
+  },
+  "files": {
+    "check.py": {
+      "sha256": "687c204864b732f8a85a14c5b13fe51e83a631a0cb1f26ab7100a76c677baa2d",
+      "bytes": 22912
+    },
+    "evidence-receipt-v1.json": {
+      "sha256": "18cdc5b8bba2fb0b14f877d4a02b736ef5883bddc5b3347ca1014df2f32ea3f3",
+      "bytes": 32530
+    },
+    "evidence-v1.py": {
+      "sha256": "e250640bf1d835d66ae6edb28fa975a0765508e4a8801f7b633e453cf8e6cca4",
+      "bytes": 5452
+    },
+    "preexecution-v1.json": {
+      "sha256": "76c304b47466a91de6390ab5ea0ecfadb3798a605ac0890e446b42832e8318f4",
+      "bytes": 754
+    },
+    "receipt-v1.json": {
+      "sha256": "45a30a78459557e93767d58bd13338d7cd522e7c9cad2133c4699ed904b521fb",
+      "bytes": 55595
+    }
+  },
+  "tracked_diff": [],
+  "independently_qualified_auditor": false
+}

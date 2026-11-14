@@ -1,0 +1,151 @@
+"""Supplemental saved-only first-attempt/source-preservation binding review."""
+
+import hashlib
+import json
+from pathlib import Path
+
+ROOT = Path.cwd()
+BASE = ROOT / ".local/verification"
+PREFIX = "finite-acquisition-recovery-restoration-controls-v2"
+PINNED = {
+    PREFIX
+    + "-first-terminal-receipt.json": "a9a6870357a01c064f70c8eb92ce89cadd41c23f2fd743c6d2cf1f37999c123c",
+    PREFIX
+    + "-first-tests-terminal-receipt.json": "95aa737833027c1ecca122c204d9091a3cf3ce89568bab9a746f2cda3c3c4362",
+    PREFIX + "-freeze.json": "7d244b9b197217dd7b06718bdde69769cf3f163489192b267e211d6ecaab726b",
+}
+
+
+def digest(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+
+checks, failed, bindings = [], [], {}
+
+
+def check(value, label):
+    checks.append(label)
+    if not value:
+        failed.append(label)
+
+
+def read(path, expected=None, size=None):
+    raw = path.read_bytes()
+    bindings[str(path)] = digest(raw)
+    if expected is not None:
+        check(digest(raw) == expected, str(path) + ": byte SHA")
+    if size is not None:
+        check(len(raw) == size, str(path) + ": byte size")
+    return raw
+
+
+def bound_tree(value):
+    if isinstance(value, dict):
+        if "path" in value and "sha256" in value:
+            read(ROOT / value["path"], value["sha256"], value.get("bytes"))
+        for item in value.values():
+            bound_tree(item)
+    elif isinstance(value, list):
+        for item in value:
+            bound_tree(item)
+
+
+objects = {name: json.loads(read(BASE / name, expected)) for name, expected in PINNED.items()}
+terminal = objects[PREFIX + "-first-terminal-receipt.json"]
+controls = objects[PREFIX + "-first-tests-terminal-receipt.json"]
+freeze = objects[PREFIX + "-freeze.json"]
+bound_tree(objects)
+for relative, record in freeze["prior_v1_failed_test_bindings_retained"].items():
+    read(ROOT / relative, record["sha256"], record.get("bytes"))
+for record in freeze["prior_saved_bindings_retained"].values():
+    if isinstance(record, dict) and "path" in record:
+        read(ROOT / record["path"], record["sha256"], record.get("bytes"))
+run = json.loads((BASE / (PREFIX + "-first/report.json")).read_bytes())
+rows = [
+    [path, freeze["git_modes"][path], expected]
+    for path, expected in sorted(freeze["governing_inputs"].items())
+]
+closure = digest(json.dumps(rows, ensure_ascii=True, separators=(",", ":")).encode())
+check(
+    closure
+    == freeze["closure_sha256"]
+    == "33ce7a777b732e6970092c119bb18f7b72e234a2b15ca37c92ba2c9274136576",
+    "independent131 closure",
+)
+check(
+    freeze["governing_inputs"] == run["source_sha256_before"] == run["source_sha256_after"],
+    "freeze and consumed131 maps identical",
+)
+check(
+    freeze["input_count"] == len(rows) == 131 and len(freeze["new_source_paths"]) == 5,
+    "126+5 identity scope",
+)
+check(
+    terminal["attempt"] == controls["attempt"] == 1
+    and terminal["reruns"] == controls["reruns"] == 0,
+    "retained first attempts",
+)
+check(
+    terminal["exit_code"] == 1
+    and terminal["matched_passes"] == 11
+    and terminal["original_rows_retained"] == 24,
+    "negative original24 outcome",
+)
+check(
+    controls["exit_code"] == 0
+    and controls["passed"] == 1169
+    and controls["deselected_exact_malformed_old_node"] == 1
+    and controls["subtests_passed"] == 33,
+    "control-only repair disposition",
+)
+middle = next(row for row in run["rows"] if row["case"]["name"] == "middle-png")
+evaluation = middle["evaluation"]
+check(
+    [key for key, passed in evaluation["targets"].items() if not passed] == ["fraction_error"],
+    "sole middlePNG target failure",
+)
+check(
+    evaluation["errors"]["fraction_error"] > run["original_plan"]["targets"]["fraction_error"],
+    "fraction target retained",
+)
+check(
+    len(evaluation["conditional_reserved_residuals"]) == 34
+    and all(v == 0 for v in evaluation["conditional_reserved_residuals"]),
+    "saved conditional34 residuals",
+)
+check(
+    evaluation["search_stopping_statuses"] == ["poll_resolution"]
+    and evaluation["candidate_tie_retained"],
+    "poll/tie provenance retained",
+)
+for name, expected in list(bindings.items()):
+    check(digest(Path(name).read_bytes()) == expected, "after:" + name)
+result = {
+    "format": "restoration-first-attempt-binding-supplement-v1",
+    "scope": __doc__,
+    "subject_imports": 0,
+    "new_models_solvers_points_reference_or_target_evaluations": 0,
+    "checks": len(checks),
+    "failures": failed,
+    "passed": not failed,
+    "bindings": bindings,
+    "checker_sha256": digest(Path(__file__).read_bytes()),
+    "first_accounting_audit": {
+        "attempt": 1,
+        "reruns": 0,
+        "native_session": 49954,
+        "initial_chunk": "c29372",
+        "terminal_chunk": "2794a6",
+        "exit_code": 0,
+        "checks": 19362,
+        "failures": 0,
+        "checker_sha256": "687c204864b732f8a85a14c5b13fe51e83a631a0cb1f26ab7100a76c677baa2d",
+        "receipt_sha256": "45a30a78459557e93767d58bd13338d7cd522e7c9cad2133c4699ed904b521fb",
+    },
+    "interpretation": "Accounting/provenance checks passed; the scientific full protocol remains exit1/11 of12. Zero training and conditional reserved residuals do not establish unique geometry or the fraction target.",
+}
+output = BASE / "restoration-ai/saved-audit/evidence-receipt-v1.json"
+with output.open("x") as stream:
+    json.dump(result, stream, indent=2, allow_nan=False)
+    stream.write("\n")
+print(json.dumps({key: result[key] for key in ("checks", "failures", "passed")}))

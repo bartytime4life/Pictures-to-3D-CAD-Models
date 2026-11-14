@@ -7,7 +7,7 @@ the existing dated receipt. The receipt, check date and release status were not
 regenerated for this correction.
 
 Repository documentation update, November 13: the
-[current review](../docs/validation/documentation-inward-literal.md) links the
+[current review](../docs/validation/documentation-codecell-result.md) links the
 [local acquisition-recovery snapshot](../docs/finite-acquisition-recovery.md).
 That separate synthetic research retains 4/12 original matched target passes
 and 9/12 continuation passes; both earlier full protocols exited 1. The 459 focused tests
@@ -45,6 +45,29 @@ reproduces the baseline but raises training cost from 0.302031169350812 to
 while collateral cell 33 changes 106 to 105. The earlier 0/128 census and
 failed 11/12 full recovery remain unchanged. See [the complete negative result](../docs/validation/finite-acquisition-inward-literal.md).
 These studies add no library feature or physical qualification.
+
+The subsequent [observed-defect correction](../docs/finite-acquisition-defect-corrector.md)
+uses one fixed equality-restoration step and one nearest physical tuple. Its
+first actual pair reduces training cost **0.302031169350812 to 0.0** on the
+135 supplied synthetic PNG training samples. Only source 62 changes code
+(93 to 92), with no collateral code change. [Complete paired result](../docs/validation/finite-acquisition-defect-corrector.md).
+That standalone probe did not rerun full recovery. Its result remains
+separate from the later fresh live study below.
+
+The [live restoration controller](../docs/finite-acquisition-restoration-result.md)
+is frozen at research `e677039` and its selected controls pass 1,169 tests
+and 33 subtests (one malformed predecessor node is independently replaced).
+The fresh full 24-case study remains **11/12 matched passes, exit 1**:
+zero image residuals do not meet every geometry target. These results add
+no library feature, Photos tool, generated reader or refreshed release
+verification. [Full result and limitations](../docs/validation/finite-acquisition-restoration-result.md).
+
+The subsequent [same-image diagnostic](../docs/validation/finite-acquisition-codecell-result.md)
+records 168 actual compatible alternatives after 1,417 selected controls and
+33 subtests pass. It leaves the original 11/12 recovery result unchanged and
+adds no library feature or refreshed release verification. Its numerical-model
+ambiguity result is separate from physical-camera or print accuracy.
+
 
 ## What was checked automatically
 

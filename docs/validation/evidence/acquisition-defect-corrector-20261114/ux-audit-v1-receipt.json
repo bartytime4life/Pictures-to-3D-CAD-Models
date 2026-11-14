@@ -1,0 +1,16 @@
+{
+  "format": "defect-corrector-ux-saved-audit-v1",
+  "report": {
+    "sha256": "1738ab1ef1e5784dac9381c558a8f0947fbcf15b72208e432e7c8785f312c34d",
+    "bytes": 1826974
+  },
+  "audit_sha256": "0424fbc924e548f0a78f512da952d9cb8d120816a5aa7d8447a7cf5a60c0b98d",
+  "checks": 433,
+  "failed": 0,
+  "failures": [],
+  "status": "saved_protocol_records_consistent",
+  "subject_imports": 0,
+  "new_points_solves_or_forward_calls": 0,
+  "scope": "Strict saved JSON/byte hashes, full inventory/source identity, retained status/gate/witness flags, stage raw-byte reconstruction, observed residual/cost arithmetic and source-code changes. Does not independently verify rational construction/Gram/gates, optical/area physics, geometry targets, rank or physical accuracy.",
+  "interpretation": "One predetermined conditional correction matches all saved training intensities in this synthetic quantized pipeline. Full recovery remains 11/12; zero training cost does not identify unique or true geometry."
+}

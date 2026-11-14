@@ -1,0 +1,40 @@
+{
+  "format": "finite-acquisition-restoration-static-review-v1",
+  "recorded_at": "2026-11-14T02:05:00.252889+00:00",
+  "independent_static_review_completed": true,
+  "subject_execution": false,
+  "reviewed_new_files": {
+    "backend/finite_acquisition_restoration.py": "389b78f818b951c3f95825724d85953d9f7fdf1ce161247a8271977d9e075692",
+    "backend/finite_acquisition_restoration_rational.py": "fa22ae47510869ad348f27fc6e9d7d74261ca1957367162e322c8215ecacdc75",
+    "backend/finite_acquisition_restoration_inward.py": "e9052f475b13908f7ec9537dd0da22a9c87e82b1572e762b0b25588b3e8620e7",
+    "backend/finite_acquisition_restoration_correction.py": "c0f597b68d35f696af353ee822011e056b8f203cf2f252b8536eecaec3e68635",
+    "tests/test_finite_acquisition_restoration_math.py": "9e01b3d5ac056e6f865cf5f9f3d8ae8b6d37482d305c2b9f2300622dd339dae8",
+    "tests/test_finite_acquisition_restoration.py": "dc5956199f42e6257417e4c87d8aa81a1c7a94c10c992fee925d080b8963fc94",
+    "tests/test_finite_acquisition_restoration_protocol.py": "cb1fab29797230433c94f2b24c076b697a8a0e8915995edc00e3d19c9d64ceb0",
+    "studies/verification/finite-acquisition-recovery-restoration-v1.py": "c0ad8206963bacea2525aa973cd3c07c94bc885ff4de8fe740fdde078b5d246a",
+    "studies/finite-acquisition-recovery-restoration-v1.json": "aae43f599a0b69c546ce12d3eeca77575eab5bbb30f78ec6bc6f9c8b3ef712b0",
+    "docs/finite-acquisition-restoration.md": "e649605b215fbb08a340a8105855b3dc754f8c0e7e8498ba07a65e051a9df833"
+  },
+  "reviewers": {
+    "math_review": "Independent review of four backend modules, exact transformations/gates/accounting/controller/plan/guide; clear at389b78 and unchangedpuremodulehashes.",
+    "ai_review": "Independent newmath/controller/protocoltests and adapter compatibility review; clear after safe-record guards. Raised old-mode defect; root independently reviewed its final fix.",
+    "ux_review": "Independent rootprotocoltests/admission/guide review at finalhashes; clear including declaration and old-mode pinning.",
+    "root": "Independent controller diff against oldflow, literalpath/gates/runner before-and-after lifecycle/truthboundary; clear. Authored protocol/mode regressions and admission."
+  },
+  "prefreeze_findings_resolved": [
+    "Explicit declaration union must match canonical126; fallback inventory cannot mask omission.",
+    "Only safe resolved/cache-hit literal records may supply correction optics or completednegative labels.",
+    "Old116filemodes independently pinned and compared, including committed same-byte chmod.",
+    "Study/default ceilings separated from API maxima; exactT/W and capturecap declared."
+  ],
+  "old116_hashes_unchanged": true,
+  "old116_modes_unchanged": true,
+  "selected_control_prospective_count": 1139,
+  "selected_control_unchanged_subtests_separate": 33,
+  "native_count_authoritative": true,
+  "static_native_binding": {
+    "path": ".local/verification/finite-acquisition-restoration-static-native-v1.json",
+    "sha256": "7d3a1d124d7e8b44311d169c2d90f2824c5c496a73a6846433dbd96b1cc2a934"
+  },
+  "qualification": "Static clearance only; not functional validation, scientific execution, recovery or physical proof."
+}

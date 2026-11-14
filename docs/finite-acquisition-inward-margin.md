@@ -1,5 +1,15 @@
 # An inward margin before physical floating-point rounding
 
+The subsequent [observed-defect correction](finite-acquisition-defect-corrector.md)
+uses one fixed equality-restoration step and one nearest physical tuple. Its
+first actual pair reduces training cost **0.302031169350812 to 0.0** on the
+135 supplied synthetic PNG training samples. Only source 62 changes code
+(93 to 92), with no collateral code change. [Complete paired result](validation/finite-acquisition-defect-corrector.md).
+That standalone probe did not rerun full recovery. The later
+[live restoration study](finite-acquisition-restoration-result.md) has now
+completed at 11/12, exit 1, with zero image residuals and a geometry miss.
+The earlier failed protocols and main runtime remain unchanged.
+
 The saved-data construction at `66df525` finds a changed rational point whose
 **128 adjacent physical binary64 candidates all pass the five unchanged local
 feasibility gates**. Its 103 selected software controls pass. An independent
@@ -168,6 +178,8 @@ rejects the selected corner because training cost increases. Its target code
 changes as intended, and one protected code changes too. See the
 [complete negative result](validation/finite-acquisition-inward-literal.md).
 This later evaluation does not change the 108-input diagnostic's zero-call
-scope or the original failed full recovery. Runtime integration still needs
-separate admission and a complete original 24-case protocol. No automatic
-trace/CAD change, camera qualification or physical-fit claim follows here.
+scope or the original failed full recovery. A separately admitted
+[live restoration integration](finite-acquisition-restoration-result.md)
+has since completed the original 24-case protocol, still failed at 11/12.
+Main adoption remains absent. No automatic trace/CAD change, camera
+qualification or physical-fit claim follows here.

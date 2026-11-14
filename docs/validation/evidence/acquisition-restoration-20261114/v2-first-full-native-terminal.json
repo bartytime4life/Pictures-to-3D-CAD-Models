@@ -1,0 +1,33 @@
+{
+  "attempt": 1,
+  "reruns": 0,
+  "native_session_id": 28887,
+  "initial": {
+    "chunk_id": "1f6828",
+    "wall_time_seconds": 1.001054438,
+    "session_id": 28887,
+    "original_token_count": 0,
+    "output": ""
+  },
+  "observations": [
+    {
+      "chunk_id": "dfeee9",
+      "wall_time_seconds": 5.000900316,
+      "session_id": 28887,
+      "original_token_count": 372,
+      "output": "{\"name\": \"minor-smooth\", \"status\": \"completed\", \"all_targets\": true}\n{\"name\": \"minor-staged\", \"status\": \"completed\", \"all_targets\": true}\n{\"name\": \"minor-png\", \"status\": \"completed\", \"all_targets\": true}\n{\"name\": \"middle-smooth\", \"status\": \"completed\", \"all_targets\": true}\n{\"name\": \"middle-staged\", \"status\": \"completed\", \"all_targets\": true}\n{\"name\": \"middle-png\", \"status\": \"completed\", \"all_targets\": false}\n{\"name\": \"major-smooth\", \"status\": \"completed\", \"all_targets\": true}\n{\"name\": \"major-staged\", \"status\": \"completed\", \"all_targets\": true}\n{\"name\": \"major-png\", \"status\": \"completed\", \"all_targets\": true}\n{\"name\": \"wrapped-major-smooth\", \"status\": \"completed\", \"all_targets\": true}\n{\"name\": \"wrapped-major-staged\", \"status\": \"completed\", \"all_targets\": true}\n{\"name\": \"wrapped-major-png\", \"status\": \"completed\", \"all_targets\": true}\n{\"name\": \"zero-smooth\", \"status\": \"completed\", \"all_targets\": false}\n{\"name\": \"zero-png\", \"status\": \"completed\", \"all_targets\": false}\n{\"name\": \"low-staged\", \"status\": \"completed\", \"all_targets\": false}\n{\"name\": \"cropped-smooth\", \"status\": \"completed\", \"all_targets\": false}\n{\"name\": \"thin-png\", \"status\": \"completed\", \"all_targets\": false}\n{\"name\": \"almost-circle-smooth\", \"status\": \"completed\", \"all_targets\": false}\n{\"name\": \"wrong-optics-smooth\", \"status\": \"completed\", \"all_targets\": false}\n{\"name\": \"gradient-staged\", \"status\": \"completed\", \"all_targets\": false}\n{\"name\": \"singular-map-png\", \"status\": \"exception\", \"all_targets\": false}\n"
+    },
+    {
+      "chunk_id": "bfc062",
+      "wall_time_seconds": 0.000007133,
+      "exit_code": 1,
+      "original_token_count": 70,
+      "output": "{\"name\": \"five-queries-smooth\", \"status\": \"completed\", \"all_targets\": false}\n{\"name\": \"coincident-smooth\", \"status\": \"completed\", \"all_targets\": true}\n{\"name\": \"budget-png\", \"status\": \"completed\", \"all_targets\": false}\n{\"matched_passes\": 11, \"matched_total\": 12, \"passed\": false}\n"
+    }
+  ],
+  "terminal_exit": 1,
+  "matched_passes": 11,
+  "matched_total": 12,
+  "original_cases_retained": 24,
+  "previous_first_results_unchanged": true
+}

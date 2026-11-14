@@ -1,0 +1,30 @@
+{
+  "format": "finite-acquisition-recovery-restoration-controls-v2-first-controls-terminal",
+  "recorded_at": "2026-11-14T02:13:10.681496+00:00",
+  "attempt": 1,
+  "reruns": 0,
+  "native_session_id": 39267,
+  "exit_code": 0,
+  "passed": 1169,
+  "deselected_exact_malformed_old_node": 1,
+  "subtests_passed": 33,
+  "elapsed_reported_seconds": 16.97,
+  "all131_source_inputs_unchanged": true,
+  "previous_first_failure_retained": true,
+  "native": {
+    "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first-tests-native-terminal.json",
+    "bytes": 2072,
+    "sha256": "c30ab279fef40158b603cd8652cd45088b368db7f792f406e27a79057676cb5f"
+  },
+  "log": {
+    "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first-tests.log",
+    "bytes": 1383,
+    "sha256": "645248657515b32a98a70f30f5a4d11d434436911d607aa71f66095f040e1fb2"
+  },
+  "launch": {
+    "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first-tests-launch.json",
+    "bytes": 2459,
+    "sha256": "08aa7cb5e9cc0f244aa633050401448172d95f41a1245b44e4e4762f5108ca2c"
+  },
+  "full_study_permitted": true
+}

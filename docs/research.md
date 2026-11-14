@@ -100,7 +100,34 @@ exactly reproduces the baseline but raises actual training cost from
 0.302031169350812 to 0.40923713513984694, so its predetermined candidate is
 rejected. Target source cell 62 reaches code 92; collateral cell 33 changes
 106 to 105. [Complete negative result](validation/finite-acquisition-inward-literal.md).
-Full recovery remains 11/12; fitter integration is still absent.
+Full recovery remains 11/12; acquisition-aware fitter integration is absent from main.
+
+The subsequent [observed-defect correction](finite-acquisition-defect-corrector.md)
+uses one fixed equality-restoration step and one nearest physical tuple. Its
+first actual pair reduces training cost **0.302031169350812 to 0.0** on the
+135 supplied synthetic PNG training samples. Only source 62 changes code
+(93 to 92), with no collateral code change. [Complete paired result](validation/finite-acquisition-defect-corrector.md).
+That standalone probe did not rerun full recovery. The subsequent live study
+has its own source freeze and result; the earlier failed protocols
+and main runtime remain unchanged.
+
+The separate [live restoration controller](finite-acquisition-restoration-result.md)
+is now frozen and executed in local research. Its selected controls pass
+1,169 tests and 33 subtests, with one malformed predecessor node deselected
+and independently replaced. The fresh original 24-case study remains
+**11/12 matched passes, exit 1**. Middle PNG has zero training and conditional
+reserved residuals but misses the fraction target: 0.003206949 > 0.002.
+It adds no main runtime, HTTP mode or workbench control.
+
+The subsequent [code-cell diagnostic](finite-acquisition-codecell-probe.md)
+finds 168 actual compatible alternatives across four eligible PNG fits, with
+one fixed baseline and sensitivity matrix per fit. Its minor-case witnesses
+give a conditional two-point image-only error lower bound above 0.002 under
+the numerical model/domain. Sampled spans do not enclose compatible geometry,
+establish physical uncertainty or resolve the middle-case miss. The
+[first result](validation/finite-acquisition-codecell-result.md) retains failed
+controls and their additive repair; no recovered best or original target changes.
+
 These separate local studies add no main runtime or workbench integration.
 
 The [original selected design reference](images/design-reference.png) is a generated concept. The [recorded workbench screenshot](images/workbench.png) is browser-rendered implementation evidence; the [guided-workbench review](validation/guided-workbench.md) records the reviewed interaction, screenshots and evidence date. The sample photograph is generated demonstration input and is traced by the real conversion pipeline; it is not a measured reference specimen.

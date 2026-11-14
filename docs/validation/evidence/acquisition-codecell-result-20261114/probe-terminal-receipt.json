@@ -1,0 +1,4328 @@
+{
+  "format": "finite-acquisition-codecell-probe-controls-v2-first-probe-terminal",
+  "recorded_at": "2026-11-14T03:42:08.247744+00:00",
+  "attempt": 1,
+  "reruns": 0,
+  "native_session_id": 96234,
+  "exit_code": 0,
+  "head": "44ad56cf7026bb642a4ed0a8d71e93b7b3103903",
+  "freeze_sha256": "21d84e15b4c8aa745cc157d4787c19304782cf0788b9548cea81b65941ed37de",
+  "report": {
+    "path": ".local/verification/finite-acquisition-codecell-probe-controls-v2-first/report.json",
+    "sha256": "51658a514f41eb26ef98f0a401020e75a02d1fef8a8244be479417b431b3444a",
+    "bytes": 172568
+  },
+  "governing144_unchanged": true,
+  "saved236_unchanged": true,
+  "raw_artifacts_verified": 4,
+  "original_recovery_rescored": false,
+  "original_recovery": {
+    "matched_passes": 11,
+    "matched_total": 12,
+    "exit_code": 1
+  },
+  "summary": {
+    "saved_fit_count": 17,
+    "protocol_completed": true,
+    "interpretation_withheld": false,
+    "eligible_fit_count": 4,
+    "probe_attempt_count": 4,
+    "qualified_probe_count": 4,
+    "compatible_actual_slots": 168,
+    "distinct_new_parameter_tuples": 168,
+    "distinct_new_geometry_tuples": 168,
+    "distinct_new_fraction_values": 168,
+    "new_compatible_geometry_found": true,
+    "diagnostic_outcome": "complete_new_geometry_witnesses"
+  },
+  "qualified_rows": [
+    {
+      "name": "minor-png",
+      "status": "completed_witness_diagnostic",
+      "census": {
+        "compatible_actual_slots": 49,
+        "distinct_new_parameter_tuples": 49,
+        "distinct_new_geometry_tuples": 49,
+        "distinct_new_fraction_values": 49
+      },
+      "fraction_min": -0.5524998970242435,
+      "fraction_max": -0.544516998598625,
+      "fraction_diameter_exact": "4493972296869/562949953421312",
+      "charged": [
+        52,
+        8619,
+        17468027
+      ],
+      "aggregate_work": [
+        588,
+        80951,
+        21050489
+      ],
+      "historical_codes": "not_retained",
+      "literal_trials": [
+        {
+          "index": 0,
+          "parameters": [
+            6.126408479191348,
+            6.206685576623858,
+            3.630205827561892,
+            -0.548247514347239,
+            0.3087206833016447
+          ],
+          "levels": [
+            235.01749359849322,
+            28.181577632285304
+          ],
+          "purpose": "codecell_baseline",
+          "status": "resolved",
+          "ledger_start": 0,
+          "code_ref": 0,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 0,
+          "ledger_end": 1
+        },
+        {
+          "index": 1,
+          "parameters": [
+            6.12188521718528,
+            6.205595420454701,
+            3.626640080757457,
+            -0.5473633324371847,
+            0.30880402631183634
+          ],
+          "levels": [
+            235.01810507338664,
+            28.33608575626514
+          ],
+          "purpose": "codecell:0:0",
+          "status": "resolved",
+          "ledger_start": 1475,
+          "code_ref": 1,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 1,
+          "ledger_end": 1476
+        },
+        {
+          "index": 2,
+          "parameters": [
+            6.117361955179213,
+            6.204505264285544,
+            3.623074333953022,
+            -0.5464791505271305,
+            0.308887369322028
+          ],
+          "levels": [
+            235.01871654828005,
+            28.490593880244973
+          ],
+          "purpose": "codecell:0:1",
+          "status": "resolved",
+          "ledger_start": 1476,
+          "code_ref": 2,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 2,
+          "ledger_end": 1477
+        },
+        {
+          "index": 3,
+          "parameters": [
+            6.1128386931731455,
+            6.203415108116387,
+            3.619508587148587,
+            -0.5455949686170762,
+            0.3089707123322196
+          ],
+          "levels": [
+            235.01932802317347,
+            28.645102004224807
+          ],
+          "purpose": "codecell:0:2",
+          "status": "resolved",
+          "ledger_start": 1477,
+          "code_ref": 3,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 3,
+          "ledger_end": 1478
+        },
+        {
+          "index": 4,
+          "parameters": [
+            6.130581688349924,
+            6.207691366185308,
+            3.63349562311242,
+            -0.5490632698882482,
+            0.3086437901628063
+          ],
+          "levels": [
+            235.01692944531746,
+            28.03902681006847
+          ],
+          "purpose": "codecell:0:3",
+          "status": "resolved",
+          "ledger_start": 1478,
+          "code_ref": 4,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 4,
+          "ledger_end": 1479
+        },
+        {
+          "index": 5,
+          "parameters": [
+            6.1347548975085004,
+            6.208697155746758,
+            3.6367854186629476,
+            -0.5498790254292573,
+            0.3085668970239679
+          ],
+          "levels": [
+            235.01636529214173,
+            27.896475987851638
+          ],
+          "purpose": "codecell:0:4",
+          "status": "resolved",
+          "ledger_start": 1479,
+          "code_ref": 5,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 5,
+          "ledger_end": 1480
+        },
+        {
+          "index": 6,
+          "parameters": [
+            6.138928106667076,
+            6.209702945308208,
+            3.640075214213476,
+            -0.5506947809702665,
+            0.3084900038851295
+          ],
+          "levels": [
+            235.01580113896597,
+            27.753925165634804
+          ],
+          "purpose": "codecell:0:5",
+          "status": "resolved",
+          "ledger_start": 1480,
+          "code_ref": 6,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 6,
+          "ledger_end": 1481
+        },
+        {
+          "index": 7,
+          "parameters": [
+            6.125708373496365,
+            6.206516843408443,
+            3.6296539250540776,
+            -0.5481106616091488,
+            0.30873358304435117
+          ],
+          "levels": [
+            235.01758824192856,
+            28.205492235811306
+          ],
+          "purpose": "codecell:0:6",
+          "status": "resolved",
+          "ledger_start": 1481,
+          "code_ref": 7,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 7,
+          "ledger_end": 1482
+        },
+        {
+          "index": 8,
+          "parameters": [
+            6.1242876251522,
+            6.20569732929764,
+            3.6284134439237565,
+            -0.5478074220857654,
+            0.3086539577888584
+          ],
+          "levels": [
+            235.01793635324944,
+            28.253282576955982
+          ],
+          "purpose": "codecell:1:0",
+          "status": "resolved",
+          "ledger_start": 1484,
+          "code_ref": 8,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 8,
+          "ledger_end": 1485
+        },
+        {
+          "index": 9,
+          "parameters": [
+            6.1221667711130525,
+            6.204709081971422,
+            3.626621060285621,
+            -0.5473673298242917,
+            0.30858723227607215
+          ],
+          "levels": [
+            235.0183791080057,
+            28.32498752162666
+          ],
+          "purpose": "codecell:1:1",
+          "status": "resolved",
+          "ledger_start": 1485,
+          "code_ref": 9,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 9,
+          "ledger_end": 1486
+        },
+        {
+          "index": 10,
+          "parameters": [
+            6.120045917073906,
+            6.203720834645203,
+            3.6248286766474855,
+            -0.5469272375628181,
+            0.30852050676328585
+          ],
+          "levels": [
+            235.0188218627619,
+            28.396692466297335
+          ],
+          "purpose": "codecell:1:2",
+          "status": "resolved",
+          "ledger_start": 1486,
+          "code_ref": 10,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 10,
+          "ledger_end": 1487
+        },
+        {
+          "index": 11,
+          "parameters": [
+            6.128753109226206,
+            6.2077780961090046,
+            3.6321873295579707,
+            -0.5487340417156075,
+            0.3087944491707155
+          ],
+          "levels": [
+            235.01700412770438,
+            28.10230694046987
+          ],
+          "purpose": "codecell:1:3",
+          "status": "resolved",
+          "ledger_start": 1487,
+          "code_ref": 11,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 11,
+          "ledger_end": 1488
+        },
+        {
+          "index": 12,
+          "parameters": [
+            6.131097739261065,
+            6.208870615594152,
+            3.63416883155405,
+            -0.5492205690839759,
+            0.30886821503978634
+          ],
+          "levels": [
+            235.01651465691555,
+            28.02303624865443
+          ],
+          "purpose": "codecell:1:4",
+          "status": "resolved",
+          "ledger_start": 1488,
+          "code_ref": 12,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 12,
+          "ledger_end": 1489
+        },
+        {
+          "index": 13,
+          "parameters": [
+            6.133442369295924,
+            6.209963135079298,
+            3.6361503335501286,
+            -0.5497070964523444,
+            0.3089419809088572
+          ],
+          "levels": [
+            235.01602518612674,
+            27.943765556838997
+          ],
+          "purpose": "codecell:1:5",
+          "status": "resolved",
+          "ledger_start": 1489,
+          "code_ref": 13,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 13,
+          "ledger_end": 1490
+        },
+        {
+          "index": 14,
+          "parameters": [
+            6.126856031182771,
+            6.2068941209417146,
+            3.6305840642777785,
+            -0.5483403845610287,
+            0.3087347640142138
+          ],
+          "levels": [
+            235.01740016642802,
+            28.166446137995788
+          ],
+          "purpose": "codecell:1:6",
+          "status": "resolved",
+          "ledger_start": 1490,
+          "code_ref": 14,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 14,
+          "ledger_end": 1491
+        },
+        {
+          "index": 15,
+          "parameters": [
+            6.119880162689053,
+            6.20499879210388,
+            3.624856493598901,
+            -0.547004009097701,
+            0.3088135239469766
+          ],
+          "levels": [
+            235.01796064471452,
+            28.369837477396985
+          ],
+          "purpose": "codecell:2:0",
+          "status": "resolved",
+          "ledger_start": 1493,
+          "code_ref": 15,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 15,
+          "ledger_end": 1494
+        },
+        {
+          "index": 16,
+          "parameters": [
+            6.113351846186758,
+            6.203312007583903,
+            3.61950715963591,
+            -0.545760503848163,
+            0.3089063645923085
+          ],
+          "levels": [
+            235.0184276909358,
+            28.558097322508665
+          ],
+          "purpose": "codecell:2:1",
+          "status": "resolved",
+          "ledger_start": 1494,
+          "code_ref": 16,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 16,
+          "ledger_end": 1495
+        },
+        {
+          "index": 17,
+          "parameters": [
+            6.106823529684463,
+            6.201625223063925,
+            3.614157825672919,
+            -0.544516998598625,
+            0.3089992052376404
+          ],
+          "levels": [
+            235.0188947371571,
+            28.746357167620346
+          ],
+          "purpose": "codecell:2:2",
+          "status": "resolved",
+          "ledger_start": 1495,
+          "code_ref": 17,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 17,
+          "ledger_end": 1496
+        },
+        {
+          "index": 18,
+          "parameters": [
+            6.130283312441312,
+            6.207686754912508,
+            3.633380884576618,
+            -0.5489855875527463,
+            0.3086655784335897
+          ],
+          "levels": [
+            235.01721638671484,
+            28.069837414540736
+          ],
+          "purpose": "codecell:2:3",
+          "status": "resolved",
+          "ledger_start": 1496,
+          "code_ref": 18,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 18,
+          "ledger_end": 1497
+        },
+        {
+          "index": 19,
+          "parameters": [
+            6.134158145691276,
+            6.208687933201159,
+            3.6365559415913435,
+            -0.5497236607582536,
+            0.3086104735655347
+          ],
+          "levels": [
+            235.01693917493643,
+            27.958097196796164
+          ],
+          "purpose": "codecell:2:4",
+          "status": "resolved",
+          "ledger_start": 1497,
+          "code_ref": 19,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 19,
+          "ledger_end": 1498
+        },
+        {
+          "index": 20,
+          "parameters": [
+            6.138032978941241,
+            6.209689111489809,
+            3.6397309986060695,
+            -0.5504617339637609,
+            0.3085553686974797
+          ],
+          "levels": [
+            235.01666196315804,
+            27.846356979051595
+          ],
+          "purpose": "codecell:2:5",
+          "status": "resolved",
+          "ledger_start": 1498,
+          "code_ref": 20,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 20,
+          "ledger_end": 1499
+        },
+        {
+          "index": 21,
+          "parameters": [
+            6.121101512686687,
+            6.205314364161203,
+            3.625857273665362,
+            -0.5472366502591777,
+            0.30879615485619855
+          ],
+          "levels": [
+            235.017873267379,
+            28.334616887019525
+          ],
+          "purpose": "codecell:2:6",
+          "status": "resolved",
+          "ledger_start": 1499,
+          "code_ref": 21,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 21,
+          "ledger_end": 1500
+        },
+        {
+          "index": 22,
+          "parameters": [
+            6.131310916644465,
+            6.207939849713194,
+            3.633971715213622,
+            -0.5492657049336759,
+            0.3086480767869469
+          ],
+          "levels": [
+            235.01623958351973,
+            27.977578933472063
+          ],
+          "purpose": "codecell:3:0",
+          "status": "resolved",
+          "ledger_start": 1502,
+          "code_ref": 22,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 22,
+          "ledger_end": 1503
+        },
+        {
+          "index": 23,
+          "parameters": [
+            6.136213354097584,
+            6.209194122802529,
+            3.6377376028653514,
+            -0.5502838955201128,
+            0.3085754702722491
+          ],
+          "levels": [
+            235.01498556854625,
+            27.773580234658827
+          ],
+          "purpose": "codecell:3:1",
+          "status": "resolved",
+          "ledger_start": 1503,
+          "code_ref": 23,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 23,
+          "ledger_end": 1504
+        },
+        {
+          "index": 24,
+          "parameters": [
+            6.1411157915507015,
+            6.210448395891865,
+            3.6415034905170813,
+            -0.5513020861065498,
+            0.30850286375755126
+          ],
+          "levels": [
+            235.01373155357274,
+            27.569581535845586
+          ],
+          "purpose": "codecell:3:2",
+          "status": "resolved",
+          "ledger_start": 1504,
+          "code_ref": 24,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 24,
+          "ledger_end": 1505
+        },
+        {
+          "index": 25,
+          "parameters": [
+            6.123656141437844,
+            6.205981399730223,
+            3.62809157422191,
+            -0.5476758794374391,
+            0.3087614462187577
+          ],
+          "levels": [
+            235.01819763047487,
+            28.296107052758003
+          ],
+          "purpose": "codecell:3:3",
+          "status": "resolved",
+          "ledger_start": 1505,
+          "code_ref": 25,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 25,
+          "ledger_end": 1506
+        },
+        {
+          "index": 26,
+          "parameters": [
+            6.120903803684341,
+            6.205277222836586,
+            3.625977320881928,
+            -0.5471042445276394,
+            0.3088022091358707
+          ],
+          "levels": [
+            235.0189016624565,
+            28.4106364732307
+          ],
+          "purpose": "codecell:3:4",
+          "status": "resolved",
+          "ledger_start": 1506,
+          "code_ref": 26,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 26,
+          "ledger_end": 1507
+        },
+        {
+          "index": 27,
+          "parameters": [
+            6.118151465930837,
+            6.204573045942951,
+            3.623863067541946,
+            -0.5465326096178396,
+            0.30884297205298367
+          ],
+          "levels": [
+            235.01960569443816,
+            28.5251658937034
+          ],
+          "purpose": "codecell:3:5",
+          "status": "resolved",
+          "ledger_start": 1507,
+          "code_ref": 27,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 27,
+          "ledger_end": 1508
+        },
+        {
+          "index": 28,
+          "parameters": [
+            6.130708678590577,
+            6.207785769015257,
+            3.6335090961853873,
+            -0.5491406257005133,
+            0.30865699610647507
+          ],
+          "levels": [
+            235.01639363250953,
+            28.002639075604222
+          ],
+          "purpose": "codecell:3:6",
+          "status": "resolved",
+          "ledger_start": 1508,
+          "code_ref": 28,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 28,
+          "ledger_end": 1509
+        },
+        {
+          "index": 29,
+          "parameters": [
+            6.127326460550259,
+            6.2063078004740175,
+            3.630764364796817,
+            -0.5483917490731635,
+            0.3083965762180504
+          ],
+          "levels": [
+            235.01752167721375,
+            28.150783326393498
+          ],
+          "purpose": "codecell:4:0",
+          "status": "resolved",
+          "ledger_start": 1511,
+          "code_ref": 29,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 29,
+          "ledger_end": 1512
+        },
+        {
+          "index": 30,
+          "parameters": [
+            6.12824444190917,
+            6.205930024324176,
+            3.6313229020317417,
+            -0.5485359837990881,
+            0.308072469134456
+          ],
+          "levels": [
+            235.0175497559343,
+            28.11998902050169
+          ],
+          "purpose": "codecell:4:1",
+          "status": "resolved",
+          "ledger_start": 1512,
+          "code_ref": 30,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 30,
+          "ledger_end": 1513
+        },
+        {
+          "index": 31,
+          "parameters": [
+            6.129162423268082,
+            6.205552248174335,
+            3.6318814392666665,
+            -0.5486802185250126,
+            0.3077483620508617
+          ],
+          "levels": [
+            235.01757783465484,
+            28.089194714609885
+          ],
+          "purpose": "codecell:4:2",
+          "status": "resolved",
+          "ledger_start": 1513,
+          "code_ref": 31,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 31,
+          "ledger_end": 1514
+        },
+        {
+          "index": 32,
+          "parameters": [
+            6.124488809958822,
+            6.207475576599992,
+            3.629037822640336,
+            -0.5479458927914946,
+            0.3093984513090011
+          ],
+          "levels": [
+            235.01743488068223,
+            28.24597423574966
+          ],
+          "purpose": "codecell:4:3",
+          "status": "resolved",
+          "ledger_start": 1514,
+          "code_ref": 32,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 32,
+          "ledger_end": 1515
+        },
+        {
+          "index": 33,
+          "parameters": [
+            6.122569140726296,
+            6.208265576576127,
+            3.6278698177187803,
+            -0.5476442712357503,
+            0.31007621931635754
+          ],
+          "levels": [
+            235.01737616287124,
+            28.310370839214016
+          ],
+          "purpose": "codecell:4:4",
+          "status": "resolved",
+          "ledger_start": 1515,
+          "code_ref": 33,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 33,
+          "ledger_end": 1516
+        },
+        {
+          "index": 34,
+          "parameters": [
+            6.1206494714937705,
+            6.209055576552261,
+            3.626701812797224,
+            -0.547342649680006,
+            0.3107539873237139
+          ],
+          "levels": [
+            235.01731744506026,
+            28.374767442678372
+          ],
+          "purpose": "codecell:4:5",
+          "status": "resolved",
+          "ledger_start": 1516,
+          "code_ref": 34,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 34,
+          "ledger_end": 1517
+        },
+        {
+          "index": 35,
+          "parameters": [
+            6.1244051034441185,
+            6.207510024276445,
+            3.62898689218863,
+            -0.5479327406875995,
+            0.30942800514916885
+          ],
+          "levels": [
+            235.01743232031234,
+            28.248782227430404
+          ],
+          "purpose": "codecell:4:6",
+          "status": "resolved",
+          "ledger_start": 1517,
+          "code_ref": 35,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 35,
+          "ledger_end": 1518
+        },
+        {
+          "index": 36,
+          "parameters": [
+            6.126714331184622,
+            6.206799411111339,
+            3.6303334249686583,
+            -0.5483606410088133,
+            0.30872195840479805
+          ],
+          "levels": [
+            235.00146346316717,
+            28.150006675245518
+          ],
+          "purpose": "codecell:5:0",
+          "status": "resolved",
+          "ledger_start": 1520,
+          "code_ref": 36,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 36,
+          "ledger_end": 1521
+        },
+        {
+          "index": 37,
+          "parameters": [
+            6.127020183177897,
+            6.20691324559882,
+            3.630461022375424,
+            -0.5484737676703878,
+            0.30872323350795144
+          ],
+          "levels": [
+            234.98543332784112,
+            28.118435718205735
+          ],
+          "purpose": "codecell:5:1",
+          "status": "resolved",
+          "ledger_start": 1521,
+          "code_ref": 37,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 37,
+          "ledger_end": 1522
+        },
+        {
+          "index": 38,
+          "parameters": [
+            6.127326035171171,
+            6.2070270800863,
+            3.6305886197821904,
+            -0.5485868943319622,
+            0.3087245086111048
+          ],
+          "levels": [
+            234.96940319251507,
+            28.08686476116595
+          ],
+          "purpose": "codecell:5:2",
+          "status": "resolved",
+          "ledger_start": 1522,
+          "code_ref": 38,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 38,
+          "ledger_end": 1523
+        },
+        {
+          "index": 39,
+          "parameters": [
+            6.125401952658094,
+            6.2063109593757515,
+            3.6297859180033196,
+            -0.5478752264792608,
+            0.3087164870721457
+          ],
+          "levels": [
+            235.07024707694717,
+            28.28547430989246
+          ],
+          "purpose": "codecell:5:3",
+          "status": "resolved",
+          "ledger_start": 1523,
+          "code_ref": 39,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 39,
+          "ledger_end": 1524
+        },
+        {
+          "index": 40,
+          "parameters": [
+            6.124395426124841,
+            6.205936342127645,
+            3.6293660084447468,
+            -0.5475029386112827,
+            0.30871229084264673
+          ],
+          "levels": [
+            235.12300055540115,
+            28.38937098749962
+          ],
+          "purpose": "codecell:5:4",
+          "status": "resolved",
+          "ledger_start": 1524,
+          "code_ref": 40,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 40,
+          "ledger_end": 1525
+        },
+        {
+          "index": 41,
+          "parameters": [
+            6.123388899591587,
+            6.205561724879537,
+            3.6289460988861744,
+            -0.5471306507433046,
+            0.3087080946131478
+          ],
+          "levels": [
+            235.1757540338551,
+            28.493267665106778
+          ],
+          "purpose": "codecell:5:5",
+          "status": "resolved",
+          "ledger_start": 1525,
+          "code_ref": 41,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 41,
+          "ledger_end": 1526
+        },
+        {
+          "index": 42,
+          "parameters": [
+            6.12500713011139,
+            6.206164011102605,
+            3.6296212032582793,
+            -0.5477291919344316,
+            0.30871484104895347
+          ],
+          "levels": [
+            235.09094028474905,
+            28.32622907342005
+          ],
+          "purpose": "codecell:5:6",
+          "status": "resolved",
+          "ledger_start": 1526,
+          "code_ref": 42,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 42,
+          "ledger_end": 1527
+        },
+        {
+          "index": 43,
+          "parameters": [
+            6.132361061975286,
+            6.208105553152188,
+            3.6341673408933914,
+            -0.5496649752395738,
+            0.3086129723497258
+          ],
+          "levels": [
+            235.0150619030182,
+            27.74103232161465
+          ],
+          "purpose": "codecell:6:0",
+          "status": "resolved",
+          "ledger_start": 1529,
+          "code_ref": 43,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 43,
+          "ledger_end": 1530
+        },
+        {
+          "index": 44,
+          "parameters": [
+            6.138313644759225,
+            6.2095255296805165,
+            3.638128854224891,
+            -0.5510824361319087,
+            0.3085052613978069
+          ],
+          "levels": [
+            235.0126302075432,
+            27.300487010943996
+          ],
+          "purpose": "codecell:6:1",
+          "status": "resolved",
+          "ledger_start": 1530,
+          "code_ref": 44,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 44,
+          "ledger_end": 1531
+        },
+        {
+          "index": 45,
+          "parameters": [
+            6.144266227543163,
+            6.210945506208846,
+            3.6420903675563903,
+            -0.5524998970242435,
+            0.30839755044588796
+          ],
+          "levels": [
+            235.01019851206817,
+            26.859941700273342
+          ],
+          "purpose": "codecell:6:2",
+          "status": "resolved",
+          "ledger_start": 1531,
+          "code_ref": 45,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 45,
+          "ledger_end": 1532
+        },
+        {
+          "index": 46,
+          "parameters": [
+            6.125781755020833,
+            6.2065360728463945,
+            3.6297887353102123,
+            -0.5480982754312542,
+            0.308732023766691
+          ],
+          "levels": [
+            235.0177496222034,
+            28.227960925794275
+          ],
+          "purpose": "codecell:6:3",
+          "status": "resolved",
+          "ledger_start": 1532,
+          "code_ref": 46,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 46,
+          "ledger_end": 1533
+        },
+        {
+          "index": 47,
+          "parameters": [
+            6.12515503085032,
+            6.20638656906893,
+            3.629371643058532,
+            -0.5479490365152694,
+            0.30874336423173737
+          ],
+          "levels": [
+            235.01800564591358,
+            28.27434421930325
+          ],
+          "purpose": "codecell:6:4",
+          "status": "resolved",
+          "ledger_start": 1533,
+          "code_ref": 47,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 47,
+          "ledger_end": 1534
+        },
+        {
+          "index": 48,
+          "parameters": [
+            6.124528306679806,
+            6.206237065291466,
+            3.6289545508068524,
+            -0.5477997975992847,
+            0.3087547046967837
+          ],
+          "levels": [
+            235.01826166962377,
+            28.32072751281222
+          ],
+          "purpose": "codecell:6:5",
+          "status": "resolved",
+          "ledger_start": 1534,
+          "code_ref": 48,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 48,
+          "ledger_end": 1535
+        },
+        {
+          "index": 49,
+          "parameters": [
+            6.137060196418196,
+            6.209226522125588,
+            3.637294669721531,
+            -0.5507839582999391,
+            0.30852794232789954
+          ],
+          "levels": [
+            235.01314225496355,
+            27.39325359796194
+          ],
+          "purpose": "codecell:6:6",
+          "status": "resolved",
+          "ledger_start": 1535,
+          "code_ref": 49,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 49,
+          "ledger_end": 1536
+        }
+      ],
+      "direction_statuses": [
+        "axis_completed",
+        "axis_completed",
+        "axis_completed",
+        "axis_completed",
+        "axis_completed",
+        "axis_completed",
+        "axis_completed"
+      ]
+    },
+    {
+      "name": "middle-png",
+      "status": "completed_witness_diagnostic",
+      "census": {
+        "compatible_actual_slots": 49,
+        "distinct_new_parameter_tuples": 49,
+        "distinct_new_geometry_tuples": 49,
+        "distinct_new_fraction_values": 49
+      },
+      "fraction_min": 0.16676279128473026,
+      "fraction_max": 0.16733677942146846,
+      "fraction_diameter_exact": "10340051034917/18014398509481984",
+      "charged": [
+        52,
+        8619,
+        17472803
+      ],
+      "aggregate_work": [
+        1044,
+        143988,
+        43042635
+      ],
+      "historical_codes": "equal",
+      "literal_trials": [
+        {
+          "index": 0,
+          "parameters": [
+            5.870124148570346,
+            6.117573300926215,
+            3.411642659916736,
+            0.16679305093653776,
+            1.1306449527409792
+          ],
+          "levels": [
+            21.9872555740398,
+            218.25931253499678
+          ],
+          "purpose": "codecell_baseline",
+          "status": "resolved",
+          "ledger_start": 0,
+          "code_ref": 0,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 0,
+          "ledger_end": 1
+        },
+        {
+          "index": 1,
+          "parameters": [
+            5.87012361834808,
+            6.117572877405145,
+            3.4116422927046077,
+            0.1667932699539137,
+            1.1306450063325852
+          ],
+          "levels": [
+            21.987255682460976,
+            218.2593095183091
+          ],
+          "purpose": "codecell:0:0",
+          "status": "resolved",
+          "ledger_start": 2669,
+          "code_ref": 1,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 1,
+          "ledger_end": 2670
+        },
+        {
+          "index": 2,
+          "parameters": [
+            5.870123088125814,
+            6.117572453884076,
+            3.41164192549248,
+            0.16679348897128965,
+            1.1306450599241915
+          ],
+          "levels": [
+            21.987255790882152,
+            218.2593065016214
+          ],
+          "purpose": "codecell:0:1",
+          "status": "resolved",
+          "ledger_start": 2670,
+          "code_ref": 2,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 2,
+          "ledger_end": 2671
+        },
+        {
+          "index": 3,
+          "parameters": [
+            5.870122557903548,
+            6.117572030363006,
+            3.4116415582803516,
+            0.16679370798866558,
+            1.1306451135157976
+          ],
+          "levels": [
+            21.987255899303324,
+            218.25930348493372
+          ],
+          "purpose": "codecell:0:2",
+          "status": "resolved",
+          "ledger_start": 2671,
+          "code_ref": 3,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 3,
+          "ledger_end": 2672
+        },
+        {
+          "index": 4,
+          "parameters": [
+            5.870148567243504,
+            6.117592805619296,
+            3.4116595713772813,
+            0.16678296438593526,
+            1.130642484651656
+          ],
+          "levels": [
+            21.987250580848425,
+            218.25945146448996
+          ],
+          "purpose": "codecell:0:3",
+          "status": "resolved",
+          "ledger_start": 2672,
+          "code_ref": 4,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 4,
+          "ledger_end": 2673
+        },
+        {
+          "index": 5,
+          "parameters": [
+            5.870172985916661,
+            6.117612310312377,
+            3.411676482837827,
+            0.16677287783533276,
+            1.130640016562333
+          ],
+          "levels": [
+            21.987245587657053,
+            218.25959039398316
+          ],
+          "purpose": "codecell:0:4",
+          "status": "resolved",
+          "ledger_start": 2673,
+          "code_ref": 5,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 5,
+          "ledger_end": 2674
+        },
+        {
+          "index": 6,
+          "parameters": [
+            5.8701974045898195,
+            6.117631815005458,
+            3.4116933942983723,
+            0.16676279128473026,
+            1.1306375484730098
+          ],
+          "levels": [
+            21.98724059446568,
+            218.25972932347634
+          ],
+          "purpose": "codecell:0:5",
+          "status": "resolved",
+          "ledger_start": 2674,
+          "code_ref": 6,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 6,
+          "ledger_end": 2675
+        },
+        {
+          "index": 7,
+          "parameters": [
+            5.870171925472129,
+            6.117611463270238,
+            3.4116757484135705,
+            0.16677331587008465,
+            1.1306401237455452
+          ],
+          "levels": [
+            21.987245804499402,
+            218.2595843606078
+          ],
+          "purpose": "codecell:0:6",
+          "status": "resolved",
+          "ledger_start": 2675,
+          "code_ref": 7,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 7,
+          "ledger_end": 2676
+        },
+        {
+          "index": 8,
+          "parameters": [
+            5.870123644426919,
+            6.117571865418102,
+            3.4116417233130893,
+            0.16679359714197436,
+            1.1306449266002454
+          ],
+          "levels": [
+            21.987255964265188,
+            218.25930661229685
+          ],
+          "purpose": "codecell:1:0",
+          "status": "resolved",
+          "ledger_start": 2678,
+          "code_ref": 8,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 8,
+          "ledger_end": 2679
+        },
+        {
+          "index": 9,
+          "parameters": [
+            5.870123140283493,
+            6.117570429909989,
+            3.4116407867094423,
+            0.16679414334741094,
+            1.1306449004595116
+          ],
+          "levels": [
+            21.98725635449058,
+            218.25930068959693
+          ],
+          "purpose": "codecell:1:1",
+          "status": "resolved",
+          "ledger_start": 2679,
+          "code_ref": 9,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 9,
+          "ledger_end": 2680
+        },
+        {
+          "index": 10,
+          "parameters": [
+            5.870122636140066,
+            6.117568994401877,
+            3.4116398501057956,
+            0.16679468955284754,
+            1.1306448743187778
+          ],
+          "levels": [
+            21.987256744715967,
+            218.259294766897
+          ],
+          "purpose": "codecell:1:2",
+          "status": "resolved",
+          "ledger_start": 2680,
+          "code_ref": 10,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 10,
+          "ledger_end": 2681
+        },
+        {
+          "index": 11,
+          "parameters": [
+            5.870124534846224,
+            6.117574400815904,
+            3.4116433775446513,
+            0.16679263243264866,
+            1.130644972770071
+          ],
+          "levels": [
+            21.987255275048188,
+            218.25931707298338
+          ],
+          "purpose": "codecell:1:3",
+          "status": "resolved",
+          "ledger_start": 2681,
+          "code_ref": 11,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 11,
+          "ledger_end": 2682
+        },
+        {
+          "index": 12,
+          "parameters": [
+            5.870124921122103,
+            6.117575500705594,
+            3.4116440951725666,
+            0.16679221392875954,
+            1.1306449927991624
+          ],
+          "levels": [
+            21.98725497605658,
+            218.25932161096998
+          ],
+          "purpose": "codecell:1:4",
+          "status": "resolved",
+          "ledger_start": 2682,
+          "code_ref": 12,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 12,
+          "ledger_end": 2683
+        },
+        {
+          "index": 13,
+          "parameters": [
+            5.870125307397981,
+            6.117576600595283,
+            3.411644812800482,
+            0.16679179542487044,
+            1.1306450128282541
+          ],
+          "levels": [
+            21.987254677064968,
+            218.2593261489566
+          ],
+          "purpose": "codecell:1:5",
+          "status": "resolved",
+          "ledger_start": 2683,
+          "code_ref": 13,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 13,
+          "ledger_end": 2684
+        },
+        {
+          "index": 14,
+          "parameters": [
+            5.870123912835249,
+            6.117572629689368,
+            3.411642221965273,
+            0.16679330633963274,
+            1.130644940517695
+          ],
+          "levels": [
+            21.98725575650736,
+            218.25930976557012
+          ],
+          "purpose": "codecell:1:6",
+          "status": "resolved",
+          "ledger_start": 2684,
+          "code_ref": 14,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 14,
+          "ledger_end": 2685
+        },
+        {
+          "index": 15,
+          "parameters": [
+            5.87012379259952,
+            6.117572538190388,
+            3.4116419337523802,
+            0.16679335374977614,
+            1.1306449546092812
+          ],
+          "levels": [
+            21.987257284905965,
+            218.25932314968907
+          ],
+          "purpose": "codecell:2:0",
+          "status": "resolved",
+          "ledger_start": 2687,
+          "code_ref": 15,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 15,
+          "ledger_end": 2688
+        },
+        {
+          "index": 16,
+          "parameters": [
+            5.870123436628694,
+            6.117571775454563,
+            3.4116412075880245,
+            0.1667936565630145,
+            1.130644956477583
+          ],
+          "levels": [
+            21.987258995772134,
+            218.25933376438132
+          ],
+          "purpose": "codecell:2:1",
+          "status": "resolved",
+          "ledger_start": 2688,
+          "code_ref": 16,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 16,
+          "ledger_end": 2689
+        },
+        {
+          "index": 17,
+          "parameters": [
+            5.8701230806578675,
+            6.117571012718736,
+            3.411640481423669,
+            0.1667939593762529,
+            1.1306449583458849
+          ],
+          "levels": [
+            21.9872607066383,
+            218.2593443790736
+          ],
+          "purpose": "codecell:2:2",
+          "status": "resolved",
+          "ledger_start": 2689,
+          "code_ref": 17,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 17,
+          "ledger_end": 2690
+        },
+        {
+          "index": 18,
+          "parameters": [
+            5.870124592609052,
+            6.11757425236438,
+            3.4116435657355773,
+            0.16679267320671037,
+            1.1306449504104559
+          ],
+          "levels": [
+            21.987253439901988,
+            218.25929929420883
+          ],
+          "purpose": "codecell:2:3",
+          "status": "resolved",
+          "ledger_start": 2690,
+          "code_ref": 18,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 18,
+          "ledger_end": 2691
+        },
+        {
+          "index": 19,
+          "parameters": [
+            5.870125036647759,
+            6.117575203802545,
+            3.4116444715544185,
+            0.16679229547688298,
+            1.1306449480799323
+          ],
+          "levels": [
+            21.98725130576418,
+            218.25928605342085
+          ],
+          "purpose": "codecell:2:4",
+          "status": "resolved",
+          "ledger_start": 2691,
+          "code_ref": 19,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 19,
+          "ledger_end": 2692
+        },
+        {
+          "index": 20,
+          "parameters": [
+            5.870125480686466,
+            6.117576155240711,
+            3.41164537737326,
+            0.16679191774705562,
+            1.130644945749409
+          ],
+          "levels": [
+            21.987249171626367,
+            218.2592728126329
+          ],
+          "purpose": "codecell:2:5",
+          "status": "resolved",
+          "ledger_start": 2692,
+          "code_ref": 20,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 20,
+          "ledger_end": 2693
+        },
+        {
+          "index": 21,
+          "parameters": [
+            5.870124324706107,
+            6.117573678330893,
+            3.4116430192257075,
+            0.16679290110335976,
+            1.130644951816536
+          ],
+          "levels": [
+            21.98725472749651,
+            218.25930728280542
+          ],
+          "purpose": "codecell:2:6",
+          "status": "resolved",
+          "ledger_start": 2693,
+          "code_ref": 21,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 21,
+          "ledger_end": 2694
+        },
+        {
+          "index": 22,
+          "parameters": [
+            5.870124734983432,
+            6.117574529502171,
+            3.4116434962946376,
+            0.1667924861785689,
+            1.1306449544403925
+          ],
+          "levels": [
+            21.987256252452696,
+            218.25932667763283
+          ],
+          "purpose": "codecell:3:0",
+          "status": "resolved",
+          "ledger_start": 2696,
+          "code_ref": 22,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 22,
+          "ledger_end": 2697
+        },
+        {
+          "index": 23,
+          "parameters": [
+            5.870125321396518,
+            6.117575758078128,
+            3.411644332672539,
+            0.16679192142060006,
+            1.130644956139806
+          ],
+          "levels": [
+            21.98725693086559,
+            218.25934082026887
+          ],
+          "purpose": "codecell:3:1",
+          "status": "resolved",
+          "ledger_start": 2697,
+          "code_ref": 23,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 23,
+          "ledger_end": 2698
+        },
+        {
+          "index": 24,
+          "parameters": [
+            5.870125907809604,
+            6.117576986654084,
+            3.411645169050441,
+            0.1667913566626312,
+            1.1306449578392193
+          ],
+          "levels": [
+            21.987257609278483,
+            218.2593549629049
+          ],
+          "purpose": "codecell:3:2",
+          "status": "resolved",
+          "ledger_start": 2698,
+          "code_ref": 24,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 24,
+          "ledger_end": 2699
+        },
+        {
+          "index": 25,
+          "parameters": [
+            5.870123629164129,
+            6.117572212734282,
+            3.4116419191080944,
+            0.16679355116207317,
+            1.1306449512357504
+          ],
+          "levels": [
+            21.987254973146193,
+            218.25930000837818
+          ],
+          "purpose": "codecell:3:3",
+          "status": "resolved",
+          "ledger_start": 2699,
+          "code_ref": 25,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 25,
+          "ledger_end": 2700
+        },
+        {
+          "index": 26,
+          "parameters": [
+            5.8701231097579125,
+            6.11757112454235,
+            3.4116411782994533,
+            0.16679405138760858,
+            1.1306449497305215
+          ],
+          "levels": [
+            21.987254372252583,
+            218.25928748175954
+          ],
+          "purpose": "codecell:3:4",
+          "status": "resolved",
+          "ledger_start": 2700,
+          "code_ref": 26,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 26,
+          "ledger_end": 2701
+        },
+        {
+          "index": 27,
+          "parameters": [
+            5.870122590351696,
+            6.117570036350417,
+            3.411640437490812,
+            0.166794551613144,
+            1.1306449482252927
+          ],
+          "levels": [
+            21.987253771358976,
+            218.25927495514094
+          ],
+          "purpose": "codecell:3:5",
+          "status": "resolved",
+          "ledger_start": 2701,
+          "code_ref": 27,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 27,
+          "ledger_end": 2702
+        },
+        {
+          "index": 28,
+          "parameters": [
+            5.870124282584085,
+            6.117573581694263,
+            3.4116428510552566,
+            0.16679292187167089,
+            1.1306449531293483
+          ],
+          "levels": [
+            21.987255729078374,
+            218.25931576703164
+          ],
+          "purpose": "codecell:3:6",
+          "status": "resolved",
+          "ledger_start": 2702,
+          "code_ref": 28,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 28,
+          "ledger_end": 2703
+        },
+        {
+          "index": 29,
+          "parameters": [
+            5.870173563205078,
+            6.117553052209614,
+            3.4116444370028427,
+            0.16679363617487272,
+            1.1305520795639232
+          ],
+          "levels": [
+            21.987226056100415,
+            218.25918474493082
+          ],
+          "purpose": "codecell:4:0",
+          "status": "resolved",
+          "ledger_start": 2705,
+          "code_ref": 29,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 29,
+          "ledger_end": 2706
+        },
+        {
+          "index": 30,
+          "parameters": [
+            5.870222977839811,
+            6.117532803493014,
+            3.4116462140889494,
+            0.16679422141320768,
+            1.130459206386867
+          ],
+          "levels": [
+            21.98719653816103,
+            218.2590569548649
+          ],
+          "purpose": "codecell:4:1",
+          "status": "resolved",
+          "ledger_start": 2706,
+          "code_ref": 30,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 30,
+          "ledger_end": 2707
+        },
+        {
+          "index": 31,
+          "parameters": [
+            5.870272392474543,
+            6.117512554776415,
+            3.411647991175056,
+            0.16679480665154262,
+            1.130366333209811
+          ],
+          "levels": [
+            21.987167020221648,
+            218.25892916479893
+          ],
+          "purpose": "codecell:4:2",
+          "status": "resolved",
+          "ledger_start": 2707,
+          "code_ref": 31,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 31,
+          "ledger_end": 2708
+        },
+        {
+          "index": 32,
+          "parameters": [
+            5.870123937615684,
+            6.117573387369455,
+            3.4116426523302263,
+            0.16679304843811285,
+            1.1306453492233113
+          ],
+          "levels": [
+            21.987255700054025,
+            218.25931308054186
+          ],
+          "purpose": "codecell:4:3",
+          "status": "resolved",
+          "ledger_start": 2708,
+          "code_ref": 32,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 32,
+          "ledger_end": 2709
+        },
+        {
+          "index": 33,
+          "parameters": [
+            5.870123726661023,
+            6.117573473812696,
+            3.4116426447437167,
+            0.1667930459396879,
+            1.1306457457056436
+          ],
+          "levels": [
+            21.98725582606825,
+            218.2593136260869
+          ],
+          "purpose": "codecell:4:4",
+          "status": "resolved",
+          "ledger_start": 2709,
+          "code_ref": 33,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 33,
+          "ledger_end": 2710
+        },
+        {
+          "index": 34,
+          "parameters": [
+            5.870123515706362,
+            6.117573560255936,
+            3.4116426371572075,
+            0.166793043441263,
+            1.1306461421879757
+          ],
+          "levels": [
+            21.987255952082474,
+            218.25931417163198
+          ],
+          "purpose": "codecell:4:5",
+          "status": "resolved",
+          "ledger_start": 2710,
+          "code_ref": 34,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 34,
+          "ledger_end": 2711
+        },
+        {
+          "index": 35,
+          "parameters": [
+            5.8702225559304875,
+            6.117532976379495,
+            3.4116461989159306,
+            0.16679421641635783,
+            1.1304599993515314
+          ],
+          "levels": [
+            21.987196790189483,
+            218.25905804595502
+          ],
+          "purpose": "codecell:4:6",
+          "status": "resolved",
+          "ledger_start": 2711,
+          "code_ref": 35,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 35,
+          "ledger_end": 2712
+        },
+        {
+          "index": 36,
+          "parameters": [
+            5.870124182483963,
+            6.11757340346695,
+            3.4116432119670232,
+            0.16679313019196376,
+            1.130644942727449
+          ],
+          "levels": [
+            21.987178241407438,
+            218.25929084892235
+          ],
+          "purpose": "codecell:5:0",
+          "status": "resolved",
+          "ledger_start": 2714,
+          "code_ref": 36,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 36,
+          "ledger_end": 2715
+        },
+        {
+          "index": 37,
+          "parameters": [
+            5.870124216397579,
+            6.117573506007685,
+            3.411643764017311,
+            0.1667932094473898,
+            1.1306449327139187
+          ],
+          "levels": [
+            21.987100908775076,
+            218.25926916284791
+          ],
+          "purpose": "codecell:5:1",
+          "status": "resolved",
+          "ledger_start": 2715,
+          "code_ref": 37,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 37,
+          "ledger_end": 2716
+        },
+        {
+          "index": 38,
+          "parameters": [
+            5.8701242503111954,
+            6.11757360854842,
+            3.411644316067598,
+            0.1667932887028158,
+            1.1306449227003885
+          ],
+          "levels": [
+            21.987023576142715,
+            218.25924747677348
+          ],
+          "purpose": "codecell:5:2",
+          "status": "resolved",
+          "ledger_start": 2716,
+          "code_ref": 38,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 38,
+          "ledger_end": 2717
+        },
+        {
+          "index": 39,
+          "parameters": [
+            5.870123926857837,
+            6.117572630559382,
+            3.411639050851495,
+            0.166792532798952,
+            1.1306450182050949
+          ],
+          "levels": [
+            21.987761141234994,
+            218.2594543091417
+          ],
+          "purpose": "codecell:5:3",
+          "status": "resolved",
+          "ledger_start": 2717,
+          "code_ref": 39,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 39,
+          "ledger_end": 2718
+        },
+        {
+          "index": 40,
+          "parameters": [
+            5.870123705145328,
+            6.117571960192549,
+            3.411635441786254,
+            0.16679201466136628,
+            1.1306450836692103
+          ],
+          "levels": [
+            21.988266708430185,
+            218.25959608328657
+          ],
+          "purpose": "codecell:5:4",
+          "status": "resolved",
+          "ledger_start": 2718,
+          "code_ref": 40,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 40,
+          "ledger_end": 2719
+        },
+        {
+          "index": 41,
+          "parameters": [
+            5.8701234834328195,
+            6.117571289825716,
+            3.4116318327210133,
+            0.16679149652378053,
+            1.130645149133326
+          ],
+          "levels": [
+            21.98877227562538,
+            218.25973785743147
+          ],
+          "purpose": "codecell:5:5",
+          "status": "resolved",
+          "ledger_start": 2719,
+          "code_ref": 41,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 41,
+          "ledger_end": 2720
+        },
+        {
+          "index": 42,
+          "parameters": [
+            5.870123772972561,
+            6.117572165274019,
+            3.411636545886829,
+            0.16679217317221828,
+            1.13064506364215
+          ],
+          "levels": [
+            21.98811204316546,
+            218.2595527111377
+          ],
+          "purpose": "codecell:5:6",
+          "status": "resolved",
+          "ledger_start": 2720,
+          "code_ref": 42,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 42,
+          "ledger_end": 2721
+        },
+        {
+          "index": 43,
+          "parameters": [
+            5.870020637714684,
+            6.117402576292756,
+            3.4120183810000912,
+            0.166974293764848,
+            1.1306401972668283
+          ],
+          "levels": [
+            21.984876672326077,
+            218.1450985513714
+          ],
+          "purpose": "codecell:6:0",
+          "status": "resolved",
+          "ledger_start": 2723,
+          "code_ref": 43,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 43,
+          "ledger_end": 2724
+        },
+        {
+          "index": 44,
+          "parameters": [
+            5.869917126859023,
+            6.117231851659296,
+            3.4123941020834465,
+            0.1671555365931582,
+            1.1306354417926774
+          ],
+          "levels": [
+            21.982497770612355,
+            218.03088456774603
+          ],
+          "purpose": "codecell:6:1",
+          "status": "resolved",
+          "ledger_start": 2724,
+          "code_ref": 44,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 44,
+          "ledger_end": 2725
+        },
+        {
+          "index": 45,
+          "parameters": [
+            5.869813616003361,
+            6.1170611270258375,
+            3.4127698231668018,
+            0.16733677942146846,
+            1.1306306863185263
+          ],
+          "levels": [
+            21.980118868898632,
+            217.91667058412068
+          ],
+          "purpose": "codecell:6:2",
+          "status": "resolved",
+          "ledger_start": 2725,
+          "code_ref": 45,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 45,
+          "ledger_end": 2726
+        },
+        {
+          "index": 46,
+          "parameters": [
+            5.87012445927886,
+            6.117573813390311,
+            3.4116415321148392,
+            0.1667925068999782,
+            1.130644967015485
+          ],
+          "levels": [
+            21.987262714788574,
+            218.25965537108735
+          ],
+          "purpose": "codecell:6:3",
+          "status": "resolved",
+          "ledger_start": 2726,
+          "code_ref": 46,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 46,
+          "ledger_end": 2727
+        },
+        {
+          "index": 47,
+          "parameters": [
+            5.870124769987373,
+            6.117574325854408,
+            3.4116404043129425,
+            0.16679196286341866,
+            1.1306449812899908
+          ],
+          "levels": [
+            21.987269855537345,
+            218.25999820717794
+          ],
+          "purpose": "codecell:6:4",
+          "status": "resolved",
+          "ledger_start": 2727,
+          "code_ref": 47,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 47,
+          "ledger_end": 2728
+        },
+        {
+          "index": 48,
+          "parameters": [
+            5.870125080695887,
+            6.117574838318504,
+            3.4116392765110457,
+            0.16679141882685913,
+            1.1306449955644964
+          ],
+          "levels": [
+            21.98727699628612,
+            218.2603410432685
+          ],
+          "purpose": "codecell:6:5",
+          "status": "resolved",
+          "ledger_start": 2728,
+          "code_ref": 48,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 48,
+          "ledger_end": 2729
+        },
+        {
+          "index": 49,
+          "parameters": [
+            5.86991774827605,
+            6.117232876587489,
+            3.412391846479653,
+            0.16715444852003913,
+            1.1306354703416888
+          ],
+          "levels": [
+            21.9825120521099,
+            218.0315702399272
+          ],
+          "purpose": "codecell:6:6",
+          "status": "resolved",
+          "ledger_start": 2729,
+          "code_ref": 49,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 49,
+          "ledger_end": 2730
+        }
+      ],
+      "direction_statuses": [
+        "axis_completed",
+        "axis_completed",
+        "axis_completed",
+        "axis_completed",
+        "axis_completed",
+        "axis_completed",
+        "axis_completed"
+      ]
+    },
+    {
+      "name": "major-png",
+      "status": "completed_witness_diagnostic",
+      "census": {
+        "compatible_actual_slots": 21,
+        "distinct_new_parameter_tuples": 21,
+        "distinct_new_geometry_tuples": 21,
+        "distinct_new_fraction_values": 21
+      },
+      "fraction_min": 0.6093432763117355,
+      "fraction_max": 0.6095960322110473,
+      "fraction_diameter_exact": "2276622747913/9007199254740992",
+      "charged": [
+        24,
+        3887,
+        17329771
+      ],
+      "aggregate_work": [
+        716,
+        107991,
+        21836325
+      ],
+      "historical_codes": "not_retained",
+      "literal_trials": [
+        {
+          "index": 0,
+          "parameters": [
+            6.258824176732029,
+            5.840309791348551,
+            3.819739358033077,
+            0.6094210929277416,
+            2.429898277872285
+          ],
+          "levels": [
+            254.95266337625088,
+            0.0
+          ],
+          "purpose": "codecell_baseline",
+          "status": "resolved",
+          "ledger_start": 0,
+          "code_ref": 0,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 0,
+          "ledger_end": 1
+        },
+        {
+          "index": 1,
+          "parameters": [
+            6.2589799312463175,
+            5.840244563421255,
+            3.8196758516197673,
+            0.6094794060221769,
+            2.429881707611287
+          ],
+          "levels": [
+            254.9527156518633,
+            5.253463808313548e-05
+          ],
+          "purpose": "codecell:0:3",
+          "status": "resolved",
+          "ledger_start": 3584,
+          "code_ref": 1,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 1,
+          "ledger_end": 3585
+        },
+        {
+          "index": 2,
+          "parameters": [
+            6.259135685760605,
+            5.840179335493959,
+            3.819612345206457,
+            0.609537719116612,
+            2.4298651373502893
+          ],
+          "levels": [
+            254.95276792747572,
+            0.00010506927616627096
+          ],
+          "purpose": "codecell:0:4",
+          "status": "resolved",
+          "ledger_start": 3585,
+          "code_ref": 2,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 2,
+          "ledger_end": 3586
+        },
+        {
+          "index": 3,
+          "parameters": [
+            6.259291440274894,
+            5.840114107566662,
+            3.819548838793147,
+            0.6095960322110473,
+            2.4298485670892913
+          ],
+          "levels": [
+            254.95282020308812,
+            0.00015760391424940643
+          ],
+          "purpose": "codecell:0:5",
+          "status": "resolved",
+          "ledger_start": 3586,
+          "code_ref": 3,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 3,
+          "ledger_end": 3587
+        },
+        {
+          "index": 4,
+          "parameters": [
+            6.258799743640754,
+            5.840362132009181,
+            3.819760507053825,
+            0.6094027743577013,
+            2.4298990047916442
+          ],
+          "levels": [
+            254.9526726256716,
+            5.947541548228313e-05
+          ],
+          "purpose": "codecell:1:3",
+          "status": "resolved",
+          "ledger_start": 3589,
+          "code_ref": 4,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 4,
+          "ledger_end": 3590
+        },
+        {
+          "index": 5,
+          "parameters": [
+            6.258775310549479,
+            5.840414472669811,
+            3.8197816560745728,
+            0.6093844557876611,
+            2.429899731711004
+          ],
+          "levels": [
+            254.95268187509234,
+            0.00011895083096456626
+          ],
+          "purpose": "codecell:1:4",
+          "status": "resolved",
+          "ledger_start": 3590,
+          "code_ref": 5,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 5,
+          "ledger_end": 3591
+        },
+        {
+          "index": 6,
+          "parameters": [
+            6.258750877458205,
+            5.840466813330441,
+            3.8198028050953208,
+            0.6093661372176208,
+            2.4299004586303634
+          ],
+          "levels": [
+            254.95269112451305,
+            0.00017842624644684937
+          ],
+          "purpose": "codecell:1:5",
+          "status": "resolved",
+          "ledger_start": 3591,
+          "code_ref": 6,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 6,
+          "ledger_end": 3592
+        },
+        {
+          "index": 7,
+          "parameters": [
+            6.258808369530598,
+            5.840323844794456,
+            3.8197640894866622,
+            0.6094116625340491,
+            2.429900641198346
+          ],
+          "levels": [
+            254.95294803746643,
+            0.000961935105119776
+          ],
+          "purpose": "codecell:2:3",
+          "status": "resolved",
+          "ledger_start": 3594,
+          "code_ref": 7,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 7,
+          "ledger_end": 3595
+        },
+        {
+          "index": 8,
+          "parameters": [
+            6.258792562329168,
+            5.840337898240363,
+            3.819788820940247,
+            0.6094022321403566,
+            2.429903004524407
+          ],
+          "levels": [
+            254.95323269868197,
+            0.001923870210239552
+          ],
+          "purpose": "codecell:2:4",
+          "status": "resolved",
+          "ledger_start": 3595,
+          "code_ref": 8,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 8,
+          "ledger_end": 3596
+        },
+        {
+          "index": 9,
+          "parameters": [
+            6.258776755127737,
+            5.8403519516862685,
+            3.819813552393832,
+            0.6093928017466641,
+            2.429905367850468
+          ],
+          "levels": [
+            254.95351735989752,
+            0.002885805315359328
+          ],
+          "purpose": "codecell:2:5",
+          "status": "resolved",
+          "ledger_start": 3596,
+          "code_ref": 9,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 9,
+          "ledger_end": 3597
+        },
+        {
+          "index": 10,
+          "parameters": [
+            6.258854531430174,
+            5.840284334387349,
+            3.819719635974157,
+            0.6094414536411187,
+            2.4298945281626576
+          ],
+          "levels": [
+            254.95271460985987,
+            0.00023764021520482944
+          ],
+          "purpose": "codecell:3:3",
+          "status": "resolved",
+          "ledger_start": 3599,
+          "code_ref": 10,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 10,
+          "ledger_end": 3600
+        },
+        {
+          "index": 11,
+          "parameters": [
+            6.258884886128318,
+            5.840258877426148,
+            3.8196999139152368,
+            0.6094618143544956,
+            2.42989077845303
+          ],
+          "levels": [
+            254.95276584346888,
+            0.0004752804304096589
+          ],
+          "purpose": "codecell:3:4",
+          "status": "resolved",
+          "ledger_start": 3600,
+          "code_ref": 11,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 11,
+          "ledger_end": 3601
+        },
+        {
+          "index": 12,
+          "parameters": [
+            6.258915240826464,
+            5.840233420464947,
+            3.8196801918563166,
+            0.6094821750678727,
+            2.4298870287434027
+          ],
+          "levels": [
+            254.95281707707787,
+            0.0007129206456144883
+          ],
+          "purpose": "codecell:3:5",
+          "status": "resolved",
+          "ledger_start": 3601,
+          "code_ref": 12,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 12,
+          "ledger_end": 3602
+        },
+        {
+          "index": 13,
+          "parameters": [
+            6.258764508574513,
+            5.840316779377168,
+            3.819773548066124,
+            0.6093951540557395,
+            2.430113587038987
+          ],
+          "levels": [
+            254.95284726977138,
+            9.125974488197441e-05
+          ],
+          "purpose": "codecell:4:3",
+          "status": "resolved",
+          "ledger_start": 3604,
+          "code_ref": 13,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 13,
+          "ledger_end": 3605
+        },
+        {
+          "index": 14,
+          "parameters": [
+            6.258704840416998,
+            5.840323767405785,
+            3.819807738099171,
+            0.6093692151837374,
+            2.4303288962056895
+          ],
+          "levels": [
+            254.9530311632919,
+            0.00018251948976394882
+          ],
+          "purpose": "codecell:4:4",
+          "status": "resolved",
+          "ledger_start": 3605,
+          "code_ref": 14,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 14,
+          "ledger_end": 3606
+        },
+        {
+          "index": 15,
+          "parameters": [
+            6.258645172259483,
+            5.840330755434402,
+            3.8198419281322176,
+            0.6093432763117355,
+            2.4305442053723922
+          ],
+          "levels": [
+            254.9532150568124,
+            0.0002737792346459232
+          ],
+          "purpose": "codecell:4:5",
+          "status": "resolved",
+          "ledger_start": 3606,
+          "code_ref": 15,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 15,
+          "ledger_end": 3607
+        },
+        {
+          "index": 16,
+          "parameters": [
+            6.258826208660963,
+            5.840310751144871,
+            3.81978381095194,
+            0.6094249185713082,
+            2.4299002628815307
+          ],
+          "levels": [
+            254.962410792896,
+            0.0014043485263063745
+          ],
+          "purpose": "codecell:5:3",
+          "status": "resolved",
+          "ledger_start": 3609,
+          "code_ref": 16,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 16,
+          "ledger_end": 3610
+        },
+        {
+          "index": 17,
+          "parameters": [
+            6.258828240589898,
+            5.840311710941192,
+            3.819828263870803,
+            0.6094287442148748,
+            2.429902247890776
+          ],
+          "levels": [
+            254.9721582095411,
+            0.002808697052612749
+          ],
+          "purpose": "codecell:5:4",
+          "status": "resolved",
+          "ledger_start": 3610,
+          "code_ref": 17,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 17,
+          "ledger_end": 3611
+        },
+        {
+          "index": 18,
+          "parameters": [
+            6.258830272518832,
+            5.8403126707375135,
+            3.819872716789666,
+            0.6094325698584415,
+            2.429904232900022
+          ],
+          "levels": [
+            254.98190562618623,
+            0.004213045578919124
+          ],
+          "purpose": "codecell:5:5",
+          "status": "resolved",
+          "ledger_start": 3611,
+          "code_ref": 18,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 18,
+          "ledger_end": 3612
+        },
+        {
+          "index": 19,
+          "parameters": [
+            6.258824222117682,
+            5.840309928520558,
+            3.8197426967624546,
+            0.6094214873241515,
+            2.429898299766976
+          ],
+          "levels": [
+            254.9526945894558,
+            0.00099852077656579
+          ],
+          "purpose": "codecell:6:3",
+          "status": "resolved",
+          "ledger_start": 3614,
+          "code_ref": 19,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 19,
+          "ledger_end": 3615
+        },
+        {
+          "index": 20,
+          "parameters": [
+            6.258824267503336,
+            5.840310065692564,
+            3.819746035491832,
+            0.6094218817205613,
+            2.4298983216616667
+          ],
+          "levels": [
+            254.95272580266075,
+            0.00199704155313158
+          ],
+          "purpose": "codecell:6:4",
+          "status": "resolved",
+          "ledger_start": 3615,
+          "code_ref": 20,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 20,
+          "ledger_end": 3616
+        },
+        {
+          "index": 21,
+          "parameters": [
+            6.258824312888988,
+            5.840310202864571,
+            3.8197493742212094,
+            0.6094222761169712,
+            2.4298983435563577
+          ],
+          "levels": [
+            254.95275701586567,
+            0.0029955623296973708
+          ],
+          "purpose": "codecell:6:5",
+          "status": "resolved",
+          "ledger_start": 3616,
+          "code_ref": 21,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 21,
+          "ledger_end": 3617
+        }
+      ],
+      "direction_statuses": [
+        "axis_completed",
+        "axis_completed",
+        "axis_completed",
+        "axis_completed",
+        "axis_completed",
+        "axis_completed",
+        "axis_completed"
+      ]
+    },
+    {
+      "name": "wrapped-major-png",
+      "status": "completed_witness_diagnostic",
+      "census": {
+        "compatible_actual_slots": 49,
+        "distinct_new_parameter_tuples": 49,
+        "distinct_new_geometry_tuples": 49,
+        "distinct_new_fraction_values": 49
+      },
+      "fraction_min": 0.8290267711908844,
+      "fraction_max": 0.8295395016050038,
+      "fraction_diameter_exact": "4618265003939/9007199254740992",
+      "charged": [
+        52,
+        8619,
+        17473363
+      ],
+      "aggregate_work": [
+        321,
+        44954,
+        19309886
+      ],
+      "historical_codes": "not_retained",
+      "literal_trials": [
+        {
+          "index": 0,
+          "parameters": [
+            6.089777845291927,
+            6.168760286473537,
+            3.520177322293736,
+            0.8293879114012787,
+            -0.06020106504773626
+          ],
+          "levels": [
+            230.98884192527558,
+            35.127053296670404
+          ],
+          "purpose": "codecell_baseline",
+          "status": "resolved",
+          "ledger_start": 0,
+          "code_ref": 0,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 0,
+          "ledger_end": 1
+        },
+        {
+          "index": 1,
+          "parameters": [
+            6.0896579043239445,
+            6.168759256912722,
+            3.5201415886059158,
+            0.829438441469187,
+            -0.06020762592044688
+          ],
+          "levels": [
+            230.98869522950292,
+            35.12726557632351
+          ],
+          "purpose": "codecell:0:0",
+          "status": "resolved",
+          "ledger_start": 2809,
+          "code_ref": 1,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 1,
+          "ledger_end": 2810
+        },
+        {
+          "index": 2,
+          "parameters": [
+            6.089537963355962,
+            6.168758227351907,
+            3.5201058549180955,
+            0.8294889715370953,
+            -0.0602141867931575
+          ],
+          "levels": [
+            230.9885485337303,
+            35.127477855976615
+          ],
+          "purpose": "codecell:0:1",
+          "status": "resolved",
+          "ledger_start": 2810,
+          "code_ref": 2,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 2,
+          "ledger_end": 2811
+        },
+        {
+          "index": 3,
+          "parameters": [
+            6.08941802238798,
+            6.168757197791091,
+            3.5200701212302747,
+            0.8295395016050038,
+            -0.060220747665868116
+          ],
+          "levels": [
+            230.98840183795764,
+            35.12769013562973
+          ],
+          "purpose": "codecell:0:2",
+          "status": "resolved",
+          "ledger_start": 2811,
+          "code_ref": 3,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 3,
+          "ledger_end": 2812
+        },
+        {
+          "index": 4,
+          "parameters": [
+            6.089939307334328,
+            6.168761672446944,
+            3.5202254262428294,
+            0.8293198888723262,
+            -0.06019223293702704
+          ],
+          "levels": [
+            230.98903940408087,
+            35.12676753020605
+          ],
+          "purpose": "codecell:0:3",
+          "status": "resolved",
+          "ledger_start": 2812,
+          "code_ref": 4,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 4,
+          "ledger_end": 2813
+        },
+        {
+          "index": 5,
+          "parameters": [
+            6.090100769376729,
+            6.1687630584203506,
+            3.5202735301919224,
+            0.8292518663433739,
+            -0.06018340082631781
+          ],
+          "levels": [
+            230.9892368828862,
+            35.12648176374171
+          ],
+          "purpose": "codecell:0:4",
+          "status": "resolved",
+          "ledger_start": 2813,
+          "code_ref": 5,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 5,
+          "ledger_end": 2814
+        },
+        {
+          "index": 6,
+          "parameters": [
+            6.09026223141913,
+            6.168764444393758,
+            3.5203216341410157,
+            0.8291838438144215,
+            -0.06017456871560859
+          ],
+          "levels": [
+            230.98943436169148,
+            35.12619599727736
+          ],
+          "purpose": "codecell:0:5",
+          "status": "resolved",
+          "ledger_start": 2814,
+          "code_ref": 6,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 6,
+          "ledger_end": 2815
+        },
+        {
+          "index": 7,
+          "parameters": [
+            6.089860887440764,
+            6.16876099929872,
+            3.520202062816282,
+            0.8293529264791906,
+            -0.060196522571739054
+          ],
+          "levels": [
+            230.98894349134088,
+            35.12690632304792
+          ],
+          "purpose": "codecell:0:6",
+          "status": "resolved",
+          "ledger_start": 2815,
+          "code_ref": 7,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 7,
+          "ledger_end": 2816
+        },
+        {
+          "index": 8,
+          "parameters": [
+            6.089777432660957,
+            6.168733154799101,
+            3.520176687498447,
+            0.8293878370084949,
+            -0.06020840217472371
+          ],
+          "levels": [
+            230.98880031497262,
+            35.127124041283814
+          ],
+          "purpose": "codecell:1:0",
+          "status": "resolved",
+          "ledger_start": 2818,
+          "code_ref": 8,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 8,
+          "ledger_end": 2819
+        },
+        {
+          "index": 9,
+          "parameters": [
+            6.089777020029986,
+            6.168706023124664,
+            3.520176052703158,
+            0.8293877626157113,
+            -0.06021573930171117
+          ],
+          "levels": [
+            230.98875870466964,
+            35.12719478589722
+          ],
+          "purpose": "codecell:1:1",
+          "status": "resolved",
+          "ledger_start": 2819,
+          "code_ref": 9,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 9,
+          "ledger_end": 2820
+        },
+        {
+          "index": 10,
+          "parameters": [
+            6.089776607399016,
+            6.168678891450228,
+            3.520175417907869,
+            0.8293876882229276,
+            -0.06022307642869862
+          ],
+          "levels": [
+            230.98871709436668,
+            35.12726553051063
+          ],
+          "purpose": "codecell:1:2",
+          "status": "resolved",
+          "ledger_start": 2820,
+          "code_ref": 10,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 10,
+          "ledger_end": 2821
+        },
+        {
+          "index": 11,
+          "parameters": [
+            6.089782053870642,
+            6.169037012642352,
+            3.5201837968100342,
+            0.8293886701613049,
+            -0.06012623092549615
+          ],
+          "levels": [
+            230.98926632443133,
+            35.126331745706835
+          ],
+          "purpose": "codecell:1:3",
+          "status": "resolved",
+          "ledger_start": 2821,
+          "code_ref": 11,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 11,
+          "ledger_end": 2822
+        },
+        {
+          "index": 12,
+          "parameters": [
+            6.089786262449357,
+            6.169313738811168,
+            3.520190271326332,
+            0.8293894289213313,
+            -0.06005139680325604
+          ],
+          "levels": [
+            230.98969072358707,
+            35.12561019474327
+          ],
+          "purpose": "codecell:1:4",
+          "status": "resolved",
+          "ledger_start": 2822,
+          "code_ref": 12,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 12,
+          "ledger_end": 2823
+        },
+        {
+          "index": 13,
+          "parameters": [
+            6.0897904710280715,
+            6.169590464979984,
+            3.52019674584263,
+            0.8293901876813575,
+            -0.059976562681015935
+          ],
+          "levels": [
+            230.9901151227428,
+            35.1248886437797
+          ],
+          "purpose": "codecell:1:5",
+          "status": "resolved",
+          "ledger_start": 2823,
+          "code_ref": 13,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 13,
+          "ledger_end": 2824
+        },
+        {
+          "index": 14,
+          "parameters": [
+            6.089785437187416,
+            6.169259475462296,
+            3.520189001735754,
+            0.829389280135764,
+            -0.06006607105723095
+          ],
+          "levels": [
+            230.98960750298113,
+            35.12575168397009
+          ],
+          "purpose": "codecell:1:6",
+          "status": "resolved",
+          "ledger_start": 2824,
+          "code_ref": 14,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 14,
+          "ledger_end": 2825
+        },
+        {
+          "index": 15,
+          "parameters": [
+            6.089759852698859,
+            6.168759488956815,
+            3.5201447562422454,
+            0.8294011771894543,
+            -0.060202602787658474
+          ],
+          "levels": [
+            230.98849345567416,
+            35.12562247482589
+          ],
+          "purpose": "codecell:2:0",
+          "status": "resolved",
+          "ledger_start": 2827,
+          "code_ref": 15,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 15,
+          "ledger_end": 2828
+        },
+        {
+          "index": 16,
+          "parameters": [
+            6.089741860105792,
+            6.168758691440093,
+            3.520112190190755,
+            0.8294144429776299,
+            -0.0602041405275807
+          ],
+          "levels": [
+            230.98814498607274,
+            35.124191652981374
+          ],
+          "purpose": "codecell:2:1",
+          "status": "resolved",
+          "ledger_start": 2828,
+          "code_ref": 16,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 16,
+          "ledger_end": 2829
+        },
+        {
+          "index": 17,
+          "parameters": [
+            6.089723867512724,
+            6.168757893923371,
+            3.5200796241392642,
+            0.8294277087658055,
+            -0.060205678267502914
+          ],
+          "levels": [
+            230.98779651647135,
+            35.12276083113686
+          ],
+          "purpose": "codecell:2:2",
+          "status": "resolved",
+          "ledger_start": 2829,
+          "code_ref": 17,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 17,
+          "ledger_end": 2830
+        },
+        {
+          "index": 18,
+          "parameters": [
+            6.0898469008697775,
+            6.168763347342967,
+            3.5203023108095968,
+            0.8293369973020895,
+            -0.06019516320143127
+          ],
+          "levels": [
+            230.99017935171537,
+            35.132544791359535
+          ],
+          "purpose": "codecell:2:3",
+          "status": "resolved",
+          "ledger_start": 2830,
+          "code_ref": 18,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 18,
+          "ledger_end": 2831
+        },
+        {
+          "index": 19,
+          "parameters": [
+            6.089915956447628,
+            6.168766408212397,
+            3.5204272993254575,
+            0.8292860832029004,
+            -0.06018926135512629
+          ],
+          "levels": [
+            230.99151677815516,
+            35.138036286048674
+          ],
+          "purpose": "codecell:2:4",
+          "status": "resolved",
+          "ledger_start": 2831,
+          "code_ref": 19,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 19,
+          "ledger_end": 2832
+        },
+        {
+          "index": 20,
+          "parameters": [
+            6.08998501202548,
+            6.168769469081827,
+            3.5205522878413182,
+            0.8292351691037113,
+            -0.0601833595088213
+          ],
+          "levels": [
+            230.99285420459498,
+            35.143527780737806
+          ],
+          "purpose": "codecell:2:5",
+          "status": "resolved",
+          "ledger_start": 2832,
+          "code_ref": 20,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 20,
+          "ledger_end": 2833
+        },
+        {
+          "index": 21,
+          "parameters": [
+            6.089879971261493,
+            6.168764813178953,
+            3.5203621672224763,
+            0.8293126147792517,
+            -0.06019233683497073
+          ],
+          "levels": [
+            230.99081983895235,
+            35.135174642359644
+          ],
+          "purpose": "codecell:2:6",
+          "status": "resolved",
+          "ledger_start": 2833,
+          "code_ref": 21,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 21,
+          "ledger_end": 2834
+        },
+        {
+          "index": 22,
+          "parameters": [
+            6.08993261773676,
+            6.168759717928655,
+            3.5202580199460995,
+            0.8292675313311473,
+            -0.06019184564320756
+          ],
+          "levels": [
+            230.98898373514695,
+            35.12678694637502
+          ],
+          "purpose": "codecell:3:0",
+          "status": "resolved",
+          "ledger_start": 2836,
+          "code_ref": 22,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 22,
+          "ledger_end": 2837
+        },
+        {
+          "index": 23,
+          "parameters": [
+            6.0900873901815915,
+            6.168759149383773,
+            3.5203387175984626,
+            0.8291471512610158,
+            -0.06018262623867885
+          ],
+          "levels": [
+            230.98912554501828,
+            35.12652059607963
+          ],
+          "purpose": "codecell:3:1",
+          "status": "resolved",
+          "ledger_start": 2837,
+          "code_ref": 23,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 23,
+          "ledger_end": 2838
+        },
+        {
+          "index": 24,
+          "parameters": [
+            6.090242162626424,
+            6.16875858083889,
+            3.520419415250826,
+            0.8290267711908844,
+            -0.06017340683415015
+          ],
+          "levels": [
+            230.98926735488965,
+            35.126254245784246
+          ],
+          "purpose": "codecell:3:2",
+          "status": "resolved",
+          "ledger_start": 2838,
+          "code_ref": 24,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 24,
+          "ledger_end": 2839
+        },
+        {
+          "index": 25,
+          "parameters": [
+            6.08971586506726,
+            6.16876051415321,
+            3.5201450060850656,
+            0.8294361188441493,
+            -0.060204757053536166
+          ],
+          "levels": [
+            230.9887851360474,
+            35.12715995939816
+          ],
+          "purpose": "codecell:3:3",
+          "status": "resolved",
+          "ledger_start": 2839,
+          "code_ref": 25,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 25,
+          "ledger_end": 2840
+        },
+        {
+          "index": 26,
+          "parameters": [
+            6.089653884842592,
+            6.168760741832882,
+            3.5201126898763957,
+            0.82948432628702,
+            -0.060208449059336075
+          ],
+          "levels": [
+            230.98872834681922,
+            35.12726662212593
+          ],
+          "purpose": "codecell:3:4",
+          "status": "resolved",
+          "ledger_start": 2840,
+          "code_ref": 26,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 26,
+          "ledger_end": 2841
+        },
+        {
+          "index": 27,
+          "parameters": [
+            6.089591904617925,
+            6.1687609695125545,
+            3.5200803736677253,
+            0.8295325337298906,
+            -0.06021214106513599
+          ],
+          "levels": [
+            230.98867155759103,
+            35.12737328485369
+          ],
+          "purpose": "codecell:3:5",
+          "status": "resolved",
+          "ledger_start": 2841,
+          "code_ref": 27,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 27,
+          "ledger_end": 2842
+        },
+        {
+          "index": 28,
+          "parameters": [
+            6.089963429732257,
+            6.1687596047431175,
+            3.5202740851811223,
+            0.8292435661467571,
+            -0.06019001025027867
+          ],
+          "levels": [
+            230.98901196656192,
+            35.126733921535156
+          ],
+          "purpose": "codecell:3:6",
+          "status": "resolved",
+          "ledger_start": 2842,
+          "code_ref": 28,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 28,
+          "ledger_end": 2843
+        },
+        {
+          "index": 29,
+          "parameters": [
+            6.089769092152581,
+            6.168735862380252,
+            3.5201732478417815,
+            0.829391927102019,
+            -0.06052447249922422
+          ],
+          "levels": [
+            230.98868530569854,
+            35.127444159010935
+          ],
+          "purpose": "codecell:4:0",
+          "status": "resolved",
+          "ledger_start": 2845,
+          "code_ref": 29,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 29,
+          "ledger_end": 2846
+        },
+        {
+          "index": 30,
+          "parameters": [
+            6.089760339013235,
+            6.1687114382869686,
+            3.520169173389827,
+            0.8293959428027594,
+            -0.06084787995071218
+          ],
+          "levels": [
+            230.9885286861215,
+            35.12783502135146
+          ],
+          "purpose": "codecell:4:1",
+          "status": "resolved",
+          "ledger_start": 2846,
+          "code_ref": 30,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 30,
+          "ledger_end": 2847
+        },
+        {
+          "index": 31,
+          "parameters": [
+            6.089751585873889,
+            6.168687014193684,
+            3.5201650989378725,
+            0.8293999585034998,
+            -0.061171287402200146
+          ],
+          "levels": [
+            230.98837206654446,
+            35.12822588369199
+          ],
+          "purpose": "codecell:4:2",
+          "status": "resolved",
+          "ledger_start": 2847,
+          "code_ref": 31,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 31,
+          "ledger_end": 2848
+        },
+        {
+          "index": 32,
+          "parameters": [
+            6.0897838690462285,
+            6.168777094698697,
+            3.520180126258864,
+            0.8293851478676877,
+            -0.05997850181069725
+          ],
+          "levels": [
+            230.98894970807368,
+            35.12678431218243
+          ],
+          "purpose": "codecell:4:3",
+          "status": "resolved",
+          "ledger_start": 2848,
+          "code_ref": 32,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 32,
+          "ledger_end": 2849
+        },
+        {
+          "index": 33,
+          "parameters": [
+            6.08978989280053,
+            6.168793902923857,
+            3.520182930223992,
+            0.8293823843340967,
+            -0.05975593857365825
+          ],
+          "levels": [
+            230.9890574908718,
+            35.12651532769446
+          ],
+          "purpose": "codecell:4:4",
+          "status": "resolved",
+          "ledger_start": 2849,
+          "code_ref": 33,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 33,
+          "ledger_end": 2850
+        },
+        {
+          "index": 34,
+          "parameters": [
+            6.089795916554832,
+            6.1688107111490185,
+            3.5201857341891203,
+            0.8293796208005058,
+            -0.05953337533661924
+          ],
+          "levels": [
+            230.9891652736699,
+            35.12624634320649
+          ],
+          "purpose": "codecell:4:5",
+          "status": "resolved",
+          "ledger_start": 2850,
+          "code_ref": 34,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 34,
+          "ledger_end": 2851
+        },
+        {
+          "index": 35,
+          "parameters": [
+            6.0897723865218385,
+            6.168745054737289,
+            3.520174781320083,
+            0.8293904157355775,
+            -0.06040275347663417
+          ],
+          "levels": [
+            230.98874425171772,
+            35.12729705237552
+          ],
+          "purpose": "codecell:4:6",
+          "status": "resolved",
+          "ledger_start": 2851,
+          "code_ref": 35,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 35,
+          "ledger_end": 2852
+        },
+        {
+          "index": 36,
+          "parameters": [
+            6.0897687289146205,
+            6.168753834452802,
+            3.520134313855506,
+            0.8293907885836752,
+            -0.060208360437658696
+          ],
+          "levels": [
+            230.98133687800768,
+            35.12609995585301
+          ],
+          "purpose": "codecell:5:0",
+          "status": "resolved",
+          "ledger_start": 2854,
+          "code_ref": 36,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 36,
+          "ledger_end": 2855
+        },
+        {
+          "index": 37,
+          "parameters": [
+            6.089759612537314,
+            6.168747382432067,
+            3.520091305417276,
+            0.8293936657660718,
+            -0.060215655827581135
+          ],
+          "levels": [
+            230.97383183073975,
+            35.12514661503561
+          ],
+          "purpose": "codecell:5:1",
+          "status": "resolved",
+          "ledger_start": 2855,
+          "code_ref": 37,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 37,
+          "ledger_end": 2856
+        },
+        {
+          "index": 38,
+          "parameters": [
+            6.089750496160007,
+            6.168740930411332,
+            3.5200482969790463,
+            0.8293965429484684,
+            -0.060222951217503574
+          ],
+          "levels": [
+            230.96632678347186,
+            35.124193274218214
+          ],
+          "purpose": "codecell:5:2",
+          "status": "resolved",
+          "ledger_start": 2856,
+          "code_ref": 38,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 38,
+          "ledger_end": 2857
+        },
+        {
+          "index": 39,
+          "parameters": [
+            6.089783684032179,
+            6.168764418780912,
+            3.5202048677858793,
+            0.8293860686604501,
+            -0.06019639259009633
+          ],
+          "levels": [
+            230.99364866155943,
+            35.127663880152994
+          ],
+          "purpose": "codecell:5:3",
+          "status": "resolved",
+          "ledger_start": 2857,
+          "code_ref": 39,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 39,
+          "ledger_end": 2858
+        },
+        {
+          "index": 40,
+          "parameters": [
+            6.089789522772431,
+            6.168768551088286,
+            3.520232413278022,
+            0.8293842259196216,
+            -0.0601917201324564
+          ],
+          "levels": [
+            230.99845539784326,
+            35.128274463635584
+          ],
+          "purpose": "codecell:5:4",
+          "status": "resolved",
+          "ledger_start": 2858,
+          "code_ref": 40,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 40,
+          "ledger_end": 2859
+        },
+        {
+          "index": 41,
+          "parameters": [
+            6.089795361512683,
+            6.168772683395661,
+            3.5202599587701653,
+            0.829382383178793,
+            -0.06018704767481647
+          ],
+          "levels": [
+            231.0032621341271,
+            35.128885047118175
+          ],
+          "purpose": "codecell:5:5",
+          "status": "resolved",
+          "ledger_start": 2859,
+          "code_ref": 41,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 41,
+          "ledger_end": 2860
+        },
+        {
+          "index": 42,
+          "parameters": [
+            6.089771290017818,
+            6.168755647046816,
+            3.5201463964015622,
+            0.8293899802844147,
+            -0.060206310912301275
+          ],
+          "levels": [
+            230.98344530330746,
+            35.12636778200079
+          ],
+          "purpose": "codecell:5:6",
+          "status": "resolved",
+          "ledger_start": 2860,
+          "code_ref": 42,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 42,
+          "ledger_end": 2861
+        },
+        {
+          "index": 43,
+          "parameters": [
+            6.089781821356581,
+            6.168763592669796,
+            3.5201240974112,
+            0.8293862826510479,
+            -0.060195577647135345
+          ],
+          "levels": [
+            230.98855459025333,
+            35.11513818735338
+          ],
+          "purpose": "codecell:6:0",
+          "status": "resolved",
+          "ledger_start": 2863,
+          "code_ref": 43,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 43,
+          "ledger_end": 2864
+        },
+        {
+          "index": 44,
+          "parameters": [
+            6.089785797421235,
+            6.168766898866056,
+            3.5200708725286636,
+            0.829384653900817,
+            -0.060190090246534426
+          ],
+          "levels": [
+            230.98826725523108,
+            35.10322307803635
+          ],
+          "purpose": "codecell:6:1",
+          "status": "resolved",
+          "ledger_start": 2864,
+          "code_ref": 44,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 44,
+          "ledger_end": 2865
+        },
+        {
+          "index": 45,
+          "parameters": [
+            6.089789773485889,
+            6.168770205062315,
+            3.5200176476461276,
+            0.8293830251505862,
+            -0.060184602845933514
+          ],
+          "levels": [
+            230.98797992020883,
+            35.09130796871933
+          ],
+          "purpose": "codecell:6:2",
+          "status": "resolved",
+          "ledger_start": 2865,
+          "code_ref": 45,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 45,
+          "ledger_end": 2866
+        },
+        {
+          "index": 46,
+          "parameters": [
+            6.089770993479824,
+            6.168754589022034,
+            3.520269042858171,
+            0.8293907181691544,
+            -0.06021052129181638
+          ],
+          "levels": [
+            230.98933707959378,
+            35.14758618466921
+          ],
+          "purpose": "codecell:6:3",
+          "status": "resolved",
+          "ledger_start": 2866,
+          "code_ref": 46,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 46,
+          "ledger_end": 2867
+        },
+        {
+          "index": 47,
+          "parameters": [
+            6.089764141667722,
+            6.168748891570529,
+            3.5203607634226066,
+            0.8293935249370303,
+            -0.0602199775358965
+          ],
+          "levels": [
+            230.98983223391195,
+            35.168119072668006
+          ],
+          "purpose": "codecell:6:4",
+          "status": "resolved",
+          "ledger_start": 2867,
+          "code_ref": 47,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 47,
+          "ledger_end": 2868
+        },
+        {
+          "index": 48,
+          "parameters": [
+            6.08975728985562,
+            6.168743194119026,
+            3.5204524839870417,
+            0.8293963317049061,
+            -0.060229433779976624
+          ],
+          "levels": [
+            230.99032738823016,
+            35.18865196066681
+          ],
+          "purpose": "codecell:6:5",
+          "status": "resolved",
+          "ledger_start": 2868,
+          "code_ref": 48,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 48,
+          "ledger_end": 2869
+        },
+        {
+          "index": 49,
+          "parameters": [
+            6.0897720937970305,
+            6.168755503963048,
+            3.520254313657534,
+            0.8293902674365686,
+            -0.06020900273469467
+          ],
+          "levels": [
+            230.98925756386745,
+            35.14428885403395
+          ],
+          "purpose": "codecell:6:6",
+          "status": "resolved",
+          "ledger_start": 2869,
+          "code_ref": 49,
+          "code_status": "retained",
+          "code_entries_requested": 169,
+          "code_entries_reserved": 169,
+          "code_entries_used": 169,
+          "candidate_index": 49,
+          "ledger_end": 2870
+        }
+      ],
+      "direction_statuses": [
+        "axis_completed",
+        "axis_completed",
+        "axis_completed",
+        "axis_completed",
+        "axis_completed",
+        "axis_completed",
+        "axis_completed"
+      ]
+    }
+  ],
+  "launch": {
+    "path": ".local/verification/finite-acquisition-codecell-probe-controls-v2-first-launch.json",
+    "sha256": "9195ed498d593209292b50a0694e773ae4962cf474a64b3e8af1952a4e4ee085",
+    "bytes": 928
+  },
+  "initial_native": {
+    "path": ".local/verification/finite-acquisition-codecell-probe-controls-v2-first-initial-native.json",
+    "sha256": "53995b05b14a9eeefe197aa3b547c45445a6a90a5e9496e93a8a4d087fc1863e",
+    "bytes": 131
+  },
+  "native": {
+    "path": ".local/verification/finite-acquisition-codecell-probe-controls-v2-first-native-terminal.json",
+    "sha256": "06f29ad26ee729b8ae62b906ad592329be52752e6984c411bebdbddf935719cb",
+    "bytes": 774
+  },
+  "log": {
+    "path": ".local/verification/finite-acquisition-codecell-probe-controls-v2-first.log",
+    "sha256": "552abea3af64c2364a47e586b4d8beb1bb7f2be31588fb7c0ec6399a14f209f5",
+    "bytes": 582
+  }
+}

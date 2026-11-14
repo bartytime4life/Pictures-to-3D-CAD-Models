@@ -1,0 +1,83 @@
+{
+  "scope": "local saved-only mathematical audit; no subject imports, replay or new scientific evaluation",
+  "report": {
+    "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/report.json",
+    "sha256": "4eadc2057ded427a4727cb2e14cae0aac153907fd511252423529dcd612fc982",
+    "bytes": 264057
+  },
+  "terminal_receipt": {
+    "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first-terminal-receipt.json",
+    "sha256": "a9a6870357a01c064f70c8eb92ce89cadd41c23f2fd743c6d2cf1f37999c123c"
+  },
+  "attempts": [
+    {
+      "checker": "audit-v1.py",
+      "receipt": "receipt-v1.json",
+      "log": "execution-v1.log",
+      "exit_code": 1,
+      "checks": 28887,
+      "failures": 1,
+      "cause": "auditor compared optional committed-only Git metadata across before/after snapshots; mathematical checks completed"
+    },
+    {
+      "checker": "audit-v2.py",
+      "receipt": "receipt-v2.json",
+      "log": "execution-v2.log",
+      "exit_code": 1,
+      "checks": 9,
+      "failures": 1,
+      "cause": "auditor KeyError on absent optional terminal Git metadata"
+    },
+    {
+      "checker": "audit-v3.py",
+      "receipt": "receipt-v3.json",
+      "log": "execution-v3.log",
+      "exit_code": 0,
+      "checks": 29022,
+      "failures": 0,
+      "cause": null
+    }
+  ],
+  "files": {
+    "audit-v1.py": {
+      "sha256": "7f39cd6330bbf94fcc1d61936c8b57c6fb3932150a092e0bc45866a3286d5405",
+      "bytes": 48625
+    },
+    "audit-v2.py": {
+      "sha256": "727db26cb60701dca28f25b00a9ea6b13969d5e8e0a1fa0b365bddf41c553fc8",
+      "bytes": 49585
+    },
+    "audit-v3.py": {
+      "sha256": "c015d3f28855ea5eff86936b8e9f3c36a5b37e18839b9759d71e0d35b1f9582f",
+      "bytes": 49884
+    },
+    "execution-v1.log": {
+      "sha256": "7c9c94347b5cdb45801bb21302088bbb23db543f02824eeb9b2a518c93cd5428",
+      "bytes": 127
+    },
+    "execution-v2.log": {
+      "sha256": "19e37977b35f1cdd73d68ec28242ff17496bea5820560225b301a20c7c2d9961",
+      "bytes": 123
+    },
+    "execution-v3.log": {
+      "sha256": "35550e3505d24d8ef8e672ce15161878d3d7f05e92b855370e6cc56e841e963b",
+      "bytes": 126
+    },
+    "interpretation-v1.md": {
+      "sha256": "d683ceea7cf05f2c29352fbbb5ecf5e940034020060d67866c7f5a932a7faa0e",
+      "bytes": 6409
+    },
+    "receipt-v1.json": {
+      "sha256": "b3eb10e0019151561967d7124f4d7d4c72243999eb711bae5e9322484714e916",
+      "bytes": 140678
+    },
+    "receipt-v2.json": {
+      "sha256": "7bc735e0488efd20ef0223df385d5842a972de4d8ff04d2192f2c77b43dfb710",
+      "bytes": 2009
+    },
+    "receipt-v3.json": {
+      "sha256": "33ae11575a2501f26f44df0a32553c99a72f522db51dd80f7a53f1259f5c32ea",
+      "bytes": 141120
+    }
+  }
+}

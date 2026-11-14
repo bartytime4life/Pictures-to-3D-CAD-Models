@@ -1,0 +1,408 @@
+#!/usr/bin/env python3
+"""Read saved first-outcome bytes/algebra only; never import governing code."""
+
+import argparse
+import hashlib
+import json
+import math
+from pathlib import Path
+import stat
+import struct
+import subprocess
+import sys
+from fractions import Fraction as F
+
+
+ROOT = Path(__file__).resolve().parents[3]
+BASE = ROOT / ".local/verification"
+RESULT = BASE / "finite-acquisition-defect-corrector-v1-first.json"
+EXPECTED_RESULT = "1738ab1ef1e5784dac9381c558a8f0947fbcf15b72208e432e7c8785f312c34d"
+EXPECTED_HEAD = "d986f1f2db12791b96aad21dcc4f1e7977029c40"
+EXPECTED_TREE = "83e1635eb176c0776ec62ee6f442abb85b2e4ed7"
+EXPECTED_CLOSURE = "f52f39e6fdc96092a1197a36e9ad0c2fbb8df60e0f685714eff84c68d3b2ace5"
+EXPECTED_TERMINAL = "b83dc4717319594b03c2257193f4e8a8fb0940264581b1a2f7586d48fc0fed60"
+CHECKS = []
+
+
+def sha(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+
+def check(name, condition, detail=None):
+    row = {"name": name, "passed": bool(condition)}
+    if detail is not None:
+        row["detail"] = detail
+    CHECKS.append(row)
+
+
+def load(path):
+    raw = path.read_bytes()
+
+    def forbidden(value):
+        raise ValueError(f"nonfinite JSON token:{value}")
+
+    return json.loads(raw, parse_constant=forbidden), {"sha256": sha(raw), "bytes": len(raw)}
+
+
+def binding(path):
+    raw = path.read_bytes()
+    return {"sha256": sha(raw), "bytes": len(raw)}
+
+
+def git(*args):
+    return subprocess.check_output(["git", *args], cwd=ROOT)
+
+
+def flat(values):
+    return [v for row in values for v in row]
+
+
+def packed(values, dtype):
+    code = {"<f8": "d", "<f4": "f", "|u1": "B", "<i8": "q"}[dtype]
+    return struct.pack("<" + str(len(values)) + code, *values)
+
+
+def bits(values):
+    return packed(values, "<f8")
+
+
+def array_record(name, row, expected_shape=None):
+    h, w = row["shape"]
+    check(name + ":rows", len(row["values"]) == h)
+    check(name + ":columns", all(len(v) == w for v in row["values"]))
+    if expected_shape is not None:
+        check(name + ":shape", row["shape"] == list(expected_shape))
+    raw = packed(flat(row["values"]), row["dtype"])
+    check(name + ":sha256", sha(raw) == row["sha256"])
+    return raw
+
+
+def source_inventory(freeze, result, label):
+    records = {}
+    tree = {}
+    for entry in git("ls-tree", "-rz", "HEAD").split(b"\0"):
+        if entry:
+            meta, path = entry.split(b"\t", 1)
+            mode, kind, oid = meta.decode().split()
+            tree[path.decode()] = (mode, kind, oid)
+    check(label + ":head", git("rev-parse", "HEAD").decode().strip() == EXPECTED_HEAD)
+    check(label + ":tree", git("rev-parse", "HEAD^{tree}").decode().strip() == EXPECTED_TREE)
+    for name, expected in freeze["governing_inputs"].items():
+        path = ROOT / name
+        raw = path.read_bytes()
+        mode, kind, oid = tree[name]
+        committed = git("cat-file", "blob", oid)
+        expected_record = result["source_before"]["files"][name]
+        records[name] = {"sha256": sha(raw), "bytes": len(raw), "git_mode": mode,
+                         "head_sha256": sha(committed),
+                         "executable": bool(path.stat().st_mode & stat.S_IXUSR)}
+        check(label + ":source:" + name, sha(raw) == sha(committed) == expected)
+        check(label + ":record:" + name,
+              expected_record == {"sha256": expected, "head_sha256": expected, "bytes": len(raw)})
+        check(label + ":git_mode:" + name, mode == freeze["git_modes"][name])
+        check(label + ":executable:" + name, records[name]["executable"] == (mode == "100755"))
+    closure = [[name, records[name]["git_mode"], records[name]["sha256"]] for name in sorted(records)]
+    digest = sha(json.dumps(closure, separators=(",", ":"), ensure_ascii=True).encode())
+    check(label + ":closure", digest == EXPECTED_CLOSURE == freeze["closure_sha256"])
+    return {"count": len(records), "closure_sha256": digest, "files": records}
+
+
+def independent_expected(plan):
+    run = plan["saved_recovery"]["path"]
+    rows = {k: {key: plan[pk][key] for key in ("path", "sha256", "bytes")}
+            for k, pk in (("literal_plan", "frozen_literal_plan"),
+                          ("literal", "saved_literal"), ("census", "saved_census"),
+                          ("inward", "saved_inward"))}
+    rows["recovery"] = {"path": run + "/report.json",
+                        "sha256": plan["saved_recovery"]["report_sha256"],
+                        "bytes": plan["saved_recovery"]["report_bytes"]}
+    for key in ("terminal_receipt", "controls_receipt", "freeze"):
+        rows[key] = plan["saved_literal"][key]
+    for name, expected in plan["saved_artifacts"].items():
+        rows["artifact:" + name] = {"path": run + "/" + name, **expected}
+    return rows
+
+
+def saved_inventory(expected, result, label):
+    records = {}
+    for name, spec in expected.items():
+        actual = binding(ROOT / spec["path"])
+        records[name] = actual
+        check(label + ":saved:" + name,
+              actual == {"sha256": spec["sha256"], "bytes": spec["bytes"]})
+        check(label + ":saved_record:" + name, actual == result["saved_before"]["bindings"][name])
+    return records
+
+
+def walk_native(value, path="root"):
+    if isinstance(value, dict):
+        check(path + ":native_keys", all(type(k) is str for k in value))
+        check(path + ":no_invalid_tag", "invalid_python_value" not in value)
+        for key, item in value.items():
+            walk_native(item, path + "/" + key)
+    elif isinstance(value, list):
+        for index, item in enumerate(value):
+            walk_native(item, path + "/" + str(index))
+    else:
+        check(path + ":native", type(value) in (str, int, float, bool, type(None)))
+        if type(value) is float:
+            check(path + ":finite", math.isfinite(value))
+
+
+def old_rows(args):
+    rows = []
+    for i, row in enumerate(args["G"]):
+        if math.isfinite(args["upper"][i]):
+            rows.append(([F(v) for v in row], F(args["upper"][i]) - F(args["z0"][i]), ["source_upper", i]))
+        if math.isfinite(args["lower"][i]):
+            rows.append(([-F(v) for v in row], F(args["z0"][i]) - F(args["lower"][i]), ["source_lower", i]))
+    for j in range(7):
+        e = [F(int(i == j)) for i in range(7)]
+        rows.append((e, F(args["delta_upper"][j]), ["box_upper", j]))
+        rows.append(([-v for v in e], -F(args["delta_lower"][j]), ["box_lower", j]))
+    return rows
+
+
+def dot(a, b):
+    return sum((x*y for x, y in zip(a, b, strict=True)), F(0))
+
+
+def saved_algebra(correction, experiment):
+    args = correction["correction_inputs"]
+    p = experiment["construction"]["proof"]
+    rows = old_rows(args)
+    x = list(map(F, args["original_point"]))
+    dual = list(map(F, args["dual"]))
+    check("old_kkt:count", len(rows) == len(dual) == 352)
+    tight = []
+    for i, (a, b, identity) in enumerate(rows):
+        slack = b-dot(a, x)
+        check(f"old_kkt:primal:{i}", slack >= 0)
+        check(f"old_kkt:dual:{i}", dual[i] >= 0)
+        check(f"old_kkt:complementarity:{i}", dual[i]*slack == 0)
+        check(f"old_kkt:identity:{i}", p["old_kkt"]["row_identities"][i] == identity)
+        if slack == 0 and any(a):
+            tight.append(i)
+    for j in range(7):
+        check(f"old_kkt:stationarity:{j}", x[j]+sum((dual[i]*row[0][j] for i, row in enumerate(rows)), F(0)) == 0)
+    check("old_kkt:saved_tight_rows", tight == p["original_tight_rows"] == [67, 123, 124, 188, 219])
+    check("old_kkt:flags", all(p["old_kkt"][k] is True for k in
+                               ("primal_feasible", "dual_feasible", "complementarity", "stationarity", "qualified")))
+    normals = [list(map(F, row)) for row in p["basis_normals"]]
+    lambdas = list(map(F, p["gram_solution"]))
+    correction_vector = list(map(F, p["correction"]))
+    matrix = [list(map(F, row)) for row in p["gram_matrix"]]
+    rhs = list(map(F, p["rhs"]))
+    check("equality:basis_is_all_old_tight", p["basis_rows"] == tight and len(normals) == 5)
+    for i in range(5):
+        check(f"equality:normal:{i}", normals[i] == rows[tight[i]][0])
+        check(f"equality:gram:{i}", matrix[i] == [dot(normals[i], v) for v in normals])
+        check(f"equality:gram_residual:{i}", dot(matrix[i], lambdas) == rhs[i])
+        check(f"equality:constraint:{i}", dot(normals[i], correction_vector) == rhs[i])
+    for j in range(7):
+        check(f"equality:row_space:{j}", correction_vector[j] == sum((lambdas[i]*normals[i][j] for i in range(5)), F(0)))
+    check("equality:flags", p["row_space_verified"] is p["basis_equalities_verified"] is True)
+    check("equality:no_full_qp_claim", experiment["construction"]["new_point_optimality"] is False and experiment["new_qp_solves"] == 0)
+    check("pre_slacks:census", len(p["augmented_rows"]) == len(p["pre_slacks"]) == 366)
+    for i, (row, slacks) in enumerate(zip(p["augmented_rows"], p["pre_slacks"], strict=True)):
+        a = list(map(F, row["coefficients"]))
+        raw_slack = F(row["bound"])-dot(a, correction_vector)
+        check(f"pre_slacks:raw:{i}", raw_slack == F(slacks["raw_slack"]))
+        check(f"pre_slacks:margin:{i}", F(row["pre_margin"]) == F(row["storage_margin"])+F(row["representation_margin"]))
+        check(f"pre_slacks:strengthened:{i}", raw_slack-F(row["pre_margin"]) == F(slacks["strengthened_slack"]) >= 0)
+        check(f"pre_slacks:identity:{i}", row["identity"] == slacks["identity"] and row["row_index"] == slacks["row_index"] == i and slacks["passed"] is True)
+    check("nearest:saved_gates", all(p["post_gates"].values()) and p["nearest"]["feasible"] is True)
+    check("nearest:single", p["nearest"]["candidate_count"] == 1)
+    return {"raw_rows": len(rows), "augmented_rows": len(p["augmented_rows"]), "tight_rows": tight,
+            "scope": "Saved exact KKT, equality/row-space identities and saved pre-slacks checked; no solve, new point, Jacobian/model or margin theorem recomputation."}
+
+
+def input_digest(forward, inputs):
+    digest = hashlib.sha256()
+    for name, shape, dtype, values in (
+        ("coverage", tuple(inputs["source_shape"]), "<f8", flat(forward["coverage"]["values"])),
+        ("levels", (2,), "<f8", forward["point"][5:]),
+        ("optical", (len(inputs["optical_kernel"]), len(inputs["optical_kernel"][0])), "<f8", flat(inputs["optical_kernel"])),
+        ("post", (len(inputs["post_kernel"]), len(inputs["post_kernel"][0])), "<f8", flat(inputs["post_kernel"])),
+        ("map", (2, 3), "<f8", flat(inputs["output_to_source_index"])),
+        ("queries", (len(inputs["queries"]), 2), "<i8", flat(inputs["queries"])),
+    ):
+        digest.update(repr((name, shape, dtype)).encode())
+        digest.update(packed(values, dtype))
+    digest.update(repr((tuple(inputs["output_shape"]), True, "finite-acquisition-v1")).encode())
+    return digest.hexdigest()
+
+
+def audit(result, plan, freeze, output):
+    check("result:hash", output["result_binding"]["sha256"] == EXPECTED_RESULT)
+    check("result:strict_native_roundtrip", json.loads(json.dumps(result, allow_nan=False)) == result)
+    walk_native(result)
+    check("result:positive_local_status", result["status"] == "literal_training_improvement" and result["passed"] is True)
+    check("result:no_errors", result["errors"] == [] and result["protocol_failure"] is False)
+    check("result:no_recovery_retest", result["full_recovery_retested"] is result["original_outcomes_modified"] is False)
+    for key in ("optimizer_calls", "new_qp_solves", "new_jacobian_calls", "reference_calls", "preparation_calls", "reserved_scoring_calls"):
+        check("result:no_call:"+key, result[key] == 0)
+    check("source:reported_equality", result["source_before"] == result["source_after"] and result["source_unchanged"] is True)
+    check("source:counts", len(plan["previous_frozen_governing"]) == 112 and freeze["input_count"] == len(freeze["governing_inputs"]) == 116)
+    check("source:new_four", set(freeze["governing_inputs"])-set(plan["previous_frozen_governing"]) == set(plan["new_source_paths"]) and len(plan["new_source_paths"]) == 4)
+    for name, digest in plan["previous_frozen_governing"].items():
+        check("source:old112:"+name, digest == freeze["governing_inputs"][name])
+    output["source_before"] = source_inventory(freeze, result, "before")
+    expected = independent_expected(plan)
+    check("saved:expected114", len(expected) == 114 and expected == result["expected_saved_bindings"])
+    check("saved:reported_equality", result["saved_before"] == result["saved_after"] and result["saved_inputs_unchanged"] is True)
+    check("saved:106", len(plan["saved_artifacts"]) == 106 and len([k for k in expected if k.startswith("artifact:")]) == 106)
+    output["saved_before"] = saved_inventory(expected, result, "before")
+    old_report, _ = load(ROOT/expected["recovery"]["path"])
+    negative, _ = load(ROOT/expected["literal"]["path"])
+    check("saved:old_report_artifacts", old_report["artifacts"] == plan["saved_artifacts"])
+    check("saved:old_report_stays_negative", old_report["passed"] is False and old_report["matched_passes"] == 11)
+    check("saved:old_negative_stays_negative", negative["passed"] is False and negative["status"] == "complete_no_improvement")
+    check("inventory:24", len(result["rows"]) == len(old_report["rows"]) == 24)
+    fit_count = 0
+    eligible = []
+    for i, (row, old) in enumerate(zip(result["rows"], old_report["rows"], strict=True)):
+        name = old["case"]["name"]
+        check(f"inventory:identity:{i}", row["row_index"] == i and row["case"] == name)
+        check(f"inventory:old_flags:{i}", row["saved_status"] == old["status"] and row["saved_all_targets"] == old["all_targets"])
+        fit_exists = f"{name}/fit.json" in plan["saved_artifacts"]
+        fit_count += fit_exists
+        check(f"inventory:fit_status:{i}", fit_exists == (row["status"] != "no_saved_fit"))
+        for correction in row["corrections"]:
+            eligible.append((row, correction))
+    check("inventory:17_16_1", fit_count == 17 and len(eligible) == 1 and result["inventory"] == {"rows": 24, "fit_files": 17, "no_certificate_fits": 16, "qualified_certificates": 1})
+    row, correction = eligible[0]
+    e = correction["experiment"]
+    inputs = correction["inputs"]
+    check("selection:middle_png", row["case"] == "middle-png")
+    preceding = negative["rows"][5]["pairs"][0]
+    check("selection:same_context", correction["path"] == preceding["path"])
+    check("selection:same_inputs", inputs == preceding["inputs"] and correction["baseline"] == preceding["baseline"] and correction["snapshot"] == preceding["snapshot"])
+    check("selection:rejected_point", correction["correction_inputs"]["rejected_point"] == preceding["pair"]["forwards"][1]["point"])
+    check("selection:actual_rejected_optics", correction["correction_inputs"]["actual_optical"] == flat(preceding["pair"]["forwards"][1]["stages"]["optical_linear"]["values"]))
+    check("selection:scope", e["selected_source_index"] == 62 and e["target_code"] == 92)
+    n = math.prod(inputs["source_shape"])
+    m = math.prod(inputs["output_shape"])
+    work = n*(1+sum(map(len, inputs["optical_kernel"]))+4)+m*(16+sum(map(len, inputs["post_kernel"])))
+    check("work:single_mean_tariff", (n, m, work) == (169, 169, 5239))
+    math_work = 65536+512*(352+9*366)
+    check("work:math_tariff", math_work == e["math_reservation"] == plan["work"]["expected_math_units"] == 1932288)
+    pair = [2, 2*n, 2*work]
+    whole = [pair[0], pair[1], pair[2]+math_work]
+    check("work:pair", e["pair_reservation"] == pair == [2, 338, 10478])
+    check("work:whole", e["whole_reservation"] == e["held"] == e["charged"] == whole == [2, 338, 1942766])
+    check("work:prior", e["prior_work"] == preceding["pair"]["aggregate_work"] == plan["work"]["starting"] == [992, 135369, 54531024])
+    aggregate = [a+b for a, b in zip(e["prior_work"], whole, strict=True)]
+    check("work:aggregate_once", e["aggregate_work"] == aggregate == [994, 135707, 56473790])
+    check("work:caps", e["limits"] == plan["work"]["unchanged_caps"] == [2048, 1000000, 100000000] and all(v <= cap for v, cap in zip(aggregate, e["limits"], strict=True)))
+    check("work:math_is_preheld_view", e["math_reservation_calls"] == [{"kind": "correction_math", "units": math_work, "already_held": True}])
+    expected_view = {"held": pair, "charged": pair, "aggregate_work": aggregate, "not_additional_debit": True}
+    check("work:pair_is_preheld_view", e["pair_accounting_view"] == expected_view)
+    check("work:construction", e["construction"]["work"]["charged"] == e["construction"]["work"]["reported"] == math_work and e["construction"]["work"]["incomplete"] is False)
+    check("work:full_pair_completed", len(e["forwards"]) == 2 and e["logical_forward_attempts"] == 2)
+    check("work:no_opaque", e["opaque_failed_work"] is False)
+    final_costs = []
+    for i, f in enumerate(e["forwards"]):
+        name = f"forward:{i}"
+        check(name+":label", f["label"] == ("incumbent" if i == 0 else "defect_corrected_nearest"))
+        check(name+":resolved", f["status"] == "resolved" and f["protocol_failure"] is f["opaque_failed_work"] is False and f["payload_errors"] == [])
+        check(name+":hex", f["hex"] == [v.hex() for v in f["point"]])
+        check(name+":entry_preheld", f["pair_budget_at_entry"] == expected_view)
+        check(name+":full_charge", f["reservations"] == f["charged"] == {"evaluations": 1, "cell_work": n, "stage_work": work})
+        check(name+":independent_cell_counter_absent", f["reported"] == {"cell_work": None, "stage_work": work} and f["caller_accounted_cell_work"] == n)
+        check(name+":mean_work", f["required_work"] == f["returned_required_work"] == f["returned_performed_work"] == work)
+        for key in ("coverage_attempted", "coverage_completed", "acquisition_attempted", "acquisition_completed"):
+            check(name+":"+key, f[key] is True)
+        check(name+":stage_order", f["stage_order"] == ["coverage", "source_linear", "optical_linear", "encoded", "decoded_linear", "rectified", "final"])
+        array_record(name+":coverage64", f["coverage"], inputs["source_shape"])
+        for stage, record in f["stages"].items():
+            array_record(name+":"+stage, record, inputs["output_shape"] if stage in ("rectified", "final") else inputs["source_shape"])
+        predicted = [f["stages"]["final"]["values"][y][x] for x, y in inputs["queries"]]
+        raw_residual = [y-v for y, v in zip(inputs["target"], predicted, strict=True)]
+        weighted = [w*v for w, v in zip(inputs["weights"], raw_residual, strict=True)]
+        norm = math.hypot(*weighted)
+        cost = norm*norm
+        check(name+":selected_prediction", bits(predicted) == bits(f["prediction"]))
+        check(name+":raw_residual", bits(raw_residual) == bits(f["raw_residual"]))
+        check(name+":weighted_residual", bits(weighted) == bits(f["weighted_residual"]))
+        check(name+":cost", bits([cost]) == bits([f["cost"]]))
+        check(name+":mean_input_digest", input_digest(f, inputs) == f["input_sha256"] == f["returned_input_sha256"])
+        check(name+":statuses", len(f["statuses"]) == 135 and set(f["statuses"]) == {"resolved"})
+        final_costs.append(cost)
+    first, second = e["forwards"]
+    check("baseline:point", first["point"] == correction["baseline"]["parameters"]+correction["baseline"]["levels"])
+    check("baseline:prediction", bits(first["prediction"]) == bits(correction["baseline"]["prediction"]))
+    check("baseline:raw", bits(first["raw_residual"]) == bits(correction["baseline"]["raw_residual"]))
+    check("baseline:weighted", bits(first["weighted_residual"]) == bits(correction["baseline"]["residual"]))
+    check("baseline:cost", bits([first["cost"]]) == bits([correction["baseline"]["cost"]]))
+    check("baseline:mean_hash", first["input_sha256"] == correction["baseline"]["mean_input_sha256"] == correction["snapshot"]["mean_input_sha256"])
+    for key in ("optical_linear", "encoded", "decoded_linear"):
+        check("baseline:source_stage:"+key, first["stages"][key] == correction["snapshot"]["stages"][key])
+    check("baseline:9flags", len(e["baseline_comparison"]["checks"]) == 9 and all(e["baseline_comparison"]["checks"].values()) and e["baseline_comparison"]["qualified"] is True)
+    old_codes, new_codes = flat(first["stages"]["encoded"]["values"]), flat(second["stages"]["encoded"]["values"])
+    changed = [i for i, (a, b) in enumerate(zip(old_codes, new_codes, strict=True)) if a != b]
+    selected = e["selected_source_index"]
+    check("codes:actual_changes", changed == e["code_changes"]["all_changed_indices"] == [62])
+    check("codes:no_collateral", e["code_changes"]["other_changed_indices"] == [] and e["code_changes"]["other_changed_count"] == 0)
+    check("codes:target", old_codes[selected] == e["code_changes"]["selected_before"] == 93 and new_codes[selected] == e["code_changes"]["selected_after"] == e["target_code"] == 92)
+    check("codes:not_acceptance_gate", e["pattern_is_acceptance_condition"] is False)
+    check("acceptance:actual_p0_cost", second["cost"] < first["cost"] == correction["baseline"]["cost"] and second["cost"] == 0.0)
+    for key in ("accepted", "strict_training_improvement_accepted", "strict_cost_improved", "paired_probe_complete", "baseline_qualified"):
+        check("acceptance:"+key, e[key] is True)
+    check("acceptance:no_protocol", e["protocol_failure"] is e["interpretation_withheld"] is False)
+    check("acceptance:single_nearest", second["point"] == e["construction"]["physical_point"])
+    output["saved_algebra"] = saved_algebra(correction, e)
+    output["local_outcome"] = {"case": row["case"], "baseline_cost": final_costs[0], "candidate_cost": final_costs[1], "strict_training_improvement": True,
+                               "encoded_changes": changed, "other_code_changes": [], "charged": whole,
+                               "aggregate": aggregate, "not_full_recovery": True}
+    output["saved_after"] = saved_inventory(expected, result, "after")
+    output["source_after"] = source_inventory(freeze, result, "after")
+    check("audit:source_unchanged", output["source_before"] == output["source_after"])
+    check("audit:saved_unchanged", output["saved_before"] == output["saved_after"])
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    if args.output.exists() or args.output.is_symlink() or not args.output.parent.is_dir():
+        parser.error("output must be fresh in an existing parent")
+    output = {"format": "defect-corrector-ai-saved-audit-v1", "scope": "Independent saved-byte/ledger/algebra review, not an independently controlled public auditor.",
+              "exclusions": ["No governing imports, tests, collection, solve, constructed point, coverage/operator/reference/PNG call", "No recomputed Jacobian, storage envelope theorem, nonlinear model qualification, reserved-data scoring, rank or full recovery assessment"],
+              "attempt": 1, "reruns": 0, "script": binding(Path(__file__)), "errors": []}
+    try:
+        result, output["result_binding"] = load(RESULT)
+        plan, output["plan_binding"] = load(ROOT/"studies/finite-acquisition-defect-corrector-v1.json")
+        freeze, output["freeze_binding"] = load(BASE/"finite-acquisition-defect-corrector-v1-freeze.json")
+        terminal, terminal_binding = load(BASE/"finite-acquisition-defect-corrector-v1-first-terminal-receipt.json")
+        launch, _ = load(BASE/"finite-acquisition-defect-corrector-v1-first-native-launch.json")
+        controls, controls_binding = load(BASE/"finite-acquisition-defect-corrector-v1-first-tests-receipt.json")
+        check("receipt:terminal_hash", terminal_binding["sha256"] == EXPECTED_TERMINAL)
+        check("receipt:first_attempt", terminal["attempt"] == launch["attempt"] == controls["attempt"] == 1 and terminal["reruns"] == launch["reruns"] == controls["reruns"] == 0)
+        check("receipt:native_identity", terminal["native_session_id"] == launch["native_session_id"] == launch["session_id"] == 63113)
+        check("receipt:native_chunks", launch["chunk_id"] == terminal["initial_native_result"]["chunk_id"] == "e083f5" and terminal["terminal_native_result"]["chunk_id"] == "664569")
+        check("receipt:terminal_exit", terminal["terminal_native_result"]["exit_code"] == 0)
+        check("receipt:result", terminal["result"] == {"path": str(RESULT.relative_to(ROOT)), **output["result_binding"]})
+        for key in ("log", "launch"):
+            spec = terminal[key]
+            check("receipt:binding:"+key, binding(ROOT/spec["path"]) == {"sha256": spec["sha256"], "bytes": spec["bytes"]})
+        check("controls:first220", controls["exit_code"] == 0 and controls["observed_passed"] == 220 and "220 passed in 0.30s" in controls["output"])
+        check("controls:prospective_count_error_retained", controls["expected_expanded_cases_prospective"] == 218 and "mismatch retained" in controls["scope"])
+        check("controls:log", sha((ROOT/controls["log"]["path"]).read_bytes()) == controls["log"]["sha256"])
+        output["execution_receipts"] = {"terminal": terminal_binding, "controls": controls_binding, "native_session_id": 63113, "attempt": 1, "reruns": 0, "controls_passed": 220, "prospective_count_error_retained": 218}
+        audit(result, plan, freeze, output)
+    except Exception as error:
+        output["errors"].append(f"{type(error).__name__}:{error}")
+    output["checks"] = CHECKS
+    output["check_count"] = len(CHECKS)
+    output["failed_checks"] = [row for row in CHECKS if not row["passed"]]
+    output["passed"] = not output["errors"] and not output["failed_checks"]
+    with args.output.open("x") as f:
+        json.dump(output, f, indent=2, allow_nan=False)
+        f.write("\n")
+    print(json.dumps({"output": str(args.output), "passed": output["passed"], "checks": len(CHECKS), "failures": len(output["failed_checks"]), "errors": output["errors"]}))
+    return 0 if output["passed"] else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

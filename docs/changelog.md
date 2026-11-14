@@ -1,5 +1,67 @@
 # Workbench change log
 
+## Same-image diagnostic executed — November 14, 2026 UTC
+
+- Record the 144-input freeze, preserved first control failures and separately
+  admitted repair: 1,417 selected tests and 33 subtests pass.
+- Document 168 actual compatible alternatives, a conditional two-witness
+  numerical-model bound, and the unchanged 11/12 full recovery failure.
+- Refresh current guides and navigation; preserve dated draft inventories,
+  first attempts, scientific source, generated library outputs and release records.
+- Add the [complete result](validation/finite-acquisition-codecell-result.md)
+  and [documentation review](validation/documentation-codecell-result.md).
+  No main runtime, UI or physical-qualification change.
+
+## Unrun same-image diagnostic documented — November 14, 2026 UTC
+
+- Describe the [local code-cell draft](finite-acquisition-codecell-probe.md), its
+  proposed API, fixed baseline, resource limits and actual-witness requirements.
+- Distinguish six untracked source/test drafts from the executed 131-input
+  restoration study. No new witness, passing scientific test or recovery result
+  is claimed; the original full study remains 11/12, exit 1.
+- Refresh navigation and the [current documentation review](validation/documentation-codecell-draft.md).
+  Preserve historical validation, frozen research and generated library outputs.
+
+## Executed live restoration documented — November 14, 2026 UTC
+
+- Replace current unrun-draft labels with the independently frozen 131-input
+  research source, first controls and fresh original 24-case study.
+- Preserve the failed v1 fixture, admit the equivalent replacement separately,
+  and record 1,169 passing selected tests plus 33 subtests. Full recovery
+  remains 11/12, exit 1: exact image agreement still misses the fraction target.
+- Publish [first report, terminal chain and saved-only audits](validation/finite-acquisition-restoration-result.md),
+  including both prior mathematical-auditor schema failures. Explain why
+  code-equivalent parameter witnesses do not bound uncertainty or prove the
+  target impossible. [Method](finite-acquisition-restoration-result.md).
+- Refresh all current guide entry points. Historical records, frozen source,
+  main runtime, generated library outputs and physical status retain their scope.
+
+
+## Unrun restoration candidate documented — November 14, 2026 UTC
+
+- Add a [draft-method guide](finite-acquisition-restoration.md) for the locally
+  authored live controller, exact-arithmetic limits, shared budget proposal
+  and required first-execution gates.
+- Distinguish ten untracked drafts and the prospective 126-path inventory from
+  the completed 116-input single-context probe. No new recovery score, tested
+  controller, main API, UI or release is claimed.
+- Refresh current navigation, source status and research guidance. Clarify the
+  limited scope of the 19 library documentation tests. Historical evidence,
+  source, generated reader/PDF and release records are preserved.
+
+## Observed-defect correction documented — November 14, 2026
+
+- Record research `d986f1f`, its 116-input freeze, 220 passing selected controls
+  and first actual paired training improvement: cost 0.302031169350812 to 0.0
+  on 135 supplied synthetic PNG samples, with only source 62 changing code.
+- Explain the equality-only minimum-norm proposal, global storage guard,
+  one nearest tuple, all-row gates and whole-work prepayment. Keep the prior
+  negative pair, prospective 218-count addition mistake and failed full
+  recovery unchanged. [Method](finite-acquisition-defect-corrector.md) ·
+  [first result](validation/finite-acquisition-defect-corrector.md).
+- Refresh current guidance from main after PR #121 merged. No main runtime or
+  library release change. [Documentation review](validation/documentation-defect-corrector.md).
+
 ## Actual PNG pair rejected on higher cost — November 13, 2026
 
 - Record the separate 112-input research freeze at `98fb1ae`: 162 selected

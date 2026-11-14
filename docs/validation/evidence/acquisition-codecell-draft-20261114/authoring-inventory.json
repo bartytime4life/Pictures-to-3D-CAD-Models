@@ -1,0 +1,52 @@
+{
+  "schema": "picad-static-authoring-inventory-v1",
+  "snapshot_utc": "2026-11-14T03:12:23.553419+00:00",
+  "research_head": "e677039274707f8c19e3efaa005f69d74b393868",
+  "scope": "Metadata and static source inspection only; draft implementation is not included in this publication. No admission, combined freeze, tests or scientific result.",
+  "files": {
+    "backend/finite_acquisition_codecell.py": {
+      "sha256": "3c79c11b0cb2a63b5aa23f942c5f12d4b4fbf264f5461e9b2fb712bfa7fd438d",
+      "bytes": 27005,
+      "proposed_git_mode": "100644",
+      "status": "untracked authoring draft"
+    },
+    "backend/finite_acquisition_codecell_probe.py": {
+      "sha256": "7a2ad0f197f235964836ef082a9ef266c0280ba17864230aff6681c8d7ab064d",
+      "bytes": 21348,
+      "proposed_git_mode": "100644",
+      "status": "untracked authoring draft"
+    },
+    "studies/verification/finite-acquisition-codecell-probe-v1.py": {
+      "sha256": "057e9f25fed95d2b5ee1fd319b6bc4772fbe98291836a9b78c0f19038020f0eb",
+      "bytes": 102730,
+      "proposed_git_mode": "100755",
+      "status": "untracked authoring draft"
+    },
+    "tests/test_finite_acquisition_codecell.py": {
+      "sha256": "4e7e7ea38d31937b792c9aff3d17b7e8eb4667cee996c6a32d6d42afd396fa9b",
+      "bytes": 18679,
+      "proposed_git_mode": "100644",
+      "status": "untracked authoring draft"
+    },
+    "tests/test_finite_acquisition_codecell_probe.py": {
+      "sha256": "25fe2a42075010911a0ffd0ca00519b4800e074aaec0fb28eb9e3a0d680f701d",
+      "bytes": 19552,
+      "proposed_git_mode": "100644",
+      "status": "untracked authoring draft"
+    },
+    "tests/test_finite_acquisition_codecell_protocol.py": {
+      "sha256": "72211b5ba1ecab8d7c0cad0c498ff34c158919b0cd6d8eeb88bae171f4db9c5a",
+      "bytes": 20015,
+      "proposed_git_mode": "100644",
+      "status": "untracked authoring draft"
+    }
+  },
+  "execution_status": "Unrun according to the authoring record; file hashes alone cannot prove execution history.",
+  "latest_executed_result": {
+    "governing_inputs": 131,
+    "matched_passes": 11,
+    "matched_total": 12,
+    "exit_code": 1,
+    "report_sha256": "4eadc2057ded427a4727cb2e14cae0aac153907fd511252423529dcd612fc982"
+  }
+}

@@ -1,0 +1,530 @@
+#!/usr/bin/env python3
+"""Saved-only provenance/accounting review. No subject imports or model calls.
+
+This local checker has no admitted independent control suite. It reviews saved
+bytes, counters, references and status logic. It does not re-evaluate models,
+references, KKT proofs, solvers, geometry, holdout observations or truth.
+"""
+
+import argparse
+import hashlib
+import json
+import math
+import stat
+import struct
+import subprocess
+from collections import Counter
+from pathlib import Path
+
+HEAD = "e677039274707f8c19e3efaa005f69d74b393868"
+CAP = 1_048_576
+STAGES = (
+    "coverage",
+    "source_linear",
+    "optical_linear",
+    "encoded",
+    "decoded_linear",
+    "rectified",
+    "final",
+)
+KEYS = ("evaluations", "cell_work", "stage_work")
+
+
+def sha(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+
+def load(raw):
+    def number(text):
+        value = float(text)
+        if not math.isfinite(value):
+            raise ValueError("nonfinite JSON")
+        return value
+
+    def pairs(items):
+        value = {}
+        for key, item in items:
+            if key in value:
+                raise ValueError("duplicate JSON key")
+            value[key] = item
+        return value
+
+    def bad(text):
+        raise ValueError("nonfinite JSON constant:" + text)
+
+    return json.loads(raw, parse_float=number, parse_constant=bad, object_pairs_hook=pairs)
+
+
+def confined(root, relative):
+    name = Path(relative)
+    if name.is_absolute() or ".." in name.parts or "\\" in str(name):
+        raise ValueError("unconfined path")
+    value = root
+    for part in name.parts:
+        value /= part
+        if value.is_symlink():
+            raise ValueError("symlinked input")
+    if not stat.S_ISREG(value.stat().st_mode):
+        raise ValueError("not a regular input")
+    return value
+
+
+class Review:
+    def __init__(self):
+        self.checks, self.failed = 0, 0
+        self.failures, self.rows, self.bindings = [], [], {}
+        self.summary = Counter()
+
+    def check(self, value, label):
+        self.checks += 1
+        if not value:
+            self.failed += 1
+            if len(self.failures) < 100:
+                self.failures.append(label)
+
+    def read(self, path, expected=None, size=None):
+        raw = path.read_bytes()
+        self.bindings[str(path)] = sha(raw)
+        if expected is not None:
+            self.check(sha(raw) == expected, str(path) + ": byte SHA")
+        if size is not None:
+            self.check(len(raw) == size, str(path) + ": bytes")
+        return raw
+
+    def native(self, value, label):
+        todo, markers = [value], []
+        while todo:
+            current = todo.pop()
+            if isinstance(current, dict):
+                markers.extend(
+                    k for k in current if "invalid_python" in k or k == "nonfinite_float"
+                )
+                todo.extend(current.values())
+            elif isinstance(current, list):
+                todo.extend(current)
+        self.check(not markers, label + ": no serialization markers")
+
+    def array(self, row, label):
+        shape, kind, values = row["shape"], row["dtype"], row["values"]
+        self.check(
+            len(shape) == 2 and all(type(v) is int and v > 0 for v in shape), label + ": shape"
+        )
+        flat = [v for line in values for v in line]
+        self.check(
+            len(values) == shape[0] and all(len(line) == shape[1] for line in values),
+            label + ": census",
+        )
+        self.check(kind in ("<f4", "<f8", "|u1"), label + ": dtype")
+        if kind == "|u1":
+            self.check(all(type(v) is int and 0 <= v <= 255 for v in flat), label + ": codes")
+            raw = bytes(flat)
+        else:
+            self.check(
+                all(type(v) in (int, float) and math.isfinite(v) for v in flat), label + ": finite"
+            )
+            raw = struct.pack("<" + ("f" if kind == "<f4" else "d") * len(flat), *flat)
+        self.check(sha(raw) == row["sha256"], label + ": raw hash")
+        return len(flat)
+
+    def sources(self, value, root, label):
+        before, after = value.get("source_before"), value.get("source_after")
+        if before is None:
+            return
+        self.check(len(before) == len(dict(before)), label + ": unique sources")
+        self.check(
+            value["source_unchanged"] == (before == after and not value["source_errors"]),
+            label + ": source flag",
+        )
+        for name, expected in before:
+            self.read(confined(root / "backend", name), expected)
+
+    def direct_fit(self, fit, details, label):
+        ledger, candidates = fit["ledger"], fit["candidates"]
+        self.check(
+            [v["index"] for v in ledger] == list(range(len(ledger))), label + ": ledger census"
+        )
+        self.check(
+            [v["index"] for v in candidates] == list(range(len(candidates))),
+            label + ": candidate census",
+        )
+        for work in ("cell", "stage"):
+            self.check(
+                sum(v[work + "_work_charged"] for v in ledger) == fit[work + "_work"],
+                label + ": " + work + " charged sum",
+            )
+            self.check(
+                sum(v[work + "_work_reported"] or 0 for v in ledger)
+                == fit[work + "_work_reported"],
+                label + ": " + work + " reported sum",
+            )
+        for item in ledger:
+            for work in ("cell", "stage"):
+                reserved, charged, reported = (
+                    item[work + "_work_" + k] for k in ("reserved", "charged", "reported")
+                )
+                self.check(
+                    type(reserved) is int and type(charged) is int and 0 <= charged <= reserved,
+                    label + ": debit bounded",
+                )
+                self.check(
+                    reported is None or type(reported) is int and 0 <= reported <= reserved,
+                    label + ": report bounded",
+                )
+            ref = item["candidate_index"]
+            self.check(
+                ref is None or type(ref) is int and 0 <= ref < len(candidates),
+                label + ": candidate reference",
+            )
+        for search in fit["searches"]:
+            ref = search["best_candidate_index"]
+            self.check(ref is None or 0 <= ref < len(candidates), label + ": search reference")
+        if details is not None:
+            operations = {v["ledger_index"]: v["evaluation_charged"] for v in details["operations"]}
+            evaluations = 0
+            for item in ledger:
+                purpose, status = item["purpose"], item["status"]
+                if item["index"] in operations:
+                    evaluations += bool(operations[item["index"]])
+                elif purpose.startswith(("protected_qp:", "encoder_probe:")) or purpose in (
+                    "decoder_table",
+                    "protected_event_score_census",
+                    "restoration:inward_math",
+                    "restoration:correction_math",
+                ):
+                    continue
+                elif status not in ("cache_hit", "work_limit") or (
+                    status == "work_limit" and item.get("error") == "stage-product budget"
+                ):
+                    evaluations += 1
+            self.check(evaluations == fit["evaluations"], label + ": evaluation census")
+            self.check(
+                sum(v["status"] == "cache_hit" for v in ledger) == fit["cache_hits"],
+                label + ": cache-hit census",
+            )
+            self.episode(fit, details, label)
+
+    def episode(self, fit, details, label):
+        ledger, candidates = fit["ledger"], fit["candidates"]
+        episodes = [
+            v["restoration"]
+            for it in details["iterations"]
+            for v in it["events"]
+            if "restoration" in v
+        ]
+        self.check(
+            len(episodes) <= 1 and bool(episodes) == details["restoration_episode_used"],
+            label + ": once per fit",
+        )
+        self.summary["episodes"] += len(episodes)
+        entries = 0
+        for index, row in enumerate(details["code_payloads"]):
+            self.check(row["index"] == index, label + ": code identity")
+            entries += self.array(row, label + ": code payload")
+        self.check(entries == details["code_entries"] <= CAP, label + ": code payload cap")
+        used = 0
+        for index, trial in enumerate(details["restoration_trials"]):
+            self.check(trial["index"] == index, label + ": episode trial identity")
+            size = sum(
+                self.array(v, label + ": trial " + k) for k, v in trial.get("stages", {}).items()
+            )
+            if "coverage" in trial:
+                size += self.array(trial["coverage"], label + ": raw coverage")
+            self.check(
+                size == trial["stage_entries_used"] <= trial["stage_entries_reserved"],
+                label + ": trial entry reservation",
+            )
+            used += size
+            if trial["capture_status"] == "retained":
+                self.check(
+                    tuple(trial["stages"]) == STAGES and "coverage" in trial,
+                    label + ": complete captured stages",
+                )
+            if trial.get("code_ref") is not None and "stages" in trial:
+                self.check(
+                    details["code_payloads"][trial["code_ref"]]["sha256"]
+                    == trial["stages"]["encoded"]["sha256"],
+                    label + ": code stage binding",
+                )
+        self.check(used == details["restoration_stage_entries"] <= CAP, label + ": stage entry cap")
+        for episode in episodes:
+            context, pre = episode["context"], episode["preflight"]
+            sides = sum(v is not None for k in ("lower", "upper") for v in context[k])
+            old, augmented = sides + 14, sides + 28
+            tariff = 65536 + 512 * (old + 9 * augmented)
+            self.check(pre["math_per_call"] == tariff, label + ": independent T formula")
+            n = len(context["G"])
+            inputs = fit["input_snapshot"]
+            count = lambda array: sum(len(line) for line in array)
+            w = n * (1 + count(inputs["optical_kernel"]) + 4) + math.prod(
+                inputs["output_shape"]
+            ) * (16 + count(inputs["post_kernel"]))
+            self.check(
+                pre["literal_per_call"] == [1, n, w],
+                label + ": independent literal work formula",
+            )
+            self.check(
+                pre["required"] == [2, 2 * n, 2 * tariff + 2 * pre["literal_per_call"][2]],
+                label + ": worst case affordability",
+            )
+            start, end = episode["work_start"], episode["work_end"]
+            self.check(
+                [b - a for a, b in zip(start, end)] == episode["charged_delta"],
+                label + ": episode delta",
+            )
+            trials = episode["literal_trials"]
+            self.check(
+                len(trials) <= 2 and all(v in details["restoration_trials"] for v in trials),
+                label + ": retained two trials",
+            )
+            mathematics = [
+                v
+                for v in ledger
+                if v["purpose"] in ("restoration:inward_math", "restoration:correction_math")
+            ]
+            reservations = [v for v in episode["math_reservations"] if v["accepted"]]
+            self.check(len(mathematics) == len(reservations), label + ": once per math reservation")
+            indices = []
+            for entry, reservation in zip(mathematics, reservations):
+                self.check(
+                    entry["purpose"] == "restoration:" + reservation["kind"]
+                    and entry["stage_work_reserved"] == entry["stage_work_charged"] == tariff,
+                    label + ": complete math debit",
+                )
+                indices.append(entry["index"])
+            for trial in trials:
+                lo, hi = trial["ledger_start"], trial["ledger_end"]
+                self.check(0 <= lo < hi <= len(ledger), label + ": literal ledger range")
+                indices.extend(range(lo, hi))
+                self.check(
+                    ledger[hi - 1]["status"] == trial["status"], label + ": literal ledger status"
+                )
+                if trial.get("candidate_index") is not None:
+                    candidate = candidates[trial["candidate_index"]]
+                    self.check(
+                        candidate["parameters"] + candidate["levels"] == trial["point"],
+                        label + ": candidate physical tuple",
+                    )
+                    self.check(
+                        candidate["cost"] == trial["cost"]
+                        and candidate["mean_input_sha256"] == trial["mean_input_sha256"],
+                        label + ": candidate cost/binding",
+                    )
+                    self.check(
+                        candidate["prediction"] == trial["prediction"]
+                        and candidate["raw_residual"] == trial["raw_residual"]
+                        and candidate["residual"] == trial["weighted_residual"],
+                        label + ": retained prediction/residual",
+                    )
+                    self.check(
+                        [float(v).hex() for v in trial["point"]] == trial["hex"],
+                        label + ": physical hex",
+                    )
+            indices = sorted(set(indices))
+            if indices:
+                selected = [ledger[i] for i in indices]
+                actual = [
+                    sum(
+                        v["purpose"].endswith(("inward_nearest", "defect_nearest"))
+                        and v["status"] != "cache_hit"
+                        for v in selected
+                    ),
+                    sum(v["cell_work_charged"] for v in selected),
+                    sum(v["stage_work_charged"] for v in selected),
+                ]
+                self.check(
+                    actual == episode["charged_delta"], label + ": no escrow or duplicate debit"
+                )
+                for j, work in ((1, "cell"), (2, "stage")):
+                    self.check(
+                        sum(v[work + "_work_charged"] for v in ledger[: indices[0]]) == start[j],
+                        label + ": prefix " + work,
+                    )
+            anchor = candidates[episode["anchor_candidate_index"]]
+            self.check(
+                anchor["cost"] == episode["acceptance_cost"]
+                and anchor["parameters"] + anchor["levels"] == episode["accepted_anchor"],
+                label + ": p0 acceptance comparator",
+            )
+            if episode["accepted_candidate_index"] is not None:
+                accepted = episode["accepted_candidate_index"]
+                matches = [v for v in trials if v.get("candidate_index") == accepted]
+                self.check(
+                    len(matches) == 1
+                    and matches[0]["status"] in ("resolved", "cache_hit")
+                    and candidates[accepted]["cost"] < anchor["cost"],
+                    label + ": safe strict p0 improvement",
+                )
+                self.summary["accepted_episodes"] += 1
+            if "correction" in episode:
+                self.check(
+                    trials[0]["status"] in ("resolved", "cache_hit")
+                    and trials[0]["cost"] >= anchor["cost"],
+                    label + ": safe rejected p1",
+                )
+                self.check(
+                    episode["rejected_snapshot"] == trials[0]["source_snapshot"],
+                    label + ": actual z1 binding",
+                )
+            self.summary["episode_literal_trials"] += len(trials)
+
+    def fit(self, value, root, label):
+        self.native(value, label)
+        self.sources(value, root, label)
+        phase = value["refinement"]
+        self.check(
+            [a + b for a, b in zip(value["initial_charged"], phase["charged"])]
+            == [value[k] for k in KEYS],
+            label + ": composite aggregate",
+        )
+        self.check(
+            all(0 <= value[k] <= cap for k, cap in zip(KEYS, value["limits"])),
+            label + ": global caps",
+        )
+        selected = phase["fit"] if value["selected_phase"] == "refinement" else value["initial"]
+        self.check(
+            value["best"] == selected["best"] and value["searches"] == selected["searches"],
+            label + ": selected best/search",
+        )
+        self.check(
+            value["global_search_certified"] is False and value["physical_qualification"] is False,
+            label + ": limited qualification",
+        )
+        if phase["fit"] is not None:
+            self.sources(phase["fit"], root, label + ": refinement")
+            if phase["counters_exact"]:
+                self.check(
+                    phase["charged"] == [phase["fit"][k] for k in KEYS],
+                    label + ": exact phase counters",
+                )
+            self.direct_fit(phase["fit"], phase.get("details"), label + ": refinement")
+        self.summary["fits"] += 1
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", required=True, type=Path)
+    parser.add_argument("--directory", required=True, type=Path)
+    parser.add_argument("--report-sha256", required=True)
+    parser.add_argument("--output", required=True, type=Path)
+    args = parser.parse_args()
+    if args.output.exists() or args.output.is_symlink() or not args.output.parent.is_dir():
+        parser.error("fresh output and existing parent required")
+    a = Review()
+    root, directory = args.root.resolve(), args.directory.resolve()
+    report = load(a.read(directory / "report.json", args.report_sha256))
+    a.native(report, "report")
+    a.check(report["source_head"] == report["source_head_after"] == HEAD, "131 frozen HEAD")
+    current = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
+    a.check(current == HEAD, "current HEAD")
+    before, after = report["source_before"], report["source_after"]
+    a.check(
+        before["complete"] and after["complete"] and report["source_unchanged"],
+        "complete source flags",
+    )
+    a.check(
+        set(before["records"]) == set(after["records"]) and len(before["records"]) == 131,
+        "131 source census",
+    )
+    for name, record in before["records"].items():
+        path = confined(root, name)
+        a.read(path, record["sha256"], record["bytes"])
+        a.check(
+            {k: record.get(k) for k in ("sha256", "bytes", "git_mode", "error")}
+            == after["records"][name],
+            "source after " + name,
+        )
+        mode = "100755" if path.stat().st_mode & 0o111 else "100644"
+        a.check(mode == record["git_mode"], "source mode " + name)
+    for name, record in report["artifacts"].items():
+        a.read(confined(directory, name), record["sha256"], record["bytes"])
+    expected = report["original_plan"]["population"]
+    a.check(len(expected) == len(report["rows"]) == 24, "24 original rows")
+    for case, row in zip(expected, report["rows"]):
+        name = case["name"]
+        a.check(row["case"] == case, name + ": original identity")
+        saved_record = directory / name / "record.json"
+        if saved_record.exists():
+            a.check(load(a.read(saved_record)) == row, name + ": first record exact")
+        fitpath = directory / name / "fit.json"
+        if fitpath.exists():
+            value = load(a.read(fitpath))
+            a.fit(value, root, name)
+            evaluation = row.get("evaluation") or {}
+            if evaluation.get("status") == "evaluated":
+                a.check(
+                    evaluation["parameters"] == value["best"]["parameters"]
+                    and evaluation["levels"] == value["best"]["levels"],
+                    name + ": evaluated selected fit",
+                )
+                if evaluation["targets"]["bounded_local_search_completion"]:
+                    a.check(
+                        not value["completion_withheld"] and not value["work_exhausted"],
+                        name + ": completion provenance",
+                    )
+                    a.check(
+                        any(
+                            v["best_candidate_index"] == value["best"]["index"]
+                            for v in value["searches"]
+                        ),
+                        name + ": best-linked completed search",
+                    )
+                a.check(
+                    evaluation["all_targets"] == all(evaluation["targets"].values()),
+                    name + ": target conjunction",
+                )
+                a.check(
+                    row["all_targets"]
+                    == (row["reference"]["passed"] and evaluation["all_targets"]),
+                    name + ": row conjunction",
+                )
+            a.rows.append(
+                {
+                    "name": name,
+                    "mode": value["mode"],
+                    "best_cost": None if value["best"] is None else value["best"]["cost"],
+                    "selected_phase": value["selected_phase"],
+                    "completion_withheld": value["completion_withheld"],
+                    "work": [value[k] for k in KEYS],
+                    "all_targets": row["all_targets"],
+                }
+            )
+        a.summary["row_status:" + row["status"]] += 1
+    matched = [v for v in report["rows"] if v["case"]["family"] == "matched"]
+    a.check(report["matched_passes"] == sum(v["all_targets"] for v in matched), "matched score")
+    a.check(
+        report["passed"]
+        == (
+            report["source_unchanged"]
+            and not report["protocol_errors"]
+            and all(v["all_targets"] for v in matched)
+        ),
+        "full outcome unchanged",
+    )
+    for name, expected_hash in list(a.bindings.items()):
+        a.check(sha(Path(name).read_bytes()) == expected_hash, "audit after " + name)
+    result = {
+        "format": "restoration-saved-only-review-v1",
+        "scope": __doc__,
+        "independently_qualified_auditor": False,
+        "subject_imports": 0,
+        "model_reference_solver_calls": 0,
+        "source_head": HEAD,
+        "input_sha256": args.report_sha256,
+        "checks": a.checks,
+        "failures": a.failed,
+        "failure_details": a.failures,
+        "passed": a.failed == 0,
+        "summary": dict(a.summary),
+        "rows": a.rows,
+        "bindings": a.bindings,
+        "checker_sha256": sha(Path(__file__).read_bytes()),
+    }
+    with args.output.open("x") as stream:
+        json.dump(result, stream, indent=2, allow_nan=False)
+        stream.write("\n")
+    print(json.dumps({k: result[k] for k in ("checks", "failures", "passed", "summary")}))
+    return 0 if result["passed"] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

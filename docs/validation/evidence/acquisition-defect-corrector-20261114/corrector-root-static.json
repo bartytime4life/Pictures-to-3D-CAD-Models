@@ -1,0 +1,34 @@
+{
+  "new_sources": [
+    {
+      "path": "studies/verification/finite-acquisition-defect-corrector-v1.py",
+      "sha256": "b2c2651f466588a19e8bfd7a77f1a56c8bd8093a3b87d2795924a46e32ffaf7b",
+      "bytes": 50496,
+      "mode": "0o755",
+      "ast_compile_only": "pass"
+    },
+    {
+      "path": "tests/test_finite_acquisition_defect_corrector.py",
+      "sha256": "5e359e5dd14f999d8a72ef4867c59185258672a6bb6941df4d0e3ff0cb65dad6",
+      "bytes": 36255,
+      "mode": "0o664",
+      "ast_compile_only": "pass",
+      "test_functions": 44,
+      "expanded_cases_static": 58
+    },
+    {
+      "path": "studies/finite-acquisition-defect-corrector-v1.json",
+      "sha256": "b6f1d5dcc59032d7cfbde196adae76d1fb82d76ff802b252c48ed2686b74439a",
+      "bytes": 88262,
+      "mode": "0o664"
+    },
+    {
+      "path": "docs/finite-acquisition-defect-corrector.md",
+      "sha256": "fdc20be6b4d7cf9594178b70665569091a65e8f86b24ece972ecf7e83fc3900e",
+      "bytes": 12474,
+      "mode": "0o664"
+    }
+  ],
+  "old_inputs_unchanged": 112,
+  "subject_imports_or_collection_or_execution": 0
+}

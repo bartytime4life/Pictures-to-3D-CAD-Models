@@ -1,9 +1,21 @@
 # Saved recovery archives and completed consistency audits
 
+The latest [restoration evidence inventory](validation/evidence/acquisition-restoration-20261114/manifest.json)
+binds the first 131-input full study and later saved-only checks. The study
+remains **11/12 matched passes, exit 1**. Its mathematical audit passes
+29,022 checks; accounting and provenance audits pass 19,362 and 620 checks;
+the record audit passes 1,333 checks. Two preceding mathematical-auditor
+schema failures remain preserved. These counts enumerate saved-record checks,
+not independent experiments or forward-model qualification. See the
+[complete first result](validation/finite-acquisition-restoration-result.md).
+The [earlier authoring inventory](validation/evidence/acquisition-restoration-authoring-20261114/manifest.json)
+retains its then-unrun snapshot.
+
 The four separately frozen recovery studies retain **4/12, 9/12, 11/12 and
 11/12 matched passes**. Those four complete 24-case protocols exit 1. The later
 [active-face study also exits 1 at 11/12](validation/finite-acquisition-physical-rounding.md);
-the saved-only physical census is a separate diagnostic, outside these earlier
+the subsequent [live restoration study](validation/finite-acquisition-restoration-result.md) also fails at 11/12. The
+saved-only physical census is a separate diagnostic, outside these earlier
 full-ledger audits. See the
 [original/predictor record](validation/finite-acquisition-recovery.md) and
 [coupled/event results](validation/finite-acquisition-continuations.md).
@@ -78,6 +90,28 @@ carries the **28 historical unknowns** separately; it does not repair them.
 The [terminal receipt](validation/evidence/acquisition-continuations-20261113/audit-correction-terminal.json)
 records first outcomes and unchanged inputs. It runs with standard-library
 Python 3.14.4, zero backend imports and zero model/reference/optimizer calls.
+
+## Observed-defect correction and its saved-only review
+
+The [new paired correction](validation/finite-acquisition-defect-corrector.md)
+retains the complete first 1,826,974-byte output, exact Gram witness and
+nearest tuple, all local gates, both forwards and all seven stages each.
+The saved cost is 0.302031169350812 at the qualified incumbent and 0.0 at the
+corrected tuple; only source 62 changes code. Its mathematical, provenance
+and record-consistency reviews inspect those retained records without another
+subject import, solve or optical evaluation. The published
+[inventory](validation/evidence/acquisition-defect-corrector-20261114/manifest.json)
+keeps the first result, controls, receipts and later audits distinct.
+
+Its local source ZIP has 117 members (116 frozen files and a manifest),
+732,739 bytes, SHA-256
+`d2f0e09e53ea46f4e6cdf482117262e8b8e978cf43187b84ad87ab4d65517424`.
+The complete first-record ZIP has 15 members, 23,580,692 bytes, SHA-256
+`965e42bb750d870e7bc4885b99ee2f69e91aaa920f312a6cf7c825493409f455`.
+Decompressed member hashes and sizes pass; source modes also pass. It includes
+the preceding literal archive. Later audits remain separate from that first
+archive. Packaging and saved arithmetic do not establish geometry accuracy,
+reserved predictions, a new full-recovery result or physical acceptance.
 
 ## Later paired-literal saved-only audits
 

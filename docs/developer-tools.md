@@ -152,8 +152,31 @@ A separately frozen 112-input [paired literal runner](finite-acquisition-inward-
 passes 162 selected controls, replays the baseline exactly and rejects the
 predetermined candidate on higher actual training cost. Its [recorded commands
 and first terminal outcomes](validation/finite-acquisition-inward-literal.md#recorded-commands-and-terminal-results)
-are provenance for that research checkout. Those runtime, test and runner
-files remain absent here; they are not main-branch commands.
+are provenance for that research checkout. The later 116-input
+[corrector/probe](finite-acquisition-defect-corrector.md) passes 220 selected
+controls and reduces actual paired training cost to zero for one supplied
+synthetic PNG context. Its [recorded commands](validation/finite-acquisition-defect-corrector.md#recorded-commands-and-first-results)
+also require the exact frozen research checkout. Those runtime, test and
+runner files remain absent here; they are not main-branch commands.
+
+`fit_acquisition_segment_restoration(...)` is implemented in the separate
+131-input research freeze `e677039`, outside this main-based source.
+Its selected controls pass 1,169 tests and 33 subtests, with one malformed
+predecessor node deselected and independently replaced. The first fresh full
+study remains 11/12 matched passes, exit 1. See the
+[current controller method](finite-acquisition-restoration-result.md) and
+[recorded command and terminal chain](validation/finite-acquisition-restoration-result.md#recorded-execution).
+Those historical commands require the exact research checkout; they are
+not additional `make` targets or executable main/UI features.
+
+The later [code-cell diagnostic](finite-acquisition-codecell-probe.md) is
+implemented only in the separate 144-input research freeze `44ad56c`.
+Its repaired first controls pass 1,417 tests and 33 subtests; the first actual
+probe finds 168 compatible alternatives, exit 0. This is a diagnostic result,
+not an additional main command or fitter mode. The [complete result](validation/finite-acquisition-codecell-result.md)
+binds the recorded execution and keeps the original 11/12 recovery failure.
+Reproduction requires the exact research source, saved inputs, freeze and
+controls receipt; the published documentation extracts are insufficient alone.
 
 ## Output and side effects
 

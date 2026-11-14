@@ -103,7 +103,25 @@ exactly reproduces the baseline but raises actual training cost from
 0.302031169350812 to 0.40923713513984694, so its predetermined candidate is
 rejected. Target source cell 62 reaches code 92; collateral cell 33 changes
 106 to 105. [Complete negative result](validation/finite-acquisition-inward-literal.md).
-Full recovery remains 11/12; fitter integration is still absent.
+Full recovery remains 11/12; acquisition-aware fitter integration is absent from main.
+
+The subsequent [observed-defect correction](finite-acquisition-defect-corrector.md)
+uses one fixed equality-restoration step and one nearest physical tuple. Its
+first actual pair reduces training cost **0.302031169350812 to 0.0** on the
+135 supplied synthetic PNG training samples. Only source 62 changes code
+(93 to 92), with no collateral code change. [Complete paired result](validation/finite-acquisition-defect-corrector.md).
+That standalone probe did not rerun full recovery. The subsequent live study
+has its own source freeze and result; the earlier failed protocols
+and main runtime remain unchanged.
+
+The separate [live restoration controller](finite-acquisition-restoration-result.md)
+is now frozen and executed in local research. Its selected controls pass
+1,169 tests and 33 subtests, with one malformed predecessor node deselected
+and independently replaced. The fresh original 24-case study remains
+**11/12 matched passes, exit 1**. Middle PNG has zero training and conditional
+reserved residuals but misses the fraction target: 0.003206949 > 0.002.
+It adds no main runtime, HTTP mode or workbench control.
+
 These separate local studies add no main runtime or workbench integration.
 
 The [engineering model and verification plan](engineering-model.md) defines the 2.5D scope, camera-model assumptions, dimension equations and evidence needed through prototype qualification. The independent source-height check optionally compares a user-bounded measurement with a user-defined allowance; it reports within, outside or inconclusive without assigning a physical accuracy or confidence level.
@@ -123,6 +141,7 @@ Reference entry also includes an [endpoint-placement sensitivity explorer](refer
 | Directional blur and independent simulation | Expose model mismatch before applying unsupported corrections | **Implemented:** a separate synthetic radial inverse, production inverse-domain safeguards and test-only higher-order lens stress inputs; [record](validation/radial-inverse.md). The [30-case blur qualification](validation/directional-spread-qualification.md) found missed cases for its research diagnostic; the tracer fits a uniform directional blur with orientation-support and adequacy rules ([method](reference-sheet.md)). Supported nonparallel fillets use its covariance. Unresolved fits normally retain the traced boundary; invalid corrected rings may use a frozen initial fit as a line-only polygon after validity and whole-boundary tolerance checks, with an undetermined-radius notice and refusal otherwise ([recovery limits](anisotropic-corners.md#when-the-corrected-source-ring-is-invalid)). Needed: finite-shape adequacy, general free-arc and slot-cap models beyond their existing approximations, covariance uncertainty, spatially varying blur, sharpening, contact shadows and sharp-edged shadows under a wide blur (a soft shadow is fitted round the part and taken out of the measured blur; [method](reference-sheet.md)), the fitted shadow's remaining outward bias beside the edge it shades (the second pass's start-dependence, measured on exact images, waits on it), thick parts traced under a wide or directional blur (on `main` the 4 mm 1 × 3 px plate fails to trace on six of seven seeds) and reserved real captures |
 | Blur frames after thickness correction | Keep known coordinate changes consistent with blur units | **Implemented:** uniform point scales transport scalar spread, covariance, free-curve correction, cap placement and line windows ([frame and support rules](blur-frames.md)). Mixed free curves, caps and scalar corners retain warned geometry approximations; mixed supplied-covariance nonparallel corners remain withheld. Needed: adequate mixed-frame and finite-shape models, independently checked critical radii and real-capture evidence |
 | Finite-material intensity fitting | Use the whole material region when an isolated arc model is inadequate | **Developer APIs in main:** supplied-optics inverse and immutable measured-ring preparation ([contract](finite-shape-inverse.md)); the [paired replay](validation/finite-photo-intensity-v2.md) retains three all-target passes among twelve records. The [recorded-source acquisition audit](finite-acquisition-operator.md) finds second-moment Gaussian closure insufficient; the subsequent [source-cell mean](finite-acquisition-mean.md) passes its [saved-stage comparisons](validation/finite-acquisition-mean.md), and [unrounded derivatives](finite-cell-sensitivity.md) have separate checks. The [separate local five-parameter prototype](finite-acquisition-recovery.md) still fails its complete protocol and is not integrated. Needed before adoption: adequate optics/illumination and thickness frames, independent reserved dimensions, broader latency qualification after the [fixed affine performance pass](validation/finite-affine-batch.md), preserved failures/refusals, and one accepted boundary through preview and exports |
+| Quantized geometry identifiability | Distinguish image agreement from dimensional recovery | The [live restoration study](validation/finite-acquisition-restoration-result.md) reaches zero image residual but misses the fraction target. The [executed diagnostic](validation/finite-acquisition-codecell-result.md) finds 168 actual compatible alternatives and a conditional minor-case two-witness lower bound above 0.002; it does not resolve the middle miss or enclose compatible geometry. Needed: defensible data-consistent geometry bounds or genuinely independent measured features, a valid inclusion model before interval claims, and original geometry acceptance targets |
 | Measured local-model selection | Choose the smallest assistant that gives useful advice quickly | Installed artifact/license verification, repeatable latency results, and human review of fixed project-specific cases |
 | Opt-in vision guidance | Give capture advice based on the actual photograph | Explicit image-sharing control, a verified local vision model, resource bounds, and evaluation against visible evidence |
 | Assembly-aware splitting | Add useful joints or locating features between pieces | Measured clearance/kerf, topology checks, validated joinery, and explicit assembly assumptions |

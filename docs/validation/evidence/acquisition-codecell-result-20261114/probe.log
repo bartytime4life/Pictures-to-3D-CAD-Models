@@ -1,0 +1,5 @@
+{"case": "minor-png", "status": "completed_witness_diagnostic", "witness_count": 50}
+{"case": "middle-png", "status": "completed_witness_diagnostic", "witness_count": 50}
+{"case": "major-png", "status": "completed_witness_diagnostic", "witness_count": 22}
+{"case": "wrapped-major-png", "status": "completed_witness_diagnostic", "witness_count": 50}
+{"rows": 24, "fits": 17, "protocol_completed": true, "interpretation_withheld": false, "eligible": 4, "qualified_probes": 4, "distinct_new_geometry_tuples": 168, "diagnostic_outcome": "complete_new_geometry_witnesses", "errors": []}

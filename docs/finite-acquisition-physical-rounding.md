@@ -1,5 +1,15 @@
 # Rational local optima and physical floating-point trials
 
+The subsequent [observed-defect correction](finite-acquisition-defect-corrector.md)
+uses one fixed equality-restoration step and one nearest physical tuple. Its
+first actual pair reduces training cost **0.302031169350812 to 0.0** on the
+135 supplied synthetic PNG training samples. Only source 62 changes code
+(93 to 92), with no collateral code change. [Complete paired result](validation/finite-acquisition-defect-corrector.md).
+That standalone probe did not rerun full recovery. The later
+[live restoration study](finite-acquisition-restoration-result.md) has now
+completed at 11/12, exit 1, with zero image residuals and a geometry miss.
+The earlier failed protocols and main runtime remain unchanged.
+
 The completed saved-data diagnostic at `b649ea3` independently verifies one
 rational local-QP optimum, but **none of 128 adjacent physical binary64
 candidates passes the unchanged constraints**. All corners were checked; there
@@ -98,7 +108,9 @@ See [its result and evidence](validation/finite-acquisition-inward-margin.md).
 A separately frozen [paired literal check](finite-acquisition-inward-literal.md)
 has now tested the predetermined candidate: exact baseline, higher actual
 training cost and rejection. [Complete negative result](validation/finite-acquisition-inward-literal.md).
-Solver integration and a new full recovery protocol remain unrun.
+A later [live restoration integration](finite-acquisition-restoration-result.md)
+has completed a fresh full recovery protocol, still failed at 11/12. This
+earlier physical census remains unchanged.
 
 Let `T` contain **every** tight row. A rational direction must satisfy
 `A_T h < 0`. If those normals are independently verified and their Gram

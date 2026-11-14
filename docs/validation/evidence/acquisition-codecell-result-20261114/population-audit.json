@@ -1,0 +1,275 @@
+{
+  "format": "codecell-ux-saved-audit-v1",
+  "recorded_at": "2026-11-14T03:54:58.579779+00:00",
+  "auditor_sha256": "d664ed90095f473354b34b2e1fb44c606f52a83b2735f1675bd7462353f4872c",
+  "report_sha256": "51658a514f41eb26ef98f0a401020e75a02d1fef8a8244be479417b431b3444a",
+  "head": "44ad56cf7026bb642a4ed0a8d71e93b7b3103903",
+  "checks": 2158,
+  "failures": [],
+  "passed": true,
+  "summary": {
+    "population": {
+      "ineligible": 13,
+      "completed_witness_diagnostic": 4,
+      "no_saved_fit": 7
+    },
+    "rows": [
+      {
+        "name": "minor-smooth",
+        "disposition": "ineligible",
+        "eligibility_reasons": [
+          "mode_not_png",
+          "nonzero_or_invalid_cost",
+          "nonzero_residual",
+          "nonzero_raw_residual"
+        ]
+      },
+      {
+        "name": "minor-staged",
+        "disposition": "ineligible",
+        "eligibility_reasons": [
+          "mode_not_png",
+          "nonzero_or_invalid_cost",
+          "nonzero_residual",
+          "nonzero_raw_residual"
+        ]
+      },
+      {
+        "name": "minor-png",
+        "disposition": "completed_witness_diagnostic",
+        "historical_source_replay": "not_retained",
+        "census": {
+          "compatible_actual_slots": 49,
+          "distinct_new_parameter_tuples": 49,
+          "distinct_new_geometry_tuples": 49,
+          "distinct_new_fraction_values": 49
+        },
+        "slot_statuses": {
+          "sampled": 49
+        },
+        "fraction_min": -0.5524998970242435,
+        "fraction_max": -0.544516998598625,
+        "stored_fraction_diameter": "4493972296869/562949953421312"
+      },
+      {
+        "name": "middle-smooth",
+        "disposition": "ineligible",
+        "eligibility_reasons": [
+          "mode_not_png",
+          "nonzero_or_invalid_cost",
+          "nonzero_residual",
+          "nonzero_raw_residual"
+        ]
+      },
+      {
+        "name": "middle-staged",
+        "disposition": "ineligible",
+        "eligibility_reasons": [
+          "mode_not_png",
+          "nonzero_or_invalid_cost",
+          "nonzero_residual",
+          "nonzero_raw_residual"
+        ]
+      },
+      {
+        "name": "middle-png",
+        "disposition": "completed_witness_diagnostic",
+        "historical_source_replay": "equal",
+        "census": {
+          "compatible_actual_slots": 49,
+          "distinct_new_parameter_tuples": 49,
+          "distinct_new_geometry_tuples": 49,
+          "distinct_new_fraction_values": 49
+        },
+        "slot_statuses": {
+          "sampled": 49
+        },
+        "fraction_min": 0.16676279128473026,
+        "fraction_max": 0.16733677942146846,
+        "stored_fraction_diameter": "10340051034917/18014398509481984"
+      },
+      {
+        "name": "major-smooth",
+        "disposition": "ineligible",
+        "eligibility_reasons": [
+          "mode_not_png",
+          "nonzero_or_invalid_cost",
+          "nonzero_residual",
+          "nonzero_raw_residual"
+        ]
+      },
+      {
+        "name": "major-staged",
+        "disposition": "ineligible",
+        "eligibility_reasons": [
+          "mode_not_png",
+          "nonzero_or_invalid_cost",
+          "nonzero_residual",
+          "nonzero_raw_residual"
+        ]
+      },
+      {
+        "name": "major-png",
+        "disposition": "completed_witness_diagnostic",
+        "historical_source_replay": "not_retained",
+        "census": {
+          "compatible_actual_slots": 21,
+          "distinct_new_parameter_tuples": 21,
+          "distinct_new_geometry_tuples": 21,
+          "distinct_new_fraction_values": 21
+        },
+        "slot_statuses": {
+          "proposal_not_qualified": 28,
+          "sampled": 21
+        },
+        "fraction_min": 0.6093432763117355,
+        "fraction_max": 0.6095960322110473,
+        "stored_fraction_diameter": "2276622747913/9007199254740992"
+      },
+      {
+        "name": "wrapped-major-smooth",
+        "disposition": "ineligible",
+        "eligibility_reasons": [
+          "mode_not_png",
+          "nonzero_or_invalid_cost",
+          "nonzero_residual",
+          "nonzero_raw_residual"
+        ]
+      },
+      {
+        "name": "wrapped-major-staged",
+        "disposition": "ineligible",
+        "eligibility_reasons": [
+          "mode_not_png",
+          "nonzero_or_invalid_cost",
+          "nonzero_residual",
+          "nonzero_raw_residual"
+        ]
+      },
+      {
+        "name": "wrapped-major-png",
+        "disposition": "completed_witness_diagnostic",
+        "historical_source_replay": "not_retained",
+        "census": {
+          "compatible_actual_slots": 49,
+          "distinct_new_parameter_tuples": 49,
+          "distinct_new_geometry_tuples": 49,
+          "distinct_new_fraction_values": 49
+        },
+        "slot_statuses": {
+          "sampled": 49
+        },
+        "fraction_min": 0.8290267711908844,
+        "fraction_max": 0.8295395016050038,
+        "stored_fraction_diameter": "4618265003939/9007199254740992"
+      },
+      {
+        "name": "zero-smooth",
+        "disposition": "no_saved_fit",
+        "saved_status": "completed"
+      },
+      {
+        "name": "zero-png",
+        "disposition": "no_saved_fit",
+        "saved_status": "completed"
+      },
+      {
+        "name": "low-staged",
+        "disposition": "no_saved_fit",
+        "saved_status": "completed"
+      },
+      {
+        "name": "cropped-smooth",
+        "disposition": "no_saved_fit",
+        "saved_status": "completed"
+      },
+      {
+        "name": "thin-png",
+        "disposition": "no_saved_fit",
+        "saved_status": "completed"
+      },
+      {
+        "name": "almost-circle-smooth",
+        "disposition": "no_saved_fit",
+        "saved_status": "completed"
+      },
+      {
+        "name": "wrong-optics-smooth",
+        "disposition": "ineligible",
+        "eligibility_reasons": [
+          "mode_not_png",
+          "nonzero_or_invalid_cost",
+          "nonzero_residual",
+          "nonzero_raw_residual"
+        ]
+      },
+      {
+        "name": "gradient-staged",
+        "disposition": "ineligible",
+        "eligibility_reasons": [
+          "mode_not_png",
+          "nonzero_or_invalid_cost",
+          "nonzero_residual",
+          "nonzero_raw_residual"
+        ]
+      },
+      {
+        "name": "singular-map-png",
+        "disposition": "no_saved_fit",
+        "saved_status": "exception"
+      },
+      {
+        "name": "five-queries-smooth",
+        "disposition": "ineligible",
+        "eligibility_reasons": [
+          "mode_not_png",
+          "nonzero_or_invalid_cost",
+          "nonzero_residual",
+          "nonzero_raw_residual",
+          "completed_best_link_absent"
+        ]
+      },
+      {
+        "name": "coincident-smooth",
+        "disposition": "ineligible",
+        "eligibility_reasons": [
+          "mode_not_png",
+          "nonzero_or_invalid_cost",
+          "nonzero_residual",
+          "nonzero_raw_residual"
+        ]
+      },
+      {
+        "name": "budget-png",
+        "disposition": "ineligible",
+        "eligibility_reasons": [
+          "unsafe_work_exhausted",
+          "nonzero_or_invalid_cost",
+          "nonzero_residual",
+          "nonzero_raw_residual",
+          "completed_best_link_absent"
+        ]
+      }
+    ],
+    "derived_census": {
+      "compatible_actual_slots": 168,
+      "distinct_new_parameter_tuples": 168,
+      "distinct_new_geometry_tuples": 168,
+      "distinct_new_fraction_values": 168
+    },
+    "original_recovery": {
+      "matched_passes": 11,
+      "matched_total": 12,
+      "exit_code": 1
+    }
+  },
+  "scope": "Saved JSON/hash/population/eligibility/census and scalar accounting checks only. No subject imports, new points, solves, optimizers, or forward/reference calls.",
+  "excluded": [
+    "independent stage-array/encoder equality reconstruction",
+    "derivative/ray/band/error-floor reconstruction",
+    "uncertainty/enclosure/physical-shape qualification",
+    "original geometry/reserved-dimension rescoring",
+    "real-camera/physical qualification"
+  ],
+  "first_attempt": true
+}

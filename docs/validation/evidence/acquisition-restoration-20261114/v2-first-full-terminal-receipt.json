@@ -1,0 +1,63 @@
+{
+  "format": "finite-acquisition-recovery-restoration-controls-v2-first-full-terminal",
+  "recorded_at": "2026-11-14T02:15:23.998623+00:00",
+  "attempt": 1,
+  "reruns": 0,
+  "native_session_id": 28887,
+  "exit_code": 1,
+  "passed": false,
+  "matched_passes": 11,
+  "matched_total": 12,
+  "original_rows_retained": 24,
+  "status_counts": {
+    "completed": 23,
+    "exception": 1
+  },
+  "protocol_errors": [],
+  "source_unchanged": true,
+  "source_records_before_after": 131,
+  "source_head": "e677039274707f8c19e3efaa005f69d74b393868",
+  "all131_governing_hashes_unchanged": true,
+  "artifacts_verified": 106,
+  "middle_png": {
+    "actual_training_cost": 0.0,
+    "conditional_reserved_residual_max": 0.0,
+    "conditional_reserved_count": 34,
+    "fraction_error": 0.00320694906346225,
+    "fraction_target": 0.002,
+    "all_targets": false,
+    "failed_targets": [
+      "fraction_error"
+    ],
+    "search_stopping_statuses": [
+      "poll_resolution"
+    ],
+    "bounded_search_completion": true,
+    "candidate_tie_retained": true
+  },
+  "report": {
+    "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/report.json",
+    "bytes": 264057,
+    "sha256": "4eadc2057ded427a4727cb2e14cae0aac153907fd511252423529dcd612fc982"
+  },
+  "log": {
+    "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first.log",
+    "bytes": 1767,
+    "sha256": "c8752addde7153afbabd7d800112a6e2541f970d109fac7f48dbff97e07d315c"
+  },
+  "launch": {
+    "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first-launch.json",
+    "bytes": 1277,
+    "sha256": "52e721818c7beefbf32237c66f6a425fdf46b4662fbc56dab8a40a5784d522c3"
+  },
+  "native_terminal": {
+    "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first-native-terminal.json",
+    "bytes": 2747,
+    "sha256": "b8c5591d5b232fc433306f35d500475ab03b6359c10bfae681475e9c1b3c2d6a"
+  },
+  "freeze": {
+    "path": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-freeze.json",
+    "bytes": 58218,
+    "sha256": "7d244b9b197217dd7b06718bdde69769cf3f163489192b267e211d6ecaab726b"
+  }
+}

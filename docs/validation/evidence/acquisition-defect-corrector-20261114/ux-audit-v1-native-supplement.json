@@ -1,0 +1,17 @@
+{
+  "format": "defect-corrector-ux-terminal-supplement-v1",
+  "terminal_receipt_sha256": "b83dc4717319594b03c2257193f4e8a8fb0940264581b1a2f7586d48fc0fed60",
+  "controls_receipt_sha256": "91796b36d2d4836515ef67b8cbc788c01ee3f2fe6ccc448a2b09701fb440e6e5",
+  "checks": {
+    "native_terminal_zero": true,
+    "first_native_session": true,
+    "controls_actual220_not_prospective218": true,
+    "controls_first_no_rerun": true,
+    "terminal_file:result": true,
+    "terminal_file:log": true,
+    "terminal_file:launch": true,
+    "controls_log": true
+  },
+  "failed": [],
+  "scope": "Saved native observations/file hash readback only. No test/process/subject invocation; original prospective count218 is retained separately from actual220."
+}

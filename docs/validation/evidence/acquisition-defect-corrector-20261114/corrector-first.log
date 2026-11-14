@@ -1,0 +1,2 @@
+{"row": 5, "case": "middle-png", "status": "visited"}
+{"output": ".local/verification/finite-acquisition-defect-corrector-v1-first.json", "status": "literal_training_improvement", "passed": true}

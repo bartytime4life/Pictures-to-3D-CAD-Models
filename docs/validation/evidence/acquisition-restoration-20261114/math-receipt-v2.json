@@ -1,0 +1,39 @@
+{
+  "format": "independent-restoration-saved-math-audit-v2",
+  "input": ".local/verification/finite-acquisition-recovery-restoration-controls-v2-first/report.json",
+  "input_before": {
+    "sha256": "4eadc2057ded427a4727cb2e14cae0aac153907fd511252423529dcd612fc982",
+    "bytes": 264057
+  },
+  "input_after": {
+    "sha256": "4eadc2057ded427a4727cb2e14cae0aac153907fd511252423529dcd612fc982",
+    "bytes": 264057
+  },
+  "auditor": {
+    "sha256": "727db26cb60701dca28f25b00a9ea6b13969d5e8e0a1fa0b365bddf41c553fc8",
+    "bytes": 49585
+  },
+  "checks": 9,
+  "failures": [
+    "auditor exception 'git_blob_sha1'"
+  ],
+  "failure_count": 1,
+  "passed": false,
+  "error": {
+    "type": "KeyError",
+    "message": "'git_blob_sha1'",
+    "traceback": "Traceback (most recent call last):\n  File \"/home/bartytime/.codex/worktrees/acquisition-recovery/3D & CAD/.local/verification/restoration-math-audit/audit-v2.py\", line 1154, in main\n    audit(args.root, args.report)\n    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/bartytime/.codex/worktrees/acquisition-recovery/3D & CAD/.local/verification/restoration-math-audit/audit-v2.py\", line 1003, in audit\n    record[\"git_blob_sha1\"],\n    ~~~~~~^^^^^^^^^^^^^^^^^\nKeyError: 'git_blob_sha1'\n"
+  },
+  "statistics": {},
+  "prior_attempt": {
+    "checker_sha256": "7f39cd6330bbf94fcc1d61936c8b57c6fb3932150a092e0bc45866a3286d5405",
+    "receipt": "receipt-v1.json",
+    "scope": "one preserved auditor metadata equality failure; no scientific mismatch"
+  },
+  "limitations": [
+    "Saved-data consistency audit only; no new subject, forward, oracle, reference, QP, point, census, gradient, fitting, or test execution.",
+    "Gram identities and saved row-space components are verified, not solved.",
+    "Raw source and storage-eroded actual bands are descriptive; proposal margins do not enclose stale-J, mixed-brightness, area or nonlinear errors.",
+    "Zero training and conditional reserved residuals do not prove unique geometry or physical accuracy."
+  ]
+}

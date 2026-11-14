@@ -1,0 +1,37 @@
+# Saved-only restoration mathematics audit
+
+This is post-hoc arithmetic verification of the single frozen full24 restoration study. It imports no subject, backend, reference, oracle, NumPy, solver, fitter or scientific model. It solves no new system and constructs no new proposal. Saved Gram equations, row-space representations and already retained physical tuples are checked as identities.
+
+The canonical report is `.local/verification/finite-acquisition-recovery-restoration-controls-v2-first/report.json`, SHA256 `4eadc2057ded427a4727cb2e14cae0aac153907fd511252423529dcd612fc982` (264,057 bytes), from frozen source `e677039274707f8c19e3efaa005f69d74b393868`. All131 source inputs and106 recorded artifacts have exact saved/current/after byte bindings in the audit. No governing input or raw result was modified.
+
+## Audit history
+
+- First checker `audit-v1.py` / `receipt-v1.json`: 28,887 checks, one false assertion. It compared complete before/after source metadata even though only the committed-before snapshot carries Git-blob metadata. All mathematical checks nevertheless completed; no arithmetic exception or scientific mismatch occurred.
+- Second checker `audit-v2.py` / `receipt-v2.json`: nine checks then a preserved KeyError. The optional terminal `git_blob_sha1` key is omitted, rather than present with null. No scientific values were evaluated in this attempt beyond saved metadata.
+- Corrected checker `audit-v3.py`: SHA256 `c015d3f28855ea5eff86936b8e9f3c36a5b37e18839b9759d71e0d35b1f9582f`; `receipt-v3.json`: SHA256 `33ae11575a2501f26f44df0a32553c99a72f522db51dd80f7a53f1259f5c32ea`. It passes **29,022 checks, zero failures**. Only the optional source-metadata handling changed. SHA/bytes/mode/error fingerprints, independently recomputed committed Git blob hashes, and all scientific arithmetic remain checked.
+
+## Exact local mathematics
+
+There is one restoration episode, in middle-png; no source index or case was supplied by this auditor to select an episode. The recorded generic context selects source62 and adjacent target code92. Its old represented local quadratic-program certificate passes primal feasibility, dual nonnegativity, complementary slackness and stationarity for all352 original source/normalized-box halfspaces. This certificate is for that strictly convex local linear surrogate, not the nonlinear acquisition geometry.
+
+The inward record augments the original352 rows with14 physical bounds. Its five nonstructural tight rows `[67,123,124,188,219]` are independent. The saved Gram solution satisfies the saved Gram equations, the direction equals the negative transposed-basis product, and every tight row has strict inward slope. The saved exact scalar interval selects `t = 4.663575870208473e-12`; all366 strengthened rows and all five nearest-physical gates verify independently. Rank five here describes the tight constraint basis; it is not a proof of identifiable geometry.
+
+The correction reanchors the fixed old source Jacobian through actual rejected source optics. All exact shifted bounds are formed before rounding. Its saved Gram equations, row-space representation and norm identity verify the minimum-norm correction for the selected restored equality system. They do not establish full inequality-QP optimality, nonlinear convergence or a new optical error enclosure. All366 pre-round strengthened rows and the five retained-nearest gates also verify.
+
+## Literal results and actual source bands
+
+The accepted anchor cost is `0.302031169350812`. The one inward literal trial costs `0.40923713513984694` and is rejected; the one corrected literal trial costs `0.0` and is strictly accepted against the original accepted anchor. All saved prediction/residual arrays, weighted `hypot(residual)^2` costs, seven stage hashes, source snapshots and mean-input hashes verify. No source code-pattern match is an acceptance condition.
+
+- Inward actual source codes change at indices33 and62. Actual source optics satisfy167/169 raw bands and166/169 storage-eroded bands. Raw misses are33 and62; storage-eroded misses are33,61,62.
+- Corrected actual source codes change only at62. Actual optics satisfy169/169 raw bands, including the selected62 central-half slice, and168/169 storage-eroded bands. Source109 alone misses the storage-eroded band. Its actual lower slack is `0.00022125244140625`, below the proposed `1/4096 = 0.000244140625` erosion.
+- Corrected source62 actual optic is `27.446090698242188`, with selected-slice upper slack `0.0002608299255371094`. Its local prediction is `27.446107387541385`; actual-minus-local discrepancy is `-1.6689299197736318e-05`. The maximum corrected all-source absolute discrepancy is `0.00012837167371415603`.
+
+These actual checks are facts about retained arrays. The margins and their successful local gate checks do not bound arbitrary stale-Jacobian, mixed geometry/brightness, area or nonlinear acquisition errors. An actual row missing the storage erosion is retained explicitly; no bin was widened to conceal it.
+
+## Accounting and scientific outcome
+
+The episode consumes exactly two literal evaluations,338 cell units and3,875,054 stage units. This is two full math tariffs of1,932,288 plus two normal literal tariffs of5,239, with no extra accepted-anchor replay, escrow debit, double charge or refund. The worst-case episode preflight was affordability-only; the complete tariff for each invoked operation was separately charged. The audit verifies the ledger records and stage-entry payload counts.
+
+The study retains24 rows,17 fit files,12 matched and12 adverse cases. It remains terminal exit1 with11/12 matched passes. The remaining middle-png failure is the chord-fraction error `0.00320694906346225 > 0.002`; its centre, radius, wrapped-angle, conditional reserved dimensions/boundary/residual and bounded-search completion targets pass. Its135 training residuals and34 conditional reserved residuals are zero; the completed original search is linked to the zero-cost best and stops at `poll_resolution`, with ties retained. Reserved residual checks remain conditional because full-field observed initialization used those pixels.
+
+Zero residual does not prove unique geometry, the declared geometry targets, a global inverse solution or physical/camera accuracy. The full recovery result is11/12, not12/12, and prior failed protocols and the two auditor schema failures remain preserved.

@@ -1,0 +1,39 @@
+{
+  "format": "finite-acquisition-recovery-restoration-v1-first-controls-terminal",
+  "recorded_at": "2026-11-14T02:07:42.062821+00:00",
+  "attempt": 1,
+  "reruns": 0,
+  "native_session_id": 51215,
+  "exit_code": 1,
+  "passed": 1138,
+  "failed": 1,
+  "subtests_passed": 33,
+  "total_cases": 1139,
+  "elapsed_reported_seconds": 16.81,
+  "failing_node": "tests/test_finite_acquisition_restoration_math.py::test_dependent_tight_normal_cannot_be_dropped_from_all_tight_sign_check",
+  "failure": "ValueError:z0 must contain3 coordinates; fixture omitted three-value z0 when replacing one-row G with three rows.",
+  "source_head": "7a126d47607ac759b21b388f3194ae6984546e7b",
+  "all126_governing_inputs_unchanged": true,
+  "full_study_attempted": false,
+  "full_study_permitted_under_v1": false,
+  "log": {
+    "path": ".local/verification/finite-acquisition-recovery-restoration-v1-first-tests.log",
+    "bytes": 3824,
+    "sha256": "e2aed88d3abf1e73a4a77691ed698601d3faef5032ea63d2c1e55b3a8dfad1cd"
+  },
+  "launch": {
+    "path": ".local/verification/finite-acquisition-recovery-restoration-v1-first-tests-launch.json",
+    "bytes": 2093,
+    "sha256": "1e647416bc643d90185abb9c3d7e4a52d6e5e0de7dbc5edb8a858f2966ec5e21"
+  },
+  "native_terminal": {
+    "path": ".local/verification/finite-acquisition-recovery-restoration-v1-first-tests-native-terminal.json",
+    "bytes": 4844,
+    "sha256": "2a2ee7895aae052b75dbe121508a7be3c943ecee061f89a6f896297314efe8ef"
+  },
+  "freeze": {
+    "path": ".local/verification/finite-acquisition-recovery-restoration-v1-freeze.json",
+    "bytes": 56678,
+    "sha256": "7eeee6ca169c62d2df77e9a553bba7e6dc7fdb2d7205b885f9d7b09d49777aa7"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "recorded_at": "2026-11-14T02:12:06.711099+00:00",
+  "command": "set -o pipefail\nOPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 .venv/bin/python -W error::RuntimeWarning -m pytest -q tests/test_finite_aperture.py tests/test_finite_acquisition.py tests/test_finite_acquisition_workspace.py tests/test_finite_aperture_sensitivity.py tests/test_finite_acquisition_linear.py tests/test_finite_acquisition_sensitivity.py tests/test_finite_photometry.py tests/test_finite_acquisition_observations.py tests/test_finite_acquisition_fit.py tests/test_finite_acquisition_predictor.py tests/test_finite_acquisition_identifiability.py tests/test_finite_acquisition_continuation.py tests/test_finite_acquisition_coupled.py tests/test_finite_acquisition_coupled_math.py tests/test_finite_acquisition_coupled_protocol.py tests/test_finite_acquisition_saved_audit.py tests/test_finite_acquisition_events.py tests/test_finite_acquisition_events_math.py tests/test_finite_acquisition_events_protocol.py tests/test_finite_acquisition_coupled_saved_audit.py tests/test_finite_acquisition_coupled_saved_audit_v2.py tests/test_finite_acquisition_protected_active_controls_v2.py tests/test_finite_acquisition_protected_active_math.py tests/test_finite_acquisition_protected_active_protocol.py tests/test_finite_acquisition_protected_active_rebound.py tests/test_finite_acquisition_physical_rounding.py tests/test_finite_acquisition_inward.py tests/test_finite_acquisition_inward_literal.py tests/test_finite_acquisition_defect_corrector.py tests/test_finite_acquisition_restoration_math.py tests/test_finite_acquisition_restoration.py tests/test_finite_acquisition_restoration_protocol.py tests/test_finite_acquisition_restoration_math_rebound.py tests/test_finite_acquisition_restoration_protocol_v2.py --deselect tests/test_finite_acquisition_restoration_math.py::test_dependent_tight_normal_cannot_be_dropped_from_all_tight_sign_check 2>&1 | tee .local/verification/finite-acquisition-recovery-restoration-controls-v2-first-tests.log",
+  "freeze_sha256": "7d244b9b197217dd7b06718bdde69769cf3f163489192b267e211d6ecaab726b",
+  "source_head": "e677039274707f8c19e3efaa005f69d74b393868",
+  "closure_sha256": "33ce7a777b732e6970092c119bb18f7b72e234a2b15ca37c92ba2c9274136576",
+  "attempt": 1,
+  "reruns": 0,
+  "expected_selected_count": 1169,
+  "expected_deselected": 1,
+  "subtests_separate": 33,
+  "previous_failed_native_session": 51215,
+  "previous_first_result_preserved": true
+}

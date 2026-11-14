@@ -1,0 +1,64 @@
+"""Saved-data identification evidence only: no model/optimizer/point generation."""
+from pathlib import Path
+import ast,collections,datetime,hashlib,json,math,struct,zipfile
+ROOT=Path('/home/bartytime/.codex/worktrees/acquisition-recovery/3D & CAD')
+RUN=ROOT/'.local/verification/finite-acquisition-recovery-restoration-controls-v2-first'
+REPORT_SHA='4eadc2057ded427a4727cb2e14cae0aac153907fd511252423529dcd612fc982'
+OUT=ROOT/'.local/verification/restoration-v2-identification-saved-v1.json'
+def sha(q):return hashlib.sha256(q.read_bytes()).hexdigest()
+def npy_from_zip(path,name):
+ with zipfile.ZipFile(path) as z:raw=z.read(name+'.npy')
+ assert raw[:6]==b'\x93NUMPY'
+ major=raw[6]
+ n=2 if major==1 else 4
+ length=int.from_bytes(raw[8:8+n],'little');start=8+n
+ header=ast.literal_eval(raw[start:start+length].decode('latin1'))
+ assert not header['fortran_order']
+ return header,raw[start+length:]
+assert not OUT.exists() and sha(RUN/'report.json')==REPORT_SHA
+report=json.loads((RUN/'report.json').read_text())
+assert report['source_unchanged'] and not report['protocol_errors'] and len(report['rows'])==24
+row=next(r for r in report['rows'] if r['case']['name']=='middle-png')
+fitpath=RUN/'middle-png/fit.json';fit=json.loads(fitpath.read_text());detail=fit['refinement']['details']
+assert fit['selected_phase']=='refinement' and not fit['completion_withheld']
+episode=[e['restoration'] for it in detail['iterations'] for e in it['events'] if 'restoration' in e]
+assert len(episode)==1 and episode[0]['status']=='literal_defect_improvement'
+episode=episode[0];best=fit['best'];assert best['cost']==0
+best_trial=next(t for t in detail['literal_trials'] if t['candidate_index']==best['index'])
+codes={p['index']:p for p in detail['code_payloads']}
+for p in codes.values():
+ raw=bytes(v for line in p['values'] for v in line)
+ assert hashlib.sha256(raw).hexdigest()==p['sha256']
+reference_header,reference_codes=npy_from_zip(RUN/'middle-png/capture.npz','order96_encoded')
+assert reference_header['descr']=='|u1' and tuple(reference_header['shape'])==(13,13)
+best_code=codes[best_trial['code_ref']]
+best_code_bytes=bytes(v for line in best_code['values'] for v in line)
+reference_source_codes_match=best_code_bytes==reference_codes
+zero=[c for c in fit['candidates'] if c['cost']==0]
+by_index={c['index']:c for c in zero};associations={}
+for t in detail['literal_trials']:
+ if t.get('candidate_index') in by_index and t.get('code_ref') is not None:
+  associations[t['candidate_index']]=t['code_ref']
+assert set(associations)==set(by_index)
+groups=collections.defaultdict(list)
+for index,ref in associations.items():
+ c=by_index[index];assert c['prediction']==best['prediction']
+ groups[codes[ref]['sha256']].append(index)
+matching=[i for i,ref in associations.items() if codes[ref]['sha256']==best_code['sha256']]
+distinct={tuple(by_index[i]['parameters']+by_index[i]['levels']) for i in matching}
+assert len(distinct)>1
+assert best['raw_residual_l2']==best['weighted_residual_l2']==0
+assert all(v==0 for v in row['evaluation']['conditional_reserved_residuals'])
+p2=episode['literal_trials'][-1];assert p2['candidate_index']==best['index']
+assert len(p2['raw_residual'])==len(p2['weighted_residual'])==135
+assert all(v==0 for v in p2['raw_residual']+p2['weighted_residual'])
+final_header,reference_final=npy_from_zip(RUN/'middle-png/capture.npz','order96_final')
+actual_final=p2['stages']['final']
+actual_bytes=b''.join(struct.pack('<f',v) for line in actual_final['values'] for v in line)
+assert actual_final['dtype']=='<f4' and final_header['descr']=='<f4'
+assert hashlib.sha256(actual_bytes).hexdigest()==actual_final['sha256']
+full_field_match=actual_bytes==reference_final
+assert full_field_match
+result={'format':'restoration-v2-saved-identification-evidence','recorded_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'script':{'path':str(Path(__file__).relative_to(ROOT)),'sha256':sha(Path(__file__))},'inputs':{'report':{'sha256':REPORT_SHA,'bytes':(RUN/'report.json').stat().st_size},'fit':{'sha256':sha(fitpath),'bytes':fitpath.stat().st_size},'capture_sha256':sha(RUN/'middle-png/capture.npz')},'checks':{'all135_training_residuals_exactly_zero':True,'all34_conditional_reserved_residuals_exactly_zero':True,'full169_pixel_float32_field_equal_reference_bytes':full_field_match,'source169_encoded_codes_equal_reference_bytes':reference_source_codes_match,'distinct_saved_parameter_tuples_with_same_complete_source_code_pattern':len(distinct),'saved_zero_cost_candidates':len(zero),'same_code_group_candidate_indices':matching,'zero_cost_code_groups':dict(groups),'completed_original_search':row['evaluation']['search_stopping_statuses'],'remaining_failed_targets':[k for k,v in row['evaluation']['targets'].items() if not v]},'saved_witness_parameters':[{'candidate_index':i,'parameters':by_index[i]['parameters'],'levels':by_index[i]['levels'],'code_sha256':codes[associations[i]]['sha256']} for i in matching],'observed_fraction_min':min(by_index[i]['parameters'][3] for i in matching),'observed_fraction_max':max(by_index[i]['parameters'][3] for i in matching),'fraction_error':row['evaluation']['errors']['fraction_error'],'original_fraction_target':report['original_plan']['targets']['fraction_error'],'mathematical_implication':'The specified sum-of-squares training cost is nonnegative and this actual witness attains zero. Its objective value is minimal; further strict objective reduction cannot repair its fraction error. Multiple distinct saved parameter tuples give the same complete source code pattern and training prediction under the fixed supplied downstream operator.','limits':['Observed extrema are sampled witnesses, not a feasible-set enclosure, confidence interval or worst-case uncertainty bound.','Direct full-field comparison is retained for the accepted trial; downstream equivalence for the other source-code-identical witnesses follows conditionally from the fixed deterministic decoder/resampling/post operator.','These witnesses do not prove that the original0.002 target is unattainable or that every equally good fit fails it.','No unique geometry, observation rank, unknown-camera accuracy, physical correctness or global-search certificate is established.','No new source coverage, forward-model, derivative, optimizer, candidate point or fit was executed.'],'new_scientific_calls':0}
+with OUT.open('x') as f:json.dump(result,f,indent=2,allow_nan=False);f.write('\n')
+print(json.dumps({'output':str(OUT.relative_to(ROOT)),'sha256':sha(OUT),'full_field_exact':full_field_match,'source_codes_exact':reference_source_codes_match,'zero_cost_saved_candidates':len(zero),'distinct_same_code_witnesses':len(distinct),'observed_fraction_range':[result['observed_fraction_min'],result['observed_fraction_max']],'remaining_failed_targets':result['checks']['remaining_failed_targets'],'new_scientific_calls':0}))

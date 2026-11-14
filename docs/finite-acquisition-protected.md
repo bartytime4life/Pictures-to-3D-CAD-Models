@@ -1,5 +1,22 @@
 # Protected source-bin proposals
 
+The separate [live restoration controller](finite-acquisition-restoration-result.md)
+is now frozen and executed in local research. Its selected controls pass
+1,169 tests and 33 subtests, with one malformed predecessor node deselected
+and independently replaced. The fresh original 24-case study remains
+**11/12 matched passes, exit 1**. Middle PNG has zero training and conditional
+reserved residuals but misses the fraction target: 0.003206949 > 0.002.
+It adds no main runtime, HTTP mode or workbench control.
+
+The subsequent [observed-defect correction](finite-acquisition-defect-corrector.md)
+uses one fixed equality-restoration step and one nearest physical tuple. Its
+first actual pair reduces training cost **0.302031169350812 to 0.0** on the
+135 supplied synthetic PNG training samples. Only source 62 changes code
+(93 to 92), with no collateral code change. [Complete paired result](validation/finite-acquisition-defect-corrector.md).
+That standalone probe did not rerun full recovery. The subsequent live study
+has its own source freeze and result; the earlier failed protocols
+and main runtime remain unchanged.
+
 The first frozen software checks **fail: eight failures, 752 passes and 33
 passing subtests**, exit 1. Seven known-feasible projection controls reach the
 iteration limit; an overflow case escapes numerical-error handling. The full
@@ -15,7 +32,9 @@ separately frozen corrected selection passes 821 tests and 33 subtests; the
 subsequent complete original 24-case study still fails at 11/12 matched passes.
 The [new result and saved-only physical census](validation/finite-acquisition-physical-rounding.md)
 preserve every first failure. The original protected-v1 full study remains
-unrun; only the active-face follow-up has completed a full recovery protocol.
+unrun. The active-face follow-up and later
+[live restoration method](finite-acquisition-restoration-result.md) each have
+their own completed, failed full recovery protocol.
 
 The separately frozen [inward-margin construction](finite-acquisition-inward-margin.md)
 passes 103 selected controls and all five gates for all 128 new adjacent
@@ -25,7 +44,7 @@ exactly reproduces the baseline but raises actual training cost from
 0.302031169350812 to 0.40923713513984694, so its predetermined candidate is
 rejected. Target source cell 62 reaches code 92; collateral cell 33 changes
 106 to 105. [Complete negative result](validation/finite-acquisition-inward-literal.md).
-Full recovery remains 11/12; fitter integration is still absent.
+Full recovery remains 11/12; acquisition-aware fitter integration is absent from main.
 
 It keeps the earlier full-protocol failures:
 4/12 original matched passes, 9/12 after the predictor, and 11/12 after both the

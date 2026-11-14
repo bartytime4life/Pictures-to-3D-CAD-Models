@@ -1,0 +1,1208 @@
+#!/usr/bin/env python3
+"""Independent saved-array arithmetic, never a subject/model/solver replay.
+
+Copied independent scalar verification utilities from the earlier saved-only
+audit-v1.py (SHA12eaf13e11c503c1ec05919fa9b6ed5e7be8e01156a82939de94a3a9047a5793).
+No runner, backend, oracle, NumPy, matrix solver, SVD, optimizer, or census is
+imported. Determinants verify only the rank of already saved small matrices;
+no direction/point/linear-system solution is computed. Rounded targets are
+checked against their already retained physical tuple, not proposed anew.
+"""
+
+import argparse
+import hashlib
+import itertools
+import json
+import math
+import struct
+import traceback
+from fractions import Fraction as F
+from pathlib import Path
+
+EXPECTED = "4eadc2057ded427a4727cb2e14cae0aac153907fd511252423529dcd612fc982"
+SIZE = 264057
+HEAD = "e677039274707f8c19e3efaa005f69d74b393868"
+checks = 0
+failures = []
+limits = []
+statistics = {}
+
+
+def check(value, label):
+    global checks
+    checks += 1
+    if not value:
+        failures.append(label)
+
+
+def eq(a, b, label):
+    check(a == b, label)
+
+
+def bind(path):
+    h = hashlib.sha256()
+    n = 0
+    with path.open("rb") as f:
+        for block in iter(lambda: f.read(1 << 20), b""):
+            h.update(block)
+            n += len(block)
+    return {"sha256": h.hexdigest(), "bytes": n}
+
+
+def load(path):
+    def bad(value):
+        raise ValueError("nonfinite token:" + value)
+
+    def number(value):
+        result = float(value)
+        if not math.isfinite(result):
+            raise ValueError("nonfinite numeric literal")
+        return result
+
+    return json.loads(path.read_bytes(), parse_constant=bad, parse_float=number)
+
+
+def native(value):
+    if isinstance(value, dict):
+        return all(type(k) is str and native(v) for k, v in value.items())
+    if isinstance(value, list):
+        return all(map(native, value))
+    return (
+        type(value) in (type(None), str, bool, int) or type(value) is float and math.isfinite(value)
+    )
+
+
+def vec(values):
+    return [F(v) for v in values]
+
+
+def dot(a, b):
+    return sum((x * y for x, y in zip(a, b, strict=True)), F(0))
+
+
+def flat(value):
+    if isinstance(value, list):
+        return [v for item in value for v in flat(item)]
+    return [value]
+
+
+def bits(value):
+    return struct.pack("<" + "d" * len(value), *value)
+
+
+def array_bytes(record, label):
+    values = flat(record["values"])
+    eq(len(values), math.prod(record["shape"]), label + " shape")
+    kind = {"<f4": "f", "<f8": "d", "<i8": "q", "|u1": "B"}[record["dtype"]]
+    result = struct.pack("<" + kind * len(values), *values)
+    eq(list(struct.unpack("<" + kind * len(values), result)), values, label + " represented dtype")
+    eq(hashlib.sha256(result).hexdigest(), record["sha256"], label + " hash")
+    return result
+
+
+def raw_bytes(values, shape, dtype):
+    values = flat(values)
+    eq(len(values), math.prod(shape), "mean binding array length")
+    kind = {"<f4": "f", "<f8": "d", "<i8": "q", "|u1": "B"}[dtype]
+    return struct.pack("<" + kind * len(values), *values)
+
+
+def mean_hash(forward, inputs):
+    h = hashlib.sha256()
+    arrays = (
+        ("coverage", forward["coverage"]["values"], tuple(inputs["source_shape"]), "<f8"),
+        ("levels", forward["point"][5:], (2,), "<f8"),
+        (
+            "optical",
+            inputs["optical_kernel"],
+            (len(inputs["optical_kernel"]), len(inputs["optical_kernel"][0])),
+            "<f8",
+        ),
+        (
+            "post",
+            inputs["post_kernel"],
+            (len(inputs["post_kernel"]), len(inputs["post_kernel"][0])),
+            "<f8",
+        ),
+        ("map", inputs["output_to_source_index"], (2, 3), "<f8"),
+        ("queries", inputs["queries"], (len(inputs["queries"]), 2), "<i8"),
+    )
+    for name, values, shape, dtype in arrays:
+        h.update(repr((name, shape, dtype)).encode())
+        h.update(raw_bytes(values, shape, dtype))
+    h.update(repr((tuple(inputs["output_shape"]), True, "finite-acquisition-v1")).encode())
+    return h.hexdigest()
+
+
+def determinant(matrix):
+    """Leibniz identity on saved matrices only, independent of elimination."""
+    n = len(matrix)
+    total = F(0)
+    for permutation in itertools.permutations(range(n)):
+        inversions = sum(permutation[i] > permutation[j] for i in range(n) for j in range(i + 1, n))
+        term = F((-1) ** inversions)
+        for i, j in enumerate(permutation):
+            term *= matrix[i][j]
+        total += term
+    return total
+
+
+def gram(rows):
+    return [[dot(a, b) for b in rows] for a in rows]
+
+
+def ceil_binary64(value):
+    result = float(value)
+    if not math.isfinite(result):
+        raise ArithmeticError("saved envelope exceeds float range")
+    if F(result) < value:
+        result = math.nextafter(result, math.inf)
+    if not math.isfinite(result):
+        raise ArithmeticError("saved envelope upward conversion exceeds float range")
+    check(F(result) >= value, "independent upward conversion")
+    return result
+
+
+def up_ulp(value):
+    return F(math.ulp(ceil_binary64(value)))
+
+
+def envelope(anchor, span, lower, upper):
+    if not span:
+        return dict.fromkeys(("up", "D", "us", "ud", "rho", "M"), F(0))
+    up = up_ulp(max(abs(anchor), abs(lower), abs(upper)))
+    D = max(abs(lower - anchor), abs(upper - anchor))
+    us = up_ulp(D)
+    ud = up_ulp((D + us) / span)
+    return {
+        "up": up,
+        "D": D,
+        "us": us,
+        "ud": ud,
+        "rho": (up + us) / span + ud,
+        "M": (D + us) / span + ud,
+    }
+
+
+def source_margin(row, intercept, envelopes):
+    position = sum((abs(g) * e["rho"] for g, e in zip(row, envelopes, strict=True)), F(0))
+    magnitude = [abs(g) * e["M"] for g, e in zip(row, envelopes, strict=True)]
+    products = [up_ulp(v) if v else F(0) for v in magnitude]
+    return (
+        position
+        + sum(products, F(0))
+        + 2 * up_ulp(abs(intercept) + sum(magnitude, F(0)) + sum(products, F(0)))
+    )
+
+
+def source_bound(value):
+    return None if value is None else F(value)
+
+
+def check_rows(rows, point, margins, saved, label):
+    eq(len(saved), len(rows), label + " census")
+    passed = []
+    for i, ((a, b, identity), margin, record) in enumerate(zip(rows, margins, saved, strict=True)):
+        slack = b - dot(a, point)
+        eq(record["row_index"], i, label + " index")
+        eq(record["identity"], identity, label + " identity")
+        eq(F(record["raw_slack"]), slack, label + " raw slack")
+        eq(F(record["strengthened_slack"]), slack - margin, label + " strengthened slack")
+        eq(record["passed"], slack >= margin, label + " flag")
+        passed.append(slack >= margin)
+    return all(passed)
+
+
+def rows_for(x, intercept=None, centred=False, probe=None):
+    G = [vec(row) for row in x["G"]]
+    z = vec(x["z0"] if intercept is None else intercept)
+    lo, hi = [source_bound(v) for v in x["lower"]], [source_bound(v) for v in x["upper"]]
+    dl, du = vec(x["delta_lower"]), vec(x["delta_upper"])
+    p0, spans = vec(x["anchor"]), vec(x["spans"])
+    probe = p0 if probe is None else vec(probe)
+    d1 = [(v - a) / s if s else F(0) for v, a, s in zip(probe, p0, spans, strict=True)]
+    rows = []
+    for i, (g, a, l, u) in enumerate(zip(G, z, lo, hi, strict=True)):
+        if u is not None:
+            rows.append((g, u - a, ["source_upper", i]))
+        if l is not None:
+            rows.append(([-v for v in g], a - l, ["source_lower", i]))
+    for j in range(7):
+        e = [F(int(k == j)) for k in range(7)]
+        rows.extend(
+            (
+                (e, du[j] - (d1[j] if centred else 0), ["box_upper", j]),
+                ([-v for v in e], (d1[j] if centred else 0) - dl[j], ["box_lower", j]),
+            )
+        )
+    return rows
+
+
+def add_physical(rows, x, probe=None):
+    result = list(rows)
+    anchor = vec(x["anchor"] if probe is None else probe)
+    s, lo, hi = vec(x["spans"]), vec(x["actual_lower"]), vec(x["actual_upper"])
+    for j in range(7):
+        a = [s[j] if k == j else F(0) for k in range(7)]
+        result.extend(
+            (
+                (a, hi[j] - anchor[j], ["physical_upper", j]),
+                ([-v for v in a], anchor[j] - lo[j], ["physical_lower", j]),
+            )
+        )
+    return result
+
+
+def kkt(x, saved, label):
+    rows = rows_for(x)
+    point = vec(x["point"])
+    dual = vec(x["dual"])
+    residual = [dot(a, point) - b for a, b, _ in rows]
+    comp = [v * r for v, r in zip(dual, residual, strict=True)]
+    stat = [
+        point[j] + sum((v * a[j] for v, (a, _, _) in zip(dual, rows, strict=True)), F(0))
+        for j in range(7)
+    ]
+    flags = {
+        "primal_feasible": all(v <= 0 for v in residual),
+        "dual_feasible": all(v >= 0 for v in dual),
+        "complementarity": all(v == 0 for v in comp),
+        "stationarity": all(v == 0 for v in stat),
+    }
+    flags["qualified"] = all(flags.values())
+    for name, value in flags.items():
+        eq(saved[name], value, label + " " + name)
+    eq(saved["raw_halfspace_count"], len(rows), label + " rows")
+    eq(saved["row_identities"], [v[2] for v in rows], label + " identities")
+    eq(vec(saved["point"]), point, label + " point")
+    eq(vec(saved["dual"]), dual, label + " dual")
+    eq(vec(saved["primal"]["residuals"]), residual, label + " primal residuals")
+    eq(vec(saved["complementarity_products"]), comp, label + " complementary products")
+    eq(vec(saved["stationarity_components"]), stat, label + " stationarity components")
+    check(flags["qualified"], label + " verified certificate")
+    return rows
+
+
+def basis_check(rows, tight, free, saved, label):
+    basis = []
+    progress = []
+    for i in tight:
+        candidate = [[rows[k][0][j] for j in free] for k in basis + [i]]
+        independent = len(candidate) <= len(free) and determinant(gram(candidate)) != 0
+        if independent:
+            basis.append(i)
+        progress.append({"row_index": i, "independent": independent, "rank": len(basis)})
+    eq(saved["basis_indices"], basis, label + " first independent order")
+    eq(saved["basis_progress"], progress, label + " all tight row rank decisions")
+    return basis
+
+
+def env_check(saved, anchor, x, label):
+    expected = [
+        envelope(a, s, l, u)
+        for a, s, l, u in zip(
+            vec(anchor),
+            vec(x["spans"]),
+            vec(x["actual_lower"]),
+            vec(x["actual_upper"]),
+            strict=True,
+        )
+    ]
+    eq(len(saved), 7, label + " count")
+    for j, (record, values) in enumerate(zip(saved, expected, strict=True)):
+        eq(record["coordinate"], j, label + " index")
+        for name, value in values.items():
+            eq(F(record[name]), value, label + " " + name)
+    return expected
+
+
+def membership(rows, point, saved, label):
+    residual = [dot(a, point) - b for a, b, _ in rows]
+    bad = [i for i, v in enumerate(residual) if v > 0]
+    eq(vec(saved["residuals"]), residual, label + " all residuals")
+    eq(saved["violated_indices"], bad, label + " bad indices")
+    eq(saved["violated_identities"], [rows[i][2] for i in bad], label + " bad identities")
+    eq(vec(saved["violated_residuals"]), [residual[i] for i in bad], label + " bad values")
+    eq(saved["feasible"], not bad, label + " feasible")
+    return not bad
+
+
+def floor_value(G, z, d, selected):
+    return (
+        128
+        * 2.0**-52
+        * max(
+            1.0,
+            abs(float(z[selected])),
+            math.fsum(abs(float(g) * v) for g, v in zip(G[selected], d, strict=True)),
+        )
+    )
+
+
+def nearest_inward(x, rows, point, record, label):
+    p0, s, lo, hi = map(vec, (x["anchor"], x["spans"], x["actual_lower"], x["actual_upper"]))
+    targets = [a + b * c for a, b, c in zip(p0, s, point, strict=True)]
+    physical = record["physical"]
+    eq(physical, [float(v) for v in targets], label + " retained nearest only")
+    eq(record["hex"], [v.hex() for v in physical], label + " physical bits")
+    exact = [(F(p) - a) / b if b else F(0) for p, a, b in zip(physical, p0, s, strict=True)]
+    comp = [
+        (p - float(a)) / float(b) if b else 0.0 for p, a, b in zip(physical, p0, s, strict=True)
+    ]
+    eq(vec(record["d_phys"]), exact, label + " physical-normalized exact")
+    eq(bits(record["d_comp"]), bits(comp), label + " computed normalized bits")
+    eq(vec(record["d_comp_exact"]), vec(comp), label + " exact represented computed delta")
+    eq(record["d_comp_hex"], [v.hex() for v in comp], label + " computed delta bits")
+    ep = membership(rows, exact, record["exact_physical_gate"], label + " physical membership")
+    ec = membership(
+        rows, vec(comp), record["exact_represented_gate"], label + " represented membership"
+    )
+    G = [vec(v) for v in x["G"]]
+    z = vec(x["z0"])
+    L, U = [source_bound(v) for v in x["lower"]], [source_bound(v) for v in x["upper"]]
+    predicted = [
+        math.fsum([float(a), *(float(g) * v for g, v in zip(row, comp, strict=True))])
+        for row, a in zip(G, z, strict=True)
+    ]
+    bad = []
+    for i, (v, l, u) in enumerate(zip(predicted, L, U, strict=True)):
+        if u is not None and v > float(u):
+            bad.append(["source_upper", i])
+        if l is not None and v < float(l):
+            bad.append(["source_lower", i])
+    for j, (v, l, u) in enumerate(
+        zip(comp, vec(x["delta_lower"]), vec(x["delta_upper"]), strict=True)
+    ):
+        if v > float(u):
+            bad.append(["box_upper", j])
+        if v < float(l):
+            bad.append(["box_lower", j])
+    eq(record["computed_gate"]["violated_identities"], bad, label + " computed bad")
+    eq(
+        bits(record["computed_gate"]["predicted_optical"]),
+        bits(predicted),
+        label + " computed optical",
+    )
+    eq(record["computed_gate"]["feasible"], not bad, label + " computed pass")
+    selected = x["selected_source_index"]
+    floor = floor_value(G, z, comp, selected)
+    half = float(U[selected] - L[selected]) / 2
+    eq(record["arithmetic_floor_value"], floor, label + " floor")
+    eq(record["arithmetic_floor_target_half_width"], half, label + " half width")
+    eq(record["arithmetic_floor_checked"], True, label + " floor checked")
+    gates = {
+        "physical_bounds": all(l <= F(p) <= u for p, l, u in zip(physical, lo, hi, strict=True)),
+        "exact_physical": ep,
+        "exact_computed": ec,
+        "computed": not bad,
+        "arithmetic_floor": floor < half,
+    }
+    eq(record["gates"], gates, label + " gates")
+    for name, key in (
+        ("physical_bounds_feasible", "physical_bounds"),
+        ("exact_physical_feasible", "exact_physical"),
+        ("exact_represented_feasible", "exact_computed"),
+        ("computed_feasible", "computed"),
+        ("arithmetic_floor_feasible", "arithmetic_floor"),
+    ):
+        eq(record[name], gates[key], label + " " + name)
+    eq(record["feasible"], all(gates.values()), label + " all gates")
+    return predicted
+
+
+def inward_check(x, result, label):
+    p = result["proof"]
+    raw = kkt(x, p["old_kkt"], label + " KKT")
+    rows = add_physical(raw, x)
+    old = vec(x["point"])
+    s = vec(x["spans"])
+    free = [j for j, v in enumerate(s) if v]
+    eq(p["free_coordinates"], free, label + " free coordinates")
+    eq(p["original_row_count"], len(raw), label + " old row count")
+    eq(p["augmented_row_count"], len(rows), label + " augmented rows")
+    env = env_check(p["coordinate_envelopes"], x["anchor"], x, label + " envelope")
+    margins = []
+    slacks = []
+    for i, ((a, b, identity), saved) in enumerate(zip(rows, p["augmented_rows"], strict=True)):
+        kind, j = identity
+        structural = all(not a[k] for k in free)
+        slack = b - dot(a, old)
+        margin = (
+            F(0)
+            if structural
+            else env[j]["rho"]
+            if kind.startswith("box_")
+            else env[j]["up"]
+            if kind.startswith("physical_")
+            else source_margin(vec(x["G"][j]), F(x["z0"][j]), env)
+        )
+        margins.append(margin)
+        slacks.append(slack)
+        eq(saved["index"], i, label + " row index")
+        eq(saved["identity"], identity, label + " row identity")
+        eq(vec(saved["coefficients"]), a, label + " row coefficients")
+        eq(F(saved["bound"]), b, label + " row bound")
+        eq(F(saved["slack"]), slack, label + " old slack")
+        eq(saved["structural"], structural, label + " structural")
+        eq(F(saved["margin"]), margin, label + " margin")
+    check(all(v >= 0 for v in slacks), label + " augmented old feasible")
+    tight = [i for i, (a, _, _) in enumerate(rows) if slacks[i] == 0 and any(a[j] for j in free)]
+    eq(p["tight_indices"], tight, label + " ALL tight")
+    basis = basis_check(rows, tight, free, p, label + " basis")
+    B = [[rows[i][0][j] for j in free] for i in basis]
+    M = gram(B)
+    y = vec(p["gram_solution"])
+    eq([vec(v) for v in p["gram_matrix"]], M, label + " saved Gram identity")
+    eq(
+        [dot(row, y) for row in M],
+        [F(1)] * len(B),
+        label + " retained Gram solution verifies no solve",
+    )
+    h = vec(p["direction"])
+    for j in range(7):
+        eq(
+            h[j],
+            -sum((v * rows[i][0][j] for v, i in zip(y, basis, strict=True)), F(0))
+            if j in free
+            else F(0),
+            label + " saved direction rowspace",
+        )
+    slopes = [dot(a, h) for a, _, _ in rows]
+    bad = [i for i in tight if slopes[i] >= 0]
+    eq(p["tight_sign_failures"], bad, label + " all tight signs")
+    check(not bad, label + " strict tight signs")
+    low = F(0)
+    high = None
+    blocked = []
+    for i, (q, a, m, r) in enumerate(zip(slacks, slopes, margins, p["restrictions"], strict=True)):
+        eq(p["augmented_rows"][i]["slope"], str(a), label + " saved slope")
+        for key, val in (("slack", q), ("slope", a), ("margin", m)):
+            eq(F(r[key]), val, label + " restriction " + key)
+        eq(r["row_index"], i, label + " restriction index")
+        if a < 0:
+            bound = (m - q) / (-a)
+            low = max(low, bound)
+            eq(r["kind"], "lower", label + " lower kind")
+            eq(F(r["bound"]), bound, label + " lower bound")
+        elif a > 0:
+            bound = (q - m) / a
+            high = bound if high is None else min(high, bound)
+            eq(r["kind"], "upper", label + " upper kind")
+            eq(F(r["bound"]), bound, label + " upper bound")
+        else:
+            eq(r["kind"], "constant", label + " constant kind")
+            eq(r["satisfied"], q >= m, label + " constant pass")
+            if q < m:
+                blocked.append(i)
+    eq(F(p["scalar_lower"]), low, label + " exact interval lower")
+    eq(None if p["scalar_upper"] is None else F(p["scalar_upper"]), high, label + " upper")
+    eq(p["constant_obstructions"], blocked, label + " blocked")
+    t = F(p["selected_t"])
+    eq(t, low, label + " lowest single t")
+    check(t > 0 and not blocked and (high is None or t <= high), label + " interval feasible")
+    point = vec(result["point"])
+    eq(
+        point,
+        [d + t * v for d, v in zip(old, h, strict=True)],
+        label + " saved changed point identity",
+    )
+    for i, ((a, b, _), m, r) in enumerate(zip(rows, margins, p["new_slacks"], strict=True)):
+        q = b - dot(a, point)
+        eq(r["row_index"], i, label + " strengthened index")
+        eq(F(r["raw_slack"]), q, label + " new slack")
+        eq(F(r["strengthened_slack"]), q - m, label + " new strengthened")
+        eq(r["passed"], q >= m, label + " strengthened flag")
+    check(
+        all(b - dot(a, point) >= m for (a, b, _), m in zip(rows, margins, strict=True)),
+        label + " all strengthened rows",
+    )
+    predicted = nearest_inward(x, raw, point, p["nearest"], label + " nearest")
+    eq(result["physical_point"], p["nearest"]["physical"], label + " returned tuple")
+    eq(p["post_gates"], p["nearest"]["gates"], label + " gate alias")
+    eq(result["new_point_optimality"], False, label + " no optimum transfer")
+    eq(result["new_qp_solves"], 0, label + " no new inequality solve")
+    return {
+        "old_rows": len(raw),
+        "rows": len(rows),
+        "tight_count": len(tight),
+        "basis": basis,
+        "t": float(t),
+        "predicted": predicted,
+        "nearest": p["nearest"]["physical"],
+    }
+
+
+def correction_check(x, episode, result, label):
+    p = result["proof"]
+    raw = kkt(x, p["old_kkt"], label + " old KKT")
+    p0, p1, s, lo, hi = map(
+        vec,
+        (x["anchor"], episode["rejected_point"], x["spans"], x["actual_lower"], x["actual_upper"]),
+    )
+    z1 = vec(episode["actual_optical"])
+    G = [vec(v) for v in x["G"]]
+    free = [j for j, v in enumerate(s) if v]
+    d1 = [(a - b) / v if v else F(0) for a, b, v in zip(p1, p0, s, strict=True)]
+    eq(vec(p["exact_d1"]), d1, label + " exact d1")
+    rows = add_physical(
+        rows_for(x, z1, True, episode["rejected_point"]), x, episode["rejected_point"]
+    )
+    env1 = env_check(p["rounding_envelopes"], episode["rejected_point"], x, label + " new envelope")
+    env0 = env_check(p["original_chart_envelopes"], x["anchor"], x, label + " original envelope")
+    margins = []
+    storage = []
+    for i, ((a, b, identity), r) in enumerate(zip(rows, p["augmented_rows"], strict=True)):
+        kind, j = identity
+        structural = all(not a[k] for k in free)
+        st = F(1, 4096) if not structural and kind.startswith("source_") else F(0)
+        rp = (
+            F(0)
+            if structural
+            else source_margin(G[j], z1[j], env1)
+            if kind.startswith("source_")
+            else env0[j]["rho"]
+            if kind.startswith("box_")
+            else env1[j]["up"]
+        )
+        margins.append(st + rp)
+        storage.append(st)
+        eq(r["row_index"], i, label + " row index")
+        eq(r["identity"], identity, label + " row identity")
+        eq(vec(r["coefficients"]), a, label + " coefficients")
+        eq(F(r["bound"]), b, label + " EXACT centered RHS")
+        eq(r["structural"], structural, label + " structural")
+        eq(F(r["storage_margin"]), st, label + " storage")
+        eq(F(r["representation_margin"]), rp, label + " repr")
+        eq(F(r["pre_margin"]), st + rp, label + " pre margin")
+    old = vec(x["point"])
+    tight = [i for i, (a, b, _) in enumerate(raw) if dot(a, old) == b and any(a[j] for j in free)]
+    eq(p["original_tight_rows"], tight, label + " ALL old tight")
+    basis = basis_check(raw, tight, free, p, label + " basis")
+    eq(p["basis_rows"], basis, label + " alias")
+    B = [[rows[i][0][j] for j in free] for i in basis]
+    M = gram(B)
+    rhs = [rows[i][1] - margins[i] for i in basis]
+    lam = vec(p["gram_solution"])
+    u = vec(p["correction"])
+    eq([vec(v) for v in p["gram_matrix"]], M, label + " Gram")
+    eq(vec(p["rhs"]), rhs, label + " RHS")
+    eq([dot(row, lam) for row in M], rhs, label + " saved solution equation no solve")
+    for j in range(7):
+        eq(
+            u[j],
+            sum((l * rows[i][0][j] for l, i in zip(lam, basis, strict=True)), F(0))
+            if j in free
+            else F(0),
+            label + " rowspace",
+        )
+    eq([dot(rows[i][0], u) for i in basis], rhs, label + " equality restoration")
+    eq(dot(u, u), dot(rhs, lam), label + " equality minimum norm identity")
+    eq(vec(p["row_space_components"]), [F(0)] * len(free), label + " rowspace residual")
+    check(
+        p["row_space_verified"] and p["basis_equalities_verified"], label + " reported identities"
+    )
+    check_rows(rows, u, margins, p["pre_slacks"], label + " pre")
+    n = p["nearest"]
+    physical = n["physical"]
+    targets = [a + b * c for a, b, c in zip(p1, s, u, strict=True)]
+    eq(vec(n["physical_targets"]), targets, label + " targets")
+    eq(physical, [float(v) for v in targets], label + " nearest only")
+    eq(n["hex"], [v.hex() for v in physical], label + " physical bits")
+    exact = [(F(v) - a) / b if b else F(0) for v, a, b in zip(physical, p1, s, strict=True)]
+    comp = [
+        (v - float(a)) / float(b) if b else 0.0 for v, a, b in zip(physical, p1, s, strict=True)
+    ]
+    orig = [
+        (v - float(a)) / float(b) if b else 0.0 for v, a, b in zip(physical, p0, s, strict=True)
+    ]
+    eq(vec(n["exact_u"]), exact, label + " exact u")
+    eq(bits(n["computed_u"]), bits(comp), label + " computed u")
+    eq(bits(n["computed_original_d"]), bits(orig), label + " original computed d")
+    ep = check_rows(rows, exact, storage, n["exact_physical_rows"], label + " exact physical")
+    ec = check_rows(
+        rows, vec(comp), storage, n["exact_computed_rows"], label + " exact represented"
+    )
+    predicted = [
+        math.fsum([float(z), *(float(g) * v for g, v in zip(row, comp, strict=True))])
+        for row, z in zip(G, z1, strict=True)
+    ]
+    eq(bits(n["predicted_optical"]), bits(predicted), label + " computed optics")
+    L, U = [source_bound(v) for v in x["lower"]], [source_bound(v) for v in x["upper"]]
+    bad = []
+    for i, (v, l, h, row) in enumerate(zip(predicted, L, U, G, strict=True)):
+        m = F(1, 4096) if any(row[j] and s[j] for j in range(7)) else F(0)
+        if l is not None and F(v) < l + m:
+            bad.append(["source_lower", i])
+        if h is not None and F(v) > h - m:
+            bad.append(["source_upper", i])
+    boxbad = [
+        j
+        for j, (v, l, h) in enumerate(
+            zip(orig, vec(x["delta_lower"]), vec(x["delta_upper"]), strict=True)
+        )
+        if not l <= F(v) <= h
+    ]
+    eq(n["computed_source_violations"], bad, label + " computed source bad")
+    eq(n["computed_original_box_violations"], boxbad, label + " original box bad")
+    selected = x["selected_source_index"]
+    floor = floor_value(G, z1, comp, selected)
+    eq(n["arithmetic_floor"], floor, label + " floor")
+    gates = {
+        "physical_bounds": all(l <= F(v) <= h for v, l, h in zip(physical, lo, hi, strict=True)),
+        "exact_physical": ep,
+        "exact_computed": ec and not boxbad,
+        "computed": not bad and not boxbad,
+        "arithmetic_floor": floor < float(U[selected] - L[selected]) / 2,
+    }
+    eq(n["gates"], gates, label + " gates")
+    eq(n["feasible"], all(gates.values()), label + " feasible")
+    eq(p["post_gates"], gates, label + " alias")
+    eq(result["physical_point"], physical, label + " returnedtuple")
+    eq(n["candidate_count"], 1, label + " sole candidate")
+    return {
+        "basis": basis,
+        "predicted": predicted,
+        "nearest": physical,
+        "rows": len(rows),
+        "local_storage_qualified": all(gates.values()),
+    }
+
+
+def snapshot_check(snapshot, label):
+    for name, record in snapshot["stages"].items():
+        array_bytes(record, label + " " + name)
+
+
+def candidate_check(candidate, data, label):
+    target, weights = data["target"], data["weights"]
+    raw = [a - b for a, b in zip(target, candidate["prediction"], strict=True)]
+    residual = [a * b for a, b in zip(raw, weights, strict=True)]
+    eq(bits(candidate["raw_residual"]), bits(raw), label + " raw residual")
+    eq(bits(candidate["residual"]), bits(residual), label + " weighted residual")
+    norm = math.hypot(*residual)
+    cost = norm * norm
+    eq(candidate["cost"], cost, label + " hypot squared")
+    return cost
+
+
+def trial_check(t, data, anchor_snapshot, selected, target, label):
+    eq(t["hex"], [v.hex() for v in t["point"]], label + " point bits")
+    check(t["status"] in ("resolved", "cache_hit"), label + " returned valid literal")
+    if "stages" not in t:
+        limits.append(label + " lacks full-stage cache-hit replay (not rerun)")
+        return None
+    eq(
+        set(t["stages"]),
+        {
+            "coverage",
+            "source_linear",
+            "optical_linear",
+            "encoded",
+            "decoded_linear",
+            "rectified",
+            "final",
+        },
+        label + " seven stages",
+    )
+    for name, record in t["stages"].items():
+        array_bytes(record, label + " " + name)
+    array_bytes(t["coverage"], label + " precast coverage")
+    final = t["stages"]["final"]["values"]
+    prediction = [final[y][xx] for xx, y in data["queries"]]
+    raw = [a - b for a, b in zip(data["target"], prediction, strict=True)]
+    residual = [a * b for a, b in zip(raw, data["weights"], strict=True)]
+    eq(bits(t["prediction"]), bits(prediction), label + " saved final query extraction")
+    eq(bits(t["raw_residual"]), bits(raw), label + " residual subtraction")
+    eq(bits(t["weighted_residual"]), bits(residual), label + " positive row weights")
+    norm = math.hypot(*residual)
+    eq(t["cost"], norm * norm, label + " cost")
+    forward = {"coverage": t["coverage"], "point": t["point"]}
+    eq(mean_hash(forward, data), t["mean_input_sha256"], label + " mean input binding")
+    snap = t["source_snapshot"]
+    snapshot_check(snap, label + " snapshot")
+    eq(snap["candidate_index"], t["candidate_index"], label + " snapshot candidate")
+    eq(snap["mean_input_sha256"], t["mean_input_sha256"], label + " snapshot hash")
+    for name in ("optical_linear", "encoded", "decoded_linear"):
+        eq(snap["stages"][name], t["stages"][name], label + " full/snapshot " + name)
+    before = flat(anchor_snapshot["stages"]["encoded"]["values"])
+    after = flat(t["stages"]["encoded"]["values"])
+    changed = [i for i, (a, b) in enumerate(zip(before, after, strict=True)) if a != b]
+    other = [i for i in changed if i != selected]
+    result = {
+        "selected_target_matched": after[selected] == target,
+        "other_changed_indices": other,
+        "other_changed_count": len(other),
+        "all_changed_indices": changed,
+        "all_changed_count": len(changed),
+        "actual_pattern_is_acceptance_condition": False,
+    }
+    eq(t["code_changes"], result, label + " encoded changes")
+    return {
+        "cost": t["cost"],
+        "changes": changed,
+        "codes": after,
+        "optical": flat(t["stages"]["optical_linear"]["values"]),
+        "prediction": prediction,
+        "residual": residual,
+    }
+
+
+def actual_bands(x, actual, predicted, label):
+    L, U = [source_bound(v) for v in x["lower"]], [source_bound(v) for v in x["upper"]]
+    s = vec(x["spans"])
+    G = [vec(v) for v in x["G"]]
+    rows = []
+    for i, (a, p, l, u, g) in enumerate(zip(actual, predicted, L, U, G, strict=True)):
+        a, p = F(a), F(p)
+        margin = F(1, 4096) if any(g[j] and s[j] for j in range(7)) else F(0)
+        raw = (l is None or a >= l) and (u is None or a <= u)
+        guarded = (l is None or a >= l + margin) and (u is None or a <= u - margin)
+        rows.append(
+            {
+                "index": i,
+                "actual": float(a),
+                "local_prediction": float(p),
+                "defect": float(a - p),
+                "raw_passed": raw,
+                "storage_eroded_passed": guarded,
+                "lower_slack": None if l is None else float(a - l),
+                "upper_slack": None if u is None else float(u - a),
+            }
+        )
+    return {
+        "scope": label + " actual saved optical only; no nonlinear/error bound",
+        "count": len(rows),
+        "raw_pass_count": sum(r["raw_passed"] for r in rows),
+        "storage_eroded_pass_count": sum(r["storage_eroded_passed"] for r in rows),
+        "raw_misses": [r["index"] for r in rows if not r["raw_passed"]],
+        "storage_eroded_misses": [r["index"] for r in rows if not r["storage_eroded_passed"]],
+        "maximum_absolute_local_defect": max(abs(r["defect"]) for r in rows),
+        "selected": rows[x["selected_source_index"]],
+        "rows": rows,
+    }
+
+
+def episode_check(ep, fit, label):
+    x = ep["context"]
+    data = fit["input_snapshot"]
+    rf = fit["refinement"]["fit"]
+    raw = rows_for(x)
+    N = math.prod(data["source_shape"])
+    M = math.prod(data["output_shape"])
+    Ko = len(flat(data["optical_kernel"]))
+    Kp = len(flat(data["post_kernel"]))
+    T = 65536 + 512 * (len(raw) + 9 * (len(raw) + 14))
+    W = N * (1 + Ko + 4) + M * (16 + Kp)
+    policy = ep["preflight"]
+    eq(policy["math_per_call"], T, label + " math tariff")
+    eq(policy["literal_per_call"], [1, N, W], label + " literal tariff")
+    eq(policy["required"], [2, 2 * N, 2 * T + 2 * W], label + " affordability worst case")
+    eq(policy["stage_entries_required"], 2 * (6 * N + 2 * M), label + " payload entries")
+    check(
+        policy["affordable"]
+        and all(a <= b for a, b in zip(policy["required"], policy["remaining"], strict=True)),
+        label + " preflight affordable",
+    )
+    eq(ep["accepted_anchor"], x["anchor"], label + " accepted p0 preserved")
+    eq(ep["actual_pattern_is_acceptance_condition"], False, label + " pattern diagnostic only")
+    eq(ep["new_point_optimality"], False, label + " no QP transfer")
+    anchor = ep["anchor_snapshot"]
+    snapshot_check(anchor, label + " anchor snapshot")
+    eq(
+        bits(flat(anchor["stages"]["optical_linear"]["values"])),
+        bits(x["z0"]),
+        label + " z0 actual accepted source",
+    )
+    candidates = {v["index"]: v for v in rf["candidates"]}
+    p0 = candidates[ep["anchor_candidate_index"]]
+    eq(p0["parameters"] + p0["levels"], x["anchor"], label + " p0 candidate identity")
+    eq(ep["acceptance_cost"], p0["cost"], label + " p0 sole cost reference")
+    eq(anchor["mean_input_sha256"], p0["mean_input_sha256"], label + " p0 mean snapshot bound")
+    for name, value in x.items():
+        if name in ("G", "z0", "anchor", "spans", "actual_lower", "actual_upper"):
+            check(native(value), label + " context native " + name)
+    insight = {
+        "status": ep["status"],
+        "selected_source_index": x["selected_source_index"],
+        "target_code": x["target_code"],
+        "p0_cost": p0["cost"],
+        "original_rows": len(raw),
+        "augmented_rows": len(raw) + 14,
+        "math_per_call": T,
+        "literal_per_call": [1, N, W],
+        "trials": [],
+    }
+    inward = result = ep.get("inward")
+    if result is None:
+        limits.append(label + " no inward proof: " + ep["status"])
+        return insight
+    if not result["constructed"]:
+        if result["proof"].get("old_kkt"):
+            kkt(x, result["proof"]["old_kkt"], label + " retained unknown KKT")
+        limits.append(label + " withheld inward: " + str(result.get("reason")))
+        return insight
+    iresult = inward_check(x, result, label + " inward")
+    insight["inward"] = {k: v for k, v in iresult.items() if k != "predicted"}
+    for name, math_result in (("inward", inward), ("correction", ep.get("correction"))):
+        if math_result is not None:
+            work = math_result["work"]
+            eq(work["required_stage_work"], T, label + " " + name + " tariff")
+            eq(work["charged"], T, label + " " + name + " full charge")
+            eq(work["reserved"], True, label + " " + name + " reserved")
+            eq(work["reported"], T, label + " " + name + " reported")
+            eq(work["incomplete"], False, label + " " + name + " complete")
+    trials = ep["literal_trials"]
+    check(1 <= len(trials) <= 2, label + " at most two actuals")
+    first = trials[0]
+    eq(first["point"], inward["physical_point"], label + " inward actual point")
+    t1 = trial_check(
+        first, data, anchor, x["selected_source_index"], x["target_code"], label + " inward actual"
+    )
+    insight["trials"].append(
+        {
+            "cost": first["cost"],
+            "candidate_index": first["candidate_index"],
+            "changed": None if t1 is None else t1["changes"],
+        }
+    )
+    if t1 is not None:
+        insight["inward_actual_bands"] = actual_bands(
+            x, t1["optical"], iresult["predicted"], label + " inward"
+        )
+    if ep.get("correction") is not None:
+        check(first["cost"] >= p0["cost"], label + " only rejected first reanchors")
+        eq(ep["rejected_point"], first["point"], label + " rejected physical anchor")
+        eq(ep["rejected_cost"], first["cost"], label + " rejected cost")
+        eq(ep["rejected_snapshot"], first["source_snapshot"], label + " rejected capture binding")
+        eq(
+            bits(ep["actual_optical"]),
+            bits(flat(first["stages"]["optical_linear"]["values"])),
+            label + " exact actual reanchor optical",
+        )
+        correction = ep["correction"]
+        if correction["constructed"]:
+            cresult = correction_check(x, ep, correction, label + " correction")
+            insight["correction"] = {k: v for k, v in cresult.items() if k != "predicted"}
+            eq(len(trials), 2, label + " second actual present")
+            second = trials[1]
+            eq(second["point"], correction["physical_point"], label + " corrected actual point")
+            t2 = trial_check(
+                second,
+                data,
+                anchor,
+                x["selected_source_index"],
+                x["target_code"],
+                label + " corrected actual",
+            )
+            insight["trials"].append(
+                {
+                    "cost": second["cost"],
+                    "candidate_index": second["candidate_index"],
+                    "changed": None if t2 is None else t2["changes"],
+                }
+            )
+            if t2 is not None:
+                insight["corrected_actual_bands"] = actual_bands(
+                    x, t2["optical"], cresult["predicted"], label + " corrected"
+                )
+        else:
+            limits.append(label + " withheld correction: " + str(correction.get("reason")))
+    for t in trials:
+        candidate = candidates[t["candidate_index"]]
+        eq(candidate["cost"], t["cost"], label + " trial/candidate cost")
+        eq(
+            candidate["parameters"] + candidate["levels"],
+            t["point"],
+            label + " trial candidate params",
+        )
+    costs = [t["cost"] for t in trials]
+    accepted = ep["accepted_candidate_index"]
+    improved = [t for t in trials if t["cost"] < p0["cost"]]
+    eq(
+        accepted,
+        None if not improved else improved[0]["candidate_index"],
+        label + " strict original p0 selection",
+    )
+    if accepted is not None:
+        check(
+            ep["status"] in ("literal_inward_improvement", "literal_defect_improvement"),
+            label + " accepted status",
+        )
+        check(candidates[accepted]["cost"] < p0["cost"], label + " strict literal acceptance")
+    eq(
+        ep["charged_delta"],
+        [b - a for a, b in zip(ep["work_start"], ep["work_end"], strict=True)],
+        label + " charge difference",
+    )
+    ledger = [v for v in rf["ledger"] if v["purpose"].startswith("restoration:")]
+    eq(
+        len(ledger),
+        len(ep["math_reservations"]) + len(trials),
+        label + " math plus actual ledger entries only",
+    )
+    eq(
+        sum(v["stage_work_charged"] for v in ledger),
+        ep["charged_delta"][2],
+        label + " no double stage charge",
+    )
+    eq(
+        sum(v["cell_work_charged"] for v in ledger),
+        ep["charged_delta"][1],
+        label + " actual cells only",
+    )
+    eq(
+        sum(v["purpose"].endswith("_nearest") and v["status"] != "cache_hit" for v in ledger),
+        ep["charged_delta"][0],
+        label + " actual evaluations only",
+    )
+    eq(
+        ep["charged_delta"],
+        [len(trials), N * len(trials), T * len(ep["math_reservations"]) + W * len(trials)],
+        label + " per-operation exact observed charge",
+    )
+    for r in ep["math_reservations"]:
+        eq(r["units"], T, label + " full invoked tariff")
+        eq(r["accepted"], True, label + " accepted math reservation")
+    for t in trials:
+        eq(t["stage_entries_reserved"], 6 * N + 2 * M, label + " entries per actual")
+        eq(
+            t["stage_entries_used"],
+            6 * N + 2 * M,
+            label + " archived all stage and coverage entries",
+        )
+    insight["charged_delta"] = ep["charged_delta"]
+    insight["accepted_candidate_index"] = accepted
+    insight["candidate_costs"] = costs
+    return insight
+
+
+def audit(root, path):
+    eq(bind(path), {"sha256": EXPECTED, "bytes": SIZE}, "first canonical report binding")
+    report = load(path)
+    check(native(report), "strict native finite JSON")
+    eq(report["source_head"], HEAD, "frozen131 head")
+    eq(report["source_head_after"], HEAD, "same terminal head")
+    eq(len(report["source_before"]["records"]), 131, "131 source census")
+    eq(report["source_unchanged"], True, "source unchanged")
+    eq(report["protocol_errors"], [], "no top protocol errors")
+    eq(report["source_sha256_before"], report["source_sha256_after"], "source before after hashes")
+    source_fields = ("sha256", "bytes", "git_mode", "error")
+    eq(
+        {
+            name: {key: record[key] for key in source_fields}
+            for name, record in report["source_before"]["records"].items()
+        },
+        {
+            name: {key: record[key] for key in source_fields}
+            for name, record in report["source_after"]["records"].items()
+        },
+        "source before after byte/mode/error fingerprints",
+    )
+    for record in report["source_after"]["records"].values():
+        eq(
+            record.get("git_blob_sha1"),
+            None,
+            "terminal byte-only snapshot deliberately omits Git lookup",
+        )
+    for key in ("source_before", "source_after"):
+        eq(report[key]["complete"], True, key + " complete")
+        eq(report[key]["errors"], [], key + " no errors")
+    observed_sources = {}
+    for name, record in report["source_before"]["records"].items():
+        actual = bind(root / name)
+        observed_sources[name] = actual
+        eq(
+            actual,
+            {"sha256": record["sha256"], "bytes": record["bytes"]},
+            "current historical source " + name,
+        )
+        check(record["error"] is None, "source error absent " + name)
+        blob = hashlib.sha1(
+            b"blob " + str(actual["bytes"]).encode() + b"\0" + (root / name).read_bytes()
+        ).hexdigest()
+        eq(blob, record["git_blob_sha1"], "source git blob bytes " + name)
+    observed_artifacts = {}
+    for name, record in report["artifacts"].items():
+        actual = bind(path.parent / name)
+        observed_artifacts[name] = actual
+        eq(actual, record, "artifact " + name)
+    eq(len(report["artifacts"]), 106, "retained artifacts106")
+    eq(
+        [r["case"] for r in report["rows"]],
+        report["original_plan"]["population"],
+        "all24 unchanged original identities",
+    )
+    eq(len(report["rows"]), 24, "24 rows census")
+    matched = [r for r in report["rows"] if r["case"]["family"] == "matched"]
+    adverse = [r for r in report["rows"] if r["case"]["family"] == "adverse"]
+    eq(len(matched), 12, "12 matched")
+    eq(len(adverse), 12, "12 adverse")
+    eq(
+        report["matched_passes"],
+        sum(r["all_targets"] for r in matched),
+        "matched pass recomputation",
+    )
+    eq(report["matched_total"], 12, "matched total")
+    eq(
+        report["adverse_all_target_passes"],
+        sum(r["all_targets"] for r in adverse),
+        "adverse descriptive passes",
+    )
+    eq(report["passed"], all(r["all_targets"] for r in matched), "full scientific outcome retained")
+    fitcount = 0
+    episode_summaries = []
+    fit_summaries = []
+    for row in report["rows"]:
+        name = row["case"]["name"]
+        directory = path.parent / name
+        record = load(directory / "record.json")
+        eq(record, row, "original row retained " + name)
+        evaluation = row.get("evaluation")
+        if evaluation and evaluation.get("status") == "evaluated":
+            eq(
+                evaluation["all_targets"],
+                all(evaluation["targets"].values()),
+                name + " all target aggregate",
+            )
+            for key, value in evaluation["errors"].items():
+                if key in report["original_plan"]["targets"]:
+                    eq(
+                        evaluation["targets"][key],
+                        value <= report["original_plan"]["targets"][key],
+                        name + " " + key + " frozen threshold",
+                    )
+        fpath = directory / "fit.json"
+        if not fpath.exists():
+            continue
+        fitcount += 1
+        fit = load(fpath)
+        check(native(fit), name + " native fit")
+        data = fit["input_snapshot"]
+        for i, c in enumerate(fit["candidates"]):
+            candidate_check(c, data, name + " candidate" + str(i))
+        for k, cap in zip(("evaluations", "cell_work", "stage_work"), fit["limits"], strict=True):
+            check(fit[k] <= cap, name + " cap " + k)
+        details = fit.get("refinement", {}).get("details", {})
+        episodes = []
+        for iteration in details.get("iterations", []):
+            for event in iteration.get("events", []):
+                if "restoration" in event:
+                    episodes.append(event["restoration"])
+        check(len(episodes) <= 1, name + " generic first eligible at most once")
+        eq(
+            details.get("restoration_episode_used", False),
+            bool(episodes),
+            name + " first episode consumed flag",
+        )
+        for i, ep in enumerate(episodes):
+            episode_summaries.append(
+                {"case": name, **episode_check(ep, fit, name + " episode" + str(i))}
+            )
+        best = fit.get("best")
+        searches = fit.get("searches", [])
+        if best and name == "middle-png":
+            check(
+                any(
+                    s["best_candidate_index"] == best["index"] and s["status"] == "poll_resolution"
+                    for s in searches
+                ),
+                name + " final completion search links saved zero best",
+            )
+        fit_summaries.append(
+            {
+                "case": name,
+                "cost": None if best is None else best["cost"],
+                "tied": fit.get("tied"),
+                "completion_withheld": fit["completion_withheld"],
+                "rank": fit.get("geometry_rank_conservative"),
+                "work": [fit[k] for k in ("evaluations", "cell_work", "stage_work")],
+                "episodes": len(episodes),
+            }
+        )
+    eq(fitcount, 17, "17 fit records retained")
+    statistics.update(
+        {
+            "rows": 24,
+            "matched_passes": report["matched_passes"],
+            "matched_total": 12,
+            "adverse_all_target_passes": report["adverse_all_target_passes"],
+            "fit_count": fitcount,
+            "episode_count": len(episode_summaries),
+            "episodes": episode_summaries,
+            "fits": fit_summaries,
+            "middle_record": next(r for r in matched if r["case"]["name"] == "middle-png"),
+        }
+    )
+    for name, record in observed_sources.items():
+        eq(bind(root / name), record, "source after audit " + name)
+    for name, record in observed_artifacts.items():
+        eq(bind(path.parent / name), record, "artifact after audit " + name)
+    eq(bind(path), {"sha256": EXPECTED, "bytes": SIZE}, "canonical unchanged after audit")
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--report", type=Path, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    if args.output.exists() or args.output.is_symlink() or not args.output.parent.is_dir():
+        parser.error("output must be fresh with an existing parent")
+    before = bind(args.report)
+    error = None
+    try:
+        audit(args.root, args.report)
+    except Exception as exc:  # noqa: BLE001 -- preserve the first auditor failure receipt
+        error = {
+            "type": type(exc).__name__,
+            "message": str(exc),
+            "traceback": traceback.format_exc(),
+        }
+        failures.append("auditor exception " + str(exc))
+    result = {
+        "format": "independent-restoration-saved-math-audit-v3",
+        "input": str(args.report),
+        "input_before": before,
+        "input_after": bind(args.report),
+        "auditor": bind(Path(__file__)),
+        "checks": checks,
+        "failures": failures,
+        "failure_count": len(failures),
+        "passed": not failures,
+        "error": error,
+        "statistics": statistics,
+        "prior_attempt": {
+            "checker_sha256": "7f39cd6330bbf94fcc1d61936c8b57c6fb3932150a092e0bc45866a3286d5405",
+            "receipt": "receipt-v1.json",
+            "second_attempt": {
+                "checker_sha256": "727db26cb60701dca28f25b00a9ea6b13969d5e8e0a1fa0b365bddf41c553fc8",
+                "receipt": "receipt-v2.json",
+                "failure": "KeyError on omitted optional git_blob_sha1; no scientific discrepancy",
+            },
+            "scope": "one preserved auditor metadata equality failure; no scientific mismatch",
+        },
+        "limitations": [
+            "Saved-data consistency audit only; no new subject, forward, oracle, reference, QP, point, census, gradient, fitting, or test execution.",
+            "Gram identities and saved row-space components are verified, not solved.",
+            "Raw source and storage-eroded actual bands are descriptive; proposal margins do not enclose stale-J, mixed-brightness, area or nonlinear errors.",
+            "Zero training and conditional reserved residuals do not prove unique geometry or physical accuracy.",
+        ]
+        + limits,
+    }
+    with args.output.open("x") as stream:
+        json.dump(result, stream, indent=2, allow_nan=False)
+    print(
+        json.dumps(
+            {
+                "checks": checks,
+                "failure_count": len(failures),
+                "passed": not failures,
+                "output": str(args.output),
+            }
+        )
+    )
+    return 0 if not failures else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
