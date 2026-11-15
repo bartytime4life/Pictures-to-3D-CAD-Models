@@ -2577,3 +2577,27 @@ main {
   font-weight: 600;
   cursor: pointer;
 }
+/* The narrowest phones: each step's label goes under its icon so the four steps fit. */
+@media (max-width: 400px) {
+  .workflow {
+    gap: 6px;
+  }
+  .workflow-step {
+    flex-direction: column;
+    gap: 3px;
+    font-size: 11px;
+  }
+  .step-line {
+    width: 10px;
+    align-self: flex-start;
+    margin-top: 16px;
+  }
+  /* Panel toolbars wrap their actions onto a second line rather than run off the panel. */
+  .panel-toolbar {
+    height: auto;
+    min-height: 52px;
+    flex-wrap: wrap;
+    row-gap: 4px;
+    padding: 8px 12px;
+  }
+}

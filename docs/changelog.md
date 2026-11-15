@@ -1,5 +1,13 @@
 # Workbench change log
 
+## Narrowest phones no longer scroll sideways — November 15, 2026
+
+- At 320 px the Photo/Trace/Scale/Export step bar ran 18 px past the screen, and the
+  **Adjust outline** button ran 6 px past its panel. At 400 px and below, each step's label
+  now sits under its icon and panel toolbars wrap their actions onto a second line. The
+  phone-layout browser scenario checks at 320 and 360 px that no element extends past the
+  screen edge. Against the previous stylesheet it fails on the step bar and the toolbar.
+
 ## One header for both studios, a sample gallery and automatic relief updates — November 15, 2026
 
 - The flat-part workbench and the relief studio share one header (`frontend/src/AppHeader.tsx`).

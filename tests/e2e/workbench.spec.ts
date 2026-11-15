@@ -198,6 +198,27 @@ test('keyboard dialogs, accessibility checks, and mobile layout keep the workflo
     true,
   );
   await page.screenshot({ path: 'docs/images/workbench-mobile.png', fullPage: true });
+  // On the narrowest phones nothing may run past the screen edge, even where a panel
+  // would clip it: the step bar puts labels under icons and toolbars wrap. The 3D canvas
+  // follows the window a frame later, so the check polls until the layout settles.
+  for (const width of [320, 360]) {
+    await page.setViewportSize({ width, height: 800 });
+    await expect
+      .poll(
+        () =>
+          page.evaluate(() =>
+            [...document.querySelectorAll('body *')]
+              .filter(
+                (e) =>
+                  e.getClientRects().length && e.getBoundingClientRect().right > innerWidth + 0.5,
+              )
+              .map((e) => `${e.tagName}.${e.getAttribute('class') ?? ''}`),
+          ),
+        { message: `elements past the edge at ${width}px` },
+      )
+      .toEqual([]);
+  }
+  await page.setViewportSize({ width: 390, height: 844 });
   await page.getByRole('button', { name: 'Review export', exact: true }).click();
   await expect(page.getByRole('dialog')).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
