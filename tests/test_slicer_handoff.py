@@ -37,7 +37,11 @@ def handoff_model(request, tmp_path_factory):
 
 @pytest.mark.parametrize(
     "slicer_id,name,version",
-    [("bambu", "Bambu Studio", "2.9.1"), ("prusa", "PrusaSlicer", "2.9.7")],
+    [
+        ("bambu", "Bambu Studio", "2.9.1"),
+        ("prusa", "PrusaSlicer", "2.9.7"),
+        ("qidi", "QIDI Studio", "2.7.2.73"),
+    ],
 )
 def test_bundle_contains_hash_verified_geometry_recipe_and_targeted_instructions(
     handoff_model, slicer_id, name, version

@@ -59,7 +59,7 @@ does not recover missing source-circle information.
 
 The **3MF** export contains millimeter geometry with separate objects for split output. Each object uses welded mesh indices and retains its assembly position. Individual split pieces in the Parts ZIP and slicer packages are normalized to XY zero and Z zero. A neutral 3MF does not contain printer, filament, process, support or multi-material settings.
 
-Choose **Bambu Studio** or **PrusaSlicer** in the export dialog for a tailored ZIP with geometry, editable recipe, part files, instructions and SHA-256 manifest. Choose native presets and review placement in the receiving slicer. See [slicer integration](slicers.md) for optional local opening and version/install boundaries.
+Choose **Bambu Studio**, **PrusaSlicer** or **QIDI Studio** in the export dialog for a tailored ZIP with geometry, editable recipe, part files, instructions and SHA-256 manifest. Choose native presets and review placement in the receiving slicer. See [slicer integration](slicers.md) for optional local opening and version/install boundaries.
 
 Also use **Save project** if you need the endpoint-reference and independent-height
 notes entered in the browser. The handoff ZIP's server-generated `project.json`

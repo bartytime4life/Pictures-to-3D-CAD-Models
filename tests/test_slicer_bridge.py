@@ -47,8 +47,10 @@ def test_discovery_never_executes_or_exposes_paths(bridge):
         response = client.get("/api/slicers")
     assert response.status_code == 200
     programs = response.json()["programs"]
-    assert [p["id"] for p in programs] == ["bambu", "prusa"]
+    assert [p["id"] for p in programs] == ["bambu", "prusa", "qidi"]
     assert programs[1]["target_version"] == "2.9.7"
+    assert programs[2]["target_version"] == "2.7.2.73"
+    assert programs[2]["release_url"].endswith("/releases/tag/v2.07.02.73")
     assert all(p["version_status"] == "not_checked" for p in programs)
     assert "/trusted" not in response.text
     process.assert_not_called()
@@ -205,3 +207,46 @@ def test_configured_path_is_not_a_command_or_silent_fallback(tmp_path, monkeypat
     search.assert_not_called()
     monkeypatch.setenv("PICAD_PRUSA_SLICER", str(tmp_path))
     assert slicers.executable_for("prusa") is None
+
+
+def test_unknown_program_names_every_supported_slicer():
+    with pytest.raises(slicers.SlicerError, match="Bambu Studio, PrusaSlicer or QIDI Studio"):
+        slicers.executable_for("cura")
+
+
+@pytest.mark.skipif(os.name == "nt", reason="AppImages are a Linux format")
+def test_appimages_are_found_only_in_the_applications_folder(tmp_path, monkeypatch):
+    applications = tmp_path / "Applications"
+    downloads = tmp_path / "Downloads"
+    applications.mkdir()
+    downloads.mkdir()
+    monkeypatch.setattr(slicers, "APPIMAGE_FOLDER", applications)
+    monkeypatch.delenv("PICAD_QIDI_STUDIO", raising=False)
+    monkeypatch.setattr(slicers.shutil, "which", lambda _: None)
+
+    def appimage(folder, name, mode=0o755):
+        path = folder / name
+        path.write_text("fixture only, never execute")
+        path.chmod(mode)
+        return path
+
+    # A downloaded AppImage is never picked up on its own, however it is named.
+    appimage(downloads, "QIDIStudio_v02.07.02.73_Ubuntu24.AppImage")
+    assert slicers.executable_for("qidi") is None
+    # One that is not executable is ignored.
+    appimage(applications, "QIDIStudio_v02.08.00.10_Ubuntu24.AppImage", mode=0o644)
+    assert slicers.executable_for("qidi") is None
+    # With several runnable releases the newest (padded version numbers sort) wins.
+    older = appimage(applications, "QIDIStudio_v02.06.01.50_Ubuntu24.AppImage")
+    newer = appimage(applications, "QIDIStudio_v02.07.02.73_Ubuntu24.AppImage")
+    assert slicers.executable_for("qidi") == str(newer.resolve())
+    newer.unlink()
+    assert slicers.executable_for("qidi") == str(older.resolve())
+    # Another program's AppImage never answers for QIDI Studio.
+    older.unlink()
+    appimage(applications, "Bambu_Studio_ubuntu-24.04_PR-8184.AppImage")
+    assert slicers.executable_for("qidi") is None
+    # An explicit path wins and needs no special folder.
+    configured = appimage(downloads, "QIDIStudio_v02.07.02.73_Ubuntu24.AppImage")
+    monkeypatch.setenv("PICAD_QIDI_STUDIO", str(configured))
+    assert slicers.executable_for("qidi") == str(configured.resolve())

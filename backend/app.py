@@ -56,6 +56,7 @@ DOWNLOADS = {
     "3mf": ("model.3mf", "model/3mf"),
     "bambu": ("bambu-handoff.zip", "application/zip"),
     "prusa": ("prusa-handoff.zip", "application/zip"),
+    "qidi": ("qidi-handoff.zip", "application/zip"),
     "project": ("project.json", "application/json"),
     "parts": ("parts.zip", "application/zip"),
     "heightmap": ("heightmap.png", "image/png"),

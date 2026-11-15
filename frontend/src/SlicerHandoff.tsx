@@ -24,6 +24,12 @@ const targets = [
     version: '2.9.7',
     release: 'https://github.com/prusa3d/PrusaSlicer/releases/tag/version_2.9.7',
   },
+  {
+    id: 'qidi' as const,
+    name: 'QIDI Studio',
+    version: '2.7.2.73',
+    release: 'https://github.com/QIDITECH/QIDIStudio/releases/tag/v2.07.02.73',
+  },
 ];
 
 export default function SlicerHandoff({

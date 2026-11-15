@@ -1,5 +1,19 @@
 # Workbench change log
 
+## QIDI Studio joins the slicer handoffs — November 15, 2026
+
+- **QIDI Studio 2.07.02.73** is the third slicer in **Prepare in your slicer**, next to Bambu
+  Studio and PrusaSlicer. It gets the same handoff ZIP (`qidi-handoff.zip`, downloaded as
+  `<name>.qidi-studio.zip`) and, with the local launcher enabled, **Open in QIDI Studio**.
+  `PICAD_QIDI_STUDIO` names its executable or AppImage.
+- On Linux, an executable AppImage of any of the three slicers kept in `~/Applications` is now
+  found without a setting. Downloads and the desktop are deliberately not searched.
+- Program locations moved from an if/else into each program's own record, and the
+  "Choose …" message names every supported slicer.
+- When QIDI Studio is installed, new tests run the real program (`--info`). They confirm that it
+  imports the handoff's single and split models, the STL fallback, each split piece and a
+  relief as manifold objects at their built sizes and volumes, with every facet.
+
 ## Narrowest phones no longer scroll sideways — November 15, 2026
 
 - At 320 px the Photo/Trace/Scale/Export step bar ran 18 px past the screen, and the

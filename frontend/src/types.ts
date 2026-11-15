@@ -33,7 +33,7 @@ export type Profile = {
   reference?: TraceReference;
 };
 export type Detail = 'coarse' | 'standard' | 'fine';
-export type SlicerId = 'bambu' | 'prusa';
+export type SlicerId = 'bambu' | 'prusa' | 'qidi';
 export type ExportKind =
   'step' | 'stl' | 'dxf' | 'svg' | 'pdf' | 'scad' | 'parts' | '3mf' | SlicerId;
 export type SlicerProgram = {
@@ -180,6 +180,7 @@ export type ModelResult = {
     '3mf'?: string;
     bambu?: string;
     prusa?: string;
+    qidi?: string;
   };
   warnings: string[];
 };

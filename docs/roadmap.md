@@ -145,7 +145,7 @@ Reference entry also includes an [endpoint-placement sensitivity explorer](refer
 | Measured local-model selection | Choose the smallest assistant that gives useful advice quickly | Installed artifact/license verification, repeatable latency results, and human review of fixed project-specific cases |
 | Opt-in vision guidance | Give capture advice based on the actual photograph | Explicit image-sharing control, a verified local vision model, resource bounds, and evaluation against visible evidence |
 | Assembly-aware splitting | Add useful joints or locating features between pieces | Measured clearance/kerf, topology checks, validated joinery, and explicit assembly assumptions |
-| Native slicer qualification | Verify the existing 3MF and Bambu Studio/PrusaSlicer handoffs in installed applications | Installed-version records, imported dimensions and hole topology, actual layer previews, qualified printer/material profiles, and separate physical-print evidence |
+| Native slicer qualification | Verify the existing 3MF and Bambu Studio/PrusaSlicer handoffs in installed applications (QIDI Studio's import of sizes, volumes and manifold meshes is already checked) | Installed-version records, imported dimensions and hole topology, actual layer previews, qualified printer/material profiles, and separate physical-print evidence |
 | Multi-user hosting | Share the tool safely across users | Authentication, authorization, isolated jobs, quotas, retention, deletion, monitoring |
 | Multiview reconstruction | Reconstruct more general surfaces | Capture guidance, hardware budget, scale controls, mesh validation, and a separate CAD-fitting strategy |
 

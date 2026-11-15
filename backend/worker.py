@@ -372,7 +372,9 @@ def build(job_dir: Path) -> dict:
 
     downloads = {
         kind: f"/api/download/{job_dir.name}/{kind}"
-        for kind in ("step", "stl", "dxf", "svg", "pdf", "scad", "project", "3mf", "bambu", "prusa")
+        for kind in (
+            "step", "stl", "dxf", "svg", "pdf", "scad", "project", "3mf", "bambu", "prusa", "qidi",
+        )
     }
     if design.output_mode == "split":
         manifest = {
@@ -433,7 +435,7 @@ def build(job_dir: Path) -> dict:
             result["split_plan"] = plan
     for name in (
         "profile.dxf", "profile.svg", "drawing.pdf", "model.scad", "project.json", "model.3mf",
-        "bambu-handoff.zip", "prusa-handoff.zip",
+        "bambu-handoff.zip", "prusa-handoff.zip", "qidi-handoff.zip",
     ):
         if (job_dir / name).stat().st_size == 0:
             raise PrintGeometryError("An export was empty. Try rebuilding the model.")

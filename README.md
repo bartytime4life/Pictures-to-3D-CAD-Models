@@ -65,11 +65,11 @@ Choose **Shape: Sphere** (or the **Moon lamp** sample) to wrap a 2:1 world-map p
 
 Download STL or 3MF for a slicer, a 16-bit height map, or a **Blender ZIP**. The ZIP rebuilds the identical solid in Blender as a live **Displace** modifier and, for lithophanes, sets up a Cycles backlight scene that renders the Beer–Lambert prediction. With `PICAD_ENABLE_BLENDER_LAUNCH=1`, **Open in Blender** starts an installed Blender with that scene. Blender is optional; nothing else needs it. See the [relief and lithophane guide](docs/relief.md).
 
-## Bambu Studio and PrusaSlicer
+## Bambu Studio, PrusaSlicer and QIDI Studio
 
-After building, open **Choose an export** or **Review export**, then **Prepare in your slicer**. Choose **Bambu Studio** or **PrusaSlicer** and download a ZIP containing millimeter 3MF geometry, separate split-piece files, the editable recipe, and a hash-verified record of your printer/material plan. Select and review the actual printer, nozzle, filament and process settings in the slicer. Plain 3MF is also available as a regular export.
+After building, open **Choose an export** or **Review export**, then **Prepare in your slicer**. Choose **Bambu Studio**, **PrusaSlicer** or **QIDI Studio** and download a ZIP containing millimeter 3MF geometry, separate split-piece files, the editable recipe, and a hash-verified record of your printer/material plan. Select and review the actual printer, nozzle, filament and process settings in the slicer. Plain 3MF is also available as a regular export.
 
-An optional local launcher can open the current geometry in a configured installed slicer. Run `make slicers` to inspect availability. Targets are Bambu Studio 2.9.1 and the requested PrusaSlicer 2.9.7; executable detection does not verify the installed version. See [slicer setup and use](docs/slicers.md). Setup does not install either application, and the workbench does not slice or start prints.
+An optional local launcher can open the current geometry in a configured installed slicer. Run `make slicers` to inspect availability. Targets are Bambu Studio 2.9.1, the requested PrusaSlicer 2.9.7 and QIDI Studio 2.07.02.73; executable detection does not verify the installed version. On Linux an AppImage kept in `~/Applications` is found automatically. When QIDI Studio is installed, tests run it to confirm it imports the handoff geometry at its built size. See [slicer setup and use](docs/slicers.md). Setup does not install any of these applications, and the workbench does not slice or start prints.
 
 To check that a separate CAD application reads fitted exports as exact geometry, run `make freecad` with `FREECADCMD` set to FreeCAD's `freecadcmd` (FreeCAD is not installed by setup). It builds the synthetic reference-sheet plate and checks FreeCAD's import of its STEP and DXF against the plate's design; see [validation](docs/validation.md).
 
@@ -133,7 +133,7 @@ source files** for DXF, SVG, PDF, and OpenSCAD.
 | PDF | Printing the outline at 1:1 to lay the real part on | The outline and holes at true size on a page that fits A4 and US Letter, a 100 mm ruler along each axis to check the print, and a centre mark in each round hole |
 | OpenSCAD | Editing the built profile in scripted CAD | Final scaled profile, holes, thickness, and selectable split pieces in assembled positions; fitted circles stay `circle()` calls and non-circular fitted arcs are sampled into polygons |
 | Parts ZIP | Importing generated pieces separately | A STEP, STL and 3MF per piece, plus a manifest |
-| Slicer handoff ZIP | Preparing a Bambu Studio or PrusaSlicer import | Geometry, split pieces, recipe, printer/material planning notes, instructions and payload hashes |
+| Slicer handoff ZIP | Preparing a Bambu Studio, PrusaSlicer or QIDI Studio import | Geometry, split pieces, recipe, printer/material planning notes, instructions and payload hashes |
 | Save project JSON | Restoring the workbench settings and browser measurement notes | Outline, source measurements, optional endpoint reference and independent-height decision inputs, and design/print settings. The browser saves version 3 for fitted/reference-sheet profiles and version 2 for ordinary polygons; version 1 imports remain supported. Photos are excluded |
 | Relief STL / 3MF | Printing a relief or lithophane | Closed millimetre mesh of the 16-bit height field, flat base at Z zero |
 | Height map PNG | Using the surface in other tools | 16-bit grayscale, one pixel per surface point, thinnest to thickest wall |

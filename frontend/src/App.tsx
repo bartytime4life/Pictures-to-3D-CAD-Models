@@ -1242,7 +1242,7 @@ export default function App() {
         .slice(
           0,
           60,
-        )}.${kind === 'parts' ? 'parts.zip' : kind === 'bambu' ? 'bambu-studio.zip' : kind === 'prusa' ? 'prusaslicer.zip' : kind}`;
+        )}.${kind === 'parts' ? 'parts.zip' : kind === 'bambu' ? 'bambu-studio.zip' : kind === 'prusa' ? 'prusaslicer.zip' : kind === 'qidi' ? 'qidi-studio.zip' : kind}`;
       link.click();
       window.setTimeout(() => URL.revokeObjectURL(url), 1000);
       const label =
@@ -1250,7 +1250,9 @@ export default function App() {
           ? 'Bambu Studio handoff ZIP'
           : kind === 'prusa'
             ? 'PrusaSlicer handoff ZIP'
-            : kind.toUpperCase();
+            : kind === 'qidi'
+              ? 'QIDI Studio handoff ZIP'
+              : kind.toUpperCase();
       setNotice(
         kind === 'pdf'
           ? 'PDF download started. Print it at 100 % (actual size) and check its two 100 mm rulers.'

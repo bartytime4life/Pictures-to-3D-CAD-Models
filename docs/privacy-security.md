@@ -79,7 +79,7 @@ The app does not require third-party API keys for conversion. If future integrat
 
 ## Local slicer handoff
 
-Bambu Studio and PrusaSlicer handoff downloads include generated geometry, the editable outline recipe and printer/material planning notes. They do not include the original photograph or assistant conversation. Neutral 3MF files contain geometry without native slicing settings.
+Bambu Studio, PrusaSlicer and QIDI Studio handoff downloads include generated geometry, the editable outline recipe and printer/material planning notes. They do not include the original photograph or assistant conversation. Neutral 3MF files contain geometry without native slicing settings.
 
 The optional host launcher is disabled by default. Explicit local opening accepts only two fixed program IDs, configured installed executables and a generated model ID. It requires same-origin JSON over HTTP from a loopback client/host and uses an argument array without a shell. HTTPS loopback and remote workbenches use handoff ZIP downloads instead. Opening requests do not slice, send G-code, or contact a printer. Once open, the external slicer runs with its own settings and permissions.
 
