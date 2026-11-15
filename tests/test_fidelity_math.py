@@ -1248,6 +1248,96 @@ def test_the_sheet_jacobian_inverts_the_plane_to_photo_map():
         assert np.allclose(ji @ np.column_stack(columns), np.eye(2), atol=1e-6)
 
 
+def test_the_blend_is_solved_from_its_luma():
+    """chroma.blend_from_luma inverts a blend's luma: for two colours whose lumas differ,
+    the blend a of (1 - a) A + a B is recovered from its JFIF luma within 1e-7, inside
+    [0, 1] and a little beyond it, where noise puts a plateau's pixels."""
+    from backend import chroma
+
+    part = tone.linear_from_encoded(np.array([60.0, 150.0, 70.0]))
+    paper = tone.linear_from_encoded(np.array([200.0, 200.0, 200.0]))
+    blend = np.linspace(-0.3, 1.3, 41)
+    colours = (1 - blend)[:, None] * part + blend[:, None] * paper
+    luma = chroma.luma(tone.encoded_from_linear(colours))
+    found = chroma.blend_from_luma(luma, np.repeat(part[None], 41, axis=0), np.repeat(paper[None], 41, axis=0))
+    assert np.max(np.abs(found - blend)) < 1e-7
+
+
+def _coloured_plate(part, paper, sigma, seed):
+    """An exactly blurred plate (a square turned 7 degrees with a hole of radius 30 px) in
+    two saved sRGB colours, blurred in linear light, saved with noise of 2.5 levels and
+    dither, as 8-bit RGB."""
+    from shapely import affinity
+    from shapely.geometry import Point, box
+
+    c, half = np.array([210.3, 209.8]), 120.0
+    plate = affinity.rotate(box(c[0] - half, c[1] - half, c[0] + half, c[1] + half), 7.0, origin=tuple(c))
+    cover = synthetic.coverage(plate.difference(Point(*c).buffer(30.0, 4096)), 1.0, 0.0, 0.0, (420, 420))
+    rng = np.random.default_rng(seed)
+    planes = []
+    for pc, qc in zip(part, paper):
+        light = tone.linear_from_encoded(np.array([qc, pc], float))
+        blurred = cv2.GaussianBlur((light[0] + (light[1] - light[0]) * cover).astype(np.float32), (0, 0), sigma)
+        saved = tone.encoded_from_linear(blurred) + rng.normal(0, 2.5, blurred.shape) + rng.uniform(-0.5, 0.5, blurred.shape)
+        planes.append(np.clip(np.rint(saved), 0, 255))
+    return np.dstack(planes).astype(np.uint8), c, half
+
+
+def _plate_sides(measured, c, half, mask=None):
+    """The straight sides' mean offset (px, + out of the part), the rings and the first
+    ring's paper light, traced by edges.subpixel_rings on a linear-light image."""
+    if mask is None:
+        mask = (measured < (np.percentile(measured, 2) + np.percentile(measured, 98)) / 2).astype(np.uint8)
+    rings, sigma, _ = edges.subpixel_rings(mask, cv2.GaussianBlur(measured, (0, 0), 0.7), 5.6)
+    a = np.radians(-7.0)
+    q = (next(r for r in rings if r["outer"])["points"] - 0.5 - c) @ np.array([[np.cos(a), -np.sin(a)], [np.sin(a), np.cos(a)]]).T
+    straight = np.abs(q).min(axis=1) < half - 8 * max(sigma, 2)
+    light = next((r["paper_model"] for r in rings if r.get("paper_model") is not None), None)
+    return float((np.abs(q).max(axis=1) - half)[straight].mean()), mask, sigma, light
+
+
+def test_a_coloured_parts_edges_are_rebuilt_from_the_full_resolution_luma():
+    """backend.chroma: a JPEG keeps its luma at full resolution and its colour at half
+    (4:2:0). Measured on the decoded linear light, a green part on a grey card under a
+    1.6 px blur read its sides over 0.03 px into the part, against the same photo saved
+    as PNG. Rebuilt within the band from the luma, as a blend of the part's colour and
+    the paper's (with the paper's light from the fitted shadow model), they read within
+    0.004 px of it; the same rebuild leaves the PNG within 0.002 px."""
+    import io
+
+    from PIL import Image
+
+    from backend import chroma
+
+    rgb, c, half = _coloured_plate((60, 150, 70), (200, 200, 200), 1.6, seed=1)
+
+    def saved(fmt, **options):
+        buffer = io.BytesIO()
+        Image.fromarray(rgb).save(buffer, fmt, **options)
+        return np.asarray(Image.open(io.BytesIO(buffer.getvalue())).convert("RGB"))
+
+    png, jpeg = saved("PNG"), saved("JPEG", quality=90, subsampling=2)
+    weights = tone.LUMINANCE
+
+    def rebuilt(photo):
+        measured = tone.linear_mix(photo, weights)
+        _, mask, sigma, light = _plate_sides(measured, c, half)
+        linear = tone.linear_from_encoded(photo)
+        inside = mask > 0
+        d_in = cv2.distanceTransform(inside.astype(np.uint8), cv2.DIST_L2, 5)
+        d_out = cv2.distanceTransform((~inside).astype(np.uint8), cv2.DIST_L2, 5)
+        band = chroma.BAND_SIGMAS * sigma + 2
+        part = chroma.chromaticity(np.median(linear[inside & (d_in > band)], axis=0), weights)
+        paper = chroma.chromaticity(np.median(linear[~inside & (d_out > band) & (d_out < band + 17)], axis=0), weights)
+        assert chroma.different_hues(part, paper) and light is not None
+        return chroma.rebuild(measured, chroma.luma(photo), mask, sigma, part, paper, weights, light.blurred)
+
+    truth = _plate_sides(tone.linear_mix(png, weights), c, half)[0]
+    assert _plate_sides(tone.linear_mix(jpeg, weights), c, half)[0] - truth < -0.03
+    assert abs(_plate_sides(rebuilt(jpeg), c, half)[0] - truth) < 0.004
+    assert abs(_plate_sides(rebuilt(png), c, half)[0] - truth) < 0.002
+
+
 def test_a_constant_sheet_jacobian_leaves_the_edges_where_they_were():
     """The photo's blur carried to each point by the sheet's Jacobian (edges._camera_blur)
     is the measured blur wherever that Jacobian is the same, as it is for a photo taken

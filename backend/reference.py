@@ -26,7 +26,7 @@ from pydantic import ValidationError
 from shapely.errors import GEOSException
 from shapely.geometry import LineString, Polygon
 
-from . import edges, fitting, shadow, sheet, tone
+from . import chroma, edges, fitting, shadow, sheet, tone
 from .circular_joins import JoinConstructionError
 from .models import Profile
 
@@ -93,6 +93,58 @@ def _segments_for(points, prims, tolerance_px, join_notices=None, boundary="boun
             "Review those edges and measure critical curves in CAD."
         )
     return [("line", vertices[k], vertices[(k + 1) % len(vertices)]) for k in range(len(vertices))], False
+
+
+# Beside a fitted shadow at least shadow.NOTICEABLE_DEPTH deep, a coloured part's edges
+# are rebuilt from the luma only under a blur of at most this (_rebuilt_from_luma).
+COLOUR_SHADOW_BLUR_MM = 0.5
+COLOUR_REBUILT = (
+    "The photo stores colour at half the resolution of brightness, as most phone JPEGs do, which moves a coloured part's edges into it; they were measured from the photo's full-resolution brightness instead."
+)
+COLOUR_KEPT = (
+    "The photo stores colour at half the resolution of brightness, which can move a coloured part's edges slightly into it. A shadow beside the part kept them from being measured from its full-resolution brightness; even light from above avoids that."
+)
+
+
+def _rebuilt_from_luma(rgb, rectified, measured, mask, rings, sigma, weights, geometry):
+    """(the measurement image rebuilt from the photo's luma, or None; a note or None) for
+    a JPEG whose colour is at half resolution (backend.chroma).
+
+    The part's and the paper's colours are the medians of the rectified photo beyond
+    chroma.BAND_SIGMAS sigma + 2 px of the classified part, the paper's within 3 mm
+    beyond that. Nothing is rebuilt when their hues are alike (chroma.different_hues):
+    the test renderer's tinted grey part differs from its paper by 0.022, real coloured
+    parts by 0.5-4.3. The paper's light is the shadow model's, so there must be one.
+    Within about two blur widths of a shadowed edge the paper's light cannot be measured,
+    and the model's guess there is what the rebuild uses. Beside the renderer's shadow,
+    which takes 25 % of the light, the rebuild helped seven of eight rendered photos
+    under a blur of 0.29 mm and all four under 0.48 mm (a green part on a grey card
+    144 -> 24 um and 146 -> 62 um summed, seeds 201-206), but under 0.70 mm a green
+    part went 111 -> 124 um. Beside a fitted
+    shadow at least shadow.NOTICEABLE_DEPTH deep, therefore, it is used only under a
+    blur of at most COLOUR_SHADOW_BLUR_MM."""
+    matrix, k1, plane, ppm = geometry
+    inside = mask > 0
+    band = chroma.BAND_SIGMAS * float(sigma) + 2.0
+    d_in = cv2.distanceTransform(inside.astype(np.uint8), cv2.DIST_L2, 5)
+    d_out = cv2.distanceTransform((~inside).astype(np.uint8), cv2.DIST_L2, 5)
+    part_px = inside & (d_in > band)
+    paper_px = ~inside & (d_out > band) & (d_out < band + 3 * ppm)
+    if not part_px.any() or not paper_px.any():
+        return None, None
+    linear = tone.linear_from_encoded(rectified)
+    part = chroma.chromaticity(np.median(linear[part_px], axis=0), weights)
+    paper = chroma.chromaticity(np.median(linear[paper_px], axis=0), weights)
+    if not chroma.different_hues(part, paper):
+        return None, None
+    light = next((ring.get("paper_light") for ring in rings if ring.get("paper_light")), {})
+    model = next((ring.get("paper_model") for ring in rings if ring.get("paper_model") is not None), None)
+    shaded = light.get("depth", 1.0) >= shadow.NOTICEABLE_DEPTH
+    if model is None or (shaded and sigma / ppm > COLOUR_SHADOW_BLUR_MM):
+        return None, COLOUR_KEPT
+    luma = sheet.rectify_gray(chroma.luma(rgb), matrix, k1, plane, ppm)
+    rebuilt = chroma.rebuild(measured, luma, mask, sigma, part, paper, weights, model.blurred)
+    return (None, None) if rebuilt is None else (rebuilt, COLOUR_REBUILT)
 
 
 def _carried_covariance(camera_blur, jacobian):
@@ -380,7 +432,9 @@ def _refine_walls(g, rings, camera, thickness_mm, sigma, ppm):
     return refined, notes
 
 
-def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, focal_35mm, snap, notices):
+def trace_on_sheet(
+    rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, focal_35mm, snap, notices, chroma_subsampled=False
+):
     size_mm = sheet_size(reference, sheet_mm)
     gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
     size = (gray.shape[1], gray.shape[0])
@@ -410,10 +464,8 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
         )
         weights = edges.measurement_weights(rectified, mask, ppm)
         # The measurement image: exact resampling of the linear-light mix.
-        g = cv2.GaussianBlur(
-            sheet.rectify_gray(tone.linear_mix(rgb, weights), matrix, k1, plane, ppm),
-            (0, 0), edges.MEASUREMENT_SMOOTHING_PX,
-        )
+        measured = sheet.rectify_gray(tone.linear_mix(rgb, weights), matrix, k1, plane, ppm)
+        g = cv2.GaussianBlur(measured, (0, 0), edges.MEASUREMENT_SMOOTHING_PX)
         # The fourth argument, shadow_free_blur, is positional: tests stand in for this
         # call. A part traced with a thickness takes the shadow-free blur too, now that
         # its wall model takes the shadow's light out of its profiles (_refine_walls);
@@ -428,9 +480,21 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
         rings, sigma, tiny = edges.subpixel_rings(
             mask, g, ppm, True, not thickness_mm, bool(thickness_mm), not thickness_mm, jacobian
         )
+        # A coloured part in a JPEG whose colour is at half resolution: its edges are
+        # measured again from the light rebuilt from the full-resolution luma
+        # (_rebuilt_from_luma). Not for a part traced with a thickness, whose walls are a
+        # third colour.
+        colour_note = None
+        if chroma_subsampled and not thickness_mm and sigma > 0:
+            rebuilt, colour_note = _rebuilt_from_luma(rgb, rectified, measured, mask, rings, sigma, weights, (matrix, k1, plane, ppm))
+            if rebuilt is not None:
+                g = cv2.GaussianBlur(rebuilt, (0, 0), edges.MEASUREMENT_SMOOTHING_PX)
+                rings, sigma, tiny = edges.subpixel_rings(mask, g, ppm, True, True, False, True, jacobian)
     except edges.EdgeError as exc:
         raise ReferenceError_(str(exc), sheet_missing=True) from exc
     notes = list(seg_notes)
+    if colour_note:
+        notes.append(colour_note)
     # The note is about the blur's direction: each edge's width carried across the sheet
     # by perspective (edges._camera_blur) differs by place as well, and that is not it.
     spreads = np.concatenate([

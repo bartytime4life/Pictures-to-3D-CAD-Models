@@ -301,6 +301,8 @@ def render(
     chromatic_px=0.0,
     sharpen=0.0,
     sharpen_px=1.0,
+    colours=None,
+    subsampling=None,
 ):
     """Returns (jpeg bytes, truth dict).
 
@@ -342,6 +344,13 @@ def render(
     `sharpen` is an unsharp mask on the saved values, saved + sharpen (saved - G * saved)
     with G a Gaussian of `sharpen_px`, as a phone's processing sharpens: it overshoots
     either side of an edge.
+
+    `colours`, four saved sRGB colours (table, sheet, part top, wall), renders a part in
+    colour: each channel's scene takes its own tones, with the same texture, and the
+    channels are not tinted. `quality=None` saves a PNG, which is lossless; a JPEG keeps
+    Pillow's default 4:2:0 colour unless `subsampling` is given (0 for 4:4:4). A JPEG's
+    rounding of colour through Y'CbCr acts as a small tone curve where no noise dithers
+    it, so a noise-free JPEG is not a lossless photo.
     """
     if gamma is None:
         to_linear, to_saved = srgb_to_linear, linear_to_srgb
@@ -405,49 +414,61 @@ def render(
     # linear in its coverages (top is inside material, so material >= top): background
     # where neither covers it, wall where only the walls do, top face elsewhere. Uneven
     # light and vignetting scale the whole scene, and the optical blur follows.
-    table, paper, metal, wall_tone = (
-        to_linear(np.clip(surface, 0, 255)) for surface in (table, paper, metal, wall_tone)
-    )
-    paper = paper * (1 - shadow * cast)
-    background = table * (1 - sheet_a) + paper * sheet_a
-    scene = background * (1 - material) + wall_tone * (material - top) + metal * top
-    gx, gy = (xx - shape[1] / 2) / shape[1], (yy - shape[0] / 2) / shape[0]
-    scene *= (1 - gradient * (gx * 0.8 + gy * 0.6)) * (1 - 0.35 * (gx**2 + gy**2))
-    scene = cv2.GaussianBlur(scene.astype(np.float32), (0, 0), 0.8)
     w, h = size
     u, v = np.meshgrid(np.arange(w, dtype=np.float64) + 0.5, np.arange(h, dtype=np.float64) + 0.5)
     iu, iv = undistort_grid(u, v, k1, size, k2)
     den = floor_inv[2, 0] * iu + floor_inv[2, 1] * iv + floor_inv[2, 2]
     px = (floor_inv[0, 0] * iu + floor_inv[0, 1] * iv + floor_inv[0, 2]) / den
     py = (floor_inv[1, 0] * iu + floor_inv[1, 1] * iv + floor_inv[1, 2]) / den
-    image = cv2.remap(
-        scene,
-        ((px - x0) * ppm).astype(np.float32),
-        ((py - y0) * ppm).astype(np.float32),
-        cv2.INTER_LINEAR,
-        borderMode=cv2.BORDER_REFLECT,
-    )
-    if np.isscalar(blur) or len(blur) == 2:
-        blur_x, blur_y = (blur, blur) if np.isscalar(blur) else blur
-        image = cv2.GaussianBlur(image, (0, 0), blur_x, sigmaY=blur_y)
+
+    def photographed(table, paper, metal, wall_tone):
+        table, paper, metal, wall_tone = (
+            to_linear(np.clip(surface, 0, 255)) for surface in (table, paper, metal, wall_tone)
+        )
+        paper = paper * (1 - shadow * cast)
+        background = table * (1 - sheet_a) + paper * sheet_a
+        scene = background * (1 - material) + wall_tone * (material - top) + metal * top
+        gx, gy = (xx - shape[1] / 2) / shape[1], (yy - shape[0] / 2) / shape[0]
+        scene *= (1 - gradient * (gx * 0.8 + gy * 0.6)) * (1 - 0.35 * (gx**2 + gy**2))
+        scene = cv2.GaussianBlur(scene.astype(np.float32), (0, 0), 0.8)
+        image = cv2.remap(
+            scene,
+            ((px - x0) * ppm).astype(np.float32),
+            ((py - y0) * ppm).astype(np.float32),
+            cv2.INTER_LINEAR,
+            borderMode=cv2.BORDER_REFLECT,
+        )
+        if np.isscalar(blur) or len(blur) == 2:
+            blur_x, blur_y = (blur, blur) if np.isscalar(blur) else blur
+            image = cv2.GaussianBlur(image, (0, 0), blur_x, sigmaY=blur_y)
+        else:
+            image = cv2.filter2D(image, -1, rotated_gaussian(*blur), borderType=cv2.BORDER_REFLECT)
+        if glare > 0:
+            image = (1 - glare) * image + glare * _veil(image, glare_px)
+        return image
+
+    if colours is None:
+        image = photographed(table, paper, metal, wall_tone)
+        planes, tints = [image] * 3, (1.0, 0.97, 0.92)
     else:
-        image = cv2.filter2D(image, -1, rotated_gaussian(*blur), borderType=cv2.BORDER_REFLECT)
-    if glare > 0:
-        image = (1 - glare) * image + glare * _veil(image, glare_px)
+        # Each channel's scene, with its own tones and the same texture.
+        planes = [
+            photographed(table + c[0] - table_tone, paper + c[1] - paper_tone, metal + c[2] - top_tone, wall_tone + c[3] - side_tone)
+            for c in zip(*colours)
+        ]
+        image, tints = planes[1], (1.0, 1.0, 1.0)
     # The camera saves through its tone curve; noise is added on the saved scale, where
     # a processed photo's noise is roughly even across tones, independently in each
     # colour channel as a sensor's is, and the saved values are rounded (they had been
     # truncated, half a level low on average).
     if chromatic_px:
-        planes = [_magnify(image, scale) for scale in _chromatic_scales(chromatic_px, size)]
-    else:
-        planes = [image] * 3
+        planes = [_magnify(plane, scale) for plane, scale in zip(planes, _chromatic_scales(chromatic_px, size))]
     saved_planes = [to_saved(plane) for plane in planes]
     if sharpen > 0:
         saved_planes = [p + sharpen * (p - cv2.GaussianBlur(p, (0, 0), sharpen_px)) for p in saved_planes]
     rgb = np.dstack([
         np.clip(np.rint(saved * tint + rng.normal(0, noise, image.shape) + dither * rng.uniform(-0.5, 0.5, image.shape)), 0, 255)
-        for saved, tint in zip(saved_planes, (1.0, 0.97, 0.92))
+        for saved, tint in zip(saved_planes, tints)
     ]).astype(np.uint8)
     from PIL import Image
 
@@ -456,7 +477,11 @@ def render(
     if exif_focal_35mm:
         exif.get_ifd(0x8769)[0xA405] = int(exif_focal_35mm)  # FocalLengthIn35mmFilm
     buffer = io.BytesIO()
-    picture.save(buffer, "JPEG", quality=quality, exif=exif.tobytes())
+    if quality is None:
+        picture.save(buffer, "PNG")
+    else:
+        extra = {} if subsampling is None else {"subsampling": subsampling}
+        picture.save(buffer, "JPEG", quality=quality, exif=exif.tobytes(), **extra)
     encoded = np.frombuffer(buffer.getvalue(), np.uint8)
     truth = {
         "k1": k1,
