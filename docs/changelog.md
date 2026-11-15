@@ -1,5 +1,23 @@
 # Workbench change log
 
+## A coloured part measured from a JPEG's full-resolution brightness — November 15, 2026
+
+- JPEG photos usually store colour at half the resolution of brightness, which moves
+  a coloured part's edges into it. On exactly blurred test plates a green part on a
+  grey card read 0.044-0.066 px in, and an orange one up to 0.018 px; a grey part, at
+  most 0.003 px. The tracer now rebuilds a coloured part's edges from the photo's
+  full-resolution brightness, with the paper's light from the fitted shadow, and says
+  so. On rendered photos a green part on a grey card went from 88-146 to 20-62
+  micrometres summed, and a blue one from 27-36 to 14-31. Orange and red parts improved
+  by up to 13 micrometres; two tilted orange photos read 1-2 micrometres worse.
+  Beside a shadow under a blur wider than 0.5 mm the edges are not rebuilt, and the
+  trace says that too. HEIC, WebP and AVIF photos are not corrected.
+- The tests' noise-free photos, saved as quality-100 JPEG, are not lossless: without
+  noise, JPEG's colour rounding moved their edges by up to 0.014 px. The renderer can
+  now save PNG (`quality=None`), render a part in colour (`colours`) and set the
+  JPEG's colour subsampling ([reference-sheet tracing](reference-sheet.md), §3 and
+  Limits).
+
 ## QIDI Studio joins the slicer handoffs — November 15, 2026
 
 - **QIDI Studio 2.07.02.73** is the third slicer in **Prepare in your slicer**, next to Bambu

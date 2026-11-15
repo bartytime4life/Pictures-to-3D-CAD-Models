@@ -8,7 +8,7 @@ import warnings
 
 import cv2
 import numpy as np
-from PIL import ExifTags, Image, UnidentifiedImageError
+from PIL import ExifTags, Image, JpegImagePlugin, UnidentifiedImageError
 from pydantic import ValidationError
 from shapely.geometry import Polygon
 
@@ -140,6 +140,10 @@ def decode_with_pillow(data, notices):
             else:
                 image = normalized.convert("RGB")
             image.load()
+            # A JPEG that stores its colour at half resolution (4:2:0 or 4:2:2), as
+            # phones save them: the sheet trace rebuilds a coloured part's edges from its
+            # full-resolution luma (backend.chroma).
+            image.info["chroma_subsampled"] = raw.format in ("JPEG", "MPO") and JpegImagePlugin.get_sampling(raw) in (1, 2)
     return image, focal_35mm
 
 
@@ -288,6 +292,8 @@ def trace_image(
                     focal_35mm=focal_35mm,
                     snap=snap,
                     notices=notices,
+                    # A photo reduced in linear light is a new image, without the flag.
+                    chroma_subsampled=bool(image.info.get("chroma_subsampled")),
                 )
             except ReferenceError_:
                 raise

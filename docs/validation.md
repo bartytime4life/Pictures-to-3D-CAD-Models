@@ -547,6 +547,7 @@ It changes guides relative to that integrated baseline, not runtime behavior.
 | Directional covariance rank guard | Draft PR #78, source `185d682`: [633 local Python tests](validation/directional-blur-rank.md), build and 76 focused checks | Actual sampled Gaussian-step rank counterexample; no new whole-photo, browser or physical-accuracy claim |
 | Recorded directional-blur checks | Branch `claude/directional-blur`, on the slot end-cap commit and `main` at `485da7e` (after #47): **627 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#a-blur-that-differs-by-direction--november-12-2026) | Local result; synthetic photos including the directional-spread qualification's kinds of case, and exact blurred holes; supersedes that record's "no production correction" |
 | Contact-shadow observability study | Branch `claude/contact-shadow-limits` on `main` at `70055dc`, documentation only, as recorded [below](#contact-shadows-beside-an-edge--november-13-2026) | Exactly rendered scenes; an unobservable kernel radius, a closer-fit study and a profile-shape fit, none adopted; capture guidance |
+| Recorded luma-rebuild checks | Branch `claude/jpeg-luma`, on `main` at `10ce436` (after #150): **1392 Python tests**, **83 browser scenarios**, Ruff passed, as recorded [below](#a-coloured-parts-edges-rebuilt-from-a-jpegs-luma--november-15-2026) | Local result; exactly blurred plates and rendered photos in four colours, with and without a shadow, at three blurs; grey and tinted parts unchanged; HEIC, WebP, AVIF and thick parts not rebuilt |
 | JPEG colour study | Branch `claude/jpeg-edge` on `main` at `5a222b0` (after #145), documentation only, as recorded [below](#jpegs-colour-at-half-resolution--november-14-2026) | Exactly blurred plates saved as PNG and JPEG, six colour pairs, two blurs, with and without noise and shadow; rendered photos JPEG against PNG; two corrections tried, neither adopted |
 | Recorded carried-blur checks | Branch `claude/perspective-blur`, on `main` at `ab2f74b` (after #144): **1393 Python tests**, **81 browser scenarios**, Ruff passed, as recorded [below](#the-photos-blur-carried-across-the-sheet--november-14-2026) | Local result; rendered photos saved as JPEG and as PNG, ring and direction widths, the documented tables, rectangles and seeds; JPEG photos under a directional blur read worse; carrying the blur into the shadow model not adopted |
 | Recorded measured-tail checks | Branch `claude/blur-shape`, on `main` at `7e0a1dd` (after #140): **1359 Python tests**, **79 browser scenarios**, Ruff passed, as recorded [below](#the-blurs-shape-in-the-steps-tail--november-14-2026) | Local result; exactly blurred plates under disks and a streak, rendered plates under four kernels, the documented tables, rectangles and noise seeds; JPEG photos read about 1–2 µm into the part |
@@ -591,6 +592,37 @@ covers the endpoint explorer. The original CAD release and optional Ollama
 integration retain separate historical evidence. These records do not establish
 that a newly created or published cloud task has been validated.
 
+## A coloured part's edges rebuilt from a JPEG's luma — November 15, 2026
+
+Branch `claude/jpeg-luma`, on `main` at `10ce436` (after #150), after the study below (#146). The full checks ran on `7dbb30d` (#149); #150 changes only the slicer handoffs. See [reference-sheet tracing](reference-sheet.md), §3 (**JPEG's colour**, **Rebuilt from the luma**) and Limits.
+
+- **The change.**
+  - **`backend.chroma`.** Within 5.5 σ + 2 px of the classified part, the measured light is rebuilt as (1 − α)A + αB, with α solved from the rectified full-resolution luma. A and B take their hues from the rectified photo beyond the band; the part's brightness is read beyond the band, and the paper's is the shadow model's light. The edges are then traced again.
+  - **The gates.** It applies to a JPEG or MPO with 4:2:0 or 4:2:2 colour, recorded by `tracing.decode_with_pillow`. The hues must differ by at least 0.1. The shadow model must be used, and the blur must be at most 0.5 mm beside a fitted shadow at least 3 % deep. It is not used for thick parts or photos reduced from above 16 megapixels.
+  - **The renderer** (`synthetic.render`) gains `colours`, `quality=None` for PNG, and `subsampling`. Default renders are byte-identical.
+- **Exactly blurred plates,** 4:2:0 → rebuilt, against PNG, four draws:
+  - **At 1.6 px,** with and without a shadow taking 10 % of the light, every colour reads within 0.003 px. Green on a grey card goes −0.044 → −0.000 px.
+  - **At 3.9 px without a shadow:** green −0.019 → +0.002 px, blue +0.005 → +0.000 px, red −0.006 → −0.005 px, orange −0.019 → −0.013 px.
+  - **The rebuilt PNG** stays within 0.002 px at 1.6 px.
+  - **The luma itself** is the same at 4:2:0 and 4:4:4. Its quantization, about 0.2 levels at each edge, is what remains: at quality 95, orange under 3.9 px reads −0.006 px decoded and −0.005 px rebuilt, red −0.004 and −0.006 px.
+- **Rendered photos,** seeds 201–206, quality 90, 4:2:0, summed error of the five features, decoded → rebuilt (PNG):
+  - **Green on a grey card:** 110.0 → 19.5 µm (27.4) overhead and 124.6 → 23.1 µm (23.2) tilted, under 1 px. Tilted under 2 px, 118.8 → 35.2 µm (41.6), and under 3 px, 87.9 → 59.8 µm (59.8). Beside the renderer's shadow: 136.0 → 26.6 µm (53.5), 144.3 → 24.4 µm (27.5), and 146.2 → 62.0 µm (58.3) under 2 px.
+  - **Blue on white:** 27.4 → 13.9 µm (13.4) and 28.0 → 15.8 µm (13.0); under 2 px 29.0 → 24.0 µm (21.1), under 3 px 33.0 → 30.1 µm (30.7). Beside the shadow: 32.8 → 16.8 µm, 28.7 → 18.4 µm, and 35.5 → 31.2 µm under 2 px.
+  - **Orange on white:** 26.6 → 18.7 µm and 16.8 → 17.8 µm; under 2 px 35.3 → 22.9 µm. Beside the shadow: 36.8 → 23.6 µm, 21.5 → 23.7 µm, and 47.4 → 44.6 µm under 2 px.
+  - **Red on white:** 17.8 → 16.9 µm and 16.0 → 16.1 µm; under 2 px 28.2 → 20.5 µm. Beside the shadow: 21.1 → 17.8 µm, 20.2 → 17.3 µm, and 36.4 → 34.2 µm under 2 px.
+- **The gate's blur,** set from those photos. Beside the shadow under 3 px (0.70 mm) a rebuild took green from 110.6 to 124.0 µm (PNG 109.5) and blue from 64.9 to 61.0 µm. Under 0.29 mm seven of the eight shadowed photos improved, all but orange tilted (21.5 → 23.7 µm), and under 0.48 mm all four tried did. The shadow model's light within about two blur widths of a shadowed edge is a guess, and the rebuild relies on it there.
+- **Unchanged:** grey parts and the renderer's tinted part (hue difference 0.022), to the last digit; the documented tables' traces checked on four photo kinds. The hue check adds 0.06–0.13 s.
+- **What got worse.**
+  - Orange, tilted, 1 px: 16.8 → 17.8 µm without the shadow and 21.5 → 23.7 µm beside it.
+  - The rebuilt 6 mm holes read 2–4 µm smaller than the PNG's.
+  - A rebuilt trace takes a second edge pass: 5.0 s against 2.0 s for the 2400 × 1800 photo.
+- **Tests.**
+  - `test_the_blend_is_solved_from_its_luma`: within 10⁻⁷.
+  - `test_a_coloured_parts_edges_are_rebuilt_from_the_full_resolution_luma`: the exact green plate reads over 0.03 px in as decoded and within 0.004 px rebuilt; the rebuilt PNG is within 0.002 px.
+  - `test_a_coloured_part_in_a_phone_jpeg_is_measured_from_its_full_resolution_luma`: 0.002 and 0.001 mm rebuilt against 0.041 and 0.030 mm decoded, the note beside a wide blur, and grey parts left alone.
+  - `test_the_decoder_notes_a_jpeg_whose_colour_is_at_half_resolution`.
+- **Checks run.** `pytest` with runtime warnings as errors: **1392 passed**, two skipped without the optional depth model. Five Blender tests failed here as they do on `main` (`66bbc7d`): the Blender snap could not start ("snap-confine is packaged without necessary permissions"). Ruff and Prettier passed. **83 browser scenarios** passed with the system Chrome, one skipped without the depth model.
+
 ## JPEG's colour at half resolution — November 14, 2026
 
 Branch `claude/jpeg-edge` on `main` at `5a222b0` (after #145), documentation only. See [reference-sheet tracing](reference-sheet.md), §3 (**JPEG's colour**) and Limits, and the [capture guide](capture-guide.md).
@@ -612,7 +644,7 @@ Branch `claude/jpeg-edge` on `main` at `5a222b0` (after #145), documentation onl
 - **Noise-free renders.** The renderer's tinted plate (1, 0.97, 0.92) under 3.9 px read −0.014 ± 0.002 px at quality 100, 4:4:4, and −0.013 px at quality 90, 4:2:0; pure grey, within 0.005 px. JPEG's rounding through Y′CbCr acts as a tone curve when no noise dithers it.
 - **Rendered photos with noise,** seeds 201–206, quality-90 JPEG against PNG, per edge, outward positive. The outline moved +0.004 and +0.004 px overhead under 1 px, and +0.011 and +0.006 px under 3 px; tilted, +0.003 and +0.002 px under 1 px, and +0.014 and +0.008 px under 3 px. The holes moved within 0.007 px. At 4:4:4 the outline was within 0.005 px of PNG.
 - **libjpeg's 4:2:0 colour blur:** an added variance of 0.83, 0.67 and 0.53 px² at 0°, 7° and 45° (0.22–1.08 px² by sub-pixel phase). On edges along the pixel axes it also shifted the colour by −0.017 to +0.076 px with phase.
-- **Not adopted: the light rebuilt from the luma.**
+- **Not adopted then: the light rebuilt from the luma with smooth colour fields** (adopted with the shadow model's light; record above).
   - **The method.** α from Y′ for a blend of the part's and the paper's colours, read as Gaussian-weighted fields beyond a band of 3 σ + 3 px.
   - **Without a shadow,** at 1.6 px: green −0.044 → −0.001 px, red −0.005 → −0.000 px, orange −0.007 → −0.001 px. At 3.9 px: green −0.019 → +0.003 px, orange −0.019 → −0.010 px.
   - **With a soft shadow taking 30 % of the light,** at 3.9 px: orange −0.020 → −0.131 px, red −0.016 → −0.055 px. Applied to the PNG, orange read −0.108 px. The paper within the band is darker than the fields read beyond it.

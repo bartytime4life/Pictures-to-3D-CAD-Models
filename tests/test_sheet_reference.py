@@ -371,6 +371,31 @@ def test_the_photo_s_blur_is_carried_to_each_edge_by_the_sheet(client, monkeypat
     assert np.max(np.abs(np.array(uniform) - 1)) > 0.05
 
 
+GREEN_ON_GREY = ((120, 120, 120), (200, 200, 200), (60, 150, 70), (50, 125, 58))
+
+
+def test_a_coloured_part_in_a_phone_jpeg_is_measured_from_its_full_resolution_luma(client, monkeypatch):
+    """backend.chroma: a JPEG stores its colour at half resolution (4:2:0), which moves a
+    coloured part's edges into it. A green part on a grey card, tilted 22 degrees beside
+    the renderer's shadow under a 1 px blur, read its 6 mm holes 0.041 mm and its outline
+    0.030 mm off as decoded; rebuilt from the luma, 0.002 and 0.001 mm. Under a 3 px blur
+    beside that shadow it is not rebuilt, and a note says so; a grey part is never."""
+    from backend import reference
+
+    profile = trace(client, S.render(colours=GREEN_ON_GREY)[0], reference="a4").json()["profile"]
+    errors = S.feature_errors(profile)
+    assert errors["small"] < 0.006 and errors["outer"] < 0.006
+    assert reference.COLOUR_REBUILT in profile["reference"]["notes"]
+    monkeypatch.setattr(reference, "_rebuilt_from_luma", lambda *args: (None, None))
+    errors = S.feature_errors(trace(client, S.render(colours=GREEN_ON_GREY)[0], reference="a4").json()["profile"])
+    assert errors["small"] > 0.02 and errors["outer"] > 0.02
+    monkeypatch.undo()
+    wide = trace(client, S.render(colours=GREEN_ON_GREY, blur=3.0)[0], reference="a4").json()["profile"]
+    assert reference.COLOUR_KEPT in wide["reference"]["notes"]
+    grey = trace(client, S.render()[0], reference="a4").json()["profile"]
+    assert not any("half the resolution" in note for note in grey["reference"]["notes"])
+
+
 def test_veiling_glare_is_taken_out_before_the_edges_are_placed(client, monkeypatch):
     """With 10 % of the light scattered (synthetic.render's `glare`, a = 20 px) under a
     3 px blur, the outline read 0.022 mm small and Ø6 0.008 mm large while the step's
