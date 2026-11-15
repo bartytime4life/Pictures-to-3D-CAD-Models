@@ -249,9 +249,18 @@ test('AI depth follows the model status and stays out of lithophanes', async ({ 
   await page.getByText('Fine-tune (optional)').click();
   await page.getByLabel('Picture type').selectOption('ai');
   await expect(page.getByText('AI depth: nearer = raised')).toBeVisible();
-  const sent = page.waitForRequest((r) => r.url().endsWith('/api/relief') && r.method() === 'POST');
+  // Choosing AI depth starts an automatic relief rebuild of its own, which may be sent
+  // before or after the mode switch, so wait for the first lithophane request.
+  const settingsOf = (request: { postData(): string | null }) =>
+    JSON.parse(/"settings"\r\n\r\n(.*)\r\n/.exec(request.postData() ?? '')![1]);
+  const sent = page.waitForRequest(
+    (r) =>
+      r.url().endsWith('/api/relief') &&
+      r.method() === 'POST' &&
+      settingsOf(r).mode === 'lithophane',
+  );
   await page.getByRole('radio', { name: /Lithophane/ }).click();
-  const settings = JSON.parse(/"settings"\r\n\r\n(.*)\r\n/.exec((await sent).postData() ?? '')![1]);
+  const settings = settingsOf(await sent);
   expect([settings.mode, settings.source]).toEqual(['lithophane', 'photo']);
   await expect(page.getByRole('heading', { name: 'Your lithophane' })).toBeVisible({
     timeout: 60_000,
