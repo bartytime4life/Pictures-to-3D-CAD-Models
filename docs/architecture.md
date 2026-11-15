@@ -37,7 +37,7 @@ flowchart LR
     F --> G[Bounded CadQuery conversion]
     G --> H[Mesh for 3D preview]
     G --> I[STEP · STL · 3MF · DXF · SVG · PDF · SCAD · parts ZIP · recipe]
-    I --> K[Bambu Studio or PrusaSlicer handoff]
+    I --> K[Bambu Studio, PrusaSlicer or QIDI Studio handoff]
 ```
 
 The later local [coupled](finite-acquisition-coupled.md) and

@@ -19,6 +19,9 @@ PROGRAMS = {
         "release_url": "https://github.com/bambulab/BambuStudio/releases/tag/v02.09.01.70",
         "environment": "PICAD_BAMBU_STUDIO",
         "commands": ("bambu-studio", "BambuStudio", "bambustudio"),
+        "windows": ("Bambu Studio/bambu-studio.exe",),
+        "mac": "BambuStudio.app/Contents/MacOS/BambuStudio",
+        "appimage": "Bambu_Studio_*.AppImage",
     },
     "prusa": {
         "id": "prusa",
@@ -28,8 +31,31 @@ PROGRAMS = {
         "release_url": "https://github.com/prusa3d/PrusaSlicer/releases/tag/version_2.9.7",
         "environment": "PICAD_PRUSA_SLICER",
         "commands": ("prusa-slicer", "PrusaSlicer", "prusa-slicer-console"),
+        "windows": ("Prusa3D/PrusaSlicer/prusa-slicer.exe", "Prusa3D/PrusaSlicer/PrusaSlicer.exe"),
+        "mac": "PrusaSlicer.app/Contents/MacOS/PrusaSlicer",
+        "appimage": "PrusaSlicer-*.AppImage",
+    },
+    # QIDI Studio (AGPL-3.0) is a Bambu Studio derivative for QIDI printers. Its build names
+    # the program qidi-studio and the macOS bundle QIDIStudio.app (src/CMakeLists.txt at the
+    # v2.07.02.73 tag). The Windows folder is the installer's default name and is unverified.
+    "qidi": {
+        "id": "qidi",
+        "name": "QIDI Studio",
+        "target_version": "2.7.2.73",
+        "source_url": "https://github.com/QIDITECH/QIDIStudio",
+        "release_url": "https://github.com/QIDITECH/QIDIStudio/releases/tag/v2.07.02.73",
+        "environment": "PICAD_QIDI_STUDIO",
+        "commands": ("qidi-studio", "QIDIStudio", "qidistudio"),
+        "windows": ("QIDIStudio/qidi-studio.exe", "QIDI Studio/qidi-studio.exe"),
+        "mac": "QIDIStudio.app/Contents/MacOS/QIDIStudio",
+        "appimage": "QIDIStudio_*.AppImage",
     },
 }
+
+#: Where Linux AppImages are looked for: the folder AppImage tools install into. Downloads
+#: and the desktop are deliberately not searched; set the program's environment variable
+#: to use an AppImage kept anywhere else.
+APPIMAGE_FOLDER = Path("~/Applications")
 
 
 class SlicerError(ValueError):
@@ -40,39 +66,38 @@ def bridge_enabled():
     return os.environ.get("PICAD_ENABLE_SLICER_LAUNCH") == "1"
 
 
+def _choice_message():
+    names = [program["name"] for program in PROGRAMS.values()]
+    return f"Choose {', '.join(names[:-1])} or {names[-1]}."
+
+
+def _runnable(path):
+    return path.is_file() and os.access(path, os.X_OK)
+
+
 def executable_for(program_id):
     if program_id not in PROGRAMS:
-        raise SlicerError("Choose Bambu Studio or PrusaSlicer.")
+        raise SlicerError(_choice_message())
     program = PROGRAMS[program_id]
     configured = os.environ.get(program["environment"])
     if configured:
         path = Path(configured).expanduser()
         # Config is a single executable path, never an argument string or shell command.
-        return (
-            str(path.resolve())
-            if path.is_absolute() and path.is_file() and os.access(path, os.X_OK)
-            else None
-        )
+        return str(path.resolve()) if path.is_absolute() and _runnable(path) else None
     for name in program["commands"]:
         found = shutil.which(name)
         if found:
             return str(Path(found).resolve())
     if os.name == "nt":
         folder = Path(os.environ.get("ProgramFiles", "C:/Program Files"))
-        candidates = (
-            [folder / "Bambu Studio/bambu-studio.exe"]
-            if program_id == "bambu"
-            else [
-                folder / "Prusa3D/PrusaSlicer/prusa-slicer.exe",
-                folder / "Prusa3D/PrusaSlicer/PrusaSlicer.exe",
-            ]
-        )
+        candidates = [folder / relative for relative in program["windows"]]
     else:
-        app_name = "BambuStudio" if program_id == "bambu" else "PrusaSlicer"
-        candidates = [Path(f"/Applications/{app_name}.app/Contents/MacOS/{app_name}")]
-    return next(
-        (str(p.resolve()) for p in candidates if p.is_file() and os.access(p, os.X_OK)), None
-    )
+        candidates = [Path("/Applications") / program["mac"]]
+        # With several matches the last by name wins: QIDI and Bambu pad their version
+        # numbers, so for them that is the newest release.
+        appimages = sorted(APPIMAGE_FOLDER.expanduser().glob(program["appimage"]), reverse=True)
+        candidates += appimages
+    return next((str(p.resolve()) for p in candidates if _runnable(p)), None)
 
 
 def program_status():
@@ -144,7 +169,7 @@ def launch(program_id, source, handoff_root):
     The API accepts only program IDs; the caller supplies its validated job path.
     """
     if program_id not in PROGRAMS:
-        raise SlicerError("Choose Bambu Studio or PrusaSlicer.")
+        raise SlicerError(_choice_message())
     if not bridge_enabled():
         raise SlicerError(
             "Direct opening is off. Download the handoff package or enable the local launcher."

@@ -19,7 +19,7 @@ different source and validation histories.
 | Interpret an independent source-height check | [Engineering model and verification](engineering-model.md) |
 | Resize, inspect printer fit or make straight-cut pieces | [Print planning](print-planning.md), [printer catalog](printer-catalog.md) |
 | Choose CAD, mesh, drawing or source files | [Exports and dimensional checks](exports.md) |
-| Prepare Bambu Studio or PrusaSlicer handoffs | [Slicer integration](slicers.md) |
+| Prepare Bambu Studio, PrusaSlicer or QIDI Studio handoffs | [Slicer integration](slicers.md) |
 | Turn any picture into a relief or backlit lithophane, or edit it in Blender | [Relief and lithophane studio](relief.md) |
 | Ask the optional text-only local assistant | [Ollama setup and controls](ollama.md), [model evaluation plan](ollama-models.md) |
 | Recover from an error or missing result | [Troubleshooting](troubleshooting.md) |

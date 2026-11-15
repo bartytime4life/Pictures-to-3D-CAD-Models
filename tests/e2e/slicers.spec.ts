@@ -31,6 +31,18 @@ const programs = [
     version_status: 'not_checked',
     bridge_enabled: false,
   },
+  {
+    id: 'qidi',
+    name: 'QIDI Studio',
+    target_version: '2.7.2.73',
+    release_url: 'https://github.com/QIDITECH/QIDIStudio/releases/tag/v2.07.02.73',
+    source_url: 'https://github.com/QIDITECH/QIDIStudio',
+    detected: false,
+    launch_available: false,
+    launch_reason: 'Local opening is disabled. Download the handoff ZIP to open it yourself.',
+    version_status: 'not_checked',
+    bridge_enabled: false,
+  },
 ];
 
 test.beforeEach(async ({ page }) => {
@@ -125,6 +137,7 @@ test('real 3MF and targeted handoffs preserve units, split objects and planning 
   for (const [name, id, version] of [
     ['Bambu Studio', 'bambu', '2.9.1'],
     ['PrusaSlicer', 'prusa', '2.9.7'],
+    ['QIDI Studio', 'qidi', '2.7.2.73'],
   ]) {
     await handoff.getByRole('radio', { name: new RegExp(name) }).check();
     const zipEvent = page.waitForEvent('download');
@@ -320,6 +333,14 @@ test('mobile slicer selection survives reopening and the dialog remains accessib
   await ready(page);
   await page.getByRole('button', { name: 'Review export', exact: true }).click();
   const handoff = page.getByRole('region', { name: 'Prepare in your slicer', exact: true });
+  await handoff.getByRole('radio', { name: /QIDI Studio/ }).check();
+  await expect(handoff.getByRole('link', { name: /QIDI Studio 2.7.2.73 release/ })).toHaveAttribute(
+    'href',
+    programs[2].release_url,
+  );
+  await expect(
+    handoff.getByRole('button', { name: 'Download QIDI Studio handoff ZIP', exact: true }),
+  ).toBeVisible();
   await handoff.getByRole('radio', { name: /PrusaSlicer/ }).check();
   await expect(handoff.getByRole('link', { name: /PrusaSlicer 2.9.7 release/ })).toHaveAttribute(
     'href',

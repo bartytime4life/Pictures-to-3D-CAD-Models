@@ -1,5 +1,18 @@
 # Validation results
 
+## QIDI Studio handoff and import — November 15, 2026
+
+QIDI Studio 2.07.02.73 is the third slicer target. The program used for these checks is the official Ubuntu 24 AppImage. Its SHA-256 (`b0f39d5f…a276f8`) and size (127,400,440 bytes) match the asset digest GitHub publishes for the [v2.07.02.73 release](https://github.com/QIDITECH/QIDIStudio/releases/tag/v2.07.02.73).
+
+- **QIDI Studio's own import** (`tests/test_qidi_import.py`, run with `PICAD_QIDI_STUDIO` set to the AppImage). QIDI Studio's `--info` loaded each model:
+  - **Single part:** the handoff `model.3mf` and the `model.stl` fallback imported as one manifold object at the built 80 × 48 × 4 mm, with the solid's volume.
+  - **Split into two pieces:** the combined `model.3mf` imported as two separate manifold objects of 40 × 48 × 4 mm, with volumes summing to the built total. Each `part-XX.3mf` imported at its piece's size.
+  - **Relief:** the moon relief imported manifold at 100.000 × 71.111 × 4.000 mm, with all 361,136 facets the app wrote.
+  - The tests skip when QIDI Studio is not installed, as in CI.
+- **Python:** **1,389 tests** passed and 2 were skipped in 10.1 minutes. 11 Blender-launching tests were deselected: snap Blender cannot start from this session's shell (see the previous entries). New unit tests cover AppImage discovery in `~/Applications`. They check that downloads are never picked up, that a non-executable file is ignored, that the newest of several releases wins, that another program's AppImage does not count, and that the explicit variable takes priority. The discovery and handoff tests include QIDI Studio. `make lint` passed.
+- **Browser:** all **83 Chrome scenarios** passed in 10.1 minutes, 1 skipped (it needs the AI depth model). The slicer scenarios download and hash-check the QIDI handoff ZIP alongside the other two, and check the QIDI release link and download button at phone width. At 1440, 1000 and 390 px the three slicer cards fit without overflow; at 1440 px "Target release 2.7.2.73" wraps to two lines.
+- **Not checked:** **Open in QIDI Studio** starting the GUI window. The AppImage needs FUSE, which this session's sandbox refuses, and the launch path is the same mocked code the other two slicers use. The Windows install folder is unverified. No slicing or printing was done.
+
 ## AI-depth relief test waits for the lithophane request — November 15, 2026
 
 Test only. After #147 merged, `main`'s CI failed one of 83 browser scenarios, *AI depth follows the model status and stays out of lithophanes*, while 1,388 Python tests passed. The scenario picks **AI depth**, switches to **Lithophane**, and checks the next relief request. Picking AI depth now starts an automatic rebuild of its own about 0.7 s later. On the slower CI runner that rebuild was sent first, so the scenario read `relief`/`ai` instead of `lithophane`/`photo`. The app behaved correctly.
