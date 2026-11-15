@@ -1,5 +1,13 @@
 # Validation results
 
+## AI-depth relief test waits for the lithophane request — November 15, 2026
+
+Test only. After #147 merged, `main`'s CI failed one of 83 browser scenarios, *AI depth follows the model status and stays out of lithophanes*, while 1,388 Python tests passed. The scenario picks **AI depth**, switches to **Lithophane**, and checks the next relief request. Picking AI depth now starts an automatic rebuild of its own about 0.7 s later. On the slower CI runner that rebuild was sent first, so the scenario read `relief`/`ai` instead of `lithophane`/`photo`. The app behaved correctly.
+
+- **Reproduced locally** by pausing 1.5 s before the Lithophane click. The old scenario failed with exactly CI's `["relief", "ai"]`; the fixed one passed with and without the pause.
+- **Fix:** the scenario waits for the first request whose settings say `lithophane`, then checks its source is `photo`.
+- **Browser:** the 9 runnable relief scenarios passed (1 skipped: it needs the downloaded AI depth model).
+
 ## Narrowest phones no longer scroll sideways — November 15, 2026
 
 Frontend CSS only.
