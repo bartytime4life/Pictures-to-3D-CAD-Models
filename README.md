@@ -12,8 +12,8 @@ This repository contains three related tools:
 | Component | Use it for | Entry point |
 | --- | --- | --- |
 | Photo-to-CAD workbench | Trace, measure, review, and export a flat part | `make start` after setup |
-| Relief and lithophane studio | Turn any picture into a raised relief or a backlit lithophane, with an editable Blender scene | **Relief & Lithophane** in the app header, or `/#relief` |
-| Reference library and OpenSCAD workspace | Read the handbook, calculate dimensions, and design parameter-driven mounting plates or fit coupons | **OpenSCAD** in the app header, [offline library](reference-library/index.html), or [its guide](reference-library/README.md) |
+| Relief and lithophane studio | Turn any picture into a raised relief or a backlit lithophane, with an editable Blender scene | The **Relief & Lithophane** tab in the app header, or `/#relief` |
+| Reference library and OpenSCAD workspace | Read the handbook, calculate dimensions, and design parameter-driven mounting plates or fit coupons | The **OpenSCAD** tab in the app header, [offline library](reference-library/index.html), or [its guide](reference-library/README.md) |
 
 ![Pictures to CAD workbench showing the traced sample beside its generated CAD solid](docs/images/workbench.png)
 
@@ -61,7 +61,7 @@ Every build reports these numbers beside the 3D preview.
 
 **Optional AI depth** raises the *shape* a photo shows instead of its shading. Run `make depth-model` once to download and verify Depth Anything V2 Small (99 MB, Apache-2.0); it then runs on this computer's CPU, with no account or upload. Choose **Picture type: Photo → AI depth** or **Try AI depth on the moon**. The estimate is relative depth, so size still comes from your width and thickness settings. On the moon sample's sunlit surface it ranks true heights at Spearman ρ = 0.94, where brightness scores −0.16 ([details and limits](docs/relief.md#ai-depth-from-an-ordinary-photo)).
 
-Choose **Shape: Sphere** (or **Try the moon lamp**) to wrap a 2:1 world-map picture around a hollow ball. As a lithophane it makes a moon lamp, with a flat base ring around a light opening. The overhang share and bed-contact area are reported. **Elevation maps** (single-band TIFF or PNG heights, such as NASA's CGI Moon Kit) build terrain at true scale with a chosen exaggeration. Try **Try the moon elevation globe**.
+Choose **Shape: Sphere** (or the **Moon lamp** sample) to wrap a 2:1 world-map picture around a hollow ball. As a lithophane it makes a moon lamp, with a flat base ring around a light opening. The overhang share and bed-contact area are reported. **Elevation maps** (single-band TIFF or PNG heights, such as NASA's CGI Moon Kit) build terrain at true scale with a chosen exaggeration. Try the **Moon elevation globe** sample.
 
 Download STL or 3MF for a slicer, a 16-bit height map, or a **Blender ZIP**. The ZIP rebuilds the identical solid in Blender as a live **Displace** modifier and, for lithophanes, sets up a Cycles backlight scene that renders the Beer–Lambert prediction. With `PICAD_ENABLE_BLENDER_LAUNCH=1`, **Open in Blender** starts an installed Blender with that scene. Blender is optional; nothing else needs it. See the [relief and lithophane guide](docs/relief.md).
 

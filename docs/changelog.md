@@ -1,5 +1,24 @@
 # Workbench change log
 
+## One header for both studios, a sample gallery and automatic relief updates — November 15, 2026
+
+- The flat-part workbench and the relief studio share one header (`frontend/src/AppHeader.tsx`).
+  Its tabs (**Flat part**, **Relief & Lithophane**, **OpenSCAD**) mark the current studio, so
+  the relief studio no longer has only a back link. Below 1100 px every header icon keeps a
+  short label under it (**Guide**, **Save**, **Relief**) instead of becoming a bare icon; on
+  phones the tabs get a row of their own.
+- The project name is no longer cut off ("Mounti…"). Below 1700 px the tabs use short labels,
+  and the spacing tightens just above the 1250 px step. A browser test checks both studios at
+  eight widths from 1920 to 375 px for header overflow, a clipped name and unlabelled icons.
+- The relief studio's five "Try the…" buttons became a gallery of captioned sample cards that
+  show the picture each sample uses. The TIFF elevation sample, which browsers cannot show,
+  has a globe icon.
+- Relief settings apply on their own about 0.7 s after typing stops; **Update model** remains
+  for retries. The model it replaces is deleted from the server's temporary storage, so a
+  session of tweaks does not fill the 20-model limit. A setting the server rejects is reported
+  once and not retried in a loop, and a build that meets another build in progress waits out
+  the server's `Retry-After` instead of failing.
+
 ## How JPEG's colour moves a coloured part's edges — November 14, 2026
 
 - JPEG and HEIC photos usually store colour at half the resolution of brightness. On

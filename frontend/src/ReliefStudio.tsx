@@ -2,12 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import type { ChangeEvent, DragEvent } from 'react';
 import {
   ArrowCounterClockwise,
-  ArrowLeft,
   ArrowSquareOut,
   CheckCircle,
   Cube,
   DownloadSimple,
   Flask,
+  GlobeHemisphereWest,
   Image as ImageIcon,
   Lamp,
   Mountains,
@@ -16,6 +16,7 @@ import {
   WarningCircle,
   X,
 } from '@phosphor-icons/react';
+import AppHeader from './AppHeader';
 import ModelViewer from './ModelViewer';
 import {
   MODE_DEFAULTS,
@@ -195,6 +196,52 @@ const SAMPLES: Record<SampleKind, { url: string; file: string; draft: Partial<Dr
   },
 };
 
+// The start screen's sample gallery: each card shows the picture the sample feeds in and
+// says what it makes. The elevation sample is a TIFF, which browsers cannot show, so its
+// card uses an icon. The accessible names are the gallery's stable test handles.
+const SAMPLE_CARDS: {
+  kind: SampleKind;
+  label: string;
+  title: string;
+  makes: string;
+  thumbnail?: string;
+}[] = [
+  {
+    kind: 'photo',
+    label: 'Try the moon sample',
+    title: 'Moon photo',
+    makes: 'Flat relief from lightness',
+    thumbnail: SAMPLES.photo.url,
+  },
+  {
+    kind: 'ai',
+    label: 'Try AI depth on the moon',
+    title: 'Moon photo + AI depth',
+    makes: 'Flat relief from estimated depth',
+    thumbnail: SAMPLES.ai.url,
+  },
+  {
+    kind: 'depth',
+    label: 'Try the moon depth map',
+    title: 'Moon depth map',
+    makes: 'True half-sphere dome',
+    thumbnail: SAMPLES.depth.url,
+  },
+  {
+    kind: 'globe',
+    label: 'Try the moon lamp',
+    title: 'Moon lamp',
+    makes: 'Backlit sphere lithophane',
+    thumbnail: SAMPLES.globe.url,
+  },
+  {
+    kind: 'elevation',
+    label: 'Try the moon elevation globe',
+    title: 'Moon elevation globe',
+    makes: 'True-scale globe from km heights',
+  },
+];
+
 function number(value: string, low: number, high: number) {
   const parsed = Number(value);
   return value.trim() !== '' && Number.isFinite(parsed) && parsed >= low && parsed <= high
@@ -285,6 +332,17 @@ function geometryKey(settings: ReliefSettings) {
   return JSON.stringify(rest);
 }
 
+/** How long the settings must rest before the model rebuilds on its own. */
+const AUTO_BUILD_DELAY_MS = 700;
+
+/** How many times a build waits out the server's "another model is being built" reply. */
+const BUSY_RETRIES = 20;
+
+/** Delete a model the page no longer shows; failures only leave it to expire. */
+function discardModel(id: string) {
+  void fetch(`/api/models/${encodeURIComponent(id)}`, { method: 'DELETE' }).catch(() => {});
+}
+
 async function errorFrom(response: Response) {
   try {
     const body = await response.json();
@@ -369,6 +427,8 @@ export default function ReliefStudio() {
   const [fitError, setFitError] = useState('');
   const revision = useRef(0);
   const fileInput = useRef<HTMLInputElement>(null);
+  const shownId = useRef('');
+  const failedKey = useRef('');
 
   const settings = toSettings(draft, revision.current);
   const invalid = typeof settings === 'string' ? settings : '';
@@ -399,6 +459,19 @@ export default function ReliefStudio() {
     [sourceUrl],
   );
 
+  // Settings apply on their own: once the inputs are valid and have rested for
+  // AUTO_BUILD_DELAY_MS the model rebuilds, so there is no button to remember. Each
+  // keystroke restarts the wait. A build that failed is not retried for the same settings;
+  // Update model stays as the manual retry.
+  const autoKey =
+    result && stale && file && typeof settings !== 'string' ? geometryKey(settings) : '';
+  useEffect(() => {
+    if (!autoKey || busy || autoKey === failedKey.current) return;
+    const timer = window.setTimeout(() => void build(), AUTO_BUILD_DELAY_MS);
+    return () => window.clearTimeout(timer);
+    // build() reads the draft this render describes, which autoKey already captures.
+  }, [autoKey, busy]);
+
   function update<K extends keyof Draft>(key: K, value: Draft[K]) {
     setDraft((current) => ({ ...current, [key]: value }));
   }
@@ -418,10 +491,31 @@ export default function ReliefStudio() {
       const body = new FormData();
       body.append('file', nextFile);
       body.append('settings', JSON.stringify(request));
-      const response = await fetch('/api/relief', { method: 'POST', body });
+      let response = await fetch('/api/relief', { method: 'POST', body });
+      // The server builds one model at a time and answers 429 with a short Retry-After
+      // while another build runs. Wait and retry instead of reporting a failure; a long
+      // Retry-After (full storage) is a real error.
+      for (let attempt = 0; attempt < BUSY_RETRIES; attempt += 1) {
+        const wait = Number(response.headers.get('Retry-After'));
+        if (response.status !== 429 || !(wait > 0 && wait <= 10)) break;
+        setBusy('Waiting for another build to finish…');
+        await new Promise((resolve) => window.setTimeout(resolve, wait * 1000));
+        if (mine !== revision.current) return; // Superseded while waiting.
+        setBusy(request.mode === 'lithophane' ? 'Computing lithophane…' : 'Computing relief…');
+        response = await fetch('/api/relief', { method: 'POST', body });
+      }
       if (!response.ok) throw new Error(await errorFrom(response));
       const built: ReliefResult = await response.json();
-      if (mine !== revision.current) return; // A newer build superseded this one.
+      if (mine !== revision.current) {
+        // A newer build superseded this one; free its storage slot.
+        discardModel(built.id);
+        return;
+      }
+      // Automatic rebuilds make many models; keep only the one on screen so the
+      // server's bounded temporary storage does not fill up.
+      if (shownId.current && shownId.current !== built.id) discardModel(shownId.current);
+      shownId.current = built.id;
+      failedKey.current = '';
       setResult(built);
       setBuiltKey(geometryKey(request));
       setBuiltFile(nextFile);
@@ -429,6 +523,8 @@ export default function ReliefStudio() {
       setResetKey((v) => v + 1);
       setFit(null);
     } catch (caught) {
+      // Remember the failure so the automatic rebuild does not retry the same settings.
+      failedKey.current = geometryKey(request);
       if (mine === revision.current)
         setError(caught instanceof Error ? caught.message : String(caught));
     } finally {
@@ -571,12 +667,9 @@ export default function ReliefStudio() {
 
   return (
     <div className="app-shell relief-studio">
-      <header className="topbar">
-        <a className="brand" href="#workbench" aria-label="Pictures to CAD flat-part workbench">
-          <Cube size={35} weight="light" />
-          <span>Pictures to CAD</span>
-        </a>
-        <div className="project-name">
+      <AppHeader
+        studio="relief"
+        projectName={
           <input
             aria-label="Project name"
             value={draft.name}
@@ -584,18 +677,8 @@ export default function ReliefStudio() {
             onChange={(e) => update('name', e.target.value)}
             style={{ width: `${Math.min(Math.max(draft.name.length, 10), 24)}ch` }}
           />
-        </div>
-        <div className="header-actions">
-          <a
-            className="text-button guide-button"
-            href="#workbench"
-            aria-label="Flat-part workbench"
-          >
-            <ArrowLeft size={22} />
-            <span>Flat-part workbench</span>
-          </a>
-        </div>
-      </header>
+        }
+      />
 
       <main
         id="relief"
@@ -717,60 +800,45 @@ export default function ReliefStudio() {
                   }
                 />
               ) : (
-                <div className="model-empty">
-                  <ImageIcon size={45} weight="light" />
+                <div className="model-empty relief-empty">
                   <h3>Drop a picture here.</h3>
                   <p>
                     PNG, JPEG, WebP, HEIC or AVIF up to 32 MiB. A 16-bit grayscale depth map, or a
                     TIFF elevation map in metres or kilometres, also works.
                   </p>
-                  <div className="relief-start">
-                    <button
-                      className="primary-button"
-                      disabled={!!busy}
-                      onClick={() => fileInput.current?.click()}
-                    >
-                      <UploadSimple size={20} />
-                      Choose image
-                    </button>
-                    <button
-                      className="outlined-button"
-                      disabled={!!busy}
-                      onClick={() => void loadSample('photo')}
-                    >
-                      Try the moon sample
-                    </button>
-                    {depthModel?.available && (
-                      <button
-                        className="outlined-button"
-                        disabled={!!busy}
-                        onClick={() => void loadSample('ai')}
-                      >
-                        Try AI depth on the moon
-                      </button>
+                  <button
+                    className="primary-button"
+                    disabled={!!busy}
+                    onClick={() => fileInput.current?.click()}
+                  >
+                    <UploadSimple size={20} />
+                    Choose image
+                  </button>
+                  <p className="sample-heading">Or start from a sample</p>
+                  <ul className="sample-gallery" aria-label="Samples">
+                    {SAMPLE_CARDS.filter((card) => card.kind !== 'ai' || depthModel?.available).map(
+                      (card) => (
+                        <li key={card.kind}>
+                          <button
+                            className="sample-card"
+                            aria-label={card.label}
+                            disabled={!!busy}
+                            onClick={() => void loadSample(card.kind)}
+                          >
+                            {card.thumbnail ? (
+                              <img src={card.thumbnail} alt="" loading="lazy" decoding="async" />
+                            ) : (
+                              <span className="sample-icon" aria-hidden="true">
+                                <GlobeHemisphereWest size={40} weight="light" />
+                              </span>
+                            )}
+                            <strong>{card.title}</strong>
+                            <small>{card.makes}</small>
+                          </button>
+                        </li>
+                      ),
                     )}
-                    <button
-                      className="outlined-button"
-                      disabled={!!busy}
-                      onClick={() => void loadSample('depth')}
-                    >
-                      Try the moon depth map
-                    </button>
-                    <button
-                      className="outlined-button"
-                      disabled={!!busy}
-                      onClick={() => void loadSample('globe')}
-                    >
-                      Try the moon lamp
-                    </button>
-                    <button
-                      className="outlined-button"
-                      disabled={!!busy}
-                      onClick={() => void loadSample('elevation')}
-                    >
-                      Try the moon elevation globe
-                    </button>
-                  </div>
+                  </ul>
                 </div>
               )}
             </div>
@@ -812,7 +880,13 @@ export default function ReliefStudio() {
               {stale && !busy && (
                 <div className="stale-status">
                   <WarningCircle size={19} />
-                  <span>Previous model · press Update model to apply your changes</span>
+                  <span>
+                    {autoKey && autoKey !== failedKey.current
+                      ? 'Previous model · updating when you pause'
+                      : invalid
+                        ? 'Previous model · fix the setting named below'
+                        : 'Previous model · press Update model to try again'}
+                  </span>
                 </div>
               )}
               {!result && !busy && (
