@@ -1,5 +1,19 @@
 # Workbench change log
 
+## The photo's blur followed across a tilted sheet — November 14, 2026
+
+- On a tilted photo the sheet is nearer the camera on one side, and the blur measured
+  on the sheet is wider there and differs by direction: on rendered photos the part's
+  one measured width was 4-9 % off for some edges. The blur is now taken back to the
+  photo's own pixels and carried to each edge through the sheet's perspective, so each
+  edge, hole and slot end is placed and corrected with the blur it actually has. Each
+  ring's measured width now reads within 1.6 % of the blur carried to it. On lossless
+  tilted photos most results read closer: a 2 px blur at 22 degrees 10.6 -> 7.7
+  micrometres summed. On JPEG photos under a blur that differs by direction they read
+  worse, by up to 9 micrometres on the documented tables, because JPEG's own edge
+  shift had been partly offset ([reference-sheet tracing](reference-sheet.md), §3 and
+  Limits).
+
 ## The blurred edge's tail measured, not assumed — November 14, 2026
 
 - Before placing an edge, the tracer removes the blurred step's own tail from each

@@ -95,6 +95,32 @@ def _segments_for(points, prims, tolerance_px, join_notices=None, boundary="boun
     return [("line", vertices[k], vertices[(k + 1) % len(vertices)]) for k in range(len(vertices))], False
 
 
+def _carried_covariance(camera_blur, jacobian):
+    """A function of a plane point giving the photo's blur carried there by the sheet's
+    Jacobian (edges._camera_blur), s0 I + J S J', or None without one. On a tilted photo
+    it differs across the part: a hole on the side of the sheet nearer the camera is
+    blurred wider on the plane than one on the far side."""
+    if camera_blur is None or jacobian is None:
+        return None
+    s0 = edges.MEASUREMENT_SMOOTHING_PX**2
+
+    def covariance_at(centre):
+        j = jacobian(np.asarray(centre, float)[None, :])[0]
+        return s0 * np.eye(2) + j @ camera_blur @ j.T
+
+    return covariance_at
+
+
+def _local_curvature_sigma(camera_blur, jacobian):
+    """The blur's isotropic equivalent for a curve centred at a plane point, det(S)^(1/4)
+    of the blur carried there (_carried_covariance), or None without one: blur draws a
+    circle of radius R in by about sqrt(det S) / (2R) (edges._measure_blur)."""
+    covariance_at = _carried_covariance(camera_blur, jacobian)
+    if covariance_at is None:
+        return None
+    return lambda centre: float(np.linalg.det(covariance_at(centre)) ** 0.25)
+
+
 def _trace_unresolved_corners(prims):
     """Make each arc whose blur model is unresolved, between two fitted lines, a traced
     corner: placed tangent to both at its fitted radius, with no blur correction, so
@@ -385,7 +411,8 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
         weights = edges.measurement_weights(rectified, mask, ppm)
         # The measurement image: exact resampling of the linear-light mix.
         g = cv2.GaussianBlur(
-            sheet.rectify_gray(tone.linear_mix(rgb, weights), matrix, k1, plane, ppm), (0, 0), 0.7
+            sheet.rectify_gray(tone.linear_mix(rgb, weights), matrix, k1, plane, ppm),
+            (0, 0), edges.MEASUREMENT_SMOOTHING_PX,
         )
         # The fourth argument, shadow_free_blur, is positional: tests stand in for this
         # call. A part traced with a thickness takes the shadow-free blur too, now that
@@ -394,12 +421,21 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
         # sixth argument reads a narrow opening's paper short of its far edge, for a
         # thick part's holes only (edges.subpixel_rings' bounded_openings). The seventh
         # measures the step's tail rather than taking the Gaussian's; a thick part's
-        # profiles cross its wall, so it keeps the Gaussian.
-        rings, sigma, tiny = edges.subpixel_rings(mask, g, ppm, True, not thickness_mm, bool(thickness_mm), not thickness_mm)
+        # profiles cross its wall, so it keeps the Gaussian. The eighth carries the
+        # photo's blur to each point by the sheet's local Jacobian (edges._camera_blur);
+        # a thick part's edges lie off the sheet's plane, so it keeps one blur.
+        jacobian = None if thickness_mm else (lambda points: sheet.photo_to_plane_jacobian(matrix, k1, size, ppm, points))
+        rings, sigma, tiny = edges.subpixel_rings(
+            mask, g, ppm, True, not thickness_mm, bool(thickness_mm), not thickness_mm, jacobian
+        )
     except edges.EdgeError as exc:
         raise ReferenceError_(str(exc), sheet_missing=True) from exc
     notes = list(seg_notes)
-    spreads = np.concatenate([ring.get("sigma_n", np.full(len(ring["points"]), sigma)) for ring in rings])
+    # The note is about the blur's direction: each edge's width carried across the sheet
+    # by perspective (edges._camera_blur) differs by place as well, and that is not it.
+    spreads = np.concatenate([
+        ring.get("sigma_direction", ring.get("sigma_n", np.full(len(ring["points"]), sigma))) for ring in rings
+    ])
     if spreads.max() > edges.DIRECTIONAL_RATIO * spreads.min():
         notes.append(
             f"The edge blur differs by direction, from {spreads.min() / ppm:.3f} mm across the sharpest edges to {spreads.max() / ppm:.3f} mm across the softest, as a shaken camera's does; each edge was measured with its own. A steadier photo is sharper."
@@ -539,6 +575,9 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
                 fitting.refit_lines(
                     ring["points"], prims, margin=3 * spread, blur_scales=ring.get("blur_scales")
                 )
+                # The blur carried to each cap and fillet where there is one; the call
+                # is otherwise as it was (tests stand in for fit_fillets).
+                carried = _carried_covariance(ring.get("camera_blur"), jacobian)
                 fitting.fit_fillets(
                     ring["points"],
                     prims,
@@ -546,6 +585,7 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
                     sigma,
                     covariance,
                     blur_scales=ring.get("blur_scales"),
+                    **({} if carried is None else {"covariance_at": carried}),
                 )
     unresolved = 0
     traced_corners = 0
@@ -597,7 +637,11 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
     )
     for ring, prims in fitted:
         if prims:
-            fitting.correct_blur(prims, sigma, blur_scales=ring.get("blur_scales"))
+            sigma_at = _local_curvature_sigma(ring.get("camera_blur"), jacobian)
+            fitting.correct_blur(
+                prims, sigma, blur_scales=ring.get("blur_scales"),
+                **({} if sigma_at is None else {"sigma_at": sigma_at}),
+            )
     if snap:
         fitting.equalise_radii(rings_prims, scale=1 / ppm, unit="mm")
     polyline_px = POLYLINE_TOLERANCE_MM.get(detail, 0.05) * ppm

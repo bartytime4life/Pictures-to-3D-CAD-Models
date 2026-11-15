@@ -344,6 +344,33 @@ def test_veiling_glare_is_told_from_a_contact_shadow(client):
     assert not any("veiling glare" in note for note in contact)
 
 
+def test_the_photo_s_blur_is_carried_to_each_edge_by_the_sheet(client, monkeypatch):
+    """The lens blurs the photo, and the sheet's rectification carries that blur to each
+    point by its local Jacobian (edges._camera_blur): tilted 22 degrees, the blur on the
+    plane differs across the part. Each ring's own measured width (edges.edge_sigma)
+    reads within 2.5 % of the spread carried to it, where one width for the part was
+    3.6-8.4 % off for some rings under an isotropic 3 px blur."""
+    captured = {}
+    original = edges.subpixel_rings
+
+    def capture(mask, g, ppm, *rest):
+        out = original(mask, g, ppm, *rest)
+        captured.update(g=g, rings=out[0], sigma=out[1])
+        return out
+
+    monkeypatch.setattr(edges, "subpixel_rings", capture)
+    data = S.render(blur=3.0, k1=0, shadow=0, gradient=0, noise=0, quality=100)[0]
+    trace(client, data, reference="a4")
+    carried, uniform = [], []
+    for ring in captured["rings"]:
+        _, normals = edges.ring_normals(ring["points"])
+        own = edges.edge_sigma(captured["g"], ring["points"][::2], normals[::2], start=float(np.median(ring["sigma_n"])))
+        carried.append(own / float(np.median(ring["sigma_n"][::2])))
+        uniform.append(own / captured["sigma"])
+    assert np.max(np.abs(np.array(carried) - 1)) < 0.025
+    assert np.max(np.abs(np.array(uniform) - 1)) > 0.05
+
+
 def test_veiling_glare_is_taken_out_before_the_edges_are_placed(client, monkeypatch):
     """With 10 % of the light scattered (synthetic.render's `glare`, a = 20 px) under a
     3 px blur, the outline read 0.022 mm small and Ø6 0.008 mm large while the step's

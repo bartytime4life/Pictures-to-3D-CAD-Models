@@ -632,6 +632,44 @@ def test_slot_end_caps_are_placed_with_their_radius_fixed():
     assert len(errors) >= 35 and errors.std() < 0.024 and abs(errors.mean()) < 0.01
 
 
+def test_a_slot_cap_takes_the_blur_carried_to_it():
+    """fitting.fit_fillets' `covariance_at`: on a tilted photo the photo's blur carried to
+    a slot (reference._carried_covariance) differs by direction as well as from the mean
+    over the part, and a cap's tip is drawn in by det(S) / (2r u' S u), u along the slot:
+    the blur across the slot's axis. With S = diag(14.7, 16.6) px^2 at a 21.5 px cap,
+    the cap placed with the covariance carried to it reads the slot's length within
+    0.001 px of the truth; with S's isotropic equivalent, det(S)^(1/4), 0.024 px short."""
+    r, half, step = 21.5, 64.0, 0.5
+    covariance = np.diag([14.7, 16.6])
+    sigma = float(np.linalg.det(covariance) ** 0.25)
+    pts = []
+    for x in np.arange(-half, half, step):
+        pts.append((x, -r))
+    for a in np.arange(-90, 90, step / r * 180 / math.pi):
+        u = np.array([math.cos(math.radians(a)), math.sin(math.radians(a))])
+        shrink = np.linalg.det(covariance) / (2 * r * (u @ covariance @ u)) + 5 * sigma**4 / (24 * r**3)
+        pts.append(tuple(np.array([half, 0.0]) + (r - shrink) * u))
+    for x in np.arange(half, -half, -step):
+        pts.append((x, r))
+    for a in np.arange(90, 270, step / r * 180 / math.pi):
+        u = np.array([math.cos(math.radians(a)), math.sin(math.radians(a))])
+        shrink = np.linalg.det(covariance) / (2 * r * (u @ covariance @ u)) + 5 * sigma**4 / (24 * r**3)
+        pts.append(tuple(np.array([-half, 0.0]) + (r - shrink) * u))
+    points = np.array(pts) + np.array([400.3, 300.7])
+
+    def length(covariance_at):
+        prims = fitting.fit_ring(points, 0.3, 8.0)
+        fitting.snap_axes([prims])
+        fitting.refit_lines(points, prims, margin=3 * sigma)
+        fitting.fit_fillets(points, prims, 0.3, sigma, covariance_at=covariance_at)
+        caps = [p for p in prims if p.kind == "arc" and p.data.get("end_cap")]
+        assert len(caps) == 2
+        return abs(caps[0].data["c"][0] - caps[1].data["c"][0]) - 2 * half
+
+    assert abs(length(lambda centre: covariance)) < 1e-3
+    assert length(None) < -0.015
+
+
 def directionally_blurred_hole(radius, sigma_x, sigma_y, size=240, up=6):
     """A plate with one hole, blurred by a Gaussian of sigma_x, sigma_y px (on a grid
     `up` times finer, then averaged into pixels, which adds a pixel's box). Returns the
@@ -1183,6 +1221,58 @@ def test_the_steps_tail_is_measured_not_assumed_gaussian(monkeypatch):
     z, measured = captured[-1].measured
     near = (z >= 2.0) & (z <= 3.5)
     assert np.max(np.abs(measured[near] - sheet._upper_tail(z[near]))) < 0.0005
+
+
+def test_the_sheet_jacobian_inverts_the_plane_to_photo_map():
+    """sheet.photo_to_plane_jacobian is the inverse of plane_to_photo's derivative, in the
+    measurement image's pixels: against the homography's analytic derivative without lens
+    distortion, and against a fine difference of the full map with it."""
+    h = np.array([[3.1, 0.4, 210.0], [-0.2, 2.6, 160.0], [0.0011, -0.0007, 1.0]])
+    size, ppm = (2400, 1800), 5.6
+    points = np.array([[80.0, 60.0], [700.0, 900.0], [1100.0, 300.0]])
+    j = sheet.photo_to_plane_jacobian(h, 0.0, size, ppm, points)
+    for p, ji in zip(points / ppm, j):
+        x = np.array([p[0], p[1], 1.0])
+        w = h[2] @ x
+        u, v = (h[0] @ x) / w, (h[1] @ x) / w
+        forward = np.array([[h[0, 0] - u * h[2, 0], h[0, 1] - u * h[2, 1]], [h[1, 0] - v * h[2, 0], h[1, 1] - v * h[2, 1]]]) / w / ppm
+        assert np.allclose(ji @ forward, np.eye(2), atol=1e-9)
+    j = sheet.photo_to_plane_jacobian(h, -0.035, size, ppm, points)
+    d = 1e-4
+    for p, ji in zip(points / ppm, j):
+        columns = [
+            (np.array(sheet.plane_to_photo(h, -0.035, size, p[0] + dx, p[1] + dy))
+             - np.array(sheet.plane_to_photo(h, -0.035, size, p[0] - dx, p[1] - dy))) / (2 * d * ppm)
+            for dx, dy in ((d, 0.0), (0.0, d))
+        ]
+        assert np.allclose(ji @ np.column_stack(columns), np.eye(2), atol=1e-6)
+
+
+def test_a_constant_sheet_jacobian_leaves_the_edges_where_they_were():
+    """The photo's blur carried to each point by the sheet's Jacobian (edges._camera_blur)
+    is the measured blur wherever that Jacobian is the same, as it is for a photo taken
+    square on without lens distortion: the rings are unchanged to rounding, whatever its
+    scale and turn."""
+    size, c, half = 300, np.array([150.3, 149.8]), 80.0
+    from shapely import affinity
+    from shapely.geometry import Point, box
+
+    plate = affinity.rotate(box(c[0] - half, c[1] - half, c[0] + half, c[1] + half), 7.0, origin=tuple(c))
+    cover = synthetic.coverage(plate.difference(Point(*c).buffer(25.0, 2048)), 1.0, 0.0, 0.0, (size, size))
+    image = cv2.GaussianBlur((210 - 184 * cover).astype(np.float32), (0, 0), 2.0)
+    mask = (image < 80).astype(np.uint8)
+    a = np.radians(31.0)
+    turn = 0.83 * np.array([[np.cos(a), -np.sin(a)], [np.sin(a), np.cos(a)]])
+
+    def constant(points):
+        return np.repeat(turn[None], len(points), axis=0)
+
+    plain, sigma, _ = edges.subpixel_rings(mask, image, 5.6)
+    carried, carried_sigma, _ = edges.subpixel_rings(mask, image, 5.6, jacobian=constant)
+    assert carried_sigma == sigma
+    for one, other in zip(plain, carried):
+        assert np.allclose(one["points"], other["points"], atol=1e-9)
+        assert np.allclose(one["sigma_n"], other["sigma_n"], rtol=1e-9)
 
 
 def outline_points(shape, turn_deg=0.0, step=0.2):
