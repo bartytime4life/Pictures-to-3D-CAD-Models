@@ -1,5 +1,17 @@
 # Workbench change log
 
+## How JPEG's colour moves a coloured part's edges — November 14, 2026
+
+- JPEG and HEIC photos usually store colour at half the resolution of brightness. On
+  exactly blurred test plates with noise, that moved a grey part's edges by at most
+  0.003 px, but a coloured part's by much more: up to 0.018 px for an orange part and
+  0.044-0.066 px for a green part on a grey card, into the part. With colour at full
+  resolution every plate read within 0.004 px. The capture guide now suggests keeping
+  colour at full resolution for coloured parts. The tests' noise-free photos, saved as
+  quality-100 JPEG, are not lossless: without noise, JPEG's colour rounding moved their
+  edges by up to 0.014 px. Two corrections were tried and are recorded, neither
+  adopted ([reference-sheet tracing](reference-sheet.md), §3 and Limits).
+
 ## The photo's blur followed across a tilted sheet — November 14, 2026
 
 - On a tilted photo the sheet is nearer the camera on one side, and the blur measured
