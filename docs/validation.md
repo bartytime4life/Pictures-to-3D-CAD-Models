@@ -508,6 +508,7 @@ It changes guides relative to that integrated baseline, not runtime behavior.
 | Directional covariance rank guard | Draft PR #78, source `185d682`: [633 local Python tests](validation/directional-blur-rank.md), build and 76 focused checks | Actual sampled Gaussian-step rank counterexample; no new whole-photo, browser or physical-accuracy claim |
 | Recorded directional-blur checks | Branch `claude/directional-blur`, on the slot end-cap commit and `main` at `485da7e` (after #47): **627 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#a-blur-that-differs-by-direction--november-12-2026) | Local result; synthetic photos including the directional-spread qualification's kinds of case, and exact blurred holes; supersedes that record's "no production correction" |
 | Contact-shadow observability study | Branch `claude/contact-shadow-limits` on `main` at `70055dc`, documentation only, as recorded [below](#contact-shadows-beside-an-edge--november-13-2026) | Exactly rendered scenes; an unobservable kernel radius, a closer-fit study and a profile-shape fit, none adopted; capture guidance |
+| Recorded measured-tail checks | Branch `claude/blur-shape`, on `main` at `7e0a1dd` (after #140): **1359 Python tests**, **79 browser scenarios**, Ruff passed, as recorded [below](#the-blurs-shape-in-the-steps-tail--november-14-2026) | Local result; exactly blurred plates under disks and a streak, rendered plates under four kernels, the documented tables, rectangles and noise seeds; JPEG photos read about 1–2 µm into the part |
 | Recorded glare-removal checks | Branch `claude/glare-correction`, on `main` at `51c1816` (after #125): **1311 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#veiling-glare-taken-out--november-14-2026) | Local result; rendered photos with veiling glare of two shapes, exact discs; glare-free photos unchanged |
 | Recorded optical-effects checks | Branch `claude/optical-effects`, on the second-pass start commit (`main` at `e29b560`, after #122): **1309 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#real-cameras-optical-effects--november-14-2026) | Local result; rendered photos with veiling glare, lateral chromatic aberration and sharpening, exact 1-D edges; sharpening and glare not corrected |
 | Recorded second-pass start checks | Branch `claude/second-pass-start`, on `main` at `e29b560` (after #122) and the snapping-axis commit: **1304 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#where-the-second-pass-starts--november-13-2026) | Local result; exactly blurred plates and exactly rendered scenes, the documented tables, rectangles, plates and noise seeds; contact shadows and non-Gaussian blurs read worse, three limits re-set from new and planted-fault figures |
@@ -548,6 +549,37 @@ stub fix in managed cloud sessions. The [reference-sensitivity record](validatio
 covers the endpoint explorer. The original CAD release and optional Ollama
 integration retain separate historical evidence. These records do not establish
 that a newly created or published cloud task has been validated.
+
+## The blur's shape in the step's tail — November 14, 2026
+
+Branch `claude/blur-shape`, on `main` at `7e0a1dd` (after #140). The comparisons below were run against `main` at `e347998` (after #137); #138–#140 change only a thick part's narrow openings and CI. See [reference-sheet tracing](reference-sheet.md), §3 (**The blur's shape**) and Limits. Since #124 the motion-streak and defocus plates read 16–28 % worse, because the second pass took the step's tail as the Gaussian's. This measures the tail.
+
+- **The change** (`edges._edge_tail`, and `tail_shape` in `sheet.half_level_search`). Each lone edge point's profile is read on its material side to 6 σₙ. At each z = distance / σₙ its rise above the material's level, read beyond 4 σₙ, is divided by the step, which is twice the rise at the point. The median over the points at each z, made non-increasing, is the tail. It is measured again in each light round, from the rings that round starts at. Parts traced with a thickness keep Q.
+- **Exact plates.** A 240 px square turned 7°, with a hole of radius 30 px and exact coverage, blurred by a supersampled kernel. Straight sides, + out of the part, Q → measured:
+  - 4 px disk: +0.0151 → +0.0000 px;
+  - 2.5 px disk: +0.0100 → +0.0001 px;
+  - 10 px streak at 83°: +0.0109 → −0.0014 px;
+  - 2.4 px Gaussian: −0.0021 → −0.0022 px. Its measured tail is Q within 0.0005 of the step for z from 2 to 3.5.
+- **Rendered plates under kernels that are not Gaussian,** summed over the five features: 6 px streak 31 → 19 µm, 10 px streak 52 → 32 µm, 2.5 px disk 26 → 9 µm, 4 px disk 51 → 22 µm.
+- **The documented tables:** 1269 → 1257 µm summed, 25 rows better, 14 worse, the four thick-plate rows unchanged.
+  - **Better:** 3 × 1 px at 0°, 22°, full 42.7 → 34.3 µm; at 120° 43.0 → 37.1 µm; at 30° 34.1 → 30.2 µm; 3 × 1 px overhead, clean 22.3 → 20.2 µm.
+  - **Worse:** overhead, ideal light 11.0 → 15.6 µm; 3 px isotropic, 22°, clean 29.9 → 33.3 µm and with the shadow 66.8 → 69.7 µm; 3 × 1 px at 30°, overhead, full 39.6 → 42.5 µm; 2 × 1 px at 37°, overhead, full 14.8 → 17.8 µm; 2 px isotropic, 22°, clean 23.3 → 25.3 µm.
+- **Rectangles and capsules** (84 cases), mean outline error: clean 6.4 → 6.0 µm, full 1.8 → 2.1 µm (worst 5.4 → 6.2 µm), with the shadow 5.5 → 5.3 µm.
+- **Noise seeds 201–206,** summed error: tilted 1 px 15.0 → 15.8 µm, 1 × 3 px 45.9 → 47.4 µm, contact shadow under 3 px 187.5 → 184.4 µm, two lights 57.3 → 58.1 µm, overhead 15.1 → 17.1 µm. The thick plate was unchanged, at 26.8 µm.
+- **Signed errors, overhead seeds 201–206,** Q → measured, µm, + large, for Ø6, Ø22, slot length and width, and outline length and width:
+
+  | Photo | Ø6 | Ø22 | Slot length | Slot width | Outline length | Outline width |
+  | --- | --- | --- | --- | --- | --- | --- |
+  | Lossless, noise-free | −2.3 → −1.1 | −1.2 → −0.0 | −1.9 → −0.8 | −0.9 → +0.2 | +1.7 → +0.5 | +2.2 → +1.0 |
+  | JPEG, noise | −1.9 → −0.8 | +0.5 → +1.6 | −1.2 → −0.1 | +0.3 → +1.5 | −0.3 → −1.4 | +0.6 → −0.5 |
+  | JPEG, noise, shadow | −1.1 → +0.9 | +1.4 → +3.4 | +0.9 → +2.9 | +1.7 → +3.7 | −1.7 → −3.7 | +0.2 → −1.8 |
+
+  Under the 1 px blur the measured tail lies 0.0009–0.0021 of the step below Q at 1.5–2.5 σ, with or without the shadow, and the edges move 0.003 px into the part. On lossless photos that is right. Quality-90 JPEG pulls an edge about 0.014 px towards the part, and Q's surplus had offset part of that. With the shadow fitted the edges move about twice as far. That was not traced to its cause; the shadow model's own step is still the footprint blurred by a Gaussian.
+- **The tilted 3 px photo.** The rings' own tails, measured one ring at a time, differ by up to 0.016 of the step at one blur width at 22°, and agree within 0.002 overhead. The blur's width in the rectified sheet follows the sheet's scale in the photo, which perspective changes across the part. The pooled tail lies within 0.0006 of Q beyond 1.5 σ on the noise-free 3 px photo at 22°, and every feature moved about 0.9 µm outward (Ø6 −3.5 → −4.3 µm, outline length +11.4 → +12.3 µm).
+- **Veiling glare,** 10 % over a = 20 px, seeds 7 and 201–206, summed error with Q → measured. Without glare: 12.5 → 12.4 µm under 1 px, 33.3 → 33.1 µm under 3 px. Glare left in: 17.1 → 16.0 µm and 89.9 → 53.5 µm. Glare taken out: 13.5 → 12.2 µm and 41.6 → 41.9 µm. Glare is part of the lens's blur, and the measured tail takes up its near part. Left in under 3 px, the outline reads 0.0004 and 0.0034 mm small, and Ø6 0.011 mm small. `test_veiling_glare_is_taken_out_before_the_edges_are_placed` therefore no longer asserts that the outline reads over 0.015 mm off with the removal switched off; its Ø6 check, over 0.006 mm, stays.
+- **Not changed.** The blur's width, the curvature corrections, the shadow model's step and the fillet model still take the blur as Gaussian.
+- **Tests.** `test_the_steps_tail_is_measured_not_assumed_gaussian` holds the exact plate's sides within 0.003 px under the 4 px disk, and over 0.01 px with Q. Under a 2.4 px Gaussian they are within 0.004 px, and its tail is Q within 0.0005.
+- **Checks run.** `pytest` with runtime warnings as errors: **1359 passed**. Ruff and Prettier passed. **79 browser scenarios** passed with the system Chrome.
 
 ## Veiling glare taken out — November 14, 2026
 

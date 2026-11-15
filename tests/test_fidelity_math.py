@@ -1141,6 +1141,50 @@ def test_the_dominant_axis_is_the_direction_that_gathers_the_most_edge():
         assert [bool(p.data.get("snapped")) for p in mixed] == [True, True, True, True, False]
 
 
+def test_the_steps_tail_is_measured_not_assumed_gaussian(monkeypatch):
+    """The second pass removes the blurred step's own tail before fitting each end's line
+    (sheet.half_level_search). Taken as the Gaussian's, it put the sides of an exactly
+    blurred plate out of the part under a blur that is not Gaussian: 0.015 px under a
+    4 px defocus disk. Measured on the material side of the edges (edges._edge_tail),
+    the disk's tail ends within its radius and the sides read within 0.003 px; a
+    Gaussian blur's measured tail is Q(z)."""
+    from shapely import affinity
+    from shapely.geometry import Point, box
+
+    size, c, half, radius = 420, np.array([210.3, 209.8]), 120.0, 30.0
+    plate = affinity.rotate(box(c[0] - half, c[1] - half, c[0] + half, c[1] + half), 7.0, origin=tuple(c))
+    cover = synthetic.coverage(plate.difference(Point(*c).buffer(radius, 4096)), 1.0, 0.0, 0.0, (size, size))
+    base = (210 - 184 * cover).astype(np.float32)
+    yy, xx = np.mgrid[-6:7, -6:7]
+    disk = sum((np.hypot(xx + dx, yy + dy) <= 4.0).astype(float) for dx in np.linspace(-0.4375, 0.4375, 8) for dy in np.linspace(-0.4375, 0.4375, 8))
+    disk = (disk / disk.sum()).astype(np.float32)
+    mid = float(synthetic.srgb_to_linear((synthetic.linear_to_srgb(np.array([26.0])) + synthetic.linear_to_srgb(np.array([210.0]))) / 2)[0])
+    a = np.radians(-7.0)
+    turn = np.array([[np.cos(a), -np.sin(a)], [np.sin(a), np.cos(a)]])
+
+    def sides(image, measure_tail=True):
+        rings, sigma, _ = edges.subpixel_rings((image < mid).astype(np.uint8), image, 5.6, measure_tail=measure_tail)
+        q = (next(r for r in rings if r["outer"])["points"] - 0.5 - c) @ turn.T
+        straight = np.abs(q).min(axis=1) < half - 8 * max(sigma, 2)
+        return float((np.abs(q).max(axis=1) - half)[straight].mean())
+
+    blurred = cv2.filter2D(base, -1, disk, borderType=cv2.BORDER_REPLICATE)
+    assert abs(sides(blurred)) < 0.003 and sides(blurred, measure_tail=False) > 0.01
+    gaussian = cv2.GaussianBlur(base, (0, 0), 2.4)
+    captured = []
+    original = edges._edge_tail
+
+    def capture(*args, **kwargs):
+        captured.append(original(*args, **kwargs))
+        return captured[-1]
+
+    monkeypatch.setattr(edges, "_edge_tail", capture)
+    assert abs(sides(gaussian)) < 0.004
+    z, measured = captured[-1].measured
+    near = (z >= 2.0) & (z <= 3.5)
+    assert np.max(np.abs(measured[near] - sheet._upper_tail(z[near]))) < 0.0005
+
+
 def outline_points(shape, turn_deg=0.0, step=0.2):
     """Noise-free points at most `step` apart along a shapely outline, after turning it."""
     import shapely

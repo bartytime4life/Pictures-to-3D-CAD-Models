@@ -392,8 +392,10 @@ def trace_on_sheet(rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, 
         # its wall model takes the shadow's light out of its profiles (_refine_walls);
         # glare removal stays off for it (its walls are brighter than its top). The
         # sixth argument reads a narrow opening's paper short of its far edge, for a
-        # thick part's holes only (edges.subpixel_rings' bounded_openings).
-        rings, sigma, tiny = edges.subpixel_rings(mask, g, ppm, True, not thickness_mm, bool(thickness_mm))
+        # thick part's holes only (edges.subpixel_rings' bounded_openings). The seventh
+        # measures the step's tail rather than taking the Gaussian's; a thick part's
+        # profiles cross its wall, so it keeps the Gaussian.
+        rings, sigma, tiny = edges.subpixel_rings(mask, g, ppm, True, not thickness_mm, bool(thickness_mm), not thickness_mm)
     except edges.EdgeError as exc:
         raise ReferenceError_(str(exc), sheet_missing=True) from exc
     notes = list(seg_notes)

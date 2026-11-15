@@ -89,6 +89,7 @@ def half_level_search(
     paper_side=None,
     paper_light=None,
     paper_extent=None,
+    tail_shape=None,
 ):
     """Move each point along its normal to the crossing of its local mid-level.
 
@@ -102,12 +103,13 @@ def half_level_search(
 
     With the edge blur `sigma` given, each end is instead a sloped plateau: a soft
     shadow brightens the paper away from an edge, and the end medians then put the
-    level too far out. The profile is sampled out to 5 sigma, the step's own Gaussian
-    tail is removed, and a line is fitted to each end beyond 2.5 sigma from the centre,
-    A(t) and B(t). A Gaussian-blurred step between two linear plateaus, with slopes a1
-    and b1 at its edge e, has the value (A(e) + B(e)) / 2 + (b1 - a1) sigma / sqrt(2 pi)
-    there, so the crossing of the profile with that level, as a function of t, is the
-    edge itself, flat ends included. Extrapolated lines are
+    level too far out. The profile is sampled out to 5 sigma, the step's own tail is
+    removed (the Gaussian's, Q, or `tail_shape`, a function of |t| / sigma measured from
+    the photo: edges._edge_tail), and a line is fitted to each end beyond 2.5 sigma from
+    the centre, A(t) and B(t). A Gaussian-blurred step between two linear plateaus, with
+    slopes a1 and b1 at its edge e, has the value (A(e) + B(e)) / 2 + (b1 - a1) sigma /
+    sqrt(2 pi) there, so the crossing of the profile with that level, as a function of
+    t, is the edge itself, flat ends included. Extrapolated lines are
     noisier than medians, while a shadow's slope changes slowly along an edge: with
     `ring_smoothing` (points in order round a closed ring), the correction from the
     median level's crossing to the sloped level's is smoothed along the ring with a
@@ -175,9 +177,9 @@ def half_level_search(
     if not sloped:
         level_t = np.repeat(((low + high) / 2)[:, None], len(t), axis=1)
     else:
-        # Beyond 2.5 sigma, with the step's own blurred tail (high - low) Q(|t| / sigma)
-        # removed first: it is under 0.6 % of the contrast there, but a line fitted to
-        # one side alone would read it as a slope.
+        # Beyond 2.5 sigma, with the step's own blurred tail (high - low) T(|t| / sigma)
+        # removed first (T is Q unless `tail_shape` is given): it is under 0.6 % of the
+        # contrast there, but a line fitted to one side alone would read it as a slope.
         within = np.abs(t)[None, :] <= reach + step / 2
         lo_end = (t[None, :] <= -2.5 * sigma[:, None]) & within
         hi_end = (t[None, :] >= 2.5 * sigma[:, None]) & within
@@ -186,7 +188,8 @@ def half_level_search(
             cut_low = cut & ~paper_high
             hi_end = np.where(cut_high[:, None], narrow, hi_end)
             lo_end = np.where(cut_low[:, None], narrow, lo_end)
-        tail = (high - low)[:, None] * _upper_tail(np.abs(t)[None, :] / sigma[:, None])
+        shape = _upper_tail if tail_shape is None else tail_shape
+        tail = (high - low)[:, None] * shape(np.abs(t)[None, :] / sigma[:, None])
         flattened = np.where(t[None, :] < 0, profile - tail, profile + tail)
 
         def line(mask):
