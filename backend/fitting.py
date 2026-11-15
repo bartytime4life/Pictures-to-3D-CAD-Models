@@ -847,7 +847,7 @@ def _uniform_blur_scale(scales, span=None):
     return float(scales[0]) if len(scales) and np.all(scales == scales[0]) else None
 
 
-def correct_blur(prims, sigma, *, blur_scales=None):
+def correct_blur(prims, sigma, *, blur_scales=None, sigma_at=None):
     """Undo the blur-curvature shrink of every fitted radius (see blur_corrected_radius).
     Slot end caps take their radius from the line spacing, which blur does not bias, and
     a fillet fitted with the blur in its model (fit_fillets) needs no second correction.
@@ -857,6 +857,10 @@ def correct_blur(prims, sigma, *, blur_scales=None):
     Mixed support retains the legacy curvature approximation and is explicitly
     marked for the caller's warning, not assigned an averaged covariance or an
     exact Gaussian interpretation. This series is not physical qualification.
+
+    `sigma_at`, a function of a curve's centre, gives the blur there in place of the one
+    `sigma` (reference._local_curvature_sigma): on a tilted photo it differs across the
+    part.
     """
     scales = _validated_blur_scales(blur_scales)
     for p in prims:
@@ -865,12 +869,13 @@ def correct_blur(prims, sigma, *, blur_scales=None):
             or p.data.get("blur_correction_withheld")
         ):
             scale = _uniform_blur_scale(scales, None if p.kind == "circle" else p.span)
+            here = sigma if sigma_at is None else sigma_at(p.data["c"])
             if scale is None:
                 p.data["blur_frame_mixed"] = True
-                local_sigma = sigma
+                local_sigma = here
             else:
                 p.data.pop("blur_frame_mixed", None)
-                local_sigma = sigma * scale
+                local_sigma = here * scale
             p.data["r"] = blur_corrected_radius(p.data["r"], local_sigma)
     place_fillets(prims)
 
@@ -1141,7 +1146,7 @@ def fillet_frame(l1, l2, centre, r):
     return best[1], best[2]
 
 
-def fit_fillets(points, prims, tol, sigma=0.0, covariance=None, *, blur_scales=None):
+def fit_fillets(points, prims, tol, sigma=0.0, covariance=None, *, blur_scales=None, covariance_at=None):
     """Constrain each arc between two lines to be tangent to both.
 
     Between non-parallel lines the arc becomes a fillet: its centre lies on the corner
@@ -1183,6 +1188,15 @@ def fit_fillets(points, prims, tol, sigma=0.0, covariance=None, *, blur_scales=N
     geometric arc without another blur correction. These mixed approximations
     are not promoted to a stationary Gaussian model.
     The inherited scale/error allowances remain conditional heuristics.
+
+    `covariance_at`, a function of a plane point giving the blur's covariance there
+    (reference._carried_covariance), serves a blur that differs across the part, as
+    perspective makes it on a tilted photo. A slot cap then takes the covariance at its
+    centre for its directional shrink: at its tip the shrink follows the blur across the
+    slot's axis, which on rendered photos tilted 22-35 degrees differed from the part's
+    one measured width by up to 9 %. Without
+    a supplied `covariance`, a fillet takes that covariance's isotropic equivalent,
+    det(S)^(1/4), at its centre; with one, its whitened model keeps the one covariance.
     """
     source_sigma = sigma
     scales = _validated_blur_scales(blur_scales, len(points))
@@ -1202,6 +1216,10 @@ def fit_fillets(points, prims, tol, sigma=0.0, covariance=None, *, blur_scales=N
         if l1.kind != "line" or l2.kind != "line":
             continue
         old_c, old_r = np.array(p.data["c"]), p.data["r"]
+        carried = None if covariance_at is None else np.asarray(covariance_at(old_c), float)
+        if carried is not None and covariance is None:
+            sigma = float(np.linalg.det(carried) ** 0.25)
+        base_sigma = sigma
         d1, d2 = np.asarray(l1.data["d"]), np.asarray(l2.data["d"])
         n1, n2 = np.array([-d1[1], d1[0]]), np.array([-d2[1], d2[0]])
         c1, c2 = np.asarray(l1.data["c"]), np.asarray(l2.data["c"])
@@ -1224,7 +1242,7 @@ def fit_fillets(points, prims, tol, sigma=0.0, covariance=None, *, blur_scales=N
                 p.data["r_sd"] = math.inf
         else:
             p.data.pop("blur_frame_mixed", None)
-            sigma = source_sigma * scale
+            sigma = base_sigma * scale
             reach_sigma = sigma
             if covariance is not None:
                 local_covariance = np.asarray(covariance, float) * scale**2
@@ -1233,8 +1251,9 @@ def fit_fillets(points, prims, tol, sigma=0.0, covariance=None, *, blur_scales=N
             o1, o2 = float(c1 @ n1), float(c2 @ n1)
             mid = n1 * (o1 + o2) / 2
             r = abs(o1 - o2) / 2
+            cap_covariance = local_covariance if carried is None else carried * (1.0 if scale is None else scale**2)
             axial = _end_cap_axial(
-                span_points(points, *p.span), mid, d1, n1, o1, o2, r, float((old_c - mid) @ d1), tol, sigma, local_covariance
+                span_points(points, *p.span), mid, d1, n1, o1, o2, r, float((old_c - mid) @ d1), tol, sigma, cap_covariance
             )
             _move_arc_centre(p, mid + d1 * axial, r)
             p.data["end_cap"] = True

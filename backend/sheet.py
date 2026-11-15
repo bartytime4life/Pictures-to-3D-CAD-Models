@@ -777,6 +777,27 @@ def plane_to_photo(matrix, k1, size, gx, gy):
     return cx + x * f * s, cy + y * f * s
 
 
+def photo_to_plane_jacobian(matrix, k1, size, ppm, points):
+    """The local linear map from photo pixels to the measurement image's pixels at each
+    of `points` (that image's pixel coordinates, pixel i spanning [i, i + 1]), as an
+    (N, 2, 2) array J: a small photo offset d moves the plane point by J d. It inverts
+    the derivative of plane_to_photo, by central differences of a quarter of a plane
+    pixel, which are exact to the mapping's third derivative: the homography and the
+    radial term are smooth on that scale. A blur of covariance S in the photo's pixels is
+    J S J' on the plane; perspective and the lens's distortion make J differ across
+    the sheet."""
+    p = np.asarray(points, float).reshape(-1, 2) / ppm
+    h = 0.25 / ppm
+    columns = []
+    for dx, dy in ((h, 0.0), (0.0, h)):
+        u1, v1 = plane_to_photo(matrix, k1, size, p[:, 0] + dx, p[:, 1] + dy)
+        u0, v0 = plane_to_photo(matrix, k1, size, p[:, 0] - dx, p[:, 1] - dy)
+        # Photo pixels per plane pixel along this plane axis.
+        columns.append(np.stack([u1 - u0, v1 - v0], axis=-1) / (2 * h * ppm))
+    forward = np.stack(columns, axis=-1)  # d(photo) / d(plane pixel)
+    return np.linalg.inv(forward)
+
+
 def rectify_gray(gray, matrix, k1, plane_size, ppm, block_rows=192):
     """The measurement image: an exact float64 cubic resampling of a grey photo onto the
     millimetre grid (same geometry as rectify). Unlike cv2.remap, which quantises

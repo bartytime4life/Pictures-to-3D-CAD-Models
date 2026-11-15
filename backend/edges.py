@@ -783,6 +783,40 @@ def _deglare(g, fit, sigma):
     return ((g - fit["g"] * up) / (1 - fit["g"])).astype(g.dtype)
 
 
+MEASUREMENT_SMOOTHING_PX = 0.7  # the Gaussian the trace applies to the rectified photo
+
+
+def _camera_blur(sigma, covariance, jacobian, outline, outline_normals, centre):
+    """The blur in the photo's own pixels, as a 2 x 2 covariance (photo px^2), or None.
+
+    The lens blurs the photo, and the sheet's rectification carries that blur to each
+    point of the measurement image by the local Jacobian J of photo to plane pixels
+    (sheet.photo_to_plane_jacobian): J S J' there, plus the trace's own smoothing of
+    the rectified photo (MEASUREMENT_SMOOTHING_PX), which is the same everywhere. The
+    blur is measured on the plane, pooled over the part; this takes it back to the
+    photo. A measured covariance is read at the centroid of the profiles it was fitted
+    from (`centre`). One measured width is taken as a blur that is round in the photo:
+    each outline profile it is the median of (`outline`, `outline_normals`) spreads by
+    c |J' n|^2, so c is the excess over the smoothing divided by the median of
+    |J' n|^2 (a median commutes with the monotone map)."""
+    if jacobian is None or not sigma > 0:
+        return None
+    s0 = MEASUREMENT_SMOOTHING_PX**2
+    if covariance is not None:
+        inverse = np.linalg.inv(jacobian(np.asarray(centre, float)[None, :])[0])
+        camera = inverse @ (np.asarray(covariance, float) - s0 * np.eye(2)) @ inverse.T
+        values, vectors = np.linalg.eigh((camera + camera.T) / 2)
+        return (vectors * np.clip(values, 0.0, None)) @ vectors.T
+    m = np.einsum("nji,nj->ni", jacobian(outline), outline_normals)
+    return max(sigma * sigma - s0, 0.0) / float(np.median(np.einsum("ni,ni->n", m, m))) * np.eye(2)
+
+
+def _carried_variance(camera, jacobian, points, normals):
+    """Each point's blur variance across its edge, s0 + m' S m with m = J' n."""
+    m = np.einsum("nji,nj->ni", jacobian(points), normals)
+    return MEASUREMENT_SMOOTHING_PX**2 + np.einsum("ni,ij,nj->n", m, camera, m)
+
+
 TAIL_REACH = 6.0  # blur widths over which the step's measured tail is read
 TAIL_FROM = 4.0  # and where the material's own level is read, beyond it
 
@@ -808,7 +842,7 @@ def _edge_tail(g, rings, spreads, mask, step=0.125):
         if not use.any():
             continue
         p, n = points[use], normals[use]
-        spread = spreads(n)
+        spread = spreads(n, p)
         side = _paper_side_of(mask, p, n, spread)
         into = -side[:, None] * n  # towards the material
         t = z[None, :] * spread[:, None]
@@ -834,7 +868,9 @@ def _edge_tail(g, rings, spreads, mask, step=0.125):
     return shape
 
 
-def subpixel_rings(mask, g, ppm, shadow_free_blur=True, remove_glare=True, bounded_openings=False, measure_tail=True):
+def subpixel_rings(
+    mask, g, ppm, shadow_free_blur=True, remove_glare=True, bounded_openings=False, measure_tail=True, jacobian=None,
+):
     """Outer boundary and holes of the mask at the local half-level, sub-pixel.
 
     `g` is the lightly smoothed rectified photo in linear light.
@@ -903,17 +939,40 @@ def subpixel_rings(mask, g, ppm, shadow_free_blur=True, remove_glare=True, bound
     # (_edge_widths) and the light fitted again with it. A shallower one is mostly the
     # classified mask's own offset from the edges, read as shadow (up to 2.3 % on exactly
     # blurred scenes), and taking it out read the blur up to 0.6 % narrow.
-    def spreads(normals):
+    def by_direction_only(normals):
         if covariance is not None:
             return np.sqrt(np.einsum("ij,jk,ik->i", normals, covariance, normals))
         if by_direction is not None:
             return _spread_by_direction(normals, by_direction)
         return np.full(len(normals), sigma)
 
+    # With the sheet's `jacobian`, each point's spread is the photo's blur carried to it
+    # (_camera_blur): on a tilted photo the sheet's scale in the photo, and so the blur's
+    # width on the plane, differs across the part. Without it, or with no blur measured,
+    # every point facing one way has one spread.
+    centre = np.vstack([p for p, _ in sampled]).mean(axis=0)
+
+    def camera():
+        return _camera_blur(sigma, covariance, jacobian, outer[::4], normals[::4], centre)
+
+    def spreads(directions, points=None):
+        held = None if points is None else camera()
+        if held is None:
+            return by_direction_only(directions)
+        variance = _carried_variance(held, jacobian, points, directions)
+        if covariance is None and by_direction is not None:
+            # Each direction's measured width, scaled by how the sheet carries it here
+            # against at the centre the widths were measured round.
+            s0 = MEASUREMENT_SMOOTHING_PX**2
+            there = _carried_variance(held, jacobian, np.repeat(centre[None, :], len(points), axis=0), directions)
+            width = by_direction_only(directions)
+            variance = s0 + np.maximum(width * width - s0, 0.0) * (variance - s0) / np.maximum(there - s0, 1e-12)
+        return np.sqrt(variance)
+
     tail = {"shape": None}
 
     def second_pass(start, normals, light):
-        spread = spreads(normals)
+        spread = spreads(normals, start)
         # Which side of each point the paper is on, from the classified mask 3 sigma out.
         side = _paper_side_of(mask, start, normals, spread)
         half = max(4.0, 3.5 * float(spread.max()))
@@ -1003,9 +1062,11 @@ def subpixel_rings(mask, g, ppm, shadow_free_blur=True, remove_glare=True, bound
                 raise EdgeError("The part's outline is not clear enough to trace. Improve the contrast.")
             tiny += 1
             continue
+        _, across = ring_normals(moved[keep])
         rings.append({
             "outer": is_outer, "points": moved[keep], "support": support,
             "support_indices": indices[keep], "sigma_n": spread[keep], "covariance": covariance,
+            "sigma_direction": by_direction_only(across), "camera_blur": camera(),
             "paper_light": light.info, "paper_model": paper_light,
         })
     return rings, sigma, tiny

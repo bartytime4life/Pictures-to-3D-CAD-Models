@@ -508,6 +508,7 @@ It changes guides relative to that integrated baseline, not runtime behavior.
 | Directional covariance rank guard | Draft PR #78, source `185d682`: [633 local Python tests](validation/directional-blur-rank.md), build and 76 focused checks | Actual sampled Gaussian-step rank counterexample; no new whole-photo, browser or physical-accuracy claim |
 | Recorded directional-blur checks | Branch `claude/directional-blur`, on the slot end-cap commit and `main` at `485da7e` (after #47): **627 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#a-blur-that-differs-by-direction--november-12-2026) | Local result; synthetic photos including the directional-spread qualification's kinds of case, and exact blurred holes; supersedes that record's "no production correction" |
 | Contact-shadow observability study | Branch `claude/contact-shadow-limits` on `main` at `70055dc`, documentation only, as recorded [below](#contact-shadows-beside-an-edge--november-13-2026) | Exactly rendered scenes; an unobservable kernel radius, a closer-fit study and a profile-shape fit, none adopted; capture guidance |
+| Recorded carried-blur checks | Branch `claude/perspective-blur`, on `main` at `ab2f74b` (after #144): **1393 Python tests**, **81 browser scenarios**, Ruff passed, as recorded [below](#the-photos-blur-carried-across-the-sheet--november-14-2026) | Local result; rendered photos saved as JPEG and as PNG, ring and direction widths, the documented tables, rectangles and seeds; JPEG photos under a directional blur read worse; carrying the blur into the shadow model not adopted |
 | Recorded measured-tail checks | Branch `claude/blur-shape`, on `main` at `7e0a1dd` (after #140): **1359 Python tests**, **79 browser scenarios**, Ruff passed, as recorded [below](#the-blurs-shape-in-the-steps-tail--november-14-2026) | Local result; exactly blurred plates under disks and a streak, rendered plates under four kernels, the documented tables, rectangles and noise seeds; JPEG photos read about 1–2 µm into the part |
 | Recorded glare-removal checks | Branch `claude/glare-correction`, on `main` at `51c1816` (after #125): **1311 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#veiling-glare-taken-out--november-14-2026) | Local result; rendered photos with veiling glare of two shapes, exact discs; glare-free photos unchanged |
 | Recorded optical-effects checks | Branch `claude/optical-effects`, on the second-pass start commit (`main` at `e29b560`, after #122): **1309 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#real-cameras-optical-effects--november-14-2026) | Local result; rendered photos with veiling glare, lateral chromatic aberration and sharpening, exact 1-D edges; sharpening and glare not corrected |
@@ -549,6 +550,42 @@ stub fix in managed cloud sessions. The [reference-sensitivity record](validatio
 covers the endpoint explorer. The original CAD release and optional Ollama
 integration retain separate historical evidence. These records do not establish
 that a newly created or published cloud task has been validated.
+
+## The photo's blur carried across the sheet — November 14, 2026
+
+Branch `claude/perspective-blur`, on `main` at `ab2f74b` (after #144; #143–#144 change only the relief studio). Comparisons are against `claude/blur-shape` at `e197c4c`, the same tracer as #142. See [reference-sheet tracing](reference-sheet.md), §3 (**The blur across the sheet**) and Limits.
+
+- **The change.**
+  - **The Jacobian** (`sheet.photo_to_plane_jacobian`): photo to plane pixels at each point, by central differences of `plane_to_photo`. It matches the homography's analytic derivative within 10⁻⁹, and a fine difference of the full map with lens distortion within 10⁻⁶ (`test_the_sheet_jacobian_inverts_the_plane_to_photo_map`).
+  - **The blur in the photo** (`edges._camera_blur`). One measured width is taken as round in the photo, c = (σ² − s0²) / median |Jᵀn|², with s0 = 0.7 px, the trace's smoothing. A covariance is taken back at the centroid of its profiles. Per-direction widths are scaled by the sheet's carriage of each direction.
+  - **Where it is used.** Each point's second pass and the measured tail take s0² + nᵀ J S Jᵀ n. Circles and arcs are corrected with det(S)^(1/4) at their centre (`reference._local_curvature_sigma`). Slot caps take the carried covariance for their directional shrink, and fillets without a measured covariance its isotropic equivalent (`fitting.fit_fillets`' `covariance_at`). Parts traced with a thickness keep one blur.
+- **Rendered photos, the blur itself.**
+  - **Rings:** each ring's own median width over carried is 0.997–1.016 under 3 px at 22°, 0.982–1.003 under 1 px with lens distortion, and 0.988–1.015 under 3 px at 35°. Over the part's one width it was 0.964–1.084, 0.962–1.046 and 0.915–1.087.
+  - **By direction:** the outline's tilt-facing over cross-facing widths were 1.035, 1.061 and 1.174 (3 px and 2 px at 22°, 2 px at 35°), against 1.029, 1.072 and 1.172 carried.
+  - **Tails:** the rings' measured tails at 22° differ by at most 0.002 of the step, against 0.016 before.
+- **Lossless renders** (PNG), summed error, one blur → carried:
+  - **Noise-free:** 2 px at 22° 10.6 → 7.7 µm; 3 px at 22° 15.0 → 12.8 µm; 3 px at 35° 38.8 → 34.1 µm; 3 px at 22° with the shadow 31.5 → 28.0 µm; 1 × 3 px 31.2 → 31.5 µm; 3 × 1 px turned 30° 44.0 → 41.0 µm.
+  - **Seeds 201–206:** 1 px 15.4 → 13.9 µm; 2 px 27.1 → 26.5 µm; 3 px 48.1 → 46.8 µm; 2 px at 35° without the shadow 28.8 → 27.9 µm; 1 × 3 px 41.2 → 41.0 µm, and without the shadow 38.9 → 37.0 µm.
+  - **Single noisy photos (seed 7) under a directional blur with the shadow:** 1 × 3 px 33.9 → 41.5 µm, 3 × 1 px at 0° 32.3 → 28.9 µm, at 30° 25.4 → 28.0 µm, at 120° 25.7 → 29.3 µm.
+- **JPEG renders, the documented case set.**
+  - **Tables:** 1257 → 1289 µm, 9 rows better and 19 worse; overhead, thick and kernel rows unchanged. Worst: 1 × 3 px at 22° with the shadow 56.5 → 65.9 µm, 3 × 1 px at 0° at 22° 34.3 → 41.2 µm, at 30° 30.2 → 35.1 µm. Best: 2 px at 22°, clean 25.3 → 23.7 µm; 3 × 1 px at 60° at 22° 47.2 → 44.6 µm.
+  - **Rectangles and capsules:** mean outline error clean 6.0 → 6.0 µm, full 2.1 → 2.0 µm, shadow 5.3 → 5.3 µm.
+  - **Seeds 201–206:** tilted 1 px 15.8 → 15.3 µm, 2 px 30.3 → 27.7 µm, 3 px without the shadow 33.4 → 30.6 µm, 3 px 56.9 → 59.9 µm, 2 px at 35° 42.6 → 42.7 µm, 1 × 3 px 47.4 → 49.0 µm, two lights 58.1 → 60.6 µm, contact shadow 184.4 → 186.1 µm, overhead 17.1 → 17.0 µm, thick 26.8 µm unchanged.
+- **JPEG's own bias.** The noise-free overhead 3 px photo reads its outline as below, in µm, with its holes the other way:
+
+  | Saved as | Outline length, width | Ø6, Ø22 |
+  | --- | --- | --- |
+  | Quality-100 JPEG, 4:2:0 | +8.9, +7.2 | −2.8, −4.2 |
+  | 4:4:4 | +7.3, +5.8 | −4.2, −3.1 |
+  | PNG | −3.2, −1.9 | +1.9, +0.6 |
+
+  With the shadow model switched off the JPEG read +8.2 and +6.5 µm. The bias is about 0.02 px outward under a 3.9 px blur.
+- **Not adopted: the shadow model's step carried.** `shadow._carried_tail` gave the model's step the carried blur, G_S ∗ X + L B/2 + L L B/8 with L = Σ Dᵢⱼ ∂ᵢ∂ⱼ by fourth-order differences. Against exact blurs on a plate with a hole it was within 0.5 % of the change for 4 → 4.2 and 4 → 3.8 px, 1.7 % for 4 → 4.4 and 4 → 3.6 px, and 1.3–1.6 % for 1.6 → 1.7 and 1.6 → 1.52 px. An anisotropic change was within 0.9 %. First order alone, by three-point differences, was 2–11 % off, and by repeated `np.gradient` 16 % at 1.6 → 1.7 px. Traced, the lossless noise-free 3 px photo with the shadow read 40.6 µm against 28.0 µm without it. The noisy seeds read 48.9 against 46.8 µm.
+- **Tests.**
+  - `test_the_sheet_jacobian_inverts_the_plane_to_photo_map` and `test_a_constant_sheet_jacobian_leaves_the_edges_where_they_were`: unchanged to 10⁻⁹ px.
+  - `test_the_photo_s_blur_is_carried_to_each_edge_by_the_sheet`: rings within 2.5 %, one width over 5 % off.
+  - `test_a_slot_cap_takes_the_blur_carried_to_it`: within 0.001 px, against 0.024 px short.
+- **Checks run.** `pytest` with runtime warnings as errors: **1393 passed**, two skipped without the optional depth model. Ruff and Prettier passed. **81 browser scenarios** passed with the system Chrome, one skipped for the same reason.
 
 ## The blur's shape in the step's tail — November 14, 2026
 
