@@ -17,9 +17,17 @@ import {
   X,
 } from '@phosphor-icons/react';
 import ModelViewer from './ModelViewer';
-import { MODE_DEFAULTS, filenameFor, fmt, lithophaneRange, wedgeThicknesses } from './relief';
+import {
+  MODE_DEFAULTS,
+  effectiveSource,
+  filenameFor,
+  fmt,
+  lithophaneRange,
+  wedgeThicknesses,
+} from './relief';
 import type {
   BlenderStatus,
+  DepthModelStatus,
   CalibrationFit,
   ReliefDownload,
   ReliefMaterial,
@@ -27,6 +35,7 @@ import type {
   ReliefResult,
   ReliefSettings,
   ReliefShape,
+  ReliefSource,
   ElevationUnit,
 } from './relief';
 import './ReliefStudio.css';
@@ -50,7 +59,7 @@ const TIFF_NAME = /\.tiff?$/i;
 type Draft = {
   name: string;
   mode: ReliefMode;
-  source: 'photo' | 'depth' | 'elevation';
+  source: ReliefSource;
   width: string;
   min: string;
   max: string;
@@ -103,7 +112,7 @@ const initialDraft: Draft = {
   bodyRadius: '1737.4',
 };
 
-type SampleKind = 'photo' | 'depth' | 'globe' | 'elevation';
+type SampleKind = 'photo' | 'ai' | 'depth' | 'globe' | 'elevation';
 
 // The depth sample's white level is 1.1 sphere radii and its sphere spans 30% of the
 // image width (scripts/generate_relief_samples.py). A 100 mm wide relief therefore has
@@ -114,6 +123,21 @@ const SAMPLES: Record<SampleKind, { url: string; file: string; draft: Partial<Dr
     url: '/relief-sample.png',
     file: 'moon.png',
     draft: { name: 'Moon relief', shape: 'flat', source: 'photo' },
+  },
+  // The same lit photo, with height estimated by the optional AI depth model: the dome
+  // comes back instead of an embossed copy of the lighting (docs/relief.md, AI depth).
+  ai: {
+    url: '/relief-sample.png',
+    file: 'moon.png',
+    draft: {
+      name: 'Moon dome (AI)',
+      mode: 'relief',
+      shape: 'flat',
+      source: 'ai',
+      min: '1.6',
+      max: '12',
+      autoLevels: true,
+    },
   },
   depth: {
     url: '/relief-sample-depth.png',
@@ -229,7 +253,7 @@ function toSettings(draft: Draft, revision: number): ReliefSettings | string {
     name: draft.name.trim() || 'Relief',
     revision,
     mode: draft.mode,
-    source: draft.source,
+    source: effectiveSource(draft),
     width_mm: width,
     min_mm: min,
     max_mm: max,
@@ -337,6 +361,7 @@ export default function ReliefStudio() {
   const [resetKey, setResetKey] = useState(0);
   const [dragging, setDragging] = useState(false);
   const [blender, setBlender] = useState<BlenderStatus | null>(null);
+  const [depthModel, setDepthModel] = useState<DepthModelStatus | null>(null);
   const [blenderMessage, setBlenderMessage] = useState('');
   const [readings, setReadings] = useState<string[]>(() => Array(8).fill(''));
   const [readingScale, setReadingScale] = useState<'srgb8' | 'linear'>('srgb8');
@@ -352,6 +377,13 @@ export default function ReliefStudio() {
     (typeof settings === 'string' || geometryKey(settings) !== builtKey || file !== builtFile);
   const lithophane = draft.mode === 'lithophane';
   const sphere = draft.shape === 'sphere';
+
+  useEffect(() => {
+    fetch('/api/relief/depth')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((status) => setDepthModel(status))
+      .catch(() => setDepthModel(null));
+  }, []);
 
   useEffect(() => {
     fetch('/api/blender')
@@ -708,6 +740,15 @@ export default function ReliefStudio() {
                     >
                       Try the moon sample
                     </button>
+                    {depthModel?.available && (
+                      <button
+                        className="outlined-button"
+                        disabled={!!busy}
+                        onClick={() => void loadSample('ai')}
+                      >
+                        Try AI depth on the moon
+                      </button>
+                    )}
                     <button
                       className="outlined-button"
                       disabled={!!busy}
@@ -930,7 +971,14 @@ export default function ReliefStudio() {
                 </button>
               </div>
               <span className="relief-hint">
-                {draft.source === 'depth' ? 'Depth map: white = nearest' : 'From photo lightness'}
+                {
+                  {
+                    depth: 'Depth map: white = nearest',
+                    elevation: 'Elevation map: higher = raised',
+                    ai: 'AI depth: nearer = raised',
+                    photo: 'From photo lightness',
+                  }[effectiveSource(draft)]
+                }
               </span>
             </div>
           )}
@@ -965,9 +1013,19 @@ export default function ReliefStudio() {
                     onChange={(e) => update('source', e.target.value as Draft['source'])}
                   >
                     <option value="photo">Photo (height from lightness, CIE L*)</option>
+                    <option value="ai" disabled={!depthModel?.available || sphere}>
+                      Photo → AI depth (shape, not shading)
+                    </option>
                     <option value="depth">Depth map (stored values, white = near)</option>
                     <option value="elevation">Elevation map (heights, true scale)</option>
                   </select>
+                  <span className="relief-hint" id="relief-ai-hint">
+                    {sphere
+                      ? 'AI depth is for flat reliefs.'
+                      : depthModel?.available
+                        ? `AI depth: ${depthModel.model} (${depthModel.license}) on this computer. Relative depth only; size comes from your settings.`
+                        : 'AI depth needs the optional model: ./scripts/depth-model.sh install'}
+                  </span>
                 </div>
                 <NumberInput
                   id="relief-gamma"
@@ -1107,6 +1165,7 @@ export default function ReliefStudio() {
                     ['3mf', '3MF', 'Millimetre mesh for slicers'],
                     ['blender', 'Blender ZIP', 'Editable scene + script'],
                     ['heightmap', 'Height map', '16-bit PNG, 1 px per point'],
+                    ['depth', 'AI depth map', '16-bit PNG, white = nearest'],
                     ['project', 'Settings', 'JSON recipe (no photo)'],
                     ['wedge', 'Calibration wedge', '8-step STL for your filament'],
                   ] as [ReliefDownload, string, string][]
@@ -1179,6 +1238,18 @@ export default function ReliefStudio() {
                     <dd>
                       {fmt(stats.sphere.polyhedral_vs_smooth * 100, 3)}% volume difference from the
                       smooth surface
+                    </dd>
+                  </>
+                )}
+                {stats.depth_estimate && (
+                  <>
+                    <dt>Depth estimate</dt>
+                    <dd>
+                      {stats.depth_estimate.model} ({stats.depth_estimate.license}, rev{' '}
+                      {stats.depth_estimate.revision}), {stats.depth_estimate.input_px[0]} ×{' '}
+                      {stats.depth_estimate.input_px[1]} px input,{' '}
+                      {fmt(stats.depth_estimate.seconds, 2)} s{' '}
+                      <small>(relative: order is estimated, distances are not)</small>
                     </dd>
                   </>
                 )}

@@ -28,7 +28,7 @@ make setup
 make start
 ```
 
-Setup prepares the workbench and reference-library dependencies in separate local environments and builds the workbench interface. Startup runs the API and built interface together. No account, paid API, GPU, or third-party AI credential is required. Setup does not download Ollama models, browsers, OpenSCAD, or system fonts.
+Setup prepares the workbench and reference-library dependencies in separate local environments and builds the workbench interface. Startup runs the API and built interface together. No account, paid API, GPU, or third-party AI credential is required. Setup does not download Ollama models, the optional AI depth model, browsers, OpenSCAD, or system fonts.
 
 For workbench-only setup, use `make setup-app`. The existing `./scripts/setup.sh` and `./scripts/start.sh` commands remain supported and apply only to the workbench.
 
@@ -58,6 +58,8 @@ Behind those few controls:
 - A watertight mesh, checked by its Euler characteristic and by two independent volume calculations.
 
 Every build reports these numbers beside the 3D preview.
+
+**Optional AI depth** raises the *shape* a photo shows instead of its shading. Run `make depth-model` once to download and verify Depth Anything V2 Small (99 MB, Apache-2.0); it then runs on this computer's CPU, with no account or upload. Choose **Picture type: Photo → AI depth** or **Try AI depth on the moon**. The estimate is relative depth, so size still comes from your width and thickness settings. On the moon sample's sunlit surface it ranks true heights at Spearman ρ = 0.94, where brightness scores −0.16 ([details and limits](docs/relief.md#ai-depth-from-an-ordinary-photo)).
 
 Choose **Shape: Sphere** (or **Try the moon lamp**) to wrap a 2:1 world-map picture around a hollow ball. As a lithophane it makes a moon lamp, with a flat base ring around a light opening. The overhang share and bed-contact area are reported. **Elevation maps** (single-band TIFF or PNG heights, such as NASA's CGI Moon Kit) build terrain at true scale with a chosen exaggeration. Try **Try the moon elevation globe**.
 
@@ -135,6 +137,7 @@ source files** for DXF, SVG, PDF, and OpenSCAD.
 | Save project JSON | Restoring the workbench settings and browser measurement notes | Outline, source measurements, optional endpoint reference and independent-height decision inputs, and design/print settings. The browser saves version 3 for fitted/reference-sheet profiles and version 2 for ordinary polygons; version 1 imports remain supported. Photos are excluded |
 | Relief STL / 3MF | Printing a relief or lithophane | Closed millimetre mesh of the 16-bit height field, flat base at Z zero |
 | Height map PNG | Using the surface in other tools | 16-bit grayscale, one pixel per surface point, thinnest to thickest wall |
+| AI depth map | Editing an AI depth estimate, or reusing it elsewhere | 16-bit PNG, white = nearest, relative depth only (AI depth reliefs) |
 | Blender ZIP | Editing or rendering a relief in Blender | Static build script, height map, settings, STL and hashes; no photo |
 | Calibration wedge | Measuring a filament for lithophanes | Eight-step STL from thinnest to thickest wall |
 
@@ -146,7 +149,7 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 ## Honest limits
 
-These apply to the flat-part workbench. The relief studio has its own [limits](docs/relief.md#limits): its height comes from image tone, not recovered shape.
+These apply to the flat-part workbench. The relief studio has its own [limits](docs/relief.md#limits): its height comes from image tone, or from relative depth estimated by the optional AI model, never from measured shape.
 
 - A single image supplies a 2D outline. Thickness is entered by the user; recesses, sloped walls, threads, and hidden features are not reconstructed.
 - One outside width or two-point reference sets uniform scale. It does not correct perspective, lens distortion, or an out-of-plane part. A reference sheet estimates perspective and one radial lens coefficient in the sheet's plane, and the parallax of a vertical-walled part of the entered thickness. Its edges are measured in linear light, decoding the photo as sRGB. The paper-side model follows local slopes and can apply a soft shadow fitted round the part when its numerical checks accept it; contact shadows, sharper shadow transitions and a camera's own tone mapping remain limits. Near-frontal camera height can be inferred from suitable holes assumed round; without that evidence or EXIF, an assumed lens remains necessary. The recorded errors come from rendered photographs with exact ground truth. [The photo benchmark](docs/photo-benchmark.md) measures real photos against calipers, and no such result is recorded yet.

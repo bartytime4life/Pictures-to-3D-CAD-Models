@@ -208,6 +208,81 @@ test('moon lamp wraps a world map into a verified hollow sphere', async ({ page 
   await expect(page.getByRole('button', { name: 'Update model' })).toBeDisabled();
 });
 
+test('AI depth follows the model status and stays out of lithophanes', async ({ page }) => {
+  let available = false;
+  await page.route('**/api/relief/depth', (route) =>
+    route.fulfill({
+      json: {
+        available,
+        model: 'Depth Anything V2 Small',
+        license: 'Apache-2.0',
+        revision: '4472b7362082',
+        bytes: 99060839,
+        reason: available ? '' : 'The depth model is not installed.',
+      },
+    }),
+  );
+  // Without the model: no AI sample, and the picture type explains how to install it.
+  await page.goto('/#relief');
+  await expect(page.getByRole('button', { name: 'Try the moon sample' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Try AI depth on the moon' })).toHaveCount(0);
+  await page.getByText('Fine-tune (optional)').click();
+  await expect(page.getByRole('option', { name: /AI depth/ })).toBeDisabled();
+  await expect(page.locator('#relief-ai-hint')).toHaveText(/depth-model\.sh install/);
+
+  // With the model reported: the choice is offered. A lithophane uses the photo's light
+  // instead, so the request the server receives must say photo.
+  available = true;
+  await page.reload();
+  await expect(page.getByRole('button', { name: 'Try AI depth on the moon' })).toBeVisible();
+  await page.getByRole('button', { name: 'Try the moon sample' }).click();
+  await expect(page.getByRole('heading', { name: 'Your relief' })).toBeVisible({
+    timeout: 60_000,
+  });
+  await page.getByText('Fine-tune (optional)').click();
+  await page.getByLabel('Picture type').selectOption('ai');
+  await expect(page.getByText('AI depth: nearer = raised')).toBeVisible();
+  const sent = page.waitForRequest((r) => r.url().endsWith('/api/relief') && r.method() === 'POST');
+  await page.getByRole('radio', { name: /Lithophane/ }).click();
+  const settings = JSON.parse(/"settings"\r\n\r\n(.*)\r\n/.exec((await sent).postData() ?? '')![1]);
+  expect([settings.mode, settings.source]).toEqual(['lithophane', 'photo']);
+  await expect(page.getByRole('heading', { name: 'Your lithophane' })).toBeVisible({
+    timeout: 60_000,
+  });
+  await expect(page.locator('.check-bad')).toHaveCount(0);
+});
+
+test('installed AI depth model turns the moon photo into a dome', async ({
+  page,
+  request,
+}, testInfo) => {
+  const state = await (await request.get('/api/relief/depth')).json();
+  test.skip(!state.available, 'Optional depth model not installed (./scripts/depth-model.sh)');
+  await page.goto('/#relief');
+  await page.getByRole('button', { name: 'Try AI depth on the moon' }).click();
+  await expect(page.getByRole('heading', { name: 'Your relief' })).toBeVisible({
+    timeout: 90_000,
+  });
+  await expect(page.locator('canvas[data-model-ready="true"]')).toBeVisible();
+  await expect(page.locator('.check-bad')).toHaveCount(0);
+  await expect(
+    page.getByText(/Depth Anything V2 Small \(Apache-2\.0, rev 4472b7362082\)/),
+  ).toBeVisible();
+  await expect(page.getByText(/not measured distances/)).toBeVisible();
+  await page.getByRole('button', { name: 'Heights' }).click();
+  await page.evaluate(
+    () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))),
+  );
+  await page.screenshot({ path: 'docs/images/relief-ai-depth.png', fullPage: true });
+  const estimate = await download(page, /^AI depth map/, testInfo);
+  expect(estimate.name).toBe('Moon-dome-AI-depth.png');
+  expect([estimate.data[24], estimate.data[25]]).toEqual([16, 0]);
+  const accessibility = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+    .analyze();
+  expect(accessibility.violations).toEqual([]);
+});
+
 test('moon elevation map builds a true-scale exaggerated globe', async ({ page }) => {
   await page.goto('/#relief');
   await page.getByRole('button', { name: 'Try the moon elevation globe' }).click();

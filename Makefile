@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 REFERENCE_PYTHON ?= $(CURDIR)/reference-library/.venv/bin/python
 
-.PHONY: help setup setup-app setup-library start dev build build-app build-library test test-app test-library lint smoke slicers freecad photo-benchmark corner-sweep
+.PHONY: help setup setup-app setup-library start dev build build-app build-library test test-app test-library lint smoke slicers depth-model depth-benchmark freecad photo-benchmark corner-sweep
 
 help:
 	@echo "make setup          install app and reference-library dependencies; build the app"
@@ -12,6 +12,8 @@ help:
 	@echo "make lint           check workbench Python and frontend/browser-source formatting"
 	@echo "make smoke          check an already running workbench"
 	@echo "make slicers        inspect local Bambu Studio and PrusaSlicer availability"
+	@echo "make depth-model    download and verify the optional AI depth model (99 MB)"
+	@echo "make depth-benchmark  score AI depth against the moon sample's true heights"
 	@echo "make freecad        open a fitted build in FreeCAD (set FREECADCMD) and check it"
 	@echo "make photo-benchmark PHOTOS=folder   compare traces of your photos with your calipers"
 	@echo "make corner-sweep   fit exactly blurred filleted corners (60-150 degrees) and report radius errors"
@@ -58,6 +60,12 @@ smoke:
 
 slicers:
 	.venv/bin/python scripts/slicer_status.py
+
+depth-model:
+	./scripts/depth-model.sh install
+
+depth-benchmark:
+	.venv/bin/python scripts/depth_benchmark.py
 
 freecad:
 	.venv/bin/python scripts/freecad_check.py

@@ -22,13 +22,13 @@ There are two samples, produced together by [`scripts/generate_relief_samples.py
 ## Use it
 
 1. Choose **Relief** or **Lithophane**.
-2. Drop in a PNG, JPEG, WebP, HEIC or AVIF picture (up to 32 MiB), or press **Try the moon sample**. A 16-bit grayscale PNG is read at full depth, so depth maps from other tools keep all 65,536 levels.
+2. Drop in a PNG, JPEG, WebP, HEIC or AVIF picture (up to 32 MiB), or press **Try the moon sample**. A 16-bit grayscale PNG is read at full depth, so depth maps from other tools keep all 65,536 levels. To raise the *shape* of what a photo shows rather than its shading, use [AI depth](#ai-depth-from-an-ordinary-photo).
 3. Set **Picture width**, the **Thinnest** and **Thickest** walls, and an optional **Frame**. The picture's height follows its aspect ratio; a frame is added outside the picture at full thickness.
 4. Lithophane only: set the filament's **Half-value thickness** (see [calibration](#calibrate-a-filament)). The line under **Update model** shows the light range those settings can produce.
 5. Press **Update model** after changes. Downloads are disabled while the shown model is out of date.
 6. Download **STL** or **3MF** for your slicer, or the **Blender ZIP** to keep editing.
 
-**Fine-tune** holds the optional controls: picture type (photo or depth map), tone curve, auto levels, edge-preserving noise smoothing, nozzle width, the nozzle detail filter, sample spacing, material (for the mass estimate) and preview colour.
+**Fine-tune** holds the optional controls: picture type (photo, photo → AI depth, or depth map), tone curve, auto levels, edge-preserving noise smoothing, nozzle width, the nozzle detail filter, sample spacing, material (for the mass estimate) and preview colour.
 
 The 3D preview uses a low raking light so shallow relief is visible. It is a lighting choice only; the geometry is never exaggerated. The left panel switches between your picture and either the **height map** (relief: lighter is taller) or the **backlit prediction** (lithophane: the Beer–Lambert model of what the lit panel should look like).
 
@@ -77,6 +77,55 @@ Each grid cell is split into two triangles along the diagonal with the smaller h
 The mass estimate is volume × a typical datasheet density at 100% infill (PLA 1.24, PETG 1.27, ABS 1.04, ASA 1.07, TPU 1.21, nylon 1.14 g/cm³). Slicer infill settings change the real mass.
 
 A height field printed flat has no overhangs. Slope figures describe how steep the surface gets, not a support requirement.
+
+## AI depth from an ordinary photo
+
+A photo's brightness depends on lighting as much as on shape, so **Photo** mode embosses the picture: the moon sample's sunlit side comes out high and its shadowed side low. **Photo → AI depth** instead estimates which parts of the scene are nearer, and raises those. It runs a small neural network on this computer's CPU; nothing is sent anywhere.
+
+![AI depth turns the lit moon photo back into a dome](images/relief-ai-depth.png)
+
+### Install it (once)
+
+The model is optional and not downloaded by setup:
+
+```bash
+make depth-model
+```
+
+This runs `./scripts/depth-model.sh install`, which downloads **Depth Anything V2 Small** (99 MB, Apache-2.0) as the [onnx-community ONNX export](https://huggingface.co/onnx-community/depth-anything-v2-small) at a pinned revision, checks its SHA-256 and saves it as `.local/depth-model/depth-anything-v2-small.onnx` (or `PICAD_DEPTH_MODEL`). `./scripts/depth-model.sh status` re-checks the file and `remove` deletes it. The workbench checks the same hash before it loads the model, and refuses a different or damaged file. It runs with [ONNX Runtime](https://onnxruntime.ai/) on the CPU; no GPU is needed. `GET /api/relief/depth` reports whether the model is ready without running it.
+
+The larger Depth Anything V2 models are licensed for non-commercial use only, so they are not offered.
+
+### Use it
+
+Press **Try AI depth on the moon**, or open **Fine-tune** and set **Picture type** to **Photo → AI depth**, then **Update model**. The choice is unavailable until the model is installed, and applies to flat reliefs only: lithophanes need the photo's light, and spheres need a world map, so those use the photo instead.
+
+The left panel's **Heights** view shows the estimate, and **AI depth map** downloads it as a 16-bit PNG (white = nearest) that you can edit and load back in as a depth map. The science check names the model, revision, network input size and time.
+
+### What the network can and cannot tell you
+
+- **Pre-processing** follows the model's published processor exactly. The picture is scaled, keeping its aspect ratio, so that the side whose scale factor is closer to 1 becomes 518 pixels. Each side is then rounded to a multiple of 14, the network's patch size. A 900 × 640 photo becomes 728 × 518. For pictures more than 3:1 the long side is also limited to 1,554 pixels. Pixels are resampled bicubically and normalized with the ImageNet mean and standard deviation.
+- **Output.** The network returns *relative inverse depth*: larger means nearer. It was trained to be correct only up to an unknown scale and shift, d = a / z + b, so what is in front of what is meaningful, but distances and ratios are not. Two known distances in the scene would be needed to recover a and b; one photo has none. The output is resampled to the photo's pixels and stretched to 0..1 with white = nearest.
+- **Size** therefore comes only from your **Picture width**, **Thinnest** and **Thickest**, exactly as for any depth map. Auto levels and the tone curve then shape the height range.
+- **Flattening is legitimate.** A relief is a compressed rendering of depth anyway. Under orthographic viewing, a surface and a flattened, tilted copy of it shade identically under suitably changed lighting (the generalized bas-relief ambiguity: Belhumeur, Kriegman and Yuille, 1999). Sculptors exploit this. Your thickness range sets the compression.
+- **Hidden surfaces stay hidden.** The network can only reason about what the photo shows. The moon sample's night side is black, so the estimated dome stops at the terminator instead of completing the disc.
+
+### Measured on the moon sample
+
+The moon photo and its depth map come from the same procedural sphere, so the true height behind the photo is known. `make depth-benchmark` ([`scripts/depth_benchmark.py`](../scripts/depth_benchmark.py)) compares both ways of getting height from the photo. Spearman's ρ measures ordering only (+1 = the same order as the truth). The aligned error is the RMS error after the best scale and shift, as a share of the true height span.
+
+| Height from | Region | Spearman ρ | Aligned RMS error |
+| --- | --- | --- | --- |
+| Brightness (Photo mode) | sunlit disc (35% of picture) | −0.16 | 21.8% |
+| AI depth | sunlit disc | **0.94** | **8.7%** |
+| Brightness (Photo mode) | whole disc (40%) | 0.13 | 22.5% |
+| AI depth | whole disc | 0.93 | 15.8% |
+| Brightness (Photo mode) | whole picture | 0.87 | 19.2% |
+| AI depth | whole picture | 0.83 | 11.9% |
+
+On the sunlit surface, brightness follows the lighting and is unrelated to height; the network recovers the dome. Over the whole picture, brightness ranks well only because the black sky and the black, zero-height background coincide. The network's background is a soft gradient rather than flat. These figures come from one synthetic scene rendered with Lambertian shading. They show the method working, not its accuracy on your photographs. A `tests/test_depth.py` check asserts ρ > 0.9 and aligned error < 12% on the sunlit disc whenever the model is installed.
+
+Inference took 0.4–0.7 s for the 728 × 518 moon on the 2026-11-14 test machine's CPU; a whole build took about 2.3 s.
 
 ## Spheres: globes and moon lamps
 
@@ -170,7 +219,7 @@ The launcher looks for `blender` on `PATH`, then the Snap, macOS and Windows ins
 
 ## Limits
 
-- One picture carries no true depth. A relief is a tone map, not a reconstruction of the photographed object's shape; a depth map from another tool can supply estimated depth.
+- One picture carries no true depth. Photo mode makes a tone map, not a reconstruction of the photographed object's shape. AI depth and depth maps from other tools supply *estimated* relative depth: plausible ordering, unknown scale, nothing behind what the photo shows.
 - Beer–Lambert ignores scattering, layer lines and colour. Thin walls under about 0.6 mm may print poorly; the defaults stay above that.
 - Tone accuracy, light range and mass are model predictions. They are not measurements of a printed part.
 - The source picture is uploaded to this app's backend, used once to compute the thickness map and deleted. Recipes and Blender ZIPs never contain it.
