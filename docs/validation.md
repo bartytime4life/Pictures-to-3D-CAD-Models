@@ -1,12 +1,20 @@
 # Validation results
 
+## Narrowest phones no longer scroll sideways — November 15, 2026
+
+Frontend CSS only.
+
+- **Measured** with a script on the workbench and the relief studio at 320, 340, 360, 375, 400 and 414 px. Before: at 320 px the step bar's active step reached 338 px and the source panel's **Adjust outline** reached 326 px. After: no element extends past the screen at any of these widths.
+- **Browser:** the phone-layout scenario now checks 320 and 360 px for any element past the screen edge. It polls, because the 3D canvas follows a resize a frame later. With the previous stylesheet it fails, naming the step bar and the panel actions; with the fix it passes. All **83 Chrome scenarios** passed against a dedicated server in 8.4 minutes (1 skipped: it needs the downloaded AI depth model), and `make lint` passed.
+- **Screenshot:** `docs/images/workbench-mobile.png` (390 px) now shows the step labels under their icons.
+
 ## One header, a sample gallery and automatic relief updates — November 15, 2026
 
 Frontend only; no backend code changed.
 
 - **Browser:** all **83 Chrome scenarios** passed against a dedicated server in 7.1 minutes (1 skipped: it needs the downloaded AI depth model). Two scenarios are new. One checks both studios' header at 1920, 1366, 1280, 1251, 1100, 1001, 800 and 375 px: no header overflow, the project name not clipped, every header link and button showing a visible text label, the current studio marked, the sample gallery's four cards and captions, the thumbnails loaded, and axe WCAG 2.1 AA. The other answers the first relief request with a 429 and `Retry-After: 1`, and checks that the page waits, retries once and builds without an error.
 - **Changed scenarios:** the moon-sample scenario now edits Thickest and waits for the automatic rebuild instead of pressing **Update model**. It also checks that the superseded model's `DELETE` returns 204. The elevation scenario checks that a rejected exaggeration is requested exactly once in a 2 s wait, and that **Update model** stays available.
-- **Header measurement** before the fix: at 800 px the workbench name read "Mounti…", and with the first version of the tabs it was clipped at 1100–1440 px and again at 1251 px. A measuring script found no clipping or overflow at 18 widths from 2560 to 375 px after the fix. The workflow stepper below the header still overflows by 18 px at 320 px; that is unchanged by this work.
+- **Header measurement** before the fix: at 800 px the workbench name read "Mounti…", and with the first version of the tabs it was clipped at 1100–1440 px and again at 1251 px. A measuring script found no clipping or overflow at 18 widths from 2560 to 375 px after the fix. The workflow stepper below the header still overflowed by 18 px at 320 px; the next entry fixes it.
 - **Python:** **1,382 tests** passed and 2 were skipped, in 7.0 minutes. The 13 tests that launch Blender could not run in this session: snap Blender refused to start (`snap-confine … cap_dac_override not found`), and `blender --version` and `main` fail the same way. CI has no Blender and skips them. No backend or Blender code changed. `make lint` passed Ruff and Prettier.
 - **Screenshots:** the browser suite regenerated `docs/images/workbench.png`, `workbench-mobile.png`, `relief.png` and `relief-sphere.png`, which now show the new header. The other hand-captured workbench images still show the old header.
 
