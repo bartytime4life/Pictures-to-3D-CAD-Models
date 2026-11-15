@@ -2,13 +2,15 @@
 
     .venv/bin/python scripts/generate_relief_samples.py [OUTPUT_DIR]
 
-Writes three images to OUTPUT_DIR, by default ``frontend/public``:
+Writes four images to OUTPUT_DIR, by default ``frontend/public``:
 
 * ``relief-sample.png``: a lit, cratered sphere, as an 8-bit sRGB "photograph";
 * ``relief-sample-depth.png``: that sphere's height as a 16-bit depth map (white =
   nearest), from the same seeded craters, so it is the true shape behind the photo;
 * ``moon-map.png``: a 2:1 equirectangular albedo map of a whole cratered moon, for
-  wrapping around a sphere (a moon lamp). It wraps seamlessly at 0/360 degrees.
+  wrapping around a sphere (a moon lamp). It wraps seamlessly at 0/360 degrees;
+* ``moon-elevation.tif``: the same moon's heights as a float32 TIFF in kilometres,
+  laid out like NASA's floating-point CGI Moon Kit elevation maps.
 Everything is procedural; no photograph or third-party data is involved.
 """
 
@@ -17,6 +19,7 @@ from pathlib import Path
 
 import cv2
 import numpy as np
+from PIL import Image
 
 WIDTH, HEIGHT = 900, 640
 CENTRE_X, CENTRE_Y, RADIUS = 450, 320, 270  # Sphere outline, in pixels.
@@ -101,6 +104,41 @@ MAP_WIDTH, MAP_HEIGHT = 1024, 512
 MAP_SEED = 29
 
 
+MOON_RADIUS_KM = 1737.4  # The mean lunar radius NASA's CGI Moon Kit heights refer to.
+
+
+def _map_points(width, height):
+    rows = (np.arange(height) + 0.5) / height * np.pi  # colatitude
+    columns = (np.arange(width) + 0.5) / width * 2 * np.pi  # longitude
+    theta, lam = np.meshgrid(rows, columns, indexing="ij")
+    return np.stack(
+        [np.sin(theta) * np.cos(lam), np.sin(theta) * np.sin(lam), np.cos(theta)], axis=-1
+    )
+
+
+def moon_features():
+    """Seeded maria, mottling and craters, drawn in a fixed order so the albedo and
+    elevation maps describe the same surface. Sizes are great-circle angles (radians)."""
+    rng = np.random.default_rng(MAP_SEED)
+
+    def random_direction():
+        v = rng.normal(size=3)
+        return v / np.linalg.norm(v)
+
+    maria = [(random_direction(), rng.uniform(0.18, 0.5)) for _ in range(12)]
+    mottling = []
+    for _ in range(40):
+        centre, size = random_direction(), rng.uniform(0.05, 0.2)
+        mottling.append((centre, size, rng.uniform(-0.04, 0.04)))
+    craters = []
+    for _ in range(300):
+        # Crater sizes follow a power law, as on real surfaces: many small, few large.
+        centre = random_direction()
+        size = np.radians(min(0.5 * rng.uniform(0.02, 1) ** -0.75, 8.0))
+        craters.append((centre, size, rng.random() < 0.08))
+    return maria, mottling, craters
+
+
 def moon_map():
     """Albedo of a whole moon in equirectangular projection (longitude across, from the
     north pole at the top to the south pole at the bottom).
@@ -109,36 +147,21 @@ def moon_map():
     by great-circle angle, so features near the poles are not stretched and the map
     has no seam. Craters have a bright rim and a slightly darker floor.
     """
-    rng = np.random.default_rng(MAP_SEED)
-    rows = (np.arange(MAP_HEIGHT) + 0.5) / MAP_HEIGHT * np.pi  # colatitude
-    columns = (np.arange(MAP_WIDTH) + 0.5) / MAP_WIDTH * 2 * np.pi  # longitude
-    theta, lam = np.meshgrid(rows, columns, indexing="ij")
-    points = np.stack(
-        [np.sin(theta) * np.cos(lam), np.sin(theta) * np.sin(lam), np.cos(theta)], axis=-1
-    )
-
-    def random_direction():
-        v = rng.normal(size=3)
-        return v / np.linalg.norm(v)
-
-    albedo = np.full(theta.shape, 0.78)
-    for _ in range(12):  # Maria: broad, dark, overlapping basins.
-        centre, size = random_direction(), rng.uniform(0.18, 0.5)
+    points = _map_points(MAP_WIDTH, MAP_HEIGHT)
+    maria, mottling, craters = moon_features()
+    albedo = np.full(points.shape[:2], 0.78)
+    for centre, size in maria:  # Maria: broad, dark, overlapping basins.
         angle = np.arccos(np.clip(points @ centre, -1, 1))
         albedo -= 0.32 * np.exp(-((angle / size) ** 4))
     albedo = np.maximum(albedo, 0.3)
-    for _ in range(40):  # Low-contrast mottling.
-        centre, size = random_direction(), rng.uniform(0.05, 0.2)
+    for centre, size, amount in mottling:  # Low-contrast mottling.
         angle = np.arccos(np.clip(points @ centre, -1, 1))
-        albedo += rng.uniform(-0.04, 0.04) * np.exp(-((angle / size) ** 2))
-    for _ in range(300):
-        # Crater sizes follow a power law, as on real surfaces: many small, few large.
-        centre = random_direction()
-        size = np.radians(min(0.5 * rng.uniform(0.02, 1) ** -0.75, 8.0))
+        albedo += amount * np.exp(-((angle / size) ** 2))
+    for centre, size, young in craters:
         angle = np.arccos(np.clip(points @ centre, -1, 1)) / size
         rim = 0.07 * np.exp(-(((angle - 1) / 0.25) ** 2))
         floor = 0.05 * np.exp(-((angle / 0.75) ** 2))
-        halo = 0.05 * np.exp(-((angle / 2.5) ** 2)) if rng.random() < 0.08 else 0
+        halo = 0.05 * np.exp(-((angle / 2.5) ** 2)) if young else 0
         albedo += rim - floor + halo
     linear = np.clip(albedo, 0.05, 1.0) ** 1.6  # Albedo to reflectance contrast.
     srgb = np.where(linear <= 0.0031308, 12.92 * linear, 1.055 * linear ** (1 / 2.4) - 0.055)
@@ -146,11 +169,41 @@ def moon_map():
     return np.dstack([gray, gray, gray])
 
 
+ELEVATION_WIDTH, ELEVATION_HEIGHT = 1440, 720  # 4 samples per degree, like ldem_4.tif
+
+
+def moon_elevation():
+    """Heights (float32 km, relative to MOON_RADIUS_KM) of the same moon as moon_map.
+
+    Maria are basins about 2 km deep. Craters follow simple-crater geometry: depth about
+    0.2 x diameter and rim height about 0.04 x diameter, capped at 4 km and 1 km as
+    large craters flatten. Same projection and units as NASA's floating-point
+    CGI Moon Kit maps, so the studio treats both alike.
+    """
+    points = _map_points(ELEVATION_WIDTH, ELEVATION_HEIGHT)
+    maria, _, craters = moon_features()
+    height = np.zeros(points.shape[:2])
+    for centre, size in maria:
+        angle = np.arccos(np.clip(points @ centre, -1, 1))
+        height -= 2.0 * np.exp(-((angle / size) ** 4))
+    for centre, size, _young in craters:
+        diameter_km = 2 * size * MOON_RADIUS_KM
+        depth, rim_height = min(0.2 * diameter_km, 4.0), min(0.04 * diameter_km, 1.0)
+        angle = np.arccos(np.clip(points @ centre, -1, 1)) / size
+        bowl = np.clip(1 - angle**2, 0, None)  # A parabolic bowl inside the rim.
+        rim = np.exp(-(((angle - 1) / 0.25) ** 2))
+        height += rim_height * rim - depth * bowl
+    return height.astype(np.float32)
+
+
 def main(output):
     output.mkdir(parents=True, exist_ok=True)
     cv2.imwrite(str(output / "relief-sample.png"), photo())
     cv2.imwrite(str(output / "relief-sample-depth.png"), depth())
     cv2.imwrite(str(output / "moon-map.png"), moon_map())
+    Image.fromarray(moon_elevation(), "F").save(
+        output / "moon-elevation.tif", "TIFF", compression="tiff_adobe_deflate"
+    )
 
 
 if __name__ == "__main__":

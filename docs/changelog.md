@@ -13,6 +13,30 @@
   the Gaussian tail had been offsetting part of JPEG's own pull
   ([reference-sheet tracing](reference-sheet.md), §3 and Limits).
 
+## Relief studio: elevation maps at true scale — November 14, 2026
+
+- The relief studio builds terrain from measured heights: single-band TIFF or PNG in
+  kilometres, metres or NASA's half-metres. A height becomes millimetres at the
+  model's own scale (model width over ground width, or sphere radius over the body's
+  radius) times a chosen exaggeration, and Thickest follows from the data. A 1 km hill
+  on a 10 km map printed 100 mm wide stands 10 mm tall at 1x. A generated moon
+  elevation map is the sample; NASA's CGI Moon Kit formats are documented
+  ([relief studio](relief.md#elevation-maps-real-terrain-at-true-scale)).
+
+## Relief and lithophane studio — November 14, 2026
+
+- A second tool at `/#relief` turns a picture into a raised relief or a backlit
+  lithophane (#128). It uses sRGB and CIE L* tone mapping, Beer-Lambert thickness with
+  a printable calibration wedge and a least-squares filament fit, and a watertight
+  height field checked by its Euler characteristic and two volume calculations.
+  Exports are STL, 3MF, a 16-bit height map and a Blender scene that rebuilds the
+  same solid.
+- An empty 3D panel shows only the studio's own message (#130). A moon depth-map
+  sample builds a true hemisphere within 0.1 mm (#132).
+- Shape: Sphere wraps a 2:1 world map around a hollow ball with a flat base ring: a
+  moon lamp or a relief globe (#135). A Cycles render of a uniform lamp matches
+  Beer-Lambert through the shell within 0.6% ([relief studio](relief.md)).
+
 ## Narrow openings placed by a two-edge model — November 14, 2026
 
 - Across a narrow opening an edge's blurred profile is a bump, not a step, and its

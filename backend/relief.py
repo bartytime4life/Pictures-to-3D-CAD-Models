@@ -29,6 +29,7 @@ import hashlib
 import io
 import json
 import math
+import warnings
 import zipfile
 from pathlib import Path
 from typing import Literal
@@ -39,7 +40,7 @@ from PIL import Image
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from .three_mf import write_mesh_3mf
-from .tracing import load_image
+from .tracing import MAX_BYTES, MAX_PIXELS, load_image
 
 MAX_SAMPLES = 250_000  # Grid vertices in the exported surface (about 500 x 500).
 PREVIEW_SIDE = 160  # Longest side of the browser preview grid, in samples.
@@ -64,7 +65,9 @@ class ReliefSettings(BaseModel):
     revision: int = Field(default=0, ge=0)
     mode: Literal["relief", "lithophane"] = "relief"
     # Relief only: a photo maps brightness to height; a depth map is used as stored data.
-    source: Literal["photo", "depth"] = "photo"
+    # A photo's tone, a depth map's stored values, or an elevation map's heights, which
+    # are scaled to millimetres at the model's true scale times `exaggeration`.
+    source: Literal["photo", "depth", "elevation"] = "photo"
     width_mm: float = Field(default=100, ge=10, le=400)
     min_mm: float = Field(default=1.6, ge=0.2, le=20)
     max_mm: float = Field(default=4.0, ge=0.4, le=40)
@@ -85,9 +88,17 @@ class ReliefSettings(BaseModel):
     sphere_diameter_mm: float = Field(default=100, ge=30, le=250)
     opening_mm: float = Field(default=35, ge=10, le=200)
     collar_mm: float = Field(default=3, ge=0, le=20)
+    elevation_unit: Literal["km", "m", "half_m"] = "km"
+    exaggeration: float = Field(default=1, ge=0.1, le=1000)
+    ground_width_km: float = Field(default=10, ge=0.001, le=50_000)
+    body_radius_km: float = Field(default=1737.4, ge=1, le=100_000)
 
     @model_validator(mode="after")
     def check_range(self):
+        if self.source == "elevation" and self.mode == "lithophane":
+            raise ValueError(
+                "Elevation maps make reliefs: heights set the shape, not the light. Choose Relief."
+            )
         if self.max_mm - self.min_mm < 0.1:
             raise ValueError("Maximum thickness must exceed minimum thickness by at least 0.1 mm.")
         if self.shape == "sphere":
@@ -422,6 +433,136 @@ def _grid_size(settings, aspect):
     return nx, ny, height_mm, notices
 
 
+ELEVATION_UNITS_KM = {"km": 1.0, "m": 0.001, "half_m": 0.0005}
+ELEVATION_MODES = ("F", "I", "I;16", "I;16B", "I;16L", "I;16S", "L")
+MAX_ELEVATION_SIDE = 2048
+NODATA_LIMIT = 1e7  # Raw values beyond this are fill values, not heights.
+
+
+def load_elevation(data: bytes):
+    """Decode a single-band elevation grid (TIFF or PNG) as raw float64 values.
+
+    Float, signed and unsigned integer samples keep their stored values. Non-finite
+    samples and fill values (beyond +/-1e7) are counted and replaced by the median.
+    """
+    if not data or len(data) > MAX_BYTES:
+        raise ReliefError("Choose an elevation map between 1 byte and 32 MiB.")
+    try:
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", Image.DecompressionBombWarning)
+            with Image.open(io.BytesIO(data)) as raw:
+                if raw.format not in {"TIFF", "PNG"}:
+                    raise ReliefError("Use a single-band TIFF or PNG elevation map.")
+                if getattr(raw, "n_frames", 1) != 1:
+                    raise ReliefError("Use an elevation map with one image, not several pages.")
+                if raw.mode not in ELEVATION_MODES:
+                    raise ReliefError(
+                        "An elevation map must have one band of heights (grayscale), not colour."
+                    )
+                if raw.width * raw.height > MAX_PIXELS:
+                    raise ReliefError("The elevation map exceeds 70 megapixels.")
+                if min(raw.size) < 16:
+                    raise ReliefError("Use an elevation map at least 16 samples wide and tall.")
+                raw.load()
+                values = np.asarray(raw, dtype=np.float64)
+    except ReliefError:
+        raise
+    except (
+        OSError,
+        ValueError,
+        SyntaxError,
+        Image.DecompressionBombError,
+        Image.DecompressionBombWarning,
+    ) as exc:
+        raise ReliefError("The elevation map could not be decoded.") from exc
+    invalid = ~np.isfinite(values) | (np.abs(values) > NODATA_LIMIT)
+    if invalid.all():
+        raise ReliefError("The elevation map contains no usable heights.")
+    if invalid.any():
+        values = np.where(invalid, np.median(values[~invalid]), values)
+    return values, float(invalid.mean())
+
+
+def prepare_elevation(data: bytes, settings: ReliefSettings):
+    """Turn an elevation map into a 0..1 depth field and settings at true scale.
+
+    Heights become millimetres with mm_per_km = model width / ground width (flat) or
+    sphere radius / body radius (sphere), times `exaggeration`. The relief's span is
+    then fixed by the data: max_mm = min_mm + span. Returns the field as a float
+    image, the effective settings, notices and statistics.
+    """
+    values, nodata = load_elevation(data)
+    notices = []
+    if nodata:
+        notices.append(
+            f"{nodata:.1%} of the elevation map had no data and was filled with the median height."
+        )
+    h, w = values.shape
+    if max(h, w) > MAX_ELEVATION_SIDE:
+        scale = MAX_ELEVATION_SIDE / max(h, w)
+        values = cv2.resize(
+            values,
+            (max(2, round(w * scale)), max(2, round(h * scale))),
+            interpolation=cv2.INTER_AREA,
+        )
+    km = values * ELEVATION_UNITS_KM[settings.elevation_unit]
+    low, high = float(km.min()), float(km.max())
+    relief_km = high - low
+    if settings.shape == "sphere":
+        mm_per_km = (settings.sphere_diameter_mm / 2) / settings.body_radius_km
+        basis = f"sphere radius {settings.sphere_diameter_mm / 2:g} mm / body radius {settings.body_radius_km:g} km"
+    else:
+        mm_per_km = settings.width_mm / settings.ground_width_km
+        basis = (
+            f"model width {settings.width_mm:g} mm / ground width {settings.ground_width_km:g} km"
+        )
+    true_mm = relief_km * mm_per_km
+    span = true_mm * settings.exaggeration
+    if span < 0.05:
+        raise ReliefError(
+            f"At this scale the terrain is only {span:.3f} mm tall. Increase the exaggeration "
+            "(or, for a flat map, check the ground width)."
+        )
+    limit = 40.0
+    if settings.min_mm + span > limit:
+        raise ReliefError(
+            f"With {settings.exaggeration:g}× exaggeration the terrain is {span:.1f} mm tall, "
+            f"more than the {limit:g} mm thickest wall allows. Use at most "
+            f"{(limit - settings.min_mm) / true_mm:.3g}×."
+        )
+    try:
+        effective = ReliefSettings.model_validate(
+            {
+                **settings.model_dump(),
+                "max_mm": settings.min_mm + span,
+                "auto_levels": False,
+                "gamma": 1.0,
+                "invert": False,
+                "denoise": "off",
+            }
+        )
+    except ValueError as exc:
+        raise ReliefError(
+            f"The terrain at {settings.exaggeration:g}× is {span:.2f} mm tall, which does not fit "
+            "these sphere settings. Lower the exaggeration or enlarge the sphere."
+        ) from exc
+    field = ((km - low) / relief_km).astype(np.float32)
+    stats = {
+        "unit": settings.elevation_unit,
+        "lowest_km": low,
+        "highest_km": high,
+        "relief_km": relief_km,
+        "mm_per_km": mm_per_km,
+        "scale_basis": basis,
+        "true_scale_relief_mm": true_mm,
+        "exaggeration": settings.exaggeration,
+        "printed_relief_mm": span,
+        "nodata_fraction": nodata,
+        "source_samples": [w, h],
+    }
+    return Image.fromarray(field, "F"), effective, notices, stats
+
+
 def tone_to_thickness(values, settings):
     """Map sampled tone (0..1) to wall thickness in mm, shared by every shape.
 
@@ -458,9 +599,15 @@ def build_relief(data: bytes, settings: ReliefSettings, job_dir: Path) -> dict:
         from .sphere import build_sphere
 
         return build_sphere(data, settings, job_dir)
-    image, notices = load_image(data, keep_depth=True)
+    elevation = None
+    if settings.source == "elevation":
+        image, settings, notices, elevation = prepare_elevation(data, settings)
+    else:
+        image, notices = load_image(data, keep_depth=True)
     notices = list(notices)
     luminance, display, sample_kind = _image_fields(image)
+    if elevation:
+        sample_kind = "elevation map"
     w_px, h_px = image.size
     aspect = h_px / w_px
     if not 0.05 <= aspect <= 20:
@@ -566,6 +713,7 @@ def build_relief(data: bytes, settings: ReliefSettings, job_dir: Path) -> dict:
                 "image_pixel_mm": pixel_mm,
             },
             "source": {"width_px": w_px, "height_px": h_px, "samples": sample_kind},
+            **({"elevation": elevation} if elevation else {}),
             "nozzle_filter": {
                 "enabled": settings.nozzle_filter,
                 "fwhm_mm": settings.nozzle_mm,

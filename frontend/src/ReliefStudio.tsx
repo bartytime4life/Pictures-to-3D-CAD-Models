@@ -27,6 +27,7 @@ import type {
   ReliefResult,
   ReliefSettings,
   ReliefShape,
+  ElevationUnit,
 } from './relief';
 import './ReliefStudio.css';
 
@@ -40,13 +41,16 @@ const PHOTO_TYPES = [
   'image/heic',
   'image/heif',
   'image/avif',
+  'image/tiff',
 ];
-const PHOTO_NAME = /\.(heic|heif|avif)$/i;
+const PHOTO_NAME = /\.(heic|heif|avif|tiff?)$/i;
+// Browsers cannot display TIFF; elevation maps show their computed height map instead.
+const TIFF_NAME = /\.tiff?$/i;
 
 type Draft = {
   name: string;
   mode: ReliefMode;
-  source: 'photo' | 'depth';
+  source: 'photo' | 'depth' | 'elevation';
   width: string;
   min: string;
   max: string;
@@ -65,6 +69,10 @@ type Draft = {
   diameter: string;
   opening: string;
   collar: string;
+  elevationUnit: ElevationUnit;
+  exaggeration: string;
+  groundWidth: string;
+  bodyRadius: string;
 };
 
 const initialDraft: Draft = {
@@ -89,9 +97,13 @@ const initialDraft: Draft = {
   diameter: '100',
   opening: '35',
   collar: '3',
+  elevationUnit: 'km',
+  exaggeration: '1',
+  groundWidth: '10',
+  bodyRadius: '1737.4',
 };
 
-type SampleKind = 'photo' | 'depth' | 'globe';
+type SampleKind = 'photo' | 'depth' | 'globe' | 'elevation';
 
 // The depth sample's white level is 1.1 sphere radii and its sphere spans 30% of the
 // image width (scripts/generate_relief_samples.py). A 100 mm wide relief therefore has
@@ -101,7 +113,7 @@ const SAMPLES: Record<SampleKind, { url: string; file: string; draft: Partial<Dr
   photo: {
     url: '/relief-sample.png',
     file: 'moon.png',
-    draft: { name: 'Moon relief', shape: 'flat' },
+    draft: { name: 'Moon relief', shape: 'flat', source: 'photo' },
   },
   depth: {
     url: '/relief-sample-depth.png',
@@ -139,6 +151,24 @@ const SAMPLES: Record<SampleKind, { url: string; file: string; draft: Partial<Dr
       denoise: 'light',
     },
   },
+  // The same generated moon's heights in kilometres, laid out like NASA's float maps.
+  elevation: {
+    url: '/moon-elevation.tif',
+    file: 'moon-elevation.tif',
+    draft: {
+      name: 'Moon globe',
+      mode: 'relief',
+      shape: 'sphere',
+      source: 'elevation',
+      elevationUnit: 'km',
+      exaggeration: '12',
+      bodyRadius: '1737.4',
+      diameter: '100',
+      opening: '35',
+      collar: '3',
+      min: '2',
+    },
+  },
 };
 
 function number(value: string, low: number, high: number) {
@@ -152,7 +182,9 @@ function number(value: string, low: number, high: number) {
 function toSettings(draft: Draft, revision: number): ReliefSettings | string {
   const width = number(draft.width, 10, 400);
   const min = number(draft.min, 0.2, 20);
-  const max = number(draft.max, 0.4, 40);
+  const elevation = draft.source === 'elevation';
+  // An elevation map fixes the thickest wall from its data; the server derives it.
+  const max = elevation && min !== null ? min + 0.1 : number(draft.max, 0.4, 40);
   const frame = number(draft.frame, 0, 20);
   const gamma = number(draft.gamma, 0.25, 4);
   const nozzle = number(draft.nozzle, 0.1, 1.2);
@@ -166,14 +198,27 @@ function toSettings(draft: Draft, revision: number): ReliefSettings | string {
   const diameter = number(draft.diameter, 30, 250);
   const opening = number(draft.opening, 10, 200);
   const collar = number(draft.collar, 0, 20);
+  const exaggeration = number(draft.exaggeration, 0.1, 1000);
+  const groundWidth = number(draft.groundWidth, 0.001, 50000);
+  const bodyRadius = number(draft.bodyRadius, 1, 100000);
+  if (elevation) {
+    if (draft.mode === 'lithophane') return 'Elevation maps make reliefs. Choose Relief.';
+    if (exaggeration === null) return 'Exaggeration must be between 0.1 and 1000.';
+    if (draft.shape === 'flat' && groundWidth === null)
+      return 'Ground width must be between 0.001 and 50,000 km.';
+    if (draft.shape === 'sphere' && bodyRadius === null)
+      return 'Body radius must be between 1 and 100,000 km.';
+  }
   if (draft.shape === 'sphere') {
     if (diameter === null) return 'Sphere diameter must be between 30 and 250 mm.';
     if (opening === null) return 'Opening must be between 10 and 200 mm.';
     if (collar === null) return 'Collar must be between 0 and 20 mm.';
-    const inside = diameter / 2 - max;
-    if (inside < 10) return 'The sphere is too small for its thickest wall.';
-    if (opening / 2 > 0.9 * inside)
-      return 'The opening must be narrower than 90% of the inside diameter.';
+    if (!elevation) {
+      const inside = diameter / 2 - max;
+      if (inside < 10) return 'The sphere is too small for its thickest wall.';
+      if (opening / 2 > 0.9 * inside)
+        return 'The opening must be narrower than 90% of the inside diameter.';
+    }
   }
   if (gamma === null) return 'Tone curve must be between 0.25 and 4.';
   if (nozzle === null) return 'Nozzle width must be between 0.1 and 1.2 mm.';
@@ -203,6 +248,10 @@ function toSettings(draft: Draft, revision: number): ReliefSettings | string {
     sphere_diameter_mm: diameter ?? 100,
     opening_mm: opening ?? 35,
     collar_mm: collar ?? 3,
+    elevation_unit: draft.elevationUnit,
+    exaggeration: exaggeration ?? 1,
+    ground_width_km: groundWidth ?? 10,
+    body_radius_km: bodyRadius ?? 1737.4,
   };
 }
 
@@ -379,7 +428,12 @@ export default function ReliefStudio() {
       const response = await fetch(sample.url);
       if (!response.ok) throw new Error('The sample image could not be loaded.');
       const blob = await response.blob();
-      choose(new File([blob], sample.file, { type: 'image/png' }), sample.draft);
+      choose(
+        new File([blob], sample.file, {
+          type: TIFF_NAME.test(sample.file) ? 'image/tiff' : 'image/png',
+        }),
+        sample.draft,
+      );
     } catch (caught) {
       setBusy('');
       setError(caught instanceof Error ? caught.message : String(caught));
@@ -601,7 +655,7 @@ export default function ReliefStudio() {
                   ref={fileInput}
                   type="file"
                   hidden
-                  accept="image/png,image/jpeg,image/webp,image/heic,image/heif,image/avif,.heic,.heif,.avif"
+                  accept="image/png,image/jpeg,image/webp,image/heic,image/heif,image/avif,image/tiff,.heic,.heif,.avif,.tif,.tiff"
                   aria-label="Choose an image"
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     const chosen = e.target.files?.[0];
@@ -612,7 +666,13 @@ export default function ReliefStudio() {
               </div>
             </div>
             <div className={`canvas-stage relief-image-stage ${dragging ? 'dragging' : ''}`}>
-              {sourceUrl ? (
+              {sourceUrl && file && TIFF_NAME.test(file.name) && !(view === 'preview' && result) ? (
+                <div className="model-empty">
+                  <ImageIcon size={45} weight="light" />
+                  <h3>{file.name}</h3>
+                  <p>Browsers cannot show TIFF files. The computed height map appears here.</p>
+                </div>
+              ) : sourceUrl ? (
                 <img
                   className="relief-image"
                   src={view === 'preview' && result ? result.preview_image : sourceUrl}
@@ -629,8 +689,8 @@ export default function ReliefStudio() {
                   <ImageIcon size={45} weight="light" />
                   <h3>Drop a picture here.</h3>
                   <p>
-                    PNG, JPEG, WebP, HEIC or AVIF up to 32 MiB. A 16-bit grayscale depth map also
-                    works.
+                    PNG, JPEG, WebP, HEIC or AVIF up to 32 MiB. A 16-bit grayscale depth map, or a
+                    TIFF elevation map in metres or kilometres, also works.
                   </p>
                   <div className="relief-start">
                     <button
@@ -661,6 +721,13 @@ export default function ReliefStudio() {
                       onClick={() => void loadSample('globe')}
                     >
                       Try the moon lamp
+                    </button>
+                    <button
+                      className="outlined-button"
+                      disabled={!!busy}
+                      onClick={() => void loadSample('elevation')}
+                    >
+                      Try the moon elevation globe
                     </button>
                   </div>
                 </div>
@@ -768,13 +835,62 @@ export default function ReliefStudio() {
             onChange={(v) => update('min', v)}
             hint={lithophane ? 'Brightest areas' : 'Lowest areas (base)'}
           />
-          <NumberInput
-            id="relief-max"
-            label="Thickest"
-            value={draft.max}
-            onChange={(v) => update('max', v)}
-            hint={lithophane ? 'Darkest areas' : 'Highest areas'}
-          />
+          {draft.source === 'elevation' ? (
+            <>
+              <div className="relief-field">
+                <label htmlFor="relief-unit">Heights are in</label>
+                <select
+                  id="relief-unit"
+                  value={draft.elevationUnit}
+                  onChange={(e) => update('elevationUnit', e.target.value as ElevationUnit)}
+                >
+                  <option value="km">Kilometres</option>
+                  <option value="m">Metres</option>
+                  <option value="half_m">Half-metres (NASA 16-bit)</option>
+                </select>
+                <span className="relief-hint">Check your map’s documentation</span>
+              </div>
+              {sphere ? (
+                <NumberInput
+                  id="relief-body"
+                  label="Body radius"
+                  unit="km"
+                  value={draft.bodyRadius}
+                  onChange={(v) => update('bodyRadius', v)}
+                  hint="Moon 1737.4 · Earth 6371 · Mars 3389.5"
+                />
+              ) : (
+                <NumberInput
+                  id="relief-ground"
+                  label="Ground width"
+                  unit="km"
+                  value={draft.groundWidth}
+                  onChange={(v) => update('groundWidth', v)}
+                  hint="Real distance across the map"
+                />
+              )}
+              <NumberInput
+                id="relief-exaggeration"
+                label="Exaggeration"
+                unit="×"
+                value={draft.exaggeration}
+                onChange={(v) => update('exaggeration', v)}
+                hint={
+                  result?.stats.elevation
+                    ? `True scale ${fmt(result.stats.elevation.true_scale_relief_mm, 2)} mm; thickest set by the data`
+                    : 'Thickest is set by the data'
+                }
+              />
+            </>
+          ) : (
+            <NumberInput
+              id="relief-max"
+              label="Thickest"
+              value={draft.max}
+              onChange={(v) => update('max', v)}
+              hint={lithophane ? 'Darkest areas' : 'Highest areas'}
+            />
+          )}
           {sphere ? (
             <NumberInput
               id="relief-collar"
@@ -800,7 +916,7 @@ export default function ReliefStudio() {
               onChange={(v) => update('halfValue', v)}
               hint="Extra plastic that halves the light"
             />
-          ) : (
+          ) : draft.source === 'elevation' ? null : (
             <div className="relief-field">
               <span className="relief-label" id="relief-bright-label">
                 Bright areas are
@@ -850,6 +966,7 @@ export default function ReliefStudio() {
                   >
                     <option value="photo">Photo (height from lightness, CIE L*)</option>
                     <option value="depth">Depth map (stored values, white = near)</option>
+                    <option value="elevation">Elevation map (heights, true scale)</option>
                   </select>
                 </div>
                 <NumberInput
@@ -951,6 +1068,22 @@ export default function ReliefStudio() {
                     ? `Ø ${fmt(stats.sphere.outer_diameter_mm, 1)} mm, ${fmt(stats.sphere.height_mm, 1)} mm tall (inside Ø ${fmt(stats.sphere.inner_diameter_mm, 1)} mm)`
                     : `${fmt(result.dimensions.width, 1)} × ${fmt(result.dimensions.height, 1)} × ${fmt(result.dimensions.thickness, 2)} mm`}
                 </dd>
+                {stats.elevation && (
+                  <>
+                    <dt>Terrain</dt>
+                    <dd>
+                      {fmt(stats.elevation.lowest_km, 2)} to {fmt(stats.elevation.highest_km, 2)} km
+                      ({fmt(stats.elevation.relief_km, 2)} km of relief)
+                    </dd>
+                    <dt>Vertical scale</dt>
+                    <dd>
+                      {fmt(stats.elevation.true_scale_relief_mm, 3)} mm at true scale ×{' '}
+                      {fmt(stats.elevation.exaggeration, 1)} ={' '}
+                      {fmt(stats.elevation.printed_relief_mm, 2)} mm{' '}
+                      <small>({stats.elevation.scale_basis})</small>
+                    </dd>
+                  </>
+                )}
                 <dt>Thickness range</dt>
                 <dd>
                   {fmt(result.dimensions.min_thickness, 2)} – {fmt(result.dimensions.thickness, 2)}{' '}
