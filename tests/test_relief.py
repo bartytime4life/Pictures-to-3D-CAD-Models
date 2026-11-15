@@ -557,7 +557,7 @@ def load_generator():
     return module
 
 
-def test_sample_generator_reproduces_both_committed_samples(tmp_path):
+def test_sample_generator_reproduces_the_committed_samples(tmp_path):
     load_generator().main(tmp_path)
     for name in (
         "relief-sample.png",
@@ -567,7 +567,17 @@ def test_sample_generator_reproduces_both_committed_samples(tmp_path):
     ):
         committed = cv2.imread(str(ROOT / "frontend" / "public" / name), cv2.IMREAD_UNCHANGED)
         regenerated = cv2.imread(str(tmp_path / name), cv2.IMREAD_UNCHANGED)
-        assert committed.dtype == regenerated.dtype and np.array_equal(committed, regenerated), name
+        assert committed.dtype == regenerated.dtype and committed.shape == regenerated.shape, name
+        # NumPy's exp and arccos may round their last bit differently on different CPUs
+        # (it picks SIMD code per processor), so allow exactly that: a sample one level
+        # away where a value sits on a rounding boundary, or float32 rounding noise in the
+        # kilometre heights. Anything else means the generator or a sample changed.
+        difference = np.abs(committed.astype(np.float64) - regenerated.astype(np.float64))
+        if committed.dtype == np.float32:
+            assert difference.max() < 1e-4, name  # 0.1 m: far below any printed detail
+        else:
+            assert difference.max() <= 1, name
+            assert np.mean(difference > 0) < 1e-3, name
 
 
 def test_moon_depth_sample_builds_a_true_hemisphere(tmp_path):
