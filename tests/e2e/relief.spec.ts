@@ -73,12 +73,19 @@ test('moon sample becomes a verified relief with valid downloads', async ({ page
   expect(project.format).toBe('pictures-to-cad-relief');
   expect(project.settings.mode).toBe('relief');
 
-  // Changing a setting marks the model stale and disables outdated downloads.
+  // Changing a setting marks the model stale and disables outdated downloads; once the
+  // settings rest, the model rebuilds by itself and the superseded model is deleted.
+  const firstId = [...jobs].at(-1);
+  expect(firstId).toBeTruthy();
+  const deleted = page.waitForResponse(
+    (response) =>
+      response.request().method() === 'DELETE' && response.url().endsWith(`/api/models/${firstId}`),
+  );
   await page.getByLabel('Thickest').fill('6');
-  await expect(page.getByText(/Previous model/)).toBeVisible();
+  await expect(page.getByText('Previous model · updating when you pause')).toBeVisible();
   await expect(page.getByRole('button', { name: /^STL/ })).toBeDisabled();
-  await page.getByRole('button', { name: 'Update model' }).click();
   await expect(page.getByText(/Previous model/)).toBeHidden({ timeout: 60_000 });
+  expect((await deleted).status()).toBe(204);
   // The brightest moon pixel is below L* 100, so the top lands just under the 6 mm limit.
   await expect(page.locator('.relief-facts dd').nth(1)).toHaveText(/– (5\.[89]\d|6\.00)\s*mm/);
 
@@ -298,7 +305,117 @@ test('moon elevation map builds a true-scale exaggerated globe', async ({ page }
   await expect(page.getByRole('heading', { name: 'Height map' })).toBeVisible();
   await expect(page.locator('.check-bad')).toHaveCount(0);
 
+  // The server rejects this; the automatic rebuild reports it once and does not retry the
+  // same settings in a loop. Update model stays available as the manual retry.
+  let builds = 0;
+  page.on('request', (request) => {
+    if (request.url().endsWith('/api/relief') && request.method() === 'POST') builds += 1;
+  });
   await page.getByLabel('Exaggeration').fill('1000');
-  await page.getByRole('button', { name: 'Update model' }).click();
-  await expect(page.getByRole('alert')).toContainText('Use at most');
+  await expect(page.getByRole('alert')).toContainText('Use at most', { timeout: 60_000 });
+  await expect(page.getByText('Previous model · press Update model to try again')).toBeVisible();
+  const afterFailure = builds;
+  await page.waitForTimeout(2_000);
+  expect(builds).toBe(afterFailure);
+  expect(afterFailure).toBe(1);
+  await expect(page.getByRole('button', { name: 'Update model' })).toBeEnabled();
+});
+
+test('both studios share one header that keeps the name whole and labels every icon', async ({
+  page,
+}) => {
+  // Report no AI model so the sample gallery is the same on every machine.
+  await page.route('**/api/relief/depth', (route) =>
+    route.fulfill({ json: { available: false, reason: 'The depth model is not installed.' } }),
+  );
+  const widths = [1920, 1366, 1280, 1251, 1100, 1001, 800, 375];
+  async function checkHeader(studio: 'workbench' | 'relief') {
+    const tabs = page.getByRole('navigation', { name: 'Studios' });
+    const current = studio === 'workbench' ? 'Flat-part workbench' : 'Relief and lithophane studio';
+    await expect(tabs.getByRole('link', { name: current })).toHaveAttribute('aria-current', 'page');
+    await expect(tabs.getByRole('link', { name: /OpenSCAD workspace/ })).toBeVisible();
+    for (const width of widths) {
+      await page.setViewportSize({ width, height: 900 });
+      const layout = await page.evaluate(() => {
+        const bar = document.querySelector('.topbar')!;
+        const name = document.querySelector<HTMLInputElement>('.project-name input')!;
+        // Every header link and button shows a visible text label, not just an icon.
+        const unlabeled = [...bar.querySelectorAll('nav a, .header-actions > *')].filter(
+          (item) =>
+            ![...item.querySelectorAll('span')].some(
+              (span) => span.getBoundingClientRect().width > 0 && span.textContent!.trim(),
+            ),
+        ).length;
+        return {
+          barOverflow: bar.scrollWidth - bar.clientWidth,
+          nameCut: name.scrollWidth > name.clientWidth + 1,
+          unlabeled,
+        };
+      });
+      expect(layout, `${studio} at ${width}px`).toEqual({
+        barOverflow: 0,
+        nameCut: false,
+        unlabeled: 0,
+      });
+    }
+    await page.setViewportSize({ width: 1280, height: 900 });
+  }
+
+  await page.goto('/');
+  await expect(page.getByRole('textbox', { name: 'Project name' })).toHaveValue('Mounting plate');
+  await checkHeader('workbench');
+  // The workbench loads its own sample. Let that trace and build finish so this test does
+  // not hold the server's single trace slot while the next test starts.
+  await expect(page.getByRole('button', { name: 'Review export', exact: true })).toBeEnabled({
+    timeout: 60_000,
+  });
+  expect(
+    await page.evaluate(async () => (await fetch('/api/models', { method: 'DELETE' })).ok),
+  ).toBe(true);
+
+  await page
+    .getByRole('navigation', { name: 'Studios' })
+    .getByRole('link', { name: 'Relief and lithophane studio' })
+    .click();
+  await expect(page).toHaveURL(/#relief$/);
+  await checkHeader('relief');
+
+  // The start screen offers the samples as a captioned gallery; the TIFF one uses an icon.
+  const samples = page.getByRole('list', { name: 'Samples' }).getByRole('listitem');
+  await expect(samples).toHaveCount(4);
+  await expect(samples.nth(0)).toContainText('Flat relief from lightness');
+  await expect(samples.nth(2)).toContainText('Backlit sphere lithophane');
+  await expect(samples.nth(3).locator('img')).toHaveCount(0);
+  await expect(samples.locator('img')).toHaveCount(3);
+  for (const image of await samples.locator('img').all())
+    await expect
+      .poll(() => image.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0))
+      .toBe(true);
+  const accessibility = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+    .analyze();
+  expect(accessibility.violations).toEqual([]);
+});
+
+test('a busy server delays the relief build instead of failing it', async ({ page }) => {
+  // The first request meets another build in progress; the page waits out Retry-After.
+  let attempts = 0;
+  await page.route('**/api/relief', async (route) => {
+    attempts += 1;
+    if (attempts === 1)
+      return route.fulfill({
+        status: 429,
+        headers: { 'Retry-After': '1' },
+        json: { detail: 'Another model is being built. Wait a moment and try again.' },
+      });
+    return route.continue();
+  });
+  await page.goto('/#relief');
+  await page.getByRole('button', { name: 'Try the moon sample' }).click();
+  await expect(page.getByText('Waiting for another build to finish…').first()).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Your relief' })).toBeVisible({
+    timeout: 60_000,
+  });
+  await expect(page.getByRole('alert')).toHaveCount(0);
+  expect(attempts).toBe(2);
 });

@@ -1,15 +1,15 @@
 # Relief and lithophane studio
 
-The studio turns any picture into a printable 3D surface without CAD work. Open **Relief & Lithophane** in the workbench header (or go to `/#relief`), choose a picture, and the model builds automatically.
+The studio turns any picture into a printable 3D surface without CAD work. Open the **Relief & Lithophane** tab in the header (or go to `/#relief`), choose a picture, and the model builds automatically. Both studios share one header: its tabs switch between **Flat part**, **Relief & Lithophane** and the **OpenSCAD** workspace, and on narrow screens every icon keeps a short label.
 
 ![Relief studio with the generated moon sample, its height map and 3D preview](images/relief.png)
 
 The page shows the generated moon sample. The sample image is procedurally generated (a lit sphere with synthetic craters); it is not a photograph or third-party artwork.
 
-There are two samples, produced together by [`scripts/generate_relief_samples.py`](../scripts/generate_relief_samples.py) from one seeded crater list:
+The start screen shows the samples as a gallery: each card shows the picture the sample uses and says what it makes. The elevation sample is a TIFF, which browsers cannot display, so its card shows a globe icon instead. Two of the samples, produced together by [`scripts/generate_relief_samples.py`](../scripts/generate_relief_samples.py) from one seeded crater list, show the difference between brightness and true height:
 
-- **Try the moon sample** loads the lit "photograph". Its relief follows *brightness*: the sunlit side comes out high and the shadowed side low, so it embosses the picture rather than recreating a ball. Brightness in a photo depends on lighting, not only on shape.
-- **Try the moon depth map** loads the true height of the same sphere and craters as a 16-bit depth map, with white at 1.1 sphere radii. The button sets *Picture type* to depth map, turns auto levels off and sets Thickest to 34.6 mm. At 100 mm wide the sphere's radius is 30 mm, so the 33 mm span makes the dome a true hemisphere.
+- **Moon photo** loads the lit "photograph". Its relief follows *brightness*: the sunlit side comes out high and the shadowed side low, so it embosses the picture rather than recreating a ball. Brightness in a photo depends on lighting, not only on shape.
+- **Moon depth map** loads the true height of the same sphere and craters as a 16-bit depth map, with white at 1.1 sphere radii. The card sets *Picture type* to depth map, turns auto levels off and sets Thickest to 34.6 mm. At 100 mm wide the sphere's radius is 30 mm, so the 33 mm span makes the dome a true hemisphere.
   - On a 1.6 mm base, the built dome's median height matches √(R² − r²) to within 0.1 mm from the centre out to r = 28 mm.
   - Its volume is within 0.2% of an ideal hemisphere plus base; the craters account for the difference.
   - To keep the hemisphere at another width, keep *Thickest − Thinnest* at 0.33 × the width.
@@ -22,10 +22,10 @@ There are two samples, produced together by [`scripts/generate_relief_samples.py
 ## Use it
 
 1. Choose **Relief** or **Lithophane**.
-2. Drop in a PNG, JPEG, WebP, HEIC or AVIF picture (up to 32 MiB), or press **Try the moon sample**. A 16-bit grayscale PNG is read at full depth, so depth maps from other tools keep all 65,536 levels. To raise the *shape* of what a photo shows rather than its shading, use [AI depth](#ai-depth-from-an-ordinary-photo).
+2. Drop in a PNG, JPEG, WebP, HEIC or AVIF picture (up to 32 MiB), or pick the **Moon photo** sample. A 16-bit grayscale PNG is read at full depth, so depth maps from other tools keep all 65,536 levels. To raise the *shape* of what a photo shows rather than its shading, use [AI depth](#ai-depth-from-an-ordinary-photo).
 3. Set **Picture width**, the **Thinnest** and **Thickest** walls, and an optional **Frame**. The picture's height follows its aspect ratio; a frame is added outside the picture at full thickness.
-4. Lithophane only: set the filament's **Half-value thickness** (see [calibration](#calibrate-a-filament)). The line under **Update model** shows the light range those settings can produce.
-5. Press **Update model** after changes. Downloads are disabled while the shown model is out of date.
+4. Lithophane only: set the filament's **Half-value thickness** (see [calibration](#calibrate-a-filament)). The line under the build button shows the light range those settings can produce.
+5. Changes apply on their own: about 0.7 s after you stop typing, the model rebuilds and the previous one is deleted from the server's temporary storage. While a rebuild is pending, the preview reads *Previous model · updating when you pause* and downloads are disabled. If the server rejects a setting, the error is shown once and the same settings are not retried; **Update model** retries by hand. If another model is still being built, the page waits for it (the server's `Retry-After`) instead of failing.
 6. Download **STL** or **3MF** for your slicer, or the **Blender ZIP** to keep editing.
 
 **Fine-tune** holds the optional controls: picture type (photo, photo → AI depth, or depth map), tone curve, auto levels, edge-preserving noise smoothing, nozzle width, the nozzle detail filter, sample spacing, material (for the mass estimate) and preview colour.
@@ -98,7 +98,7 @@ The larger Depth Anything V2 models are licensed for non-commercial use only, so
 
 ### Use it
 
-Press **Try AI depth on the moon**, or open **Fine-tune** and set **Picture type** to **Photo → AI depth**, then **Update model**. The choice is unavailable until the model is installed, and applies to flat reliefs only: lithophanes need the photo's light, and spheres need a world map, so those use the photo instead.
+Pick the **Moon photo + AI depth** sample, or open **Fine-tune** and set **Picture type** to **Photo → AI depth**; the model rebuilds when you pause. The choice is unavailable until the model is installed, and applies to flat reliefs only: lithophanes need the photo's light, and spheres need a world map, so those use the photo instead.
 
 The left panel's **Heights** view shows the estimate, and **AI depth map** downloads it as a 16-bit PNG (white = nearest) that you can edit and load back in as a depth map. The science check names the model, revision, network input size and time.
 
@@ -129,7 +129,7 @@ Inference took 0.4–0.7 s for the 728 × 518 moon on the 2026-11-14 test machin
 
 ## Spheres: globes and moon lamps
 
-Choose **Shape: Sphere** to wrap the picture around a hollow ball instead of a flat panel, or press **Try the moon lamp**. With **Lithophane** this makes a lamp: a light inside shines out through walls whose thickness follows the picture. With **Relief** it makes a raised globe.
+Choose **Shape: Sphere** to wrap the picture around a hollow ball instead of a flat panel, or pick the **Moon lamp** sample. With **Lithophane** this makes a lamp: a light inside shines out through walls whose thickness follows the picture. With **Relief** it makes a raised globe.
 
 ![Moon lamp from the generated moon map, with its sphere checks](images/relief-sphere.png)
 
@@ -151,7 +151,7 @@ Choose **Shape: Sphere** to wrap the picture around a hollow ball instead of a f
 
 ## Elevation maps: real terrain at true scale
 
-Set **Picture type** to **Elevation map** (under *Fine-tune*), or press **Try the moon elevation globe**, to build a relief from measured heights instead of picture tones.
+Set **Picture type** to **Elevation map** (under *Fine-tune*), or pick the **Moon elevation globe** sample, to build a relief from measured heights instead of picture tones.
 
 - **Input:** a single-band TIFF or PNG of heights: 32-bit float, or signed or unsigned 16-bit integers. Choose the unit under **Heights are in**: kilometres, metres, or half-metres. Samples that are not numbers, or that lie beyond ±10⁷ (common fill values), are replaced by the median height and reported. Large maps are reduced by area averaging to at most 2,048 samples on their long side.
 - **True scale:** heights become millimetres at the model's own scale.
@@ -177,7 +177,7 @@ Lithophane mode adds a **Calibration wedge** download: eight steps, each 10 × 2
 2. Hold it in front of the light you will use and photograph it with exposure and white balance locked, or measure each step with a light meter.
 3. Enter each step's brightness under **Calibrate your filament**: pixel values (0–255) from a photo, or light-meter readings in any unit.
 4. Press **Fit half-value thickness**. The app linearizes pixel values from sRGB, fits ln Y = a − μ t by least squares and reports the half-value thickness with its standard error and R². Readings at or near 0 or 255 carry no slope information and are skipped.
-5. Press **Use this value**, then **Update model**.
+5. Press **Use this value**; the model rebuilds with it.
 
 A high R² supports the exponential model for that filament and light; a low one means the readings are noisy, saturated or not in step order.
 

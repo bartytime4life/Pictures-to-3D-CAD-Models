@@ -146,6 +146,66 @@ button:disabled:hover {
   gap: 26px;
   align-items: center;
 }
+/* Studio tabs shared by the workbench and the relief studio (AppHeader.tsx). */
+.studio-tabs {
+  margin-left: auto;
+  display: flex;
+  gap: 24px;
+  align-items: stretch;
+  align-self: stretch;
+}
+.studio-tabs + .header-actions {
+  margin-left: 0;
+  padding-left: 24px;
+  border-left: 1px solid #454a4f;
+}
+.studio-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 0 2px;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid transparent;
+  color: #c3ccd3;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.studio-tab:hover {
+  color: var(--accent);
+}
+.studio-tab[aria-current='page'] {
+  color: #fff;
+  border-bottom-color: var(--accent);
+}
+.studio-tab[aria-current='page'] svg {
+  color: var(--accent);
+}
+.topbar .label-short {
+  display: none;
+}
+/* Just above the 1250 px step the desktop type is large; tighter spacing keeps the name whole. */
+@media (min-width: 1251px) and (max-width: 1365px) {
+  .topbar,
+  .studio-tabs,
+  .studio-tabs + .header-actions {
+    gap: 18px;
+  }
+  .studio-tabs + .header-actions {
+    padding-left: 18px;
+  }
+}
+/* Below 1700 px the full labels would squeeze the project name; use the short ones. */
+@media (max-width: 1699px) {
+  .topbar .label-long {
+    display: none;
+  }
+  .topbar .label-short {
+    display: inline;
+  }
+}
 .icon-button {
   display: inline-flex;
   align-items: center;
@@ -1175,6 +1235,30 @@ main {
     display: none;
   }
 }
+/* Narrow headers keep a short visible label under every icon instead of bare icons. */
+@media (max-width: 1100px) {
+  .studio-tab,
+  .header-actions .guide-button,
+  .header-actions .save-button {
+    flex-direction: column;
+    gap: 2px;
+    font-size: 11px;
+    line-height: 1.1;
+  }
+  .header-actions .text-button {
+    font-size: 11px;
+  }
+  .studio-tabs {
+    gap: 14px;
+  }
+  .studio-tabs + .header-actions {
+    gap: 14px;
+    padding-left: 14px;
+  }
+  .guide-button {
+    min-width: 32px;
+  }
+}
 @media (max-width: 1000px) {
   .topbar {
     padding: 0 16px;
@@ -1197,12 +1281,6 @@ main {
   }
   .header-actions {
     gap: 17px;
-  }
-  .guide-button span {
-    display: none;
-  }
-  .guide-button {
-    min-width: 32px;
   }
   .save-button {
     font-size: 13px;
@@ -1340,13 +1418,30 @@ main {
   .header-actions {
     gap: 13px;
   }
+  /* Phones: the studio tabs get a full-width row of their own under the project name. */
+  .studio-tabs {
+    order: 4;
+    width: 100%;
+    margin: 2px 0 -10px;
+    gap: 0;
+    justify-content: space-around;
+    border-top: 1px solid #454a4f;
+  }
+  .studio-tab {
+    flex-direction: row;
+    gap: 7px;
+    font-size: 13px;
+    padding: 8px 4px;
+  }
+  .studio-tabs + .header-actions {
+    margin-left: auto;
+    padding-left: 0;
+    border-left: 0;
+  }
   .save-button {
     padding: 7px 8px;
     min-height: 34px;
     border-color: #838e96;
-  }
-  .save-button span {
-    display: none;
   }
   .save-button svg {
     width: 21px;
@@ -1676,6 +1771,9 @@ main {
   .header-actions .text-button,
   .header-actions .outlined-button {
     font-size: 19px;
+  }
+  .studio-tab {
+    font-size: 17px;
   }
   .panel-toolbar h1,
   .panel-toolbar h2 {

@@ -13,7 +13,6 @@ import {
   FloppyDisk,
   Image as ImageIcon,
   Info,
-  Mountains,
   PencilSimple,
   Polygon,
   Question,
@@ -24,6 +23,7 @@ import {
   WarningCircle,
   X,
 } from '@phosphor-icons/react';
+import AppHeader from './AppHeader';
 import ModelViewer from './ModelViewer';
 import LocalAssistant from './LocalAssistant';
 import PrintSettings from './PrintSettings';
@@ -1366,82 +1366,67 @@ export default function App() {
 
   return (
     <div className="app-shell">
-      <header className="topbar">
-        <a className="brand" href="#workbench" aria-label="Pictures to CAD workbench">
-          <Cube size={35} weight="light" />
-          <span>Pictures to CAD</span>
-        </a>
-        <div className="project-name">
-          <input
-            ref={nameInput}
-            aria-label="Project name"
-            value={name}
-            maxLength={100}
-            readOnly={!editingName}
-            disabled={!!busy}
-            onChange={(e) => {
-              setName(e.target.value);
-              invalidate();
-            }}
-            onBlur={() => {
-              setEditingName(false);
-              setName(projectName());
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
+      <AppHeader
+        studio="workbench"
+        projectName={
+          <>
+            <input
+              ref={nameInput}
+              aria-label="Project name"
+              value={name}
+              maxLength={100}
+              readOnly={!editingName}
+              disabled={!!busy}
+              onChange={(e) => {
+                setName(e.target.value);
+                invalidate();
+              }}
+              onBlur={() => {
                 setEditingName(false);
-                nameInput.current?.blur();
-              }
-            }}
-            style={{ width: `${Math.min(Math.max(name.length, 10), 22)}ch` }}
-          />
-          <button
-            className="icon-button"
-            aria-label="Rename project"
-            disabled={!!busy}
-            onClick={() => setEditingName(true)}
-          >
-            <PencilSimple size={21} />
-          </button>
-        </div>
-        <div className="header-actions">
-          <a
-            className="text-button guide-button"
-            href="#relief"
-            aria-label="Relief and lithophane studio"
-          >
-            <Mountains size={25} />
-            <span>Relief &amp; Lithophane</span>
-          </a>
-          <a
-            className="text-button guide-button"
-            href="/reference-library/index.html#cad"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="OpenSCAD workspace (opens in a new tab)"
-          >
-            <Cube size={25} />
-            <span>OpenSCAD</span>
-          </a>
-          <button
-            className="text-button guide-button"
-            aria-label="Capture guide"
-            onClick={() => setModal('guide')}
-          >
-            <Question size={25} />
-            <span>Capture guide</span>
-          </button>
-          <button
-            className="outlined-button save-button"
-            aria-label="Save project"
-            onClick={saveProject}
-            disabled={!trace || !buildReady || !!busy}
-          >
-            <FloppyDisk size={24} />
-            <span>Save project</span>
-          </button>
-        </div>
-      </header>
+                setName(projectName());
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  setEditingName(false);
+                  nameInput.current?.blur();
+                }
+              }}
+              style={{ width: `${Math.min(Math.max(name.length, 10), 22)}ch` }}
+            />
+            <button
+              className="icon-button"
+              aria-label="Rename project"
+              disabled={!!busy}
+              onClick={() => setEditingName(true)}
+            >
+              <PencilSimple size={21} />
+            </button>
+          </>
+        }
+        actions={
+          <>
+            <button
+              className="text-button guide-button"
+              aria-label="Capture guide"
+              onClick={() => setModal('guide')}
+            >
+              <Question size={25} />
+              <span className="label-long">Capture guide</span>
+              <span className="label-short">Guide</span>
+            </button>
+            <button
+              className="outlined-button save-button"
+              aria-label="Save project"
+              onClick={saveProject}
+              disabled={!trace || !buildReady || !!busy}
+            >
+              <FloppyDisk size={24} />
+              <span className="label-long">Save project</span>
+              <span className="label-short">Save</span>
+            </button>
+          </>
+        }
+      />
 
       <main id="workbench">
         <nav className="workflow" aria-label="Conversion workflow">
