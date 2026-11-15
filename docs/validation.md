@@ -508,6 +508,7 @@ It changes guides relative to that integrated baseline, not runtime behavior.
 | Directional covariance rank guard | Draft PR #78, source `185d682`: [633 local Python tests](validation/directional-blur-rank.md), build and 76 focused checks | Actual sampled Gaussian-step rank counterexample; no new whole-photo, browser or physical-accuracy claim |
 | Recorded directional-blur checks | Branch `claude/directional-blur`, on the slot end-cap commit and `main` at `485da7e` (after #47): **627 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#a-blur-that-differs-by-direction--november-12-2026) | Local result; synthetic photos including the directional-spread qualification's kinds of case, and exact blurred holes; supersedes that record's "no production correction" |
 | Contact-shadow observability study | Branch `claude/contact-shadow-limits` on `main` at `70055dc`, documentation only, as recorded [below](#contact-shadows-beside-an-edge--november-13-2026) | Exactly rendered scenes; an unobservable kernel radius, a closer-fit study and a profile-shape fit, none adopted; capture guidance |
+| JPEG colour study | Branch `claude/jpeg-edge` on `main` at `5a222b0` (after #145), documentation only, as recorded [below](#jpegs-colour-at-half-resolution--november-14-2026) | Exactly blurred plates saved as PNG and JPEG, six colour pairs, two blurs, with and without noise and shadow; rendered photos JPEG against PNG; two corrections tried, neither adopted |
 | Recorded carried-blur checks | Branch `claude/perspective-blur`, on `main` at `ab2f74b` (after #144): **1393 Python tests**, **81 browser scenarios**, Ruff passed, as recorded [below](#the-photos-blur-carried-across-the-sheet--november-14-2026) | Local result; rendered photos saved as JPEG and as PNG, ring and direction widths, the documented tables, rectangles and seeds; JPEG photos under a directional blur read worse; carrying the blur into the shadow model not adopted |
 | Recorded measured-tail checks | Branch `claude/blur-shape`, on `main` at `7e0a1dd` (after #140): **1359 Python tests**, **79 browser scenarios**, Ruff passed, as recorded [below](#the-blurs-shape-in-the-steps-tail--november-14-2026) | Local result; exactly blurred plates under disks and a streak, rendered plates under four kernels, the documented tables, rectangles and noise seeds; JPEG photos read about 1–2 µm into the part |
 | Recorded glare-removal checks | Branch `claude/glare-correction`, on `main` at `51c1816` (after #125): **1311 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#veiling-glare-taken-out--november-14-2026) | Local result; rendered photos with veiling glare of two shapes, exact discs; glare-free photos unchanged |
@@ -550,6 +551,37 @@ stub fix in managed cloud sessions. The [reference-sensitivity record](validatio
 covers the endpoint explorer. The original CAD release and optional Ollama
 integration retain separate historical evidence. These records do not establish
 that a newly created or published cloud task has been validated.
+
+## JPEG's colour at half resolution — November 14, 2026
+
+Branch `claude/jpeg-edge` on `main` at `5a222b0` (after #145), documentation only. See [reference-sheet tracing](reference-sheet.md), §3 (**JPEG's colour**) and Limits, and the [capture guide](capture-guide.md).
+
+- **The question.** A noise-free rendered photo, saved as quality-100 JPEG, read its outline 8.9 and 7.2 µm large, and 3.2 and 1.9 µm small saved as PNG. That raised the question of how much of the renderer's evidence, and of a phone photo, JPEG moves.
+- **The set-up.** Exactly blurred plates (a 240 px square turned 7° or 45°, with a hole of radius 30 px, exact coverage) were saved through the sRGB curve with dither, with and without Gaussian noise of 2.5 levels. Each was saved as PNG and as JPEG through Pillow, then traced by `edges.subpixel_rings` on the decoded photo, with no sheet or perspective. Each figure is JPEG − PNG over the same four or six draws.
+- **Near-grey parts with noise:** sides within 0.003 px and the hole within 0.006 px at quality 90 and 100, 4:2:0 and 4:4:4, under 1.6, 2.5 and 3.9 px, at 7° and 30°.
+- **Coloured parts with noise, quality 90, 4:2:0 → 4:4:4,** straight sides:
+
+  | Part | 1.6 px | 3.9 px |
+  | --- | --- | --- |
+  | Red on white | −0.005 → +0.001 px | −0.006 → −0.001 px |
+  | Orange on white | −0.007 → +0.001 px | −0.018 → −0.003 px |
+  | Blue on white | −0.007 → +0.001 px | +0.005 → +0.001 px |
+  | Green on a grey card | −0.044 → −0.004 px | −0.018 → −0.002 px |
+  | Green, turned 45° | −0.066 → −0.003 px | |
+
+  The hole moved in alike, up to 0.058 px larger. At quality 95, 4:2:0, green read −0.038 px.
+- **Noise-free renders.** The renderer's tinted plate (1, 0.97, 0.92) under 3.9 px read −0.014 ± 0.002 px at quality 100, 4:4:4, and −0.013 px at quality 90, 4:2:0; pure grey, within 0.005 px. JPEG's rounding through Y′CbCr acts as a tone curve when no noise dithers it.
+- **Rendered photos with noise,** seeds 201–206, quality-90 JPEG against PNG, per edge, outward positive. The outline moved +0.004 and +0.004 px overhead under 1 px, and +0.011 and +0.006 px under 3 px; tilted, +0.003 and +0.002 px under 1 px, and +0.014 and +0.008 px under 3 px. The holes moved within 0.007 px. At 4:4:4 the outline was within 0.005 px of PNG.
+- **libjpeg's 4:2:0 colour blur:** an added variance of 0.83, 0.67 and 0.53 px² at 0°, 7° and 45° (0.22–1.08 px² by sub-pixel phase). On edges along the pixel axes it also shifted the colour by −0.017 to +0.076 px with phase.
+- **Not adopted: the light rebuilt from the luma.**
+  - **The method.** α from Y′ for a blend of the part's and the paper's colours, read as Gaussian-weighted fields beyond a band of 3 σ + 3 px.
+  - **Without a shadow,** at 1.6 px: green −0.044 → −0.001 px, red −0.005 → −0.000 px, orange −0.007 → −0.001 px. At 3.9 px: green −0.019 → +0.003 px, orange −0.019 → −0.010 px.
+  - **With a soft shadow taking 30 % of the light,** at 3.9 px: orange −0.020 → −0.131 px, red −0.016 → −0.055 px. Applied to the PNG, orange read −0.108 px. The paper within the band is darker than the fields read beyond it.
+  - **With one pair of colours for the whole part,** paper in a shadow taking 10–40 % of the light read 1.5–7 % of the contrast wrong for a green part, and 0.7–2.2 % for red and orange.
+- **Not adopted: the colour sharpened by the subsampling's blur.**
+  - **The method.** C − (v/2)∇²C + (v²/8)∇⁴C with v = 0.67 px², by fourth-order differences, the luma kept.
+  - **The result.** Green at 1.6 px went from −0.044 to −0.018 px; at 3.9 px from −0.019 to −0.010 px. The red and orange holes moved further off, red −0.005 → −0.011 px and orange −0.004 → −0.018 px at 1.6 px. Halving the colour's resolution aliases its edge, which sharpening cannot restore.
+- **Checks run.** Local links and anchors. No code changed; the study's scripts are not in the repository.
 
 ## The photo's blur carried across the sheet — November 14, 2026
 
