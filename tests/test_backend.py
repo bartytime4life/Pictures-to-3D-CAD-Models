@@ -208,8 +208,8 @@ def test_camera_mpo_jpeg_uses_its_primary_image(client):
 
 def test_the_decoder_notes_a_jpeg_whose_colour_is_at_half_resolution():
     """A JPEG that stores its colour at half resolution (4:2:0 or 4:2:2), as phones save
-    them, is marked for the sheet trace (backend.chroma); a 4:4:4 JPEG, a PNG and a
-    camera MPO's 4:2:0 primary image are told apart."""
+    them, or a lossy WebP is marked for the sheet trace (backend.chroma); a 4:4:4 JPEG,
+    a PNG, a lossless WebP and a camera MPO's 4:2:0 primary image are told apart."""
     image = plate()
     for options, expected in (({"subsampling": 2}, True), ({"subsampling": 1}, True), ({"subsampling": 0}, False)):
         decoded, _ = tracing.decode_with_pillow(encoded(image, "JPEG", quality=90, **options), [])
@@ -218,6 +218,13 @@ def test_the_decoder_notes_a_jpeg_whose_colour_is_at_half_resolution():
     assert decoded.info["chroma_subsampled"] is False
     mpo = encoded(image, "MPO", save_all=True, append_images=[image.resize((160, 120))])
     assert tracing.decode_with_pillow(mpo, [])[0].info["chroma_subsampled"] is True
+    # A lossy WebP is VP8, always 4:2:0 with BT.601's luma; a lossless one is VP8L. With
+    # transparency the image chunk follows a VP8X header and an alpha chunk.
+    assert tracing.decode_with_pillow(encoded(image, "WEBP", quality=90), [])[0].info["chroma_subsampled"] is True
+    assert tracing.decode_with_pillow(encoded(image, "WEBP", lossless=True), [])[0].info["chroma_subsampled"] is False
+    translucent = image.convert("RGBA")
+    translucent.putalpha(200)
+    assert tracing.decode_with_pillow(encoded(translucent, "WEBP", quality=90), [])[0].info["chroma_subsampled"] is True
 
 
 def test_the_heic_decoder_reports_how_its_colour_is_stored():

@@ -592,7 +592,7 @@ covers the endpoint explorer. The original CAD release and optional Ollama
 integration retain separate historical evidence. These records do not establish
 that a newly created or published cloud task has been validated.
 
-## A coloured part's edges rebuilt from an HEIC's luma — November 15, 2026
+## A coloured part's edges rebuilt from an HEIC's or WebP's luma — November 15, 2026
 
 Branch `claude/heic-luma`, on `main` at `1298bf2` (after #151). See [reference-sheet tracing](reference-sheet.md), §3 (**Rebuilt from the luma**) and Limits.
 
@@ -606,8 +606,9 @@ Branch `claude/heic-luma`, on `main` at `1298bf2` (after #151). See [reference-s
   | Blue on white | 16.6 → 13.7 µm (13.4) | 19.6 → 15.3 µm (15.8) | 14.3 → 12.5 µm (13.0) | 16.8 → 14.4 µm (14.1) |
 
 - **The matrix.** The green tilted photos encoded with matrix 1 (BT.709) read 20.8 and 23.5 µm rebuilt, 35.2 and 45.4 µm with JPEG's BT.601 luma, and 38.5 and 72.9 µm decoded.
-- **What is not covered.** One encoder: phones' HEIC encoders may filter colour differently. WebP and AVIF are not marked.
-- **Tests.** `test_the_luma_follows_the_photos_colour_matrix`: the mapping, and an exact plate through a simulated BT.709 4:2:0 codec, within 0.004 px with BT.709's luma and over 0.01 px off with BT.601's. `test_the_heic_decoder_reports_how_its_colour_is_stored`: the fixtures read 4:2:0 and BT.601.
+- **Lossy WebP.** `tracing._lossy_webp` reads the RIFF chunks: VP8 is lossy, always 4:2:0 with BT.601's luma; VP8L is lossless. On the exact plates at quality 90, three draws, decoded → rebuilt against PNG: green on a grey card −0.040 → −0.003 px (1.6 px) and −0.014 → +0.003 px (3.9 px); orange −0.017 → −0.003 px and −0.007 → +0.005 px; blue −0.006 → −0.001 px and −0.001 → −0.001 px.
+- **What is not covered.** One encoder: phones' HEIC encoders may filter colour differently. AVIF is not marked: Pillow does not report its chroma or matrix.
+- **Tests.** `test_the_luma_follows_the_photos_colour_matrix`: the mapping, and an exact plate through a simulated BT.709 4:2:0 codec, within 0.004 px with BT.709's luma and over 0.01 px off with BT.601's. `test_the_heic_decoder_reports_how_its_colour_is_stored`: the fixtures read 4:2:0 and BT.601. `test_the_decoder_notes_a_jpeg_whose_colour_is_at_half_resolution`: lossy WebP, with and without alpha, against lossless.
 - **Checks run.** `pytest` with runtime warnings as errors: **1398 passed**, five skipped. Five Blender tests failed here as they do on `main`: the Blender snap could not start ("snap-confine is packaged without necessary permissions"). Ruff and Prettier passed. **83 browser scenarios** passed with the system Chrome, one skipped without the optional depth model.
 
 ## A coloured part's edges rebuilt from a JPEG's luma — November 15, 2026
