@@ -98,7 +98,7 @@ def _known_trace(
     with monkeypatch.context() as patch:
         patch.setattr(reference.sheet, "find_sheet", lambda *_: object())
         patch.setattr(reference.sheet, "estimate_k1", lambda *_: (0.0, 0.0, 0.0))
-        patch.setattr(reference.sheet, "homography", lambda *_: (np.eye(3), (210.0, 297.0), None))
+        patch.setattr(reference.sheet, "homography", lambda *_, **kw: (np.eye(3), (210.0, 297.0), None))
         patch.setattr(reference.sheet, "orthogonal_focal", lambda *_: 100.0)
         patch.setattr(reference.sheet, "camera_pose", lambda *_, **__: camera)
         patch.setattr(reference.sheet, "aspect_ratio_check", lambda *_: 1.0)

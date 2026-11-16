@@ -48,6 +48,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Understand blur units after thickness correction and mixed-curve warnings | [Blur frames and support rules](blur-frames.md) |
 | Understand circle-consistent final joins, retained outlines and critical CAD checks | [Curved joins](curved-joins.md), [arc export checks](exports.md#verify-critical-arc-geometry) |
 | Understand the lens inverse domain and independent synthetic camera checks | [Radial inverse and lens mismatch](validation/radial-inverse.md) |
+| Understand sheet-axis reversal, ambiguous views and near-square support limits | [Sheet-axis mathematics and regressions](validation/sheet-axis-orientation.md) |
 | Distinguish the earlier blur diagnostic from current directional tracing | [Historical qualification](validation/directional-spread-qualification.md), [current method](reference-sheet.md), [rank repair](validation/directional-blur-rank.md) |
 | Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |
 | Run a benchmark with measured photos | [Photo benchmark](photo-benchmark.md) |

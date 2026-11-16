@@ -45,7 +45,7 @@ def test_support_uses_final_camera_once_and_final_refined_pairs(monkeypatch, sig
     mask = np.zeros(rgb.shape[:2], np.uint8)
     monkeypatch.setattr(sheet, "find_sheet", lambda *args: object())
     monkeypatch.setattr(sheet, "estimate_k1", lambda *args: (0.0, 0.0, 0.0))
-    monkeypatch.setattr(sheet, "homography", lambda *args: (np.eye(3), (100.0, 80.0), None))
+    monkeypatch.setattr(sheet, "homography", lambda *args, **kwargs: (np.eye(3), (100.0, 80.0), None))
     monkeypatch.setattr(sheet, "orthogonal_focal", lambda *args: None)
     monkeypatch.setattr(sheet, "aspect_ratio_check", lambda *args: 1.0)
     monkeypatch.setattr(sheet, "choose_ppm", lambda *args: (ppm, ppm))

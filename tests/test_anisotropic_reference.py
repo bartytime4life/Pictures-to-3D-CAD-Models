@@ -122,7 +122,7 @@ def _controlled_trace(
     camera = {"height_mm": 100.0, "nadir_mm": np.asarray(nadir) / ppm, "focal_source": "exif"}
     monkeypatch.setattr(reference.sheet, "find_sheet", lambda *_: object())
     monkeypatch.setattr(reference.sheet, "estimate_k1", lambda *_: (0.0, 0.0, 0.0))
-    monkeypatch.setattr(reference.sheet, "homography", lambda *_: (np.eye(3), (210.0, 297.0), None))
+    monkeypatch.setattr(reference.sheet, "homography", lambda *_, **kw: (np.eye(3), (210.0, 297.0), None))
     monkeypatch.setattr(reference.sheet, "orthogonal_focal", lambda *_: 100.0)
     monkeypatch.setattr(reference.sheet, "camera_pose", lambda *_, **__: camera)
     monkeypatch.setattr(reference.sheet, "aspect_ratio_check", lambda *_: 1.0)

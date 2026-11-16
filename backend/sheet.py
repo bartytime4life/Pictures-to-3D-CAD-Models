@@ -29,6 +29,13 @@ PPM_RANGE = (4.0, 12.0)  # rectified pixels per millimetre
 K1_RANGE = (-0.25, 0.25)
 # A phone's main camera is typically about 24-28 mm (35 mm equivalent).
 DEFAULT_FOCAL_35MM = 26.0
+# The broad focal envelope already accepted from metadata. This bounds an axis
+# decision when the photo alone cannot identify focal length; it is not calibration.
+FOCAL_35MM_RANGE = (5.0, 600.0)
+AXIS_ORTHOGONAL_SIGNAL = 1e-3
+# A support policy, not an uncertainty estimate: almost-square custom sheets need
+# an ordering stable across the whole focal envelope.
+MIN_INFERRED_AXIS_RATIO = 1.02
 
 
 class SheetError(ValueError):
@@ -695,10 +702,97 @@ def estimate_k1(sheet, size):
     return k1, before, after
 
 
-def homography(sheet, k1, size, sheet_mm):
+def _sheet_axis_order(matrix, size, sheet_mm, focal_35mm=None):
+    """Whether the unit square's x side is the sheet's long side, and its evidence.
+
+    For centred homography columns u,v, metric squared lengths are
+    P1/f²+Z1 and P2/f²+Z2, where Pj is the squared image-plane norm and
+    Zj the squared third component. Apparent pixel lengths omit the Z terms,
+    so perspective can reverse their order.
+
+    Prefer supplied EXIF; otherwise use a conditioned orthogonality focal.
+    Otherwise test the entire supported 5..600 mm-equivalent focal envelope.
+    If ordering changes there, each stated aspect q is feasible only when
+    (P1+f²Z1)/(P2+f²Z2)=q² has a solution in that envelope. This ratio is
+    monotone in f², so its endpoint interval is sufficient. Two feasible
+    assignments are a real ambiguity: do not export one by guessing.
+
+    The 1e-3 normalized orthogonality signal is a conditioning guard, not a
+    statistical confidence bound. Non-square sheets with under 2% side separation
+    do not use focal-derived ordering or aspect feasibility: those choices are too
+    sensitive to small edge errors, even with metadata. Invariant focal-range ordering is required.
+    This is an application support policy, not a precision claim.
+    A focal inferred using the stated aspect is deliberately not returned to the
+    independent aspect-ratio check.
+    """
+    short, long = sorted(sheet_mm)
+    if short == long:
+        return False, "square"
+    w, h = size
+    centred = np.array([[1, 0, -w / 2], [0, 1, -h / 2], [0, 0, 1.0]]) @ matrix
+    xy = centred[:2, :2]
+    p = np.sum(xy * xy, axis=0)
+    z = centred[2, :2] ** 2
+    if not np.isfinite(p).all() or not np.isfinite(z).all() or np.any(p <= 0):
+        raise SheetError("The reference sheet's perspective could not be resolved. Retake the photo.")
+    near_square = long / short < MIN_INFERRED_AXIS_RATIO
+    focal, source = None, None
+    if not near_square and focal_35mm is not None:
+        supplied = float(focal_35mm)
+        if math.isfinite(supplied) and FOCAL_35MM_RANGE[0] <= supplied <= FOCAL_35MM_RANGE[1]:
+            focal = supplied / math.hypot(36, 24) * math.hypot(w, h)
+            source = "exif"
+    signal = abs(float(xy[:, 0] @ xy[:, 1])) / math.sqrt(float(p[0] * p[1]))
+    inferred = orthogonal_focal(matrix, size) if not near_square and signal >= AXIS_ORTHOGONAL_SIGNAL else None
+    if inferred is not None:
+        inferred_length2 = p / inferred**2 + z
+        if focal is not None:
+            supplied_length2 = p / focal**2 + z
+            if (inferred_length2[0] > inferred_length2[1]) != (supplied_length2[0] > supplied_length2[1]):
+                raise SheetError(
+                    "The photo's focal-length metadata and the reference-sheet perspective disagree "
+                    "about the long edge. Use the original uncropped photo, check the sheet size, "
+                    "or retake it more directly overhead."
+                )
+        else:
+            focal, source = inferred, "sheet"
+    if focal is not None:
+        length2 = p / focal**2 + z
+        return bool(length2[0] > length2[1]), source
+
+    focal_bounds = np.asarray(FOCAL_35MM_RANGE) / math.hypot(36, 24) * math.hypot(w, h)
+    ratios2 = (p[0] + focal_bounds**2 * z[0]) / (p[1] + focal_bounds**2 * z[1])
+    lower, upper = float(ratios2.min()), float(ratios2.max())
+    if upper < 1.0:
+        return False, "focal-range"
+    if lower > 1.0:
+        return True, "focal-range"
+    if near_square:
+        raise SheetError(
+            "The reference sheet's sides are too close in length to assign reliably from this view. "
+            "Use a rectangular reference with more distinct side lengths, "
+            "or retake the photo more directly overhead."
+        )
+    # Both arrangements are tested against the same camera envelope. No best-fit
+    # residual is promoted to evidence that resolves a non-identifiable assignment.
+    q2 = (short / long) ** 2
+    short_possible = lower <= q2 <= upper
+    long_possible = lower <= 1 / q2 <= upper
+    if short_possible != long_possible:
+        return long_possible, "aspect-feasibility"
+    raise SheetError(
+        "The photo does not identify which reference-sheet edge is the long side. "
+        "Retake it more directly overhead, use the original uncropped photo with focal-length metadata, "
+        "or use a clearly rectangular reference sheet."
+    )
+
+
+def homography(sheet, k1, size, sheet_mm, *, focal_35mm=None, diagnostics=None):
     """Plane millimetres -> undistorted photo pixels, from the four fitted sheet edges.
 
-    The longer pair of opposite sides is matched to the sheet's long dimension.
+    Sheet axes are assigned using metric camera geometry, not apparent edge length.
+    A supplied diagnostics dict records the evidence used and whether this repairs
+    the apparent-length assignment. Genuinely ambiguous perspectives are refused.
     """
     lines = []
     for side in sheet.sides:
@@ -707,12 +801,19 @@ def homography(sheet, k1, size, sheet_mm):
     corners = np.array([intersect(*lines[i - 1], *lines[i]) for i in range(4)])
     horizontal = np.linalg.norm(corners[1] - corners[0]) + np.linalg.norm(corners[2] - corners[3])
     vertical = np.linalg.norm(corners[3] - corners[0]) + np.linalg.norm(corners[2] - corners[1])
-    short, long = sorted(sheet_mm)
-    width, height = (short, long) if vertical > horizontal else (long, short)
-    plane = np.array([[0, 0], [width, 0], [width, height], [0, height]], np.float64)
-    matrix, _ = cv2.findHomography(plane, corners, 0)
-    if matrix is None or not np.all(np.isfinite(matrix)):
+    unit = np.array([[0, 0], [1, 0], [1, 1], [0, 1]], np.float64)
+    unit_matrix, _ = cv2.findHomography(unit, corners, 0)
+    if unit_matrix is None or not np.all(np.isfinite(unit_matrix)):
         raise SheetError("The reference sheet's corners could not be resolved. Retake the photo.")
+    width_is_long, source = _sheet_axis_order(unit_matrix, size, sheet_mm, focal_35mm)
+    short, long = sorted(sheet_mm)
+    width, height = (long, short) if width_is_long else (short, long)
+    matrix = unit_matrix @ np.diag([1 / width, 1 / height, 1.0])
+    if diagnostics is not None:
+        diagnostics.update(
+            axis_source=source,
+            axis_corrected=bool(short != long and width_is_long != (horizontal >= vertical)),
+        )
     return matrix / matrix[2, 2], (width, height), corners
 
 
