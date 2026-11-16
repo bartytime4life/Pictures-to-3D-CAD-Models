@@ -101,6 +101,18 @@ def to_pixel_edges(ring, distance):
     return [list(point) for point in moved.exterior.coords[:-1]]
 
 
+def _lossy_webp(data):
+    """Whether a WebP's image is VP8 (lossy), whose colour is always at half resolution
+    (4:2:0) with BT.601's luma, rather than VP8L (lossless): from its RIFF chunks."""
+    position = 12
+    while position + 8 <= len(data):
+        tag, size = data[position : position + 4], int.from_bytes(data[position + 4 : position + 8], "little")
+        if tag in (b"VP8 ", b"VP8L"):
+            return tag == b"VP8 "
+        position += 8 + size + (size & 1)
+    return False
+
+
 def decode_with_pillow(data, notices):
     """Decode a PNG, JPEG, WebP or AVIF as an upright RGB image on white. Returns
     (image, 35 mm-equivalent focal length or None); appends to `notices`."""
@@ -143,8 +155,10 @@ def decode_with_pillow(data, notices):
             # A JPEG that stores its colour at half resolution (4:2:0 or 4:2:2), as
             # phones save them: the sheet trace rebuilds a coloured part's edges from its
             # full-resolution luma (backend.chroma).
-            image.info["chroma_subsampled"] = raw.format in ("JPEG", "MPO") and JpegImagePlugin.get_sampling(raw) in (1, 2)
-            image.info["luma_weights"] = (0.299, 0.587, 0.114)  # JFIF's
+            image.info["chroma_subsampled"] = (
+                raw.format in ("JPEG", "MPO") and JpegImagePlugin.get_sampling(raw) in (1, 2)
+            ) or (raw.format == "WEBP" and _lossy_webp(data))
+            image.info["luma_weights"] = (0.299, 0.587, 0.114)  # JFIF's, and VP8's
     return image, focal_35mm
 
 

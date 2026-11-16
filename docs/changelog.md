@@ -1,6 +1,6 @@
 # Workbench change log
 
-## A coloured part in an HEIC measured from its full-resolution brightness — November 15, 2026
+## A coloured part in an HEIC or WebP measured from its full-resolution brightness — November 15, 2026
 
 - HEIC photos, iPhones' default, store colour at half resolution as JPEGs do, and a
   coloured part's edges are now rebuilt from their full-resolution brightness too. An
@@ -8,7 +8,9 @@
   from the file. On rendered photos saved as HEIC, a green part on a grey card went from
   68-92 to 20-27 micrometres summed, an orange one from 29-43 to 16-23 and a blue one
   from 14-20 to 13-15; every photo improved. With JPEG's formula, a BT.709 HEIC read
-  35-45 instead of 21-24 micrometres. WebP and AVIF photos are not corrected
+  35-45 instead of 21-24 micrometres. Lossy WebP photos, whose colour is always at
+  half resolution, are corrected too: on test plates a green part's sides went from
+  0.040 to 0.003 px off. AVIF photos are not corrected
   ([reference-sheet tracing](reference-sheet.md), §3 and Limits).
 
 ## A coloured part measured from a JPEG's full-resolution brightness — November 15, 2026
