@@ -220,6 +220,15 @@ def test_the_decoder_notes_a_jpeg_whose_colour_is_at_half_resolution():
     assert tracing.decode_with_pillow(mpo, [])[0].info["chroma_subsampled"] is True
 
 
+def test_the_heic_decoder_reports_how_its_colour_is_stored():
+    """An HEIC's chroma and colour matrix reach the sheet trace (backend.chroma): the
+    fixtures, written at 4:2:0 with matrix 6 (BT.601), are marked with BT.601's luma."""
+    for name in ("plain.heic", "orientation6.heic"):
+        image, _ = heic.decode((FIXTURES / name).read_bytes(), tracing.MAX_PIXELS, tracing.MIN_SIDE)
+        assert image.info["chroma_subsampled"] is True
+        assert image.info["luma_weights"] == pytest.approx((0.299, 0.587, 0.114))
+
+
 def test_animated_png_is_still_rejected(client):
     blank = Image.new("RGB", (500, 360), "white")
     response = trace(client, encoded(plate(), save_all=True, append_images=[blank]))

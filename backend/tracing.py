@@ -144,6 +144,7 @@ def decode_with_pillow(data, notices):
             # phones save them: the sheet trace rebuilds a coloured part's edges from its
             # full-resolution luma (backend.chroma).
             image.info["chroma_subsampled"] = raw.format in ("JPEG", "MPO") and JpegImagePlugin.get_sampling(raw) in (1, 2)
+            image.info["luma_weights"] = (0.299, 0.587, 0.114)  # JFIF's
     return image, focal_35mm
 
 
@@ -294,6 +295,7 @@ def trace_image(
                     notices=notices,
                     # A photo reduced in linear light is a new image, without the flag.
                     chroma_subsampled=bool(image.info.get("chroma_subsampled")),
+                    luma_weights=image.info.get("luma_weights"),
                 )
             except ReferenceError_:
                 raise

@@ -72,7 +72,17 @@ def decode(data, max_pixels, min_side):
             raise HeicError("decode")
         focal = result.get("focal_35mm")
         focal = float(focal) if isinstance(focal, (int, float)) and 5 <= focal <= 600 else None
-        return Image.frombytes("RGB", (width, height), pixels), focal
+        image = Image.frombytes("RGB", (width, height), pixels)
+        # Colour at half resolution, with the luma weights of its matrix (backend.chroma);
+        # a matrix without such a luma leaves the photo unmarked. Imported here: the child
+        # process, whose memory is bounded, must not load OpenCV.
+        from .chroma import luma_weights as chroma_luma
+
+        weights = chroma_luma(result.get("matrix")) if isinstance(result.get("matrix"), int) else None
+        image.info["chroma_subsampled"] = result.get("chroma") in (420, 422) and weights is not None
+        if weights is not None:
+            image.info["luma_weights"] = weights
+        return image, focal
     except (ValueError, KeyError, TypeError) as exc:
         if isinstance(exc, HeicError):
             raise
@@ -119,7 +129,15 @@ def main():
             image.paste(raw.convert("RGBA"), mask=raw.convert("RGBA").getchannel("A"))
         else:
             image = raw.convert("RGB")
-    reply({"width": image.width, "height": image.height, "focal_35mm": focal}, image.tobytes())
+    # How the colour is stored, for the sheet trace's rebuild of a coloured part's edges
+    # from the full-resolution luma (backend.chroma): the chroma (420, 422 or 444) and the
+    # nclx matrix that turned R'G'B' into Y'CbCr.
+    chroma = raw.info.get("chroma")
+    matrix = (raw.info.get("nclx_profile") or {}).get("matrix_coefficients", 2)
+    reply(
+        {"width": image.width, "height": image.height, "focal_35mm": focal, "chroma": chroma, "matrix": matrix},
+        image.tobytes(),
+    )
 
 
 if __name__ == "__main__":
