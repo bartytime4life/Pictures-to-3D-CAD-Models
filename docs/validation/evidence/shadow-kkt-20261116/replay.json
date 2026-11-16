@@ -1,0 +1,360 @@
+{
+  "scope": "same synthetic inputs, fixed model and settings, solver substitution only",
+  "sources_sha256": {
+    "backend/shadow.py": "95e6e69e3333b5ccca2031c59a2dba7ee5d4848b3e7c5425e25a67a03094bd6f",
+    "backend/sheet.py": "d01827b36e0eecaee706d95f9ad83e26aa1104ae458751d6f824a37ecd47391b",
+    "tests/test_fidelity_math.py": "7ffb7136cc46fd6ac0c170bc0d44cf3157660f0fb031579df1c69acb58e7ce3f",
+    "tests/synthetic.py": "c79984d6f298973cca2e453f694bce7f2eeb0f56dea9f989bfd653cc711e04ff",
+    "scripts/shadow_solver_audit.py": "4da549b16dfa0147d9c20fed33d4a6787a8efe5bf2c7a6ef2135eee97aeeff07"
+  },
+  "cases": [
+    {
+      "shift_mm": [
+        1.6,
+        1.9
+      ],
+      "shadow_width_mm": 2.2,
+      "shadow_depth": 0.3,
+      "ppm": 4.0,
+      "sigma_px": 3.0,
+      "deleted_only": {
+        "seconds": 0.47404387104324996,
+        "light": {
+          "used": true,
+          "prior": 0.3,
+          "cells": 8909,
+          "rms": 0.1500836665344869,
+          "excess": 0.0057300122834741205,
+          "depth": 0.27246525751854683
+        },
+        "solves": 8,
+        "maximum_relative_dual_violation": 6.70271214830454e-06,
+        "negative_node": false,
+        "side_errors_px": [
+          [
+            0.07728192510996905,
+            0.019287646958957794
+          ],
+          [
+            0.07082522723396352,
+            -0.016255803993792266
+          ]
+        ]
+      },
+      "kkt_repair": {
+        "seconds": 0.3511477299616672,
+        "light": {
+          "used": true,
+          "prior": 0.3,
+          "cells": 8909,
+          "rms": 0.15011322116018563,
+          "excess": 0.005729425285257371,
+          "depth": 0.27247130900474587
+        },
+        "solves": 8,
+        "maximum_relative_dual_violation": 3.458633044676325e-16,
+        "negative_node": false,
+        "side_errors_px": [
+          [
+            0.07728192510996905,
+            0.019259320600092642
+          ],
+          [
+            0.07082522723396352,
+            -0.01621143515484249
+          ]
+        ]
+      }
+    },
+    {
+      "shift_mm": [
+        0,
+        0
+      ],
+      "shadow_width_mm": 2.2,
+      "shadow_depth": 0.3,
+      "ppm": 4.0,
+      "sigma_px": 3.0,
+      "deleted_only": {
+        "seconds": 0.363002663012594,
+        "light": {
+          "used": true,
+          "prior": 0.3,
+          "cells": 8909,
+          "rms": 0.10747878082535371,
+          "excess": 0.007191163623419126,
+          "depth": 0.15268817110517052
+        },
+        "solves": 8,
+        "maximum_relative_dual_violation": 7.668305689279098e-06,
+        "negative_node": false,
+        "side_errors_px": [
+          [
+            0.14381312326606613,
+            0.04480443334560012
+          ],
+          [
+            0.11146747783308679,
+            0.02617665074171498
+          ]
+        ]
+      },
+      "kkt_repair": {
+        "seconds": 0.47757822601124644,
+        "light": {
+          "used": true,
+          "prior": 0.3,
+          "cells": 8909,
+          "rms": 0.10742479667237356,
+          "excess": 0.00718395251902037,
+          "depth": 0.15270566730809773
+        },
+        "solves": 8,
+        "maximum_relative_dual_violation": 4.033069763466886e-16,
+        "negative_node": false,
+        "side_errors_px": [
+          [
+            0.14381312326606613,
+            0.0447484695075038
+          ],
+          [
+            0.11146747783308679,
+            0.025987933933151908
+          ]
+        ]
+      }
+    },
+    {
+      "shift_mm": [
+        3,
+        -2
+      ],
+      "shadow_width_mm": 4,
+      "shadow_depth": 0.4,
+      "ppm": 4.0,
+      "sigma_px": 3.0,
+      "deleted_only": {
+        "seconds": 0.4419912750017829,
+        "light": {
+          "used": true,
+          "prior": 3.0,
+          "cells": 8909,
+          "rms": 0.4882776259350399,
+          "excess": 0.0012351487963009908,
+          "depth": 0.34229295757906925
+        },
+        "solves": 8,
+        "maximum_relative_dual_violation": 1.8453800001529687e-05,
+        "negative_node": false,
+        "side_errors_px": [
+          [
+            -0.016313217850663857,
+            0.019230387697890212
+          ],
+          [
+            0.03783202884364082,
+            -0.011755939622585032
+          ]
+        ]
+      },
+      "kkt_repair": {
+        "seconds": 0.468180178955663,
+        "light": {
+          "used": true,
+          "prior": 3.0,
+          "cells": 8909,
+          "rms": 0.48830757203447595,
+          "excess": 0.0012243500100051305,
+          "depth": 0.3423015978897123
+        },
+        "solves": 8,
+        "maximum_relative_dual_violation": 5.900370704745427e-16,
+        "negative_node": false,
+        "side_errors_px": [
+          [
+            -0.016313217850663857,
+            0.019142142873399357
+          ],
+          [
+            0.03783202884364082,
+            -0.011787666911837864
+          ]
+        ]
+      }
+    },
+    {
+      "shift_mm": [
+        0,
+        0
+      ],
+      "shadow_width_mm": 0.8,
+      "shadow_depth": 0.3,
+      "ppm": 4.0,
+      "sigma_px": 3.0,
+      "deleted_only": {
+        "seconds": 0.4398180710268207,
+        "light": {
+          "used": true,
+          "prior": 0.01,
+          "cells": 8909,
+          "rms": 0.057363161119076314,
+          "excess": 0.003858629634261423,
+          "depth": 0.05067457852526165
+        },
+        "solves": 8,
+        "maximum_relative_dual_violation": 1.6027319906825334e-06,
+        "negative_node": false,
+        "side_errors_px": [
+          [
+            0.2809462049382745,
+            0.20187403012439803
+          ],
+          [
+            0.2515999662944343,
+            0.19957652682322807
+          ]
+        ]
+      },
+      "kkt_repair": {
+        "seconds": 0.388149642967619,
+        "light": {
+          "used": true,
+          "prior": 0.01,
+          "cells": 8909,
+          "rms": 0.057337252462715774,
+          "excess": 0.003858643492102573,
+          "depth": 0.05068995648559413
+        },
+        "solves": 8,
+        "maximum_relative_dual_violation": 8.670032662551778e-17,
+        "negative_node": false,
+        "side_errors_px": [
+          [
+            0.2809462049382745,
+            0.20184270172836324
+          ],
+          [
+            0.2515999662944343,
+            0.19951243699552373
+          ]
+        ]
+      }
+    },
+    {
+      "shift_mm": [
+        1.6,
+        1.9
+      ],
+      "shadow_width_mm": 2.2,
+      "shadow_depth": 0,
+      "ppm": 4.0,
+      "sigma_px": 3.0,
+      "deleted_only": {
+        "seconds": 0.2364058549865149,
+        "light": {
+          "used": true,
+          "prior": 0.01,
+          "cells": 8909,
+          "rms": 0.017355667589409204,
+          "excess": 0.0005952525895434248,
+          "depth": 0.008289843903615075
+        },
+        "solves": 8,
+        "maximum_relative_dual_violation": 9.959397339926732e-07,
+        "negative_node": false,
+        "side_errors_px": [
+          [
+            0.0033428465029042326,
+            -0.009130908313138283
+          ],
+          [
+            -0.011086824945579584,
+            -0.01685377639193746
+          ]
+        ]
+      },
+      "kkt_repair": {
+        "seconds": 0.4505330370157026,
+        "light": {
+          "used": true,
+          "prior": 0.01,
+          "cells": 8909,
+          "rms": 0.017347756833556615,
+          "excess": 0.0005952576116641576,
+          "depth": 0.008294941671565316
+        },
+        "solves": 8,
+        "maximum_relative_dual_violation": 9.392125144328804e-12,
+        "negative_node": false,
+        "side_errors_px": [
+          [
+            0.0033428465029042326,
+            -0.00913734336427486
+          ],
+          [
+            -0.011086824945579584,
+            -0.016851617103255497
+          ]
+        ]
+      }
+    },
+    {
+      "shift_mm": [
+        1.6,
+        1.9
+      ],
+      "shadow_width_mm": 2.2,
+      "shadow_depth": 0,
+      "ppm": 5.4,
+      "sigma_px": 4.0,
+      "deleted_only": {
+        "seconds": 0.507003627019003,
+        "light": {
+          "used": true,
+          "prior": 0.3,
+          "cells": 7139,
+          "rms": 0.007010451451275084,
+          "excess": 0.0001812164317553942,
+          "depth": 0.001386028454300323
+        },
+        "solves": 8,
+        "maximum_relative_dual_violation": 2.500091273136068e-07,
+        "negative_node": false,
+        "side_errors_px": [
+          [
+            0.003814878834140245,
+            0.0022043749039672394
+          ],
+          [
+            -0.009398188821539104,
+            -0.010593729909377696
+          ]
+        ]
+      },
+      "kkt_repair": {
+        "seconds": 0.5114188129664399,
+        "light": {
+          "used": true,
+          "prior": 0.03,
+          "cells": 7139,
+          "rms": 0.006138543339805043,
+          "excess": 0.00018198754931255176,
+          "depth": 0.002124549614173052
+        },
+        "solves": 8,
+        "maximum_relative_dual_violation": 9.895122325550476e-12,
+        "negative_node": false,
+        "side_errors_px": [
+          [
+            0.003814878834140245,
+            0.0004509534838594694
+          ],
+          [
+            -0.009398188821539104,
+            -0.011242289752672245
+          ]
+        ]
+      }
+    }
+  ]
+}

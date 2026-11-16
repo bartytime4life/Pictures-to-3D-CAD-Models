@@ -1,5 +1,15 @@
 # Workbench change log
 
+## Constrained shadow solver — November 16, 2026
+
+- The nonnegative shadow fit now lets discarded kernel nodes return when they
+  improve its constrained objective. It checks scaled optimality conditions and
+  retains the existing profile-line method when the numerical solve fails.
+- Added an exact counterexample, exhaustive small-problem checks and a paired
+  six-scene replay. The [validation record](validation/shadow-kkt.md) retains a
+  shadow-free prior-selection trade-off and explains the true-edge test change.
+  This is a numerical repair, not a new physical accuracy claim.
+
 ## Sheet scale under perspective and visible calibration evidence — November 16, 2026
 
 - Reference-sheet tracing now resolves physical axes from camera geometry before
