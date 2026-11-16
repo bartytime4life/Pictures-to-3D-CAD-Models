@@ -1338,6 +1338,50 @@ def test_a_coloured_parts_edges_are_rebuilt_from_the_full_resolution_luma():
     assert abs(_plate_sides(rebuilt(png), c, half)[0] - truth) < 0.002
 
 
+def test_the_luma_follows_the_photos_colour_matrix():
+    """An HEIC's luma is set by its nclx matrix_coefficients (chroma.luma_weights). On the
+    exact green plate, through a BT.709 encoder that keeps the luma and averages the colour
+    over 2 x 2 pixels, the edges rebuilt with BT.709's luma read within 0.004 px of the
+    plate before encoding, and with JPEG's BT.601 luma over 0.01 px off."""
+    from backend import chroma
+
+    assert chroma.luma_weights(1) == pytest.approx((0.2126, 0.7152, 0.0722))
+    assert chroma.luma_weights(6) == chroma.luma_weights(2) == pytest.approx((0.299, 0.587, 0.114))
+    assert chroma.luma_weights(0) is None and chroma.luma_weights(8) is None
+
+    rgb, c, half = _coloured_plate((60, 150, 70), (200, 200, 200), 1.6, seed=2)
+    kr, kg, kb = chroma.luma_weights(1)
+    r, g, b = (rgb[..., i].astype(np.float64) for i in range(3))
+    y = kr * r + kg * g + kb * b
+    cb, cr = (b - y) / (2 * (1 - kb)), (r - y) / (2 * (1 - kr))
+    h, w = y.shape
+
+    def halved(plane):
+        return cv2.resize(cv2.resize(plane, (w // 2, h // 2), interpolation=cv2.INTER_AREA), (w, h), interpolation=cv2.INTER_LINEAR)
+
+    cb, cr = halved(cb), halved(cr)
+    r2, b2 = y + 2 * (1 - kr) * cr, y + 2 * (1 - kb) * cb
+    decoded = np.clip(np.rint(np.dstack([r2, (y - kr * r2 - kb * b2) / kg, b2])), 0, 255).astype(np.uint8)
+    weights = tone.LUMINANCE
+    truth = _plate_sides(tone.linear_mix(rgb, weights), c, half)[0]
+
+    def rebuilt_sides(luma_weights):
+        measured = tone.linear_mix(decoded, weights)
+        _, mask, sigma, light = _plate_sides(measured, c, half)
+        linear = tone.linear_from_encoded(decoded)
+        inside = mask > 0
+        d_in = cv2.distanceTransform(inside.astype(np.uint8), cv2.DIST_L2, 5)
+        d_out = cv2.distanceTransform((~inside).astype(np.uint8), cv2.DIST_L2, 5)
+        band = chroma.BAND_SIGMAS * sigma + 2
+        part = chroma.chromaticity(np.median(linear[inside & (d_in > band)], axis=0), weights)
+        paper = chroma.chromaticity(np.median(linear[~inside & (d_out > band) & (d_out < band + 17)], axis=0), weights)
+        out = chroma.rebuild(measured, chroma.luma(decoded, luma_weights), mask, sigma, part, paper, weights, light.blurred, luma_weights)
+        return _plate_sides(out, c, half)[0]
+
+    assert abs(rebuilt_sides(chroma.luma_weights(1)) - truth) < 0.004
+    assert abs(rebuilt_sides(chroma.LUMA_601) - truth) > 0.01
+
+
 def test_a_constant_sheet_jacobian_leaves_the_edges_where_they_were():
     """The photo's blur carried to each point by the sheet's Jacobian (edges._camera_blur)
     is the measured blur wherever that Jacobian is the same, as it is for a photo taken

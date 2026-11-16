@@ -106,9 +106,10 @@ COLOUR_KEPT = (
 )
 
 
-def _rebuilt_from_luma(rgb, rectified, measured, mask, rings, sigma, weights, geometry):
+def _rebuilt_from_luma(rgb, rectified, measured, mask, rings, sigma, weights, geometry, luma_weights=None):
     """(the measurement image rebuilt from the photo's luma, or None; a note or None) for
-    a JPEG whose colour is at half resolution (backend.chroma).
+    a JPEG or HEIC whose colour is at half resolution (backend.chroma). `luma_weights`
+    are the photo's luma (an HEIC's by its colour matrix; JPEG's by default).
 
     The part's and the paper's colours are the medians of the rectified photo beyond
     chroma.BAND_SIGMAS sigma + 2 px of the classified part, the paper's within 3 mm
@@ -142,8 +143,9 @@ def _rebuilt_from_luma(rgb, rectified, measured, mask, rings, sigma, weights, ge
     shaded = light.get("depth", 1.0) >= shadow.NOTICEABLE_DEPTH
     if model is None or (shaded and sigma / ppm > COLOUR_SHADOW_BLUR_MM):
         return None, COLOUR_KEPT
-    luma = sheet.rectify_gray(chroma.luma(rgb), matrix, k1, plane, ppm)
-    rebuilt = chroma.rebuild(measured, luma, mask, sigma, part, paper, weights, model.blurred)
+    luma_weights = chroma.LUMA_601 if luma_weights is None else luma_weights
+    luma = sheet.rectify_gray(chroma.luma(rgb, luma_weights), matrix, k1, plane, ppm)
+    rebuilt = chroma.rebuild(measured, luma, mask, sigma, part, paper, weights, model.blurred, luma_weights)
     return (None, None) if rebuilt is None else (rebuilt, COLOUR_REBUILT)
 
 
@@ -433,7 +435,8 @@ def _refine_walls(g, rings, camera, thickness_mm, sigma, ppm):
 
 
 def trace_on_sheet(
-    rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, focal_35mm, snap, notices, chroma_subsampled=False
+    rgb, *, reference, sheet_mm, inverted, detail, thickness_mm, focal_35mm, snap, notices, chroma_subsampled=False,
+    luma_weights=None,
 ):
     size_mm = sheet_size(reference, sheet_mm)
     gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
@@ -486,7 +489,9 @@ def trace_on_sheet(
         # third colour.
         colour_note = None
         if chroma_subsampled and not thickness_mm and sigma > 0:
-            rebuilt, colour_note = _rebuilt_from_luma(rgb, rectified, measured, mask, rings, sigma, weights, (matrix, k1, plane, ppm))
+            rebuilt, colour_note = _rebuilt_from_luma(
+                rgb, rectified, measured, mask, rings, sigma, weights, (matrix, k1, plane, ppm), luma_weights
+            )
             if rebuilt is not None:
                 g = cv2.GaussianBlur(rebuilt, (0, 0), edges.MEASUREMENT_SMOOTHING_PX)
                 rings, sigma, tiny = edges.subpixel_rings(mask, g, ppm, True, True, False, True, jacobian)

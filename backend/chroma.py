@@ -1,6 +1,7 @@
 """Edges in a photo whose colour is stored at half resolution.
 
-A JPEG keeps its luma Y' (0.299 R' + 0.587 G' + 0.114 B' of the saved values) at full
+A JPEG or HEIC keeps its luma Y' (for a JPEG 0.299 R' + 0.587 G' + 0.114 B' of the saved
+values; for an HEIC by its colour matrix, luma_weights) at full
 resolution, and its colour, Cb and Cr, usually at half resolution in each direction
 (4:2:0). The linear light the trace measures mixes the two through the sRGB curve, and
 at a coloured part's edge the half-resolution colour moves it: on exactly blurred plates
@@ -25,6 +26,12 @@ import numpy as np
 from .tone import encoded_from_linear
 
 LUMA_601 = np.array([0.299, 0.587, 0.114])  # JPEG's (JFIF's) luma of saved R'G'B'
+# Luma's red and blue weights (Kr, Kb) by an HEIF's nclx matrix_coefficients (ITU-T
+# H.273): 1 BT.709, 4 FCC, 5 and 6 BT.601, 7 SMPTE 240M, 9 BT.2020 non-constant
+# luminance. libheif takes 2 (unspecified) as BT.601: a file so marked decodes exactly
+# as one marked 6. The others (identity, YCgCo, constant-luminance and ICtCp) have no
+# such luma, and nothing is rebuilt for them.
+MATRIX_LUMA = {1: (0.2126, 0.0722), 2: (0.299, 0.114), 4: (0.30, 0.11), 5: (0.299, 0.114), 6: (0.299, 0.114), 7: (0.212, 0.087), 9: (0.2627, 0.0593)}
 BAND_SIGMAS = 5.5  # rebuilt within this many blur widths, plus 2 px, of the part's boundary
 FIELD_PX = 6.0  # smoothing of the part's light, read beyond the band
 MIN_LUMA_CONTRAST = 20.0  # saved levels of luma between the two colours, to solve the blend
@@ -33,9 +40,17 @@ BISECTIONS = 6
 NEWTON_STEPS = 4
 
 
-def luma(rgb):
-    """The photo's luma Y' on the saved scale, float64 (JFIF's weights)."""
-    return np.asarray(rgb, np.float64) @ LUMA_601
+def luma_weights(matrix_coefficients):
+    """The luma weights (Kr, Kg, Kb) of an nclx matrix_coefficients, or None."""
+    pair = MATRIX_LUMA.get(matrix_coefficients)
+    return None if pair is None else (pair[0], 1.0 - pair[0] - pair[1], pair[1])
+
+
+def luma(rgb, weights=LUMA_601):
+    """The photo's luma Y' on the saved scale, float64. The decoder's R'G'B' are its
+    Y'CbCr through the inverse of the matrix whose weights these are, so with the same
+    weights this is its stored luma, at full resolution, whatever its range."""
+    return np.asarray(rgb, np.float64) @ np.asarray(weights, np.float64)
 
 
 def chromaticity(linear_rgb, weights):
@@ -49,7 +64,7 @@ def different_hues(part, paper):
     return bool(np.max(np.abs(np.asarray(part) - np.asarray(paper))) >= MIN_HUE)
 
 
-def _luma_and_slope(blend, part, paper):
+def _luma_and_slope(blend, part, paper, weights=LUMA_601):
     """The luma of (1 - a) part + a paper and its derivative with respect to a."""
     raw = (1 - blend)[:, None] * part + blend[:, None] * paper
     colour = np.clip(raw, 0, None)
@@ -57,24 +72,25 @@ def _luma_and_slope(blend, part, paper):
     # The sRGB curve's slope, on the 0-255 scale both ways; nothing where light clips.
     slope = np.where(v <= 0.0031308, 12.92, (1.055 / 2.4) * np.maximum(v, 0.0031308) ** (1 / 2.4 - 1))
     slope = np.where(raw > 0, slope, 0.0)
-    return encoded_from_linear(colour) @ LUMA_601, (slope * (paper - part)) @ LUMA_601
+    weights = np.asarray(weights, np.float64)
+    return encoded_from_linear(colour) @ weights, (slope * (paper - part)) @ weights
 
 
-def blend_from_luma(y, part, paper, lo=-0.5, hi=1.5):
+def blend_from_luma(y, part, paper, lo=-0.5, hi=1.5, weights=LUMA_601):
     """The blend a of (1 - a) part + a paper (linear RGB, one row per pixel) whose luma
     is `y`. The luma is monotone in a when the two colours' lumas differ, and a may
     leave [0, 1] by noise, so the bracket reaches beyond it. BISECTIONS halvings, then
     Newton steps kept within the bracket: the result is within 1e-7 of the root."""
     part, paper = np.atleast_2d(part), np.atleast_2d(paper)
-    rising = _luma_and_slope(np.ones(len(y)), part, paper)[0] > _luma_and_slope(np.zeros(len(y)), part, paper)[0]
+    rising = _luma_and_slope(np.ones(len(y)), part, paper, weights)[0] > _luma_and_slope(np.zeros(len(y)), part, paper, weights)[0]
     low, high = np.full(len(y), lo), np.full(len(y), hi)
     for _ in range(BISECTIONS):
         mid = (low + high) / 2
-        above = (_luma_and_slope(mid, part, paper)[0] > y) == rising
+        above = (_luma_and_slope(mid, part, paper, weights)[0] > y) == rising
         high, low = np.where(above, mid, high), np.where(above, low, mid)
     blend = (low + high) / 2
     for _ in range(NEWTON_STEPS):
-        value, slope = _luma_and_slope(blend, part, paper)
+        value, slope = _luma_and_slope(blend, part, paper, weights)
         step = np.where(np.abs(slope) > 1e-9, (value - y) / np.where(np.abs(slope) > 1e-9, slope, 1.0), 0.0)
         blend = np.clip(blend - step, low, high)
     return blend
@@ -101,14 +117,14 @@ def _extended(values, support):
     return out
 
 
-def rebuild(g, y, mask, sigma, part, paper, weights, paper_level):
+def rebuild(g, y, mask, sigma, part, paper, weights, paper_level, luma_weights=LUMA_601):
     """The measured light `g` (the rectified linear mix, before its smoothing) rebuilt
     from the rectified luma `y` within BAND_SIGMAS sigma + 2 px of the classified part
     `mask`, or None when the two colours' lumas are too close to solve the blend.
 
     `part` and `paper` are the two sides' chromaticities (chromaticity), and
     `paper_level` the paper's light on the grid (the shadow model's, shadow.PaperLight's
-    `blurred`). The part's light is read from `g` beyond the band and smoothed over
+    `blurred`), and `luma_weights` the photo's luma (luma_weights; JPEG's by default). The part's light is read from `g` beyond the band and smoothed over
     FIELD_PX (_extended). Outside the band `g` is kept: there the colour's resolution
     does not matter."""
     inside = mask > 0
@@ -122,12 +138,11 @@ def rebuild(g, y, mask, sigma, part, paper, weights, paper_level):
     band = np.minimum(d_in, d_out) <= band_px
     a = part_level[band][:, None] * np.asarray(part, np.float64)
     b = np.asarray(paper_level, np.float64)[band][:, None] * np.asarray(paper, np.float64)
-    gap = np.median(np.abs(
-        encoded_from_linear(np.clip(b, 0, None)) @ LUMA_601 - encoded_from_linear(np.clip(a, 0, None)) @ LUMA_601
-    ))
+    lw = np.asarray(luma_weights, np.float64)
+    gap = np.median(np.abs(encoded_from_linear(np.clip(b, 0, None)) @ lw - encoded_from_linear(np.clip(a, 0, None)) @ lw))
     if gap < MIN_LUMA_CONTRAST:
         return None
-    blend = blend_from_luma(np.asarray(y, np.float64)[band], a, b)
+    blend = blend_from_luma(np.asarray(y, np.float64)[band], a, b, weights=lw)
     out = np.asarray(g, np.float64).copy()
     out[band] = ((1 - blend)[:, None] * a + blend[:, None] * b) @ np.asarray(weights, np.float64)
     return out.astype(np.float32)
