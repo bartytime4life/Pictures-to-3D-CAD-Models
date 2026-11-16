@@ -449,10 +449,23 @@ def trace_on_sheet(
     except sheet.SheetError as exc:
         raise ReferenceError_(str(exc), sheet_missing=True) from exc
     k1, before, after = sheet.estimate_k1(found, size)
-    matrix, plane, _ = sheet.homography(found, k1, size, size_mm)
+    axis = {}
+    try:
+        matrix, plane, _ = sheet.homography(
+            found, k1, size, size_mm, focal_35mm=focal_35mm, diagnostics=axis
+        )
+    except sheet.SheetError as exc:
+        # A detected sheet with unresolved metric axes must not silently become
+        # an ordinary trace, even when missing-sheet fallback was requested.
+        raise ReferenceError_(str(exc), sheet_missing=False) from exc
     # Independent check of the stated sheet size: its proportions (not its scale) are
     # measurable from the photo (sheet.aspect_ratio_check).
-    focal = sheet.orthogonal_focal(matrix, size) or sheet.camera_pose(matrix, size, focal_35mm)["focal_px"]
+    focal = sheet.orthogonal_focal(matrix, size)
+    aspect_source = "sheet"
+    if focal is None:
+        aspect_camera = sheet.camera_pose(matrix, size, focal_35mm)
+        focal = aspect_camera["focal_px"]
+        aspect_source = aspect_camera["focal_source"]
     aspect = sheet.aspect_ratio_check(matrix, size, focal)
     ppm, native = sheet.choose_ppm(matrix, plane)
     if native < 1.0:
@@ -498,6 +511,19 @@ def trace_on_sheet(
     except edges.EdgeError as exc:
         raise ReferenceError_(str(exc), sheet_missing=True) from exc
     notes = list(seg_notes)
+    axis_notes = []
+    if axis.get("axis_corrected"):
+        axis_notes.append(
+            "Perspective makes the sheet's long edges look shorter in this photo; "
+            "their physical direction was resolved before setting scale."
+        )
+    if axis.get("axis_source") in {"focal-range", "aspect-feasibility"}:
+        axis_notes.append(
+            "Sheet orientation uses the chosen sheet proportions and a supported "
+            "range of camera lenses; "
+            "verify a separate part dimension with a measurement."
+        )
+    notes.extend(axis_notes)
     if colour_note:
         notes.append(colour_note)
     # The note is about the blur's direction: each edge's width carried across the sheet
@@ -541,14 +567,22 @@ def trace_on_sheet(
             f" (red {weights[0]:.0%}, green {weights[1]:.0%}, blue {weights[2]:.0%}). Colour detail is coarser than brightness in a compressed photo."
         )
     stated = plane[0] / plane[1]
+    aspect_basis = (
+        f" Using an assumed {sheet.DEFAULT_FOCAL_35MM:g} mm-equivalent lens; "
+        "this is not an independent camera calibration."
+        if aspect_source == "assumed"
+        else ""
+    )
     if abs(aspect - 1) > 0.01:
         notes.append(
             f"The sheet's proportions in the photo differ from the chosen size by {100 * (aspect - 1):+.1f} %"
             f" (width : height measured {stated * aspect:.3f}, chosen {stated:.3f}). Check the sheet choice or its measured size; every dimension scales with it."
+            + aspect_basis
         )
     else:
         notes.append(
             f"Sheet proportions check: the photo matches the chosen sheet within {100 * abs(aspect - 1):.2f} %."
+            + aspect_basis
         )
     camera = None
     if thickness_mm:
@@ -908,6 +942,7 @@ def trace_on_sheet(
     )
     mismatch = [n for n in notes if n.startswith("The sheet's proportions in the photo differ")]
     warnings_out.extend(mismatch)
+    warnings_out.extend(axis_notes)
     warnings_out.extend(blur_notes)
     warnings_out.extend(mixed_blur_notes)
     warnings_out.extend(radius_notes)

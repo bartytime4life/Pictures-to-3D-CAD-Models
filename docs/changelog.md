@@ -1,5 +1,25 @@
 # Workbench change log
 
+## Sheet scale under perspective and visible calibration evidence — November 16, 2026
+
+- Reference-sheet tracing now resolves physical axes from camera geometry before
+  assigning millimetres. Perspective can reverse apparent edge lengths; the old
+  assignment distorted a rendered 120 × 70 mm plate to about 176.50 × 49.87 mm
+  in the controlled historical-function replay. The corrected synthetic result
+  is 119.97 × 70.01 mm. These are fixture results,
+  not measured real-camera accuracy.
+- A corner-perturbation screen with outward-rounded interval arithmetic limits
+  noise-sensitive inferred assignments. Ambiguity, conflicting focal evidence
+  and unsupported near-square views give retake guidance; detected-sheet
+  calibration failures cannot silently fall back to ordinary tracing.
+- Corrected-axis and conditional-orientation notes now stay visible in the main
+  notice. A sheet-size mismatch retains first priority. See the
+  [mathematics and validation](validation/sheet-axis-orientation.md).
+- Added the [figure/base case study](validation/figure-base-refinement.md), with
+  selected hash-bound results from the separate mesh workflow: better Omega Red
+  image agreement, retained Wolverine geometry, reinforced socket regions and
+  continuously clear insertion paths. Physical fit and strength remain untested.
+
 ## A coloured part in an HEIC or WebP measured from its full-resolution brightness — November 15, 2026
 
 - HEIC photos, iPhones' default, store colour at half resolution as JPEGs do, and a

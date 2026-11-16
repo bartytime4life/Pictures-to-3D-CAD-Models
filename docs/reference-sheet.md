@@ -10,6 +10,15 @@ Lay the part on a sheet of known size, photograph the whole sheet, and choose th
 - **Analytic fitted geometry**: accepted lines, tangent arcs and circles carry residuals and become exact entities in STEP and DXF. OpenSCAD retains fitted circles as `circle()` calls and samples other fitted curves; see [export representation limits](exports.md#openscad-editable-profile-extrusion). A fitted entity is not an exact measurement of the physical part.
 - **A check of the sheet you chose**: its proportions, though not its scale, are measured from the photo.
 
+Perspective can make the sheet's physical long edge appear shorter. The tracer
+resolves its axes using the camera constraints before setting millimetres. If
+that assignment is ambiguous or fails the declared corner-sensitivity screen,
+the trace stops with retake guidance. This refusal also applies when the upload
+requested ordinary-trace fallback. Photograph all four corners more directly
+overhead and use a reference whose measured side lengths are clearly different.
+Correction and conditional-orientation notes appear in the main notice; a sheet
+size mismatch takes priority. See the [axis mathematics and regression results](validation/sheet-axis-orientation.md).
+
 ![The workbench after tracing a tilted phone photo of a 4 mm plate on an A4 sheet: the rectified, axis-aligned view with the fitted outline, the 120.02 mm width taken from the sheet, and the built model](images/reference-sheet.png)
 
 The screenshot shows the browser-test fixture `tests/e2e/fixtures/plate-on-a4.jpg`, a rendered photo, after building with a 4 mm thickness.
@@ -63,7 +72,7 @@ Coordinates follow the repository convention: pixel *i* spans [*i*, *i* + 1], so
 
 **Inverse.** Undistorting solves r_u + k₁ r_u³ = r_d by safeguarded Newton steps inside a sign bracket, with bisection when a step leaves it. For negative k₁, the increasing branch ends at r_u = 1/√(−3k₁), corresponding to r_d,max = 2/(3√(−3k₁)). At k₁ = −0.25 that observed-radius limit is approximately 0.769800359: a sensor radius of 0.9 has no central inverse. Such inputs are refused. If the largest reference radius is R, plumb-line search restricts k₁ to values above −4/(27R²), within its existing range. Near the turning point the inverse remains ill-conditioned; numerical convergence does not bound image or camera error. [Domain derivation, counterexamples and Decimal checks](validation/radial-inverse.md) replace the earlier whole-frame claim. The existing `test_newton_undistortion_is_the_inverse_of_the_lens_model` checks sampled forward-generated rays, while `test_plumb_line_recovers_the_radial_coefficient_from_noise_free_edges` recovers k₁ within 10⁻⁶ under its noise-free model.
 
-**Homography.** Total-least-squares lines through the undistorted edge points are intersected for the four corners, and `cv2.findHomography` maps the sheet's millimetre corners onto them. The longer pair of opposite sides is matched to the sheet's long dimension.
+**Homography and sheet axes.** Total-least-squares lines through the undistorted edge points are intersected for the four corners. A unit-square homography and metric camera constraints assign the sheet's long and short dimensions before conversion to millimetres. Apparent edge lengths cannot decide this: perspective can make the physical long side look shorter. Inferred ordering must remain stable over a declared corner-placement interval scenario before it can decide an axis or conflict with focal metadata. Without usable focal evidence, the assignment must be identifiable over the supported lens range and stated sheet proportions. Ambiguous cases stop with a retake instruction, including when automatic missing-sheet fallback was requested. Non-square references with less than 2% side separation have a more conservative support rule. See [the axis derivation, assumptions and regressions](validation/sheet-axis-orientation.md).
 
 ## 2. Resampling without positional quantisation
 

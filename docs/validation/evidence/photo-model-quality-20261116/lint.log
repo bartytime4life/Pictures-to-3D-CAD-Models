@@ -1,0 +1,5 @@
+.venv/bin/ruff check backend scripts tests
+All checks passed!
+npx --no-install prettier --check frontend/src tests/e2e playwright.config.ts
+Checking formatting...
+All matched files use Prettier code style!

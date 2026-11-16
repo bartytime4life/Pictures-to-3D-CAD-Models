@@ -52,9 +52,10 @@ export default function SheetReference({
         </div>
       )}
       <p className="field-explanation">
-        Lay the part on a sheet of known size and photograph the whole sheet. The sheet sets the
-        scale and corrects perspective and lens distortion; the entered thickness corrects for
-        visible side walls. Measure your sheet: paper sizes vary slightly.
+        Lay the part on a flat sheet of known size and show all four corners. The sheet sets scale
+        and supports perspective and lens correction; measured thickness supports correction for
+        vertical side walls. If the sheet orientation is unclear, retake the photo more directly
+        above it. Measure your sheet: paper sizes vary slightly.
       </p>
     </div>
   );

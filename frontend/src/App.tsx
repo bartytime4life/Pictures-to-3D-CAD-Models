@@ -631,9 +631,14 @@ export default function App() {
     appendSheetFields(body, sheet, sheetThickness, snapIntent, fallback);
     return api<TraceResult>('/api/trace', { method: 'POST', body });
   }
-  /** A sheet-size mismatch found from the photo's proportions outranks routine notices. */
-  function sheetMismatch(result: TraceResult) {
-    return result.warnings.find((w) => w.includes('proportions in the photo differ')) ?? '';
+  /** Keep scale evidence visible before routine next-step guidance. */
+  function sheetCalibrationNotice(result: TraceResult) {
+    return (
+      result.warnings.find((w) => w.includes('proportions in the photo differ')) ??
+      result.warnings.find((w) => w.startsWith('Sheet orientation uses')) ??
+      result.warnings.find((w) => w.startsWith("Perspective makes the sheet's long edges")) ??
+      ''
+    );
   }
   /** Use the sheet scale of a reference-sheet trace as the outside width. */
   function applySheetWidth(result: TraceResult) {
@@ -720,7 +725,7 @@ export default function App() {
         setWidth(fromSheet.toFixed(4));
         setWidthMm(fromSheet);
         setNotice(
-          sheetMismatch(result) ||
+          sheetCalibrationNotice(result) ||
             `Outline traced on the ${sheetLabel(result.profile.reference.kind)}; the width comes from the sheet. Enter the measured thickness, then build.`,
         );
         window.setTimeout(() => document.getElementById('thickness')?.focus(), 0);
@@ -909,7 +914,7 @@ export default function App() {
       if (result.profile.reference) {
         applySheetWidth(result);
         setNotice(
-          sheetMismatch(result) ||
+          sheetCalibrationNotice(result) ||
             `Outline traced on the ${sheetLabel(result.profile.reference.kind)}. The width comes from the sheet; your own width measurement is now an independent check.`,
         );
       } else if (referenceCalibration) {

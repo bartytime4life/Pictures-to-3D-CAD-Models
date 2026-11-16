@@ -149,3 +149,74 @@ test('the outline dialog switches an existing photo to a sheet reference', async
   await expect(page.getByText(/From the A4 sheet/)).toBeVisible({ timeout: 30_000 });
   await expect(page.locator('p.notice')).toContainText(/the width comes from the sheet/i);
 });
+
+const correctedAxes =
+  "Perspective makes the sheet's long edges look shorter in this photo; their physical direction was resolved before setting scale.";
+const conditionalAxes =
+  'Sheet orientation uses the chosen sheet proportions and a supported range of camera lenses; verify a separate part dimension with a measurement.';
+
+for (const [label, notes, expected] of [
+  ['corrected axes', [correctedAxes], correctedAxes],
+  ['conditional scale', [correctedAxes, conditionalAxes], conditionalAxes],
+  [
+    'size mismatch first',
+    [
+      correctedAxes,
+      conditionalAxes,
+      "The sheet's proportions in the photo differ from the chosen size by +2.0 %.",
+    ],
+    'proportions in the photo differ',
+  ],
+] as const) {
+  test(`sheet calibration notice keeps ${label} visible`, async ({ page, request }) => {
+    await sampleReady(page);
+    // Use a real sheet trace; only inject the warning combinations to isolate UI
+    // priority. These tests do not establish the camera/assignment mathematics.
+    const response = await request.post('/api/trace', {
+      multipart: {
+        file: { name: 'plate.jpg', mimeType: 'image/jpeg', buffer: await readFile(photo) },
+        reference: 'a4',
+      },
+    });
+    expect(response.ok()).toBe(true);
+    const trace = await response.json();
+    trace.warnings = [...notes, ...trace.warnings];
+    await page.route('**/api/trace', (route) => route.fulfill({ json: trace }), { times: 1 });
+    await page.getByRole('button', { name: 'Change photo' }).click();
+    await page.getByRole('dialog').getByLabel('Scale reference').selectOption('a4');
+    await page.getByLabel('Choose photo or project').setInputFiles(photo);
+    await expect(page.locator('p.notice')).toContainText(expected, { timeout: 30_000 });
+    await expect(page.getByRole('spinbutton', { name: 'Reference width' })).toHaveValue(
+      /^12[0-3]\.\d+/,
+    );
+  });
+}
+
+test('ambiguous sheet calibration shows retake guidance without replacing the current model', async ({
+  page,
+}) => {
+  await sampleReady(page);
+  const originalWidth = await page
+    .getByRole('spinbutton', { name: 'Reference width' })
+    .inputValue();
+  let traceRequests = 0;
+  await page.route('**/api/trace', (route) => {
+    traceRequests += 1;
+    return route.fulfill({
+      status: 422,
+      json: {
+        detail:
+          'The photo does not identify which reference-sheet edge is the long side. Retake it more directly overhead, use the original uncropped photo with focal-length metadata, or use a clearly rectangular reference sheet.',
+      },
+    });
+  });
+  await page.getByRole('button', { name: 'Change photo' }).click();
+  await page.getByRole('dialog').getByLabel('Scale reference').selectOption('a4');
+  await page.getByLabel('Choose photo or project').setInputFiles(photo);
+  await expect(page.getByRole('alert')).toContainText('Retake it more directly overhead');
+  await expect(page.getByRole('spinbutton', { name: 'Reference width' })).toHaveValue(
+    originalWidth,
+  );
+  await expect(page.getByRole('button', { name: 'Review export', exact: true })).toBeEnabled();
+  expect(traceRequests).toBe(1);
+});
