@@ -1,5 +1,16 @@
 # Source scope and verification status
 
+## Science audit continuation — November 16, 2026
+
+The [mathematics and science audit](science-audit.md) starts from merged PR #154
+at `40cfbe4`. The preceding constrained-shadow change repairs reversible active
+sets and numerical optimality checks; its [paired record](validation/shadow-kkt.md)
+also preserves the prior-selection regression. The audit's Gaussian identities
+and two-dimensional lighting counterexample are separate numerical experiments.
+The latter remains unresolved; no general two-dimensional light integration or
+physical accuracy qualification is added. Earlier snapshots below remain pinned
+historical records.
+
 ## Calibration quality update — November 16, 2026
 
 This change is based on main `9337800` (PR #153). Runtime commits

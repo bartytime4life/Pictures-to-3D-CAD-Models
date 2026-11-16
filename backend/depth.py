@@ -8,18 +8,20 @@ checks its SHA-256, so a different or damaged file is refused instead of run.
 What the network returns
     A *relative inverse depth* (disparity-like) map: larger values are nearer. Like
     MiDaS, the model is trained with a scale- and shift-invariant loss, so its output is
-    only defined up to d = a / z + b with unknown a > 0 and b. Ordering (what is in front
-    of what) is meaningful; ratios and absolute distances are not. Two known depths in
-    the scene would be needed to recover a and b; a single photograph has none.
+    evaluated up to d = a / z + b with unknown a > 0 and b. Its predicted ordering
+    can still be wrong; the affine training objective is not a guarantee that one
+    pair (a, b) recovers every true scene depth. Two distinct measured camera depths
+    determine a and b only under that exact model, and require independent checks.
 
 How the workbench uses it
     The disparity is resampled to the photograph's pixels and normalized to 0..1 with
     white = nearest, the same convention as a stored depth map. Physical size still
     comes only from the width and thickness range the user enters. A relief is a
     compressed (bas-relief) rendering of depth in any case: under orthographic viewing a
-    surface z(x, y) and lambda * z(x, y) + mu * x + nu * y shade identically under
-    suitably transformed lighting (the generalized bas-relief ambiguity, Belhumeur,
-    Kriegman and Yuille, 1999), which is why sculptors may flatten depth freely.
+    Lambertian surface z(x, y) and lambda * z(x, y) + mu * x + nu * y can produce the
+    same images under suitably transformed lighting AND albedo (the generalized
+    bas-relief ambiguity, Belhumeur, Kriegman and Yuille, 1999). This conditional
+    ambiguity does not establish physical depth or arbitrary-material equivalence.
 
 Pre-processing follows the model's published DPTImageProcessor configuration exactly:
 keep aspect ratio, scale so that the side whose scale factor is closest to 1 reaches 518

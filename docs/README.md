@@ -37,6 +37,7 @@ settings. Physical dimensions, fit and strength need their own evidence.
 | Find the commands available in this checkout | [Developer tools and output behavior](developer-tools.md) |
 | Understand components, API and data flow | [Architecture](architecture.md) |
 | Read mathematical methods and their limits | [Research and algorithms](research.md), [engineering model](engineering-model.md) |
+| Review the current scientific assumptions and reproduce their checks | [Mathematics and science audit](science-audit.md) |
 | Investigate conditional finite-material intensity fitting | [Developer model and numerical limits](finite-shape-inverse.md) |
 | Understand batched affine probabilities, resource limits and measured fit latency | [Shared-panel mathematics](finite-affine-evaluation.md), [complete qualification record](validation/finite-affine-batch.md) |
 | Prepare fixed samples from a measured ring and compare covariance hypotheses | [Observation contract](finite-shape-inverse.md#prepare-a-measured-ring-observation-set), [paired saved-field replay](validation/finite-photo-intensity-v2.md) |

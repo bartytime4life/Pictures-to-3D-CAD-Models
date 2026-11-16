@@ -1,0 +1,63 @@
+{
+  "baseline": "40cfbe480d603976264c04c3b3031146fd1e8a01",
+  "solver_tree": "4ba0f20f17953c3e39e2771604bbddae59bb9b36",
+  "python": {
+    "command": "timeout 1800 .venv/bin/python -m pytest -q -W error::RuntimeWarning -k 'not blender_rebuilds and not cycles_render and not cycles_lamp' --maxfail=1",
+    "passed": 1479,
+    "skipped": 2,
+    "deselected": 5,
+    "seconds": 650.0,
+    "scope": "workbench Python suite; five installed-Blender rebuild/render tests excluded"
+  },
+  "browser": {
+    "command": "PICAD_TEST_URL=http://127.0.0.1:8127 npx --no-install playwright test tests/e2e/sheet-reference.spec.ts --reporter=line",
+    "passed": 6,
+    "seconds": 50.7,
+    "scope": "dedicated rebuilt loopback app, reference-sheet scenarios only"
+  },
+  "build": {
+    "command": "npm run build -- --configLoader runner",
+    "exit_code": 0,
+    "note": "runner avoids writing Vite config cache into the shared read-only dependency directory"
+  },
+  "lint": {
+    "python": "ruff check backend scripts tests",
+    "frontend": "prettier --check frontend/src tests/e2e playwright.config.ts",
+    "new_reports": "prettier --check docs/science-audit.md docs/validation/shadow-kkt.md",
+    "exit_code": 0
+  },
+  "documentation_targets": {
+    "files": 9,
+    "local_targets_checked": 572,
+    "missing": 0,
+    "scope": "local target existence, not a complete external URL or anchor crawler"
+  },
+  "versions": {
+    "python": "3.12.3",
+    "numpy": "2.5.4",
+    "opencv": "4.14.0"
+  },
+  "excluded_claims": [
+    "full reference-library qualification",
+    "all browser scenarios",
+    "hosted CI result",
+    "installation or deployment",
+    "real-camera accuracy",
+    "physical fit or print"
+  ],
+  "logs_sha256": {
+    "full-tests.log": "86f25e8400660cd70030e97ac87f491691d996cc11e159622e2d7f9abcb72ff9",
+    "browser.log": "5344ba60db75847f3792e01e39eda55337fa878e683d2ccc0b40dc32ff0c6c29",
+    "lint.log": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    "format.log": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+  },
+  "runtime_source_sha256": {
+    "backend/shadow.py": "95e6e69e3333b5ccca2031c59a2dba7ee5d4848b3e7c5425e25a67a03094bd6f",
+    "backend/sheet.py": "d25a4a89a94295b15c31c551e29ebd70c273273dbe4e0323390185d53f324c6c",
+    "backend/edges.py": "edf3a5038e427c11cf88b160494888f72189bfc3b731055f8c0f16833032a9f3",
+    "backend/reference.py": "5c9457424acdab589b725c42c173cb93ee6ad47ff03176707526183c4b205054",
+    "backend/fitting.py": "c47273f8837cf7a22ac62d8b96a60a7e4e86b6cf65422b54404af14efa94cddf",
+    "backend/depth.py": "ba056d00ef03984e582fbbc54f85b860f116f16ecbf14f66895a5d009d9e396e"
+  },
+  "source_timing": "Algorithm source remained fixed during the final full suite; subsequent edits were documentation, docstrings and this evidence record."
+}
