@@ -1,5 +1,16 @@
 # Workbench change log
 
+## Scientific assumptions and reproducible derivations — November 16, 2026
+
+- Added a [science audit](science-audit.md) across calibration, optics, shadow
+  fitting, CAD, uncertainty and relief depth, with primary scientific sources.
+- Independently verified quadratic Gaussian moments; observed plateau curvature
+  must not be counted twice. Retained a reproducible two-dimensional lighting
+  counterexample as an unresolved model limit, without enabling a correction.
+- Clarified that affine-invariant learned inverse depth is not guaranteed metric
+  depth or ordering, and that generalized bas-relief ambiguity changes albedo as
+  well as illumination under its stated imaging assumptions.
+
 ## Constrained shadow solver — November 16, 2026
 
 - The nonnegative shadow fit now lets discarded kernel nodes return when they

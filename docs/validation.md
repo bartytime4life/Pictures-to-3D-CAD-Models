@@ -1,5 +1,29 @@
 # Validation results
 
+## Mathematics and science audit — November 16, 2026
+
+The [current audit](science-audit.md) starts from PR #154's merged source and
+maps calibration, optics, constrained fitting, geometry, uncertainty and relief
+depth to their assumptions and evidence. Its [reproducible identity report](validation/evidence/science-audit-20261116/model-identities.json)
+checks twelve Gaussian quadratic-light cases: maximum analytic/quadrature
+difference `9.95e-14` light units, with maximum 128/256-order difference
+`1.88e-12`. These are mathematical subproblem checks, not photo accuracy.
+
+An independently integrated affine-light example retains an unresolved
+two-dimensional model discrepancy: edge level `100.5984134206` versus the
+normal-line routine's `99.9999478413`. The report does not label this outcome
+a model pass. Updated relief guidance also states the conditions on learned
+inverse depth and generalized bas-relief ambiguity. No two-dimensional optical
+correction, metric learned-depth recovery or physical qualification is delivered.
+
+Final local workbench verification: **1,479 Python tests passed**, 2 skipped,
+and 5 tests that launch installed Blender deselected; all **6 reference-sheet
+browser scenarios** passed against a dedicated rebuilt local app. Production
+build, Python lint, frontend formatting and the new-report formatting passed.
+The [commands, source bindings, exclusions and log hashes](validation/evidence/science-audit-20261116/verification.json)
+retain that scope. This is not a full reference-library, all-browser,
+hosted-CI, installed-runtime or physical qualification.
+
 ## Constrained shadow optimality — November 16, 2026
 
 The [shadow solver repair](validation/shadow-kkt.md) reproduces a one-way

@@ -6,6 +6,12 @@ This product starts with a deliberately constrained geometry problem: a photogra
 
 The research below informed the implementation and its acceptance criteria. It is a review of technical and accessibility sources, not a claim that user interviews, a physical metrology study, or a production security assessment have been completed.
 
+The [November 16 mathematics and science audit](science-audit.md) maps the current
+calibration, optics, fitting, CAD and relief assumptions to their evidence. It
+includes the constrained-shadow solver repair, independently checked Gaussian
+moments, an unresolved two-dimensional light counterexample and corrected
+conditions for AI depth and generalized bas-relief ambiguity.
+
 The [source-scope guide](project-status.md) identifies which algorithms are in
 this main-based checkout. Source-space PSF research on a separate lineage
 does not replace the production rectified-width estimator or add new HTTP modes.

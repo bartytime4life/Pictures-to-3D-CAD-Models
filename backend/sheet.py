@@ -134,8 +134,10 @@ def half_level_search(
     the fitted shadow model plus a line: B(t) = L(p + t n) + r0 + r1 t, with r0 and r1
     fitted to the profile minus the model's blurred light over the same window, so a
     model without a shadow leaves the line method as it was. The level is then the
-    blurred step's exact value at its edge, A / 2 + int_0^inf B(t +- u) phi_sigma(u) du
-    (_modelled_level), for any curvature of B.
+    one-dimensional blurred step's value at its edge,
+    A / 2 + int_0^inf B(t +- u) phi_sigma(u) du (_modelled_level).
+    This normal-line approximation does not integrate light variation along the
+    edge or normal/tangent covariance; see docs/science-audit.md.
 
     `paper_extent` (px per point, with `sigma` and `paper_side`; inf where none) is how
     far the paper runs along the normal before material starts again: across a narrow

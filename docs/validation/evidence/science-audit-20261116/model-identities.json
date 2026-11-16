@@ -1,0 +1,250 @@
+{
+  "verified_identities_pass": true,
+  "scope": "quadratic Gaussian moments and a straight-edge affine-light counterexample only",
+  "quadratic_moments": [
+    {
+      "sigma_px": 0.7,
+      "material_coefficients": [
+        20.0,
+        0.0,
+        0.0
+      ],
+      "paper_coefficients": [
+        180.0,
+        0.0,
+        0.0
+      ],
+      "quadrature_256": 100.00000000000009,
+      "analytic_sharp": 100.0,
+      "analytic_observed_plateaus": 100.0,
+      "quadrature_error": 8.526512829121202e-14,
+      "order_doubling_difference": 1.8758328224066645e-12
+    },
+    {
+      "sigma_px": 0.7,
+      "material_coefficients": [
+        20.0,
+        0.2,
+        0.0
+      ],
+      "paper_coefficients": [
+        180.0,
+        -0.6,
+        0.0
+      ],
+      "quadrature_256": 99.77659232297528,
+      "analytic_sharp": 99.7765923229752,
+      "analytic_observed_plateaus": 99.7765923229752,
+      "quadrature_error": 7.105427357601002e-14,
+      "order_doubling_difference": 1.8758328224066645e-12
+    },
+    {
+      "sigma_px": 0.7,
+      "material_coefficients": [
+        20.0,
+        0.2,
+        0.03
+      ],
+      "paper_coefficients": [
+        180.0,
+        -0.6,
+        -0.04
+      ],
+      "quadrature_256": 99.77414232297528,
+      "analytic_sharp": 99.77414232297521,
+      "analytic_observed_plateaus": 99.77414232297521,
+      "quadrature_error": 7.105427357601002e-14,
+      "order_doubling_difference": 1.8616219676914625e-12
+    },
+    {
+      "sigma_px": 0.7,
+      "material_coefficients": [
+        50.0,
+        -0.3,
+        -0.02
+      ],
+      "paper_coefficients": [
+        150.0,
+        0.8,
+        0.06
+      ],
+      "quadrature_256": 100.31698555590917,
+      "analytic_sharp": 100.3169855559091,
+      "analytic_observed_plateaus": 100.31698555590911,
+      "quadrature_error": 7.105427357601002e-14,
+      "order_doubling_difference": 1.8616219676914625e-12
+    },
+    {
+      "sigma_px": 2.0,
+      "material_coefficients": [
+        20.0,
+        0.0,
+        0.0
+      ],
+      "paper_coefficients": [
+        180.0,
+        0.0,
+        0.0
+      ],
+      "quadrature_256": 100.00000000000009,
+      "analytic_sharp": 100.0,
+      "analytic_observed_plateaus": 100.0,
+      "quadrature_error": 8.526512829121202e-14,
+      "order_doubling_difference": 1.8758328224066645e-12
+    },
+    {
+      "sigma_px": 2.0,
+      "material_coefficients": [
+        20.0,
+        0.2,
+        0.0
+      ],
+      "paper_coefficients": [
+        180.0,
+        -0.6,
+        0.0
+      ],
+      "quadrature_256": 99.3616923513578,
+      "analytic_sharp": 99.3616923513577,
+      "analytic_observed_plateaus": 99.3616923513577,
+      "quadrature_error": 9.947598300641403e-14,
+      "order_doubling_difference": 1.8616219676914625e-12
+    },
+    {
+      "sigma_px": 2.0,
+      "material_coefficients": [
+        20.0,
+        0.2,
+        0.03
+      ],
+      "paper_coefficients": [
+        180.0,
+        -0.6,
+        -0.04
+      ],
+      "quadrature_256": 99.34169235135778,
+      "analytic_sharp": 99.34169235135771,
+      "analytic_observed_plateaus": 99.34169235135771,
+      "quadrature_error": 7.105427357601002e-14,
+      "order_doubling_difference": 1.8758328224066645e-12
+    },
+    {
+      "sigma_px": 2.0,
+      "material_coefficients": [
+        50.0,
+        -0.3,
+        -0.02
+      ],
+      "paper_coefficients": [
+        150.0,
+        0.8,
+        0.06
+      ],
+      "quadrature_256": 100.95767301688323,
+      "analytic_sharp": 100.95767301688315,
+      "analytic_observed_plateaus": 100.95767301688316,
+      "quadrature_error": 8.526512829121202e-14,
+      "order_doubling_difference": 1.8474111129762605e-12
+    },
+    {
+      "sigma_px": 4.0,
+      "material_coefficients": [
+        20.0,
+        0.0,
+        0.0
+      ],
+      "paper_coefficients": [
+        180.0,
+        0.0,
+        0.0
+      ],
+      "quadrature_256": 100.00000000000009,
+      "analytic_sharp": 100.0,
+      "analytic_observed_plateaus": 100.0,
+      "quadrature_error": 8.526512829121202e-14,
+      "order_doubling_difference": 1.8758328224066645e-12
+    },
+    {
+      "sigma_px": 4.0,
+      "material_coefficients": [
+        20.0,
+        0.2,
+        0.0
+      ],
+      "paper_coefficients": [
+        180.0,
+        -0.6,
+        0.0
+      ],
+      "quadrature_256": 98.72338470271549,
+      "analytic_sharp": 98.72338470271542,
+      "analytic_observed_plateaus": 98.72338470271542,
+      "quadrature_error": 7.105427357601002e-14,
+      "order_doubling_difference": 1.8758328224066645e-12
+    },
+    {
+      "sigma_px": 4.0,
+      "material_coefficients": [
+        20.0,
+        0.2,
+        0.03
+      ],
+      "paper_coefficients": [
+        180.0,
+        -0.6,
+        -0.04
+      ],
+      "quadrature_256": 98.64338470271551,
+      "analytic_sharp": 98.64338470271542,
+      "analytic_observed_plateaus": 98.64338470271542,
+      "quadrature_error": 8.526512829121202e-14,
+      "order_doubling_difference": 1.8758328224066645e-12
+    },
+    {
+      "sigma_px": 4.0,
+      "material_coefficients": [
+        50.0,
+        -0.3,
+        -0.02
+      ],
+      "paper_coefficients": [
+        150.0,
+        0.8,
+        0.06
+      ],
+      "quadrature_256": 102.07534603376638,
+      "analytic_sharp": 102.0753460337663,
+      "analytic_observed_plateaus": 102.07534603376631,
+      "quadrature_error": 8.526512829121202e-14,
+      "order_doubling_difference": 1.8616219676914625e-12
+    }
+  ],
+  "tangential_light": {
+    "status": "unresolved model limitation; no correction delivered",
+    "covariance_px2": [
+      [
+        4.0,
+        3.0
+      ],
+      [
+        3.0,
+        9.0
+      ]
+    ],
+    "paper_gradient_per_px": [
+      0.0,
+      1.0
+    ],
+    "analytic_2d_edge_level": 100.59841342060214,
+    "conditional_quadrature_2d": 100.59841342060221,
+    "production_normal_line_level": 99.9999478413492,
+    "missing_level": 0.5984655792529452,
+    "leading_offset_estimate_px": 0.01875,
+    "offset_scope": "first-order estimate from edge slope, not an end-to-end trace measurement"
+  },
+  "sources_sha256": {
+    "backend/sheet.py": "d25a4a89a94295b15c31c551e29ebd70c273273dbe4e0323390185d53f324c6c",
+    "backend/shadow.py": "95e6e69e3333b5ccca2031c59a2dba7ee5d4848b3e7c5425e25a67a03094bd6f",
+    "scripts/science_model_audit.py": "6de9874ea6e1480c694c3c9f465a8f63fb5805564ed4c6a34f86e06e94f70138"
+  }
+}

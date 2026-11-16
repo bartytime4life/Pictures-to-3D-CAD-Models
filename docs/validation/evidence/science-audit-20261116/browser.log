@@ -1,0 +1,10 @@
+
+Running 6 tests using 1 worker
+
+[1/6] tests/e2e/sheet-reference.spec.ts:33:1 › a photo on an A4 sheet is scaled by the sheet and exported with exact circles and arcs
+[2/6] tests/e2e/sheet-reference.spec.ts:127:1 › the outline dialog switches an existing photo to a sheet reference
+[3/6] tests/e2e/sheet-reference.spec.ts:171:3 › sheet calibration notice keeps corrected axes visible
+[4/6] tests/e2e/sheet-reference.spec.ts:171:3 › sheet calibration notice keeps conditional scale visible
+[5/6] tests/e2e/sheet-reference.spec.ts:171:3 › sheet calibration notice keeps size mismatch first visible
+[6/6] tests/e2e/sheet-reference.spec.ts:195:1 › ambiguous sheet calibration shows retake guidance without replacing the current model
+  6 passed (50.7s)
