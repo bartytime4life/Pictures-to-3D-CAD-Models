@@ -1,5 +1,14 @@
 # Validation results
 
+## Constrained shadow optimality — November 16, 2026
+
+The [shadow solver repair](validation/shadow-kkt.md) reproduces a one-way
+active-set deletion error, checks the replacement against exhaustive small
+problems, and retains a paired six-scene replay with numerical optimality
+diagnostics. It records the changed true-edge regression criterion and the
+shadow-free prior-selection trade-off. Numerical optimality and physical
+accuracy remain separate claims.
+
 ## Sheet-axis calibration and visible scale evidence — November 16, 2026
 
 The calibration change resolves the sheet's physical axes before assigning

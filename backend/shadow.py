@@ -85,6 +85,15 @@ def fit_paper_light(g, mask, ppm, sigma, covariance=None, footprint=None):
     smoothness prior and the ridge set it there. The ridge pulls it towards no shadow,
     which reads the light beside a shaded edge too bright; the traced fit's smaller
     ridge pulls less."""
+    try:
+        return _fit_paper_light(g, mask, ppm, sigma, covariance, footprint)
+    except np.linalg.LinAlgError:
+        # An unfinished constrained solve is not a fitted physical shadow. Keep the
+        # existing per-profile light model when numerical optimality is unavailable.
+        return PaperLight(None, None, {"used": False, "reason": "shadow_solve_failed"})
+
+
+def _fit_paper_light(g, mask, ppm, sigma, covariance, footprint):
     H, W = g.shape
     f = max(1, round(CELL_MM * ppm))
     h, w = H // f, W // f
@@ -129,17 +138,7 @@ def fit_paper_light(g, mask, ppm, sigma, covariance=None, footprint=None):
         scale = np.trace(normal[6:, 6:]) / (n * n)
         matrix = normal.copy()
         matrix[6:, 6:] += prior * scale * smooth / 20 + ridge * scale * np.eye(n * n)
-        free = np.ones(len(rhs), bool)
-        theta = np.zeros(len(rhs))
-        for _ in range(60):  # active set: kernel nodes held at zero where they would go negative
-            theta = np.zeros(len(rhs))
-            index = np.flatnonzero(free)
-            theta[index] = _spd_solve(matrix[np.ix_(index, index)], rhs[index])
-            negative = free & (np.arange(len(theta)) >= 6) & (theta < 0)
-            if not negative.any():
-                break
-            free &= ~negative
-        return theta
+        return _nonnegative_solve(matrix, rhs, unbounded=6)
 
     def fit(yy, xx, values, choose):
         A = design(yy, xx)
@@ -235,6 +234,78 @@ def _laplacian(n):
                 if 0 <= a + da < n and 0 <= b + db < n:
                     lap[r, (a + da) * n + b + db] = 1
     return lap.T @ lap
+
+
+def _nonnegative_solve(matrix, rhs, unbounded=0, *, max_steps=None):
+    """Minimize x.T M x / 2 - b.T x for SPD M, with x[unbounded:] >= 0.
+
+    The first coefficients describe unconstrained paper light. Kernel coefficients
+    can enter AND leave the passive set: deleting every negative coefficient once
+    does not satisfy the dual KKT condition M x - b >= 0 at a zero coefficient.
+    Diagonal equilibration makes the stopping test independent of column units.
+    Failure to reach the primal/dual conditions raises LinAlgError, never returns
+    an unfinished shadow. This is an active-set convex quadratic solve, not a
+    certificate of the optical model or the normal equations' conditioning.
+    """
+    diagonal = np.diag(matrix)
+    if not np.isfinite(diagonal).all() or np.any(diagonal <= 0):
+        raise np.linalg.LinAlgError("invalid shadow normal matrix")
+    diagonal = np.sqrt(diagonal)
+    normal = matrix / diagonal[:, None] / diagonal[None, :]
+    target = rhs / diagonal
+    n = len(target)
+    bounded = np.arange(n) >= unbounded
+    free = np.ones(n, bool)
+    x = np.zeros(n)
+    remaining = max_steps if max_steps is not None else 10 * n + 60
+
+    def solve():
+        nonlocal remaining
+        if remaining <= 0:
+            raise np.linalg.LinAlgError("shadow active set did not converge")
+        remaining -= 1
+        index = np.flatnonzero(free)
+        proposal = np.zeros(n)
+        if len(index):
+            proposal[index] = _spd_solve(normal[np.ix_(index, index)], target[index])
+        if not np.isfinite(proposal).all():
+            raise np.linalg.LinAlgError("non-finite shadow solution")
+        return proposal
+
+    # Fast feasible start: the old deletion pass, followed by the essential dual
+    # check below, which can release coefficients it incorrectly fixed at zero.
+    while True:
+        x = solve()
+        negative = free & bounded & (x < 0)
+        if not negative.any():
+            break
+        free[negative] = False
+
+    while True:
+        gradient = normal @ x - target
+        scale = max(float(np.max(np.abs(target))), float(np.max(np.abs(normal) @ np.abs(x))))
+        tolerance = 128 * np.finfo(float).eps * n * scale
+        release = ~free & (gradient < -tolerance)
+        if not release.any():
+            if np.any(np.abs(gradient[free]) > tolerance):
+                raise np.linalg.LinAlgError("shadow stationarity unavailable")
+            return x / diagonal
+        free[np.argmin(np.where(release, gradient, np.inf))] = True
+        while True:
+            proposal = solve()
+            negative = free & bounded & (proposal < 0)
+            if not negative.any():
+                x = proposal
+                break
+            # Move only as far as the first bound. Re-solving after removing that
+            # coefficient preserves feasibility and lets other nodes become useful.
+            ratios = np.full(n, np.inf)
+            ratios[negative] = x[negative] / (x[negative] - proposal[negative])
+            hit = int(np.argmin(ratios))
+            x += ratios[hit] * (proposal - x)
+            x[bounded] = np.maximum(x[bounded], 0.0)
+            x[hit] = 0.0
+            free[hit] = False
 
 
 def _spd_solve(matrix, rhs):
