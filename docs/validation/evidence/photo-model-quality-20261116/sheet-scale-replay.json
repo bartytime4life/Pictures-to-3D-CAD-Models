@@ -1,0 +1,78 @@
+{
+  "kind": "executed-controlled-historical-axis-function-replay",
+  "method": "Only homography is replaced; other tracing code is current for both runs",
+  "historical_function_revision": "9337800037f66bcef601c1e49171ac7144c960c4",
+  "historical_function_sha256": "15f4bd301da698f50b3bd7b603b3425b46b6150604b7d4e6106cfcb0ca81c470",
+  "inputs": [
+    {
+      "path": "docs/validation/evidence/photo-model-quality-20261116/verify-sheet-scale.py",
+      "sha256": "f3178188fe9ad6a8731d7cf4ede9142051a5123d498821e217aac11df8406c86"
+    },
+    {
+      "path": "backend/sheet.py",
+      "sha256": "d01827b36e0eecaee706d95f9ad83e26aa1104ae458751d6f824a37ecd47391b"
+    },
+    {
+      "path": "backend/reference.py",
+      "sha256": "5c9457424acdab589b725c42c173cb93ee6ad47ff03176707526183c4b205054"
+    },
+    {
+      "path": "backend/calibration_bounds.py",
+      "sha256": "ca78e1f0a2aa0d3e655e007bd3b19b5c0bfbd71a349120d5c64fa45dd2cc15dc"
+    },
+    {
+      "path": "tests/synthetic.py",
+      "sha256": "c79984d6f298973cca2e453f694bce7f2eeb0f56dea9f989bfd653cc711e04ff"
+    }
+  ],
+  "image_sha256": "11d6e9c318a3ae54fca396040b43b6f8aac89301c43c8184b4bde100782b30bd",
+  "render_settings": {
+    "tilt": [
+      50.0,
+      10.0,
+      0.0
+    ],
+    "k1": 0.0,
+    "shadow": 0.0,
+    "gradient": 0.0,
+    "noise": 0.0,
+    "dither": 0.0,
+    "quality": null
+  },
+  "ground_truth_outside_dimensions_mm": [
+    120,
+    70
+  ],
+  "results": {
+    "before": {
+      "outside_dimensions_mm": [
+        176.49832153320312,
+        49.86528015136719
+      ],
+      "warnings": [
+        "The outer boundary was kept as a traced outline because of fitted curves that do not intersect. Review those edges and measure critical curves in CAD.",
+        "Scaled from the A4 sheet (210 \u00d7 297 mm), corrected for perspective. Check the sheet's real size; the measured width is now an independent check.",
+        "The sheet's proportions in the photo differ from the chosen size by -50.0 % (width : height measured 0.707, chosen 1.414). Check the sheet choice or its measured size; every dimension scales with it.",
+        "Enter the part's thickness and re-trace (Build does this automatically) to correct for its visible side walls."
+      ]
+    },
+    "after": {
+      "outside_dimensions_mm": [
+        119.97005462646484,
+        70.00666046142578
+      ],
+      "warnings": [
+        "The outer boundary was kept as a traced outline because of fitted curves that do not intersect. Review those edges and measure critical curves in CAD.",
+        "Scaled from the A4 sheet (210 \u00d7 297 mm), corrected for perspective. Check the sheet's real size; the measured width is now an independent check.",
+        "Perspective makes the sheet's long edges look shorter in this photo; their physical direction was resolved before setting scale.",
+        "Enter the part's thickness and re-trace (Build does this automatically) to correct for its visible side walls."
+      ]
+    }
+  },
+  "runtime": {
+    "python": "3.12.3",
+    "numpy": "2.5.4",
+    "opencv": "4.14.0"
+  },
+  "physical_accuracy_validated": false
+}

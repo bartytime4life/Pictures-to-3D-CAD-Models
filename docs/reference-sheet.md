@@ -10,6 +10,15 @@ Lay the part on a sheet of known size, photograph the whole sheet, and choose th
 - **Analytic fitted geometry**: accepted lines, tangent arcs and circles carry residuals and become exact entities in STEP and DXF. OpenSCAD retains fitted circles as `circle()` calls and samples other fitted curves; see [export representation limits](exports.md#openscad-editable-profile-extrusion). A fitted entity is not an exact measurement of the physical part.
 - **A check of the sheet you chose**: its proportions, though not its scale, are measured from the photo.
 
+Perspective can make the sheet's physical long edge appear shorter. The tracer
+resolves its axes using the camera constraints before setting millimetres. If
+that assignment is ambiguous or fails the declared corner-sensitivity screen,
+the trace stops with retake guidance. This refusal also applies when the upload
+requested ordinary-trace fallback. Photograph all four corners more directly
+overhead and use a reference whose measured side lengths are clearly different.
+Correction and conditional-orientation notes appear in the main notice; a sheet
+size mismatch takes priority. See the [axis mathematics and regression results](validation/sheet-axis-orientation.md).
+
 ![The workbench after tracing a tilted phone photo of a 4 mm plate on an A4 sheet: the rectified, axis-aligned view with the fitted outline, the 120.02 mm width taken from the sheet, and the built model](images/reference-sheet.png)
 
 The screenshot shows the browser-test fixture `tests/e2e/fixtures/plate-on-a4.jpg`, a rendered photo, after building with a 4 mm thickness.

@@ -1,5 +1,42 @@
 # Validation results
 
+## Sheet-axis calibration and visible scale evidence — November 16, 2026
+
+The calibration change resolves the sheet's physical axes before assigning
+millimetres. Perspective can reverse apparent edge lengths. Conditional camera
+constraints and a declared, outward-rounded corner-perturbation scenario replace
+that heuristic; ambiguous or unsupported detected-sheet assignments return an
+actionable 422 without ordinary-trace fallback. The backend now publishes the
+axis notes as warnings, and the interface keeps them visible, with a sheet-size
+mismatch first. [Mathematics and historical regressions](validation/sheet-axis-orientation.md).
+
+- **Local Python:** 489 targeted regressions passed on the calibration source
+  before the warning bridge; all 71 axis/interval/API cases then passed again
+  after that follow-up, including the actual rendered-photo warning assertion.
+  These counts overlap and are not a full-repository run.
+- **Browser:** six scenarios passed against a dedicated local server serving
+  the rebuilt frontend. Two use real tracing and CAD/export; three isolate
+  notice priority with real trace geometry and injected notes; one supplies an
+  ambiguous-calibration 422 to verify retake guidance and retained current
+  model. The mathematical/API refusal itself is covered by Python tests.
+- **Build and lint:** production build/TypeScript, Python lint, frontend/browser
+  formatting, and the two evidence scripts passed.
+- **Controlled replay:** replacing only the historical homography function on
+  a clean rendered 120 × 70 mm plate yields 176.4983 × 49.8653 mm before and
+  119.9701 × 70.0067 mm after. The rest of the current tracer stays fixed;
+  this is a synthetic function comparison, not physical-camera accuracy.
+- **Model study:** the [figure/base review](validation/figure-base-refinement.md)
+  records a separate character-model pipeline's actual serialized geometry,
+  with original review hashes and a reproducible selected-field extract.
+
+The [check receipt](validation/evidence/photo-model-quality-20261116/workbench-checks.json)
+binds current runtime source hashes, the replay, commands, scope and local log
+hashes. The [final axis/API log](validation/evidence/photo-model-quality-20261116/axis-api.log),
+[browser log](validation/evidence/photo-model-quality-20261116/browser.log) and
+[lint log](validation/evidence/photo-model-quality-20261116/lint.log) accompany it.
+Hosted CI, merge, installed runtime and deployment are separate; none is inferred
+from these local checks. Real-camera accuracy and physical fit remain untested.
+
 ## QIDI Studio handoff and import — November 15, 2026
 
 QIDI Studio 2.07.02.73 is the third slicer target. The program used for these checks is the official Ubuntu 24 AppImage. Its SHA-256 (`b0f39d5f…a276f8`) and size (127,400,440 bytes) match the asset digest GitHub publishes for the [v2.07.02.73 release](https://github.com/QIDITECH/QIDIStudio/releases/tag/v2.07.02.73).

@@ -20,6 +20,7 @@ Use the visible error message and the **Next step** guide to identify the action
 
 | Symptom | Likely cause | Next action |
 | --- | --- | --- |
+| Sheet long edge cannot be identified, metadata disagrees, or sides are too close in length | Perspective permits competing assignments or the assignment lacks the required numerical support. | Retake more directly overhead with all corners visible, keep the original uncropped photo and metadata, and use a clearly rectangular measured reference. A refused detected-sheet calibration does not fall back to an uncorrected trace. [Method and limits](validation/sheet-axis-orientation.md). |
 | Unsupported or unreadable image | The bytes are not a supported image, or the file is damaged. | Export a fresh PNG, JPEG, WebP, HEIC, or AVIF; changing the extension alone does not convert a file. A HEIC that uses a codec other than HEVC is not supported. |
 | Upload rejected as too large | Encoded size or decoded image dimensions exceed the server limit. | Resize the image before uploading, keeping the relevant boundary sharp. |
 | A selected reference sheet was not used | The whole sheet could not be detected or measured, and the initial upload fell back to ordinary tracing with a warning. | Enter a measured width, or retake the whole flat sheet with all four corners visible and choose the matching **Scale reference**. A fallback does not supply sheet correction or fitted geometry. |

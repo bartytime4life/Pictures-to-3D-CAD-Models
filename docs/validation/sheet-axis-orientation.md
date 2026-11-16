@@ -179,7 +179,15 @@ existing 120 × 70 mm plate, at camera tilt `(50°, 10°, 0°)`, yielded:
 This uses `tests.synthetic.render` with zero radial coefficient, shadow,
 lighting gradient, noise and dither, lossless PNG, zero in-plane part angle,
 and `trace_image(..., reference="a4", snap=False)`. Remaining errors include
-rendering, detection and contour approximation. The more complex noisy JPEG
+rendering, detection and contour approximation. A later controlled replay replaces only
+`homography` with its function from that baseline, keeping all other current
+tracing code fixed. This later replay measures **176.4983 × 49.8653 mm** with
+the historical assignment and **119.9701 × 70.0067 mm** with the correction.
+Its surrounding tracer is held fixed at this later source; these values are
+separate from the historical full-pipeline table above. The [executed replay receipt](evidence/photo-model-quality-20261116/sheet-scale-replay.json)
+and [runner](evidence/photo-model-quality-20261116/verify-sheet-scale.py) bind the
+synthetic image and source files. This isolates the axis-function change; it is
+not an execution of the complete historical application. The more complex noisy JPEG
 regression uses the ordinary renderer and checks every supported feature within
 0.15 mm; these thresholds describe these fixtures only.
 
@@ -234,6 +242,12 @@ backend and blur/support integration tests, and 126 sheet/photo/lens tests.
 Python lint and whitespace checks passed. The frontend was unchanged in this
 follow-up. These are local results; browser interaction, CI and physical-camera
 accuracy remain unverified for this change.
+
+The later repository publication adds a backend warning bridge and visible main
+notice priority. The [November 16 publication checks](../validation.md#sheet-axis-calibration-and-visible-scale-evidence--november-16-2026)
+include six passing browser scenarios; they supersede the earlier browser
+availability limitation for those scenarios only. Real-camera accuracy remains
+unverified.
 
 ## Scope of the evidence
 

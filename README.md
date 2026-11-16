@@ -196,6 +196,13 @@ recovery score; the middle miss and original 11/12 result remain unresolved.
 
 For reference-sheet tracing, photograph the whole flat sheet (A4, US Letter, or a sheet you have measured) and explicitly choose it as the **Scale reference**. A successful sheet trace sets scale from its stated size, estimates perspective and one radial lens correction, and fits lines, tangent arcs and circles. Entered thickness supports a side-wall/parallax correction under the method's assumptions. Ordinary tracing and the sample use measured-width scaling instead; they do not perform these corrections. See [reference-sheet tracing](docs/reference-sheet.md) for the mathematics and synthetic evidence, and the [engineering model](docs/engineering-model.md) for independent verification before fabrication.
 
+The [sheet-axis correction](docs/validation/sheet-axis-orientation.md) prevents
+perspective from swapping the sheet's physical width and height. Ambiguous or
+sensitive assignments ask for a better capture; correction and conditional-scale
+notes stay visible in the workbench. The [figure/base case study](docs/validation/figure-base-refinement.md)
+records the separate model pipeline's measured image and assembly gains and the
+limits of applying those results to this flat-part app.
+
 Review the [initial-fit support check](docs/validation/fit-support.md) and
 [known benchmark and camera-model limits](docs/validation/scientific-model-review.md)
 before relying on small residuals or reported error percentiles. A successful

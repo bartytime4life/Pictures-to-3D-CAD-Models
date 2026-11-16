@@ -1,6 +1,23 @@
 # Source scope and verification status
 
-## Current source snapshot — November 14, 2026 UTC
+## Calibration quality update — November 16, 2026
+
+This change is based on main `9337800` (PR #153). Runtime commits
+`e9bb5c8` and `edf9679` replace apparent-length sheet-axis assignment with
+conditional camera geometry and a declared corner-perturbation screen. Ambiguous
+detected-sheet calibrations return 422 even when missing-sheet fallback was
+requested. The interface now keeps scale-evidence notes visible ahead of routine
+guidance, with sheet-size mismatch first. See the [method and tests](validation/sheet-axis-orientation.md)
+and [current validation entry](validation.md#sheet-axis-calibration-and-visible-scale-evidence--november-16-2026).
+
+The [figure/base study](validation/figure-base-refinement.md) records an external
+character-model pipeline. Its mesh and image results do not add an arbitrary
+3D-sculpt reconstruction mode to this workbench. Local validation, hosted CI,
+merge and installed runtime remain separate records. The older snapshot below
+describes its pinned source and date; its statement that runtime matched PR #114
+does not describe this later checkout.
+
+## Historical source snapshot — November 14, 2026 UTC
 
 This documentation continuation follows published head
 `5f609af4944ba0ddc8b6b1e0c26eec81a75912c0`, tree

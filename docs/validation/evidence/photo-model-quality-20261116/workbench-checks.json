@@ -1,0 +1,57 @@
+{
+  "kind": "local-workbench-publication-validation",
+  "recorded_utc": "2026-11-16T18:32:32.770597+00:00",
+  "base_main_commit": "9337800037f66bcef601c1e49171ac7144c960c4",
+  "runtime_inputs": [
+    {
+      "path": "backend/calibration_bounds.py",
+      "sha256": "ca78e1f0a2aa0d3e655e007bd3b19b5c0bfbd71a349120d5c64fa45dd2cc15dc"
+    },
+    {
+      "path": "backend/sheet.py",
+      "sha256": "d01827b36e0eecaee706d95f9ad83e26aa1104ae458751d6f824a37ecd47391b"
+    },
+    {
+      "path": "backend/reference.py",
+      "sha256": "5c9457424acdab589b725c42c173cb93ee6ad47ff03176707526183c4b205054"
+    },
+    {
+      "path": "frontend/src/App.tsx",
+      "sha256": "3053ba086565f59d4d616acd37ff76820c0340ee560c2dfa7f496fd3ab158e1c"
+    },
+    {
+      "path": "frontend/src/SheetReference.tsx",
+      "sha256": "2bb4748b386c35e4d782762372836d140cd4a798f80312c246a7daee74c5f8b1"
+    }
+  ],
+  "broad_python": {
+    "passed": 489,
+    "runtime_source": "edf9679 before the subsequent warning bridge",
+    "scope": "Axis, interval, fidelity, sheet, lens, photo benchmark, backend and blur/support regressions",
+    "log_sha256": "146311ba7dc73e8b846e8ebf7b9bcde0e295bfff02ca1035d18d52e897172162",
+    "summary": "489 passed in 388.45s (0:06:28)"
+  },
+  "final_warning_bridge_axis_api_rerun": {
+    "passed": 71,
+    "command": ".venv/bin/python -m pytest -q tests/test_calibration_bounds.py tests/test_sheet_axis_assignment.py tests/test_sheet_axis_sweep.py tests/test_sheet_axis_flow.py",
+    "log_sha256": "a56ae231fcd0af713adab9628eb4cdccabedfc1b1c5f62867e93933ad8320462",
+    "summary": "71 passed in 10.23s"
+  },
+  "browser": {
+    "passed": 6,
+    "command": "PICAD_TEST_URL=http://127.0.0.1:8217 npx playwright test tests/e2e/sheet-reference.spec.ts --reporter=list",
+    "log_sha256": "d77acb46bab54d2244db974abcfeffaf4a2be855cbc531a218cdeef9ade19af7",
+    "summary": "6 passed (57.7s)",
+    "scope": "Two real sheet/CAD-export scenarios; three warning-priority scenarios with real trace geometry and injected warnings; one injected-422 recovery scenario"
+  },
+  "production_build": "pass; includes TypeScript check",
+  "python_and_frontend_lint": "pass",
+  "evidence_scripts_lint": "pass",
+  "controlled_sheet_replay": {
+    "path": "sheet-scale-replay.json",
+    "sha256": "ec296af716aa026ccc4f6e32f8b4216c16707603e6b56a22ad171d317efcc243"
+  },
+  "physical_accuracy_or_fit_validated": false,
+  "hosted_ci": "Not asserted by this local receipt; inspect the pull request checks",
+  "installed_runtime_or_deployment": "Not changed or established by this repository publication"
+}

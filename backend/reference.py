@@ -511,17 +511,19 @@ def trace_on_sheet(
     except edges.EdgeError as exc:
         raise ReferenceError_(str(exc), sheet_missing=True) from exc
     notes = list(seg_notes)
+    axis_notes = []
     if axis.get("axis_corrected"):
-        notes.append(
+        axis_notes.append(
             "Perspective makes the sheet's long edges look shorter in this photo; "
             "their physical direction was resolved before setting scale."
         )
     if axis.get("axis_source") in {"focal-range", "aspect-feasibility"}:
-        notes.append(
+        axis_notes.append(
             "Sheet orientation uses the chosen sheet proportions and a supported "
             "range of camera lenses; "
             "verify a separate part dimension with a measurement."
         )
+    notes.extend(axis_notes)
     if colour_note:
         notes.append(colour_note)
     # The note is about the blur's direction: each edge's width carried across the sheet
@@ -940,6 +942,7 @@ def trace_on_sheet(
     )
     mismatch = [n for n in notes if n.startswith("The sheet's proportions in the photo differ")]
     warnings_out.extend(mismatch)
+    warnings_out.extend(axis_notes)
     warnings_out.extend(blur_notes)
     warnings_out.extend(mixed_blur_notes)
     warnings_out.extend(radius_notes)

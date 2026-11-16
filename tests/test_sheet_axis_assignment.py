@@ -171,3 +171,4 @@ def test_rendered_foreshortened_photo_recovers_the_plate_dimensions():
     _, lengths, _ = cv2.minAreaRect(points.astype(np.float32))
     np.testing.assert_allclose(sorted(lengths), [70.0, 120.0], atol=0.15, rtol=0)
     assert max(S.feature_errors(profile).values()) < 0.15
+    assert any("physical direction was resolved" in note for note in result["warnings"])
