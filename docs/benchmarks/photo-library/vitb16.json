@@ -1,0 +1,77 @@
+{
+  "model": "DINOv3 ViT-B/16",
+  "device": "NVIDIA GeForce RTX 5080",
+  "photos": 98,
+  "parts": 7,
+  "seconds": {
+    "starting": 0.02,
+    "read": 1.04,
+    "model": 3.09,
+    "features": 0.82
+  },
+  "subject": {
+    "photos": 56,
+    "subject_found": 56,
+    "region_iou_mean": 0.7275944396889942,
+    "region_iou_median": 0.7481975354973109,
+    "region_iou_min": 0.4442265189326854,
+    "box_iou_mean": 0.8686171756107042,
+    "box_iou_below_half": 0
+  },
+  "matching_subject": {
+    "first_match": 1.0,
+    "mean_average_precision": 0.9944957041258062
+  },
+  "matching_whole": {
+    "first_match": 0.8571428571428571,
+    "mean_average_precision": 0.8884372409798699
+  },
+  "blur_rank_correlation": 0.751,
+  "blur_rank_correlation_photos": 56,
+  "subject_blur_rank_correlation": 0.832,
+  "subject_blur_rank_correlation_photos": 56,
+  "copy_cosine_min": {
+    "exact": 1.0,
+    "resaved": 0.965,
+    "half": 0.9927
+  },
+  "different_shot_cosine_max": 0.9138,
+  "groups": {
+    "threshold": 0.84,
+    "split": 0.8,
+    "pair_precision": 1.0,
+    "pair_recall": 1.0,
+    "f1": 1.0,
+    "groups_found": 7
+  },
+  "copies": {
+    "threshold": 0.96,
+    "found": {
+      "exact": 14,
+      "resaved": 14,
+      "half": 14
+    },
+    "of": {
+      "exact": 14,
+      "resaved": 14,
+      "half": 14
+    },
+    "sets_mixing_different_shots": 0
+  },
+  "best_shots": {
+    "groups": 7,
+    "truly_most_detailed": 3,
+    "within_top_three": 3,
+    "mean_group_size": 14.0
+  },
+  "set": "evaluation",
+  "part_names": [
+    "d-plate",
+    "gear",
+    "hex-plate",
+    "mounting-plate",
+    "ring-gasket",
+    "star-washer",
+    "u-clip"
+  ]
+}

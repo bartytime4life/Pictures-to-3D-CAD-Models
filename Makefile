@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 REFERENCE_PYTHON ?= $(CURDIR)/reference-library/.venv/bin/python
 
-.PHONY: help setup setup-app setup-library start dev build build-app build-library test test-app test-library lint smoke slicers depth-model depth-benchmark freecad photo-benchmark corner-sweep
+.PHONY: help setup setup-app setup-library start dev build build-app build-library test test-app test-library lint smoke slicers depth-model depth-benchmark vision-model vision-benchmark freecad photo-benchmark corner-sweep
 
 help:
 	@echo "make setup          install app and reference-library dependencies; build the app"
@@ -14,6 +14,8 @@ help:
 	@echo "make slicers        inspect local Bambu Studio, PrusaSlicer and QIDI Studio availability"
 	@echo "make depth-model    download and verify the optional AI depth model (99 MB)"
 	@echo "make depth-benchmark  score AI depth against the moon sample's true heights"
+	@echo "make vision-model [WEIGHTS=folder]  build the optional DINOv3 environment for the photo library"
+	@echo "make vision-benchmark  score the photo library's vision features on rendered parts"
 	@echo "make freecad        open a fitted build in FreeCAD (set FREECADCMD) and check it"
 	@echo "make photo-benchmark PHOTOS=folder   compare traces of your photos with your calipers"
 	@echo "make corner-sweep   fit exactly blurred filleted corners (60-150 degrees) and report radius errors"
@@ -66,6 +68,12 @@ depth-model:
 
 depth-benchmark:
 	.venv/bin/python scripts/depth_benchmark.py
+
+vision-model:
+	./scripts/vision-model.sh install $(if $(WEIGHTS),--weights "$(WEIGHTS)")
+
+vision-benchmark:
+	.venv/bin/python scripts/vision_benchmark.py
 
 freecad:
 	.venv/bin/python scripts/freecad_check.py

@@ -91,6 +91,8 @@ Run `make` for help. Component targets delegate to the existing scripts and libr
 | `make corner-sweep` | Fit synthetic blurred filleted corners and report radius error; it does not measure a real camera or part |
 | `make freecad` | Check fitted synthetic STEP/DXF imports using a separately installed `FREECADCMD` |
 | `make slicers` | Inspect executable discovery without starting a slicer |
+| `make vision-model WEIGHTS=folder` | Build the optional DINOv3 environment for the photo library and link verified weight files you obtained ([guide](photo-library.md#optional-vision-model)) |
+| `make vision-benchmark` | Score the photo library's vision features on rendered parts with the installed model; it does not measure real photographs |
 | `make setup-app` / `make setup-library` | Prepare one component |
 | `make build-app` / `make build-library` | Build one component |
 | `make test-app` / `make test-library` | Validate one component |

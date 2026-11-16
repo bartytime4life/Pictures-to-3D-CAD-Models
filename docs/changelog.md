@@ -1,5 +1,32 @@
 # Workbench change log
 
+## A photo library that crunches whole folders, with optional DINOv3 features — November 16, 2026
+
+- A third studio, **Library**, indexes folders of photos on this computer or photos
+  sent through the browser. Reader processes decode each picture with the workbench's
+  own decoders, write a 512-pixel preview and measure edge blur; the catalogue is a
+  SQLite file under `.local/library`. Originals are only read. Views sort and filter
+  by name, date, sharpness, detail and size; the grid draws only the rows on screen.
+- Edge blur is the Gaussian width of the strongest edges in the photo's own pixels,
+  solved from each edge's rise and step height, along the colour direction of most
+  contrast. On renders with 0.5 to 4 px of blur it read 0.8 to 4.1 px.
+- With the optional DINOv3 model (`make vision-model WEIGHTS=folder`; weights from Meta
+  under its licence, never downloaded here) each photo gets a subject region, found by
+  fitting the background as a plane in feature space, and a subject vector. The library
+  then groups shots of one subject, marks the most detailed shot of each group, flags
+  re-saved and resized look-alikes, and finds the photos most like any picture.
+- On rendered parts held out from tuning, ViT-B/16 returned the same part first for all
+  56 shots (0.857 with the whole-picture vector), grouped all seven parts correctly
+  and found all 42 planted copies. With fourteen parts together, group precision was
+  0.76: an L-bracket and a T-bracket shared a group. The best shot was the truly most
+  detailed in 12 of 20 groups. These are drawings, not photographs.
+- A crunch read 12-megapixel JPEGs at about 100 a second and described them at about
+  175 a second on a 16-core computer with an RTX 5080.
+- **Open in Flat part** and **Open in Relief** hand the chosen original to that studio.
+  Catalogue exports are CSV and JSON. The header gained a fourth tab and tighter
+  spacing between 1251 and 1450 px so the project name stays whole.
+- See the [guide](photo-library.md) and the [validation record](validation/photo-library.md),
+  which also lists the methods tried and rejected.
 ## Constrained shadow solver — November 16, 2026
 
 - The nonnegative shadow fit now lets discarded kernel nodes return when they

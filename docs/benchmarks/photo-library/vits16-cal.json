@@ -1,0 +1,65 @@
+{
+  "model": "DINOv3 ViT-S/16",
+  "device": "NVIDIA GeForce RTX 5080",
+  "photos": 98,
+  "parts": 7,
+  "seconds": {
+    "starting": 0.02,
+    "read": 1.09,
+    "model": 2.41,
+    "features": 0.4
+  },
+  "subject": {
+    "photos": 56,
+    "subject_found": 56,
+    "region_iou_mean": 0.6934804181979423,
+    "region_iou_median": 0.7367040521158108,
+    "region_iou_min": 0.2624387582856437,
+    "box_iou_mean": 0.8373565502670284,
+    "box_iou_below_half": 2
+  },
+  "matching_subject": {
+    "first_match": 0.9821428571428571,
+    "mean_average_precision": 0.9240767444173806
+  },
+  "matching_whole": {
+    "first_match": 0.8571428571428571,
+    "mean_average_precision": 0.86243962520446
+  },
+  "blur_rank_correlation": 0.78,
+  "blur_rank_correlation_photos": 56,
+  "subject_blur_rank_correlation": 0.825,
+  "subject_blur_rank_correlation_photos": 56,
+  "copy_cosine_min": {
+    "exact": 0.9999,
+    "resaved": 0.9851,
+    "half": 0.9864
+  },
+  "different_shot_cosine_max": 0.9456,
+  "group_grid_best_f1": 0.842,
+  "group_thresholds_chosen": {
+    "link": 0.84,
+    "split": 0.8,
+    "precision": 0.747,
+    "recall": 0.964,
+    "f1": 0.842
+  },
+  "group_thresholds_shipped": {
+    "link": 0.84,
+    "split": 0.8
+  },
+  "lookalike_gap": [
+    0.9456,
+    0.9851
+  ],
+  "set": "calibration",
+  "part_names": [
+    "cross",
+    "flange",
+    "gusset",
+    "l-bracket",
+    "oval-gasket",
+    "slot-plate",
+    "t-bracket"
+  ]
+}

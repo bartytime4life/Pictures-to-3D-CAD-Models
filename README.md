@@ -7,10 +7,11 @@ The workbench is designed for plates, gaskets, spacers, and templates. It traces
 [Start the app](#start-the-app) · [Try the workflow](#try-the-complete-workflow)
 · [Documentation](docs/README.md) · [Troubleshooting](docs/troubleshooting.md)
 
-This repository contains three related tools:
+This repository contains four related tools:
 
 | Component | Use it for | Entry point |
 | --- | --- | --- |
+| Photo library | Crunch whole folders of photos: measure sharpness, find copies and, with the optional DINOv3 model, group shots of the same part and find similar ones; then open the best shot in either studio | The **Library** tab in the app header, or `/#library`; [guide](docs/photo-library.md) |
 | Photo-to-CAD workbench | Trace, measure, review, and export a flat part | `make start` after setup |
 | Relief and lithophane studio | Turn any picture into a raised relief or a backlit lithophane, with an editable Blender scene | The **Relief & Lithophane** tab in the app header, or `/#relief` |
 | Reference library and OpenSCAD workspace | Read the handbook, calculate dimensions, and design parameter-driven mounting plates or fit coupons | The **OpenSCAD** tab in the app header, [offline library](reference-library/index.html), or [its guide](reference-library/README.md) |
@@ -28,7 +29,7 @@ make setup
 make start
 ```
 
-Setup prepares the workbench and reference-library dependencies in separate local environments and builds the workbench interface. Startup runs the API and built interface together. No account, paid API, GPU, or third-party AI credential is required. Setup does not download Ollama models, the optional AI depth model, browsers, OpenSCAD, or system fonts.
+Setup prepares the workbench and reference-library dependencies in separate local environments and builds the workbench interface. Startup runs the API and built interface together. No account, paid API, GPU, or third-party AI credential is required. Setup does not download Ollama models, the optional AI depth model, the optional DINOv3 vision model, browsers, OpenSCAD, or system fonts.
 
 For workbench-only setup, use `make setup-app`. The existing `./scripts/setup.sh` and `./scripts/start.sh` commands remain supported and apply only to the workbench.
 
@@ -64,6 +65,18 @@ Every build reports these numbers beside the 3D preview.
 Choose **Shape: Sphere** (or the **Moon lamp** sample) to wrap a 2:1 world-map picture around a hollow ball. As a lithophane it makes a moon lamp, with a flat base ring around a light opening. The overhang share and bed-contact area are reported. **Elevation maps** (single-band TIFF or PNG heights, such as NASA's CGI Moon Kit) build terrain at true scale with a chosen exaggeration. Try the **Moon elevation globe** sample.
 
 Download STL or 3MF for a slicer, a 16-bit height map, or a **Blender ZIP**. The ZIP rebuilds the identical solid in Blender as a live **Displace** modifier and, for lithophanes, sets up a Cycles backlight scene that renders the Beer–Lambert prediction. With `PICAD_ENABLE_BLENDER_LAUNCH=1`, **Open in Blender** starts an installed Blender with that scene. Blender is optional; nothing else needs it. See the [relief and lithophane guide](docs/relief.md).
+
+## Photo library
+
+Before tracing anything, open **Library** and point it at a folder of photos. It reads every picture in parallel, keeps a small preview, and measures how sharp each one is. Originals are only read, never changed or moved.
+
+![Photo library showing grouped photos of rendered parts and one photo's subject lit](docs/images/library.png)
+
+Without any model it indexes, sorts, filters, finds exact copies and exports the catalogue as CSV. With the **optional DINOv3 vision model** it also finds the subject of each photo, groups shots of the same part, picks the most detailed shot of each group, flags re-saved and resized look-alikes, and finds the photos most like any picture you choose. **Open in Flat part** or **Open in Relief** sends the chosen original straight to that studio.
+
+DINOv3's weights are released by Meta under its own licence and only after a request form, so this project never downloads them. With files you obtained, run `make vision-model WEIGHTS=/folder/with/the/pth/files`. It builds a separate environment with PyTorch, verifies each file by SHA-256 and runs the model on this computer's graphics card or processor.
+
+On one workstation (16 cores, RTX 5080) a crunch read 12-megapixel JPEGs at about 100 a second and described them at about 175 a second. On rendered parts never used for tuning, the default ViT-B/16 returned the same part as the first match for all 56 shots and grouped all seven parts correctly; with fourteen parts together, two look-alike brackets shared a group. These figures are from drawings of parts, not photographs, and every result is a suggestion for choosing a photo, not a measurement ([guide](docs/photo-library.md), [validation](docs/validation/photo-library.md)).
 
 ## Bambu Studio, PrusaSlicer and QIDI Studio
 
@@ -149,7 +162,7 @@ OpenSCAD source export works without installing OpenSCAD. Open the downloaded `.
 
 ## Honest limits
 
-These apply to the flat-part workbench. The relief studio has its own [limits](docs/relief.md#limits): its height comes from image tone, or from relative depth estimated by the optional AI model, never from measured shape.
+These apply to the flat-part workbench. The relief studio has its own [limits](docs/relief.md#limits): its height comes from image tone, or from relative depth estimated by the optional AI model, never from measured shape. The photo library's groups, matches and subject regions are suggestions from image features with [limits](docs/photo-library.md#limits) of their own.
 
 - A single image supplies a 2D outline. Thickness is entered by the user; recesses, sloped walls, threads, and hidden features are not reconstructed.
 - One outside width or two-point reference sets uniform scale. It does not correct perspective, lens distortion, or an out-of-plane part. A reference sheet estimates perspective and one radial lens coefficient in the sheet's plane, and the parallax of a vertical-walled part of the entered thickness. Its edges are measured in linear light, decoding the photo as sRGB. The paper-side model follows local slopes and can apply a soft shadow fitted round the part when its numerical checks accept it; contact shadows, sharper shadow transitions and a camera's own tone mapping remain limits. Near-frontal camera height can be inferred from suitable holes assumed round; without that evidence or EXIF, an assumed lens remains necessary. The recorded errors come from rendered photographs with exact ground truth. [The photo benchmark](docs/photo-benchmark.md) measures real photos against calipers, and no such result is recorded yet.

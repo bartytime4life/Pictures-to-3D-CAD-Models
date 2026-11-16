@@ -161,6 +161,21 @@ Opening a project replaces the current work only after its CAD build succeeds. I
 | AI cannot send with invalid settings | Follow the deterministic **Next step** correction first. Valid settings that request oversized geometry can still ask for a repair suggestion; applying it remains explicit and validated. |
 | The answer seems wrong | Ignore it or undo an applied suggestion. Check the photograph, measured part, and capture guide. A valid response format does not prove the advice is correct. |
 
+## Photo library problems
+
+| Symptom | Next action |
+| --- | --- |
+| **Add folder** is missing | Folders can be named only from the workbench page on the same computer as the backend, and not with `PICAD_LIBRARY_FOLDERS=0`. Use **Add photos**, or open the app at its loopback address on that computer. |
+| The header says **Vision model off** | Open it for the reason. Install with `./scripts/vision-model.sh install --weights FOLDER` after requesting the weights from Meta, then restart the workbench. `./scripts/vision-model.sh status` shows what is verified. |
+| A weight file is "not verified" | The file is damaged or is not one of the four supported LVD-1689M ViT backbones. Download it again; the name ends with the first eight digits of its SHA-256. |
+| The vision model "could not start" | The message carries the last line of `.local/vision-model/worker.log`. A graphics driver PyTorch cannot use falls back when `PICAD_VISION_DEVICE=cpu` is set; install the ViT-S/16 weights for processor use. |
+| No groups, or every photo alone | Groups need the vision model and at least two photos of one subject. Photos of one part against very different surroundings can stay apart. |
+| Two different parts share a group | Parts that look alike can be grouped together. Groups are suggestions; choose the photo by eye. |
+| A photo has no edge blur | It has too few clear edges, as icons and plain graphics do. It is still indexed and sorted last by sharpness. |
+| **Not read** lists files | Each shows its reason: over 32 MiB, over 70 megapixels, an animation, or a damaged file. Fix or remove the file and choose **Rescan**. |
+| A crunch is slow | Reading is limited by memory traffic for large PNG and HEIC files, which are decoded in full. `PICAD_LIBRARY_WORKERS` sets the number of reader processes. Without a graphics card, describing is far slower; install ViT-S/16. |
+| "The original file has changed" on **Open in** | The file was edited or moved after indexing. Choose **Rescan**. |
+
 ## Report a reproducible problem
 
 Include the failing stage, exact error text, input format and approximate dimensions, entered width and thickness with units, browser, operating system, and the relevant application revision. Attach a non-sensitive sample when possible. Avoid uploading confidential parts or credentials to an issue report.

@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
-import { Cube, Mountains, Ruler } from '@phosphor-icons/react';
+import { Cube, Images, Mountains, Ruler } from '@phosphor-icons/react';
 
-export type Studio = 'workbench' | 'relief';
+export type Studio = 'workbench' | 'relief' | 'library';
 
 /**
- * The header both studios share: the brand, the page's own project-name control, one row of
+ * The header the studios share: the brand, the page's own project-name control, one row of
  * studio tabs (the current one marked with aria-current="page") and the page's own actions.
  * On narrow screens every icon keeps a short visible label instead of becoming a bare icon.
  */
@@ -52,6 +52,16 @@ export default function AppHeader({
           <Mountains size={23} />
           <span className="label-long">Relief &amp; Lithophane</span>
           <span className="label-short">Relief</span>
+        </a>
+        <a
+          className="studio-tab"
+          href="#library"
+          aria-label="Photo library"
+          aria-current={studio === 'library' ? 'page' : undefined}
+        >
+          <Images size={23} />
+          <span className="label-long">Photo library</span>
+          <span className="label-short">Library</span>
         </a>
         <a
           className="studio-tab"

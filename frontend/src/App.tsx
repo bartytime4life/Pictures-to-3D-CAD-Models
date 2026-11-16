@@ -24,6 +24,7 @@ import {
   X,
 } from '@phosphor-icons/react';
 import AppHeader from './AppHeader';
+import { takeHandoff } from './handoff';
 import ModelViewer from './ModelViewer';
 import LocalAssistant from './LocalAssistant';
 import PrintSettings from './PrintSettings';
@@ -765,7 +766,9 @@ export default function App() {
   }
 
   useEffect(() => {
-    void loadSample();
+    // A photo sent from the photo library opens instead of the sample.
+    const handed = takeHandoff('workbench');
+    void (handed ? loadPhoto(handed) : loadSample());
     return () => {
       sequenceRef.current++;
     };

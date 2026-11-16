@@ -13,6 +13,7 @@ different source and validation histories.
 | Task | Guide |
 | --- | --- |
 | Install, start and try the sample | [Project README](../README.md), [setup and development](development.md) |
+| Organize source photos with optional DINOv3 features | [Photo library](photo-library.md) |
 | Photograph and measure a part | [Capture guide](capture-guide.md) |
 | Use paper to estimate scale and correct a suitable capture | [Reference-sheet tracing](reference-sheet.md) |
 | Set scale from two known points and explore endpoint placement | [Reference sensitivity](reference-sensitivity.md) |
