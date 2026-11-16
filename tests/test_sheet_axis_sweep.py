@@ -33,7 +33,7 @@ def test_camera_sweep_keeps_holdout_dimensions_or_refuses_ambiguous_axes():
     accepted = rejected = 0
     accepted_standard = rejected_without_exif = 0
     failures = []
-    dimensions = [(210, 297), (200, 200), (200, 201), (200, 200.1)]
+    dimensions = [(210, 297), (200, 200), (200, 201), (200, 200.1), (200, 204), (200, 204.2)]
     tilts = [
         (0, 0, 0),
         (22, -9, 4),
@@ -42,6 +42,10 @@ def test_camera_sweep_keeps_holdout_dimensions_or_refuses_ambiguous_axes():
         (0, 60, 0),
         (60, 0.0001, 4),
         (20, -30, 90),
+        (60, 0.1, 4),
+        (70, 0.1, 4),
+        (75, 0.1, 4),
+        (75, -0.1, 4),
     ]
     cases = itertools.product(
         dimensions, tilts, [500, 1980, 5000], [False, True], [0, 0.05], range(4)
@@ -99,7 +103,7 @@ def test_camera_sweep_keeps_holdout_dimensions_or_refuses_ambiguous_axes():
         if error > (0.1 if noise else 1e-4):
             failures.append((context, "held-out dimension error", error))
 
-    assert accepted + rejected == 1344
+    assert accepted + rejected == 3168
     assert accepted_standard > 0 and rejected_without_exif > 0
     assert accepted > 0 and rejected > 0
     assert failures == []

@@ -126,6 +126,42 @@ def test_wrong_sheet_proportions_are_not_forced_to_pass_the_independent_check():
     assert abs(expected - 1) > 0.08
 
 
+@pytest.mark.parametrize("tilt,focal,seed,dimensions", [
+    ((75, 0.1, 4), 5000, 25, (210, 297)),
+    ((70, 0.1, 4), 5000, 98, (210, 297)),
+    ((60, 0.1, 4), 1980, 1, (200, 204)),
+])
+@pytest.mark.parametrize("cycle", range(4))
+@pytest.mark.parametrize("metadata", [False, True])
+def test_unstable_inferred_focal_cannot_swap_axes_or_veto_original_metadata(
+    tilt, focal, seed, dimensions, cycle, metadata
+):
+    """A nonzero orthogonality constraint can be dominated by subpixel error.
+
+    The first case formerly accepted 141.436 x 49.493 for a 100 x 70 rectangle,
+    while the separate sheet-proportion check differed by only 0.3%.
+    """
+    found, truth, _ = projected_sheet(
+        tilt, sheet_mm=dimensions, focal=focal, distance=focal * 0.4
+    )
+    rng = np.random.default_rng(seed)
+    found.sides = [side + rng.normal(0, 0.05, side.shape) for side in found.sides]
+    found.sides = found.sides[cycle:] + found.sides[:cycle]
+    found.corners = np.roll(found.corners, -cycle, axis=0)
+    if not metadata:
+        with pytest.raises(sheet.SheetError, match="does not identify which reference-sheet edge"):
+            sheet.homography(found, 0.0, (2400, 1800), dimensions)
+        return
+    equivalent = focal * math.hypot(36, 24) / math.hypot(2400, 1800)
+    diagnostic = {}
+    matrix, assigned, _ = sheet.homography(
+        found, 0.0, (2400, 1800), dimensions, focal_35mm=equivalent, diagnostics=diagnostic
+    )
+    assert diagnostic["axis_source"] == "exif"
+    assert assigned == (dimensions if cycle % 2 == 0 else dimensions[::-1])
+    np.testing.assert_allclose(recovered_lengths(matrix, truth), [100, 70, 100, 70], atol=0.03, rtol=0)
+
+
 def test_rendered_foreshortened_photo_recovers_the_plate_dimensions():
     """The old apparent-length assignment made the 120 x 70 plate about 169 x 50 mm."""
     data, _ = S.render(tilt=(50.0, 10.0, 4.0), shadow=0.0, gradient=0.0, k1=0.0)

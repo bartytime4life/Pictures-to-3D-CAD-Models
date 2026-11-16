@@ -20,6 +20,7 @@ import cv2
 import numpy as np
 
 from . import tone
+from .calibration_bounds import inferred_axis_order
 from .tone import encoded_from_linear
 
 # Paper presets in millimetres (ISO 216 A4 and ANSI Letter), short side first.
@@ -32,7 +33,6 @@ DEFAULT_FOCAL_35MM = 26.0
 # The broad focal envelope already accepted from metadata. This bounds an axis
 # decision when the photo alone cannot identify focal length; it is not calibration.
 FOCAL_35MM_RANGE = (5.0, 600.0)
-AXIS_ORTHOGONAL_SIGNAL = 1e-3
 # A support policy, not an uncertainty estimate: almost-square custom sheets need
 # an ordering stable across the whole focal envelope.
 MIN_INFERRED_AXIS_RATIO = 1.02
@@ -717,8 +717,10 @@ def _sheet_axis_order(matrix, size, sheet_mm, focal_35mm=None):
     monotone in f², so its endpoint interval is sufficient. Two feasible
     assignments are a real ambiguity: do not export one by guessing.
 
-    The 1e-3 normalized orthogonality signal is a conditioning guard, not a
-    statistical confidence bound. Non-square sheets with under 2% side separation
+    Inferred ordering must survive an outward-rounded corner-placement interval
+    scenario; a nonzero orthogonality constraint alone does not make it stable.
+    This is a sensitivity policy, not a statistical confidence bound.
+    Non-square sheets with under 2% side separation
     do not use focal-derived ordering or aspect feasibility: those choices are too
     sensitive to small edge errors, even with metadata. Invariant focal-range ordering is required.
     This is an application support policy, not a precision claim.
@@ -742,23 +744,20 @@ def _sheet_axis_order(matrix, size, sheet_mm, focal_35mm=None):
         if math.isfinite(supplied) and FOCAL_35MM_RANGE[0] <= supplied <= FOCAL_35MM_RANGE[1]:
             focal = supplied / math.hypot(36, 24) * math.hypot(w, h)
             source = "exif"
-    signal = abs(float(xy[:, 0] @ xy[:, 1])) / math.sqrt(float(p[0] * p[1]))
-    inferred = orthogonal_focal(matrix, size) if not near_square and signal >= AXIS_ORTHOGONAL_SIGNAL else None
-    if inferred is not None:
-        inferred_length2 = p / inferred**2 + z
-        if focal is not None:
-            supplied_length2 = p / focal**2 + z
-            if (inferred_length2[0] > inferred_length2[1]) != (supplied_length2[0] > supplied_length2[1]):
-                raise SheetError(
-                    "The photo's focal-length metadata and the reference-sheet perspective disagree "
-                    "about the long edge. Use the original uncropped photo, check the sheet size, "
-                    "or retake it more directly overhead."
-                )
-        else:
-            focal, source = inferred, "sheet"
+    unit = np.array([[0, 0], [1, 0], [1, 1], [0, 1]], dtype=float)
+    inferred_order = None if near_square else inferred_axis_order(project(matrix, unit), size)
     if focal is not None:
         length2 = p / focal**2 + z
-        return bool(length2[0] > length2[1]), source
+        supplied_order = bool(length2[0] > length2[1])
+        if inferred_order is not None and inferred_order != supplied_order:
+            raise SheetError(
+                "The photo's focal-length metadata and the reference-sheet perspective disagree "
+                "about the long edge. Use the original uncropped photo, check the sheet size, "
+                "or retake it more directly overhead."
+            )
+        return supplied_order, source
+    if inferred_order is not None:
+        return inferred_order, "sheet"
 
     focal_bounds = np.asarray(FOCAL_35MM_RANGE) / math.hypot(36, 24) * math.hypot(w, h)
     ratios2 = (p[0] + focal_bounds**2 * z[0]) / (p[1] + focal_bounds**2 * z[1])

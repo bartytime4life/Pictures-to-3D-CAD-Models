@@ -49,6 +49,55 @@ route. When both sources are usable, conflicting assignments stop the trace;
 otherwise metadata takes precedence. This does not establish that metadata from
 a cropped or processed photo is correct.
 
+### Sensitivity to corner placement
+
+A merely nonzero orthogonality constraint can still be unusably sensitive. The
+initial fix at `e9bb5c8` required a normalized numerator of at least 0.001, but an
+independent review reproduced a failure just outside its camera grid: A4 at
+`(75°, 0.1°, 4°)`, true focal 5000 px, distance 2000 mm, and seeded 0.05 px edge
+coordinate noise. It inferred 2224.274 px and accepted the wrong axes. The
+reserved 100 × 70 mm rectangle became **141.4358 × 49.4930 mm**, yet the independent
+proportion check was **0.997028**, within its 1% warning threshold. A residual
+check does not cure an ill-conditioned inverse problem.
+
+`backend/calibration_bounds.py` replaces that numerator threshold with
+outward-rounded interval arithmetic. Each of the eight fitted, undistorted
+corner coordinates varies independently within a declared box. For corner
+coordinates `(x0,y0),...,(x3,y3)`, centred on the assumed principal point, write
+
+```
+dx1 = x1-x2; dx2 = x3-x2; dx3 = x0-x1+x2-x3
+dy1 = y1-y2; dy2 = y3-y2; dy3 = y0-y1+y2-y3
+det = dx1*dy2 - dx2*dy1
+g = (dx3*dy2 - dx2*dy3) / det
+h = (dx1*dy3 - dx3*dy1) / det
+u = (x1-x0+g*x1, y1-y0+g*y1, g)
+v = (x3-x0+h*x3, y3-y0+h*y3, h).
+```
+
+These are the first two columns of the unit-square homography with its last
+entry normalized to one. Its denominator is affine: requiring positive lower
+bounds on `1+g`, `1+h` and `1+g+h` keeps the whole square within a finite
+projective chart. Define `N = u_x*v_x + u_y*v_y` and `Z = u_z*v_z`. Eliminating
+`f² = -N/Z` from the metric squared-length difference gives
+
+```
+D = [N*(Z1-Z2) - (P1-P2)*Z] / N.
+```
+
+Every operation rounds both interval endpoints outward. A denominator that
+contains zero, an unsupported focal interval, or a `D` interval that contains
+zero makes this inference unresolved. A strictly signed `D` interval resolves
+the order throughout the chosen corner box; no random sampling is used in the
+production decision. Dependency overestimation can conservatively reject a
+view whose true set of possibilities is narrower than its computed intervals.
+
+An unresolved inference cannot veto usable original focal metadata. Without
+metadata, the existing focal-envelope/aspect checks still apply; if those also
+cannot resolve the axes, the app requests a new photo. The reported noisy case
+now refuses instead of exporting distorted dimensions; correct focal metadata
+recovers the held-out lengths within 0.03 mm in the seeded regression.
+
 ## Unknown focal length and ambiguity
 
 A frontal or single-axis view can leave orthogonality uninformative. A guessed
@@ -94,11 +143,12 @@ by construction. The separate proportion check retains its own focal source.
   photo pixels by the ratio of image diagonal to the 36 × 24 mm diagonal. This
   reuses the range accepted for EXIF; it is an application assumption, not a
   measured bound on the camera.
-- The orthogonality numerator must have normalized magnitude at least **0.001**
-  relative to the product of image-plane column norms before its focal estimate
-  can decide an axis. A nearly vanishing constraint is too sensitive to edge
-  errors for this route. The existing inferred-focal plausibility check also
-  applies.
+- The corner scenario is **±0.25 pixels per 3000-pixel image diagonal**, per
+  coordinate. Scaling its radius with the image preserves the policy when the
+  same image is resized. The entire inferred focal interval must remain within
+  the existing **0.3–5 image diagonals** plausibility range, and the metric-axis
+  difference must keep one sign. This scenario is a sensitivity screen, not a
+  claim that actual corner error is bounded by that radius.
 - A non-square reference with `long / short < 1.02` cannot use either EXIF-based
   or inferred-focal norm ordering, or the aspect-feasibility route. It can only
   proceed when the ordering is invariant over the focal envelope. This is a
@@ -110,9 +160,11 @@ by construction. The separate proportion check retains its own focal source.
   and conflicting focal evidence have separate messages. These failures do not
   silently invoke ordinary tracing via the missing-sheet fallback.
 
-The interval reasoning is exact for the **measured homography**. It is not a
-bound against arbitrary corner-placement errors. No policy threshold above is
-a probability, a confidence interval, or a physical uncertainty estimate.
+The focal-envelope reasoning uses the **measured homography**. Only the inferred
+axis route additionally encloses the declared corner scenario, with lens
+correction and principal point fixed. Neither is a bound against arbitrary
+corner-placement, camera-model or lens errors. No policy threshold above is a
+probability, a confidence interval, or a physical uncertainty estimate.
 
 ## Reproduced checks
 
@@ -136,25 +188,35 @@ The permanent checks are:
 - `tests/test_sheet_axis_assignment.py`: exact projected edge clouds, reserved
   100 × 70 mm dimensions, cyclic corner starts, image/homography rescaling,
   single-axis ambiguity, metadata conflicts, square/near-square policy and a
-  full rendered photo through tracing.
+  full rendered photo through tracing. Noisy weak-secondary-tilt cases cover
+  the reproduced failure and the 2% sheet-ratio policy boundary, with each
+  cyclic corner start and metadata present/absent.
+- `tests/test_calibration_bounds.py`: high-precision decimal arithmetic checks
+  outward enclosure, and independent eight-equation homography solves at every
+  corner-box vertex check the derived column bounds for three camera poses.
+  Degenerate and horizon-crossing scenarios cannot supply inferred ordering.
 - `tests/test_sheet_axis_sweep.py`: an independently written pinhole projection
-  over **1,344 cases**, with exact edges or seeded 0.05 px edge-coordinate noise,
-  four sheet shapes, seven poses, three focal lengths, metadata present/absent
-  and four cyclic corner starts. **744 accepted; 600 refused; no wrong accepted
-  axis assignments.** Maximum accepted reserved-dimension error was 0.01980 mm.
+  over **3,168 cases**, with exact edges or seeded 0.05 px edge-coordinate noise,
+  six sheet shapes, eleven poses, three focal lengths, metadata present/absent
+  and four cyclic corner starts. The expanded grid includes small nonzero
+  secondary tilts and sheets on either side of the 2% support boundary.
+  **1,702 accepted; 1,466 refused; no wrong accepted axis assignments.** Every
+  accepted held-out dimension remained within the fixture's 0.1 mm bound with
+  noise, or 0.0001 mm with exact edges.
   Rejections include the conservative near-square policy; they are not all
   proofs of physical non-identifiability.
 - `tests/test_sheet_axis_flow.py`: the actual API returns an actionable 422
-  for ambiguous detected geometry, with and without requested fallback. Only
-  sheet detection is supplied as an exact fixture; axis selection is exercised.
+  for exact ambiguous and noisy unstable detected geometry, with and without
+  requested fallback. Only detection and lens estimation are supplied as
+  fixtures; axis selection is exercised.
 
 Run the dedicated regression set with:
 
 ```sh
-.venv/bin/python -m pytest -q tests/test_sheet_axis_assignment.py tests/test_sheet_axis_sweep.py tests/test_sheet_axis_flow.py
+.venv/bin/python -m pytest -q tests/test_calibration_bounds.py tests/test_sheet_axis_assignment.py tests/test_sheet_axis_sweep.py tests/test_sheet_axis_flow.py
 ```
 
-Local verification on 2026-11-16 passed **365 targeted Python tests**: 36 axis
+The initial local verification on 2026-11-16 passed **365 targeted Python tests**: 36 axis
 assignment/sweep tests, 84 fidelity-math tests, 126 existing sheet/photo/lens
 tests, 90 backend/API-flow tests, and 29 blur/support integration tests. The
 frontend production build, TypeScript check, Python lint, changed frontend
@@ -163,6 +225,15 @@ also reproduced the corrected dimensions above and the axis-correction note.
 These were targeted regressions, not the entire repository suite. Browser
 interaction/visual verification was unavailable because browser navigation
 failed; no new CI, merge, deployment or physical-print result is claimed.
+The original 1,344-case grid had no wrong accepted axes but missed the weak-tilt
+failure above; that finite result was not a general correctness guarantee.
+
+The follow-up interval implementation passed **398 targeted Python tests**:
+67 axis/sweep/interval tests, 4 API calibration-refusal cases, 201 fidelity,
+backend and blur/support integration tests, and 126 sheet/photo/lens tests.
+Python lint and whitespace checks passed. The frontend was unchanged in this
+follow-up. These are local results; browser interaction, CI and physical-camera
+accuracy remain unverified for this change.
 
 ## Scope of the evidence
 
