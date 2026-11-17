@@ -1,5 +1,23 @@
 # Workbench change log
 
+## Unreleased — Precision Studio local implementation, November 17, 2026
+
+- A shared command launcher and responsive workspace navigation retain edits while
+  switching among Flat part, Relief, Photo library, Knowledge and Science lab.
+  Source, CAD and bed inspection controls change the view without changing exports.
+- Quick edit adds linked target dimensions, presets and bounded undo/redo. Optional
+  outline-based background removal and user-marked common-object references help
+  prepare the photograph and establish explicit scale.
+- Prepare for slicing records layer height, walls, infill, supports and adhesion.
+  Five slicer handoff targets now include OrcaSlicer and Cura; process plans remain
+  notes for manual review in the receiving slicer, without native presets or G-code.
+- Knowledge adds searchable guides, local notes and validated backups. Science lab
+  adds editable scale, layer and measured-fit scenarios with explicit assumptions.
+  A read-only local API supplies curated project guides and matching downloads.
+- Task-oriented guides and the documentation index accompany the interface. These
+  are locally implemented changes prepared for review, not a merged release or
+  evidence of native slicer import, deployment or physical printing.
+
 ## Documentation and mathematics audit — November 16, 2026
 
 - Every guide and record was checked against the code and saved data, formula by
@@ -9,7 +27,7 @@
   - API, security and export docs now include QIDI Studio as the third slicer. The
     PDF's centre marks are on circles of a fitted outline only.
   - The photo library: a JPEG is decoded at reduced scale from 7.6 megapixels, not 8.
-    The model table gives the real graphics-card and processor order. *Detail*
+    The model table gives the real graphics-card and processor order. _Detail_
     without a subject uses half the frame. The edge-blur table is re-measured with
     stated seeds. With all fourteen parts ViT-B/16 merges two pairs of look-alike
     parts, and it is about twice as fast as ViT-L/16, not three times.
@@ -399,7 +417,6 @@
   target impossible. [Method](finite-acquisition-restoration-result.md).
 - Refresh all current guide entry points. Historical records, frozen source,
   main runtime, generated library outputs and physical status retain their scope.
-
 
 ## Unrun restoration candidate documented — November 14, 2026 UTC
 
@@ -880,7 +897,6 @@ library maintains its own [revision history](../reference-library/CHANGELOG.md).
   positive-definite covariance. Bin support and model-adequacy thresholds remain
   unchanged. Actual sampled Gaussian-step regressions and the bounded scope are
   recorded in [directional-blur rank validation](validation/directional-blur-rank.md).
-
 
 ## A shadow's push on a hole's centre — November 12, 2026
 

@@ -30,6 +30,18 @@ const targets = [
     version: '2.7.2.73',
     release: 'https://github.com/QIDITECH/QIDIStudio/releases/tag/v2.07.02.73',
   },
+  {
+    id: 'orca' as const,
+    name: 'OrcaSlicer',
+    version: '2.5.1',
+    release: 'https://github.com/OrcaSlicer/OrcaSlicer/releases/tag/v2.5.1',
+  },
+  {
+    id: 'cura' as const,
+    name: 'UltiMaker Cura',
+    version: '5.14.0',
+    release: 'https://github.com/Ultimaker/Cura/releases/tag/5.14.0',
+  },
 ];
 
 export default function SlicerHandoff({
@@ -183,6 +195,11 @@ export default function SlicerHandoff({
           <p className="slicer-plan">
             Your plan: {model.design.material.toUpperCase()} · {model.design.nozzle_mm} mm nozzle ·{' '}
             {model.design.bed_width_mm} × {model.design.bed_depth_mm} mm bed
+            <br />
+            {model.design.layer_height_mm} mm layers · {model.design.wall_count} walls ·{' '}
+            {model.design.infill_percent}% infill
+            <br />
+            Supports: {model.design.supports.replace('_', ' ')} · Adhesion: {model.design.adhesion}
           </p>
         )}
         <button
@@ -200,7 +217,8 @@ export default function SlicerHandoff({
             : `Download ${target.name} handoff ZIP`}
         </button>
         <p className="slicer-unpack">
-          Unzip the package, open its 3MF in {target.name}, then follow the included notes.
+          Unzip the package, open its 3MF in {target.name}, then transfer the included process plan
+          into your slicer settings.
         </p>
       </div>
 

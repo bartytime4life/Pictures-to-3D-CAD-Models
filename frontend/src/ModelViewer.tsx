@@ -1,7 +1,17 @@
 import { Component, Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
 import { Environment, Lightformer, OrbitControls } from '@react-three/drei';
-import { ArrowsOut, Cube, Minus, Plus } from '@phosphor-icons/react';
+import {
+  ArrowCounterClockwise,
+  ArrowsOut,
+  Cube,
+  GridFour,
+  Minus,
+  Plus,
+  Ruler,
+  Selection,
+} from '@phosphor-icons/react';
+import { useStudioActive } from './StudioActivity';
 import {
   Box3,
   BufferGeometry,
@@ -54,8 +64,8 @@ type ViewerActions = {
 };
 
 const buttonStyle = {
-  width: 34,
-  height: 34,
+  width: 44,
+  height: 44,
   padding: 0,
   display: 'inline-flex',
   justifyContent: 'center',
@@ -172,9 +182,15 @@ function CadScene({
   parts,
   separated,
   lighting = 'studio',
+  showGrid,
+  wireframe,
+  active,
 }: {
   mesh: PreviewMesh;
   lighting?: ViewerLighting;
+  showGrid: boolean;
+  wireframe: boolean;
+  active: boolean;
   resetKey: number;
   request: ViewRequest;
   actions: React.RefObject<ViewerActions | null>;
@@ -187,7 +203,7 @@ function CadScene({
   const { camera, size, invalidate, gl } = useThree();
   const finish = finishes[material];
 
-  useEffect(() => invalidate(), [color, material, invalidate]);
+  useEffect(() => invalidate(), [color, material, showGrid, wireframe, invalidate]);
 
   const model = useMemo(() => prepareMesh(mesh), [mesh]);
   const partModels = useMemo(
@@ -228,6 +244,13 @@ function CadScene({
     };
   }, [layout]);
   const lastFit = useRef<{ mesh: PreviewMesh; resetKey: number; sequence: number } | null>(null);
+  const fittedDisplay = useRef<{
+    display: typeof display;
+    width: number;
+    height: number;
+    resetKey: number;
+    sequence: number;
+  } | null>(null);
 
   useEffect(
     () => () => {
@@ -247,7 +270,26 @@ function CadScene({
   );
 
   useEffect(() => {
-    if (!(camera instanceof OrthographicCamera)) return;
+    if (!active || !(camera instanceof OrthographicCamera) || size.width <= 0 || size.height <= 0)
+      return;
+    const previousDisplay = fittedDisplay.current;
+    // Hiding a kept-alive studio temporarily gives its canvas zero dimensions.
+    // Returning to the same viewport preserves the user's orbit, pan and zoom.
+    if (
+      previousDisplay?.display === display &&
+      previousDisplay.width === size.width &&
+      previousDisplay.height === size.height &&
+      previousDisplay.resetKey === resetKey &&
+      previousDisplay.sequence === request.sequence
+    )
+      return;
+    fittedDisplay.current = {
+      display,
+      width: size.width,
+      height: size.height,
+      resetKey,
+      sequence: request.sequence,
+    };
     const { center, span, bounds } = display;
     const keepDirection =
       lastFit.current?.mesh === mesh &&
@@ -295,7 +337,18 @@ function CadScene({
       controls.current.saveState();
     }
     invalidate();
-  }, [camera, display, mesh, model, resetKey, request, size.width, size.height, invalidate]);
+  }, [
+    camera,
+    display,
+    mesh,
+    model,
+    resetKey,
+    request,
+    size.width,
+    size.height,
+    invalidate,
+    active,
+  ]);
 
   useEffect(() => {
     actions.current = {
@@ -337,7 +390,7 @@ function CadScene({
   const fill = raking ? 0.3 : 1;
   return (
     <>
-      <color attach="background" args={['#1b2025']} />
+      <color attach="background" args={['#101b29']} />
       <ambientLight intensity={0.25 * fill} />
       <hemisphereLight args={['#edf0f3', '#525a62', 0.9 * fill]} />
       <directionalLight
@@ -398,6 +451,7 @@ function CadScene({
               envMapIntensity={0.7}
               clearcoat={finish.clearcoat}
               clearcoatRoughness={0.5}
+              wireframe={wireframe}
             />
           </mesh>
           <lineSegments geometry={part.edges}>
@@ -407,15 +461,17 @@ function CadScene({
       ))}
       <mesh position={[0, 0, display.bounds.min.z - span * 0.012]}>
         <planeGeometry args={[span * 14, span * 14]} />
-        <meshBasicMaterial color="#1b2025" toneMapped={false} />
+        <meshBasicMaterial color="#101b29" toneMapped={false} />
       </mesh>
-      <gridHelper
-        args={[span * 8, 64, '#343c43', '#30383f']}
-        rotation={[Math.PI / 2, 0, 0]}
-        position={[0, 0, display.bounds.min.z - span * 0.011]}
-        material-transparent
-        material-opacity={0.55}
-      />
+      {showGrid && (
+        <gridHelper
+          args={[span * 8, 64, '#343c43', '#30383f']}
+          rotation={[Math.PI / 2, 0, 0]}
+          position={[0, 0, display.bounds.min.z - span * 0.011]}
+          material-transparent
+          material-opacity={0.55}
+        />
+      )}
       <mesh position={[0, 0, display.bounds.min.z - span * 0.01]} receiveShadow>
         <planeGeometry args={[span * 14, span * 14]} />
         <shadowMaterial transparent opacity={0.4} />
@@ -444,6 +500,21 @@ export default function ModelViewer({
   parts = noParts,
   lighting = 'studio',
 }: ModelViewerProps) {
+  const active = useStudioActive();
+  const [showGrid, setShowGrid] = useState(true);
+  const [wireframe, setWireframe] = useState(false);
+  const [measurements, setMeasurements] = useState(false);
+  const dimensions = useMemo(() => {
+    if (!mesh) return null;
+    const min = [Infinity, Infinity, Infinity],
+      max = [-Infinity, -Infinity, -Infinity];
+    mesh.vertices.forEach((value, index) => {
+      const axis = index % 3;
+      min[axis] = Math.min(min[axis], value);
+      max[axis] = Math.max(max[axis], value);
+    });
+    return max.map((value, axis) => value - min[axis]);
+  }, [mesh]);
   const [request, setRequest] = useState<ViewRequest>({ view: 'iso', sequence: 0 });
   const [attempt, setAttempt] = useState(0);
   const [contextLost, setContextLost] = useState(false);
@@ -474,6 +545,9 @@ export default function ModelViewer({
       data-preview-color={previewColor}
       data-preview-material={previewMaterial}
       data-inspection-view={showSeparated ? 'separated' : 'assembled'}
+      data-grid={showGrid ? 'visible' : 'hidden'}
+      data-wireframe={wireframe ? 'visible' : 'hidden'}
+      data-measurements={measurements ? 'visible' : 'hidden'}
       tabIndex={mesh ? 0 : -1}
       onKeyDown={(event) => {
         // Buttons keep their own normal keyboard behavior.
@@ -487,6 +561,9 @@ export default function ModelViewer({
           '=': () => actions.current?.zoom(1.2),
           '-': () => actions.current?.zoom(1 / 1.2),
           '0': () => setView('iso'),
+          g: () => setShowGrid((value) => !value),
+          w: () => setWireframe((value) => !value),
+          d: () => setMeasurements((value) => !value),
         };
         if (keys[event.key]) {
           event.preventDefault();
@@ -511,7 +588,7 @@ export default function ModelViewer({
             <Canvas
               key={attempt}
               orthographic
-              frameloop="demand"
+              frameloop={active ? 'demand' : 'never'}
               dpr={[1, 2]}
               shadows={{ type: PCFShadowMap }}
               camera={{
@@ -540,6 +617,9 @@ export default function ModelViewer({
                   parts={parts}
                   separated={showSeparated}
                   lighting={lighting}
+                  showGrid={showGrid}
+                  wireframe={wireframe}
+                  active={active}
                 />
               </Suspense>
             </Canvas>
@@ -571,6 +651,53 @@ export default function ModelViewer({
       )}
       {mesh && !contextLost && !failed && (
         <>
+          <div className="viewer-display-tools" role="group" aria-label="CAD display controls">
+            <button
+              type="button"
+              aria-pressed={showGrid}
+              onClick={() => setShowGrid(!showGrid)}
+              aria-label="Show grid"
+            >
+              <GridFour size={18} /> Grid
+            </button>
+            <button
+              type="button"
+              aria-pressed={wireframe}
+              onClick={() => setWireframe(!wireframe)}
+              aria-label="Show wireframe"
+            >
+              <Selection size={18} /> Mesh
+            </button>
+            <button
+              type="button"
+              aria-pressed={measurements}
+              onClick={() => setMeasurements(!measurements)}
+              aria-label="Show measurements"
+            >
+              <Ruler size={18} /> Size
+            </button>
+            <button
+              type="button"
+              aria-label="Reset CAD display"
+              title="Reset CAD display"
+              onClick={() => {
+                setShowGrid(true);
+                setWireframe(false);
+                setMeasurements(false);
+                setSeparated(false);
+                setView('iso');
+              }}
+            >
+              <ArrowCounterClockwise size={18} />
+            </button>
+          </div>
+          {measurements && dimensions && (
+            <div className="viewer-dimensions" role="status">
+              <span>Preview dimensions · mm</span>
+              <strong>{dimensions.map((value) => Number(value.toFixed(3))).join(' × ')}</strong>
+              <small>width × height × thickness</small>
+            </div>
+          )}
           {canSeparate && (
             <div
               aria-label="Piece inspection"

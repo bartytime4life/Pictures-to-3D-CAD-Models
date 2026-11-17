@@ -64,9 +64,11 @@ export default function PrintSettings({
   model,
   current,
   revealRequest = 0,
+  onEditEnd,
 }: {
   design: DesignSettings;
-  onChange: (settings: DesignSettings) => void;
+  onChange: (settings: DesignSettings, editKey?: string) => void;
+  onEditEnd?: () => void;
   busy: boolean;
   sourceSize: { width: number; height: number; thickness: number } | null;
   model: ModelResult | null;
@@ -162,23 +164,39 @@ export default function PrintSettings({
     design.detail_mode === 'original'
       ? 0
       : design.nozzle_mm * { draft: 0.5, balanced: 0.25, fine: 0.1 }[design.detail_mode];
-  const change = (patch: Partial<DesignSettings>) => onChange({ ...design, ...patch });
+  const change = (patch: Partial<DesignSettings>, editKey?: string) =>
+    onChange({ ...design, ...patch }, editKey);
   const setNumber = (key: keyof DesignSettings, value: string) => {
     const next = value === '' ? 0 : Number(value);
+    const layer =
+      key === 'nozzle_mm' && Number.isFinite(next) && next >= 0.1 && next <= 8
+        ? { layer_height_mm: Math.min(design.layer_height_mm, next) }
+        : {};
     if (key === 'nozzle_mm' && selectedPrinter) {
       const volume =
         selectedPrinter.profiles.find((profile) => profile.nozzle_diameters_mm.includes(next))
           ?.build_volume ?? selectedPrinter.build_volume;
-      change({
-        nozzle_mm: next,
-        bed_width_mm: volume.x_mm,
-        bed_depth_mm: volume.y_mm,
-        bed_height_mm: volume.z_mm,
-      });
-    } else change({ [key]: next });
+      change(
+        {
+          nozzle_mm: next,
+          ...layer,
+          bed_width_mm: volume.x_mm,
+          bed_depth_mm: volume.y_mm,
+          bed_height_mm: volume.z_mm,
+        },
+        key,
+      );
+    } else
+      change(
+        {
+          [key]: next,
+          ...layer,
+        },
+        key,
+      );
   };
   const setBed = (key: keyof DesignSettings, value: string) =>
-    change({ [key]: value === '' ? 0 : Number(value), printer_id: 'custom' });
+    change({ [key]: value === '' ? 0 : Number(value), printer_id: 'custom' }, key);
   const printerTitle =
     selectedPrinter?.name ??
     (design.printer_id === 'custom' ? 'Custom printer' : design.printer_id);
@@ -190,6 +208,7 @@ export default function PrintSettings({
     <section
       className={`print-settings ${expanded ? 'expanded' : ''}`}
       aria-label="Design and print settings"
+      onBlurCapture={onEditEnd}
     >
       <button
         ref={toggle}
@@ -439,6 +458,7 @@ export default function PrintSettings({
                     change({
                       printer_id: printer.id,
                       nozzle_mm: nozzle,
+                      layer_height_mm: Math.min(design.layer_height_mm, nozzle),
                       bed_width_mm: volume.x_mm,
                       bed_depth_mm: volume.y_mm,
                       bed_height_mm: volume.z_mm,

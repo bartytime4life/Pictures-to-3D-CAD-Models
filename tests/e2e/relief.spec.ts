@@ -346,8 +346,8 @@ test('both studios share one header that keeps the name whole and labels every i
     for (const width of widths) {
       await page.setViewportSize({ width, height: 900 });
       const layout = await page.evaluate(() => {
-        const bar = document.querySelector('.topbar')!;
-        const name = document.querySelector<HTMLInputElement>('.project-name input')!;
+        const bar = document.querySelector('.studio-route:not([hidden]) .topbar')!;
+        const name = bar.querySelector<HTMLInputElement>('.project-name input')!;
         // Every header link and button shows a visible text label, not just an icon.
         const unlabeled = [...bar.querySelectorAll('nav a, .header-actions > *')].filter(
           (item) =>

@@ -26,6 +26,11 @@ def handoff_model(request, tmp_path_factory):
             "material": "petg",
             "color": "#FF6600",
             "nozzle_mm": 0.6,
+            "layer_height_mm": 0.3,
+            "wall_count": 5,
+            "infill_percent": 40,
+            "supports": "build_plate",
+            "adhesion": "brim",
             "output_mode": request.param,
             "split_columns": 2,
             "split_rows": 1,
@@ -41,6 +46,8 @@ def handoff_model(request, tmp_path_factory):
         ("bambu", "Bambu Studio", "2.9.1"),
         ("prusa", "PrusaSlicer", "2.9.7"),
         ("qidi", "QIDI Studio", "2.7.2.73"),
+        ("orca", "OrcaSlicer", "2.5.1"),
+        ("cura", "UltiMaker Cura", "5.14.0"),
     ],
 )
 def test_bundle_contains_hash_verified_geometry_recipe_and_targeted_instructions(
@@ -49,7 +56,9 @@ def test_bundle_contains_hash_verified_geometry_recipe_and_targeted_instructions
     directory, result = handoff_model
     with zipfile.ZipFile(directory / f"{slicer_id}-handoff.zip") as bundle:
         files = set(bundle.namelist())
-        expected = {"model.3mf", "model.stl", "project.json", "manifest.json", "README.md"}
+        expected = {
+            "model.3mf", "model.stl", "project.json", "process-plan.json", "manifest.json", "README.md"
+        }
         if len(result["parts"]) > 1:
             expected.update(
                 part["files"][kind] for part in result["parts"] for kind in ("3mf", "stl")
@@ -82,12 +91,25 @@ def test_bundle_contains_hash_verified_geometry_recipe_and_targeted_instructions
         recipe = json.loads(bundle.read("project.json"))
         assert recipe["width_mm"] == 80 and recipe["thickness_mm"] == 4
         assert recipe["design"]["scale_percent"] == 150
+        process_plan = json.loads(bundle.read("process-plan.json"))
+        assert process_plan["settings"] == {
+            "layer_height_mm": 0.3,
+            "wall_count": 5,
+            "infill_percent": 40,
+            "supports": "build_plate",
+            "adhesion": "brim",
+        }
+        assert process_plan == manifest["process_plan"]
+        assert process_plan["applied_to_geometry"] is False
+        assert process_plan["native_slicer_profile"] is False
+        assert all(recipe["design"][key] == value for key, value in process_plan["settings"].items())
         assert "photo" not in recipe and "image" not in recipe
         notes = bundle.read("README.md").decode("utf-8")
         assert name in notes and version in notes
         assert "geometry only" in notes and "not a native slicer project" in notes
         assert "not installed presets" in notes and "has not sliced" in notes
         assert "choose" in notes.lower() and "layer preview" in notes
+        assert "0.3 mm layer height, 5 walls, 40% infill" in notes
         for actual, recorded in zip(result["parts"], manifest["parts"]):
             assert "mesh" not in recorded
             for key in ("id", "dimensions", "volume_mm3", "assembly_offset_mm", "bed_fit"):

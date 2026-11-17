@@ -138,6 +138,8 @@ test('real 3MF and targeted handoffs preserve units, split objects and planning 
     ['Bambu Studio', 'bambu', '2.9.1'],
     ['PrusaSlicer', 'prusa', '2.9.7'],
     ['QIDI Studio', 'qidi', '2.7.2.73'],
+    ['OrcaSlicer', 'orca', '2.5.1'],
+    ['UltiMaker Cura', 'cura', '5.14.0'],
   ]) {
     await handoff.getByRole('radio', { name: new RegExp(name) }).check();
     const zipEvent = page.waitForEvent('download');
@@ -157,6 +159,7 @@ test('real 3MF and targeted handoffs preserve units, split objects and planning 
         'model.3mf',
         'model.stl',
         'project.json',
+        'process-plan.json',
         'manifest.json',
         'README.md',
         'part-01.3mf',

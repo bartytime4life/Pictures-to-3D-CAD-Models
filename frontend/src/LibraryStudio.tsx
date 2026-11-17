@@ -23,6 +23,7 @@ import {
   X,
 } from '@phosphor-icons/react';
 import AppHeader from './AppHeader';
+import { useStudioActive } from './StudioActivity';
 import { handOff } from './handoff';
 import type { HandoffTarget } from './handoff';
 import {
@@ -299,6 +300,9 @@ function SubjectView({ detail, show }: { detail: LibraryPhotoDetail; show: boole
 }
 
 export default function LibraryStudio() {
+  const active = useStudioActive();
+  const activeRef = useRef(active);
+  activeRef.current = active;
   const [state, setState] = useState<LibraryState | null>(null);
   const [offline, setOffline] = useState('');
   const [view, setView] = useState<LibraryView>('all');
@@ -353,15 +357,20 @@ export default function LibraryStudio() {
   }, []);
 
   useEffect(() => {
-    void refresh();
-  }, [refresh]);
+    if (active) void refresh();
+    else {
+      pickerDialog.current?.close();
+      clearDialog.current?.close();
+    }
+  }, [refresh, active]);
 
   useEffect(() => {
     // Follow a running crunch closely; otherwise look in now and then, so a crunch
     // started from another window, or a model installed meanwhile, shows up.
+    if (!active) return;
     const timer = window.setInterval(() => void refresh(), running ? 700 : 5000);
     return () => window.clearInterval(timer);
-  }, [running, refresh]);
+  }, [running, refresh, active]);
 
   useEffect(() => {
     // A crunch just ended: show what it did and reload the photos.
@@ -520,7 +529,7 @@ export default function LibraryStudio() {
       const listing = await send<FolderListing>('/api/library/browse', path ? { path } : {});
       setPicker(listing);
       setPickerPath(listing.path);
-      if (!pickerDialog.current?.open) pickerDialog.current?.showModal();
+      if (activeRef.current && !pickerDialog.current?.open) pickerDialog.current?.showModal();
     } catch (err) {
       if (pickerDialog.current?.open) setPickerError(errorText(err));
       else setError(errorText(err));
@@ -671,8 +680,8 @@ export default function LibraryStudio() {
     });
 
   useEffect(() => {
-    if (confirmClear && !clearDialog.current?.open) clearDialog.current?.showModal();
-  }, [confirmClear]);
+    if (active && confirmClear && !clearDialog.current?.open) clearDialog.current?.showModal();
+  }, [confirmClear, active]);
 
   // ------------------------------------------------------------------ render
 

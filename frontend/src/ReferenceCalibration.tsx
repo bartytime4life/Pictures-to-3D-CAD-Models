@@ -3,6 +3,7 @@ import type { PointerEvent } from 'react';
 import { calibrationError, measuredHeightError, referenceWidth } from './calibration';
 import ReferenceSensitivity from './ReferenceSensitivity';
 import HeightDecision from './HeightDecision';
+import { COMMON_REFERENCES } from './commonReferences';
 import type { Point, ReferenceCalibration as Calibration, TraceResult } from './types';
 import './ReferenceCalibration.css';
 
@@ -39,15 +40,31 @@ export default function ReferenceCalibration({
     ['', ''],
   ]);
   const [length, setLength] = useState('');
+  const [referenceObject, setReferenceObject] = useState('custom');
   const [nextPoint, setNextPoint] = useState<0 | 1>(0);
   const previousFactor = useRef(factor);
   const previousCalibration = useRef<Calibration | null | undefined>(undefined);
+  const previousFrame = useRef(trace.image);
   useEffect(() => {
-    if (previousCalibration.current !== calibration) {
+    const frameChanged =
+      previousFrame.current.width !== trace.image.width ||
+      previousFrame.current.height !== trace.image.height ||
+      previousFrame.current.data_url !== trace.image.data_url;
+    // Applied evidence is coordinated by App. An unapplied draft has no such owner:
+    // discard its points if rectification or resizing replaces their image frame.
+    // Identical working-image pixels preserve drafts through ordinary detail changes.
+    if (previousCalibration.current !== calibration || (frameChanged && !calibration)) {
       if (calibration) {
         setPoints(calibration.reference_points.map((p) => p.map(String)) as typeof points);
         setLength(String(calibration.known_length_mm / factor));
+        setReferenceObject((previous) =>
+          COMMON_REFERENCES.find((item) => item.id === previous)?.lengthMm ===
+          calibration.known_length_mm
+            ? previous
+            : 'custom',
+        );
       } else {
+        setReferenceObject('custom');
         setPoints([
           ['', ''],
           ['', ''],
@@ -65,7 +82,8 @@ export default function ReferenceCalibration({
     }
     previousFactor.current = factor;
     previousCalibration.current = calibration;
-  }, [calibration, factor]);
+    previousFrame.current = trace.image;
+  }, [calibration, factor, trace.image.width, trace.image.height, trace.image.data_url]);
 
   const value: Calibration = {
     known_length_mm: length.trim() ? Number(length) * factor : NaN,
@@ -94,6 +112,24 @@ export default function ReferenceCalibration({
     estimate !== null && height.trim() && !heightIssue ? estimate - Number(height) * factor : null;
   const format = (mm: number) => (mm / factor).toFixed(unit === 'in' ? 4 : 3);
   const hasDraft = length !== '' || points.some((p) => p.some((v) => v !== ''));
+  const selectedObject = COMMON_REFERENCES.find((item) => item.id === referenceObject);
+  const pixelSpan = Math.hypot(
+    value.reference_points[1][0] - value.reference_points[0][0],
+    value.reference_points[1][1] - value.reference_points[0][1],
+  );
+
+  function chooseReference(id: string) {
+    const selected = COMMON_REFERENCES.find((item) => item.id === id);
+    setReferenceObject(selected?.id ?? 'custom');
+    setLength(selected ? String(selected.lengthMm / factor) : '');
+    // A different object needs its own visible endpoints. Never reuse a previous span
+    // as if recognizing the object had located it in the image.
+    setPoints([
+      ['', ''],
+      ['', ''],
+    ]);
+    setNextPoint(0);
+  }
 
   function mark(event: PointerEvent<SVGSVGElement>) {
     if (disabled || event.button !== 0) return;
@@ -195,6 +231,37 @@ export default function ReferenceCalibration({
                 </p>
               </div>
               <div className="reference-fields">
+                <div className="common-reference">
+                  <label htmlFor="common-reference-object">Reference object (optional)</label>
+                  <select
+                    id="common-reference-object"
+                    value={referenceObject}
+                    disabled={disabled || !trace.image.data_url}
+                    onChange={(event) => chooseReference(event.target.value)}
+                    aria-describedby="common-reference-help"
+                  >
+                    <option value="custom">Custom or saved length</option>
+                    {COMMON_REFERENCES.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {item.label} · {item.lengthMm.toFixed(2)} mm diameter
+                      </option>
+                    ))}
+                  </select>
+                  <p id="common-reference-help" className="field-hint">
+                    {selectedObject ? (
+                      <>
+                        {selectedObject.instruction} This is a nominal size; verify your coin and
+                        edit the length below if measured differently. Keep it in the same plane as
+                        the part and photograph straight-on.{' '}
+                        <a href={selectedObject.sourceUrl} target="_blank" rel="noreferrer">
+                          {selectedObject.sourceTitle} (opens in a new tab)
+                        </a>
+                      </>
+                    ) : (
+                      'A coin or another measured object visible beside the part can set scale. Choose it, then mark its two endpoints in the photo.'
+                    )}
+                  </p>
+                </div>
                 <fieldset disabled={disabled}>
                   <legend>Working-image endpoints (px)</legend>
                   {points.map((point, index) => (
@@ -232,7 +299,10 @@ export default function ReferenceCalibration({
                       step="any"
                       min="0"
                       value={length}
-                      onChange={(e) => setLength(e.target.value)}
+                      onChange={(e) => {
+                        setLength(e.target.value);
+                        setReferenceObject('custom');
+                      }}
                     />
                   </label>
                 </fieldset>
@@ -248,6 +318,14 @@ export default function ReferenceCalibration({
                     </p>
                   ) : (
                     <p>Set two endpoints and a known length to calculate scale.</p>
+                  )}
+                  {!issue && !rangeIssue && (
+                    <p className="reference-scale-math">
+                      Scale: {(value.known_length_mm / factor).toFixed(unit === 'in' ? 4 : 3)}{' '}
+                      {unit} ÷ {pixelSpan.toFixed(2)} px ={' '}
+                      {(value.known_length_mm / factor / pixelSpan).toPrecision(5)} {unit}/px.{' '}
+                      Applied to the traced outline width.
+                    </p>
                   )}
                 </div>
                 <ReferenceSensitivity

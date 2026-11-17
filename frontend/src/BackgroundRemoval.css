@@ -1,0 +1,78 @@
+.background-removal {
+  padding: 12px 18px;
+  border-top: 1px solid var(--border, #dce2e6);
+  background: #fff;
+}
+
+.background-actions,
+.background-toggle {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.background-actions {
+  justify-content: space-between;
+}
+
+.background-removal .text-button {
+  color: #155e75;
+  min-height: 44px;
+}
+
+.background-toggle {
+  gap: 3px;
+  padding: 3px;
+  background: #eef2f4;
+  border-radius: 7px;
+}
+
+.background-toggle button {
+  padding: 7px 10px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: transparent;
+  color: #47545d;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.background-toggle button[aria-pressed='true'] {
+  background: #fff;
+  border-color: #cbd5dc;
+  color: #17242d;
+}
+
+.background-toggle button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.background-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 0;
+  color: #007d9f;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.background-download:hover {
+  text-decoration: underline;
+}
+
+.background-hint,
+.background-error {
+  margin: 7px 0 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #596772;
+}
+
+.background-error {
+  color: #a52828;
+}

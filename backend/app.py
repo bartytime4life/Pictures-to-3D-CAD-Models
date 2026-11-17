@@ -23,6 +23,7 @@ from . import blender as blender_bridge
 from . import depth as depth_model
 from . import library, vision
 from .assistant import AssistantError, AssistantRequest, assistant_status, chat
+from .documentation import router as documentation_router
 from .models import BuildRequest, Detail, Reference
 from .printing import load_printer_catalog
 from .relief import ReliefError, ReliefSettings, fit_half_value
@@ -59,6 +60,8 @@ DOWNLOADS = {
     "bambu": ("bambu-handoff.zip", "application/zip"),
     "prusa": ("prusa-handoff.zip", "application/zip"),
     "qidi": ("qidi-handoff.zip", "application/zip"),
+    "orca": ("orca-handoff.zip", "application/zip"),
+    "cura": ("cura-handoff.zip", "application/zip"),
     "project": ("project.json", "application/json"),
     "parts": ("parts.zip", "application/zip"),
     "heightmap": ("heightmap.png", "image/png"),
@@ -145,6 +148,7 @@ async def lifespan(app):
 
 
 app = FastAPI(title="Pictures to CAD", version="0.1.0", lifespan=lifespan)
+app.include_router(documentation_router)
 
 
 class BodyTooLarge(HTTPException):
