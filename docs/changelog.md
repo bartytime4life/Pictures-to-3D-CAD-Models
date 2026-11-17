@@ -54,6 +54,8 @@ A review of every studio in the browser and of the frontend and API code
 - **Design & print:**
   - A typed `0` or a leading zero stays visible.
   - Each group shows its own error beside the field at fault, marked as invalid.
+    A nozzle under 0.2 mm is no longer flagged as a layer-height error, since
+    choosing it lowers the layer height to match.
   - The panel no longer fails when the printer catalogue is missing.
 - **3D preview:** after a failed render or lost graphics context, a new build
   shows its model again.

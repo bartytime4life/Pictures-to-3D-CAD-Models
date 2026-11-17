@@ -205,7 +205,14 @@ export default function PrintSettings({
         },
         sourceSize,
       );
-  const nozzleIssue = designError({ ...DEFAULT_DESIGN, nozzle_mm: design.nozzle_mm });
+  // The nozzle field reports only the nozzle's own range. The default 0.2 mm layer would
+  // make a valid 0.1 mm nozzle look wrong (choosing it lowers the real layer height to
+  // match); a layer-height problem is reported by the whole-design check below.
+  const nozzleIssue = designError({
+    ...DEFAULT_DESIGN,
+    nozzle_mm: design.nozzle_mm,
+    layer_height_mm: Math.min(DEFAULT_DESIGN.layer_height_mm, design.nozzle_mm),
+  });
   const splitIssue = designError({
     ...DEFAULT_DESIGN,
     split_columns: design.split_columns,
