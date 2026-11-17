@@ -11,6 +11,7 @@ from fastapi.responses import Response
 DOCS_ROOT = Path(__file__).resolve().parent.parent / "docs"
 MAX_DOCUMENT_BYTES = 1024 * 1024
 DOCUMENTS = {
+    "image-inspection": ("Image inspection", "image-inspection.md"),
     "shape-designer": ("Flat part shape designer", "shape-designer.md"),
     "creative-tools": ("Creative tools and local AI", "creative-tools.md"),
     "getting-started": ("Getting started", "getting-started.md"),

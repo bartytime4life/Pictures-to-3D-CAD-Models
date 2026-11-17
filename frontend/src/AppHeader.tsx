@@ -9,6 +9,7 @@ import {
   Ruler,
   Sparkle,
   Shapes,
+  Scan,
 } from '@phosphor-icons/react';
 import CommandLauncher, { type StudioCommand } from './CommandLauncher';
 
@@ -18,6 +19,7 @@ export type { Studio } from './studioCatalog';
 
 const studioIcons = {
   designer: Shapes,
+  image: Scan,
   workbench: Ruler,
   relief: Mountains,
   library: Images,
@@ -69,7 +71,9 @@ export default function AppHeader({
         </a>
         <div className="project-context">
           <span className="project-caption">
-            {studio === 'knowledge' || studio === 'science' ? 'EXPLORE' : 'CURRENT PROJECT'}
+            {studio === 'knowledge' || studio === 'science' || studio === 'image'
+              ? 'EXPLORE'
+              : 'CURRENT PROJECT'}
           </span>
           <div className="project-name">{projectName}</div>
         </div>

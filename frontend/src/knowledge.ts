@@ -11,6 +11,22 @@ export type Guide = {
 };
 export const GUIDES: Guide[] = [
   {
+    id: 'image-inspection',
+    category: 'Getting started',
+    title: 'Inspect an image before tracing',
+    summary: 'Check selected-region contrast and exposure, or compare two images locally.',
+    steps: [
+      'Open Image inspection and choose image A. The browser samples up to 720 pixels on the long side.',
+      'Drag a region or enter its percentages. Read the brightness histogram, tonal spread and edge support.',
+      'Optionally open image B with matching sampled dimensions to compare pixel-aligned versions.',
+      'Save readings as JSON, or open the unchanged original in Flat part or Relief.',
+    ],
+    assumptions:
+      'These are sampled image diagnostics, not a focus score or physical measurement. Transparency uses a white backing. Pixel differences include lighting and movement; no alignment is performed.',
+    doc: 'image-inspection',
+    action: { label: 'Open Image inspection', href: '#image' },
+  },
+  {
     id: 'shape-designer',
     category: 'Getting started',
     title: 'Design a flat part from common shapes',

@@ -1,13 +1,13 @@
 // Passing a photo from the library to another studio. The studios are separate pages
 // behind one hash router. The file waits until the target studio becomes active and
 // finishes any work already running. It is held in memory only and taken once.
-export type HandoffTarget = 'workbench' | 'relief';
+export type HandoffTarget = 'workbench' | 'relief' | 'image';
 
 let pending: { target: HandoffTarget; file: File } | null = null;
 
 export function handOff(target: HandoffTarget, file: File) {
   pending = { target, file };
-  window.location.hash = target === 'relief' ? '#relief' : '#workbench';
+  window.location.hash = `#${target}`;
 }
 
 export function takeHandoff(target: HandoffTarget): File | null {

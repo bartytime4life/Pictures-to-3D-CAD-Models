@@ -11,14 +11,14 @@ test('science deep links open the named experiment while plain studio switches p
     'true',
   );
   await page.getByRole('button', { name: /Layer stack/ }).click();
-  await page.getByRole('link', { name: 'Knowledge', exact: true }).click();
+  await page.getByRole('link', { name: 'Knowledge base', exact: true }).click();
   await page.getByRole('button', { name: /Measure from a known object/ }).click();
   await page.getByRole('link', { name: 'Explore pixel scale', exact: true }).click();
   await expect(page.getByRole('button', { name: /Pixel scale/ })).toHaveAttribute(
     'aria-pressed',
     'true',
   );
-  await page.getByRole('link', { name: 'Knowledge', exact: true }).click();
+  await page.getByRole('link', { name: 'Knowledge base', exact: true }).click();
   await page.getByRole('button', { name: /Use a coupon to investigate fit/ }).click();
   await page.getByRole('link', { name: 'Open the fit experiment', exact: true }).click();
   await expect(page.getByRole('button', { name: /Measured fit/ })).toHaveAttribute(
@@ -26,7 +26,7 @@ test('science deep links open the named experiment while plain studio switches p
     'true',
   );
   await page.getByRole('button', { name: /Layer stack/ }).click();
-  await page.getByRole('link', { name: 'Knowledge', exact: true }).click();
+  await page.getByRole('link', { name: 'Knowledge base', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Knowledge base', exact: true })).toBeVisible();
   await page.getByRole('link', { name: 'Science lab', exact: true }).click();
   await expect(page.getByRole('button', { name: /Layer stack/ })).toHaveAttribute(

@@ -16,7 +16,7 @@ test('desktop studio selectors include their visible content and both full pages
     await button.click();
     expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   }
-  await page.getByRole('link', { name: 'Knowledge', exact: true }).click();
+  await page.getByRole('link', { name: 'Knowledge base', exact: true }).click();
   await expect(
     page.getByRole('button', { name: /Capture a traceable flat part/ }),
   ).toHaveAccessibleName(
