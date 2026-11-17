@@ -17,7 +17,11 @@ mu_i = b*(1-P_i) + a*P_i.
 ```
 
 The unknown geometry is `(Cx, Cy, R, f)`; the two shared foreground/background
-levels `a,b` are bounded nuisance parameters. The caller supplies a unit chord
+levels `a,b` are bounded nuisance parameters. Here `a` is the level inside `K`
+and `b` the level outside. The [residual-information](finite-residual-information.md)
+and [normal-derivative](finite-normal-derivative.md) guides write the same model
+as `a*(1-P) + b*P`, with the letters swapped, so their contrast `b-a` is this
+guide's `a-b`. The caller supplies a unit chord
 normal `n`, homography `H`, constant observation-frame covariance `Sigma`, fixed
 integer pixel indices and fixed residual metric. Pixel centres are indices plus
 `0.5`. The tracer's ring coordinates already use this convention; its sampling
@@ -334,7 +338,8 @@ basins can remain represented and unrefined. These caps are resource limits,
 not completion guarantees; callers can
 set them explicitly. The independent study uses its own frozen settings. A
 fit's latency depends on its observations, optics and search settings. The
-original study's roughly 20-second fits remain historical results. The
+original study's 13–20-second matched cases (median 15 s, including oracle rendering
+and scoring) remain historical results. The
 [affine comparison](validation/finite-affine-batch.md) records 3.84× faster
 complete fits across three fixed 40-training-pixel datasets, with candidate
 medians of 2.75–3.91 seconds. It does not qualify interactive latency or all

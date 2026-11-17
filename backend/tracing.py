@@ -201,12 +201,15 @@ def _sixteen_bit_gray(data):
     return image
 
 
-def load_image(data: bytes, *, keep_depth: bool = False):
+def load_image(data: bytes, *, keep_depth: bool = False, linear_light: bool = False):
     """Decode one bounded still image with the tracer's decoders, limits and orientation.
 
     Returns ``(image, notices)``: an RGB image at most MAX_SIDE on its long side. With
     ``keep_depth``, a 16-bit grayscale PNG (such as an exported depth map) is returned as
     a 32-bit float ``F`` image with samples in 0..1, so its 65,536 levels are kept.
+    With ``linear_light``, a photo larger than MAX_SIDE is reduced by averaging its
+    linear light (``tone.reduce_in_linear_light``); otherwise saved values are resampled,
+    which suits depth maps and other pictures whose values are data, not light.
     """
     if not data or len(data) > MAX_BYTES:
         raise TraceError("Choose an image between 1 byte and 32 MiB.")
@@ -226,7 +229,11 @@ def load_image(data: bytes, *, keep_depth: bool = False):
                 raise ValueError("The HEIC image could not be decoded.") from exc
         else:
             image, _ = decode_with_pillow(data, notices)
-        image.thumbnail((MAX_SIDE, MAX_SIDE), Image.Resampling.LANCZOS)
+        if linear_light and image.mode == "RGB" and max(image.size) > MAX_SIDE:
+            scale = MAX_SIDE / max(image.size)
+            image = Image.fromarray(tone.reduce_in_linear_light(np.asarray(image), scale))
+        else:
+            image.thumbnail((MAX_SIDE, MAX_SIDE), Image.Resampling.LANCZOS)
     except TraceError:
         raise
     except DECODE_ERRORS as exc:

@@ -1,5 +1,38 @@
 # Workbench change log
 
+## Documentation and mathematics audit — November 16, 2026
+
+- Every guide and record was checked against the code and saved data, formula by
+  formula ([validation](validation.md#documentation-and-mathematics-audit--november-16-2026)).
+  No method formula was wrong; stale, imprecise and unreproducible statements were
+  corrected:
+  - API, security and export docs now include QIDI Studio as the third slicer. The
+    PDF's centre marks are on circles of a fitted outline only.
+  - The photo library: a JPEG is decoded at reduced scale from 7.6 megapixels, not 8.
+    The model table gives the real graphics-card and processor order. *Detail*
+    without a subject uses half the frame. The edge-blur table is re-measured with
+    stated seeds. With all fourteen parts ViT-B/16 merges two pairs of look-alike
+    parts, and it is about twice as fast as ViT-L/16, not three times.
+  - The relief guide: the hemisphere sample's volume is 0.22 % below ideal, not
+    within 0.2 %. The lamp's mesh-volume difference grows with size. The frame
+    adds points beyond the 250,000-point cap. Lithophane targets are relative to
+    the 99.5th-percentile white under auto exposure.
+  - Reference-sheet tracing: the shadow fit's start radii (3 σ and 2 σ from the
+    traced footprint), the profile window behind the wall-bias table, and the
+    extra conditions on the lens and focal-length estimates.
+  - Research records: the affine audit's source binding, a misattributed seed
+    error, fit times, swapped level letters between guides, and stale "not yet
+    run" notes in five recovery records.
+  - Reference library: the unit-detective calculator ranks by relative error (the
+    formula shown said log ratio), overflow checks cover only `uncertainty` and
+    `wind`, and `meshcheck` does not test the volume's sign.
+- The relief studio reduces a large photo in linear light, so fine detail in a
+  lithophane keeps its brightness (a one-pixel checkerboard kept 50 % of the light,
+  where resampling saved values left 21 %). Depth maps are resampled as before.
+- An elevation map's suggested largest exaggeration is rounded down, so the value it
+  names is accepted. A map whose printed relief is under 0.1 mm is now told to raise
+  the exaggeration instead of being refused as not fitting the sphere.
+
 ## One message in the empty CAD preview — November 16, 2026
 
 - After a photo of your own was traced and before a model was built, the CAD preview
@@ -18,7 +51,8 @@
   by name, date, sharpness, detail and size; the grid draws only the rows on screen.
 - Edge blur is the Gaussian width of the strongest edges in the photo's own pixels,
   solved from each edge's rise and step height, along the colour direction of most
-  contrast. On renders with 0.5 to 4 px of blur it read 0.8 to 4.1 px.
+  contrast. On renders with 0.5 to 4 px of blur it read 0.65 to 4.12 px (re-measured
+  with stated seeds; the 0.8 to 4.1 first quoted did not reproduce).
 - With the optional DINOv3 model (`make vision-model WEIGHTS=folder`; weights from Meta
   under its licence, never downloaded here) each photo gets a subject region, found by
   fitting the background as a plane in feature space, and a subject vector. The library
@@ -27,8 +61,9 @@
 - On rendered parts held out from tuning, ViT-B/16 returned the same part first for all
   56 shots (0.857 with the whole-picture vector), grouped all seven parts correctly
   and found all 42 planted copies. With fourteen parts together, group precision was
-  0.76: an L-bracket and a T-bracket shared a group. The best shot was the truly most
-  detailed in 12 of 20 groups. These are drawings, not photographs.
+  0.76: the L- and T-brackets shared a group, and so did the oval and ring gaskets. The best shot was the truly most
+  detailed in 3 of 7 held-out groups and 9 of 13 with all fourteen parts. These are
+  drawings, not photographs.
 - A crunch read 12-megapixel JPEGs at about 100 a second and described them at about
   175 a second on a 16-core computer with an RTX 5080.
 - **Open in Flat part** and **Open in Relief** hand the chosen original to that studio.
@@ -165,6 +200,18 @@
   shift had been partly offset ([reference-sheet tracing](reference-sheet.md), §3 and
   Limits).
 
+## Optional AI depth for reliefs — November 14, 2026
+
+- **Picture type: Photo → AI depth** in the relief studio estimates relative depth
+  from an ordinary photo with Depth Anything V2 Small (Apache-2.0, ONNX, pinned
+  revision and SHA-256) and builds a flat relief from it (#143). It runs on the CPU
+  through ONNX Runtime, with no account or upload. Setup does not download the model;
+  `make depth-model` does, and checks its hash. On the moon sample's sunlit disc AI
+  depth ranks the true heights at Spearman ρ = 0.94 with 8.7 % aligned RMS error,
+  where photo brightness scores −0.16 and 21.8 % (`make depth-benchmark`;
+  [relief guide](relief.md#measured-on-the-moon-sample)). The estimate is relative
+  depth only: size still comes from the width and thickness settings.
+
 ## The blurred edge's tail measured, not assumed — November 14, 2026
 
 - Before placing an edge, the tracer removes the blurred step's own tail from each
@@ -197,7 +244,8 @@
   Exports are STL, 3MF, a 16-bit height map and a Blender scene that rebuilds the
   same solid.
 - An empty 3D panel shows only the studio's own message (#130). A moon depth-map
-  sample builds a true hemisphere within 0.1 mm (#132).
+  sample builds a true hemisphere: median heights within 0.1 mm at the five rings
+  measured, tested to 0.6 mm (#132).
 - Shape: Sphere wraps a 2:1 world map around a hollow ball with a flat base ring: a
   moon lamp or a relief globe (#135). A Cycles render of a uniform lamp matches
   Beer-Lambert through the shell within 0.6% ([relief studio](relief.md)).

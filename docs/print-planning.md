@@ -190,7 +190,8 @@ fitting pieces. It considers all eleven nontrivial combinations of 1–4 columns
 and 1–4 rows with at most 8 cells. It clips the actual outline, counts connected
 pieces rather than empty cells, checks area preservation, and tests every piece
 with the continuous-angle placement solver. Plans producing more than 8 pieces
-are unsupported. Ties prefer fewer cut lines, then fewer rows and columns.
+are unsupported. Ties prefer fewer cut lines, then fewer rows, then fewer columns (two columns in
+one row are preferred to one column in two rows).
 
 For example, a 250 × 80 mm plate on a 140 × 100 mm usable bed can be cut into
 two 125 × 80 mm pieces. An L-shaped 100 × 100 mm outline with 10 mm arms can
@@ -209,8 +210,10 @@ proposals.
 Single-piece fitted curves and unverified shaped, excluded or ambiguous beds
 do not receive polygon split suggestions. Splitting cannot correct excessive
 thickness or a margin that leaves no usable bed. If no supported grid fits,
-the workbench explains that search limit. A numerical failure checking a grid
-is reported as an incomplete search, without discarding the original build.
+the workbench explains that search limit. A geometry-library (GEOS) failure checking
+a grid is reported as an incomplete search, without discarding the original build.
+A grid whose clipped pieces are invalid or do not preserve the outline's area is
+skipped like an unsupported grid.
 
 This minimizes piece count within the supported grids. It does not find arbitrary
 cut paths, preserve structural strength, add joinery, compensate kerf, or arrange

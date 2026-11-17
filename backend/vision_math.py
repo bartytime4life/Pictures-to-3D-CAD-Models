@@ -13,8 +13,9 @@ Subject finding
     fitted robustly so that the object does not pull it:
 
     1. Iteratively reweighted least squares. Each patch's residual length r is compared
-       with the residuals' median and median absolute deviation; patches beyond
-       median + 2 MAD lose weight linearly, reaching none at 6 MAD. Patches on the
+       with the residuals' median and scaled median absolute deviation (1.4826 MAD, a
+       robust standard deviation); patches beyond median + 2 of those lose weight
+       linearly, reaching none at 6. Patches on the
        picture's border count three times, because a part rarely covers the border.
        (Residual *lengths* of well-fitted patches cluster round a positive value in a
        space of several hundred dimensions, so they are judged against their own

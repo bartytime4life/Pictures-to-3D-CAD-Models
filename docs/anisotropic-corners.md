@@ -200,8 +200,8 @@ the scalar comparisons and before/after source hashes. All 48 predeclared checks
 passed, with no execution errors and unchanged bound source files.
 
 These are exact-input tests of the local infinite-corner model with supplied
-covariance and known tangent lines. The numerical seed is the true radius
-except in the sharp/small cases, which use half the scalar spread. Segmentation,
+covariance and known tangent lines. The numerical seed is `max(R, 0.5 σ)`: the true radius
+except in the sharp case (R = 0), which starts at half the scalar spread. Segmentation,
 line refitting, finite neighbouring boundaries and physical calibration are
 outside this study. Its quadrature comparisons are engineering evidence,
 rather than rigorous probability enclosures.

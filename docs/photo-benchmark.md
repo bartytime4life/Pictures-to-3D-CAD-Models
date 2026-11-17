@@ -124,7 +124,7 @@ A trace takes a few seconds per photo. The command exits with an error when the 
 
 ## 6. Read the report
 
-The following report is the PR #103 guide snapshot at `7f60d4f`: three **rendered** photos from the `--example` folder at 22°, 9° and 0° tilt, 4 mm thick, with design dimensions as the caliper values. It is not a fresh benchmark of later checkouts; bind any regenerated report to its own source revision.
+The following report is the PR #103 guide snapshot at `7f60d4f`: three **rendered** photos from the `--example` folder, tilted (22°, −9°), (9°, 6°) and (0°, 0°) about the x and y axes (the last overhead, turned 30° in plane), 4 mm thick, with design dimensions as the caliper values. It is not a fresh benchmark of later checkouts; bind any regenerated report to its own source revision.
 
 > 3 of 3 photos traced.
 > Dimensions: 48 of 48 requested compared; 0 unmatched in successful traces; 0 unavailable in failed traces.

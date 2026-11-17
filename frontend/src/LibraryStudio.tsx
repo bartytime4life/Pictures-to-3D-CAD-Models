@@ -1188,7 +1188,7 @@ export default function LibraryStudio() {
                           <dt>Clipped</dt>
                           <dd>
                             {Math.round(detail.clipped * 100)}%{' '}
-                            <small>of pixels at pure black or white</small>
+                            <small>of pixels at or near pure black or white</small>
                           </dd>
                         </>
                       )}

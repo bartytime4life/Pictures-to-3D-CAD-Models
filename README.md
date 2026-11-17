@@ -76,7 +76,7 @@ Without any model it indexes, sorts, filters, finds exact copies and exports the
 
 DINOv3's weights are released by Meta under its own licence and only after a request form, so this project never downloads them. With files you obtained, run `make vision-model WEIGHTS=/folder/with/the/pth/files`. It builds a separate environment with PyTorch, verifies each file by SHA-256 and runs the model on this computer's graphics card or processor.
 
-On one workstation (16 cores, RTX 5080) a crunch read 12-megapixel JPEGs at about 100 a second and described them at about 175 a second. On rendered parts never used for tuning, the default ViT-B/16 returned the same part as the first match for all 56 shots and grouped all seven parts correctly; with fourteen parts together, two look-alike brackets shared a group. These figures are from drawings of parts, not photographs, and every result is a suggestion for choosing a photo, not a measurement ([guide](docs/photo-library.md), [validation](docs/validation/photo-library.md)).
+On one workstation (16 cores, RTX 5080) a crunch read 12-megapixel JPEGs at about 100 a second and described them at about 175 a second. On rendered parts never used for tuning, the default ViT-B/16 returned the same part as the first match for all 56 shots and grouped all seven parts correctly; with fourteen parts together, two pairs of look-alike parts (two brackets, two gaskets) each shared a group. These figures are from drawings of parts, not photographs, and every result is a suggestion for choosing a photo, not a measurement ([guide](docs/photo-library.md), [validation](docs/validation/photo-library.md)).
 
 ## Bambu Studio, PrusaSlicer and QIDI Studio
 

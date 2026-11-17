@@ -145,6 +145,11 @@ research checkout and are not main-branch commands.
 
 ## Remaining engineering work
 
+This section states the plan at the time of this record. The actual PNG step
+has since run separately: the [paired literal test](finite-acquisition-inward-literal.md)
+rejected the candidate on higher cost, and the
+[observed-defect correction](finite-acquisition-defect-corrector.md) followed.
+
 The next numerical step requires its own admission and combined freeze before
 any actual PNG call. Replay the saved incumbent under identical training-only
 inputs and qualify its stored predictions, source stages and cost. Then

@@ -401,6 +401,17 @@ def _sample(field, nx, ny):
     return cv2.remap(field, grid_x, grid_y, cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
 
 
+def _round_down(value, digits=3):
+    """``value`` rounded down to ``digits`` significant figures, so a suggested limit fits."""
+    if value <= 0:
+        return value
+    shown = float(f"{value:.{digits}g}")
+    if shown > value:
+        exponent = math.floor(math.log10(value)) - digits + 1
+        shown = round(shown - 10.0**exponent, max(0, -exponent))
+    return shown
+
+
 def _image_fields(image):
     """Return (linear luminance Y, display value) arrays in 0..1 and the source kind."""
     if image.mode == "F":
@@ -525,7 +536,7 @@ def prepare_elevation(data: bytes, settings: ReliefSettings):
         )
     true_mm = relief_km * mm_per_km
     span = true_mm * settings.exaggeration
-    if span < 0.05:
+    if span < 0.1:
         raise ReliefError(
             f"At this scale the terrain is only {span:.3f} mm tall. Increase the exaggeration "
             "(or, for a flat map, check the ground width)."
@@ -535,7 +546,7 @@ def prepare_elevation(data: bytes, settings: ReliefSettings):
         raise ReliefError(
             f"With {settings.exaggeration:g}× exaggeration the terrain is {span:.1f} mm tall, "
             f"more than the {limit:g} mm thickest wall allows. Use at most "
-            f"{(limit - settings.min_mm) / true_mm:.3g}×."
+            f"{_round_down((limit - settings.min_mm) / true_mm):g}×."
         )
     try:
         effective = ReliefSettings.model_validate(
@@ -610,7 +621,7 @@ def build_relief(data: bytes, settings: ReliefSettings, job_dir: Path) -> dict:
     if settings.source == "elevation":
         image, settings, notices, elevation = prepare_elevation(data, settings)
     else:
-        image, notices = load_image(data, keep_depth=True)
+        image, notices = load_image(data, keep_depth=True, linear_light=settings.source == "photo")
     notices = list(notices)
     luminance, display, sample_kind = _image_fields(image)
     if elevation:

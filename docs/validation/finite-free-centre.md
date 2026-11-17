@@ -92,8 +92,9 @@ those use fake-audit flow controls and are not more optical recovery tests.
 The frozen case named `contour-only-support` actually selects 24 **edge-band**
 integer pixels with different intensities, not equal-valued points on one level
 set. Its successful recovery does not contradict the equal-level degeneracy
-described in the model guide. A normal case takes roughly 20 seconds in this
-bounded research search on the reviewed machine; it is not a qualified default
+described in the model guide. A matched case took 13–20 seconds (median 15 s) in this
+bounded research search on the reviewed machine, including oracle rendering and
+scoring; it is not a qualified default
 latency for an interactive photo workflow.
 
 ## Captured-field integration diagnostic
@@ -107,8 +108,8 @@ runner text and input aliases are archived; the archive does not claim a
 standalone replay command or a new production capture run.
 
 The one all-target case uses the observed scalar spread on the small isotropic
-field: centre error falls from `0.07545 mm` in the geometric seed to
-`0.000942 mm`, with radius error `0.001823 mm` and held-out error `0.87264`
+field: centre error falls from `0.07545 mm` in the archived production arc fit (the
+fitter's own observed seed was `0.00675 mm`) to `0.000942 mm`, with radius error `0.001823 mm` and held-out error `0.87264`
 linear levels. Other cases remain part of the same evaluation. In particular,
 moment-derived covariance can give small geometry errors while failing the
 held-out intensity target; numerical completion and SPD covariance do not

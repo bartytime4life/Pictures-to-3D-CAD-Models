@@ -1,5 +1,48 @@
 # Validation results
 
+## Documentation and mathematics audit — November 16, 2026
+
+Every guide, method page and validation record on `main` at `502b2f5` (PR #159) was
+read against the code and saved data. Each formula and worked number was derived
+again, the implementation was compared with it, and quoted study figures were
+recomputed from `studies/` and `docs/benchmarks/`. No formula in the method pages
+was wrong. The corrections are listed in the [change log](changelog.md#documentation-and-mathematics-audit--november-16-2026).
+
+- **Re-run and matched:** `make depth-benchmark` with the pinned model (every
+  figure in the relief guide's moon table); `scripts/vision_benchmark.py` with
+  ViT-B/16, held out and `--all` (every non-timing field of the saved records);
+  `scripts/photo_benchmark.py --example`; `scripts/corner_sweep.py --quick`; the
+  sheet-scale replay; the acquisition, cell-sensitivity and moment-photo saved-data
+  audits; and every relative link and anchor in the 141 Markdown files.
+- **Re-run and corrected:** the photo library's edge-blur table did not reproduce
+  from the committed renderer and reader (0.65 px measured at 0.5 px of blur, not
+  0.76–0.86); it is replaced with a stated command and seeds. A re-run that recorded
+  group membership showed that with all fourteen parts ViT-B/16 merges two pairs of
+  look-alike parts, not one. ViT-B/16 describes photos about twice as fast as
+  ViT-L/16, not three times. The affine study's saved-report audit exits 1 on later
+  main (1,017 of 1,018 checks; the failure is its source binding), which is now
+  documented with its matching revision.
+- **Code fixes:** the relief studio reduced photos above 1,400 px by resampling saved
+  sRGB values. A one-pixel black-and-white checkerboard then carried 21 % of the
+  light instead of 50 %, darkening fine detail in a lithophane. Photo-mode pictures
+  are now reduced in linear light; depth maps and AI-depth inputs keep resampling.
+  An elevation map's "use at most" exaggeration could round up to a value that was
+  itself refused (8× for 7.996×); it now rounds down. Both have new tests in
+  `tests/test_relief.py`. The photo library's *Clipped* label now says "at or near"
+  pure black or white, as it counts grey levels 0–5 and 250–255.
+- **Checks after the changes:** `tests/test_relief.py`, `test_depth.py`,
+  `test_library.py`, `test_vision.py` and `test_backend.py`: 211 passed, 3 skipped.
+  Before the changes the complete suite on `502b2f5` gave 1,532 passed and 3
+  skipped. Ruff and Prettier passed, and the production build passed. Reference
+  library: 180 Python and 58 Node tests, and browser checks over loopback HTTP (page
+  112, Photos 67, transfer 49, OpenSCAD 30, native plate and coupon).
+- **Not changed:** dated validation records keep their original figures where those
+  describe their own run. Small code observations that change no documented result
+  are left as they are: `min_segments` can be one short when the tolerance is below
+  about 10⁻⁸ of the radius, `cadkit meshcheck` passes a closed mesh with negative
+  volume (now documented), and the library's per-tile blur map assumes tiles span the
+  whole frame.
+
 ## Photo library with optional DINOv3 features — November 16, 2026
 
 A third studio indexes folders of photos, measures edge blur, finds copies and, with the
@@ -21,9 +64,10 @@ matches photos. Full method, tables, rejected approaches and limits are in the
   56 of 56 shots, mean box overlap 0.87; the nearest other shot was the same part for
   all 56 (0.857 with the whole-picture vector); all seven parts grouped correctly; all
   42 planted copies found. With all fourteen parts together, group precision 0.76
-  (two look-alike brackets share a group). Best shot truly most detailed in 12 of 20
-  groups. These are drawings of parts, not photographs.
-- **Edge blur:** 0.5 to 4 px of rendered blur read 0.76 to 4.13 px.
+  (two brackets share a group, and so do two gaskets). Best shot truly most detailed in 3 of 7
+  held-out groups (9 of 13 with all fourteen parts). These are drawings of parts, not photographs.
+- **Edge blur:** 0.5 to 4 px of rendered blur read 0.65 to 4.12 px (re-run at
+  `502b2f5` with stated seeds; the first figures, 0.76 to 4.13, did not reproduce).
 - **Throughput, one loaded workstation (16 cores, RTX 5080):** 12-megapixel JPEGs read
   at 102 a second and described at 174 a second; 6,784 mixed real files indexed in
   52.5 s with no failure. Only counts and times of the real files were examined.
@@ -175,7 +219,7 @@ The relief studio has a second sample: the true 16-bit height of the generated m
 - `tests/test_relief.py` (33 tests) passed. One new test regenerates both samples and checks them pixel for pixel against the committed files; the existing photo is reproduced unchanged.
 - The other new test builds the depth sample at 100 mm wide with Thickest 34.6 mm. Median heights over thin rings match a 30 mm sphere, z = √(R² − r²), within 0.6 mm (the measured error is under 0.1 mm at r = 0, 10, 20, 25 and 28 mm). The surrounding base stays flat.
 - The four relief browser scenarios passed, including one that loads the depth sample and checks the 31.6 mm overall thickness and the settings it applies. `make lint` passed.
-- The built dome's volume, 67,779 mm³, is within 0.2% of an ideal hemisphere plus base (67,926 mm³).
+- The built dome's volume, 67,779 mm³, is 0.22 % below an ideal hemisphere plus base (67,926 mm³); the craters remove about 146 mm³.
 
 Nothing was printed.
 
@@ -229,7 +273,7 @@ original counts and environment; they are not later retests.
 
 ## Live restoration: exact image, remaining geometry miss — November 14, 2026 UTC
 
-The [current documentation review](validation/documentation-codecell-result.md)
+The [restoration documentation review](validation/documentation-restoration-result.md)
 records research `e677039`, its 131-input freeze and the first fresh full
 24-case result: **11/12 matched passes, exit 1**. V1's first suite failed on
 a malformed optical-anchor fixture (1,138 passes, one failure, 33 subtests).
@@ -621,7 +665,7 @@ It changes guides relative to that integrated baseline, not runtime behavior.
 | Directional covariance rank guard | Draft PR #78, source `185d682`: [633 local Python tests](validation/directional-blur-rank.md), build and 76 focused checks | Actual sampled Gaussian-step rank counterexample; no new whole-photo, browser or physical-accuracy claim |
 | Recorded directional-blur checks | Branch `claude/directional-blur`, on the slot end-cap commit and `main` at `485da7e` (after #47): **627 Python tests**, **74 browser scenarios**, Ruff passed, as recorded [below](#a-blur-that-differs-by-direction--november-12-2026) | Local result; synthetic photos including the directional-spread qualification's kinds of case, and exact blurred holes; supersedes that record's "no production correction" |
 | Contact-shadow observability study | Branch `claude/contact-shadow-limits` on `main` at `70055dc`, documentation only, as recorded [below](#contact-shadows-beside-an-edge--november-13-2026) | Exactly rendered scenes; an unobservable kernel radius, a closer-fit study and a profile-shape fit, none adopted; capture guidance |
-| Recorded luma-rebuild checks | Branch `claude/jpeg-luma`, on `main` at `10ce436` (after #150): **1392 Python tests**, **83 browser scenarios**, Ruff passed, as recorded [below](#a-coloured-parts-edges-rebuilt-from-a-jpegs-luma--november-15-2026) | Local result; exactly blurred plates and rendered photos in four colours, with and without a shadow, at three blurs; grey and tinted parts unchanged; HEIC, WebP, AVIF and thick parts not rebuilt |
+| Recorded luma-rebuild checks | Branch `claude/jpeg-luma`, on `main` at `10ce436` (after #150): **1392 Python tests**, **83 browser scenarios**, Ruff passed, as recorded [below](#a-coloured-parts-edges-rebuilt-from-a-jpegs-luma--november-15-2026) | Local result; exactly blurred plates and rendered photos in four colours, with and without a shadow, at three blurs; grey and tinted parts unchanged; HEIC, WebP, AVIF and thick parts not rebuilt in that change (HEIC and WebP followed in #152 and #153) |
 | JPEG colour study | Branch `claude/jpeg-edge` on `main` at `5a222b0` (after #145), documentation only, as recorded [below](#jpegs-colour-at-half-resolution--november-14-2026) | Exactly blurred plates saved as PNG and JPEG, six colour pairs, two blurs, with and without noise and shadow; rendered photos JPEG against PNG; two corrections tried, neither adopted |
 | Recorded carried-blur checks | Branch `claude/perspective-blur`, on `main` at `ab2f74b` (after #144): **1393 Python tests**, **81 browser scenarios**, Ruff passed, as recorded [below](#the-photos-blur-carried-across-the-sheet--november-14-2026) | Local result; rendered photos saved as JPEG and as PNG, ring and direction widths, the documented tables, rectangles and seeds; JPEG photos under a directional blur read worse; carrying the blur into the shadow model not adopted |
 | Recorded measured-tail checks | Branch `claude/blur-shape`, on `main` at `7e0a1dd` (after #140): **1359 Python tests**, **79 browser scenarios**, Ruff passed, as recorded [below](#the-blurs-shape-in-the-steps-tail--november-14-2026) | Local result; exactly blurred plates under disks and a streak, rendered plates under four kernels, the documented tables, rectangles and noise seeds; JPEG photos read about 1–2 µm into the part |
@@ -783,6 +827,16 @@ Branch `claude/perspective-blur`, on `main` at `ab2f74b` (after #144; #143–#14
   - `test_the_photo_s_blur_is_carried_to_each_edge_by_the_sheet`: rings within 2.5 %, one width over 5 % off.
   - `test_a_slot_cap_takes_the_blur_carried_to_it`: within 0.001 px, against 0.024 px short.
 - **Checks run.** `pytest` with runtime warnings as errors: **1393 passed**, two skipped without the optional depth model. Ruff and Prettier passed. **81 browser scenarios** passed with the system Chrome, one skipped for the same reason.
+
+## Thick parts under a directional blur — November 14, 2026
+
+PRs #127, #129, #131, #133, #134, #136, #137 and #138 (branch `claude/brave-sagan-kqi4cf`) changed only parts traced with an entered thickness. The method and every figure are in [reference-sheet tracing](reference-sheet.md), Limits; this entry is an index to them. No test or browser-run counts were recorded for these PRs in this file.
+
+- **Before:** on `main` at `903f76e`, five of the six noise seeds 201–206 of the rendered 4 mm plate tilted 22° failed to trace under a 1 × 3 px blur: the corrected outline went out and back along the wall's vertical edge and crossed itself.
+- **After #127:** those points are dropped and seeds 7 and 201–206 trace, with and without the shadow. #131 fits each hole's circle clear of the points within 3 σ of a support switch, so all seven seeds score.
+- **After #133–#138:** paper read short of a narrow opening's far edge (#133, #134; kept to thick parts by #136), unresolved corners kept as traced between fitted edges (#137), and a two-edge profile model across narrow openings (#138). Across the seven seeds Ø6 reads 0.0021–0.013 mm off, Ø22 0.0010–0.019 mm, the slot 0.0033–0.020 mm, hole positions 0.019–0.026 mm and the outline 0.007–0.031 mm, all inside the test limits. Seed 202's Ø6 reads worse (0.0051 → 0.0106 mm).
+- **Shadow-free blur (#129):** thick parts now take the shadow-free blur; on the frontal photo whose camera height comes from the holes, the height reads 0.5 % low instead of 3.3 %.
+- **Not shown:** these are rendered photos from this repository's renderer; such parts remain partly fragile where support switches between the top and bottom edges.
 
 ## The blur's shape in the step's tail — November 14, 2026
 

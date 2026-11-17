@@ -247,7 +247,7 @@ def build_sphere(data, settings, job_dir):
     if settings.source == "elevation":
         image, settings, notices, elevation = prepare_elevation(data, settings)
     else:
-        image, notices = load_image(data, keep_depth=True)
+        image, notices = load_image(data, keep_depth=True, linear_light=settings.source == "photo")
     notices = list(notices)
     luminance, display, sample_kind = _image_fields(image)
     if elevation:

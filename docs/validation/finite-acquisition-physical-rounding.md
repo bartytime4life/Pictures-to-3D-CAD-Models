@@ -128,7 +128,9 @@ This establishes no accepted point in the checked adjacent physical box under
 the unchanged gates. It does not prove global float nonexistence, nonlinear
 infeasibility or a recovery improvement. The
 [inward-point proposal and proof obligations](../finite-acquisition-physical-rounding.md#an-inward-point-is-future-work)
-remain unexecuted and require a new admission before numerical work.
+were unexecuted at this record. They were later executed separately at `66df525`
+(103 controls, 128/128 new corners, an 8,030-check audit;
+[result](finite-acquisition-inward-margin.md)); the 0/128 census above is unchanged.
 
 ## Local packaging and publication boundary
 

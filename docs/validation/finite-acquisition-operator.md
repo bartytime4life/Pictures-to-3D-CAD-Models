@@ -51,7 +51,7 @@ intensity residuals. These are forward diagnostic queries, not training or
 held-out observations. There are no optimizer, geometry-Jacobian or
 normal-derivative calls, and no covariance or brightness fitting.
 
-The nominal covariance is `q^2*Sigma_nominal + 0.7^2*I`. The moment hypothesis
+The nominal covariance is `q^2*Sigma_optical_nominal + 0.7^2*I`. The moment hypothesis
 uses `q^2*(Cov(W)+I/12)+Cov(G)` from the saved normalized discrete kernels.
 Keys has zero formal second central moment because it reproduces quadratics;
 its signed higher moments and phase dependence remain. This is a declared

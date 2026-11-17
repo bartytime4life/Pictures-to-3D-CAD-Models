@@ -149,7 +149,10 @@ absolute paths are historical provenance, not runnable paths in main.
 The represented local obstruction is resolved for the earlier inward point;
 actual nonlinear band preservation and cost improvement fail for the selected
 candidate. The original 11/12 full recovery, first failures and earlier
-0/128 corner census remain unchanged. A future nonlinear correction is
-unimplemented. Runtime integration, an unchanged full 24-case acceptance run,
+0/128 corner census remain unchanged. A nonlinear correction was
+unimplemented at this record; the later
+[observed-defect correction](finite-acquisition-defect-corrector.md) and
+[live restoration study](finite-acquisition-restoration-result.md) addressed it in
+separate research (full 24-case result 11/12, exit 1). Main integration,
 independent forward/rank qualification, real-camera measurements, installed
 behavior and physical CAD/print acceptance remain separate work.

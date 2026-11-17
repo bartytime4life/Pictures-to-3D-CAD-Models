@@ -43,7 +43,7 @@ regression where normalization would underflow it to zero.
 | --- | --- |
 | Original versus batch probability | `3.83e-12` |
 | Kernel versus independent positive-area intensity | `1.383e-9` levels |
-| Independent 32/64-order intensity comparison | `3.849e-11` levels |
+| Independent 32/64-order intensity comparison | `3.848e-11` levels |
 | Direct Jacobian versus independent finite difference | `8.989e-9` |
 | Independent finite-difference step comparison | `2.702e-8` |
 

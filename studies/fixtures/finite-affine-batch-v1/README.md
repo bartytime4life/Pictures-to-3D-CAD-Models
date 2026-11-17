@@ -80,7 +80,10 @@ python3 studies/verification/finite-affine-report-audit-v1.py \
 ```
 
 This standard-library-only auditor imports no fitter, performs no new forward
-calculation and runs no benchmark. Exit 0 means the saved integrity checks pass.
+calculation and runs no benchmark. Exit 0 means the saved integrity checks pass on the recorded source. On later
+main its `binding/current_files` check fails, because the six recorded source
+files have changed since `f7d116e`; that is a provenance mismatch, not a data
+mismatch ([historical source checks](../../../docs/developer-tools.md#historical-source-checks-in-saved-data-audits)).
 It is not a physical-model check, a proof of host quietness or a replacement for
 a missed performance/scientific target. Historical `original24` held-out
 prediction arrays were not archived; that older target subcheck uses its

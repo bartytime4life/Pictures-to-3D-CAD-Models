@@ -52,7 +52,8 @@ STANDIN = "stand-in"
 
 #: The LVD-1689M ViT backbones the library can use, as Meta names and ships them. The
 #: order is the preference on a graphics card: on the rendered benchmark ViT-B/16 matched
-#: parts best and runs about three times faster than ViT-L/16 (docs/validation/photo-library.md).
+#: parts best and describes photos about twice as fast as ViT-L/16
+#: (docs/validation/photo-library.md).
 #: ``group``, ``split`` and ``lookalike`` are that model's cosine thresholds: for the
 #: same-subject links, for breaking up chained groups by average likeness
 #: (vision_math.split_chained) and for near-identical pictures. They were chosen on seven

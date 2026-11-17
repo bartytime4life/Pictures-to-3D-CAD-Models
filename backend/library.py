@@ -31,7 +31,7 @@ Edge blur
     read on the subject alone once the vision model has found it.
     Rendered experiments include pixel integration and JPEG as well as the applied
     blur; see docs/validation/photo-library.md for the validation scope.
-    A JPEG of 8 megapixels or more is decoded at half scale or less, as its decoder
+    A JPEG of 7.6 megapixels or more is decoded at half scale or less, as its decoder
     allows, and the reading is scaled back to the photo's own pixels; on such photos
     blur below about one pixel is not resolved. A reading above about 5 measured pixels
     is cut short by the 12-pixel profile and reads low.

@@ -76,10 +76,18 @@ What the table supports:
   model's whole-picture vector in every row: for ViT-B/16, 1.000 against 0.857 for the
   first match on the held-out parts, because the whole-picture vector also describes
   the surface the part lies on.
-- ViT-B/16 is the default on a graphics card. It equals or beats ViT-L/16 on every
-  column but best shot, and runs about three times faster.
+- ViT-B/16 is the default on a graphics card. On the held-out parts it equals or beats
+  ViT-L/16 on every column but best shot and top three. With all fourteen parts
+  ViT-L/16 has the higher whole-picture first match (0.804 against 0.795), group
+  precision (0.81 against 0.76) and best-shot share, at much lower group recall (0.76
+  against 0.98, 18 groups for 14 parts). ViT-B/16 describes photos about twice as fast:
+  the saved describe stage took 0.82 s against 1.51 s on the held-out set and 1.23 s
+  against 2.86 s with all fourteen parts.
 - Groups merge parts that look alike. With all fourteen parts, ViT-B/16 puts the
-  L-bracket and the T-bracket in one group (13 groups, precision 0.76). No rule tried
+  L-bracket and the T-bracket in one group and the oval and ring gaskets in another, and
+  splits one oval-gasket shot off (13 groups, precision 0.76, recall 0.98). The saved
+  records hold no group membership; a re-run at `502b2f5` that reproduced the saved
+  precision and recall listed it. No rule tried
   separated them at a usable recall.
 - The best shot is right less often than not on the held-out set (3 of 7 for ViT-B/16)
   and more often with all parts (9 of 13). It is a ranking aid. The subject's span
@@ -88,7 +96,7 @@ What the table supports:
 ### Thresholds
 
 For each model, every link threshold from 0.76 to 0.92 was tried with every split
-threshold at or below it on the calibration parts. Of the pairs within 0.02 of the best
+threshold from 0.70 up to it, both in steps of 0.02, on the calibration parts. Of the pairs within 0.02 of the best
 pair F1, the strictest was taken, because a group that wrongly merges two parts hides
 one of them. The look-alike threshold, 0.96 for all models, lies between the largest
 cosine of two different shots and the smallest cosine of a re-saved or half-size copy.
@@ -104,18 +112,24 @@ The calibration precision of 0.747 is the L-bracket and T-bracket sharing a grou
 
 ## Edge blur
 
-`tests/synthetic.py` renders the reference-sheet plate with a chosen sensor blur. Two
-noise seeds each, 1600 × 1200 pixels:
+`tests/synthetic.py` renders the reference-sheet plate with a chosen sensor blur:
+`synthetic.render(size=(1600, 1200), blur=b, seed=s)` with its other defaults (noise
+2.5 levels, JPEG quality 90), read by `library.read_photo`, noise seeds 7 and 8. Re-run
+at `502b2f5` (PR #159):
 
 | Rendered blur (px) | 0.5 | 1.0 | 1.5 | 2.0 | 3.0 | 4.0 |
 | --- | --- | --- | --- | --- | --- | --- |
-| Measured (px) | 0.76, 0.86 | 1.27, 1.28 | 1.65, 1.65 | 2.18, 2.18 | 3.16, 3.17 | 4.12, 4.13 |
+| Measured (px) | 0.65, 0.65 | 1.22, 1.21 | 1.61, 1.61 | 2.15, 2.15 | 3.14, 3.15 | 4.11, 4.12 |
 
-The measured value exceeds the rendered one by the renderer's own pixel integration,
-resampling and JPEG, about 0.8 px in quadrature. Enlarged 2.52 times to 12 megapixels,
-the 2.0 px render read 5.15 px against 5.49 expected: a reading above about five
-measured pixels is cut short by the 12-pixel profile. A picture of noise alone gives
-no reading.
+The first version of this table (0.76 and 0.86 at 0.5 px up to 4.12 and 4.13 at 4 px)
+stated no seeds or settings and does not reproduce from the committed renderer and
+reader; the table above replaces it. The measured value exceeds the rendered one by
+0.11–0.22 px, from the renderer's own pixel integration, resampling and JPEG.
+Enlarged 2.52 times to 12 megapixels and saved at JPEG quality 90, the seed-7 2.0 px
+render read 5.34 px against 5.42 expected (2.52 × 2.15); such a JPEG is decoded at half
+scale and its reading scaled back. On an ideal blurred step the reader stays within
+1 % up to 4.5 px and reads low beyond about 5 px (5.67 at 6 px), where the 12-pixel
+profile cuts the edge short. A picture of noise alone gives no reading.
 
 On the benchmark, the rank correlation between the rendered blur and the measured
 blur was 0.75 (held out) and 0.66 (all 14) for the whole picture, and 0.83 and 0.84
@@ -127,7 +141,11 @@ the subject reading is used for the best shot.
 | Collection | Photos | Read | Describe | Whole crunch |
 | --- | --- | --- | --- | --- |
 | Two personal folders, mostly small PNG, mean 0.2 MP, largest 67 MP | 6,784 | 575 per second | 183 per second | 52.5 s (129 per second) |
-| Rendered 12.2 MP JPEGs, 1.6 GB | 960 | 102 per second | 174 per second | 18.3 s (53 per second) |
+| Rendered 12.2 MP JPEGs, 1.6 GB | 960 | 102 per second | 174 per second | 18.3 s (52 per second) |
+
+These are single observed runs on the workstation above. Unlike the benchmark tables,
+no record of them is saved in `docs/benchmarks/photo-library/`, and the 12.2 MP renders
+are not produced by a committed script (`scripts/vision_scenes.py` renders 1280 × 960).
 
 The whole crunch includes about 3 s to start the model. Organizing 6,784 photos took
 0.7 s. In that library a similar-photo query took 6 ms, a sorted page 41 ms, and a

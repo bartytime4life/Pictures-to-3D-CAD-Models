@@ -18,7 +18,7 @@ from PIL import Image
 
 from backend import app as api
 from backend import blender as blender_bridge
-from backend import relief, sphere
+from backend import relief, sphere, tracing
 from backend.relief import ReliefError, ReliefSettings
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -939,6 +939,36 @@ def test_elevation_maps_are_checked():
         )
     with pytest.raises(ValueError, match="Choose Relief"):
         ReliefSettings(source="elevation", mode="lithophane")
+
+
+def test_the_suggested_largest_exaggeration_is_accepted():
+    # 4.752 mm of true relief under a 2 mm base allows 38 / 4.752 = 7.996x. Rounding that
+    # to three figures would suggest 8x, which is itself refused, so it is rounded down.
+    data = tiff(hill(peak=475.238))
+    settings = {
+        "source": "elevation",
+        "elevation_unit": "m",
+        "ground_width_km": 10,
+        "width_mm": 100,
+    }
+    with pytest.raises(ReliefError, match=r"Use at most 7\.99×"):
+        relief.prepare_elevation(data, ReliefSettings(**settings, min_mm=2, exaggeration=8))
+    relief.prepare_elevation(data, ReliefSettings(**settings, min_mm=2, exaggeration=7.99))
+    assert [relief._round_down(v) for v in (7.99764, 12.0, 9.9996, 999.96)] == [7.99, 12, 9.99, 999]
+
+
+def test_large_photos_are_reduced_in_linear_light():
+    # A one-pixel black and white checkerboard is half the light. Averaging its saved
+    # values would make it mid-grey in sRGB (21 % of the light) and darken a lithophane.
+    board = (np.indices((1400, 2800)).sum(axis=0) % 2 * 255).astype(np.uint8)
+    data = png(np.dstack([board] * 3))
+    photo, _ = tracing.load_image(data, linear_light=True)
+    assert photo.size == (1400, 700)
+    light = relief.relative_luminance(relief.srgb_to_linear(np.asarray(photo) / 255))
+    assert light.mean() == pytest.approx(0.5, abs=0.01)
+    # Depth maps and other data keep plain resampling of their saved values.
+    values, _ = tracing.load_image(data)
+    assert np.asarray(values.convert("L")).mean() == pytest.approx(127.5, abs=2)
 
 
 def test_sphere_elevation_is_true_scale_on_the_body(tmp_path):
