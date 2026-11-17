@@ -11,6 +11,7 @@ import hashlib
 import io
 import os
 import time
+from contextlib import contextmanager
 from pathlib import Path
 
 import cv2
@@ -20,7 +21,7 @@ from fastapi.testclient import TestClient
 from PIL import Image
 
 from backend import app as api
-from backend import library, vision
+from backend import library, vision, vision_math
 from tests import photos
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -314,6 +315,58 @@ def test_only_one_crunch_runs_and_it_can_be_cancelled(lib):
     assert state["running"] is False and state["stage"] in ("cancelled", "finished")
     crunch()  # A later crunch finishes what was left.
     assert library.summary()["ready"] == 12
+
+
+def test_cancelled_regroup_keeps_saved_groups_and_allows_retry(lib, monkeypatch):
+    folder = lib / "shots"
+    folder.mkdir()
+    photos.write_set(folder, views=2, parts=("red", "blue"))
+    library.add_folder(str(folder))
+    crunch()
+    before = named()
+    neighbours = vision_math.neighbours
+
+    def cancel_during_search(*args, **kwargs):
+        library.job.cancel()
+        return neighbours(*args, **kwargs)
+
+    with monkeypatch.context() as patch:
+        patch.setattr(vision_math, "neighbours", cancel_during_search)
+        library.start_reorganize()
+        library.job.wait(30)
+    assert library.job.state()["stage"] == "cancelled"
+    assert library.job.state()["error"] is None
+    assert named() == before
+    library.start_reorganize()
+    library.job.wait(30)
+    assert library.job.state()["stage"] == "finished"
+    assert named() == before
+
+
+def test_cancel_during_group_write_rolls_back_the_entire_update(lib, monkeypatch):
+    library.add_upload("a.png", photos.encoded(photos.scene("red", 0)))
+    library.add_upload("b.png", photos.encoded(photos.scene("red", 1)))
+    crunch()
+    before = named()
+    current = library.Job()
+    database = library.database
+
+    @contextmanager
+    def cancel_on_update():
+        with database() as db:
+            class Connection:
+                def execute(self, sql, *args):
+                    result = db.execute(sql, *args)
+                    if sql.startswith("UPDATE photos SET detail="):
+                        current.cancel()
+                    return result
+            yield Connection()
+
+    with monkeypatch.context() as patch:
+        patch.setattr(library, "database", cancel_on_update)
+        with pytest.raises(vision_math.SearchCancelled):
+            library.organize(current)
+    assert named() == before
 
 
 def test_readers_that_never_answer_end_the_crunch_instead_of_holding_it(lib, monkeypatch):
