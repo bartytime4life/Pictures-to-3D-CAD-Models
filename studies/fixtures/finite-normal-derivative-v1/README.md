@@ -19,7 +19,7 @@ synthetic inputs and software evidence; no private photograph is included.
 ## Lossless report and receipts
 
 The [full report](../../results/finite-normal-derivative-v1.json.gz) is a lossless
-gzip of 91,924,054 bytes, decoded SHA-256
+gzip (11,515,718 bytes) of the 91,924,054-byte report, decoded SHA-256
 `d31fcb0436daee9e91bd21d78c1650901916a8c2c77bf6c7e351da61c04e113f`.
 It retains every scene, query-role mapping, candidate status/error/work record,
 independent source partition, quadrature order, tail bound and positive-area

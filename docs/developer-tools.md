@@ -114,9 +114,9 @@ experiment and needs its own source binding and comparison criteria.
 ## Historical source checks in saved-data audits
 
 A saved-only audit can still require the source files in its checkout to match
-the original report. The normal-derivative and residual-information auditors
-compare every recorded source hash with the current repository files. Current
-main differs from both recorded closures, so those checks report a source
+the original report. The normal-derivative, residual-information and affine-batch
+auditors compare every recorded source hash with the current repository files.
+Current main differs from all three recorded closures, so those checks report a source
 mismatch here even though they run no model or optimizer.
 
 Use the exact recorded source and hashes when reproducing a source-binding audit.
@@ -126,8 +126,11 @@ The matching recorded revisions are:
 | --- | --- |
 | Normal derivative, 33 recorded source pins | [`d40502fed3de93989c73d4c8cf614f6f6b6d7e45`](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/commit/d40502fed3de93989c73d4c8cf614f6f6b6d7e45) |
 | Residual information, 38 recorded source pins | [`1f51bae35eb862dca4a259016cc31bf1504207f9`](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/commit/1f51bae35eb862dca4a259016cc31bf1504207f9) |
+| Affine batch, 24 recorded source pins (`binding/current_files`) | [`f7d116e74b028beffe2dee797518767d0e5b7222`](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/commit/f7d116e74b028beffe2dee797518767d0e5b7222) |
 
-Both revisions contain their public auditors. These two fixture archives do not
+All three revisions contain their public auditors. On main at `502b2f5` the affine
+auditor passes 1,017 of its 1,018 checks; the one failure is that source binding.
+The normal-derivative and residual-information fixture archives do not
 include complete source ZIPs, so recover the matching source separately and then
 follow its recorded README with fresh destinations. The table is verified by
 comparing recorded pins with Git blobs; no audit or numerical replay is rerun.

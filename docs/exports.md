@@ -110,7 +110,7 @@ Like the DXF, the SVG is a flat profile. It holds no thickness, toolpaths, cutti
 
 ## PDF: a 1:1 drawing to print
 
-Use the PDF to check the outline against the real part before cutting or printing anything. Print it, lay the part on the paper, and look at every edge and hole. It also works as a paper template: each round hole carries a centre mark.
+Use the PDF to check the outline against the real part before cutting or printing anything. Print it, lay the part on the paper, and look at every edge and hole. It also works as a paper template: on a single-piece fitted (reference-sheet) outline, each hole fitted as a circle carries a centre mark. Polygon-traced holes and split pieces have no centre marks.
 
 - **Print at 100 %**, which print dialogs also call "actual size". Do not fit the page to the paper.
 - **Measure both rulers.** The page has a 100 mm ruler along each axis. A printer can scale the two directions differently, so measure both. If one reads 99.5 mm, every dimension in that direction is 0.5 % small.

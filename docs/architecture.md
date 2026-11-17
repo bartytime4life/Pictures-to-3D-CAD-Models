@@ -366,7 +366,7 @@ The profile is validated at the API boundary even when it originated in this app
 
 ### Export downloads
 
-`GET /api/download/{job_id}/{kind}` returns an artifact for `kind` equal to `step`, `stl`, `3mf`, `dxf`, `svg`, `pdf`, `scad`, `project`, `parts`, `bambu`, or `prusa`. The `svg` and `pdf` artifacts are the DXF's loops as a millimetre drawing and as a page that prints at 1:1 (`backend/drawing.py`, which writes both without a PDF or SVG library). The parts artifact is a ZIP of separate STEP/STL/3MF files and a manifest. The `bambu` and `prusa` artifacts are tailored handoff ZIPs. Successful builds provide those links explicitly. Do not construct arbitrary filesystem paths from project names or user-provided extensions.
+`GET /api/download/{job_id}/{kind}` returns an artifact for `kind` equal to `step`, `stl`, `3mf`, `dxf`, `svg`, `pdf`, `scad`, `project`, `parts`, `bambu`, `prusa`, or `qidi` (relief builds add `heightmap`, `blender`, `wedge` and `depth`; see below). The `svg` and `pdf` artifacts are the DXF's loops as a millimetre drawing and as a page that prints at 1:1 (`backend/drawing.py`, which writes both without a PDF or SVG library). The parts artifact is a ZIP of separate STEP/STL/3MF files and a manifest. The `bambu`, `prusa` and `qidi` artifacts are tailored handoff ZIPs. Successful builds provide those links explicitly. Do not construct arbitrary filesystem paths from project names or user-provided extensions.
 
 `DELETE /api/models/{job_id}` removes the generated model directory. It is an API capability; it is not a promise that the interface exposes a model-management screen. Deleting server artifacts does not delete copies already downloaded.
 
@@ -417,7 +417,7 @@ One crunch runs at a time in a background thread; routes that would change the c
 | `DELETE /api/library` | Forget everything derived; originals in added folders are untouched |
 | `GET /api/library/export` | The catalogue, one row per photo, with `format=csv` (default) or `format=json` |
 
-Naming a host folder uses the slicer launch gate (`launch_request_allowed`): a loopback client and host, a same-origin `Origin`, and a JSON body. `PICAD_LIBRARY_FOLDERS=0` turns it off. Routes that change the library refuse a request whose `Origin` names another site (`library_same_origin`): a multipart upload is otherwise a request any page may send. Photo decoding reuses `tracing.decode_with_pillow` and `heic.decode` with their limits; a JPEG of 8 megapixels or more is decoded at reduced scale by `library._decode_jpeg_reduced`, which applies the same size limits before decoding.
+Naming a host folder uses the slicer launch gate (`launch_request_allowed`): a loopback client and host, a same-origin `Origin`, and a JSON body. `PICAD_LIBRARY_FOLDERS=0` turns it off. Routes that change the library refuse a request whose `Origin` names another site (`library_same_origin`): a multipart upload is otherwise a request any page may send. Photo decoding reuses `tracing.decode_with_pillow` and `heic.decode` with their limits; a JPEG of 7.6 megapixels or more (four times `DRAFT_PIXELS`, 1.9 megapixels) is decoded at reduced scale by `library._decode_jpeg_reduced`, which applies the same size limits before decoding.
 
 The vision worker speaks one JSON object per line on its standard streams and writes feature arrays to a file the caller names. Each weight file is identified by a pinned SHA-256 and checked before it is loaded with `weights_only=True`. The worker is started on first use, restarted if it dies, and stopped after five idle minutes. `PICAD_VISION_STANDIN=1` replaces the network with colour statistics for tests; it is not a vision model and is never chosen automatically.
 
@@ -425,7 +425,7 @@ The vision worker speaks one JSON object per line on its standard streams and wr
 
 `GET /api/slicers` checks fixed executable names or server-configured paths without executing them. It reports target releases, executable availability and whether direct opening is enabled; installed versions remain unchecked.
 
-`POST /api/models/{job_id}/slicer/{program_id}` accepts an empty JSON object for `bambu` or `prusa`. With `PICAD_ENABLE_SLICER_LAUNCH=1`, an HTTP loopback caller/host, a matching Origin and JSON content type, it retains a copy of the generated 3MF and requests GUI opening using a fixed argument list without a shell. HTTPS loopback and remote workbenches use the downloadable handoff ZIP instead. The API accepts neither executable paths nor arbitrary arguments. The response is HTTP 202 with `launch_requested`, not proof of import. A per-process lock and two-second cooldown bound launch attempts; request cancellation keeps the lock until the worker completes.
+`POST /api/models/{job_id}/slicer/{program_id}` accepts an empty JSON object for `bambu`, `prusa` or `qidi`. With `PICAD_ENABLE_SLICER_LAUNCH=1`, an HTTP loopback caller/host, a matching Origin and JSON content type, it retains a copy of the generated 3MF and requests GUI opening using a fixed argument list without a shell. HTTPS loopback and remote workbenches use the downloadable handoff ZIP instead. The API accepts neither executable paths nor arbitrary arguments. The response is HTTP 202 with `launch_requested`, not proof of import. A per-process lock and two-second cooldown bound launch attempts; request cancellation keeps the lock until the worker completes.
 
 Copies under `.local/slicer-handoffs/` (or `PICAD_SLICER_HANDOFF_DIR`) outlive temporary model expiry and deletion and remain until manually removed. This workflow does not slice or send anything to a printer. See [slicer setup and limits](slicers.md).
 
@@ -449,7 +449,7 @@ The status endpoint returns HTTP 200 with `running: false` when Ollama is unavai
 
 | Boundary | Current limit |
 | --- | --- |
-| Photo upload | 32 MiB file content; 32 MiB + 64 KiB total trace-request body |
+| Photo upload | 32 MiB file content; 32 MiB + 64 KiB total request body for trace, relief, library upload and library search |
 | Any other request body | 10 MiB + 64 KiB total middleware limit; individual schema limits still apply |
 | Decoded image | 70 million pixels; at least 16 pixels per side |
 | HEIC decoding | A child process per file; 60-second timeout; 4 GiB address space and 60 s of processor time where the platform enforces them |

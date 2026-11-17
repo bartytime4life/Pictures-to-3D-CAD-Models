@@ -157,9 +157,11 @@ ledger is a view of that prepaid work, not another debit. Two coverage and
 two acquisition attempts complete, with no opaque failed work. Tariffs are
 accounting units, not elapsed time or a complexity theorem.
 
-Fitter integration, a separately admitted complete original 24-case protocol,
-reserved checks, rank/forward qualification and real captures remain future
-work. No new main UI/HTTP control, installation, deployment, native slicing
+Main-branch integration, reserved checks, rank/forward qualification and real
+captures remain future work. The later
+[live restoration study](finite-acquisition-restoration-result.md) integrated this
+correction into its research fitter and ran the complete original 24-case protocol
+(11/12 matched passes, exit 1). No new main UI/HTTP control, installation, deployment, native slicing
 or physical CAD/print acceptance is added by this record.
 
 ## Later saved-only audits and packaging

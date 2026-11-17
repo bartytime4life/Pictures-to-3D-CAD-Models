@@ -93,7 +93,7 @@ The local portable replay on Python **3.12.3** and NumPy **2.5.4** retains every
 
 ## Source and artifact binding
 
-The report binds 23 files before and after replay: runner, original plan, manifest, contract helper, eight original provenance files, five measured fields, and six capture/generation sources. Each original baseline retains its own complete before/after hashes. The five production modules plus synthetic generator are unchanged from the archived capture:
+The report binds 23 files before and after replay: runner, original plan, manifest, contract helper, eight original provenance files, five measured fields, and six capture/generation sources. Each original baseline retains its own complete before/after hashes. The five production modules plus synthetic generator were unchanged from the archived capture when this archive was packaged (later main differs, which the replay reports separately without affecting row equality):
 
 | Capture/generation component | SHA-256 |
 | --- | --- |

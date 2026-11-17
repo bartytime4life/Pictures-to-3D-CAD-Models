@@ -133,8 +133,8 @@ Use the revision-bound records in [validation.md](validation.md) to identify whi
 implementation was checked. A historical pass does not establish a later head,
 and listing a command here does not establish that it ran.
 
-This main-based source includes PR #103's paper-light/shadow model and preserves
-PR #82's 45-minute workbench job budget. It also contains the conditional
+This main-based source includes PR #103's paper-light/shadow model. The workbench
+CI job's time limit, 45 minutes from PR #82, is 60 minutes since PR #140. It also contains the conditional
 finite-material Python operators and immutable measured-ring preparation API;
 source-space calibration APIs from the separate research lineage remain absent.
 PR #114 adds shadow-free edge-width remeasurement only when its fitted model

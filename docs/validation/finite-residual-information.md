@@ -18,7 +18,7 @@ fit-pass count. Six algebra and ten safe contracts pass, as do three of the four
 independent positive-area controls. The normal control misses its fixed absolute
 step/half-step allowance: **0.0004222865848 > 0.00002** linear-light levels per
 radian. Production and positive-area fine derivatives nevertheless agree within
-**2.7712e-10**. Matching two implementations at the same finite-difference step
+**2.7711e-10**. Matching two implementations at the same finite-difference step
 does not resolve that step's truncation error. The failed control and full report
 are preserved, without retry or tolerance change.
 
@@ -59,9 +59,9 @@ linear check. The original held-out values never select damping or a retry.
 | rotated-major-directional | moment | 2.451006 | 1.803439 | 0.285663 |
 
 Intensity values use the archived linear-light level scale. Residuals decrease
-in this fixed conditional check, but the small-isotropic moment,
-small-directional moment and rotated-major moment rows still exceed the original
-one-level held-out target. No original target is relabeled. Truth is accessed
+in this fixed conditional check, but seven of the ten rows still exceed the
+original one-level held-out target: the four directional scalar rows and the
+small-isotropic moment, small-directional moment and rotated-major moment rows. No original target is relabeled. Truth is accessed
 only after predictions for descriptive geometry errors, all retained in the
 [readable index](../../studies/results/finite-residual-information-v1-summary.json).
 Held-out pixels already influenced preparation/moments; they are conditional
@@ -89,7 +89,7 @@ calls**, including the 16 synthetic derivative-control means and ten actual
 `BGS` trials. It reports 21,290,976 returned evaluations and 2,101,194 panels.
 Optimizer attempts, renderers and preparation calls are zero. The one-shot
 launcher records the terminal exit and all 38 unchanged source/input members.
-Its roughly 9.55-second elapsed time is execution provenance, not a latency
+The runner's 9.55-second recorded runtime (launcher interval 9.74 s) is execution provenance, not a latency
 benchmark or an interactive-performance claim.
 
 ## Separate post-hoc rotation identity
@@ -101,14 +101,14 @@ It combines the saved centre derivatives and stable covariance columns in the
 correct crop/global frame, without another model call or trial. Across all ten
 eligible rows, coarse/fine maximum discrepancies have ratios **3.9991–4.0020**,
 consistent with second-order central-difference truncation. Saved Richardson
-comparisons range from 3.514e-10 to 2.134e-6. These shared-source comparisons do
+comparisons range from 3.514e-10 to 2.133e-6. These shared-source comparisons do
 not independently validate the identity's numerical implementation or qualify
 any formerly unknown `N` column.
 
 An independent saved-only scalar calculation uses raw centre Jacobians and
 closed-form covariance coefficients rather than the script's matrix products.
 All **560 identity values** agree within **1.146e-13**, estimated error sums
-within **1.695e-21**, and all frames, rows and 38 bindings match: **13/13** checks.
+within **1.694e-21**, and all frames, rows and 38 bindings match: **13/13** checks.
 The first audit retained **12/13** because its closure reader incorrectly expected
 bare SHA strings instead of `{sha256, bytes}` records. Both receipts and the
 corrected audit source remain in the archive. Correcting the reader changes no

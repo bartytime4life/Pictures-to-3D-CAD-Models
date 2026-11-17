@@ -134,7 +134,7 @@
   {
     "id": "units", "title": "Import unit detective", "section": 2,
     "blurb": "A mesh came in far too big or small? Find the unit mismatch that explains it.",
-    "formula": "corrected = observed × factor     rank by |log(corrected / expected)|",
+    "formula": "corrected = observed × factor     rank by |corrected − expected| / expected",
     "inputs": [
       { "k": "observed", "label": "Extent shown after import", "unit": "", "value": 0.06 },
       { "k": "expected", "label": "Known real size", "unit": "mm", "value": 60 }

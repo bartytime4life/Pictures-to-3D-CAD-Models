@@ -7,7 +7,7 @@ python3 -m cadkit --help
 python3 -m cadkit <command> --help
 ```
 
-Lengths are in millimetres unless an option says otherwise. Every numeric command accepts `--json`. Exit codes are `0` for success, `1` when a check fails (for example a mesh that is not closed, or a register with problems), and `2` for invalid input. Invalid input includes impossible or out-of-range values, results too large to represent, malformed JSON or STL, and a path that is missing, unreadable, a directory, or not writable. It prints one `error: …` line on standard error, never a traceback.
+Lengths are in millimetres unless an option says otherwise. Every numeric command accepts `--json`. Exit codes are `0` for success, `1` when a check fails (for example a mesh that is not closed, or a register with problems), and `2` for invalid input. Invalid input includes impossible or out-of-range values, an `uncertainty` or `wind` result too large to represent, malformed JSON or STL, and a path that is missing, unreadable, a directory, or not writable. It prints one `error: …` line on standard error, never a traceback.
 
 The results are arithmetic on the inputs you give. They are not measurements, and they inherit every assumption the handbook states for each formula.
 
@@ -158,11 +158,11 @@ scad.render("examples/two-hole-plate.scad", "out.stl", params.to_openscad_define
 | `project` | `new_project`, `slugify`, `FOLDERS`, `PLACEMENT` |
 | `routes` | `load_routes`, `recommend`, `all_recommendations` |
 
-Single-number calculator functions are plain formulas. Structured calculator reports and `homography.fit_report` include a `warnings` list; warnings never change their result. Other dictionary-returning APIs have their own schemas: `stl.analyze`, `params.load_register` and `params.values` do not universally supply that field. Invalid calculator input raises `ValueError` with a message. That includes malformed point lists, a homography `at` point beyond the vanishing line, and a result too large to represent, such as a `wind_power` or `ratio_uncertainty` overflow.
+Single-number calculator functions are plain formulas. Structured calculator reports and `homography.fit_report` include a `warnings` list; warnings never change their result. Other dictionary-returning APIs have their own schemas: `stl.analyze`, `params.load_register` and `params.values` do not universally supply that field. Invalid calculator input raises `ValueError` with a message. That includes malformed point lists, a homography `at` point beyond the vanishing line, and a `wind_power` or `ratio_uncertainty` result too large to represent. Other calculators do not check for overflow: an extreme `scale`, `depth` or `gear` input can return infinity.
 
 ## Conventions shared with the browser calculators
 
-The offline page's calculators (`assets/js/cadcalc.js`) follow the same formulas and thresholds, and `tests/node/cadcalc.test.mjs` runs both implementations on the same inputs:
+The offline page's calculators (`assets/js/cadcalc.js`) follow the same formulas and thresholds, and `tests/node/cadcalc.test.mjs` runs both implementations on the same inputs. The page also shows three interface-only warnings that `cadkit` does not print: wind `Cp` above 0.45, a clearance step under 0.05 mm, and a coating thicker than the slot it lines.
 
 | Rule | Value | Where |
 | --- | --- | --- |
@@ -191,7 +191,7 @@ Evidence classes, from strongest to weakest, are `measured`, `image-derived`, `i
 - Vertices closer than `--weld-tol` (default 1e-6 file units, straight-line distance) are welded before topology is checked. A spatial hash searches neighbouring cells, so two nearly coincident points are merged even when they straddle a cell boundary. The tolerance must be a positive finite number no larger than 1e100, and large enough that every coordinate divided by it stays finite; `--weld-tol 1e-320` on a 10 mm part is rejected.
 - `watertight` means every edge is shared by exactly two faces. `manifold` adds the vertex test: the faces around each vertex must form a single fan, so two shells that touch only at a corner fail even though every edge has two faces. `orientation_consistent` means each shared edge is traversed once in each direction. None of these checks rules out self-intersections.
 - `status: pass` (exit code 0) requires a watertight, manifold, consistently oriented mesh with no degenerate triangles. `--allow-open` reports the same result but exits 0.
-- Volume uses the divergence theorem about the bounding-box centre. A negative volume indicates inward-facing normals.
+- Volume uses the divergence theorem about the bounding-box centre. A negative volume indicates inward-facing normals. `status` does not test the volume's sign or size: a closed mesh with every triangle reversed (negative volume) or a zero-thickness double-sided sheet (zero volume) still reports pass, so read the volume line.
 - `genus` is reported for closed, manifold, consistently oriented meshes as `(2 × components − χ) / 2`. For a plate it equals the number of through-holes, so the two-hole plate reports 2.
 - A triangle is degenerate when fewer than three distinct vertices remain after welding (a collapsed face) or when its area is at most `weld_tol²` (a sliver). Both collapsed faces and slivers are excluded from the topology checks. Both kinds are counted in `degenerate_triangles` and fail `status`.
 

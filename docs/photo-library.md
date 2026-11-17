@@ -59,9 +59,9 @@ A photo's details show:
 | Field | Meaning |
 | --- | --- |
 | Edge blur | Width of the photo's strongest edges, in its own pixels, as the standard deviation of the Gaussian that would blur a step into them. Lower is sharper. Read on the subject when the vision model found one, otherwise on the whole picture. |
-| Detail | The subject's longer side in pixels divided by the edge blur: how many blur widths span the part. The best shot of a group has the most. |
+| Detail | The subject's longer side in pixels divided by the edge blur: how many blur widths span the part. Without a subject, half the photo's longer side is used. The best shot of a group has the most. |
 | Subject | Share of the frame the model's subject region covers. **Light up the subject** dims everything else. The region is drawn on a 28 × 28 grid; it is not an outline. |
-| Clipped | Share of pixels at pure black or white, shown from 2 %. White paper counts. |
+| Clipped | Share of the preview's pixels within 5 grey levels of black or white (0–5 or 250–255), shown from 2 %. White paper counts. |
 | Group, Copies | The photo's group and copy set, with a link to show them. |
 
 **Export CSV** (and **Export JSON** under *Folders and storage*) writes one row per
@@ -101,13 +101,15 @@ ConvNeXt models, the adapter heads) are not used.
 
 | Model | File size | Used when |
 | --- | --- | --- |
-| ViT-B/16 | 343 MB | First choice on a graphics card |
-| ViT-L/16 | 1.2 GB | Graphics card, if ViT-B is not installed |
-| ViT-S+/16 | 115 MB | Processor only, second choice |
-| ViT-S/16 | 87 MB | Processor only, first choice |
+| ViT-B/16 | 343 MB | Graphics card: first choice. Processor: third |
+| ViT-L/16 | 1.2 GB | Graphics card: second. Processor: fourth |
+| ViT-S+/16 | 115 MB | Processor: second. Graphics card: third |
+| ViT-S/16 | 87 MB | Processor: first choice. Graphics card: fourth |
 
-On the rendered benchmark ViT-B/16 matched parts best and ran about three times faster
-than ViT-L/16; see the [validation record](validation/photo-library.md). Features
+The first installed model in that order is used; `PICAD_VISION_MODEL` forces one.
+
+On the rendered benchmark ViT-B/16 matched parts best and described photos about twice as
+fast as ViT-L/16 (1.8–2.3 times on the saved runs); see the [validation record](validation/photo-library.md). Features
 from different models cannot be compared, so changing the model describes every photo
 again.
 
@@ -137,7 +139,7 @@ The methods and their derivations are in the module texts of `backend/library.py
   24 × 24 grid is found, its profile is sampled along the gradient at full resolution,
   and σ is solved from R and H. It is measured along the colour direction in which the
   picture varies most, so an edge between two equally bright colours still counts. A
-  JPEG of 8 megapixels or more is decoded at half scale or less and the reading is
+  JPEG of 7.6 megapixels or more is decoded at half scale or less and the reading is
   scaled back to the photo's own pixels.
 - **Subject.** DINOv3 gives one feature vector per 16 × 16 pixel patch of a 448 × 448
   copy of the preview. On a plain or evenly textured surface those vectors change only
@@ -163,8 +165,9 @@ The methods and their derivations are in the module texts of `backend/library.py
   reflects how sharp the scene's own edges are. On large JPEGs blur below about one
   pixel is not resolved, and blur above about five measured pixels reads low. A picture
   with too few clear edges gets no reading.
-- The best shot was the truly most detailed one in 12 of 20 groups on the rendered
-  benchmark, and among the top three in 15. Look at the photo before tracing it.
+- On the rendered benchmark with ViT-B/16, the best shot was the truly most detailed
+  one in 3 of 7 groups of the held-out parts and 9 of 13 with all fourteen parts, and
+  among the top three in 3 of 7 and 12 of 13. Look at the photo before tracing it.
 - All quality figures come from rendered drawings of flat parts. No accuracy on
   photographs of real parts has been measured.
 - DINOv3 does not measure, recover hidden surfaces or produce a 3D model. The ViT-7B

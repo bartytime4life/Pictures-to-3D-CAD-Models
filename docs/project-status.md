@@ -240,7 +240,7 @@ probe aggregates. [First report and interpretation](validation/finite-acquisitio
 
 Saved-only mathematical, accounting/provenance and record audits pass, retaining
 two earlier mathematical-auditor schema failures. A separate saved-data check
-finds ten distinct parameter tuples sharing the complete source code pattern;
+finds ten distinct seven-coordinate parameter tuples (eight distinct geometries) sharing the complete source code pattern;
 their observed extent is not an uncertainty enclosure. Source, raw evidence,
 first failures and older outcomes remain unchanged. Research runtime/tests,
 full candidate arrays and complete ZIPs remain outside this documentation
@@ -264,6 +264,13 @@ measurements, optional design-intent fitting and entered-thickness correction
 under the [documented model](reference-sheet.md). The optional Ollama assistant
 receives text context and proposes explicit settings changes; it receives no
 photograph or CAD geometry.
+
+The same server also hosts the [relief and lithophane studio](relief.md)
+(`/#relief`: tone, Beer–Lambert, depth-map, elevation-map and optional AI-depth
+height fields, flat or spherical) and the [photo library](photo-library.md)
+(`/#library`: folder indexing, edge blur and copies, plus optional DINOv3
+grouping and search). Slicer handoffs cover Bambu Studio, PrusaSlicer and QIDI
+Studio ([slicers](slicers.md)). None of these changes the flat-part tracing above.
 
 Current main also fits a nonnegative soft-shadow kernel from paper around the
 part and uses a normalized excess-error diagnostic before applying its modelled

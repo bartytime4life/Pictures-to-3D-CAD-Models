@@ -10,8 +10,8 @@ The start screen shows the samples as a gallery: each card shows the picture the
 
 - **Moon photo** loads the lit "photograph". Its relief follows *brightness*: the sunlit side comes out high and the shadowed side low, so it embosses the picture rather than recreating a ball. Brightness in a photo depends on lighting, not only on shape.
 - **Moon depth map** loads the true height of the same sphere and craters as a 16-bit depth map, with white at 1.1 sphere radii. The card sets *Picture type* to depth map, turns auto levels off and sets Thickest to 34.6 mm. At 100 mm wide the sphere's radius is 30 mm, so the 33 mm span makes the dome a true hemisphere.
-  - On a 1.6 mm base, the built dome's median height matches √(R² − r²) to within 0.1 mm from the centre out to r = 28 mm.
-  - Its volume is within 0.2% of an ideal hemisphere plus base; the craters account for the difference.
+  - On a 1.6 mm base, the built dome's median height matches √(R² − r²) to within about 0.1 mm from the centre out to r = 28 mm (0.02–0.09 mm low at r = 0, 10, 20, 25 and 28 mm; 0.12 mm at worst on a 0.25 mm ring scan; the test allows 0.6 mm). The craters pull the median slightly low.
+  - Its volume is 0.22 % below an ideal hemisphere plus base (67,779 against 67,926 mm³); the craters account for the difference.
   - To keep the hemisphere at another width, keep *Thickest − Thinnest* at 0.33 × the width.
 
 | Mode | What you get | Typical use |
@@ -22,13 +22,13 @@ The start screen shows the samples as a gallery: each card shows the picture the
 ## Use it
 
 1. Choose **Relief** or **Lithophane**.
-2. Drop in a PNG, JPEG, WebP, HEIC or AVIF picture (up to 32 MiB), or pick the **Moon photo** sample. A 16-bit grayscale PNG is read at full depth, so depth maps from other tools keep all 65,536 levels. To raise the *shape* of what a photo shows rather than its shading, use [AI depth](#ai-depth-from-an-ordinary-photo).
+2. Drop in a PNG, JPEG, WebP, HEIC or AVIF picture (up to 32 MiB), or pick the **Moon photo** sample. A picture larger than 1,400 pixels on its long side is reduced to 1,400 first; in Photo mode it is reduced by averaging its linear light, so fine light and dark detail keeps its brightness; depth maps and AI-depth inputs are resampled. A 16-bit grayscale PNG is read at full depth, so depth maps from other tools keep all 65,536 levels. To raise the *shape* of what a photo shows rather than its shading, use [AI depth](#ai-depth-from-an-ordinary-photo).
 3. Set **Picture width**, the **Thinnest** and **Thickest** walls, and an optional **Frame**. The picture's height follows its aspect ratio; a frame is added outside the picture at full thickness.
 4. Lithophane only: set the filament's **Half-value thickness** (see [calibration](#calibrate-a-filament)). The line under the build button shows the light range those settings can produce.
 5. Changes apply on their own: about 0.7 s after you stop typing, the model rebuilds and the previous one is deleted from the server's temporary storage. While a rebuild is pending, the preview reads *Previous model · updating when you pause* and downloads are disabled. If the server rejects a setting, the error is shown once and the same settings are not retried; **Update model** retries by hand. If another model is still being built, the page waits for it (the server's `Retry-After`) instead of failing.
 6. Download **STL** or **3MF** for your slicer, or the **Blender ZIP** to keep editing.
 
-**Fine-tune** holds the optional controls: picture type (photo, photo → AI depth, or depth map), tone curve, auto levels, edge-preserving noise smoothing, nozzle width, the nozzle detail filter, sample spacing, material (for the mass estimate) and preview colour.
+**Fine-tune** holds the optional controls: picture type (photo, photo → AI depth, depth map, or [elevation map](#elevation-maps-real-terrain-at-true-scale)), tone curve, auto levels, edge-preserving noise smoothing, nozzle width, the nozzle detail filter, sample spacing, material (for the mass estimate) and preview colour.
 
 The 3D preview uses a low raking light so shallow relief is visible. It is a lighting choice only; the geometry is never exaggerated. The left panel switches between your picture and either the **height map** (relief: lighter is taller) or the **backlit prediction** (lithophane: the Beer–Lambert model of what the lit panel should look like).
 
@@ -50,11 +50,11 @@ Human lightness perception is roughly a cube root of luminance. A relief therefo
 
 ### Lithophane: Beer–Lambert transmission
 
-Light crossing an absorbing layer of thickness t is attenuated exponentially: T(t) = exp(−μ t). Relative to the thinnest wall, the viewer sees Y = exp(−μ (t − t_min)), so each point needs
+Light crossing an absorbing layer of thickness t is attenuated exponentially: T(t) = exp(−μ t). Relative to the thinnest wall, the viewer sees Y = exp(−μ (t − t_min)), so each point needs a thickness
 
 t = t_min − ln(Y) / μ.
 
-The material is described by its **half-value thickness** h, the extra thickness that halves the light, with μ = ln 2 / h. The panel's light range is (t_max − t_min) / h stops, or a contrast ratio of exp(μ (t_max − t_min)). Tones darker than that print at full thickness and are reported as **clipped shadows**. **Tone accuracy** compares the CIE L* of the target with the predicted transmission where the panel can show the tone, after filtering and quantization. A ΔL* of about 1 is barely visible.
+Here Y is the target's relative luminance. With **Auto exposure** (on by default) the photo's luminance is first divided by its 99.5th percentile, so the brightest 0.5 % of points print at Thinnest; without it, Y is the photo's own luminance. The material is described by its **half-value thickness** h, the extra thickness that halves the light, with μ = ln 2 / h. The panel's light range is (t_max − t_min) / h stops, or a contrast ratio of exp(μ (t_max − t_min)). Tones darker than that print at full thickness and are reported as **clipped shadows**. **Tone accuracy** compares the CIE L* of the target with the predicted transmission where the panel can show the tone, after filtering and quantization. A ΔL* of about 1 is barely visible.
 
 Real filament also scatters light, so Beer–Lambert is a first-order model. The default half-value thickness, 0.5 mm, is a placeholder, not a measurement. Calibrate the filament you use.
 
@@ -62,7 +62,7 @@ Real filament also scatters light, so Beer–Lambert is a first-order model. The
 
 A nozzle cannot form lateral detail much narrower than its line width. When the nozzle filter is on, the thickness map is low-pass filtered with a Gaussian whose full width at half maximum equals the nozzle width (σ = w / (2 √(2 ln 2)) ≈ 0.4247 w). The RMS and maximum height removed are reported. Noise smoothing uses a bilateral filter, which averages only neighbouring samples of similar tone and so preserves edges.
 
-Points are sampled every half nozzle width by default. When the grid is coarser than the photo's pixels, a Gaussian pre-filter (σ = half the sample step) removes detail the grid cannot represent, to avoid aliasing. The surface is capped at 250,000 points; wider parts get a wider spacing, and the notes say so. If the samples are finer than the photo's pixels, the notes say that too: interpolation adds no detail.
+Points are sampled every half nozzle width by default, and at least every 0.1 mm. When the grid is coarser than the photo's pixels, a Gaussian pre-filter (σ = half the sample step) removes detail the grid cannot represent, to avoid aliasing. The picture area is capped at 250,000 points; wider parts get a wider spacing, and the notes say so. A frame adds points beyond that cap. If the samples are finer than the photo's pixels, the notes say that too: interpolation adds no detail.
 
 ### Geometry and its checks
 
@@ -71,7 +71,7 @@ The thickness map is quantized to 16 bits (steps of span / 65,535, under 0.04 µ
 Each grid cell is split into two triangles along the diagonal with the smaller height change, which follows ridges instead of cutting across them. Vertical walls drop to a flat base at z = 0, triangulated as a fan around an interior centre vertex so no triangle is degenerate. Every build is then checked independently:
 
 - **Watertight and oriented:** every directed edge occurs once and its reverse occurs once.
-- **One solid without holes:** the Euler characteristic V − E + F equals 2, i.e. genus 0.
+- **One solid without holes:** the Euler characteristic V − E + F equals 2, which for one connected closed surface means genus 0 (the generators build one connected surface).
 - **Volume, two ways:** the divergence-theorem sum of signed tetrahedra must agree, to 10⁻⁹ relative, with the sum over top triangles of projected area × mean height. That is the same theorem applied with the field (0, 0, z), for which the walls and base contribute nothing.
 
 The mass estimate is volume × a typical datasheet density at 100% infill (PLA 1.24, PETG 1.27, ABS 1.04, ASA 1.07, TPU 1.21, nylon 1.14 g/cm³). Slicer infill settings change the real mass.
@@ -104,7 +104,7 @@ The left panel's **Heights** view shows the estimate, and **AI depth map** downl
 
 ### What the network can and cannot tell you
 
-- **Pre-processing** follows the model's published processor exactly. The picture is scaled, keeping its aspect ratio, so that the side whose scale factor is closer to 1 becomes 518 pixels. Each side is then rounded to a multiple of 14, the network's patch size. A 900 × 640 photo becomes 728 × 518. For pictures more than 3:1 the long side is also limited to 1,554 pixels. Pixels are resampled bicubically and normalized with the ImageNet mean and standard deviation.
+- **Pre-processing** follows the model's published processor exactly. The picture is scaled, keeping its aspect ratio, so that the side whose scale factor is closer to 1 becomes 518 pixels. Each side is then rounded to a multiple of 14, the network's patch size. A 900 × 640 photo becomes 728 × 518. If that would make the long side exceed 1,554 pixels, as for a large picture more than 3:1, the long side is limited to 1,554. Pixels are resampled bicubically and normalized with the ImageNet mean and standard deviation.
 - **Output.** The network returns *relative inverse depth*: larger means nearer. It was trained to be correct only up to an unknown scale and shift, d = a / z + b, so what is in front of what is meaningful, but distances and ratios are not. Two known distances in the scene would be needed to recover a and b; one photo has none. The output is resampled to the photo's pixels and stretched to 0..1 with white = nearest.
 - **Size** therefore comes only from your **Picture width**, **Thinnest** and **Thickest**, exactly as for any depth map. Auto levels and the tone curve then shape the height range.
 - **Flattening is legitimate.** A relief is a compressed rendering of depth anyway. Under orthographic viewing, a surface and a flattened, tilted copy of it shade identically under suitably changed lighting (the generalized bas-relief ambiguity: Belhumeur, Kriegman and Yuille, 1999). Sculptors exploit this. Your thickness range sets the compression.
@@ -144,7 +144,7 @@ Choose **Shape: Sphere** to wrap the picture around a hollow ball instead of a f
 - **Checks.**
   - The solid is a thick bowl: one closed surface with Euler characteristic 2.
   - Its divergence volume is computed about two origins, the sphere's centre and the bed origin. The two agree only for a closed surface.
-  - The report gives the difference between the triangle mesh and the smooth surface's volume, which is integrated numerically; it is typically under 0.5%.
+  - The report gives the difference between the triangle mesh and the smooth surface's volume, which is integrated numerically; it is about 0.5 % for the 100 mm sample lamp and grows with diameter, because the inner surface's mesh is coarse beside a thin wall (0.2 % at 60 mm, 0.8 % at 150 mm and 1.4 % at 250 mm with a 0.8–3 mm wall).
   - It also reports the share of surface that faces downward more than 45° from vertical, mostly the inside of the dome, which prints as a ceiling.
 - **Printing.** Print standing on the flat opening ring and check supports in your slicer. The outer surface is limited to 200,000 points; larger spheres get a wider spacing, and the notes say so.
 - **Blender.** The ZIP builds the same triangles, ordered and oriented identically. A Geometry Nodes modifier moves each outer point outward along its radius by Strength × height-map value. Lamps render in Cycles with an emitting sphere just inside the wall, standing in for light scattered by the plastic.
@@ -158,7 +158,7 @@ Set **Picture type** to **Elevation map** (under *Fine-tune*), or pick the **Moo
   - Flat: mm per km = Picture width ÷ **Ground width** (the real distance across the map).
   - Sphere: mm per km = sphere radius ÷ **Body radius** (Moon 1,737.4 km, Earth 6,371 km, Mars 3,389.5 km).
 - **Exaggeration:** **Exaggeration** multiplies that scale. Real terrain is small at print scale. The generated moon's 11.8 km of relief is 0.34 mm on a 100 mm globe, so the sample uses 12×, which is 4.07 mm.
-- **Thickest is set by the data:** Thinnest + exaggerated relief. The lowest height maps to Thinnest. A pit narrower than the nozzle is smoothed by the detail filter, so the printed minimum can be higher; the moon sample's deepest small crater prints at 2.8 mm on a 2 mm Thinnest. Tone settings (auto levels, tone curve, raised/sunken, noise smoothing) do not apply to measured heights. If the relief would exceed the 40 mm limit, or not fit inside the sphere, the message names the largest exaggeration that fits.
+- **Thickest is set by the data:** Thinnest + exaggerated relief. The lowest height maps to Thinnest. A pit narrower than the sample spacing is averaged away by the sampling grid's anti-aliasing filter (and, slightly, by the nozzle filter), so the printed minimum can be higher; the moon sample's deepest pit, one pixel of the map, prints at 2.8 mm on a 2 mm Thinnest. Tone settings (auto levels, tone curve, raised/sunken, noise smoothing) do not apply to measured heights. If the relief would exceed the 40 mm limit, the message names the largest exaggeration that fits, rounded down. If it would not fit inside the sphere, the message asks for a lower exaggeration or a larger sphere.
 - **Elevation maps make reliefs only.** A lithophane's thickness encodes light, not height.
 
 **NASA's Moon.** NASA's Scientific Visualization Studio publishes the [CGI Moon Kit](https://svs.gsfc.nasa.gov/4720), with displacement maps from LRO's laser altimeter (LOLA) at 4, 16 and 64 pixels per degree. Its page describes the formats:
@@ -195,7 +195,7 @@ Extract the ZIP and run `blender --python build_relief.py` in that folder. Alter
 
 - **Relief**: the same flat base, walls and triangulation as the STL. Its top vertices (vertex group `surface`) are lifted by a **Displace** modifier that reads the height map at pixel centres without interpolation. The modifier's *Strength* is the thickness span; change it to rescale the relief live.
 - **Lithophanes:** a Cycles scene with a backlight panel and a *Volume Absorption* material whose density equals μ per millimetre. A render is a physical simulation of the Beer–Lambert prediction.
-- **Reliefs:** a sun 25° above the horizon (raking light) and the chosen colour.
+- **Reliefs:** a sun 25° above the horizon for a flat relief and 20° for a sphere (raking light), and the chosen colour.
 
 Scene units are millimetres. Sphere scenes replace the Displace modifier with a Geometry Nodes modifier named *Radial height* (input *Strength*), because a sphere's thickness is added along each radius. To print an edited version, export STL with *Apply Modifiers* on and re-check it in your slicer; Blender edits do not update the studio.
 

@@ -127,7 +127,7 @@ inverse search or select true or unique geometry. Further strict cost
 reduction cannot improve a zero objective.
 
 A [saved-data check](validation/evidence/acquisition-restoration-20261114/identification-v1.json)
-finds ten distinct saved parameter tuples with the same complete source-code
+finds ten distinct saved seven-coordinate parameter tuples (eight distinct five-geometry tuples) with the same complete source-code
 pattern. Their observed fraction range is
 `[0.16679305093653773, 0.1668006421840963]`. These are sampled witnesses,
 not an outer feasible-set bound, confidence interval or worst-case error
