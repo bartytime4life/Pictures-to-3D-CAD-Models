@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Locator, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { readFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
@@ -27,6 +27,37 @@ async function ready(page: Page) {
   // Canvas fallback text is present in the DOM even when WebGL renders correctly.
   await expect(page.getByText('3D preview is unavailable')).toBeHidden();
   await expect(page.locator('canvas[data-model-ready="true"]')).toBeVisible();
+}
+
+// Pairs of different visible text runs inside `panel` whose drawn line boxes share pixels.
+// Text rectangles come from the text nodes themselves, so padding and block width do not count.
+async function overlappingText(panel: Locator) {
+  return panel.evaluate((root) => {
+    const lines: { run: number; text: string; box: DOMRect }[] = [];
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    let run = 0;
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      const text = node.textContent?.trim();
+      const shown = node.parentElement?.checkVisibility({
+        visibilityProperty: true,
+        opacityProperty: true,
+      });
+      if (!text || !shown) continue;
+      run += 1;
+      const range = document.createRange();
+      range.selectNodeContents(node);
+      for (const box of range.getClientRects())
+        if (box.width > 0 && box.height > 0) lines.push({ run, text, box });
+    }
+    const clashes = new Set<string>();
+    for (const [index, a] of lines.entries())
+      for (const b of lines.slice(index + 1)) {
+        const wide = Math.min(a.box.right, b.box.right) - Math.max(a.box.left, b.box.left);
+        const tall = Math.min(a.box.bottom, b.box.bottom) - Math.max(a.box.top, b.box.top);
+        if (a.run !== b.run && wide > 1 && tall > 1) clashes.add(`"${a.text}" over "${b.text}"`);
+      }
+    return [...clashes];
+  });
 }
 
 test('sample creates real CAD, downloads valid formats, and renders the selected workbench', async ({
@@ -174,6 +205,53 @@ test('own photo requires measurements and a failed upload preserves the previous
   await expect(page.getByRole('spinbutton', { name: 'Reference width', exact: true })).toHaveValue(
     '40',
   );
+});
+
+test('a traced photo without a model shows one CAD preview message, and one while building', async ({
+  page,
+}) => {
+  await ready(page);
+  // The sample image under another name is the user's own photo: traced, not yet built.
+  await page.getByLabel('Choose photo or project').setInputFiles({
+    name: 'my-bracket.png',
+    mimeType: 'image/png',
+    buffer: await readFile('frontend/public/sample.png'),
+  });
+  await expect(page.getByText('my-bracket.png')).toBeVisible({ timeout: 30_000 });
+  const preview = page.getByRole('region', { name: 'CAD preview', exact: true });
+  // The page's message and the 3D viewer's own placeholder used to be drawn on top of
+  // each other here. Only the page's message, which follows the tracing state, is shown.
+  const headings = preview
+    .getByText(/^(Your solid starts here\.|Your CAD model will appear here)$/)
+    .filter({ visible: true });
+  for (const viewport of [
+    { width: 1488, height: 1058 },
+    { width: 390, height: 844 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await expect(headings).toHaveText(['Your solid starts here.']);
+    await expect(
+      preview.getByText('Set the measured width and thickness, then build your model.'),
+    ).toBeVisible();
+    await expect(preview.getByText('Trace a photo and set its dimensions to begin.')).toBeHidden();
+    expect(await overlappingText(preview), `text overlap at ${viewport.width}px`).toEqual([]);
+  }
+  // While the first model builds, the page's message steps aside for the viewer's own
+  // loading message. The build is held so that state can be inspected.
+  let release = () => {};
+  const held = new Promise<void>((resolve) => (release = resolve));
+  await page.route('**/api/build', async (route) => {
+    await held;
+    await route.continue();
+  });
+  await page.getByRole('spinbutton', { name: 'Reference width', exact: true }).fill('40');
+  await page.getByLabel('Thickness', { exact: true }).fill('2');
+  await page.getByRole('button', { name: 'Build model', exact: true }).click();
+  await expect(preview.getByText('Building your CAD solid…')).toBeVisible();
+  await expect(headings).toHaveCount(0);
+  expect(await overlappingText(preview), 'text overlap while building').toEqual([]);
+  release();
+  await expect(page.getByRole('dialog')).toBeVisible({ timeout: 60_000 });
 });
 
 test('keyboard dialogs, accessibility checks, and mobile layout keep the workflow usable', async ({

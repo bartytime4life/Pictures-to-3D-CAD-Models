@@ -1,5 +1,14 @@
 # Workbench change log
 
+## One message in the empty CAD preview — November 16, 2026
+
+- After a photo of your own was traced and before a model was built, the CAD preview
+  drew two messages on top of each other: the page's "Your solid starts here." and the
+  3D viewer's own placeholder. The viewer's placeholder is now off on the flat-part
+  page, so only the page's message shows; the viewer still says when a solid is being
+  built. A browser test checks one heading and no overlapping text at desktop and
+  phone widths.
+
 ## A photo library that crunches whole folders, with optional DINOv3 features — November 16, 2026
 
 - A third studio, **Library**, indexes folders of photos on this computer or photos
@@ -27,6 +36,7 @@
   spacing between 1251 and 1450 px so the project name stays whole.
 - See the [guide](photo-library.md) and the [validation record](validation/photo-library.md),
   which also lists the methods tried and rejected.
+
 ## Constrained shadow solver — November 16, 2026
 
 - The nonnegative shadow fit now lets discarded kernel nodes return when they
