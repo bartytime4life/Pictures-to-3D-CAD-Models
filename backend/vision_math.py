@@ -41,6 +41,7 @@ Matching
 from __future__ import annotations
 
 import math
+from collections.abc import Callable
 
 import numpy as np
 
@@ -198,25 +199,71 @@ def region_box(region: np.ndarray) -> tuple[float, float, float, float] | None:
     )
 
 
+class SearchCancelled(Exception):
+    """A caller cancelled numerical work; partial results must not be published."""
+
+
+def _best_rows(scores: np.ndarray, ids: np.ndarray, count: int):
+    """Exact top-k, descending score then ascending source row, including cutoff ties."""
+    count = min(count, scores.shape[1])
+    ids = np.broadcast_to(ids, scores.shape)
+    part = np.argpartition(scores, scores.shape[1] - count, axis=1)[:, -count:]
+    values = np.take_along_axis(scores, part, axis=1)
+    cutoff = values.min(axis=1)
+    ties = scores == cutoff[:, None]
+    needed = count - (values > cutoff[:, None]).sum(axis=1)
+    # argpartition may omit a lower-index equal score. Only repair rows whose
+    # cutoff has more ties than places; ordinary distinct-score rows stay vectorized.
+    for row in np.flatnonzero(ties.sum(axis=1) > needed):
+        above = part[row][values[row] > cutoff[row]]
+        tied = np.flatnonzero(ties[row])
+        keep = int(needed[row])
+        chosen = np.argpartition(ids[row, tied], keep - 1)[:keep]
+        part[row] = np.concatenate((above, tied[chosen]))
+    values = np.take_along_axis(scores, part, axis=1)
+    selected = np.take_along_axis(ids, part, axis=1)
+    order = np.lexsort((selected, -values), axis=1)
+    return np.take_along_axis(selected, order, axis=1), np.take_along_axis(values, order, axis=1)
+
+
 def top_matches(matrix: np.ndarray, query: np.ndarray, count: int) -> tuple[np.ndarray, np.ndarray]:
     """Rows of a unit-vector ``matrix`` most similar to ``query`` (cosine), best first."""
     scores = np.asarray(matrix, dtype=np.float32) @ np.asarray(query, dtype=np.float32)
     count = min(count, scores.size)
     if count <= 0:
         return np.empty(0, dtype=np.int64), np.empty(0, dtype=np.float32)
-    chosen = np.argpartition(-scores, count - 1)[:count]
-    chosen = chosen[np.argsort(-scores[chosen], kind="stable")]
-    return chosen, scores[chosen]
+    chosen, values = _best_rows(scores[None], np.arange(scores.size), count)
+    return chosen[0], values[0]
 
 
-def neighbours(matrix: np.ndarray, count: int, chunk: int = 2048, progress=None) -> tuple[np.ndarray, np.ndarray]:
+def neighbours(
+    matrix: np.ndarray, count: int, chunk: int = 256, progress=None,
+    *, candidate_chunk: int = 2048, cancelled: Callable[[], bool] | None = None,
+) -> tuple[np.ndarray, np.ndarray]:
     """Each row's ``count`` most similar other rows. Returns (indices, cosines), N x count.
 
-    Computed in blocks of ``chunk`` rows, so memory stays at chunk x N values however
-    large the library is. ``progress(done, total)`` is called after each block.
+    Both query and candidate dimensions are blocked: the score array is at most
+    chunk x candidate_chunk float32 values (2 MiB by default), independent of N.
+    Top-k results still need O(N*k) storage; exact comparison remains O(N*N*C).
+    Equal scores prefer the lower source row. ``progress(done, total)`` reports
+    completed query rows. Cancellation raises before publishing partial results.
     """
     vectors = np.ascontiguousarray(matrix, dtype=np.float32)
+    if vectors.ndim != 2:
+        raise ValueError("Feature vectors must be a finite row matrix.")
+    if type(chunk) is not int or type(candidate_chunk) is not int or min(chunk, candidate_chunk) < 1:
+        raise ValueError("Search block sizes must be positive integers.")
+
+    def check_cancelled():
+        if cancelled and cancelled():
+            raise SearchCancelled()
+
+    check_cancelled()
     total = vectors.shape[0]
+    for first in range(0, total, candidate_chunk):
+        check_cancelled()
+        if not np.isfinite(vectors[first:first + candidate_chunk]).all():
+            raise ValueError("Feature vectors must be a finite row matrix.")
     count = max(0, min(count, total - 1))
     indices = np.zeros((total, count), dtype=np.int64)
     cosines = np.zeros((total, count), dtype=np.float32)
@@ -224,13 +271,21 @@ def neighbours(matrix: np.ndarray, count: int, chunk: int = 2048, progress=None)
         return indices, cosines
     for start in range(0, total, chunk):
         stop = min(start + chunk, total)
-        scores = vectors[start:stop] @ vectors.T
-        scores[np.arange(stop - start), np.arange(start, stop)] = -np.inf  # Not its own neighbour.
-        part = np.argpartition(-scores, count - 1, axis=1)[:, :count]
-        part_scores = np.take_along_axis(scores, part, axis=1)
-        order = np.argsort(-part_scores, axis=1, kind="stable")
-        indices[start:stop] = np.take_along_axis(part, order, axis=1)
-        cosines[start:stop] = np.take_along_axis(part_scores, order, axis=1)
+        best_ids = np.empty((stop - start, 0), np.int64)
+        best_scores = np.empty((stop - start, 0), np.float32)
+        for first in range(0, total, candidate_chunk):
+            check_cancelled()
+            last = min(first + candidate_chunk, total)
+            scores = np.matmul(vectors[start:stop], vectors[first:last].T)
+            overlap = np.arange(max(start, first), min(stop, last))
+            scores[overlap - start, overlap - first] = -np.inf
+            ids, values = _best_rows(scores, np.arange(first, last), count)
+            best_ids, best_scores = _best_rows(
+                np.concatenate((best_scores, values), axis=1),
+                np.concatenate((best_ids, ids), axis=1), count,
+            )
+        check_cancelled()
+        indices[start:stop], cosines[start:stop] = best_ids, best_scores
         if progress:
             progress(stop, total)
     return indices, cosines

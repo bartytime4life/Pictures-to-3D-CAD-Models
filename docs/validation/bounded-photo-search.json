@@ -1,0 +1,21 @@
+{
+  "schema": "picad-search-benchmark-v1",
+  "input": "generated unit vectors",
+  "seed": 418,
+  "rows": 4096,
+  "dimensions": 64,
+  "neighbours": 12,
+  "numpy": "2.5.4",
+  "results": {
+    "previous": {
+      "seconds": 0.0537,
+      "peak_traced_bytes": 202218900
+    },
+    "blocked": {
+      "seconds": 0.0623,
+      "peak_traced_bytes": 7642149
+    }
+  },
+  "same_neighbours": true,
+  "scores_within_1e-6": true
+}

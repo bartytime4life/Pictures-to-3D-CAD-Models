@@ -691,6 +691,8 @@ class Job:
                 summary, error = None, None
                 try:
                     summary = work(self)
+                except vision_math.SearchCancelled:
+                    pass  # Keep the existing groups; stage below records cancellation.
                 except LibraryError as exc:
                     error = str(exc)
                 except vision.VisionError as exc:
@@ -970,6 +972,12 @@ def organize(current: Job | None = None) -> dict:
     """Recompute copies, look-alikes, groups, detail and best shots for the whole library."""
     if current:
         current.stage("organize")
+
+    def check_cancelled():
+        if current and current.cancelled():
+            raise vision_math.SearchCancelled()
+
+    check_cancelled()
     with database() as db:
         photos = db.execute(
             "SELECT p.id, p.sha256, p.width, p.height, COALESCE(f.subject_blur_px, p.blur_px) AS blur_px,"
@@ -1022,18 +1030,23 @@ def organize(current: Job | None = None) -> dict:
             current.stage("organize", int(2 * keep.sum()))
         steps = int(keep.sum())
         near, near_cos = vision_math.neighbours(
-            loaded.whole[keep], NEIGHBOURS, progress=(lambda d, t: current.advance(d)) if current else None
+            loaded.whole[keep], NEIGHBOURS, progress=(lambda d, t: current.advance(d)) if current else None,
+            cancelled=current.cancelled if current else None,
         )
         for i, j in zip(*np.nonzero(near_cos >= info["lookalike"]), strict=True):
             a, b = int(rows[i]), int(rows[near[i, j]])
             if find(a) != find(b):
                 join(a, b)
         alike, alike_cos = vision_math.neighbours(
-            loaded.subject[keep], NEIGHBOURS, progress=(lambda d, t: current.advance(steps + d)) if current else None
+            loaded.subject[keep], NEIGHBOURS, progress=(lambda d, t: current.advance(steps + d)) if current else None,
+            cancelled=current.cancelled if current else None,
         )
+        check_cancelled()
         labels = vision_math.linked_groups(alike, alike_cos, info["group"])
         labels = vision_math.split_chained(loaded.subject[keep], labels, info["split"])
         groups[rows] = rows[labels]
+
+    check_cancelled()
 
     dup_root = [find(index) for index in range(len(ids))]
     dup_sizes: dict[int, int] = {}
@@ -1054,8 +1067,11 @@ def organize(current: Job | None = None) -> dict:
     winners = set(best.values())
 
     with database() as db:
+        check_cancelled()
         db.execute("UPDATE photos SET group_id=NULL, dup_set=NULL, dup_kind=NULL, best=0, detail=NULL")
         for index, photo_id in enumerate(ids):
+            if index % 256 == 0:
+                check_cancelled()  # Closing an uncommitted connection rolls back all regrouping.
             in_set = dup_sizes[dup_root[index]] > 1
             label = int(groups[index])
             db.execute(
@@ -1069,6 +1085,7 @@ def organize(current: Job | None = None) -> dict:
                     photo_id,
                 ),
             )
+        check_cancelled()
         counts["copies"] = len(exact)
         counts["lookalikes"] = sum(1 for i in range(len(ids)) if dup_sizes[dup_root[i]] > 1 and i not in exact)
         counts["groups"] = sum(1 for size in group_sizes.values() if size > 1)
