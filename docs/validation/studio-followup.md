@@ -1,14 +1,15 @@
 # Studio integration follow-up
 
-Prepared November 17, 2026 for PR #163. Application fixes are commit
+Prepared November 17, 2026 after PRs #161–#163. Application fixes are commit
 `cdb7f0260f0a38a9fc76bd779b22cba96d169fc6`, based on main at
-`36ada0982513e2b9e05d4af311cdf234ef8a4fcb`. The combined branch preserves that
-application source and also carries the documentation previously merged in #162.
+`36ada0982513e2b9e05d4af311cdf234ef8a4fcb`. The follow-up is integrated with
+main at `7c6cc0f`, preserving that exact tested application source.
 
 ## Why another change was needed
 
 PR #161 merged the application into main. PR #162 then merged the documentation
-into the old application branch rather than main. The follow-up targets main
+into the old application branch rather than main. PR #163 then brought the
+documentation onto main. This application follow-up targets that updated main
 directly and retains the original documentation commits and evidence records.
 
 The [review finding on #161](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/161#discussion_r4595125679)
