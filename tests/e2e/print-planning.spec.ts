@@ -510,3 +510,21 @@ test('printer search and custom volume checks stay usable on a narrow screen', a
     .analyze();
   expect(accessibility.violations).toEqual([]);
 });
+
+test('a fine nozzle is valid on its own, and only an out-of-range nozzle is flagged', async ({
+  page,
+}) => {
+  await ready(page);
+  await openDesign(page);
+  const nozzle = page.getByLabel('Nozzle diameter (mm)', { exact: true });
+  // Choosing 0.1 mm lowers the layer height to match, so nothing is wrong with the design.
+  await nozzle.fill('0.1');
+  await expect(nozzle).toHaveAttribute('aria-invalid', 'false');
+  await expect(page.locator('#print-nozzle-error')).toHaveCount(0);
+  await expect(page.getByText('Set layer height between')).toHaveCount(0);
+  await nozzle.fill('0.05');
+  await expect(nozzle).toHaveAttribute('aria-invalid', 'true');
+  await expect(page.locator('#print-nozzle-error')).toHaveText(
+    'Set the nozzle diameter between 0.1 and 8 mm.',
+  );
+});
