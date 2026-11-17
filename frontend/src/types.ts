@@ -33,7 +33,7 @@ export type Profile = {
   reference?: TraceReference;
 };
 export type Detail = 'coarse' | 'standard' | 'fine';
-export type SlicerId = 'bambu' | 'prusa' | 'qidi';
+export type SlicerId = 'bambu' | 'prusa' | 'qidi' | 'orca' | 'cura';
 export type ExportKind =
   'step' | 'stl' | 'dxf' | 'svg' | 'pdf' | 'scad' | 'parts' | '3mf' | SlicerId;
 export type SlicerProgram = {
@@ -67,6 +67,11 @@ export type DesignSettings = {
   material: Material;
   detail_mode: 'original' | 'draft' | 'balanced' | 'fine';
   nozzle_mm: number;
+  layer_height_mm: number;
+  wall_count: number;
+  infill_percent: number;
+  supports: 'none' | 'build_plate' | 'everywhere';
+  adhesion: 'none' | 'brim' | 'raft';
   output_mode: 'single' | 'split';
   split_columns: number;
   split_rows: number;
@@ -181,6 +186,8 @@ export type ModelResult = {
     bambu?: string;
     prusa?: string;
     qidi?: string;
+    orca?: string;
+    cura?: string;
   };
   warnings: string[];
 };

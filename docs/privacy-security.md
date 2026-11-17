@@ -79,11 +79,19 @@ The app does not require third-party API keys for conversion. If future integrat
 
 ## Local slicer handoff
 
-Bambu Studio, PrusaSlicer and QIDI Studio handoff downloads include generated geometry, the editable outline recipe and printer/material planning notes. They do not include the original photograph or assistant conversation. Neutral 3MF files contain geometry without native slicing settings.
+Bambu Studio, PrusaSlicer, QIDI Studio, OrcaSlicer and UltiMaker Cura handoff downloads include generated geometry, the editable outline recipe and printer/material/process planning notes. They do not include the original photograph or assistant conversation. Neutral 3MF files contain geometry without native slicing settings.
 
-The optional host launcher is disabled by default. Explicit local opening accepts only three fixed program IDs (`bambu`, `prusa`, `qidi`), configured installed executables and a generated model ID. It requires same-origin JSON over HTTP from a loopback client/host and uses an argument array without a shell. HTTPS loopback and remote workbenches use handoff ZIP downloads instead. Opening requests do not slice, send G-code, or contact a printer. Once open, the external slicer runs with its own settings and permissions.
+The optional host launcher is disabled by default. Explicit local opening accepts only the five registered program IDs (`bambu`, `prusa`, `qidi`, `orca`, `cura`), configured installed executables and a generated model ID. It requires same-origin JSON over HTTP from a loopback client/host and uses an argument array without a shell. HTTPS loopback and remote workbenches use handoff ZIP downloads instead. Opening requests do not slice, send G-code, or contact a printer. Once open, the external slicer runs with its own settings and permissions.
 
 A retained copy under `.local/slicer-handoffs/` (or `PICAD_SLICER_HANDOFF_DIR`) survives temporary-job expiry and Clear temporary exports. These copies stay local and remain until manually removed. Discovery does not execute any of these programs or verify their versions; the interface distinguishes launch requests from confirmed native imports.
+
+## Browser notes, scenarios and documentation
+
+Knowledge notebook notes/pins and valid Science scenarios save to this browser profile's local storage for the application's origin. They are independent of CAD project recipes, temporary model cleanup and the photo library. Clearing site data can remove them; their JSON exports provide portable copies. A different browser, profile, host name or port can have separate saved state. Do not treat browser storage as encrypted or backed up.
+
+These learning tools do not send notes or scenarios to the CAD backend or apply them to model settings. The local documentation API reads a fixed allowlist of repository guides and supplies their Markdown text, checksum and download. It does not accept arbitrary file paths. Following an external research or repository link opens that external service under its own policies.
+
+Background removal clips the current working photo using the reviewed outline in the browser. Its transparent PNG is separate from geometry and does not change the original file. The original trace/upload still follows the ordinary backend processing described above.
 
 ## Photo library
 

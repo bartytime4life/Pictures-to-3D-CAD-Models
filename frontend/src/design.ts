@@ -7,6 +7,11 @@ export const DEFAULT_DESIGN: DesignSettings = {
   material: 'pla',
   detail_mode: 'original',
   nozzle_mm: 0.4,
+  layer_height_mm: 0.2,
+  wall_count: 3,
+  infill_percent: 15,
+  supports: 'none',
+  adhesion: 'none',
   output_mode: 'single',
   split_columns: 2,
   split_rows: 1,
@@ -25,6 +30,11 @@ export const DESIGN_LABELS: Record<keyof DesignSettings, string> = {
   material: 'Material',
   detail_mode: 'Geometry detail',
   nozzle_mm: 'Nozzle diameter',
+  layer_height_mm: 'Layer height',
+  wall_count: 'Wall count',
+  infill_percent: 'Infill',
+  supports: 'Supports',
+  adhesion: 'Bed adhesion',
   output_mode: 'Output',
   split_columns: 'Columns',
   split_rows: 'Rows',
@@ -39,7 +49,12 @@ export function formatDesignValue(
   key: keyof DesignSettings,
   value: DesignSettings[keyof DesignSettings],
 ) {
-  if (key === 'scale_percent' || key === 'thickness_percent') return `${value}%`;
+  if (key === 'scale_percent' || key === 'thickness_percent' || key === 'infill_percent')
+    return `${value}%`;
+  if (key === 'supports')
+    return { none: 'None', build_plate: 'Build plate only', everywhere: 'Everywhere' }[
+      value as DesignSettings['supports']
+    ];
   if (key.endsWith('_mm')) return `${value} mm`;
   if (key === 'material') return String(value).toUpperCase();
   if (key === 'output_mode') return value === 'single' ? 'Single part' : 'Split into parts';
@@ -68,6 +83,15 @@ export function designError(
   if (!['original', 'draft', 'balanced', 'fine'].includes(value.detail_mode))
     return 'Choose a geometry detail setting.';
   if (!range('nozzle_mm', 0.1, 8)) return 'Set the nozzle diameter between 0.1 and 8 mm.';
+  if (!range('layer_height_mm', 0.05, 1.2) || value.layer_height_mm > value.nozzle_mm)
+    return 'Set layer height between 0.05 and 1.2 mm, no larger than the nozzle diameter.';
+  if (!range('wall_count', 1, 12) || !Number.isInteger(value.wall_count))
+    return 'Set a whole number of walls between 1 and 12.';
+  if (!range('infill_percent', 0, 100)) return 'Set infill between 0% and 100%.';
+  if (!['none', 'build_plate', 'everywhere'].includes(value.supports))
+    return 'Choose a supported support plan.';
+  if (!['none', 'brim', 'raft'].includes(value.adhesion))
+    return 'Choose a supported bed adhesion plan.';
   if (!['single', 'split'].includes(value.output_mode)) return 'Choose single or split output.';
   if (
     !range('split_columns', 1, 4) ||
@@ -106,6 +130,7 @@ export function parseDesign(value: unknown): DesignSettings {
   if (Object.keys(raw).some((key) => !DESIGN_KEYS.includes(key as keyof DesignSettings)))
     throw new Error('This project contains unsupported design settings.');
   const design = { ...DEFAULT_DESIGN, ...raw } as DesignSettings;
+  if (raw.layer_height_mm === undefined) design.layer_height_mm = Math.min(0.2, design.nozzle_mm);
   const error = designError(design);
   if (error) throw new Error(`Invalid project settings. ${error}`);
   return design;

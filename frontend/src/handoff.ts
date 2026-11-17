@@ -1,6 +1,6 @@
 // Passing a photo from the library to another studio. The studios are separate pages
-// behind one hash router and each mounts fresh, so the file waits here for the moment
-// the target studio mounts and takes it. It is held in memory only and taken once.
+// behind one hash router. The file waits until the target studio becomes active and
+// finishes any work already running. It is held in memory only and taken once.
 export type HandoffTarget = 'workbench' | 'relief';
 
 let pending: { target: HandoffTarget; file: File } | null = null;

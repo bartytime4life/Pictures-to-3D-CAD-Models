@@ -6,18 +6,53 @@ import './styles.css';
 import App from './App';
 import LibraryStudio from './LibraryStudio';
 import ReliefStudio from './ReliefStudio';
+import KnowledgeStudio from './KnowledgeStudio';
+import ScienceStudio from './ScienceStudio';
+import { StudioActivity } from './StudioActivity';
+import type { Studio } from './AppHeader';
 
-// Three independent tools share one page: the flat-part workbench (default), the relief &
-// lithophane studio at #relief and the photo library at #library. Each keeps its own state.
+const studios = {
+  workbench: App,
+  relief: ReliefStudio,
+  library: LibraryStudio,
+  knowledge: KnowledgeStudio,
+  science: ScienceStudio,
+};
+function route(): Studio {
+  const target = window.location.hash.slice(1).split('?')[0];
+  return Object.hasOwn(studios, target) ? (target as Studio) : 'workbench';
+}
+
+// Mount a studio when first visited, then preserve its unsaved work during navigation.
+// Hidden routes are inert and active context suspends focus, modal and automatic work.
 function Root() {
-  const [hash, setHash] = useState(window.location.hash);
+  const [active, setActive] = useState(route);
+  const [visited, setVisited] = useState<Studio[]>(() => [route()]);
   useEffect(() => {
-    const changed = () => setHash(window.location.hash);
+    const changed = () => {
+      const next = route();
+      setVisited((previous) => (previous.includes(next) ? previous : [...previous, next]));
+      setActive(next);
+    };
     window.addEventListener('hashchange', changed);
     return () => window.removeEventListener('hashchange', changed);
   }, []);
-  if (hash === '#library') return <LibraryStudio />;
-  return hash === '#relief' ? <ReliefStudio /> : <App />;
+  return visited.map((studio) => {
+    const Component = studios[studio];
+    return (
+      <div
+        key={studio}
+        className="studio-route"
+        data-studio={studio}
+        hidden={studio !== active}
+        inert={studio !== active}
+      >
+        <StudioActivity.Provider value={studio === active}>
+          <Component />
+        </StudioActivity.Provider>
+      </div>
+    );
+  });
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(<Root />);

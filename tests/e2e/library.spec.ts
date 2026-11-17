@@ -9,6 +9,11 @@ import path from 'node:path';
 // library must not be disturbed, so they run only when it is empty and afterwards
 // remove exactly what they added (never "clear library").
 const ADDED = ['library-plate.png', 'library-plate-again.png', 'library-moon.png'];
+let cleanupAllowed = false;
+
+test.beforeEach(() => {
+  cleanupAllowed = false;
+});
 
 async function idle(request: APIRequestContext) {
   await expect
@@ -20,10 +25,14 @@ async function idle(request: APIRequestContext) {
 
 async function emptyLibrary(request: APIRequestContext) {
   const state = await (await request.get('/api/library')).json();
-  return state.summary.photos === 0 && state.summary.folders.length === 0 && !state.job.running;
+  cleanupAllowed =
+    state.summary.photos === 0 && state.summary.folders.length === 0 && !state.job.running;
+  return cleanupAllowed;
 }
 
 async function removeAdded(request: APIRequestContext) {
+  // A skipped or mocked scenario must never remove matching names from an existing library.
+  if (!cleanupAllowed) return;
   await idle(request);
   const state = await (await request.get('/api/library')).json();
   for (const folder of state.summary.folders) {
@@ -45,7 +54,7 @@ async function headerFits(page: Page) {
   for (const width of [1920, 1366, 1280, 1251, 1100, 1001, 800, 375, 320]) {
     await page.setViewportSize({ width, height: 900 });
     const layout = await page.evaluate(() => {
-      const bar = document.querySelector('.topbar')!;
+      const bar = document.querySelector('.studio-route:not([hidden]) .topbar')!;
       const unlabeled = [...bar.querySelectorAll('nav a')].filter(
         (item) =>
           ![...item.querySelectorAll('span')].some(
@@ -199,7 +208,8 @@ test('a photo opens in the relief studio, and uploads can be removed', async ({
   for (const id of jobs) await request.delete(`/api/models/${id}`);
 
   await page.goto('/#library');
-  await cells.first().click();
+  // Returning to a visited studio retains the selected photo and its detail panel.
+  await expect(detail).toBeVisible();
   await page.getByRole('button', { name: 'Remove from library' }).click();
   await expect(page.getByRole('heading', { name: 'Crunch a whole folder of photos' })).toBeVisible({
     timeout: 60_000,

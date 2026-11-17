@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { ChangeEvent, DragEvent, ReactNode } from 'react';
 import {
   ArrowCounterClockwise,
   ArrowSquareOut,
   ArrowsHorizontal,
+  ArrowsOut,
   Camera,
   CheckCircle,
   Cube,
@@ -13,8 +14,10 @@ import {
   FloppyDisk,
   Image as ImageIcon,
   Info,
+  Minus,
   PencilSimple,
   Polygon,
+  Plus,
   Question,
   Ruler,
   SpinnerGap,
@@ -24,10 +27,21 @@ import {
   X,
 } from '@phosphor-icons/react';
 import AppHeader from './AppHeader';
+import { useStudioActive } from './StudioActivity';
 import { takeHandoff } from './handoff';
 import ModelViewer from './ModelViewer';
 import LocalAssistant from './LocalAssistant';
 import PrintSettings from './PrintSettings';
+import QuickEdit from './QuickEdit';
+import PrintPreparation from './PrintPreparation';
+import BackgroundRemoval, { type BackgroundPreview } from './BackgroundRemoval';
+import {
+  createDesignHistory,
+  sameDesign,
+  recordDesignChange,
+  undoDesignChange,
+  redoDesignChange,
+} from './designHistory';
 import ReferenceCalibration from './ReferenceCalibration';
 import SheetReference from './SheetReference';
 import SlicerHandoff from './SlicerHandoff';
@@ -297,16 +311,34 @@ function SourceCanvas({
   trace,
   showOutline,
   widthLabel,
+  imageUrl,
 }: {
   trace: TraceResult | null;
   showOutline: boolean;
   widthLabel: string;
+  imageUrl?: string;
 }) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const container = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!trace || !canvas.current || !container.current) return;
+  const active = useStudioActive();
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const drag = useRef<{ x: number; y: number; panX: number; panY: number } | null>(null);
+  const sourceImage = useMemo(() => {
     const image = new window.Image();
+    if (trace?.image.data_url) image.src = imageUrl ?? trace.image.data_url;
+    return image;
+  }, [trace, imageUrl]);
+  const fit = () => {
+    setZoom(1);
+    setPan({ x: 0, y: 0 });
+  };
+  const changeZoom = (factor: number) =>
+    setZoom((value) => Math.min(8, Math.max(0.5, value * factor)));
+  useEffect(fit, [trace]);
+  useEffect(() => {
+    if (!active || !trace || !canvas.current || !container.current) return;
+    const image = sourceImage;
     let disposed = false;
     const draw = () => {
       if (disposed || !canvas.current || !container.current) return;
@@ -315,12 +347,20 @@ function SourceCanvas({
       if (!ctx) return;
       const width = container.current.clientWidth,
         height = container.current.clientHeight;
+      if (!width || !height) return;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       el.width = width * dpr;
       el.height = height * dpr;
       ctx.scale(dpr, dpr);
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, width, height);
+      if (imageUrl) {
+        const cell = 16;
+        ctx.fillStyle = '#d4dce0';
+        for (let y = 0; y < height; y += cell)
+          for (let x = 0; x < width; x += cell)
+            if ((x / cell + y / cell) % 2 === 0) ctx.fillRect(x, y, cell, cell);
+      }
       const b = trace.bounds;
       const marginX = b.width * 0.09;
       const marginY = Math.max(b.height * 0.48, b.width * 0.17);
@@ -330,9 +370,34 @@ function SourceCanvas({
         width: b.width + marginX * 2,
         height: b.height + marginY * 2,
       };
-      const scale = Math.min(width / crop.width, height / crop.height);
-      const ox = (width - crop.width * scale) / 2 - crop.x * scale;
-      const oy = (height - crop.height * scale) / 2 - crop.y * scale;
+      // Fit the outline and its ruler into the space left by the actual controls.
+      // The filename strip and inspection hint overlay this canvas, so the canvas
+      // edge alone is not a safe lower bound, especially on a phone.
+      const tools = container.current.querySelector<HTMLElement>('.source-inspection-tools');
+      const hint = container.current.querySelector<HTMLElement>('.source-inspection-hint');
+      const caption =
+        container.current.parentElement?.querySelector<HTMLElement>('.source-caption');
+      const contentTop = width < 480 && tools ? tools.offsetTop + tools.offsetHeight + 12 : 12;
+      const contentBottom = Math.min(
+        height - 12,
+        hint?.offsetHeight ? hint.offsetTop - 12 : height,
+        caption?.offsetHeight ? caption.offsetTop - 12 : height,
+      );
+      const profileBottom = Math.max(contentTop + 1, contentBottom - (widthLabel ? 60 : 0));
+      const fitScale = Math.min(
+        width / crop.width,
+        height / crop.height,
+        Math.max(1, width - 32) / b.width,
+        (profileBottom - contentTop) / b.height,
+      );
+      const fittedHalfHeight = (b.height * fitScale) / 2;
+      const centerY = Math.min(
+        Math.max(height / 2, contentTop + fittedHalfHeight),
+        profileBottom - fittedHalfHeight,
+      );
+      const scale = fitScale * zoom;
+      const ox = width / 2 - (b.x + b.width / 2) * scale + pan.x;
+      const oy = centerY - (b.y + b.height / 2) * scale + pan.y;
       if (trace.image.data_url && image.complete && image.naturalWidth) {
         ctx.drawImage(image, ox, oy, trace.image.width * scale, trace.image.height * scale);
       }
@@ -365,7 +430,7 @@ function SourceCanvas({
       const x1 = ox + b.x * scale,
         x2 = ox + (b.x + b.width) * scale;
       const bottom = oy + (b.y + b.height) * scale;
-      const y = Math.min(height - 26, bottom + 44);
+      const y = Math.min(contentBottom - 16, bottom + 44);
       if (widthLabel && y > bottom + 12) {
         ctx.strokeStyle = '#00b9e8';
         ctx.lineWidth = 1.3;
@@ -392,29 +457,72 @@ function SourceCanvas({
         ctx.font = '500 17px "JetBrains Mono Variable",monospace';
         const textWidth = ctx.measureText(widthLabel).width;
         ctx.fillStyle = '#f9fafb';
-        ctx.fillRect(width / 2 - textWidth / 2 - 13, y - 16, textWidth + 26, 32);
+        const labelX = (x1 + x2) / 2;
+        ctx.fillRect(labelX - textWidth / 2 - 13, y - 16, textWidth + 26, 32);
         ctx.strokeStyle = '#00b9e8';
-        ctx.strokeRect(width / 2 - textWidth / 2 - 13, y - 16, textWidth + 26, 32);
+        ctx.strokeRect(labelX - textWidth / 2 - 13, y - 16, textWidth + 26, 32);
         ctx.fillStyle = '#202a30';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(widthLabel, width / 2, y + 1);
+        ctx.fillText(widthLabel, labelX, y + 1);
       }
     };
     const observer = new ResizeObserver(draw);
     observer.observe(container.current);
     image.onload = draw;
-    if (trace.image.data_url) image.src = trace.image.data_url;
     draw();
     return () => {
       disposed = true;
       observer.disconnect();
     };
-  }, [trace, showOutline, widthLabel]);
+  }, [trace, showOutline, widthLabel, imageUrl, zoom, pan, active, sourceImage]);
   return (
-    <div className="source-canvas" ref={container}>
+    <div
+      className="source-canvas"
+      ref={container}
+      data-background={imageUrl ? 'removed' : 'original'}
+      data-source-zoom={zoom.toFixed(2)}
+      role="region"
+      aria-label="Source inspection. Drag to pan; arrow keys to move, plus or minus to zoom, zero to fit."
+      tabIndex={0}
+      onKeyDown={(event) => {
+        if (event.target !== event.currentTarget) return;
+        const moves: Record<string, [number, number]> = {
+          ArrowLeft: [-30, 0],
+          ArrowRight: [30, 0],
+          ArrowUp: [0, -30],
+          ArrowDown: [0, 30],
+        };
+        if (moves[event.key]) {
+          event.preventDefault();
+          const [x, y] = moves[event.key];
+          setPan((value) => ({ x: value.x + x, y: value.y + y }));
+        } else if (['+', '=', '-', '0'].includes(event.key)) {
+          event.preventDefault();
+          if (event.key === '0') fit();
+          else changeZoom(event.key === '-' ? 1 / 1.25 : 1.25);
+        }
+      }}
+    >
       <canvas
         ref={canvas}
+        onPointerDown={(event) => {
+          event.currentTarget.setPointerCapture(event.pointerId);
+          drag.current = { x: event.clientX, y: event.clientY, panX: pan.x, panY: pan.y };
+        }}
+        onPointerMove={(event) => {
+          if (drag.current)
+            setPan({
+              x: drag.current.panX + event.clientX - drag.current.x,
+              y: drag.current.panY + event.clientY - drag.current.y,
+            });
+        }}
+        onPointerUp={() => {
+          drag.current = null;
+        }}
+        onPointerCancel={() => {
+          drag.current = null;
+        }}
         role="img"
         aria-label={
           trace
@@ -422,14 +530,42 @@ function SourceCanvas({
             : 'No source photo loaded'
         }
       />
+      <div className="source-inspection-tools" role="group" aria-label="Source zoom">
+        <button
+          type="button"
+          aria-label="Zoom source out"
+          onClick={() => changeZoom(1 / 1.25)}
+          disabled={zoom <= 0.5}
+        >
+          <Minus size={18} />
+        </button>
+        <output aria-live="polite">{Math.round(zoom * 100)}%</output>
+        <button
+          type="button"
+          aria-label="Zoom source in"
+          onClick={() => changeZoom(1.25)}
+          disabled={zoom >= 8}
+        >
+          <Plus size={18} />
+        </button>
+        <button type="button" aria-label="Fit source image" onClick={fit}>
+          <ArrowsOut size={18} />
+        </button>
+      </div>
+      <span className="source-inspection-hint">Drag to inspect · dimensions stay unchanged</span>
     </div>
   );
 }
 
 export default function App() {
+  const active = useStudioActive();
+  const activeRef = useRef(active);
+  activeRef.current = active;
   const [name, setName] = useState('Mounting plate');
   const [editingName, setEditingName] = useState(false);
   const [trace, setTrace] = useState<TraceResult | null>(null);
+  const [backgroundPreview, setBackgroundPreview] = useState<BackgroundPreview | null>(null);
+  const [prepareOpen, setPrepareOpen] = useState(false);
   const [sourceFile, setSourceFile] = useState<File | null>(null);
   const [model, setModel] = useState<ModelResult | null>(null);
   const modelRef = useRef<ModelResult | null>(null);
@@ -461,6 +597,9 @@ export default function App() {
   const [draftSheet, setDraftSheet] = useState<SheetChoice>(NO_SHEET);
   const [draftSnap, setDraftSnap] = useState(true);
   const [design, setDesign] = useState<DesignSettings>({ ...DEFAULT_DESIGN });
+  const [designHistory, setDesignHistory] = useState(createDesignHistory);
+  const lastValidDesign = useRef(design);
+  const historyEditKey = useRef<string | undefined>(undefined);
   const [assistantUndo, setAssistantUndo] = useState<{
     trace: TraceResult | null;
     detail: Detail;
@@ -515,6 +654,9 @@ export default function App() {
         }
       : null;
   const designIssue = designError(design, sourceSize);
+  useEffect(() => {
+    if (!designIssue) lastValidDesign.current = design;
+  }, [design, designIssue]);
   const buildReady = dimensionsValid && !designIssue;
   const current = !!model && model.revision === String(revision);
   const stale = !!model && !current;
@@ -561,18 +703,57 @@ export default function App() {
     const previous = modelRef.current;
     modelRef.current = result;
     setModel(result);
-    if (result.design) setDesign(result.design);
+    if (result.design) {
+      if (!sameDesign(design, result.design)) setDesignHistory(createDesignHistory());
+      setDesign(result.design);
+    }
     if (previous && previous.id !== result.id) releaseModel(previous.id);
   }
   function projectName() {
     return cleanName(name);
   }
-  function invalidate() {
+  function invalidate(clearHistory = true) {
+    if (clearHistory) {
+      setDesignHistory(createDesignHistory());
+      historyEditKey.current = undefined;
+    }
     setAssistantUndo(null);
     const next = ++revisionRef.current;
     setRevision(next);
     setNotice('');
     return String(next);
+  }
+  function changeDesign(next: DesignSettings, editKey?: string) {
+    if (busy || sameDesign(design, next)) return;
+    // A numeric replacement is one edit, even when intermediate keystrokes are
+    // invalid or happen to form a valid number. Never put a draft in history.
+    if (!designError(next, sourceSize)) {
+      const previous = lastValidDesign.current;
+      const changed = !sameDesign(previous, next);
+      if (designError(previous, sourceSize)) setDesignHistory(createDesignHistory());
+      else if (changed && (!editKey || historyEditKey.current !== editKey))
+        setDesignHistory((history) => recordDesignChange(history, previous, next));
+      lastValidDesign.current = next;
+      if (changed || !editKey) historyEditKey.current = editKey;
+    }
+    setDesign(next);
+    invalidate(false);
+    setError('');
+  }
+  function travelDesign(direction: 'undo' | 'redo') {
+    if (busy) return;
+    historyEditKey.current = undefined;
+    const valid = lastValidDesign.current;
+    const result =
+      direction === 'undo'
+        ? undoDesignChange(designHistory, valid)
+        : redoDesignChange(designHistory, valid);
+    if (!result) return;
+    setDesign(result.design);
+    setDesignHistory(result.history);
+    invalidate(false);
+    setError('');
+    setNotice('Design settings restored. Update the preview before exporting.');
   }
   /** Show (or clear) an error. Only an error given its own retry action offers "Try again". */
   function setError(message: string, retryAction: RetryAction | null = null) {
@@ -774,6 +955,15 @@ export default function App() {
     };
   }, []);
   useEffect(() => {
+    if (!active) {
+      setModal(null);
+      return;
+    }
+    if (busy) return;
+    const handed = takeHandoff('workbench');
+    if (handed) void loadPhoto(handed);
+  }, [active, busy]);
+  useEffect(() => {
     // Release this tab's temporary model files when the page goes away, so reloads and closed
     // tabs do not fill the service's job limit. A page restored from the back/forward cache has
     // lost those files, so it needs a rebuild before exporting.
@@ -802,17 +992,17 @@ export default function App() {
   useEffect(() => {
     // Disabling a focused control during busy work drops focus to the page body. Return it once
     // the work and any dialog it opened are finished, unless the user has focused something else.
-    if (busy || modal) return;
+    if (busy || modal || !active) return;
     const target = pendingFocusRef.current;
     pendingFocusRef.current = null;
-    const active = document.activeElement;
+    const focused = document.activeElement;
     if (
       target?.isConnected &&
       !target.matches(':disabled') &&
-      (!active || active === document.body)
+      (!focused || focused === document.body)
     )
       target.focus();
-  }, [busy, modal]);
+  }, [busy, modal, active]);
 
   async function buildModel(openExport = false) {
     if (!trace || !buildReady || busy) return;
@@ -862,7 +1052,7 @@ export default function App() {
       const result = await requestModel(profile, width, thicknessMm, projectName(), rev);
       if (sequence === sequenceRef.current && String(revisionRef.current) === rev) {
         installModel(result);
-        if (openExport) {
+        if (openExport && activeRef.current) {
           setExportError('');
           setModal('export');
         } else
@@ -1250,7 +1440,7 @@ export default function App() {
         .slice(
           0,
           60,
-        )}.${kind === 'parts' ? 'parts.zip' : kind === 'bambu' ? 'bambu-studio.zip' : kind === 'prusa' ? 'prusaslicer.zip' : kind === 'qidi' ? 'qidi-studio.zip' : kind}`;
+        )}.${kind === 'parts' ? 'parts.zip' : kind === 'bambu' ? 'bambu-studio.zip' : kind === 'prusa' ? 'prusaslicer.zip' : kind === 'qidi' ? 'qidi-studio.zip' : kind === 'orca' ? 'orca-slicer.zip' : kind === 'cura' ? 'cura.zip' : kind}`;
       link.click();
       window.setTimeout(() => URL.revokeObjectURL(url), 1000);
       const label =
@@ -1260,7 +1450,11 @@ export default function App() {
             ? 'PrusaSlicer handoff ZIP'
             : kind === 'qidi'
               ? 'QIDI Studio handoff ZIP'
-              : kind.toUpperCase();
+              : kind === 'orca'
+                ? 'OrcaSlicer handoff ZIP'
+                : kind === 'cura'
+                  ? 'UltiMaker Cura handoff ZIP'
+                  : kind.toUpperCase();
       setNotice(
         kind === 'pdf'
           ? 'PDF download started. Print it at 100 % (actual size) and check its two 100 mm rulers.'
@@ -1378,6 +1572,48 @@ export default function App() {
     <div className="app-shell">
       <AppHeader
         studio="workbench"
+        commands={[
+          {
+            id: 'load-photo',
+            label: 'Open a photo or project',
+            detail: 'Start from a picture or restore a saved project',
+            keywords: 'upload import image',
+            disabled: !!busy,
+            run: () => fileInput.current?.click(),
+          },
+          {
+            id: 'save-project',
+            label: 'Save project',
+            detail: 'Download your outline, measurements and settings',
+            disabled: !trace || !buildReady || !!busy,
+            run: saveProject,
+          },
+          {
+            id: 'update-preview',
+            label: 'Build or update preview',
+            detail: 'Apply the current dimensions and design to your solid',
+            disabled: !trace || !buildReady || !!busy,
+            run: () => void buildModel(false),
+          },
+          {
+            id: 'prepare-slicing',
+            label: 'Prepare for slicing',
+            detail: 'Review the print bed, process plan and slicer handoff',
+            run: () => setPrepareOpen(true),
+          },
+          {
+            id: 'edit-model',
+            label: 'Edit model',
+            detail: 'Return to size, proportions and edit history',
+            run: () => setPrepareOpen(false),
+          },
+          {
+            id: 'capture-guide',
+            label: 'Capture guide',
+            detail: 'Photograph a clear outline with a measured reference',
+            run: () => setModal('guide'),
+          },
+        ]}
         projectName={
           <>
             <input
@@ -1439,55 +1675,62 @@ export default function App() {
       />
 
       <main id="workbench">
-        <nav className="workflow" aria-label="Conversion workflow">
-          <button
-            className={`workflow-step ${activeStage === 'photo' ? 'active' : ''}`}
-            aria-current={activeStage === 'photo' ? 'step' : undefined}
-            onClick={() => setModal('photo')}
-            disabled={!!busy}
-          >
-            <span className="step-icon">
-              <Camera size={26} />
-            </span>
-            <span>Photo</span>
-          </button>
-          <span className="step-line" />
-          <button
-            className={`workflow-step ${activeStage === 'trace' ? 'active' : ''}`}
-            aria-current={activeStage === 'trace' ? 'step' : undefined}
-            onClick={openTrace}
-            disabled={!sourceFile || !!busy}
-          >
-            <span className="step-icon">
-              <PencilSimple size={26} />
-            </span>
-            <span>Trace</span>
-          </button>
-          <span className="step-line" />
-          <button
-            className={`workflow-step ${activeStage === 'scale' ? 'active' : ''}`}
-            aria-current={activeStage === 'scale' ? 'step' : undefined}
-            onClick={() => widthInput.current?.focus()}
-            disabled={!trace || !!busy}
-          >
-            <span className="step-icon">
-              <Ruler size={28} />
-            </span>
-            <span>Scale</span>
-          </button>
-          <span className="step-line" />
-          <button
-            className={`workflow-step ${activeStage === 'export' ? 'active' : ''}`}
-            aria-current={activeStage === 'export' ? 'step' : undefined}
-            onClick={handlePrimary}
-            disabled={!trace || !buildReady || !!busy}
-          >
-            <span className="step-icon">
-              <DownloadSimple size={27} />
-            </span>
-            <span>Export</span>
-          </button>
-        </nav>
+        <div className="workspace-heading">
+          <div>
+            <span className="workspace-eyebrow">01 / CREATE</span>
+            <h2>Flat part studio</h2>
+            <p>A clear outline. A measured solid.</p>
+          </div>
+          <nav className="workflow" aria-label="Conversion workflow">
+            <button
+              className={`workflow-step ${activeStage === 'photo' ? 'active' : ''}`}
+              aria-current={activeStage === 'photo' ? 'step' : undefined}
+              onClick={() => setModal('photo')}
+              disabled={!!busy}
+            >
+              <span className="step-icon">
+                <Camera size={26} />
+              </span>
+              <span>Photo</span>
+            </button>
+            <span className="step-line" />
+            <button
+              className={`workflow-step ${activeStage === 'trace' ? 'active' : ''}`}
+              aria-current={activeStage === 'trace' ? 'step' : undefined}
+              onClick={openTrace}
+              disabled={!sourceFile || !!busy}
+            >
+              <span className="step-icon">
+                <PencilSimple size={26} />
+              </span>
+              <span>Trace</span>
+            </button>
+            <span className="step-line" />
+            <button
+              className={`workflow-step ${activeStage === 'scale' ? 'active' : ''}`}
+              aria-current={activeStage === 'scale' ? 'step' : undefined}
+              onClick={() => widthInput.current?.focus()}
+              disabled={!trace || !!busy}
+            >
+              <span className="step-icon">
+                <Ruler size={28} />
+              </span>
+              <span>Scale</span>
+            </button>
+            <span className="step-line" />
+            <button
+              className={`workflow-step ${activeStage === 'export' ? 'active' : ''}`}
+              aria-current={activeStage === 'export' ? 'step' : undefined}
+              onClick={handlePrimary}
+              disabled={!trace || !buildReady || !!busy}
+            >
+              <span className="step-icon">
+                <DownloadSimple size={27} />
+              </span>
+              <span>Export</span>
+            </button>
+          </nav>
+        </div>
 
         {error && (
           <div className="message error-message" role="alert">
@@ -1539,6 +1782,22 @@ export default function App() {
           </button>
         </section>
 
+        <div className="workbench-tools" role="group" aria-label="Workbench tools">
+          <button
+            className="outlined-button"
+            aria-pressed={!prepareOpen}
+            onClick={() => setPrepareOpen(false)}
+          >
+            Edit model
+          </button>
+          <button
+            className="outlined-button"
+            aria-pressed={prepareOpen}
+            onClick={() => setPrepareOpen(true)}
+          >
+            Prepare for slicing
+          </button>
+        </div>
         <section className="viewports" aria-label="Photo and CAD workbench">
           <section className="viewport-panel source-panel">
             <div className="panel-toolbar">
@@ -1578,7 +1837,14 @@ export default function App() {
               onDrop={drop}
             >
               {trace ? (
-                <SourceCanvas trace={trace} showOutline={outline} widthLabel={widthLabel} />
+                <SourceCanvas
+                  trace={trace}
+                  showOutline={outline}
+                  widthLabel={widthLabel}
+                  imageUrl={
+                    backgroundPreview?.trace === trace ? backgroundPreview?.dataUrl : undefined
+                  }
+                />
               ) : (
                 <div className="empty-state">
                   <Camera size={44} weight="light" />
@@ -1614,6 +1880,12 @@ export default function App() {
                 </div>
               )}
             </div>
+            <BackgroundRemoval
+              trace={trace}
+              name={name}
+              disabled={!!busy}
+              onPreviewChange={setBackgroundPreview}
+            />
           </section>
           <section className="viewport-panel model-panel" aria-label="CAD preview">
             <div className="panel-toolbar">
@@ -1666,6 +1938,32 @@ export default function App() {
             </div>
           </section>
         </section>
+
+        {prepareOpen ? (
+          <PrintPreparation
+            design={design}
+            model={model}
+            current={current}
+            busy={!!busy}
+            canBuild={!!trace && buildReady}
+            onChange={changeDesign}
+            onBuild={() => void buildModel(false)}
+            onExport={handlePrimary}
+            onAdvanced={() => setDesignReview((value) => value + 1)}
+          />
+        ) : (
+          <QuickEdit
+            design={design}
+            onChange={changeDesign}
+            sourceSize={sourceSize}
+            disabled={!!busy}
+            canUndo={designHistory.past.length > 0}
+            canRedo={designHistory.future.length > 0}
+            onUndo={() => travelDesign('undo')}
+            onRedo={() => travelDesign('redo')}
+            onAdvanced={() => setDesignReview((value) => value + 1)}
+          />
+        )}
 
         <section className="controls-section" aria-label="Model dimensions">
           <div className="controls-grid">
@@ -1875,10 +2173,9 @@ export default function App() {
         </section>
         <PrintSettings
           design={design}
-          onChange={(next) => {
-            setDesign(next);
-            invalidate();
-            setError('');
+          onChange={changeDesign}
+          onEditEnd={() => {
+            historyEditKey.current = undefined;
           }}
           busy={!!busy}
           sourceSize={sourceSize}
@@ -1955,7 +2252,7 @@ export default function App() {
         onChange={onFile}
       />
 
-      {modal === 'photo' && (
+      {active && modal === 'photo' && (
         <Modal
           title="Start from a photo."
           eyebrow="PHOTO TO PROFILE"
@@ -2012,7 +2309,7 @@ export default function App() {
         </Modal>
       )}
 
-      {modal === 'trace' && (
+      {active && modal === 'trace' && (
         <Modal
           title="Make the outline match."
           eyebrow="REVIEW YOUR TRACE"
@@ -2127,7 +2424,7 @@ export default function App() {
         </Modal>
       )}
 
-      {modal === 'guide' && (
+      {active && modal === 'guide' && (
         <Modal
           title="A better photo. A better outline."
           eyebrow="CAPTURE GUIDE"
@@ -2206,7 +2503,7 @@ export default function App() {
         </Modal>
       )}
 
-      {modal === 'export' && current && model && (
+      {active && modal === 'export' && current && model && (
         <Modal
           title="Your part, ready for the next tool."
           eyebrow="REVIEW & EXPORT"

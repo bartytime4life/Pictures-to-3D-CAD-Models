@@ -11,7 +11,7 @@ help:
 	@echo "make test           run both components' unit and browser checks"
 	@echo "make lint           check workbench Python and frontend/browser-source formatting"
 	@echo "make smoke          check an already running workbench"
-	@echo "make slicers        inspect local Bambu Studio, PrusaSlicer and QIDI Studio availability"
+	@echo "make slicers        inspect local Bambu, Prusa, QIDI, Orca and Cura availability"
 	@echo "make depth-model    download and verify the optional AI depth model (99 MB)"
 	@echo "make depth-benchmark  score AI depth against the moon sample's true heights"
 	@echo "make vision-model [WEIGHTS=folder]  build the optional DINOv3 environment for the photo library"

@@ -189,6 +189,12 @@ class DesignSettings(BaseModel):
     material: Literal["pla", "petg", "abs", "asa", "tpu", "nylon"] = "pla"
     detail_mode: Literal["original", "draft", "balanced", "fine"] = "original"
     nozzle_mm: float = Field(default=0.4, ge=0.1, le=8)
+    # Process planning metadata, reviewed and entered in the receiving slicer.
+    layer_height_mm: float = Field(default=0.2, ge=0.05, le=1.2)
+    wall_count: int = Field(default=3, ge=1, le=12)
+    infill_percent: float = Field(default=15, ge=0, le=100)
+    supports: Literal["none", "build_plate", "everywhere"] = "none"
+    adhesion: Literal["none", "brim", "raft"] = "none"
     output_mode: Literal["single", "split"] = "single"
     split_columns: int = Field(default=2, ge=1, le=4)
     split_rows: int = Field(default=1, ge=1, le=4)
@@ -207,6 +213,11 @@ class DesignSettings(BaseModel):
     def bounded_grid(self):
         if self.split_columns * self.split_rows > 8:
             raise ValueError("Choose a split grid with at most 8 cells.")
+        # Older recipes have no process settings, including those with tiny nozzles.
+        if "layer_height_mm" not in self.model_fields_set:
+            self.layer_height_mm = min(self.layer_height_mm, self.nozzle_mm)
+        if self.layer_height_mm > self.nozzle_mm:
+            raise ValueError("Layer height must not exceed the selected nozzle diameter.")
         return self
 
 

@@ -373,7 +373,7 @@ def build(job_dir: Path) -> dict:
     downloads = {
         kind: f"/api/download/{job_dir.name}/{kind}"
         for kind in (
-            "step", "stl", "dxf", "svg", "pdf", "scad", "project", "3mf", "bambu", "prusa", "qidi",
+            "step", "stl", "dxf", "svg", "pdf", "scad", "project", "3mf", "bambu", "prusa", "qidi", "orca", "cura",
         )
     }
     if design.output_mode == "split":
@@ -411,7 +411,7 @@ def build(job_dir: Path) -> dict:
     warnings.extend(
         [
             "STL coordinates are in millimeters. Set millimeters explicitly when importing the mesh.",
-            "Color and material are planning notes in the project and handoff manifests; geometry exports do not assign filament or slicer presets.",
+            "Color, material and process settings are planning notes in the project and handoff manifests; geometry exports do not assign filament or slicer presets.",
             "Bed fit checks one flat piece at a time in a clear rectangular envelope. Suggested XY turns are not applied to exports. Verify placement, small features, supports and material settings in your slicer.",
         ]
     )
@@ -435,7 +435,7 @@ def build(job_dir: Path) -> dict:
             result["split_plan"] = plan
     for name in (
         "profile.dxf", "profile.svg", "drawing.pdf", "model.scad", "project.json", "model.3mf",
-        "bambu-handoff.zip", "prusa-handoff.zip", "qidi-handoff.zip",
+        "bambu-handoff.zip", "prusa-handoff.zip", "qidi-handoff.zip", "orca-handoff.zip", "cura-handoff.zip",
     ):
         if (job_dir / name).stat().st_size == 0:
             raise PrintGeometryError("An export was empty. Try rebuilding the model.")

@@ -185,6 +185,11 @@ Other design settings: color is a hex #RRGGBB preview color; material is a plann
 label (pla,petg,abs,asa,tpu,nylon), NOT physical properties or slicer settings.
 detail_mode original/draft/balanced/fine controls geometric simplification tied
 to nozzle_mm. It cannot create new detail or certify printable feature size.
+Process plan settings are layer_height_mm (0.05..1.2, no larger than nozzle_mm),
+wall_count (integer 1..12), infill_percent (0..100), supports
+(none/build_plate/everywhere), and adhesion (none/brim/raft). These are planning
+notes for manual review and entry in the receiving slicer, not applied native
+presets or geometry. Do not claim they predict strength, quality or print time.
 output_mode single/split uses a rectangular split_columns by split_rows grid,
 at most 8 pieces. Pieces have plain cut faces, no joints or assembly guarantee.
 Printer IDs MUST come from selected_printer or printer_candidates supplied below,

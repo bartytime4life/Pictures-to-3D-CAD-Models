@@ -17,6 +17,7 @@ import {
   X,
 } from '@phosphor-icons/react';
 import AppHeader from './AppHeader';
+import { useStudioActive } from './StudioActivity';
 import { takeHandoff } from './handoff';
 import ModelViewer from './ModelViewer';
 import {
@@ -408,6 +409,7 @@ function Check({ ok, children }: { ok: boolean; children: string }) {
 }
 
 export default function ReliefStudio() {
+  const active = useStudioActive();
   const [draft, setDraft] = useState<Draft>(initialDraft);
   const [file, setFile] = useState<File | null>(null);
   const [sourceUrl, setSourceUrl] = useState('');
@@ -462,10 +464,11 @@ export default function ReliefStudio() {
 
   useEffect(() => {
     // A photo sent from the photo library is built straight away with the current settings.
+    if (!active || busy) return;
     const handed = takeHandoff('relief');
     if (handed)
       choose(handed, { name: handed.name.replace(/\.[^.]+$/, '').slice(0, 100) || 'Relief' });
-  }, []);
+  }, [active, busy]);
 
   // Settings apply on their own: once the inputs are valid and have rested for
   // AUTO_BUILD_DELAY_MS the model rebuilds, so there is no button to remember. Each
@@ -474,11 +477,11 @@ export default function ReliefStudio() {
   const autoKey =
     result && stale && file && typeof settings !== 'string' ? geometryKey(settings) : '';
   useEffect(() => {
-    if (!autoKey || busy || autoKey === failedKey.current) return;
+    if (!active || !autoKey || busy || autoKey === failedKey.current) return;
     const timer = window.setTimeout(() => void build(), AUTO_BUILD_DELAY_MS);
     return () => window.clearTimeout(timer);
     // build() reads the draft this render describes, which autoKey already captures.
-  }, [autoKey, busy]);
+  }, [autoKey, busy, active]);
 
   function update<K extends keyof Draft>(key: K, value: Draft[K]) {
     setDraft((current) => ({ ...current, [key]: value }));

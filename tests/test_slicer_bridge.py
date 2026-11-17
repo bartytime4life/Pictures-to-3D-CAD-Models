@@ -47,22 +47,25 @@ def test_discovery_never_executes_or_exposes_paths(bridge):
         response = client.get("/api/slicers")
     assert response.status_code == 200
     programs = response.json()["programs"]
-    assert [p["id"] for p in programs] == ["bambu", "prusa", "qidi"]
+    assert [p["id"] for p in programs] == ["bambu", "prusa", "qidi", "orca", "cura"]
     assert programs[1]["target_version"] == "2.9.7"
     assert programs[2]["target_version"] == "2.7.2.73"
     assert programs[2]["release_url"].endswith("/releases/tag/v2.07.02.73")
+    assert programs[3]["target_version"] == "2.5.1"
+    assert programs[4]["target_version"] == "5.14.0"
     assert all(p["version_status"] == "not_checked" for p in programs)
     assert "/trusted" not in response.text
     process.assert_not_called()
 
 
-def test_launch_uses_fixed_argument_array_and_copy_survives_job_deletion(bridge):
+@pytest.mark.parametrize("program", ["bambu", "prusa", "qidi", "orca", "cura"])
+def test_launch_uses_fixed_argument_array_and_copy_survives_job_deletion(bridge, program):
     client, job_id, directory, handoffs = bridge
     original = (directory / "model.3mf").read_bytes()
     with mock.patch.object(
         slicers.subprocess, "Popen", return_value=SimpleNamespace(pid=42)
     ) as run:
-        response = open_slicer(client, job_id)
+        response = open_slicer(client, job_id, program=program)
     assert response.status_code == 202, response.text
     result = response.json()
     assert result["status"] == "launch_requested"
@@ -210,8 +213,35 @@ def test_configured_path_is_not_a_command_or_silent_fallback(tmp_path, monkeypat
 
 
 def test_unknown_program_names_every_supported_slicer():
-    with pytest.raises(slicers.SlicerError, match="Bambu Studio, PrusaSlicer or QIDI Studio"):
-        slicers.executable_for("cura")
+    with pytest.raises(slicers.SlicerError, match="Bambu Studio, PrusaSlicer, QIDI Studio, OrcaSlicer or UltiMaker Cura"):
+        slicers.executable_for("unknown")
+
+
+@pytest.mark.parametrize(
+    "program,environment,filename",
+    [
+        ("orca", "PICAD_ORCA_SLICER", "OrcaSlicer_Linux_AppImage_Ubuntu2404_V2.5.1.AppImage"),
+        ("cura", "PICAD_CURA", "UltiMaker-Cura-5.14.0-linux-X64.AppImage"),
+    ],
+)
+@pytest.mark.skipif(os.name == "nt", reason="AppImages are a Linux format")
+def test_new_slicers_use_configured_path_or_application_folder(
+    tmp_path, monkeypatch, program, environment, filename
+):
+    applications = tmp_path / "Applications"
+    applications.mkdir()
+    monkeypatch.setattr(slicers, "APPIMAGE_FOLDER", applications)
+    monkeypatch.setattr(slicers.shutil, "which", lambda _: None)
+    monkeypatch.delenv(environment, raising=False)
+    assert slicers.executable_for(program) is None
+    candidate = applications / filename
+    candidate.write_text("fixture only, never execute")
+    candidate.chmod(0o755)
+    assert slicers.executable_for(program) == str(candidate.resolve())
+    monkeypatch.setenv(environment, str(candidate) + " --slice")
+    assert slicers.executable_for(program) is None
+    monkeypatch.setenv(environment, str(candidate))
+    assert slicers.executable_for(program) == str(candidate.resolve())
 
 
 @pytest.mark.skipif(os.name == "nt", reason="AppImages are a Linux format")

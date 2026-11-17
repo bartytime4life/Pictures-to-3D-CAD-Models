@@ -50,6 +50,30 @@ PROGRAMS = {
         "mac": "QIDIStudio.app/Contents/MacOS/QIDIStudio",
         "appimage": "QIDIStudio_*.AppImage",
     },
+    "orca": {
+        "id": "orca",
+        "name": "OrcaSlicer",
+        "target_version": "2.5.1",
+        "source_url": "https://github.com/OrcaSlicer/OrcaSlicer",
+        "release_url": "https://github.com/OrcaSlicer/OrcaSlicer/releases/tag/v2.5.1",
+        "environment": "PICAD_ORCA_SLICER",
+        "commands": ("orca-slicer", "OrcaSlicer", "orcaslicer"),
+        "windows": ("OrcaSlicer/orca-slicer.exe",),
+        "mac": "OrcaSlicer.app/Contents/MacOS/OrcaSlicer",
+        "appimage": "OrcaSlicer_*.AppImage",
+    },
+    "cura": {
+        "id": "cura",
+        "name": "UltiMaker Cura",
+        "target_version": "5.14.0",
+        "source_url": "https://github.com/Ultimaker/Cura",
+        "release_url": "https://github.com/Ultimaker/Cura/releases/tag/5.14.0",
+        "environment": "PICAD_CURA",
+        "commands": ("cura", "UltiMaker-Cura", "ultimaker-cura"),
+        "windows": ("UltiMaker Cura 5.14.0/UltiMaker-Cura.exe",),
+        "mac": "UltiMaker Cura.app/Contents/MacOS/UltiMaker-Cura",
+        "appimage": "UltiMaker-Cura-*.AppImage",
+    },
 }
 
 #: Where Linux AppImages are looked for: the folder AppImage tools install into. Downloads
