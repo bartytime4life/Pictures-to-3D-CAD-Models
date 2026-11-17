@@ -420,6 +420,7 @@ export default function KnowledgeStudio() {
                   className="sr-only"
                   ref={fileInput}
                   type="file"
+                  tabIndex={-1}
                   disabled={importing}
                   accept=".json,application/json"
                   aria-label="Import knowledge notebook JSON"

@@ -12,6 +12,8 @@ The Science lab and reference tools explore how endpoint placement changes the c
 
 In the Science lab, a shift of `e` pixels **per reference endpoint** gives trial reference spans `p + 2e` and `p - 2e`. The displayed output lengths are `qL / (p + 2e)` and `qL / (p - 2e)`; the reference span must exceed `2e`. The outline span and known length stay fixed in this scenario. This interval is not a statistical confidence interval.
 
+The endpoint slider starts with a 0–5 px exploration range. Entering or importing a larger shift expands that range; moving the slider keeps its range fixed so you can compare values in either direction. Arrow keys adjust by 0.25 px, and Home/End select the range endpoints. Reset experiment restores the example values and the 0–5 px range. The numeric field also accepts finer values within its supported bounds.
+
 Read [reference sensitivity](reference-sensitivity.md) for the workbench's actual endpoint contract and [engineering verification](engineering-model.md) for an independent source-height decision. A nominal coin/card/reference preset should be checked against the physical object rather than treated as a measured value.
 
 ## Perspective and reference sheets

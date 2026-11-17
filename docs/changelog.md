@@ -1,6 +1,6 @@
 # Workbench change log
 
-## Studio export recovery and narrow-screen labels — November 17, 2026
+## Studio export recovery and keyboard controls — November 17, 2026
 
 - Clearing temporary exports now invalidates retained Relief results as well as
   the Flat part model. Relief keeps its picture and settings, disables deleted
@@ -10,8 +10,12 @@
 - The command search's hidden accessible label is positioned within its control
   on narrow phones. Its complete accessible name remains available, and the
   existing strict screen-overflow check remains in place.
+- Science endpoint exploration keeps a stable slider range after a larger shift
+  is entered, restored or imported. Keyboard users can move in both directions
+  without the upper bound shrinking. The Science and Knowledge import buttons
+  remain keyboard accessible without an extra invisible file-input tab stop.
 
-## Unreleased — Precision Studio local implementation, November 17, 2026
+## Precision Studio source integration — November 17, 2026
 
 - A shared command launcher and responsive workspace navigation retain edits while
   switching among Flat part, Relief, Photo library, Knowledge and Science lab.
@@ -25,9 +29,11 @@
 - Knowledge adds searchable guides, local notes and validated backups. Science lab
   adds editable scale, layer and measured-fit scenarios with explicit assumptions.
   A read-only local API supplies curated project guides and matching downloads.
-- Task-oriented guides and the documentation index accompany the interface. These
-  are locally implemented changes prepared for review, not a merged release or
-  evidence of native slicer import, deployment or physical printing.
+- Task-oriented guides and the documentation index accompany the interface.
+  Application [PR #161](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/161)
+  and documentation [PR #163](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/163)
+  are merged into main. Source integration does not establish a released package,
+  native slicer import, deployment or physical printing.
 
 ## Documentation and mathematics audit — November 16, 2026
 

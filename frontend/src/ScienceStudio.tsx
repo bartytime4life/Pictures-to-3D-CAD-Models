@@ -95,6 +95,7 @@ function attempt<T>(calculate: () => T) {
 const format = (value: number, places = 3) =>
   value.toLocaleString('en-US', { minimumFractionDigits: places, maximumFractionDigits: places });
 const SCIENCE_KEY = 'pictures-to-cad.science.v1';
+const endpointExplorationMax = (shift: number) => Math.min(1000, Math.max(5, shift));
 function loadScenario() {
   let raw: string | null = null;
   try {
@@ -121,6 +122,11 @@ export default function ScienceStudio() {
     () => experimentFromHash(window.location.hash) ?? initial.scenario.active,
   );
   const [drafts, setDrafts] = useState(() => toDrafts(initial.scenario));
+  // Numeric edits/imports choose the exploration range; moving the slider must
+  // not shrink its own maximum and prevent returning to the starting value.
+  const [endpointMax, setEndpointMax] = useState(() =>
+    endpointExplorationMax(initial.scenario.scale.endpointShiftPx),
+  );
   const [dirty, setDirty] = useState(false);
   const [recovery, setRecovery] = useState(initial.recovery);
   const [persistence, setPersistence] = useState(
@@ -227,6 +233,7 @@ export default function ScienceStudio() {
       setRecovery(null);
       setDirty(true);
       setDrafts(toDrafts(scenario));
+      setEndpointMax(endpointExplorationMax(scenario.scale.endpointShiftPx));
       setActive(scenario.active);
       setMessage('Scenario imported. These values do not change your CAD model.');
     } catch (reason) {
@@ -268,6 +275,7 @@ export default function ScienceStudio() {
               ref={fileInput}
               className="sr-only"
               type="file"
+              tabIndex={-1}
               disabled={importing}
               accept=".json,application/json"
               aria-label="Import science scenario JSON"
@@ -358,6 +366,8 @@ export default function ScienceStudio() {
                 onClick={() => {
                   setDirty(true);
                   setDrafts((old) => ({ ...old, [active]: toDrafts(LAB_DEFAULTS)[active] }));
+                  if (active === 'scale')
+                    setEndpointMax(endpointExplorationMax(LAB_DEFAULTS.scale.endpointShiftPx));
                   setMessage(`${selected.title} reset to example values.`);
                   setFileError('');
                 }}
@@ -380,7 +390,14 @@ export default function ScienceStudio() {
                       max={field.max}
                       step={field.step}
                       value={drafts[active][field.key]}
-                      onChange={(event) => change(field.key, event.target.value)}
+                      onChange={(event) => {
+                        change(field.key, event.target.value);
+                        if (active === 'scale' && field.key === 'endpointShiftPx') {
+                          const shift = event.target.valueAsNumber;
+                          if (Number.isFinite(shift) && shift >= 0 && shift <= 1000)
+                            setEndpointMax(endpointExplorationMax(shift));
+                        }
+                      }}
                     />
                   </label>
                 ))}
@@ -391,12 +408,7 @@ export default function ScienceStudio() {
                       type="range"
                       disabled={importing}
                       min="0"
-                      max={Math.max(
-                        5,
-                        Number.isFinite(scaleInput.endpointShiftPx)
-                          ? Math.min(1000, scaleInput.endpointShiftPx)
-                          : 5,
-                      )}
+                      max={endpointMax}
                       step="0.25"
                       value={
                         Number.isFinite(scaleInput.endpointShiftPx) ? scaleInput.endpointShiftPx : 0
