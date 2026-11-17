@@ -4,10 +4,11 @@ import '@fontsource-variable/inter';
 import '@fontsource-variable/jetbrains-mono';
 import './styles.css';
 import App from './App';
+import LibraryStudio from './LibraryStudio';
 import ReliefStudio from './ReliefStudio';
 
-// Two independent tools share one page: the flat-part workbench (default) and the
-// relief & lithophane studio at #relief. Each keeps its own state.
+// Three independent tools share one page: the flat-part workbench (default), the relief &
+// lithophane studio at #relief and the photo library at #library. Each keeps its own state.
 function Root() {
   const [hash, setHash] = useState(window.location.hash);
   useEffect(() => {
@@ -15,6 +16,7 @@ function Root() {
     window.addEventListener('hashchange', changed);
     return () => window.removeEventListener('hashchange', changed);
   }, []);
+  if (hash === '#library') return <LibraryStudio />;
   return hash === '#relief' ? <ReliefStudio /> : <App />;
 }
 

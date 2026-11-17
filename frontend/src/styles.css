@@ -186,19 +186,26 @@ button:disabled:hover {
 .topbar .label-short {
   display: none;
 }
-/* Just above the 1250 px step the desktop type is large; tighter spacing keeps the name whole. */
-@media (min-width: 1251px) and (max-width: 1365px) {
+/* Just above the 1250 px step the desktop type is large; with four studio tabs, tighter
+   spacing keeps the project name whole. */
+@media (min-width: 1251px) and (max-width: 1450px) {
+  .topbar {
+    padding: 0 20px;
+  }
   .topbar,
   .studio-tabs,
   .studio-tabs + .header-actions {
-    gap: 18px;
+    gap: 12px;
   }
   .studio-tabs + .header-actions {
-    padding-left: 18px;
+    padding-left: 12px;
+  }
+  .studio-tab {
+    gap: 6px;
   }
 }
-/* Below 1700 px the full labels would squeeze the project name; use the short ones. */
-@media (max-width: 1699px) {
+/* Below 1800 px the full labels would squeeze the project name; use the short ones. */
+@media (max-width: 1799px) {
   .topbar .label-long {
     display: none;
   }
@@ -2599,5 +2606,12 @@ main {
     flex-wrap: wrap;
     row-gap: 4px;
     padding: 8px 12px;
+  }
+  /* Four studio tabs do not fit side by side with their icons: labels go under them. */
+  .studio-tab {
+    flex-direction: column;
+    gap: 2px;
+    font-size: 12px;
+    padding: 6px 2px;
   }
 }

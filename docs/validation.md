@@ -1,5 +1,33 @@
 # Validation results
 
+## Photo library with optional DINOv3 features — November 16, 2026
+
+A third studio indexes folders of photos, measures edge blur, finds copies and, with the
+optional DINOv3 model, finds each photo's subject, groups shots of one subject and
+matches photos. Full method, tables, rejected approaches and limits are in the
+[photo library record](validation/photo-library.md).
+
+- **Local Python:** the complete suite, 1,525 passed and 2 skipped, with the vision
+  model installed. 49 tests are new, 28 for the library and 21 for the vision layer;
+  the last library test was added after that run and the two suites passed again.
+  They use a stand-in for the network, so they show integration behaviour, not model
+  quality; one runs the real model when it is installed.
+- **Browser:** all 92 runnable Chrome scenarios passed against a dedicated server in
+  7.1 minutes (1 skipped: it needs the AI depth model). Five are new. An earlier run
+  failed the existing 320 px edge check because of the fourth header tab; the header
+  was changed and the rerun passed.
+- **Build and lint:** production build and TypeScript, Ruff and Prettier passed.
+- **Rendered benchmark, parts held out from tuning (ViT-B/16):** subject found in
+  56 of 56 shots, mean box overlap 0.87; the nearest other shot was the same part for
+  all 56 (0.857 with the whole-picture vector); all seven parts grouped correctly; all
+  42 planted copies found. With all fourteen parts together, group precision 0.76
+  (two look-alike brackets share a group). Best shot truly most detailed in 12 of 20
+  groups. These are drawings of parts, not photographs.
+- **Edge blur:** 0.5 to 4 px of rendered blur read 0.76 to 4.13 px.
+- **Throughput, one loaded workstation (16 cores, RTX 5080):** 12-megapixel JPEGs read
+  at 102 a second and described at 174 a second; 6,784 mixed real files indexed in
+  52.5 s with no failure. Only counts and times of the real files were examined.
+- **Not measured:** accuracy on photographs of real parts.
 ## Constrained shadow optimality — November 16, 2026
 
 The [shadow solver repair](validation/shadow-kkt.md) reproduces a one-way

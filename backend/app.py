@@ -12,14 +12,16 @@ import uuid
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Annotated, Literal
+from urllib.parse import urlsplit
 
-from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
+from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse, Response
 from pydantic import BaseModel, ConfigDict, Field
 
 from . import blender as blender_bridge
 from . import depth as depth_model
+from . import library, vision
 from .assistant import AssistantError, AssistantRequest, assistant_status, chat
 from .models import BuildRequest, Detail, Reference
 from .printing import load_printer_catalog
@@ -121,6 +123,7 @@ async def lifespan(app):
     app.state.slicer_lock = asyncio.Lock()
     app.state.slicer_last_launch = 0.0
     app.state.blender_last_launch = 0.0
+    app.state.library_search_lock = asyncio.Lock()
 
     async def expire_jobs():
         while True:
@@ -152,7 +155,7 @@ class BodyTooLarge(HTTPException):
 def body_limit(path):
     """(bytes allowed, refusal) for a request body. A photo upload may be larger than
     any other request; both allow 64 KiB for multipart framing and form fields."""
-    if path in ("/api/trace", "/api/relief"):
+    if path in ("/api/trace", "/api/relief", "/api/library/uploads", "/api/library/search"):
         return MAX_BYTES + 64 * 1024, "Upload exceeds the 32 MiB limit."
     return MAX_BODY + 64 * 1024, "Upload exceeds the 10 MiB limit."
 
@@ -612,6 +615,256 @@ async def clear_models():
                 shutil.rmtree(directory)
                 deleted += 1
         return {"deleted": deleted}
+
+
+# ------------------------------------------------------------------ photo library
+
+
+class LibraryFolderRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    path: str | None = Field(default=None, max_length=4096)
+
+
+class LibraryActionRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+
+def library_folders_allowed(request: Request, with_body=True):
+    """Whether this request may name folders on the host: only the workbench's own page on
+    this computer (the same gate as starting a slicer), unless PICAD_LIBRARY_FOLDERS=0."""
+    if os.environ.get("PICAD_LIBRARY_FOLDERS", "1") == "0":
+        return False
+    if not with_body:  # A status read: report whether the page could use folders at all.
+        host = request.client.host if request.client else None
+        return launch_request_allowed(host, str(request.url), str(request.base_url), "application/json")
+    return launch_request_allowed(
+        request.client.host if request.client else None,
+        str(request.url),
+        request.headers.get("origin"),
+        request.headers.get("content-type", ""),
+    )
+
+
+def library_same_origin(request: Request):
+    """Refuse a browser request that another site's page sent.
+
+    A multipart upload is a "simple" cross-site request: any web page could post files
+    into a library on this computer without the browser asking first. Browsers name the
+    sending page in ``Origin``; its host must be the one addressed. Clients that send no ``Origin``
+    (scripts, tests) are not browsers acting for another site and pass.
+    """
+    origin = request.headers.get("origin")
+    if not origin:
+        return
+    # Host and port as the browser addressed them. The scheme is left out: behind a
+    # TLS-terminating proxy this service sees http while the page's origin is https.
+    try:
+        sent = urlsplit(origin).netloc.lower()
+    except ValueError:
+        sent = ""
+    if not sent or sent != request.headers.get("host", "").lower():
+        raise HTTPException(403, "Use the photo library from the workbench's own page.")
+
+
+def library_refusal(exc):
+    if isinstance(exc, library.Busy):
+        return HTTPException(409, str(exc), headers={"Retry-After": "3"})
+    status = 404 if "not found" in str(exc).lower() else 422
+    return HTTPException(status, str(exc))
+
+
+async def library_call(function, *args, **kwargs):
+    try:
+        return await asyncio.to_thread(function, *args, **kwargs)
+    except library.LibraryError as exc:
+        raise library_refusal(exc) from None
+    except vision.VisionError as exc:
+        raise HTTPException(503, str(exc)) from None
+
+
+def library_idle():
+    if library.job.state().get("running"):
+        raise HTTPException(
+            409, "The library is crunching photos. Wait for it to finish or cancel it.", headers={"Retry-After": "3"}
+        )
+
+
+@app.get("/api/library")
+async def library_status(request: Request):
+    state = {
+        "summary": await library_call(library.summary),
+        "vision": await asyncio.to_thread(vision.status),
+        "job": library.job.state(),
+        "folders_allowed": library_folders_allowed(request, with_body=False),
+    }
+    return JSONResponse(state, headers={"Cache-Control": "no-store"})
+
+
+@app.post("/api/library/browse")
+async def library_browse(request: Request, payload: LibraryFolderRequest):
+    if not library_folders_allowed(request):
+        raise HTTPException(403, "Choose folders from the workbench on this computer.")
+    return await library_call(library.browse, payload.path)
+
+
+@app.post("/api/library/folders", status_code=202)
+async def library_add_folder(request: Request, payload: LibraryFolderRequest):
+    if not library_folders_allowed(request):
+        raise HTTPException(403, "Add folders from the workbench on this computer.")
+    if not payload.path:
+        raise HTTPException(422, "Choose a folder.")
+    library_idle()
+    folder = await library_call(library.add_folder, payload.path)
+    await library_call(library.start_crunch)
+    return {"folder": folder, "job": library.job.state()}
+
+
+@app.delete("/api/library/folders/{folder_id}", status_code=202, dependencies=[Depends(library_same_origin)])
+async def library_remove_folder(folder_id: int):
+    library_idle()
+    await library_call(library.remove_folder, folder_id)
+    await library_call(library.start_reorganize)
+    return {"job": library.job.state()}
+
+
+@app.post("/api/library/uploads", dependencies=[Depends(library_same_origin)])
+async def library_upload(file: Annotated[UploadFile, File()]):
+    try:
+        data = await file.read(MAX_BYTES + 1)
+    finally:
+        await file.close()
+    return await library_call(library.add_upload, file.filename or "", data)
+
+
+@app.post("/api/library/crunch", status_code=202, dependencies=[Depends(library_same_origin)])
+async def library_crunch(payload: LibraryActionRequest):
+    await library_call(library.start_crunch)
+    return {"job": library.job.state()}
+
+
+@app.post("/api/library/cancel", dependencies=[Depends(library_same_origin)])
+async def library_cancel(payload: LibraryActionRequest):
+    library.job.cancel()
+    return {"job": library.job.state()}
+
+
+@app.get("/api/library/photos")
+async def library_photos(
+    view: str = "all",
+    sort: str = "added",
+    q: Annotated[str, Field(max_length=200)] = "",
+    offset: Annotated[int, Field(ge=0)] = 0,
+    limit: Annotated[int, Field(ge=1, le=500)] = 200,
+    group: int | None = None,
+    dup: int | None = None,
+):
+    result = await library_call(library.list_photos, view, sort, q, offset, limit, group, dup)
+    return JSONResponse(result, headers={"Cache-Control": "no-store"})
+
+
+@app.get("/api/library/groups")
+async def library_groups(
+    offset: Annotated[int, Field(ge=0)] = 0, limit: Annotated[int, Field(ge=1, le=200)] = 60
+):
+    result = await library_call(library.list_groups, offset, limit)
+    return JSONResponse(result, headers={"Cache-Control": "no-store"})
+
+
+@app.get("/api/library/export")
+async def library_export(format: Literal["csv", "json"] = "csv"):
+    if format == "json":
+        body, media, name = await library_call(library.export_json), "application/json", "photo-library.json"
+    else:
+        body, media, name = await library_call(library.export_csv), "text/csv; charset=utf-8", "photo-library.csv"
+    return Response(
+        body,
+        media_type=media,
+        headers={
+            "Content-Disposition": f'attachment; filename="{name}"',
+            "Cache-Control": "private, no-store",
+            "X-Content-Type-Options": "nosniff",
+        },
+    )
+
+
+@app.get("/api/library/photos/{photo_id}")
+async def library_photo(photo_id: int):
+    result = await library_call(library.get_photo, photo_id)
+    return JSONResponse(result, headers={"Cache-Control": "no-store"})
+
+
+@app.get("/api/library/photos/{photo_id}/preview")
+async def library_preview(photo_id: int):
+    path = library.preview_path(photo_id)
+    if photo_id < 0 or not path.is_file():
+        raise HTTPException(404, "Preview not found.")
+    return FileResponse(
+        path,
+        media_type="image/jpeg",
+        headers={"Cache-Control": "private, max-age=300", "X-Content-Type-Options": "nosniff"},
+    )
+
+
+@app.get("/api/library/photos/{photo_id}/original")
+async def library_original(photo_id: int):
+    path, name = await library_call(library.original_file, photo_id)
+    return FileResponse(
+        path,
+        media_type="application/octet-stream",
+        filename=name,
+        headers={"Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff"},
+    )
+
+
+@app.get("/api/library/photos/{photo_id}/similar")
+async def library_similar(photo_id: int, limit: Annotated[int, Field(ge=1, le=200)] = 60):
+    result = await library_call(library.similar, photo_id, limit)
+    return JSONResponse(result, headers={"Cache-Control": "no-store"})
+
+
+@app.post("/api/library/search", dependencies=[Depends(library_same_origin)])
+async def library_search(file: Annotated[UploadFile, File()]):
+    lock = app.state.library_search_lock
+    if lock.locked():
+        await file.close()
+        raise HTTPException(
+            429, "Another picture search is running. Wait a moment and try again.", headers={"Retry-After": "3"}
+        )
+    async with lock:
+        try:
+            data = await file.read(MAX_BYTES + 1)
+        finally:
+            await file.close()
+        # A cancelled request cannot stop the model call; keep the slot until it ends.
+        worker = asyncio.create_task(library_call(library.search_by_picture, file.filename or "", data))
+        try:
+            return await asyncio.shield(worker)
+        except asyncio.CancelledError:
+            while not worker.done():
+                try:
+                    await asyncio.shield(worker)
+                except asyncio.CancelledError:
+                    continue
+                except HTTPException:
+                    break
+            if not worker.cancelled():
+                worker.exception()
+            raise
+
+
+@app.delete("/api/library/photos/{photo_id}", status_code=202, dependencies=[Depends(library_same_origin)])
+async def library_remove_photo(photo_id: int):
+    library_idle()
+    await library_call(library.remove_photo, photo_id)
+    await library_call(library.start_reorganize)
+    return {"job": library.job.state()}
+
+
+@app.delete("/api/library", dependencies=[Depends(library_same_origin)])
+async def library_clear():
+    library_idle()
+    await library_call(library.clear)
+    return {"cleared": True}
 
 
 @app.get("/reference-library")

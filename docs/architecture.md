@@ -105,6 +105,8 @@ These separate local studies add no main runtime or workbench integration.
 | Shapely | Planar-profile validity checks before invoking the solid kernel |
 | CadQuery / OpenCascade | Solid construction, topology checks, tessellation, and CAD exports |
 | Optional local Ollama | Text advice and validated trace/design/print-setting proposals for explicit user review |
+| SQLite | The photo library's catalogue (`backend/library.py`), one file under `.local/library` |
+| Optional DINOv3 with PyTorch | Photo-library features, in a separate process and Python environment (`backend/vision.py`, `backend/vision_worker.py`) |
 
 The application does not call a paid or external inference service. Its optional assistant connects to Ollama through an HTTP loopback address on the backend host. It receives text context, including measured and built dimensions, but not the photograph, outline vertices, or mesh. An uploaded photograph still reaches the Python backend for tracing, which may run on the user's machine or on a cloud host.
 
@@ -379,6 +381,45 @@ The profile is validated at the API boundary even when it originated in this app
 `POST /api/relief/calibrate` fits `ln Y = a − μ t` to `thickness_mm` and `readings` (`scale` `srgb8` or `linear`) and returns μ, the half-value thickness with its standard error, R² and any excluded steps.
 
 `GET /api/blender` reports whether Blender was found and whether direct opening is enabled, without running it. `POST /api/models/{job_id}/blender`, with `PICAD_ENABLE_BLENDER_LAUNCH=1` and the same loopback, same-origin JSON requirements as the slicer launcher, extracts the generated Blender ZIP's fixed file names into `.local/blender-handoffs/<id>/` and starts `blender --python build_relief.py` without a shell. The script is the repository's static `backend/blender_relief.py`; settings reach it only as JSON data. See the [relief guide](relief.md).
+
+### Photo library
+
+The library is a third studio with its own state, separate from tracing and CAD jobs. `backend/library.py` keeps a catalogue of photos in SQLite with a preview, measurements and optional feature vectors for each; `backend/vision.py` runs the optional DINOv3 model in another process under its own Python environment; `backend/vision_math.py` holds the numerical steps both sides share and imports only NumPy. See the [guide](photo-library.md) and [validation record](validation/photo-library.md).
+
+```mermaid
+flowchart LR
+    A[Folders on this computer or uploads] --> B[Scan: new, changed, vanished files]
+    B --> C[Read in parallel processes: decode, edge blur, preview]
+    C --> D[Describe: DINOv3 whole-picture vector, subject region, subject vector]
+    C --> E[Organize]
+    D --> E[Organize: copies, look-alikes, groups, best shots]
+    E --> F[Browse, search by picture, export CSV or JSON]
+    F --> G[Open the original in the workbench or relief studio]
+```
+
+One crunch runs at a time in a background thread; routes that would change the catalogue meanwhile return 409 with `Retry-After`. The library does not use the CAD or trace locks. A photo handed to a studio is fetched by the page as its original file and then follows that studio's ordinary upload path.
+
+| Route | Purpose |
+| --- | --- |
+| `GET /api/library` | Totals, added folders, vision-model status, the running job (stage, done, total, rate, time left) and whether this caller may name folders |
+| `POST /api/library/browse` `{path?}` | Folders inside a folder, for the picker. Loopback page only |
+| `POST /api/library/folders` `{path}` | Add a folder and start a crunch (202). Loopback page only |
+| `DELETE /api/library/folders/{id}` | Forget a folder's photos and regroup (202). Never touches the folder |
+| `POST /api/library/uploads` | Store one multipart `file` (32 MiB, same formats as tracing); identical bytes are stored once |
+| `POST /api/library/crunch`, `POST /api/library/cancel` | Start scan, read, describe and organize (202); ask the running job to stop after its batch |
+| `GET /api/library/photos` | A page of photos: `view` (`all`, `best`, `duplicates`, `grouped`, `failed`), `sort` (`added`, `taken`, `name`, `sharp`, `detail`, `size`), `q`, `offset`, `limit` (at most 500), `group`, `dup` |
+| `GET /api/library/groups` | Groups, largest first, with up to six member ids each |
+| `GET /api/library/photos/{id}` | One photo's facts and its subject region as rows of a 28 × 28 grid. An upload's storage path is not returned |
+| `GET /api/library/photos/{id}/preview`, `/original` | The 512-pixel JPEG preview; the original file, refused if it changed or vanished since it was indexed |
+| `GET /api/library/photos/{id}/similar` | Photos with the most similar subject vector, with cosines |
+| `POST /api/library/search` | The same for a multipart picture that is not in the library; nothing about it is kept. One at a time (429 when busy) |
+| `DELETE /api/library/photos/{id}` | Remove an upload and regroup (202). A folder photo is refused |
+| `DELETE /api/library` | Forget everything derived; originals in added folders are untouched |
+| `GET /api/library/export` | The catalogue, one row per photo, with `format=csv` (default) or `format=json` |
+
+Naming a host folder uses the slicer launch gate (`launch_request_allowed`): a loopback client and host, a same-origin `Origin`, and a JSON body. `PICAD_LIBRARY_FOLDERS=0` turns it off. Routes that change the library refuse a request whose `Origin` names another site (`library_same_origin`): a multipart upload is otherwise a request any page may send. Photo decoding reuses `tracing.decode_with_pillow` and `heic.decode` with their limits; a JPEG of 8 megapixels or more is decoded at reduced scale by `library._decode_jpeg_reduced`, which applies the same size limits before decoding.
+
+The vision worker speaks one JSON object per line on its standard streams and writes feature arrays to a file the caller names. Each weight file is identified by a pinned SHA-256 and checked before it is loaded with `weights_only=True`. The worker is started on first use, restarted if it dies, and stopped after five idle minutes. `PICAD_VISION_STANDIN=1` replaces the network with colour statistics for tests; it is not a vision model and is never chosen automatically.
 
 ### Optional local slicer opening
 

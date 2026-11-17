@@ -17,6 +17,7 @@ import {
   X,
 } from '@phosphor-icons/react';
 import AppHeader from './AppHeader';
+import { takeHandoff } from './handoff';
 import ModelViewer from './ModelViewer';
 import {
   MODE_DEFAULTS,
@@ -458,6 +459,13 @@ export default function ReliefStudio() {
     },
     [sourceUrl],
   );
+
+  useEffect(() => {
+    // A photo sent from the photo library is built straight away with the current settings.
+    const handed = takeHandoff('relief');
+    if (handed)
+      choose(handed, { name: handed.name.replace(/\.[^.]+$/, '').slice(0, 100) || 'Relief' });
+  }, []);
 
   // Settings apply on their own: once the inputs are valid and have rested for
   // AUTO_BUILD_DELAY_MS the model rebuilds, so there is no button to remember. Each
