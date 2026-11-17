@@ -36,15 +36,15 @@ Keep the terminal running after startup and open [Pictures to CAD](http://127.0.
 
 The default bind address is `127.0.0.1`. The supported startup settings are:
 
-| Variable | Default | Purpose |
-| --- | --- | --- |
-| `PICAD_PYTHON` | first 3.12 of `python3.12`, `python3` | Python 3.12 interpreter that `setup.sh` builds `.venv` from |
-| `PICAD_HOST` | `127.0.0.1` | API and built-interface bind address for `start.sh` |
-| `PICAD_PORT` | `8000` | API and built-interface port for `start.sh` |
-| `PICAD_DEV_HOST` | `127.0.0.1` | Vite bind address for `dev.sh`; the development API remains on port 8000 |
-| `PICTURES_CAD_JOB_DIR` | Repository `.local/jobs` | Temporary model artifact directory |
-| `PICTURES_CAD_OLLAMA_URL` | `http://127.0.0.1:11434` | Optional assistant's HTTP loopback endpoint on the backend host |
-| `PICTURES_CAD_OLLAMA_MODEL` | `qwen3:1.7b` | Preferred installed assistant model; otherwise selects that default if installed, then the smallest local model |
+| Variable                    | Default                               | Purpose                                                                                                         |
+| --------------------------- | ------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `PICAD_PYTHON`              | first 3.12 of `python3.12`, `python3` | Python 3.12 interpreter that `setup.sh` builds `.venv` from                                                     |
+| `PICAD_HOST`                | `127.0.0.1`                           | API and built-interface bind address for `start.sh`                                                             |
+| `PICAD_PORT`                | `8000`                                | API and built-interface port for `start.sh`                                                                     |
+| `PICAD_DEV_HOST`            | `127.0.0.1`                           | Vite bind address for `dev.sh`; the development API remains on port 8000                                        |
+| `PICTURES_CAD_JOB_DIR`      | Repository `.local/jobs`              | Temporary model artifact directory                                                                              |
+| `PICTURES_CAD_OLLAMA_URL`   | `http://127.0.0.1:11434`              | Optional assistant's HTTP loopback endpoint on the backend host                                                 |
+| `PICTURES_CAD_OLLAMA_MODEL` | `qwen3:1.7b`                          | Preferred installed assistant model; otherwise selects that default if installed, then the smallest local model |
 
 Changing the bind address can expose a service to other machines. Use the intended host access controls; the application itself has no account authentication.
 
@@ -79,23 +79,23 @@ The reference library intentionally commits generated HTML, figures, and its PDF
 
 Run `make` for help. Component targets delegate to the existing scripts and library Makefile.
 
-| Command | Scope |
-| --- | --- |
-| `make setup` | Prepare both components; no system tools, browser, or model downloads |
-| `make start` / `make dev` | Run the production workbench / workbench with hot reload |
-| `make build` | Build the workbench and library outputs, including the library PDF |
-| `make test` | Workbench Python/build/browser checks, then library Python/Node/browser checks |
-| `make lint` | Workbench Ruff and frontend/browser-source formatting checks |
-| `make smoke` | Check an already running workbench through its real trace/build/export API |
-| `make photo-benchmark PHOTOS=folder` | Trace a folder of your own reference-sheet photos and compare them with your caliper measurements ([guide](photo-benchmark.md)) |
-| `make corner-sweep` | Fit synthetic blurred filleted corners and report radius error; it does not measure a real camera or part |
-| `make freecad` | Check fitted synthetic STEP/DXF imports using a separately installed `FREECADCMD` |
-| `make slicers` | Inspect executable discovery without starting a slicer |
-| `make vision-model WEIGHTS=folder` | Build the optional DINOv3 environment for the photo library and link verified weight files you obtained ([guide](photo-library.md#optional-vision-model)) |
-| `make vision-benchmark` | Score the photo library's vision features on rendered parts with the installed model; it does not measure real photographs |
-| `make setup-app` / `make setup-library` | Prepare one component |
-| `make build-app` / `make build-library` | Build one component |
-| `make test-app` / `make test-library` | Validate one component |
+| Command                                 | Scope                                                                                                                                                     |
+| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `make setup`                            | Prepare both components; no system tools, browser, or model downloads                                                                                     |
+| `make start` / `make dev`               | Run the production workbench / workbench with hot reload                                                                                                  |
+| `make build`                            | Build the workbench and library outputs, including the library PDF                                                                                        |
+| `make test`                             | Workbench Python/build/TypeScript-unit/browser checks, then library Python/Node/browser checks                                                            |
+| `make lint`                             | Workbench Ruff and frontend/browser-source formatting checks                                                                                              |
+| `make smoke`                            | Check an already running workbench through its real trace/build/export API                                                                                |
+| `make photo-benchmark PHOTOS=folder`    | Trace a folder of your own reference-sheet photos and compare them with your caliper measurements ([guide](photo-benchmark.md))                           |
+| `make corner-sweep`                     | Fit synthetic blurred filleted corners and report radius error; it does not measure a real camera or part                                                 |
+| `make freecad`                          | Check fitted synthetic STEP/DXF imports using a separately installed `FREECADCMD`                                                                         |
+| `make slicers`                          | Inspect executable discovery without starting a slicer                                                                                                    |
+| `make vision-model WEIGHTS=folder`      | Build the optional DINOv3 environment for the photo library and link verified weight files you obtained ([guide](photo-library.md#optional-vision-model)) |
+| `make vision-benchmark`                 | Score the photo library's vision features on rendered parts with the installed model; it does not measure real photographs                                |
+| `make setup-app` / `make setup-library` | Prepare one component                                                                                                                                     |
+| `make build-app` / `make build-library` | Build one component                                                                                                                                       |
+| `make test-app` / `make test-library`   | Validate one component                                                                                                                                    |
 
 The library's full build requires its PDF dependencies and fonts. The root library browser target uses an ephemeral loopback HTTP server; the standalone library check defaults to `file://`. `CAD_REFERENCE_BROWSER_TRANSPORT=file` or `http` selects that transport when invoking the library directly. This is a test mechanism; the distributed HTML still opens offline. See [library build instructions](../reference-library/BUILD.md) for its additional release, archive, and optional network-check targets.
 
@@ -107,19 +107,22 @@ make lint
 ```
 
 For just the workbench, use `make test-app` or `./scripts/test.sh`, which currently
-runs Python tests, the frontend build, then browser scenarios. Setup already
+runs Python tests, the frontend build, pure TypeScript unit tests, then browser scenarios. Setup already
 builds the frontend. When replaying stages manually from a clean checkout, build
 first so checks that serve the compiled interface use current assets:
 
 ```bash
 npm run build
 .venv/bin/python -m pytest -q
+npm run test:unit
 npm run test:e2e
 ```
 
 `make test-library` runs the independent library tests and browser checks without rerunning CAD workbench tests. Native OpenSCAD checks report skips if the tool is absent; those skips do not establish that rendering passed. Workbench source export does not require the executable. When it is available, `tests/test_mesh_interop.py` renders exported SCAD and compares simplified/scaled single and split-piece geometry, volume, and holes with the built CAD result. The library CI installs OpenSCAD and executes the required plate pipeline separately.
 
 Backend checks should exercise image parsing, geometry validation, dimensional bounds, topology, and exported-file re-imports. Browser checks should exercise the actual conversion path, edits, outdated-result handling, exports, input failures, and responsive navigation.
+
+Pure TypeScript suites under `tests/unit` exercise design arithmetic/history, plate projection and Science scenario calculations without a browser. The unit runner discovers `*.test.ts` files. For Knowledge and Science changes, cover JSON validation, storage recovery, same-page navigation and view-only behavior separately from CAD construction. The read-only documentation API has a fixed guide allowlist; test its file bounds and refusal behavior when changing that route.
 
 Design/print checks should also verify that XY and thickness percentages preserve measured inputs, that relative-detail approximation remains valid, and that generated split solids have consistent volumes and per-part exports. Check continuous-angle placement witnesses, conservative curve enclosures and unknown-fit cases rather than just 0°/90°. Cover version 2 polygon and version 3 fitted/reference recipe round-trips, version 1 import defaults, and browser-held measurement notes separately from server handoff recipes. Color/material preview must not alter mesh coordinates or imply material/strength simulation. Test assistant Apply/Undo, stale advice-only answers and invalid-setting recovery separately from live model quality.
 
@@ -293,4 +296,4 @@ The direct `.venv/bin/python scripts/smoke.py` command remains available. To che
 
 ## Optional slicer programs
 
-`make slicers` reports filesystem discovery for Bambu Studio, PrusaSlicer and QIDI Studio without starting them. Configure `PICAD_ENABLE_SLICER_LAUNCH=1` and absolute `PICAD_BAMBU_STUDIO` / `PICAD_PRUSA_SLICER` / `PICAD_QIDI_STUDIO` executable paths before startup to permit explicit local GUI handoff. Programs on PATH, common app locations and AppImages in `~/Applications` are also checked. Direct opening requires HTTP loopback and same-origin JSON; HTTPS loopback and remote workbenches use handoff ZIP downloads instead. Retained copies live in `.local/slicer-handoffs/` or `PICAD_SLICER_HANDOFF_DIR`, outside temporary job cleanup. See [slicer integration](slicers.md) for version targets and installation details.
+`make slicers` reports filesystem discovery for Bambu Studio, PrusaSlicer, QIDI Studio, OrcaSlicer and UltiMaker Cura without starting them. Configure `PICAD_ENABLE_SLICER_LAUNCH=1` and the required absolute executable paths before startup: `PICAD_BAMBU_STUDIO`, `PICAD_PRUSA_SLICER`, `PICAD_QIDI_STUDIO`, `PICAD_ORCA_SLICER` or `PICAD_CURA`. Programs on PATH, common app locations and AppImages in `~/Applications` are also checked. Direct opening requires HTTP loopback and same-origin JSON; HTTPS loopback and remote workbenches use handoff ZIP downloads instead. Retained copies live in `.local/slicer-handoffs/` or `PICAD_SLICER_HANDOFF_DIR`, outside temporary job cleanup. See [slicer integration](slicers.md) for version targets and installation details.
