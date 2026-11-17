@@ -10,7 +10,7 @@ test('knowledge retains manual search across studios and honors explicit search 
 
   await page.getByRole('link', { name: 'Science lab', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Science lab', exact: true })).toBeVisible();
-  await page.getByRole('link', { name: 'Knowledge', exact: true }).click();
+  await page.getByRole('link', { name: 'Knowledge base', exact: true }).click();
   await expect(search).toHaveValue('through holes');
 
   await page.evaluate(() => {

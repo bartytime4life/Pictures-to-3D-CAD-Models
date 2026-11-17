@@ -10,6 +10,7 @@ import KnowledgeStudio from './KnowledgeStudio';
 import ScienceStudio from './ScienceStudio';
 import CreativeStudio from './CreativeStudio';
 import ShapeStudio from './ShapeStudio';
+import ImageStudio from './ImageStudio';
 import { STUDIO_CATALOG, studioFromHash } from './studioCatalog';
 import type { ComponentType } from 'react';
 import { StudioActivity } from './StudioActivity';
@@ -23,6 +24,7 @@ const studios: Record<Studio, ComponentType> = {
   science: ScienceStudio,
   creative: CreativeStudio,
   designer: ShapeStudio,
+  image: ImageStudio,
 };
 function route(): Studio {
   return studioFromHash(window.location.hash);

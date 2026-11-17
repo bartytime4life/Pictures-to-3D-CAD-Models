@@ -19,7 +19,13 @@ flowchart LR
     K[Knowledge and Science lab] --> M
 ```
 
-The hash router exposes Shape designer (`#designer`), Flat part (`#workbench`), Relief (`#relief`), Photo library (`#library`), Knowledge (`#knowledge`) Science lab (`#science`) and Creative tools (`#creative`). OpenSCAD links to the separately served companion library. Visited studio state is retained in memory during in-page navigation; this is not automatic disk persistence.
+The hash router exposes Shape designer (`#designer`), Flat part (`#workbench`), Relief (`#relief`), Photo library (`#library`), Image inspection (`#image`), Knowledge (`#knowledge`), Science lab (`#science`) and Creative tools (`#creative`). OpenSCAD links to the separately served companion library. Visited studio state is retained in memory during in-page navigation; this is not automatic disk persistence.
+
+Image inspection (`ImageStudio.tsx`, `imageAnalysis.ts`) samples explicitly chosen
+files in browser memory, computes bounded region statistics and pixel differences,
+and exports a JSON receipt. It has no analysis API or model dependency. Its original
+file handoff reuses the photo-library transport into Flat part or Relief. Sampling
+does not alter the CAD source or establish its scale; see [the method and limits](image-inspection.md).
 
 ## Component map
 

@@ -377,6 +377,22 @@ main {
   flex: 0 0 auto;
   font-size: 14px;
 }
+/* Nine studio/companion entries need a wrapping navigation before tablet widths. */
+@media (min-width: 721px) and (max-width: 1000px) {
+  .topbar-navigation .studio-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+    gap: 0;
+  }
+  .topbar-navigation .studio-tab {
+    justify-content: center;
+    min-width: 0;
+  }
+  .topbar-navigation .studio-tab:last-child {
+    margin-left: 0;
+  }
+}
 @media (max-width: 720px) {
   .workflow-guide {
     margin: 0 12px 14px;
@@ -3668,7 +3684,7 @@ main {
   .studio-tabs {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0;
   }
   .studio-tab {

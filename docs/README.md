@@ -1,6 +1,6 @@
 # Documentation
 
-Start with a task, follow its workflow, and keep a saved recipe before leaving the application. Pictures to CAD has a measured flat-part workbench, a relief studio, a photo library, a Creative tools studio, and supporting Knowledge and Science workspaces.
+Start with a task, follow its workflow, and keep a saved recipe before leaving the application. Pictures to CAD has a shape designer, a measured flat-part workbench, a relief studio, image inspection, a photo library, Creative tools, and supporting Knowledge and Science workspaces.
 
 ## Start and finish a part
 
@@ -21,6 +21,9 @@ Start with a task, follow its workflow, and keep a saved recipe before leaving t
 The **Next step** guide points to the next missing measurement, invalid setting, build or export review. **Quick edit** changes design size; the original reference measurements stay explicit. **Prepare for slicing** keeps process notes with the built revision. View-only controls never modify an exported solid.
 
 Create a part without a photo using the [shape designer](shape-designer.md). Explore ideas and find a making workspace with [Creative tools](creative-tools.md). Developers can use its workspace catalog and text-tool registry to add tools without duplicating navigation or inference plumbing.
+
+Use [Image inspection](image-inspection.md) for region histograms, exposure/contrast
+readings and pixel-aligned A/B comparison before tracing.
 
 ## Understand the result
 

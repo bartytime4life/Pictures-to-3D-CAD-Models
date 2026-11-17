@@ -75,6 +75,10 @@ Open **Shape designer** to combine rectangles, rounded rectangles, circles, slot
 
 ## Creative tools
 
+**Image inspection** adds browser-local histograms, contrast/exposure readings,
+selected regions and A/B comparison, with unchanged-original handoff to CAD.
+See the [image inspection guide](docs/image-inspection.md).
+
 Open **Creative tools** to explore design directions, refine an idea, or plan the making with an installed local Ollama chat model. Save generated notes with the submitted brief and use the searchable toolkit to open a making workspace. See [creative tools and extension guide](docs/creative-tools.md).
 
 ## Local data and optional models

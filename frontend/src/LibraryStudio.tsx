@@ -1210,6 +1210,13 @@ export default function LibraryStudio() {
                             <MagnifyingGlass size={20} aria-hidden /> Find similar
                           </button>
                         )}
+                        <button
+                          className="outlined-button"
+                          disabled={!!busy}
+                          onClick={() => void openIn('image', detail)}
+                        >
+                          <MagnifyingGlass size={20} aria-hidden /> Inspect image
+                        </button>
                       </div>
                     )}
                     <dl className="library-facts">
