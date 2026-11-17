@@ -18,6 +18,7 @@ import {
 } from '@phosphor-icons/react';
 import AppHeader from './AppHeader';
 import { useStudioActive } from './StudioActivity';
+import { onTemporaryExportsCleared, temporaryExportGeneration } from './temporaryExports';
 import { takeHandoff } from './handoff';
 import ModelViewer from './ModelViewer';
 import {
@@ -416,6 +417,7 @@ export default function ReliefStudio() {
   const [result, setResult] = useState<ReliefResult | null>(null);
   const [builtKey, setBuiltKey] = useState('');
   const [builtFile, setBuiltFile] = useState<File | null>(null);
+  const [exportsCleared, setExportsCleared] = useState(false);
   const [busy, setBusy] = useState('');
   const [error, setError] = useState('');
   const [view, setView] = useState<'photo' | 'preview'>('photo');
@@ -437,9 +439,29 @@ export default function ReliefStudio() {
   const invalid = typeof settings === 'string' ? settings : '';
   const stale =
     !!result &&
-    (typeof settings === 'string' || geometryKey(settings) !== builtKey || file !== builtFile);
+    (exportsCleared ||
+      typeof settings === 'string' ||
+      geometryKey(settings) !== builtKey ||
+      file !== builtFile);
   const lithophane = draft.mode === 'lithophane';
   const sphere = draft.shape === 'sphere';
+
+  useEffect(
+    () =>
+      onTemporaryExportsCleared(() => {
+        // A completed server build can still have an unread response when deletion
+        // succeeds. Supersede it synchronously before it can restore dead downloads.
+        revision.current += 1;
+        shownId.current = '';
+        failedKey.current = '';
+        setExportsCleared(true);
+        setBusy('');
+        setError('');
+        setBlenderMessage('');
+        setView('photo');
+      }),
+    [],
+  );
 
   useEffect(() => {
     fetch('/api/relief/depth')
@@ -475,10 +497,15 @@ export default function ReliefStudio() {
   // keystroke restarts the wait. A build that failed is not retried for the same settings;
   // Update model stays as the manual retry.
   const autoKey =
-    result && stale && file && typeof settings !== 'string' ? geometryKey(settings) : '';
+    result && stale && !exportsCleared && file && typeof settings !== 'string'
+      ? geometryKey(settings)
+      : '';
   useEffect(() => {
     if (!active || !autoKey || busy || autoKey === failedKey.current) return;
-    const timer = window.setTimeout(() => void build(), AUTO_BUILD_DELAY_MS);
+    const exportsGeneration = temporaryExportGeneration();
+    const timer = window.setTimeout(() => {
+      if (exportsGeneration === temporaryExportGeneration()) void build();
+    }, AUTO_BUILD_DELAY_MS);
     return () => window.clearTimeout(timer);
     // build() reads the draft this render describes, which autoKey already captures.
   }, [autoKey, busy, active]);
@@ -496,6 +523,9 @@ export default function ReliefStudio() {
       return;
     }
     const mine = revision.current;
+    const exportsGeneration = temporaryExportGeneration();
+    const isCurrent = () =>
+      mine === revision.current && exportsGeneration === temporaryExportGeneration();
     setBusy(request.mode === 'lithophane' ? 'Computing lithophane…' : 'Computing relief…');
     setError('');
     try {
@@ -509,15 +539,16 @@ export default function ReliefStudio() {
       for (let attempt = 0; attempt < BUSY_RETRIES; attempt += 1) {
         const wait = Number(response.headers.get('Retry-After'));
         if (response.status !== 429 || !(wait > 0 && wait <= 10)) break;
+        if (!isCurrent()) return;
         setBusy('Waiting for another build to finish…');
         await new Promise((resolve) => window.setTimeout(resolve, wait * 1000));
-        if (mine !== revision.current) return; // Superseded while waiting.
+        if (!isCurrent()) return; // Superseded or exports cleared while waiting.
         setBusy(request.mode === 'lithophane' ? 'Computing lithophane…' : 'Computing relief…');
         response = await fetch('/api/relief', { method: 'POST', body });
       }
       if (!response.ok) throw new Error(await errorFrom(response));
       const built: ReliefResult = await response.json();
-      if (mine !== revision.current) {
+      if (!isCurrent()) {
         // A newer build superseded this one; free its storage slot.
         discardModel(built.id);
         return;
@@ -528,6 +559,7 @@ export default function ReliefStudio() {
       shownId.current = built.id;
       failedKey.current = '';
       setResult(built);
+      setExportsCleared(false);
       setBuiltKey(geometryKey(request));
       setBuiltFile(nextFile);
       setView('preview');
@@ -535,11 +567,12 @@ export default function ReliefStudio() {
       setFit(null);
     } catch (caught) {
       // Remember the failure so the automatic rebuild does not retry the same settings.
-      failedKey.current = geometryKey(request);
-      if (mine === revision.current)
+      if (isCurrent()) {
+        failedKey.current = geometryKey(request);
         setError(caught instanceof Error ? caught.message : String(caught));
+      }
     } finally {
-      if (mine === revision.current) setBusy('');
+      if (isCurrent()) setBusy('');
     }
   }
 
@@ -562,11 +595,13 @@ export default function ReliefStudio() {
 
   async function loadSample(kind: SampleKind) {
     const sample = SAMPLES[kind];
+    const exportsGeneration = temporaryExportGeneration();
     setBusy('Loading the sample…');
     try {
       const response = await fetch(sample.url);
       if (!response.ok) throw new Error('The sample image could not be loaded.');
       const blob = await response.blob();
+      if (exportsGeneration !== temporaryExportGeneration()) return;
       choose(
         new File([blob], sample.file, {
           type: TIFF_NAME.test(sample.file) ? 'image/tiff' : 'image/png',
@@ -574,6 +609,7 @@ export default function ReliefStudio() {
         sample.draft,
       );
     } catch (caught) {
+      if (exportsGeneration !== temporaryExportGeneration()) return;
       setBusy('');
       setError(caught instanceof Error ? caught.message : String(caught));
     }
@@ -596,12 +632,16 @@ export default function ReliefStudio() {
 
   async function download(kind: ReliefDownload) {
     const url = result?.downloads[kind];
-    if (!result || !url) return;
+    if (!result || !url || stale || busy || shownId.current !== result.id) return;
+    const exportsGeneration = temporaryExportGeneration();
+    const isCurrent = () =>
+      exportsGeneration === temporaryExportGeneration() && shownId.current === result.id;
     setError('');
     try {
       const response = await fetch(url);
       if (!response.ok) throw new Error(await errorFrom(response));
       const blob = await response.blob();
+      if (!isCurrent()) return;
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
       link.download = filenameFor(kind, result.settings.name);
@@ -610,12 +650,15 @@ export default function ReliefStudio() {
       link.remove();
       setTimeout(() => URL.revokeObjectURL(link.href), 10_000);
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : String(caught));
+      if (isCurrent()) setError(caught instanceof Error ? caught.message : String(caught));
     }
   }
 
   async function openBlender() {
-    if (!result) return;
+    if (!result || stale || busy || shownId.current !== result.id) return;
+    const exportsGeneration = temporaryExportGeneration();
+    const isCurrent = () =>
+      exportsGeneration === temporaryExportGeneration() && shownId.current === result.id;
     setBlenderMessage('');
     try {
       const response = await fetch(`/api/models/${result.id}/blender`, {
@@ -625,9 +668,9 @@ export default function ReliefStudio() {
       });
       if (!response.ok) throw new Error(await errorFrom(response));
       const body = await response.json();
-      setBlenderMessage(body.detail);
+      if (isCurrent()) setBlenderMessage(body.detail);
     } catch (caught) {
-      setBlenderMessage(caught instanceof Error ? caught.message : String(caught));
+      if (isCurrent()) setBlenderMessage(caught instanceof Error ? caught.message : String(caught));
     }
   }
 
@@ -742,6 +785,12 @@ export default function ReliefStudio() {
               <X size={19} />
             </button>
           </div>
+        )}
+        {exportsCleared && (file || result) && !busy && (
+          <p className="notice" role="status">
+            Temporary exports cleared. Your picture and settings are still here; update the model to
+            create fresh files.
+          </p>
         )}
         <div className="sr-only" role="status" aria-live="polite">
           {busy || (result && !stale ? `${result.kind} model ready.` : '')}
@@ -892,11 +941,13 @@ export default function ReliefStudio() {
                 <div className="stale-status">
                   <WarningCircle size={19} />
                   <span>
-                    {autoKey && autoKey !== failedKey.current
-                      ? 'Previous model · updating when you pause'
-                      : invalid
-                        ? 'Previous model · fix the setting named below'
-                        : 'Previous model · press Update model to try again'}
+                    {exportsCleared
+                      ? 'Previous model · temporary exports cleared'
+                      : autoKey && autoKey !== failedKey.current
+                        ? 'Previous model · updating when you pause'
+                        : invalid
+                          ? 'Previous model · fix the setting named below'
+                          : 'Previous model · press Update model to try again'}
                   </span>
                 </div>
               )}
@@ -1260,7 +1311,7 @@ export default function ReliefStudio() {
                     <button
                       key={kind}
                       className="outlined-button relief-download"
-                      disabled={stale}
+                      disabled={stale || !!busy}
                       onClick={() => void download(kind)}
                     >
                       <DownloadSimple size={20} />
@@ -1397,7 +1448,11 @@ export default function ReliefStudio() {
                     : ' The lithophane scene uses a Volume Absorption material with density μ and a backlight, so a Cycles render shows the Beer–Lambert prediction.')}
               </p>
               {blender?.launch_available ? (
-                <button className="outlined-button" disabled={stale} onClick={openBlender}>
+                <button
+                  className="outlined-button"
+                  disabled={stale || !!busy}
+                  onClick={openBlender}
+                >
                   <ArrowSquareOut size={20} />
                   Open in Blender
                 </button>
