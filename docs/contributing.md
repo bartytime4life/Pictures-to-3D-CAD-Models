@@ -29,7 +29,7 @@ make test-app
 make lint
 ```
 
-The test target runs Python tests, builds the frontend, then runs browser tests.
+The test target runs Python tests, builds the frontend, runs pure TypeScript unit tests, then runs browser tests.
 Confirm that port 8000 belongs to this checkout before allowing a local test to
 reuse it; see [test-server selection](development.md#validate-changes).
 
@@ -47,14 +47,14 @@ test count is not a fresh result.
 
 Choose checks by what the documentation exercises:
 
-| Documentation change | Verification |
-| --- | --- |
-| New page, heading or navigation | Parse Markdown; check relative files, image paths, heading fragments, code fences and table columns across the full inventory |
-| Setup, environment variable or CLI example | Compare with the actual Makefile, script or parser; use read-only help only where implemented, and identify output/overwrite behavior |
-| Numerical Python example | Execute in the pinned environment with runtime warnings treated as errors; bind to source hashes and record whether it invokes preparation, a forward operator or an optimizer |
-| Archived evidence instructions | Verify compressed and decoded hashes; use a fresh scratch destination and saved-data auditing before considering an expensive replay |
-| Current source or CI statement | Read back the exact branch/head, dependency base and run conclusion; timestamp the snapshot and link the older immutable record |
-| Proposed research | Label it prospective; separate derivations, preflight contracts, numerical replay, independent audit and physical qualification |
+| Documentation change                       | Verification                                                                                                                                                                   |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| New page, heading or navigation            | Parse Markdown; check relative files, image paths, heading fragments, code fences and table columns across the full inventory                                                  |
+| Setup, environment variable or CLI example | Compare with the actual Makefile, script or parser; use read-only help only where implemented, and identify output/overwrite behavior                                          |
+| Numerical Python example                   | Execute in the pinned environment with runtime warnings treated as errors; bind to source hashes and record whether it invokes preparation, a forward operator or an optimizer |
+| Archived evidence instructions             | Verify compressed and decoded hashes; use a fresh scratch destination and saved-data auditing before considering an expensive replay                                           |
+| Current source or CI statement             | Read back the exact branch/head, dependency base and run conclusion; timestamp the snapshot and link the older immutable record                                                |
+| Proposed research                          | Label it prospective; separate derivations, preflight contracts, numerical replay, independent audit and physical qualification                                                |
 
 Run the companion library's documentation-accuracy tests from the repository
 root without rebuilding or rewriting its verification record:
