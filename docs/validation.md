@@ -30,10 +30,9 @@ was wrong. The corrections are listed in the [change log](changelog.md#documenta
   itself refused (8× for 7.996×); it now rounds down. Both have new tests in
   `tests/test_relief.py`. The photo library's *Clipped* label now says "at or near"
   pure black or white, as it counts grey levels 0–5 and 250–255.
-- **Checks after the changes:** `tests/test_relief.py`, `test_depth.py`,
-  `test_library.py`, `test_vision.py` and `test_backend.py`: 211 passed, 3 skipped.
-  Before the changes the complete suite on `502b2f5` gave 1,532 passed and 3
-  skipped. Ruff and Prettier passed, and the production build passed. Reference
+- **Checks after the changes:** the complete Python suite, 1,534 passed and 3
+  skipped in 8.6 minutes (1,532 and 3 on `502b2f5` before the changes, plus the two
+  new tests). The browser scenarios were not run locally. Ruff and Prettier passed, and the production build passed. Reference
   library: 180 Python and 58 Node tests, and browser checks over loopback HTTP (page
   112, Photos 67, transfer 49, OpenSCAD 30, native plate and coupon).
 - **Not changed:** dated validation records keep their original figures where those
