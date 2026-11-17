@@ -1,5 +1,16 @@
 # Workbench change log
 
+## Studio export recovery and narrow-screen labels — November 17, 2026
+
+- Clearing temporary exports now invalidates retained Relief results as well as
+  the Flat part model. Relief keeps its picture and settings, disables deleted
+  downloads and Blender actions, and asks for an explicit rebuild. Late responses
+  from before cleanup cannot restore deleted exports; failed cleanup keeps valid
+  results available.
+- The command search's hidden accessible label is positioned within its control
+  on narrow phones. Its complete accessible name remains available, and the
+  existing strict screen-overflow check remains in place.
+
 ## Unreleased — Precision Studio local implementation, November 17, 2026
 
 - A shared command launcher and responsive workspace navigation retain edits while

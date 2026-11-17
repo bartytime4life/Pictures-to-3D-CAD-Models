@@ -2811,6 +2811,15 @@ main {
 .command-trigger > svg {
   color: #7cddea;
 }
+.command-trigger-label {
+  position: relative;
+}
+.command-trigger-label > .sr-only {
+  /* Keep the suffix inside the label even when the whole label is clipped on phones. */
+  top: 0;
+  left: 0;
+  margin: 0;
+}
 .command-trigger kbd {
   display: inline-flex;
   align-items: center;

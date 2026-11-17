@@ -41,6 +41,7 @@ Knowledge articles and Science scenarios are part of the browser interface. Thei
 - [Research methods](research.md), [research index](research-index.md), [validation overview](validation.md): mathematical methods and revision-bound results.
 - [Precision Studio review](validation/precision-studio.md): interface captures, corrected defects and current local verification scope.
 - [Pull-request verification](validation/precision-studio-pr.md): current-main integration checks and the scope of earlier evidence.
+- [Studio follow-up](validation/studio-followup.md): documentation integration, shared-export recovery and narrow-phone label verification.
 - [Photo benchmark](photo-benchmark.md): compare source images with independent measurements.
 - [Roadmap](roadmap.md), [change log](changelog.md): planned work and recorded changes.
 

@@ -28,6 +28,7 @@ import {
 } from '@phosphor-icons/react';
 import AppHeader from './AppHeader';
 import { useStudioActive } from './StudioActivity';
+import { publishTemporaryExportsCleared, temporaryExportGeneration } from './temporaryExports';
 import { takeHandoff } from './handoff';
 import ModelViewer from './ModelViewer';
 import LocalAssistant from './LocalAssistant';
@@ -1405,12 +1406,16 @@ export default function App() {
     const exportedModel = model;
     const downloadUrl = model.downloads[kind];
     if (!downloadUrl) return;
+    const exportsGeneration = temporaryExportGeneration();
+    const exportsStillExist = () => exportsGeneration === temporaryExportGeneration();
     setDownloading(kind);
     setExportError('');
     try {
       const response = await fetch(downloadUrl, { signal: AbortSignal.timeout(30000) });
+      if (!exportsStillExist()) return;
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
+        if (!exportsStillExist()) return;
         if (response.status === 404 || response.status === 410) {
           invalidate();
           setModal(null);
@@ -1425,6 +1430,7 @@ export default function App() {
         );
       }
       const blob = await response.blob();
+      if (!exportsStillExist()) return;
       if (
         modelRef.current?.id !== exportedModel.id ||
         String(revisionRef.current) !== exportedModel.revision
@@ -1461,6 +1467,7 @@ export default function App() {
           : `${label} download started. Exported geometry uses millimeters.`,
       );
     } catch (err) {
+      if (!exportsStillExist()) return;
       const message =
         err instanceof DOMException && (err.name === 'TimeoutError' || err.name === 'AbortError')
           ? 'The download took too long. Your model is still here; try again.'
@@ -1468,12 +1475,13 @@ export default function App() {
       setExportError(message);
       setError(message, { kind: 'build', openExport: true });
     } finally {
-      setDownloading(null);
+      if (exportsStillExist()) setDownloading(null);
     }
   }
   async function launchSlicer(id: SlicerId): Promise<SlicerLaunch> {
     if (!model || !current || downloading)
       throw new Error('Update the model before opening it in your slicer.');
+    const exportsGeneration = temporaryExportGeneration();
     let response: Response;
     try {
       response = await fetch(`/api/models/${encodeURIComponent(model.id)}/slicer/${id}`, {
@@ -1493,6 +1501,10 @@ export default function App() {
       throw new Error('Could not reach the CAD service. Check the connection and try again.');
     }
     const result = await response.json().catch(() => ({}));
+    if (exportsGeneration !== temporaryExportGeneration())
+      throw new Error(
+        'Temporary exports were cleared. Update the model to create a fresh handoff.',
+      );
     if (!response.ok) {
       if (response.status === 404 || response.status === 410) {
         invalidate();
@@ -1516,6 +1528,9 @@ export default function App() {
     setError('');
     try {
       await api<{ deleted: number }>('/api/models', { method: 'DELETE' });
+      publishTemporaryExportsCleared();
+      setDownloading(null);
+      setExportError('');
       invalidate();
       modelRef.current = null;
       setModel(null);
@@ -2492,7 +2507,7 @@ export default function App() {
             </button>
             <p>
               Deletes temporary model exports. Downloaded copies and retained slicer handoff copies
-              remain. The current model will need to be rebuilt.
+              remain. Models in both Flat part and Relief will need to be rebuilt.
             </p>
           </div>
           <div className="modal-footer">

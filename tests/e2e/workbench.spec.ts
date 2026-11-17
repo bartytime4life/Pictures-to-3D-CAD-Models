@@ -281,6 +281,9 @@ test('keyboard dialogs, accessibility checks, and mobile layout keep the workflo
   // follows the window a frame later, so the check polls until the layout settles.
   for (const width of [320, 360]) {
     await page.setViewportSize({ width, height: 800 });
+    await expect(
+      page.getByRole('button', { name: 'Search commands and help', exact: true }),
+    ).toBeVisible();
     await expect
       .poll(
         () =>
