@@ -107,6 +107,13 @@ def test_half_value_fit_excludes_saturated_readings_and_rejects_nonsense():
         relief.fit_half_value([1, 2, 3], [50, 100, 150])
     with pytest.raises(ReliefError, match="neither black nor saturated"):
         relief.fit_half_value([1, 2, 3], [255, 255, 3])
+    # Equal readings carry no slope: refused, not a half-value of ~1e16 mm with r² = 1.
+    with pytest.raises(ReliefError, match="did not fall"):
+        relief.fit_half_value([1, 2, 3], [200, 200, 200])
+    with pytest.raises(ReliefError, match="did not fall"):
+        relief.fit_half_value([0.5, 1, 2], [3.2, 3.2, 3.2], "linear")
+    with pytest.raises(ReliefError, match="different thicknesses"):
+        relief.fit_half_value([1, 1, 1], [200, 150, 100])
 
 
 # ------------------------------------------------------------------------ meshing
@@ -379,6 +386,11 @@ def test_calibration_api(client):
         "/api/relief/calibrate", json={"thickness_mm": [1, 2, 3], "readings": [10, 20, 30]}
     )
     assert rising.status_code == 422
+    # A step cannot be thinner than nothing; this once returned a confident 0.48 mm fit.
+    negative = client.post(
+        "/api/relief/calibrate", json={"thickness_mm": [-3, -2, -1], "readings": [200, 100, 50]}
+    )
+    assert negative.status_code == 422 and "thickness_mm.0" in negative.json()["detail"]
 
 
 # -------------------------------------------------------------------- launcher

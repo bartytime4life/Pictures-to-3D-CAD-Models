@@ -41,8 +41,21 @@ type PrinterProfile = {
 };
 type Catalog = {
   printers: PrinterProfile[];
-  source: { name: string; repository: string; license: string };
+  // The service sends null when its catalog file is missing (backend/printing.py).
+  source: { name: string; repository: string; license: string } | null;
 };
+type NumberKey =
+  | 'scale_percent'
+  | 'thickness_percent'
+  | 'nozzle_mm'
+  | 'split_columns'
+  | 'split_rows'
+  | 'bed_width_mm'
+  | 'bed_depth_mm'
+  | 'bed_height_mm'
+  | 'bed_margin_mm';
+const inRange = (value: number, min: number, max: number) =>
+  Number.isFinite(value) && value >= min && value <= max;
 
 const colors = [
   ['Silver', '#9ca3af'],
@@ -166,7 +179,55 @@ export default function PrintSettings({
       : design.nozzle_mm * { draft: 0.5, balanced: 0.25, fine: 0.1 }[design.detail_mode];
   const change = (patch: Partial<DesignSettings>, editKey?: string) =>
     onChange({ ...design, ...patch }, editKey);
-  const setNumber = (key: keyof DesignSettings, value: string) => {
+  // Keep exactly what was typed (such as "0" or "05") while it still matches the design
+  // value, so an out-of-range entry stays visible next to its error. A value changed
+  // elsewhere (reset, printer choice, assistant) replaces the draft.
+  const [drafts, setDrafts] = useState<Partial<Record<NumberKey, string>>>({});
+  const numberValue = (key: NumberKey) => {
+    const draft = drafts[key];
+    const value = design[key];
+    return draft !== undefined && (draft.trim() === '' ? value === 0 : Number(draft) === value)
+      ? draft
+      : String(value);
+  };
+  const scaleIssue = designError({
+    ...DEFAULT_DESIGN,
+    scale_percent: design.scale_percent,
+    thickness_percent: design.thickness_percent,
+  });
+  const sizeIssue = scaleIssue
+    ? ''
+    : designError(
+        {
+          ...DEFAULT_DESIGN,
+          scale_percent: design.scale_percent,
+          thickness_percent: design.thickness_percent,
+        },
+        sourceSize,
+      );
+  const nozzleIssue = designError({ ...DEFAULT_DESIGN, nozzle_mm: design.nozzle_mm });
+  const splitIssue = designError({
+    ...DEFAULT_DESIGN,
+    split_columns: design.split_columns,
+    split_rows: design.split_rows,
+  });
+  const bedIssue = designError({
+    ...DEFAULT_DESIGN,
+    bed_width_mm: design.bed_width_mm,
+    bed_depth_mm: design.bed_depth_mm,
+    bed_height_mm: design.bed_height_mm,
+    bed_margin_mm: design.bed_margin_mm,
+  });
+  const bedDimensionInvalid = (value: number) => !inRange(value, 20, 5000);
+  const marginInvalid =
+    !inRange(design.bed_margin_mm, 0, 30) ||
+    (!bedDimensionInvalid(design.bed_width_mm) &&
+      !bedDimensionInvalid(design.bed_depth_mm) &&
+      design.bed_margin_mm * 2 >= Math.min(design.bed_width_mm, design.bed_depth_mm));
+  const splitInvalid = (value: number) =>
+    !inRange(value, 1, 4) || !Number.isInteger(value) || !!splitIssue;
+  const setNumber = (key: NumberKey, value: string) => {
+    setDrafts((old) => ({ ...old, [key]: value }));
     const next = value === '' ? 0 : Number(value);
     const layer =
       key === 'nozzle_mm' && Number.isFinite(next) && next >= 0.1 && next <= 8
@@ -195,8 +256,10 @@ export default function PrintSettings({
         key,
       );
   };
-  const setBed = (key: keyof DesignSettings, value: string) =>
+  const setBed = (key: NumberKey, value: string) => {
+    setDrafts((old) => ({ ...old, [key]: value }));
     change({ [key]: value === '' ? 0 : Number(value), printer_id: 'custom' }, key);
+  };
   const printerTitle =
     selectedPrinter?.name ??
     (design.printer_id === 'custom' ? 'Custom printer' : design.printer_id);
@@ -244,7 +307,9 @@ export default function PrintSettings({
                     min="10"
                     max="400"
                     step="1"
-                    value={design.scale_percent || ''}
+                    value={numberValue('scale_percent')}
+                    aria-invalid={!inRange(design.scale_percent, 10, 400) || !!sizeIssue}
+                    aria-describedby={scaleIssue || sizeIssue ? 'print-scale-error' : undefined}
                     onChange={(event) => setNumber('scale_percent', event.target.value)}
                   />
                 </label>
@@ -255,16 +320,23 @@ export default function PrintSettings({
                     min="10"
                     max="400"
                     step="1"
-                    value={design.thickness_percent || ''}
+                    value={numberValue('thickness_percent')}
+                    aria-invalid={!inRange(design.thickness_percent, 10, 400) || !!sizeIssue}
+                    aria-describedby={scaleIssue || sizeIssue ? 'print-scale-error' : undefined}
                     onChange={(event) => setNumber('thickness_percent', event.target.value)}
                   />
                 </label>
               </div>
+              {(scaleIssue || sizeIssue) && (
+                <p id="print-scale-error" className="print-field-error">
+                  {scaleIssue || sizeIssue}
+                </p>
+              )}
               <p className="print-field-note">
                 100% keeps your measured size. Original width and thickness stay in the main
                 controls.
               </p>
-              {sourceSize && (
+              {sourceSize && !scaleIssue && (
                 <p className="print-target-size">
                   <span>Requested size</span>
                   <strong>
@@ -300,7 +372,7 @@ export default function PrintSettings({
                   </select>
                 </label>
               </div>
-              <div className="print-color-swatches" aria-label="Color presets">
+              <div className="print-color-swatches" role="group" aria-label="Color presets">
                 {colors.map(([name, color]) => (
                   <button
                     type="button"
@@ -330,7 +402,9 @@ export default function PrintSettings({
                     min="0.1"
                     max="8"
                     step="0.05"
-                    value={design.nozzle_mm || ''}
+                    value={numberValue('nozzle_mm')}
+                    aria-invalid={!!nozzleIssue}
+                    aria-describedby={nozzleIssue ? 'print-nozzle-error' : undefined}
                     onChange={(event) => setNumber('nozzle_mm', event.target.value)}
                   />
                 </label>
@@ -349,6 +423,11 @@ export default function PrintSettings({
                   </select>
                 </label>
               </div>
+              {nozzleIssue && (
+                <p id="print-nozzle-error" className="print-field-error">
+                  {nozzleIssue}
+                </p>
+              )}
               <p className="print-field-note">
                 {tolerance === 0
                   ? 'Original keeps the traced outline. Other modes simplify actual geometry relative to the nozzle diameter.'
@@ -375,7 +454,9 @@ export default function PrintSettings({
                       min="1"
                       max="4"
                       step="1"
-                      value={design.split_columns || ''}
+                      value={numberValue('split_columns')}
+                      aria-invalid={splitInvalid(design.split_columns)}
+                      aria-describedby={splitIssue ? 'print-split-error' : undefined}
                       onChange={(event) => setNumber('split_columns', event.target.value)}
                     />
                   </label>
@@ -386,11 +467,18 @@ export default function PrintSettings({
                       min="1"
                       max="4"
                       step="1"
-                      value={design.split_rows || ''}
+                      value={numberValue('split_rows')}
+                      aria-invalid={splitInvalid(design.split_rows)}
+                      aria-describedby={splitIssue ? 'print-split-error' : undefined}
                       onChange={(event) => setNumber('split_rows', event.target.value)}
                     />
                   </label>
                 </div>
+              )}
+              {design.output_mode === 'split' && splitIssue && (
+                <p id="print-split-error" className="print-field-error">
+                  {splitIssue}
+                </p>
               )}
               <p className="print-field-note">
                 {design.output_mode === 'split'
@@ -522,7 +610,9 @@ export default function PrintSettings({
                   min="20"
                   max="5000"
                   step="1"
-                  value={design.bed_width_mm || ''}
+                  value={numberValue('bed_width_mm')}
+                  aria-invalid={bedDimensionInvalid(design.bed_width_mm)}
+                  aria-describedby={bedIssue ? 'print-bed-error' : undefined}
                   onChange={(event) => setBed('bed_width_mm', event.target.value)}
                 />
               </label>
@@ -533,7 +623,9 @@ export default function PrintSettings({
                   min="20"
                   max="5000"
                   step="1"
-                  value={design.bed_depth_mm || ''}
+                  value={numberValue('bed_depth_mm')}
+                  aria-invalid={bedDimensionInvalid(design.bed_depth_mm)}
+                  aria-describedby={bedIssue ? 'print-bed-error' : undefined}
                   onChange={(event) => setBed('bed_depth_mm', event.target.value)}
                 />
               </label>
@@ -544,7 +636,9 @@ export default function PrintSettings({
                   min="20"
                   max="5000"
                   step="1"
-                  value={design.bed_height_mm || ''}
+                  value={numberValue('bed_height_mm')}
+                  aria-invalid={bedDimensionInvalid(design.bed_height_mm)}
+                  aria-describedby={bedIssue ? 'print-bed-error' : undefined}
                   onChange={(event) => setBed('bed_height_mm', event.target.value)}
                 />
               </label>
@@ -555,11 +649,18 @@ export default function PrintSettings({
                   min="0"
                   max="30"
                   step="1"
-                  value={design.bed_margin_mm}
+                  value={numberValue('bed_margin_mm')}
+                  aria-invalid={marginInvalid}
+                  aria-describedby={bedIssue ? 'print-bed-error' : undefined}
                   onChange={(event) => setNumber('bed_margin_mm', event.target.value)}
                 />
               </label>
             </div>
+            {bedIssue && (
+              <p id="print-bed-error" className="print-field-error">
+                {bedIssue}
+              </p>
+            )}
             <p className="print-field-note">
               Margin reserves space on each side of the bed. Editing width, depth or height switches
               to Custom. Fit checks search all XY turns on a clear rectangular bed.
@@ -656,7 +757,7 @@ export default function PrintSettings({
                 ))}
               </details>
             )}
-            {catalog && (
+            {catalog?.source && (
               <p className="printer-source">
                 Profiles from {catalog.source.name}. They are planning references, not printer
                 certification.

@@ -116,3 +116,19 @@
   white-space: normal;
   text-align: left;
 }
+
+.print-settings .print-field-error {
+  margin: 10px 0 0;
+  padding: 8px 11px;
+  border: 1px solid #8d6356;
+  border-radius: 5px;
+  background: #382b29;
+  color: #ffd9c9;
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.print-settings input[aria-invalid='true'] {
+  border-color: #e8a291;
+}

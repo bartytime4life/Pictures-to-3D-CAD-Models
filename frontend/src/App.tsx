@@ -474,6 +474,7 @@ function SourceCanvas({
     draw();
     return () => {
       disposed = true;
+      image.onload = null;
       observer.disconnect();
     };
   }, [trace, showOutline, widthLabel, imageUrl, zoom, pan, active, sourceImage]);
@@ -855,13 +856,17 @@ export default function App() {
   }
 
   async function loadPhoto(file: File, isSample = false) {
+    // A photo handed over from the library opens while the initial "Loading sample…" state is
+    // still set, so a refusal here must end it rather than leave every control disabled.
     if (file.size > MAX_PHOTO) {
       setError('This photo is too large. Choose an image smaller than 32 MiB.');
+      setBusy(null);
       return;
     }
     const sheetIssue = isSample ? null : sheetChoiceError(sheetChoice);
     if (sheetIssue) {
       setError(sheetIssue);
+      setBusy(null);
       return;
     }
     const sequence = ++sequenceRef.current;
@@ -933,6 +938,9 @@ export default function App() {
   async function loadSample() {
     startBusy('Loading sample…');
     setError('');
+    // Leaving the workbench while the sample downloads must not start a trace and build whose
+    // model nobody would own or release.
+    const sequence = ++sequenceRef.current;
     try {
       const response = await fetch('/sample.png');
       if (!response.ok)
@@ -940,8 +948,10 @@ export default function App() {
           'The sample image could not be loaded. Upload your own photo to get started.',
         );
       const blob = await response.blob();
+      if (sequence !== sequenceRef.current) return;
       await loadPhoto(new File([blob], 'mounting-plate.png', { type: 'image/png' }), true);
     } catch (err) {
+      if (sequence !== sequenceRef.current) return;
       setError(errorText(err), { kind: 'sample' });
       setBusy(null);
     }
@@ -985,6 +995,9 @@ export default function App() {
     return () => {
       window.removeEventListener('pagehide', release);
       window.removeEventListener('pageshow', restored);
+      // If the workbench is ever unmounted without the page going away, its model would
+      // otherwise hold a temporary-storage slot until it expires.
+      release();
     };
   }, []);
   useEffect(() => {
@@ -1337,6 +1350,11 @@ export default function App() {
     event.preventDefault();
     setDragging(false);
     chooseFile(event.dataTransfer.files?.[0]);
+  }
+  function leaveDrag(event: DragEvent) {
+    // Moving onto a child (the canvas, the drop overlay) also fires dragleave; only leaving
+    // the drop target itself ends the drag, so the overlay does not flicker on and off.
+    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setDragging(false);
   }
   function changeUnit(next: Unit) {
     if (next === unit) return;
@@ -1848,7 +1866,7 @@ export default function App() {
                 e.preventDefault();
                 if (!busy) setDragging(true);
               }}
-              onDragLeave={() => setDragging(false)}
+              onDragLeave={leaveDrag}
               onDrop={drop}
             >
               {trace ? (
@@ -1987,7 +2005,7 @@ export default function App() {
               <div className="field-stack">
                 <div className="label-row">
                   <label htmlFor="reference-width">Reference width</label>
-                  <div className="unit-toggle" aria-label="Measurement units">
+                  <div className="unit-toggle" role="group" aria-label="Measurement units">
                     <button
                       aria-pressed={unit === 'mm'}
                       disabled={!!busy}
@@ -2278,13 +2296,20 @@ export default function App() {
             One flat part, a contrasting background, and a straight-on view. We’ll trace the
             outline; you supply the real dimensions.
           </p>
+          {/* A refused file (wrong type, too large, unset custom sheet) keeps this dialog open,
+              and the page's own alert is hidden behind it. */}
+          {error && (
+            <p className="export-error" role="alert">
+              {error}
+            </p>
+          )}
           <div
             className={`upload-zone ${dragging ? 'dragging' : ''}`}
             onDragOver={(e) => {
               e.preventDefault();
               setDragging(true);
             }}
-            onDragLeave={() => setDragging(false)}
+            onDragLeave={leaveDrag}
             onDrop={drop}
           >
             <UploadSimple size={40} weight="light" />

@@ -1,5 +1,60 @@
 # Validation results
 
+## Interface, navigation and API bug sweep — November 16, 2026
+
+Starting from `main` at `1c41ac1` (PR #160), each studio was used in Chrome at desktop
+width and 375 px:
+- the workbench sample, width and scale validation, the guide and export dialogs
+- the Relief and Lithophane moon samples
+- a library folder crunch and its **Open in** hand-offs
+- the OpenSCAD workspace
+
+The frontend and API code was reviewed alongside. The branch was then rebased onto
+`36ada09` (PR #161) and later onto `1bdcc3b` (PR #165). PR #161 independently kept
+visited studios mounted, so its routing and hand-off code was kept, and this sweep
+adds per-studio titles and scroll positions on top. Fixes are listed in the
+[change log](changelog.md#interface-navigation-and-api-bug-sweep--november-16-2026).
+
+- **Reproduced before the fix:**
+  - In the browser, before PR #161: renaming the sample project, opening Relief and
+    returning reset the name and rebuilt the sample.
+  - After Library → **Open in Flat part**, the trace error was above a page left
+    scrolled down.
+  - Typing `0` as the XY scale blanked the field and showed a requested size of
+    "0 × 0 × 4 mm".
+  - The folder dialog said "1 pictures".
+  - Through the API: a library ID of 2⁶³ returned 500, and readings of
+    `[200, 200, 200]` fitted a half-value of about 3 × 10¹⁶ mm with r² = 1.
+  - With `Host: attacker.example:8000`, `/api/library/export` returned the catalogue.
+  - After the rebase, the 320 px layout check in `workbench.spec.ts` failed. The
+    hidden " and help" text of PR #161's **Search commands** button sat past the
+    screen edge. `.sr-only` text is now pinned to its container's corner.
+- **New regression tests:**
+  - `tests/e2e/studio-tabs.spec.ts`: the name and model survive a trip to another
+    tab with no rebuild, and each tab has its own title. The workbench's scroll
+    position is restored, and Back returns to the relief studio as it was left.
+  - Host-name, identifier-range, 3MF-name, search-suffix and calibration cases in
+    `tests/test_backend.py`, `tests/test_three_mf.py`, `tests/test_library.py` and
+    `tests/test_relief.py`.
+- **Python, after the rebase:** `pytest` passed 1,596 tests with 3 skipped, in
+  9 min 2 s. Ruff passed.
+- **Frontend:** `npm run build` (typecheck and production bundle), Prettier and the
+  30 unit tests (`npm run test:unit`) passed.
+- **Browser:** before the rebase, the tab scenario failed once. It expected the
+  workbench back at exactly 420 px and got 408 px, because the panels settle by a
+  few pixels as they reappear. It now allows 40 px, and passed three runs in a row.
+- **Browser, after the rebase:** the full Chrome suite of 123 scenarios ran against
+  a dedicated server with an empty library and the Depth Anything and DINOv3 models
+  configured. The first run passed 122; the failure was the 320 px check above.
+  After that fix all 123 passed, in 9.7 minutes.
+  - Rebased again onto `c3d797b` (PR #164), all 126 scenarios passed in 10.0
+    minutes.
+  - On `1bdcc3b` (PR #165), which changed only the Knowledge and Science studios,
+    the 20 studio, keyboard and Knowledge scenarios plus the 320 px layout check
+    passed.
+- **Not verified:** dark mode, Windows and macOS, and installed slicers or Blender
+  launching from the page.
+
 ## Documentation and mathematics audit — November 16, 2026
 
 Every guide, method page and validation record on `main` at `502b2f5` (PR #159) was

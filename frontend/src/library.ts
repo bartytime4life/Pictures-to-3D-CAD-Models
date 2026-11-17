@@ -54,6 +54,8 @@ export type LibraryJob = {
   rate?: number;
   eta_seconds?: number | null;
   error?: string | null;
+  /** Unix time the last crunch ended; changes even when the page never saw it running. */
+  finished?: number;
   summary?: {
     scan?: { new: number; changed: number; gone: number };
     read?: { read: number; failed: number };
@@ -114,11 +116,11 @@ export const SORTS: { value: LibrarySort; label: string }[] = [
   { value: 'size', label: 'Most pixels' },
 ];
 
-export const STAGES: { id: string; label: string; unit: string }[] = [
-  { id: 'scan', label: 'Scan', unit: 'files found' },
-  { id: 'read', label: 'Read', unit: 'photos' },
-  { id: 'features', label: 'Describe', unit: 'photos' },
-  { id: 'organize', label: 'Organize', unit: 'comparisons' },
+export const STAGES: { id: string; label: string; unit: string; one: string }[] = [
+  { id: 'scan', label: 'Scan', unit: 'files found', one: 'file found' },
+  { id: 'read', label: 'Read', unit: 'photos', one: 'photo' },
+  { id: 'features', label: 'Describe', unit: 'photos', one: 'photo' },
+  { id: 'organize', label: 'Organize', unit: 'comparisons', one: 'comparison' },
 ];
 
 export async function request<T>(url: string, init?: RequestInit): Promise<T> {
@@ -149,6 +151,11 @@ export const previewUrl = (id: number) => `/api/library/photos/${id}/preview`;
 
 export function count(value: number) {
   return value.toLocaleString('en-US');
+}
+
+/** "1 photo", "2 photos", "0 photos": a counted noun in the right number. */
+export function plural(value: number, one: string, many: string) {
+  return `${count(value)} ${value === 1 ? one : many}`;
 }
 
 export function megabytes(bytes: number | null) {

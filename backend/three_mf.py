@@ -6,6 +6,7 @@ It does not encode slicer settings, filament assignments or machine instructions
 """
 
 import math
+import re
 import zipfile
 from collections import Counter
 from pathlib import Path
@@ -101,7 +102,7 @@ def write_3mf(path: Path, objects, *, name="Measured part"):
             "{http://www.w3.org/XML/1998/namespace}lang": "en-US",
         },
     )
-    ET.SubElement(model, "metadata", {"name": "Title"}).text = name
+    ET.SubElement(model, "metadata", {"name": "Title"}).text = _xml_text(name)
     ET.SubElement(model, "metadata", {"name": "Application"}).text = "Pictures to CAD"
     resources = ET.SubElement(model, "resources")
     build = ET.SubElement(model, "build")
@@ -110,7 +111,7 @@ def write_3mf(path: Path, objects, *, name="Measured part"):
         resource = ET.SubElement(
             resources,
             "object",
-            {"id": str(object_id), "type": "model", "name": item["name"]},
+            {"id": str(object_id), "type": "model", "name": _xml_text(item["name"])},
         )
         mesh = ET.SubElement(resource, "mesh")
         vertex_list = ET.SubElement(mesh, "vertices")
@@ -187,7 +188,7 @@ def write_mesh_3mf(path: Path, vertices, triangles, *, name="Relief", object_nam
         f'<model xmlns="{CORE_NAMESPACE}" unit="millimeter" xml:lang="en-US">\n'
         f'<metadata name="Title">{_escape(name)}</metadata>\n'
         '<metadata name="Application">Pictures to CAD</metadata>\n'
-        f'<resources><object id="1" type="model" name={quoteattr(object_name)}><mesh>\n'
+        f'<resources><object id="1" type="model" name={quoteattr(_xml_text(object_name))}><mesh>\n'
         f"<vertices>\n{vertex_xml}\n</vertices>\n<triangles>\n{triangle_xml}\n</triangles>\n"
         "</mesh></object></resources>\n"
         '<build><item objectid="1"/></build>\n</model>\n'
@@ -216,7 +217,18 @@ def write_mesh_3mf(path: Path, vertices, triangles, *, name="Relief", object_nam
         archive.writestr(MODEL_PATH, model.encode("utf-8"))
 
 
+def _xml_text(text):
+    """Text with every character XML 1.0 cannot hold (controls other than tab, newline
+    and carriage return, lone surrogates, U+FFFE and U+FFFF) replaced by a space. XML
+    escaping does not cover them, and one such character in a name makes the whole
+    package unreadable to slicers."""
+    return _XML_INVALID.sub(" ", str(text))
+
+
+_XML_INVALID = re.compile("[^\t\n\r\x20-\ud7ff\ue000-\ufffd\U00010000-\U0010ffff]")
+
+
 def _escape(text):
     from xml.sax.saxutils import escape
 
-    return escape(text)
+    return escape(_xml_text(text))

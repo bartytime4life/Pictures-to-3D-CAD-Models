@@ -207,12 +207,20 @@ def fit_half_value(thickness_mm, readings, scale: Literal["srgb8", "linear"] = "
         excluded = [int(i) for i in np.flatnonzero(~usable)]
         y = r
     t, y = t[usable], y[usable]
-    if len(t) < 3 or np.ptp(t) <= 0:
+    if len(t) < 3:
         raise ReliefError(
             "At least three readings must be neither black nor saturated. "
             "Lower the camera exposure or use a dimmer light."
         )
+    if np.ptp(t) <= 0:
+        raise ReliefError("The readings must come from steps of different thicknesses.")
     ln_y = np.log(y)
+    if np.ptp(ln_y) <= 1e-9:
+        # Equal readings have no slope; a least-squares fit would return rounding noise
+        # as an absurd half-value thickness with a perfect r².
+        raise ReliefError(
+            "Brightness did not fall with thickness. Check the step order and keep exposure locked."
+        )
     design = np.column_stack([np.ones_like(t), t])
     (intercept, slope), *_ = np.linalg.lstsq(design, ln_y, rcond=None)
     mu = -slope

@@ -35,6 +35,51 @@
   are merged into main. Source integration does not establish a released package,
   native slicer import, deployment or physical printing.
 
+## Interface, navigation and API bug sweep — November 16, 2026
+
+A review of every studio in the browser and of the frontend and API code
+([validation](validation.md#interface-navigation-and-api-bug-sweep--november-16-2026)).
+
+- **Tabs:** each studio now has its own page title (it always read "Photo to
+  profile workbench"). Each keeps its own scroll position, so a studio opened for
+  the first time starts at its top instead of where the last one was scrolled.
+- **Phones:** screen-reader-only text, such as the hidden end of **Search commands
+  and help**, no longer reaches past the screen edge at 320 px.
+- **Workbench:**
+  - A library photo over 32 MiB no longer leaves every control disabled behind
+    "Loading sample…".
+  - A refused file in the photo dialog shows its error inside the dialog.
+  - The drop overlay no longer flickers during a drag, and the photo no longer
+    blinks on each keystroke.
+- **Design & print:**
+  - A typed `0` or a leading zero stays visible.
+  - Each group shows its own error beside the field at fault, marked as invalid.
+  - The panel no longer fails when the printer catalogue is missing.
+- **3D preview:** after a failed render or lost graphics context, a new build
+  shows its model again.
+- **Relief studio:**
+  - An invalid setting no longer locks every control on "Loading the sample…".
+  - File names over 100 characters no longer fail the build.
+  - Calibration uses the thicknesses of the wedge you printed and reports skipped
+    steps by their real number.
+  - Elevation-map spheres are checked before upload.
+- **Photo library:**
+  - Counts read "1 photo", "1 picture" and "1 copy or look-alike".
+  - A selected photo's details scroll into view and take focus.
+  - A crunch shorter than one poll is no longer missed.
+  - Out-of-order status replies are ignored.
+  - A failed first load is retried.
+- **API:**
+  - The photo library refuses requests made under unrecognised dotted host names,
+    so a web page that re-points its own DNS name at this computer cannot read
+    your photos. List other names in `PICAD_ALLOWED_HOSTS`.
+  - Library IDs and offsets beyond SQLite's 64-bit range get a 422, not a 500.
+  - 3MF names drop characters XML cannot hold.
+  - A picture search with a very long file extension no longer fails.
+  - Calibration refuses negative thicknesses, equal thicknesses and flat
+    readings. Flat readings used to return a half-value of about 10¹⁶ mm with
+    r² = 1.
+
 ## Documentation and mathematics audit — November 16, 2026
 
 - Every guide and record was checked against the code and saved data, formula by
