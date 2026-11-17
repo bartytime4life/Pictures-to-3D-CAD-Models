@@ -109,6 +109,11 @@ and the scene-geometry/reference requirements described in
 [Practical single view metrology for cuboids](https://scispace.com/papers/practical-single-view-metrology-for-cuboids-1bu93tytwm).
 Those papers motivate the stated limits; they do not validate this application.
 
+PR #164 merged its original head `8f3b95c` into main at `c3d797b` while this
+keyboard follow-up was being verified. Integrating that main commit changed no
+files in the tested keyboard candidate. The keyboard fixes are a separate PR
+against the updated main; the merged PR's scope and record remain unchanged.
+
 Hosted CI and the GitHub review of `8f3b95c` do not cover the later keyboard commit.
-The updated PR requires its own hosted checks. Native slicer/Blender operation,
+The keyboard follow-up requires its own hosted checks. Native slicer/Blender operation,
 deployment, real-camera accuracy and physical printing remain unverified here.
