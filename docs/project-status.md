@@ -1,5 +1,18 @@
 # Source scope and verification status
 
+## Precision Studio integration — November 17, 2026 UTC
+
+Main at `7c6cc0f2b4193c4ea94abeec418ad7393593dfe5` includes the
+interface, Knowledge, Science, background cutout and slicer-planning changes from
+[PR #161](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/161),
+plus the documentation brought onto main by
+[PR #163](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/163).
+[PR #164](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/164)
+contains the export-recovery, phone-label and keyboard follow-up; see its
+[verification record](validation/studio-followup.md) for tested revisions.
+Older snapshots below retain their original source and CI states. Source merge,
+hosted CI, installed runtime and physical print acceptance remain separate.
+
 ## Calibration quality update — November 16, 2026
 
 This change is based on main `9337800` (PR #153). Runtime commits
