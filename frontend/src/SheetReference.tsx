@@ -1,3 +1,4 @@
+import { sheetChoiceError } from './sheet';
 import type { SheetChoice } from './types';
 
 /** The scale-reference choice, shared by the photo dialog and the outline dialog. */
@@ -10,6 +11,12 @@ export default function SheetReference({
   value: SheetChoice;
   onChange: (next: SheetChoice) => void;
 }) {
+  // Say why a custom sheet blocks tracing next to its fields, not only in a disabled button.
+  const issue = sheetChoiceError(value);
+  const sideInvalid = (side: string) => {
+    const mm = Number(side);
+    return !!side.trim() && !(Number.isFinite(mm) && mm >= 10 && mm <= 2000);
+  };
   return (
     <div className="field-stack sheet-reference">
       <label htmlFor={id}>Scale reference</label>
@@ -34,6 +41,8 @@ export default function SheetReference({
               max="2000"
               step="any"
               value={value.width}
+              aria-invalid={sideInvalid(value.width)}
+              aria-describedby={issue ? `${id}-error` : undefined}
               onChange={(e) => onChange({ ...value, width: e.target.value })}
             />
           </label>
@@ -46,10 +55,17 @@ export default function SheetReference({
               max="2000"
               step="any"
               value={value.height}
+              aria-invalid={sideInvalid(value.height)}
+              aria-describedby={issue ? `${id}-error` : undefined}
               onChange={(e) => onChange({ ...value, height: e.target.value })}
             />
           </label>
         </div>
+      )}
+      {issue && (
+        <p id={`${id}-error`} className="field-explanation">
+          {issue}
+        </p>
       )}
       <p className="field-explanation">
         Lay the part on a flat sheet of known size and show all four corners. The sheet sets scale

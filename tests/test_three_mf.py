@@ -9,7 +9,7 @@ from xml.etree import ElementTree as ET
 
 import pytest
 
-from backend.three_mf import ThreeMFError, indexed_mesh, write_3mf
+from backend.three_mf import ThreeMFError, indexed_mesh, write_3mf, write_mesh_3mf
 from backend.worker import build
 
 CORE = "{http://schemas.microsoft.com/3dmanufacturing/core/2015/02}"
@@ -181,3 +181,23 @@ def test_writer_welds_face_local_copies_without_moving_coordinates(tmp_path):
     assert len(meshes) == 1 and len(meshes[0]) == 4
     with pytest.raises(ThreeMFError):
         write_3mf(tmp_path / "empty.3mf", [])
+
+
+def test_names_xml_cannot_hold_do_not_break_the_package(tmp_path):
+    # A build name may hold U+FFFE and a relief name any control character; escaping
+    # alone leaves them in the XML, and no 3MF reader accepts the package then.
+    name = "Plate￾\x00\x0b\ud800 <&>"
+    write_3mf(tmp_path / "part.3mf", [{"name": name, "mesh": tetrahedron()}], name=name)
+    write_mesh_3mf(
+        tmp_path / "relief.3mf",
+        [[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]],
+        [[0, 2, 1], [0, 1, 3], [0, 3, 2], [1, 2, 3]],
+        name=name,
+        object_name=name,
+    )
+    for path in (tmp_path / "part.3mf", tmp_path / "relief.3mf"):
+        with zipfile.ZipFile(path) as archive:
+            root = ET.fromstring(archive.read("3D/3dmodel.model"))
+        title = root.find(f"{CORE}metadata[@name='Title']").text
+        assert title == "Plate     <&>"
+        assert root.find(f"{CORE}resources/{CORE}object").get("name") == "Plate     <&>"

@@ -60,6 +60,11 @@ const PHOTO_NAME = /\.(heic|heif|avif|tiff?)$/i;
 // Browsers cannot display TIFF; elevation maps show their computed height map instead.
 const TIFF_NAME = /\.tiff?$/i;
 
+/** A project name from a file name: no extension, within the server's 100 characters. */
+function nameOf(file: File) {
+  return file.name.replace(/\.[^.]+$/, '').slice(0, 100) || 'Relief';
+}
+
 type Draft = {
   name: string;
   mode: ReliefMode;
@@ -287,12 +292,12 @@ function toSettings(draft: Draft, revision: number): ReliefSettings | string {
     if (diameter === null) return 'Sphere diameter must be between 30 and 250 mm.';
     if (opening === null) return 'Opening must be between 10 and 200 mm.';
     if (collar === null) return 'Collar must be between 0 and 20 mm.';
-    if (!elevation) {
-      const inside = diameter / 2 - max;
-      if (inside < 10) return 'The sphere is too small for its thickest wall.';
-      if (opening / 2 > 0.9 * inside)
-        return 'The opening must be narrower than 90% of the inside diameter.';
-    }
+    // The server checks the sent walls for every source (an elevation map sends its
+    // thinnest + 0.1 mm), so check them here too instead of failing after the upload.
+    const inside = diameter / 2 - max;
+    if (inside < 10) return 'The sphere is too small for its thickest wall.';
+    if (opening / 2 > 0.9 * inside)
+      return 'The opening must be narrower than 90% of the inside diameter.';
   }
   if (gamma === null) return 'Tone curve must be between 0.25 and 4.';
   if (nozzle === null) return 'Nozzle width must be between 0.1 and 1.2 mm.';
@@ -488,8 +493,7 @@ export default function ReliefStudio() {
     // A photo sent from the photo library is built straight away with the current settings.
     if (!active || busy) return;
     const handed = takeHandoff('relief');
-    if (handed)
-      choose(handed, { name: handed.name.replace(/\.[^.]+$/, '').slice(0, 100) || 'Relief' });
+    if (handed) choose(handed, { name: nameOf(handed) });
   }, [active, busy]);
 
   // Settings apply on their own: once the inputs are valid and have rested for
@@ -519,6 +523,9 @@ export default function ReliefStudio() {
     revision.current += 1;
     const request = toSettings(nextDraft, revision.current);
     if (typeof request === 'string') {
+      // This supersedes any build in flight (and a sample still loading), whose own
+      // cleanup now skips the busy state: clear it here or every control stays disabled.
+      setBusy('');
       setError(request);
       return;
     }
@@ -677,11 +684,8 @@ export default function ReliefStudio() {
   async function calibrate() {
     setFit(null);
     setFitError('');
-    const min = Number(draft.min);
-    const max = Number(draft.max);
-    const steps = wedgeThicknesses(min, max);
     const pairs = readings
-      .map((value, index) => ({ value: value.trim(), thickness: steps[index] }))
+      .map((value, index) => ({ value: value.trim(), thickness: wedge[index], step: index }))
       .filter((pair) => pair.value !== '');
     if (pairs.length < 3 || pairs.some((pair) => !Number.isFinite(Number(pair.value)))) {
       setFitError('Enter a number for at least three steps.');
@@ -698,7 +702,12 @@ export default function ReliefStudio() {
         }),
       });
       if (!response.ok) throw new Error(await errorFrom(response));
-      setFit(await response.json());
+      const fitted: CalibrationFit = await response.json();
+      // The service numbers skipped readings among those sent; blanks were not sent.
+      setFit({
+        ...fitted,
+        excluded_steps: fitted.excluded_steps.map((i) => pairs[i]?.step ?? i),
+      });
     } catch (caught) {
       setFitError(caught instanceof Error ? caught.message : String(caught));
     }
@@ -708,7 +717,7 @@ export default function ReliefStudio() {
     event.preventDefault();
     setDragging(false);
     const dropped = event.dataTransfer.files[0];
-    if (dropped) choose(dropped, { name: dropped.name.replace(/\.[^.]+$/, '') });
+    if (dropped) choose(dropped, { name: nameOf(dropped) });
   }
 
   const stats = result?.stats;
@@ -717,7 +726,9 @@ export default function ReliefStudio() {
     typeof settings === 'string'
       ? null
       : lithophaneRange(settings.min_mm, settings.max_mm, settings.half_value_mm);
-  const wedge = wedgeThicknesses(Number(draft.min) || 0, Number(draft.max) || 0);
+  // The steps of the wedge that can be downloaded, which is the one being measured; the
+  // draft only stands in before a lithophane is built.
+  const wedge = stats?.wedge_mm ?? wedgeThicknesses(Number(draft.min) || 0, Number(draft.max) || 0);
 
   return (
     <div className="app-shell relief-studio">
@@ -809,7 +820,7 @@ export default function ReliefStudio() {
               </h1>
               <div className="panel-actions">
                 {result && (
-                  <div className="unit-toggle" aria-label="Image view">
+                  <div className="unit-toggle" role="group" aria-label="Image view">
                     <button aria-pressed={view === 'photo'} onClick={() => setView('photo')}>
                       Photo
                     </button>
@@ -834,7 +845,7 @@ export default function ReliefStudio() {
                   aria-label="Choose an image"
                   onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     const chosen = e.target.files?.[0];
-                    if (chosen) choose(chosen, { name: chosen.name.replace(/\.[^.]+$/, '') });
+                    if (chosen) choose(chosen, { name: nameOf(chosen) });
                     e.target.value = '';
                   }}
                 />

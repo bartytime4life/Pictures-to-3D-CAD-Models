@@ -119,6 +119,7 @@ export default function LocalAssistant({
       const result = await assistantRequest<AssistantStatus>('/api/assistant/status', {
         signal: controller.signal,
       });
+      if (statusRequest.current !== controller) return;
       setStatus(result);
       setModel((current) =>
         result.models.some((item) => item.name === current)
@@ -442,7 +443,13 @@ export default function LocalAssistant({
           </div>
 
           {reply && (
-            <div className="assistant-reply" ref={replyRef} tabIndex={-1} aria-label="AI response">
+            <div
+              className="assistant-reply"
+              ref={replyRef}
+              tabIndex={-1}
+              role="region"
+              aria-label="AI response"
+            >
               <div className="assistant-reply-heading">
                 <strong>
                   <Sparkle size={18} /> Suggested next step

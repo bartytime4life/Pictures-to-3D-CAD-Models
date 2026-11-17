@@ -1,6 +1,7 @@
 """Same-origin local development API; no third-party reconstruction services."""
 
 import asyncio
+import ipaddress
 import json
 import logging
 import os
@@ -200,6 +201,59 @@ class BodyLimitMiddleware:
 
 
 app.add_middleware(BodyLimitMiddleware)
+
+
+def library_host_allowed(host_header: str) -> bool:
+    """Whether a request addressed to ``host_header`` may reach the photo library.
+
+    The library serves the user's own photos and folder paths, so it must not answer a page
+    that reached this service through DNS rebinding: a site's name re-pointed at this
+    computer makes the browser treat this service as that site, sending its own name as
+    Host. Such a name is a public, dotted DNS name. IP addresses, single-label names
+    (``localhost``, this computer's name), ``*.localhost`` and ``*.local`` (LAN mDNS) pass;
+    any other name must be listed in PICAD_ALLOWED_HOSTS (comma-separated, or ``*``).
+    """
+    try:
+        name = urlsplit(f"//{host_header}").hostname or ""
+    except ValueError:
+        return False
+    if not name:
+        return False
+    try:
+        ipaddress.ip_address(name)
+        return True
+    except ValueError:
+        pass
+    if "." not in name or name.endswith((".localhost", ".local")):
+        return True
+    listed = {
+        entry.strip().lower().rstrip(".")
+        for entry in os.environ.get("PICAD_ALLOWED_HOSTS", "").split(",")
+        if entry.strip()
+    }
+    return "*" in listed or name.rstrip(".") in listed
+
+
+class LibraryHostMiddleware:
+    """Refuse library requests addressed by an unrecognised host name (see above)."""
+
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        path = scope.get("path", "")
+        if scope["type"] == "http" and (path == "/api/library" or path.startswith("/api/library/")):
+            host = dict(scope.get("headers", [])).get(b"host", b"").decode("latin-1")
+            if not library_host_allowed(host):
+                refusal = (
+                    "The photo library answers only this computer's own addresses. To use it at "
+                    "another host name, list that name in PICAD_ALLOWED_HOSTS."
+                )
+                return await JSONResponse({"detail": refusal}, 403)(scope, receive, send)
+        await self.app(scope, receive, send)
+
+
+app.add_middleware(LibraryHostMiddleware)
 
 
 @app.exception_handler(RequestValidationError)
@@ -453,7 +507,9 @@ def relief_settings_error(exc):
 
 class CalibrationRequest(BaseModel):
     model_config = ConfigDict(extra="forbid", allow_inf_nan=False)
-    thickness_mm: list[float] = Field(min_length=3, max_length=32)
+    # A printed step is 0.2 to 40 mm thick (the relief's own range); a negative one
+    # produced a confident fit from impossible input.
+    thickness_mm: list[Annotated[float, Field(ge=0, le=100)]] = Field(min_length=3, max_length=32)
     readings: list[float] = Field(min_length=3, max_length=32)
     scale: Literal["srgb8", "linear"] = "srgb8"
 
@@ -633,6 +689,12 @@ class LibraryActionRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
+# SQLite stores integers in 64 bits; a larger identifier or offset would raise
+# OverflowError in the driver (a 500) instead of a refusal.
+SQLITE_INT = Field(ge=-(2**63), le=2**63 - 1)
+RowId = Annotated[int, SQLITE_INT]
+
+
 def library_folders_allowed(request: Request, with_body=True):
     """Whether this request may name folders on the host: only the workbench's own page on
     this computer (the same gate as starting a slicer), unless PICAD_LIBRARY_FOLDERS=0."""
@@ -724,7 +786,7 @@ async def library_add_folder(request: Request, payload: LibraryFolderRequest):
 
 
 @app.delete("/api/library/folders/{folder_id}", status_code=202, dependencies=[Depends(library_same_origin)])
-async def library_remove_folder(folder_id: int):
+async def library_remove_folder(folder_id: RowId):
     library_idle()
     await library_call(library.remove_folder, folder_id)
     await library_call(library.start_reorganize)
@@ -757,10 +819,10 @@ async def library_photos(
     view: str = "all",
     sort: str = "added",
     q: Annotated[str, Field(max_length=200)] = "",
-    offset: Annotated[int, Field(ge=0)] = 0,
+    offset: Annotated[int, Field(ge=0, le=2**63 - 1)] = 0,
     limit: Annotated[int, Field(ge=1, le=500)] = 200,
-    group: int | None = None,
-    dup: int | None = None,
+    group: Annotated[int | None, SQLITE_INT] = None,
+    dup: Annotated[int | None, SQLITE_INT] = None,
 ):
     result = await library_call(library.list_photos, view, sort, q, offset, limit, group, dup)
     return JSONResponse(result, headers={"Cache-Control": "no-store"})
@@ -768,7 +830,7 @@ async def library_photos(
 
 @app.get("/api/library/groups")
 async def library_groups(
-    offset: Annotated[int, Field(ge=0)] = 0, limit: Annotated[int, Field(ge=1, le=200)] = 60
+    offset: Annotated[int, Field(ge=0, le=2**63 - 1)] = 0, limit: Annotated[int, Field(ge=1, le=200)] = 60
 ):
     result = await library_call(library.list_groups, offset, limit)
     return JSONResponse(result, headers={"Cache-Control": "no-store"})
@@ -792,13 +854,13 @@ async def library_export(format: Literal["csv", "json"] = "csv"):
 
 
 @app.get("/api/library/photos/{photo_id}")
-async def library_photo(photo_id: int):
+async def library_photo(photo_id: RowId):
     result = await library_call(library.get_photo, photo_id)
     return JSONResponse(result, headers={"Cache-Control": "no-store"})
 
 
 @app.get("/api/library/photos/{photo_id}/preview")
-async def library_preview(photo_id: int):
+async def library_preview(photo_id: RowId):
     path = library.preview_path(photo_id)
     if photo_id < 0 or not path.is_file():
         raise HTTPException(404, "Preview not found.")
@@ -810,7 +872,7 @@ async def library_preview(photo_id: int):
 
 
 @app.get("/api/library/photos/{photo_id}/original")
-async def library_original(photo_id: int):
+async def library_original(photo_id: RowId):
     path, name = await library_call(library.original_file, photo_id)
     return FileResponse(
         path,
@@ -821,7 +883,7 @@ async def library_original(photo_id: int):
 
 
 @app.get("/api/library/photos/{photo_id}/similar")
-async def library_similar(photo_id: int, limit: Annotated[int, Field(ge=1, le=200)] = 60):
+async def library_similar(photo_id: RowId, limit: Annotated[int, Field(ge=1, le=200)] = 60):
     result = await library_call(library.similar, photo_id, limit)
     return JSONResponse(result, headers={"Cache-Control": "no-store"})
 
@@ -840,7 +902,11 @@ async def library_search(file: Annotated[UploadFile, File()]):
         finally:
             await file.close()
         # A cancelled request cannot stop the model call; keep the slot until it ends.
-        worker = asyncio.create_task(library_call(library.search_by_picture, file.filename or "", data))
+        # The search names its temporary copy after the upload's suffix. Pass only a known
+        # image suffix: a long or odd one made that file name unusable (a 500).
+        suffix = Path(file.filename or "").suffix.lower()
+        name = f"query{suffix}" if suffix in library.SUFFIXES else ""
+        worker = asyncio.create_task(library_call(library.search_by_picture, name, data))
         try:
             return await asyncio.shield(worker)
         except asyncio.CancelledError:
@@ -857,7 +923,7 @@ async def library_search(file: Annotated[UploadFile, File()]):
 
 
 @app.delete("/api/library/photos/{photo_id}", status_code=202, dependencies=[Depends(library_same_origin)])
-async def library_remove_photo(photo_id: int):
+async def library_remove_photo(photo_id: RowId):
     library_idle()
     await library_call(library.remove_photo, photo_id)
     await library_call(library.start_reorganize)

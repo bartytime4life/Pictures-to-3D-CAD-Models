@@ -597,7 +597,14 @@ def test_http_workflow_from_upload_to_export(client, lib, monkeypatch):
         "/api/library/search", files={"file": ("q.png", photos.encoded(photos.scene("blue", 3)), "image/png")}
     ).json()
     assert found["photos"][0]["name"].startswith("blue")
-    groups = client.get("/api/library/groups").json()
+    # Only a known image suffix names the search's temporary copy: a 300-character one
+    # could not be a file name and gave a 500.
+    for name in ("q." + "x" * 300, "q", "q.PNG"):
+        reply = client.post(
+            "/api/library/search", files={"file": (name, photos.encoded(photos.scene("blue", 3)), "image/png")}
+        )
+        assert reply.status_code == 200 and reply.json()["photos"][0]["name"].startswith("blue")
+    groups =client.get("/api/library/groups").json()
     assert groups["total"] == 2 and {group["size"] for group in groups["groups"]} == {2}
     exported = client.get("/api/library/export")
     assert exported.headers["content-type"].startswith("text/csv") and exported.text.count("\n") == 5

@@ -863,7 +863,11 @@ main {
   }
 }
 .sr-only {
+  /* Pinned to its container's corner: left at its static position, text that ends near the
+     right edge (such as "Search commands and help") would sit past the screen on phones. */
   position: absolute;
+  top: 0;
+  left: 0;
   width: 1px;
   height: 1px;
   margin: -1px;

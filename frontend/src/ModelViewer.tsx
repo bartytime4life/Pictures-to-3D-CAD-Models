@@ -537,6 +537,17 @@ export default function ModelViewer({
     setRequest((previous) => ({ view: 'iso', sequence: previous.sequence + 1 }));
   }, [resetKey]);
 
+  // A failed or lost preview must not outlive the model it failed on: a new build gets a
+  // fresh attempt, rather than a stale "unavailable" card or hidden view controls.
+  const unavailable = useRef(false);
+  unavailable.current = failed || contextLost;
+  useEffect(() => {
+    if (!unavailable.current) return;
+    setFailed(false);
+    setContextLost(false);
+    setAttempt((n) => n + 1);
+  }, [mesh, parts]);
+
   return (
     <div
       className="model-viewer"

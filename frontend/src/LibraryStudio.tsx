@@ -37,6 +37,7 @@ import {
   duration,
   megabytes,
   megapixels,
+  plural,
   previewUrl,
   request,
   send,
@@ -212,7 +213,7 @@ function PhotoGrid({
       className="library-grid"
       onScroll={(event) => setScroll(event.currentTarget.scrollTop)}
       role="group"
-      aria-label={`${count(total)} photos`}
+      aria-label={plural(total, 'photo', 'photos')}
     >
       <div
         ref={inner}
@@ -334,6 +335,14 @@ export default function LibraryStudio() {
   const searchInput = useRef<HTMLInputElement>(null);
   const loading = useRef(new Set<number>());
   const wasRunning = useRef(false);
+  const lastFinished = useRef<number | undefined>(undefined);
+  const seenState = useRef(false);
+  const refreshAsked = useRef(0);
+  const refreshShown = useRef(0);
+  const uploadRunning = useRef(false);
+  const detailPanel = useRef<HTMLElement>(null);
+  const detailHeading = useRef<HTMLHeadingElement>(null);
+  const revealDetail = useRef(false);
 
   const running = !!state?.job.running;
   const summary = state?.summary;
@@ -345,13 +354,18 @@ export default function LibraryStudio() {
   // ------------------------------------------------------------------ status
 
   const refresh = useCallback(async () => {
+    // Polls overlap when the service is slow; an older answer must not replace a newer
+    // one, or a finished crunch would flip back to running and end twice.
+    const mine = ++refreshAsked.current;
     try {
       const next = await request<LibraryState>('/api/library');
+      if (mine < refreshShown.current) return next;
+      refreshShown.current = mine;
       setState(next);
       setOffline('');
       return next;
     } catch (err) {
-      setOffline(errorText(err));
+      if (mine >= refreshShown.current) setOffline(errorText(err));
       return null;
     }
   }, []);
@@ -373,8 +387,17 @@ export default function LibraryStudio() {
   }, [running, refresh, active]);
 
   useEffect(() => {
-    // A crunch just ended: show what it did and reload the photos.
-    if (wasRunning.current && !running && state) {
+    // A crunch just ended: show what it did and reload the photos. A short crunch (after
+    // removing a photo, or adding one) can start and end between two polls, so a new
+    // finish time counts as an end too.
+    if (!state) return;
+    const finishedNow =
+      seenState.current &&
+      state.job.finished !== undefined &&
+      state.job.finished !== lastFinished.current;
+    seenState.current = true;
+    lastFinished.current = state.job.finished;
+    if (!running && (wasRunning.current || finishedNow)) {
       const job = state.job;
       setRevision((value) => value + 1);
       if (job.error) setError(job.error);
@@ -382,13 +405,17 @@ export default function LibraryStudio() {
       else if (job.summary) {
         const parts: string[] = [];
         const { read, features, organize } = job.summary;
-        if (read?.read) parts.push(`${count(read.read)} photos read`);
+        if (read?.read) parts.push(`${plural(read.read, 'photo', 'photos')} read`);
         if (read?.failed) parts.push(`${count(read.failed)} could not be read`);
         if (features?.described) parts.push(`${count(features.described)} described`);
         if (organize)
           parts.push(
-            `${count(organize.groups)} groups`,
-            `${count(organize.copies + organize.lookalikes)} copies and look-alikes`,
+            plural(organize.groups, 'group', 'groups'),
+            plural(
+              organize.copies + organize.lookalikes,
+              'copy or look-alike',
+              'copies and look-alikes',
+            ),
           );
         setNotice(parts.length ? `Done: ${parts.join(' · ')}.` : 'Done. Nothing had changed.');
       }
@@ -447,10 +474,13 @@ export default function LibraryStudio() {
     [filter, query, similar, sort, view],
   );
 
+  const photoCount = summary?.photos;
   useEffect(() => {
-    // The first page gives the count before the grid knows how many rows it has.
+    // The first page gives the count before the grid knows how many rows it has. It is
+    // asked again when the library's count changes, so a first request that failed (the
+    // service was still starting) is retried; a page already loaded is not fetched twice.
     if (!(view === 'groups' && !filter) && !similar) need(0, 1);
-  }, [filter, listKey, need, similar, view]);
+  }, [filter, listKey, need, similar, view, photoCount]);
 
   useEffect(() => {
     if (view !== 'groups') return;
@@ -489,6 +519,29 @@ export default function LibraryStudio() {
       current = false;
     };
   }, [selected, revision]);
+
+  useEffect(() => {
+    // A newly chosen photo's details can open below the grid (narrow windows stack
+    // them), out of sight: bring them into view and move focus there.
+    if (!detail || detail.id !== selected || !revealDetail.current) return;
+    revealDetail.current = false;
+    const panel = detailPanel.current;
+    if (!panel) return;
+    const top = panel.getBoundingClientRect().top;
+    if (top < 0 || top > window.innerHeight / 2) panel.scrollIntoView({ block: 'start' });
+    detailHeading.current?.focus({ preventScroll: true });
+  }, [detail, selected]);
+
+  // The "Not read" tab disappears once no photo failed; do not leave its view behind.
+  useEffect(() => {
+    if (view === 'failed' && summary && summary.failed === 0) changeView('all');
+  }, [summary, view]);
+
+  function closeDetail() {
+    // Return focus to the photo's tile, when it is drawn, instead of losing it.
+    document.querySelector<HTMLElement>('.library-cell[aria-pressed="true"]')?.focus();
+    setSelected(null);
+  }
 
   // ----------------------------------------------------------------- actions
 
@@ -558,6 +611,12 @@ export default function LibraryStudio() {
     });
 
   async function upload(files: File[]) {
+    // A drop while earlier photos are still uploading would interleave the two progress
+    // counts and start a second crunch that the service refuses.
+    if (uploadRunning.current) {
+      setError('Wait until the photos being added are done, then add more.');
+      return;
+    }
     const accepted = files.filter((file) => PHOTO_NAME.test(file.name) && file.size <= MAX_FILE);
     const skipped = files.length - accepted.length;
     if (!accepted.length) {
@@ -567,6 +626,7 @@ export default function LibraryStudio() {
     setError('');
     setNotice('');
     setUploading({ done: 0, total: accepted.length });
+    uploadRunning.current = true;
     let done = 0;
     let failed = 0;
     const queue = [...accepted];
@@ -584,6 +644,7 @@ export default function LibraryStudio() {
       }
     };
     await Promise.all([worker(), worker(), worker()]);
+    uploadRunning.current = false;
     setUploading(null);
     if (failed || skipped)
       setError(
@@ -734,15 +795,18 @@ export default function LibraryStudio() {
 
         <section className="library-hero" aria-label="Library summary">
           <div className="library-stats">
-            <Stat value={summary ? count(summary.photos) : '—'} label="photos" />
+            <Stat
+              value={summary ? count(summary.photos) : '—'}
+              label={summary?.photos === 1 ? 'photo' : 'photos'}
+            />
             <Stat
               value={summary ? count(summary.groups) : '—'}
-              label="groups"
+              label={summary?.groups === 1 ? 'group' : 'groups'}
               hint="Sets of photos that show the same subject"
             />
             <Stat
               value={summary ? count(summary.spare) : '—'}
-              label="spare copies"
+              label={summary?.spare === 1 ? 'spare copy' : 'spare copies'}
               hint="Exact copies and look-alikes beyond the first of each set"
             />
             <Stat value={summary ? megabytes(summary.bytes) : '—'} label="indexed" />
@@ -834,7 +898,7 @@ export default function LibraryStudio() {
                     {job?.stage === 'model'
                       ? 'Starting the vision model…'
                       : stage
-                        ? `${count(job?.done ?? 0)}${job?.total ? ` of ${count(job.total)}` : ''} ${stage.unit}`
+                        ? `${count(job?.done ?? 0)}${job?.total ? ` of ${count(job.total)}` : ''} ${!job?.total && job?.done === 1 ? stage.one : stage.unit}`
                         : 'Starting…'}
                     {stage && job?.rate && job.stage !== 'organize'
                       ? ` · ${count(Math.round(job.rate))} per second`
@@ -991,7 +1055,8 @@ export default function LibraryStudio() {
                 <p className="library-filter" data-testid="filter">
                   {similar ? (
                     <>
-                      <strong>{count(similar.photos.length)}</strong> photos most like{' '}
+                      <strong>{count(similar.photos.length)}</strong>{' '}
+                      {similar.photos.length === 1 ? 'photo' : 'photos'} most like{' '}
                       <em>{similar.title}</em>, closest first ({similar.model}).
                     </>
                   ) : filter?.kind === 'group' ? (
@@ -1076,19 +1141,28 @@ export default function LibraryStudio() {
                     photoAt={photoAt}
                     need={need}
                     selected={selected}
-                    onSelect={(photo) => setSelected(photo.id === selected ? null : photo.id)}
+                    onSelect={(photo) => {
+                      revealDetail.current = photo.id !== selected;
+                      setSelected(photo.id === selected ? null : photo.id);
+                    }}
                     resetKey={similar ? `similar-${similar.title}` : listKey}
                   />
                 )}
 
                 {detail && (
-                  <aside className="library-detail" aria-label={`Details of ${detail.name}`}>
+                  <aside
+                    ref={detailPanel}
+                    className="library-detail"
+                    aria-label={`Details of ${detail.name}`}
+                  >
                     <div className="library-detail-head">
-                      <h2>{detail.name}</h2>
+                      <h2 ref={detailHeading} tabIndex={-1}>
+                        {detail.name}
+                      </h2>
                       <button
                         className="icon-button"
                         aria-label="Close details"
-                        onClick={() => setSelected(null)}
+                        onClick={closeDetail}
                       >
                         <X size={20} />
                       </button>
@@ -1255,7 +1329,17 @@ export default function LibraryStudio() {
                             {detail.path}{' '}
                             <button
                               className="library-link"
-                              onClick={() => void navigator.clipboard?.writeText(detail.path ?? '')}
+                              onClick={() => {
+                                const path = detail.path ?? '';
+                                if (!navigator.clipboard) {
+                                  setError('This browser does not allow copying here.');
+                                  return;
+                                }
+                                navigator.clipboard.writeText(path).then(
+                                  () => setNotice('Path copied.'),
+                                  () => setError('The path could not be copied.'),
+                                );
+                              }}
                             >
                               <Copy size={13} aria-hidden /> Copy
                             </button>
@@ -1296,7 +1380,7 @@ export default function LibraryStudio() {
                     <li key={folder.id}>
                       <FolderOpen size={19} aria-hidden />
                       <span className="library-path">{folder.path}</span>
-                      <span>{count(folder.photos)} photos</span>
+                      <span>{plural(folder.photos, 'photo', 'photos')}</span>
                       <button
                         className="text-button"
                         disabled={running || !!busy}
@@ -1313,7 +1397,7 @@ export default function LibraryStudio() {
                       <span className="library-path">
                         Added through the browser (kept in the library)
                       </span>
-                      <span>{count(summary.uploads)} photos</span>
+                      <span>{plural(summary.uploads, 'photo', 'photos')}</span>
                     </li>
                   )}
                 </ul>
@@ -1421,8 +1505,8 @@ export default function LibraryStudio() {
             )}
             <div className="modal-footer library-picker-footer">
               <span>
-                {count(picker.photos)} pictures directly in <strong>{picker.name}</strong>. Folders
-                inside it are included.
+                {plural(picker.photos, 'picture', 'pictures')} directly in{' '}
+                <strong>{picker.name}</strong>. Folders inside it are included.
               </span>
               <button className="primary-button" onClick={() => void addFolder()}>
                 <FolderPlus size={20} aria-hidden /> Add this folder

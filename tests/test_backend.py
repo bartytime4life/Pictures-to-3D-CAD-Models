@@ -877,3 +877,62 @@ def test_clear_models_removes_completed_jobs_and_refuses_during_build(
             assert (await http.delete("/api/models")).json() == {"deleted": 0}
 
     asyncio.run(scenario())
+
+
+@pytest.mark.parametrize(
+    "method,path",
+    [
+        ("GET", "/api/library/photos/{n}"),
+        ("GET", "/api/library/photos/{n}/preview"),
+        ("GET", "/api/library/photos/{n}/original"),
+        ("GET", "/api/library/photos/{n}/similar"),
+        ("DELETE", "/api/library/photos/{n}"),
+        ("DELETE", "/api/library/folders/{n}"),
+        ("GET", "/api/library/photos?group={n}"),
+        ("GET", "/api/library/photos?dup={n}"),
+        ("GET", "/api/library/photos?offset={n}"),
+        ("GET", "/api/library/groups?offset={n}"),
+    ],
+)
+def test_library_identifiers_beyond_sqlite_integers_are_refused_not_500(client, method, path):
+    # SQLite integers are 64-bit: a larger one made its driver raise OverflowError.
+    response = client.request(method, path.format(n=2**63))
+    assert response.status_code == 422
+    assert "9223372036854775807" in response.json()["detail"]
+
+
+@pytest.mark.parametrize(
+    ("host", "allowed"),
+    [
+        ("127.0.0.1:8000", True),
+        ("[::1]:8000", True),
+        ("192.168.1.20:8000", True),
+        ("localhost:8000", True),
+        ("devil:8000", True),
+        ("devil.local:8000", True),
+        ("app.localhost", True),
+        ("attacker.example:8000", False),
+        ("evil.example.com", False),
+        ("", False),
+    ],
+)
+def test_photo_library_refuses_rebound_host_names(client, monkeypatch, host, allowed):
+    # A page on a DNS name re-pointed at this computer sends its own name as Host; the
+    # photo library (the user's photos and folder paths) must not answer it.
+    monkeypatch.delenv("PICAD_ALLOWED_HOSTS", raising=False)
+    assert api.library_host_allowed(host) is allowed
+    response = client.get("/api/library/export?format=csv", headers={"host": host})
+    assert (response.status_code == 403) is not allowed, response.text
+    if not allowed:
+        assert "PICAD_ALLOWED_HOSTS" in response.json()["detail"]
+
+
+def test_photo_library_host_allow_list_and_other_routes(client, monkeypatch):
+    monkeypatch.setenv("PICAD_ALLOWED_HOSTS", "cad.example.org, other.example")
+    assert client.get("/api/library", headers={"host": "cad.example.org"}).status_code == 200
+    assert client.get("/api/library", headers={"host": "third.example"}).status_code == 403
+    monkeypatch.setenv("PICAD_ALLOWED_HOSTS", "*")
+    assert client.get("/api/library", headers={"host": "third.example"}).status_code == 200
+    # Only the library is fenced; the rest of the API works behind any forwarded name.
+    monkeypatch.delenv("PICAD_ALLOWED_HOSTS")
+    assert client.get("/api/printers", headers={"host": "forwarded.example.dev"}).status_code == 200
