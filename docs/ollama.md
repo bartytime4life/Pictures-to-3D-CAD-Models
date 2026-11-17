@@ -4,6 +4,8 @@
 
 The assistant helps explain the photo-to-CAD process. It can suggest a better capture, explain trace warnings, identify measurements to check, propose design and print-setting changes, or help choose an export. OpenCV still traces the image, and CadQuery still creates the solids. An LLM does not determine the source part's physical dimensions or certify accuracy.
 
+The [Creative tools](creative-tools.md) studio also uses the same local chat models for design directions, critique and making plans. Use `./scripts/ollama.sh check` to inspect readiness, or `check --probe` to run four synthetic production-path inferences.
+
 The workbench's **Next step** guide uses the current inputs and build state without an LLM. You can follow its measurement, settings, preview and export actions without installing Ollama. AI adds optional text advice; it does not inspect the photograph.
 
 There is no paid API, subscription, account, or cloud-model fallback in this integration. You supply the computer resources and download the model weights. “Local” means the machine running the CAD backend; in a cloud environment, inference runs on that cloud host.
@@ -30,7 +32,7 @@ Keep the server terminal running. In a second terminal:
 
 The starting choice, **Qwen3 1.7B**, is a small text model with an upstream Apache 2.0 weight-license statement. It is a provisional CPU baseline; exact installed size, performance, and answer quality must be measured locally. [Model choices](ollama-models.md) records alternatives and the evidence still needed.
 
-The helper binds Ollama to `127.0.0.1:11434` and sets `OLLAMA_NO_CLOUD=1`. It keeps one model loaded at a time, permits one parallel inference request, and uses an 8,192-token context to accommodate the bounded design and printer information. The application caps generated output at 512 tokens. These limits are configuration choices, not measured inference-performance results. Model weights live under `.local/ollama-models`; the runtime lives under `.local/ollama`. These directories are ignored by Git.
+The helper now reuses a system Ollama CLI when present, retaining its model store; `PICAD_OLLAMA_BIN` can select an explicit executable. Its repository installation remains the fallback. The helper binds Ollama to `127.0.0.1:11434` and sets `OLLAMA_NO_CLOUD=1`. It keeps one model loaded at a time, permits one parallel inference request, and uses an 8,192-token context to accommodate the bounded design and printer information. The application caps generated output at 512 tokens. These limits are configuration choices, not measured inference-performance results. For a repository installation, model weights live under `.local/ollama-models` and the runtime lives under `.local/ollama`. System installations retain their configured model directory. These directories are ignored by Git.
 
 Ollama creates its own identity files under `~/.ollama` on first startup. On a normal machine, that directory must be writable by the current user. A managed sandbox may require its supported filesystem-permission flow for this initial write. No Ollama account or sign-in is required for the local models used here.
 
@@ -77,7 +79,7 @@ For example, a suggestion to use 125% XY scale with an 80 mm measured width prop
 
 Small models can still be slow on a CPU, particularly on their first response. Use short questions and compare measured latency before selecting a larger model. Model output is untrusted advice, even when its response has a valid JSON shape.
 
-**Stop waiting** dismisses an active browser request and leaves your CAD inputs unchanged. Ollama may still finish computing that answer, so an immediate new question can receive a busy response. Collapsing the assistant panel leaves its request active. The backend limits chat inference to 120 seconds, plus short model checks.
+**Stop waiting** dismisses an active browser request and leaves your CAD inputs unchanged. Ollama may still finish computing that answer, so an immediate new question can receive a busy response. Collapsing the assistant panel leaves its request active. The backend limits chat inference to 120 seconds, plus short model checks. Creative tools share this inference slot, including after browser cancellation. The model picker verifies completion capability and excludes embedding-only models and cloud aliases.
 
 ## Compare models
 

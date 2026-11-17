@@ -683,3 +683,210 @@ def test_inference_slot_survives_cancelled_http_request(tmp_path, monkeypatch):
         asyncio.run(exercise())
     finally:
         release.set()
+
+
+# Creative tools share the production transport, model gate, and inference slot.
+def creative_body(**changes):
+    return {
+        "model": LOCAL_MODEL["name"],
+        "tool": "concepts",
+        "brief": "A modular desk organizer",
+        "constraints": "No measured sizes yet",
+        **changes,
+    }
+
+
+def creative_notes():
+    return {
+        "title": "Organizer directions",
+        "summary": "Three concepts to explore.",
+        "sections": [
+            {"title": title, "body": "Measure the available space and test a small sample."}
+            for title in ("Stacked trays", "Pebble forms", "Open grid")
+        ],
+        "next_steps": ["Measure the desk space.", "Make a small fit test."],
+    }
+
+
+def set_creative_response(state, notes=None, **raw_changes):
+    state["/api/chat"] = {
+        "done": True,
+        "done_reason": "stop",
+        "message": {"content": json.dumps(notes if notes is not None else creative_notes())},
+        **raw_changes,
+    }
+
+
+def test_status_does_not_offer_embedding_or_unverified_models(client, local_ollama):
+    for details in ({"capabilities": ["embedding"]}, {}, {"remote_host": "https://ollama.com"}):
+        local_ollama["/api/show"] = details
+        result = client.get("/api/assistant/status").json()
+        assert result["running"]
+        assert result["models"] == []
+        assert result["recommended_model"] is None
+    assert all(path != "/api/chat" for _, path, _ in local_ollama["calls"])
+
+
+def test_creative_catalog_is_available_without_ollama(client, monkeypatch):
+    def unavailable(*args, **kwargs):
+        raise AssertionError("Catalog must not contact Ollama")
+
+    monkeypatch.setattr(assistant, "ollama_request", unavailable)
+    result = client.get("/api/creative/tools")
+    assert result.status_code == 200
+    assert {item["id"] for item in result.json()["tools"]} == {"concepts", "critique", "plan"}
+    assert all(item["requires"] == ["local_chat"] for item in result.json()["tools"])
+    assert "instruction" not in result.text
+
+
+@pytest.mark.parametrize("tool", ["concepts", "critique", "plan"])
+def test_creative_tools_use_local_inference_without_geometry_actions(client, local_ollama, tool):
+    set_creative_response(local_ollama)
+    body = creative_body(tool=tool)
+    result = client.post("/api/creative/run", json=body)
+    assert result.status_code == 200, result.text
+    assert result.json()["notes"] == creative_notes()
+    assert result.json()["tool"] == tool
+    assert result.json()["format"] == "creative-notes-v1"
+    payload = local_ollama["calls"][-1][2]
+    assert payload["stream"] is False and payload["think"] is False
+    assert "tools" not in payload and "images" not in payload
+    assert json.loads(payload["messages"][1]["content"]) == {
+        "brief": body["brief"],
+        "constraints": body["constraints"],
+    }
+    assert payload["options"]["num_predict"] == 1200
+    assert payload["format"]["additionalProperties"] is False
+    assert all(
+        path in {"/api/tags", "/api/show", "/api/chat"} for _, path, _ in local_ollama["calls"]
+    )
+    assert not list(api.JOB_ROOT.iterdir())
+
+
+@pytest.mark.parametrize(
+    "changes",
+    [
+        {"tool": "execute-code"},
+        {"brief": " "},
+        {"brief": "x" * 2401},
+        {"constraints": "x" * 1601},
+        {"model": "https://remote.invalid"},
+        {"images": ["private-photo"]},
+        {"script": "rm -rf"},
+    ],
+)
+def test_creative_request_bounds_reject_untrusted_fields(client, local_ollama, changes):
+    assert client.post("/api/creative/run", json=creative_body(**changes)).status_code == 422
+    assert not local_ollama["calls"]
+
+
+@pytest.mark.parametrize(
+    "details",
+    [
+        {"capabilities": ["embedding"]},
+        {},
+        {"capabilities": ["completion"], "remote_model": "remote"},
+    ],
+)
+def test_creative_rechecks_model_before_inference(client, local_ollama, details):
+    local_ollama["/api/show"] = details
+    assert client.post("/api/creative/run", json=creative_body()).status_code == 409
+    assert all(path != "/api/chat" for _, path, _ in local_ollama["calls"])
+
+
+@pytest.mark.parametrize(
+    "raw_changes",
+    [
+        {"done": False},
+        {"done_reason": "length"},
+        {"message": {"content": "not JSON"}},
+        {"message": {"content": "x" * 16001}},
+        {"message": {"content": "{}", "tool_calls": [{"name": "execute"}]}},
+    ],
+)
+def test_incomplete_or_executable_creative_output_is_rejected(client, local_ollama, raw_changes):
+    set_creative_response(local_ollama, **raw_changes)
+    assert client.post("/api/creative/run", json=creative_body()).status_code == 502
+    assert not api.app.state.assistant_lock.locked()
+
+
+@pytest.mark.parametrize(
+    "changes",
+    [
+        {"title": " "},
+        {"summary": " "},
+        {"sections": []},
+        {"sections": [{"title": "", "body": "x"}]},
+        {"next_steps": [" "]},
+        {"next_steps": ["x" * 241]},
+        {"extra": "not allowed"},
+    ],
+)
+def test_invalid_creative_notes_are_rejected(client, local_ollama, changes):
+    set_creative_response(local_ollama, {**creative_notes(), **changes})
+    assert client.post("/api/creative/run", json=creative_body()).status_code == 502
+
+
+def test_concept_tool_requires_three_design_directions(client, local_ollama):
+    notes = creative_notes()
+    notes["sections"] = notes["sections"][:1]
+    set_creative_response(local_ollama, notes)
+    assert client.post("/api/creative/run", json=creative_body()).status_code == 502
+    assert client.post("/api/creative/run", json=creative_body(tool="plan")).status_code == 200
+
+
+@pytest.mark.parametrize("first_kind", ["creative", "assistant"])
+def test_creative_and_assistant_share_slot_after_cancellation(tmp_path, monkeypatch, first_kind):
+    started, release = threading.Event(), threading.Event()
+
+    def slow(request):
+        started.set()
+        release.wait(timeout=5)
+        return {"finished": True}
+
+    monkeypatch.setattr(api, "chat", slow)
+    monkeypatch.setattr(api, "run_tool", slow)
+    monkeypatch.setattr(api, "JOB_ROOT", tmp_path / "jobs")
+    routes = {
+        "creative": ("/api/creative/run", creative_body()),
+        "assistant": ("/api/assistant/chat", request_body()),
+    }
+    first_route, first_body = routes[first_kind]
+    other_route, other_body = routes["assistant" if first_kind == "creative" else "creative"]
+
+    async def exercise():
+        async with (
+            api.lifespan(api.app),
+            httpx2.AsyncClient(
+                transport=httpx2.ASGITransport(app=api.app), base_url="http://test"
+            ) as client,
+        ):
+            first = asyncio.create_task(client.post(first_route, json=first_body))
+            await asyncio.wait_for(asyncio.to_thread(started.wait), timeout=2)
+            first.cancel()
+            await asyncio.sleep(0)
+            blocked = await client.post(other_route, json=other_body)
+            assert blocked.status_code == 429
+            assert (await client.get("/api/health")).status_code == 200
+            release.set()
+            with pytest.raises(asyncio.CancelledError):
+                await first
+            assert not api.app.state.assistant_lock.locked()
+
+    try:
+        asyncio.run(exercise())
+    finally:
+        release.set()
+
+
+def test_creative_notes_cannot_silently_invent_sizes_for_an_unmeasured_brief(client, local_ollama):
+    notes = creative_notes()
+    notes["sections"][0]["body"] = "Set the tray width to 80 mm."
+    set_creative_response(local_ollama, notes)
+    result = client.post("/api/creative/run", json=creative_body())
+    assert result.status_code == 502
+    assert "sizes that were not in your brief" in result.json()["detail"]
+    result = client.post(
+        "/api/creative/run", json=creative_body(constraints="The measured space is 80 mm wide.")
+    )
+    assert result.status_code == 200

@@ -480,23 +480,37 @@ def _single_threaded_children():
 
 # ------------------------------------------------------------------------- store
 
+_store_init_lock = threading.Lock()
+
 
 def _connect() -> sqlite3.Connection:
     root = library_root()
     root.mkdir(parents=True, exist_ok=True)
     connection = sqlite3.connect(root / "library.sqlite3", timeout=30)
     connection.row_factory = sqlite3.Row
-    connection.execute("PRAGMA journal_mode=WAL")
-    connection.execute("PRAGMA synchronous=NORMAL")
-    connection.execute("PRAGMA foreign_keys=ON")
+    try:
+        connection.execute("PRAGMA journal_mode=WAL")
+        connection.execute("PRAGMA synchronous=NORMAL")
+        connection.execute("PRAGMA foreign_keys=ON")
+    except BaseException:
+        connection.close()
+        raise
     return connection
 
 
 @contextmanager
 def database():
-    connection = _connect()
+    # A first page load requests summary and photos concurrently. SQLite's WAL
+    # transition can refuse that race immediately despite busy_timeout. Serialize
+    # opening/migration only; normal reads and transactions remain concurrent.
+    with _store_init_lock:
+        connection = _connect()
+        try:
+            _migrate(connection)
+        except BaseException:
+            connection.close()
+            raise
     try:
-        _migrate(connection)
         yield connection
         connection.commit()
     finally:

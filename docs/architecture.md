@@ -19,7 +19,7 @@ flowchart LR
     K[Knowledge and Science lab] --> M
 ```
 
-The hash router exposes Flat part (`#workbench`), Relief (`#relief`), Photo library (`#library`), Knowledge (`#knowledge`) and Science lab (`#science`). OpenSCAD links to the separately served companion library. Visited studio state is retained in memory during in-page navigation; this is not automatic disk persistence.
+The hash router exposes Shape designer (`#designer`), Flat part (`#workbench`), Relief (`#relief`), Photo library (`#library`), Knowledge (`#knowledge`) Science lab (`#science`) and Creative tools (`#creative`). OpenSCAD links to the separately served companion library. Visited studio state is retained in memory during in-page navigation; this is not automatic disk persistence.
 
 ## Component map
 
@@ -91,3 +91,9 @@ Only fixed download kinds and registered native-program IDs are accepted. Launch
 ## Verify a change
 
 Use focused Python tests for schema, geometry, job lifecycle and handoff contracts; pure TypeScript tests for math/history; frontend typecheck and production build; then browser tests for real interaction, download freshness and accessibility. Run native import or physical print checks only as separate explicit activities. See [development](development.md), [validation](validation.md) and [contributing](contributing.md).
+
+## Creative tool extension boundary
+
+The typed `studioCatalog.ts` supplies shared route metadata. `CreativeStudio.tsx` discovers bounded text tools from `backend/creative.py`; both it and the CAD assistant run through the same local-model gate and cancellation-safe inference slot. See the [extension guide](creative-tools.md) and [architecture decision](adr-local-creative-tools.md).
+
+The shape designer uses `backend/shapes.py` for bounded inputs and the isolated `backend/shape_worker.py` for exact constructive solid operations. It recovers the planar boundary and reuses the measured-profile exporter; the UI serializes automatic rebuilds and rejects obsolete results.

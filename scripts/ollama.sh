@@ -5,9 +5,15 @@ PICAD_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 PICAD_OLLAMA_VERSION=0.40.15
 PICAD_OLLAMA_SHA256=628c018404a4206493efd38e46251c154ede5141b8b8dc85c659b3b027c47379
 PICAD_OLLAMA_DIR="$PICAD_ROOT/.local/ollama"
-PICAD_OLLAMA_BIN="$PICAD_OLLAMA_DIR/bin/ollama"
+PICAD_PINNED_BIN="$PICAD_OLLAMA_DIR/bin/ollama"
+# Reuse an existing system installation and its model store. An explicit
+# override wins; a repository install remains available when no system CLI exists.
+PICAD_OLLAMA_BIN="${PICAD_OLLAMA_BIN:-$(command -v ollama || true)}"
+PICAD_OLLAMA_BIN="${PICAD_OLLAMA_BIN:-$PICAD_PINNED_BIN}"
 export OLLAMA_HOST=127.0.0.1:11434
-export OLLAMA_MODELS="$PICAD_ROOT/.local/ollama-models"
+if [[ "$PICAD_OLLAMA_BIN" == "$PICAD_PINNED_BIN" ]]; then
+  export OLLAMA_MODELS="${OLLAMA_MODELS:-$PICAD_ROOT/.local/ollama-models}"
+fi
 export OLLAMA_NO_CLOUD=1
 export OLLAMA_NUM_PARALLEL=1
 export OLLAMA_MAX_LOADED_MODELS=1
@@ -34,7 +40,7 @@ case "${1:-help}" in
     echo "Verified Ollama $PICAD_OLLAMA_VERSION installed. Start it with ./scripts/ollama.sh serve."
     ;;
   serve|list|ps)
-    [[ -x "$PICAD_OLLAMA_BIN" ]] || { echo 'Run ./scripts/ollama.sh install first.' >&2; exit 1; }
+    [[ -x "$PICAD_OLLAMA_BIN" ]] || { echo 'Install Ollama, or run ./scripts/ollama.sh install first.' >&2; exit 1; }
     exec "$PICAD_OLLAMA_BIN" "$1"
     ;;
   pull|rm)
@@ -46,16 +52,24 @@ case "${1:-help}" in
     fi
     exec "$PICAD_OLLAMA_BIN" "$1" "$PICAD_MODEL"
     ;;
+  check)
+    shift
+    [[ -x "$PICAD_ROOT/.venv/bin/python" ]] || { echo 'Run ./scripts/setup.sh first.' >&2; exit 1; }
+    exec "$PICAD_ROOT/.venv/bin/python" "$PICAD_ROOT/scripts/check_ai.py" "$@"
+    ;;
   *)
     cat <<'HELP'
 Optional local AI (no subscription or API key):
   ./scripts/ollama.sh install          Install the verified Linux x86_64 runtime
+  ./scripts/ollama.sh check            Check chat-capable models without inference
+  ./scripts/ollama.sh check --probe    Verify the assistant and creative tools with inference
   ./scripts/ollama.sh serve            Run locally; cloud features disabled
   ./scripts/ollama.sh pull qwen3:1.7b  Download a model while the server runs
   ./scripts/ollama.sh list             List downloaded models
   ./scripts/ollama.sh ps               Show models loaded into memory
   ./scripts/ollama.sh rm MODEL         Remove a downloaded model
 
+Uses an existing system Ollama first. Set PICAD_OLLAMA_BIN to override it.
 Use Ctrl+C in the serve terminal to stop this server. See docs/ollama.md.
 HELP
     ;;

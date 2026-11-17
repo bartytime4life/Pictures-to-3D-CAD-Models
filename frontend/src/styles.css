@@ -3668,7 +3668,7 @@ main {
   .studio-tabs {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0;
   }
   .studio-tab {
@@ -3939,4 +3939,13 @@ main {
   .workflow-step {
     gap: 4px;
   }
+}
+
+.shape-entry-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  color: var(--accent);
+  font-size: 12px;
 }

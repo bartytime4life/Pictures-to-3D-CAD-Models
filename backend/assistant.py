@@ -102,7 +102,7 @@ class AssistantRequest(BaseModel):
     @field_validator("model")
     @classmethod
     def validate_model(cls, value):
-        if not MODEL_NAME.fullmatch(value):
+        if "://" in value or not MODEL_NAME.fullmatch(value):
             raise ValueError("Choose a model installed in local Ollama.")
         return value
 
@@ -351,6 +351,7 @@ def installed_models():
                 "size_bytes": size,
                 "parameter_size": str(details.get("parameter_size", ""))[:50],
                 "quantization": str(details.get("quantization_level", ""))[:50],
+                "digest": str(item.get("digest", ""))[:100],
             }
         )
     return sorted(local, key=lambda item: (item["size_bytes"], item["name"]))
@@ -361,6 +362,29 @@ def assistant_status():
         models = installed_models()
     except AssistantError as exc:
         return {"running": False, "models": [], "recommended_model": None, "detail": exc.detail}
+    # Tags include embedding-only models and remote aliases. Check capabilities
+    # before offering a model, with a total budget that fits the UI's status timeout.
+    had_models = bool(models)
+    available = []
+    deadline = time.monotonic() + 6
+    for model in models:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            break
+        try:
+            details = ollama_request(
+                "POST", "/api/show", {"model": model["name"]}, timeout=min(2, remaining)
+            )
+        except AssistantError:
+            continue
+        capabilities = details.get("capabilities")
+        if (
+            not is_cloud_model({"name": model["name"], **details})
+            and isinstance(capabilities, list)
+            and "completion" in capabilities
+        ):
+            available.append({**model, "capabilities": capabilities})
+    models = available
     preferred = os.environ.get("PICTURES_CAD_OLLAMA_MODEL", "qwen3:1.7b")
     selected = next((item["name"] for item in models if item["name"] == preferred), None)
     if selected is None:
@@ -372,9 +396,13 @@ def assistant_status():
         "models": models,
         "recommended_model": selected,
         "detail": (
-            "Local models are ready. Only your question and current settings are sent to Ollama."
+            "Local chat models are ready. Requests stay on this machine."
             if models
-            else "Ollama is running. Install a local model, then refresh."
+            else (
+                "Ollama is running, but no local chat model was verified. Check models, then refresh."
+                if had_models
+                else "Ollama is running. Install a local model, then refresh."
+            )
         ),
     }
 
@@ -692,21 +720,26 @@ def review_proposal(result, request: AssistantRequest):
     return result
 
 
-def chat(request: AssistantRequest):
-    started = time.monotonic()
+def require_local_chat_model(model: str):
+    """Shared gate for every text tool; never accept arbitrary or remote model aliases."""
     models = installed_models()
-    if not any(item["name"] == request.model for item in models):
+    if not any(item["name"] == model for item in models):
         raise AssistantError(
             409, "Choose an installed local model. Cloud models are not supported."
         )
-    details = ollama_request("POST", "/api/show", {"model": request.model})
-    if is_cloud_model({"name": request.model, **details}):
+    details = ollama_request("POST", "/api/show", {"model": model})
+    if is_cloud_model({"name": model, **details}):
         raise AssistantError(
             409, "Cloud models are not supported. Choose a model with local weights."
         )
     capabilities = details.get("capabilities")
-    if isinstance(capabilities, list) and "completion" not in capabilities:
+    if not isinstance(capabilities, list) or "completion" not in capabilities:
         raise AssistantError(409, "Choose a chat model. This model cannot generate answers.")
+
+
+def chat(request: AssistantRequest):
+    started = time.monotonic()
+    require_local_chat_model(request.model)
     raw = ollama_request("POST", "/api/chat", build_chat_payload(request), timeout=CHAT_TIMEOUT)
     result = review_proposal(parse_chat_response(raw), request)
     return {

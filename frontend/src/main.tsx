@@ -8,26 +8,24 @@ import LibraryStudio from './LibraryStudio';
 import ReliefStudio from './ReliefStudio';
 import KnowledgeStudio from './KnowledgeStudio';
 import ScienceStudio from './ScienceStudio';
+import CreativeStudio from './CreativeStudio';
+import ShapeStudio from './ShapeStudio';
+import { STUDIO_CATALOG, studioFromHash } from './studioCatalog';
+import type { ComponentType } from 'react';
 import { StudioActivity } from './StudioActivity';
 import type { Studio } from './AppHeader';
 
-const studios = {
+const studios: Record<Studio, ComponentType> = {
   workbench: App,
   relief: ReliefStudio,
   library: LibraryStudio,
   knowledge: KnowledgeStudio,
   science: ScienceStudio,
-};
-const TITLES: Record<Studio, string> = {
-  workbench: 'Pictures to CAD — Photo to profile workbench',
-  relief: 'Pictures to CAD — Relief & lithophane studio',
-  library: 'Pictures to CAD — Photo library',
-  knowledge: 'Pictures to CAD — Knowledge base',
-  science: 'Pictures to CAD — Science lab',
+  creative: CreativeStudio,
+  designer: ShapeStudio,
 };
 function route(): Studio {
-  const target = window.location.hash.slice(1).split('?')[0];
-  return Object.hasOwn(studios, target) ? (target as Studio) : 'workbench';
+  return studioFromHash(window.location.hash);
 }
 
 // Mount a studio when first visited, then preserve its unsaved work during navigation.
@@ -49,7 +47,7 @@ function Root() {
     return () => window.removeEventListener('hashchange', changed);
   }, []);
   useLayoutEffect(() => {
-    document.title = TITLES[active];
+    document.title = `Pictures to CAD — ${STUDIO_CATALOG.find((studio) => studio.id === active)!.title}`;
     // A studio opens at its top the first time and where it was left after that, not at the
     // previous studio's scroll position. The first render keeps the browser's own restoration.
     if (shown.current !== active) window.scrollTo(0, scrollOf.current[active] ?? 0);

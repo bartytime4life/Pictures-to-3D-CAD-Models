@@ -11,6 +11,38 @@ export type Guide = {
 };
 export const GUIDES: Guide[] = [
   {
+    id: 'shape-designer',
+    category: 'Getting started',
+    title: 'Design a flat part from common shapes',
+    summary: 'Combine material shapes and through cutouts with an automatic CAD preview.',
+    steps: [
+      'Open Shape designer and choose a starter, such as a mounting plate or washer.',
+      'Add rectangles, circles, slots, triangles or hexagons. Choose Add material or Cut through; edit dimensions or drag to position.',
+      'Set thickness and let the CAD preview update. Material shapes must join into one connected part.',
+      'Review dimensions, export STEP/STL/DXF, and save the editable shape design. Open the result in the workbench for print planning.',
+    ],
+    assumptions:
+      'All dimensions are explicit design inputs in millimeters. Cutouts pass through the full thickness. CAD geometry and preview do not certify physical fit or printability.',
+    doc: 'shape-designer',
+    action: { label: 'Open Shape designer', href: '#designer' },
+  },
+  {
+    id: 'creative-tools',
+    category: 'Getting started',
+    title: 'Explore an idea with local AI',
+    summary: 'Write a brief, compare design directions, and save practical creative notes.',
+    steps: [
+      'Open Creative tools and refresh the local AI connection.',
+      'Choose an installed chat model and a tool: Explore directions, Refine an idea, or Plan the making.',
+      'Describe the idea and constraints. Generate and review the notes; no photograph or geometry is sent.',
+      'Save notes with their original brief and use the toolkit to open a making workspace.',
+    ],
+    assumptions:
+      'Ollama must run on the CAD service machine with local completion weights. Creative notes are concepts, not generated meshes or verified engineering measurements. Depth and photo features use separate optional models.',
+    doc: 'creative-tools',
+    action: { label: 'Open Creative tools', href: '#creative' },
+  },
+  {
     id: 'capture',
     category: 'Getting started',
     title: 'Capture a traceable flat part',
