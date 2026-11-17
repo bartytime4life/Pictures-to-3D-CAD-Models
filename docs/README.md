@@ -1,111 +1,53 @@
 # Documentation
 
-Start with the guide for your task. Pictures to CAD reconstructs one flat,
-constant-thickness part; the companion library also covers broader reconstruction
-methods, offline reference photos, calculators and parametric OpenSCAD examples.
+Start with a task, follow its workflow, and keep a saved recipe before leaving the application. Pictures to CAD has a measured flat-part workbench, a relief studio, a photo library, and supporting Knowledge and Science workspaces.
 
-Read [source scope and status](project-status.md) first when switching branches.
-Workbench tracing, corner/frame repairs and separate research APIs have
-different source and validation histories.
+## Start and finish a part
 
-## Use the workbench
+| Your task                                                 | Read                                                                                                                   |
+| --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Install, run and finish the sample                        | [Getting started](getting-started.md)                                                                                  |
+| Choose the right workspace and complete a project         | [Workflow guide](workflows.md)                                                                                         |
+| Capture a useful photograph                               | [Capture guide](capture-guide.md)                                                                                      |
+| Use A4, Letter or a measured sheet                        | [Reference-sheet tracing](reference-sheet.md)                                                                          |
+| Set scale from a known feature or common-object reference | [Reference sensitivity](reference-sensitivity.md) and [measurement workflow](workflows.md#scale-and-check-a-flat-part) |
+| Resize, split and inspect individual pieces               | [Print planning](print-planning.md) and [printer catalog](printer-catalog.md)                                          |
+| Prepare a package for any of the five slicers             | [Slicer integration](slicers.md)                                                                                       |
+| Choose a file format and verify imported units            | [Exports](exports.md)                                                                                                  |
+| Make reliefs, lithophanes, globes or Blender handoffs     | [Relief studio](relief.md)                                                                                             |
+| Organize and choose source photos                         | [Photo library](photo-library.md)                                                                                      |
+| Recover work or diagnose a problem                        | [Troubleshooting](troubleshooting.md)                                                                                  |
 
-| Task | Guide |
-| --- | --- |
-| Install, start and try the sample | [Project README](../README.md), [setup and development](development.md) |
-| Organize source photos with optional DINOv3 features | [Photo library](photo-library.md) |
-| Photograph and measure a part | [Capture guide](capture-guide.md) |
-| Use paper to estimate scale and correct a suitable capture | [Reference-sheet tracing](reference-sheet.md) |
-| Set scale from two known points and explore endpoint placement | [Reference sensitivity](reference-sensitivity.md) |
-| Interpret an independent source-height check | [Engineering model and verification](engineering-model.md) |
-| Resize, inspect printer fit or make straight-cut pieces | [Print planning](print-planning.md), [printer catalog](printer-catalog.md) |
-| Choose CAD, mesh, drawing or source files | [Exports and dimensional checks](exports.md) |
-| Prepare Bambu Studio, PrusaSlicer or QIDI Studio handoffs | [Slicer integration](slicers.md) |
-| Turn any picture into a relief or backlit lithophane, or edit it in Blender | [Relief and lithophane studio](relief.md) |
-| Ask the optional text-only local assistant | [Ollama setup and controls](ollama.md), [model evaluation plan](ollama-models.md) |
-| Recover from an error or missing result | [Troubleshooting](troubleshooting.md) |
-| Understand photo, model and local-data handling | [Privacy and security](privacy-security.md) |
+The **Next step** guide points to the next missing measurement, invalid setting, build or export review. **Quick edit** changes design size; the original reference measurements stay explicit. **Prepare for slicing** keeps process notes with the built revision. View-only controls never modify an exported solid.
 
-The **Next step** guide directs you to a missing measurement, invalid setting,
-preview update or export. A current preview means its geometry matches the shown
-settings. Physical dimensions, fit and strength need their own evidence.
+## Understand the result
+
+| Topic                                                             | Read                                                                                     |
+| ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Scale, perspective, layer height and fit scenarios                | [Science guide](science.md)                                                              |
+| Define an engineering requirement and independent check           | [Engineering model](engineering-model.md)                                                |
+| Interpret conditional endpoint sensitivity                        | [Reference sensitivity](reference-sensitivity.md)                                        |
+| Understand where photos and files live                            | [Privacy and security](privacy-security.md)                                              |
+| Optional advice from local Ollama                                 | [Local assistant](ollama.md) and [model evaluation](ollama-models.md)                    |
+| Distinguish current application behavior from historical research | [Research and validation index](research-index.md) and [source scope](project-status.md) |
+
+Knowledge articles and Science scenarios are part of the browser interface. Their saved notes/scenarios are separate from the CAD project recipe. Export the relevant file when moving between computers or browser profiles.
 
 ## Develop and evaluate
 
-| Task | Guide |
-| --- | --- |
-| Make and validate a change | [Contributing](contributing.md), [development](development.md) |
-| Find the commands available in this checkout | [Developer tools and output behavior](developer-tools.md) |
-| Understand components, API and data flow | [Architecture](architecture.md) |
-| Read mathematical methods and their limits | [Research and algorithms](research.md), [engineering model](engineering-model.md) |
-| Investigate conditional finite-material intensity fitting | [Developer model and numerical limits](finite-shape-inverse.md) |
-| Understand batched affine probabilities, resource limits and measured fit latency | [Shared-panel mathematics](finite-affine-evaluation.md), [complete qualification record](validation/finite-affine-batch.md) |
-| Prepare fixed samples from a measured ring and compare covariance hypotheses | [Observation contract](finite-shape-inverse.md#prepare-a-measured-ring-observation-set), [paired saved-field replay](validation/finite-photo-intensity-v2.md) |
-| Review original scientific findings and remaining model limits | [Scientific model review](validation/scientific-model-review.md) |
-| Understand initial fitted-boundary coverage | [Fit-support repair and evidence](validation/fit-support.md) |
-| Understand weak-edge refusal and recovery | [Contrast-recovery validation](validation/contrast-recovery.md) |
-| Understand arc-sector preservation after fillet movement | [Fillet-sweep repair](validation/fillet-sweep.md) |
-| Understand directional blur at nonparallel fitted corners and traced-outline recovery | [Anisotropic corner model](anisotropic-corners.md) |
-| Understand blur units after thickness correction and mixed-curve warnings | [Blur frames and support rules](blur-frames.md) |
-| Understand circle-consistent final joins, retained outlines and critical CAD checks | [Curved joins](curved-joins.md), [arc export checks](exports.md#verify-critical-arc-geometry) |
-| Understand the lens inverse domain and independent synthetic camera checks | [Radial inverse and lens mismatch](validation/radial-inverse.md) |
-| Understand sheet-axis reversal, ambiguous views and near-square support limits | [Sheet-axis mathematics and regressions](validation/sheet-axis-orientation.md) |
-| Review the character model's placement, socket and insertion improvements | [Figure/base case study and executed review summary](validation/figure-base-refinement.md); separate model pipeline, without a new workbench sculpt mode |
-| Distinguish the earlier blur diagnostic from current directional tracing | [Historical qualification](validation/directional-spread-qualification.md), [current method](reference-sheet.md), [rank repair](validation/directional-blur-rank.md) |
-| Understand global feature matching and dimension coverage | [Benchmark correspondence record](validation/benchmark-correspondence.md) |
-| Run a benchmark with measured photos | [Photo benchmark](photo-benchmark.md) |
-| Review completed checks | [Validation overview](validation.md), [design QA](../design-qa.md) |
-| Check documentation coverage and source consistency | [Current documentation audit](validation/documentation-codecell-result.md), [source and CI snapshot](project-status.md), [executed restoration documentation review](validation/documentation-restoration-result.md) |
-| Review the recent interface changes | [Guided-workbench audit](validation/guided-workbench.md) |
-| Review scope and future work | [Roadmap](roadmap.md), [change log](changelog.md) |
-| Diagnose fixed-normal residual information and its original failed normal control | [Method and rotation identity](finite-residual-information.md), [derived finite-chord proposal](finite-residual-information.md#finite-chord-shape-derivative-a-derived-proposal), [retained failed protocol](validation/finite-residual-information.md), [portable saved-data audit](../studies/fixtures/finite-residual-information-v1/README.md) |
-| Evaluate signed finite-material normal-angle sensitivities | [Experimental API and units](finite-normal-derivative.md), [complete failed qualification](validation/finite-normal-derivative.md), [portable archive](../studies/fixtures/finite-normal-derivative-v1/README.md) |
-| Review later analytic-normal research on its recorded branch | [Pinned result and geometric counterexamples](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/blob/0f1adbd391f7fa015f458cca60dcfe2a0e2dad9e/docs/validation/finite-analytic-normal-information.md); this is separate from current-main qualification |
-| Test a Gaussian hypothesis against known acquisition stages | [Method and completed outcomes](finite-acquisition-operator.md), [recorded-source validation](validation/finite-acquisition-operator.md), [123-artifact archive and saved-only workflow](../studies/fixtures/finite-acquisition-operator-v1/README.md) |
-| Inspect the independent source-cell acquisition mean | [Executable example](finite-acquisition-mean.md#small-executable-example), [API limits and resource accounting](finite-acquisition-mean.md#refusals-provenance-and-work), [complete qualification](validation/finite-acquisition-mean.md), [frozen plan](../studies/finite-acquisition-mean-v1.json), [portable archive](../studies/fixtures/finite-acquisition-mean-v1/README.md); no automatic trace or inverse integration |
-| Evaluate five unrounded cell-area sensitivities and propagate signed fields | [Boundary flux and fixed linear acquisition](finite-cell-sensitivity.md), [small executable example](finite-cell-sensitivity.md#small-executable-example), [first frozen qualification and limits](validation/finite-cell-sensitivity.md), [portable saved-data archive](../studies/fixtures/finite-cell-sensitivity-v1/README.md); no geometry recovery or rounded-pipeline derivative claim |
-| Review the separate local five-geometry/unknown-brightness prototype | [Model, search and rank limits](finite-acquisition-recovery.md), [original and predictor protocols, all 24 rows and first audit limitation](validation/finite-acquisition-recovery.md); research snapshot only, without its runtime in main or workbench controls |
-| Review coupled and source-event recovery | [Seven-parameter surrogate](finite-acquisition-coupled.md), [source-code events](finite-acquisition-events.md), [completed 11/12 results and remaining miss](validation/finite-acquisition-continuations.md); separate local research |
-| Review protected-source-bin proposals | [Original local projection](finite-acquisition-protected.md), [eight failed first controls](validation/finite-acquisition-protected.md), [exact active-face follow-up](finite-acquisition-protected-active.md), [retained first expectation failure](validation/finite-acquisition-protected-active.md), [corrected selected controls and completed 11/12 study](validation/finite-acquisition-physical-rounding.md); local research only |
-| Understand rational-to-physical rounding | [Original five gates and negative corner census](finite-acquisition-physical-rounding.md), [49 controls and complete negative 128-corner diagnostic](validation/finite-acquisition-physical-rounding.md); no new fit or improvement |
-| Review the inward-point representation step | [Exact construction and unchanged gates](finite-acquisition-inward-margin.md), [103 focused controls, 128/128 feasible new corners and saved-data audit](validation/finite-acquisition-inward-margin.md); local feasibility only |
-| Review the actual PNG cost test | [Paired replay and acceptance rule](finite-acquisition-inward-literal.md), [162 selected controls and complete negative result](validation/finite-acquisition-inward-literal.md); exact baseline, higher candidate cost, no recovery improvement |
-| Review the observed-defect correction | [One equality-restoration step](finite-acquisition-defect-corrector.md), [220 controls and first actual training improvement](validation/finite-acquisition-defect-corrector.md); zero training cost for one supplied synthetic PNG context; the later live study is separate |
-| Review the executed live restoration controller | [Current method and limits](finite-acquisition-restoration-result.md), [first full result and evidence](validation/finite-acquisition-restoration-result.md); 1,169 controls pass, full recovery remains 11/12 with a geometry miss |
-| Inspect alternative geometries with the same image | [Diagnostic method and API](finite-acquisition-codecell-probe.md), [168 actual alternatives, conditional bound and complete evidence](validation/finite-acquisition-codecell-result.md); original recovery remains 11/12 |
-| Review saved-record consistency and packaging | [Archive inventory, completed audits, first failures and precision gaps](finite-acquisition-saved-audit.md); no forward-model or physical qualification |
-| Reproduce bundled printer data | [Printer source record](../data/PRINTER_SOURCES.md) |
+- [Architecture](architecture.md): workspaces, data flow, state, persistence and integration boundaries.
+- [Detailed API and geometry contracts](api-reference.md): requests, outputs, units and implementation details.
+- [Development](development.md), [developer tools](developer-tools.md), [contributing](contributing.md): environment, commands and review process.
+- [Research methods](research.md), [research index](research-index.md), [validation overview](validation.md): mathematical methods and revision-bound results.
+- [Precision Studio review](validation/precision-studio.md): interface captures, corrected defects and current local verification scope.
+- [Pull-request verification](validation/precision-studio-pr.md): current-main integration checks and the scope of earlier evidence.
+- [Photo benchmark](photo-benchmark.md): compare source images with independent measurements.
+- [Roadmap](roadmap.md), [change log](changelog.md): planned work and recorded changes.
 
-Before running an archived audit, check its
-[source-binding requirements](developer-tools.md#historical-source-checks-in-saved-data-audits).
-Some saved-only tools compare against the checkout's current source and therefore
-report a provenance mismatch on later main revisions.
-
-Historical validation reports retain their original revision, environment and
-counts. They describe those runs, rather than the current installed application
-or a later commit. Start at the validation overview for the relevant evidence.
-
-Detailed records cover [height decisions](validation/engineering-audit.md),
-[curved placement](validation/curved-placement.md), [suggested splits](validation/split-plans.md),
-[project import recovery](validation/project-import-recovery.md),
-[endpoint sensitivity](validation/reference-sensitivity.md), and an
-[earlier documentation refresh](validation/documentation-refresh.md).
+Historical evidence retains its original revision, inputs, failures and limits. A later green test run does not rewrite an earlier result, establish camera accuracy or prove a physical print.
 
 ## Companion reference library
 
-| Resource | Purpose |
-| --- | --- |
-| [Offline reader](../reference-library/index.html), [library README](../reference-library/README.md) | Handbook, catalog, Toolkit, Photos, OpenSCAD and worksheets |
-| [Handbook](../reference-library/HANDBOOK.md), [research record](../reference-library/RESEARCH-NOTES.md) | Methods, assumptions and review depth |
-| [Source directory](../reference-library/REFERENCES.md), [GitHub snapshot](../reference-library/GITHUB.md) | Annotated catalog and dated repository metadata |
-| [OpenSCAD workflow](../reference-library/OPENSCAD.md), [examples](../reference-library/examples/README.md) | Synthetic plate/coupon sources, native builds and handoff checks |
-| [cadkit commands](../reference-library/cadkit/README.md) | Calculators, STL inspection and project scaffolding |
-| [Build instructions](../reference-library/BUILD.md), [contributing](../reference-library/CONTRIBUTING.md) | Source editing, generated HTML/PDF and test commands |
-| [Verification record](../reference-library/VERIFICATION.md), [library changelog](../reference-library/CHANGELOG.md) | Separate library evidence and revision history |
-| [Project brief](../reference-library/templates/PROJECT-BRIEF.md), [capture checklist](../reference-library/templates/CAPTURE-CHECKLIST.md) | Record inputs, requirements and capture conditions |
-| [Independent checks](../reference-library/templates/INDEPENDENT-CHECKS.md), [print acceptance](../reference-library/templates/PRINT-ACCEPTANCE.md) | Reserve evaluation dimensions and record physical outcomes |
+Open the application's **OpenSCAD** link for the separate reference workspace, or use [the offline reader](../reference-library/index.html). Its [README](../reference-library/README.md), [handbook](../reference-library/HANDBOOK.md), [OpenSCAD guide](../reference-library/OPENSCAD.md), [cadkit commands](../reference-library/cadkit/README.md) and [build guide](../reference-library/BUILD.md) describe its own tools and checks.
 
-The library's browser-stored Photos collection is separate from the workbench's
-backend upload. Its image limits and persistence rules differ; follow the guide
-for the component you are using. The repository and portable library have
-separate build and verification records.
+Use the [project brief](../reference-library/templates/PROJECT-BRIEF.md), [capture checklist](../reference-library/templates/CAPTURE-CHECKLIST.md), [independent checks](../reference-library/templates/INDEPENDENT-CHECKS.md) and [print acceptance](../reference-library/templates/PRINT-ACCEPTANCE.md) templates to record a project beyond the browser session.
