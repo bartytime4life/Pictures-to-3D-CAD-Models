@@ -610,7 +610,11 @@ export default function ModelViewer({
                 zoom: 8,
               }}
               gl={{ antialias: true, alpha: false, powerPreference: 'low-power' }}
-              fallback={<Unavailable />}
+              fallback={
+                <div aria-hidden="true">
+                  <Unavailable />
+                </div>
+              }
               onCreated={({ gl }) => {
                 gl.domElement.setAttribute('aria-label', 'CAD solid preview');
               }}

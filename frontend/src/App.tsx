@@ -960,7 +960,11 @@ export default function App() {
   useEffect(() => {
     // A photo sent from the photo library opens instead of the sample.
     const handed = takeHandoff('workbench');
-    void (handed ? loadPhoto(handed) : loadSample());
+    void (handed
+      ? handed.name.toLowerCase().endsWith('.json')
+        ? restoreProject(handed)
+        : loadPhoto(handed)
+      : loadSample());
     return () => {
       sequenceRef.current++;
     };
@@ -972,7 +976,10 @@ export default function App() {
     }
     if (busy) return;
     const handed = takeHandoff('workbench');
-    if (handed) void loadPhoto(handed);
+    if (handed)
+      void (handed.name.toLowerCase().endsWith('.json')
+        ? restoreProject(handed)
+        : loadPhoto(handed));
   }, [active, busy]);
   useEffect(() => {
     // Release this tab's temporary model files when the page goes away, so reloads and closed
@@ -1713,6 +1720,9 @@ export default function App() {
             <span className="workspace-eyebrow">01 / CREATE</span>
             <h2>Flat part studio</h2>
             <p>A clear outline. A measured solid.</p>
+            <a className="shape-entry-link" href="#designer">
+              Design with common shapes <Plus size={16} />
+            </a>
           </div>
           <nav className="workflow" aria-label="Conversion workflow">
             <button

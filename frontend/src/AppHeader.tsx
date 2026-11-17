@@ -7,10 +7,24 @@ import {
   Images,
   Mountains,
   Ruler,
+  Sparkle,
+  Shapes,
 } from '@phosphor-icons/react';
 import CommandLauncher, { type StudioCommand } from './CommandLauncher';
 
-export type Studio = 'workbench' | 'relief' | 'library' | 'knowledge' | 'science';
+import { STUDIO_CATALOG } from './studioCatalog';
+import type { Studio } from './studioCatalog';
+export type { Studio } from './studioCatalog';
+
+const studioIcons = {
+  designer: Shapes,
+  workbench: Ruler,
+  relief: Mountains,
+  library: Images,
+  creative: Sparkle,
+  knowledge: BookOpen,
+  science: Flask,
+};
 
 /**
  * The header the studios share: the brand, the page's own project-name control, one row of
@@ -66,52 +80,22 @@ export default function AppHeader({
       </div>
       <div className="topbar-navigation">
         <nav className="studio-tabs" aria-label="Studios">
-          <a
-            className="studio-tab"
-            href="#workbench"
-            aria-label="Flat-part workbench"
-            aria-current={studio === 'workbench' ? 'page' : undefined}
-          >
-            <Ruler size={23} />
-            <span className="label-long">Flat part</span>
-            <span className="label-short">Flat part</span>
-          </a>
-          <a
-            className="studio-tab"
-            href="#relief"
-            aria-label="Relief and lithophane studio"
-            aria-current={studio === 'relief' ? 'page' : undefined}
-          >
-            <Mountains size={23} />
-            <span className="label-long">Relief &amp; Lithophane</span>
-            <span className="label-short">Relief</span>
-          </a>
-          <a
-            className="studio-tab"
-            href="#library"
-            aria-label="Photo library"
-            aria-current={studio === 'library' ? 'page' : undefined}
-          >
-            <Images size={23} />
-            <span className="label-long">Photo library</span>
-            <span className="label-short">Library</span>
-          </a>
-          <a
-            className="studio-tab"
-            href="#knowledge"
-            aria-current={studio === 'knowledge' ? 'page' : undefined}
-          >
-            <BookOpen size={21} />
-            <span>Knowledge</span>
-          </a>
-          <a
-            className="studio-tab"
-            href="#science"
-            aria-current={studio === 'science' ? 'page' : undefined}
-          >
-            <Flask size={21} />
-            <span>Science lab</span>
-          </a>
+          {STUDIO_CATALOG.map((item) => {
+            const Icon = studioIcons[item.id];
+            return (
+              <a
+                key={item.id}
+                className="studio-tab"
+                href={`#${item.id}`}
+                aria-label={item.name}
+                aria-current={studio === item.id ? 'page' : undefined}
+              >
+                <Icon size={21} />
+                <span className="label-long">{item.label}</span>
+                <span className="label-short">{item.shortLabel}</span>
+              </a>
+            );
+          })}
           <a
             className="studio-tab"
             href="/reference-library/index.html#cad"

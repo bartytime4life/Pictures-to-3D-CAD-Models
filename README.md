@@ -69,6 +69,14 @@ The bed display is an inspection of a mesh over a rectangular envelope. Its view
 
 The [science guide](docs/science.md), [engineering model](docs/engineering-model.md) and [research index](docs/research-index.md) keep application methods, experimental Python APIs and historical studies distinct. Recorded test counts and case studies remain bound to their own revisions and inputs.
 
+## Design from common shapes
+
+Open **Shape designer** to combine rectangles, rounded rectangles, circles, slots, triangles and hexagons, add through cutouts, and watch the CAD preview update automatically. Save the editable design or export STEP/STL/DXF. See the [shape designer guide](docs/shape-designer.md).
+
+## Creative tools
+
+Open **Creative tools** to explore design directions, refine an idea, or plan the making with an installed local Ollama chat model. Save generated notes with the submitted brief and use the searchable toolkit to open a making workspace. See [creative tools and extension guide](docs/creative-tools.md).
+
 ## Local data and optional models
 
 Flat-part and relief uploads are processed by the running CAD backend. Temporary model jobs expire; downloaded files remain yours to keep. The photo library has separate persistent storage and original-file rules. Browser notes and saved scenarios belong to the browser profile and origin; export them for a portable copy. Read [privacy and security](docs/privacy-security.md) before using sensitive source material.

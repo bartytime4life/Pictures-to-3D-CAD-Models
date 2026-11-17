@@ -671,3 +671,21 @@ def test_upload_size_is_bounded_before_parsing(client):
     assert reply.status_code == 413 and "32 MiB" in reply.json()["detail"]
     assert api.body_limit("/api/library/search")[0] == api.body_limit("/api/trace")[0]
     assert api.body_limit("/api/library/crunch")[0] < api.body_limit("/api/library/uploads")[0]
+
+
+@pytest.mark.parametrize("attempt", range(3))
+def test_first_summary_and_photo_reads_initialize_store_concurrently(lib, attempt):
+    from concurrent.futures import ThreadPoolExecutor
+    from threading import Barrier
+
+    barrier = Barrier(12)
+
+    def read(index):
+        barrier.wait(timeout=5)
+        if index % 2:
+            return library.list_photos()["photos"] == []
+        return library.summary()["photos"] == 0
+
+    with ThreadPoolExecutor(12) as pool:
+        assert all(pool.map(read, range(12)))
+    assert library.summary()["photos"] == 0

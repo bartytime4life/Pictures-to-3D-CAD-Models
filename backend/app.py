@@ -24,10 +24,12 @@ from . import blender as blender_bridge
 from . import depth as depth_model
 from . import library, vision
 from .assistant import AssistantError, AssistantRequest, assistant_status, chat
+from .creative import CreativeRequest, run_tool, tool_catalog
 from .documentation import router as documentation_router
 from .models import BuildRequest, Detail, Reference
 from .printing import load_printer_catalog
 from .relief import ReliefError, ReliefSettings, fit_half_value
+from .shapes import ShapeBuildRequest
 from .slicers import PROGRAMS, SlicerError, launch, launch_request_allowed, program_status
 from .tracing import MAX_BYTES, TraceError, trace_image
 
@@ -282,6 +284,21 @@ async def local_assistant_status():
 
 @app.post("/api/assistant/chat")
 async def local_assistant_chat(request: AssistantRequest):
+    return await run_local_ai(chat, request)
+
+
+@app.get("/api/creative/tools")
+async def creative_tools():
+    return tool_catalog()
+
+
+@app.post("/api/creative/run")
+async def creative_run(request: CreativeRequest):
+    return await run_local_ai(run_tool, request)
+
+
+async def run_local_ai(operation, request):
+    """One bounded inference slot shared by the assistant and all creative tools."""
     lock = app.state.assistant_lock
     if lock.locked():
         raise HTTPException(429, "The local assistant is answering. Wait a moment and try again.")
@@ -289,7 +306,7 @@ async def local_assistant_chat(request: AssistantRequest):
         # Cancelling an HTTP request cannot stop a worker thread. Keep its slot
         # until the bounded local request finishes, so repeated cancellation
         # cannot accumulate inference jobs on the Ollama server.
-        worker = asyncio.create_task(asyncio.to_thread(chat, request))
+        worker = asyncio.create_task(asyncio.to_thread(operation, request))
         try:
             return await asyncio.shield(worker)
         except asyncio.CancelledError:
@@ -454,6 +471,23 @@ async def build(request: BuildRequest):
             "backend.worker",
             prepare,
             "This outline could not be converted to a solid. Reduce detail or remove very narrow features and try again.",
+        )
+
+
+@app.post("/api/designer/build")
+async def build_shapes(request: ShapeBuildRequest):
+    lock = app.state.cad_lock
+    if lock.locked():
+        raise busy_building()
+    async with lock:
+        job_dir = reserve_job()
+
+        def prepare(directory):
+            (directory / "input.json").write_text(request.model_dump_json(), encoding="utf-8")
+
+        return await run_worker(
+            job_dir, "backend.shape_worker", prepare,
+            "The shapes could not form a solid. Check overlap, cutouts and dimensions.",
         )
 
 

@@ -1,6 +1,6 @@
 # Documentation
 
-Start with a task, follow its workflow, and keep a saved recipe before leaving the application. Pictures to CAD has a measured flat-part workbench, a relief studio, a photo library, and supporting Knowledge and Science workspaces.
+Start with a task, follow its workflow, and keep a saved recipe before leaving the application. Pictures to CAD has a measured flat-part workbench, a relief studio, a photo library, a Creative tools studio, and supporting Knowledge and Science workspaces.
 
 ## Start and finish a part
 
@@ -19,6 +19,8 @@ Start with a task, follow its workflow, and keep a saved recipe before leaving t
 | Recover work or diagnose a problem                        | [Troubleshooting](troubleshooting.md)                                                                                  |
 
 The **Next step** guide points to the next missing measurement, invalid setting, build or export review. **Quick edit** changes design size; the original reference measurements stay explicit. **Prepare for slicing** keeps process notes with the built revision. View-only controls never modify an exported solid.
+
+Create a part without a photo using the [shape designer](shape-designer.md). Explore ideas and find a making workspace with [Creative tools](creative-tools.md). Developers can use its workspace catalog and text-tool registry to add tools without duplicating navigation or inference plumbing.
 
 ## Understand the result
 
@@ -52,3 +54,5 @@ Historical evidence retains its original revision, inputs, failures and limits. 
 Open the application's **OpenSCAD** link for the separate reference workspace, or use [the offline reader](../reference-library/index.html). Its [README](../reference-library/README.md), [handbook](../reference-library/HANDBOOK.md), [OpenSCAD guide](../reference-library/OPENSCAD.md), [cadkit commands](../reference-library/cadkit/README.md) and [build guide](../reference-library/BUILD.md) describe its own tools and checks.
 
 Use the [project brief](../reference-library/templates/PROJECT-BRIEF.md), [capture checklist](../reference-library/templates/CAPTURE-CHECKLIST.md), [independent checks](../reference-library/templates/INDEPENDENT-CHECKS.md) and [print acceptance](../reference-library/templates/PRINT-ACCEPTANCE.md) templates to record a project beyond the browser session.
+
+- [Creative workspace verification](validation/creative-workspaces.md): local Ollama inference, common-shape CAD, workspace UI checks, fixes and captured evidence.

@@ -1,7 +1,8 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { ArrowRight, Command, MagnifyingGlass, X } from '@phosphor-icons/react';
 import { useStudioActive } from './StudioActivity';
-import type { Studio } from './AppHeader';
+import { STUDIO_CATALOG, studioFromHash } from './studioCatalog';
+import type { Studio } from './studioCatalog';
 
 export type StudioCommand = {
   id: string;
@@ -12,45 +13,18 @@ export type StudioCommand = {
   disabled?: boolean;
 };
 
-const navigation: StudioCommand[] = [
-  [
-    'workbench',
-    'Flat-part workbench',
-    'Trace, measure, edit and export a solid',
-    'photo cad model edit',
-  ],
-  [
-    'relief',
-    'Relief and lithophane studio',
-    'Turn image intensity into printable depth',
-    'terrain heightmap light',
-  ],
-  ['library', 'Photo library', 'Organize and choose source photographs', 'images browse'],
-  [
-    'knowledge',
-    'Knowledge base',
-    'Guides, troubleshooting and your saved notes',
-    'help documentation learn',
-  ],
-  [
-    'science',
-    'Science lab',
-    'Explore scale, print layers and fit with editable scenarios',
-    'calculator sensitivity clearance',
-  ],
-].map(([id, label, detail, keywords]) => ({
-  id,
-  label,
-  detail,
-  keywords,
+const navigation: StudioCommand[] = STUDIO_CATALOG.map((item) => ({
+  id: item.id,
+  label: item.name,
+  detail: item.description,
+  keywords: item.keywords,
   run: () => {
-    window.location.hash = `#${id}`;
+    window.location.hash = `#${item.id}`;
   },
 }));
 
-function currentStudio(): string {
-  const route = window.location.hash.slice(1).split('?')[0];
-  return navigation.some((command) => command.id === route) ? route : 'workbench';
+function currentStudio(): Studio {
+  return studioFromHash(window.location.hash);
 }
 
 // A shortcut can arrive after the URL changes but before React activates its route.
