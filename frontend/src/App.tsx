@@ -1636,6 +1636,7 @@ export default function App() {
                 parts={model?.parts}
                 resetKey={resetKey}
                 loading={!!busy}
+                emptyMessage={false}
                 color={design.color}
                 material={design.material}
               />

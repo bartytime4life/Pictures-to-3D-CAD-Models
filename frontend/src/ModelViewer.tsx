@@ -38,6 +38,9 @@ type ModelViewerProps = {
   lighting?: ViewerLighting;
   resetKey: number;
   loading: boolean;
+  // false when the page draws its own empty-state message over the viewer, so the two
+  // are not shown on top of each other. The loading message is shown either way.
+  emptyMessage?: boolean;
   color?: string;
   material?: PreviewMaterial;
   parts?: PreviewPart[];
@@ -435,6 +438,7 @@ export default function ModelViewer({
   mesh,
   resetKey,
   loading,
+  emptyMessage = true,
   color = '#c4c7ca',
   material = 'pla',
   parts = noParts,
@@ -552,12 +556,16 @@ export default function ModelViewer({
             lineHeight: 1.7,
           }}
         >
-          <Cube size={40} weight="light" aria-hidden="true" />
-          <p style={{ color: '#e1e7eb', fontWeight: 600, marginBottom: 4 }}>
-            {loading ? 'Building your CAD solid…' : 'Your CAD model will appear here'}
-          </p>
-          {!loading && (
-            <p style={{ marginTop: 0 }}>Trace a photo and set its dimensions to begin.</p>
+          {(loading || emptyMessage) && (
+            <>
+              <Cube size={40} weight="light" aria-hidden="true" />
+              <p style={{ color: '#e1e7eb', fontWeight: 600, marginBottom: 4 }}>
+                {loading ? 'Building your CAD solid…' : 'Your CAD model will appear here'}
+              </p>
+              {!loading && (
+                <p style={{ marginTop: 0 }}>Trace a photo and set its dimensions to begin.</p>
+              )}
+            </>
           )}
         </div>
       )}
