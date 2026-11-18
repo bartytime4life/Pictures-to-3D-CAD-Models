@@ -27,7 +27,7 @@ async function studio(page: Page, hash: string) {
 test('studio navigation preserves unfinished model edits and requires a fresh build', async ({
   page,
 }) => {
-  await page.goto('/');
+  await page.goto('/#workbench');
   await expect(page.getByRole('button', { name: 'Review export', exact: true })).toBeEnabled({
     timeout: 60_000,
   });
@@ -97,7 +97,7 @@ test('command search supports keyboard navigation, Escape, and one active dialog
 test('source and CAD inspection tools preserve model dimensions and reset predictably', async ({
   page,
 }) => {
-  await page.goto('/');
+  await page.goto('/#workbench');
   await expect(page.getByRole('button', { name: 'Review export', exact: true })).toBeEnabled({
     timeout: 60_000,
   });

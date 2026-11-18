@@ -22,7 +22,7 @@ test.afterEach(async ({ request }) => {
 
 async function ready(page: Page): Promise<TraceResult> {
   const traced = page.waitForResponse((r) => r.url().endsWith('/api/trace') && r.ok());
-  await page.goto('/');
+  await page.goto('/#workbench');
   await expect(page.getByRole('button', { name: 'Review export', exact: true })).toBeEnabled({
     timeout: 60_000,
   });

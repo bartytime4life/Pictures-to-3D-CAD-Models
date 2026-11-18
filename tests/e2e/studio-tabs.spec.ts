@@ -25,7 +25,7 @@ test('switching studios keeps each studio’s work, title and scroll position', 
   });
   const tabs = page.getByRole('navigation', { name: 'Studios', exact: true });
 
-  await page.goto('/');
+  await page.goto('/#workbench');
   await expect(page.getByRole('button', { name: 'Review export', exact: true })).toBeEnabled({
     timeout: 60_000,
   });

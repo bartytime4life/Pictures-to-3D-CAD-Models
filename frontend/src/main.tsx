@@ -4,6 +4,7 @@ import '@fontsource-variable/inter';
 import '@fontsource-variable/jetbrains-mono';
 import './styles.css';
 import App from './App';
+import StartStudio from './StartStudio';
 import LibraryStudio from './LibraryStudio';
 import ReliefStudio from './ReliefStudio';
 import KnowledgeStudio from './KnowledgeStudio';
@@ -17,6 +18,7 @@ import { StudioActivity } from './StudioActivity';
 import type { Studio } from './AppHeader';
 
 const studios: Record<Studio, ComponentType> = {
+  start: StartStudio,
   workbench: App,
   relief: ReliefStudio,
   library: LibraryStudio,

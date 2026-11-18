@@ -36,4 +36,6 @@ fi
 "$PICAD_UV" sync --frozen --python "$PICAD_PY"
 npm ci --no-fund --no-audit
 npm run build
-echo 'Setup complete. Run ./scripts/start.sh, or ./scripts/dev.sh for development.'
+echo 'App setup complete. Run ./scripts/start.sh and keep that terminal open.'
+echo 'Use ./scripts/doctor.sh for a read-only setup and optional local AI check.'
+echo 'Use ./scripts/dev.sh when developing the interface.'

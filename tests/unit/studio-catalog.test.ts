@@ -6,8 +6,8 @@ import { notesExport } from '../../frontend/src/creative.ts';
 test('studio routes accept deep links and safely fall back for unknown targets', () => {
   for (const studio of STUDIO_CATALOG)
     assert.equal(studioFromHash(`#${studio.id}?search=test`), studio.id);
-  assert.equal(studioFromHash('#missing'), 'workbench');
-  assert.equal(studioFromHash('#__proto__'), 'workbench');
+  assert.equal(studioFromHash('#missing'), 'start');
+  assert.equal(studioFromHash('#__proto__'), 'start');
   assert.equal(new Set(STUDIO_CATALOG.map((studio) => studio.id)).size, STUDIO_CATALOG.length);
 });
 

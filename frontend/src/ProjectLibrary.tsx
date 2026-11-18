@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { ArrowSquareOut, DownloadSimple, Plus, Trash } from '@phosphor-icons/react';
 import {
   listLibraryProjects,
@@ -8,16 +8,35 @@ import {
   saveLibraryProject,
   updateLibraryProject,
 } from './projectLibrary';
-import type {
-  LibraryProject,
-  PrintAttempt,
-  PrintStatus,
-  ProjectDetailsUpdate,
-  ProjectUpdate,
-} from './projectLibrary';
+import type { LibraryProject, PrintStatus, ProjectUpdate } from './projectLibrary';
+import {
+  clearProjectDraft,
+  clearSavedProjectDraft,
+  patchProjectDraft,
+  projectDetailsUpdate,
+  projectDraftChanged,
+  readProjectDraft,
+} from './projectDrafts';
+import type { ProjectDraft, ProjectDraftMap } from './projectDrafts';
 import { downloadProjectRecipe, profileBounds } from './projectRecipe';
 import type { Profile, ProjectRecipe } from './types';
 import './ProjectLibrary.css';
+
+// The modal unmounts on close. Keep its unsaved text in this tab until it is saved,
+// its snapshot is deleted, or the page reloads. No drafts are written to storage.
+let draftCache: { drafts: ProjectDraftMap; revision: number } = { drafts: new Map(), revision: 0 };
+const draftSubscribers = new Set<() => void>();
+function subscribeDrafts(listener: () => void) {
+  draftSubscribers.add(listener);
+  return () => {
+    draftSubscribers.delete(listener);
+  };
+}
+const readDraftCache = () => draftCache;
+function keepDrafts(drafts: ProjectDraftMap, saved = false) {
+  draftCache = { drafts, revision: draftCache.revision + Number(saved) };
+  for (const listener of draftSubscribers) listener();
+}
 
 function OutlineThumbnail({ profile }: { profile: Profile }) {
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -64,6 +83,9 @@ function snapshotDimensions(recipe: ProjectRecipe) {
 
 function ProjectDetails({
   project,
+  draft,
+  unsaved,
+  onDraftChange,
   disabled,
   canOpen,
   onOpen,
@@ -71,31 +93,18 @@ function ProjectDetails({
   onRemove,
 }: {
   project: LibraryProject;
+  draft: ProjectDraft;
+  unsaved: boolean;
+  onDraftChange: (patch: Partial<ProjectDraft>) => void;
   disabled: boolean;
   canOpen: boolean;
   onOpen: (recipe: ProjectRecipe) => void;
   onUpdate: (update: ProjectUpdate, message: string) => Promise<boolean>;
   onRemove: () => void;
 }) {
-  const [status, setStatus] = useState(project.status);
-  const storedTags = project.tags.join(', ');
-  const [tags, setTags] = useState(storedTags);
-  const [notes, setNotes] = useState(project.notes);
-  const [date, setDate] = useState(localDate);
-  const [outcome, setOutcome] = useState<PrintAttempt['outcome']>('Printed');
-  const [attemptNotes, setAttemptNotes] = useState('');
+  const { status, tags, notes, date, outcome, attemptNotes } = draft;
   const [confirmRemove, setConfirmRemove] = useState(false);
   const { recipe } = project;
-
-  useEffect(() => {
-    setStatus(project.status);
-  }, [project.status]);
-  useEffect(() => {
-    setTags(storedTags);
-  }, [storedTags]);
-  useEffect(() => {
-    setNotes(project.notes);
-  }, [project.notes]);
 
   return (
     <section className="project-library-details" aria-label="Selected project details">
@@ -127,25 +136,19 @@ function ProjectDetails({
           </button>
         </div>
         <p>Opening replaces the current workbench draft after the saved version rebuilds.</p>
+        {unsaved && (
+          <p role="status">
+            Unsaved edits stay in this tab when switching projects or closing the project library.
+            Save details or record the print attempt to keep them after a page reload.
+          </p>
+        )}
       </div>
 
       <form
         className="project-library-form"
         onSubmit={(event) => {
           event.preventDefault();
-          const distinctTags = new Map<string, string>();
-          for (const tag of tags
-            .split(',')
-            .map((value) => value.trim())
-            .filter(Boolean)) {
-            if (!distinctTags.has(tag.toLowerCase())) distinctTags.set(tag.toLowerCase(), tag);
-          }
-          const savedTags = [...distinctTags.values()];
-          const update: ProjectDetailsUpdate = {};
-          if (status !== project.status) update.status = status;
-          if (savedTags.join(', ') !== storedTags) update.tags = savedTags;
-          if (notes.trim() !== project.notes) update.notes = notes.trim();
-          void onUpdate(update, 'Project details saved.');
+          void onUpdate(projectDetailsUpdate(project, draft), 'Project details saved.');
         }}
       >
         <h4>Project details</h4>
@@ -154,7 +157,7 @@ function ProjectDetails({
             Print status
             <select
               value={status}
-              onChange={(event) => setStatus(event.target.value as PrintStatus)}
+              onChange={(event) => onDraftChange({ status: event.target.value as PrintStatus })}
             >
               {PRINT_STATUSES.map((value) => (
                 <option key={value}>{value}</option>
@@ -163,7 +166,11 @@ function ProjectDetails({
           </label>
           <label>
             Tags (comma separated)
-            <input value={tags} maxLength={240} onChange={(event) => setTags(event.target.value)} />
+            <input
+              value={tags}
+              maxLength={240}
+              onChange={(event) => onDraftChange({ tags: event.target.value })}
+            />
           </label>
           <label>
             Project notes
@@ -171,7 +178,7 @@ function ProjectDetails({
               rows={2}
               value={notes}
               maxLength={1600}
-              onChange={(event) => setNotes(event.target.value)}
+              onChange={(event) => onDraftChange({ notes: event.target.value })}
             />
           </label>
           <button type="submit" className="outlined-button">
@@ -187,9 +194,7 @@ function ProjectDetails({
           void onUpdate(
             { attempt: { date, outcome, notes: attemptNotes.trim() } },
             'Print attempt recorded.',
-          ).then((saved) => {
-            if (saved) setAttemptNotes('');
-          });
+          );
         }}
       >
         <h4>Print history</h4>
@@ -211,14 +216,16 @@ function ProjectDetails({
               type="date"
               required
               value={date}
-              onChange={(event) => setDate(event.target.value)}
+              onChange={(event) => onDraftChange({ date: event.target.value })}
             />
           </label>
           <label>
             Outcome
             <select
               value={outcome}
-              onChange={(event) => setOutcome(event.target.value as PrintAttempt['outcome'])}
+              onChange={(event) =>
+                onDraftChange({ outcome: event.target.value as ProjectDraft['outcome'] })
+              }
             >
               {PRINT_OUTCOMES.map((value) => (
                 <option key={value}>{value}</option>
@@ -231,7 +238,7 @@ function ProjectDetails({
               rows={2}
               value={attemptNotes}
               maxLength={1600}
-              onChange={(event) => setAttemptNotes(event.target.value)}
+              onChange={(event) => onDraftChange({ attemptNotes: event.target.value })}
             />
           </label>
           <button type="submit" className="outlined-button">
@@ -288,6 +295,8 @@ export default function ProjectLibrary({
   onOpen: (recipe: ProjectRecipe) => void;
 }) {
   const [projects, setProjects] = useState<LibraryProject[]>([]);
+  const { drafts, revision } = useSyncExternalStore(subscribeDrafts, readDraftCache);
+  const [today] = useState(localDate);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<PrintStatus | ''>('');
@@ -298,12 +307,22 @@ export default function ProjectLibrary({
   const [feedback, setFeedback] = useState('');
   const [error, setError] = useState('');
 
+  function editDraft(project: LibraryProject, patch: Partial<ProjectDraft>) {
+    try {
+      keepDrafts(patchProjectDraft(draftCache.drafts, project, patch, today));
+      setError('');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not keep these edits.');
+    }
+  }
+
   useEffect(() => {
     let active = true;
     void listLibraryProjects().then(
       (list) => {
         if (!active) return;
         setProjects(list);
+        setLoadError(false);
         setLoading(false);
       },
       () => {
@@ -315,7 +334,7 @@ export default function ProjectLibrary({
     return () => {
       active = false;
     };
-  }, []);
+  }, [revision]);
 
   const words = query.trim().toLowerCase().split(/\s+/);
   const visible = projects.filter((project) => {
@@ -368,6 +387,7 @@ export default function ProjectLibrary({
             void run(async () => {
               const { project, created } = await saveLibraryProject(getRecipe());
               keepProject(project);
+              keepDrafts(draftCache.drafts, true);
               setSelectedId(project.id);
               setQuery('');
               setFilter('');
@@ -430,20 +450,23 @@ export default function ProjectLibrary({
             </div>
             {visible.length > 0 ? (
               <ul className="project-library-list" aria-label="Saved projects">
-                {visible.map(({ id, recipe, tags, status }) => (
-                  <li key={id}>
+                {visible.map((project) => (
+                  <li key={project.id}>
                     <button
                       type="button"
-                      aria-pressed={id === selected?.id}
+                      aria-pressed={project.id === selected?.id}
                       disabled={pending}
-                      onClick={() => setSelectedId(id)}
+                      onClick={() => setSelectedId(project.id)}
                     >
-                      <OutlineThumbnail profile={recipe.profile} />
+                      <OutlineThumbnail profile={project.recipe.profile} />
                       <span>
-                        <strong>{recipe.name}</strong>
-                        <small>{snapshotDimensions(recipe)}</small>
-                        <small>{status}</small>
-                        {tags.length > 0 && <small>{tags.join(', ')}</small>}
+                        <strong>{project.recipe.name}</strong>
+                        <small>{snapshotDimensions(project.recipe)}</small>
+                        <small>{project.status}</small>
+                        {project.tags.length > 0 && <small>{project.tags.join(', ')}</small>}
+                        {projectDraftChanged(project, drafts, today) && (
+                          <small>Unsaved edits</small>
+                        )}
                       </span>
                     </button>
                   </li>
@@ -459,23 +482,37 @@ export default function ProjectLibrary({
             <ProjectDetails
               key={selected.id}
               project={selected}
+              draft={readProjectDraft(selected, drafts, today)}
+              unsaved={projectDraftChanged(selected, drafts, today)}
+              onDraftChange={(patch) => editDraft(selected, patch)}
               disabled={pending}
               canOpen={canOpen}
               onOpen={onOpen}
               onUpdate={(update, message) =>
                 run(async () => {
+                  const submitted = draftCache.drafts;
                   const updated = await updateLibraryProject(selected.id, update);
                   if (!updated) {
                     setProjects((previous) => previous.filter(({ id }) => id !== selected.id));
                     throw new Error('This snapshot was removed in another tab.');
                   }
                   keepProject(updated);
+                  keepDrafts(
+                    clearSavedProjectDraft(
+                      draftCache.drafts,
+                      submitted,
+                      selected.id,
+                      'attempt' in update ? 'attempt' : 'details',
+                    ),
+                    true,
+                  );
                   setFeedback(message);
                 })
               }
               onRemove={() =>
                 void run(async () => {
                   await removeLibraryProject(selected.id);
+                  keepDrafts(clearProjectDraft(draftCache.drafts, selected.id, 'all'), true);
                   setProjects((previous) => previous.filter(({ id }) => id !== selected.id));
                   setFeedback('Project snapshot removed.');
                 })

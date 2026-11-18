@@ -6,7 +6,7 @@ Trace a plate, gasket, spacer or template. Set scale from a real measurement, en
 
 [Get started](docs/getting-started.md) · [Workflows](docs/workflows.md) · [Documentation](docs/README.md) · [Troubleshooting](docs/troubleshooting.md)
 
-![Flat-part studio with linked source and CAD inspection tools](docs/validation/evidence/precision-studio/02-desktop.png)
+![Start workspace with making tasks and saved-project entry](docs/validation/evidence/experience/01-start.png)
 
 ## Start locally
 
@@ -15,11 +15,12 @@ Use **Python 3.12**, **Node.js 22.12+**, npm and GNU Make. Clone the repository,
 ```bash
 git clone https://github.com/bartytime4life/Pictures-to-3D-CAD-Models.git
 cd Pictures-to-3D-CAD-Models
-make setup
+make setup-app
+make doctor
 make start
 ```
 
-Keep the terminal open and visit [Pictures to CAD](http://127.0.0.1:8000). The default server binds to your computer's loopback address. `make setup-app` installs only the workbench; `make dev` starts frontend hot reload. See [setup details](docs/development.md) for platform requirements and commands.
+Keep the terminal open and visit [Pictures to CAD](http://127.0.0.1:8000). The default server binds to your computer's loopback address. `make setup-app` installs only the app; `make setup` also prepares the companion handbook development environment; `make dev` starts frontend hot reload. See [setup details](docs/development.md) for platform requirements and commands.
 
 The basic workflow needs no account, GPU, paid API or AI credential. Setup installs application dependencies; it does not install a native slicer or OpenSCAD, download optional AI weights, or send a model to a printer.
 
@@ -27,6 +28,7 @@ The basic workflow needs no account, GPU, paid API or AI credential. Setup insta
 
 | Workspace               | What works here                                                                                                                                        | What to check yourself                                                                     |
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| **Start**               | Choose a making task, reopen saved flat-part projects and check required setup or optional AI | Setup metadata is advisory; a sample checks the complete CAD workflow |
 | **Flat part**           | Trace a planar outline and through holes; calibrate from measured width, known features or a suitable reference sheet; build constant-thickness solids | Independent dimensions, important radii and the source photograph                          |
 | **Shape designer**      | Combine common shapes and through cutouts, save the editable composition, or transfer the outline to Flat part                                         | Finished dimensions and connected geometry                                                 |
 | **Quick edit**          | Set target width and thickness, keep XY proportions, use size presets, undo/redo design settings                                                       | Whether the intended size still meets your fit requirement                                 |
@@ -40,11 +42,11 @@ The basic workflow needs no account, GPU, paid API or AI credential. Setup insta
 | **Science lab**         | Explore scale sensitivity, ideal layer counts and measured-clearance scenarios with editable values                                                    | Real measurement uncertainty, slicer behavior and physical fit                             |
 | **OpenSCAD**            | Open the companion handbook, calculators and parametric examples                                                                                       | External edits and native rendering separately from the workbench recipe                   |
 
-Use **Search commands** or **Ctrl/Cmd+K** to find a workspace or supported action. Escape closes the launcher. Visited studios keep their current edits while navigating in the same page; save a project before reloading or closing the browser.
+The app opens on **Start**. Phones and tablets use a labeled **Workspace** picker; larger screens show workspace tabs. Use **Search commands** or **Ctrl/Cmd+K** to find a workspace or supported action. Escape closes the launcher. Visited studios keep their current edits while navigating in the same page; save a project before reloading or closing the browser.
 
 ## First successful model
 
-1. Open **Flat part**. The included mounting plate is a demonstration with an 80 mm reference width and 4 mm thickness.
+1. Open **Start → Try the flat-part sample**. The included mounting plate is a demonstration with an 80 mm reference width and 4 mm thickness.
 2. Inspect the outline and through holes beside the generated solid. Use **Quick edit** to choose a target size without replacing the reference measurements.
 3. Update the model after an edit. A stale preview cannot authorize downloads for the new settings.
 4. Open **Prepare for slicing**, choose a process starting point, and review printer dimensions under **Printer & split settings**.

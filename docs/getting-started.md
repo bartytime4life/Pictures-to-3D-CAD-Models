@@ -9,17 +9,28 @@ Use Python 3.12, Node.js 22.12 or later, npm and GNU Make. Clone the repository 
 ```bash
 git clone https://github.com/bartytime4life/Pictures-to-3D-CAD-Models.git
 cd Pictures-to-3D-CAD-Models
-make setup
+make setup-app
+make doctor
 make start
 ```
 
-Keep the terminal open. Visit [the local application](http://127.0.0.1:8000). For workbench-only setup, use `make setup-app`; the full setup also prepares the separate reference library. If `python3` points to another version, setup checks `python3.12`, or you can set `PICAD_PYTHON` to an existing Python 3.12 interpreter. See [development and setup](development.md) for platform details.
+Keep the terminal open. Visit [the local application](http://127.0.0.1:8000), or the address printed by the start script when you choose another port. `make setup-app` installs and builds the application. The included OpenSCAD handbook can be read without preparing its separate development environment; use `make setup` when you also want to rebuild or test that handbook. If `python3` points to another version, setup checks `python3.12`, or you can set `PICAD_PYTHON` to an existing Python 3.12 interpreter. See [development and setup](development.md) for platform details.
+
+`make doctor` checks the app environment, required Python packages, built interface, and optional local AI. It prints a next step for any missing requirement and exits successfully when the app requirements are ready. Missing optional Ollama or frontend development tools do not block the built app. This check does not install packages, download models, build CAD, or generate AI responses. For JSON output, run `./scripts/doctor.sh --json`; use `--skip-ai` to skip the loopback Ollama metadata request.
 
 A remote backend runs on the remote machine: use its supported port-forwarding mechanism. Your laptop's localhost does not automatically reach that backend.
 
+## Choose your task
+
+The app opens on **Start** without creating a CAD job. Choose **Design a flat part** to combine common shapes, **Trace a photo into CAD** to open your measured photograph, or **Make a relief or lithophane** to create depth from a picture. Supporting tools explain their own AI requirements before you enter them.
+
+**Saved flat-part projects** opens this browser's project snapshots. **Open a downloaded project** accepts a portable recipe JSON in the photo-or-project chooser. A source photo collection lives separately in **Photo library**. On phones and tablets, use the **Workspace** picker to change tools; larger screens show tabs. Navigation retains drafts in the current page.
+
+Expand **Local setup → Setup details** for missing requirements and suggested commands. It checks installed requirements, not the correctness of a CAD export or AI answer.
+
 ## Learn with the sample
 
-1. Open **Flat part**. The mounting-plate sample is traced and built with demonstration dimensions: 80 mm reference width and 4 mm thickness.
+1. On **Start**, select **Try the flat-part sample**. The mounting-plate sample is traced and built with demonstration dimensions: 80 mm reference width and 4 mm thickness.
 2. Compare the cyan source outline and holes with the 3D solid. Use the available views and reset control to inspect the result.
 3. Under **Quick edit**, enter a target width of 100 mm. Leave the field or press Enter to commit. The target height changes proportionally; the measured reference width remains 80 mm.
 4. Select **Update model** in the CAD panel or **Update preview** in **Next step**. Until a fresh build succeeds, the old result remains marked outdated and new exports are unavailable.
@@ -58,6 +69,6 @@ Choose **Project library → Save current snapshot** in Flat part to keep a vers
 
 Use **Save project** or **Download recipe** from a saved snapshot to download portable JSON. The file carries the outline and editable settings. Keep the original photograph alongside it and download any geometry files you plan to use.
 
-Navigation within the page keeps visited studio drafts in memory. Reloading or closing the page clears those drafts. To resume, select **Open in workbench** on a saved snapshot, or open the downloaded JSON through **Photo → Browse files**. The replacement becomes current after it builds successfully. Temporary geometry exports expire, even for a saved project.
+Navigation within the page keeps visited studio drafts in memory. Reloading or closing the page clears those drafts. To resume, use **Start → Saved flat-part projects → Open in workbench**, or **Start → Open a downloaded project → Browse files**. The replacement becomes current after it builds successfully. Temporary geometry exports expire, even for a saved project.
 
 Knowledge notes and Science scenarios have their own storage and export controls. They are not included automatically in the CAD recipe. See [workflows](workflows.md) and [troubleshooting](troubleshooting.md).

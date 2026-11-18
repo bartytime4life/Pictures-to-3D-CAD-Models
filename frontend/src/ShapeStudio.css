@@ -83,6 +83,13 @@
   gap: 22px;
   align-items: start;
 }
+.shape-section-navigation {
+  display: none;
+}
+.shape-panel:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 4px;
+}
 .shape-panel {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -313,6 +320,28 @@
   .shape-layout {
     display: flex;
     flex-direction: column;
+  }
+  .shape-section-navigation {
+    position: sticky;
+    top: 8px;
+    z-index: 10;
+    display: flex;
+    gap: 6px;
+    padding: 6px;
+    margin-bottom: 18px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #101b29;
+  }
+  .shape-main .shape-section-navigation button {
+    flex: 1;
+    min-width: 0;
+    min-height: 44px;
+    padding: 8px 6px;
+    font-size: 11px;
+  }
+  .shape-panel[id] {
+    scroll-margin-top: 80px;
   }
   .shape-controls,
   .shape-workspace {

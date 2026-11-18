@@ -2,6 +2,12 @@
 
 Choose the workspace that matches the source and the result you need. The measured flat-part workflow builds a planar extrusion; the Relief workspace interprets an image as a height or transmission field. Neither is a universal reconstruction of hidden 3D shape.
 
+## Choose and resume a task
+
+**Start** groups making tools by the source you have: dimensions and common shapes, a measured photograph, or a picture for relief. It also exposes saved flat-part projects, downloaded recipe files and the optional sample. Entering a photo or saved-project flow does not first trace or build a demonstration.
+
+Use the shared tabs or compact **Workspace** picker to move between tools. **Search commands** also opens saved flat-part projects from any workspace. Navigation preserves mounted drafts; save or download before a page reload. Photo library sources and browser-saved CAD snapshots are separate collections.
+
 ## Scale and check a flat part
 
 **Inputs:** one useful front-on photograph, a known physical length and a measured constant thickness.
@@ -29,6 +35,8 @@ To inspect a source edge, use the source panel's plus/minus buttons and drag the
 2. Select a snapshot. Enter comma-separated tags, project notes or a status (**Unprinted**, **Queued**, **Printing**, **Printed** or **Failed**) and select **Save details**. Search by project name or tag and use the status filter to narrow the list.
 3. Enter the print date, choose **Printed** or **Failed**, add optional notes, and select **Record print attempt**. This adds a history entry and sets the current status to that outcome. Changing the status in **Save details** is independent of recording an attempt.
 4. Choose **Open in workbench** to rebuild the saved outline and settings. Choose **Download recipe** for a portable editable copy. To delete an entry and its history, select **Remove from library** and confirm **Remove snapshot**.
+
+Unsaved project details and print-form text stay in the current tab when selecting or filtering snapshots or closing the dialog. **Unsaved edits** marks affected records. Saving details keeps pending print notes; recording a print keeps pending project notes. Save each form before reloading.
 
 The library stores snapshots in this browser profile and app origin. It keeps tags, notes, status and attempts with each entry. The recipe download carries the outline, measurements and settings. Keep the source photo and any print records you need to retain outside the browser separately. See [storage and retention](privacy-security.md#flat-part-project-library).
 

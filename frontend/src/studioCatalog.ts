@@ -3,6 +3,17 @@
  */
 export const STUDIO_CATALOG = [
   {
+    id: 'start',
+    label: 'Start',
+    shortLabel: 'Start',
+    name: 'Start',
+    title: 'Start',
+    description: 'Choose a making task, resume saved work and check local setup.',
+    keywords: 'home getting started setup resume projects',
+    category: 'Explore',
+    requirement: 'No AI needed',
+  },
+  {
     id: 'designer',
     label: 'Shape designer',
     shortLabel: 'Shape',
@@ -97,7 +108,7 @@ export type StudioDefinition = (typeof STUDIO_CATALOG)[number];
 
 export function studioFromHash(hash: string): Studio {
   const target = hash.replace(/^#/, '').split('?')[0];
-  return STUDIO_CATALOG.find((studio) => studio.id === target)?.id ?? 'workbench';
+  return STUDIO_CATALOG.find((studio) => studio.id === target)?.id ?? 'start';
 }
 
 export function searchStudios(query: string, category = 'All'): StudioDefinition[] {

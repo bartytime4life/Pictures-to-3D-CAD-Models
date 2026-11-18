@@ -12,7 +12,7 @@ for (const viewport of [
     const initialBuild = page.waitForResponse(
       (response) => response.url().endsWith('/api/build') && response.ok(),
     );
-    await page.goto('/');
+    await page.goto('/#workbench');
     const model = await (await initialBuild).json();
     try {
       await expect(page.getByRole('button', { name: 'Review export', exact: true })).toBeEnabled();

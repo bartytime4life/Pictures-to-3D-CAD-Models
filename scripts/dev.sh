@@ -2,7 +2,11 @@
 set -euo pipefail
 PICAD_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PICAD_ROOT"
-[[ -x .venv/bin/python && -d node_modules ]] || { echo 'Run ./scripts/setup.sh first.' >&2; exit 1; }
+[[ -x .venv/bin/python && -x node_modules/.bin/vite ]] || {
+  echo 'Development dependencies are missing. Run ./scripts/setup.sh first.' >&2
+  echo 'Use ./scripts/doctor.sh for a read-only setup check.' >&2
+  exit 1
+}
 .venv/bin/python - <<'PY'
 import socket
 for port in (8000, 4173):
@@ -19,6 +23,12 @@ cleanup() {
   [[ -z "$PICAD_API_PID" ]] || kill "$PICAD_API_PID" 2>/dev/null || true
 }
 trap cleanup EXIT INT TERM
+if [[ "${PICAD_DEV_HOST:-127.0.0.1}" == 127.0.0.1 || "${PICAD_DEV_HOST:-127.0.0.1}" == localhost ]]; then
+  echo "Open http://${PICAD_DEV_HOST:-127.0.0.1}:4173 after both services report startup complete."
+else
+  echo "The interface will listen on ${PICAD_DEV_HOST}:4173. Use this host's supported browser or port forwarding."
+fi
+echo 'Keep this terminal open. Press Ctrl+C to stop both development services.'
 .venv/bin/python -m uvicorn backend.app:app --host 127.0.0.1 --port 8000 --reload &
 PICAD_API_PID=$!
 ./node_modules/.bin/vite frontend --config frontend/vite.config.ts --host "${PICAD_DEV_HOST:-127.0.0.1}" --port 4173 --strictPort &

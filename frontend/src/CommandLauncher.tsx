@@ -47,7 +47,26 @@ export default function CommandLauncher({
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState(0);
-  const available = useMemo(() => [...commands, ...navigation], [commands]);
+  const available = useMemo(
+    () => [
+      ...commands,
+      ...navigation,
+      ...(!commands.some((command) => command.id === 'project-library')
+        ? [
+            {
+              id: 'project-library',
+              label: 'Open saved flat-part projects',
+              detail: 'Resume browser snapshots and print history in the flat-part workbench',
+              keywords: 'library project resume saved history',
+              run: () => {
+                window.location.hash = '#workbench?open=projects';
+              },
+            },
+          ]
+        : []),
+    ],
+    [commands],
+  );
   const matches = available.filter((command) =>
     `${command.label} ${command.detail} ${command.keywords ?? ''}`
       .toLowerCase()

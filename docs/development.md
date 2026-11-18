@@ -24,15 +24,24 @@ The companion library uses the `python3` and `node` found on `PATH` (it needs Py
 ## Install and run
 
 ```bash
-make setup
+make setup-app
+make doctor
 make start
 ```
 
-`make setup` prepares both components. Workbench setup uses `uv.lock` and the root `package-lock.json`, then builds the frontend. HEIC decoding comes from the `pi-heif` wheel (BSD-3-Clause), which bundles libheif and libde265 (LGPL-3.0) and needs no system package; it can read HEIC but not write it, so the HEIC files in `tests/fixtures/` were written with `pillow-heif`. Library setup creates `reference-library/.venv`, installs its PDF requirements, and runs `npm ci` against the library's own lockfile. The environments and dependency declarations remain separate.
+`make setup-app` is sufficient to run the application and read the included handbook. Use `make setup` to prepare both the app and the separate reference-library development environment. Workbench setup uses `uv.lock` and the root `package-lock.json`, then builds the frontend. HEIC decoding comes from the `pi-heif` wheel (BSD-3-Clause), which bundles libheif and libde265 (LGPL-3.0) and needs no system package; it can read HEIC but not write it, so the HEIC files in `tests/fixtures/` were written with `pillow-heif`. Library setup creates `reference-library/.venv`, installs its PDF requirements, and runs `npm ci` against the library's own lockfile. The environments and dependency declarations remain separate.
 
 `make start` runs the Python workbench service, which serves the compiled frontend, API, and published reference library on the same origin. The app header opens `/reference-library/index.html#cad` separately. The library route only serves an explicit set of reader files; personal native builds, temporary outputs, scripts, and environments remain outside it. `make setup-app` and the existing `./scripts/setup.sh` prepare only that workbench; `./scripts/start.sh` remains the direct startup command. A library-only contributor can use `make setup-library`.
 
 Keep the terminal running after startup and open [Pictures to CAD](http://127.0.0.1:8000) in your browser on the same machine. For a managed remote host, use its supported browser or port forwarding. The normal server uses port 8000. Do not assume a background process will survive a new cloud task or an environment snapshot restore; run the start script again in the restored environment.
+
+### Check setup without changing it
+
+Run `make doctor`, or `./scripts/doctor.sh --json` for a structured report. The script uses this checkout's `.venv` when present; it also runs before setup with Python 3.10+ so it can explain missing requirements. A successful exit means the project environment uses Python 3.12, required package metadata is present, and the built HTML references existing local assets. It does not validate binary imports, CAD construction, live API behavior, or frontend source freshness; use the build, test and smoke commands for those checks.
+
+The optional Ollama check reads only `/api/tags` and `/api/show` from the configured HTTP loopback endpoint, with a shared 1.5-second budget and bounded response size. A ready result requires installed local weights advertising text completion; embedding-only and cloud aliases do not qualify. It never pulls models or calls inference. An unavailable optional capability does not fail the overall check. Use `./scripts/doctor.sh --skip-ai` when no local network check is wanted, or `.venv/bin/python scripts/check_ai.py --probe` to explicitly request synthetic inference tests. The report omits configured addresses, filesystem paths, model names and raw errors so the same summary can be shown inside the app.
+
+Node.js and npm are reported as optional development tools. They are needed to install or rebuild the interface, while an already built interface runs from the Python service without Node.js. The report does not modify environments, package caches, photo libraries or model stores.
 
 The default bind address is `127.0.0.1`. The supported startup settings are:
 
@@ -83,6 +92,7 @@ Run `make` for help. Component targets delegate to the existing scripts and libr
 | Command                                 | Scope                                                                                                                                                     |
 | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `make setup`                            | Prepare both components; no system tools, browser, or model downloads                                                                                     |
+| `make doctor`                           | Read-only app setup and optional local AI metadata check; missing optional tools do not fail the check                                                   |
 | `make start` / `make dev`               | Run the production workbench / workbench with hot reload                                                                                                  |
 | `make build`                            | Build the workbench and library outputs, including the library PDF                                                                                        |
 | `make test`                             | Workbench Python/build/TypeScript-unit/browser checks, then library Python/Node/browser checks                                                            |
