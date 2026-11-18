@@ -67,7 +67,7 @@ async function saveRecipe(page: Page, testInfo: TestInfo) {
 test('boundary reference stays applicable across unit changes and recipe restoration', async ({
   page,
 }, testInfo) => {
-  await page.goto('/');
+  await page.goto('/#workbench');
   await expect(page.getByRole('button', { name: 'Review export', exact: true })).toBeEnabled({
     timeout: 60_000,
   });

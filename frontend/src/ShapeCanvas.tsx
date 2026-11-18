@@ -23,9 +23,23 @@ export default function ShapeCanvas({
   const active = useStudioActive();
   const canvas = useRef<HTMLCanvasElement>(null);
   const transform = useRef({ scale: 1, x: 0, y: 0 });
-  const drag = useRef<{ id: string; dx: number; dy: number } | null>(null);
+  const drag = useRef<{ id: string; dx: number; dy: number; pointerId: number } | null>(null);
+  const moveEnd = useRef(onMoveEnd);
+  moveEnd.current = onMoveEnd;
   const latest = useRef(shapes);
   latest.current = shapes;
+  function finishGesture() {
+    const gesture = drag.current;
+    if (!gesture) return;
+    drag.current = null;
+    moveEnd.current();
+    if (canvas.current?.hasPointerCapture(gesture.pointerId))
+      canvas.current.releasePointerCapture(gesture.pointerId);
+  }
+  useEffect(() => {
+    if (!active) finishGesture();
+    return finishGesture;
+  }, [active]);
   useEffect(() => {
     if (!active || !canvas.current) return;
     const target = canvas.current;
@@ -153,6 +167,7 @@ export default function ShapeCanvas({
       aria-label="2D shape design. Drag shapes to move; use the shape list and dimension fields for keyboard editing."
       role="img"
       onPointerDown={(event) => {
+        if (!active || event.button !== 0 || !event.isPrimary || drag.current) return;
         const ctx = event.currentTarget.getContext('2d');
         if (!ctx) return;
         const point = position(event);
@@ -172,14 +187,19 @@ export default function ShapeCanvas({
           if (hit) {
             onSelect(shape.id);
             onMoveStart();
-            drag.current = { id: shape.id, dx: point.x - shape.x_mm, dy: point.y - shape.y_mm };
+            drag.current = {
+              id: shape.id,
+              dx: point.x - shape.x_mm,
+              dy: point.y - shape.y_mm,
+              pointerId: event.pointerId,
+            };
             event.currentTarget.setPointerCapture(event.pointerId);
             break;
           }
         }
       }}
       onPointerMove={(event) => {
-        if (!drag.current) return;
+        if (!active || !drag.current || event.pointerId !== drag.current.pointerId) return;
         const point = position(event),
           step = snap ? 1 : 0.1;
         onMove(
@@ -188,14 +208,9 @@ export default function ShapeCanvas({
           Math.round((point.y - drag.current.dy) / step) * step,
         );
       }}
-      onPointerUp={() => {
-        drag.current = null;
-        onMoveEnd();
-      }}
-      onPointerCancel={() => {
-        drag.current = null;
-        onMoveEnd();
-      }}
+      onPointerUp={finishGesture}
+      onPointerCancel={finishGesture}
+      onLostPointerCapture={finishGesture}
     >
       <span>
         {shapes.map((shape) => `${SHAPE_LABELS[shape.kind]} ${shape.operation}`).join(', ')}

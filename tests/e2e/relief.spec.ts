@@ -150,8 +150,10 @@ test('relief page rejects unsupported files and fits a phone screen', async ({ p
     timeout: 60_000,
   });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await page.getByRole('link', { name: /Flat-part workbench/ }).click();
-  await expect(page.getByRole('link', { name: 'Relief and lithophane studio' })).toBeVisible();
+  await page.getByRole('combobox', { name: 'Workspace', exact: true }).selectOption('workbench');
+  await expect(page.getByRole('combobox', { name: 'Workspace', exact: true })).toHaveValue(
+    'workbench',
+  );
   // The workbench loads its own sample. Let that trace and build finish so this test does
   // not hold the server's single trace slot while the next test starts.
   await expect(page.getByRole('button', { name: 'Review export', exact: true })).toBeEnabled({
@@ -351,6 +353,7 @@ test('both studios share one header that keeps the name whole and labels every i
         // Every header link and button shows a visible text label, not just an icon.
         const unlabeled = [...bar.querySelectorAll('nav a, .header-actions > *')].filter(
           (item) =>
+            item.getBoundingClientRect().width > 0 &&
             ![...item.querySelectorAll('span')].some(
               (span) => span.getBoundingClientRect().width > 0 && span.textContent!.trim(),
             ),
@@ -370,7 +373,7 @@ test('both studios share one header that keeps the name whole and labels every i
     await page.setViewportSize({ width: 1280, height: 900 });
   }
 
-  await page.goto('/');
+  await page.goto('/#workbench');
   await expect(page.getByRole('textbox', { name: 'Project name' })).toHaveValue('Mounting plate');
   await checkHeader('workbench');
   // The workbench loads its own sample. Let that trace and build finish so this test does

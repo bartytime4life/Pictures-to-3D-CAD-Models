@@ -13,6 +13,7 @@ import AppHeader from './AppHeader';
 import { useStudioActive } from './StudioActivity';
 import { searchStudios } from './studioCatalog';
 import { localAIRequest, notesExport } from './creative';
+import { readCreativeConnection } from './creativeConnection';
 import type { CreativeInput, CreativeReply, CreativeTool } from './creative';
 import type { AssistantStatus } from './types';
 import './CreativeStudio.css';
@@ -33,6 +34,7 @@ export default function CreativeStudio() {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState('');
   const [connectionError, setConnectionError] = useState('');
+  const [toolError, setToolError] = useState('');
   const [saved, setSaved] = useState<SavedResult | null>(null);
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('All');
@@ -56,25 +58,27 @@ export default function CreativeStudio() {
     const timeout = window.setTimeout(() => controller.abort(), 15000);
     setChecking(true);
     setConnectionError('');
+    setToolError('');
     try {
-      // Tool discovery works even if Ollama is unavailable.
-      const [catalog, connection] = await Promise.all([
-        localAIRequest<{ tools: CreativeTool[] }>('/api/creative/tools', {
-          signal: controller.signal,
-        }),
-        localAIRequest<AssistantStatus>('/api/assistant/status', { signal: controller.signal }),
-      ]);
+      const result = await readCreativeConnection(controller.signal);
       if (statusRequest.current !== controller) return;
-      setTools(catalog.tools);
-      setTool((current) =>
-        catalog.tools.some((item) => item.id === current) ? current : (catalog.tools[0]?.id ?? ''),
-      );
+      if (result.tools) {
+        const catalog = result.tools;
+        setTools(catalog);
+        setTool((current) =>
+          catalog.some((item) => item.id === current) ? current : (catalog[0]?.id ?? ''),
+        );
+      }
+      const connection = result.status;
       setStatus(connection);
-      setModel((current) =>
-        connection.models.some((item) => item.name === current)
-          ? current
-          : (connection.recommended_model ?? ''),
-      );
+      if (connection)
+        setModel((current) =>
+          connection.models.some((item) => item.name === current)
+            ? current
+            : (connection.recommended_model ?? ''),
+        );
+      setToolError(result.toolError);
+      setConnectionError(result.connectionError);
     } catch (err) {
       if (statusRequest.current !== controller) return;
       setStatus(null);
@@ -122,7 +126,9 @@ export default function CreativeStudio() {
         activeRef.current &&
         (!focused || focused === document.body || editorRef.current?.contains(focused))
       )
-        requestAnimationFrame(() => resultRef.current?.focus({ preventScroll: true }));
+        requestAnimationFrame(() => {
+          if (activeRef.current) resultRef.current?.focus({ preventScroll: true });
+        });
     } catch (err) {
       if (request.current !== controller) return;
       setError(
@@ -198,8 +204,14 @@ export default function CreativeStudio() {
               ))}
             </div>
             <p className="creative-help">
-              {toolDefinition?.description ?? 'Discovering the local creative tools…'}
+              {toolDefinition?.description ??
+                (checking ? 'Discovering the local creative tools…' : 'Choose a creative tool.')}
             </p>
+            {toolError && (
+              <p className="creative-error" role="alert">
+                {toolError}
+              </p>
+            )}
             <form
               onSubmit={(event) => {
                 event.preventDefault();

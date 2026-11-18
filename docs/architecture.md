@@ -25,7 +25,7 @@ flowchart LR
     K[Knowledge and Science lab] --> M
 ```
 
-The hash router exposes Shape designer (`#designer`), Flat part (`#workbench`), Relief (`#relief`), Photo library (`#library`), Image inspection (`#image`), Knowledge (`#knowledge`), Science lab (`#science`) and Creative tools (`#creative`). OpenSCAD links to the separately served companion library. Visited studio state is retained in memory during in-page navigation; this is not automatic disk persistence.
+The hash router defaults to Start (`#start`) for empty or unknown routes and exposes Shape designer (`#designer`), Flat part (`#workbench`), Relief (`#relief`), Photo library (`#library`), Image inspection (`#image`), Knowledge (`#knowledge`), Science lab (`#science`) and Creative tools (`#creative`). Explicit `#workbench?open=photo`, `open=projects`, and `open=sample` intents defer until the workspace is active and idle, then are consumed without replacing the current draft merely by navigating. OpenSCAD links to the separately served companion library. Visited studio state is retained in memory during in-page navigation; this is not automatic disk persistence.
 
 Image inspection (`ImageStudio.tsx`, `imageAnalysis.ts`) samples explicitly chosen
 files in browser memory, computes bounded region statistics and pixel differences,
@@ -52,6 +52,7 @@ does not alter the CAD source or establish its scale; see [the method and limits
 | Fit planning               | `backend/printing.py`, `backend/placement.py`, `backend/curve_envelope.py` | Resolve catalog bounds and test per-piece containment                            |
 | Slicer handoff             | `backend/slicer_handoff.py`, `backend/slicers.py`                          | Neutral packages, planning notes, hashes and optional fixed-program launch       |
 | Relief and photo library   | `backend/relief.py`, `backend/library.py`, associated workers              | Separate image/mesh and persistent-photo workflows                               |
+| Setup status               | `StartStudio.tsx`, `runtimeStatus.ts`, `backend/runtime_status.py` | Task entry and validated, read-only runtime metadata with optional local AI checks |
 | Creative tools             | `CreativeStudio.tsx`, `backend/creative.py`, `backend/assistant.py`        | Registered text tools and the shared local Ollama connection                     |
 
 The [detailed API and geometry contracts](api-reference.md) describe request fields, geometry conventions, algorithms and HTTP responses. The [research index](research-index.md) links developer-only numerical APIs and archived experiments; their existence does not imply a browser feature or automatic tracing step.
@@ -72,6 +73,8 @@ Every geometry-affecting or saved-plan edit invalidates the current build revisi
 
 Project import validates and builds the replacement before installing it. A failed import preserves the user's current work. Undo/redo restores settings and requires a fresh build rather than assuming an old job still exists. Source-context changes clear design history where required.
 
+Project library keeps unsaved form patches in a bounded tab-local cache tied to snapshot identity. Form saves clear only matching submitted fields, so an older save cannot discard newer edits or the other form. Reload clears these unsaved patches.
+
 Project library stores Flat part recipes and per-snapshot metadata in IndexedDB. Saving compares recipes with the same name and reuses an identical entry. Print attempts append to the selected snapshot and update its status in the same transaction. Opening a snapshot uses the normal recipe restore flow and generates a fresh CAD job. See the [snapshot workflow](workflows.md#save-snapshots-and-record-prints).
 
 Background removal binds its request and object URL to the current trace, aborts obsolete image work and revokes owned URLs. The cutout is independent of CAD geometry. The optional assistant uses validated proposals that require explicit Apply; stale context blocks application.
@@ -89,6 +92,10 @@ Background removal binds its request and object URL to the current trace, aborts
 | Knowledge notes and saved Science scenarios | Browser-profile/origin storage with separate export controls        |
 
 The default server is a local, single-user service with no general multi-user account boundary. Same-origin JSON and loopback gates constrain native program opening and filesystem-sensitive library actions; they do not make the whole service a public authenticated deployment. See [privacy and security](privacy-security.md).
+
+## Setup checks
+
+`GET /api/runtime` runs stdlib-only environment/package/asset checks off the API event loop and sends `Cache-Control: no-store`. The optional Ollama check reads only bounded loopback metadata under a shared 1.5-second budget, with no inference or download. Reports omit paths, endpoint configuration and model names. The browser validates the entire response before presenting readiness and cancels hidden requests. `make doctor` exposes the same report before the API can start, adding development-tool checks and next-step commands.
 
 ## API groups
 

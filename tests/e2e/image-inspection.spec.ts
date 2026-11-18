@@ -151,7 +151,12 @@ test('image workspace stays usable at phone/tablet/desktop widths and passes the
       `page overflow at ${width}`,
     ).toBeLessThanOrEqual(width);
     const nav = page.getByRole('navigation', { name: 'Studios', exact: true });
-    await expect(nav.getByRole('link', { name: 'Image inspection', exact: true })).toBeVisible();
+    if (width <= 1100)
+      await expect(nav.getByRole('combobox', { name: 'Workspace', exact: true })).toHaveValue(
+        'image',
+      );
+    else
+      await expect(nav.getByRole('link', { name: 'Image inspection', exact: true })).toBeVisible();
   }
   const result = await new AxeBuilder({ page }).include('[data-studio="image"]').analyze();
   expect(result.violations).toEqual([]);

@@ -29,6 +29,7 @@ from .documentation import router as documentation_router
 from .models import BuildRequest, Detail, Reference
 from .printing import load_printer_catalog
 from .relief import ReliefError, ReliefSettings, fit_half_value
+from .runtime_status import summarize_runtime
 from .shapes import ShapeBuildRequest
 from .slicers import PROGRAMS, SlicerError, launch, launch_request_allowed, program_status
 from .tracing import MAX_BYTES, TraceError, trace_image
@@ -270,6 +271,12 @@ async def invalid_input(request, exc):
 @app.get("/api/health")
 async def health():
     return {"status": "ok", "version": "0.1.0", "workflow": "measured-profile-extrusion"}
+
+
+@app.get("/api/runtime")
+async def runtime_status():
+    summary = await asyncio.to_thread(summarize_runtime)
+    return JSONResponse(summary, headers={"Cache-Control": "no-store"})
 
 
 @app.get("/api/printers")

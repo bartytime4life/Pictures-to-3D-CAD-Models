@@ -28,7 +28,7 @@ async function ready(page: Page): Promise<TraceResult> {
   const traceResponse = page.waitForResponse(
     (response) => response.url().endsWith('/api/trace') && response.ok(),
   );
-  await page.goto('/');
+  await page.goto('/#workbench');
   await expect(page.getByRole('button', { name: 'Review export', exact: true })).toBeEnabled({
     timeout: 60_000,
   });

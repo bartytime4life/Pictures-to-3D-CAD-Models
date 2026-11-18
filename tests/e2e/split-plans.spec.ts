@@ -54,7 +54,7 @@ for (const mobile of [false, true]) {
     });
     try {
       if (mobile) await page.setViewportSize({ width: 390, height: 844 });
-      await page.goto('/');
+      await page.goto('/#workbench');
       await expect(page.getByRole('button', { name: 'Review export', exact: true })).toBeEnabled({
         timeout: 60_000,
       });

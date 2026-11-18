@@ -5,6 +5,7 @@ import {
   Cube,
   Flask,
   Images,
+  House,
   Mountains,
   Ruler,
   Sparkle,
@@ -18,6 +19,7 @@ import type { Studio } from './studioCatalog';
 export type { Studio } from './studioCatalog';
 
 const studioIcons = {
+  start: House,
   designer: Shapes,
   image: Scan,
   workbench: Ruler,
@@ -31,7 +33,7 @@ const studioIcons = {
 /**
  * The header the studios share: the brand, the page's own project-name control, one row of
  * studio tabs (the current one marked with aria-current="page") and the page's own actions.
- * On narrow screens every icon keeps a short visible label instead of becoming a bare icon.
+ * On narrow screens a labeled workspace picker leaves more room for making.
  */
 export default function AppHeader({
   studio,
@@ -61,7 +63,7 @@ export default function AppHeader({
         Skip to workspace
       </a>
       <div className="topbar-main">
-        <a className="brand" href="#workbench">
+        <a className="brand" href="#start">
           <span className="brand-symbol">
             <Cube size={29} weight="light" />
           </span>
@@ -71,8 +73,8 @@ export default function AppHeader({
         </a>
         <div className="project-context">
           <span className="project-caption">
-            {studio === 'knowledge' || studio === 'science' || studio === 'image'
-              ? 'EXPLORE'
+            {['start', 'knowledge', 'science', 'image', 'library', 'creative'].includes(studio)
+              ? 'WORKSPACE'
               : 'CURRENT PROJECT'}
           </span>
           <div className="project-name">{projectName}</div>
@@ -83,34 +85,71 @@ export default function AppHeader({
         </div>
       </div>
       <div className="topbar-navigation">
-        <nav className="studio-tabs" aria-label="Studios">
-          {STUDIO_CATALOG.map((item) => {
-            const Icon = studioIcons[item.id];
-            return (
-              <a
-                key={item.id}
-                className="studio-tab"
-                href={`#${item.id}`}
-                aria-label={item.name}
-                aria-current={studio === item.id ? 'page' : undefined}
+        <nav className="workspace-navigation" aria-label="Studios">
+          <div className="studio-tabs">
+            {STUDIO_CATALOG.map((item) => {
+              const Icon = studioIcons[item.id];
+              return (
+                <a
+                  key={item.id}
+                  className="studio-tab"
+                  href={`#${item.id}`}
+                  aria-label={item.name}
+                  aria-current={studio === item.id ? 'page' : undefined}
+                >
+                  <Icon size={21} />
+                  <span className="label-long">{item.label}</span>
+                  <span className="label-short">{item.shortLabel}</span>
+                </a>
+              );
+            })}
+            <a
+              className="studio-tab"
+              href="/reference-library/index.html#cad"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="OpenSCAD workspace (opens in a new tab)"
+            >
+              <ArrowSquareOut size={19} />
+              <span className="label-long">OpenSCAD</span>
+              <span className="label-short">OpenSCAD</span>
+            </a>
+          </div>
+          <div className="mobile-workspace-navigation">
+            <a
+              className="mobile-start"
+              href="#start"
+              aria-current={studio === 'start' ? 'page' : undefined}
+            >
+              <House size={20} aria-hidden="true" />
+              <span>Start</span>
+            </a>
+            <label className="workspace-picker">
+              <span className="sr-only">Workspace</span>
+              <select
+                value={studio}
+                onChange={(event) => {
+                  window.location.hash = `#${event.target.value}`;
+                }}
               >
-                <Icon size={21} />
-                <span className="label-long">{item.label}</span>
-                <span className="label-short">{item.shortLabel}</span>
-              </a>
-            );
-          })}
-          <a
-            className="studio-tab"
-            href="/reference-library/index.html#cad"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="OpenSCAD workspace (opens in a new tab)"
-          >
-            <ArrowSquareOut size={19} />
-            <span className="label-long">OpenSCAD</span>
-            <span className="label-short">OpenSCAD</span>
-          </a>
+                {STUDIO_CATALOG.map((item) => (
+                  <option value={item.id} key={item.id}>
+                    {item.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <a
+              className="mobile-companion"
+              href="/reference-library/index.html#cad"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="OpenSCAD workspace (opens in a new tab)"
+            >
+              <ArrowSquareOut size={18} aria-hidden="true" />
+              <span>OpenSCAD</span>
+            </a>
+          </div>
         </nav>
         <span className="workspace-local">
           <span aria-hidden="true" />

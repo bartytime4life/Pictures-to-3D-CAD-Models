@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 test('project snapshots preserve their recipe and print history across reloads', async ({
   page,
 }) => {
-  await page.goto('/');
+  await page.goto('/#workbench');
   const reviewExport = page.getByRole('button', { name: 'Review export', exact: true });
   await expect(reviewExport).toBeEnabled({ timeout: 60_000 });
   const openLibrary = page.getByRole('button', { name: 'Project library', exact: true });
@@ -86,4 +86,53 @@ test('project snapshots preserve their recipe and print history across reloads',
   await library.getByRole('button', { name: 'Remove snapshot' }).click();
   await expect(snapshots.getByRole('listitem')).toHaveCount(1);
   await expect(snapshots).toContainText('4 mm thick');
+});
+
+test('unsaved project and print forms survive selection, filtering and modal close independently', async ({
+  page,
+}) => {
+  await page.goto('/#workbench');
+  await expect(page.getByRole('button', { name: 'Review export', exact: true })).toBeEnabled({
+    timeout: 60_000,
+  });
+  const openLibrary = page.getByRole('button', { name: 'Project library', exact: true });
+  const library = page.getByRole('dialog', { name: 'Project library', exact: true });
+  await openLibrary.click();
+  await library.getByRole('button', { name: 'Save current snapshot', exact: true }).click();
+  await page.keyboard.press('Escape');
+  await page.getByLabel('Thickness', { exact: true }).fill('6');
+  await openLibrary.click();
+  await library.getByRole('button', { name: 'Save current snapshot', exact: true }).click();
+  const snapshots = library.getByRole('list', { name: 'Saved projects' });
+  await snapshots.getByRole('button', { name: /4 mm thick/ }).click();
+  await library.getByLabel('Project notes', { exact: true }).fill('Keep this project draft');
+  await library.getByLabel('Print notes', { exact: true }).fill('Keep this print draft');
+  await snapshots.getByRole('button', { name: /6 mm thick/ }).click();
+  await expect(library.getByLabel('Project notes', { exact: true })).toHaveValue('');
+  await snapshots.getByRole('button', { name: /4 mm thick/ }).click();
+  await library.getByLabel('Search projects', { exact: true }).fill('no match here');
+  await expect(library.getByText('No projects match your filters.')).toBeVisible();
+  await library.getByLabel('Search projects', { exact: true }).fill('');
+  await expect(library.getByLabel('Project notes', { exact: true })).toHaveValue(
+    'Keep this project draft',
+  );
+  await page.keyboard.press('Escape');
+  await openLibrary.click();
+  await snapshots.getByRole('button', { name: /4 mm thick/ }).click();
+  await expect(library.getByLabel('Print notes', { exact: true })).toHaveValue(
+    'Keep this print draft',
+  );
+  await library.getByRole('button', { name: 'Save details', exact: true }).click();
+  await expect(library.getByLabel('Print notes', { exact: true })).toHaveValue(
+    'Keep this print draft',
+  );
+  await library.getByLabel('Project notes', { exact: true }).fill('New unsaved project draft');
+  await library.getByRole('button', { name: 'Record print attempt', exact: true }).click();
+  await expect(library.getByRole('list', { name: 'Recorded print attempts' })).toContainText(
+    'Keep this print draft',
+  );
+  await expect(library.getByLabel('Project notes', { exact: true })).toHaveValue(
+    'New unsaved project draft',
+  );
+  await expect(library.getByLabel('Print notes', { exact: true })).toHaveValue('');
 });

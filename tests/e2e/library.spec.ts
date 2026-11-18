@@ -57,6 +57,7 @@ async function headerFits(page: Page) {
       const bar = document.querySelector('.studio-route:not([hidden]) .topbar')!;
       const unlabeled = [...bar.querySelectorAll('nav a')].filter(
         (item) =>
+          item.getBoundingClientRect().width > 0 &&
           ![...item.querySelectorAll('span')].some(
             (span) => span.getBoundingClientRect().width > 0 && span.textContent!.trim(),
           ),
@@ -90,7 +91,7 @@ test('photos are added, measured, checked for copies and opened in the workbench
   page.on('console', (message) => {
     if (message.type() === 'error') errors.push(message.text());
   });
-  await page.goto('/');
+  await page.goto('/#workbench');
   await page
     .getByRole('navigation', { name: 'Studios' })
     .getByRole('link', { name: 'Photo library' })

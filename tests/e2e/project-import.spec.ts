@@ -33,7 +33,7 @@ test.afterEach(async ({ request }) => {
 });
 
 async function ready(page: Page) {
-  await page.goto('/');
+  await page.goto('/#workbench');
   await expect(page.getByRole('button', { name: 'Review export', exact: true })).toBeEnabled({
     timeout: 60_000,
   });

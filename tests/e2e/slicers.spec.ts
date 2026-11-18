@@ -66,7 +66,7 @@ async function ready(page: Page) {
   const built = page.waitForResponse(
     (response) => response.url().endsWith('/api/build') && response.ok(),
   );
-  await page.goto('/');
+  await page.goto('/#workbench');
   await expect(page.getByRole('button', { name: 'Review export', exact: true })).toBeEnabled({
     timeout: 60_000,
   });

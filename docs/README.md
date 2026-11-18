@@ -48,6 +48,7 @@ Knowledge articles and Science scenarios are part of the browser interface. Thei
 - [Studio follow-up](validation/studio-followup.md): documentation integration, shared-export recovery and narrow-phone label verification.
 - [Photo benchmark](photo-benchmark.md): compare source images with independent measurements.
 - [Bounded photo search](bounded-photo-search.md): batching, cancellation and the generated-vector benchmark.
+- [Product experience review](validation/product-experience.md): task entry, setup, mobile navigation, draft retention and current browser checks.
 - [Creative workspace verification](validation/creative-workspaces.md): local Ollama inference, common-shape CAD and captured UI checks.
 - [Image inspection verification](validation/image-inspection.md): region analysis, responsive controls and original-file handoff.
 - [Agent harness playbook](agent-harness-playbook.md): improve context and verify CAD outcomes on a measured fixture.

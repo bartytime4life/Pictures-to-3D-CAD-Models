@@ -59,6 +59,9 @@ const icons = {
 
 export default function ShapeStudio() {
   const active = useStudioActive();
+  const activeRef = useRef(active);
+  activeRef.current = active;
+  const handoffEpoch = useRef(0);
   const [draft, setDraft] = useState<ShapeDraft>(() => shapeTemplate('plate'));
   const [selectedId, setSelectedId] = useState('');
   const [operation, setOperation] = useState<'add' | 'cut'>('add');
@@ -86,6 +89,10 @@ export default function ShapeStudio() {
   const issue = shapeDraftIssue(draft);
   const selected = draft.shapes.find((shape) => shape.id === selectedId) ?? draft.shapes[0];
   const ready = !!model && readyKey === key && !issue;
+
+  useEffect(() => {
+    if (!active) handoffEpoch.current++;
+  }, [active]);
 
   function change(next: ShapeDraft) {
     if (JSON.stringify(next) === key) return;
@@ -208,7 +215,8 @@ export default function ShapeStudio() {
     if (!model || !ready || downloading) return;
     const requestKey = key,
       id = model.id,
-      generation = temporaryExportGeneration();
+      generation = temporaryExportGeneration(),
+      epoch = handoffEpoch.current;
     setDownloading(true);
     setError('');
     try {
@@ -227,6 +235,8 @@ export default function ShapeStudio() {
         generation !== temporaryExportGeneration()
       )
         return;
+      // A slow file fetch must not take the user away from a studio they chose meanwhile.
+      if (openWorkbench && (!activeRef.current || handoffEpoch.current !== epoch)) return;
       if (openWorkbench)
         handOff(
           'workbench',
@@ -255,7 +265,7 @@ export default function ShapeStudio() {
       change(parsed);
       setSelectedId(parsed.shapes[0].id);
     } catch (err) {
-      if (mounted.current)
+      if (mounted.current && ticket === importSequence.current)
         setError(err instanceof Error ? err.message : 'Could not open this design.');
     }
   }
@@ -341,8 +351,33 @@ export default function ShapeStudio() {
             </button>
           ))}
         </div>
+        <nav className="shape-section-navigation" aria-label="Shape designer sections">
+          {[
+            ['shape-tools-section', 'Shape tools'],
+            ['shape-outline-section', '2D outline'],
+            ['shape-preview-section', 'CAD preview'],
+          ].map(([id, label]) => (
+            <button
+              key={id}
+              type="button"
+              aria-controls={id}
+              onClick={() => {
+                const section = document.getElementById(id);
+                section?.focus({ preventScroll: true });
+                section?.scrollIntoView({ block: 'start' });
+              }}
+            >
+              {label}
+            </button>
+          ))}
+        </nav>
         <div className="shape-layout">
-          <section className="shape-panel shape-controls" aria-labelledby="shape-controls-title">
+          <section
+            className="shape-panel shape-controls"
+            id="shape-tools-section"
+            tabIndex={-1}
+            aria-labelledby="shape-controls-title"
+          >
             <h2 id="shape-controls-title">Build your outline</h2>
             <label htmlFor="shape-name">Design name</label>
             <input
@@ -473,7 +508,12 @@ export default function ShapeStudio() {
             )}
           </section>
           <div className="shape-workspace">
-            <section className="shape-panel" aria-labelledby="shape-outline-title">
+            <section
+              className="shape-panel"
+              id="shape-outline-section"
+              tabIndex={-1}
+              aria-labelledby="shape-outline-title"
+            >
               <div className="shape-section-heading">
                 <h2 id="shape-outline-title">
                   2D outline <span>Millimeters</span>
@@ -526,7 +566,12 @@ export default function ShapeStudio() {
                 </label>
               </div>
             </section>
-            <section className="shape-panel" aria-labelledby="shape-preview-title">
+            <section
+              className="shape-panel"
+              id="shape-preview-section"
+              tabIndex={-1}
+              aria-labelledby="shape-preview-title"
+            >
               <div className="shape-section-heading">
                 <h2 id="shape-preview-title">CAD preview</h2>
                 <label className="shape-thickness">

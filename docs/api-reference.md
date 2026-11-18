@@ -256,6 +256,10 @@ The running server's `/docs` page and `/openapi.json` describe the current HTTP 
 
 Returns API health information. A successful health response establishes service availability, not that a conversion, export, or browser interaction has passed.
 
+### `GET /api/runtime`
+
+Returns `{ready, checks}` with `Cache-Control: no-store`. Each check has `id`, `label`, `status` (`ready`, `missing`, or `limited`), `required`, `detail`, and optionally `action: {label, command}`. Overall readiness depends only on required Python environment, package metadata and built-asset checks. Optional local Ollama metadata is bounded and does not run inference. Reports omit filesystem paths, configured addresses and model names. This endpoint does not prove a CAD build, export, AI response, or freshness of built source. `make doctor` provides the same checks before starting the API.
+
 ### `GET /api/printers`
 
 Returns the bundled pinned printer catalog with source metadata, grouped

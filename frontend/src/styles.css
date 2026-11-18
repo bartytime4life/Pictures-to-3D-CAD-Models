@@ -3965,3 +3965,62 @@ main {
   color: var(--accent);
   font-size: 12px;
 }
+
+/* Shared workspace navigation keeps the making surface close on small screens. */
+.workspace-navigation {
+  min-width: 0;
+}
+.mobile-workspace-navigation {
+  display: none;
+}
+@media (max-width: 1100px) {
+  .workspace-navigation {
+    width: 100%;
+  }
+  .workspace-navigation .studio-tabs {
+    display: none;
+  }
+  .mobile-workspace-navigation {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    width: 100%;
+  }
+  .mobile-start,
+  .mobile-companion {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 44px;
+    color: #b7c9da;
+    font-size: 12px;
+    text-decoration: none;
+    padding: 8px;
+  }
+  .mobile-start[aria-current='page'] {
+    color: var(--accent);
+    background: #183242;
+    border-radius: 5px;
+  }
+  .workspace-picker {
+    flex: 1;
+    min-width: 0;
+  }
+  .workspace-picker select {
+    background: #101c2a;
+    color: #d8e7f4;
+    border: 1px solid #3a5065;
+    border-radius: 5px;
+    width: 100%;
+    min-height: 44px;
+    font-size: 12px;
+    padding: 8px;
+  }
+  .mobile-companion {
+    font-size: 10px;
+    padding: 4px;
+    gap: 4px;
+  }
+}

@@ -1,10 +1,12 @@
 .DEFAULT_GOAL := help
 REFERENCE_PYTHON ?= $(CURDIR)/reference-library/.venv/bin/python
 
-.PHONY: help setup setup-app setup-library start dev build build-app build-library test test-app test-library lint smoke slicers depth-model depth-benchmark vision-model vision-benchmark freecad photo-benchmark corner-sweep
+.PHONY: help setup setup-app setup-library doctor start dev build build-app build-library test test-app test-library lint smoke slicers depth-model depth-benchmark vision-model vision-benchmark freecad photo-benchmark corner-sweep
 
 help:
 	@echo "make setup          install app and reference-library dependencies; build the app"
+	@echo "make setup-app      install and build just the app (recommended for getting started)"
+	@echo "make doctor         check setup and optional local AI without installing or generating"
 	@echo "make start          start the built CAD workbench"
 	@echo "make dev            start the workbench with frontend hot reload"
 	@echo "make build          rebuild the app and generated reference-library outputs"
@@ -29,6 +31,9 @@ setup-app:
 
 setup-library:
 	./scripts/setup-library.sh
+
+doctor:
+	./scripts/doctor.sh
 
 start:
 	./scripts/start.sh

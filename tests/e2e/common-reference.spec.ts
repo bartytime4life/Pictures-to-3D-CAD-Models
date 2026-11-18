@@ -13,7 +13,7 @@ test('a user-marked common object sets scale, keeps numeric evidence, and suppor
     }
   });
   try {
-    await page.goto('/');
+    await page.goto('/#workbench');
     await expect(page.getByRole('button', { name: 'Review export', exact: true })).toBeEnabled({
       timeout: 60_000,
     });
@@ -187,7 +187,7 @@ test('an unapplied reference draft survives the same image and resets when the i
     const traced = page.waitForResponse(
       (response) => response.url().endsWith('/api/trace') && response.ok(),
     );
-    await page.goto('/');
+    await page.goto('/#workbench');
     const trace = (await (await traced).json()) as TraceResult;
     await expect(page.getByRole('button', { name: 'Review export', exact: true })).toBeEnabled({
       timeout: 60_000,

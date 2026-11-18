@@ -20,7 +20,7 @@ test('optional background removal keeps source colors and holes, and resets afte
     const traced = page.waitForResponse(
       (response) => response.url().endsWith('/api/trace') && response.ok(),
     );
-    await page.goto('/');
+    await page.goto('/#workbench');
     const source = (await (await traced).json()) as TraceResult;
     await expect(page.getByRole('button', { name: 'Review export', exact: true })).toBeEnabled({
       timeout: 60_000,

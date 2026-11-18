@@ -318,7 +318,12 @@ export default function LibraryStudio() {
   const [groups, setGroups] = useState<LibraryGroup[]>([]);
   const [groupTotal, setGroupTotal] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
+  const selectedRef = useRef(selected);
+  selectedRef.current = selected;
   const [detail, setDetail] = useState<LibraryPhotoDetail | null>(null);
+  const [detailError, setDetailError] = useState<{ id: number; message: string } | null>(null);
+  const [detailAttempt, setDetailAttempt] = useState(0);
+  const handoffRequest = useRef<AbortController | null>(null);
   const [showSubject, setShowSubject] = useState(true);
   const [picker, setPicker] = useState<FolderListing | null>(null);
   const [pickerPath, setPickerPath] = useState('');
@@ -373,10 +378,20 @@ export default function LibraryStudio() {
   useEffect(() => {
     if (active) void refresh();
     else {
+      revealDetail.current = false;
       pickerDialog.current?.close();
       clearDialog.current?.close();
     }
   }, [refresh, active]);
+
+  useEffect(
+    () => () => {
+      // Leaving the library or choosing a different photo cancels a pending navigation.
+      handoffRequest.current?.abort();
+      handoffRequest.current = null;
+    },
+    [active, selected],
+  );
 
   useEffect(() => {
     // Follow a running crunch closely; otherwise look in now and then, so a crunch
@@ -506,31 +521,34 @@ export default function LibraryStudio() {
   useEffect(() => {
     if (selected == null) {
       setDetail(null);
+      setDetailError(null);
       return;
     }
+    if (!active) return;
     let current = true;
+    setDetailError(null);
     request<LibraryPhotoDetail>(`/api/library/photos/${selected}`)
       .then((result) => current && setDetail(result))
-      .catch(() => {
+      .catch((err) => {
         if (!current) return;
-        setSelected(null); // Removed meanwhile.
+        setDetailError({ id: selected, message: errorText(err) });
       });
     return () => {
       current = false;
     };
-  }, [selected, revision]);
+  }, [selected, revision, active, detailAttempt]);
 
   useEffect(() => {
     // A newly chosen photo's details can open below the grid (narrow windows stack
     // them), out of sight: bring them into view and move focus there.
-    if (!detail || detail.id !== selected || !revealDetail.current) return;
+    if (!active || !detail || detail.id !== selected || !revealDetail.current) return;
     revealDetail.current = false;
     const panel = detailPanel.current;
     if (!panel) return;
     const top = panel.getBoundingClientRect().top;
     if (top < 0 || top > window.innerHeight / 2) panel.scrollIntoView({ block: 'start' });
     detailHeading.current?.focus({ preventScroll: true });
-  }, [detail, selected]);
+  }, [detail, selected, active]);
 
   // The "Not read" tab disappears once no photo failed; do not leave its view behind.
   useEffect(() => {
@@ -706,18 +724,35 @@ export default function LibraryStudio() {
 
   const openIn = (target: HandoffTarget, photo: LibraryPhotoDetail) =>
     act('Opening…', async () => {
-      const response = await fetch(`/api/library/photos/${photo.id}/original`);
-      if (!response.ok) {
-        const data = await response.json().catch(() => ({}));
-        throw new Error(
-          typeof data.detail === 'string' ? data.detail : 'The photo could not be opened.',
-        );
+      handoffRequest.current?.abort();
+      const controller = new AbortController();
+      handoffRequest.current = controller;
+      try {
+        const response = await fetch(`/api/library/photos/${photo.id}/original`, {
+          signal: controller.signal,
+        });
+        if (!response.ok) {
+          const data = await response.json().catch(() => ({}));
+          throw new Error(
+            typeof data.detail === 'string' ? data.detail : 'The photo could not be opened.',
+          );
+        }
+        const extension = photo.name.split('.').pop()?.toLowerCase() ?? '';
+        const file = new File([await response.blob()], photo.name, {
+          type: MIME[extension] ?? 'application/octet-stream',
+        });
+        if (
+          !activeRef.current ||
+          selectedRef.current !== photo.id ||
+          handoffRequest.current !== controller
+        )
+          return;
+        handOff(target, file);
+      } catch (err) {
+        if (!controller.signal.aborted) throw err;
+      } finally {
+        if (handoffRequest.current === controller) handoffRequest.current = null;
       }
-      const extension = photo.name.split('.').pop()?.toLowerCase() ?? '';
-      const file = new File([await response.blob()], photo.name, {
-        type: MIME[extension] ?? 'application/octet-stream',
-      });
-      handOff(target, file);
     });
 
   const removePhoto = (photo: LibraryPhotoDetail) =>
@@ -1149,7 +1184,35 @@ export default function LibraryStudio() {
                   />
                 )}
 
-                {detail && (
+                {selected != null && detail?.id !== selected && (
+                  <aside className="library-detail" aria-label="Selected photo details">
+                    <div className="library-detail-head">
+                      <h2>Selected photo</h2>
+                      <button
+                        className="icon-button"
+                        aria-label="Close details"
+                        onClick={closeDetail}
+                      >
+                        <X size={20} />
+                      </button>
+                    </div>
+                    {detailError?.id !== selected && <p role="status">Loading photo details…</p>}
+                    {detailError?.id === selected && (
+                      <>
+                        <p className="library-message error" role="alert">
+                          Could not load this photo. {detailError.message}
+                        </p>
+                        <button
+                          className="outlined-button"
+                          onClick={() => setDetailAttempt((value) => value + 1)}
+                        >
+                          <ArrowsClockwise size={18} aria-hidden /> Retry details
+                        </button>
+                      </>
+                    )}
+                  </aside>
+                )}
+                {detail && detail.id === selected && (
                   <aside
                     ref={detailPanel}
                     className="library-detail"
@@ -1167,6 +1230,17 @@ export default function LibraryStudio() {
                         <X size={20} />
                       </button>
                     </div>
+                    {detailError?.id === selected && (
+                      <p className="library-message error" role="alert">
+                        Could not refresh these details. {detailError.message}{' '}
+                        <button
+                          className="text-button"
+                          onClick={() => setDetailAttempt((value) => value + 1)}
+                        >
+                          Retry details
+                        </button>
+                      </p>
+                    )}
                     {detail.state === 'ready' ? (
                       <SubjectView detail={detail} show={showSubject} />
                     ) : (

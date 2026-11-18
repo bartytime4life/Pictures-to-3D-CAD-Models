@@ -29,6 +29,7 @@ import {
 } from '@phosphor-icons/react';
 import AppHeader from './AppHeader';
 import { useStudioActive } from './StudioActivity';
+import { workbenchEntry } from './workspaceNavigation';
 import { publishTemporaryExportsCleared, temporaryExportGeneration } from './temporaryExports';
 import { takeHandoff } from './handoff';
 import ModelViewer from './ModelViewer';
@@ -609,6 +610,7 @@ export default function App() {
   const [retry, setRetry] = useState<RetryAction | null>(null);
   const [notice, setNotice] = useState('');
   const [modal, setModal] = useState<ModalName>(null);
+  const [entryRevision, setEntryRevision] = useState(0);
   const [outline, setOutline] = useState(true);
   const [resetKey, setResetKey] = useState(0);
   const [dragging, setDragging] = useState(false);
@@ -943,8 +945,20 @@ export default function App() {
   }
 
   useEffect(() => {
-    // A photo sent from the photo library opens instead of the sample.
+    // Opening a file or saved project must not first build an unrelated demonstration.
     const handed = takeHandoff('workbench');
+    if (!handed && workbenchEntry(window.location.hash)) {
+      setName('Untitled part');
+      setSample(false);
+      setWidth('');
+      setThickness('');
+      setWidthMm(NaN);
+      setThicknessMm(NaN);
+      setBusy(null);
+      return () => {
+        sequenceRef.current++;
+      };
+    }
     void (handed
       ? handed.name.toLowerCase().endsWith('.json')
         ? restoreProject(handed)
@@ -955,17 +969,31 @@ export default function App() {
     };
   }, []);
   useEffect(() => {
+    const changed = () => setEntryRevision((previous) => previous + 1);
+    window.addEventListener('hashchange', changed);
+    return () => window.removeEventListener('hashchange', changed);
+  }, []);
+  useEffect(() => {
     if (!active) {
       setModal(null);
       return;
     }
     if (busy) return;
     const handed = takeHandoff('workbench');
-    if (handed)
+    if (handed) {
       void (handed.name.toLowerCase().endsWith('.json')
         ? restoreProject(handed)
         : loadPhoto(handed));
-  }, [active, busy]);
+      return;
+    }
+    const entry = workbenchEntry(window.location.hash);
+    if (!entry) return;
+    // Consume only when the mounted workspace is active and idle. Repeating an entry link
+    // works again, while normal workspace navigation keeps the current document intact.
+    window.history.replaceState(window.history.state, '', '#workbench');
+    if (entry === 'sample') void loadSample();
+    else setModal(entry);
+  }, [active, busy, entryRevision]);
   useEffect(() => {
     // Release this tab's temporary model files when the page goes away, so reloads and closed
     // tabs do not fill the service's job limit. A page restored from the back/forward cache has
