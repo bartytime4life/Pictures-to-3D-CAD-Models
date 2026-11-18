@@ -10,21 +10,30 @@ import {
 } from './projectLibrary';
 import type { LibraryProject, PrintStatus, ProjectUpdate } from './projectLibrary';
 import {
+  acknowledgeProjectWrites,
+  beginProjectWrite,
   clearProjectDraft,
   clearSavedProjectDraft,
+  finishProjectWrite,
   patchProjectDraft,
   projectDetailsUpdate,
+  projectDetailsWrite,
   projectDraftChanged,
   readProjectDraft,
 } from './projectDrafts';
-import type { ProjectDraft, ProjectDraftMap } from './projectDrafts';
+import type { ProjectDraft, ProjectDraftMap, ProjectWriteMap } from './projectDrafts';
 import { downloadProjectRecipe, profileBounds } from './projectRecipe';
 import type { Profile, ProjectRecipe } from './types';
 import './ProjectLibrary.css';
 
 // The modal unmounts on close. Keep its unsaved text in this tab until it is saved,
 // its snapshot is deleted, or the page reloads. No drafts are written to storage.
-let draftCache: { drafts: ProjectDraftMap; revision: number } = { drafts: new Map(), revision: 0 };
+let draftCache: { drafts: ProjectDraftMap; writes: ProjectWriteMap; revision: number } = {
+  drafts: new Map(),
+  writes: new Map(),
+  revision: 0,
+};
+let writeToken = 0;
 const draftSubscribers = new Set<() => void>();
 function subscribeDrafts(listener: () => void) {
   draftSubscribers.add(listener);
@@ -33,8 +42,9 @@ function subscribeDrafts(listener: () => void) {
   };
 }
 const readDraftCache = () => draftCache;
-function keepDrafts(drafts: ProjectDraftMap, saved = false) {
-  draftCache = { drafts, revision: draftCache.revision + Number(saved) };
+function keepDrafts(drafts: ProjectDraftMap, saved = false, writes = draftCache.writes) {
+  if (drafts === draftCache.drafts && writes === draftCache.writes && !saved) return;
+  draftCache = { drafts, writes, revision: draftCache.revision + Number(saved) };
   for (const listener of draftSubscribers) listener();
 }
 
@@ -295,7 +305,10 @@ export default function ProjectLibrary({
   onOpen: (recipe: ProjectRecipe) => void;
 }) {
   const [projects, setProjects] = useState<LibraryProject[]>([]);
-  const { drafts, revision } = useSyncExternalStore(subscribeDrafts, readDraftCache);
+  const completedRead = useRef<{ projects: LibraryProject[]; writes: ProjectWriteMap } | null>(
+    null,
+  );
+  const { drafts, writes, revision } = useSyncExternalStore(subscribeDrafts, readDraftCache);
   const [today] = useState(localDate);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [query, setQuery] = useState('');
@@ -309,7 +322,7 @@ export default function ProjectLibrary({
 
   function editDraft(project: LibraryProject, patch: Partial<ProjectDraft>) {
     try {
-      keepDrafts(patchProjectDraft(draftCache.drafts, project, patch, today));
+      keepDrafts(patchProjectDraft(draftCache.drafts, project, patch, today, draftCache.writes));
       setError('');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not keep these edits.');
@@ -318,9 +331,11 @@ export default function ProjectLibrary({
 
   useEffect(() => {
     let active = true;
+    const observed = draftCache.writes;
     void listLibraryProjects().then(
       (list) => {
         if (!active) return;
+        completedRead.current = { projects: list, writes: observed };
         setProjects(list);
         setLoadError(false);
         setLoading(false);
@@ -335,6 +350,20 @@ export default function ProjectLibrary({
       active = false;
     };
   }, [revision]);
+
+  useEffect(() => {
+    const read = completedRead.current;
+    if (!read || read.projects !== projects) return;
+    completedRead.current = null;
+    const acknowledged = acknowledgeProjectWrites(
+      draftCache.drafts,
+      draftCache.writes,
+      read.writes,
+      projects,
+      today,
+    );
+    keepDrafts(acknowledged.drafts, false, acknowledged.writes);
+  }, [projects, today]);
 
   const words = query.trim().toLowerCase().split(/\s+/);
   const visible = projects.filter((project) => {
@@ -464,7 +493,7 @@ export default function ProjectLibrary({
                         <small>{snapshotDimensions(project.recipe)}</small>
                         <small>{project.status}</small>
                         {project.tags.length > 0 && <small>{project.tags.join(', ')}</small>}
-                        {projectDraftChanged(project, drafts, today) && (
+                        {projectDraftChanged(project, drafts, today, writes) && (
                           <small>Unsaved edits</small>
                         )}
                       </span>
@@ -483,7 +512,7 @@ export default function ProjectLibrary({
               key={selected.id}
               project={selected}
               draft={readProjectDraft(selected, drafts, today)}
-              unsaved={projectDraftChanged(selected, drafts, today)}
+              unsaved={projectDraftChanged(selected, drafts, today, writes)}
               onDraftChange={(patch) => editDraft(selected, patch)}
               disabled={pending}
               canOpen={canOpen}
@@ -491,22 +520,35 @@ export default function ProjectLibrary({
               onUpdate={(update, message) =>
                 run(async () => {
                   const submitted = draftCache.drafts;
-                  const updated = await updateLibraryProject(selected.id, update);
-                  if (!updated) {
-                    setProjects((previous) => previous.filter(({ id }) => id !== selected.id));
-                    throw new Error('This snapshot was removed in another tab.');
-                  }
-                  keepProject(updated);
-                  keepDrafts(
-                    clearSavedProjectDraft(
+                  const requestedUpdate =
+                    'attempt' in update
+                      ? update
+                      : projectDetailsWrite(selected, submitted, today, draftCache.writes);
+                  const begun = beginProjectWrite(draftCache.writes, selected, ++writeToken);
+                  keepDrafts(draftCache.drafts, false, begun.writes);
+                  try {
+                    const updated = await updateLibraryProject(selected.id, requestedUpdate);
+                    if (!updated) {
+                      setProjects((previous) => previous.filter(({ id }) => id !== selected.id));
+                      throw new Error('This snapshot was removed in another tab.');
+                    }
+                    keepProject(updated);
+                    keepDrafts(
+                      clearSavedProjectDraft(
+                        draftCache.drafts,
+                        submitted,
+                        selected.id,
+                        'attempt' in update ? 'attempt' : 'details',
+                      ),
+                    );
+                    setFeedback(message);
+                  } finally {
+                    keepDrafts(
                       draftCache.drafts,
-                      submitted,
-                      selected.id,
-                      'attempt' in update ? 'attempt' : 'details',
-                    ),
-                    true,
-                  );
-                  setFeedback(message);
+                      true,
+                      finishProjectWrite(draftCache.writes, begun.write),
+                    );
+                  }
                 })
               }
               onRemove={() =>

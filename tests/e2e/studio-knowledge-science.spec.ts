@@ -133,7 +133,7 @@ test('science and knowledge remain usable and accessible at phone width', async 
     );
     expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   }
-  await page.locator('a[href="#knowledge"]:visible').first().click();
+  await page.getByRole('combobox', { name: 'Workspace', exact: true }).selectOption('knowledge');
   await expect(page.getByRole('heading', { name: 'Knowledge base', exact: true })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);

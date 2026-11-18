@@ -1,10 +1,14 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  acknowledgeProjectWrites,
+  beginProjectWrite,
   clearProjectDraft,
   clearSavedProjectDraft,
+  finishProjectWrite,
   patchProjectDraft,
   projectDetailsUpdate,
+  projectDetailsWrite,
   projectDraftChanged,
   PROJECT_DRAFT_LIMIT,
   readProjectDraft,
@@ -178,4 +182,258 @@ test('saving normalizes tags and notes while retaining existing update semantics
   });
   assert.equal(projectDraftChanged(first, drafts, today), true);
   assert.equal(projectDraftChanged(first, new Map(), today), false);
+});
+
+test('reverting metadata to its old baseline survives an older successful save', () => {
+  const original = { ...project(1), notes: 'Original note.' };
+  const submitted = patchProjectDraft(new Map(), original, { notes: 'Submitted note.' }, today);
+  const begun = beginProjectWrite(new Map(), original, 1);
+  const reverted = patchProjectDraft(
+    submitted,
+    original,
+    { notes: 'Original note.' },
+    today,
+    begun.writes,
+  );
+  assert.equal(reverted.size, 1, 'the explicit revert must not disappear during the write');
+  const completed = clearSavedProjectDraft(reverted, submitted, original.id, 'details');
+  const writes = finishProjectWrite(begun.writes, begun.write);
+  const stored = { ...original, notes: 'Submitted note.' };
+  const refreshed = acknowledgeProjectWrites(completed, writes, writes, [stored], today);
+  assert.equal(readProjectDraft(stored, refreshed.drafts, today).notes, 'Original note.');
+  assert.deepEqual(
+    projectDetailsUpdate(stored, readProjectDraft(stored, refreshed.drafts, today)),
+    { notes: 'Original note.' },
+  );
+  assert.equal(refreshed.writes.size, 0);
+});
+
+test('print completion preserves a newer metadata-status revert and clears no-op print fields', () => {
+  const original = project(1);
+  const submitted = patchProjectDraft(
+    new Map(),
+    original,
+    { outcome: 'Failed', attemptNotes: 'Warped edge.' },
+    today,
+  );
+  const begun = beginProjectWrite(new Map(), original, 1);
+  const edited = patchProjectDraft(submitted, original, { status: 'Queued' }, today, begun.writes);
+  const reverted = patchProjectDraft(
+    edited,
+    original,
+    { status: 'Unprinted', attemptNotes: '' },
+    today,
+    begun.writes,
+  );
+  const completed = clearSavedProjectDraft(reverted, submitted, original.id, 'attempt');
+  const writes = finishProjectWrite(begun.writes, begun.write);
+  const stored: LibraryProject = {
+    ...original,
+    status: 'Failed',
+    attempts: [{ date: today, outcome: 'Failed', notes: 'Warped edge.' }],
+  };
+  const refreshed = acknowledgeProjectWrites(completed, writes, writes, [stored], today);
+  const draft = readProjectDraft(stored, refreshed.drafts, today);
+  assert.equal(draft.status, 'Unprinted');
+  assert.equal(draft.outcome, 'Printed');
+  assert.equal(draft.attemptNotes, '');
+  assert.deepEqual(projectDetailsUpdate(stored, draft), { status: 'Unprinted' });
+  assert.deepEqual(Object.keys(refreshed.drafts.get(original.id)!.fields), ['status']);
+});
+
+test('failed writes release true no-op reverts only after a confirmed fresh read', () => {
+  const original = { ...project(1), notes: 'Original note.' };
+  const submitted = patchProjectDraft(new Map(), original, { notes: 'Submitted note.' }, today);
+  const begun = beginProjectWrite(new Map(), original, 1);
+  const reverted = patchProjectDraft(
+    submitted,
+    original,
+    { notes: 'Original note.', attemptNotes: 'Keep this new print note.' },
+    today,
+    begun.writes,
+  );
+  const writes = finishProjectWrite(begun.writes, begun.write);
+  assert.equal(reverted.get(original.id)!.fields.notes, 'Original note.');
+  const stale = acknowledgeProjectWrites(reverted, writes, begun.writes, [original], today);
+  assert.equal(stale.drafts, reverted, 'a read begun during a write cannot release protection');
+  const refreshed = acknowledgeProjectWrites(reverted, writes, writes, [original], today);
+  assert.equal(refreshed.drafts.get(original.id)!.fields.notes, undefined);
+  assert.equal(
+    readProjectDraft(original, refreshed.drafts, today).attemptNotes,
+    'Keep this new print note.',
+  );
+  assert.equal(refreshed.writes.size, 0);
+});
+
+test('reopened edits remain protected between write completion and refresh', () => {
+  const original = project(1);
+  const begun = beginProjectWrite(new Map(), original, 1);
+  const settled = finishProjectWrite(begun.writes, begun.write);
+  const edited = patchProjectDraft(new Map(), original, { notes: '' }, today, settled);
+  assert.equal(edited.size, 1, 'the loaded old baseline is not yet authoritative');
+  const stored = { ...original, notes: 'The earlier write completed.' };
+  const refreshed = acknowledgeProjectWrites(edited, settled, settled, [stored], today);
+  assert.equal(readProjectDraft(stored, refreshed.drafts, today).notes, '');
+});
+
+test('overlapping writes and reads cannot prune a newer explicit baseline edit', () => {
+  const original = { ...project(1), notes: 'Original note.' };
+  const submittedA = patchProjectDraft(new Map(), original, { notes: 'A' }, today);
+  const first = beginProjectWrite(new Map(), original, 1);
+  const submittedB = patchProjectDraft(submittedA, original, { notes: 'B' }, today, first.writes);
+  const second = beginProjectWrite(first.writes, original, 2);
+  const reverted = patchProjectDraft(
+    submittedB,
+    original,
+    { notes: 'Original note.' },
+    today,
+    second.writes,
+  );
+  const afterA = clearSavedProjectDraft(reverted, submittedA, original.id, 'details');
+  const onePending = finishProjectWrite(second.writes, first.write);
+  assert.deepEqual(onePending.get(original.id)!.active, [2]);
+  const earlyRead = acknowledgeProjectWrites(
+    afterA,
+    onePending,
+    onePending,
+    [{ ...original, notes: 'A' }],
+    today,
+  );
+  assert.equal(earlyRead.writes, onePending);
+  const afterB = clearSavedProjectDraft(afterA, submittedB, original.id, 'details');
+  const settled = finishProjectWrite(onePending, second.write);
+  const stale = acknowledgeProjectWrites(
+    afterB,
+    settled,
+    onePending,
+    [{ ...original, notes: 'A' }],
+    today,
+  );
+  assert.equal(stale.writes, settled);
+  const stored = { ...original, notes: 'B' };
+  const refreshed = acknowledgeProjectWrites(afterB, settled, settled, [stored], today);
+  assert.equal(readProjectDraft(stored, refreshed.drafts, today).notes, 'Original note.');
+  assert.equal(refreshed.writes.size, 0);
+  assert.equal(
+    finishProjectWrite(settled, first.write),
+    settled,
+    'duplicate completion is harmless',
+  );
+});
+
+test('a new write invalidates a read that began after the previous write settled', () => {
+  const original = project(1);
+  const first = beginProjectWrite(new Map(), original, 1);
+  const observed = finishProjectWrite(first.writes, first.write);
+  const second = beginProjectWrite(observed, original, 2);
+  const drafts = patchProjectDraft(new Map(), original, { notes: '' }, today, second.writes);
+  const stale = acknowledgeProjectWrites(drafts, second.writes, observed, [original], today);
+  assert.equal(stale.drafts, drafts);
+  assert.equal(stale.writes, second.writes);
+  const replacement = { ...original, savedAt: 5000 };
+  assert.equal(
+    patchProjectDraft(new Map(), replacement, { notes: '' }, today, second.writes).size,
+    0,
+    'another snapshot must not inherit pending-write protection',
+  );
+  const replacedDraft = patchProjectDraft(
+    new Map(),
+    replacement,
+    { notes: 'Replacement draft.' },
+    today,
+  );
+  const acknowledgedOld = acknowledgeProjectWrites(
+    replacedDraft,
+    observed,
+    observed,
+    [original],
+    today,
+  );
+  assert.equal(
+    readProjectDraft(replacement, acknowledgedOld.drafts, today).notes,
+    'Replacement draft.',
+    'an old-snapshot read cannot prune another snapshot’s text',
+  );
+});
+
+test('saving a reverted stale baseline sends the explicit metadata values to storage', () => {
+  const original = { ...project(1), notes: 'Original note.', tags: ['original'] };
+  const submitted = patchProjectDraft(
+    new Map(),
+    original,
+    { notes: 'Submitted note.', tags: 'new', status: 'Queued' },
+    today,
+  );
+  const first = beginProjectWrite(new Map(), original, 1);
+  const reverted = patchProjectDraft(
+    submitted,
+    original,
+    { notes: 'Original note.', tags: 'original', status: 'Unprinted' },
+    today,
+    first.writes,
+  );
+  assert.deepEqual(
+    projectDetailsUpdate(original, readProjectDraft(original, reverted, today)),
+    {},
+    'the rendered baseline alone cannot express this newer write intent',
+  );
+  assert.equal(
+    projectDraftChanged(original, reverted, today, first.writes),
+    true,
+    'an explicit pending revert still needs a visible unsaved indicator',
+  );
+  const payload = projectDetailsWrite(original, reverted, today, first.writes);
+  assert.deepEqual(payload, { notes: 'Original note.', tags: ['original'], status: 'Unprinted' });
+  const second = beginProjectWrite(first.writes, original, 2);
+  const afterFirst = clearSavedProjectDraft(reverted, submitted, original.id, 'details');
+  const onePending = finishProjectWrite(second.writes, first.write);
+  const afterSecond = clearSavedProjectDraft(afterFirst, reverted, original.id, 'details');
+  const settled = finishProjectWrite(onePending, second.write);
+  const stored = { ...original, ...payload };
+  const refreshed = acknowledgeProjectWrites(afterSecond, settled, settled, [stored], today);
+  assert.equal(refreshed.drafts.size, 0);
+  assert.equal(readProjectDraft(stored, refreshed.drafts, today).notes, 'Original note.');
+  assert.deepEqual(projectDetailsWrite(original, new Map(), today, new Map()), {});
+});
+
+test('older A completions cannot erase newer A-B-A edits in either form', () => {
+  for (const section of ['details', 'attempt'] as const) {
+    const original = project(1);
+    const field = section === 'details' ? 'notes' : 'attemptNotes';
+    const submittedA = patchProjectDraft(new Map(), original, { [field]: 'A' }, today);
+    const first = beginProjectWrite(new Map(), original, 1);
+    const submittedB = patchProjectDraft(
+      submittedA,
+      original,
+      { [field]: 'B' },
+      today,
+      first.writes,
+    );
+    const second = beginProjectWrite(first.writes, original, 2);
+    const newestA = patchProjectDraft(submittedB, original, { [field]: 'A' }, today, second.writes);
+    const afterA = clearSavedProjectDraft(newestA, submittedA, original.id, section);
+    assert.equal(
+      readProjectDraft(original, afterA, today)[field],
+      'A',
+      `${section}: equal text from a newer edit is still unsaved`,
+    );
+    const pendingB = finishProjectWrite(second.writes, first.write);
+    const afterB = clearSavedProjectDraft(afterA, submittedB, original.id, section);
+    const settled = finishProjectWrite(pendingB, second.write);
+    const stored: LibraryProject =
+      section === 'details'
+        ? { ...original, notes: 'B' }
+        : {
+            ...original,
+            status: 'Printed',
+            attempts: [{ date: today, outcome: 'Printed', notes: 'B' }],
+          };
+    const refreshed = acknowledgeProjectWrites(afterB, settled, settled, [stored], today);
+    assert.equal(
+      readProjectDraft(stored, refreshed.drafts, today)[field],
+      'A',
+      `${section}: the newer A survives B reaching storage`,
+    );
+    assert.equal(projectDraftChanged(stored, refreshed.drafts, today), true);
+  }
 });
