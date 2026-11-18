@@ -12,6 +12,7 @@ import {
   Eye,
   EyeSlash,
   FloppyDisk,
+  FolderOpen,
   Image as ImageIcon,
   Info,
   Minus,
@@ -35,6 +36,9 @@ import LocalAssistant from './LocalAssistant';
 import PrintSettings from './PrintSettings';
 import QuickEdit from './QuickEdit';
 import PrintPreparation from './PrintPreparation';
+import ProjectLibrary from './ProjectLibrary';
+import { downloadProjectRecipe, profileBounds } from './projectRecipe';
+import { studioJsonBlob } from './studioFiles';
 import BackgroundRemoval, { type BackgroundPreview } from './BackgroundRemoval';
 import {
   createDesignHistory,
@@ -76,7 +80,7 @@ import type {
   TraceResult,
 } from './types';
 
-type ModalName = 'photo' | 'trace' | 'guide' | 'export' | null;
+type ModalName = 'photo' | 'trace' | 'guide' | 'export' | 'projects' | null;
 type Unit = 'mm' | 'in';
 // What "Try again" repeats. It names the failed operation rather than capturing it, so a retry
 // always runs with the inputs on screen when it is clicked, never with an earlier render's.
@@ -143,17 +147,6 @@ function errorText(error: unknown): string {
   return error instanceof Error ? error.message : 'Something went wrong. Try again.';
 }
 
-function downloadJson(recipe: ProjectRecipe) {
-  const url = URL.createObjectURL(
-    new Blob([JSON.stringify(recipe, null, 2)], { type: 'application/json' }),
-  );
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `${recipe.name.replace(/[^a-zA-Z0-9_-]+/g, '-').slice(0, 60) || 'part'}.cad-project.json`;
-  link.click();
-  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
-
 function parseRecipe(value: unknown): ProjectRecipe {
   const recipe = value as Partial<ProjectRecipe> | null;
   if (
@@ -215,7 +208,7 @@ function parseRecipe(value: unknown): ProjectRecipe {
       )
     )
       throw new Error('This project outline is outside its reference working image.');
-    const calculated = referenceWidth(evidence, getBounds(profile).width);
+    const calculated = referenceWidth(evidence, profileBounds(profile).width);
     if (
       !Number.isFinite(calculated) ||
       Math.abs(calculated - recipe.width_mm!) > Math.max(1e-6, recipe.width_mm! * 1e-8)
@@ -247,14 +240,6 @@ function parseRecipe(value: unknown): ProjectRecipe {
   }
   if (recipe.version !== 1) recipe.design = parseDesign(recipe.design);
   return recipe as ProjectRecipe;
-}
-
-function getBounds(profile: Profile) {
-  const xs = profile.outer.map((p) => p[0]);
-  const ys = profile.outer.map((p) => p[1]);
-  const x = Math.min(...xs),
-    y = Math.min(...ys);
-  return { x, y, width: Math.max(...xs) - x, height: Math.max(...ys) - y };
 }
 
 function Modal({
@@ -1264,7 +1249,7 @@ export default function App() {
       // Saved names may predate, or bypass, the rule the service enforces.
       const restoredName = cleanName(recipe.name);
       const restoredDesign = recipe.version !== 1 ? recipe.design! : { ...DEFAULT_DESIGN };
-      const bounds = getBounds(recipe.profile);
+      const bounds = profileBounds(recipe.profile);
       if (bounds.width <= 0 || bounds.height <= 0)
         throw new Error('The project outline has no area.');
       const restoredError = designError(restoredDesign, {
@@ -1389,39 +1374,47 @@ export default function App() {
     setDraftSnap(snap);
     setModal('trace');
   }
-  function saveProject() {
-    if (!trace || !buildReady) return;
+  function readProjectRecipe():
+    { recipe: ProjectRecipe } | { issue: string; target?: 'height' | 'decision' } {
+    if (!trace || !buildReady) return { issue: 'Set valid dimensions and design settings first.' };
     const heightIssue = measuredHeightError(measuredHeight, unitFactor);
-    if (heightIssue) {
-      setModal(null);
-      setMeasurementReview((value) => ({ request: value.request + 1, target: 'height' }));
-      setError(heightIssue);
-      return;
-    }
+    if (heightIssue) return { issue: heightIssue, target: 'height' };
     const check = heightCheckDraft(heightAllowance, heightBound, unitFactor);
     if (check.error || (check.value && !measuredHeight.trim())) {
-      setModal(null);
-      setMeasurementReview((value) => ({
-        request: value.request + 1,
+      return {
+        issue:
+          check.error ?? 'Enter an independent height measurement, or clear both decision inputs.',
         target: check.error ? 'decision' : 'height',
-      }));
-      setError(
-        check.error ?? 'Enter an independent height measurement, or clear both decision inputs.',
-      );
+      };
+    }
+    return {
+      recipe: {
+        format: 'pictures-to-cad',
+        version: trace.profile.primitives || trace.profile.reference ? 3 : 2,
+        name: projectName(),
+        profile: trace.profile,
+        width_mm: widthMm,
+        thickness_mm: thicknessMm,
+        design,
+        ...(referenceCalibration ? { reference_calibration: referenceCalibration } : {}),
+        ...(measuredHeight.trim()
+          ? { measured_height_mm: Number(measuredHeight) * unitFactor }
+          : {}),
+        ...(check.value ? { height_check: check.value } : {}),
+      },
+    };
+  }
+  function saveProject() {
+    if (!trace || !buildReady) return;
+    const result = readProjectRecipe();
+    if ('issue' in result) {
+      const { issue, target } = result;
+      setModal(null);
+      if (target) setMeasurementReview((value) => ({ request: value.request + 1, target }));
+      setError(issue);
       return;
     }
-    downloadJson({
-      format: 'pictures-to-cad',
-      version: trace.profile.primitives || trace.profile.reference ? 3 : 2,
-      name: projectName(),
-      profile: trace.profile,
-      width_mm: widthMm,
-      thickness_mm: thicknessMm,
-      design,
-      ...(referenceCalibration ? { reference_calibration: referenceCalibration } : {}),
-      ...(measuredHeight.trim() ? { measured_height_mm: Number(measuredHeight) * unitFactor } : {}),
-      ...(check.value ? { height_check: check.value } : {}),
-    });
+    downloadProjectRecipe(result.recipe);
     setNotice(
       'Project download started. Your outline, measurements and design settings are included; the photo is not.',
     );
@@ -1629,6 +1622,13 @@ export default function App() {
             run: saveProject,
           },
           {
+            id: 'project-library',
+            label: 'Open project library',
+            detail: 'Save and reopen snapshots, or record print attempts',
+            keywords: 'catalog collection print inventory history tags',
+            run: () => setModal('projects'),
+          },
+          {
             id: 'update-preview',
             label: 'Build or update preview',
             detail: 'Apply the current dimensions and design to your solid',
@@ -1720,9 +1720,18 @@ export default function App() {
             <span className="workspace-eyebrow">01 / CREATE</span>
             <h2>Flat part studio</h2>
             <p>A clear outline. A measured solid.</p>
-            <a className="shape-entry-link" href="#designer">
-              Design with common shapes <Plus size={16} />
-            </a>
+            <div className="workbench-entry-links">
+              <a className="shape-entry-link" href="#designer">
+                Design with common shapes <Plus size={16} />
+              </a>
+              <button
+                type="button"
+                className="shape-entry-link project-library-link"
+                onClick={() => setModal('projects')}
+              >
+                <FolderOpen size={17} aria-hidden="true" /> Project library
+              </button>
+            </div>
           </div>
           <nav className="workflow" aria-label="Conversion workflow">
             <button
@@ -2295,6 +2304,22 @@ export default function App() {
         onChange={onFile}
       />
 
+      {active && modal === 'projects' && (
+        <Modal title="Project library" onClose={() => setModal(null)} onFocusLost={rememberFocus}>
+          <ProjectLibrary
+            canSave={!!trace && buildReady && !busy}
+            canOpen={!busy}
+            getRecipe={() => {
+              const result = readProjectRecipe();
+              if ('issue' in result) throw new Error(result.issue);
+              return result.recipe;
+            }}
+            onOpen={(recipe) =>
+              void restoreProject(new File([studioJsonBlob(recipe)], 'library.cad-project.json'))
+            }
+          />
+        </Modal>
+      )}
       {active && modal === 'photo' && (
         <Modal
           title="Start from a photo."

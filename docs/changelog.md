@@ -1,5 +1,12 @@
 # Workbench change log
 
+## Flat-part project library — November 17, 2026
+
+- Save editable versions of flat-part projects in the current browser, browse
+  outline thumbnails, and find snapshots by name, tag or print status.
+- Record dated print attempts and notes for each saved version. Reopen a
+  snapshot in the workbench or download its editable recipe.
+
 ## Studio export recovery and keyboard controls — November 17, 2026
 
 - Clearing temporary exports now invalidates retained Relief results as well as

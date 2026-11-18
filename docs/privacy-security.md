@@ -51,7 +51,7 @@ The backend also writes a build recipe as `project.json`, used in export/handoff
 
 Keep the original source image separately when you need a record of how the model was derived. Saving a local recipe does not create a cloud account, synchronize another device, or provide a backup service.
 
-There is no automatic project persistence across page refreshes. Download a recipe before leaving the workbench if you need to recover its current settings.
+Use **Project library → Save current snapshot** to store an editable Flat part recipe in this browser profile and origin. The library uses IndexedDB to keep recipes, tags, notes, print statuses and print attempts across reloads. Clearing site data or removing a snapshot can delete its history. **Download recipe** saves a portable copy of the recipe only. The library stores the outline and editable settings as its geometry record. The current draft still requires an explicit snapshot or recipe download to survive a reload.
 
 Browser downloads are governed by the browser and host environment. Deleting an artifact from the running app does not delete copies already downloaded or stored in a host backup or environment snapshot.
 

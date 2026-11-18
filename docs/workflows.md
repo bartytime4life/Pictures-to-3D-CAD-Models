@@ -23,6 +23,15 @@ The model viewer's camera, grid, wireframe, dimensions and separated-piece inspe
 
 To inspect a source edge, use the source panel's plus/minus buttons and drag the image. With the source inspection region focused, arrow keys pan, `+` or `-` changes zoom, and `0` fits the image again. **Fit source image** resets zoom and pan without changing measurements. The source outline moves with the photograph. In CAD preview, **Grid**, **Mesh** and **Size** toggle display layers; **Reset CAD display** restores their defaults.
 
+## Save snapshots and record prints
+
+1. In **Flat part**, open **Project library** and select **Save current snapshot**. Each changed recipe earns its own snapshot so its measurements, settings and print records stay together. Saving the same recipe again selects its existing entry.
+2. Add tags and notes or set a print status such as **Queued**, then select **Save details**. Find snapshots by name or tag and filter them by print status.
+3. After printing, enter the date, outcome and any notes, then select **Record print attempt**. Each attempt adds a history entry and sets the snapshot's current status to its outcome.
+4. Choose **Open in workbench** to rebuild a saved snapshot, or **Download recipe** to keep an editable copy outside your browser.
+
+The library stays in the browser profile where you saved it. Recipe downloads contain the editable model inputs. Tags, notes and print history are stored with the library entry. Keep the source photo separately.
+
 ## Prepare a large part for a slicer
 
 1. Select the actual printer and nozzle, or enter custom build bounds. Set a deliberate XY margin.
