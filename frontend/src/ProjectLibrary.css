@@ -1,0 +1,235 @@
+.workbench-entry-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 18px;
+}
+
+.project-library-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.modal:has(.project-library) {
+  width: min(920px, calc(100vw - 36px));
+  background: var(--surface);
+}
+
+.project-library {
+  margin-top: 14px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.project-library p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.project-library-toolbar,
+.project-library-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.project-library-toolbar {
+  justify-content: space-between;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 18px;
+}
+
+.project-library :is(.primary-button, .outlined-button, .text-button) {
+  min-height: 38px;
+  font-size: 13px;
+  padding: 7px 12px;
+  white-space: normal;
+}
+
+.project-library-grid {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(0, 1.65fr);
+  align-items: start;
+  gap: 20px;
+}
+
+.project-library-filters,
+.project-library-form fieldset,
+.project-library-details {
+  display: grid;
+  gap: 10px;
+}
+
+.project-library-details {
+  gap: 16px;
+}
+
+.project-library label {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.project-library :is(input, select, textarea) {
+  min-height: 36px;
+  min-width: 0;
+  width: 100%;
+  padding: 6px 9px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: #edf2f6;
+  background: #0d1724;
+  font: inherit;
+}
+
+.project-library textarea {
+  resize: vertical;
+}
+
+.project-library textarea:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 4px;
+}
+
+.project-library-list,
+.project-library-attempts {
+  padding: 0;
+  list-style: none;
+  margin: 12px 0 0;
+}
+
+.project-library-list li + li,
+.project-library-attempts li + li {
+  margin-top: 7px;
+}
+
+.project-library-list button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 9px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.project-library-list button:hover,
+.project-library-list button[aria-pressed='true'] {
+  border-color: var(--accent);
+  background: #163044;
+}
+
+.project-library-list canvas {
+  width: 60px;
+  flex: 0 0 60px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: #0b1421;
+}
+
+.project-library-list small {
+  display: block;
+  color: var(--muted);
+}
+
+.project-library-record,
+.project-library-form {
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+}
+
+.project-library-record {
+  display: grid;
+  gap: 7px;
+  overflow-wrap: anywhere;
+}
+
+.project-library-record h3,
+.project-library-form h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.project-library-form fieldset {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 10px 0 0;
+  border: 0;
+  padding: 0;
+  min-inline-size: 0;
+  justify-items: start;
+}
+
+.project-library-form label {
+  width: 100%;
+}
+
+.project-library-form label:has(textarea) {
+  grid-column: 1 / -1;
+}
+
+.project-library-attempts li {
+  padding: 8px 10px;
+  background: #0d1724;
+  border-radius: 5px;
+  overflow-wrap: anywhere;
+}
+
+.project-library-attempts time {
+  margin-right: 8px;
+  color: var(--muted);
+}
+
+.project-library-attempts p {
+  white-space: pre-wrap;
+}
+
+.project-library .project-library-empty {
+  padding: 13px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+}
+
+.project-library .project-library-filters + .project-library-empty {
+  margin-top: 12px;
+}
+
+.project-library .project-library-feedback,
+.project-library .project-library-error {
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  border: 1px solid currentColor;
+  border-radius: 6px;
+}
+
+.project-library .project-library-feedback {
+  color: var(--accent);
+}
+
+.project-library .project-library-error {
+  color: #ffc7a0;
+}
+
+@media (max-width: 650px) {
+  .project-library-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+}
+
+@media (max-width: 460px) {
+  .project-library-form fieldset {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
