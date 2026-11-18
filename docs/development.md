@@ -1,6 +1,6 @@
 # Development and setup
 
-Run commands from the repository root unless a command explicitly says otherwise. An existing Codex cloud task already has an isolated checkout; use it directly rather than creating another worktree for normal setup.
+Run commands from the repository root unless a command names another directory.
 
 See the [documentation index](README.md) for usage and method guides, and
 [Contributing](contributing.md) for change scope, review and evidence practices.
@@ -262,6 +262,13 @@ worktree's interpreter does not prepare those helpers. Run `make setup-app` in
 the test checkout; preserve earlier reports before a rerun replaces them.
 
 The browser suite includes automated accessibility checks with `@axe-core/playwright`. Those checks cover the tested rendered states; they do not establish full accessibility conformance or replace keyboard and assistive-technology testing.
+
+For changes to user guidance, check relative links, image paths, headings and command examples against the checkout. The documentation API tests also exercise the guides served in Knowledge. To replay the snapshot and image-inspection workflows in Chromium, run the focused browser scenarios.
+
+```bash
+.venv/bin/python -m pytest -q tests/test_documentation.py
+npm run test:e2e -- tests/e2e/project-library.spec.ts tests/e2e/image-inspection.spec.ts
+```
 
 ## Continuous integration
 

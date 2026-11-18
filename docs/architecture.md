@@ -6,15 +6,21 @@ Pictures to CAD separates measurements, editable design settings, generated geom
 
 ```mermaid
 flowchart LR
-    P[Photo or saved recipe] --> W[Flat-part workspace]
-    W --> T[Trace API: outline and holes]
-    T --> M[Review source scale and thickness]
+    P[Photo] --> T[Trace API: outline and holes]
+    T --> W[Flat-part workspace]
+    W --> M[Review source scale and thickness]
     M --> D[Editable design and process plan]
     D --> B[Build API and isolated CAD worker]
     B --> V[Current mesh and fit results]
     B --> E[Geometry, recipe and handoff ZIPs]
     E --> S[Native slicer: review settings and slice]
-    L[Photo library] --> W
+    J[Project library or recipe JSON] -->|Restore outline and settings| W
+    D -->|Save snapshot or download| J
+    A[Shape designer and CAD worker] --> W
+    L[Photo library] --> T
+    L --> I[Image inspection]
+    I --> T
+    I --> R
     L --> R[Relief workspace and mesh worker]
     K[Knowledge and Science lab] --> M
 ```
@@ -33,6 +39,8 @@ does not alter the CAD source or establish its scale; see [the method and limits
 | -------------------------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | Application routing        | `frontend/src/main.tsx`                                                    | Select and retain visited workspaces                                             |
 | Flat-part orchestration    | `frontend/src/App.tsx`                                                     | Trace/build requests, measurements, revisions, import/export and recovery        |
+| Flat-part snapshots        | `ProjectLibrary.tsx`, `projectLibrary.ts`, `projectRecipe.ts`              | Browser-local recipes and print logs, shared recipe downloads and restore flow   |
+| Shape designer             | `ShapeStudio.tsx`, `backend/shapes.py`, `backend/shape_worker.py`          | Common-shape editing, exact solid construction and outline handoff               |
 | Design and process editing | `QuickEdit.tsx`, `PrintSettings.tsx`, `PrintPreparation.tsx`, `design.ts`  | Commit validated settings, inspect printer bounds and carry process notes        |
 | Settings history           | `designHistory.ts`                                                         | Bounded snapshots of design settings; no export-file ownership                   |
 | Geometry visualization     | `ModelViewer.tsx`, `plateInspection.ts`                                    | Camera/mesh inspection and top-down projection; no mutation of exported geometry |
@@ -44,6 +52,7 @@ does not alter the CAD source or establish its scale; see [the method and limits
 | Fit planning               | `backend/printing.py`, `backend/placement.py`, `backend/curve_envelope.py` | Resolve catalog bounds and test per-piece containment                            |
 | Slicer handoff             | `backend/slicer_handoff.py`, `backend/slicers.py`                          | Neutral packages, planning notes, hashes and optional fixed-program launch       |
 | Relief and photo library   | `backend/relief.py`, `backend/library.py`, associated workers              | Separate image/mesh and persistent-photo workflows                               |
+| Creative tools             | `CreativeStudio.tsx`, `backend/creative.py`, `backend/assistant.py`        | Registered text tools and the shared local Ollama connection                     |
 
 The [detailed API and geometry contracts](api-reference.md) describe request fields, geometry conventions, algorithms and HTTP responses. The [research index](research-index.md) links developer-only numerical APIs and archived experiments; their existence does not imply a browser feature or automatic tracing step.
 
@@ -63,13 +72,16 @@ Every geometry-affecting or saved-plan edit invalidates the current build revisi
 
 Project import validates and builds the replacement before installing it. A failed import preserves the user's current work. Undo/redo restores settings and requires a fresh build rather than assuming an old job still exists. Source-context changes clear design history where required.
 
+Project library stores Flat part recipes and per-snapshot metadata in IndexedDB. Saving compares recipes with the same name and reuses an identical entry. Print attempts append to the selected snapshot and update its status in the same transaction. Opening a snapshot uses the normal recipe restore flow and generates a fresh CAD job. See the [snapshot workflow](workflows.md#save-snapshots-and-record-prints).
+
 Background removal binds its request and object URL to the current trace, aborts obsolete image work and revokes owned URLs. The cutout is independent of CAD geometry. The optional assistant uses validated proposals that require explicit Apply; stale context blocks application.
 
 ## Storage and service scope
 
 | Data                                        | Lifetime and location                                               |
 | ------------------------------------------- | ------------------------------------------------------------------- |
-| Current workspace inputs and design history | Browser memory; saved recipe needed across reloads                  |
+| Current workspace inputs and design history | Browser memory for the current page                                 |
+| Flat-part snapshots and print history       | Browser IndexedDB for the current profile and origin                |
 | Flat-part/relief generated job artifacts    | Backend temporary job directory; normally expire after one hour     |
 | Downloaded geometry, recipes and ZIPs       | User-selected browser download location                             |
 | Retained native handoff copy                | Backend handoff directory, independent of temporary CAD job cleanup |
@@ -84,13 +96,17 @@ The default server is a local, single-user service with no general multi-user ac
 | ------------------ | ------------------------------------------------------------------------- |
 | Health and catalog | `GET /api/health`, `GET /api/printers`                                    |
 | Flat parts         | `POST /api/trace`, `POST /api/build`                                      |
+| Shape designer     | `POST /api/designer/build`                                                |
 | Generated files    | `GET /api/download/{job_id}/{kind}`, `DELETE /api/models/{job_id}`        |
 | Slicer bridge      | `GET /api/slicers`, `POST /api/models/{job_id}/slicer/{program_id}`       |
 | Relief             | `POST /api/relief`, `GET /api/relief/depth`, `POST /api/relief/calibrate` |
 | Blender bridge     | `GET /api/blender`, `POST /api/models/{job_id}/blender`                   |
 | Photo library      | `/api/library` plus documented browse/upload/index/search/detail routes   |
 | Optional assistant | `GET /api/assistant/status`, `POST /api/assistant/chat`                   |
+| Creative tools     | `GET /api/creative/tools`, `POST /api/creative/run`                       |
 | Local guides       | `GET /api/docs`, `GET /api/docs/{slug}`, `GET /api/docs/{slug}/download`  |
+
+Image inspection runs in the browser. The Project library uses the build API when a user reopens a snapshot.
 
 Only fixed download kinds and registered native-program IDs are accepted. Launcher commands use fixed argument arrays with `shell=False`; the browser cannot supply a command or post-processing script. A successful launch response is `launch_requested`, not confirmation of import, slicing or printing.
 

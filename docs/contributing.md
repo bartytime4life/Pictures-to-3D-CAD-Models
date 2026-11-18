@@ -90,6 +90,9 @@ retains its original source and verification scope.
 - Update the relevant guide, [architecture](architecture.md) or API contract
   when behavior changes. Add navigation to the [index](README.md) for a new
   guide and a concise entry in [change log](changelog.md).
+- Verify setup commands, on-screen labels, relative links and heading fragments
+  from the checkout. For guides served in Knowledge, exercise the documentation
+  API. See [validation commands](development.md#validate-changes).
 - Edit source Markdown or data rather than generated HTML, catalog directories,
   figures or PDFs. The library's [generation map](../reference-library/BUILD.md#what-is-generated-from-what)
   identifies each source and command.

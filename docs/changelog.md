@@ -6,6 +6,24 @@
   outline thumbnails, and find snapshots by name, tag or print status.
 - Record dated print attempts and notes for each saved version. Reopen a
   snapshot in the workbench or download its editable recipe.
+- Preserve print metadata and history in the browser library when downloading
+  the portable recipe. See [the Project library workflow](workflows.md#save-snapshots-and-record-prints).
+
+## Image inspection and bounded photo search — November 17, 2026
+
+- Inspect a source image's histogram, tones and edges, compare aligned images,
+  and send the original into Flat part or Relief. See [Image inspection](image-inspection.md).
+- Bound exact photo matching's score matrix to 2 MiB with default settings.
+  Cancelling regrouping preserves the previous groups. See [bounded photo search](bounded-photo-search.md).
+
+## Shape designer and Creative tools — November 17, 2026
+
+- Build connected flat parts from common shapes and through cutouts. Save the
+  editable composition, export STEP/STL/DXF, or transfer the outline for print
+  planning. See [Shape designer](shape-designer.md).
+- Explore directions, refine a concept or plan the making with an installed
+  local Ollama chat model. Download the submitted brief and generated notes.
+  See [Creative tools](creative-tools.md).
 
 ## Studio export recovery and keyboard controls — November 17, 2026
 

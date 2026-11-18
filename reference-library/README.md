@@ -11,7 +11,7 @@
 
 # Pictures to printable CAD: reference library
 
-This folder is the reference companion to the [photo-to-CAD workbench](../README.md) in this repository. The workbench traces one flat part; the library covers the wider route from photographs to printable CAD.
+This folder is the offline reference companion to Pictures to CAD. Open the app's **OpenSCAD** link to reach the companion's parametric workspace, or open the reader directly from disk. Start with [the available tools and files](#start-here) or [the workbench README](../README.md).
 
 When reading inside the repository, use the [documentation index](../docs/README.md)
 for current workbench guides and [contribution guide](../docs/contributing.md) for
@@ -165,7 +165,7 @@ For a front-on view of a flat surface, mark two endpoints on a known reference a
 
 Photos and their details are saved only in this browser's local storage; they are never uploaded. Clearing browser data, using another browser or origin, or losing the device can make the collection unavailable. Keep your original image files. **Export photo manifest** saves the notes and measurements, not the image files, and is not a backup of the photo library. **Download original** retrieves an individual stored photo. The feature needs a browser with IndexedDB and image decoding support; storage restrictions and private browsing can prevent saving.
 
-The Photos tab is separate from the [workbench](../README.md)'s photo upload, which traces one flat part on its own backend. Photos saved here stay in this page's browser storage and are not shared with the workbench.
+The companion's **Photos** tab stores its own reference images and measurements in the browser. The workbench's **Photo library** indexes source images on its backend, and **Project library** in Flat part stores editable CAD snapshots and print logs in the workbench browser profile and origin. Each has its own storage and export controls. See [workbench data handling](../docs/privacy-security.md).
 
 ### Back up, restore, and hand off measurements
 

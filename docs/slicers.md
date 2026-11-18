@@ -22,9 +22,10 @@ Older recipes without process fields open with 0.2 mm layers, three walls, 15% i
 
 The ZIP's server-generated recipe preserves the source profile, size and design,
 including sheet/fitted data when present. Browser-held known-feature endpoints,
-independent height and height-decision inputs are not sent to that recipe. Use
-**Save project** as a separate download to keep those optional measurement notes;
-see [recipe contents](exports.md#project-json-the-workbench-recipe).
+independent height and height-decision inputs stay in the browser-saved recipe.
+Use **Save project** or **Download recipe** from a saved snapshot to keep those
+notes. Print attempts are recorded on the snapshot. See [recipe contents](exports.md#project-json-the-workbench-recipe)
+and the [Project library workflow](workflows.md#save-snapshots-and-record-prints).
 
 The standards-based 3MF includes millimetre units, separate mesh objects and their positions. It contains no printer settings, temperatures, AMS/MMU assignments, painting, supports or machine instructions. A slicer project saved by any of these applications can carry application-specific settings beyond this interchange geometry.
 

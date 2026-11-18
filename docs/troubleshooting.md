@@ -7,7 +7,7 @@ Use the visible error message and the **Next step** guide to identify the action
 | What you see                                     | What to do                                                                                                                                                   |
 | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Build or export unavailable                      | Read **Next step**. Fix the named measurement or setting, then rebuild; an old visible mesh can still be outdated.                                           |
-| Work vanished after a page reload                | Open your downloaded project JSON. In-page studio navigation keeps memory state, but reload is not a project restore. Keep source photos separately.         |
+| Flat-part work vanished after a page reload      | Reopen a saved snapshot in **Project library**, or open your downloaded project JSON. Reload clears the current unsaved draft. Keep source photos separately. |
 | A desired size will not commit                   | Use a positive target value within supported scale/output limits. Press Enter or leave the field. An invalid draft does not replace the last committed size. |
 | The nozzle or process plan is invalid            | Check **Prepare for slicing** and **Printer & split settings**. Layer height must be at least 0.05 mm, at most 1.2 mm and no larger than the nozzle.         |
 | Bed rotation did not affect the downloaded model | The bed rotation is an inspection control. Apply the chosen orientation in the receiving slicer.                                                             |
@@ -144,9 +144,21 @@ If STEP opens without the application's original sketch and extrusion history, t
 
 If an endpoint reference or independent-height note is absent after restoring a slicer-bundle recipe, use the JSON downloaded through the browser's **Save project** instead. The backend recipe contains build settings and reference-sheet evidence, but omits browser-only endpoint and height-decision notes.
 
-If refreshing the page returns to the sample, restore your downloaded project through **Photo → Browse files**. The application has no automatic CAD project persistence across reloads; the saved recipe is the recovery path.
+If refreshing the page returns to the sample, use **Project library → Open in workbench** on a saved snapshot or restore a downloaded project through **Photo → Browse files**.
 
 Opening a project replaces the current work only after its CAD build succeeds. If the imported outline is invalid or the service fails, the previous outline, measurements, design settings, and temporary exports remain available. **Try again** retries the selected import; it does not rebuild the previous project. Correct an invalid imported file before retrying it.
+
+## Flat-part Project library
+
+| What you see | What to do |
+| --- | --- |
+| **Save current snapshot** is unavailable | Finish tracing, enter valid dimensions and settings, and wait for any active operation to finish. Check browser site-storage permissions if the library itself reports an error. |
+| Saving reports a height-check error | Close the dialog and correct the independent height or its decision fields. Clear both optional decision fields if you only want to save the measured height. |
+| A snapshot is missing | Clear the search and print-status filter. Check the browser profile and app address used when saving, including protocol, hostname and port. A downloaded recipe can restore the model inputs. |
+| A recipe opened with no print history | Use the original snapshot in its browser profile and origin. The recipe contains editable model inputs, and the library entry contains the print log. |
+| Saving again selects the previous snapshot | An identical recipe reuses its existing entry. Save a changed recipe to create a version with its own status and history. |
+
+See [saving snapshots and recording prints](workflows.md#save-snapshots-and-record-prints).
 
 ## Viewer and startup problems
 

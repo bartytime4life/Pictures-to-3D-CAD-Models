@@ -4,9 +4,11 @@ This guide gets you from a running local app to a saved project and a slicer han
 
 ## Install and open
 
-Use Python 3.12, Node.js 22.12 or later, npm and GNU Make. From the repository root:
+Use Python 3.12, Node.js 22.12 or later, npm and GNU Make. Clone the repository and run setup from its root.
 
 ```bash
+git clone https://github.com/bartytime4life/Pictures-to-3D-CAD-Models.git
+cd Pictures-to-3D-CAD-Models
 make setup
 make start
 ```
@@ -20,7 +22,7 @@ A remote backend runs on the remote machine: use its supported port-forwarding m
 1. Open **Flat part**. The mounting-plate sample is traced and built with demonstration dimensions: 80 mm reference width and 4 mm thickness.
 2. Compare the cyan source outline and holes with the 3D solid. Use the available views and reset control to inspect the result.
 3. Under **Quick edit**, enter a target width of 100 mm. Leave the field or press Enter to commit. The target height changes proportionally; the measured reference width remains 80 mm.
-4. Update the model. Until a fresh build succeeds, the old result remains marked outdated and new exports are unavailable.
+4. Select **Update model** in the CAD panel or **Update preview** in **Next step**. Until a fresh build succeeds, the old result remains marked outdated and new exports are unavailable.
 5. Use Undo or Redo to restore design settings, then rebuild the chosen version. History does not restore expired export files.
 
 The sample demonstrates the workflow; it is not a measurement of your part.
@@ -52,8 +54,10 @@ Optional **Remove background** produces a transparent PNG from the current revie
 
 ## Save before leaving
 
-Use **Save project** to download the editable JSON recipe. Keep your source photo separately. A recipe restores the traced profile and settings; it does not contain the photograph or recover a full CAD feature history.
+Choose **Project library → Save current snapshot** in Flat part to keep a version in the current browser. Open the saved entry later to rebuild it or record the outcome of a print. See [saving snapshots and recording prints](workflows.md#save-snapshots-and-record-prints).
 
-Navigation within the page keeps visited studio state in memory. Reloading or closing the page can lose unsaved work. Temporary generated models expire, so download required artifacts promptly. To restore a recipe, choose the JSON file through the photo/project file picker; current work is replaced only after the imported project builds successfully.
+Use **Save project** or **Download recipe** from a saved snapshot to download portable JSON. The file carries the outline and editable settings. Keep the original photograph alongside it and download any geometry files you plan to use.
+
+Navigation within the page keeps visited studio drafts in memory. Reloading or closing the page clears those drafts. To resume, select **Open in workbench** on a saved snapshot, or open the downloaded JSON through **Photo → Browse files**. The replacement becomes current after it builds successfully. Temporary geometry exports expire, even for a saved project.
 
 Knowledge notes and Science scenarios have their own storage and export controls. They are not included automatically in the CAD recipe. See [workflows](workflows.md) and [troubleshooting](troubleshooting.md).

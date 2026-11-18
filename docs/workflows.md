@@ -25,12 +25,18 @@ To inspect a source edge, use the source panel's plus/minus buttons and drag the
 
 ## Save snapshots and record prints
 
-1. In **Flat part**, open **Project library** and select **Save current snapshot**. Each changed recipe earns its own snapshot so its measurements, settings and print records stay together. Saving the same recipe again selects its existing entry.
-2. Add tags and notes or set a print status such as **Queued**, then select **Save details**. Find snapshots by name or tag and filter them by print status.
-3. After printing, enter the date, outcome and any notes, then select **Record print attempt**. Each attempt adds a history entry and sets the snapshot's current status to its outcome.
-4. Choose **Open in workbench** to rebuild a saved snapshot, or **Download recipe** to keep an editable copy outside your browser.
+1. In **Flat part**, open **Project library** under the studio heading and select **Save current snapshot** once the outline, dimensions and settings are valid. You can save before building. A recipe that has not been saved before starts as **Unprinted** with its own history. Saving an identical recipe selects its existing entry.
+2. Select a snapshot. Enter comma-separated tags, project notes or a status (**Unprinted**, **Queued**, **Printing**, **Printed** or **Failed**) and select **Save details**. Search by project name or tag and use the status filter to narrow the list.
+3. Enter the print date, choose **Printed** or **Failed**, add optional notes, and select **Record print attempt**. This adds a history entry and sets the current status to that outcome. Changing the status in **Save details** is independent of recording an attempt.
+4. Choose **Open in workbench** to rebuild the saved outline and settings. Choose **Download recipe** for a portable editable copy. To delete an entry and its history, select **Remove from library** and confirm **Remove snapshot**.
 
-The library stays in the browser profile where you saved it. Recipe downloads contain the editable model inputs. Tags, notes and print history are stored with the library entry. Keep the source photo separately.
+The library stores snapshots in this browser profile and app origin. It keeps tags, notes, status and attempts with each entry. The recipe download carries the outline, measurements and settings. Keep the source photo and any print records you need to retain outside the browser separately. See [storage and retention](privacy-security.md#flat-part-project-library).
+
+![Project library with saved flat-part snapshots and a print-attempt history](validation/evidence/project-library-dialog.png)
+
+## Design a part from shapes
+
+Open **Shape designer** to add material shapes and through cutouts. Review the automatic CAD build, then use **Save design** to retain the editable shape composition. **Open in flat-part workbench** transfers the built outline for scaling, print planning and slicer handoff. Save the designer file as well if you will need to edit the individual shapes. See the [shape designer guide](shape-designer.md).
 
 ## Prepare a large part for a slicer
 
@@ -55,6 +61,8 @@ Inspect the built surface, warnings, wall bounds and exported units. Supported s
 Open **Photo library**, add photos or an authorized local folder, and run the indexing workflow. Sort by sharpness, inspect copies and open a selected image in Flat part or Relief. Optional local vision features add similarity and suggested groups; verify groups by eye.
 
 Library originals, thumbnails and metadata have different retention rules from temporary flat-part uploads. A moved or changed original may need a rescan. See [photo library](photo-library.md) and [privacy](privacy-security.md).
+
+Choose **Inspect image** in the Photo library or open a file directly in **Image inspection** to inspect a region or compare aligned exposures. Send the original image to Flat part or Relief when it is ready for modeling. See the [image inspection workflow](image-inspection.md).
 
 ## Learn without changing a model
 

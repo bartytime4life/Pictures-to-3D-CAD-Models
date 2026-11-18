@@ -1,6 +1,6 @@
 # Pictures to CAD
 
-A local studio for turning a measured photograph of a flat part into editable CAD, preparing a print plan, and understanding the assumptions behind the result.
+A local studio for turning a measured photograph of a flat part into editable CAD, designing parts from common shapes, and preparing geometry for a 3D slicer.
 
 Trace a plate, gasket, spacer or template. Set scale from a real measurement, enter thickness, inspect the solid, and export to CAD or a slicer. Separate studios create reliefs and lithophanes, organize source photos, and explain the measurement workflow with interactive scientific scenarios.
 
@@ -10,9 +10,11 @@ Trace a plate, gasket, spacer or template. Set scale from a real measurement, en
 
 ## Start locally
 
-Requirements: **Python 3.12**, **Node.js 22.12+**, npm and GNU Make. Setup finds `python3.12`, or accepts `PICAD_PYTHON` pointing to a Python 3.12 interpreter.
+Use **Python 3.12**, **Node.js 22.12+**, npm and GNU Make. Clone the repository, then run setup from its root. Set `PICAD_PYTHON` if your Python 3.12 interpreter is outside the usual search path.
 
 ```bash
+git clone https://github.com/bartytime4life/Pictures-to-3D-CAD-Models.git
+cd Pictures-to-3D-CAD-Models
 make setup
 make start
 ```
@@ -26,11 +28,14 @@ The basic workflow needs no account, GPU, paid API or AI credential. Setup insta
 | Workspace               | What works here                                                                                                                                        | What to check yourself                                                                     |
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
 | **Flat part**           | Trace a planar outline and through holes; calibrate from measured width, known features or a suitable reference sheet; build constant-thickness solids | Independent dimensions, important radii and the source photograph                          |
+| **Shape designer**      | Combine common shapes and through cutouts, save the editable composition, or transfer the outline to Flat part                                         | Finished dimensions and connected geometry                                                 |
 | **Quick edit**          | Set target width and thickness, keep XY proportions, use size presets, undo/redo design settings                                                       | Whether the intended size still meets your fit requirement                                 |
 | **Prepare for slicing** | Select printer bounds; split into straight-cut parts; plan layers, walls, infill, supports and adhesion; inspect each piece over a bed envelope        | Native printer/material settings, orientation, supports and sliced layers                  |
-| **Project library**    | Save and reopen editable flat-part snapshots, find them by name or tag, and record print status and attempts                                         | Keep portable recipe downloads and your source photos separately                           |
+| **Project library**     | Save and reopen editable flat-part snapshots, find them by name or tag, and record print status and attempts                                           | Keep portable recipe downloads and your source photos separately                           |
 | **Relief**              | Convert photos, depth maps or elevation maps into reliefs, lithophanes and supported spherical forms                                                   | Surface interpretation, wall thickness, actual material transmission and print orientation |
 | **Photo library**       | Index photos, rank sharpness, identify copies and inspect source images; optional local vision features add similarity/grouping                        | Whether suggested images show the same actual part                                         |
+| **Image inspection**    | Read histograms, brightness and edge strength for a selected region, or compare aligned images                                                         | Whether the source is suitable for tracing or relief                                       |
+| **Creative tools**      | Use a local Ollama model to explore a brief, critique an idea or plan a build                                                                          | Measurements, feasibility and acceptance criteria                                          |
 | **Knowledge**           | Search task guides, follow concrete steps and keep local reading notes                                                                                 | Which assumptions apply to your part                                                       |
 | **Science lab**         | Explore scale sensitivity, ideal layer counts and measured-clearance scenarios with editable values                                                    | Real measurement uncertainty, slicer behavior and physical fit                             |
 | **OpenSCAD**            | Open the companion handbook, calculators and parametric examples                                                                                       | External edits and native rendering separately from the workbench recipe                   |
@@ -43,7 +48,8 @@ Use **Search commands** or **Ctrl/Cmd+K** to find a workspace or supported actio
 2. Inspect the outline and through holes beside the generated solid. Use **Quick edit** to choose a target size without replacing the reference measurements.
 3. Update the model after an edit. A stale preview cannot authorize downloads for the new settings.
 4. Open **Prepare for slicing**, choose a process starting point, and review printer dimensions under **Printer & split settings**.
-5. Build the updated plan, then **Review slicer handoff**. Save the editable project and download a package for your chosen slicer.
+5. Build the updated plan, then select **Review slicer handoff** and download a package for your chosen slicer.
+6. Open **Project library** in Flat part to save a snapshot and track print attempts. Use **Save project** to download the editable recipe for use in another browser or on another computer. See the [snapshot workflow](docs/workflows.md#save-snapshots-and-record-prints).
 
 For your own part, start with a front-on photograph and real measurements. The [getting-started guide](docs/getting-started.md) explains each decision; the [capture guide](docs/capture-guide.md) helps avoid scale and perspective errors.
 
@@ -84,7 +90,7 @@ Open **Creative tools** to explore design directions, refine an idea, or plan th
 
 ## Local data and optional models
 
-Flat-part and relief uploads are processed by the running CAD backend. Temporary model jobs expire; downloaded files remain yours to keep. The photo library has separate persistent storage and original-file rules. Browser notes and saved scenarios belong to the browser profile and origin; export them for a portable copy. Read [privacy and security](docs/privacy-security.md) before using sensitive source material.
+The running CAD backend processes Flat part and Relief uploads and expires temporary model jobs. The Photo library keeps its index on the backend. Project library snapshots, Knowledge notes and Science scenarios are stored in the current browser profile and app origin. A downloaded Flat part recipe carries the outline and settings, while its print log stays in the browser's Project library. See [data handling and storage](docs/privacy-security.md).
 
 Optional local capabilities are documented separately: [Ollama text guidance](docs/ollama.md), [AI depth](docs/relief.md#ai-depth-from-an-ordinary-photo), and [DINOv3 photo features](docs/photo-library.md#optional-vision-model). They require their own installed services or model files and are not prerequisites for measured flat-part CAD.
 

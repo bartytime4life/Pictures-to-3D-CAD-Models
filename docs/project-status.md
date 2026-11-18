@@ -1,5 +1,18 @@
 # Source scope and verification status
 
+## Main after the project library merge
+
+The user guides cover main at `6ec6ce0d1bc8219ca89780b429923a4dee5ddb97`. This revision includes the following additions to the Precision Studio baseline.
+
+| Capability | What is available | Source and verification |
+| --- | --- | --- |
+| Flat-part Project library | Editable snapshots, browser-local metadata and dated print attempts | [Workflow](workflows.md#save-snapshots-and-record-prints), [PR #172](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/172) |
+| Image inspection | Browser-local region readings, aligned A/B comparison and original-file handoff | [Guide](image-inspection.md), [verification](validation/image-inspection.md) |
+| Photo library organization | Exact top-k search with bounded score blocks and rollback on cancelled regrouping | [Design and benchmark](bounded-photo-search.md) |
+| Shape designer and Creative tools | Constructive planar CAD and optional local text generation | [Shape designer](shape-designer.md), [Creative tools](creative-tools.md), [verification](validation/creative-workspaces.md) |
+
+For a particular checkout, verify its revision before using recorded results. The [validation overview](validation.md) links the test evidence, and the [workbench workflow](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/actions/workflows/ci.yml) shows hosted CI by commit.
+
 ## Precision Studio integration — November 17, 2026 UTC
 
 Main at `c3d797b89eacf453c276c91ef4d457c1fe4f20cc` includes the

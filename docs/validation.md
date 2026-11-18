@@ -1,5 +1,16 @@
 # Validation results
 
+## Workspace and photo search records — November 17, 2026
+
+| Area | Recorded checks |
+| --- | --- |
+| Flat-part Project library | Snapshot deduplication and persistence, print status/history, recipe download, rebuild and removal. [Browser scenario](../tests/e2e/project-library.spec.ts), [PR verification](https://github.com/bartytime4life/Pictures-to-3D-CAD-Models/pull/172) |
+| Image inspection | Region and histogram calculations, representative desktop and phone flows, keyboard controls and unchanged-original handoff. [Verification record](validation/image-inspection.md) |
+| Bounded photo search | Top-k comparison, cancellation and rollback, plus scratch allocations on generated vectors. [Method and reproduction](bounded-photo-search.md), [benchmark receipt](validation/bounded-photo-search.json) |
+| Shape designer and Creative tools | Constructive geometry and export checks, workspace interactions and a live local Ollama probe. [Verification record](validation/creative-workspaces.md) |
+
+Each record identifies its tested revision and inputs. For the current source baseline and hosted CI, see [source scope](project-status.md).
+
 ## Interface, navigation and API bug sweep — November 16, 2026
 
 Starting from `main` at `1c41ac1` (PR #160), each studio was used in Chrome at desktop
