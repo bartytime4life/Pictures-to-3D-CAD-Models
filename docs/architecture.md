@@ -97,6 +97,8 @@ The default server is a local, single-user service with no general multi-user ac
 
 `GET /api/runtime` runs stdlib-only environment/package/asset checks off the API event loop and sends `Cache-Control: no-store`. The optional Ollama check reads only bounded loopback metadata under a shared 1.5-second budget, with no inference or download. Reports omit paths, endpoint configuration and model names. The browser validates the entire response before presenting readiness and cancels hidden requests. `make doctor` exposes the same report before the API can start, adding development-tool checks and next-step commands.
 
+`backend/build_info.py` freezes a bounded backend source snapshot at process startup. Health, runtime and doctor expose only validated revision, checkout-state and source-fingerprint fields. Vite embeds one frontend input identity and emits a matching bounded manifest; the runtime reads that manifest without Git or source scans on requests. The Start setup details compare the loaded production browser fingerprint with the interface on disk. Missing or malformed optional metadata never changes core readiness, and live development avoids production reload guidance. These are diagnostic snapshots rather than loaded-byte or output-integrity attestations.
+
 ## API groups
 
 | Group              | Representative routes                                                     |

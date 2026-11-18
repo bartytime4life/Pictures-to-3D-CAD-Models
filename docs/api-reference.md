@@ -254,11 +254,13 @@ The running server's `/docs` page and `/openapi.json` describe the current HTTP 
 
 ### `GET /api/health`
 
-Returns API health information. A successful health response establishes service availability, not that a conversion, export, or browser interaction has passed.
+Returns API health information with `Cache-Control: no-store`, retaining `status`, `version` and `workflow` and adding `identity` as described below. A successful health response establishes service availability, not that a conversion, export, or browser interaction has passed.
 
 ### `GET /api/runtime`
 
-Returns `{ready, checks}` with `Cache-Control: no-store`. Each check has `id`, `label`, `status` (`ready`, `missing`, or `limited`), `required`, `detail`, and optionally `action: {label, command}`. Overall readiness depends only on required Python environment, package metadata and built-asset checks. Optional local Ollama metadata is bounded and does not run inference. Reports omit filesystem paths, configured addresses and model names. This endpoint does not prove a CAD build, export, AI response, or freshness of built source. `make doctor` provides the same checks before starting the API.
+Returns `{ready, checks, identity}` with `Cache-Control: no-store`. Each check has `id`, `label`, `status` (`ready`, `missing`, or `limited`), `required`, `detail`, and optionally `action: {label, command}`. Overall readiness depends only on required Python environment, package metadata and built-asset checks. Optional local Ollama metadata is bounded and does not run inference. Reports omit filesystem paths, configured addresses and model names. This endpoint does not prove a CAD build, export, AI response, or freshness of built source. `make doctor` provides the same checks before starting the API.
+
+Both endpoints include `identity: {backend, interface}`. Each available identity contains `revision` (40-character Git SHA or null), `dirty` (checkout changes at capture, or null when unknown), and `source_sha256` (64-character input fingerprint or null). The backend identity is a source snapshot captured once at service startup. The interface identity describes the validated `frontend/dist/build-info.json` currently on disk and is null if that optional manifest is unavailable or invalid. API requests do not run Git or rescan backend source. Build identity is diagnostic metadata and does not affect readiness.
 
 ### `GET /api/printers`
 

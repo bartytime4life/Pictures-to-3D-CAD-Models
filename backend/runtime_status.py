@@ -18,6 +18,8 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
+from .build_info import runtime_identity
+
 ROOT = Path(__file__).resolve().parents[1]
 AI_TIMEOUT = 1.5
 MAX_METADATA_BYTES = 512 * 1024
@@ -312,4 +314,5 @@ def summarize_runtime(*, include_development=False, check_ai=True, root=None):
     return {
         "ready": all(check["status"] == "ready" for check in checks if check["required"]),
         "checks": checks,
+        "identity": runtime_identity(root),
     }

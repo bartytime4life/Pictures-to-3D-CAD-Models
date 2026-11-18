@@ -24,6 +24,7 @@ from . import blender as blender_bridge
 from . import depth as depth_model
 from . import library, vision
 from .assistant import AssistantError, AssistantRequest, assistant_status, chat
+from .build_info import runtime_identity
 from .creative import CreativeRequest, run_tool, tool_catalog
 from .documentation import router as documentation_router
 from .models import BuildRequest, Detail, Reference
@@ -270,7 +271,15 @@ async def invalid_input(request, exc):
 
 @app.get("/api/health")
 async def health():
-    return {"status": "ok", "version": "0.1.0", "workflow": "measured-profile-extrusion"}
+    return JSONResponse(
+        {
+            "status": "ok",
+            "version": "0.1.0",
+            "workflow": "measured-profile-extrusion",
+            "identity": runtime_identity(),
+        },
+        headers={"Cache-Control": "no-store"},
+    )
 
 
 @app.get("/api/runtime")
