@@ -43,6 +43,14 @@ The optional Ollama check reads only `/api/tags` and `/api/show` from the config
 
 Node.js and npm are reported as optional development tools. They are needed to install or rebuild the interface, while an already built interface runs from the Python service without Node.js. The report does not modify environments, package caches, photo libraries or model stores.
 
+### Identify the running build
+
+Start → Local setup → Setup details shows the browser interface, service startup source snapshot, and built interface on disk. `make doctor`, `/api/runtime` and `/api/health` expose the same service/build identifiers. Git revision and checkout state are captured at startup/build time, so local changes remain visible; Git is optional and unknown metadata is reported explicitly.
+
+`npm run build` embeds one frontend input fingerprint in the browser bundle and emits the same metadata as `frontend/dist/build-info.json`. If a later build changes those inputs while a page remains open, refreshing setup reports the difference and reminds you to save or download drafts before reloading. Live development mode is labeled separately and suppresses this production-build comparison. After changing Python code, restart the service to capture the new startup source snapshot.
+
+These fingerprints identify source inputs, not installed dependency bytes, generated-bundle integrity, CAD correctness or physical acceptance. The backend fingerprint covers regular Python files under `backend` plus `requirements.txt` and `pyproject.toml`. Frontend inputs cover `frontend/src`, build/configuration files, package manifests and the bundled public sample/appearance assets listed in `scripts/frontendBuildInfo.ts`. Add new standalone public assets to that list when extending the app. No user photo library, model store, output directory or filesystem path is included in the published metadata. Missing build metadata leaves an otherwise prepared app usable.
+
 The default bind address is `127.0.0.1`. The supported startup settings are:
 
 | Variable                    | Default                               | Purpose                                                                                                                                                                                                                                                                                                                       |

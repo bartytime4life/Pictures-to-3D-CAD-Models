@@ -39,6 +39,23 @@ def test_optional_ai_never_blocks_prepared_core(prepared_root):
     assert not by_id(report, "ollama")["required"]
 
 
+def test_interface_identity_is_optional_and_does_not_change_required_readiness(prepared_root):
+    before = runtime_status.summarize_runtime(root=prepared_root, check_ai=False)
+    assert before["ready"] and before["identity"]["interface"] is None
+    manifest = prepared_root / "frontend" / "dist" / "build-info.json"
+    interface = {"revision": "a" * 40, "dirty": False, "source_sha256": "b" * 64}
+    manifest.write_text(json.dumps({"schema": 1, **interface}))
+    after = runtime_status.summarize_runtime(root=prepared_root, check_ai=False)
+    assert after["identity"]["interface"] == interface
+    assert after["ready"] == before["ready"]
+    assert after["checks"] == before["checks"]
+    manifest.write_text('{"schema":2,"private":"not returned"}')
+    malformed = runtime_status.summarize_runtime(root=prepared_root, check_ai=False)
+    assert malformed["identity"]["interface"] is None
+    assert malformed["ready"] == before["ready"]
+    assert "private" not in json.dumps(malformed)
+
+
 def test_missing_environment_has_recovery_without_creating_files(tmp_path):
     before = set(tmp_path.rglob("*"))
     report = runtime_status.summarize_runtime(root=tmp_path, check_ai=False)
@@ -349,6 +366,48 @@ def test_runtime_route_is_not_cached_and_returns_fresh_checks(monkeypatch):
 
     asyncio.run(exercise())
     assert len(calls) == 2
+
+
+def test_health_identity_is_fresh_and_no_store_without_recomputing_startup_source(
+    tmp_path, monkeypatch
+):
+    import asyncio
+
+    import httpx2
+
+    from backend import app as api
+    from backend import build_info
+
+    monkeypatch.setattr(api, "runtime_identity", lambda: build_info.runtime_identity(tmp_path))
+    monkeypatch.setattr(
+        build_info, "capture_backend_identity", lambda *_: pytest.fail("No source rescan")
+    )
+    monkeypatch.setattr(
+        build_info, "git_identity", lambda *_: pytest.fail("No Git on health requests")
+    )
+
+    async def exercise():
+        async with httpx2.AsyncClient(
+            transport=httpx2.ASGITransport(app=api.app), base_url="http://test"
+        ) as client:
+            before = await client.get("/api/health")
+            manifest = tmp_path / "frontend" / "dist" / "build-info.json"
+            manifest.parent.mkdir(parents=True)
+            interface = {"revision": "a" * 40, "dirty": True, "source_sha256": "b" * 64}
+            manifest.write_text(json.dumps({"schema": 1, **interface}))
+            after = await client.get("/api/health")
+        assert before.status_code == after.status_code == 200
+        assert before.headers["cache-control"] == after.headers["cache-control"] == "no-store"
+        first, second = before.json(), after.json()
+        assert first["status"] == "ok"
+        assert first["version"] == "0.1.0"
+        assert first["workflow"] == "measured-profile-extrusion"
+        assert first["identity"]["backend"] == second["identity"]["backend"]
+        assert first["identity"]["interface"] is None
+        assert second["identity"]["interface"] == interface
+        assert str(tmp_path) not in after.text
+
+    asyncio.run(exercise())
 
 
 def test_runtime_metadata_runs_off_event_loop_and_does_not_block_health(monkeypatch):

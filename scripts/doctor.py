@@ -11,6 +11,21 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from backend.runtime_status import summarize_runtime
 
 
+def identity_label(identity):
+    if identity is None:
+        return "unavailable (rebuild the interface to include build diagnostics)"
+    revision = identity["revision"][:12] if identity["revision"] else "Git revision unavailable"
+    dirty = {True: "modified tree", False: "clean tree", None: "tree state unknown"}[
+        identity["dirty"]
+    ]
+    source = (
+        ("source " + identity["source_sha256"][:12])
+        if identity["source_sha256"]
+        else "source hash unavailable"
+    )
+    return f"{revision}; {dirty}; {source}"
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--json", action="store_true", help="Print a structured report")
@@ -27,6 +42,9 @@ def main():
             print(f"\n[{check['status'].upper()}] {check['label']}: {check['detail']}")
             if action := check.get("action"):
                 print(f"  {action['label']}: {action['command']}")
+        print("\nBackend startup source snapshot: " + identity_label(report["identity"]["backend"]))
+        print("Built interface snapshot: " + identity_label(report["identity"]["interface"]))
+        print("Backend diagnostics describe source at startup, not every byte loaded by Python.")
         print("\nThis check does not install anything, execute CAD, or generate AI responses.")
     return 0 if report["ready"] else 1
 

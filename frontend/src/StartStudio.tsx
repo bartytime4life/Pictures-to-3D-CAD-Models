@@ -16,9 +16,46 @@ import {
 } from '@phosphor-icons/react';
 import AppHeader from './AppHeader';
 import { useStudioActive } from './StudioActivity';
-import { parseRuntimeStatus } from './runtimeStatus';
-import type { RuntimeStatus } from './runtimeStatus';
+import { interfaceBuildChanged, parseBuildIdentity, parseRuntimeStatus } from './runtimeStatus';
+import type { BuildIdentity, RuntimeStatus } from './runtimeStatus';
 import './StartStudio.css';
+
+const browserBuild =
+  import.meta.env.DEV ||
+  typeof __PICAD_BUILD_INFO__ === 'undefined' ||
+  __PICAD_BUILD_INFO__.schema !== 1
+    ? null
+    : parseBuildIdentity(__PICAD_BUILD_INFO__);
+
+function BuildRecord({ label, identity }: { label: string; identity: BuildIdentity | null }) {
+  return (
+    <div className="start-build-record">
+      <h4>{label}</h4>
+      {identity ? (
+        <dl>
+          <dt>Source fingerprint</dt>
+          <dd>
+            <code>{identity.source_sha256 ?? 'Unavailable'}</code>
+          </dd>
+          <dt>Checkout revision</dt>
+          <dd>
+            <code>{identity.revision ?? 'Git metadata unavailable'}</code>
+          </dd>
+          <dt>Checkout at capture</dt>
+          <dd>
+            {identity.dirty === null
+              ? 'Unknown'
+              : identity.dirty
+                ? 'Local changes present'
+                : 'Clean'}
+          </dd>
+        </dl>
+      ) : (
+        <p>Build details unavailable.</p>
+      )}
+    </div>
+  );
+}
 
 const makingTasks = [
   {
@@ -270,6 +307,39 @@ export default function StartStudio() {
                     </li>
                   ))}
                 </ul>
+                <section className="start-build-details" aria-labelledby="start-build-title">
+                  <h3 id="start-build-title">Build details</h3>
+                  <p>These identifiers help match a problem report to the app you are using.</p>
+                  {interfaceBuildChanged(browserBuild, runtime.identity?.interface ?? null) && (
+                    <p role="status" className="start-build-update">
+                      A different interface build is available. Save or download your drafts before
+                      reloading this page.
+                    </p>
+                  )}
+                  {import.meta.env.DEV ? (
+                    <div className="start-build-record">
+                      <h4>Development interface</h4>
+                      <p>
+                        Live development preview. A production build captures its interface
+                        identifier.
+                      </p>
+                    </div>
+                  ) : (
+                    <BuildRecord label="Browser interface" identity={browserBuild} />
+                  )}
+                  <BuildRecord
+                    label="Service startup"
+                    identity={runtime.identity?.backend ?? null}
+                  />
+                  <BuildRecord
+                    label="Interface on disk"
+                    identity={runtime.identity?.interface ?? null}
+                  />
+                  <p>
+                    The service records its source snapshot at startup. Interface fingerprints
+                    record build inputs.
+                  </p>
+                </section>
               </details>
             )}
           </section>

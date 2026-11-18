@@ -406,6 +406,39 @@
     padding: 20px;
   }
 }
+.start-build-details {
+  margin-top: 18px;
+  border-top: 1px solid var(--border, #2b3e4c);
+  padding-top: 14px;
+}
+.start-build-details h3,
+.start-build-record h4 {
+  margin: 0 0 8px;
+}
+.start-build-record {
+  min-width: 0;
+  margin-top: 16px;
+}
+.start-build-record dl {
+  margin: 0;
+  font-size: 12px;
+}
+.start-build-record dt {
+  margin-top: 7px;
+  color: var(--muted);
+}
+.start-build-record dd {
+  margin: 3px 0 0;
+  overflow-wrap: anywhere;
+}
+.start-build-record code {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.start-build-update {
+  border-left: 2px solid var(--accent, #69b9c7);
+  padding-left: 10px;
+}
 @media (max-width: 400px) {
   .app-shell .start-main {
     padding-right: 12px;

@@ -1,8 +1,23 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { fileURLToPath } from 'node:url';
+import { frontendBuildInfo } from '../scripts/frontendBuildInfo.ts';
+
+// Capture once so the embedded UI value and emitted manifest describe the same inputs.
+const buildInfo = JSON.stringify(frontendBuildInfo(fileURLToPath(new URL('..', import.meta.url))));
 
 export default defineConfig({
-  plugins: [react()],
+  define: { __PICAD_BUILD_INFO__: buildInfo },
+  plugins: [
+    react(),
+    {
+      name: 'picad-build-info',
+      apply: 'build',
+      generateBundle() {
+        this.emitFile({ type: 'asset', fileName: 'build-info.json', source: `${buildInfo}\n` });
+      },
+    },
+  ],
   server: {
     // Loopback by default, like scripts/dev.sh: the /api proxy below would otherwise expose the
     // backend to the local network. dev.sh's PICAD_DEV_HOST (or --host) opts in explicitly.
