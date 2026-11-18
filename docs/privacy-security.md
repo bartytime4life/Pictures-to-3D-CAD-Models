@@ -51,9 +51,13 @@ The backend also writes a build recipe as `project.json`, used in export/handoff
 
 Keep the original source image separately when you need a record of how the model was derived. Saving a local recipe does not create a cloud account, synchronize another device, or provide a backup service.
 
-Use **Project library → Save current snapshot** to store an editable Flat part recipe in this browser profile and origin. The library uses IndexedDB to keep recipes, tags, notes, print statuses and print attempts across reloads. Clearing site data or removing a snapshot can delete its history. **Download recipe** saves a portable copy of the recipe only. The library stores the outline and editable settings as its geometry record. The current draft still requires an explicit snapshot or recipe download to survive a reload.
-
 Browser downloads are governed by the browser and host environment. Deleting an artifact from the running app does not delete copies already downloaded or stored in a host backup or environment snapshot.
+
+## Flat-part Project library
+
+**Save current snapshot** records the outline, measurements and editable settings in IndexedDB for the current browser profile and app origin. Tags, project notes, print status and attempts are stored alongside that recipe. The library stores no original image or generated geometry files. Opening a snapshot sends the saved outline and build settings to the CAD backend to generate a fresh model.
+
+Changing browser profile, protocol, hostname or port can change which library is visible. Clearing site data or removing a snapshot deletes access to its history. **Download recipe** copies the editable recipe to a file. Keep the source photo and any print records you need outside that browser separately. See the [snapshot workflow](workflows.md#save-snapshots-and-record-prints).
 
 ## Input and execution boundaries
 
@@ -92,6 +96,10 @@ Knowledge notebook notes/pins and valid Science scenarios save to this browser p
 These learning tools do not send notes or scenarios to the CAD backend or apply them to model settings. The local documentation API reads a fixed allowlist of repository guides and supplies their Markdown text, checksum and download. It does not accept arbitrary file paths. Following an external research or repository link opens that external service under its own policies.
 
 Background removal clips the current working photo using the reviewed outline in the browser. Its transparent PNG is separate from geometry and does not change the original file. The original trace/upload still follows the ordinary backend processing described above.
+
+## Image inspection
+
+The browser holds the selected files and their samples in page memory and computes readings locally. Selecting **Inspect image** in the Photo library first retrieves its stored original from the backend. Choosing a CAD or Relief handoff then uses that studio's normal original-file upload. **Save readings** downloads filenames, dimensions, regions and statistics as JSON. See [image inspection](image-inspection.md).
 
 ## Photo library
 

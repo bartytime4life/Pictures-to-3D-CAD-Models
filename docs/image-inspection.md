@@ -14,7 +14,9 @@ or generating relief. It needs no model and makes no analysis network requests.
 
 The Photo library also offers **Inspect image**, deliberately reading its stored
 original from the local service. Inspection itself sends no image to a server or
-AI model. HEIC needs conversion for this tool. Frames survive studio navigation
+AI model. The receiving Flat part or Relief studio uploads the original when you
+choose a handoff. Convert a copy of any HEIC file to a supported format for inspection.
+Frames survive studio navigation
 in tab memory; Clear releases one, and page reload discards both. Clearing or
 replacing a pending import prevents its late completion from restoring an image.
 A failed replacement retains the previous image.

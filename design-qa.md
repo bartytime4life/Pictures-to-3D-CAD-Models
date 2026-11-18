@@ -1,16 +1,21 @@
 # Design QA records
 
-This page connects the workbench's recorded design reviews. It is not a claim that
-older screenshots, test totals or runtime observations validate the current
-checkout. No browser, geometry or accessibility tests were rerun for this
-documentation refresh.
+This page links recorded workbench design reviews. Screenshots and test results
+describe the interface at the revision in each record.
 
-The [current documentation review](docs/validation/documentation-codecell-result.md)
+The [same-image diagnostic documentation review](docs/validation/documentation-codecell-result.md)
 also links a [separate local recovery prototype](docs/finite-acquisition-recovery.md).
 Its focused tests and synthetic study do not change the reviewed interface below
 or add acquisition-fitting controls to the workbench.
 
-## Latest recorded workbench review — November 11, 2026
+## Workspace reviews — November 17, 2026
+
+- Precision Studio and follow-up checks cover the measured workbench, slicer preparation, Knowledge, Science, and temporary-export recovery. [Precision Studio](docs/validation/precision-studio.md) · [Studio follow-up](docs/validation/studio-followup.md)
+- Shape designer and Creative tools checks cover responsive navigation, CAD preview and local model notes. [Creative workspace verification](docs/validation/creative-workspaces.md)
+- Image inspection checks cover region controls, A/B comparison, phone layouts and original-file handoff. [Image inspection verification](docs/validation/image-inspection.md)
+- Project library checks cover saved versions, print records and reopening the saved outline after reload. [Project library screenshot](docs/validation/evidence/project-library-dialog.png) · [Browser scenario](tests/e2e/project-library.spec.ts)
+
+## Guided workbench review — November 11, 2026
 
 The [guided workbench review](docs/validation/guided-workbench.md) records the
 source/CAD experience, implemented recovery changes, accepted screenshots and

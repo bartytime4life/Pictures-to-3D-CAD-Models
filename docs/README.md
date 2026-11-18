@@ -1,6 +1,6 @@
 # Documentation
 
-Start with a task, follow its workflow, and keep a saved recipe before leaving the application. Pictures to CAD has a shape designer, a measured flat-part workbench, a relief studio, image inspection, a photo library, Creative tools, and supporting Knowledge and Science workspaces.
+Use these guides to install Pictures to CAD, choose a workspace, check a model and save the files you need for printing or later edits.
 
 ## Start and finish a part
 
@@ -8,6 +8,8 @@ Start with a task, follow its workflow, and keep a saved recipe before leaving t
 | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | Install, run and finish the sample                        | [Getting started](getting-started.md)                                                                                  |
 | Choose the right workspace and complete a project         | [Workflow guide](workflows.md)                                                                                         |
+| Design a flat part from shapes                            | [Shape designer](shape-designer.md)                                                                                    |
+| Save flat-part versions and log print attempts            | [Project library workflow](workflows.md#save-snapshots-and-record-prints)                                              |
 | Capture a useful photograph                               | [Capture guide](capture-guide.md)                                                                                      |
 | Use A4, Letter or a measured sheet                        | [Reference-sheet tracing](reference-sheet.md)                                                                          |
 | Set scale from a known feature or common-object reference | [Reference sensitivity](reference-sensitivity.md) and [measurement workflow](workflows.md#scale-and-check-a-flat-part) |
@@ -16,14 +18,11 @@ Start with a task, follow its workflow, and keep a saved recipe before leaving t
 | Choose a file format and verify imported units            | [Exports](exports.md)                                                                                                  |
 | Make reliefs, lithophanes, globes or Blender handoffs     | [Relief studio](relief.md)                                                                                             |
 | Organize and choose source photos                         | [Photo library](photo-library.md)                                                                                      |
+| Inspect brightness, edges or differences in source photos | [Image inspection](image-inspection.md)                                                                                |
+| Explore or refine an idea with local text generation      | [Creative tools](creative-tools.md)                                                                                    |
 | Recover work or diagnose a problem                        | [Troubleshooting](troubleshooting.md)                                                                                  |
 
 The **Next step** guide points to the next missing measurement, invalid setting, build or export review. **Quick edit** changes design size; the original reference measurements stay explicit. **Prepare for slicing** keeps process notes with the built revision. View-only controls never modify an exported solid.
-
-Create a part without a photo using the [shape designer](shape-designer.md). Explore ideas and find a making workspace with [Creative tools](creative-tools.md). Developers can use its workspace catalog and text-tool registry to add tools without duplicating navigation or inference plumbing.
-
-Use [Image inspection](image-inspection.md) for region histograms, exposure/contrast
-readings and pixel-aligned A/B comparison before tracing.
 
 ## Understand the result
 
@@ -44,10 +43,13 @@ Knowledge articles and Science scenarios are part of the browser interface. Thei
 - [Detailed API and geometry contracts](api-reference.md): requests, outputs, units and implementation details.
 - [Development](development.md), [developer tools](developer-tools.md), [contributing](contributing.md): environment, commands and review process.
 - [Research methods](research.md), [research index](research-index.md), [validation overview](validation.md): mathematical methods and revision-bound results.
-- [Precision Studio review](validation/precision-studio.md): interface captures, corrected defects and current local verification scope.
-- [Pull-request verification](validation/precision-studio-pr.md): current-main integration checks and the scope of earlier evidence.
+- [Precision Studio review](validation/precision-studio.md): interface captures, corrected defects and verification at the recorded revision.
+- [Pull-request verification](validation/precision-studio-pr.md): main integration checks at the recorded revision.
 - [Studio follow-up](validation/studio-followup.md): documentation integration, shared-export recovery and narrow-phone label verification.
 - [Photo benchmark](photo-benchmark.md): compare source images with independent measurements.
+- [Bounded photo search](bounded-photo-search.md): batching, cancellation and the generated-vector benchmark.
+- [Creative workspace verification](validation/creative-workspaces.md): local Ollama inference, common-shape CAD and captured UI checks.
+- [Image inspection verification](validation/image-inspection.md): region analysis, responsive controls and original-file handoff.
 - [Agent harness playbook](agent-harness-playbook.md): improve context and verify CAD outcomes on a measured fixture.
 - [Roadmap](roadmap.md), [change log](changelog.md): planned work and recorded changes.
 
@@ -58,5 +60,3 @@ Historical evidence retains its original revision, inputs, failures and limits. 
 Open the application's **OpenSCAD** link for the separate reference workspace, or use [the offline reader](../reference-library/index.html). Its [README](../reference-library/README.md), [handbook](../reference-library/HANDBOOK.md), [OpenSCAD guide](../reference-library/OPENSCAD.md), [cadkit commands](../reference-library/cadkit/README.md) and [build guide](../reference-library/BUILD.md) describe its own tools and checks.
 
 Use the [project brief](../reference-library/templates/PROJECT-BRIEF.md), [capture checklist](../reference-library/templates/CAPTURE-CHECKLIST.md), [independent checks](../reference-library/templates/INDEPENDENT-CHECKS.md) and [print acceptance](../reference-library/templates/PRINT-ACCEPTANCE.md) templates to record a project beyond the browser session.
-
-- [Creative workspace verification](validation/creative-workspaces.md): local Ollama inference, common-shape CAD, workspace UI checks, fixes and captured evidence.

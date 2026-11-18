@@ -145,7 +145,7 @@ The cuts create no alignment pins, joints, glue allowance, clearance, or kerf co
 
 Use **Save project** in the header, or **Save editable project recipe** in Export, to download a JSON recipe: version 2 for a polygon-only profile, or version 3 when the profile contains fitted primitives or reference-sheet evidence. Restore it through **Photo → Browse files**, using the same chooser as an image. The app rebuilds from the source outline, measured inputs, and saved design/print settings; restoration does not require re-tracing a photograph. Versions 1, 2 and 3 import; version 1 uses default design settings.
 
-Save before refreshing or leaving the page. The workbench does not provide automatic project persistence; a fresh page starts with the sample.
+Save before refreshing or leaving the page. You can also save a browser-local snapshot through **Project library → Save current snapshot**. A fresh Flat part page starts with the sample. Reopen a saved snapshot to generate fresh exports, or use **Download recipe** to take the same editable model inputs to another browser. Tags, notes and print attempts stay with the library entry. See [the snapshot workflow](workflows.md#save-snapshots-and-record-prints).
 
 The project recipe preserves the traced coordinates, source width/thickness, XY/thickness design scales, geometry-detail mode, color/material choices, printer settings, and split plan needed to regenerate the result. Design percentages remain separate from the source measurements. Color/material choices also appear in a split bundle's manifest; STEP, STL, DXF, and SCAD do not encode them. The recipe is not a substitute for the original physical measurement, nor a general-purpose CAD exchange format.
 
@@ -159,6 +159,8 @@ that needs correction. Correct the notes or clear both decision inputs before
 saving again. This does not change an otherwise current CAD model.
 
 Keep a separately named copy of the original photo when provenance matters. The recipe **does not include the photograph**. A restored project therefore displays an outline-only source view; saved reference endpoints retain their working-image frame and can be adjusted numerically. Upload a photograph if you want to trace again; it starts a new source rather than attaching the old reference to a different image.
+
+Shape designer files preserve the original composition of additions and cutouts. Save the design there if you need to edit those shapes later. A workbench recipe created after the handoff stores the generated outline. See [Shape designer](shape-designer.md).
 
 ## Keep revisions consistent
 

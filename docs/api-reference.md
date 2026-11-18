@@ -250,7 +250,7 @@ Known catalog printers resolve their bed geometry from the selected nozzle's sou
 
 ## API overview
 
-Use the running server's `/docs` page for the exact generated request schemas and validation constraints.
+The running server's `/docs` page and `/openapi.json` describe the current HTTP request schemas and validation constraints.
 
 ### `GET /api/health`
 
@@ -364,6 +364,12 @@ The response contains a build identifier, matching revision, resulting dimension
 
 The profile is validated at the API boundary even when it originated in this app's trace endpoint. A client-supplied polygon is not trusted merely because it has the expected JSON shape.
 
+### `POST /api/designer/build`
+
+Submit 1–16 `shapes` with at least one addition. Each shape requires a unique `id`, a `kind`, `width_mm` and `height_mm`. Specify `operation` (`add` by default or `cut`), center coordinates (`x_mm`, `y_mm`), `rotation_deg` and `corner_mm` as needed. Supported kinds are `rectangle`, `rounded_rectangle`, `circle`, `slot`, `triangle` and `hexagon`. The body also accepts `name`, `revision` and `thickness_mm`.
+
+The isolated worker joins additions, subtracts through cutouts and validates one connected solid. It extracts the planar boundary and delegates to the Flat part exporter. The response follows the standard CAD build result and shares its concurrency, timeout and artifact lifecycle. Saving the editable shape composition is a browser operation. See [Shape designer](shape-designer.md).
+
 ### Export downloads
 
 `GET /api/download/{job_id}/{kind}` returns an artifact for `kind` equal to `step`, `stl`, `3mf`, `dxf`, `svg`, `pdf`, `scad`, `project`, `parts`, `bambu`, `prusa`, `qidi`, `orca`, or `cura` (relief builds add `heightmap`, `blender`, `wedge` and `depth`; see below). The `svg` and `pdf` artifacts are the DXF's loops as a millimetre drawing and as a page that prints at 1:1 (`backend/drawing.py`, which writes both without a PDF or SVG library). The parts artifact is a ZIP of separate STEP/STL/3MF files and a manifest. The five slicer-named artifacts are tailored handoff ZIPs containing a hash-verified process plan as well as geometry and a recipe. Successful builds provide those links explicitly. Do not construct arbitrary filesystem paths from project names or user-provided extensions.
@@ -384,7 +390,7 @@ The profile is validated at the API boundary even when it originated in this app
 
 ### Photo library
 
-The library is a third studio with its own state, separate from tracing and CAD jobs. `backend/library.py` keeps a catalogue of photos in SQLite with a preview, measurements and optional feature vectors for each; `backend/vision.py` runs the optional DINOv3 model in another process under its own Python environment; `backend/vision_math.py` holds the numerical steps both sides share and imports only NumPy. See the [guide](photo-library.md) and [validation record](validation/photo-library.md).
+The Photo library indexes source images independently of CAD jobs. `backend/library.py` keeps a SQLite catalogue with a preview, measurements and optional feature vectors. `backend/vision.py` runs the optional DINOv3 model in a separate Python environment, and `backend/vision_math.py` contains shared NumPy routines. See the [guide](photo-library.md) and [validation record](validation/photo-library.md).
 
 ```mermaid
 flowchart LR
@@ -394,10 +400,10 @@ flowchart LR
     C --> E[Organize]
     D --> E[Organize: copies, look-alikes, groups, best shots]
     E --> F[Browse, search by picture, export CSV or JSON]
-    F --> G[Open the original in the workbench or relief studio]
+    F --> G[Open the original in Flat part, Relief or Image inspection]
 ```
 
-One crunch runs at a time in a background thread; routes that would change the catalogue meanwhile return 409 with `Retry-After`. The library does not use the CAD or trace locks. A photo handed to a studio is fetched by the page as its original file and then follows that studio's ordinary upload path.
+One crunch runs at a time in a background thread. Conflicting library operations return 409 with `Retry-After`. The library has its own concurrency controls. The browser fetches the selected original for a handoff. Flat part and Relief upload that file to their respective APIs, while Image inspection analyzes it in browser memory.
 
 | Route                                                  | Purpose                                                                                                                                                                                         |
 | ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -406,7 +412,7 @@ One crunch runs at a time in a background thread; routes that would change the c
 | `POST /api/library/folders` `{path}`                   | Add a folder and start a crunch (202). Loopback page only                                                                                                                                       |
 | `DELETE /api/library/folders/{id}`                     | Forget a folder's photos and regroup (202). Never touches the folder                                                                                                                            |
 | `POST /api/library/uploads`                            | Store one multipart `file` (32 MiB, same formats as tracing); identical bytes are stored once                                                                                                   |
-| `POST /api/library/crunch`, `POST /api/library/cancel` | Start scan, read, describe and organize (202); ask the running job to stop after its batch                                                                                                      |
+| `POST /api/library/crunch`, `POST /api/library/cancel` | Start scan, read, describe and organize (202), or ask the running job to stop at a cancellation checkpoint                                                                                       |
 | `GET /api/library/photos`                              | A page of photos: `view` (`all`, `best`, `duplicates`, `grouped`, `failed`), `sort` (`added`, `taken`, `name`, `sharp`, `detail`, `size`), `q`, `offset`, `limit` (at most 500), `group`, `dup` |
 | `GET /api/library/groups`                              | Groups, largest first, with up to six member ids each                                                                                                                                           |
 | `GET /api/library/photos/{id}`                         | One photo's facts and its subject region as rows of a 28 × 28 grid. An upload's storage path is not returned                                                                                    |
@@ -420,6 +426,8 @@ One crunch runs at a time in a background thread; routes that would change the c
 Naming a host folder uses the slicer launch gate (`launch_request_allowed`): a loopback client and host, a same-origin `Origin`, and a JSON body. `PICAD_LIBRARY_FOLDERS=0` turns it off. Routes that change the library refuse a request whose `Origin` names another site (`library_same_origin`): a multipart upload is otherwise a request any page may send. Photo decoding reuses `tracing.decode_with_pillow` and `heic.decode` with their limits; a JPEG of 7.6 megapixels or more (four times `DRAFT_PIXELS`, 1.9 megapixels) is decoded at reduced scale by `library._decode_jpeg_reduced`, which applies the same size limits before decoding.
 
 The vision worker speaks one JSON object per line on its standard streams and writes feature arrays to a file the caller names. Each weight file is identified by a pinned SHA-256 and checked before it is loaded with `weights_only=True`. The worker is started on first use, restarted if it dies, and stopped after five idle minutes. `PICAD_VISION_STANDIN=1` replaces the network with colour statistics for tests; it is not a vision model and is never chosen automatically.
+
+Organize performs exact top-k matching over blocks of computed float32 scores. Cancellation during regrouping rolls back the group transaction and keeps the previously committed organization. See [bounded photo search](bounded-photo-search.md).
 
 ### Optional local slicer opening
 
@@ -440,6 +448,18 @@ Proposals may contain supported trace controls and design/print settings, includ
 There is no image, outline, or mesh payload, model-download endpoint, generated-code execution, or cloud fallback. Ollama must already have the selected local model installed. See [local AI setup and controls](ollama.md).
 
 The status endpoint returns HTTP 200 with `running: false` when Ollama is unavailable. Chat failures use 503 for an unavailable service, 409 for an unavailable or unsupported model, 429 for a busy assistant, 504 for a timeout, and 502 for an unusable upstream response. Cloud names and remote-model metadata are rejected; a model is checked again before inference. Generated prose still requires human review.
+
+### Creative tools
+
+`GET /api/creative/tools` lists tool IDs, labels, descriptions and starter briefs. `POST /api/creative/run` takes a registered `tool` (`concepts`, `critique` or `plan`), an installed chat `model`, a `brief` of up to 2,400 characters and optional `constraints` of up to 1,600 characters. Successful responses use `creative-notes-v1` and include the tool, model, structured notes, warnings and elapsed seconds. It shares the assistant's loopback Ollama connection and inference slot. See the [Creative tools contract](creative-tools.md#adding-a-creative-text-tool).
+
+### Local documentation
+
+`GET /api/docs` returns the available guide slugs and titles. `GET /api/docs/{slug}` returns a whitelisted guide's `slug`, `title`, Markdown `content` and `sha256` of its UTF-8 bytes. `GET /api/docs/{slug}/download` returns those bytes as Markdown. Unknown slugs and unavailable guides return 404.
+
+### Browser-only features
+
+Image inspection computes readings and exports their JSON in the browser. The Flat part Project library stores recipes and print metadata in IndexedDB and uses `POST /api/build` when restoring a snapshot. `/api/library` is the Photo library API.
 
 ### Published companion library
 

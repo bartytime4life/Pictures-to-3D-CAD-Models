@@ -1,10 +1,10 @@
 # Photo library
 
-Open **Library** in the app header, or `/#library`, to prepare a collection of photos
+Open **Photo library** in the app header (**Library** on narrow screens), or `/#library`, to prepare a collection of photos
 before making CAD or reliefs. Point it at a folder and it reads every picture: size,
 sharpness and exact copies, and, with the optional DINOv3 vision model, what each
 picture shows and which shots belong together. Then open the best shot of a part
-straight in the flat-part workbench or the relief studio.
+in Flat part, Relief or Image inspection.
 
 ![Photo library with grouped photos and the subject of one photo lit](images/library.png)
 
@@ -16,9 +16,11 @@ on this page is a suggestion for choosing a photo. Nothing here measures a part.
 1. Choose **Add folder** and pick a folder on this computer, or **Add photos** to send
    files through the browser. You can also drop photos anywhere on the page.
 2. The library crunches by itself. A bar shows the stage, the photos per second and the
-   time left; **Cancel** stops after the current batch and keeps what is done.
+   time left. **Cancel** stops at a checkpoint. Completed reads and descriptions
+   are retained. If regrouping is cancelled, the previous groups stay in place.
 3. Choose a photo to see its details, then **Open in Flat part**, **Open in Relief**
-   or **Find similar**.
+   to use the source, **Inspect image** to examine it in the browser, or **Find similar**
+   when vision features are available.
 
 **Rescan** looks for new, changed and removed files in the added folders and finishes
 any work a cancelled crunch left over. Unchanged photos are not read again.
@@ -153,6 +155,9 @@ The methods and their derivations are in the module texts of `backend/library.py
   cosine reaches the model's threshold. A group held together only by a chain of links
   is then split by average likeness. Thresholds were chosen on seven rendered parts and
   scored on seven others.
+- **Search cost.** The exact nearest-neighbor pass compares blocks of query and candidate
+  vectors. With default blocks, the score matrix is at most 2 MiB, while total
+  comparisons still grow quadratically. See [bounded search and cancellation](bounded-photo-search.md).
 
 ## Limits
 
@@ -175,6 +180,9 @@ The methods and their derivations are in the module texts of `backend/library.py
   has and are not connected.
 - A library holds at most 250,000 photos. Groups larger than 400 photos are not split.
   Location data in photos is never read. HEIC files give no date or camera.
+
+For a per-image histogram, selected region or aligned A/B comparison, use the separate
+browser-local tool. See [Image inspection](image-inspection.md).
 
 ## Data and privacy
 
