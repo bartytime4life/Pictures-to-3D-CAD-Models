@@ -48,6 +48,7 @@ Knowledge articles and Science scenarios are part of the browser interface. Thei
 - [Pull-request verification](validation/precision-studio-pr.md): current-main integration checks and the scope of earlier evidence.
 - [Studio follow-up](validation/studio-followup.md): documentation integration, shared-export recovery and narrow-phone label verification.
 - [Photo benchmark](photo-benchmark.md): compare source images with independent measurements.
+- [Agent harness playbook](agent-harness-playbook.md): improve context and verify CAD outcomes on a measured fixture.
 - [Roadmap](roadmap.md), [change log](changelog.md): planned work and recorded changes.
 
 Historical evidence retains its original revision, inputs, failures and limits. A later green test run does not rewrite an earlier result, establish camera accuracy or prove a physical print.
