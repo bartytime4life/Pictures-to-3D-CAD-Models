@@ -240,8 +240,22 @@ test('a reopened baseline save stays ordered behind an older delayed save', asyn
   await expect(library.getByRole('status')).toHaveText('Project details saved.');
   await expect.poll(storedProject).toEqual({ notes: '', tags: ['Latest submission'] });
   await expect(notes).toHaveValue('');
+  // Reload the library through its explicit entry, rather than starting a new sample CAD
+  // build that could remain in flight when this page closes and contend with the next test.
+  let reloadBuilds = 0;
+  page.on('request', (request) => {
+    if (request.url().endsWith('/api/build')) reloadBuilds++;
+  });
+  await page.keyboard.press('Escape');
+  await page.getByRole('link', { name: 'Start', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'What would you like to make?' })).toBeVisible();
   await page.reload();
-  await openLibrary.click();
+  await page.getByRole('link', { name: 'Saved flat-part projects', exact: true }).click();
   await expect(notes).toHaveValue('');
   await expect(tags).toHaveValue('Latest submission');
+  await page.keyboard.press('Escape');
+  await expect(
+    page.getByRole('heading', { name: 'Start with your part', exact: true }),
+  ).toBeVisible();
+  expect(reloadBuilds).toBe(0);
 });
