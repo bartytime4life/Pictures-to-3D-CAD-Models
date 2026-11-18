@@ -28,9 +28,9 @@ export default function ShapeCanvas({
   moveEnd.current = onMoveEnd;
   const latest = useRef(shapes);
   latest.current = shapes;
-  function finishGesture() {
+  function finishGesture(pointerId?: number) {
     const gesture = drag.current;
-    if (!gesture) return;
+    if (!gesture || (pointerId !== undefined && pointerId !== gesture.pointerId)) return;
     drag.current = null;
     moveEnd.current();
     if (canvas.current?.hasPointerCapture(gesture.pointerId))
@@ -208,9 +208,9 @@ export default function ShapeCanvas({
           Math.round((point.y - drag.current.dy) / step) * step,
         );
       }}
-      onPointerUp={finishGesture}
-      onPointerCancel={finishGesture}
-      onLostPointerCapture={finishGesture}
+      onPointerUp={(event) => finishGesture(event.pointerId)}
+      onPointerCancel={(event) => finishGesture(event.pointerId)}
+      onLostPointerCapture={(event) => finishGesture(event.pointerId)}
     >
       <span>
         {shapes.map((shape) => `${SHAPE_LABELS[shape.kind]} ${shape.operation}`).join(', ')}

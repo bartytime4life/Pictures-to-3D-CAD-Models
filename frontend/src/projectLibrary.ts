@@ -1,4 +1,5 @@
 import type { ProjectRecipe } from './types';
+import { KeyedTaskQueue } from './keyedTaskQueue.ts';
 
 export const PRINT_OUTCOMES = ['Printed', 'Failed'] as const;
 export const PRINT_STATUSES = ['Unprinted', 'Queued', 'Printing', ...PRINT_OUTCOMES] as const;
@@ -19,6 +20,8 @@ export type LibraryProject = {
 };
 
 const STORE = 'projects';
+// Keep submission order explicit across modal instances, including delayed storage acquisition.
+const projectUpdates = new KeyedTaskQueue<number>();
 
 function openLibrary(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -93,26 +96,28 @@ export type ProjectDetailsUpdate = Partial<Pick<LibraryProject, 'status' | 'tags
 export type ProjectUpdate = ProjectDetailsUpdate | { attempt: PrintAttempt };
 
 export function updateLibraryProject(id: number, update: ProjectUpdate) {
-  return transact<LibraryProject | null>('readwrite', (store, setResult) => {
-    const request = store.get(id);
-    request.onsuccess = () => {
-      const current = request.result as LibraryProject | undefined;
-      if (!current) {
-        setResult(null);
-        return;
-      }
-      const updated =
-        'attempt' in update
-          ? {
-              ...current,
-              status: update.attempt.outcome,
-              attempts: [...current.attempts, update.attempt],
-            }
-          : { ...current, ...update };
-      store.put(updated);
-      setResult(updated);
-    };
-  });
+  return projectUpdates.run(id, () =>
+    transact<LibraryProject | null>('readwrite', (store, setResult) => {
+      const request = store.get(id);
+      request.onsuccess = () => {
+        const current = request.result as LibraryProject | undefined;
+        if (!current) {
+          setResult(null);
+          return;
+        }
+        const updated =
+          'attempt' in update
+            ? {
+                ...current,
+                status: update.attempt.outcome,
+                attempts: [...current.attempts, update.attempt],
+              }
+            : { ...current, ...update };
+        store.put(updated);
+        setResult(updated);
+      };
+    }),
+  );
 }
 
 export function removeLibraryProject(id: number) {

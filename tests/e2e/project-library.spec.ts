@@ -1,6 +1,12 @@
 import { expect, test } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 
+type HeldLibraryOpen = Window & {
+  holdNextLibraryOpen?: boolean;
+  libraryOpenHeld?: boolean;
+  releaseLibraryOpen?: () => void;
+};
+
 test('project snapshots preserve their recipe and print history across reloads', async ({
   page,
 }) => {
@@ -105,34 +111,137 @@ test('unsaved project and print forms survive selection, filtering and modal clo
   await library.getByRole('button', { name: 'Save current snapshot', exact: true }).click();
   const snapshots = library.getByRole('list', { name: 'Saved projects' });
   await snapshots.getByRole('button', { name: /4 mm thick/ }).click();
-  await library.getByLabel('Project notes', { exact: true }).fill('Keep this project draft');
-  await library.getByLabel('Print notes', { exact: true }).fill('Keep this print draft');
+  await library
+    .getByRole('textbox', { name: 'Project notes', exact: true })
+    .fill('Keep this project draft');
+  await library
+    .getByRole('textbox', { name: 'Print notes', exact: true })
+    .fill('Keep this print draft');
   await snapshots.getByRole('button', { name: /6 mm thick/ }).click();
-  await expect(library.getByLabel('Project notes', { exact: true })).toHaveValue('');
+  await expect(library.getByRole('textbox', { name: 'Project notes', exact: true })).toHaveValue(
+    '',
+  );
   await snapshots.getByRole('button', { name: /4 mm thick/ }).click();
   await library.getByLabel('Search projects', { exact: true }).fill('no match here');
   await expect(library.getByText('No projects match your filters.')).toBeVisible();
   await library.getByLabel('Search projects', { exact: true }).fill('');
-  await expect(library.getByLabel('Project notes', { exact: true })).toHaveValue(
+  await expect(library.getByRole('textbox', { name: 'Project notes', exact: true })).toHaveValue(
     'Keep this project draft',
   );
   await page.keyboard.press('Escape');
   await openLibrary.click();
   await snapshots.getByRole('button', { name: /4 mm thick/ }).click();
-  await expect(library.getByLabel('Print notes', { exact: true })).toHaveValue(
+  await expect(library.getByRole('textbox', { name: 'Print notes', exact: true })).toHaveValue(
     'Keep this print draft',
   );
   await library.getByRole('button', { name: 'Save details', exact: true }).click();
-  await expect(library.getByLabel('Print notes', { exact: true })).toHaveValue(
+  await expect(library.getByRole('textbox', { name: 'Print notes', exact: true })).toHaveValue(
     'Keep this print draft',
   );
-  await library.getByLabel('Project notes', { exact: true }).fill('New unsaved project draft');
+  await library
+    .getByRole('textbox', { name: 'Project notes', exact: true })
+    .fill('New unsaved project draft');
   await library.getByRole('button', { name: 'Record print attempt', exact: true }).click();
   await expect(library.getByRole('list', { name: 'Recorded print attempts' })).toContainText(
     'Keep this print draft',
   );
-  await expect(library.getByLabel('Project notes', { exact: true })).toHaveValue(
+  await expect(library.getByRole('textbox', { name: 'Project notes', exact: true })).toHaveValue(
     'New unsaved project draft',
   );
-  await expect(library.getByLabel('Print notes', { exact: true })).toHaveValue('');
+  await expect(library.getByRole('textbox', { name: 'Print notes', exact: true })).toHaveValue('');
+});
+
+test('a reopened baseline save stays ordered behind an older delayed save', async ({ page }) => {
+  // Delay one database-open notification before the save creates its transaction.
+  // The reopened modal can read the old snapshot while this older save is pending.
+  await page.addInitScript(() => {
+    const original = IDBFactory.prototype.open;
+    IDBFactory.prototype.open = function (name: string, version?: number) {
+      const harness = window as HeldLibraryOpen;
+      let hold = name === 'pictures-to-cad-project-library' && harness.holdNextLibraryOpen;
+      if (hold) harness.holdNextLibraryOpen = false;
+      const request =
+        version === undefined ? original.call(this, name) : original.call(this, name, version);
+      request.addEventListener(
+        'success',
+        (event) => {
+          if (!hold) return;
+          hold = false;
+          harness.libraryOpenHeld = true;
+          event.stopImmediatePropagation();
+          harness.releaseLibraryOpen = () => {
+            harness.libraryOpenHeld = false;
+            request.dispatchEvent(new Event('success'));
+          };
+        },
+        { capture: true },
+      );
+      return request;
+    };
+  });
+  await page.goto('/#workbench');
+  await expect(page.getByRole('button', { name: 'Review export', exact: true })).toBeEnabled({
+    timeout: 60_000,
+  });
+  const openLibrary = page.getByRole('button', { name: 'Project library', exact: true });
+  const library = page.getByRole('dialog', { name: 'Project library', exact: true });
+  const notes = library.getByRole('textbox', { name: 'Project notes', exact: true });
+  const tags = library.getByRole('textbox', { name: 'Tags (comma separated)', exact: true });
+  const save = library.getByRole('button', { name: 'Save details', exact: true });
+  const storedProject = () =>
+    page.evaluate(
+      () =>
+        new Promise<{ notes: string; tags: string[] }>((resolve, reject) => {
+          const request = indexedDB.open('pictures-to-cad-project-library', 1);
+          request.onerror = () => reject(request.error);
+          request.onsuccess = () => {
+            const db = request.result;
+            const transaction = db.transaction('projects', 'readonly');
+            const all = transaction.objectStore('projects').getAll();
+            transaction.oncomplete = () => {
+              db.close();
+              resolve({ notes: all.result[0]?.notes, tags: all.result[0]?.tags });
+            };
+            transaction.onabort = () => {
+              db.close();
+              reject(transaction.error);
+            };
+          };
+        }),
+    );
+  await openLibrary.click();
+  await library.getByRole('button', { name: 'Save current snapshot', exact: true }).click();
+  await expect(library.getByRole('status')).toHaveText('Project snapshot saved.');
+  // Finish initial loading in a fresh modal so an old list refresh cannot consume the hold.
+  await page.keyboard.press('Escape');
+  await openLibrary.click();
+  await notes.fill('Older submitted note');
+  await page.evaluate(() => ((window as HeldLibraryOpen).holdNextLibraryOpen = true));
+  await save.click();
+  await expect
+    .poll(() => page.evaluate(() => (window as HeldLibraryOpen).libraryOpenHeld))
+    .toBe(true);
+  try {
+    expect(await storedProject()).toEqual({ notes: '', tags: [] });
+    await page.keyboard.press('Escape');
+    await openLibrary.click();
+    await expect(notes).toHaveValue('Older submitted note');
+    await notes.fill('');
+    await expect(library.getByText(/^Unsaved edits stay in this tab/)).toBeVisible();
+    await tags.fill('Latest submission');
+    await save.click();
+    await expect(save).toBeDisabled();
+    // A real read establishes a barrier: the queued newer save has not overtaken the hold.
+    expect(await storedProject()).toEqual({ notes: '', tags: [] });
+  } finally {
+    await page.evaluate(() => (window as HeldLibraryOpen).releaseLibraryOpen?.());
+  }
+
+  await expect(library.getByRole('status')).toHaveText('Project details saved.');
+  await expect.poll(storedProject).toEqual({ notes: '', tags: ['Latest submission'] });
+  await expect(notes).toHaveValue('');
+  await page.reload();
+  await openLibrary.click();
+  await expect(notes).toHaveValue('');
+  await expect(tags).toHaveValue('Latest submission');
 });
